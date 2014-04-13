@@ -1,0 +1,51 @@
+/* 
+* Place css styles below.
+*/
+
+#wrapper {
+	margin:auto;
+	width:960px;
+}
+
+
+.clear {
+	clear: both;
+}
+
+.error {
+	padding: 0.75em;
+	margin: 0.75em;
+	border: 1px solid #990000;
+	max-width: 400px;
+	color: #990000;
+	background-color: #FDF0EB;
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+}
+
+p,li {
+	color: #555555;
+	font-size: 16px;
+	line-height: 1.5em;
+}
+
+a {
+	color: #EF1F2F;
+	text-decoration: none;
+}
+
+form input {
+	border: 1px solid #999999;
+	border-bottom-color: #cccccc;
+	border-right-color: #cccccc;
+	padding: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1.0em;
+	margin: 2px;
+}
+
+table {width:98%; text-align:left; border:1px solid #DDDDDD; font-size:12px; color:#000;background:#fff; margin-bottom:10px;}
+table th {background-color:#E5E5E5; border:1px solid #BBBBBB; padding:3px 6px; font-weight:normal; color:#000;}
+table tr td {border:1px solid #DDDDDD; padding:5px 6px;}
+table tr.alt td {background-color:#E2E2E2;}
+table tr:hover {background-color:#F0F0F0; color:#000;}

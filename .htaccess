@@ -1,0 +1,12 @@
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /
+
+#comment out to keep tralining slashes
+RedirectMatch 301 ^(.+)/$ $1
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ index.php?$1 [L]

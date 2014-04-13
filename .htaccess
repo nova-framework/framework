@@ -3,7 +3,7 @@ Options -Indexes
 RewriteEngine On
 RewriteBase /
 
-#comment out to keep tralining slashes
+#comment out to keep trailing slashes
 #RedirectMatch 301 ^(.+)/$ $1
 
 RewriteCond %{REQUEST_FILENAME} !-d

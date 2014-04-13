@@ -22,7 +22,7 @@ function autoloader($class) {
 }
 
 //run autoloader
-spl_autoload_register(autoloader);
+spl_autoload_register('autoloader');
 //start sessions
 Session::init();
 

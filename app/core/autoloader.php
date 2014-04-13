@@ -2,8 +2,7 @@
 //turn on output buffering
 ob_start();
 
-//run autoloader
-spl_autoload_register(function ($class) {
+function autoloader($class) {
 
    $filename = "app/controllers/".strtolower($class).".php";
    if(file_exists($filename)){
@@ -20,7 +19,10 @@ spl_autoload_register(function ($class) {
       require $filename;
    } 
  
-});
+}
+
+//run autoloader
+spl_autoload_register(autoloader);
 //start sessions
 Session::init();
 

@@ -5,7 +5,7 @@ Simple MVC Framework is a PHP 5.3 MVC system. It's designed to be lightweight an
 
 The base framework comes with a few helper classes, this is to keep code bloat down to a minimum. Classes can easily be added at any stage of development.
 
-See the [https://github.com/simple-mvc-framework/addons](Add-ons) repo for more Add-ons & to add your own.
+See the [Add-ons](https://github.com/simple-mvc-framework/addons) repo for more Add-ons & to add your own.
 
 ## Documentation
 

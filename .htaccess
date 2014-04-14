@@ -4,7 +4,7 @@ RewriteEngine On
 RewriteBase /
 
 #comment out to keep trailing slashes
-#RedirectMatch 301 ^(.+)/$ $1
+RewriteRule ^(.+)/$ $1 [R=301,L]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f

@@ -26,7 +26,7 @@ class Password {
      *
      * @return string|false The hashed password, or false on error.
      */
-    static public function password_hash($password, $algo, array $options = array()) {
+    static public function make($password, $algo = PASSWORD_BCRYPT, array $options = array()) {
         if (!function_exists('crypt')) {
             trigger_error("Crypt must be loaded for password_hash to function", E_USER_WARNING);
             return null;
@@ -180,7 +180,7 @@ class Password {
      *
      * @return boolean True if the password needs to be rehashed.
      */
-    static public function password_needs_rehash($hash, $algo, array $options = array()) {
+    static public function needs_rehash($hash, $algo = PASSWORD_BCRYPT, array $options = array()) {
         $info = password_get_info($hash);
         if ($info['algo'] != $algo) {
             return true;
@@ -204,7 +204,7 @@ class Password {
      *
      * @return boolean If the password matches the hash
      */
-    static public function password_verify($password, $hash) {
+    static public function verify($password, $hash) {
         if (!function_exists('crypt')) {
             trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
             return false;

@@ -108,6 +108,13 @@ class Router
 
                         array_shift($matched); //remove $matched[0] as [1] is the first parameter.
 
+                        $parts = explode('@',self::$callbacks[$pos]);
+                        $file = strtolower('app/controllers/'.$parts[0].'.php'); 
+                        
+                        //try to load and instantiate model     
+                        if(file_exists($file)){
+                            require $file;
+                        }
 
                         if(!is_object(self::$callbacks[$pos])){
 
@@ -146,6 +153,14 @@ class Router
                     echo '404';
                 };
             } 
+
+            $parts = explode('@',self::$error_callback);
+            $file = strtolower('app/controllers/'.$parts[0].'.php'); 
+            
+            //try to load and instantiate model     
+            if(file_exists($file)){
+                require $file;
+            }
 
             if(!is_object(self::$error_callback)){
 

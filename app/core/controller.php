@@ -22,12 +22,12 @@ class Controller {
 
 		$modelpath = strtolower('app/models/'.$name.'.php');
 
-		//try to load and instantiate model		
+		//try to load and instantiate model
 		if(file_exists($modelpath)){
-			
+
 			require_once $modelpath;
 
-			//break name into sections based on a / 
+			//break name into sections based on a /
 			$parts = explode('/',$name);
 
 			//use last part of array
@@ -51,12 +51,12 @@ class Controller {
 
 		$helperpath = strtolower('app/helpers/'.$name.'.php');
 
-		//try to load and instantiate helper		
+		//try to load and instantiate helper
 		if(file_exists($helperpath)){
-			
+
 			require_once $helperpath;
 
-			//break name into sections based on a / 
+			//break name into sections based on a /
 			$parts = explode('/',$name);
 
 			//if object is not static then instantiate it.

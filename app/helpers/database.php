@@ -39,7 +39,7 @@ class Database extends PDO{
 			$stmt->bindValue(":$key", $value);
 		}
 
-		$stmt->execute();		
+		$stmt->execute();
 
 	}
 
@@ -61,7 +61,7 @@ class Database extends PDO{
 			} else {
 				$whereDetails .= " AND $key = :$key";
 			}
-			
+
 		$i++;}
 		$whereDetails = ltrim($whereDetails, ' AND ');
 
@@ -91,7 +91,7 @@ class Database extends PDO{
 			} else {
 				$whereDetails .= " AND $key = :$key";
 			}
-			
+
 		$i++;}
 		$whereDetails = ltrim($whereDetails, ' AND ');
 

@@ -20,9 +20,9 @@ class Router
     /**
      * Defines a route w/ callback and method
      */
-    public static function __callstatic($method, $params) 
+    public static function __callstatic($method, $params)
     {
-        
+
         $uri = dirname($_SERVER['PHP_SELF']).$params[0];
         $callback = $params[1];
 
@@ -45,7 +45,7 @@ class Router
     public static function dispatch()
     {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $method = $_SERVER['REQUEST_METHOD'];  
+        $method = $_SERVER['REQUEST_METHOD'];
 
         $searches = array_keys(static::$patterns);
         $replaces = array_values(static::$patterns);
@@ -60,33 +60,33 @@ class Router
                 if (self::$methods[$route] == $method) {
                     $found_route = true;
 
-                    //if route is not an object 
+                    //if route is not an object
                     if(!is_object(self::$callbacks[$route])){
-                        
-                        
+
+
                         $parts = explode('@',self::$callbacks[$route]);
-                        $file = strtolower('app/controllers/'.$parts[0].'.php'); 
-                        
-                        //try to load and instantiate model     
+                        $file = strtolower('app/controllers/'.$parts[0].'.php');
+
+                        //try to load and instantiate model
                         if(file_exists($file)){
                             require $file;
                         }
 
-                        //grab all parts based on a / separator 
+                        //grab all parts based on a / separator
                         $parts = explode('/',self::$callbacks[$route]);
 
                         //collect the last index of the array
                         $last = end($parts);
 
                         //grab the controller name and method call
-                        $segments = explode('@',$last);                         
+                        $segments = explode('@',$last);
 
                         //instanitate controller
                         $controller = new $segments[0]();
 
                         //call method
-                        $controller->$segments[1](); 
-                        
+                        $controller->$segments[1]();
+
                     } else {
                         //call closure
                         call_user_func(self::$callbacks[$route]);
@@ -109,41 +109,41 @@ class Router
                         array_shift($matched); //remove $matched[0] as [1] is the first parameter.
 
                         $parts = explode('@',self::$callbacks[$pos]);
-                        $file = strtolower('app/controllers/'.$parts[0].'.php'); 
-                        
-                        //try to load and instantiate model     
+                        $file = strtolower('app/controllers/'.$parts[0].'.php');
+
+                        //try to load and instantiate model
                         if(file_exists($file)){
                             require $file;
                         }
 
                         if(!is_object(self::$callbacks[$pos])){
 
-                            //grab all parts based on a / separator 
-                            $parts = explode('/',self::$callbacks[$pos]); 
+                            //grab all parts based on a / separator
+                            $parts = explode('/',self::$callbacks[$pos]);
 
                             //collect the last index of the array
                             $last = end($parts);
 
                             //grab the controller name and method call
-                            $segments = explode('@',$last); 
+                            $segments = explode('@',$last);
 
                             //instanitate controller
                             $controller = new $segments[0]();
 
                             //call method and pass any extra parameters to the method
-                            $controller->$segments[1](implode(",", $matched)); 
-                            
+                            $controller->$segments[1](implode(",", $matched));
+
                         } else {
-                            
+
                             call_user_func_array(self::$callbacks[$pos], $matched);
                         }
-                        
+
                     }
                 }
             $pos++;
             }
         }
- 
+
 
         // run the error callback if the route was not found
         if ($found_route == false) {
@@ -152,20 +152,20 @@ class Router
                     header($_SERVER['SERVER_PROTOCOL']." 404 Not Found");
                     echo '404';
                 };
-            } 
+            }
 
             $parts = explode('@',self::$error_callback);
-            $file = strtolower('app/controllers/'.$parts[0].'.php'); 
-            
-            //try to load and instantiate model     
+            $file = strtolower('app/controllers/'.$parts[0].'.php');
+
+            //try to load and instantiate model
             if(file_exists($file)){
                 require $file;
             }
 
             if(!is_object(self::$error_callback)){
 
-                //grab all parts based on a / separator 
-                $parts = explode('/',self::$error_callback); 
+                //grab all parts based on a / separator
+                $parts = explode('/',self::$error_callback);
 
                 //collect the last index of the array
                 $last = end($parts);
@@ -180,9 +180,9 @@ class Router
                 $controller->$segments[1]();
 
             } else {
-               call_user_func(self::$error_callback); 
+               call_user_func(self::$error_callback);
             }
-            
+
         }
     }
 }

@@ -7,7 +7,7 @@ function autoloader($class) {
    $filename = "app/controllers/".strtolower($class).".php";
    if(file_exists($filename)){
       require $filename;
-   } 
+   }
 
    $filename = "app/core/".strtolower($class).".php";
    if(file_exists($filename)){
@@ -17,8 +17,8 @@ function autoloader($class) {
    $filename = "app/helpers/".strtolower($class).".php";
    if(file_exists($filename)){
       require $filename;
-   } 
- 
+   }
+
 }
 
 //run autoloader

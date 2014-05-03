@@ -14,5 +14,5 @@ class Welcome extends Controller{
 		$this->view->render('welcome/welcome',$data);
 		$this->view->rendertemplate('footer',$data);
 	}
-	
+
 }

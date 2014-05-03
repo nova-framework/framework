@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 class Error extends Controller {
 
-	private $_error = null; 
+	private $_error = null;
 
 	public function __construct($error){
 		parent::__construct();
@@ -10,14 +10,14 @@ class Error extends Controller {
 	}
 
 	public function index(){
-		
+
 		$data['title'] = '404';
 		$data['error'] = $this->_error;
-		
+
 		$this->view->rendertemplate('header',$data);
 		$this->view->render('error/404',$data);
 		$this->view->rendertemplate('footer',$data);
-		
+
 	}
 
 }

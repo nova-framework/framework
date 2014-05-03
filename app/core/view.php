@@ -9,5 +9,5 @@ class View {
 	public function rendertemplate($path,$data = false){
 		require "app/templates/".Session::get('template')."/$path.php";
 	}
-	
+
 }

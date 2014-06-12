@@ -134,6 +134,9 @@ class Router
 
                             //call method and pass any extra parameters to the method
                             switch ($params) {
+                                case '0':
+                                    $controller->$segments[1]();
+                                    break;
                                 case '1':
                                     $controller->$segments[1]($matched[0]);
                                     break;

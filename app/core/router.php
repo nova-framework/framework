@@ -3,6 +3,8 @@
 class Router
 {
 
+    public static $halts = false;
+
     public static $routes = array();
 
     public static $methods = array();
@@ -22,7 +24,7 @@ class Router
      */
     public static function __callstatic($method, $params) 
     {
-        
+      
         $uri = dirname($_SERVER['PHP_SELF']).$params[0];
         $callback = $params[1];
 
@@ -37,6 +39,11 @@ class Router
     public static function error($callback)
     {
         self::$error_callback = $callback;
+    }
+
+    public static function haltOnMatch($flag = true)
+    {
+        self::$halts = $flag;
     }
 
     /**
@@ -63,7 +70,6 @@ class Router
                     //if route is not an object 
                     if(!is_object(self::$callbacks[$route])){
                         
-                        
                         $parts = explode('@',self::$callbacks[$route]);
                         $file = strtolower('app/controllers/'.$parts[0].'.php'); 
                         
@@ -86,10 +92,15 @@ class Router
 
                         //call method
                         $controller->$segments[1](); 
+
+                        if (self::$halts) return;
                         
-                    } else {
+                    } else { 
+
                         //call closure
                         call_user_func(self::$callbacks[$route]);
+
+                        if (self::$halts) return;
                     }
                 }
             }
@@ -97,6 +108,8 @@ class Router
             // check if defined with regex
             $pos = 0;
             foreach (self::$routes as $route) {
+
+                $route = str_replace('//','/',$route);
 
                 if (strpos($route, ':') !== false) {
                     $route = str_replace($searches, $replaces, $route);
@@ -168,10 +181,14 @@ class Router
                                     $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3],$matched[4],$matched[5],$matched[6],$matched[7],$matched[8],$matched[9]);
                                     break;
                             }
+
+                            if (self::$halts) return;
                             
                         } else {
                             
                             call_user_func_array(self::$callbacks[$pos], $matched);
+                       
+                            if (self::$halts) return;
                         }
                         
                     }
@@ -215,8 +232,12 @@ class Router
                 //call method
                 $controller->$segments[1]();
 
+                if (self::$halts) return;
+
             } else {
                call_user_func(self::$error_callback); 
+
+               if (self::$halts) return;
             }
             
         }

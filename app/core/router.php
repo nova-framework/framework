@@ -25,7 +25,7 @@ class Router
     public static function __callstatic($method, $params) 
     {
       
-        $uri = dirname($_SERVER['PHP_SELF']).$params[0];
+        $uri = dirname($_SERVER['PHP_SELF']).'/'.$params[0];
         $callback = $params[1];
 
         array_push(self::$routes, $uri);
@@ -57,14 +57,17 @@ class Router
         $searches = array_keys(static::$patterns);
         $replaces = array_values(static::$patterns);
 
+        self::$routes = str_replace('//','/',self::$routes);   
+
         $found_route = false;
 
         // check if route is defined without regex
         if (in_array($uri, self::$routes)) {
+
             $route_pos = array_keys(self::$routes, $uri);
             foreach ($route_pos as $route) {
 
-                if (self::$methods[$route] == $method) {
+                if (self::$methods[$route] == $method || self::$methods[$route] == 'ANY') {
                     $found_route = true;
 
                     //if route is not an object 

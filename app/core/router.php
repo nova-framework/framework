@@ -108,6 +108,7 @@ class Router
                 }
             }
         } else {
+
             // check if defined with regex
             $pos = 0;
             foreach (self::$routes as $route) {
@@ -119,20 +120,21 @@ class Router
                 }
 
                 if (preg_match('#^' . $route . '$#', $uri, $matched)) {
-                    if (self::$methods[$pos] == $method) {
-                        $found_route = true;
+
+                    if (self::$methods[$pos] == $method || self::$methods[$pos] == 'ANY') {
+                        $found_route = true; 
 
                         array_shift($matched); //remove $matched[0] as [1] is the first parameter.
 
-                        $parts = explode('@',self::$callbacks[$pos]);
-                        $file = strtolower('app/controllers/'.$parts[0].'.php'); 
-                        
-                        //try to load and instantiate model     
-                        if(file_exists($file)){
-                            require $file;
-                        }
-
                         if(!is_object(self::$callbacks[$pos])){
+
+                            $parts = explode('@',self::$callbacks[$pos]);
+                            $file = strtolower('app/controllers/'.$parts[0].'.php'); 
+                            
+                            //try to load and instantiate model     
+                            if(file_exists($file)){
+                                require $file;
+                            }
 
                             //grab all parts based on a / separator 
                             $parts = explode('/',self::$callbacks[$pos]); 

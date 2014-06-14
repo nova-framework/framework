@@ -15,18 +15,18 @@ class Controller {
 	//return an array of url segments
 	public function getUrl(){
 		$url = isset($_SERVER['REQUEST_URI']) ? rtrim($_SERVER['REQUEST_URI'], '/') : NULL;
-        $url = filter_var($url, FILTER_SANITIZE_URL);
-        $url = explode('/',$url);
-        $url = array_filter($url);
-        return $url;
-    }
+        	$url = filter_var($url, FILTER_SANITIZE_URL);
+		$url = explode('/',$url);
+	 	$url = array_filter($url);
+        	return $url;
+    	}
 
 	//Display an error page if nothing exists
 	protected function _error($error) {
-	    require 'app/core/error.php';
-	    $this->_controller = new Error($error);
-	    $this->_controller->index();
-	    die;
+		require 'app/core/error.php';
+		$this->_controller = new Error($error);
+	    	$this->_controller->index();
+	    	die;
 	}
 
 

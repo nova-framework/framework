@@ -5,10 +5,14 @@ class Controller {
 	public $view;
 
 	public function __construct(){
+		//initialise the views object
 		$this->view = new view();
-		$this->_getUrl();
+
+		//call the getUrl function to collect the url structure
+		$this->getUrl();
 	}
 
+	//return an array of url segments
 	public function getUrl(){
 		$url = isset($_SERVER['REQUEST_URI']) ? rtrim($_SERVER['REQUEST_URI'], '/') : NULL;
         $url = filter_var($url, FILTER_SANITIZE_URL);

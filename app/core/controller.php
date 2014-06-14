@@ -9,7 +9,7 @@ class Controller {
 		$this->_getUrl();
 	}
 
-	protected function _getUrl(){
+	public function getUrl(){
 		$url = isset($_SERVER['REQUEST_URI']) ? rtrim($_SERVER['REQUEST_URI'], '/') : NULL;
         $url = filter_var($url, FILTER_SANITIZE_URL);
         $url = explode('/',$url);

@@ -87,7 +87,7 @@ class Controller {
 			}
 
 		} else {
-			$this->_error("Helper does not exist: ".$modelpath);
+			$this->_error("Helper does not exist: ".$helperpath);
 			return false;
 		}
 

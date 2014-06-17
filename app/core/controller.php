@@ -8,18 +8,7 @@ class Controller {
 		//initialise the views object
 		$this->view = new view();
 
-		//call the getUrl function to collect the url structure
-		$this->getUrl();
 	}
-
-	//return an array of url segments
-	public function getUrl(){
-		$url = isset($_SERVER['REQUEST_URI']) ? rtrim($_SERVER['REQUEST_URI'], '/') : NULL;
-        	$url = filter_var($url, FILTER_SANITIZE_URL);
-		$url = explode('/',$url);
-	 	$url = array_filter($url);
-        	return $url;
-    	}
 
 	//Display an error page if nothing exists
 	protected function _error($error) {

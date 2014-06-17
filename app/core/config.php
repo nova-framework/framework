@@ -9,10 +9,6 @@ date_default_timezone_set('Europe/London');
 //site address
 define('DIR','http://domain.com/');
 
-//Get the current page full url
-$c = new Controller();
-define('FULLDIR',DIR.implode('/',$c->getUrl()));
-
 //database details ONLY NEEDED IF USING A DATABASE
 define('DB_TYPE','mysql');
 define('DB_HOST','localhost');

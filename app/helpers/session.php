@@ -17,6 +17,15 @@ class Session {
 		$_SESSION[SESSION_PREFIX.$key] = $value;
 	}
 
+	public static function pull($key){
+
+		$value = $_SESSION[SESSION_PREFIX.$key];
+		unset($_SESSION[SESSION_PREFIX.$key]);
+
+		return $value;
+
+	}
+
 	public static function get($key,$secondkey = false){
 
 		if($secondkey == true){

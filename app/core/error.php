@@ -14,9 +14,9 @@ class Error extends Controller {
 		$data['title'] = '404';
 		$data['error'] = $this->_error;
 
-		$this->view->rendertemplate('header',$data);
-		$this->view->render('error/404',$data);
-		$this->view->rendertemplate('footer',$data);
+		View::rendertemplate('header',$data);
+		View::render('error/404',$data);
+		View::rendertemplate('footer',$data);
 
 	}
 

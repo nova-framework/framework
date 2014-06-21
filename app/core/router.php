@@ -3,7 +3,7 @@
 class Router
 {
 
-    public static $halts = false;
+    public static $halts = true;
 
     public static $routes = array();
 

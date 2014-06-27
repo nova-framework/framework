@@ -3,9 +3,7 @@
 
 Simple MVC Framework is a PHP 5.3 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
 
-The base framework comes with a few helper classes, this is to keep code bloat down to a minimum. Classes can easily be added at any stage of development.
-
-See the [Add-ons](https://github.com/simple-mvc-framework/addons) repo for more Add-ons & to add your own.
+The base framework comes with a range of helper classes.
 
 ## Documentation
 
@@ -24,7 +22,8 @@ Full docs & tutorials are available at [simplemvcframework.com](http://simplemvc
 
 1. Download the framework
 2. Unzip the package.
-3. Upload the framework files to your server. Normally the index.php file will be at your root.
-4. Open the index.php file with a text editor, setup your routes. 
+3. To run composer, navigate to your project on a terminal/command prompt then run 'composer install' that will update the vendor folder. Or use the vendor folder as is (composer is not required for this step)
+Upload the framework files to your server. Normally the index.php file will be at your root.
+4. Open the index.php file with a text editor, setup your routes.
 5. Open core/config.php and set your base URL and database credentials (if a database is needed). Set the default theme.
-6. Edit .htaccess file and save the base path.
+6. Edit .htaccess file and save the base path. (if the framework is installed in a folder the base path should reflect the folder path /path/to/folder/ otherwise a single / will do.

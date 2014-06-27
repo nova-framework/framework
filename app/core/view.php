@@ -1,4 +1,5 @@
-<?php
+<?php namespace core;
+use helpers\session as Session;
 
 class View {
 
@@ -9,5 +10,5 @@ class View {
 	public function rendertemplate($path,$data = false){
 		require "app/templates/".Session::get('template')."/$path.php";
 	}
-
+	
 }

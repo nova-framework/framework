@@ -1,4 +1,4 @@
-<?php
+<?php namespace helpers;
 
 class Session {
 
@@ -15,15 +15,6 @@ class Session {
 
 	public static function set($key,$value){
 		$_SESSION[SESSION_PREFIX.$key] = $value;
-	}
-
-	public static function pull($key){
-
-		$value = $_SESSION[SESSION_PREFIX.$key];
-		unset($_SESSION[SESSION_PREFIX.$key]);
-
-		return $value;
-
 	}
 
 	public static function get($key,$secondkey = false){

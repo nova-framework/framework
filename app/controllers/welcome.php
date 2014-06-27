@@ -1,12 +1,13 @@
-<?php
+<?php namespace controllers;
+use core\view as View;
 
-class Welcome extends Controller{
+class Welcome extends \core\controller{
 
 	public function __construct(){
 		parent::__construct();
 	}
 
-	public function index($request = null){
+	public function index(){	
 
 		$data['title'] = 'Welcome';
 
@@ -14,5 +15,5 @@ class Welcome extends Controller{
 		View::render('welcome/welcome',$data);
 		View::rendertemplate('footer',$data);
 	}
-
+	
 }

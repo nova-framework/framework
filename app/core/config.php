@@ -1,27 +1,41 @@
-<?php
+<?php namespace core;
 
-set_exception_handler('logger::exception_handler');
-set_error_handler('logger::error_handler');
+class Config {
 
-//set timezone
-date_default_timezone_set('Europe/London');
+	public function __construct(){
 
-//site address
-define('DIR','http://domain.com/');
+		//turn on output buffering
+		ob_start();
 
-//database details ONLY NEEDED IF USING A DATABASE
-define('DB_TYPE','mysql');
-define('DB_HOST','localhost');
-define('DB_NAME','database_name');
-define('DB_USER','username');
-define('DB_PASS','password');
-define('PREFIX','smvc_');
+		//start sessions
+		\helpers\session::init();
 
-//set prefix for sessions
-define('SESSION_PREFIX','smvc_');
+		set_exception_handler('core\logger::exception_handler');
+		set_error_handler('core\logger::error_handler');
 
-//optionall create a constant for the name of the site
-define('SITETITLE','Simple MVC Framework v2');
+		//set timezone
+		date_default_timezone_set('Europe/London');
 
-//set the default template
-Session::set('template','default');
+		//site address
+		define('DIR','http://domain.com/');
+
+		//database details ONLY NEEDED IF USING A DATABASE
+		define('DB_TYPE','mysql');
+		define('DB_HOST','localhost');
+		define('DB_NAME','dbname');
+		define('DB_USER','username');
+		define('DB_PASS','password');
+		define('PREFIX','smvc_');
+
+		//set prefix for sessions
+		define('SESSION_PREFIX','smvc_');
+
+		//optionall create a constant for the name of the site
+		define('SITETITLE','V2.1');
+
+		//set the default template
+		\helpers\session::set('template','default');
+		
+	}
+
+}

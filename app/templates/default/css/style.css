@@ -1,4 +1,4 @@
-/*
+/* 
 * Place css styles below.
 */
 
@@ -49,3 +49,5 @@ table th {background-color:#E5E5E5; border:1px solid #BBBBBB; padding:3px 6px; f
 table tr td {border:1px solid #DDDDDD; padding:5px 6px;}
 table tr.alt td {background-color:#E2E2E2;}
 table tr:hover {background-color:#F0F0F0; color:#000;}
+
+.pagination li {display:inline; margin-right:5px;}

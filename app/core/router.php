@@ -1,4 +1,4 @@
-<?php
+<?php namespace core;
 
 class Router
 {
@@ -100,6 +100,8 @@ class Router
                         
                     } else { 
 
+                        new \core\config();
+
                         //call closure
                         call_user_func(self::$callbacks[$route]);
 
@@ -190,6 +192,8 @@ class Router
                             if (self::$halts) return;
                             
                         } else {
+
+                            new \core\config();
                             
                             call_user_func_array(self::$callbacks[$pos], $matched);
                        
@@ -240,6 +244,9 @@ class Router
                 if (self::$halts) return;
 
             } else {
+
+               new \Core\config();
+               
                call_user_func(self::$error_callback); 
 
                if (self::$halts) return;

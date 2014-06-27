@@ -1,5 +1,5 @@
-<?php
-
+<?php namespace helpers;
+use \PDO;
 class Database extends PDO{
 
 	function __construct(){
@@ -39,12 +39,12 @@ class Database extends PDO{
 			$stmt->bindValue(":$key", $value);
 		}
 
-		$stmt->execute();
+		$stmt->execute();		
 
 	}
 
 	public function update($table, $data, $where){
-
+		
 		ksort($data);
 
 		$fieldDetails = NULL;
@@ -61,7 +61,7 @@ class Database extends PDO{
 			} else {
 				$whereDetails .= " AND $key = :$key";
 			}
-
+			
 		$i++;}
 		$whereDetails = ltrim($whereDetails, ' AND ');
 
@@ -91,7 +91,7 @@ class Database extends PDO{
 			} else {
 				$whereDetails .= " AND $key = :$key";
 			}
-
+			
 		$i++;}
 		$whereDetails = ltrim($whereDetails, ' AND ');
 

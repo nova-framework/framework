@@ -1,9 +1,9 @@
-<?php
+<?php namespace helpers\phpmailer;
 /**
  * PHPMailer exception handler
  * @package PHPMailer
  */
-class phpmailerException extends Exception
+class phpmailerException extends \Exception
 {
     /**
      * Prettify error message output
@@ -12,6 +12,6 @@ class phpmailerException extends Exception
     public function errorMessage()
     {
         $errorMsg = '<strong>' . $this->getMessage() . "</strong><br />\n";
-        return $errorMsg;
+        echo $errorMsg;
     }
 }

@@ -3,13 +3,29 @@ use core\config as Config;
 use core\view as View;
 use core\error as Error;
 
+/*
+ * controller - base controller
+ *
+ * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
+ * @version 2.1
+ * @date June 27, 2014
+ */
 class Controller {
 
+	/**
+	 * view variable to use the view class
+	 * @var string
+	 */
 	public $view;
 
-	public function __construct(){	
+	/**
+	 * on run make an instance of the config class and view class 
+	 */
+	public function __construct(){
+		
 		//initialise the config object
 		new config();
+
 		//initialise the views object
 		$this->view = new view();
 	}

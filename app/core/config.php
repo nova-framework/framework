@@ -1,5 +1,11 @@
 <?php namespace core;
-
+/*
+ * config - setup system wide settings
+ *
+ * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
+ * @version 2.1
+ * @date June 27, 2014
+ */
 class Config {
 
 	public function __construct(){
@@ -10,6 +16,7 @@ class Config {
 		//start sessions
 		\helpers\session::init();
 
+		//turn on custom error handling
 		set_exception_handler('core\logger::exception_handler');
 		set_error_handler('core\logger::error_handler');
 

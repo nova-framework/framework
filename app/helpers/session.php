@@ -1,9 +1,22 @@
 <?php namespace helpers;
-
+/*
+ * Session Class - prefix sessions with useful methods
+ *
+ * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
+ * @version 2.0
+ * @date June 27, 2014
+ */
 class Session {
 
+	/**
+	 * Determine if session has started
+	 * @var boolean
+	 */
 	private static $_sessionStarted = false;
 
+	/**
+	 * if session has not started, start sessions 
+	 */
 	public static function init(){
 
 		if(self::$_sessionStarted == false){
@@ -13,10 +26,20 @@ class Session {
 
 	}
 
+	/**
+	 * Add value to a session
+	 * @param string $key   name the data to save
+	 * @param string $value the data to save
+	 */
 	public static function set($key,$value){
 		$_SESSION[SESSION_PREFIX.$key] = $value;
 	}
 
+	/**
+	 * extract item from session then delete from the session, finally return the item
+	 * @param  string $key item to extract
+	 * @return string      return item
+	 */
 	public static function pull($key){
 
 		$value = $_SESSION[SESSION_PREFIX.$key];
@@ -26,6 +49,13 @@ class Session {
 
 	}
 
+	/**
+	 * get item from session
+	 * 
+	 * @param  string  $key       item to look for in session
+	 * @param  boolean $secondkey if used then use as a second key
+	 * @return string             returns the key
+	 */
 	public static function get($key,$secondkey = false){
 
 		if($secondkey == true){
@@ -46,10 +76,17 @@ class Session {
 
 	}
 
+	/**
+	 * return the session array
+	 * @return array array of session indexes
+	 */
 	public static function display(){
 		return $_SESSION;
 	}
 
+	/**
+	 * emptiey and destroy the session
+	 */
 	public static function destroy(){
 
 		if(self::$_sessionStarted == true){

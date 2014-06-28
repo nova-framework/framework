@@ -1,7 +1,17 @@
 <?php namespace helpers;
 use \PDO;
+/*
+ * database Helper - extending PDO to use custom methods
+ *
+ * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
+ * @version 2.1
+ * @date June 27, 2014
+ */
 class Database extends PDO{
 
+	/**
+	 * create database connection
+	 */
 	function __construct(){
 
 		try {
@@ -9,12 +19,20 @@ class Database extends PDO{
 			$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
 		} catch(PDOException $e){
+			//in the event of an error record the error to errorlog.html
 			Logger::newMessage($e);
 			logger::customErrorMsg();
 		}
 
 	}
 
+	/**
+	 * method for selecting records from a database
+	 * @param  string $sql       sql query
+	 * @param  array  $array     named params
+	 * @param  object $fetchMode 
+	 * @return array            returns an array of records
+	 */
 	public function select($sql,$array = array(), $fetchMode = PDO::FETCH_OBJ){
 
 		$stmt = $this->prepare($sql);
@@ -26,6 +44,11 @@ class Database extends PDO{
 		return $stmt->fetchAll($fetchMode);
 	}
 
+	/**
+	 * insert method
+	 * @param  string $table table name
+	 * @param  array $data  array of columns and values
+	 */
 	public function insert($table, $data){
 
 		ksort($data);
@@ -43,6 +66,12 @@ class Database extends PDO{
 
 	}
 
+	/**
+	 * update method
+	 * @param  string $table table name
+	 * @param  array $data  array of columns and values
+	 * @param  array $where array of columns and values
+	 */
 	public function update($table, $data, $where){
 		
 		ksort($data);
@@ -79,6 +108,13 @@ class Database extends PDO{
 
 	}
 
+	/**
+	 * Delete method
+	 * @param  string $table table name
+	 * @param  array $data  array of columns and values
+	 * @param  array $where array of columns and values
+	 * @param  integer $limit limit number of records
+	 */
 	public function delete($table, $where, $limit = 1){
 
 		ksort($where);
@@ -95,7 +131,12 @@ class Database extends PDO{
 		$i++;}
 		$whereDetails = ltrim($whereDetails, ' AND ');
 
-		$stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails LIMIT $limit");
+		//if limit is a number use a limit on the query
+		if(is_numeric($limit)){
+			$uselimit = "LIMIT $limit";
+		}
+
+		$stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails $uselimit");
 
 		foreach($where as $key => $value){
 			$stmt->bindValue(":$key", $value);
@@ -105,6 +146,10 @@ class Database extends PDO{
 
 	}
 
+	/**
+	 * truncate table
+	 * @param  string $table table name
+	 */
 	public function truncate($table){
 		return $this->exec("TRUNCATE TABLE $table");
 	}

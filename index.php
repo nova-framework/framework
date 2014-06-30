@@ -9,8 +9,8 @@ if(file_exists('vendor/autoload.php')){
 }
 
 //create alias for Router
-use \core\router as Router;
-use \helpers\url as Url;
+use \core\router as Router,
+    \helpers\url as Url;
 
 //define routes
 Router::any('', '\controllers\welcome@index');

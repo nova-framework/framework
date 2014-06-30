@@ -1,7 +1,7 @@
 <?php namespace core;
-use core\config as Config;
-use core\view as View;
-use core\error as Error;
+use core\config as Config,
+    core\view as View,
+    core\error as Error;
 
 /*
  * controller - base controller

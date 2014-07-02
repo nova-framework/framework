@@ -37,7 +37,11 @@ class Database extends PDO{
 
 		$stmt = $this->prepare($sql);
 		foreach($array as $key => $value){
-			$stmt->bindValue("$key", $value);
+			if(is_int($value)){
+				$stmt->bindValue("$key", $value, PDO::PARAM_INT); 
+			} else {
+				$stmt->bindValue("$key", $value); 
+			}
 		}
 
 		$stmt->execute();

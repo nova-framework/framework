@@ -31,8 +31,21 @@ class Session {
 	 * @param string $key   name the data to save
 	 * @param string $value the data to save
 	 */
-	public static function set($key,$value){
-		$_SESSION[SESSION_PREFIX.$key] = $value;
+	public static function set($key,$value = false){
+            
+            /**
+             * Check whether session is set in array or not
+             * If array then set all session key-values in foreach loop
+             */
+            if(is_array($key) && $value === false){
+		foreach ($key as $name => $value) {
+                    $_SESSION[SESSION_PREFIX.$name] = $value;
+                }
+            }
+            else {
+                $_SESSION[SESSION_PREFIX.$key] = $value;
+            }
+                
 	}
 
 	/**
@@ -83,7 +96,7 @@ class Session {
 	public static function display(){
 		return $_SESSION;
 	}
-
+	
 	/**
 	 * emptiey and destroy the session
 	 */

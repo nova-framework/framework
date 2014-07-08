@@ -36,10 +36,9 @@ if(file_exists('vendor/autoload.php')){
  * By default development will show errors but testing and production will hide them.
  */
 
-if (defined('ENVIRONMENT'))
-{
-	switch (ENVIRONMENT)
-	{
+if (defined('ENVIRONMENT')){
+
+	switch (ENVIRONMENT){
 		case 'development':
 			error_reporting(E_ALL);
 		break;
@@ -52,6 +51,7 @@ if (defined('ENVIRONMENT'))
 		default:
 			exit('The application environment is not set correctly.');
 	}
+
 }
 
 //create alias for Router

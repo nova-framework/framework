@@ -6,23 +6,12 @@
  * @version 2.1
  * @date June 27, 2014
  */
- 
-use \helpers\session as Session,
-\core\logger as Logger;
- 
 class Config {
 
 	public function __construct(){
 
 		//turn on output buffering
 		ob_start();
-
-		//turn on custom error handling
-		set_exception_handler('Logger::exception_handler');
-		set_error_handler('Logger::error_handler');
-
-		//set timezone
-		date_default_timezone_set('Europe/London');
 
 		//site address
 		define('DIR','http://domain.com/');
@@ -41,11 +30,18 @@ class Config {
 		//optionall create a constant for the name of the site
 		define('SITETITLE','V2.1');
 
+		//turn on custom error handling
+		set_exception_handler('core\logger::exception_handler');
+		set_error_handler('core\logger::error_handler');
+
+		//set timezone
+		date_default_timezone_set('Europe/London');
+
 		//start sessions
-		Session::init();
+		\helpers\session::init();
 
 		//set the default template
-		Session::set('template','default');
+		\helpers\session::set('template','default');
 		
 	}
 

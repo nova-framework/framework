@@ -90,10 +90,44 @@ class Router
     }
 
     /**
+     * autoDispatch by Volter9
+     * Ability to call controllers in their controller/model/param way
+     */
+    public static function autoDispatch() {
+
+            $uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
+            $uri = trim($uri, ' /');
+            $parts = explode('/', $uri); 
+
+            $controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : DEFAULT_CONTROLLER;
+            $method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : DEFAULT_METHOD;
+            $args       = is_array($parts) && count($parts) > 2 ? array_slice($parts, 2) : array(); 
+
+            // Check for file
+            if (!file_exists('app/controllers/' . $controller . '.php')) {
+                return;
+            }
+
+            $controller = '\controllers\\' . $controller;
+            $c = new $controller;
+
+            if (method_exists($c, $method)) {
+                $c->$method($args);
+                //found method so stop
+                exit;
+            }
+
+        }
+
+    /**
      * Runs the callback for the given request
      */
     public static function dispatch()
     {
+
+        //call the auto dispatch method
+        self::autoDispatch();
+
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];  
 

@@ -3,9 +3,10 @@
  * Router - routing urls to closurs and controllers
  *
  * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
- * @version 2.1
- * @date June 27, 2014
+ * @version 2.2
+ * @date Auguest 16th, 2014
  */
+
 class Router
 {
 
@@ -47,9 +48,45 @@ class Router
         self::$error_callback = $callback;
     }
 
+    /**
+     * Don't load any further routes on match
+     * @param  boolean $flag 
+     */
     public static function haltOnMatch($flag = true)
     {
         self::$halts = $flag;
+    }
+
+    /**
+     * call object and instantiate
+     * @param  object $callback 
+     * @param  array $matched  array of matched parameters
+     * @param  string $msg      
+     */
+    public static function invokeObject($callback,$matched = null,$msg = null)
+    {
+        //grab all parts based on a / separator 
+        $parts = explode('/',$callback);
+
+        //collect the last index of the array
+        $last = end($parts);
+
+        //grab the controller name and method call
+        $segments = explode('@',$last);                         
+
+        //instanitate controller with optional msg (used for error_callback)
+        $controller = new $segments[0]($msg);
+
+        if($matched == null){
+
+            //call method
+            $controller->$segments[1]();
+
+        } else {
+
+            //call method and pass any extra parameters to the method
+            $controller->$segments[1](implode(",", $matched));
+        }
     }
 
     /**
@@ -69,7 +106,6 @@ class Router
 
         // check if route is defined without regex
         if (in_array($uri, self::$routes)) {
-
             $route_pos = array_keys(self::$routes, $uri);
             foreach ($route_pos as $route) {
 
@@ -78,35 +114,13 @@ class Router
 
                     //if route is not an object 
                     if(!is_object(self::$callbacks[$route])){
-                        
-                        $parts = explode('@',self::$callbacks[$route]);
-                        $file = strtolower('app/controllers/'.$parts[0].'.php'); 
-                        
-                        //try to load and instantiate model     
-                        if(file_exists($file)){
-                            require $file;
-                        }
 
-                        //grab all parts based on a / separator 
-                        $parts = explode('/',self::$callbacks[$route]);
-
-                        //collect the last index of the array
-                        $last = end($parts);
-
-                        //grab the controller name and method call
-                        $segments = explode('@',$last);                         
-
-                        //instanitate controller
-                        $controller = new $segments[0]();
-
-                        //call method
-                        $controller->$segments[1](); 
+                        //call object controller and method
+                        self::invokeObject(self::$callbacks[$route]);
 
                         if (self::$halts) return;
                         
                     } else { 
-
-                        new \core\config();
 
                         //call closure
                         call_user_func(self::$callbacks[$route]);
@@ -136,71 +150,13 @@ class Router
 
                         if(!is_object(self::$callbacks[$pos])){
 
-                            $parts = explode('@',self::$callbacks[$pos]);
-                            $file = strtolower('app/controllers/'.$parts[0].'.php'); 
-                            
-                            //try to load and instantiate model     
-                            if(file_exists($file)){
-                                require $file;
-                            }
-
-                            //grab all parts based on a / separator 
-                            $parts = explode('/',self::$callbacks[$pos]); 
-
-                            //collect the last index of the array
-                            $last = end($parts);
-
-                            //grab the controller name and method call
-                            $segments = explode('@',$last); 
-
-                            //instanitate controller
-                            $controller = new $segments[0]();
-
-                            $params = count($matched);
-
-                            //call method and pass any extra parameters to the method
-                            switch ($params) {
-                                case '0':
-                                    $controller->$segments[1]();
-                                    break;
-                                case '1':
-                                    $controller->$segments[1]($matched[0]);
-                                    break;
-                                case '2':
-                                    $controller->$segments[1]($matched[0],$matched[1]);
-                                    break;
-                                case '3':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2]);
-                                    break;
-                                case '4':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3]);
-                                    break;
-                                case '5':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3],$matched[4]);
-                                    break;
-                                case '6':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3],$matched[4],$matched[5]);
-                                    break;
-                                case '7':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3],$matched[4],$matched[5],$matched[6]);
-                                    break;
-                                case '8':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3],$matched[4],$matched[5],$matched[6],$matched[7]);
-                                    break;
-                                case '9':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3],$matched[4],$matched[5],$matched[6],$matched[7],$matched[8]);
-                                    break;
-                                case '10':
-                                    $controller->$segments[1]($matched[0],$matched[1],$matched[2],$matched[3],$matched[4],$matched[5],$matched[6],$matched[7],$matched[8],$matched[9]);
-                                    break;
-                            }
+                            //call object controller and method
+                            self::invokeObject(self::$callbacks[$pos],$matched);
 
                             if (self::$halts) return;
                             
                         } else {
-
-                            new \core\config();
-                            
+                            //call closure
                             call_user_func_array(self::$callbacks[$pos], $matched);
                        
                             if (self::$halts) return;
@@ -222,36 +178,14 @@ class Router
                 };
             } 
 
-            $parts = explode('@',self::$error_callback);
-            $file = strtolower('app/controllers/'.$parts[0].'.php'); 
-            
-            //try to load and instantiate model     
-            if(file_exists($file)){
-                require $file;
-            }
-
             if(!is_object(self::$error_callback)){
 
-                //grab all parts based on a / separator 
-                $parts = explode('/',self::$error_callback); 
-
-                //collect the last index of the array
-                $last = end($parts);
-
-                //grab the controller name and method call
-                $segments = explode('@',$last);
-
-                //instanitate controller
-                $controller = new $segments[0]('No routes found.');
-
-                //call method
-                $controller->$segments[1]();
+                //call object controller and method
+                self::invokeObject(self::$error_callback,null,'No routes found.');
 
                 if (self::$halts) return;
 
             } else {
-
-               new \Core\config();
                
                call_user_func(self::$error_callback); 
 

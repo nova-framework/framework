@@ -9,7 +9,10 @@
 
 class Router
 {
-
+	// Fallback for auto dispatching feature.
+	// Disabled by default, although, you can activate it by: Router::$fallback = true;
+	public static $fallback = false;
+	
     public static $halts = true;
 
     public static $routes = array();
@@ -94,40 +97,37 @@ class Router
      * Ability to call controllers in their controller/model/param way
      */
     public static function autoDispatch() {
+		$uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
+		$uri = trim($uri, ' /');
+		$parts = explode('/', $uri);
 
-            $uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
-            $uri = trim($uri, ' /');
-            $parts = explode('/', $uri); 
+		$controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : DEFAULT_CONTROLLER;
+		$method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : DEFAULT_METHOD;
+		$args       = is_array($parts) && count($parts) > 2 ? array_slice($parts, 2) : array(); 
 
-            $controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : DEFAULT_CONTROLLER;
-            $method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : DEFAULT_METHOD;
-            $args       = is_array($parts) && count($parts) > 2 ? array_slice($parts, 2) : array(); 
+		// Check for file
+		if (!file_exists('app/controllers/' . $controller . '.php')) {
+			return false;
+		}
 
-            // Check for file
-            if (!file_exists('app/controllers/' . $controller . '.php')) {
-                return;
-            }
+		$controller = '\controllers\\' . $controller;
+		$c = new $controller;
 
-            $controller = '\controllers\\' . $controller;
-            $c = new $controller;
-
-            if (method_exists($c, $method)) {
-                $c->$method($args);
-                //found method so stop
-                exit;
-            }
-
-        }
+		if (method_exists($c, $method)) {
+			$c->$method($args);
+			//found method so stop
+			return true;
+		}
+		
+		return false;
+	}
 
     /**
      * Runs the callback for the given request
      */
     public static function dispatch()
     {
-
-        //call the auto dispatch method
-        self::autoDispatch();
-
+		
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];  
 
@@ -137,7 +137,7 @@ class Router
         self::$routes = str_replace('//','/',self::$routes);   
 
         $found_route = false;
-
+         
         // check if route is defined without regex
         if (in_array($uri, self::$routes)) {
             $route_pos = array_keys(self::$routes, $uri);
@@ -201,10 +201,14 @@ class Router
             $pos++;
             }
         }
- 
-
+ 		
+ 		if (self::$fallback) {
+        	//call the auto dispatch method
+        	$found_route = self::autoDispatch();
+        }
+		
         // run the error callback if the route was not found
-        if ($found_route == false) {
+        if (!$found_route) {
             if (!self::$error_callback) {
                 self::$error_callback = function() {
                     header($_SERVER['SERVER_PROTOCOL']." 404 Not Found");

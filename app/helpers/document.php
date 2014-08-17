@@ -58,5 +58,36 @@ class Document {
 	public static function getExtension($file){
 		return substr(strrchr($file,'.'),1);
 	}
+	
+	//IMAGE UPLOAD & GENERATE THUMBNAIL FUNCTION
+	public function uploadPhoto($fupload_name)
+	{
+		//IMAGE UPLOAD DIRECTORY, DEFINE ON core/config.php
+		$vdir_upload = IMAGE_UPLOAD_DIR;
+		$vfile_upload = $vdir_upload . $fupload_name;
+		
+		//SAVE IMAGE WITH ORIGINAL SIZE
+		move_uploaded_file($_FILES["fupload"]["tmp_name"], $vfile_upload);
+		
+		//ORIGINAL FILES IDENTITY
+		$im_src = imagecreatefromjpeg($vfile_upload);
+		$src_width = imageSX($im_src);
+		$src_height = imageSY($im_src);
+		
+		//SET & SAVE THUMBNAIL
+		$dst_width = 177;
+		$dst_height = ($dst_width/$src_width)*$src_height;
+		
+		//CONVERT IMAGE SIZE
+		$im = imagecreatetruecolor($dst_width,$dst_height);
+		imagecopyresampled($im, $im_src, 0, 0, 0, 0, $dst_width, $dst_height, $src_width, $src_height);
+		
+		//SAVE IMAGE
+		imagejpeg($im,$vdir_upload . "small_" . $fupload_name);
+		
+		//DELETE FROM MEMORY
+		imagedestroy($im_src);
+		imagedestroy($im);
+	}
 
 }

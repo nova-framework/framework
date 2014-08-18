@@ -20,7 +20,6 @@ if(file_exists('vendor/autoload.php')){
  * This can be set to anything, but default usage is:
  *
  *     development
- *     testing
  *     production
  *
  * NOTE: If you change these, also change the error_reporting() code below
@@ -33,7 +32,7 @@ if(file_exists('vendor/autoload.php')){
  *---------------------------------------------------------------
  *
  * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and production will hide them.
+ * By default development will show errors but production will hide them.
  */
 
 if (defined('ENVIRONMENT')){
@@ -43,7 +42,6 @@ if (defined('ENVIRONMENT')){
 			error_reporting(E_ALL);
 		break;
 	
-		case 'testing':
 		case 'production':
 			error_reporting(0);
 		break;

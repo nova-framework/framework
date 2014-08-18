@@ -15,6 +15,10 @@ class Config {
 
 		//site address
 		define('DIR','http://domain.com/');
+		
+		//set default controller and method for legacy calls
+		define('DEFAULT_CONTROLLER', 'index');
+    		define('DEFAULT_METHOD', 'index');
 
 		//database details ONLY NEEDED IF USING A DATABASE
 		define('DB_TYPE','mysql');

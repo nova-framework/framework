@@ -17,8 +17,8 @@ class Config {
 		define('DIR','http://domain.com/');
 		
 		//set default controller and method for legacy calls
-		define('DEFAULT_CONTROLLER', 'index');
-    		define('DEFAULT_METHOD', 'index');
+		define('DEFAULT_CONTROLLER', 'welcome');
+		define('DEFAULT_METHOD'    , 'index');
 
 		//database details ONLY NEEDED IF USING A DATABASE
 		define('DB_TYPE','mysql');
@@ -33,10 +33,6 @@ class Config {
 
 		//optionall create a constant for the name of the site
 		define('SITETITLE','V2.1');
-		
-		// Default controller and method
-		define('DEFAULT_CONTROLLER', 'welcome');
-		define('DEFAULT_METHOD'    , 'index');
 		
 		//turn on custom error handling
 		set_exception_handler('core\logger::exception_handler');

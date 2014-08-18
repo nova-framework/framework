@@ -33,14 +33,18 @@ class Config {
 
 		//optionall create a constant for the name of the site
 		define('SITETITLE','V2.1');
-
+		
+		// Default controller and method
+		define('DEFAULT_CONTROLLER', 'welcome');
+		define('DEFAULT_METHOD'    , 'index');
+		
 		//turn on custom error handling
 		set_exception_handler('core\logger::exception_handler');
 		set_error_handler('core\logger::error_handler');
-
+		
 		//set timezone
 		date_default_timezone_set('Europe/London');
-
+		
 		//start sessions
 		\helpers\session::init();
 

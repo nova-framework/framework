@@ -1,4 +1,5 @@
 <?php
+
 if(file_exists('vendor/autoload.php')){
 	require 'vendor/autoload.php';
 } else {
@@ -33,6 +34,7 @@ if(file_exists('vendor/autoload.php')){
  *
  * Different environments will require different levels of error reporting.
  * By default development will show errors but production will hide them.
+ *
  */
 
 if (defined('ENVIRONMENT')){
@@ -50,6 +52,28 @@ if (defined('ENVIRONMENT')){
 			exit('The application environment is not set correctly.');
 	}
 
+}
+
+/*
+ *---------------------------------------------------------------
+ * ERROR REPORTING > LOG TO FILE
+ *---------------------------------------------------------------
+ *
+ * If you want to report the errors to a log, please define LOG_REPORT to 
+ * true and set a file to save the log (LOG_SRC). By default, the errors
+ * will be saved in /error.log file.
+ */
+
+define('LOG_REPORT', false);
+define('LOG_SRC', 'error.log');
+
+
+if(defined(LOG_REPORT) && LOG_REPORT) {
+
+	error_reporting(E_ALL);
+	ini_set("log_errors", 1);
+	ini_set("error_log", LOG_SRC);
+	
 }
 
 //create alias for Router

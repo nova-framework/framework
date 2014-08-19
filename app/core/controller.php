@@ -30,7 +30,10 @@ class Controller {
 		$this->view = new view();
 	}
 
-	//Display an error page if nothing exists
+	/**
+	 * Display an error page if nothing exists
+	 * @param	string $error
+	 */
 	protected function _error($error) {
 		require 'app/core/error.php';
 		$this->_controller = new error($error);

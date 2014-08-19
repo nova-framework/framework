@@ -31,6 +31,8 @@ class Router
 
     /**
      * Defines a route w/ callback and method
+     * @param   string $method
+     * @param   array @params
      */
     public static function __callstatic($method, $params) 
     {
@@ -45,7 +47,8 @@ class Router
 
     /**
      * Defines callback if route is not found
-    */
+     * @param   string $callback
+     */
     public static function error($callback)
     {
         self::$error_callback = $callback;

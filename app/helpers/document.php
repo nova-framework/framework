@@ -58,5 +58,19 @@ class Document {
 	public static function getExtension($file){
 		return substr(strrchr($file,'.'),1);
 	}
+	
+	/**
+	 * remove extension of file
+	 * @param  string  $file filename and extension
+	 * @return file name missing extension
+	 */
+	public static function remove_extension($file){
+		$ext = strrchr($file,'.');
+		
+		if($ext !== false){
+			$file = substr($file, 0, -strlen($ext));
+		}
+		return $file;
+	}
 
 }

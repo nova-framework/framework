@@ -87,7 +87,7 @@ class Logger {
      
     file_put_contents($error_file, $log_message . $content);
 
-    if($print_error == true){
+    if($print_error === true){
        echo $log_message;
        exit;
     }

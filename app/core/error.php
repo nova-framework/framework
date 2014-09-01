@@ -31,6 +31,8 @@ class Error extends Controller {
 	 */
 	public function index(){
 		
+		http_response_code(404);
+		
 		$data['title'] = '404';
 		$data['error'] = $this->_error;
 		

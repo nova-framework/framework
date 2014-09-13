@@ -18,7 +18,7 @@ class Logger {
    * in the event of an error show this message
    */
   public static function customErrorMsg() {
-     echo "<p>An error occured, The error has been reported to the development team and will be addresses asap.</p>";  
+     echo "<p>An error occured, The error has been reported.</p>";  
      exit;
   }
 

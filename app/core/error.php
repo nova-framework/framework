@@ -31,6 +31,8 @@ class Error extends Controller {
 	 */
 	public function index(){
 		
+		header("HTTP/1.0 404 Not Found");
+		
 		$data['title'] = '404';
 		$data['error'] = $this->_error;
 		

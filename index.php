@@ -52,6 +52,9 @@ if (defined('ENVIRONMENT')){
 
 }
 
+//initiate config
+new \core\config();
+
 //create alias for Router
 use \core\router as Router,
     \helpers\url as Url;
@@ -61,6 +64,9 @@ Router::any('', '\controllers\welcome@index');
 
 //if no route found
 Router::error('\core\error@index');
+
+//turn on old style routing
+Router::$fallback = true;
 
 //execute matched routes
 Router::dispatch();

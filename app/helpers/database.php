@@ -16,10 +16,10 @@ class Database extends PDO{
 	private static $_instances = array();
 	
 	/**
+	 * Get instance of database with specified group
 	 * 
-	 * 
-	 * @param 
-	 * @return 
+	 * @param string $group
+	 * @return \helpers\database
 	 */
 	public static function getInstance ($group) {
 		if ( !isset(self::$_instances[$group]) ) {

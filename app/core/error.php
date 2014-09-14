@@ -30,7 +30,7 @@ class Error extends Controller {
 	 * load a 404 page with the error message
 	 */
 	public function index(){
-		
+
 		header("HTTP/1.0 404 Not Found");
 		
 		$data['title'] = '404';
@@ -48,7 +48,7 @@ class Error extends Controller {
 	 * @param  string $class name of class to apply to div
 	 * @return string        return the errors inside divs
 	 */
-	static public function display(array $error,$class = 'error'){
+	static public function display(array $error,$class = 'alert alert-danger'){
 		$errorrow = null;
 	    if (is_array($error)){
 	       foreach($error as $error){

@@ -22,20 +22,13 @@ class Controller {
 	 * on run make an instance of the config class and view class 
 	 */
 	public function __construct(){
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> upstream/master
 		//initialise the views object
 		$this->view = new view();
-	}
-
-	/**
-	 * Display an error page if nothing exists
-	 * @param	string $error
-	 */
-	protected function _error($error) {
-		require 'app/core/error.php';
-		$this->_controller = new error($error);
-	    	$this->_controller->index();
-	    	die;
 	}
 
 }

@@ -15,7 +15,7 @@ class View {
 	 * @param  array $data  array of data
 	 * @param  array $error array of errors
 	 */
-	public function render($path,$data = false, $error = false){
+	public static function render($path,$data = false, $error = false){
 		require "app/views/$path.php";
 	}
 
@@ -24,7 +24,7 @@ class View {
 	 * @param  string  $path  path to file from views folder
 	 * @param  array $data  array of data
 	 */
-	public function rendertemplate($path,$data = false){
+	public static function rendertemplate($path,$data = false){
 		require "app/templates/".Session::get('template')."/$path.php";
 	}
 	

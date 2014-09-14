@@ -20,8 +20,9 @@ class Welcome extends \core\controller{
 	/**
 	 * define page title and load template files
 	 */
-	public function index(){	
-
+	public function index() {
+		$db = \helpers\database::getInstance('default');
+		
 		$data['title'] = 'Welcome';
 
 		View::rendertemplate('header',$data);

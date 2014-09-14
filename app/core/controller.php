@@ -23,9 +23,6 @@ class Controller {
 	 */
 	public function __construct(){
 		
-		//initialise the config object
-		new config();
-
 		//initialise the views object
 		$this->view = new view();
 	}

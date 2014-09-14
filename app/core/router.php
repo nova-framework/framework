@@ -7,6 +7,8 @@
  * @date Auguest 16th, 2014
  */
 
+use core\config;
+
 class Router
 {
 	// Fallback for auto dispatching feature.
@@ -103,9 +105,11 @@ class Router
 		$uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
 		$uri = trim($uri, ' /');
 		$parts = explode('/', $uri);
-
-		$controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : DEFAULT_CONTROLLER;
-		$method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : DEFAULT_METHOD;
+		
+		$routing = config::getConfig()->get('routing');
+		
+		$controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : $routing['defaultController'];
+		$method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : $routing['defaultMethod'];
 		$args       = is_array($parts) && count($parts) > 2 ? array_slice($parts, 2) : array(); 
 
 		// Check for file

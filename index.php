@@ -52,12 +52,13 @@ if (defined('ENVIRONMENT')){
 
 }
 
-//initiate config
-new \core\config();
-
 //create alias for Router
 use \core\router as Router,
-    \helpers\url as Url;
+    \helpers\url as Url,
+    \core\config as Config;
+
+// Initalizing the main config file
+Config::getConfig();
 
 //define routes
 Router::any('', '\controllers\welcome@index');

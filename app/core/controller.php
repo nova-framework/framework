@@ -22,7 +22,11 @@ class Controller {
 	 * on run make an instance of the config class and view class 
 	 */
 	public function __construct(){
+<<<<<<< HEAD
+		
+=======
 
+>>>>>>> upstream/master
 		//initialise the views object
 		$this->view = new view();
 	}

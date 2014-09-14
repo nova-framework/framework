@@ -1,5 +1,9 @@
 <?php namespace helpers;
+
 use \PDO;
+use core\config;
+use core\logger;
+
 /*
  * database Helper - extending PDO to use custom methods
  *
@@ -8,19 +12,46 @@ use \PDO;
  * @date June 27, 2014
  */
 class Database extends PDO{
-
+	
+	private static $_instances = array();
+	
+	/**
+	 * Get instance of database with specified group
+	 * 
+	 * @param string $group
+	 * @return \helpers\database
+	 */
+	public static function getInstance ($group) {
+		if ( !isset(self::$_instances[$group]) ) {
+			self::$_instances[$group] = new database($group);
+		}
+		
+		return self::$_instances[$group];
+	}
+	
 	/**
 	 * create database connection
 	 */
-	function __construct(){
-
+	public function __construct($group = 'default') {
+		
 		try {
-			parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME,DB_USER,DB_PASS);
+			$group = config::getConfig()->get('database', $group);
+			
+			$type = $group['type'];
+			$name = $group['name'];
+			$host = $group['host'];
+			$user = $group['user'];
+			$pass = $group['pass'];
+			$char = $group['char'];
+			
+			parent::__construct("$type:host=$host;dbname=$name", $user, $pass);
+			
 			$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
-		} catch(PDOException $e){
+			$this->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES '$char'");
+		} 
+		catch(PDOException $e){
 			//in the event of an error record the error to errorlog.html
-			Logger::newMessage($e);
+			logger::newMessage($e);
 			logger::customErrorMsg();
 		}
 

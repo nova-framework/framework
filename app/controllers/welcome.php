@@ -20,10 +20,7 @@ class Welcome extends \core\controller{
 	/**
 	 * define page title and load template files
 	 */
-	public function index(){	
-
-		$data['title'] = 'Welcome';
-
+	public function index() {
 		View::rendertemplate('header',$data);
 		View::render('welcome/welcome',$data);
 		View::rendertemplate('footer',$data);

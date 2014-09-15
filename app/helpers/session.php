@@ -100,12 +100,12 @@ class Session {
 	/**
 	 * emptiey and destroy the session
 	 */
-	public static function destroy(){
+	public static function destroy($key){
 
 		if(self::$_sessionStarted == true){
-			session_unset();
-			session_destroy();
+			unset($_SESSION[SESSION_PREFIX.$key]);
 		}
+
 
 	}
 

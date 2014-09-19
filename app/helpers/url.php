@@ -48,4 +48,11 @@ class Url {
 			return preg_replace('@(http)?(s)?(://)?(([-\w]+\.)+([^\s]+)+[^,.\s])@', '<a href="http$2://$4">'.$custom.'</a>', $text);
 		}  
 	} 
+	
+	/**
+         * Go to the previous url.
+         */
+        public static function previous() {
+                header('Location: '.$_SERVER['HTTP_REFERER']);
+        }
 }

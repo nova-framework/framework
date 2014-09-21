@@ -8,6 +8,10 @@ if(file_exists('vendor/autoload.php')){
 	exit;
 }
 
+if (!is_readable('app/core/config.php')) {
+	die('No config.php found.');
+}
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -41,7 +45,7 @@ if (defined('ENVIRONMENT')){
 		case 'development':
 			error_reporting(E_ALL);
 		break;
-	
+
 		case 'production':
 			error_reporting(0);
 		break;

@@ -88,6 +88,13 @@ class Session {
 		return false;
 
 	}
+	
+	/**
+        * @return string with the session id.
+        */
+        public static function id() {
+                return session_id();
+        }
 
 	/**
 	 * return the session array

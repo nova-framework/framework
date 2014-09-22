@@ -1,6 +1,6 @@
 <?php namespace core;
 /*
- * Router - routing urls to closurs and controllers
+ * Router - routing urls to closurs and controllers - modified from https://github.com/NoahBuscher/Macaw
  *
  * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
  * @version 2.2
@@ -9,9 +9,9 @@
 
 class Router
 {
-	// Fallback for auto dispatching feature.
-	// Disabled by default, although, you can activate it by: Router::$fallback = true;
-	public static $fallback = false;
+    // Fallback for auto dispatching feature.
+    // Disabled by default, although, you can activate it by: Router::$fallback = true;
+    public static $fallback = false;
 	
     public static $halts = true;
 

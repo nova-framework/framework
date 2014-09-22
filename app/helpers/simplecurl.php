@@ -4,20 +4,26 @@ class simplecurl {
     
     /**
      * Performs a get request on the chosen link and the chosen parameters
-     * in the array
+     * in the array.
      * @param string $url
      * @param array $params
-     * @return string with the contents of the site
+     * @return string returns the content of the given url
      */
     public static function get($url, $params=array()) {
-        $url = $url.'?'.http_build_query($params, '', '&');
+        $url = $url . '?' . http_build_query($params, '', '&');
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);    
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);        
+        
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false
+        );
+        curl_setopt_array($ch, $options);
+                
         $response = curl_exec($ch);    
         curl_close($ch);    
+        
         return $response;
     }
     
@@ -26,41 +32,51 @@ class simplecurl {
      * in the array
      * @param string $url
      * @param array $fields
-     * @return string with the contents of the site
+     * @return string returns the content of the given url after post
      */
-    function post($url, $fields=array())
-    {
+    public static function post($url, $fields=array()) {
         $post_field_string = http_build_query($fields, '', '&');    
-        $ch = curl_init();    
-        curl_setopt($ch, CURLOPT_URL, $url);    
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);    
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);    
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);    
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_field_string);    
-        curl_setopt($ch, CURLOPT_POST, true);    
+        $ch = curl_init();
+        
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_POSTFIELDS => $post_field_string,
+            CURLOPT_POST => true
+        );
+        curl_setopt_array($ch, $options);
+        
         $response = curl_exec($ch);    
         curl_close ($ch);    
+        
         return $response;
     }
     
     /**
-     * Performs a post request on the chosen link and the chosen parameters
-     * in the array
+     * Performs a put request on the chosen link and the chosen parameters
+     * in the array.
      * @param string $url
      * @param array $fields
      * @return string with the contents of the site
      */
-    function put($url, $fields=array())
-    {
+    public static function put($url, $fields = array()) {
         $post_field_string = http_build_query($fields, '', '&');    
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);    
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);    
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);    
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");    
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_field_string);    
+        
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_CUSTOMREQUEST => "PUT",
+            CURLOPT_POSTFIELDS => $post_field_string
+        );
+        curl_setopt_array($ch, $options);
+        
         $response = curl_exec($ch);    
         curl_close ($ch);    
+        
         return $response;
     }
 

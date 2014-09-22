@@ -15,18 +15,21 @@ class Welcome extends \core\controller{
 	 */
 	public function __construct(){
 		parent::__construct();
+
+		$this->language->load('welcome');
 	}
 
 	/**
 	 * define page title and load template files
 	 */
-	public function index(){	
+	public function index(){
 
 		$data['title'] = 'Welcome';
+		$data['welcome_message'] = $this->language->get('welcome_message');
 
-		View::rendertemplate('header',$data);
-		View::render('welcome/welcome',$data);
-		View::rendertemplate('footer',$data);
+		View::rendertemplate('header', $data);
+		View::render('welcome/welcome', $data);
+		View::rendertemplate('footer', $data);
 	}
-	
+
 }

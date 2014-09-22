@@ -22,6 +22,9 @@ class Config {
 		define('DEFAULT_CONTROLLER', 'welcome');
 		define('DEFAULT_METHOD' , 'index');
 
+		//set a default language
+		define('LANGUAGE_CODE', 'en');
+
 		//database details ONLY NEEDED IF USING A DATABASE
 		define('DB_TYPE', 'mysql');
 		define('DB_HOST', 'localhost');

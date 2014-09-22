@@ -1,5 +1,13 @@
 <?php namespace helpers;
 
+/*
+ * Curl class with some default functions and settings
+ *
+ * @author SecretD - https://github.com/SecretD
+ * @version 2.1
+ * @date Sept 22, 2014
+ */
+
 class simplecurl {
     
     /**

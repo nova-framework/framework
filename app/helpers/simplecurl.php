@@ -50,7 +50,7 @@ class simplecurl {
      * @param array $fields
      * @return string with the contents of the site
      */
-    function put($url, $fields)
+    function put($url, $fields=array())
     {
         $post_field_string = http_build_query($fields, '', '&');    
         $ch = curl_init($url);

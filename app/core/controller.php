@@ -1,6 +1,7 @@
 <?php namespace core;
 use core\config as Config,
     core\view as View,
+	core\language as Language,
     core\error as Error;
 
 /*
@@ -19,12 +20,15 @@ class Controller {
 	public $view;
 
 	/**
-	 * on run make an instance of the config class and view class 
+	 * on run make an instance of the config class and view class
 	 */
 	public function __construct(){
 
 		//initialise the views object
 		$this->view = new view();
+
+		//initialise the language object
+		$this->language = new Language();
 	}
 
 }

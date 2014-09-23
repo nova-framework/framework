@@ -9,7 +9,7 @@ if(file_exists('vendor/autoload.php')){
 }
 
 if (!is_readable('app/core/config.php')) {
-	die('No config.php found.');
+	die('No config.php found, configure and rename config.example.php to config.php in app/core.');
 }
 
 /*

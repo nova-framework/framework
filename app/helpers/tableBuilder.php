@@ -248,11 +248,15 @@ class tableBuilder {
 	 * @return string
 	 */
 	public function getSQL () {
+		if (!$this->_sql) {
+			$this->generateSQL();
+		}
+		
 		return $this->_sql;
 	}
 	
 	/**
-	 * Creates database
+	 * Creates table
 	 * 
 	 * @param boolean $reset - A flag to reset whole set of data.
 	 * @return boolean

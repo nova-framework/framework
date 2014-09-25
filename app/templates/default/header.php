@@ -6,5 +6,8 @@
 	<link href="<?php echo \helpers\url::get_template_path();?>css/style.css" rel="stylesheet">
 </head>
 <body>
-
+    <form action="setlanguage" method="POST">
+        <input type="submit" name="code" value="nl">
+        <input type="submit" name="code" value="en">
+    </form>
 <div id='wrapper'>

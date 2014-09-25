@@ -61,10 +61,17 @@ new \core\config();
 
 //create alias for Router
 use \core\router as Router,
-    \helpers\url as Url;
+    \helpers\url as Url,
+    \helpers\Session as Session;
 
 //define routes
 Router::any('', '\controllers\welcome@index');
+
+//define language
+Router::any('/setlanguage', function() {
+    Session::set('lang', $_POST['code']);
+    Url::previous();
+});
 
 //if no route found
 Router::error('\core\error@index');

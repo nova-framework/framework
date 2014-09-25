@@ -8,16 +8,53 @@ use \PDO;
  * @date June 27, 2014
  */
 class Database extends PDO{
-
+	
 	/**
-	 * create database connection
+	 * @var array Array of saved databases for reusing
 	 */
-	function __construct(){
-
+	protected static $instances = array();
+	
+	/**
+	 * create database connection based 
+	 * 
+	 * @param array $group - Array with infomration about connection: DB type, host, DB name, user and password
+	 * @author volter9 - volter925@gmail.com
+	 * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
+	 */
+	function __construct ($group = FALSE) {
+		// Determining is exist or it's not empty, then use default group defined in config
+		$group = !$group || !empty($group) ? array (
+			'type' => DB_TYPE,
+			'host' => DB_HOST,
+			'name' => DB_NAME,
+			'user' => DB_USER,
+			'pass' => DB_PASS
+		) : $group;
+		
+		// Group information
+		$type = $group['type'];
+		$host = $group['host'];
+		$name = $group['name'];
+		$user = $group['user'];
+		$pass = $group['pass'];
+		
+		// ID for database based on the group information
+		$id = "$type.$host.$name.$user.$pass";
+		
+		// Checking if the same 
+		if ( isset(self::$instances[$id]) ) {
+			echo "Reusing $id database";
+			
+			return self::$instances[$id];
+		}
+		
 		try {
-			parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME,DB_USER,DB_PASS);
+			parent::__construct("$type:host=$host;dbname=$name", $user, $pass);
 			$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
+			
+			// Setting Database into $instances to avoid duplication
+			self::$instances[$id] = $this;
 		} catch(PDOException $e){
 			//in the event of an error record the error to errorlog.html
 			Logger::newMessage($e);

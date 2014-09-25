@@ -49,9 +49,9 @@ class Config {
 		//set the default template
 		\helpers\session::set('template', 'default');
                 
-                //define the language
+                //define the language on first use
                 if(\helpers\Session::get('lang') == null)
-                    \helpers\Session::set('lang', 'nl');
+                    \helpers\Session::set('lang', 'en');
                 
 	}
 

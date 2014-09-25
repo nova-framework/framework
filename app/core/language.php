@@ -26,7 +26,7 @@ class Language {
         private $language_code;
         
         /**
-         * This function will load the language code and set it on the class 
+         * Construct the class with the session variable lang.
          * 
          * @param type $code the language code
          */

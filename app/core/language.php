@@ -1,5 +1,6 @@
 <?php namespace core;
-use core\error as Error;
+use core\error as Error,
+    helpers\session as Session;
 
 /**
  * language - the language handler
@@ -16,8 +17,25 @@ class Language {
 	 * @var array
 	 */
 	private $language_data = array();
+        
+        /**
+         * The variable that holds the language code
+         * 
+         * @var type string
+         */
+        private $language_code;
+        
+        /**
+         * Construct the class with the session variable lang.
+         * 
+         * @param type $code the language code
+         */
+        public function __construct() {
+            $this->language_code = (Session::get('lang') != '') ? Session::get('lang') : 'en';
+        }
 
-	/**
+
+        /**
 	 * This function will load any language file, and optionally return the language data
 	 *
 	 * @param string $controller
@@ -26,13 +44,9 @@ class Language {
 	 *
 	 * @return array|bool
 	 */
-	public function load($controller, $return = false, $language_code = null) {
-
-		if ($language_code != null) {
-			$language_file = 'app/language/' . $language_code . '/' . $controller . '.php';
-		} else {
-			$language_file = 'app/language/' . LANGUAGE_CODE . '/' . $controller . '.php';
-		}
+	public function load($controller, $return = false) {
+                
+                $language_file = 'app/language/' . $this->language_code . '/' . $controller . '.php';
 
 		if (is_readable($language_file)) {
 			require_once($language_file);

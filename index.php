@@ -60,8 +60,7 @@ if (defined('ENVIRONMENT')){
 new \core\config();
 
 //create alias for Router
-use \core\router as Router,
-    \helpers\url as Url;
+use \core\router as Router;
 
 //define routes
 Router::any('', '\controllers\welcome@index');

@@ -6,5 +6,4 @@
 	<link href="<?php echo \helpers\url::get_template_path();?>css/style.css" rel="stylesheet">
 </head>
 <body>
-
 <div id='wrapper'>

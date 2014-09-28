@@ -43,8 +43,6 @@ class Database extends PDO{
 		
 		// Checking if the same 
 		if ( isset(self::$instances[$id]) ) {
-			echo "Reusing $id database";
-			
 			return self::$instances[$id];
 		}
 		

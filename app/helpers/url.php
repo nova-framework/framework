@@ -62,6 +62,8 @@ class Url {
 	public static function generateSafeSlug($slug) {
 		$slug = preg_replace('/[^a-zA-Z0-9]/', '-', $slug);
 		$slug = strtolower($slug);
+		//Removing more than one dashes
+		$slug = preg_replace('/\-{2,}/', '-', $slug);
 
 		return $slug;
 	}

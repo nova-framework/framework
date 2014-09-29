@@ -71,10 +71,10 @@ class Url {
 	}
 
 	/**
-     * Go to the previous url.
-     */
-    public static function previous() {
-        header('Location: '.$_SERVER['HTTP_REFERER']);
-        exit;
-    }
+         * Go to the previous url.
+        */
+        public static function previous() {
+        	header('Location: '.$_SERVER['HTTP_REFERER']);
+		exit;
+    	}
 }

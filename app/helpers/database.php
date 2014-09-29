@@ -22,7 +22,7 @@ class Database extends PDO{
 	 * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
 	 */
 	function __construct ($group = FALSE) {
-		// Determining if exist or it's not empty, then use default group defined in config
+		// Determining if exists or it's not empty, then use default group defined in config
 		$group = !$group || !empty($group) ? array (
 			'type' => DB_TYPE,
 			'host' => DB_HOST,

@@ -1,8 +1,7 @@
 <?php namespace core;
-use core\config as Config,
-    core\view as View,
+use core\config   as Config,
 	core\language as Language,
-    core\error as Error;
+    core\error    as Error;
 
 /*
  * controller - base controller
@@ -14,19 +13,9 @@ use core\config as Config,
 class Controller {
 
 	/**
-	 * view variable to use the view class
-	 * @var string
-	 */
-	public $view;
-
-	/**
 	 * on run make an instance of the config class and view class
 	 */
 	public function __construct(){
-
-		//initialise the views object
-		$this->view = new view();
-
 		//initialise the language object
 		$this->language = new Language();
 	}

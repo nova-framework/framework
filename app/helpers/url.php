@@ -43,9 +43,9 @@ class Url {
 		$replace = '';
 		
 		if ($custom === null) {
-			$replace = '<a href="http$2://$4">'.$custom.'</a>';
-		} else {
 			$replace = '<a href="http$2://$4">$1$2$3$4</a>';
+		} else {
+			$replace = '<a href="http$2://$4">'.$custom.'</a>';
 		}
 	
 		return preg_replace($regex, $replace, $text);

@@ -29,3 +29,8 @@ Upload the framework files to your server. Normally the index.php file will be a
 4. Open the index.php file with a text editor, setup your routes.
 5. Open core/config.example.php and set your base URL and database credentials (if a database is needed). Set the default theme. When you are done, rename the file to core/config.php
 6. Edit .htaccess file and save the base path. (if the framework is installed in a folder the base path should reflect the folder path /path/to/folder/ otherwise a single / will do.
+
+##Sublime Text Snippets
+
+For Sublime Text users, their is a new plugin for keyboard shortcuts see [https://github.com/simple-mvc-framework/SMVC-Snippets](https://github.com/simple-mvc-framework/SMVC-Snippets) for more details and install instructions.
+

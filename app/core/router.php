@@ -90,8 +90,8 @@ class Router
 
         } else {
 
-            //call method and pass any extra parameters to the method
-            $controller->$segments[1](implode(",", $matched));
+            //call method and pass in array keys as params
+            call_user_func_array(array($controller, $segments[1]), $matched);
         }
     }
 

@@ -98,7 +98,7 @@ class Session {
 
 	/**
 	 * return the session array
-	 * @return array array of session indexes
+	 * @return array of session indexes
 	 */
 	public static function display(){
 		return $_SESSION;

@@ -16,10 +16,10 @@ class Url {
 	public static function redirect($url = null, $fullpath = false){
 
 		if($fullpath == false){
-			header('location: '.DIR.$url);
+			header('Location: '.DIR.$url);
 			exit;
 		} else {
-			header('location: '.$url);
+			header('Location: '.$url);
 			exit;
 		}
 
@@ -73,5 +73,6 @@ class Url {
          */
         public static function previous() {
                 header('Location: '.$_SERVER['HTTP_REFERER']);
+                exit;
         }
 }

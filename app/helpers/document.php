@@ -56,7 +56,7 @@ class Document {
 	 * @return string       
 	 */
 	public static function getExtension($file){
-		return substr(strrchr($file,'.'),1);
+		return pathinfo($file, PATHINFO_EXTENSION);
 	}
 	
 	/**

@@ -105,7 +105,7 @@ class Session {
 	}
 	
 	/**
-	 * emptiey and destroy the session
+	 * empties and destroys the session
 	 */
 	public static function destroy($key){
 

@@ -4,10 +4,9 @@
  * GUMP - A fast, extensible PHP input validation class
  *
  * @author      Sean Nieuwoudt (http://twitter.com/SeanNieuwoudt)
- * @copyright   Copyright (c) 2011 Wixel.net
+ * @copyright   Copyright (c) 2014 Wixelhq.com
  * @link        http://github.com/Wixel/GUMP
  * @version     1.0
- * For full GUMP docs visit https://github.com/Wixel/GUMP
  */
 
 class GUMP
@@ -20,6 +19,9 @@ class GUMP
 
 	// Instance attribute containing errors from last run
 	protected $errors = array();
+	
+	// Contain readable field names that have been set manually
+	protected static $fields = array();	
 
 	// Custom validation methods
 	protected static $validation_methods = array();
@@ -114,6 +116,7 @@ class GUMP
 	public static function add_validator($rule, $callback)
 	{
 		$method = 'validate_'.$rule;
+		
 		if(method_exists(__CLASS__, $method) || isset(self::$validation_methods[$rule])) {
 			throw new Exception("Validator rule '$rule' already exists.");
 		}
@@ -134,6 +137,7 @@ class GUMP
 	public static function add_filter($rule, $callback)
 	{
 		$method = 'filter_'.$rule;
+		
 		if(method_exists(__CLASS__, $method) || isset(self::$filter_methods[$rule])) {
 			throw new Exception("Filter rule '$rule' already exists.");
 		}
@@ -235,7 +239,9 @@ class GUMP
 		{
 			$fields = array_keys($input);
 		}
-
+		
+		$return = array();
+		
 		foreach($fields as $field)
 		{
 			if(!isset($input[$field]))
@@ -270,11 +276,11 @@ class GUMP
 					$value = filter_var($value, FILTER_SANITIZE_STRING);
 				}
 
-				$input[$field] = $value;
+				$return[$field] = $value;
 			}
 		}
 
-		return $input;
+		return $return;
 	}
 
 	/**
@@ -307,57 +313,72 @@ class GUMP
 			#}
 
 			$rules = explode('|', $rules);
-
-			foreach($rules as $rule)
-			{
-				$method = NULL;
-				$param  = NULL;
-
-				if(strstr($rule, ',') !== FALSE) // has params
+			
+	        if(in_array("required", $rules) || (isset($input[$field]) && trim($input[$field]) != ''))
+	        {			
+				foreach($rules as $rule)
 				{
-					$rule   = explode(',', $rule);
-					$method = 'validate_'.$rule[0];
-					$param  = $rule[1];
-					$rule   = $rule[0];
-				}
-				else
-				{
-					$method = 'validate_'.$rule;
-				}
+					$method = NULL;
+					$param  = NULL;
 
-				if(is_callable(array($this, $method)))
-				{
-					$result = $this->$method($field, $input, $param);
-
-					if(is_array($result)) // Validation Failed
+					if(strstr($rule, ',') !== FALSE) // has params
 					{
-						$this->errors[] = $result;
+						$rule   = explode(',', $rule);
+						$method = 'validate_'.$rule[0];
+						$param  = $rule[1];
+						$rule   = $rule[0];
 					}
-				}
-				else if (isset(self::$validation_methods[$rule]))
-				{
-					if (isset($input[$field])) {
-						$result = call_user_func(self::$validation_methods[$rule], $field, $input, $param);
+					else
+					{
+						$method = 'validate_'.$rule;
+					}
 
-						if (!$result) // Validation Failed
+					if(is_callable(array($this, $method)))
+					{
+						$result = $this->$method($field, $input, $param);
+
+						if(is_array($result)) // Validation Failed
 						{
-							$this->errors[] = array(
-								'field' => $field,
-								'value' => $input[$field],
-								'rule'  => $method,
-								'param' => $param
-							);
+							$this->errors[] = $result;
 						}
 					}
-				}
-				else
-				{
-					throw new Exception("Validator method '$method' does not exist.");
+					else if (isset(self::$validation_methods[$rule]))
+					{
+						if (isset($input[$field])) {
+							$result = call_user_func(self::$validation_methods[$rule], $field, $input, $param);
+
+							if (!$result) // Validation Failed
+							{
+								$this->errors[] = array(
+									'field' => $field,
+									'value' => $input[$field],
+									'rule'  => $method,
+									'param' => $param
+								);
+							}
+						}
+					}
+					else
+					{
+						throw new Exception("Validator method '$method' does not exist.");
+					}
 				}
 			}
 		}
 
 		return (count($this->errors) > 0)? $this->errors : TRUE;
+	}
+	
+	/**
+	 * Set a readable name for a specified field names
+	 *
+	 * @param string $field_class
+	 * @param string $readable_name
+	 * @return void
+	 */	
+	public static function set_field_name($field, $readable_name)
+	{
+		self::$fields[$field] = $readable_name;
 	}
 
 	/**
@@ -381,6 +402,11 @@ class GUMP
 
 			$field = ucwords(str_replace(array('_','-'), chr(32), $e['field']));
 			$param = $e['param'];
+			
+			// Let's fetch explicit field names if they exist
+			if(array_key_exists($e['field'], self::$fields)) {
+				$field = self::$fields[$e['field']];
+			}
 
 			switch($e['rule']) {
 				case 'mismatch' :
@@ -464,6 +490,8 @@ class GUMP
 				case 'validate_max_numeric':
 					$resp[] = "The <span class=\"$field_class\">$field</span> field needs to be a numeric value, equal to, or lower than $param";
 					break;
+				default:
+					$resp[] = "The <span class=\"$field_class\">$field</span> field is invalid";				
 			}
 		}
 
@@ -721,6 +749,19 @@ class GUMP
 	{
 		return strip_tags($value, self::$basic_tags);
 	}
+	
+	/**
+	 * Convert the provided numeric value to a whole number
+	 *
+	 * @access protected
+	 * @param  string $value
+	 * @param  array $params
+	 * @return string
+	 */
+	protected function filter_whole_number($value, $params = NULL)
+	{
+		return intval($value);
+	}	
 
 	// ** ------------------------- Validators ------------------------------------ ** //
 
@@ -736,6 +777,11 @@ class GUMP
 	 */
 	protected function validate_contains($field, $input, $param = NULL)
 	{
+		if(!isset($input[$field]))
+		{
+			return;
+		}
+
 		$param = trim(strtolower($param));
 
 		$value = trim(strtolower($input[$field]));
@@ -770,7 +816,7 @@ class GUMP
 	 */
 	protected function validate_required($field, $input, $param = NULL)
 	{
-		if(isset($input[$field]) && !empty($input[$field]))
+    if(isset($input[$field]) && ($input[$field] === false || $input[$field] === 0 || $input[$field] === 0.0 || $input[$field] === "0" || !empty($input[$field])))
 		{
 			return;
 		}
@@ -1173,14 +1219,16 @@ class GUMP
 		{
 			return;
 		}
-
-		$url = str_replace(
-			array('http://', 'https://', 'ftp://'), '', strtolower($input[$field])
-		);
+		
+		$url = parse_url(strtolower($input[$field]));
+		
+		if(isset($url['host'])) {
+			$url = $url['host'];
+		}
 
 		if(function_exists('checkdnsrr'))
 		{
-			if(!checkdnsrr($url))
+			if(checkdnsrr($url) === false)
 			{
 				return array(
 					'field' => $field,
@@ -1506,10 +1554,9 @@ class GUMP
 	 * Usage: '<index>' => 'max_numeric,50'
 	 *
 	 * @access protected
-	 *
-	 * @param  string $field
-	 * @param  array  $input
-	 * @param null    $param
+	 * @param string $field
+	 * @param array  $input
+	 * @param null   $param
 	 *
 	 * @return mixed
 	 */
@@ -1537,10 +1584,9 @@ class GUMP
 	 * Usage: '<index>' => 'min_numeric,1'
 	 *
 	 * @access protected
-	 *
-	 * @param  string $field
-	 * @param  array  $input
-	 * @param null    $param
+	 * @param string $field
+	 * @param array  $input
+	 * @param null   $param
 	 *
 	 * @return mixed
 	 */

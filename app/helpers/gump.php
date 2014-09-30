@@ -1,4 +1,4 @@
-<?php
+<?php namespace helpers;
 
 /**
  * GUMP - A fast, extensible PHP input validation class

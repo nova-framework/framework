@@ -24,6 +24,8 @@ class Welcome extends \core\controller{
 	 */
 	public function index(){
 
+                $data = array();
+
 		$data['title'] = 'Welcome';
 		$data['welcome_message'] = $this->language->get('welcome_message');
 

@@ -33,7 +33,9 @@ class Error extends Controller {
 
 		header("HTTP/1.0 404 Not Found");
 		
-		$data['title'] = '404';
+                $data = array();
+		
+                $data['title'] = '404';
 		$data['error'] = $this->_error;
 		
 		View::rendertemplate('header',$data);

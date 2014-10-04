@@ -18,6 +18,7 @@ class Controller {
 	 * @var string
 	 */
 	public $view;
+        public $language;
 
 	/**
 	 * on run make an instance of the config class and view class

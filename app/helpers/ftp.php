@@ -19,7 +19,7 @@ class Ftp {
 	 * @var string
 	 */
 	private $basePath;
-	
+
 	/**
 	 * open a FTP connection
 	 * @param string $host the server address
@@ -30,30 +30,30 @@ class Ftp {
 	public function __construct($host,$user,$pass,$base){
 
 		//set the basepath
-		$this->basePath = $base.'/';	
-		
+		$this->basePath = $base.'/';
+
 		//open a connection
 		$this->conn = ftp_connect($host);
-		
+
 		//login to server
 		ftp_login($this->conn,$user,$pass);
 	}
-	
+
 	/**
 	 * close the connection
 	 */
 	function close(){
 		ftp_close($this->conn);
 	}
-		
+
 	/**
 	 * create a directory on th remote FTP server
 	 * @param  string $dirToCreate name of the directory to create
 	 */
 	function makeDirectory($dirToCreate){
-		 if(!file_exists($this->basePath.$dirToCreate)){
+		if(!file_exists($this->basePath.$dirToCreate)){
 			ftp_mkdir($this->conn,$this->basePath.$dirToCreate);
-		 }
+		}
 	}
 
 	/**
@@ -63,7 +63,7 @@ class Ftp {
 	function deleteDirectory($dir){
 		ftp_rmdir($this->conn, $this->basePath.$dir);
 	}
-	
+
 	/**
 	 * Set folder permission
 	 * @param  string $folderChmod folder name
@@ -75,7 +75,7 @@ class Ftp {
 			return "<p>$folderChmod chmoded successfully to ".$permission."</p>\n";
 		}
 	}
-	
+
 	/**
 	 * upload file to remove FTP server
 	 * @param  string $remoteFile path and filename for remote file
@@ -83,20 +83,21 @@ class Ftp {
 	 * @return string             message
 	 */
 	function uploadFile($remoteFile,$localFile){
-		
+
 		if (ftp_put($this->conn,$this->basePath.$remoteFile,$localFile,FTP_ASCII)){
 			return "<p>successfully uploaded $localFile to $remoteFile</p>\n";
 		} else {
 			return "<p>There was a problem while uploading $remoteFile</p>\n";
 		}
+
 	}
 
 	/**
 	 * delete remove file
-	 * @param  string $file path and filename 
+	 * @param  string $file path and filename
 	 */
 	function deleteFile($file){
 		ftp_delete($this->conn, $this->basePath.$file);
 	}
-	
+
 }

@@ -53,7 +53,7 @@ class Error extends Controller {
 
 		if (is_array($error)){
 			foreach($error as $error){
-				$errorrow.= "<div class='$class'>".$error."</div>";
+				$errorrow.= "<div class='$class'>$error</div>";
 			}
 			return $errorrow;
 		}

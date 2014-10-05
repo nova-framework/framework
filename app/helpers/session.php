@@ -15,7 +15,7 @@ class Session {
 	private static $_sessionStarted = false;
 
 	/**
-	 * if session has not started, start sessions 
+	 * if session has not started, start sessions
 	 */
 	public static function init(){
 
@@ -32,20 +32,21 @@ class Session {
 	 * @param string $value the data to save
 	 */
 	public static function set($key,$value = false){
-            
-            /**
-             * Check whether session is set in array or not
-             * If array then set all session key-values in foreach loop
-             */
-            if(is_array($key) && $value === false){
-		foreach ($key as $name => $value) {
-                    $_SESSION[SESSION_PREFIX.$name] = $value;
-                }
-            }
-            else {
-                $_SESSION[SESSION_PREFIX.$key] = $value;
-            }
-                
+
+		/**
+		 * Check whether session is set in array or not
+		 * If array then set all session key-values in foreach loop
+		 */
+		if(is_array($key) && $value === false){
+
+			foreach ($key as $name => $value) {
+				$_SESSION[SESSION_PREFIX.$name] = $value;
+			}
+
+		} else {
+			$_SESSION[SESSION_PREFIX.$key] = $value;
+		}
+
 	}
 
 	/**
@@ -64,7 +65,7 @@ class Session {
 
 	/**
 	 * get item from session
-	 * 
+	 *
 	 * @param  string  $key       item to look for in session
 	 * @param  boolean $secondkey if used then use as a second key
 	 * @return string             returns the key
@@ -88,13 +89,13 @@ class Session {
 		return false;
 
 	}
-	
+
 	/**
-         * @return string with the session id.
-        */
-    	public static function id() {
-        	return session_id();
-    	}
+	 * @return string with the session id.
+	 */
+	public static function id() {
+		return session_id();
+	}
 
 	/**
 	 * return the session array
@@ -103,7 +104,7 @@ class Session {
 	public static function display(){
 		return $_SESSION;
 	}
-	
+
 	/**
 	 * empties and destroys the session
 	 */
@@ -112,7 +113,6 @@ class Session {
 		if(self::$_sessionStarted == true){
 			unset($_SESSION[SESSION_PREFIX.$key]);
 		}
-
 
 	}
 

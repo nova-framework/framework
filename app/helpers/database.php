@@ -43,7 +43,7 @@ class Database extends PDO{
 		
 		// Checking if the same 
 		if ( isset(self::$instances[$id]) ) {
-			return self::$instances[$id];
+			//return self::$instances[$id];
 		}
 		
 		try {

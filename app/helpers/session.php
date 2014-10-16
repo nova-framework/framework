@@ -108,12 +108,15 @@ class Session {
 	/**
 	 * empties and destroys the session
 	 */
-	public static function destroy($key){
-
-		if(self::$_sessionStarted == true){
-			unset($_SESSION[SESSION_PREFIX.$key]);
-		}
-
+	public static function destroy($key='') {
+        	if(self::$_sessionStarted == true) {
+      			if(empty($key)) {
+         			session_unset();
+         			session_destroy();
+      			} else {
+         			unset($_SESSION[SESSION_PREFIX.$key]);
+      			}
+   		}
 	}
 
 }

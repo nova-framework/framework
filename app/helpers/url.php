@@ -58,12 +58,13 @@ class Url {
 	 * It will also return all letters in lowercase
 	 *
 	 * @param $slug - The url slug to convert
-	 *
 	 * @return mixed|string
 	 */
 	public static function generateSafeSlug($slug) {
+
 		$slug = preg_replace('/[^a-zA-Z0-9]/', '-', $slug);
 		$slug = strtolower($slug);
+
 		//Removing more than one dashes
 		$slug = preg_replace('/\-{2,}/', '-', $slug);
 
@@ -71,10 +72,31 @@ class Url {
 	}
 
 	/**
-         * Go to the previous url.
-        */
-        public static function previous() {
-        	header('Location: '.$_SERVER['HTTP_REFERER']);
+	 * Go to the previous url.
+	 */
+	public static function previous() {
+		header('Location: '.$_SERVER['HTTP_REFERER']);
 		exit;
-    	}
+	}
+	
+	/**
+	 * Current relative url
+	 * @return string
+	 */
+	public static function relative() {
+
+		// cut url
+		$path = array_slice(explode('/', $_SERVER['SCRIPT_NAME']), 0, -1);
+		$path = implode('/', $path) . '/';
+		$uri = substr($_SERVER['REQUEST_URI'], strlen($path));
+
+		// remove cuery params from uri
+		if (strstr($uri, '?')) $uri = substr($uri, 0, strpos($uri, '?'));
+
+		// remove trailing slash and add start slash
+		$uri = '/' . trim($uri, '/');
+
+		return $uri;
+
+	}
 }

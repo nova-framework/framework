@@ -15,11 +15,11 @@ class Error extends Controller {
 	 * $error holder
 	 * @var string
 	 */
-	private $_error = null; 
+	private $_error = null;
 
 	/**
 	 * save error to $this->_error
-	 * @param string $error 
+	 * @param string $error
 	 */
 	public function __construct($error){
 		parent::__construct();
@@ -32,14 +32,14 @@ class Error extends Controller {
 	public function index(){
 
 		header("HTTP/1.0 404 Not Found");
-		
+
 		$data['title'] = '404';
 		$data['error'] = $this->_error;
-		
+
 		View::rendertemplate('header',$data);
 		View::render('error/404',$data);
 		View::rendertemplate('footer',$data);
-		
+
 	}
 
 	/**
@@ -48,14 +48,15 @@ class Error extends Controller {
 	 * @param  string $class name of class to apply to div
 	 * @return string        return the errors inside divs
 	 */
-	static public function display(array $error,$class = 'alert alert-danger'){
+	public static function display(array $error, $class = 'alert alert-danger'){
 		$errorrow = null;
-	    if (is_array($error)){
-	       foreach($error as $error){
-	       	$errorrow.= "<div class='$class'>".$error."</div>";
-	       }
-	       return $errorrow;
-	    }
+
+		if (is_array($error)){
+			foreach($error as $error){
+				$errorrow.= "<div class='$class'>$error</div>";
+			}
+			return $errorrow;
+		}
 	}
 
 }

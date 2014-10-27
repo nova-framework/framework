@@ -107,6 +107,24 @@ class Router
 		$controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : DEFAULT_CONTROLLER;
 		$method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : DEFAULT_METHOD;
 		$args       = is_array($parts) && count($parts) > 2 ? array_slice($parts, 2) : array(); 
+		
+		$char_position = strpos($controller,'&');
+        	if ($char_position > 0 ) {
+            		$ctp = explode('&', $controller);
+            		$controller = $ctp[0];
+        	}
+
+        	$char_position2 = strpos($method,'&');
+        	if ($char_position2 > 0 ) {
+            		$ctp = explode('&', $method);
+            		$method = $ctp[0];
+        	}
+
+        	$char_position3 = strpos($args[0],'&');
+        	if ($char_position3 > 0 ) {
+            		$ctp = explode('&', $yes);
+            		$args[0] = $ctp[0];
+        	}
 
 		// Check for file
 		if (!file_exists('app/controllers/' . $controller . '.php')) {

@@ -1,4 +1,5 @@
 <?php namespace helpers;
+
 /*
  * Session Class - prefix sessions with useful methods
  *
@@ -32,20 +33,21 @@ class Session {
 	 * @param string $value the data to save
 	 */
 	public static function set($key,$value = false){
-            
-            /**
-             * Check whether session is set in array or not
-             * If array then set all session key-values in foreach loop
-             */
-            if(is_array($key) && $value === false){
-		foreach ($key as $name => $value) {
-                    $_SESSION[SESSION_PREFIX.$name] = $value;
-                }
-            }
-            else {
-                $_SESSION[SESSION_PREFIX.$key] = $value;
-            }
-                
+
+		/**
+		* Check whether session is set in array or not
+		* If array then set all session key-values in foreach loop
+		*/
+		if(is_array($key) && $value === false){
+
+			foreach ($key as $name => $value) {
+				$_SESSION[SESSION_PREFIX.$name] = $value;
+			}
+
+		} else {
+			$_SESSION[SESSION_PREFIX.$key] = $value;
+		}
+
 	}
 
 	/**
@@ -59,7 +61,6 @@ class Session {
 		unset($_SESSION[SESSION_PREFIX.$key]);
 
 		return $value;
-
 	}
 
 	/**
@@ -86,15 +87,14 @@ class Session {
 		}
 
 		return false;
-
 	}
 	
 	/**
-         * @return string with the session id.
-        */
-    	public static function id() {
-        	return session_id();
-    	}
+	 * @return string with the session id.
+	 */
+	public static function id() {
+		return session_id();
+	}
 
 	/**
 	 * return the session array
@@ -108,14 +108,16 @@ class Session {
 	 * empties and destroys the session
 	 */
 	public static function destroy($key='') {
-        	if(self::$_sessionStarted == true) {
-      			if(empty($key)) {
-         			session_unset();
-         			session_destroy();
-      			} else {
-         			unset($_SESSION[SESSION_PREFIX.$key]);
-      			}
-   		}
+		if(self::$_sessionStarted == true) {
+
+			if(empty($key)) {
+				session_unset();
+				session_destroy();
+			} else {
+				unset($_SESSION[SESSION_PREFIX.$key]);
+			}
+
+		}
 	}
 
 }

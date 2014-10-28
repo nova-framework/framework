@@ -1,4 +1,5 @@
 <?php namespace helpers;
+
 /*
  * url Class
  *
@@ -27,7 +28,7 @@ class Url {
 	 * @return string url to template folder
 	 */
 	public static function get_template_path(){
-	    return DIR.'app/templates/'.Session::get('template').'/';
+		return DIR.'app/templates/'.Session::get('template').'/';
 	}
 
 	/**
@@ -62,8 +63,11 @@ class Url {
 	 * @return mixed|string
 	 */
 	public static function generateSafeSlug($slug) {
+
+		// transform url
 		$slug = preg_replace('/[^a-zA-Z0-9]/', '-', $slug);
 		$slug = strtolower($slug);
+
 		//Removing more than one dashes
 		$slug = preg_replace('/\-{2,}/', '-', $slug);
 
@@ -71,10 +75,10 @@ class Url {
 	}
 
 	/**
-         * Go to the previous url.
-        */
-        public static function previous() {
-        	header('Location: '.$_SERVER['HTTP_REFERER']);
+	 * Go to the previous url.
+	 */
+	public static function previous() {
+		header('Location: '.$_SERVER['HTTP_REFERER']);
 		exit;
-    	}
+	}
 }

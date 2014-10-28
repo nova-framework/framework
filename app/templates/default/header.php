@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
 	<meta charset="utf-8">
 	<title><?php echo $data['title'].' - '.SITETITLE; //SITETITLE defined in index.php?></title>
@@ -7,4 +7,4 @@
 </head>
 <body>
 
-<div id='wrapper'>
+<div id="wrapper">

@@ -48,14 +48,16 @@ class Error extends Controller {
 	 * @param  string $class name of class to apply to div
 	 * @return string        return the errors inside divs
 	 */
-	static public function display(array $error,$class = 'alert alert-danger'){
+	static public function display(array $error, $class = 'alert alert-danger'){
 		$errorrow = null;
-	    if (is_array($error)){
-	       foreach($error as $error){
-	       	$errorrow.= "<div class='$class'>".$error."</div>";
-	       }
-	       return $errorrow;
-	    }
+
+		if (is_array($error)){
+			foreach($error as $error){
+				$errorrow.= "<div class='$class'>$error</div>";
+			}
+
+			return $errorrow;
+		}
 	}
 
 }

@@ -34,3 +34,7 @@ Upload the framework files to your server. Normally the index.php file will be a
 
 For Sublime Text users, their is a new plugin for keyboard shortcuts see [https://github.com/simple-mvc-framework/SMVC-Snippets](https://github.com/simple-mvc-framework/SMVC-Snippets) for more details and install instructions.
 
+### Other Contributions
+Have you found this library helpful? Why not take a minute to endorse my hard work on [coderwall](https://coderwall.com/daveismynamecom)! Just click the badge below:
+
+[![endorse](https://api.coderwall.com/daveismynamecom/endorsecount.png)](https://coderwall.com/daveismynamecom)

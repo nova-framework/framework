@@ -7,4 +7,4 @@
 </head>
 <body>
 
-<div id="wrapper">
+<div class="wrapper">

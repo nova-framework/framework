@@ -42,10 +42,8 @@ class Database extends PDO{
 		$id = "$type.$host.$name.$user.$pass";
 		
 		// Checking if the same 
-		if(!isset(self::$instances[$id])) {
-		    	array_push(self::$instances, $id);
-		} else {
-			return $self::$instances[$id];
+		if(isset(self::$instances[$id])) {
+		    	return self::$instances[$id];
 		}
 		
 		try {

@@ -92,10 +92,10 @@ class Database extends PDO{
 
 		ksort($data);
 
-		$fieldNames = implode(',', array_keys($data));
+		$fieldNames = implode('\",\"', array_keys($data));
 		$fieldValues = ':'.implode(', :', array_keys($data));
 
-		$stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
+		$stmt = $this->prepare("SET sql_mode = 'ANSI_QUOTES';INSERT INTO $table (\"$fieldNames\") VALUES ($fieldValues)");
 
 		foreach($data as $key => $value){
 			$stmt->bindValue(":$key", $value);
@@ -117,7 +117,7 @@ class Database extends PDO{
 
 		$fieldDetails = NULL;
 		foreach($data as $key => $value){
-			$fieldDetails .= "$key = :$key,";
+			$fieldDetails .= "\"$key\" = :$key,";
 		}
 		$fieldDetails = rtrim($fieldDetails, ',');
 
@@ -125,15 +125,15 @@ class Database extends PDO{
 		$i = 0;
 		foreach($where as $key => $value){
 			if($i == 0){
-				$whereDetails .= "$key = :$key";
+				$whereDetails .= "\"$key\" = :$key";
 			} else {
-				$whereDetails .= " AND $key = :$key";
+				$whereDetails .= " AND \"$key\" = :$key";
 			}
 			
 		$i++;}
 		$whereDetails = ltrim($whereDetails, ' AND ');
 
-		$stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
+		$stmt = $this->prepare("SET sql_mode = 'ANSI_QUOTES';UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
 		foreach($data as $key => $value){
 			$stmt->bindValue(":$key", $value);
@@ -162,9 +162,9 @@ class Database extends PDO{
 		$i = 0;
 		foreach($where as $key => $value){
 			if($i == 0){
-				$whereDetails .= "$key = :$key";
+				$whereDetails .= "\"$key\" = :$key";
 			} else {
-				$whereDetails .= " AND $key = :$key";
+				$whereDetails .= " AND \"$key\" = :$key";
 			}
 			
 		$i++;}
@@ -175,7 +175,7 @@ class Database extends PDO{
 			$uselimit = "LIMIT $limit";
 		}
 
-		$stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails $uselimit");
+		$stmt = $this->prepare("SET sql_mode = 'ANSI_QUOTES';DELETE FROM $table WHERE $whereDetails $uselimit");
 
 		foreach($where as $key => $value){
 			$stmt->bindValue(":$key", $value);

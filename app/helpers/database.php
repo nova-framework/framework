@@ -23,7 +23,7 @@ class Database extends PDO{
 	 */
 	function __construct ($group = FALSE) {
 		// Determining if exists or it's not empty, then use default group defined in config
-		$group = !$group || !empty($group) ? array (
+		$group = !$group ? array (
 			'type' => DB_TYPE,
 			'host' => DB_HOST,
 			'name' => DB_NAME,
@@ -42,8 +42,8 @@ class Database extends PDO{
 		$id = "$type.$host.$name.$user.$pass";
 		
 		// Checking if the same 
-		if ( isset(self::$instances[$id]) ) {
-			//return self::$instances[$id];
+		if(isset(self::$instances[$id])) {
+		    	return self::$instances[$id];
 		}
 		
 		try {

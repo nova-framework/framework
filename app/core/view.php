@@ -16,6 +16,7 @@ class View {
 	 * @param  array $error array of errors
 	 */
 	public function render($path,$data = false, $error = false){
+		extract($data);
 		require "app/views/$path.php";
 	}
 
@@ -25,6 +26,7 @@ class View {
 	 * @param  array $data  array of data
 	 */
 	public function rendertemplate($path,$data = false){
+		extract($data);
 		require "app/templates/".Session::get('template')."/$path.php";
 	}
 	

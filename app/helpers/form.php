@@ -24,6 +24,7 @@ class form {
         $o .= (isset($params['action']))    ? " action='{$params['action']}'"               : '';
         $o .= (isset($params['files']))     ? " enctype='multipart/form-data'"              : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+        $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
         $o .= '>';
         return $o."\n";
     }
@@ -79,6 +80,7 @@ class form {
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"           : '';
         $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"  : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+        $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
         $o .= " />\n";
         return $o;
     }

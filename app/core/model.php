@@ -19,7 +19,7 @@ class Model extends Controller {
 	 */
 	public function __construct(){
 		//connect to PDO here.
-		$this->_db = new \helpers\database();
+		$this->_db = \helpers\database::get();
 
 	}
 }

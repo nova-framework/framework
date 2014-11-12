@@ -22,11 +22,10 @@ class Welcome extends \core\controller{
 	/**
 	 * define page title and load template files
 	 */
-	public function index(){
-
+	public function index() {
 		$data['title'] = 'Welcome';
 		$data['welcome_message'] = $this->language->get('welcome_message');
-
+		
 		View::rendertemplate('header', $data);
 		View::render('welcome/welcome', $data);
 		View::rendertemplate('footer', $data);

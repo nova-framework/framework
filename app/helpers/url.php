@@ -39,10 +39,9 @@ class Url {
 	 * @param  string $custom if provided, this is used for the link label
 	 * @return string         returns the data with links created around urls
 	 */
-	public static function autolink($text,$custom = null) {
+	public static function autolink($text, $custom = null) {
 		$regex   = '@(http)?(s)?(://)?(([-\w]+\.)+([^\s]+)+[^,.\s])@';
-		$replace = '';
-		
+
 		if ($custom === null) {
 			$replace = '<a href="http$2://$4">$1$2$3$4</a>';
 		} else {
@@ -78,7 +77,7 @@ class Url {
 	 * Go to the previous url.
 	 */
 	public static function previous() {
-		header('Location: '.$_SERVER['HTTP_REFERER']);
+		header('Location: '. $_SERVER['HTTP_REFERER']);
 		exit;
 	}
 }

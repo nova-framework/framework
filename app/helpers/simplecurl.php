@@ -1,6 +1,4 @@
-<?php 
-
-namespace helpers;
+<?php namespace helpers;
 
 /*
 * Curl class with some default functions and settings

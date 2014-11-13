@@ -1,4 +1,6 @@
-<?php namespace helpers;
+<?php 
+
+namespace helpers;
 
 /*
 * Curl class with some default functions and settings
@@ -7,8 +9,7 @@
 * @version 2.1
 * @date Sept 22, 2014
 */
-
-class simplecurl {
+class Simplecurl {
 
 	/**
 	* Performs a get request on the chosen link and the chosen parameters
@@ -26,7 +27,7 @@ class simplecurl {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_CONNECTTIMEOUT => 10,
 			CURLOPT_SSL_VERIFYPEER => false
-			);
+		);
 		curl_setopt_array($ch, $options);
 
 		$response = curl_exec($ch);    
@@ -43,7 +44,6 @@ class simplecurl {
 	* @return string returns the content of the given url after post
 	*/
 	public static function post($url, $fields=array()) {
-		$post_field_string = http_build_query($fields, '', '&');    
 		$ch = curl_init();
 
 		$options = array(
@@ -51,9 +51,10 @@ class simplecurl {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_CONNECTTIMEOUT => 10,
 			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_POSTFIELDS => $post_field_string,
-			CURLOPT_POST => true
-			);
+			CURLOPT_POSTFIELDS => $fields,
+			CURLOPT_POST => true,
+			CURLOPT_USERAGENT => "SMVC Agent",
+		);
 		curl_setopt_array($ch, $options);
 
 		$response = curl_exec($ch);    
@@ -70,7 +71,7 @@ class simplecurl {
 	* @return string with the contents of the site
 	*/
 	public static function put($url, $fields = array()) {
-		$post_field_string = http_build_query($fields, '', '&');    
+		$post_field_string = http_build_query($fields);    
 		$ch = curl_init($url);
 
 		$options = array(
@@ -87,5 +88,4 @@ class simplecurl {
 
 		return $response;
 	}
-
 }

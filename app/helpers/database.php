@@ -1,5 +1,7 @@
 <?php namespace helpers;
+
 use \PDO;
+
 /*
  * database Helper - extending PDO to use custom methods
  *
@@ -15,13 +17,12 @@ class Database extends PDO{
 	protected static $instances = array();
 	
 	/**
-	 * create database connection based 
+	 * Static method get 
 	 * 
-	 * @param array $group - Array with infomration about connection: DB type, host, DB name, user and password
-	 * @author volter9 - volter925@gmail.com
-	 * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
+	 * @param  array $group
+	 * @return \helpers\database
 	 */
-	function __construct ($group = FALSE) {
+	public static function get ($group = false) {
 		// Determining if exists or it's not empty, then use default group defined in config
 		$group = !$group ? array (
 			'type' => DB_TYPE,
@@ -43,22 +44,25 @@ class Database extends PDO{
 		
 		// Checking if the same 
 		if(isset(self::$instances[$id])) {
-		    	return self::$instances[$id];
+			return self::$instances[$id];
 		}
 		
 		try {
-			parent::__construct("$type:host=$host;dbname=$name", $user, $pass);
-			$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
+			// I've run into problem where
+			// SET NAMES "UTF8" not working on some hostings.
+			// Specifiying charset in DSN fixes the charset problem perfectly!
+			$instance = new Database("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
+			$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 			// Setting Database into $instances to avoid duplication
-			self::$instances[$id] = $this;
+			self::$instances[$id] = $instance;
+			
+			return $instance;
 		} catch(PDOException $e){
 			//in the event of an error record the error to errorlog.html
 			Logger::newMessage($e);
 			logger::customErrorMsg();
 		}
-
 	}
 
 	/**

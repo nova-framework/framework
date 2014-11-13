@@ -41,30 +41,45 @@ use PDO;
 
 class tableBuilder {
 	
-	// Constants
+	/**
+	 * @const int AUTO_INCREMENT    AUTO_INCREMENT flat
+	 * @const int CURRENT_TIMESTAMP Default type CURRENT_TIMESTAMP
+	 */
 	const AUTO_INCREMENT = 1;
 	const CURRENT_TIMESTAMP = 2;
 	
-	// Properties
+	/**
+	 * @var \helpers\database A database instance
+	 */
 	protected $_db;
 	
+	/**
+	 * @var string Compiled SQL query
+	 */
 	private $_sql = '';
 	
+	/**
+	 * @var string $_name   Table name
+	 * @var array  $_fields Table fields
+	 * @var strin  $_pk     Primary key field
+	 */
 	private $_name = '';
 	private $_fields = array();
 	private $_pk = '';
 	
-	// IF NOT EXISTS flag
+	/**
+	 * @var boolean Prevents errors in case if table already exists
+	 */
 	private $_notExists = FALSE;
 	
-	// Aliases
+	/**
+	 * @var array Type aliases
+	 */
 	private static $_typeAliases = array (
-		'int' => 'INT(11)',
-		'string' => 'VARCHAR(255)',
+		'int'         => 'INT(11)',
+		'string'      => 'VARCHAR(255)',
 		'description' => 'TINYTEXT'
 	);
-	
-	// Static Methods
 	
 	/**
 	 * Set alias.
@@ -78,8 +93,6 @@ class tableBuilder {
 		self::$_typeAliases[$aliasName] = $aliasType;
 	}
 	
-	// Constructor
-	
 	/**
 	 * Table builder constructor.
 	 * Database class initialization, don't create too many instances of table builder,
@@ -87,20 +100,19 @@ class tableBuilder {
 	 * By default this class would create a `id` field INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, unless
 	 * you'll set second parameter FALSE.
 	 * 
-	 * @param PDO|null $db - PDO instance (it can be \helper\database)
+	 * @param PDO|null $db - PDO instance (it can be a \helper\database instance)
 	 * @param boolean  $id - A flag to add or not to add `id` field automatically
 	 */
 	public function __construct (PDO $db = NULL, $id = TRUE) {
 		// If database is not given, create new database instance.
-		$this->_db = !$db ? new database : $db;
+		// database is in the same namespace, we don't need to specify namespace
+		$this->_db = !$db ? database::get() : $db;
 		
 		if ($id === TRUE) {
 			$this->addField('id', 'INT(11)', FALSE, self::AUTO_INCREMENT);
 			$this->setPK('id');
 		}
 	}
-	
-	// Private
 	
 	/**
 	 * Private utility for converting constants into strings.
@@ -127,8 +139,6 @@ class tableBuilder {
 				return '';
 		}
 	}
-	
-	// Setters
 	
 	/**
 	 * Add a field to table definition.

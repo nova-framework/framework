@@ -28,9 +28,9 @@ class Config {
 		//database details ONLY NEEDED IF USING A DATABASE
 		define('DB_TYPE', 'mysql');
 		define('DB_HOST', 'localhost');
-		define('DB_NAME', 'dbname');
-		define('DB_USER', 'username');
-		define('DB_PASS', 'password');
+		define('DB_NAME', 'sweetblog');
+		define('DB_USER', 'root');
+		define('DB_PASS', '');
 		define('PREFIX', 'smvc_');
 
 		//set prefix for sessions

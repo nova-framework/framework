@@ -13,10 +13,12 @@ class Language {
 	 * Variable holds array with language
 	 * @var array
 	 */
-	public $_array;
+	private $_array;
 
 	/**
-	 * 
+	 * Load language function
+	 * @param  string $name
+	 * @param  string $code
 	 */
 	public function load($name, $code = LANGUAGE_CODE) {
 		
@@ -39,6 +41,11 @@ class Language {
 
 	}
 
+	/**
+	 * Get element from language array by key
+	 * @param  string $value
+	 * @return string
+	 */
 	public function get($value) {
 		return $this->_array[$value];
 	}

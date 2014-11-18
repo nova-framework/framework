@@ -48,7 +48,7 @@ class Error extends Controller {
 	 * @param  string $class name of class to apply to div
 	 * @return string        return the errors inside divs
 	 */
-	public static function display(array $error, $class = 'alert alert-danger'){
+	public static function display($error, $class = 'alert alert-danger'){
 		if (is_array($error)){
 
 			foreach($error as $error){
@@ -59,7 +59,7 @@ class Error extends Controller {
 		} else {
 
 			if(isset($error)){
-				return "<p class='$class'>$error</p>";
+				return "<div class='$class'>$error</div>";
 			}
 
 		}

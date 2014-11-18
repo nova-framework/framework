@@ -1,5 +1,5 @@
 <?php namespace core;
-use helpers\session as Session;
+
 /*
  * View - load template pages
  *
@@ -25,7 +25,7 @@ class View {
 	 * @param  array $data  array of data
 	 */
 	public function rendertemplate($path,$data = false){
-		require "app/templates/".Session::get('template')."/$path.php";
+		require "app/templates/". \helpers\Session::get('template') ."/$path.php";
 	}
 	
 }

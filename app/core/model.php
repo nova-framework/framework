@@ -1,4 +1,5 @@
 <?php namespace core;
+
 /*
  * model - the base model
  *
@@ -18,6 +19,7 @@ class Model extends Controller {
 	 * create a new instance of the database helper
 	 */
 	public function __construct(){
+
 		//connect to PDO here.
 		$this->_db = \helpers\database::get();
 

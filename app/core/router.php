@@ -1,12 +1,12 @@
 <?php namespace core;
 
 /*
-* Router - routing urls to closurs and controllers - modified from https://github.com/NoahBuscher/Macaw
-*
-* @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
-* @version 2.2
-* @date Auguest 16th, 2014
-*/
+ * Router - routing urls to closurs and controllers - modified from https://github.com/NoahBuscher/Macaw
+ *
+ * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
+ * @version 2.2
+ * @date Auguest 16th, 2014
+ */
 class Router {
 
 	// Fallback for auto dispatching feature.

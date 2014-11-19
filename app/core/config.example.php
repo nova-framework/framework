@@ -1,4 +1,5 @@
 <?php namespace core;
+
 /*
  * config - an example for setting up system settings
  * When you are done editing, rename this file to 'config.php'
@@ -16,7 +17,7 @@ class Config {
 		ob_start();
 
 		//site address
-		define('DIR', 'http://domain.com/');
+		define('DIR', 'http://example.com/');
 
 		//set default controller and method for legacy calls
 		define('DEFAULT_CONTROLLER', 'welcome');

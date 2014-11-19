@@ -8,6 +8,10 @@ if(file_exists('vendor/autoload.php')){
 	exit;
 }
 
+if (!is_readable('app/core/config.php')) {
+	die('No config.php found, configure and rename config.example.php to config.php in app/core.');
+}
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

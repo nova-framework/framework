@@ -70,7 +70,8 @@ class Router {
 	public static function invokeObject($callback,$matched = null,$msg = null){
 
 		//grab all parts based on a / separator and collect the last index of the array
-		$last = end(explode('/',$callback));
+		$last = explode('/',$callback);
+		$last = end($last);
 
 		//grab the controller name and method call
 		$segments = explode('@',$last);                         

@@ -118,10 +118,12 @@ class Router {
 			$method = $ctp[0];
 		}
 
-		$char_position3 = strpos($args[0],'&');
-		if ($char_position3 > 0 ) {
-			$ctp = explode('&', $yes);
-			$args[0] = $ctp[0];
+		if($args != null){
+			$char_position3 = strpos($args[0],'&');
+			if ($char_position3 > 0 ) {
+				$ctp = explode('&', $yes);
+				$args[0] = $ctp[0];
+			}	
 		}
 
 		// Check for file

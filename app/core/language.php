@@ -50,4 +50,33 @@ class Language {
 		return $this->_array[$value];
 	}
 
+	/**
+	 * Get lang for views
+	 * @param  string $value this is "word" value from language file
+	 * @param  string $name  name of file with language
+	 * @param  string $code  optional, language code
+	 * @return string
+	 */
+	public function show($value, $name, $code = LANGUAGE_CODE) {
+		
+		// lang file
+		$file = "app/language/$code/$name.php";
+
+		// check if is readable
+		if(is_readable($file)){
+
+			// require file
+			$_array = include($file);
+
+		} else {
+
+			// display error
+			echo \core\error::display("Could not load language file '$code/$name.php'");
+			die;
+
+		}
+
+		return $_array[$value];
+	}
+
 }

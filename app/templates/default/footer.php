@@ -7,16 +7,20 @@ You can use jquery from JS dir or get latest script from jQuery servers
 
 <script src="<?php echo \helpers\url::get_template_path();?>js/jquery.js"></script>
 
-<?php if(isset($data['js'])) : ?>
+<?php if(isset($data['js'])) { ?>
 
 	<!-- JS plugins -->
-	<?php foreach ($data['js'] as $row): ?>
-		<script src="<?php echo $row; ?>"></script>
-	<?php endforeach ?>
+	<?php 
+	if(is_array($data['js'])){
+		foreach ($data['js'] as $row){
+			echo "<script src='$row'></script>";
+		}
+	} else {
+		echo "<script src='".$data['js']."'></script>";
+	}
+}
 
-<?php endif ?>
-
-<?php if(isset($data['jq'])) : ?>
+if(isset($data['jq'])){ ?>
 
 	<!-- JS scripts -->
 	<script>
@@ -25,7 +29,7 @@ You can use jquery from JS dir or get latest script from jQuery servers
 		});
 	</script>
 
-<?php endif ?>
+<?php } ?>
 
 </body>
 </html>

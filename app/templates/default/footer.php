@@ -6,22 +6,18 @@ You can use jquery from JS dir or get latest script from jQuery servers
 -->
 
 <script src="<?php echo \helpers\url::get_template_path();?>js/jquery.js"></script>
-
 <?php if(isset($data['js'])) { ?>
-
 	<!-- JS plugins -->
 	<?php 
 	if(is_array($data['js'])){
 		foreach ($data['js'] as $row){
-			echo "<script src='$row'></script>";
+			echo "<script src='$row'></script>\n";
 		}
 	} else {
-		echo "<script src='".$data['js']."'></script>";
+		echo "<script src='".$data['js']."'></script>\n";
 	}
 }
-
 if(isset($data['jq'])){ ?>
-
 	<!-- JS scripts -->
 	<script>
 		$(document).ready(function(){
@@ -30,6 +26,5 @@ if(isset($data['jq'])){ ?>
 	</script>
 
 <?php } ?>
-
 </body>
 </html>

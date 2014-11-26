@@ -9,10 +9,10 @@
 		<?php 
 		if(is_array($data['css'])){
 			foreach ($data['css'] as $row){
-				echo "<link href='$row' rel='stylesheet'>";
+				echo "<link href='$row' rel='stylesheet'>\n";
 			}
 		} else {
-			echo "<link href='".$data['css']."' rel='stylesheet'>";
+			echo "<link href='".$data['css']."' rel='stylesheet'>\n";
 		}
 	}
 	?>

@@ -8,7 +8,7 @@
  */
 class Paginator{
 
-	/**
+        /**
 	 * set the number of items per page.
 	 *
 	 * @var numeric
@@ -65,7 +65,7 @@ class Paginator{
 	 * creates the starting point for limiting the dataset
 	 * @return numeric
 	*/
-	private function get_start(){
+	public function get_start(){
 		return ($this->_page * $this->_perPage) - $this->_perPage;
 	}
 
@@ -100,18 +100,18 @@ class Paginator{
 	 * @return string
 	*/
 	public function get_limit(){
-        return "LIMIT ".$this->get_start().",$this->_perPage";
-    }
+        	return "LIMIT ".$this->get_start().",$this->_perPage";
+        }
 
-    /**
-     * page_links
-     *
-     * create the html links for navigating through the dataset
-     * 
-     * @var sting $path optionally set the path for the link
-     * @var sting $ext optionally pass in extra parameters to the GET
-     * @return string returns the html menu
-    */
+        /**
+         * page_links
+         *
+         * create the html links for navigating through the dataset
+         * 
+         * @var sting $path optionally set the path for the link
+         * @var sting $ext optionally pass in extra parameters to the GET
+         * @return string returns the html menu
+        */
 	public function page_links($path='?',$ext=null)
 	{
 	    $adjacents = "2";
@@ -123,11 +123,11 @@ class Paginator{
 	    $pagination = "";
 		if($lastpage > 1)
 		{   
-		    $pagination .= "<div class='pagination pagination-centered'><ul>";
+		    $pagination .= "<ul class='pagination'>";
 		if ($this->_page > 1)
 		    $pagination.= "<li><a href='".$path."$this->_instance=$prev"."$ext'>Previous</a></li>";
 		else
-		    $pagination.= "<li><span class='disabled'>Previous</span></li>";   
+		    $pagination.= "<span class='disabled'>Previous</span>";   
 
 		if ($lastpage < 7 + ($adjacents * 2))
 		{   
@@ -162,7 +162,7 @@ class Paginator{
 		for ($counter = $this->_page - $adjacents; $counter <= $this->_page + $adjacents; $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<li><span class='current'>$counter</span></li>";
+		    $pagination.= "<span class='current'>$counter</span>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
@@ -178,7 +178,7 @@ class Paginator{
 		for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<li><span class='current'>$counter</span></li>";
+		    $pagination.= "<span class='current'>$counter</span>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
@@ -189,7 +189,7 @@ class Paginator{
 		    $pagination.= "<li><a href='".$path."$this->_instance=$next"."$ext'>Next</a></li>";
 		else
 		    $pagination.= "<li><span class='disabled'>Next</span></li>";
-		    $pagination.= "</ul></div>\n";       
+		    $pagination.= "</ul>\n";       
 		}
 
 

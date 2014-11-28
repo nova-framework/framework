@@ -6,5 +6,5 @@
 <p><?php echo $data['welcome_message'] ?></p>
 
 <a class="btn btn-md btn-success" href="<?php echo DIR ?>subpage">
-	<?php echo \core\language::show('open_subpage', 'welcome') ?>
+	<?php echo core\language::show('open_subpage', 'welcome') ?>
 </a>

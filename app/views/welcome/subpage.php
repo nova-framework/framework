@@ -6,5 +6,5 @@
 <p><?php echo $data['welcome_message'] ?></p>
 
 <a class="btn btn-md btn-success" href="<?php echo DIR ?>">
-	<?php echo \core\language::show('back_home', 'welcome') ?>
+	<?php echo core\language::show('back_home', 'welcome') ?>
 </a>

@@ -70,7 +70,7 @@ Router::any('/subpage', '\controllers\welcome@subpage');
 //if no route found
 Router::error('\core\error@index');
 
-//turn on old style routing
+//turn off old style routing
 Router::$fallback = false;
 
 //execute matched routes

@@ -47,7 +47,13 @@ class Language {
 	 * @return string
 	 */
 	public function get($value) {
-		return $this->_array[$value];
+
+		if(!empty($this->_array[$value])){
+			return $this->_array[$value];
+		} else {
+			return $value;
+		}
+
 	}
 
 	/**
@@ -76,7 +82,12 @@ class Language {
 
 		}
 
-		return $_array[$value];
+		// If 
+		if(!empty($_array[$value])){
+			return $_array[$value];
+		} else {
+			return $value;
+		}
 	}
 
 }

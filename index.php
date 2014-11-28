@@ -65,12 +65,13 @@ use \core\router,
 
 //define routes
 Router::any('', '\controllers\welcome@index');
+Router::any('/subpage', '\controllers\welcome@subpage');
 
 //if no route found
 Router::error('\core\error@index');
 
 //turn on old style routing
-Router::$fallback = true;
+Router::$fallback = false;
 
 //execute matched routes
 Router::dispatch();

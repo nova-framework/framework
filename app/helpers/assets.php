@@ -28,11 +28,12 @@ class Assets {
 		$template = self::$templates[$template];
 		
 		if (is_array($files)) {
+
 			foreach ($files as $file) {
 				echo sprintf($template, $file) . "\n";
 			}
-		}
-		else {
+
+		} else {
 			echo sprintf($template, $files) . "\n";
 		}
 	}

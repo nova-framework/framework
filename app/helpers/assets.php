@@ -4,53 +4,55 @@
  * Assets static helper
  * 
  * @author volter9
+ * @author QsmaPL
  * @date 27th November, 2014
  */
 
 class Assets {
 	
 	/**
-	 * Add script to the template
-	 * 
-	 * @param string $file
+	 * @var array Asset templates
 	 */
-	public static function script ($file) {
-		echo '<script src="' . $file . '" type="text/javascript"></script>';
-	}
+	protected static $templates = array (
+		'js'  => '<script src="%s" type="text/javascript"></script>',
+		'css' => '<link href="%s" rel="stylesheet" type="text/css">'
+	);
 	
 	/**
-	 * Add stylesheet to the template
-	 * 
-	 * @param string $file
+	 * Common templates for assets.
+	 *
+	 * @param string|array $files
+	 * @param string       $template
 	 */
-	public static function stylesheet ($file) {
-		echo '<link href="' . $file . '" rel="stylesheet" type="text/css"/>';
-	}
-	
-	/**
-	 * Add several scripts to the template
-	 * 
-	 * @param arrat $files
-	 */
-	public static function scripts (array $files) {
-		if (count($files) > 0) {
+	protected static function resource ($files, $template) {
+		$template = self::$templates[$template];
+		
+		if (is_array($files)) {
 			foreach ($files as $file) {
-				self::script($file);
+				echo sprintf($template, $file) . "\n";
 			}
+		}
+		else {
+			echo sprintf($template, $files) . "\n";
 		}
 	}
 	
 	/**
-	 * Add several stylesheets to the template
+	 * Output script
 	 * 
-	 * @param array $files
+	 * @param array|string $file
 	 */
-	public static function stylesheets (array $files) {
-		if (count($files) > 0) {
-			foreach ($files as $file) {
-				self::stylesheet($file);
-			}
-		}
+	public static function js ($files) {
+		static::resource($files, 'js');
 	}
 	
+	/**
+	 * Output stylesheet
+	 * 
+	 * @param string $file
+	 */
+	public static function css ($files) {
+		static::resource($files, 'css');
+	}
+
 }

@@ -27,7 +27,7 @@ class Url {
 	 * created the absolute address to the template folder
 	 * @return string url to template folder
 	 */
-	public static function get_template_path(){
+	public static function template_path(){
 		return DIR.'app/templates/'.Session::get('template').'/';
 	}
 

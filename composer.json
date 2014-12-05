@@ -1,7 +1,7 @@
 {
-    "name": "simple-mvc-framework/v2",
+    "name": "smvc",
     "type": "Project",
-    "description": "Framework for PHP 5.3+",
+    "description": "Simple MVC Framework for PHP 5.3+",
     "homepage": "https://github.com/simple-mvc-framework/v2.git",
     "license": "MIT",
     "authors": [

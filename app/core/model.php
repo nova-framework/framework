@@ -7,7 +7,8 @@
  * @version 2.1
  * @date June 27, 2014
  */
-class Model extends Controller {
+
+abstract class Model extends Controller {
 
 	/**
 	 * hold the database connection

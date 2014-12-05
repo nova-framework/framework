@@ -9,7 +9,8 @@ use core\view,
  * @version 2.1
  * @date June 27, 2014
  */
-class Controller {
+
+abstract class Controller {
 	
 	/**
 	 * view variable to use the view class

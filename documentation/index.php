@@ -518,20 +518,20 @@ use \core\view as View;
 
 class Blog extends Controller {
 
-private $_blog;
+	private $_blog;
 
-public function __construct(){
-	parent::__construct();
-        $this->_blog = new \models\blog();
-}
+	public function __construct(){
+		parent::__construct();
+		$this->_blog = new \models\blog();
+	}
 
-public function blog(){
-   $data['title'] = 'Blog';
-   $data['posts'] = $this->_blog->get_posts();
+	public function blog(){
+	   $data['title'] = 'Blog';
+	   $data['posts'] = $this->_blog->get_posts();
 
-  View::render('blog/posts',$data);
+	  View::render('blog/posts',$data);
 
-}
+	}
 
 }
 </code></pre>
@@ -704,15 +704,14 @@ class View {
  <p>An example of a view; looping through an array and outputting its contents:<p>
 
 <pre><code class="language-php">
-
- <p>Contacts List</p>
- <?php 
+ &lt;p&gt;Contacts List &lt;/p&gt;
+ &lt;?php 
  if($data['contacts']){
  	foreach($data['contacts'] as $row){
- 		echo $row.'<br />';
+ 		echo $row.' &lt;br /&gt;';
  	}
  }
- ?>
+ ?&gt;
  </code></pre>
 
 	</section>
@@ -738,22 +737,24 @@ class View {
 
 <p>The url helper is being used to get the full path to the css file.</p>
 <pre><code class="language-php">
-<p>&lt;!DOCTYPE html&gt;<br>
-  &lt;html lang=&quot;&lt;?php echo LANGUAGE_CODE; ?&gt;&quot;&gt;<br>
-  &lt;head&gt;</p>
-<p> &lt;!-- Site meta --&gt;<br>
-  &lt;meta charset=&quot;utf-8&quot;&gt;<br>
-  &lt;title&gt;&lt;?php echo $data['title'].' - '.SITETITLE; //SITETITLE defined in app/core/config.php ?&gt;&lt;/title&gt;</p>
-<p> &lt;!-- CSS --&gt;<br>
-  &lt;?php<br>
-  helpers\assets::css(array(<br>
-  '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css',<br>
-  helpers\url::template_path() . 'css/style.css',<br>
-  ))<br>
-  ?&gt;</p>
-<p>&lt;/head&gt;<br>
-&lt;body&gt;<br>
-&lt;/body&gt;</p>
+&lt;!DOCTYPE html&gt;
+	&lt;html lang=&quot;&lt;?php echo LANGUAGE_CODE; ?&gt;&quot;&gt;
+	&lt;head&gt;
+
+	&lt;!-- Site meta --&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;title&gt;&lt;?php echo $data['title'].' - '.SITETITLE; //SITETITLE defined in app/core/config.php ?&gt;&lt;/title&gt;
+
+	&lt;!-- CSS --&gt;
+	&lt;?php
+	helpers\assets::css(array(
+		'//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css',
+		helpers\url::template_path() . 'css/style.css',
+		))
+	?&gt;</p>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
 </code></pre>
 
 	</section>
@@ -813,7 +814,7 @@ $this->language->load('file/to/load');
 <p>The load method can also be passed if the data is to be returned with a true or false and the language code, useful to set a new language on the call:</p>
 
 <pre><code class="language-php">
-$this->language->load('file/to/load',false,'nl');
+$this->language->load('file/to/load', false, 'nl');
 </code></pre>
 
 <p>The default language can be set in the config.php file:</p>

@@ -127,7 +127,7 @@ class Paginator{
 		if ($this->_page > 1)
 		    $pagination.= "<li><a href='".$path."$this->_instance=$prev"."$ext'>Previous</a></li>";
 		else
-		    $pagination.= "<span class='disabled'>Previous</span>";   
+		    $pagination.= "<li><span class='disabled'>Previous</span></li>";   
 
 		if ($lastpage < 7 + ($adjacents * 2))
 		{   

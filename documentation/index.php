@@ -173,6 +173,15 @@
 			<hr class="notop">
 		</div>
 		
+		<p>The framework is now on packagist <a href='https://packagist.org/packages/simple-mvc-framework/v2'>https://packagist.org/packages/simple-mvc-framework/v2</a>
+
+<p>Install from terminal now by using:</p>
+
+<pre><code class="language-php">composer create-project simple-mvc-framework/v2 foldername -s dev</code></pre>
+<p>The foldername is the desired folder to be created.</p>
+
+<p>If you use Sublime you can also use the fetch package to download the framework from within Sublime Text <a href='http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490'>http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490</a></p>
+		
 		<ol>
 		<li>Download the framework</li>
 		<li>Unzip the package.</li>

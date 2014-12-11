@@ -7,6 +7,21 @@ Simple MVC Framework is a PHP 5.3 MVC system. It's designed to be lightweight an
 
 The base framework comes with a range of helper classes.
 
+## Packagist
+
+The framework is now on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2)
+
+Install from terminal now by using:
+
+````
+composer create-project simple-mvc-framework/v2 foldername -s dev
+````
+
+The foldername is the desired folder to be created.
+
+If you use Sublime you can also use the fetch package to download the framework from within Sublime Text 
+[http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490](http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490)
+
 ## Documentation
 
 Full docs & tutorials are available at [simplemvcframework.com](http://simplemvcframework.com)
@@ -29,21 +44,6 @@ Upload the framework files to your server. Normally the index.php file will be a
 4. Open the index.php file with a text editor, setup your routes.
 5. Open core/config.example.php and set your base URL and database credentials (if a database is needed). Set the default theme. When you are done, rename the file to core/config.php
 6. Edit .htaccess file and save the base path. (if the framework is installed in a folder the base path should reflect the folder path /path/to/folder/ otherwise a single / will do.
-
-## Packagist
-
-The framework is now on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2)
-
-Install from terminal now by using:
-
-````
-composer create-project simple-mvc-framework/v2 foldername -s dev
-````
-
-The foldername is the desired folder to be created.
-
-If you use Sublime you can also use the fetch package to download the framework from within Sublime Text 
-[http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490](http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490)
 
 ##Sublime Text Snippets
 

@@ -12,7 +12,7 @@ class View {
 	/**
 	 * @var array Array of HTTP headers
 	 */
-	private static headers = array();
+	private static $headers = array();
 	/**
 	 * include template file
 	 * @param  string  $path  path to file from views folder
@@ -21,7 +21,7 @@ class View {
 	 */
 	public static function render($path,$data = false, $error = false){
 		if (!headers_sent()) {
-			foreach (self::headers as $header) {
+			foreach (self::$headers as $header) {
 				header($header, true);
 			}
 		}
@@ -35,7 +35,7 @@ class View {
 	 */
 	public static function rendertemplate($path,$data = false){
 		if (!headers_sent()) {
-			foreach (self::headers as $header) {
+			foreach (self::$headers as $header) {
 				header($header, true);
 			}
 		}
@@ -47,6 +47,16 @@ class View {
 	 * @param  string  $header HTTP header text
 	 */
 	public function addheader($header) {
-		self::headers[] = $header;
+		self::$headers[] = $header;
 	}
+
+    	/**
+     	* Add an array with headers to the view.
+     	* @param array $headers
+     	*/
+    	public function addheaders($headers = []) {
+        	foreach($headers as $header) {
+            		$this->addheader($header);
+        	}
+    	}
 }

@@ -50,13 +50,13 @@ class View {
 		self::$headers[] = $header;
 	}
 
-    /**
-     * Add an array with headers to the view.
-     * @param array $headers
-     */
-    public function addheaders($headers = []) {
-        foreach($headers as $header) {
-            $this->addheader($header);
-        }
-    }
+    	/**
+     	* Add an array with headers to the view.
+     	* @param array $headers
+     	*/
+    	public function addheaders($headers = []) {
+        	foreach($headers as $header) {
+            		$this->addheader($header);
+        	}
+    	}
 }

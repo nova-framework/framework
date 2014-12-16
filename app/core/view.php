@@ -54,7 +54,7 @@ class View {
      	* Add an array with headers to the view.
      	* @param array $headers
      	*/
-    	public function addheaders($headers = []) {
+    	public function addheaders($headers = array()} {
         	foreach($headers as $header) {
             		$this->addheader($header);
         	}

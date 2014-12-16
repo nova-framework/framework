@@ -1,13 +1,9 @@
 ![Simple MVC Framework](http://simplemvcframework.com/app/templates/smvcf/img/logo.png)
 
-#V2.1
-#What is Simple MVC Framework?
-
-Simple MVC Framework is a PHP 5.3 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
-
-The base framework comes with a range of helper classes.
-
 ## Packagist
+
+[![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg?style=flat-square)](LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg?style=flat-square)](https://packagist.org/packages/simple-mvc-framework/v2)
 
 The framework is now on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2)
 
@@ -21,6 +17,13 @@ The foldername is the desired folder to be created.
 
 If you use Sublime you can also use the fetch package to download the framework from within Sublime Text 
 [http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490](http://code.tutsplus.com/articles/introducing-nettuts-fetch--net-23490)
+
+#V2.1
+#What is Simple MVC Framework?
+
+Simple MVC Framework is a PHP 5.3 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
+
+The base framework comes with a range of helper classes.
 
 ## Documentation
 

@@ -2,15 +2,20 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
 
-  RewriteEngine On
-  RewriteBase /
-  
-  #comment out to keep trailing slashes
-  RewriteRule ^(.+)/$ $1 [R=307,L]
-  
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME} !-f
-  
-  RewriteRule ^(.*)$ index.php?$1 [QSA,L]
+ 	Options -Indexes
+
+	RewriteEngine On
+	RewriteBase /
+
+	# Force to exclude the trailing slash
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.*)/$
+	RewriteRule ^(.+)/$ $1 [R=307,L]
+
+	# Allow any files or directories that exist to be displayed directly
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+
+	RewriteRule ^(.*)$ index.php?$1 [QSA,L]
 
 </IfModule>

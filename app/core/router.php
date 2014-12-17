@@ -160,6 +160,25 @@ class Router {
 
 		$found_route = false;
 
+		// parse query parameters
+		{
+			$query = '';
+			$q_arr = array();
+			if(strpos($uri, '&') > 0) {
+				$query = substr($uri, strpos($uri, '&') + 1);
+				$uri = substr($uri, 0, strpos($uri, '&'));
+				$q_arr = explode('&', $query);
+				foreach($q_arr as $q) {
+					$qobj = explode('=', $q);
+					$q_arr[] = array($qobj[0] => $qobj[1]);
+					if(!isset($_GET[$qobj[0]]))
+					{
+						$_GET[$qobj[0]] = $qobj[1];
+					}
+				}
+			}
+		}
+
 		// check if route is defined without regex
 		if (in_array($uri, self::$routes)) {
 			$route_pos = array_keys(self::$routes, $uri);

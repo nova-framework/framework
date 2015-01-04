@@ -61,7 +61,7 @@ class Database extends PDO{
 		} catch(PDOException $e){
 			//in the event of an error record the error to errorlog.html
 			Logger::newMessage($e);
-			logger::customErrorMsg();
+			Logger::customErrorMsg();
 		}
 	}
 

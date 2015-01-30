@@ -23,11 +23,22 @@ class Welcome extends \core\controller{
 	 * Define Index page title and load template files
 	 */
 	public function index() {
+
+		if($_GET['ex'] == 'error'){
+			$alert['error'] = 'Error alert example' ; 
+		}
+		if($_GET['ex'] == 'success'){
+			$alert['success'] = 'Success alert example' ; 
+		} 
+		if($_GET['ex'] == 'infos'){
+			$alert['infos'] = 'Infos alert example' ; 
+		}  
+
 		$data['title'] = $this->language->get('welcome_text');
 		$data['welcome_message'] = $this->language->get('welcome_message');
 		
 		View::rendertemplate('header', $data);
-		View::render('welcome/welcome', $data);
+		View::render('welcome/welcome', $data, $alert);
 		View::rendertemplate('footer', $data);
 	}
 
@@ -39,7 +50,7 @@ class Welcome extends \core\controller{
 		$data['welcome_message'] = $this->language->get('subpage_message');
 		
 		View::rendertemplate('header', $data);
-		View::render('welcome/subpage', $data);
+		View::render('welcome/subpage', $data, $alert);
 		View::rendertemplate('footer', $data);
 	}
 

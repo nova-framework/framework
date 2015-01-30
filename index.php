@@ -68,7 +68,7 @@ Router::any('', '\controllers\welcome@index');
 Router::any('/subpage', '\controllers\welcome@subpage');
 
 //if no route found
-Router::error('\core\error@index');
+Router::error('\core\alert@index');
 
 //turn on old style routing
 Router::$fallback = false;

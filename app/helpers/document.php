@@ -4,7 +4,7 @@
  *
  * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
  * @version 1.0
- * @date June 27, 2014
+ * @date updated Feb 07, 2015
  */
 class Document {
 
@@ -51,6 +51,50 @@ class Document {
 	} 
 
 	/**
+	 * Converts a human readable file size value to a number of bytes that it
+	 * represents. Supports the following modifiers: K, M, G and T.
+	 * Invalid input is returned unchanged.
+	 *
+	 * Example:
+	 * <code>
+	 * $config->getBytesSize(10);          // 10
+	 * $config->getBytesSize('10b');       // 10
+	 * $config->getBytesSize('10k');       // 10240
+	 * $config->getBytesSize('10K');       // 10240
+	 * $config->getBytesSize('10kb');      // 10240
+	 * $config->getBytesSize('10Kb');      // 10240
+	 * // and even
+	 * $config->getBytesSize('   10 KB '); // 10240
+	 * </code>
+	 *
+	 * @param number|string $value
+	 * @return number
+	 */
+	public function getBytesSize($value) {
+	  return preg_replace_callback('/^\s*(\d+)\s*(?:([kmgt]?)b?)?\s*$/i', function ($m) {
+	    switch (strtolower($m[2])) {
+	      case 't': $m[1] *= 1024;
+	      case 'g': $m[1] *= 1024;
+	      case 'm': $m[1] *= 1024;
+	      case 'k': $m[1] *= 1024;
+	    }
+	    return $m[1];
+	  }, $value);
+	}
+
+	/**
+	 * return the bytes file of a folder
+	 * @param string $path
+	 * @return string
+	 */
+	public function getFolderSize($path){
+	    $io = popen('/usr/bin/du -sb '.$path, 'r');
+	    $size = intval(fgets($io,80));
+	    pclose($io);
+	    return $size;
+	}
+
+	/**
 	 * return the file type based on the filename provided
 	 * @param  string $file 
 	 * @return string       
@@ -71,5 +115,4 @@ class Document {
 		}
 		return $file;
 	}
-
 }

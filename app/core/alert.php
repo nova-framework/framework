@@ -9,21 +9,21 @@ use core\controller,
  * @version 2.1
  * @date June 27, 2014
  */
-class Error extends Controller {
+class Alert extends Controller {
 
 	/**
 	 * $error holder
 	 * @var string
 	 */
-	private $_error = null; 
+	private $_alert = null; 	
 
 	/**
 	 * save error to $this->_error
 	 * @param string $error 
 	 */
-	public function __construct($error){
+	public function __construct($alert){
 		parent::__construct();
-		$this->_error = $error;
+		$this->_alert = $alert;		
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Error extends Controller {
 		header("HTTP/1.0 404 Not Found");
 		
 		$data['title'] = '404';
-		$data['error'] = $this->_error;
+		$data['error'] = $this->_alert;
 		
 		View::rendertemplate('header',$data);
 		View::render('error/404',$data);
@@ -48,21 +48,20 @@ class Error extends Controller {
 	 * @param  string $class name of class to apply to div
 	 * @return string        return the errors inside divs
 	 */
-	public static function display($error, $class = 'alert alert-danger'){
-		if (is_array($error)){
 
-			foreach($error as $error){
-				$row.= "<div class='$class'>$error</div>";
+	public static function display($alert, $class){
+		if (is_array($alert)){
+
+			foreach($alert as $alert){
+				$row.= "<div class='$class'>$alert</div>";
 			}
 			return $row;
-
 		} else {
 
-			if(isset($error)){
-				return "<div class='$class'>$error</div>";
+			if(isset($alert)){
+				return "<div class='$class'>$alert</div>";
 			}
-
-		}
+		} 
 	}
 
 }

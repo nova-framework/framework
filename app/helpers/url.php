@@ -80,4 +80,28 @@ class Url {
 		header('Location: '. $_SERVER['HTTP_REFERER']);
 		exit;
 	}
+
+	/**
+	 * get all url parts based on a / seperator
+	 * @return array of segments
+	 */
+	public static function segments(){
+		return explode('/', $_SERVER['REQUEST_URI']);
+	}
+
+	/**
+	 * get last item in array
+	 */
+	public static function lastsegment($segments){
+		return end($segments);
+	}
+
+	/**
+	 * get first item in array
+	 */
+	public static function firstsegment($segments){
+		return $segments[0];
+	}
+
+	
 }

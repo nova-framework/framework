@@ -105,7 +105,8 @@ class Database extends PDO{
 			$stmt->bindValue(":$key", $value);
 		}
 
-		$stmt->execute();		
+		$stmt->execute();
+		return $this->lastInsertId();
 
 	}
 

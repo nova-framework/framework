@@ -49,7 +49,7 @@ class Language {
 	public function get($value) {
 
 		if(!empty($this->_array[$value])){
-			return $this->_array[$value];
+			htmlspecialchars($this->_array[$value]);
 		} else {
 			return $value;
 		}

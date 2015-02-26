@@ -84,7 +84,7 @@ class Language {
 
 		// If 
 		if(!empty($_array[$value])){
-			return $_array[$value];
+			return htmlspecialchars($_array[$value]);
 		} else {
 			return $value;
 		}

@@ -69,10 +69,11 @@ class Database extends PDO{
 	 * method for selecting records from a database
 	 * @param  string $sql       sql query
 	 * @param  array  $array     named params
-	 * @param  object $fetchMode 
+	 * @param  object $fetchMode
+	 * @param  string $class     class name
 	 * @return array            returns an array of records
 	 */
-	public function select($sql,$array = array(), $fetchMode = PDO::FETCH_OBJ){
+	public function select($sql,$array = array(), $fetchMode = PDO::FETCH_OBJ, $class = ''){
 
 		$stmt = $this->prepare($sql);
 		foreach($array as $key => $value){
@@ -84,7 +85,12 @@ class Database extends PDO{
 		}
 
 		$stmt->execute();
-		return $stmt->fetchAll($fetchMode);
+
+		if ($fetchMode === PDO::FETCH_CLASS) {
+			return $stmt->fetchAll($fetchMode, $class);
+		} else {
+			return $stmt->fetchAll($fetchMode);
+		}
 	}
 
 	/**

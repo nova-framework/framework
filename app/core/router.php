@@ -97,14 +97,18 @@ class Router {
 	 * Ability to call controllers in their controller/model/param way
 	 */
 	public static function autoDispatch() {
-
 		$uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
 		$uri = trim($uri, ' /');
+		
 		$parts = explode('/', $uri);
-
-		$controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : DEFAULT_CONTROLLER;
-		$method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : DEFAULT_METHOD;
-		$args       = is_array($parts) && count($parts) > 2 ? array_slice($parts, 2) : array(); 
+		
+		$controller = array_shift($parts);
+		$controller = $controller ? $controller : DEFAULT_CONTROLLER;
+		
+		$method = array_shift($parts);
+		$method = $method ? $method : DEFAULT_METHOD;
+		
+		$args = !empty($parts) ? $parts : null; 
 
 		$char_position = strpos($controller,'&');
 		if ($char_position > 0 ) {
@@ -127,16 +131,15 @@ class Router {
 		}
 
 		// Check for file
-		if (!file_exists('app/controllers/' . $controller . '.php')) {
+		if (!file_exists("app/controllers/$controller.php")) {
 			return false;
 		}
 
-		$controller = '\controllers\\' . $controller;
+		$controller = "\controllers\\$controller";
 		$c = new $controller;
 
 		if (method_exists($c, $method)) {
-			
-			$c->$method($args);
+			call_user_func(array($c, $method), $args);
 			//found method so stop
 			return true;
 
@@ -241,7 +244,7 @@ class Router {
 		if (!$found_route) {
 			if (!self::$error_callback) {
 				self::$error_callback = function() {
-					header($_SERVER['SERVER_PROTOCOL']." 404 Not Found");
+					header("{$_SERVER['SERVER_PROTOCOL']} 404 Not Found");
 					echo '404';
 				};
 			} 

@@ -120,7 +120,7 @@ class Router {
 		$c = new $controller;
 
 		if (method_exists($c, $method)) {
-		    call_user_func_array(array($c, $method), $args);
+			call_user_func_array(array($c, $method), $args);
 			//found method so stop
 			return true;
 		}

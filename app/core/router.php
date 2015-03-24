@@ -99,6 +99,7 @@ class Router {
 	public static function autoDispatch() {
 		$uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
 		$uri = trim($uri, ' /');
+		$uri = ($amp = strpos($uri, '&')) !== false ? substr($uri, 0, $amp) : $uri;
 		
 		$parts = explode('/', $uri);
 		
@@ -108,27 +109,7 @@ class Router {
 		$method = array_shift($parts);
 		$method = $method ? $method : DEFAULT_METHOD;
 		
-		$args = !empty($parts) ? $parts : null; 
-
-		$char_position = strpos($controller,'&');
-		if ($char_position > 0 ) {
-			$ctp = explode('&', $controller);
-			$controller = $ctp[0];
-		}
-
-		$char_position2 = strpos($method,'&');
-		if ($char_position2 > 0 ) {
-			$ctp = explode('&', $method);
-			$method = $ctp[0];
-		}
-
-		if ($args != null) {
-			$char_position3 = strpos($args[0],'&');
-			if ($char_position3 > 0 ) {
-				$ctp = explode('&', $yes);
-				$args[0] = $ctp[0];
-			}
-		}
+		$args = !empty($parts) ? $parts : array(); 
 
 		// Check for file
 		if (!file_exists("app/controllers/$controller.php")) {
@@ -139,10 +120,9 @@ class Router {
 		$c = new $controller;
 
 		if (method_exists($c, $method)) {
-			call_user_func(array($c, $method), $args);
+		    call_user_func_array(array($c, $method), $args);
 			//found method so stop
 			return true;
-
 		}
 
 		return false;

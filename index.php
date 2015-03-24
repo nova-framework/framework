@@ -74,4 +74,4 @@ Router::error('\core\error@index');
 Router::$fallback = false;
 
 //execute matched routes
-Router::dispatch();
+Router::autoDispatch();

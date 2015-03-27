@@ -120,7 +120,7 @@ class Router {
 		$c = new $controller;
 
 		if (method_exists($c, $method)) {
-			call_user_func_array(array($c, $method), $args);
+			$c->$method($args);
 			//found method so stop
 			return true;
 		}
@@ -227,7 +227,7 @@ class Router {
 					header("{$_SERVER['SERVER_PROTOCOL']} 404 Not Found");
 					echo '404';
 				};
-			} 
+			}
 
 			if(!is_object(self::$error_callback)){
 

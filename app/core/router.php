@@ -97,49 +97,32 @@ class Router {
 	 * Ability to call controllers in their controller/model/param way
 	 */
 	public static function autoDispatch() {
-
 		$uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
 		$uri = trim($uri, ' /');
+		$uri = ($amp = strpos($uri, '&')) !== false ? substr($uri, 0, $amp) : $uri;
+		
 		$parts = explode('/', $uri);
-
-		$controller = $uri !== ''      && isset($parts[0])  ? $parts[0] : DEFAULT_CONTROLLER;
-		$method     = $uri !== ''      && isset($parts[1])  ? $parts[1] : DEFAULT_METHOD;
-		$args       = is_array($parts) && count($parts) > 2 ? array_slice($parts, 2) : array(); 
-
-		$char_position = strpos($controller,'&');
-		if ($char_position > 0 ) {
-			$ctp = explode('&', $controller);
-			$controller = $ctp[0];
-		}
-
-		$char_position2 = strpos($method,'&');
-		if ($char_position2 > 0 ) {
-			$ctp = explode('&', $method);
-			$method = $ctp[0];
-		}
-
-		if ($args != null) {
-			$char_position3 = strpos($args[0],'&');
-			if ($char_position3 > 0 ) {
-				$ctp = explode('&', $yes);
-				$args[0] = $ctp[0];
-			}
-		}
+		
+		$controller = array_shift($parts);
+		$controller = $controller ? $controller : DEFAULT_CONTROLLER;
+		
+		$method = array_shift($parts);
+		$method = $method ? $method : DEFAULT_METHOD;
+		
+		$args = !empty($parts) ? $parts : array(); 
 
 		// Check for file
-		if (!file_exists('app/controllers/' . $controller . '.php')) {
+		if (!file_exists("app/controllers/$controller.php")) {
 			return false;
 		}
 
-		$controller = '\controllers\\' . $controller;
+		$controller = "\controllers\\$controller";
 		$c = new $controller;
 
 		if (method_exists($c, $method)) {
-			
 			$c->$method($args);
 			//found method so stop
 			return true;
-
 		}
 
 		return false;
@@ -260,10 +243,10 @@ class Router {
 		if (!$found_route) {
 			if (!self::$error_callback) {
 				self::$error_callback = function() {
-					header($_SERVER['SERVER_PROTOCOL']." 404 Not Found");
+					header("{$_SERVER['SERVER_PROTOCOL']} 404 Not Found");
 					echo '404';
 				};
-			} 
+			}
 
 			if(!is_object(self::$error_callback)){
 

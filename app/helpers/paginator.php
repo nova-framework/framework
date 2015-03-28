@@ -3,8 +3,8 @@
  * PHP Pagination Class
  *
  * @author David Carr - dave@daveismyname.com - http://www.daveismyname.com
- * @version 1.0
- * @date October 20, 2012
+ * @version 1.1
+ * @date March 28, 2015
  */
 class Paginator{
 
@@ -150,7 +150,7 @@ class Paginator{
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
-		    $pagination.= "...";
+		    $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>...</span></li>";
 		    $pagination.= "<li><a href='".$path."$this->_instance=$lpm1"."$ext'>$lpm1</a></li>";
 		    $pagination.= "<li><a href='".$path."$this->_instance=$lastpage"."$ext'>$lastpage</a></li>";       
 		}
@@ -158,15 +158,15 @@ class Paginator{
 		{
 		    $pagination.= "<li><a href='".$path."$this->_instance=1"."$ext'>1</a></li>";
 		    $pagination.= "<li><a href='".$path."$this->_instance=2"."$ext'>2</a></li>";
-		    $pagination.= "...";
+		    $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>...</span></li>";
 		for ($counter = $this->_page - $adjacents; $counter <= $this->_page + $adjacents; $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<span class='current'>$counter</span>";
+		    $pagination.= "<li><span class='current'>$counter</span></li>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
-		    $pagination.= "..";
+		    $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>..</span></li>";
 		    $pagination.= "<li><a href='".$path."$this->_instance=$lpm1"."$ext'>$lpm1</a></li>";
 		    $pagination.= "<li><a href='".$path."$this->_instance=$lastpage"."$ext'>$lastpage</a></li>";       
 		}
@@ -174,11 +174,11 @@ class Paginator{
 		{
 		    $pagination.= "<li><a href='".$path."$this->_instance=1"."$ext'>1</a></li>";
 		    $pagination.= "<li><a href='".$path."$this->_instance=2"."$ext'>2</a></li>";
-		    $pagination.= "..";
+		    $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>..</span></li>";
 		for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<span class='current'>$counter</span>";
+		    $pagination.= "<li><span class='current'>$counter</span></li>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}

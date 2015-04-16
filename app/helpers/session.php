@@ -95,6 +95,15 @@ class Session {
 	public static function id() {
 		return session_id();
 	}
+	
+	/**
+	 * regenerate session_id
+	 * @return string session_id
+	 */
+	public static function regenerate(){
+		session_regenerate_id();
+		return session_id();
+	}
 
 	/**
 	 * return the session array

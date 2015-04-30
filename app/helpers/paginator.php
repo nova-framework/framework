@@ -123,18 +123,19 @@ class Paginator{
 	    $pagination = "";
 		if($lastpage > 1)
 		{   
+			$pagination .= "<nav>";
 		    $pagination .= "<ul class='pagination'>";
 		if ($this->_page > 1)
-		    $pagination.= "<li><a href='".$path."$this->_instance=$prev"."$ext'>Previous</a></li>";
+		    $pagination.= "<li><a href='".$path."$this->_instance=$prev"."$ext' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";
 		else
-		    $pagination.= "<li><span class='disabled'>Previous</span></li>";   
+		    $pagination.= "<li class='disabled'><a href='#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";   
 
 		if ($lastpage < 7 + ($adjacents * 2))
 		{   
 		for ($counter = 1; $counter <= $lastpage; $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<li><span class='current'>$counter</span></li>";
+		    $pagination.= "<li class='active'><span>$counter</span></li>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
@@ -146,7 +147,7 @@ class Paginator{
 		for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<li><span class='current'>$counter</span></li>";
+		    $pagination.= "<li class='active'><span class='sr-only'>$counter</span></li>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
@@ -162,7 +163,7 @@ class Paginator{
 		for ($counter = $this->_page - $adjacents; $counter <= $this->_page + $adjacents; $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<li><span class='current'>$counter</span></li>";
+		    $pagination.= "<li><span class='active'>$counter</span></li>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
@@ -178,7 +179,7 @@ class Paginator{
 		for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++)
 		{
 		if ($counter == $this->_page)
-		    $pagination.= "<li><span class='current'>$counter</span></li>";
+		    $pagination.= "<li><span class='active'>$counter</span></li>";
 		else
 		    $pagination.= "<li><a href='".$path."$this->_instance=$counter"."$ext'>$counter</a></li>";                   
 		}
@@ -186,10 +187,11 @@ class Paginator{
 		}
 
 		if ($this->_page < $counter - 1)
-		    $pagination.= "<li><a href='".$path."$this->_instance=$next"."$ext'>Next</a></li>";
+		    $pagination.= "<li><a href='".$path."$this->_instance=$next"."$ext' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
 		else
-		    $pagination.= "<li><span class='disabled'>Next</span></li>";
-		    $pagination.= "</ul>\n";       
+		    $pagination.= "<li class='disabled'><a href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
+		    $pagination.= "</ul>";
+		    $pagination.= "</nav>\n";       
 		}
 
 

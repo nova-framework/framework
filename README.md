@@ -4,6 +4,10 @@
 
 [![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg?style=flat-square)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg?style=flat-square)](https://packagist.org/packages/simple-mvc-framework/v2)
+[![Dependency Status](https://www.versioneye.com/user/projects/554367f738331321e2000005/badge.svg?style=flat)](https://www.versioneye.com/user/projects/554367f738331321e2000005)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/simple-mvc-framework/v2/master/license.txt)
+[![GitHub stars](https://img.shields.io/github/stars/simple-mvc-framework/v2.svg)](https://github.com/simple-mvc-framework/v2/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/simple-mvc-framework/v2.svg)](https://github.com/simple-mvc-framework/v2/network)
 
 The framework is now on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2)
 

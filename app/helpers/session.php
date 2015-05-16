@@ -101,7 +101,7 @@ class Session {
 	 * @return string session_id
 	 */
 	public static function regenerate(){
-		session_regenerate_id();
+		session_regenerate_id(true);
 		return session_id();
 	}
 

@@ -13,11 +13,11 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "ircmaxell/password-compat": "dev-master"
+        "php": ">=5.4.0"
     },
     "autoload": {
-        "psr-4": {"": "app/"}
+        "psr-4": {"": "app/"},
+        "files": ["app/files/password.php"]
     },
     "minimum-stability": "dev"
 }

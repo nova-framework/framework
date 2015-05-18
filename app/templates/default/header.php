@@ -14,10 +14,10 @@ use Helpers\Url;
 
 	<!-- CSS -->
 	<?php
-	Assets::css([
+	Assets::css(array(
 		'//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css',
 		Url::templatePath() . 'css/style.css',
-	]);
+	));
 	?>
 
 </head>

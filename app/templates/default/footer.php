@@ -9,10 +9,10 @@ use Helpers\Url;
 
 <!-- JS -->
 <?php
-Assets::js([
+Assets::js(array(
 	Url::templatePath() . 'js/jquery.js',
 	'//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'
-]);
+));
 ?>
 
 </body>

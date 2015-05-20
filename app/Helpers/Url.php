@@ -43,6 +43,19 @@ class Url
     }
 
     /**
+     * created the relative address to the template folder
+     * @return string url to template folder
+     */
+    public static function relativeTemplatePath($admin = false)
+    {
+        if ($admin == false) {
+            return "app/templates/".DEFAULT_TEMPLATE."/";
+        } else {
+            return "app/templates/".ADMIN_TEMPLATE."/";
+        }
+    }
+
+    /**
      * converts plain text urls into HTML links, second argument will be
      * used as the url label <a href=''>$custom</a>
      *

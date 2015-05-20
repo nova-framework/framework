@@ -192,9 +192,10 @@ class Paginator
                 $pagination.= "<li><a href='".$path."$this->instance=$next"."$ext' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
             } else {
                 $pagination.= "<li class='disabled'><a href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
-                $pagination.= "</ul>";
-                $pagination.= "</nav>\n";
             }
+            $pagination.= "</ul>";
+            $pagination.= "</nav>\n";
+
         }
 
         return $pagination;

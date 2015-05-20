@@ -1,8 +1,6 @@
 <?php
 namespace Core;
 
-use Helpers\Session;
-
 /*
  * View - load template pages
  *

@@ -77,8 +77,8 @@ class Language
         }
 
         // If
-        if (!empty($_array[$value])) {
-            return $_array[$value];
+        if (!empty($array[$value])) {
+            return $array[$value];
         } else {
             return $value;
         }

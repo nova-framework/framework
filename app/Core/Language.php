@@ -17,7 +17,7 @@ class Language
      * Variable holds array with language
      * @var array
      */
-    private $array;
+    private $_array;
 
     /**
      * Load language function
@@ -32,7 +32,7 @@ class Language
         // check if is readable
         if (is_readable($file)) {
             // require file
-            $this->array = include($file);
+            $this->_array = include($file);
         } else {
             // display error
             echo Error::display("Could not load language file '$code/$name.php'");
@@ -47,8 +47,8 @@ class Language
      */
     public function get($value)
     {
-        if (!empty($this->array[$value])) {
-            return $this->array[$value];
+        if (!empty($this->_array[$value])) {
+            return $this->_array[$value];
         } else {
             return $value;
         }
@@ -69,7 +69,7 @@ class Language
         // check if is readable
         if (is_readable($file)) {
             // require file
-            $array = include($file);
+            $_array = include($file);
         } else {
             // display error
             echo Error::display("Could not load language file '$code/$name.php'");

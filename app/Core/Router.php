@@ -5,7 +5,7 @@ use Core\View;
 /*
  * Router - routing urls to closurs and controllers - modified from https://github.com/NoahBuscher/Macaw
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @version 2.2
  * @date Auguest 16th, 2014
  * @date updated May 18 2015

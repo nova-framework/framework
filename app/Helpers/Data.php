@@ -4,7 +4,7 @@ namespace Helpers;
 /*
  * data Helper - common data lookup methods
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @version 1.0
  * @date March 28, 2015
  * @date May 18 2015

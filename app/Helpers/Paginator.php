@@ -4,7 +4,7 @@ namespace Helpers;
 /*
  * PHP Pagination Class
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @version 2.2
  * @date updated May 18 2015
  */

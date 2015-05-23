@@ -4,7 +4,7 @@ namespace Helpers\PhpMailer;
 /*
  * Mail Helper
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @version 1.0
  * @date May 18 2015
  */

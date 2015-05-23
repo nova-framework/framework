@@ -3,6 +3,13 @@
 namespace Helpers;
 
 /**
+ * Cross Site Request Forgery helper
+ *
+ * @author jimgwhit
+ * @date May 23 2015
+ */
+ 
+/**
  * Instructions:
  * At the top of the controller where the other "use" statements are place:
  * use Helpers\Csrf;

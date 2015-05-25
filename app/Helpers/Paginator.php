@@ -1,4 +1,5 @@
 <?php
+
 namespace Helpers;
 
 /*
@@ -8,44 +9,43 @@ namespace Helpers;
  * @version 2.2
  * @date updated May 18 2015
  */
-class Paginator
-{
+
+class Paginator {
 
     /**
      * set the number of items per page.
      *
      * @var numeric
-    */
+     */
     private $perPage;
 
     /**
      * set get parameter for fetching the page number
      *
      * @var string
-    */
+     */
     private $instance;
 
     /**
      * sets the page number.
      *
      * @var numeric
-    */
+     */
     private $page;
 
     /**
      * set the limit for the data source
      *
      * @var string
-    */
+     */
     private $limit;
 
     /**
      * set the total number of records/items.
      *
      * @var numeric
-    */
+     */
     private $totalRows = 0;
-
 
     /**
      *  __construct
@@ -55,8 +55,7 @@ class Paginator
      * @param numeric  $perPage  sets the number of iteems per page
      * @param numeric  $instance sets the instance for the GET parameter
      */
-    public function __construct($perPage, $instance)
-    {
+    public function __construct($perPage, $instance) {
         $this->instance = $instance;
         $this->perPage = $perPage;
         $this->setInstance();
@@ -67,10 +66,20 @@ class Paginator
      *
      * creates the starting point for limiting the dataset
      * @return numeric
-    */
-    public function getStart()
-    {
+     */
+    public function getStart() {
         return ($this->page * $this->perPage) - $this->perPage;
+    }
+
+    /**
+     * getInstance
+     *
+     * gets the current page number if needed anywhere in your application.
+     *
+     * @var numeric
+     */
+    public function getInstance() {
+        return $this->page;
     }
 
     /**
@@ -79,9 +88,8 @@ class Paginator
      * sets the instance parameter, if numeric value is 0 then set to 1
      *
      * @var numeric
-    */
-    private function setInstance()
-    {
+     */
+    private function setInstance() {
         $this->page = (int) (!isset($_GET[$this->instance]) ? 1 : $_GET[$this->instance]);
         $this->page = ($this->page == 0 ? 1 : $this->page);
     }
@@ -92,9 +100,8 @@ class Paginator
      * collect a numberic value and assigns it to the totalRows
      *
      * @var numeric
-    */
-    public function setTotal($totalRows)
-    {
+     */
+    public function setTotal($totalRows) {
         $this->totalRows = $totalRows;
     }
 
@@ -104,10 +111,39 @@ class Paginator
      * returns the limit for the data source, calling the getStart method and passing in the number of items perp page
      *
      * @return string
-    */
-    public function getLimit()
-    {
-        return "LIMIT ".$this->getStart().",$this->perPage";
+     */
+    public function getLimit() {
+        return "LIMIT " . $this->getStart() . ",$this->perPage";
+    }
+
+    /**
+     * getLimit2 and getPerpage are used together
+     * when using the Eloquent Query Builder
+     * for the skip and take parameters.
+     *
+     * There are also other ORM's such as DBAL that need the skip and take
+     * parameters separated.
+     * 
+     * Example in controller method calling model method:
+     *     $data['pets'] = $this->Pet->getPets($pages->getLimit2(), $pages->getPerpage(), $petsearch);
+     * 
+     * Example model method using Eloquent Query Builder:
+     *     public function getPets($offset="", $rowsperpage="", $petsearch = ""){
+     *      $petsearch = $petsearch."%";
+     *            return Capsule::table('pets')
+     *                            ->where('petname', 'like', $petsearch)
+     *                            ->orderBy('petname', 'asc')
+     *                            ->skip($offset)->take($rowsperpage)->get();
+     *     }
+     * Also see the file in the helpers folder page_eloq.md for more help.
+     * @var numeric
+     */
+    public function getLimit2() {
+        return $this->getStart();
+    }
+
+    public function getPerpage() {
+        return $this->perPage;
     }
 
     /**
@@ -118,7 +154,7 @@ class Paginator
      * @var sting $path optionally set the path for the link
      * @var sting $ext optionally pass in extra parameters to the GET
      * @return string returns the html menu
-    */
+     */
     public function pageLinks($path = '?', $ext = null)
     {
         $adjacents = "2";
@@ -200,4 +236,5 @@ class Paginator
 
         return $pagination;
     }
+
 }

@@ -12,7 +12,9 @@ use \Helpers\Session;
 use Helpers\Csrf;
 use \Helpers\Paginator as HelpersPaginator;
 
-class Pet extends \Core\Controller {
+class Pet extends \Core\Controller 
+{
+
 
     private $Pet;
 

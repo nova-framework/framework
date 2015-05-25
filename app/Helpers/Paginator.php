@@ -10,7 +10,8 @@ namespace Helpers;
  * @date updated May 18 2015
  */
 
-class Paginator {
+class Paginator
+{
 
     /**
      * set the number of items per page.
@@ -55,7 +56,8 @@ class Paginator {
      * @param numeric  $perPage  sets the number of iteems per page
      * @param numeric  $instance sets the instance for the GET parameter
      */
-    public function __construct($perPage, $instance) {
+    public function __construct($perPage, $instance)
+    {
         $this->instance = $instance;
         $this->perPage = $perPage;
         $this->setInstance();
@@ -67,7 +69,8 @@ class Paginator {
      * creates the starting point for limiting the dataset
      * @return numeric
      */
-    public function getStart() {
+    public function getStart()
+    {
         return ($this->page * $this->perPage) - $this->perPage;
     }
 
@@ -78,7 +81,8 @@ class Paginator {
      *
      * @var numeric
      */
-    public function getInstance() {
+    public function getInstance()
+    {
         return $this->page;
     }
 
@@ -89,7 +93,8 @@ class Paginator {
      *
      * @var numeric
      */
-    private function setInstance() {
+    private function setInstance()
+    {
         $this->page = (int) (!isset($_GET[$this->instance]) ? 1 : $_GET[$this->instance]);
         $this->page = ($this->page == 0 ? 1 : $this->page);
     }
@@ -101,7 +106,8 @@ class Paginator {
      *
      * @var numeric
      */
-    public function setTotal($totalRows) {
+    public function setTotal($totalRows)
+    {
         $this->totalRows = $totalRows;
     }
 
@@ -112,7 +118,8 @@ class Paginator {
      *
      * @return string
      */
-    public function getLimit() {
+    public function getLimit()
+    {
         return "LIMIT " . $this->getStart() . ",$this->perPage";
     }
 
@@ -138,11 +145,13 @@ class Paginator {
      * Also see the file in the helpers folder page_eloq.md for more help.
      * @var numeric
      */
-    public function getLimit2() {
+    public function getLimit2()
+    {
         return $this->getStart();
     }
 
-    public function getPerpage() {
+    public function getPerpage()
+    {
         return $this->perPage;
     }
 
@@ -160,7 +169,7 @@ class Paginator {
         $adjacents = "2";
         $prev = $this->page - 1;
         $next = $this->page + 1;
-        $lastpage = ceil($this->totalRows/$this->perPage);
+        $lastpage = ceil($this->totalRows / $this->perPage);
         $lpm1 = $lastpage - 1;
 
         $pagination = "";
@@ -168,9 +177,9 @@ class Paginator {
             $pagination .= "<nav>";
             $pagination .= "<ul class='pagination'>";
             if ($this->page > 1) {
-                $pagination.= "<li><a href='".$path."$this->instance=$prev"."$ext' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";
+                $pagination.= "<li><a href='" . $path . "$this->instance=$prev" . "$ext' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";
             } else {
-                    $pagination.= "<li class='disabled'><a href='#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";
+                $pagination.= "<li class='disabled'><a href='#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";
             }
 
             if ($lastpage < 7 + ($adjacents * 2)) {
@@ -178,7 +187,7 @@ class Paginator {
                     if ($counter == $this->page) {
                         $pagination.= "<li class='active'><span>$counter</span></li>";
                     } else {
-                        $pagination.= "<li><a href='".$path."$this->instance=$counter"."$ext'>$counter</a></li>";
+                        $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                     }
                 }
             } elseif ($lastpage > 5 + ($adjacents * 2)) {
@@ -187,51 +196,50 @@ class Paginator {
                         if ($counter == $this->page) {
                             $pagination.= "<li class='active'><span class='sr-only'>$counter</span></li>";
                         } else {
-                            $pagination.= "<li><a href='".$path."$this->instance=$counter"."$ext'>$counter</a></li>";
+                            $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }
                     }
 
                     $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>...</span></li>";
-                    $pagination.= "<li><a href='".$path."$this->instance=$lpm1"."$ext'>$lpm1</a></li>";
-                    $pagination.= "<li><a href='".$path."$this->instance=$lastpage"."$ext'>$lastpage</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=$lpm1" . "$ext'>$lpm1</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=$lastpage" . "$ext'>$lastpage</a></li>";
                 } elseif ($lastpage - ($adjacents * 2) > $this->page && $this->page > ($adjacents * 2)) {
-                    $pagination.= "<li><a href='".$path."$this->instance=1"."$ext'>1</a></li>";
-                    $pagination.= "<li><a href='".$path."$this->instance=2"."$ext'>2</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=1" . "$ext'>1</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=2" . "$ext'>2</a></li>";
                     $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>...</span></li>";
 
                     for ($counter = $this->page - $adjacents; $counter <= $this->page + $adjacents; $counter++) {
                         if ($counter == $this->page) {
                             $pagination.= "<li><span class='active'>$counter</span></li>";
                         } else {
-                            $pagination.= "<li><a href='".$path."$this->instance=$counter"."$ext'>$counter</a></li>";
+                            $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }
                     }
                     $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>..</span></li>";
-                    $pagination.= "<li><a href='".$path."$this->instance=$lpm1"."$ext'>$lpm1</a></li>";
-                    $pagination.= "<li><a href='".$path."$this->instance=$lastpage"."$ext'>$lastpage</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=$lpm1" . "$ext'>$lpm1</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=$lastpage" . "$ext'>$lastpage</a></li>";
                 } else {
-                    $pagination.= "<li><a href='".$path."$this->instance=1"."$ext'>1</a></li>";
-                    $pagination.= "<li><a href='".$path."$this->instance=2"."$ext'>2</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=1" . "$ext'>1</a></li>";
+                    $pagination.= "<li><a href='" . $path . "$this->instance=2" . "$ext'>2</a></li>";
                     $pagination.= "<li><span style='border: none; background: none; padding: 8px;'>..</span></li>";
 
                     for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                         if ($counter == $this->page) {
                             $pagination.= "<li><span class='active'>$counter</span></li>";
                         } else {
-                            $pagination.= "<li><a href='".$path."$this->instance=$counter"."$ext'>$counter</a></li>";
+                            $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }
                     }
                 }
             }
 
             if ($this->page < $counter - 1) {
-                $pagination.= "<li><a href='".$path."$this->instance=$next"."$ext' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
+                $pagination.= "<li><a href='" . $path . "$this->instance=$next" . "$ext' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
             } else {
                 $pagination.= "<li class='disabled'><a href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
             }
             $pagination.= "</ul>";
             $pagination.= "</nav>\n";
-
         }
 
         return $pagination;

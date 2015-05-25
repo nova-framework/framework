@@ -33,6 +33,22 @@ class View
     }
 
     /**
+     * include template file
+     * @param  string  $path  path to file from Modules folder
+     * @param  array $data  array of data
+     * @param  array $error array of errors
+     */
+    public static function renderModule($path, $data = false, $error = false)
+    {
+        if (!headers_sent()) {
+            foreach (self::$headers as $header) {
+                header($header, true);
+            }
+        }
+        require "app/Modules/$path.php";
+    }
+
+    /**
      * return absolute path to selected template directory
      * @param  string  $path  path to file from views folder
      * @param  array   $data  array of data

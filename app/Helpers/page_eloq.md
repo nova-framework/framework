@@ -60,4 +60,8 @@
                         ->orderBy('petname', 'asc')
                         ->skip($offset)->take($rowsperpage)->get();
     }
+<<<<<<< HEAD
 ~~~
+=======
+~~~
+>>>>>>> origin/master

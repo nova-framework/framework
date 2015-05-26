@@ -135,7 +135,8 @@ class Paginator
      *     $data['pets'] = $this->Pet->getPets($pages->getLimit2(), $pages->getPerpage(), $petsearch);
      * 
      * Example model method using Eloquent Query Builder:
-     *     public function getPets($offset="", $rowsperpage="", $petsearch = ""){
+     *     public function getPets($offset="", $rowsperpage="", $petsearch = "")
+     *     {
      *      $petsearch = $petsearch."%";
      *            return Capsule::table('pets')
      *                            ->where('petname', 'like', $petsearch)

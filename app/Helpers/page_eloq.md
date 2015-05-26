@@ -1,8 +1,8 @@
 <?php
 /*
- * The paginator for the Eloquent Query Builder and for SMVC are used the same
- * except for the skip and take parameters are separated for Eloquent. 
- * A typical example of controller usage:
+  The paginator for the Eloquent Query Builder and for SMVC are used the same
+  except for the skip and take parameters are separated for Eloquent. 
+  A typical example of controller usage:
 
 
 namespace Controllers;

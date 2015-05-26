@@ -1,20 +1,18 @@
-<?php
-/*
   The paginator for the Eloquent Query Builder and for SMVC are used the same
   except for the skip and take parameters are separated for Eloquent. 
   A typical example of controller usage:
 
+```
+    namespace Controllers;
 
-namespace Controllers;
+    use Core\View;
+    use \Helpers\Url;
+    use \Helpers\Session;
+    use Helpers\Csrf;
+    use \Helpers\Paginator as HelpersPaginator;
 
-use Core\View;
-use \Helpers\Url;
-use \Helpers\Session;
-use Helpers\Csrf;
-use \Helpers\Paginator as HelpersPaginator;
-
-class Pet extends \Core\Controller
-{
+    class Pet extends \Core\Controller
+    {
 
     private $Pet;
 
@@ -43,25 +41,23 @@ class Pet extends \Core\Controller
         $this->view->render('pet/index', $data);
         $this->view->renderTemplate('footer', $data);
     }
-
+```
   And typical examples of getting count and retrieving records
   in the model are:
   
- 
+```
+    public function petCount($petsearch = "")
+    {
+        $petsearch = $petsearch . "%";
+        return Capsule::table('pets')->where('petname', 'like', $petsearch)->count();
+    }
 
-public function petCount($petsearch = "")
-{
-
-    $petsearch = $petsearch . "%";
-    return Capsule::table('pets')->where('petname', 'like', $petsearch)->count();
-}
-
-public function getPets($offset = "", $rowsperpage = "", $petsearch = "")
-{
-    $petsearch = $petsearch . "%";
-    return Capsule::table('pets')
-                    ->where('petname', 'like', $petsearch)
-                    ->orderBy('petname', 'asc')
-                    ->skip($offset)->take($rowsperpage)->get();
-}
- */
+    public function getPets($offset = "", $rowsperpage = "", $petsearch = "")
+    {
+        $petsearch = $petsearch . "%";
+        return Capsule::table('pets')
+                        ->where('petname', 'like', $petsearch)
+                        ->orderBy('petname', 'asc')
+                        ->skip($offset)->take($rowsperpage)->get();
+    }
+```

@@ -2,7 +2,7 @@
   except for the skip and take parameters are separated for Eloquent. 
   A typical example of controller usage:
 
-```
+~~~
     namespace Controllers;
 
     use Core\View;
@@ -41,11 +41,11 @@
         $this->view->render('pet/index', $data);
         $this->view->renderTemplate('footer', $data);
     }
-```
+~~~
   And typical examples of getting count and retrieving records
   in the model are:
   
-```
+~~~
     public function petCount($petsearch = "")
     {
         $petsearch = $petsearch . "%";
@@ -60,4 +60,4 @@
                         ->orderBy('petname', 'asc')
                         ->skip($offset)->take($rowsperpage)->get();
     }
-```
+~~~

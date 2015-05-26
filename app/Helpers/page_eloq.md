@@ -1,8 +1,12 @@
-The paginator for the Eloquent Query Builder and for SMVC are used the same
-except for the skip and take parameters are separated for Eloquent. 
-A typical example of controller usage:
-
 <?php
+/*
+ * The paginator for the Eloquent Query Builder and for SMVC are used the same
+ * except for the skip and take parameters are separated for Eloquent. 
+ * A typical example of controller usage:
+ */
+
+
+
 
 namespace Controllers;
 
@@ -12,13 +16,13 @@ use \Helpers\Session;
 use Helpers\Csrf;
 use \Helpers\Paginator as HelpersPaginator;
 
-class Pet extends \Core\Controller 
+class Pet extends \Core\Controller
 {
-
 
     private $Pet;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->Pet = new \Models\PetModel();
         if (Session::get('loggin') == false) {
@@ -26,7 +30,8 @@ class Pet extends \Core\Controller
         }
     }
 
-    public function index() {
+    public function index()
+    {
         $petsearch = (isset($_REQUEST['psch']) <> '' ? $_REQUEST['psch'] : "");
         Session::set('petsearch', $petsearch);
         $petrows = $this->Pet->petCount($petsearch); // get number of rows
@@ -41,21 +46,24 @@ class Pet extends \Core\Controller
         $this->view->render('pet/index', $data);
         $this->view->renderTemplate('footer', $data);
     }
+/*
+ * And typical examples of getting count and retrieving records
+ * in the model are:
+ * 
+ */
 
-    And typical examples of getting count and retrieving records
-    in the model are:
+public function petCount($petsearch = "")
+{
 
-    public function petCount($petsearch = "") {
-        $petsearch = $petsearch . "%";
-        return Capsule::table('pets')->where('petname', 'like', $petsearch)->count();
-    }
+    $petsearch = $petsearch . "%";
+    return Capsule::table('pets')->where('petname', 'like', $petsearch)->count();
+}
 
-    
-    public function getPets($offset = "", $rowsperpage = "", $petsearch = "") {
-        $petsearch = $petsearch . "%";
-        return Capsule::table('pets')
-                        ->where('petname', 'like', $petsearch)
-                        ->orderBy('petname', 'asc')
-                        ->skip($offset)->take($rowsperpage)->get();
-    }
-    
+public function getPets($offset = "", $rowsperpage = "", $petsearch = "")
+{
+    $petsearch = $petsearch . "%";
+    return Capsule::table('pets')
+                    ->where('petname', 'like', $petsearch)
+                    ->orderBy('petname', 'asc')
+                    ->skip($offset)->take($rowsperpage)->get();
+}

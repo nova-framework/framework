@@ -140,7 +140,7 @@ class Database extends PDO
 
         $fieldDetails = null;
         foreach ($data as $key => $value) {
-            $fieldDetails .= "$key = :$field_$key,";
+            $fieldDetails .= "$key = :field_$key,";
         }
         $fieldDetails = rtrim($fieldDetails, ',');
 
@@ -148,9 +148,9 @@ class Database extends PDO
         $i = 0;
         foreach ($where as $key => $value) {
             if ($i == 0) {
-                $whereDetails .= "$key = :$where_$key";
+                $whereDetails .= "$key = :where_$key";
             } else {
-                $whereDetails .= " AND $key = :$where_$key";
+                $whereDetails .= " AND $key = :where_$key";
             }
             $i++;
         }

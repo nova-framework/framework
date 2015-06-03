@@ -4,7 +4,7 @@ namespace Core;
 /*
  * View - load template pages
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @version 2.2
  * @date June 27, 2014
  * @date updated May 18 2015
@@ -30,6 +30,22 @@ class View
             }
         }
         require "app/views/$path.php";
+    }
+
+    /**
+     * include template file
+     * @param  string  $path  path to file from Modules folder
+     * @param  array $data  array of data
+     * @param  array $error array of errors
+     */
+    public static function renderModule($path, $data = false, $error = false)
+    {
+        if (!headers_sent()) {
+            foreach (self::$headers as $header) {
+                header($header, true);
+            }
+        }
+        require "app/Modules/$path.php";
     }
 
     /**

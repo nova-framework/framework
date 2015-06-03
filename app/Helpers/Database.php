@@ -6,7 +6,7 @@ use PDO;
 /*
  * database Helper - extending PDO to use custom methods
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @version 2.1
  * @date June 27, 2014
  * @date May 18 2015
@@ -140,7 +140,7 @@ class Database extends PDO
 
         $fieldDetails = null;
         foreach ($data as $key => $value) {
-            $fieldDetails .= "$key = :$key,";
+            $fieldDetails .= "$key = :field_$key,";
         }
         $fieldDetails = rtrim($fieldDetails, ',');
 
@@ -148,9 +148,9 @@ class Database extends PDO
         $i = 0;
         foreach ($where as $key => $value) {
             if ($i == 0) {
-                $whereDetails .= "$key = :$key";
+                $whereDetails .= "$key = :where_$key";
             } else {
-                $whereDetails .= " AND $key = :$key";
+                $whereDetails .= " AND $key = :where_$key";
             }
             $i++;
         }
@@ -159,11 +159,11 @@ class Database extends PDO
         $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
         foreach ($data as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+            $stmt->bindValue(":field_$key", $value);
         }
 
         foreach ($where as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+            $stmt->bindValue(":where_$key", $value);
         }
 
         $stmt->execute();

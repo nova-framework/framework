@@ -7,7 +7,7 @@ use Helpers\Session;
  * config - an example for setting up system settings
  * When you are done editing, rename this file to 'config.php'
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @author Edwin Hoksberg - info@edwinhoksberg.nl
  * @version 2.2
  * @date June 27, 2014

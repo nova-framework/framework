@@ -4,8 +4,8 @@ namespace Helpers;
 /*
  * Tags Class
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
- * @version 1.0
+ * @author David Carr - dave@simplemvcframework.com
+ * @version 2.2
  * @date May 18 2015
  */
 

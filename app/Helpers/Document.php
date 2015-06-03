@@ -4,7 +4,7 @@ namespace Helpers;
 /*
  * Document Helper - collection of methods for working with documents
  *
- * @author David Carr - dave@daveismyname.com - http://daveismyname.com
+ * @author David Carr - dave@simplemvcframework.com
  * @version 1.0
  * @date updated Feb 07, 2015
  * @date May 18 2015

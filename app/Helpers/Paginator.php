@@ -120,11 +120,11 @@ class Paginator
      */
     public function getLimit()
     {
-        return "LIMIT " . $this->getStart() . ",$this->perPage";
+        return "LIMIT " . $this->getStart() . ", $this->perPage";
     }
 
     /**
-     * getLimit2 and getPerpage are used together
+     * getLimit2 and getPerPage are used together
      * when using the Eloquent Query Builder
      * for the skip and take parameters.
      *
@@ -132,18 +132,23 @@ class Paginator
      * parameters separated.
      * 
      * Example in controller method calling model method:
-     *     $data['pets'] = $this->Pet->getPets($pages->getLimit2(), $pages->getPerpage(), $petsearch);
+     * 
+     * $data['pets'] = $this->pet->getPets($pages->getLimit2(), $pages->getPerPage(), $petSearch);
      * 
      * Example model method using Eloquent Query Builder:
-     *     public function getPets($offset="", $rowsperpage="", $petsearch = "")
-     *     {
-     *      $petsearch = $petsearch."%";
-     *            return Capsule::table('pets')
-     *                            ->where('petname', 'like', $petsearch)
-     *                            ->orderBy('petname', 'asc')
-     *                            ->skip($offset)->take($rowsperpage)->get();
-     *     }
+     * 
+     * public function getPets($offset = "", $rowsPerPage = "", $petSearch = "")
+     * {
+     *     $petsearch = $petsearch . "%";
+     *     
+     *     return Capsule::table('pets')
+     *                     ->where('petName', 'like', $petsearch)
+     *                     ->orderBy('petName', 'asc')
+     *                     ->skip($offset)->take($rowsPerPage)->get();
+     * }
+     * 
      * Also see the file in the helpers folder page_eloq.md for more help.
+     * 
      * @var numeric
      */
     public function getLimit2()
@@ -151,7 +156,7 @@ class Paginator
         return $this->getStart();
     }
 
-    public function getPerpage()
+    public function getPerPage()
     {
         return $this->perPage;
     }

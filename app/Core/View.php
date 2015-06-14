@@ -62,7 +62,7 @@ class View
             }
         }
 
-        if ($custom == false) {
+        if ($custom === false) {
             require "app/templates/".TEMPLATE."/$path.php";
         } else {
             require "app/templates/$custom/$path.php";

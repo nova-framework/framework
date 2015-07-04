@@ -108,20 +108,24 @@ class Router
 
         $parts = explode('/', $uri);
 
-        $controller = array_shift($parts);
+        if (count($parts) == 1) {
+            $controller = '';
+        } else {
+            $controller = array_shift($parts);
+        }
         $controller = $controller ? $controller : DEFAULT_CONTROLLER;
-
+        $controller = ucwords($controller);
+        
         $method = array_shift($parts);
         $method = $method ? $method : DEFAULT_METHOD;
 
         $args = !empty($parts) ? $parts : array();
 
         // Check for file
-        if (!file_exists("App/Controllers/$controller.php")) {
+        if (!file_exists("app/Controllers/$controller.php")) {
             return false;
         }
 
-        $controller = ucwords($controller);
         $controller = "\Controllers\\$controller";
         $c = new $controller;
 

@@ -108,11 +108,7 @@ class Router
 
         $parts = explode('/', $uri);
 
-        if (count($parts) == 1) {
-            $controller = '';
-        } else {
-            $controller = array_shift($parts);
-        }
+        $controller = array_shift($parts);
         $controller = $controller ? $controller : DEFAULT_CONTROLLER;
         $controller = ucwords($controller);
         

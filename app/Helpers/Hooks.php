@@ -65,7 +65,9 @@ class Hooks
         if ($handle = opendir($fromFolder)) {
             while ($file = readdir($handle)) {
                 if (is_file($fromFolder.$file)) {
-                    require_once $fromFolder . $file;
+                    if(!preg_match('/Views\//i', $fromFolder)) {
+                        require_once $fromFolder . $file;
+                    }
                     self::$plugins [$file] ['file'] = $file;
                 } elseif ((is_dir($fromFolder.$file)) && ($file != '.') && ($file != '..')) {
                     self::loadPlugins($fromFolder.$file.'/');

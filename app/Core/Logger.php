@@ -91,6 +91,7 @@ class Logger
         $file = $exception->getFile();
         $line = $exception->getLine();
         $trace = $exception->getTraceAsString();
+        $trace = str_replace(DB_PASS, '********', $trace);
         $date = date('M d, Y G:iA');
 
         $logMessage = "<h3>Exception information:</h3>\n

@@ -43,14 +43,14 @@ class Language
     /**
      * Get element from language array by key
      * @param  string $value
-     * @return string
+     * @return string or false if array key does not exist
      */
     public function get($value)
     {
         if (!empty($this->array[$value])) {
             return $this->array[$value];
         } else {
-            return $value;
+            return false;
         }
     }
 

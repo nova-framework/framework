@@ -108,27 +108,126 @@ class Url
     }
 
     /**
-     * get all url parts based on a / seperator
-     * @return array of segments
-     */
-    public static function segments()
-    {
-        return explode('/', $_SERVER['REQUEST_URI']);
-    }
-
-    /**
      * get last item in array
      */
-    public static function lastSegment($segments)
+    public static function lastSegment()
     {
-        return end($segments);
+        return end( self::segments('NUMBERS') );
     }
 
     /**
      * get first item in array
      */
-    public static function firstSegment($segments)
+    public static function firstSegment()
     {
-        return $segments[0];
+    	$path_uri = self::segments('NUMBERS');
+        return $path_uri[0];
+    }
+    
+    public static function pathUri()
+    {
+    	return str_replace(dirname($_SERVER['PHP_SELF']) . '/', '', $_SERVER['REQUEST_URI']);
+    }
+    
+    
+    /**
+     * @return string url
+     */
+    
+    public static function get(){
+    	return DIR . '/' . self::pathUri();
+    }
+    
+    
+    /**
+     * @param mixed segment
+     * @return function callback
+     * Ex.:
+     *      Url::segments() //Return array all segments;
+     *      Url::segments(int) //Return array ints;
+     *      Url::segments(last) //Return last segment uri;
+     *      Url::segments(first) //Return first segment uri
+     *      Url::segments(1) //Return sring position route;
+     *      Url::segments(a) //Return sring position route;
+     *      Url::segments(a, 'app') //Return boolen;
+     *      Url::segments(a, 'app', fn callback) //Return sring position route;
+     */
+    
+    public static function segments(){
+    	//Args
+    	$args = func_get_args();
+    	
+    	//Letters params rotas
+    	$letters = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ');
+    
+    	if(isset($args[0])){
+    		$args[0] = is_string($args[0]) ? strtoupper($args[0]) : $args[0];
+    	}
+    
+    	$path_info = explode('/', self::pathUri());
+    	
+    	$route = array();
+    
+    	for ($i = 0; $i < count($path_info); $i++){
+    		$route[$i] = $path_info[$i];
+    	}
+    
+    	//Exibir apenas array com indices numericos
+    	if(count($args) == 1){
+    		switch($args[0]){
+    			
+    			case 'numbers':
+    			case 'NUMBERS':
+    			case 'number':
+    			case 'int':
+    				
+    				return $route;
+    				break;
+    				
+    			case 'first':
+    			case 'FIRST':
+    				
+    				return $route[0];
+    				break;
+    				
+    			case 'end':
+    			case 'END':	
+    			case 'last':
+    			case 'LAST':
+    				return end( $route );
+    				break;
+    		}
+    	}
+    
+    	for ($i = 0; $i < count($path_info); $i++){
+    		if(count($letters) == $i){
+    			break;
+    		}
+    
+    		$letter = $letters[$i];
+    		$route[$letter] = $path_info[$i];
+    	}
+    
+    
+    	switch (count($args)) {
+    		case 1:
+    			 
+    			return isset($route[$args[0]]) ? $route[$args[0]] : null ;
+    			break;
+    
+    		case 2:
+    			return $args[1] == $route[$args[0]] ? true : false;
+    			break;
+    
+    		case 3:
+    			return $args[1] == $route[$args[0]] ? $args[2]() : null;
+    			break;
+    			 
+    		default:
+    			return $route;
+    			break;
+    
+    	}
+    
     }
 }

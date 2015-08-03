@@ -11,84 +11,115 @@ namespace Helpers;
 */
 class SimpleCurl
 {
-    /**
-    * Performs a get request on the chosen link and the chosen parameters
-    * in the array.
-    * @param string $url
-    * @param array $params
-    * @return string returns the content of the given url
-    */
-    public static function get($url, $params = array())
-    {
-        $url = $url . '?' . http_build_query($params, '', '&');
-        $ch = curl_init();
+  public static function get($url, $params = array(), $referer = null)
+  {
+      $url = $url . '?' . http_build_query($params, '', '&');
+      $ch = curl_init();
 
-        $options = array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_SSL_VERIFYPEER => false
-        );
-        curl_setopt_array($ch, $options);
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_USERAGENT, SITETITLE);
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+      if($referer){
+        curl_setopt($ch, CURLOPT_REFERER, $referer);
+      }
 
-        return $response;
-    }
+      $response = curl_exec($ch);
+      curl_close($ch);
 
-    /**
-    * Performs a post request on the chosen link and the chosen parameters
-    * in the array
-    * @param string $url
-    * @param array $fields
-    * @return string returns the content of the given url after post
-    */
-    public static function post($url, $fields = array())
-    {
-        $ch = curl_init();
+      return $response;
+  }
 
-        $options = array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_POSTFIELDS => $fields,
-            CURLOPT_POST => true,
-            CURLOPT_USERAGENT => "SMVC Agent",
-        );
-        curl_setopt_array($ch, $options);
+  /**
+  * Performs a HTTP POST request with the chosen link more parameters in the array
+  * @param string $url
+  * @param array $params
+  * @param string $referer
+  * @return string returns the content of the given url after post
+  */
+  public static function post($url, $params = array(), $referer = null)
+  {
+      $ch = curl_init();
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_POST, true);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_USERAGENT, SITETITLE);
 
-        return $response;
-    }
+      if($referer){
+        curl_setopt($ch, CURLOPT_REFERER, $referer);
+      }
 
-    /**
-    * Performs a put request on the chosen link and the chosen parameters
-    * in the array.
-    * @param string $url
-    * @param array $fields
-    * @return string with the contents of the site
-    */
-    public static function put($url, $fields = array())
-    {
-        $post_field_string = http_build_query($fields);
-        $ch = curl_init($url);
+      $response = curl_exec($ch);
+      curl_close($ch);
 
-        $options = array(
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_CUSTOMREQUEST => "PUT",
-            CURLOPT_POSTFIELDS => $post_field_string
-            );
-        curl_setopt_array($ch, $options);
+      return $response;
+  }
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+  /**
+  * Performs a HTTP PUT request with the chosen link more parameters in the array
+  * @param string $url
+  * @param array $params
+  * @param string $referer
+  * @return string with the contents of the site
+  */
+  public static function put($url, $params = array(), $referer = null)
+  {
+      $post_field_string = http_build_query($params);
+      $ch = curl_init();
 
-        return $response;
-    }
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_POST, true);
+      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $post_field_string);
+
+      curl_setopt($ch, CURLOPT_USERAGENT, SITETITLE);
+
+      if($referer){
+        curl_setopt($ch, CURLOPT_REFERER, $referer);
+      }
+
+      $response = curl_exec($ch);
+      curl_close($ch);
+
+      return $response;
+  }
+
+
+  /**
+  * Performs a HTTP DELETE request with the chosen link more parameters in the array
+  * @param string $url
+  * @param array $params
+  * @param string $referer
+  * @return string with the contents of the site
+  */
+  public static function delete($url, $params = array(), $referer = null){
+
+      $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+      curl_setopt($ch, CURLOPT_FAILONERROR, true);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+          'Content-Type: application/json',
+          'Content-Length: ' . strlen($data_string))
+      );
+
+      if($referer){
+        curl_setopt($ch, CURLOPT_REFERER, $referer);
+      }
+
+      $response = curl_exec($ch);
+      curl_close($ch);
+
+      return $response;
+  }
 }

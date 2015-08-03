@@ -48,7 +48,17 @@ class Config
         define('SITETITLE', 'V2.2');
 
         //optionall set a site email address
-        //define('SITEEMAIL', '');
+        //Email do administrador para notificação de erros no sistema
+        define('SITEEMAIL', 'mail@domain.com.br');
+
+        define('MAIL_SMTP_AUTH', true); // // Enable SMTP authentication
+        define('MAIL_IS_HTML', true);  // Set email format to HTML
+        define('MAIL_CHARSET', 'UTF-8');
+        define('MAIL_SMTP_SECURE', 'tls'); // Enable TLS encryption, `ssl` also accepted
+        define('MAIL_HOST', 'smtp.gmail.com'); //Servidor de envio
+        define('MAIL_PORT', '587'); //Porta de envio
+        define('MAIL_USER', 'mail@gmail.com'); //Login do email de envio
+        define('MAIL_PASS', 'secret'); //Senha
 
         //turn on custom error handling
         set_exception_handler('Core\Logger::ExceptionHandler');

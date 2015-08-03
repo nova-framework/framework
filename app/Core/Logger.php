@@ -36,7 +36,7 @@ class Logger
     * path to error file
     * @var boolean
     */
-    private static $errorFile = 'errorlog.html';
+    public static $errorFile = 'errorlog.html';
 
     /**
     * in the event of an error show this message

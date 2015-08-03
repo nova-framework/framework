@@ -88,6 +88,7 @@ class Form
         $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"  : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
         $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
+        $o .= (isset($params['autofocus'])) ? " autofocus" : '';
         $o .= " />\n";
         return $o;
     }

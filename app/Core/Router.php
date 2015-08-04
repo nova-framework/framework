@@ -28,7 +28,7 @@ class Router
     // Set route patterns
     public static $patterns = array(
         ':any' => '[^/]+',
-        ':num' => '[0-9]+',
+        ':num' => '-?[0-9]+',
         ':all' => '.*'
     );
 

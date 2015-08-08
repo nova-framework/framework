@@ -29,7 +29,32 @@ if (!is_readable('app/Core/Config.php')) {
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-    define('ENVIRONMENT', 'development');
+if ($_SERVER ['HTTP_HOST'] == 'www.localhost.com') {
+	define ( 'ENVIRONMENT', 'production' );
+} else {
+	define ( 'ENVIRONMENT', 'development' );
+}
+
+/*
+ * ---------------------------------------------------------------
+ * INTERNET CONNECTION
+ * ---------------------------------------------------------------
+ */
+define ( 'APPSTATE', 'online' );
+if (defined ( 'ENVIRONMENT' )) {
+	switch (ENVIRONMENT) {
+		case 'development' :
+			$connected = @fsockopen ( "www.google.com", 80 );
+			if ($connected) {
+				define ( 'APPSTATE', 'online' );
+				fclose ( $connected );
+			} else {
+				define ( 'APPSTATE', 'offline' );
+			}
+			break;
+	}
+}
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -56,23 +81,6 @@ if (defined('ENVIRONMENT')) {
 //initiate config
 new Core\Config();
 
-//create alias for Router
-use Core\Router;
-use Helpers\Hooks;
+// initiate routing
+require 'routing.php';
 
-//define routes
-Router::any('', 'Controllers\Welcome@index');
-Router::any('subpage', 'Controllers\Welcome@subPage');
-
-//module routes
-$hooks = Hooks::get();
-$hooks->run('routes');
-
-//if no route found
-Router::error('Core\Error@index');
-
-//turn on old style routing
-Router::$fallback = false;
-
-//execute matched routes
-Router::dispatch();

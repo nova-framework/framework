@@ -10,6 +10,8 @@ use Core\Error;
  * @version 2.2
  * @date November 18, 2014
  * @date updated May 18 2015
+ * @author Enner Pérez - ennerperez@gmail.com
+ * @date updated Jun 29 2015
  */
 class Language
 {
@@ -27,7 +29,7 @@ class Language
     public function load($name, $code = LANGUAGE_CODE)
     {
         // lang file
-        $file = "app/language/$code/$name.php";
+        $file = "app/Language/$code/$name.php";
 
         // check if is readable
         if (is_readable($file)) {
@@ -45,10 +47,16 @@ class Language
      * @param  string $value
      * @return string
      */
-    public function get($value)
+    public function get($value, $index = NULL)
     {
         if (!empty($this->array[$value])) {
-            return $this->array[$value];
+            if (!isset($index)){
+                return $this->array[$value];
+            }
+            else {
+                $return =$this->array[$value];
+                return $return[$index];
+            }
         } else {
             return $value;
         }
@@ -64,7 +72,7 @@ class Language
     public static function show($value, $name, $code = LANGUAGE_CODE)
     {
         // lang file
-        $file = "app/language/$code/$name.php";
+        $file = "app/Language/$code/$name.php";
 
         // check if is readable
         if (is_readable($file)) {

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 namespace Helpers;
 
 use PDO;
@@ -10,6 +10,8 @@ use PDO;
  * @version 2.1
  * @date June 27, 2014
  * @date May 18 2015
+ * @author Enner Pérez - ennerperez@gmail.com
+ * @date updated Jun 29 2015
  */
 class Database extends PDO
 {
@@ -54,7 +56,14 @@ class Database extends PDO
             // I've run into problem where
             // SET NAMES "UTF8" not working on some hostings.
             // Specifiying charset in DSN fixes the charset problem perfectly!
-            $instance = new Database("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
+			if ($type == 'mssql' || $type == 'sqlsrv')
+			{
+				$instance = new Database("sqlsrv:Server=$host;Database=$name", $user, $pass);
+			}
+			else
+			{
+				$instance = new Database("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
+			}
             $instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Setting Database into $instances to avoid duplication

@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    $baseDir . '/app/files/password.php',
+    $baseDir . '/app/Files/Password.php',
 );

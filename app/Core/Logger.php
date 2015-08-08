@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 namespace Core;
 
 use Helpers\PhpMailer\Mail;
@@ -10,6 +10,8 @@ use Helpers\PhpMailer\Mail;
  * @version 2.2
  * @date June 27, 2014
  * @date updated May 18 2015
+ * @author Enner Pérez - ennerperez@gmail.com
+ * @date updated Jun 29 2015
  */
 class Logger
 {
@@ -43,7 +45,7 @@ class Logger
     */
     public static function customErrorMsg()
     {
-        echo "<p>An error occured, The error has been reported.</p>";
+        echo "<p>An error occured, The error has been reported.</p>\r\n";
         exit;
     }
 
@@ -102,7 +104,8 @@ class Logger
            <p><strong>Line:</strong> {$line}</p>\n
            <h3>Stack trace:</h3>\n
            <pre>{$trace}</pre>\n
-           <hr />\n";
+           <hr />\n
+		   \r\n";
 
         if (is_file(self::$errorFile) === false) {
             file_put_contents(self::$errorFile, '');
@@ -140,7 +143,7 @@ class Logger
     public static function errorMessage($error)
     {
         $date = date('M d, Y G:iA');
-        $logMessage = "<p>Error on $date - $error</p>";
+        $logMessage = "<p>Error on $date - $error</p>\r\n";
 
         if (is_file(self::$errorFile) === false) {
             file_put_contents(self::$errorFile, '');

@@ -41,7 +41,7 @@ class Router
     public static function __callstatic($method, $params)
     {
 
-        $uri = dirname($_SERVER['PHP_SELF']).'/'.$params[0];
+        $uri = '/'.$params[0];
         $callback = $params[1];
 
         array_push(self::$routes, $uri);

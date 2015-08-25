@@ -76,24 +76,17 @@ class Router
      */
     public static function invokeObject($callback, $matched = null, $msg = null)
     {
-
-        //grab all parts based on a / separator and collect the last index of the array
         $last = explode('/', $callback);
         $last = end($last);
 
-        //grab the controller name and method call
         $segments = explode('@', $last);
 
-        //instanitate controller with optional msg (used for errorCallback)
-        $controller = new $segments[0]($msg);
+        $controller = $segments[0];
+        $method = $segments[1];
 
-        if ($matched == null) {
-            //call method
-            $controller->$segments[1]();
-        } else {
-            //call method and pass in array keys as params
-            call_user_func_array(array($controller, $segments[1]), $matched);
-        }
+        $controller = new $controller($msg);
+
+        call_user_func_array(array($controller, $method), $matched ? $matched : array());
     }
 
     /**

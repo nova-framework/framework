@@ -28,6 +28,7 @@ class Form
         $o .= (isset($params['action']))    ? " action='{$params['action']}'"               : '';
         $o .= (isset($params['files']))     ? " enctype='multipart/form-data'"              : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+        $o .= (isset($params['role']))      ? " role='{$params['role']}'"                 : '';
         $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
         $o .= '>';
         return $o."\n";

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 namespace Helpers;
 
 /**
@@ -8,6 +8,8 @@ namespace Helpers;
  * @author QsmaPL
  * @date 27th November, 2014
  * @date May 18 2015
+ * @author Enner Pérez - ennerperez@gmail.com
+ * @date updated Jun 29 2015
  */
 
 class Assets
@@ -18,7 +20,8 @@ class Assets
     protected static $templates = array
     (
         'js'  => '<script src="%s" type="text/javascript"></script>',
-        'css' => '<link href="%s" rel="stylesheet" type="text/css">'
+        'css' => '<link href="%s" rel="stylesheet" type="text/css">',
+        'img' => '<img src="%s" />'
     );
 
     /**
@@ -59,4 +62,15 @@ class Assets
     {
         static::resource($files, 'css');
     }
+    
+     /**
+     * Output images
+     *
+     * @param string $file
+     */
+    public static function img($files)
+    {
+        static::resource($files, 'img');
+    }
+    
 }

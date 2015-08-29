@@ -1,2 +1,4 @@
 app/Core/Config.php
 .DS_Store
+*.project
+/aspnet_client

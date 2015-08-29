@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 namespace Core;
 
 /*
@@ -8,6 +8,8 @@ namespace Core;
  * @version 2.2
  * @date June 27, 2014
  * @date updated May 18 2015
+ * @author Enner Pérez - ennerperez@gmail.com
+ * @date updated Jun 29 2015
  */
 class View
 {
@@ -29,7 +31,7 @@ class View
                 header($header, true);
             }
         }
-        require "app/views/$path.php";
+        require "app/Views/$path.php";
     }
 
     /**
@@ -63,9 +65,9 @@ class View
         }
 
         if ($custom === false) {
-            require "app/templates/".TEMPLATE."/$path.php";
+            require "app/Templates/".TEMPLATE."/$path.php";
         } else {
-            require "app/templates/$custom/$path.php";
+            require "app/Templates/$custom/$path.php";
         }
     }
 

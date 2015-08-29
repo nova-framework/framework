@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 namespace Core;
 
 use Helpers\Session;
@@ -12,6 +12,8 @@ use Helpers\Session;
  * @version 2.2
  * @date June 27, 2014
  * @date updated May 18 2015
+ * @author Enner Pérez - ennerperez@gmail.com
+ * @date updated Jun 29 2015
  */
 class Config
 {
@@ -32,6 +34,7 @@ class Config
 
         //set a default language
         define('LANGUAGE_CODE', 'en');
+        setlocale ( LC_TIME, "en_US" );
 
         //database details ONLY NEEDED IF USING A DATABASE
         define('DB_TYPE', 'mysql');

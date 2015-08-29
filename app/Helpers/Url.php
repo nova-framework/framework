@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 namespace Helpers;
 
 use Helpers\Session;
@@ -10,6 +10,8 @@ use Helpers\Session;
  * @version 2.2
  * @date June 27, 2014
  * @date updated May 18 2015
+ * @author Enner Pérez - ennerperez@gmail.com
+ * @date updated Jun 29 2015
  */
 class Url
 {
@@ -36,9 +38,9 @@ class Url
     public static function templatePath($custom = false)
     {
         if ($custom == true) {
-            return DIR.'app/templates/'.$custom.'/';
+            return DIR.'app/Templates/'.$custom.'/';
         } else {
-            return DIR.'app/templates/'.TEMPLATE.'/';
+            return DIR.'app/Templates/'.TEMPLATE.'/';
         }
     }
 
@@ -49,9 +51,9 @@ class Url
     public static function relativeTemplatePath($admin = false)
     {
         if ($admin == false) {
-            return "app/templates/".DEFAULT_TEMPLATE."/";
+            return "app/Templates/".DEFAULT_TEMPLATE."/";
         } else {
-            return "app/templates/".ADMIN_TEMPLATE."/";
+            return "app/Templates/".ADMIN_TEMPLATE."/";
         }
     }
 

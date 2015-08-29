@@ -19,6 +19,7 @@ class Error extends Controller
      * @var string
      */
     private $error = null;
+    private $success = null;
 
     /**
      * save error to $this->_error

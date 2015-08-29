@@ -22,7 +22,7 @@ class View
      * @param  array $data  array of data
      * @param  array $error array of errors
      */
-    public static function render($path, $data = false, $error = false)
+    public static function render($path, $data = false, $error = false, $success = false)
     {
         if (!headers_sent()) {
             foreach (self::$headers as $header) {

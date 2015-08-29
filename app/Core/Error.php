@@ -64,4 +64,30 @@ class Error extends Controller
             }
         }
     }
+    public static function displayError($error, $class = 'alert alert-danger')
+    {
+        if (is_array($error)) {
+            foreach ($error as $error) {
+                $row.= "<div class='$class'>$error</div>";
+            }
+            return $row;
+        } else {
+            if (isset($error)) {
+                return "<div class='$class'>$error</div>";
+            }
+        }
+    }
+    public static function displaySuccess($success, $class = 'alert alert-success')
+    {
+        if (is_array($success)) {
+            foreach ($success as $success) {
+                $row.= "<div class='$class'>$success</div>";
+            }
+            return $row;
+        } else {
+            if (isset($success)) {
+                return "<div class='$class'>$success</div>";
+            }
+        }
+    }
 }

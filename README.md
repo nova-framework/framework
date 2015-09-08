@@ -22,7 +22,7 @@ The foldername is the desired folder to be created.
 #V2.2
 #What is Simple MVC Framework?
 
-Simple MVC Framework is a PHP 5.4 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
+Simple MVC Framework is a PHP 5.5 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
 
 The base framework comes with a range of helper classes.
 
@@ -35,7 +35,7 @@ Full docs & tutorials are available at [simplemvcframework.com](http://simplemvc
  The framework requirements are limited
 
  - Apache Web Server or equivalent with mod rewrite support.
- - PHP 5.4 or greater is required
+ - PHP 5.5 or greater is required
 
  Although a database is not required, if a database is to be used the system is designed to work with a MySQL database. The framework can be changed to work with another database type.
 

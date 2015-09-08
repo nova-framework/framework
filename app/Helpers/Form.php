@@ -60,7 +60,9 @@ class Form
         $o .= (isset($params['rows']))      ? " rows='{$params['rows']}'"                       : '';
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
         $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"      : '';
+        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"         : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
+        $o .= (isset($params['required']))     ? " required='required'"                     : '';
         $o .= '>';
         $o .= (isset($params['value']))     ? $params['value']                                  : '';
         $o .= "</textarea>\n";
@@ -87,7 +89,10 @@ class Form
         $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"        : '';
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"           : '';
         $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"  : '';
+        $o .= (isset($params['accept']))     ? " accept='{$params['accept']}'"              : '';
+        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"     : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+        $o .= (isset($params['required']))     ? " required='required'"                     : '';
         $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
         $o .= (isset($params['autofocus'])) ? " autofocus" : '';
         $o .= " />\n";
@@ -110,6 +115,7 @@ class Form
         $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
         $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
         $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"            : '';
+        $o .= (isset($params['required']))     ? " required='required'"                     : '';
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
         $o .= ">\n";

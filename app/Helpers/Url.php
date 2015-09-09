@@ -89,6 +89,7 @@ class Url
     public static function generateSafeSlug($slug)
     {
         // transform url
+        $slug = preg_replace( '/[`^~\'"]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $slug ));
         $slug = preg_replace('/[^a-zA-Z0-9]/', '-', $slug);
         $slug = strtolower(trim($slug, '-'));
 

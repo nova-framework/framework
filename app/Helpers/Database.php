@@ -77,7 +77,25 @@ class Database extends PDO
     {
         $this->query($sql);
     }
+    /**
+     * A method for preparing before executing the SQL
+     * @param  string $sql       sql query
+     * @param  array  $array     named params
+     * @return array            returns an array of records
+     */
+    private function prepareSQL($sql, $array = array()){
+        $stmt = $this->prepare($sql);
+        foreach ($array as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue("$key", $value);
+            }
+        }
+        $stmt->execute();
 
+        return $stmt;
+    }
     /**
      * method for selecting records from a database
      * @param  string $sql       sql query
@@ -88,22 +106,53 @@ class Database extends PDO
      */
     public function select($sql, $array = array(), $fetchMode = PDO::FETCH_OBJ, $class = '')
     {
-        $stmt = $this->prepare($sql);
-        foreach ($array as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue("$key", $value);
-            }
+        $stmt = self::prepareSQL($sql, $array);
+
+        return $fetchMode === PDO::FETCH_CLASS ? $stmt->fetchAll($fetchMode, $class) : $stmt->fetchAll($fetchMode);
+    }
+    /**
+     * method to select only one row from a database
+     * @param  string $sql       sql query
+     * @param  array  $array     named params
+     * @param  object $fetchMode
+     * @return array            returns an array of records
+     */
+    public function row($sql, $array = array(), $fetchMode = PDO::FETCH_OBJ)
+    {
+        $stmt = self::prepareSQL($sql, $array);
+
+        return $stmt->fetch($fetchMode);
+    }
+    /**
+     * method to select only one field
+     * @param  string $sql       sql query
+     * @param  array  $array     named params
+     * @param  string $numberCol number column
+     * @return string            returns string selected field
+     */
+    public function single($sql, $array = array(), $numberCol = '')
+    {
+        $stmt = self::prepareSQL($sql, $array);
+        return $stmt->fetchColumn($numberCol);
+    }
+    /**
+     * method to return the values of a column
+     * @param  string $sql       sql query
+     * @param  array  $array     named params
+     * @return array            returns an array of records
+     */
+    public function column($sql, $array = array())
+    {
+        $stmt = self::prepareSQL($sql, $array);
+        $Columns = $stmt->fetchAll(PDO::FETCH_NUM);
+
+        $column = null;
+
+        foreach($Columns as $cells) {
+            $column[] = $cells[0];
         }
 
-        $stmt->execute();
-
-        if ($fetchMode === PDO::FETCH_CLASS) {
-            return $stmt->fetchAll($fetchMode, $class);
-        } else {
-            return $stmt->fetchAll($fetchMode);
-        }
+        return $column;
     }
 
     /**

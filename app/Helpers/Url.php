@@ -88,14 +88,21 @@ class Url
      */
     public static function generateSafeSlug($slug)
     {
-        // transform url
-        $slug = preg_replace('/[^a-zA-Z0-9]/', '-', $slug);
-        $slug = strtolower(trim($slug, '-'));
-
-        //Removing more than one dashes
-        $slug = preg_replace('/\-{2,}/', '-', $slug);
-
-        return $slug;
+        setlocale(LC_ALL, "en_US.utf8");
+    
+        $slug = preg_replace('/[`^~\'"]/', null, iconv('UTF-8', 'ASCII//TRANSLIT', $slug));
+    
+        $slug = htmlentities($slug, ENT_QUOTES, 'UTF-8');
+    
+        $pattern = '~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i';
+        $slug = preg_replace($pattern, '$1', $slug);
+    
+        $slug = html_entity_decode($slug, ENT_QUOTES, 'UTF-8');
+    
+        $pattern = '~[^0-9a-z]+~i';
+        $slug = preg_replace($pattern, '-', $slug);
+    
+        return strtolower(trim($slug, '-'));
     }
 
     /**

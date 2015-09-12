@@ -71,11 +71,11 @@ class Database extends PDO
     /**
      * run raw sql queries
      * @param  string $sql sql command
-     * @return none
+     * @return return query
      */
     public function raw($sql)
     {
-        $this->query($sql);
+        return $this->query($sql);
     }
 
     /**

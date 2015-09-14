@@ -21,7 +21,8 @@ class Config
         ob_start();
 
         //site address
-        define('DIR', 'http://domain.com');
+        //define('DIR', 'http://domain.com/');
+        define('DIR', '/');
 
         //set default controller and method for legacy calls
         define('DEFAULT_CONTROLLER', 'welcome');

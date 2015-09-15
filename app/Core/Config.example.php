@@ -20,8 +20,7 @@ class Config
         //turn on output buffering
         ob_start();
 
-        //site address
-        //define('DIR', 'http://domain.com/');
+        //base path
         define('DIR', '/');
 
         //set default controller and method for legacy calls

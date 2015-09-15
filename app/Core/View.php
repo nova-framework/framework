@@ -29,7 +29,7 @@ class View
                 header($header, true);
             }
         }
-        require "app/views/$path.php";
+        require SMVC."app/views/$path.php";
     }
 
     /**
@@ -45,7 +45,7 @@ class View
                 header($header, true);
             }
         }
-        require "app/Modules/$path.php";
+        require SMVC."app/Modules/$path.php";
     }
 
     /**
@@ -63,9 +63,9 @@ class View
         }
 
         if ($custom === false) {
-            require "app/templates/".TEMPLATE."/$path.php";
+            require SMVC."app/templates/".TEMPLATE."/$path.php";
         } else {
-            require "app/templates/$custom/$path.php";
+            require SMVC."app/templates/$custom/$path.php";
         }
     }
 

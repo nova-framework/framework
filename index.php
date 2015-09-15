@@ -68,4 +68,4 @@ if (defined('ENVIRONMENT')) {
 //initiate config
 new Core\Config();
 
-require SMVC.'app/Core/Routes.php';
+require SMVC.'app/Core/routes.php';

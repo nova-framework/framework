@@ -4,10 +4,15 @@ $smvc = '.';
 
 // Set the full path to the docroot
 define('ROOT', realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
+
 // Make the application relative to the docroot, for symlink'd index.php
-if ( ! is_dir($smvc) AND is_dir(ROOT.$smvc)) { $smvc = ROOT.$smvc; }
+if (!is_dir($smvc) and is_dir(ROOT.$smvc)) { 
+    $smvc = ROOT.$smvc; 
+}
+
 // Define the absolute paths for configured directories
 define('SMVC', realpath($smvc).DIRECTORY_SEPARATOR);
+
 // Unset non used variables
 unset($smvc);
 

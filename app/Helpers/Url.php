@@ -122,6 +122,16 @@ class Url
     {
         return explode('/', $_SERVER['REQUEST_URI']);
     }
+    
+    /**
+     * get item in array
+     */
+    public static function getSegment($segments, $id)
+    {
+        if (array_key_exists($id, $segments)) {
+            return $segments[$id];
+        }
+    }
 
     /**
      * get last item in array

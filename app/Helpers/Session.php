@@ -126,12 +126,14 @@ class Session
      * Empties and destroys the session.
      *
      * @param  string $key - session name to destroy
+     * @param  boolean $prefix - if set to true clear all sessions for current SESSION_PREFIX
      *
-     * @return [type]
      */
     public static function destroy($key = '', $prefix = false)
     {
+        /** only run if session has started */
         if (self::$sessionStarted == true) {
+            /** if key is empty and $prefix is false */
             if (empty($key) && $prefix = false) {
                 session_unset();
                 session_destroy();
@@ -143,6 +145,7 @@ class Session
                     }
                 }
             } else {
+                /** clear specified session key */
                 unset($_SESSION[SESSION_PREFIX.$key]);
             }
         }

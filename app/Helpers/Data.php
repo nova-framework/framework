@@ -54,7 +54,7 @@ class Data
      * @param  string $data
      * @return string
      */
-    public static function sup($data)
+    public static function stu($data)
     {
         return strtoupper($data);
     }
@@ -65,7 +65,7 @@ class Data
      * @param  string $data
      * @return string
      */
-    public static function slw($data)
+    public static function stl($data)
     {
         return strtolower($data);
     }

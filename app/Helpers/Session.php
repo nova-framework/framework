@@ -129,12 +129,19 @@ class Session
      *
      * @return [type]
      */
-    public static function destroy($key = '')
+    public static function destroy($key = '', $prefix = false)
     {
         if (self::$sessionStarted == true) {
-            if (empty($key)) {
+            if (empty($key) && $prefix = false) {
                 session_unset();
                 session_destroy();
+            } elseif ($prefix == true) {
+                /** clear all session for set SESSION_PREFIX */
+                foreach($_SESSION as $key => $value) {
+                    if (strpos($key, SESSION_PREFIX) === 0) {
+                        unset($_SESSION[$key]);
+                    }
+                }
             } else {
                 unset($_SESSION[SESSION_PREFIX.$key]);
             }

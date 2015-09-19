@@ -1,48 +1,50 @@
 <?php
+/**
+ * PHP Pagination Class
+ *
+ * @author David Carr - dave@daveismyname.com
+ * @version 2.2
+ * @date updated Sept 19, 2015
+ */
 
 namespace Helpers;
 
-/*
- * PHP Pagination Class
- *
- * @author David Carr - dave@simplemvcframework.com
- * @version 2.2
- * @date updated May 18 2015
+/**
+ * Split records into multiple pages.
  */
-
 class Paginator
 {
 
     /**
-     * set the number of items per page.
+     * Set the number of items per page.
      *
      * @var numeric
      */
     private $perPage;
 
     /**
-     * set get parameter for fetching the page number
+     * Set get parameter for fetching the page number.
      *
      * @var string
      */
     private $instance;
 
     /**
-     * sets the page number.
+     * Sets the page number.
      *
      * @var numeric
      */
     private $page;
 
     /**
-     * set the limit for the data source
+     * Set the limit for the data source.
      *
      * @var string
      */
     private $limit;
 
     /**
-     * set the total number of records/items.
+     * Set the total number of records/items.
      *
      * @var numeric
      */
@@ -51,7 +53,7 @@ class Paginator
     /**
      *  __construct
      *
-     *  pass values when class is istantiated
+     *  Pass values when class is istantiated.
      *
      * @param numeric  $perPage  sets the number of iteems per page
      * @param numeric  $instance sets the instance for the GET parameter
@@ -66,7 +68,8 @@ class Paginator
     /**
      * getStart
      *
-     * creates the starting point for limiting the dataset
+     * Creates the starting point for limiting the dataset.
+     *
      * @return numeric
      */
     public function getStart()
@@ -77,7 +80,7 @@ class Paginator
     /**
      * getInstance
      *
-     * gets the current page number if needed anywhere in your application.
+     * Gets the current page number if needed anywhere in your application.
      *
      * @var numeric
      */
@@ -89,7 +92,7 @@ class Paginator
     /**
      * setInstance
      *
-     * sets the instance parameter, if numeric value is 0 then set to 1
+     * Sets the instance parameter, if numeric value is 0 then set to 1.
      *
      * @var numeric
      */
@@ -102,9 +105,9 @@ class Paginator
     /**
      * setTotal
      *
-     * collect a numberic value and assigns it to the totalRows
+     * Collect a numberic value and assigns it to the totalRows.
      *
-     * @var numeric
+     * @param int $totalRows holds the total number of rows
      */
     public function setTotal($totalRows)
     {
@@ -114,7 +117,7 @@ class Paginator
     /**
      * getLimit
      *
-     * returns the limit for the data source, calling the getStart method and passing in the number of items perp page
+     * Returns the limit for the data source, calling the getStart method and passing in the number of items perp page.
      *
      * @return string
      */
@@ -130,25 +133,25 @@ class Paginator
      *
      * There are also other ORM's that need the skip and take
      * parameters separated.
-     * 
+     *
      * Example in controller method calling model method:
-     * 
+     *
      * $data['pets'] = $this->pet->getPets($pages->getLimit2(), $pages->getPerPage(), $petSearch);
-     * 
+     *
      * Example model method using Eloquent Query Builder:
-     * 
+     *
      * public function getPets($offset = "", $rowsPerPage = "", $petSearch = "")
      * {
      *     $petsearch = $petsearch . "%";
-     *     
+     *
      *     return Capsule::table('pets')
      *                     ->where('petName', 'like', $petsearch)
      *                     ->orderBy('petName', 'asc')
      *                     ->skip($offset)->take($rowsPerPage)->get();
      * }
-     * 
+     *
      * Also see the file in the helpers folder page_eloq.md for more help.
-     * 
+     *
      * @var numeric
      */
     public function getLimit2()
@@ -156,6 +159,11 @@ class Paginator
         return $this->getStart();
     }
 
+    /**
+     * Get Per Page.
+     *
+     * @return int returns the number of records per page.
+     */
     public function getPerPage()
     {
         return $this->perPage;
@@ -164,10 +172,11 @@ class Paginator
     /**
      * pageLinks
      *
-     * create the html links for navigating through the dataset
+     * Create the html links for navigating through the dataset.
      *
-     * @var sting $path optionally set the path for the link
-     * @var sting $ext optionally pass in extra parameters to the GET
+     * @param string $path optionally set the path for the link
+     * @param string $ext optionally pass in extra parameters to the GET
+     *
      * @return string returns the html menu
      */
     public function pageLinks($path = '?', $ext = null)

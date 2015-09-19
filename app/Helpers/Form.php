@@ -1,20 +1,27 @@
 <?php
-namespace Helpers;
-
-/*
- * Form Helper - create form elements quickly
+/**
+ * Form Helper
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 1.0
  * @date June 27, 2014
- * @date May 18 2015
+ * @date updated Sept 19, 2015
+ */
+
+namespace Helpers;
+
+/**
+ * Create form elements quickly.
  */
 class Form
 {
     /**
      * open form
+     *
      * This method return the form element <form...
+     *
      * @param   array(id, name, class, onsubmit, method, action, files, style)
+     *
      * @return  string
      */
     public static function open($params = array())
@@ -36,6 +43,7 @@ class Form
 
     /**
      * closed the form
+     *
      * @return string
      */
     public static function close()
@@ -45,8 +53,11 @@ class Form
 
     /**
      * textBox
+     *
      * This method creates a textarea element
+     *
      * @param   array(id, name, class, onclick, columns, rows, disabled, placeholder, style, value)
+     *
      * @return  string
      */
     public static function textBox($params = array())
@@ -71,8 +82,11 @@ class Form
 
     /**
      * input
+     *
      * This method returns a input text element.
+     *
      * @param   array(id, name, class, onclick, value, length, width, disable,placeholder)
+     *
      * @return  string
      */
     public static function input($params = array())
@@ -101,10 +115,13 @@ class Form
 
     /**
      * select
+     *
      * This method returns a select html element.
      * It can be given a param called value which then will be preselected
      * data has to be array(k=>v)
+     *
      * @param   array(id, name, class, onclick, disabled)
+     *
      * @return  string
      */
     public static function select($params = array())
@@ -135,10 +152,13 @@ class Form
 
     /**
      * checkboxMulti
+     *
      * This method returns multiple checkbox elements in order given in an array
      * For checking of checkbox pass checked
      * Each checkbox should look like array(0=>array('id'=>'1', 'name'=>'cb[]', 'value'=>'x', 'label'=>'label_text' ))
+     *
      * @param   array(array(id, name, value, class, checked, disabled))
+     *
      * @return  string
      */
     public static function checkbox($params = array())
@@ -166,10 +186,13 @@ class Form
 
     /**
      * radioMulti
+     *
      * This method returns radio elements in order given in an array
      * For selection pass checked
      * Each radio should look like array(0=>array('id'=>'1', 'name'=>'rd[]', 'value'=>'x', 'label'=>'label_text' ))
+     *
      * @param   array(array(id, name, value, class, checked, disabled, label))
+     *
      * @return  string
      */
     public static function radio($params = array())
@@ -197,7 +220,9 @@ class Form
 
     /**
      * This method returns a button element given the params for settings
+     *
      * @param   array(id, name, class, onclick, value, disabled)
+     *
      * @return  string
      */
     public static function button($params = array())
@@ -218,7 +243,9 @@ class Form
 
     /**
      * This method returns a submit button element given the params for settings
+     *
      * @param   array(id, name, class, onclick, value, disabled)
+     *
      * @return  string
      */
     public static function submit($params = array())
@@ -237,7 +264,9 @@ class Form
 
     /**
      * This method returns a hidden input elements given its params
+     *
      * @param   array(id, name, class, value)
+     *
      * @return  string
      */
     public static function hidden($params = array())

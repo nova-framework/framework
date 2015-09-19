@@ -1,18 +1,23 @@
 <?php
-namespace Helpers;
-
-/*
- * data Helper - common data lookup methods
+/**
+ * Data Helper
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 1.0
  * @date March 28, 2015
- * @date May 18 2015
+ * @date updated Sept 19, 2015
+ */
+
+namespace Helpers;
+
+/**
+ * Common data lookup methods.
  */
 class Data
 {
     /**
      * print_r call wrapped in pre tags
+     *
      * @param  string or array $data
      */
     public static function pr($data)
@@ -24,6 +29,7 @@ class Data
 
     /**
      * var_dump call
+     *
      * @param  string or array $data
      */
     public static function vd($data)
@@ -32,7 +38,8 @@ class Data
     }
 
     /**
-     * strlen call - count the lengh of the string
+     * strlen call - count the lengh of the string.
+     *
      * @param  string $data
      * @return string return the count
      */
@@ -42,7 +49,8 @@ class Data
     }
 
     /**
-     * strtoupper - convert string to uppercase
+     * strtoupper - convert string to uppercase.
+     *
      * @param  string $data
      * @return string
      */
@@ -52,7 +60,8 @@ class Data
     }
 
     /**
-     * strtolower - convert string to lowercase
+     * strtolower - convert string to lowercase.
+     *
      * @param  string $data
      * @return string
      */
@@ -62,7 +71,8 @@ class Data
     }
 
     /**
-     * ucwords - the first letter of each word to be a capital
+     * ucwords - the first letter of each word to be a capital.
+     *
      * @param  string $data
      * @return string
      */

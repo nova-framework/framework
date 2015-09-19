@@ -1,14 +1,14 @@
 <?php
-namespace Helpers;
-
-/*
+/**
  * Table builder class
  *
  * @author Volter9 - https://github.com/Volter9
  * @version 2.2
  * @date Sept 22, 2014
- * @date updated May 18 2015
+ * @date updated Sept 19, 2015
  */
+
+namespace Helpers;
 
 use PDO;
 use Helpers\Database;
@@ -41,7 +41,6 @@ use Helpers\Database;
  * @author volter9
  * @copyright volter9 ( c ) 2014
  */
-
 class TableBuilder
 {
     /**
@@ -62,12 +61,24 @@ class TableBuilder
     private $sql = '';
 
     /**
+     * Name
+     *
      * @var string $name   Table name
-     * @var array  $fields Table fields
-     * @var strin  $pk     Primary key field
      */
     private $name = '';
+
+    /**
+     * fields
+     *
+     * @var array  $fields Table fields
+     */
     private $fields = array();
+
+    /**
+     * pk
+     *
+     * @var strin  $pk     Primary key field
+     */
     private $pk = '';
 
     /**

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Sample language
+ */
 return array(
 	// Metoda 'index'
 	'welcome_text' => 'Bun venit',

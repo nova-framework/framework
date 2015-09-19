@@ -1,13 +1,17 @@
 <?php
-namespace Core;
-
-/*
+/**
  * View - load template pages
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 2.2
  * @date June 27, 2014
- * @date updated May 18 2015
+ * @date updated Sept 19, 2015
+ */
+
+namespace Core;
+
+/**
+ * View class to load template and views files.
  */
 class View
 {
@@ -17,7 +21,8 @@ class View
     private static $headers = array();
 
     /**
-     * include template file
+     * Include template file.
+     *
      * @param  string  $path  path to file from views folder
      * @param  array $data  array of data
      * @param  array $error array of errors
@@ -33,7 +38,8 @@ class View
     }
 
     /**
-     * include template file
+     * Include template file.
+     *
      * @param  string  $path  path to file from Modules folder
      * @param  array $data  array of data
      * @param  array $error array of errors
@@ -49,7 +55,8 @@ class View
     }
 
     /**
-     * return absolute path to selected template directory
+     * Return absolute path to selected template directory.
+     *
      * @param  string  $path  path to file from views folder
      * @param  array   $data  array of data
      * @param  string  $custom path to template folder
@@ -70,7 +77,8 @@ class View
     }
 
     /**
-     * add HTTP header to headers array
+     * Add HTTP header to headers array.
+     *
      * @param  string  $header HTTP header text
      */
     public function addHeader($header)
@@ -80,6 +88,7 @@ class View
 
     /**
     * Add an array with headers to the view.
+    *
     * @param array $headers
     */
     public function addHeaders($headers = array())

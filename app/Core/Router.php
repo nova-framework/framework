@@ -1,31 +1,65 @@
-<?php namespace Core;
+<?php
+/**
+ * Router - routing urls to closurs and controllers - modified from https://github.com/NoahBuscher/Macaw
+ *
+ * @author David Carr - dave@daveismyname.com
+ * @version 2.2
+ * @date Auguest 16th, 2014
+ * @date updated Sept 19, 2015
+ */
+
+namespace Core;
 
 use Core\View;
 
-/*
- * Router - routing urls to closurs and controllers - modified from https://github.com/NoahBuscher/Macaw
- *
- * @author David Carr - dave@simplemvcframework.com
- * @version 2.2
- * @date Auguest 16th, 2014
- * @date updated May 18 2015
+/**
+ * Router class will load requested controller / closure based on url.
  */
 class Router
 {
-
-    // Fallback for auto dispatching feature.
+    /**
+     * Fallback for auto dispatching feature.
+     *
+     * @var boolean $fallback
+     */
     public static $fallback = true;
 
-    // If true - do not process other routes when match is found
+    /**
+     * If true - do not process other routes when match is found
+     *
+     * @var boolean $halts
+     */
     public static $halts = true;
 
-    // Set routes, methods and etc.
+    /**
+     * Array of routes
+     *
+     * @var array $routes
+     */
     public static $routes = array();
+
+    /**
+     * Array of methods
+     *
+     * @var array $methods
+     */
     public static $methods = array();
+
+    /**
+     * Array of callbacks
+     *
+     * @var array $callbacks
+     */
     public static $callbacks = array();
+
+    /**
+     * Set an error callback
+     *
+     * @var null $errorCallback
+     */
     public static $errorCallback;
 
-    // Set route patterns
+    /** Set route patterns */
     public static $patterns = array(
         ':any' => '[^/]+',
         ':num' => '-?[0-9]+',
@@ -33,14 +67,13 @@ class Router
     );
 
     /**
-     * Defines a route w/ callback and method
+     * Defines a route w/ callback and method.
      *
-     * @param   string $method
-     * @param   array @params
+     * @param string $method
+     * @param array @params
      */
     public static function __callstatic($method, $params)
     {
-
         $uri = dirname($_SERVER['PHP_SELF']).'/'.$params[0];
         $callback = $params[1];
 
@@ -50,8 +83,9 @@ class Router
     }
 
     /**
-     * Defines callback if route is not found
-     * @param   string $callback
+     * Defines callback if route is not found.
+     *
+     * @param string $callback
      */
     public static function error($callback)
     {
@@ -59,7 +93,8 @@ class Router
     }
 
     /**
-     * Don't load any further routes on match
+     * Don't load any further routes on match.
+     *
      * @param  boolean $flag
      */
     public static function haltOnMatch($flag = true)
@@ -68,7 +103,7 @@ class Router
     }
 
     /**
-     * Call object and instantiate
+     * Call object and instantiate.
      *
      * @param  object $callback
      * @param  array $matched  array of matched parameters
@@ -90,8 +125,9 @@ class Router
     }
 
     /**
-     * autoDispatch by Volter9
-     * Ability to call controllers in their controller/model/param way
+     * autoDispatch by Volter9.
+     *
+     * Ability to call controllers in their controller/model/param way.
      */
     public static function autoDispatch()
     {
@@ -104,7 +140,7 @@ class Router
         $controller = array_shift($parts);
         $controller = $controller ? $controller : DEFAULT_CONTROLLER;
         $controller = ucwords($controller);
-        
+
         $method = array_shift($parts);
         $method = $method ? $method : DEFAULT_METHOD;
 
@@ -128,7 +164,7 @@ class Router
     }
 
     /**
-     * Runs the callback for the given request
+     * Runs the callback for the given request.
      */
     public static function dispatch()
     {

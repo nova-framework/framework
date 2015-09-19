@@ -1,6 +1,4 @@
 <?php
-namespace Helpers\PhpMailer;
-
 /**
  * PHPMailer RFC821 SMTP email transport class.
  * PHP Version 5
@@ -18,6 +16,8 @@ namespace Helpers\PhpMailer;
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
+
+namespace Helpers\PhpMailer;
 
 /**
  * PHPMailer RFC821 SMTP email transport class.

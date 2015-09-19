@@ -1,21 +1,25 @@
 <?php
-// SimpleMVC specifed directory
+/**
+ * SimpleMVC specifed directory default is '.'
+ * If app folder is not in the same directory update it's path
+ */
 $smvc = '.';
 
-// Set the full path to the docroot
+/** Set the full path to the docroot */
 define('ROOT', realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
 
-// Make the application relative to the docroot, for symlink'd index.php
-if (!is_dir($smvc) and is_dir(ROOT.$smvc)) { 
-    $smvc = ROOT.$smvc; 
+/** Make the application relative to the docroot, for symlink'd index.php */
+if (!is_dir($smvc) and is_dir(ROOT.$smvc)) {
+    $smvc = ROOT.$smvc;
 }
 
-// Define the absolute paths for configured directories
+/** Define the absolute paths for configured directories */
 define('SMVC', realpath($smvc).DIRECTORY_SEPARATOR);
 
-// Unset non used variables
+/** Unset non used variables */
 unset($smvc);
 
+/** load composer autoloder */
 if (file_exists(SMVC.'vendor/autoload.php')) {
     require SMVC.'vendor/autoload.php';
 } else {
@@ -70,7 +74,8 @@ if (defined('ENVIRONMENT')) {
 
 }
 
-//initiate config
+/** initiate config */
 new Core\Config();
 
+/** load routes */
 require SMVC.'app/Core/routes.php';

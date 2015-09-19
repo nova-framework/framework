@@ -1,7 +1,5 @@
 <?php
-namespace Helpers;
-
-/*
+/**
 ** RainCaptcha PHP Wrapper v1.1.0
 **
 ** Documentation: http://raincaptcha.driversworld.us/pages/docs_php_wrapper
@@ -9,22 +7,28 @@ namespace Helpers;
 ** This code is in the public domain.
 */
 
+namespace Helpers;
+
+/**
+ * RainCaptcha: Anti-spam protection for your website.
+ */
 class RainCaptcha
 {
-
     /**
-     * constant holding the API url
+     * Constant holding the API url.
      */
     const HOST = 'http://raincaptcha.driversworld.us/api/v1';
 
     /**
-     * hold the session id
+     * Hold the session id.
+     *
      * @var string
      */
     private $sessionId;
 
     /**
-     * when class is called sessionId is stored or sersver settings are used for reference
+     * When class is called sessionId is stored or sersver settings are used for reference.
+     *
      * @param string $sessionId instance id
      */
     public function __construct($sessionId = null)
@@ -37,7 +41,8 @@ class RainCaptcha
     }
 
     /**
-     * generate an image for the captcha
+     * Generate an image for the captcha.
+     *
      * @return image
      */
     public function getImage()
@@ -46,7 +51,8 @@ class RainCaptcha
     }
 
     /**
-     * compare given anser against the generated session
+     * Compare given anser against the generated session.
+     *
      * @param  string $answer
      * @return boolean
      */

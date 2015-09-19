@@ -1,15 +1,18 @@
 <?php
-namespace Helpers;
-
 /**
  * Assets static helper
  *
  * @author volter9
  * @author QsmaPL
  * @date 27th November, 2014
- * @date May 18 2015
+ * @date updated Sept 19, 2015
  */
 
+namespace Helpers;
+
+/**
+ * Collect and output css and js link tags.
+ */
 class Assets
 {
     /**
@@ -41,7 +44,7 @@ class Assets
     }
 
     /**
-     * Output script
+     * Output script.
      *
      * @param array|string $file
      */
@@ -51,7 +54,7 @@ class Assets
     }
 
     /**
-     * Output stylesheet
+     * Output stylesheet.
      *
      * @param string $file
      */

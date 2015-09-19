@@ -1,23 +1,27 @@
 <?php
-namespace Helpers;
-
-/*
+/**
  * Tags Class
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 2.2
- * @date May 18 2015
+ * @date Sept 19, 2015
  */
+
+namespace Helpers;
 
 use Helpers\Database;
 
+/**
+ * Collection of useful methods.
+ */
 class Tags
 {
-
     /**
-     * clean functon to convert data into an array
-     * @param  string $data contains the options
-     * @return array array of option and values
+     * Clean functon to convert data into an array.
+     *
+     * @param  string $data contains the options.
+     *
+     * @return array array of option and values.
      */
     public static function clean($data)
     {
@@ -43,9 +47,15 @@ class Tags
         return $params;
     }
 
+    /**
+     * Get
+     *
+     * @param  string $string content to scan
+     *
+     * @return string returns modified content
+     */
     public static function get($string)
     {
-
         //current year
         $string = str_replace('[year]', date('Y'), $string);
 

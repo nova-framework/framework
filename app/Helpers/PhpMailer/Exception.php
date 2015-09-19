@@ -1,10 +1,14 @@
 <?php
-namespace Helpers\PhpMailer;
-
 /**
  * PHPMailer exception handler
  * @package PHPMailer
  * @date May 18 2015
+ */
+
+namespace Helpers\PhpMailer;
+
+/**
+ * Exceptions for PHPMailer
  */
 class PhpMailerException extends \Exception
 {

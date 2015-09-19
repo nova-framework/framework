@@ -1,15 +1,19 @@
 <?php
+/**
+ * database Helper
+ *
+ * @author David Carr - dave@daveismyname.com
+ * @version 2.1
+ * @date June 27, 2014
+ * @date updated Sept 19, 2015
+ */
+
 namespace Helpers;
 
 use PDO;
 
-/*
- * database Helper - extending PDO to use custom methods
- *
- * @author David Carr - dave@simplemvcframework.com
- * @version 2.1
- * @date June 27, 2014
- * @date May 18 2015
+/**
+ * Extending PDO to use custom methods.
  */
 class Database extends PDO
 {
@@ -172,10 +176,10 @@ class Database extends PDO
 
     /**
      * Delete method
+     *
      * @param  string $table table name
-     * @param  array $data  array of columns and values
      * @param  array $where array of columns and values
-     * @param  integer $limit limit number of records
+     * @param  integer   $limit limit number of records
      */
     public function delete($table, $where, $limit = 1)
     {

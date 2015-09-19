@@ -1,24 +1,44 @@
 <?php
-namespace Helpers;
-
-/*
+/**
  * Hooks controller
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 2.2
- * @date updated May 18 2015
+ * @date updated Sept 19, 2015
  */
 
+namespace Helpers;
+
+/**
+ * Hooks allow code to be injected into various parts of the framework.
+ */
 class Hooks
 {
-
+    /**
+     * Array of plugins.
+     * @var array
+     */
     private static $plugins = array();
+
+    /**
+     * Array of available hooks.
+     *
+     * @var array
+     */
     private static $hooks = array();
+
+    /**
+     * Array of instances - for the purpose of reusing the same instance.
+     *
+     * @var array
+     */
     private static $instances = array();
 
     /**
-     * initial hooks
+     * Initial hooks.
+     *
      * @param  integer $id
+     *
      * @return $instance
      */
     public static function get($id = 0)
@@ -46,13 +66,21 @@ class Hooks
 
     }
 
-    //adds hook to hook list
+    /**
+     * Adds hook to hook list.
+     *
+     * @param string $where Hook to add.
+     */
     public static function setHook($where)
     {
         self::$hooks[$where] = '';
     }
 
-    //add multiple hooks
+    /**
+     * Add multiple hooks.
+     *
+     * @param array $where array of hooks to add.
+     */
     public static function setHooks($where)
     {
         foreach ($where as $where) {
@@ -60,6 +88,13 @@ class Hooks
         }
     }
 
+    /**
+     * Load all modules found in folder.
+     *
+     * Only load modulename.module.php files
+     *
+     * @param  string $fromFolder path to the folder.
+     */
     public static function loadPlugins($fromFolder)
     {
         if ($handle = opendir($fromFolder)) {
@@ -78,7 +113,12 @@ class Hooks
         }
     }
 
-    //attach custom function to hook
+    /**
+     * Attach custom function to hook.
+     *
+     * @param string $where hook to use
+     * @param string $function function to attach to hook
+     */
     public static function addHook($where, $function)
     {
         if (!isset(self::$hooks[$where])) {
@@ -91,6 +131,14 @@ class Hooks
         }
     }
 
+    /**
+     * Run all hooks attached to the hook.
+     *
+     * @param  string $where Hook to execute
+     * @param  string $args option arguments
+     *
+     * @return object - returns the called function
+     */
     public function run($where, $args = '')
     {
         if (isset(self::$hooks[$where])) {
@@ -124,6 +172,13 @@ class Hooks
         }
     }
 
+    /**
+     * Execute hooks attached to run and collect instead of running
+     *
+     * @param  string $where hook
+     * @param  string $args optional arguments
+     * @return object - returns output of hook call
+     */
     public function collectHook($where, $args = null)
     {
         ob_start();

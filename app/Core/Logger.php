@@ -1,45 +1,52 @@
 <?php
+/**
+ * Logger class - Custom errors
+ *
+ * @author David Carr - dave@daveismyname.com
+ * @version 2.2
+ * @date June 27, 2014
+ * @date updated Sept 19, 2015
+ */
+
 namespace Core;
 
 use Helpers\PhpMailer\Mail;
 
-/*
- * logger class - Custom errors
- *
- * @author David Carr - dave@simplemvcframework.com
- * @version 2.2
- * @date June 27, 2014
- * @date updated May 18 2015
+/**
+ * Record and email/display errors or a custom error message.
  */
 class Logger
 {
-
     /**
-    * determins if error should be displayed
+    * Determins if error should be displayed.
+    *
     * @var boolean
     */
     private static $printError = false;
 
     /**
-    * determins if error should be emailed to SITEEMAIL defined in app/Core/Config.php
+    * Determins if error should be emailed to SITEEMAIL defined in app/Core/Config.php.
+    *
     * @var boolean
     */
     private static $emailError = false;
 
     /**
-    * clear the errorlog
+    * Clear the errorlog.
+    *
     * @var boolean
     */
     private static $clear = false;
 
     /**
-    * path to error file
+    * Path to error file.
+    *
     * @var boolean
     */
     public static $errorFile = 'errorlog.html';
 
     /**
-    * in the event of an error show this message
+    * In the event of an error show this message.
     */
     public static function customErrorMsg()
     {
@@ -48,7 +55,8 @@ class Logger
     }
 
     /**
-    * saved the exception and calls customer error function
+    * Saved the exception and calls customer error function.
+    *
     * @param  exeption $e
     */
     public static function exceptionHandler($e)
@@ -58,11 +66,12 @@ class Logger
     }
 
     /**
-    * saves error message from exception
+    * Saves error message from exception.
+    *
     * @param  numeric $number  error number
-    * @param  string $message the error
-    * @param  string $file    file originated from
-    * @param  numeric $line   line number
+    * @param  string  $message the error
+    * @param  string  $file    file originated from
+    * @param  numeric $line    line number
     */
     public static function errorHandler($number, $message, $file, $line)
     {
@@ -77,7 +86,8 @@ class Logger
     }
 
     /**
-    * new exception
+    * New exception.
+    *
     * @param  Exception $exception
     * @param  boolean   $printError show error or not
     * @param  boolean   $clear       clear the errorlog
@@ -132,7 +142,8 @@ class Logger
     }
 
     /**
-    * custom error
+    * Custom error.
+    *
     * @param  string  $error       the error
     * @param  boolean $printError display error
     * @param  string  $errorFile  file to save to
@@ -159,7 +170,7 @@ class Logger
             file_put_contents(self::$errorFile, $logMessage . $content);
         }
 
-        //send email
+        /** send email */
         self::sendEmail($logMessage);
 
         if (self::$printError == true) {
@@ -168,6 +179,11 @@ class Logger
         }
     }
 
+    /**
+     * Send Email upon error.
+     *
+     * @param  string $message holdes the error to send
+     */
     public static function sendEmail($message)
     {
         if (self::$emailError == true) {

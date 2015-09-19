@@ -1,63 +1,116 @@
 <?php
+/**
+ * Config - an example for setting up system settings.
+ * When you are done editing, rename this file to 'config.php'.
+ *
+ * @author David Carr - dave@daveismyname.com
+ * @author Edwin Hoksberg - info@edwinhoksberg.nl
+ * @version 2.2
+ * @date June 27, 2014
+ * @date updated Sept 19, 2015
+ */
+
 namespace Core;
 
 use Helpers\Session;
 
-/*
- * config - an example for setting up system settings
- * When you are done editing, rename this file to 'config.php'
- *
- * @author David Carr - dave@simplemvcframework.com
- * @author Edwin Hoksberg - info@edwinhoksberg.nl
- * @version 2.2
- * @date June 27, 2014
- * @date updated May 18 2015
+/**
+ * Configuration constants and options.
  */
 class Config
 {
+    /**
+     * Executed as soon as the framework runs.
+     */
     public function __construct()
     {
-        //turn on output buffering
+        /**
+         * Turn on output buffering.
+         */
         ob_start();
 
-        //base path
+        /**
+         * Define relative base path.
+         */
         define('DIR', '/');
 
-        //set default controller and method for legacy calls
+        /**
+         * Set default controller and method for legacy calls.
+         */
         define('DEFAULT_CONTROLLER', 'welcome');
         define('DEFAULT_METHOD', 'index');
 
-        //set the default template
+        /**
+         * Set the default template.
+         */
         define('TEMPLATE', 'default');
 
-        //set a default language
+        /**
+         * Set a default language.
+         */
         define('LANGUAGE_CODE', 'en');
 
         //database details ONLY NEEDED IF USING A DATABASE
+
+        /**
+         * Database engine default is mysql.
+         */
         define('DB_TYPE', 'mysql');
+
+        /**
+         * Database host default is localhost.
+         */
         define('DB_HOST', 'localhost');
+
+        /**
+         * Database name.
+         */
         define('DB_NAME', 'dbname');
+
+        /**
+         * Database username.
+         */
         define('DB_USER', 'root');
+
+        /**
+         * Database password.
+         */
         define('DB_PASS', 'password');
+
+        /**
+         * PREFER to be used in database calls default is smvc_
+         */
         define('PREFIX', 'smvc_');
 
-        //set prefix for sessions
+        /**
+         * Set prefix for sessions.
+         */
         define('SESSION_PREFIX', 'smvc_');
 
-        //optionall create a constant for the name of the site
+        /**
+         * Optionall create a constant for the name of the site.
+         */
         define('SITETITLE', 'V2.2');
 
-        //optionall set a site email address
+        /**
+         * Optionall set a site email address.
+         */
         //define('SITEEMAIL', '');
 
-        //turn on custom error handling
+        /**
+         * Turn on custom error handling.
+         */
         set_exception_handler('Core\Logger::ExceptionHandler');
         set_error_handler('Core\Logger::ErrorHandler');
 
-        //set timezone
+        /**
+         * Set timezone.
+         */
         date_default_timezone_set('Europe/London');
 
-        //start sessions
+        /**
+         * Start sessions.
+         */
         Session::init();
     }
 }

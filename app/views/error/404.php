@@ -1,3 +1,11 @@
+<?php
+/**
+ * Sample layout
+ */
+
+use Core\Error;
+
+?>
 <div class="container content">
 	<div class="row">
 		<div class="col-md-12">

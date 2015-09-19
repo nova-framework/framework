@@ -1,24 +1,29 @@
 <?php
-namespace Helpers;
-
-/*
- * GeoCode Helper - collection of methods for working with Google's GeoCoder
+/**
+ * GeoCode Helper
  *
  * @author Mark Parrish - mark@pipcommunications.com - http://www.pipcommunications.com
  * @version 1.0
  * @date April 27, 2015
- * @date May 18 2015
+ * @date updated Sept 19, 2015
+ */
+namespace Helpers;
+
+/**
+ * Collection of methods for working with Google's GeoCoder.
  */
 class GeoCode
 {
    /**
-    * helper class to house google map api calls
-    * @param  array $options should contain up to 4 keys for steet,city,state and zipcode
-    * @return array array(lon, lat)
+    * Helper class to house google map api calls.
     *
+    * This function connects to google maps and retrives the lat/lon of the address provided
     * usage: GeoCode::getLngLat(array($address, $city, $state, $zipcode));
+    *
+    * @param  array $options should contain up to 4 keys for steet,city,state and zipcode
+    *
+    * @return array array(lon, lat)
     */
-    // This function connects to google maps and retrives the lat/lon of the address provided
     public static function getLngLat(array $options)
     {
         $url_base = 'http://maps.googleapis.com/maps/api/geocode/json?address=';

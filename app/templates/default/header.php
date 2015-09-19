@@ -1,4 +1,7 @@
 <?php
+/**
+ * Sample layout
+ */
 
 use Helpers\Assets;
 use Helpers\Url;

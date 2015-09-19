@@ -1,19 +1,26 @@
 <?php
-namespace Helpers;
-
-/*
- * Number Class, contains methods for converting number formats and getting a percentage
+/**
+ * Number Class
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 2.2
  * @date May 18 2015
+ * @date updated Sept 19, 2015
+ */
+
+namespace Helpers;
+
+/**
+ * Contains methods for converting number formats and getting a percentage.
  */
 class Number
 {
     /**
-     * formats a number to start with 0 useful for mobile numbers
+     * Formats a number to start with 0 useful for mobile numbers.
+     *
      * @param  numeric $number the number
      * @param  numeric $prefix the number should start with
+     *
      * @return string        the formatted number
      */
     public static function format($number, $prefix = '4')
@@ -46,9 +53,11 @@ class Number
     }
 
     /**
-     * returns the percentage
+     * Returns the percentage.
+     *
      * @param  numeric $val1 start number
      * @param  numeric $val2 end number
+     *
      * @return string       returns the percentage
      */
     public static function percentage($val1, $val2)

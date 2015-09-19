@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Sample language
+ */
 return array(
 
 	// Index method

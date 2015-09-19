@@ -1,21 +1,27 @@
 <?php
-namespace Helpers;
-
-/*
-* Curl class with some default functions and settings
+/**
+* Curl class
 *
 * @author SecretD - https://github.com/SecretD
 * @version 2.2
 * @date Sept 22, 2014
-* @date updated May 18 2015
+* @date updated Sept 19, 2015
 */
+
+namespace Helpers;
+
+/**
+ * Sets some default functions and settings.
+ */
 class SimpleCurl
 {
     /**
     * Performs a get request on the chosen link and the chosen parameters
     * in the array.
+    *
     * @param string $url
     * @param array $params
+    *
     * @return string returns the content of the given url
     */
     public static function get($url, $params = array())
@@ -39,9 +45,11 @@ class SimpleCurl
 
     /**
     * Performs a post request on the chosen link and the chosen parameters
-    * in the array
+    * in the array.
+    *
     * @param string $url
     * @param array $fields
+    *
     * @return string returns the content of the given url after post
     */
     public static function post($url, $fields = array())
@@ -68,8 +76,10 @@ class SimpleCurl
     /**
     * Performs a put request on the chosen link and the chosen parameters
     * in the array.
+    *
     * @param string $url
     * @param array $fields
+    *
     * @return string with the contents of the site
     */
     public static function put($url, $fields = array())

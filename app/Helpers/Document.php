@@ -1,20 +1,25 @@
 <?php
-namespace Helpers;
-
-/*
- * Document Helper - collection of methods for working with documents
+/**
+ * Document Helper
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 1.0
- * @date updated Feb 07, 2015
  * @date May 18 2015
+ * @date updated Sept 19, 2015
  */
 
+namespace Helpers;
+
+/**
+ * Collection of methods for working with documents.
+ */
 class Document
 {
     /**
      * group types into collections, its purpose is to assign the passed extension to the suitable group
+     *
      * @param  string $extension file extension
+     *
      * @return string            group name
      */
     public static function getFileType($extension)
@@ -48,9 +53,11 @@ class Document
     }
 
     /**
-     * create a human friendly measure of the size provided
+     * Create a human friendly measure of the size provided.
+     *
      * @param  integer  $bytes     file size
      * @param  integer $precision precision to be used
+     *
      * @return string             size with measure
      */
     public static function formatBytes($bytes, $precision = 2)
@@ -84,6 +91,7 @@ class Document
      * </code>
      *
      * @param number|string $value
+     *
      * @return number
      */
     public static function getBytesSize($value)
@@ -108,8 +116,10 @@ class Document
     }
 
     /**
-     * return the bytes file of a folder
+     * Return the bytes file of a folder.
+     *
      * @param string $path
+     *
      * @return string
      */
     public static function getFolderSize($path)
@@ -121,8 +131,10 @@ class Document
     }
 
     /**
-     * return the file type based on the filename provided
+     * Return the file type based on the filename provided.
+     *
      * @param  string $file
+     *
      * @return string
      */
     public static function getExtension($file)
@@ -131,8 +143,10 @@ class Document
     }
 
     /**
-     * remove extension of file
+     * Remove extension of file.
+     *
      * @param  string  $file filename and extension
+     *
      * @return file name missing extension
      */
     public static function removeExtension($file)

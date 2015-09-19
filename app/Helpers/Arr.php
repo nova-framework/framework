@@ -1,16 +1,21 @@
 <?php
-namespace Helpers;
-
 /**
  * Array Helper Class
  *
  * @author Benjamin von Minden | http://pandory.de
- * @date   01th August, 2015
+ * @date   August 1, 2015
+ * @date updated Sept 19, 2015
+ */
+
+namespace Helpers;
+
+/**
+ * Collection of array methods.
  */
 class Arr
 {
     /**
-     * Sets an array value
+     * Sets an array value.
      *
      * @param array  $array
      * @param string $path

@@ -1,27 +1,33 @@
 <?php
+/**
+ * Error class - calls a 404 page.
+ *
+ * @author David Carr - dave@daveismyname.com
+ * @version 2.2
+ * @date June 27, 2014
+ * @date updated Sept 19, 2015
+ */
+
 namespace Core;
 
 use Core\Controller;
 use Core\View;
 
-/*
- * error class - calls a 404 page
- *
- * @author David Carr - dave@simplemvcframework.com
- * @version 2.2
- * @date June 27, 2014
- * @date updated May 18 2015
+/**
+ * Error class to generate 404 pages.
  */
 class Error extends Controller
 {
     /**
-     * $error holder
+     * $error holder.
+     *
      * @var string
      */
     private $error = null;
 
     /**
-     * save error to $this->_error
+     * Save error to $this->error.
+     *
      * @param string $error
      */
     public function __construct($error)
@@ -31,7 +37,7 @@ class Error extends Controller
     }
 
     /**
-     * load a 404 page with the error message
+     * Load a 404 page with the error message.
      */
     public function index()
     {
@@ -46,10 +52,12 @@ class Error extends Controller
     }
 
     /**
-     * display errors
+     * Display errors.
+     *
      * @param  array  $error an error of errors
      * @param  string $class name of class to apply to div
-     * @return string        return the errors inside divs
+     *
+     * @return string return the errors inside divs
      */
     public static function display($error, $class = 'alert alert-danger')
     {

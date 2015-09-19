@@ -1,10 +1,4 @@
 <?php
-namespace Helpers\PhpMailer;
-
-require('Smtp.php');
-require('Pop3.php');
-require('Exception.php');
-
 /**
  * PHPMailer - PHP email creation and transport class.
  * PHP Version 5
@@ -22,6 +16,12 @@ require('Exception.php');
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
+
+namespace Helpers\PhpMailer;
+
+require('Smtp.php');
+require('Pop3.php');
+require('Exception.php');
 
 /**
  * PHPMailer - PHP email creation and transport class.

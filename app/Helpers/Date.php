@@ -1,17 +1,23 @@
 <?php
-namespace Helpers;
-
-/*
- * Date Helper - collection of methods for working with dates
+/**
+ * Date Helper
  *
- * @author David Carr - dave@simplemvcframework.com
+ * @author David Carr - dave@daveismyname.com
  * @version 1.0
  * @date May 18 2015
+ * @date updated Sept 19, 2015
+ */
+
+namespace Helpers;
+
+/**
+ * collection of methods for working with dates.
  */
 class Date
 {
     /**
      * get the difference between 2 dates
+     *
      * @param  date $from start date
      * @param  date $to   end date
      * @param  string $type the type of difference to return

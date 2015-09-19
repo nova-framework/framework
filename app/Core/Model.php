@@ -1,32 +1,35 @@
 <?php
+/**
+ * Model - the base model
+ *
+ * @author David Carr - dave@daveismyname.com
+ * @version 2.2
+ * @date June 27, 2014
+ * @date updated Sept 19, 2015
+ */
+
 namespace Core;
 
 use Helpers\Database;
 
-/*
- * model - the base model
- *
- * @author David Carr - dave@simplemvcframework.com
- * @version 2.2
- * @date June 27, 2014
- * @date updated May 18 2015
+/**
+ * Base model class all other models will extend from this base.
  */
-
 abstract class Model
 {
     /**
-     * hold the database connection
+     * Hold the database connection.
+     *
      * @var object
      */
     protected $db;
 
     /**
-     * create a new instance of the database helper
+     * Create a new instance of the database helper.
      */
     public function __construct()
     {
-        //connect to PDO here.
+        /** connect to PDO here. */
         $this->db = Database::get();
-
     }
 }

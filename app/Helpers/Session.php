@@ -134,7 +134,7 @@ class Session
         /** only run if session has started */
         if (self::$sessionStarted == true) {
             /** if key is empty and $prefix is false */
-            if ($key =='' && $prefix = false) {
+            if ($key =='' && $prefix == false) {
                 session_unset();
                 session_destroy();
             } elseif ($prefix == true) {

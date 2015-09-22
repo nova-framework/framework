@@ -35,4 +35,42 @@ class Date
             return $diff->$type;
         }
     }
+
+    /**
+     * Business Days
+     *
+     * Get number of working days between 2 dates
+     *
+     * Taken from http://mugurel.sumanariu.ro/php-2/php-how-to-calculate-number-of-work-days-between-2-dates/
+     *
+     * @param  date     date in the format of Y-m-d
+     * @param  date     date in the format of Y-m-d
+     * @return integer  returns the total number of days
+     */
+    public static function businessDays($startDate, $endDate)
+    {
+        $begin = strtotime($startDate);
+        $end = strtotime($endDate);
+
+        if ($begin > $end) {
+            //startDate is in the future
+            return 0;
+        } else {
+            $numDays = 0;
+            $weekends = 0;
+
+            while ($begin <= $end) {
+                $numDays++; // no of days in the given interval
+                $whatDay = date('N', $begin);
+
+                if ($whatDay > 5) { // 6 and 7 are weekend days
+                    $weekends++;
+                }
+                $begin+=86400; // +1 day
+            };
+
+            $working_days = $numDays - $weekends;
+            return $working_days;
+        }
+    }
 }

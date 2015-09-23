@@ -43,11 +43,12 @@ class Date
      *
      * Taken from http://mugurel.sumanariu.ro/php-2/php-how-to-calculate-number-of-work-days-between-2-dates/
      *
-     * @param  date     date in the format of Y-m-d
-     * @param  date     date in the format of Y-m-d
+     * @param  date     $startDate date in the format of Y-m-d
+     * @param  date     $endDate date in the format of Y-m-d
+     * @param  booleen  $getWeekends returns the number of weekends
      * @return integer  returns the total number of days
      */
-    public static function businessDays($startDate, $endDate)
+    public static function businessDays($startDate, $endDate, $getWeekends = false)
     {
         $begin = strtotime($startDate);
         $end = strtotime($endDate);
@@ -68,6 +69,10 @@ class Date
                 }
                 $begin+=86400; // +1 day
             };
+
+            if ($getWeekends == true) {
+                return $weekends;
+            }
 
             $working_days = $numDays - $weekends;
             return $working_days;

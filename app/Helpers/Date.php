@@ -45,10 +45,10 @@ class Date
      *
      * @param  date     $startDate date in the format of Y-m-d
      * @param  date     $endDate date in the format of Y-m-d
-     * @param  booleen  $getWeekends returns the number of weekends
+     * @param  booleen  $weekendDays returns the number of weekends
      * @return integer  returns the total number of days
      */
-    public static function businessDays($startDate, $endDate, $getWeekends = false)
+    public static function businessDays($startDate, $endDate, $weekendDays = false)
     {
         $begin = strtotime($startDate);
         $end = strtotime($endDate);
@@ -70,7 +70,7 @@ class Date
                 $begin+=86400; // +1 day
             };
 
-            if ($getWeekends == true) {
+            if ($weekendDays == true) {
                 return $weekends;
             }
 

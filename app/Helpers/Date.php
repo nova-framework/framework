@@ -89,10 +89,10 @@ class Date
     */
     public static function businessDates($startDate,$endDate,$nonWork = 6)
     {
-        $begin    = new \DateTime($startDate);    	//intialize start date
-        $end      = new \DateTime($endDate);    		//initialize end date
-        $holiday  = array();  						//this is assumed list of holiday
-        $interval = new \DateInterval('P1D');    		// set the interval as 1 day
+        $begin    = new \DateTime($startDate);  
+        $end      = new \DateTime($endDate);    		
+        $holiday  = array();  					
+        $interval = new \DateInterval('P1D');    		
         $dateRange= new \DatePeriod($begin, $interval ,$end);
         foreach($dateRange as $date){
             if($date->format("N") < $nonWork AND !in_array($date->format("Y-m-d"),$holiday))

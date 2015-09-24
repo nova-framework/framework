@@ -82,10 +82,10 @@ class Date
     /**
     * get an array of dates between 2 dates (not including weekends)
     *
-    * @param  date 		$startDate start date
-    * @param  date 		$endDate end date
-    * @param  integer 	$nonWork day of week(int) where weekend begins - 5 = fri -> sun, 6 = sat -> sun, 7 = sunday
-    * @return array 	list of dates between $startDate and $endDate
+    * @param  date    $startDate start date
+    * @param  date    $endDate end date
+    * @param  integer $nonWork day of week(int) where weekend begins - 5 = fri -> sun, 6 = sat -> sun, 7 = sunday
+    * @return array   list of dates between $startDate and $endDate
     */
     public static function businessDates($startDate,$endDate,$nonWork = 6)
     {

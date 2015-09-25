@@ -78,4 +78,26 @@ class Date
             return $working_days;
         }
     }
+    
+    /**
+    * get an array of dates between 2 dates (not including weekends)
+    *
+    * @param  date    $startDate start date
+    * @param  date    $endDate end date
+    * @param  integer $nonWork day of week(int) where weekend begins - 5 = fri -> sun, 6 = sat -> sun, 7 = sunday
+    * @return array   list of dates between $startDate and $endDate
+    */
+    public static function businessDates($startDate,$endDate,$nonWork = 6)
+    {
+        $begin    = new \DateTime($startDate);  
+        $end      = new \DateTime($endDate);    		
+        $holiday  = array();  					
+        $interval = new \DateInterval('P1D');    		
+        $dateRange= new \DatePeriod($begin, $interval ,$end);
+        foreach($dateRange as $date){
+            if($date->format("N") < $nonWork AND !in_array($date->format("Y-m-d"),$holiday))
+                $dates[] = $date->format("Y-m-d");
+        }
+        return $dates;
+    }
 }

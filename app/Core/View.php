@@ -23,9 +23,9 @@ class View
     /**
      * Include template file.
      *
-     * @param  string  $path  path to file from views folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
+     * @param  string $path  path to file from views folder
+     * @param  array  $data  array of data
+     * @param  array  $error array of errors
      */
     public static function render($path, $data = false, $error = false)
     {

@@ -182,7 +182,7 @@ class Logger
     /**
      * Send Email upon error.
      *
-     * @param  string $message holdes the error to send
+     * @param  string $message holds the error to send
      */
     public static function sendEmail($message)
     {

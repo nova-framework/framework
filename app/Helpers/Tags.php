@@ -17,7 +17,7 @@ use Helpers\Database;
 class Tags
 {
     /**
-     * Clean functon to convert data into an array.
+     * Clean function to convert data into an array.
      *
      * @param  string $data contains the options.
      *

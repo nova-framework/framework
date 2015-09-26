@@ -88,7 +88,7 @@ class Config
         define('SESSION_PREFIX', 'smvc_');
 
         /**
-         * Optionall create a constant for the name of the site.
+         * Optional create a constant for the name of the site.
          */
         define('SITETITLE', 'V2.2');
 

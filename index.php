@@ -19,7 +19,7 @@ define('SMVC', realpath($smvc).DIRECTORY_SEPARATOR);
 /** Unset non used variables */
 unset($smvc);
 
-/** load composer autoloder */
+/** load composer autoloader */
 if (file_exists(SMVC.'vendor/autoload.php')) {
     require SMVC.'vendor/autoload.php';
 } else {

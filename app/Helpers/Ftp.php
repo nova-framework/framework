@@ -16,7 +16,7 @@ namespace Helpers;
 class Ftp
 {
     /**
-     * Hold the FTP connction.
+     * Hold the FTP connection.
      *
      * @var integer
      */
@@ -58,7 +58,7 @@ class Ftp
     }
 
     /**
-     * Create a directory on th remote FTP server.
+     * Create a directory on the remote FTP server.
      *
      * @param  string $dirToCreate name of the directory to create
      */
@@ -95,7 +95,7 @@ class Ftp
     }
 
     /**
-     * Upload file to remove FTP server.
+     * Upload file to FTP server.
      *
      * @param  string $remoteFile path and filename for remote file
      * @param  string $localFile  local path to file

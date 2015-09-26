@@ -46,7 +46,7 @@ class Assets
     /**
      * Output script.
      *
-     * @param array|string $file
+     * @param array|string $file/s
      */
     public static function js($files)
     {

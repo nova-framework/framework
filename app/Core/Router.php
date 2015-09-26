@@ -67,7 +67,7 @@ class Router
     );
 
     /**
-     * Defines a route w/ callback and method.
+     * Defines a route with or without callback and method.
      *
      * @param string $method
      * @param array @params
@@ -106,7 +106,7 @@ class Router
      * Call object and instantiate.
      *
      * @param  object $callback
-     * @param  array $matched  array of matched parameters
+     * @param  array  $matched  array of matched parameters
      * @param  string $msg
      */
     public static function invokeObject($callback, $matched = null, $msg = null)

@@ -27,7 +27,7 @@ class RainCaptcha
     private $sessionId;
 
     /**
-     * When class is called sessionId is stored or sersver settings are used for reference.
+     * When class is called sessionId is stored or server settings are used for reference.
      *
      * @param string $sessionId instance id
      */
@@ -51,7 +51,7 @@ class RainCaptcha
     }
 
     /**
-     * Compare given anser against the generated session.
+     * Compare given answer against the generated session.
      *
      * @param  string $answer
      * @return boolean

@@ -59,13 +59,16 @@ class Session
      *
      * @param  string $key item to extract
      *
-     * @return string      return item
+     * @return mixed|null      return item or null when key does not exists
      */
     public static function pull($key)
     {
-        $value = $_SESSION[SESSION_PREFIX.$key];
-        unset($_SESSION[SESSION_PREFIX.$key]);
-        return $value;
+        if (isset($_SESSION[SESSION_PREFIX.$key])) {
+            $value = $_SESSION[SESSION_PREFIX.$key];
+            unset($_SESSION[SESSION_PREFIX.$key]);
+            return $value;
+        }
+        return null;
     }
 
     /**
@@ -74,7 +77,7 @@ class Session
      * @param  string  $key       item to look for in session
      * @param  boolean $secondkey if used then use as a second key
      *
-     * @return string             returns the key
+     * @return mixed|null         returns the key value, or null if key doesn't exists
      */
     public static function get($key, $secondkey = false)
     {
@@ -87,7 +90,7 @@ class Session
                 return $_SESSION[SESSION_PREFIX.$key];
             }
         }
-        return false;
+        return null;
     }
 
     /**

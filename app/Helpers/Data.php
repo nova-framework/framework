@@ -80,4 +80,13 @@ class Data
     {
         return ucwords($data);
     }
+
+    /**
+     * key - this will generate a 35 character key
+     * @return string
+     */
+     public static function create_key()
+     {
+       return str_shuffle(md5("!@#$%^&*()_+-=0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHJIKLMNOPQRSTUVWXYZ"));
+     }
 }

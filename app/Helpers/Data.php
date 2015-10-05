@@ -85,8 +85,15 @@ class Data
      * key - this will generate a 35 character key
      * @return string
      */
-     public static function create_key()
+     public static function create_key($length = 32)
      {
-       return str_shuffle(md5("!@#$%^&*()_+-=0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHJIKLMNOPQRSTUVWXYZ"));
+        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        $key = "";
+
+        for ($i = 0; $i < $length; $i++) {
+            $key .= $chars{rand(0, strlen($chars) - 1)};
+        }
+
+        return $key;
      }
 }

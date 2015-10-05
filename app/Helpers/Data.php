@@ -87,7 +87,7 @@ class Data
      */
      public static function create_key($length = 32)
      {
-        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        $chars = "!@#$%^&*()_+-=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         $key = "";
 
         for ($i = 0; $i < $length; $i++) {

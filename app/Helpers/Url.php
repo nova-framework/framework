@@ -51,7 +51,7 @@ class Url
     /**
      * Created the relative address to the template folder.
      *
-     * @param  boolean $admin
+     * @param  boolean $custom
      * @return string url to template folder
      */
     public static function relativeTemplatePath($custom = false)

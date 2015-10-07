@@ -59,7 +59,7 @@ class Url
         if ($custom) {
             return "app/templates/".$custom."/";
         } else {
-            return "app/templates/".DEFAULT_TEMPLATE."/";
+            return "app/templates/".TEMPLATE."/";
         }
     }
 

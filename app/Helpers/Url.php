@@ -54,12 +54,12 @@ class Url
      * @param  boolean $admin
      * @return string url to template folder
      */
-    public static function relativeTemplatePath($admin = false)
+    public static function relativeTemplatePath($custom = false)
     {
-        if ($admin == false) {
-            return "app/templates/".DEFAULT_TEMPLATE."/";
+        if ($custom == false) {
+            return "app/templates/".$custom."/";
         } else {
-            return "app/templates/".ADMIN_TEMPLATE."/";
+            return "app/templates/".DEFAULT_TEMPLATE."/";
         }
     }
 

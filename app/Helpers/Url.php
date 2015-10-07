@@ -56,7 +56,7 @@ class Url
      */
     public static function relativeTemplatePath($custom = false)
     {
-        if ($custom == false) {
+        if ($custom) {
             return "app/templates/".$custom."/";
         } else {
             return "app/templates/".DEFAULT_TEMPLATE."/";

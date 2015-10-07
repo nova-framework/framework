@@ -80,4 +80,20 @@ class Data
     {
         return ucwords($data);
     }
+
+    /**
+     * key - this will generate a 35 character key
+     * @return string
+     */
+     public static function create_key($length = 32)
+     {
+        $chars = "!@#$%^&*()_+-=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        $key = "";
+
+        for ($i = 0; $i < $length; $i++) {
+            $key .= $chars{rand(0, strlen($chars) - 1)};
+        }
+
+        return $key;
+     }
 }

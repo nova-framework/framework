@@ -23,7 +23,7 @@ class Lists{
    *
    * @return string
    */
-  public static function openList($attrs = [], $type = "ul")
+  public static function openList($type = "ul", $attrs = [])
   {
 
     $o  = "<".$type." ";

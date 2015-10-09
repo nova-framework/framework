@@ -8,7 +8,7 @@
 namespace Helpers;
 
 /**
- * Create lists and navigations with ease
+ * Create lists with ease
  */
 
 class Lists{

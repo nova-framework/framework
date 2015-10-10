@@ -8,7 +8,7 @@
 namespace Helpers;
 
 /**
- * Create lists with ease
+ * Create lists and navigations with ease
  */
 
 class Lists{
@@ -23,14 +23,14 @@ class Lists{
    *
    * @return string
    */
-  public static function openList($type = "ul", $attrs = [])
+  public static function openList( $type = "ul", $attrs = [])
   {
 
     $o  = "<".$type." ";
     $o .= (isset($attrs['id'])) ? 'id="'.$attrs['id'].'" ': ' ';
     $o .= (isset($attrs['class'])) ? 'class="'.$attrs['class'].'" ': ' ';
     $o .= ">";
-    echo $o;
+    return $o;
   }
   /**
    * close list
@@ -39,7 +39,7 @@ class Lists{
 
   public static function closeList($type = "ul")
   {
-    echo "</".$type.">\n";
+    return "</".$type.">\n";
   }
 
   /**
@@ -56,7 +56,7 @@ class Lists{
     $l .= (isset($attrs['class'])) ? 'class="'.$attrs['class'].'" ': ' ';
     $l .= (isset($attrs['role'])) ? 'role="'.$attrs['role'].'" ': ' ';
     $l .= ">";
-    echo $l;
+    return $l;
   }
   /**
    * close list item
@@ -65,7 +65,7 @@ class Lists{
    */
   public static function closeItem()
   {
-    echo "</li>";
+    return "</li>";
   }
 
   /**
@@ -77,7 +77,7 @@ class Lists{
    *
    * @return string
    */
-  public static function listLink($text="link",$href="#", $attrs = [])
+  public static function listLink($text,$href, $attrs = [])
   {
     $a  = "<a ";
     $a .= "href=".$href." ";
@@ -85,7 +85,8 @@ class Lists{
     $a .= (isset($attrs['class']) ? 'class="'.$attrs['class'].'" ' : " ");
     $a .= (isset($attrs['target']) ? 'target="'.$attrs['target'].'" ' : " ");
     $a .= " >";
-    echo $a;
+    $a .= $text;
+    return $a;
   }
   /**
    * close link
@@ -94,7 +95,44 @@ class Lists{
    */
    public static function closeLink()
    {
-     echo "</a>";
+     return "</a>";
+   }
+
+
+   /**
+    * Create a list item with custom text
+    *
+    * @param string item text
+    * @param array options (id, class, role)
+    *
+    * @return string
+    */
+   public static function createitem( $t = "item",$attrs = [])
+   {
+     $o   =   self::openItem($lia);
+     $o  .=   $t;
+     $o  .=   self::closeItem();
+
+     return $o;
+   }
+
+   /**
+    * Create a list item with a link
+    *
+    * @param string link text
+    * @param string link location
+    * @param array optoins (id, class, target)
+    *
+    * @return string
+    */
+   public static function createNavitem($t="link", $h="#", $attrs=[])
+   {
+     $o   =   self::openItem($lia);
+     $o  .=   self::listLink($t, $h, $attrs);
+     $o  .=   self::closeLink();
+     $o  .=   self::closeItem();
+
+     return $o;
    }
 }
 

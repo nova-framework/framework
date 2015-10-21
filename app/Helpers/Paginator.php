@@ -225,7 +225,7 @@ class Paginator
 
                     for ($counter = $this->page - $adjacents; $counter <= $this->page + $adjacents; $counter++) {
                         if ($counter == $this->page) {
-                            $pagination.= "<li><span class='active'>$counter</span></li>";
+                            $pagination.= "<li class='active'><span>$counter</span></li>";
                         } else {
                             $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }
@@ -240,7 +240,7 @@ class Paginator
 
                     for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                         if ($counter == $this->page) {
-                            $pagination.= "<li><span class='active'>$counter</span></li>";
+                            $pagination.= "<li class='active'><span>$counter</span></li>";
                         } else {
                             $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }

@@ -51,15 +51,15 @@ class Url
     /**
      * Created the relative address to the template folder.
      *
-     * @param  boolean $admin
+     * @param  boolean $custom
      * @return string url to template folder
      */
-    public static function relativeTemplatePath($admin = false)
+    public static function relativeTemplatePath($custom = false)
     {
-        if ($admin == false) {
-            return "app/templates/".DEFAULT_TEMPLATE."/";
+        if ($custom) {
+            return "app/templates/".$custom."/";
         } else {
-            return "app/templates/".ADMIN_TEMPLATE."/";
+            return "app/templates/".TEMPLATE."/";
         }
     }
 

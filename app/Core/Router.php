@@ -132,6 +132,10 @@ class Router
     public static function autoDispatch()
     {
         $uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
+        $uri = '/'.$uri;
+		if (strpos($uri,DIR) === 0) {
+			$uri=substr($uri,strlen(DIR));
+		}
         $uri = trim($uri, ' /');
         $uri = ($amp = strpos($uri, '&')) !== false ? substr($uri, 0, $amp) : $uri;
 
@@ -155,7 +159,7 @@ class Router
         $c = new $controller;
 
         if (method_exists($c, $method)) {
-            $c->$method($args);
+			call_user_func_array(array($c,$method),$args);
             //found method so stop
             return true;
         }

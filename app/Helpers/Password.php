@@ -1,27 +1,9 @@
 <?php
-/**
- * password class
- *
- * passes data to password compatibility library, this will add compatability up for php 5.5 at which point the built in functions will be used instead.
- *
- * @author David Carr - dave@simplemvcframework.com
- * @version 2.2
- * @date May 18, 2015
- * @date updated Sept 19, 2015
- */
-
 namespace Helpers;
 
-if (!defined('PASSWORD_BCRYPT')) {
-    define('PASSWORD_BCRYPT', 1);
-    define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
-}
-
-/**
- * uses a compatibility library with PHP 5.5's simplified password hashing API. (located in app/files/password.php)
- */
 class Password
 {
+
     /**
      * Hash the password using the specified algorithm
      *
@@ -31,7 +13,7 @@ class Password
      *
      * @return string|false The hashed password, or false on error.
      */
-    public static function make($password, $algo = PASSWORD_BCRYPT, array $options = array())
+    public static function make($password, $algo = PASSWORD_DEFAULT, array $options = array())
     {
         return password_hash($password, $algo, $options);
     }
@@ -69,7 +51,7 @@ class Password
      * @return boolean True if the password needs to be rehashed.
      */
 
-    public static function needsRehash($hash, $algo = PASSWORD_BCRYPT, array $options = array())
+    public static function needsRehash($hash, $algo = PASSWORD_DEFAULT, array $options = array())
     {
         return password_needs_rehash($hash, $algo, $options);
     }

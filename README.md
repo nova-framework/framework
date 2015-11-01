@@ -1,4 +1,4 @@
-![Simple MVC Framework](http://simplemvcframework.com/app/templates/smvc/img/logo.png)
+![Simple MVC Framework](http://simplemvcframework.com/app/templates/publicthemes/smvc/images/logo.png)
 
 ## Packagist
 

@@ -77,5 +77,13 @@ if (defined('ENVIRONMENT')) {
 /** initiate config */
 new Core\Config();
 
+//HACK: fix for php_desktop routing (Mongoose Server)
+if ((strchr($_SERVER["SERVER_SOFTWARE"], "Apache")) == false){
+
+	if (strpos($_SERVER['REQUEST_URI'], "/index.php") == false) {
+		$_SERVER['REQUEST_URI'] = dirname($_SERVER['PHP_SELF']) . $_SERVER['REQUEST_URI'];
+	}
+};
+
 /** load routes */
 require SMVC.'app/Core/routes.php';

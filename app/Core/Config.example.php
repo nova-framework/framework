@@ -1,7 +1,7 @@
 <?php
 /**
  * Config - an example for setting up system settings.
- * When you are done editing, rename this file to 'config.php'.
+ * When you are done editing, rename this file to 'Config.php'.
  *
  * @author David Carr - dave@daveismyname.com
  * @author Edwin Hoksberg - info@edwinhoksberg.nl

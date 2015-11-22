@@ -2,6 +2,8 @@
 
 ## Packagist
 
+[![Join the chat at https://gitter.im/simple-mvc-framework/framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/simple-mvc-framework/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg?style=flat-square)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg?style=flat-square)](https://packagist.org/packages/simple-mvc-framework/v2)
 [![Dependency Status](https://www.versioneye.com/user/projects/554367f738331321e2000005/badge.svg?style=flat)](https://www.versioneye.com/user/projects/554367f738331321e2000005)

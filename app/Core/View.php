@@ -29,7 +29,7 @@ class View
      */
     public static function render($path, $data = false, $error = false)
     {
-        static::sendHeaders();
+        self::sendHeaders();
         
         require SMVC."app/views/$path.php";
     }
@@ -43,7 +43,7 @@ class View
      */
     public static function renderModule($path, $data = false, $error = false)
     {
-        static::sendHeaders();
+        self::sendHeaders();
         
         require SMVC."app/Modules/$path.php";
     }
@@ -57,7 +57,7 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
-        static::sendHeaders();
+        self::sendHeaders();
 
         require SMVC."app/templates/$custom/$path.php";
     }
@@ -77,7 +77,7 @@ class View
      *
      * @param array $headers
      */
-    public function addHeaders($headers = array())
+    public function addHeaders(array $headers = array())
     {
         self::$headers = array_merge(self::$headers, $headers);
     }

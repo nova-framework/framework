@@ -109,7 +109,7 @@ class Date
      * @param int $year
      * @return int
      */
-    public static function days_in_month($month = 0, $year = '') {
+    public static function daysInMonth($month = 0, $year = '') {
         if ($month < 1 OR $month > 12) {
             return 0;
         } elseif (!is_numeric($year) OR strlen($year) !== 4) {

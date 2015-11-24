@@ -16,137 +16,99 @@ namespace Helpers;
 class Form
 {
     /**
-     * open form
+     * Sets value for attributes from key value pair
+     * Uses value as key if key-value pair does not exist
      *
-     * This method return the form element <form...
+     * @param   array   $pair array(key=>value)
      *
-     * @param   array(id, name, class, onsubmit, method, action, files, style)
-     *
-     * @return  string
+     * @return string   single string of all attributes with value
      */
-    public static function open($params = array())
-    {
-        $o = '<form';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                       : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                   : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                 : '';
-        $o .= (isset($params['onsubmit']))  ? " onsubmit='{$params['onsubmit']}'"           : '';
-        $o .= (isset($params['method']))    ? " method='{$params['method']}'"               : ' method="get"';
-        $o .= (isset($params['action']))    ? " action='{$params['action']}'"               : '';
-        $o .= (isset($params['files']))     ? " enctype='multipart/form-data'"              : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= (isset($params['role']))      ? " role='{$params['role']}'"                 : '';
-        $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
-        $o .= '>';
-        return $o."\n";
+    private function getAttrValue($pair){
+        $p = "";
+        foreach($pair as $attribute => $value){
+            $p .= !is_int($attribute)? $attribute .'="'.$value.'" ' : $value;
+        }
+        return $p;
     }
 
+
     /**
-     * closed the form
+     * Open form
      *
-     * @return string
+     * @param   string  $method GET or POST
+     * @param   array   $options attributes=>values
+     *
+     * @return  string <form method=....
+     */
+    public static function open($method="get",$options = array())
+    {
+        return '<form method="'.$method.'" ' . self::getAttrValue($options) . '>';
+    }
+
+
+
+    /**
+     * Close form
+     *
+     * @return string </form>
      */
     public static function close()
     {
-        return "</form>\n";
+        return "</form>";
     }
 
     /**
-     * textBox
+     * Create text area
      *
      * This method creates a textarea element
      *
-     * @param   array(id, name, class, onclick, columns, rows, disabled, placeholder, style, value)
+     * @param   array   $options attributes=>values
+     * @param   string  $value default text
      *
-     * @return  string
+     * @return  string  text area html element
      */
-    public static function textBox($params = array())
+    public static function textBox($options = array(),$value='')
     {
-        $o = '<textarea';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='form-input textbox {$params['class']}'"  : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
-        $o .= (isset($params['cols']))      ? " cols='{$params['cols']}'"                       : '';
-        $o .= (isset($params['rows']))      ? " rows='{$params['rows']}'"                       : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"      : '';
-        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"         : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
-        $o .= '>';
-        $o .= (isset($params['value']))     ? $params['value']                                  : '';
-        $o .= "</textarea>\n";
-        return $o;
+        return '<textarea ' . self::getAttrValue($options) . '>' . $value . '</textarea>';
     }
 
     /**
-     * input
+     * Create Input
      *
-     * This method returns a input text element.
+     * This method returns a input element.
      *
-     * @param   array(id, name, class, onclick, value, length, width, disable,placeholder)
+     * @param   string  $type type of input, default set as text
+     * @param   array   $options attributes=>values
      *
-     * @return  string
+     * @return  string input html element
      */
-    public static function input($params = array())
+    public static function input($type="text", $options = array())
     {
-        $o = '<input ';
-        $o .= (isset($params['type']))      ? " type='{$params['type']}'"                   : 'type="text"';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                       : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                   : '';
-        $o .= (isset($params['class']))     ? " class='form-input text {$params['class']}'" : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"             : '';
-        $o .= (isset($params['onkeypress']))? " onkeypress='{$params['onkeypress']}'"       : '';
-        $o .= (isset($params['value']))     ? ' value="' . $params['value'] . '"'           : '';
-        $o .= (isset($params['length']))    ? " maxlength='{$params['length']}'"            : '';
-        $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"        : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"           : '';
-        $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"  : '';
-        $o .= (isset($params['accept']))     ? " accept='{$params['accept']}'"              : '';
-        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"     : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
-        $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
-        $o .= (isset($params['autofocus'])) ? " autofocus" : '';
-        $o .= " />\n";
-        return $o;
+        return '<input type="' . $type . ' "' . self::getAttrValue($options) . '/>';
     }
 
     /**
-     * select
+     * Create Select
      *
-     * This method returns a select html element.
-     * It can be given a param called value which then will be preselected
-     * data has to be array(k=>v)
+     * This method returns a select element.
      *
-     * @param   array(id, name, class, onclick, disabled)
+     * @param   array   $options    attributes=>values or values
+     * @param   array   $data   [value=>text,text,value=>['selected',text],['selected',text]] no reverse text with 'selected'
      *
-     * @return  string
+     * @return  string  select html element
      */
-    public static function select($params = array())
+    public static function select($options = array(), $data = array())
     {
-        $o = "<select";
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
-        $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"            : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= ">\n";
-        $o .= "<option value=''>Select</option>\n";
-        if (isset($params['data']) && is_array($params['data'])) {
-            foreach ($params['data'] as $k => $v) {
-                if (isset($params['value']) && $params['value'] == $k) {
-                    $o .= "<option value='{$k}' selected='selected'>{$v}</option>\n";
-                } else {
-                    $o .= "<option value='{$k}'>{$v}</option>\n";
-                }
-            }
+        $o = '<select ' . self::getAttrValue($options) . '>';
+        foreach ($data as $k => $v) {
+            $o .= !is_int($k) ?
+                "<option value='{$k}'".((is_array($v) && in_array('selected',$v)) ? 'selected' : '').">".
+                ((is_array($v) && in_array('selected',$v)) ? $v[1] : $v)."</option>" :
+                "<option value='". ((is_array($v) && in_array('selected',$v)) ? $v[1] : $v)."'" .
+                    ((is_array($v) && in_array('selected',$v)) ? 'selected' : '').">".
+                    ((is_array($v) && in_array('selected',$v)) ? $v[1] : $v)."</option>";
         }
-        $o .= "</select>\n";
+        $o .= "</select>";
         return $o;
     }
 
@@ -241,42 +203,5 @@ class Form
         return $o;
     }
 
-    /**
-     * This method returns a submit button element given the params for settings
-     *
-     * @param   array(id, name, class, onclick, value, disabled)
-     *
-     * @return  string
-     */
-    public static function submit($params = array())
-    {
-        $o = '<input type="submit"';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
-        $o .= (isset($params['value']))     ? " value='{$params['value']}'"                     : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= " />\n";
-        return $o;
-    }
 
-    /**
-     * This method returns a hidden input elements given its params
-     *
-     * @param   array(id, name, class, value)
-     *
-     * @return  string
-     */
-    public static function hidden($params = array())
-    {
-        $o = '<input type="hidden"';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"   : '';
-        $o .= (isset($params['value']))     ? " value='{$params['value']}'"                     : '';
-        $o .= " />\n";
-        return $o;
-    }
 }

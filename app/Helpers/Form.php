@@ -1,6 +1,7 @@
 <?php
 /**
  * Form Helper
+ * Totally Rewritten!
  *
  * @author David Carr - dave@daveismyname.com
  * @version 1.0
@@ -16,267 +17,449 @@ namespace Helpers;
 class Form
 {
     /**
-     * open form
+     * Sets value for attributes from key value pair
+     * Uses value as key if key-value pair does not exist
      *
-     * This method return the form element <form...
+     * @param   array $pair array(key=>value)
      *
-     * @param   array(id, name, class, onsubmit, method, action, files, style)
-     *
-     * @return  string
+     * @return  string  attribute="value"
      */
-    public static function open($params = array())
+    private static function getAttrValue($pair)
     {
-        $o = '<form';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                       : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                   : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                 : '';
-        $o .= (isset($params['onsubmit']))  ? " onsubmit='{$params['onsubmit']}'"           : '';
-        $o .= (isset($params['method']))    ? " method='{$params['method']}'"               : ' method="get"';
-        $o .= (isset($params['action']))    ? " action='{$params['action']}'"               : '';
-        $o .= (isset($params['files']))     ? " enctype='multipart/form-data'"              : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= (isset($params['role']))      ? " role='{$params['role']}'"                 : '';
-        $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
-        $o .= '>';
-        return $o."\n";
+        $p = "";
+        foreach ($pair as $attribute => $value) {
+            $p .= !is_int($attribute) ? $attribute . '="' . $value . '" ' : $value;
+        }
+        return $p;
+    }
+
+
+    /**
+     * Open form
+     * Use openGET or openPOST
+     *
+     * @param   string  $method GET or POST, default GET
+     * @param   array   $options array(attributes=>values)
+     *
+     * @return  string  starts with open form tag
+     */
+    private static function open($method, $options = array())
+    {
+        return '<form method="' . $method . '" ' . self::getAttrValue($options) . '>';
     }
 
     /**
-     * closed the form
+     * Open form with method set as get
      *
-     * @return string
+     * @param   array   $options    [attribute=>value]
+     *
+     * @return  string  start get from tag
+     */
+    public static function openGET($options = array())
+    {
+        return self::open("get",$options);
+    }
+
+
+    /**
+     * Open form with method set as post
+     *
+     * @param   array   $options    [attribute=>value]
+     *
+     * @return  string  start post from tag
+     */
+    public static function openPOST($options = array())
+    {
+        return self::open("post",$options);
+    }
+
+
+    /**
+     * Close form
+     *
+     * @return  string  ends the form tag
      */
     public static function close()
     {
-        return "</form>\n";
+        return "</form>";
+    }
+
+
+    /**
+     * Create text area
+     *
+     * @param   array $options array(attributes=>values)
+     * @param   string $value default text
+     *
+     * @return  string  text area html element
+     */
+    public static function textBox($options = array(), $value = '')
+    {
+        return '<textarea ' . self::getAttrValue($options) . '>' . $value . '</textarea>';
+    }
+
+
+
+    /**
+     * Create Input
+     * Use textInput, passwordInput, submitInput, buttonInput, numberInput, rangeInput, fileInput
+     *  -WARNING- BELOW inputs not supported by all browsers
+     *  dateInput, datetimeInput, emailInput, monthInput, searchInput, telInput, timeInput, urlInput, weekInput
+     *
+     * @param   string  $type type of input
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  input html element
+     */
+    private static function input($type, $options = array())
+    {
+        return '<input type="' . $type . '" ' . self::getAttrValue($options) . '/>';
     }
 
     /**
-     * textBox
+     * Create File Input
      *
-     * This method creates a textarea element
+     * @param   array   $options [attribute=>value,(and/or value)]
      *
-     * @param   array(id, name, class, onclick, columns, rows, disabled, placeholder, style, value)
-     *
-     * @return  string
+     * @return  string  file input html element
      */
-    public static function textBox($params = array())
+    public static function fileInput($options = array())
     {
-        $o = '<textarea';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='form-input textbox {$params['class']}'"  : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
-        $o .= (isset($params['cols']))      ? " cols='{$params['cols']}'"                       : '';
-        $o .= (isset($params['rows']))      ? " rows='{$params['rows']}'"                       : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"      : '';
-        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"         : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
-        $o .= '>';
-        $o .= (isset($params['value']))     ? $params['value']                                  : '';
-        $o .= "</textarea>\n";
-        return $o;
+        return self::input("file",$options);
     }
 
     /**
-     * input
+     * Create Hidden Input
      *
-     * This method returns a input text element.
+     * @param   array   $options [attribute=>value,(and/or value)]
      *
-     * @param   array(id, name, class, onclick, value, length, width, disable,placeholder)
-     *
-     * @return  string
+     * @return  string  hidden input html element
      */
-    public static function input($params = array())
+    public static function hiddenInput($options = array())
     {
-        $o = '<input ';
-        $o .= (isset($params['type']))      ? " type='{$params['type']}'"                   : 'type="text"';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                       : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                   : '';
-        $o .= (isset($params['class']))     ? " class='form-input text {$params['class']}'" : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"             : '';
-        $o .= (isset($params['onkeypress']))? " onkeypress='{$params['onkeypress']}'"       : '';
-        $o .= (isset($params['value']))     ? ' value="' . $params['value'] . '"'           : '';
-        $o .= (isset($params['length']))    ? " maxlength='{$params['length']}'"            : '';
-        $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"        : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"           : '';
-        $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"  : '';
-        $o .= (isset($params['accept']))     ? " accept='{$params['accept']}'"              : '';
-        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"     : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
-        $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
-        $o .= (isset($params['autofocus'])) ? " autofocus" : '';
-        $o .= " />\n";
-        return $o;
+        return self::input("hidden",$options);
     }
 
     /**
-     * select
+     * Create Text Input
      *
-     * This method returns a select html element.
-     * It can be given a param called value which then will be preselected
-     * data has to be array(k=>v)
+     * @param   array   $options [attribute=>value,(and/or value)]
      *
-     * @param   array(id, name, class, onclick, disabled)
-     *
-     * @return  string
+     * @return  string  text input html element
      */
-    public static function select($params = array())
+    public static function textInput($options = array())
     {
-        $o = "<select";
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
-        $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"            : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= ">\n";
-        $o .= "<option value=''>Select</option>\n";
-        if (isset($params['data']) && is_array($params['data'])) {
-            foreach ($params['data'] as $k => $v) {
-                if (isset($params['value']) && $params['value'] == $k) {
-                    $o .= "<option value='{$k}' selected='selected'>{$v}</option>\n";
-                } else {
-                    $o .= "<option value='{$k}'>{$v}</option>\n";
-                }
-            }
+        return self::input("text",$options);
+    }
+
+    /**
+     * Create Password Input
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  password input html element
+     */
+    public static function passwordInput($options = array())
+    {
+        return self::input("password",$options);
+    }
+
+    /**
+     * Create Submit Input
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  submit input html element
+     */
+    public static function submitInput($options = array())
+    {
+        return self::input("submit",$options);
+    }
+
+    /**
+     * Create Button Input
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  button input html element
+     */
+    public static function buttonInput($options = array())
+    {
+        return self::input("button",$options);
+    }
+
+    /**
+     * Create Number Input
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  number input html element
+     */
+    public static function numberInput($options = array())
+    {
+        return self::input("number",$options);
+    }
+
+    /**
+     * Create Date Input
+     * -WARNING- NOT supported in IE, FF
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  date input html element
+     */
+    public static function dateInput($options = array())
+    {
+        return self::input("date",$options);
+    }
+
+    /**
+     * Create Color Input
+     * -WARNING- NOT supported in IE, Safari
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  color input html element
+     */
+    public static function colorInput($options = array())
+    {
+        return self::input("color",$options);
+    }
+
+    /**
+     * Create Range Input
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  range input html element
+     */
+    public static function rangeInput($options = array())
+    {
+        return self::input("range",$options);
+    }
+
+    /**
+     * Create Month Input
+     * -WARNING- NOT supported in IE, FF
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  month input html element
+     */
+    public static function monthInput($options = array())
+    {
+        return self::input("month",$options);
+    }
+
+    /**
+     * Create Week Input
+     * -WARNING- NOT supported in IE, FF
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  week input html element
+     */
+    public static function weekInput($options = array())
+    {
+        return self::input("week",$options);
+    }
+
+    /**
+     * Create Time Input
+     * -WARNING- NOT supported in IE, FF
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  time input html element
+     */
+    public static function timeInput($options = array())
+    {
+        return self::input("time",$options);
+    }
+
+    /**
+     * Create Date Time Local Input
+     * -WARNING- NOT supported in IE, FF
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  datetime-local input html element
+     */
+    public static function datetimeInput($options = array())
+    {
+        return self::input("datetime-local",$options);
+    }
+
+    /**
+     * Create Email Input
+     * -WARNING- NOT supported in Safari
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  email input html element
+     */
+    public static function emailInput($options = array())
+    {
+        return self::input("email",$options);
+    }
+
+    /**
+     * Create Search Input
+     * -WARNING- NOT supported in IE, FF, Opera
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  search input html element
+     */
+    public static function searchInput($options = array())
+    {
+        return self::input("search",$options);
+    }
+
+    /**
+     * Create Telephone Input
+     * -WARNING- NOT supported in IE, FF, Chrome, Opera
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  telephone input html element
+     */
+    public static function telInput($options = array())
+    {
+        return self::input("tel",$options);
+    }
+
+    /**
+     * Create URL Input
+     * -WARNING- NOT supported in Safari
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  url input html element
+     */
+    public static function urlInput($options = array())
+    {
+        return self::input("url",$options);
+    }
+
+    /**
+     * Create Select
+     * This currently does not support <optgroup> tag
+     *
+     * @param   array   $options    [attribute=>value,(and/or value)]
+     * @param   array   $data       [value=>text,text,value=>['selected',text],['selected',text]] no reverse text with 'selected'
+     *
+     * @return  string  select html element
+     */
+    public static function select($options = array(), $data = array())
+    {
+        $o = '<select ' . self::getAttrValue($options) . '>';
+        foreach ($data as $k => $v) {
+            $o .= !is_int($k) ?
+                "<option value='{$k}'" . ((is_array($v) && in_array('selected', $v)) ? 'selected' : '') . ">" .
+                ((is_array($v) && in_array('selected', $v)) ? $v[1] : $v) . "</option>" :
+                "<option value='" . ((is_array($v) && in_array('selected', $v)) ? $v[1] : $v) . "'" .
+                ((is_array($v) && in_array('selected', $v)) ? 'selected' : '') . ">" .
+                ((is_array($v) && in_array('selected', $v)) ? $v[1] : $v) . "</option>";
         }
-        $o .= "</select>\n";
+        $o .= "</select>";
         return $o;
     }
 
+
     /**
-     * checkboxMulti
+     * Create many checkbox
      *
-     * This method returns multiple checkbox elements in order given in an array
-     * For checking of checkbox pass checked
-     * Each checkbox should look like array(0=>array('id'=>'1', 'name'=>'cb[]', 'value'=>'x', 'label'=>'label_text' ))
+     * @param   array   $params [labelText=>[[labelAttribute=>value],[checkboxAttribute=>value]]]
      *
-     * @param   array(array(id, name, value, class, checked, disabled))
-     *
-     * @return  string
+     * @return  string  multiple checkboxes html
      */
     public static function checkbox($params = array())
     {
         $o = '';
-        if (!empty($params)) {
-            $x = 0;
-            foreach ($params as $k => $v) {
-                $v['id'] = (isset($v['id']))        ? $v['id']                                          : "cb_id_{$x}_".rand(1000, 9999);
-                $o .= "<input type='checkbox'";
-                $o .= (isset($v['id']))             ? " id='{$v['id']}'"                                : '';
-                $o .= (isset($v['name']))           ? " name='{$v['name']}'"                            : '';
-                $o .= (isset($v['value']))          ? " value='{$v['value']}'"                          : '';
-                $o .= (isset($v['class']))          ? " class='{$v['class']}'"                          : '';
-                $o .= (isset($v['checked']))        ? " checked='checked'"                              : '';
-                $o .= (isset($v['disabled']))       ? " disabled='{$v['disabled']}'"                    : '';
-                $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-                $o .= " />\n";
-                $o .= (isset($v['label']))          ? "<label for='{$v['id']}'>{$v['label']}</label> "  : '';
-                $x++;
-            }
+
+        foreach ($params as $k => $v) {
+            $o .= "<label " . self::getAttrValue($v[0]) . ">" . self::input("checkbox", $v[1]) . (!is_int($k) ? $k : '') . "</label>";
         }
+
         return $o;
     }
 
     /**
-     * radioMulti
+     * Create many radio
      *
-     * This method returns radio elements in order given in an array
-     * For selection pass checked
-     * Each radio should look like array(0=>array('id'=>'1', 'name'=>'rd[]', 'value'=>'x', 'label'=>'label_text' ))
+     * @param   array   $params [labelText=>[[labelAttribute=>value],[radioAttribute=>value]]]
      *
-     * @param   array(array(id, name, value, class, checked, disabled, label))
-     *
-     * @return  string
+     * @return  string  multiple radio buttons html
      */
     public static function radio($params = array())
     {
         $o = '';
-        if (!empty($params)) {
-            $x = 0;
-            foreach ($params as $k => $v) {
-                $v['id'] = (isset($v['id']))        ? $v['id']                                          : "rd_id_{$x}_".rand(1000, 9999);
-                $o .= "<input type='radio'";
-                $o .= (isset($v['id']))             ? " id='{$v['id']}'"                                : '';
-                $o .= (isset($v['name']))           ? " name='{$v['name']}'"                            : '';
-                $o .= (isset($v['value']))          ? " value='{$v['value']}'"                          : '';
-                $o .= (isset($v['class']))          ? " class='{$v['class']}'"                          : '';
-                $o .= (isset($v['checked']))        ? " checked='checked'"                              : '';
-                $o .= (isset($v['disabled']))       ? " disabled='{$v['disabled']}'"                    : '';
-                $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-                $o .= " />\n";
-                $o .= (isset($v['label']))          ? "<label for='{$v['id']}'>{$v['label']}</label> "  : '';
-                $x++;
-            }
+
+        foreach ($params as $k => $v) {
+            $o .= "<label " . self::getAttrValue($v[0]) . ">" . self::input("radio", $v[1]) . (!is_int($k) ? $k : '') . "</label>";
         }
+
+        return $o;
+    }
+
+
+    /**
+     * Creates a button
+     * use submitButton, resetButton, buttonButton
+     *
+     * @param   string  $type       type of button
+     * @param   array   $params     ["value"=>value,"class"=>[tag,class]]
+     * @param   array   $options    [attributes=>value]
+     *
+     * @return  string  button
+     */
+    private static function button($type, $params, $options)
+    {
+        $o = "<button type='{$type}'" . self::getAttrValue($options) . ">";
+        foreach ($params as $k => $v) {
+            $o .= (($k == "class") ? ("<" . $v[0] . " class='{$v[1]}'></" . $v[0] . ">") : $v);
+        }
+        $o .= "</button>";
         return $o;
     }
 
     /**
-     * This method returns a button element given the params for settings
+     * Create a submit button
      *
-     * @param   array(id, name, class, onclick, value, disabled)
+     * @param   array   $params     ["value"=>value,"class"=>[tag,class]]
+     * @param   array   $options    [attributes=>value]
      *
-     * @return  string
+     * @return string   submit button html
      */
-    public static function button($params = array())
+    public static function submitButton($params = array(), $options = array())
     {
-        $o = "<button type='submit'";
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= ">";
-        $o .= (isset($params['iclass']))    ? "<i class='fa {$params['iclass']}'></i> "         : '';
-        $o .= (isset($params['value']))     ? "{$params['value']}"                              : '';
-        $o .= "</button>\n";
-        return $o;
+        return self::button("submit", $params, $options);
     }
 
     /**
-     * This method returns a submit button element given the params for settings
+     * Create a reset button
      *
-     * @param   array(id, name, class, onclick, value, disabled)
+     * @param   array   $params     ["value"=>value,"class"=>[tag,class]]
+     * @param   array   $options    [attributes=>value]
      *
-     * @return  string
+     * @return string   reset button html
      */
-    public static function submit($params = array())
+    public static function resetButton($params = array(), $options = array())
     {
-        $o = '<input type="submit"';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
-        $o .= (isset($params['value']))     ? " value='{$params['value']}'"                     : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= " />\n";
-        return $o;
+        return self::button("reset", $params, $options);
     }
 
     /**
-     * This method returns a hidden input elements given its params
+     * Create a button button
      *
-     * @param   array(id, name, class, value)
+     * @param   array   $params     ["value"=>value,"class"=>[tag,class]]
+     * @param   array   $options    [attributes=>value]
      *
-     * @return  string
+     * @return string   button button html
      */
-    public static function hidden($params = array())
+    public static function buttonButton($params = array(), $options = array())
     {
-        $o = '<input type="hidden"';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"   : '';
-        $o .= (isset($params['value']))     ? " value='{$params['value']}'"                     : '';
-        $o .= " />\n";
-        return $o;
+        return self::button("button", $params, $options);
     }
 }

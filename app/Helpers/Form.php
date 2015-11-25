@@ -99,6 +99,7 @@ class Form
     }
 
 
+
     /**
      * Create Input
      * Use textInput, passwordInput, submitInput, buttonInput, numberInput, rangeInput, fileInput
@@ -125,6 +126,18 @@ class Form
     public static function fileInput($options = array())
     {
         return self::input("file",$options);
+    }
+
+    /**
+     * Create Hidden Input
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  hidden input html element
+     */
+    public static function hiddenInput($options = array())
+    {
+        return self::input("hidden",$options);
     }
 
     /**
@@ -357,7 +370,7 @@ class Form
     /**
      * Create many checkbox
      *
-     * @param   array   $params [labelText=>[[labelAttribute=>value],[radioAttribute=>value]]]
+     * @param   array   $params [labelText=>[[labelAttribute=>value],[checkboxAttribute=>value]]]
      *
      * @return  string  multiple checkboxes html
      */
@@ -405,7 +418,7 @@ class Form
     {
         $o = "<button type='{$type}'" . self::getAttrValue($options) . ">";
         foreach ($params as $k => $v) {
-            $o .= (($k == "class") ? ("<" . $v . " class='{$v}'></" . $v . ">") : $v);
+            $o .= (($k == "class") ? ("<" . $v[0] . " class='{$v[1]}'></" . $v[0] . ">") : $v);
         }
         $o .= "</button>";
         return $o;

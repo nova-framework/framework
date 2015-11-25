@@ -101,7 +101,7 @@ class Form
 
     /**
      * Create Input
-     * Use textInput, passwordInput, submitInput, buttonInput, numberInput, rangeInput
+     * Use textInput, passwordInput, submitInput, buttonInput, numberInput, rangeInput, fileInput
      *  -WARNING- BELOW inputs not supported by all browsers
      *  dateInput, datetimeInput, emailInput, monthInput, searchInput, telInput, timeInput, urlInput, weekInput
      *
@@ -113,6 +113,18 @@ class Form
     private static function input($type, $options = array())
     {
         return '<input type="' . $type . '" ' . self::getAttrValue($options) . '/>';
+    }
+
+    /**
+     * Create File Input
+     *
+     * @param   array   $options [attribute=>value,(and/or value)]
+     *
+     * @return  string  file input html element
+     */
+    public static function fileInput($options = array())
+    {
+        return self::input("file",$options);
     }
 
     /**

@@ -53,4 +53,12 @@ class Welcome extends Controller
         View::render('welcome/subpage', $data);
         View::renderTemplate('footer', $data);
     }
+
+    public function form(){
+        $data['title'] = "How to use Helpers\\Form";
+
+        View::renderTemplate('header', $data);
+        View::render('welcome/form', $data);
+        View::renderTemplate('footer', $data);
+    }
 }

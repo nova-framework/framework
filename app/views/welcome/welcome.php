@@ -3,7 +3,8 @@
  * Sample layout
  */
 
-use Core\Language;
+use Core\Language,
+	Helpers\Form;
 
 ?>
 
@@ -16,3 +17,7 @@ use Core\Language;
 <a class="btn btn-md btn-success" href="<?php echo DIR;?>subpage">
 	<?php echo Language::show('open_subpage', 'Welcome'); ?>
 </a>
+	<a class="btn btn-md btn-default" href="<?php echo DIR;?>form">
+		Form Examples
+	</a>
+<hr>

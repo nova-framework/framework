@@ -105,6 +105,7 @@ class Form
         $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"  : '';
         $o .= (isset($params['accept']))     ? " accept='{$params['accept']}'"              : '';
         $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"     : '';
+        $o .= (isset($params['minlength']))     ? " minlength='{$params['minlength']}'"     : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
         $o .= (isset($params['required']))     ? " required='required'"                     : '';
         $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';

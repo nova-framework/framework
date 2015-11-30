@@ -124,12 +124,11 @@ class Hooks
     {
         if (!isset(self::$hooks[$where])) {
             return false;
-        } else {
-            $theseHooks = explode('|', self::$hooks[$where]);
-            $theseHooks[] = $function;
-            self::$hooks[$where] = implode('|', $theseHooks);
-            return true;
         }
+        $theseHooks = explode('|', self::$hooks[$where]);
+        $theseHooks[] = $function;
+        self::$hooks[$where] = implode('|', $theseHooks);
+        return true;
     }
 
     /**
@@ -168,9 +167,8 @@ class Hooks
             }
 
             return $result;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

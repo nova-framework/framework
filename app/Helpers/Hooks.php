@@ -119,11 +119,12 @@ class Hooks
      * @param string $where hook to use
      * @param string $function function to attach to hook
      * @return boolean success with adding, false if $where is not defined.
+     * @throws \Exception Exception when hook $where (location) isn't known (yet)
      */
     public static function addHook($where, $function)
     {
         if (!isset(self::$hooks[$where])) {
-            return false;
+            throw new \Exception('Hook location (' . $where . ') not defined!');
         }
         $theseHooks = explode('|', self::$hooks[$where]);
         $theseHooks[] = $function;
@@ -138,6 +139,7 @@ class Hooks
      * @param  string $args option arguments
      *
      * @return object|false - returns the called function or false if the $where is not found
+     * @throws \Exception Exception when hook $where (location) isn't known (yet)
      */
     public function run($where, $args = '')
     {
@@ -168,7 +170,7 @@ class Hooks
 
             return $result;
         }
-        return false;
+        throw new \Exception('Hook location (' . $where . ') not defined!');
     }
 
     /**

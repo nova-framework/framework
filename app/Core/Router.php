@@ -63,7 +63,9 @@ class Router
     public static $patterns = array(
         ':any' => '[^/]+',
         ':num' => '-?[0-9]+',
-        ':all' => '.*'
+        ':all' => '.*',
+        ':hex' => '[[:xdigit:]]+',
+        ':uuidV4' => '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
     );
 
     /**

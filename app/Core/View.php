@@ -29,11 +29,8 @@ class View
      */
     public static function render($path, $data = false, $error = false)
     {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
+        self::sendHeaders();
+        
         require SMVC."app/views/$path.php";
     }
 
@@ -46,11 +43,8 @@ class View
      */
     public static function renderModule($path, $data = false, $error = false)
     {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
+        self::sendHeaders();
+        
         require SMVC."app/Modules/$path.php";
     }
 
@@ -61,19 +55,11 @@ class View
      * @param  array   $data  array of data
      * @param  string  $custom path to template folder
      */
-    public static function renderTemplate($path, $data = false, $custom = false)
+    public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
+        self::sendHeaders();
 
-        if ($custom === false) {
-            require SMVC."app/templates/".TEMPLATE."/$path.php";
-        } else {
-            require SMVC."app/templates/$custom/$path.php";
-        }
+        require SMVC."app/templates/$custom/$path.php";
     }
 
     /**
@@ -87,14 +73,24 @@ class View
     }
 
     /**
-    * Add an array with headers to the view.
-    *
-    * @param array $headers
-    */
-    public function addHeaders($headers = array())
+     * Add an array with headers to the view.
+     *
+     * @param array $headers
+     */
+    public function addHeaders(array $headers = array())
     {
-        foreach ($headers as $header) {
-            $this->addHeader($header);
+        self::$headers = array_merge(self::$headers, $headers);
+    }
+    
+    /**
+     * Send headers
+     */
+    public static function sendHeaders()
+    {
+        if (!headers_sent()) {
+            foreach (self::$headers as $header) {
+                header($header, true);
+            }
         }
     }
 }

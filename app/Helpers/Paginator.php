@@ -200,7 +200,7 @@ class Paginator
             if ($lastpage < 7 + ($adjacents * 2)) {
                 for ($counter = 1; $counter <= $lastpage; $counter++) {
                     if ($counter == $this->page) {
-                        $pagination.= "<li class='active'><span>$counter</span></li>";
+                        $pagination.= "<li class='active'><span>$counter <span class='sr-only'>(current)</span></span></li>";
                     } else {
                         $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                     }
@@ -209,7 +209,7 @@ class Paginator
                 if ($this->page < 1 + ($adjacents * 2)) {
                     for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++) {
                         if ($counter == $this->page) {
-                            $pagination.= "<li class='active'><span class='sr-only'>$counter</span></li>";
+                            $pagination.= "<li class='active'><span>$counter <span class='sr-only'>(current)</span></span></li>";
                         } else {
                             $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }
@@ -225,7 +225,7 @@ class Paginator
 
                     for ($counter = $this->page - $adjacents; $counter <= $this->page + $adjacents; $counter++) {
                         if ($counter == $this->page) {
-                            $pagination.= "<li class='active'><span>$counter</span></li>";
+                            $pagination.= "<li class='active'><span>$counter <span class='sr-only'>(current)</span></span></li>";
                         } else {
                             $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }
@@ -240,7 +240,7 @@ class Paginator
 
                     for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                         if ($counter == $this->page) {
-                            $pagination.= "<li class='active'><span>$counter</span></li>";
+                            $pagination.= "<li class='active'><span>$counter <span class='sr-only'>(current)</span></span></li>";
                         } else {
                             $pagination.= "<li><a href='" . $path . "$this->instance=$counter" . "$ext'>$counter</a></li>";
                         }

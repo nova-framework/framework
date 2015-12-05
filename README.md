@@ -28,3 +28,10 @@ The error log is no longer a .html file but rather a log file. On a production s
 * Open system/logs/error.log
 * OR open system/Core/Logger.php set $display to true to print errors to the screen
 * set $emailError to true and setup the siteEmail const in system/Core/Config.php this relies on an email server (not provided by the framework)
+
+#Video introduction and setup
+this is an introduction to 3.0 whilst in beta, how to install and get up and running with the major changes.
+
+Not for production use yet.
+
+https://www.youtube.com/watch?v=28l8lJz-oRM

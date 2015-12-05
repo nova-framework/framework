@@ -3,25 +3,21 @@
  * SimpleMVC specifed directory default is '.'
  * If app folder is not in the same directory update it's path
  */
-$smvc = '.';
-
-/** Set the full path to the docroot */
-define('ROOT', realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
-
-/** Make the application relative to the docroot, for symlink'd index.php */
-if (!is_dir($smvc) and is_dir(ROOT.$smvc)) {
-    $smvc = ROOT.$smvc;
-}
+$smvc = '../app/';
+$system = '../system/';
+$root = '../';
 
 /** Define the absolute paths for configured directories */
 define('SMVC', realpath($smvc).DIRECTORY_SEPARATOR);
+define('SYSTEM', realpath($system).DIRECTORY_SEPARATOR);
 
 /** Unset non used variables */
 unset($smvc);
+unset($system);
 
 /** load composer autoloader */
-if (file_exists(SMVC.'vendor/autoload.php')) {
-    require SMVC.'vendor/autoload.php';
+if (file_exists($root.'vendor/autoload.php')) {
+    require $root.'vendor/autoload.php';
 } else {
     echo "<h1>Please install via composer.json</h1>";
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
@@ -29,7 +25,7 @@ if (file_exists(SMVC.'vendor/autoload.php')) {
     exit;
 }
 
-if (!is_readable(SMVC.'app/Core/Config.php')) {
+if (!is_readable(SYSTEM.'/Core/Config.php')) {
     die('No Config.php found, configure and rename Config.example.php to Config.php in app/Core.');
 }
 
@@ -75,7 +71,7 @@ if (defined('ENVIRONMENT')) {
 }
 
 /** initiate config */
-new Core\Config();
+new \Core\Config();
 
 /** load routes */
-require SMVC.'app/Core/routes.php';
+require SYSTEM.'Core/routes.php';

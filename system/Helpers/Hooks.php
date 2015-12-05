@@ -59,7 +59,7 @@ class Hooks
         ));
 
         //load modules
-        self::loadPlugins(SMVC.'app/Modules/');
+        self::loadPlugins(SMVC.'Modules/');
         $instance = new self();
         self::$instances[$id] = $instance;
         return $instance;
@@ -118,18 +118,17 @@ class Hooks
      *
      * @param string $where hook to use
      * @param string $function function to attach to hook
-     * @return boolean success with adding, false if $where is not defined.
-     * @throws \Exception Exception when hook $where (location) isn't known (yet)
      */
     public static function addHook($where, $function)
     {
         if (!isset(self::$hooks[$where])) {
-            throw new \Exception('Hook location (' . $where . ') not defined!');
+            die("There is no such place ($where) for hooks.");
+        } else {
+            $theseHooks = explode('|', self::$hooks[$where]);
+            $theseHooks[] = $function;
+            self::$hooks[$where] = implode('|', $theseHooks);
+
         }
-        $theseHooks = explode('|', self::$hooks[$where]);
-        $theseHooks[] = $function;
-        self::$hooks[$where] = implode('|', $theseHooks);
-        return true;
     }
 
     /**
@@ -138,8 +137,7 @@ class Hooks
      * @param  string $where Hook to execute
      * @param  string $args option arguments
      *
-     * @return object|false - returns the called function or false if the $where is not found
-     * @throws \Exception Exception when hook $where (location) isn't known (yet)
+     * @return object - returns the called function
      */
     public function run($where, $args = '')
     {
@@ -169,8 +167,9 @@ class Hooks
             }
 
             return $result;
+        } else {
+            die("There is no such place ($where) for hooks.");
         }
-        throw new \Exception('Hook location (' . $where . ') not defined!');
     }
 
     /**

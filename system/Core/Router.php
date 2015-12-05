@@ -135,9 +135,9 @@ class Router
     {
         $uri = parse_url($_SERVER['QUERY_STRING'], PHP_URL_PATH);
         $uri = '/'.$uri;
-		if (strpos($uri,DIR) === 0) {
-			$uri=substr($uri,strlen(DIR));
-		}
+        if (strpos($uri,DIR) === 0) {
+            $uri=substr($uri,strlen(DIR));
+        }
         $uri = trim($uri, ' /');
         $uri = ($amp = strpos($uri, '&')) !== false ? substr($uri, 0, $amp) : $uri;
 
@@ -153,15 +153,15 @@ class Router
         $args = !empty($parts) ? $parts : array();
 
         // Check for file
-        if (!file_exists("app/Controllers/$controller.php")) {
+        if (!file_exists(SMVC."Controllers/$controller.php")) {
             return false;
         }
 
-        $controller = "\Controllers\\$controller";
+        $controller = "\\App\\Controllers\\$controller";
         $c = new $controller;
 
         if (method_exists($c, $method)) {
-			call_user_func_array(array($c,$method),$args);
+            call_user_func_array(array($c,$method),$args);
             //found method so stop
             return true;
         }

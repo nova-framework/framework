@@ -18,13 +18,6 @@ use Helpers\PhpMailer\Mail;
 class Logger
 {
     /**
-    * Determins if error should be displayed.
-    *
-    * @var boolean
-    */
-    private static $printError = false;
-
-    /**
     * Determins if error should be emailed to SITEEMAIL defined in app/Core/Config.php.
     *
     * @var boolean
@@ -39,19 +32,38 @@ class Logger
     private static $clear = false;
 
     /**
-    * Path to error file.
+    * show the error.
     *
     * @var boolean
     */
-    public static $errorFile = 'errorlog.html';
+    private static $display = false;
+
+    /**
+    * Path to error file.
+    *
+    * @var string
+    */
+    public static $errorFile = '/logs/error.log';
+
+    /**
+    * store errors for output.
+    *
+    * @var string
+    */
+    public static $error;
 
     /**
     * In the event of an error show this message.
     */
     public static function customErrorMsg()
     {
-        echo "<p>An error occured, The error has been reported.</p>";
-        exit;
+        if (self::$display) {
+            echo '<pre>'.self::$error.'</pre>';
+        } else {
+            echo "<p>An error occured, The error has been reported.</p>";
+            exit;
+        }
+
     }
 
     /**
@@ -62,7 +74,6 @@ class Logger
     public static function exceptionHandler($e)
     {
         self::newMessage($e);
-        self::customErrorMsg();
     }
 
     /**
@@ -79,6 +90,7 @@ class Logger
 
         if (($number !== E_NOTICE) && ($number < 2048)) {
             self::errorMessage($msg);
+            self::$error = $msg;
             self::customErrorMsg();
         }
 
@@ -93,9 +105,8 @@ class Logger
     * @param  boolean   $clear       clear the errorlog
     * @param  string    $errorFile  file to save to
     */
-    public static function newMessage(\Exception $exception)
+    public static function newMessage($exception)
     {
-
         $message = $exception->getMessage();
         $code = $exception->getCode();
         $file = $exception->getFile();
@@ -103,23 +114,24 @@ class Logger
         $trace = $exception->getTraceAsString();
         $trace = str_replace(DB_PASS, '********', $trace);
         $date = date('M d, Y G:iA');
+        $systempath = dirname(__DIR__);
 
-        $logMessage = "<h3>Exception information:</h3>\n
-           <p><strong>Date:</strong> {$date}</p>\n
-           <p><strong>Message:</strong> {$message}</p>\n
-           <p><strong>Code:</strong> {$code}</p>\n
-           <p><strong>File:</strong> {$file}</p>\n
-           <p><strong>Line:</strong> {$line}</p>\n
-           <h3>Stack trace:</h3>\n
-           <pre>{$trace}</pre>\n
-           <hr />\n";
+        $logMessage = "Exception information:\n
+           Date: {$date}\n
+           Message: {$message}\n
+           Code: {$code}\n
+           File: {$file}\n
+           Line: {$line}\n
+           Stack trace:\n
+           {$trace}\n
+           ---------\n\n";
 
-        if (is_file(self::$errorFile) === false) {
-            file_put_contents(self::$errorFile, '');
+        if (is_file($systempath.self::$errorFile) === false) {
+            file_put_contents($systempath.self::$errorFile, '');
         }
 
         if (self::$clear) {
-            $f = fopen(self::$errorFile, "r+");
+            $f = fopen($systempath.self::$errorFile, "r+");
             if ($f !== false) {
                 ftruncate($f, 0);
                 fclose($f);
@@ -127,18 +139,16 @@ class Logger
 
             $content = null;
         } else {
-            $content = file_get_contents(self::$errorFile);
+            $content = file_get_contents($systempath.self::$errorFile);
         }
 
-        file_put_contents(self::$errorFile, $logMessage . $content);
+        file_put_contents($systempath.self::$errorFile, $logMessage . $content);
+
+        self::$error = $logMessage . $content;
+        self::customErrorMsg();
 
         //send email
         self::sendEmail($logMessage);
-
-        if (self::$printError == true) {
-            echo $logMessage;
-            exit;
-        }
     }
 
     /**
@@ -150,15 +160,16 @@ class Logger
     */
     public static function errorMessage($error)
     {
-        $date = date('M d, Y G:iA');
-        $logMessage = "<p>Error on $date - $error</p>";
+        $date = date('Y-m-d G:iA');
+        $logMessage = "$date - $error\n\n";
+        $systempath = dirname(__DIR__);
 
-        if (is_file(self::$errorFile) === false) {
-            file_put_contents(self::$errorFile, '');
+        if (is_file($systempath.self::$errorFile) === false) {
+            file_put_contents($systempath.self::$errorFile, '');
         }
 
         if (self::$clear) {
-            $f = fopen(self::$errorFile, "r+");
+            $f = fopen($systempath.self::$errorFile, "r+");
             if ($f !== false) {
                 ftruncate($f, 0);
                 fclose($f);
@@ -166,17 +177,12 @@ class Logger
 
             $content = null;
         } else {
-            $content = file_get_contents(self::$errorFile);
-            file_put_contents(self::$errorFile, $logMessage . $content);
+            $content = file_get_contents($systempath.self::$errorFile);
+            file_put_contents($systempath.self::$errorFile, $logMessage . $content);
         }
 
         /** send email */
         self::sendEmail($logMessage);
-
-        if (self::$printError == true) {
-            echo $logMessage;
-            exit;
-        }
     }
 
     /**

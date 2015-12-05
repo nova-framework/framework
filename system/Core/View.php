@@ -30,8 +30,8 @@ class View
     public static function render($path, $data = false, $error = false)
     {
         self::sendHeaders();
-        
-        require SMVC."app/views/$path.php";
+
+        require SMVC."views/$path.php";
     }
 
     /**
@@ -44,8 +44,8 @@ class View
     public static function renderModule($path, $data = false, $error = false)
     {
         self::sendHeaders();
-        
-        require SMVC."app/Modules/$path.php";
+
+        require SMVC."Modules/$path.php";
     }
 
     /**
@@ -59,7 +59,7 @@ class View
     {
         self::sendHeaders();
 
-        require SMVC."app/templates/$custom/$path.php";
+        require $_SERVER['DOCUMENT_ROOT']."/".DIR."templates/$custom/$path.php";
     }
 
     /**
@@ -81,7 +81,7 @@ class View
     {
         self::$headers = array_merge(self::$headers, $headers);
     }
-    
+
     /**
      * Send headers
      */

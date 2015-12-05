@@ -39,13 +39,10 @@ class Url
      * @param  boolean $custom
      * @return string url to template folder
      */
-    public static function templatePath($custom = false)
+    public static function templatePath($custom = TEMPLATE)
     {
-        if ($custom == true) {
-            return DIR.'app/templates/'.$custom.'/';
-        } else {
-            return DIR.'app/templates/'.TEMPLATE.'/';
-        }
+        return DIR.'templates/'.$custom.'/';
+
     }
 
     /**
@@ -54,13 +51,9 @@ class Url
      * @param  boolean $custom
      * @return string url to template folder
      */
-    public static function relativeTemplatePath($custom = false)
+    public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        if ($custom) {
-            return "app/templates/".$custom."/";
-        } else {
-            return "app/templates/".TEMPLATE."/";
-        }
+        return "templates/".$custom."/";
     }
 
     /**

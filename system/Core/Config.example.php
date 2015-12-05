@@ -90,12 +90,12 @@ class Config
         /**
          * Optional create a constant for the name of the site.
          */
-        define('SITETITLE', 'V2.2');
+        define('SITETITLE', 'V3.0');
 
         /**
          * Optionall set a site email address.
          */
-        //define('SITEEMAIL', '');
+        // define('SITEEMAIL', 'email@domain.com');
 
         /**
          * Turn on custom error handling.

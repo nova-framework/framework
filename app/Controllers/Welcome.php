@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Controllers;
+namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
@@ -18,7 +18,6 @@ use Core\Controller;
  */
 class Welcome extends Controller
 {
-
     /**
      * Call the parent construct
      */

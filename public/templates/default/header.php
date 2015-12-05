@@ -13,19 +13,18 @@ $hooks = Hooks::get();
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
-
 	<!-- Site meta -->
 	<meta charset="utf-8">
 	<?php
 	//hook for plugging in meta tags
 	$hooks->run('meta');
 	?>
-	<title><?php echo $data['title'].' - '.SITETITLE; //SITETITLE defined in app/Core/Config.php ?></title>
+	<title><?php echo $data['title'].' - '.SITETITLE;?></title>
 
 	<!-- CSS -->
 	<?php
 	Assets::css(array(
-		'//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
+		'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
 		Url::templatePath() . 'css/style.css',
 	));
 

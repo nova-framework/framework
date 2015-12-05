@@ -11,13 +11,15 @@
 use Core\Router;
 use Helpers\Hooks;
 
-/** Define routes. */
-Router::any('', 'Controllers\Welcome@index');
-Router::any('subpage', 'Controllers\Welcome@subPage');
+/** Define static routes. */
+Router::any('', 'App\Controllers\Welcome@index');
+Router::any('subpage', 'App\Controllers\Welcome@subPage');
+/** End static routes */
 
 /** Module routes. */
 $hooks = Hooks::get();
 $hooks->run('routes');
+/** End Module routes. */
 
 /** If no route found. */
 Router::error('Core\Error@index');

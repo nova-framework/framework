@@ -27,19 +27,6 @@ class Request
     }
 
     /**
-     * Safer and better access to $_GET.
-     *
-     * @param  string   $key
-     * @static static method
-     *
-     * @return mixed
-     */
-    public static function get($key)
-    {
-        return array_key_exists($key, $_GET)? $_GET[$key]: null;
-    }
-
-    /**
      * Safer and better access to $_FILES.
      *
      * @param  string   $key

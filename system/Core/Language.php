@@ -33,7 +33,7 @@ class Language
     public function load($name, $code = LANGUAGE_CODE)
     {
         /** lang file */
-        $file = SMVC."app/language/$code/$name.php";
+        $file = SYSTEM."language/$code/$name.php";
 
         /** check if is readable */
         if (is_readable($file)) {
@@ -74,7 +74,7 @@ class Language
     public static function show($value, $name, $code = LANGUAGE_CODE)
     {
         /** lang file */
-        $file = SMVC."app/language/$code/$name.php";
+        $file = SYSTEM."language/$code/$name.php";
 
         /** check if is readable */
         if (is_readable($file)) {

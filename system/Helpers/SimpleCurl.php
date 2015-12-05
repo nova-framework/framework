@@ -26,9 +26,7 @@ class SimpleCurl
     */
     public static function get($url, $params = array())
     {
-        if (is_array($params) && count($params) > 0) {
-            $url = $url . '?' . http_build_query($params, '', '&');
-        }
+        $url = $url . '?' . http_build_query($params, '', '&');
         $ch = curl_init();
 
         $options = array(

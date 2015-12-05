@@ -26,5 +26,5 @@ That is only for classes within app this is not needed for classes within system
 The error log is no longer a .html file but rather a log file. On a production server it should be outside the document root, in order to see the any errors there are a few options:
 
 * Open system/logs/error.log
-* OR open system/Core\Logger.php set $display to true to print errors to the screen
+* OR open system/Core/Logger.php set $display to true to print errors to the screen
 * set $emailError to true and setup the siteEmail const in system/Core/Config.php this relies on an email server (not provided by the framework)

@@ -50,7 +50,7 @@ class Assets
      * @param  boolean       $refresh    if true the cache will be updated
      * @param  string        $cachedMins minutes to hold the cache
      */
-    public static function js($files, $cache = true, $refresh = false, $cachedMins = '1440')
+    public static function js($files, $cache = false, $refresh = false, $cachedMins = '1440')
     {
         $path = Url::relativeTemplatePath().'js/compressed.min.js';
         $type = 'js';
@@ -76,7 +76,7 @@ class Assets
      * @param  boolean       $refresh    if true the cache will be updated
      * @param  string        $cachedMins minutes to hold the cache
      */
-    public static function css($files, $cache = true, $refresh = false, $cachedMins = '1440')
+    public static function css($files, $cache = false, $refresh = false, $cachedMins = '1440')
     {
         $path = Url::relativeTemplatePath().'css/compressed.min.css';
         $type = 'css';

@@ -24,16 +24,11 @@ class View
      * Include template file.
      *
      * @param  string $path  path to file from views folder
-     * @param  array  $data  array of data
-     * @param  array  $error array of errors
      */
-    public static function render($path, $data = false, $error = false)
+    public static function render($path)
     {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
+        self::sendHeaders();
+        
         require SMVC."app/views/$path.php";
     }
 
@@ -41,16 +36,11 @@ class View
      * Include template file.
      *
      * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
      */
-    public static function renderModule($path, $data = false, $error = false)
+    public static function renderModule($path)
     {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
+        self::sendHeaders();
+        
         require SMVC."app/Modules/$path.php";
     }
 
@@ -58,22 +48,13 @@ class View
      * Return absolute path to selected template directory.
      *
      * @param  string  $path  path to file from views folder
-     * @param  array   $data  array of data
      * @param  string  $custom path to template folder
      */
-    public static function renderTemplate($path, $data = false, $custom = false)
+    public static function renderTemplate($path, $custom = TEMPLATE)
     {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
+        self::sendHeaders();
 
-        if ($custom === false) {
-            require SMVC."app/templates/".TEMPLATE."/$path.php";
-        } else {
-            require SMVC."app/templates/$custom/$path.php";
-        }
+        require SMVC."app/templates/$custom/$path.php";
     }
 
     /**
@@ -87,14 +68,24 @@ class View
     }
 
     /**
-    * Add an array with headers to the view.
-    *
-    * @param array $headers
-    */
-    public function addHeaders($headers = array())
+     * Add an array with headers to the view.
+     *
+     * @param array $headers
+     */
+    public function addHeaders(array $headers = array())
     {
-        foreach ($headers as $header) {
-            $this->addHeader($header);
+        self::$headers = array_merge(self::$headers, $headers);
+    }
+    
+    /**
+     * Send headers
+     */
+    public static function sendHeaders()
+    {
+        if (!headers_sent()) {
+            foreach (self::$headers as $header) {
+                header($header, true);
+            }
         }
     }
 }

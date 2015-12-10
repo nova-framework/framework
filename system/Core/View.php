@@ -59,7 +59,7 @@ class View
     {
         self::sendHeaders();
 
-        require $_SERVER['DOCUMENT_ROOT']."/".DIR."templates/$custom/$path.php";
+        require PUBLICDIR . "templates/$custom/$path.php";
     }
 
     /**

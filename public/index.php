@@ -6,14 +6,17 @@
 $smvc = '../app/';
 $system = '../system/';
 $root = '../';
+$public = dirname(__FILE__);
 
 /** Define the absolute paths for configured directories */
 define('SMVC', realpath($smvc).DIRECTORY_SEPARATOR);
 define('SYSTEM', realpath($system).DIRECTORY_SEPARATOR);
+define('PUBLICDIR', $public.DIRECTORY_SEPARATOR);
 
 /** Unset non used variables */
 unset($smvc);
 unset($system);
+unset($public);
 
 /** load composer autoloader */
 if (file_exists($root.'vendor/autoload.php')) {

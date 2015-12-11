@@ -136,15 +136,12 @@ class Logger
                 ftruncate($f, 0);
                 fclose($f);
             }
-
-            $content = null;
-        } else {
-            $content = file_get_contents($systempath.self::$errorFile);
         }
 
-        file_put_contents($systempath.self::$errorFile, $logMessage . $content);
+        // Append
+        file_put_contents($systempath.self::$errorFile, $logMessage, FILE_APPEND);
 
-        self::$error = $logMessage . $content;
+        self::$error = $logMessage;
         self::customErrorMsg();
 
         //send email
@@ -177,8 +174,8 @@ class Logger
 
             $content = null;
         } else {
-            $content = file_get_contents($systempath.self::$errorFile);
-            file_put_contents($systempath.self::$errorFile, $logMessage . $content);
+            // Append
+            file_put_contents($systempath.self::$errorFile, $logMessage, FILE_APPEND);
         }
 
         /** send email */

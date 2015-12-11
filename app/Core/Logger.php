@@ -124,13 +124,9 @@ class Logger
                 ftruncate($f, 0);
                 fclose($f);
             }
-
-            $content = null;
-        } else {
-            $content = file_get_contents(self::$errorFile);
         }
 
-        file_put_contents(self::$errorFile, $logMessage . $content);
+        file_put_contents(self::$errorFile, $logMessage, FILE_APPEND);
 
         //send email
         self::sendEmail($logMessage);
@@ -163,11 +159,8 @@ class Logger
                 ftruncate($f, 0);
                 fclose($f);
             }
-
-            $content = null;
         } else {
-            $content = file_get_contents(self::$errorFile);
-            file_put_contents(self::$errorFile, $logMessage . $content);
+            file_put_contents(self::$errorFile, $logMessage, FILE_APPEND);
         }
 
         /** send email */

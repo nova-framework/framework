@@ -1,10 +1,16 @@
 <?php
+/**
+ * Route - manage a route to an HTTP request and an assigned callback function.
+ *
+ * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @version 3.0
+ * @date December 11th, 2015
+ */
 
 namespace Core;
 
 /**
  * The Route class is responsible for routing an HTTP request to an assigned callback function.
- * The Router tries to match the requested URL against a series of URL patterns.
  */
 class Route
 {

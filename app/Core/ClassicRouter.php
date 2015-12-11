@@ -1,4 +1,11 @@
 <?php
+/**
+ * ClassicRoute - manage, in classic style, a route to an HTTP request and an assigned callback function.
+ *
+ * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @version 3.0
+ * @date December 11th, 2015
+ */
 
 namespace App\Core;
 
@@ -9,7 +16,7 @@ use Helpers\Url;
 /**
  * Router class will load requested controller / closure based on url.
  */
-class ClassicRouter extends Router
+class ClassicRouter extends \Core\Router
 {
     // Constructor
     public function __construct()
@@ -40,7 +47,7 @@ class ClassicRouter extends Router
         // Verify if the first URI part match a Module.
         $testPath = SMVC.'Modules/'.$controller;
 
-        if (is_dir($testPath)) {
+        if (! empty($controller) && is_dir($testPath)) {
             // Walking in a Module path.
             $moduleName = $controller;
             $basePath   = 'Modules/'.$controller.'/Controllers/';

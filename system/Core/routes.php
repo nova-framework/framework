@@ -11,6 +11,9 @@
 use Core\Router;
 use Helpers\Hooks;
 
+/** Get the Router instance. */
+$router = Router::getInstance();
+
 /** Define static routes. */
 Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
@@ -24,8 +27,5 @@ $hooks->run('routes');
 /** If no route found. */
 Router::error('Core\Error@index');
 
-/** Turn on old style routing. */
-Router::$fallback = false;
-
 /** Execute matched routes. */
-Router::dispatch();
+$router->dispatch();

@@ -35,6 +35,11 @@ class Config
         define('DIR', '/');
 
         /**
+         * Set the Application Router.
+         */
+        define('APPROUTER', '\Core\Router');
+        
+        /**
          * Set default controller and method for legacy calls.
          */
         define('DEFAULT_CONTROLLER', 'welcome');

@@ -86,11 +86,10 @@ class Route
         }
 
         if($optionals) {
-            $regex = str_replace(array('(/', ')', '/*'), array('(?:/', ')?', '(/?|/.*?)'), $regex);
+            $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
         }
-        else {
-            $regex = str_replace('/*', '(/?|/.*?)', $regex);
-        }
+
+        $regex = str_replace('/*', '(/?|/.*?)', $regex);
 
         // Fix trailing slash.
         if ($last_char === '/') {

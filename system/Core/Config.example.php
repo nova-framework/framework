@@ -37,7 +37,10 @@ class Config
         /**
          * Set the Application Router.
          */
-        define('APPROUTER', '\App\Core\ClassicRouter');
+        // Default Routing
+        define('APPROUTER', '\Core\Router');
+        // Classic Routing
+        //define('APPROUTER', '\App\Core\ClassicRouter');
 
         /**
          * Set default controller and method for legacy calls.

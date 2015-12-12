@@ -118,12 +118,13 @@ class ClassicRouter extends \Core\Router
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method)) {
                 // Found a valid Route; invoke the autoDispatch and go out.
-
                 $callback = $route->callback();
 
                 if (! is_object($callback)) {
-                    if (strpos($route->pattern(), ':') !== false) {
-                        $autoUri = preg_replace('#^' .$route->regex() .'$#', $callback, $uri);
+                    $regex = $route->regex();
+
+                    if (! empty($regex) && (strpos($route->pattern(), ':') !== false)) {
+                        $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
                     }
                     else {
                         $autoUri = $callback;

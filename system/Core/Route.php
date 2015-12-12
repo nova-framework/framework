@@ -60,7 +60,7 @@ class Route
      * @param string $pattern URL pattern
      * @return boolean Match status
      */
-    public function match($uri, $method)
+    public function match($uri, $method, $optionals = true)
     {
         if (($this->method != $method) && ($this->method != 'ANY')) {
             return false;
@@ -85,7 +85,12 @@ class Route
             $regex = $this->pattern;
         }
 
-        $regex = str_replace(array('(/', ')', '/*'), array('(?:/', ')?', '(/?|/.*?)'), $regex);
+        if($optionals) {
+            $regex = str_replace(array('(/', ')', '/*'), array('(?:/', ')?', '(/?|/.*?)'), $regex);
+        }
+        else {
+            $regex = str_replace('/*', '(/?|/.*?)', $regex);
+        }
 
         // Fix trailing slash.
         if ($last_char === '/') {

@@ -116,7 +116,7 @@ class ClassicRouter extends \Core\Router
         $method = Request::getMethod();
 
         foreach ($this->routes as $route) {
-            if ($route->match($uri, $method)) {
+            if ($route->match($uri, $method, false)) {
                 // Found a valid Route; invoke the autoDispatch and go out.
                 $callback = $route->callback();
 

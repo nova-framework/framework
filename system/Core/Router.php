@@ -25,7 +25,7 @@ class Router
      *
      * @var array $routes
      */
-    private $routes = array();
+    protected $routes = array();
 
     /**
      * Set an Error Callback

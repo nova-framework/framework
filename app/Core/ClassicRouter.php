@@ -34,7 +34,7 @@ class ClassicRouter extends \Core\Router
         // <DIR><directory><controller><method><params>
         // <DIR><module><directory><controller><method><params>
 
-        $parts = explode('/', $uri);
+        $parts = explode('/', trim($uri, '/'));
 
         // Loop through URI parts, checking for the Controller file including its path.
         $controller = '';
@@ -87,7 +87,7 @@ class ClassicRouter extends \Core\Router
         $method = !empty($parts) ? array_shift($parts) : DEFAULT_METHOD;
 
         // Get the Controller's className.
-        $controller = str_replace('/', '\\', 'App/'.$basePath.$directory.$controller);
+        $controller = str_replace(array('//', '/'), '\\', 'App/'.$basePath.$directory.$controller);
 
         // Controller's Methods starting with '_' are not allowed also to be called on Router.
         if (($method[0] === '_') || !class_exists($controller)) {
@@ -118,10 +118,16 @@ class ClassicRouter extends \Core\Router
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method)) {
                 // Found a valid Route; invoke the autoDispatch and go out.
+
                 $callback = $route->callback();
 
                 if (! is_object($callback)) {
-                    $autoUri = preg_replace('#^' .$route->regex() .'$#', $callback, $uri);
+                    if (strpos($route->pattern(), ':') !== false) {
+                        $autoUri = preg_replace('#^' .$route->regex() .'$#', $callback, $uri);
+                    }
+                    else {
+                        $autoUri = $callback;
+                    }
 
                     $this->autoDispatch($autoUri);
                 }
@@ -133,14 +139,21 @@ class ClassicRouter extends \Core\Router
             }
         }
 
-        // No valid Route found; invoke the Error Callback with the current URI as parameter.
-        $params = array(
-            htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
-        );
+        // We arrived there
+        $routeFound = $this->autoDispatch($uri);
 
-        $this->invokeObject($this->callback(), $params);
+        if(! $routeFound) {
+            // No valid Route found; invoke the Error Callback with the current URI as parameter.
+            $params = array(
+                htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
+            );
 
-        return false;
+            $this->invokeObject($this->callback(), $params);
+
+            return false;
+        }
+
+        return true;
     }
 
 }

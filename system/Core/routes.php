@@ -15,8 +15,13 @@ use Helpers\Hooks;
 $router = Router::getInstance();
 
 /** Define static routes. */
-Router::any('', 'App\Controllers\Welcome@index');
-Router::any('subpage', 'App\Controllers\Welcome@subPage');
+#Router::any('', 'App\Controllers\Welcome@index');
+#Router::any('subpage', 'App\Controllers\Welcome@subPage');
+
+// Classic Routing
+Router::any('', '/welcome/index');
+Router::any('subpage', '/welcome/subpage');
+
 /** End static routes */
 
 /** Module routes. */

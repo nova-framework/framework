@@ -114,6 +114,16 @@ class Route
     //
     // Some Getters
 
+    public function method()
+    {
+        return $this->method;
+    }
+
+    public function pattern()
+    {
+        return $this->pattern;
+    }
+
     public function callback()
     {
         return $this->callback;

@@ -101,7 +101,7 @@ class Date
         }
         return $dates;
     }
-    
+
     /**
      * Takes a month/year as input and returns the number of days
      * for the given month/year. Takes leap years into consideration.
@@ -109,10 +109,11 @@ class Date
      * @param int $year
      * @return int
      */
-    public static function daysInMonth($month = 0, $year = '') {
-        if ($month < 1 OR $month > 12) {
+    public static function daysInMonth($month = 0, $year = '')
+    {
+        if ($month < 1 or $month > 12) {
             return 0;
-        } elseif (!is_numeric($year) OR strlen($year) !== 4) {
+        } elseif (!is_numeric($year) or strlen($year) !== 4) {
             $year = date('Y');
         }
         if (defined('CAL_GREGORIAN')) {
@@ -122,7 +123,7 @@ class Date
             return (int) date('t', mktime(12, 0, 0, $month, 1, $year));
         }
         if ($month == 2) {
-            if ($year % 400 === 0 OR ( $year % 4 === 0 && $year % 100 !== 0)) {
+            if ($year % 400 === 0 or ( $year % 4 === 0 && $year % 100 !== 0)) {
                 return 29;
             }
         }

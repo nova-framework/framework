@@ -259,5 +259,4 @@ class Paginator
 
         return $pagination;
     }
-
 }

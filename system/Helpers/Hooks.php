@@ -101,7 +101,7 @@ class Hooks
             while ($file = readdir($handle)) {
                 if (is_file($fromFolder.$file)) {
                     //only load modulename.module.php file
-                    if(preg_match('@module.php@', $file)) {
+                    if (preg_match('@module.php@', $file)) {
                         require_once $fromFolder . $file;
                     }
                     self::$plugins [$file] ['file'] = $file;

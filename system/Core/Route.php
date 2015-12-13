@@ -80,12 +80,11 @@ class Route
                 array('[^/]+', '-?[0-9]+', '.*', '[[:xdigit:]]+', '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'),
                 $this->pattern
             );
-        }
-        else {
+        } else {
             $regex = $this->pattern;
         }
 
-        if($optionals) {
+        if ($optionals) {
             $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
         }
 
@@ -94,9 +93,7 @@ class Route
         // Fix trailing slash.
         if ($last_char === '/') {
             $regex .= '?';
-        }
-        // Allow trailing slash.
-        else {
+        } else { // Allow trailing slash.
             $regex .= '/?';
         }
 
@@ -142,5 +139,4 @@ class Route
     {
         return $this->regex;
     }
-
 }

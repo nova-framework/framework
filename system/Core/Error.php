@@ -30,7 +30,7 @@ class Error extends Controller
      *
      * @param string $error
      */
-    public function __construct($error)
+    public function __construct($error = null)
     {
         parent::__construct();
         $this->error = $error;
@@ -39,12 +39,12 @@ class Error extends Controller
     /**
      * Load a 404 page with the error message.
      */
-    public function index()
+    public function index($error = null)
     {
         header("HTTP/1.0 404 Not Found");
 
         $data['title'] = '404';
-        $data['error'] = $this->error;
+        $data['error'] = $error ? $error : $this->error;
 
         View::renderTemplate('header', $data);
         View::render('error/404', $data);

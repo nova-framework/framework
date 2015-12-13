@@ -35,9 +35,17 @@ class Config
         define('DIR', '/');
 
         /**
+         * Set the Application Router.
+         */
+        // Default Routing
+        define('APPROUTER', '\Core\Router');
+        // Classic Routing
+        //define('APPROUTER', '\App\Core\ClassicRouter');
+
+        /**
          * Set default controller and method for legacy calls.
          */
-        define('DEFAULT_CONTROLLER', 'welcome');
+        define('DEFAULT_CONTROLLER', 'Welcome');
         define('DEFAULT_METHOD', 'index');
 
         /**

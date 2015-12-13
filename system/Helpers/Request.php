@@ -14,6 +14,24 @@ namespace Helpers;
 class Request
 {
     /**
+     * Gets the request method.
+     *
+     * @return string
+     */
+    public static function getMethod() {
+        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+
+        if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+            $method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+        }
+        elseif (isset($_REQUEST['_method'])) {
+            $method = $_REQUEST['_method'];
+        }
+
+        return strtoupper($method);
+    }
+    
+    /**
      * Safer and better access to $_POST.
      *
      * @param  string   $key

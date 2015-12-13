@@ -99,9 +99,9 @@ class Assets
     {
         $content = null;
         if (is_array($files)) {
-            foreach($files as $file) {
-                if(!empty($file)){
-                       if(strpos(basename($file),'.min.')===false && $type == 'css') { //compress files that aren't minified
+            foreach ($files as $file) {
+                if (!empty($file)) {
+                    if (strpos(basename($file), '.min.') === false && $type == 'css') { //compress files that aren't minified
                         $content.= static::compress(file_get_contents($file));
                     } else {
                         $content.= file_get_contents($file);
@@ -109,8 +109,8 @@ class Assets
                 }
             }
         } else {
-            if(!empty($files)){
-                   if(strpos(basename($files),'.min.')===false && $type == 'css') { //compress files that aren't minified
+            if (!empty($files)) {
+                if (strpos(basename($files), '.min.') === false && $type == 'css') { //compress files that aren't minified
                     $content.= static::compress(file_get_contents($files));
                 } else {
                     $content.= file_get_contents($files);

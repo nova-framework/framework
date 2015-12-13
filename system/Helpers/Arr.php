@@ -28,7 +28,7 @@ class Arr
         $segments = explode('.', $path);
         while (count($segments) > 1) {
             $segment = array_shift($segments);
-            if ( ! isset( $array[$segment] ) || ! is_array($array[$segment])) {
+            if (!isset($array[$segment]) || !is_array($array[$segment])) {
                 $array[$segment] = [];
             }
             $array =& $array[$segment];
@@ -48,7 +48,7 @@ class Arr
     {
         $segments = explode('.', $path);
         foreach ($segments as $segment) {
-            if ( ! is_array($array) || ! isset( $array[$segment] )) {
+            if (!is_array($array) || !isset($array[$segment])) {
                 return false;
             }
             $array = $array[$segment];
@@ -70,7 +70,7 @@ class Arr
     {
         $segments = explode('.', $path);
         foreach ($segments as $segment) {
-            if ( ! is_array($array) || ! isset( $array[$segment] )) {
+            if (!is_array($array) || !isset($array[$segment])) {
                 return $default;
             }
             $array = $array[$segment];
@@ -92,12 +92,12 @@ class Arr
         $segments = explode('.', $path);
         while (count($segments) > 1) {
             $segment = array_shift($segments);
-            if ( ! isset( $array[$segment] ) || ! is_array($array[$segment])) {
+            if (!isset($array[$segment]) || !is_array($array[$segment])) {
                 return false;
             }
             $array =& $array[$segment];
         }
-        unset( $array[array_shift($segments)] );
+        unset($array[array_shift($segments)]);
 
         return true;
     }

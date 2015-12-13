@@ -54,11 +54,10 @@ class ClassicRouter extends \Core\Router
 
             // Go further only if have other URI Parts, to permit URL mappings like:
             // '<DIR>/clients' -> '<SMVC>/app/Modules/Clients/Controllers/Clients.php'
-            if(! empty($parts)) {
+            if (! empty($parts)) {
                 $controller = str_replace(array('-', '_'), '', ucwords(array_shift($parts), '-_'));
             }
-        }
-        else {
+        } else {
             $moduleName = '';
             $basePath   = 'Controllers/';
         }
@@ -125,14 +124,12 @@ class ClassicRouter extends \Core\Router
 
                     if (! empty($regex) && (strpos($route->pattern(), ':') !== false)) {
                         $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
-                    }
-                    else {
+                    } else {
                         $autoUri = $callback;
                     }
 
                     $this->autoDispatch($autoUri);
-                }
-                else {
+                } else {
                     $this->invokeObject($callback, $route->params());
                 }
 
@@ -143,7 +140,7 @@ class ClassicRouter extends \Core\Router
         // We arrived there
         $routeFound = $this->autoDispatch($uri);
 
-        if(! $routeFound) {
+        if (!$routeFound) {
             // No valid Route found; invoke the Error Callback with the current URI as parameter.
             $params = array(
                 htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
@@ -156,5 +153,4 @@ class ClassicRouter extends \Core\Router
 
         return true;
     }
-
 }

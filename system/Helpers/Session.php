@@ -142,7 +142,7 @@ class Session
                 session_destroy();
             } elseif ($prefix == true) {
                 /** clear all session for set SESSION_PREFIX */
-                foreach($_SESSION as $key => $value) {
+                foreach ($_SESSION as $key => $value) {
                     if (strpos($key, SESSION_PREFIX) === 0) {
                         unset($_SESSION[$key]);
                     }

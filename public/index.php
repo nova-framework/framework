@@ -11,7 +11,7 @@ if (file_exists(ROOT.'vendor/autoload.php')) {
     exit;
 }
 
-if (!is_readable(SYSTEM.'/Core/Config.php')) {
+if (!is_readable(SYSTEM.'Core/Config.php')) {
     die('No Config.php found, configure and rename Config.example.php to Config.php in app/Core.');
 }
 

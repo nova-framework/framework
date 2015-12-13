@@ -43,7 +43,7 @@ class Router
 
     public static function &getInstance()
     {
-        if(! self::$instance) {
+        if (! self::$instance) {
             $appRouter = APPROUTER;
 
             self::$instance = new $appRouter();
@@ -79,7 +79,7 @@ class Router
 
     public function callback($callback = null)
     {
-        if(is_null($callback)) {
+        if (is_null($callback)) {
             return $this->errorCallback;
         }
 
@@ -155,5 +155,4 @@ class Router
 
         return false;
     }
-
 }

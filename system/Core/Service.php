@@ -39,7 +39,8 @@ abstract class Service
      * @param $primaryKey string Primary key column name
      * @param $class string Model class name, no full namespace!
      */
-    public function __construct($table, $primaryKey, $class) {
+    public function __construct($table, $primaryKey, $class)
+    {
         $this->db = Database::get();
 
         $this->table = $table;
@@ -52,7 +53,8 @@ abstract class Service
      * @param \Core\Model $object
      * @return int inserted id
      */
-    public function create($object) {
+    public function create($object)
+    {
         $result = $this->db->insert(PREFIX . $this->table, get_object_vars($object));
         if ($result === false) {
             return false;
@@ -67,7 +69,8 @@ abstract class Service
      * @param array $bind
      * @return \Core\Model[] Readed objects of type
      */
-    public function read($sql, $bind = array()) {
+    public function read($sql, $bind = array())
+    {
         return $this->db->select($sql, $bind, \PDO::FETCH_CLASS, '\App\Models\\'.$this->class);
     }
 
@@ -76,9 +79,10 @@ abstract class Service
      * @param $id mixed Primary key value
      * @return null|\Core\Model
      */
-    public function get($id) {
+    public function get($id)
+    {
         $results = $this->db->select("SELECT * FROM " . PREFIX . $this->table . " WHERE " . $this->primaryKey . " = :pk", array(':pk'=>$id), \PDO::FETCH_CLASS, '\App\Models\\'.$this->class);
-        if(count($results) > 0) {
+        if (count($results) > 0) {
             return $results[0];
         }
         return null;
@@ -89,7 +93,8 @@ abstract class Service
      * @param \Core\Model $object
      * @return int|false updated id, false on error
      */
-    public function update($object) {
+    public function update($object)
+    {
         return $this->db->update(PREFIX . $this->table, get_object_vars($object), array($this->primaryKey => $object->{$this->primaryKey}));
     }
 
@@ -99,7 +104,8 @@ abstract class Service
      * @param int $limit limit delete operation
      * @return boolean Result of deleting
      */
-    public function delete($object, $limit = 1) {
+    public function delete($object, $limit = 1)
+    {
         return $this->db->delete(PREFIX . $this->table, array($this->primaryKey => $object->{$this->primaryKey}), $limit);
     }
 }

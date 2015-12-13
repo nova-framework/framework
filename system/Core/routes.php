@@ -20,14 +20,6 @@ $router = Router::getInstance();
 Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('/admin/(:any)(/(:all))', 'App\Controllers\Demo@test');
-
-/*
-// Classic Routing
-Router::any('', '/welcome/index');
-Router::any('/subpage', '/welcome/subpage');
-Router::any('/admin/(:any)/(:all)', '/demo/$1/$2');
-*/
-
 /** End static routes */
 
 /** Module routes. */

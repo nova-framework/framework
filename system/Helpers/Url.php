@@ -47,8 +47,7 @@ class Url
 
         if (strpos($requestUri, $scriptName) === 0) {
             $requestUri = substr($requestUri, strlen($scriptName));
-        }
-        else if (strpos($requestUri, $pathName) === 0) {
+        } else if (strpos($requestUri, $pathName) === 0) {
             $requestUri = substr($requestUri, strlen($pathName));
         }
 

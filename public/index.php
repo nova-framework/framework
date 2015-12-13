@@ -1,26 +1,9 @@
 <?php
-/**
- * SimpleMVC specifed directory default is '.'
- * If app folder is not in the same directory update it's path
- */
-$smvc = '../app/';
-$system = '../system/';
-$root = '../';
-$public = dirname(__FILE__);
-
-/** Define the absolute paths for configured directories */
-define('SMVC', realpath($smvc).DIRECTORY_SEPARATOR);
-define('SYSTEM', realpath($system).DIRECTORY_SEPARATOR);
-define('PUBLICDIR', $public.DIRECTORY_SEPARATOR);
-
-/** Unset non used variables */
-unset($smvc);
-unset($system);
-unset($public);
+require('paths.php');
 
 /** load composer autoloader */
-if (file_exists($root.'vendor/autoload.php')) {
-    require $root.'vendor/autoload.php';
+if (file_exists(ROOT.'vendor/autoload.php')) {
+    require ROOT.'vendor/autoload.php';
 } else {
     echo "<h1>Please install via composer.json</h1>";
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";

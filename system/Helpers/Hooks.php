@@ -59,7 +59,7 @@ class Hooks
         ));
 
         //load modules
-        self::loadPlugins(SMVC.'Modules/');
+        self::loadPlugins(APP.'Modules/');
         $instance = new self();
         self::$instances[$id] = $instance;
         return $instance;

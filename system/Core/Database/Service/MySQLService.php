@@ -127,6 +127,12 @@ class MySQLService extends DatabaseService implements Service
      */
     public function delete($entity, $limit = 1)
     {
-        return $this->engine->delete(PREFIX . $this->table, array($this->primaryKey => $object->{$this->primaryKey}), $limit) !== false;
+        $primaryValues = array();
+
+        foreach($this->primaryKeys as $pk) {
+            $primaryValues[$pk] = $entity->{$pk};
+        }
+
+        return $this->engine->delete(PREFIX . $this->table, $primaryValues, $limit) !== false;
     }
 }

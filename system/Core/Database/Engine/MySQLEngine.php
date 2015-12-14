@@ -73,7 +73,13 @@ class MySQLEngine extends \PDO implements Engine
 
         $stmt->execute();
 
-        $fetched = $stmt->fetchAll($fetchMode, $class);
+        $fetched = array();
+        if ($fetchMode === \PDO::FETCH_CLASS) {
+            $fetched = $stmt->fetchAll($fetchMode, $class);
+        } else {
+            $fetched = $stmt->fetchAll($fetchMode);
+        }
+
 
         if (is_array($fetched) && count($fetched) > 0) {
             return $fetched;

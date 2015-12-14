@@ -1,5 +1,5 @@
 <?php
-namespace Helpers;
+namespace Smvc\Helpers;
 
 /**
  * Assets static helper
@@ -10,8 +10,8 @@ namespace Helpers;
  * @date May 18 2015
  */
 
-use Helpers\Url;
-use Helpers\JsMin;
+use Smvc\Helpers\Url;
+use Smvc\Helpers\JsMin;
 
 class Assets
 {

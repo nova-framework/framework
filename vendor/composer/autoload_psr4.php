@@ -6,6 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Smvc\\' => array($baseDir . '/system'),
     'App\\' => array($baseDir . '/app'),
-    '' => array($baseDir . '/system'),
 );

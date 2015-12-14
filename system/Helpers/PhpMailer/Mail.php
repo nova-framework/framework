@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers\PhpMailer;
+namespace Smvc\Helpers\PhpMailer;
 
 /**
  * Custom class for PHPMailer to uniform sending emails.

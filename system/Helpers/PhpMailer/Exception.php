@@ -5,7 +5,7 @@
  * @date May 18 2015
  */
 
-namespace Helpers\PhpMailer;
+namespace Smvc\Helpers\PhpMailer;
 
 /**
  * Exceptions for PHPMailer

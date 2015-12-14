@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Core\Error;
+use Smvc\Core\Error;
 
 /**
  * Language class to load the requested language file.

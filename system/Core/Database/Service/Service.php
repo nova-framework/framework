@@ -1,8 +1,8 @@
 <?php
 
 
-namespace Core\Database\Service;
-use Core\Database\Entity;
+namespace Smvc\Core\Database\Service;
+use Smvc\Core\Database\Entity;
 
 /**
  * Interface Service for Database Services

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Core\Database;
+namespace Smvc\Core\Database;
 
 
-use Core\Database\Engine\Engine;
+use Smvc\Core\Database\Engine\Engine;
 
 abstract class EngineFactory
 {
@@ -52,7 +52,7 @@ abstract class EngineFactory
         }
 
         // Make new instance, can throw exceptions!
-        $class = '\Core\Database\Engine\\' . $driver;
+        $class = '\Smvc\Core\Database\Engine\\' . $driver;
         $engine = new $class($config);
 
         // If no success

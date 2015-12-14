@@ -11,9 +11,9 @@
 namespace App\Controllers;
 
 use App\Services\Database\Car;
-use Core\Database\EngineFactory;
-use Core\View;
-use Core\Controller;
+use Smvc\Core\Database\EngineFactory;
+use Smvc\Core\View;
+use Smvc\Core\Controller;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.

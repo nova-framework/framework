@@ -8,10 +8,10 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Core\View;
-use Core\Language;
+use Smvc\Core\View;
+use Smvc\Core\Language;
 
 /**
  * Core controller, all other controllers extend this base controller.

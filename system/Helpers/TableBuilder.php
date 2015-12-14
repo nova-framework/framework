@@ -8,10 +8,10 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
 use PDO;
-use Helpers\Database;
+use Smvc\Helpers\Database;
 
 /**
  * Table builder class for SimpleMVCFramework.

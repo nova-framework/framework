@@ -3,7 +3,7 @@
 
 namespace App\Services\Database;
 
-use Core\Database\Service\MySQLService;
+use Smvc\Core\Database\Service\MySQLService;
 
 class Car extends MySQLService
 {

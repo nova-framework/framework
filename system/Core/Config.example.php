@@ -10,9 +10,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Helpers\Session;
+use Smvc\Helpers\Session;
 
 /**
  * Configuration constants and options.
@@ -38,7 +38,7 @@ class Config
          * Set the Application Router.
          */
         // Default Routing
-        define('APPROUTER', '\Core\Router');
+        define('APPROUTER', '\Smvc\Core\Router');
         // Classic Routing
         //define('APPROUTER', '\App\Core\ClassicRouter');
 
@@ -108,8 +108,8 @@ class Config
         /**
          * Turn on custom error handling.
          */
-        set_exception_handler('Core\Logger::ExceptionHandler');
-        set_error_handler('Core\Logger::ErrorHandler');
+        set_exception_handler('Smvc\Core\Logger::ExceptionHandler');
+        set_error_handler('Smvc\Core\Logger::ErrorHandler');
 
         /**
          * Set timezone.

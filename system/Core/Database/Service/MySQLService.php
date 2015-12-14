@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Core\Database\Service;
+namespace Smvc\Core\Database\Service;
 
-use Core\Database\DatabaseService;
-use Core\Database\Engine\MySQLEngine;
-use Core\Database\EngineFactory;
-use Core\Database\Entity;
+use Smvc\Core\Database\DatabaseService;
+use Smvc\Core\Database\Engine\MySQLEngine;
+use Smvc\Core\Database\EngineFactory;
+use Smvc\Core\Database\Entity;
 
 /**
  * Class MySQLService

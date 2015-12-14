@@ -7,11 +7,12 @@
  * @date December 11th, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Core\Route;
-use Helpers\Request;
-use Helpers\Url;
+use Smvc\Core\Route;
+use Smvc\Helpers\Request;
+use Smvc\Helpers\Url;
+use Smvc\Helpers\Inflector;
 
 /**
  * Router class will load requested controller / closure based on url.

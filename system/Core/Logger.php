@@ -43,7 +43,7 @@ class Logger
     *
     * @var string
     */
-    public static $errorFile = '/logs/error.log';
+    public static $errorFile = ROOT.'tmp/logs/error.log';
 
     /**
     * store errors for output.

@@ -1,6 +1,8 @@
 <?php
 namespace App\Controllers;
 
+use App\Services\Database\Car;
+use Smvc\Core\Database\EngineFactory;
 use Smvc\Core\View;
 use Smvc\Core\Controller;
 
@@ -42,5 +44,24 @@ class Demo extends Controller
     public function catchAll($str)
     {
         echo htmlspecialchars($str, ENT_COMPAT, 'ISO-8859-1', true);
+    }
+
+    public function database()
+    {
+        echo "<pre>Plain:<br>";
+
+        // Use it without the Services:
+        $engine = EngineFactory::getEngine();
+        $result_plain = $engine->select('* FROM '.PREFIX.'car');
+        var_dump($result_plain);
+
+        echo "<br><br>Service:<br>";
+
+        // Use with the Car service:
+        $service = new Car();
+        $result_service = $service->getAll();
+        var_dump($result_service);
+
+        echo "</pre>";
     }
 }

@@ -7,9 +7,9 @@
  * @date Dec 14, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
- 
+
 class Inflector extends \Doctrine\Common\Inflector\Inflector
 {
 }

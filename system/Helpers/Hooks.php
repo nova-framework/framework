@@ -7,7 +7,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
 /**
  * Hooks allow code to be injected into various parts of the framework.

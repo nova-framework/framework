@@ -7,9 +7,9 @@
  * @date Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
-use Helpers\Database;
+use Smvc\Helpers\Database;
 
 /**
  * Collection of useful methods.

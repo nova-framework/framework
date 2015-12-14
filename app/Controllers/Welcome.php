@@ -10,8 +10,8 @@
 
 namespace App\Controllers;
 
-use Core\View;
-use Core\Controller;
+use Smvc\Core\View;
+use Smvc\Core\Controller;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.

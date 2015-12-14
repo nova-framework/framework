@@ -57,7 +57,7 @@ if (defined('ENVIRONMENT')) {
 }
 
 /** initiate config */
-new \Core\Config();
+new \Smvc\Core\Config();
 
 /** load routes */
 require SYSTEM.'Core/routes.php';

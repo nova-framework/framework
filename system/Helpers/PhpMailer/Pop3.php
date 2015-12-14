@@ -17,7 +17,7 @@
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-namespace Helpers\PhpMailer;
+namespace Smvc\Helpers\PhpMailer;
 
 /**
  * PHPMailer POP-Before-SMTP Authentication Class.

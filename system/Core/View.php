@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
 /**
  * View class to load template and views files.

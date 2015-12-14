@@ -3,6 +3,7 @@
 
 namespace Core\Database;
 use Core\Database\Engine\Engine;
+use Core\Database\Engine\MySQLEngine;
 
 /**
  * Class DatabaseService.
@@ -13,7 +14,7 @@ abstract class DatabaseService
     /** @var string Driver name, should be in the config as default. */
     protected $driver;
 
-    /** @var Engine database engine we will use. */
+    /** @var Engine|MySQLEngine database engine we will use. */
     protected $engine;
 
     /** @var string Table name. */

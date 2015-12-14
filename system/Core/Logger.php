@@ -43,7 +43,7 @@ class Logger
     *
     * @var string
     */
-    public static $errorFile = '/logs/error.log';
+    public static $errorFile = '/tmp/logs/error.log';
 
     /**
     * store errors for output.
@@ -114,7 +114,7 @@ class Logger
         $trace = $exception->getTraceAsString();
         $trace = str_replace(DB_PASS, '********', $trace);
         $date = date('M d, Y G:iA');
-        $systempath = dirname(__DIR__);
+        $rootpath = dirname(dirname(__DIR__));
 
         $logMessage = "Exception information:\n
            Date: {$date}\n
@@ -126,12 +126,12 @@ class Logger
            {$trace}\n
            ---------\n\n";
 
-        if (is_file($systempath.self::$errorFile) === false) {
-            file_put_contents($systempath.self::$errorFile, '');
+        if (is_file($rootpath.self::$errorFile) === false) {
+            file_put_contents($rootpath.self::$errorFile, '');
         }
 
         if (self::$clear) {
-            $f = fopen($systempath.self::$errorFile, "r+");
+            $f = fopen($rootpath.self::$errorFile, "r+");
             if ($f !== false) {
                 ftruncate($f, 0);
                 fclose($f);
@@ -139,7 +139,7 @@ class Logger
         }
 
         // Append
-        file_put_contents($systempath.self::$errorFile, $logMessage, FILE_APPEND);
+        file_put_contents($rootpath.self::$errorFile, $logMessage, FILE_APPEND);
 
         self::$error = $logMessage;
         self::customErrorMsg();
@@ -159,14 +159,14 @@ class Logger
     {
         $date = date('Y-m-d G:iA');
         $logMessage = "$date - $error\n\n";
-        $systempath = dirname(__DIR__);
+        $rootpath = dirname(dirname(__DIR__));
 
-        if (is_file($systempath.self::$errorFile) === false) {
-            file_put_contents($systempath.self::$errorFile, '');
+        if (is_file($rootpath.self::$errorFile) === false) {
+            file_put_contents($rootpath.self::$errorFile, '');
         }
 
         if (self::$clear) {
-            $f = fopen($systempath.self::$errorFile, "r+");
+            $f = fopen($rootpath.self::$errorFile, "r+");
             if ($f !== false) {
                 ftruncate($f, 0);
                 fclose($f);
@@ -175,7 +175,7 @@ class Logger
             $content = null;
         } else {
             // Append
-            file_put_contents($systempath.self::$errorFile, $logMessage, FILE_APPEND);
+            file_put_contents($rootpath.self::$errorFile, $logMessage, FILE_APPEND);
         }
 
         /** send email */

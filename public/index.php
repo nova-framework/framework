@@ -1,5 +1,14 @@
 <?php
-require('paths.php');
+
+// Who invented the alias DIRECTORY_SEPARATOR for '/' probably is a Spanish called:
+// Juan-Carlos Julio Mario Emanuel Carmen-Garcias Martinez de Santa-Maria della Fè.
+define('DS', DIRECTORY_SEPARATOR);
+
+/** Define the absolute paths for configured directories */
+define('APP', realpath('../app').DS);
+define('SYSTEM', realpath('../system').DS);
+define('PUBLICDIR', realpath('./').DS);
+define('ROOT', realpath('../').DS);
 
 /** load composer autoloader */
 if (file_exists(ROOT.'vendor/autoload.php')) {
@@ -57,7 +66,7 @@ if (defined('ENVIRONMENT')) {
 }
 
 /** initiate config */
-new \Smvc\Core\Config();
+require APP.'Config/bootstrap.php';
 
 /** load routes */
-require SYSTEM.'Core/routes.php';
+require APP.'Config/routes.php';

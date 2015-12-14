@@ -12,6 +12,7 @@ namespace Core;
 use Core\Route;
 use Helpers\Request;
 use Helpers\Url;
+use Helpers\Inflector;
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -194,9 +195,9 @@ class Router
 
         if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
             // We need to classify the path name (the Module/Template path).
-            $pathName = str_replace(array('-', '_'), '', ucwords($matches[1].'/'.$matches[2], '-_'));
+            $assetsPath = Inflector::classify($matches[1].'/'.$matches[2].'/Assets/');
 
-            $filePath = realpath(APP.$pathName.'/Assets/'.$matches[3]);
+            $filePath = realpath(APP.$assetsPath.$matches[3]);
 
             // Serve the specified Asset File.
             $this->serveFile($filePath);

@@ -12,6 +12,7 @@ namespace App\Core;
 use Core\Route;
 use Helpers\Request;
 use Helpers\Url;
+use Helpers\Inflector;
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -98,7 +99,7 @@ class ClassicRouter extends \Core\Router
 
         if (! empty($parts)) {
             // Classify, to permit: '<DIR>/file_manager/admin/' -> '<SMVC>/Modules/FileManager/Admin/
-            $controller = str_replace(array('-', '_'), '', ucwords(array_shift($parts), '-_'));
+            $controller = Inflector::classify(array_shift($parts));
         }
 
         // Verify if the first URI part match a Module.
@@ -112,7 +113,7 @@ class ClassicRouter extends \Core\Router
             // Go further only if have other URI Parts, to permit URL mappings like:
             // '<DIR>/clients' -> '<SMVC>/app/Modules/Clients/Controllers/Clients.php'
             if (! empty($parts)) {
-                $controller = str_replace(array('-', '_'), '', ucwords(array_shift($parts), '-_'));
+                $controller = Inflector::classify(array_shift($parts));
             }
         } else {
             $moduleName = '';
@@ -127,7 +128,7 @@ class ClassicRouter extends \Core\Router
 
             if (! is_readable($testPath .'.php') && is_dir($testPath)) {
                 $directory .= $controller .'/';
-                $controller = str_replace(array('-', '_'), '', ucwords(array_shift($parts), '-_'));
+                $controller = Inflector::classify(array_shift($parts));
 
                 continue;
             }

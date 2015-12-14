@@ -4,8 +4,6 @@
 namespace Core\Database\Engine;
 
 
-use Core\Logger;
-
 class MySQLEngine extends \PDO implements Engine
 {
 
@@ -56,18 +54,18 @@ class MySQLEngine extends \PDO implements Engine
     /**
      * Select from the database
      *
-     * @param  string $sql       sql query
-     * @param  array  $array     named params
-     * @param  int    $fetchMode Fetch mode (use \PDO::FETCH_*)
-     * @param  string $class     class name for using with \PDO::FETCH_CLASS
-     * @return array            returns an array of records
+     * @param  string      $sql       sql query
+     * @param  array       $array     named params
+     * @param  int         $fetchMode Fetch mode (use \PDO::FETCH_*)
+     * @param  string|null $class     class name for using with \PDO::FETCH_CLASS
+     * @return array                  returns an array of records
      */
-    public function select($sql, $array = array(), $fetchMode = \PDO::FETCH_OBJ, $class = '')
+    public function select($sql, $array = array(), $fetchMode = \PDO::FETCH_OBJ, $class = null)
     {
         $stmt = $this->prepare($sql);
         foreach ($array as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
+                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
             } else {
                 $stmt->bindValue("$key", $value);
             }
@@ -75,11 +73,12 @@ class MySQLEngine extends \PDO implements Engine
 
         $stmt->execute();
 
-        if ($fetchMode === PDO::FETCH_CLASS) {
-            return $stmt->fetchAll($fetchMode, $class);
-        } else {
-            return $stmt->fetchAll($fetchMode);
+        $fetched = $stmt->fetchAll($fetchMode, $class);
+
+        if (is_array($fetched) && count($fetched) > 0) {
+            return $fetched;
         }
+        return false;
     }
 
     /**

@@ -4,11 +4,7 @@ Version 3 of the Framework
 This is a temp readme, for beta testing.
 
 #Install
-* Download the files
-* for a localserver place the files within public in the root of your project (move them up a directory so they are with app and system)
-* open system/Core/Config.example.php and edit the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Save file as Config.php
-* open .htaccess and set the rewrite base same path as in the config the path is relative to the project url
-* open index.php and set the paths to if running all folders in the root no change will be needed. If app and system are in a higher folder above then edit the path to be ../app and ../system
+To be updated - 3.0 is currently been refractored once finalished these instructions will be updated.
 
 This has been tested with php 5.6 and php 7 (RC8) please report any bugs, this system has not been tested enough to be considered stable.
 

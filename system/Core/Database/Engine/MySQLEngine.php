@@ -54,7 +54,7 @@ class MySQLEngine extends \PDO implements Engine
     /**
      * Select from the database
      *
-     * @param  string      $sql       sql query, without SELECT
+     * @param  string      $sql       sql query, leave out the SELECT word
      * @param  array       $array     named params
      * @param  int         $fetchMode Fetch mode (use \PDO::FETCH_*)
      * @param  string|null $class     class name for using with \PDO::FETCH_CLASS

@@ -54,7 +54,7 @@ class MySQLEngine extends \PDO implements Engine
     /**
      * Select from the database
      *
-     * @param  string      $sql       sql query
+     * @param  string      $sql       sql query, leave out the SELECT word
      * @param  array       $array     named params
      * @param  int         $fetchMode Fetch mode (use \PDO::FETCH_*)
      * @param  string|null $class     class name for using with \PDO::FETCH_CLASS
@@ -62,7 +62,7 @@ class MySQLEngine extends \PDO implements Engine
      */
     public function select($sql, $array = array(), $fetchMode = \PDO::FETCH_OBJ, $class = null)
     {
-        $stmt = $this->prepare($sql);
+        $stmt = $this->prepare("SELECT " . $sql);
         foreach ($array as $key => $value) {
             if (is_int($value)) {
                 $stmt->bindValue("$key", $value, \PDO::PARAM_INT);

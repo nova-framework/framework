@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Smvc\Core\Database;
+namespace Smvc\Database;
 
 
-use Smvc\Core\Database\Engine\Engine;
+use Smvc\Database\Engine\Engine;
 
 abstract class EngineFactory
 {

@@ -7,9 +7,9 @@
  * @date December 13, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Helpers\Database;
+use Smvc\Helpers\Database;
 
 /**
  * Abstract Class Service, Your service classes need to extend this abstract class

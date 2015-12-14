@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers;
 
-use Core\View;
-use Core\Controller;
+use Smvc\Core\View;
+use Smvc\Core\Controller;
 
 /*
 *

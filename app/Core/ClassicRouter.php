@@ -9,15 +9,15 @@
 
 namespace App\Core;
 
-use Core\Route;
-use Helpers\Request;
-use Helpers\Url;
-use Helpers\Inflector;
+use Smvc\Core\Route;
+use Smvc\Helpers\Request;
+use Smvc\Helpers\Url;
+use Smvc\Helpers\Inflector;
 
 /**
  * Router class will load requested controller / closure based on url.
  */
-class ClassicRouter extends \Core\Router
+class ClassicRouter extends \Smvc\Core\Router
 {
     // Constructor
     public function __construct()

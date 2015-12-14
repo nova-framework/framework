@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Helpers\PhpMailer\Mail;
+use Smvc\Helpers\PhpMailer\Mail;
 
 /**
  * Record and email/display errors or a custom error message.

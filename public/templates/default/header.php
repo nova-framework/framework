@@ -3,9 +3,9 @@
  * Sample layout
  */
 
-use Helpers\Assets;
-use Helpers\Url;
-use Helpers\Hooks;
+use Smvc\Helpers\Assets;
+use Smvc\Helpers\Url;
+use Smvc\Helpers\Hooks;
 
 //initialise hooks
 $hooks = Hooks::get();

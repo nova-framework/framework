@@ -3,7 +3,7 @@
  * Sample layout
  */
 
-use Core\Language;
+use Smvc\Core\Language;
 
 ?>
 

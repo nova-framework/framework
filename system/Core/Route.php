@@ -7,7 +7,7 @@
  * @date December 11th, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
 /**
  * The Route class is responsible for routing an HTTP request to an assigned callback function.

@@ -8,10 +8,10 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Core\Controller;
-use Core\View;
+use Smvc\Core\Controller;
+use Smvc\Core\View;
 
 /**
  * Error class to generate 404 pages.

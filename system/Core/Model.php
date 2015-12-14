@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
-use Helpers\Database;
+use Smvc\Helpers\Database;
 
 /**
  * Base model class all other models will extend from this base.

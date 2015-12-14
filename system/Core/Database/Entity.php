@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Core\Database;
+namespace Smvc\Core\Database;
 
 /**
  * Class Entity, can be extended with your database entities

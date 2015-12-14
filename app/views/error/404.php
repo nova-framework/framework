@@ -3,7 +3,7 @@
  * Sample layout
  */
 
-use Core\Error;
+use Smvc\Core\Error;
 
 ?>
 <div class="container content">

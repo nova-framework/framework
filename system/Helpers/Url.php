@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
-use Helpers\Session;
+use Smvc\Helpers\Session;
 
 /**
  * Collection of methods for working with urls.

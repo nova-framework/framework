@@ -8,8 +8,8 @@
  */
 
 /** Create alias for Router. */
-use Core\Router;
-use Helpers\Hooks;
+use Smvc\Core\Router;
+use Smvc\Helpers\Hooks;
 
 /** Get the Router instance. */
 $router = Router::getInstance();

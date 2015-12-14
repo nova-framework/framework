@@ -16,20 +16,13 @@ class MySQLEngine extends \PDO implements Engine
      * Please use the Factory to maintain instances of the drivers.
      *
      * @param $config array
+     * @throws \PDOException
      */
     public function __construct($config) {
         $this->config = $config;
 
-        try {
-            parent::__construct("mysql:host=" . $config['host'] . ";dbname=" . $config['database'] . ";charset=utf8", $config['user'], $config['pass']);
-            $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
-            //in the event of an error record the error to the error log
-            Logger::newMessage($e);
-            Logger::customErrorMsg();
-
-            throw $e;
-        }
+        parent::__construct("mysql:host=" . $config['host'] . ";dbname=" . $config['database'] . ";charset=utf8", $config['user'], $config['pass']);
+        $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     /**

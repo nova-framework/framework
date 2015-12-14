@@ -19,12 +19,16 @@ abstract class EngineFactory
      * @param $driver string Driver class name (use constants in factory)
      * @param null|array $config Array of configuration
      * @return null|Engine|\PDO
+     * @throws \Exception
      */
     public static function getEngine($driver = null, $config = null)
     {
         // If no driver given, use default
         if ($driver === null) {
-            $driver = static::DRIVER_MYSQL; // TODO: Make this move to the config too
+            $driver = constant("static::DRIVER_" . strtoupper(DB_TYPE));
+            if ($driver === null) {
+                throw new \Exception("Driver not found, check your config.php, DB_TYPE");
+            }
         }
 
         // If no config is given, use the default
@@ -47,7 +51,7 @@ abstract class EngineFactory
             return static::$instances[$configString];
         }
 
-        // Make new instance
+        // Make new instance, can throw exceptions!
         $class = '\Core\Database\Engine\\' . $driver;
         $engine = new $class($config);
 

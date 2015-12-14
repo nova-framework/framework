@@ -1,103 +1,71 @@
 <?php
-/**
- * database Helper
- *
- * @author David Carr - dave@daveismyname.com
- * @version 2.1
- * @date June 27, 2014
- * @date updated Sept 19, 2015
- */
 
-namespace Helpers;
 
-use PDO;
+namespace Core\Database\Engine;
 
-/**
- * Extending PDO to use custom methods.
- *
- * @deprecated since v3.0
- */
-class Database extends PDO
+
+class MySQLEngine extends \PDO implements Engine
 {
-    /**
-     * @var array Array of saved databases for reusing
-     */
-    protected static $instances = array();
+
+    private $config;
 
     /**
-     * Static method get
+     * MySQLEngine constructor.
+     * Please use the Factory to maintain instances of the drivers.
      *
-     * @param  array $group
-     * @return \helpers\database
+     * @param $config array
+     * @throws \PDOException
      */
-    public static function get($group = false)
-    {
-        // Determining if exists or it's not empty, then use default group defined in config
-        $group = !$group ? array (
-            'type' => DB_TYPE,
-            'host' => DB_HOST,
-            'name' => DB_NAME,
-            'user' => DB_USER,
-            'pass' => DB_PASS
-        ) : $group;
+    public function __construct($config) {
+        $this->config = $config;
 
-        // Group information
-        $type = $group['type'];
-        $host = $group['host'];
-        $name = $group['name'];
-        $user = $group['user'];
-        $pass = $group['pass'];
-
-        // ID for database based on the group information
-        $id = "$type.$host.$name.$user.$pass";
-
-        // Checking if the same
-        if (isset(self::$instances[$id])) {
-            return self::$instances[$id];
-        }
-
-        try {
-            // I've run into problem where
-            // SET NAMES "UTF8" not working on some hostings.
-            // Specifiying charset in DSN fixes the charset problem perfectly!
-            $instance = new Database("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
-            $instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            // Setting Database into $instances to avoid duplication
-            self::$instances[$id] = $instance;
-
-            return $instance;
-        } catch (PDOException $e) {
-            //in the event of an error record the error to ErrorLog.html
-            Logger::newMessage($e);
-            Logger::customErrorMsg();
-        }
+        parent::__construct("mysql:host=" . $config['host'] . ";dbname=" . $config['database'] . ";charset=utf8", $config['user'], $config['pass']);
+        $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     /**
-     * run raw sql queries
-     * @param  string $sql sql command
-     * @return return query
+     * Get the name of the driver
+     * @return string
      */
-    public function raw($sql)
+    public function getDriverName()
     {
-        return $this->query($sql);
+        return "MySQL Driver";
     }
 
     /**
-     * method for selecting records from a database
-     * @param  string $sql       sql query
-     * @param  array  $array     named params
-     * @param  object $fetchMode
-     * @param  string $class     class name
-     * @return array            returns an array of records
+     * Get configuration for instance
+     * @return array
      */
-    public function select($sql, $array = array(), $fetchMode = PDO::FETCH_OBJ, $class = '')
+    public function getConfiguration()
     {
-        $stmt = $this->prepare($sql);
+        return $this->config;
+    }
+
+    /**
+     * Get native connection. Could be \PDO
+     * @return mixed|\PDO
+     */
+    public function getConnection()
+    {
+        return $this;
+    }
+
+
+    /**
+     * Select from the database
+     *
+     * @param  string      $sql       sql query, leave out the SELECT word
+     * @param  array       $array     named params
+     * @param  int         $fetchMode Fetch mode (use \PDO::FETCH_*)
+     * @param  string|null $class     class name for using with \PDO::FETCH_CLASS
+     * @return array                  returns an array of records
+     */
+    public function select($sql, $array = array(), $fetchMode = \PDO::FETCH_OBJ, $class = null)
+    {
+        $stmt = $this->prepare("SELECT " . $sql);
         foreach ($array as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
+                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
             } else {
                 $stmt->bindValue("$key", $value);
             }
@@ -105,17 +73,25 @@ class Database extends PDO
 
         $stmt->execute();
 
-        if ($fetchMode === PDO::FETCH_CLASS) {
-            return $stmt->fetchAll($fetchMode, $class);
+        $fetched = array();
+        if ($fetchMode === \PDO::FETCH_CLASS) {
+            $fetched = $stmt->fetchAll($fetchMode, $class);
         } else {
-            return $stmt->fetchAll($fetchMode);
+            $fetched = $stmt->fetchAll($fetchMode);
         }
+
+
+        if (is_array($fetched) && count($fetched) > 0) {
+            return $fetched;
+        }
+        return false;
     }
 
     /**
-     * insert method
+     * Insert data in table
      * @param  string $table table name
      * @param  array $data  array of columns and values
+     * @return int|false inserted id or false on failure
      */
     public function insert($table, $data)
     {
@@ -130,15 +106,18 @@ class Database extends PDO
             $stmt->bindValue(":$key", $value);
         }
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            return false;
+        }
         return $this->lastInsertId();
     }
 
     /**
-     * update method
+     * Update data in table
      * @param  string $table table name
      * @param  array $data  array of columns and values
      * @param  array $where array of columns and values
+     * @return int|false Row count or false on failure
      */
     public function update($table, $data, $where)
     {
@@ -172,7 +151,9 @@ class Database extends PDO
             $stmt->bindValue(":where_$key", $value);
         }
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            return false;
+        }
         return $stmt->rowCount();
     }
 
@@ -182,6 +163,7 @@ class Database extends PDO
      * @param  string $table table name
      * @param  array $where array of columns and values
      * @param  integer   $limit limit number of records
+     * @return int|false Row count or false on failure
      */
     public function delete($table, $where, $limit = 1)
     {
@@ -210,13 +192,16 @@ class Database extends PDO
             $stmt->bindValue(":$key", $value);
         }
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            return false;
+        }
         return $stmt->rowCount();
     }
 
     /**
-     * truncate table
+     * Truncate table
      * @param  string $table table name
+     * @return int number of rows affected
      */
     public function truncate($table)
     {

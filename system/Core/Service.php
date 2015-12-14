@@ -12,9 +12,7 @@ namespace Core;
 use Helpers\Database;
 
 /**
- * Abstract Class Service, Your service classes need to extend this abstract class and implement
- * the constructor function with the required parameters in order to let it work without additional
- * code required.
+ * Abstract Class Service, Your service classes need to extend this abstract class
  *
  * @package Core
  */

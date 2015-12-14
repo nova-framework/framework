@@ -52,7 +52,7 @@ abstract class EngineFactory
         }
 
         // Make new instance, can throw exceptions!
-        $class = '\Smvc\Core\Database\Engine\\' . $driver;
+        $class = '\Smvc\Database\Engine\\' . $driver;
         $engine = new $class($config);
 
         // If no success

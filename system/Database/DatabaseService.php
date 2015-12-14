@@ -2,8 +2,8 @@
 
 
 namespace Smvc\Database;
-use Smvc\Core\Database\Engine\Engine;
-use Smvc\Core\Database\Engine\MySQLEngine;
+use Smvc\Database\Engine\Engine;
+use Smvc\Database\Engine\MySQLEngine;
 
 /**
  * Class DatabaseService.

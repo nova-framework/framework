@@ -38,4 +38,9 @@ class Demo extends Controller
 
         echo '<pre>'.var_export($params, true).'</pre>';
     }
+
+    public function catchAll($str)
+    {
+        echo htmlspecialchars($str, ENT_COMPAT, 'ISO-8859-1', true);
+    }
 }

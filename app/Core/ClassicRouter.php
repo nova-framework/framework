@@ -24,6 +24,63 @@ class ClassicRouter extends \Core\Router
         parent::__construct();
     }
 
+    public function dispatch()
+    {
+        // Detect the current URI.
+        $uri = Url::detectUri();
+
+        // First, we will supose that URI is associated with an Asset File.
+        if (Request::isGet() && $this->dispatchFile($uri)) {
+            return true;
+        }
+
+        // Not an Asset File URI? Routes the current request.
+        $method = Request::getMethod();
+
+        foreach ($this->routes as $route) {
+            if ($route->match($uri, $method, false)) {
+                // Found a valid Route; invoke the autoDispatch and go out.
+                $callback = $route->callback();
+
+                if (! is_object($callback)) {
+                    $regex = $route->regex();
+
+                    if (($route->pattern() === '*') || ($route->pattern() === $uri)) {
+                        $autoUri = $uri;
+                    }
+                    else if (! empty($regex) && (strpos($route->pattern(), ':') !== false)) {
+                        $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
+                    }
+                    else {
+                        $autoUri = $callback;
+                    }
+
+                    $this->autoDispatch($autoUri);
+                } else {
+                    $this->invokeObject($callback, $route->params());
+                }
+
+                return true;
+            }
+        }
+
+        // We arrived there
+        $routeFound = $this->autoDispatch($uri);
+
+        if (!$routeFound) {
+            // No valid Route found; invoke the Error Callback with the current URI as parameter.
+            $params = array(
+                htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
+            );
+
+            $this->invokeObject($this->callback(), $params);
+
+            return false;
+        }
+
+        return true;
+    }
+
    /**
      * Ability to call controllers in their module/directory/controller/method/param way.
      */
@@ -103,53 +160,6 @@ class ClassicRouter extends \Core\Router
 
         // Execute the current Controller's Method with the given arguments.
         call_user_func_array(array($controller, $method), !empty($parts) ? $parts : array());
-
-        return true;
-    }
-
-    public function dispatch()
-    {
-        // Detect the URI and the HTTP Method.
-        $uri = Url::detectUri();
-
-        $method = Request::getMethod();
-
-        foreach ($this->routes as $route) {
-            if ($route->match($uri, $method, false)) {
-                // Found a valid Route; invoke the autoDispatch and go out.
-                $callback = $route->callback();
-
-                if (! is_object($callback)) {
-                    $regex = $route->regex();
-
-                    if (! empty($regex) && (strpos($route->pattern(), ':') !== false)) {
-                        $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
-                    } else {
-                        $autoUri = $callback;
-                    }
-
-                    $this->autoDispatch($autoUri);
-                } else {
-                    $this->invokeObject($callback, $route->params());
-                }
-
-                return true;
-            }
-        }
-
-        // We arrived there
-        $routeFound = $this->autoDispatch($uri);
-
-        if (!$routeFound) {
-            // No valid Route found; invoke the Error Callback with the current URI as parameter.
-            $params = array(
-                htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
-            );
-
-            $this->invokeObject($this->callback(), $params);
-
-            return false;
-        }
 
         return true;
     }

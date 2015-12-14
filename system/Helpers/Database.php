@@ -14,6 +14,8 @@ use PDO;
 
 /**
  * Extending PDO to use custom methods.
+ *
+ * @deprecated since v3.0
  */
 class Database extends PDO
 {

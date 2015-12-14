@@ -18,8 +18,8 @@ class Date
     /**
      * get the difference between 2 dates
      *
-     * @param  date $from start date
-     * @param  date $to   end date
+     * @param  int $from start date
+     * @param  int $to   end date
      * @param  string $type the type of difference to return
      * @return string or array, if type is set then a string is returned otherwise an array is returned
      */
@@ -43,9 +43,9 @@ class Date
      *
      * Taken from http://mugurel.sumanariu.ro/php-2/php-how-to-calculate-number-of-work-days-between-2-dates/
      *
-     * @param  date     $startDate date in the format of Y-m-d
-     * @param  date     $endDate date in the format of Y-m-d
-     * @param  booleen  $weekendDays returns the number of weekends
+     * @param  string     $startDate date in the format of Y-m-d
+     * @param  string     $endDate date in the format of Y-m-d
+     * @param  boolean  $weekendDays returns the number of weekends
      * @return integer  returns the total number of days
      */
     public static function businessDays($startDate, $endDate, $weekendDays = false)
@@ -94,6 +94,7 @@ class Date
         $holiday  = array();
         $interval = new \DateInterval('P1D');
         $dateRange= new \DatePeriod($begin, $interval, $end);
+        $dates = array();
         foreach ($dateRange as $date) {
             if ($date->format("N") < $nonWork and !in_array($date->format("Y-m-d"), $holiday)) {
                 $dates[] = $date->format("Y-m-d");
@@ -106,7 +107,7 @@ class Date
      * Takes a month/year as input and returns the number of days
      * for the given month/year. Takes leap years into consideration.
      * @param int $month
-     * @param int $year
+     * @param int|string $year
      * @return int
      */
     public static function daysInMonth($month = 0, $year = '')
@@ -129,5 +130,19 @@ class Date
         }
         $days_in_month = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
         return $days_in_month[$month - 1];
+    }
+
+    /**
+     * Get age from birthdate
+     * @param $birthDate int timestamp
+     * @return int number of years
+     */
+    public static function ageFromBirthDate($birthDate)
+    {
+        $date = new \DateTime($birthDate);
+        $now = new \DateTime();
+
+        $interval = $now->diff($date);
+        return $interval->y;
     }
 }

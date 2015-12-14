@@ -4,7 +4,7 @@
  *
  * @author Tom Valk
  * @date September 29, 2015
- * @data December 14, 2015 - Now only working as abstract for generic services.  
+ * @data December 14, 2015 - Now only working as abstract for generic services.
  */
 
 namespace Core;

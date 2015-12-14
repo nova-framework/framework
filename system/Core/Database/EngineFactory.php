@@ -20,8 +20,13 @@ abstract class EngineFactory
      * @param null|array $config Array of configuration
      * @return null|ENgine
      */
-    public static function getEngine($driver, $config = null)
+    public static function getEngine($driver = null, $config = null)
     {
+        // If no driver given, use default
+        if ($driver === null) {
+            $driver = static::DRIVER_MYSQL; // TODO: Make this move to the config too
+        }
+
         // If no config is given, use the default
         if ($config === null) {
             $config = array(

@@ -88,7 +88,7 @@ class MySQLService extends DatabaseService implements Service
      * Make sure you don't change your primary keys! As this will be used to execute the update with
      * For safety it will default limit on 1 row only, you can override it but be warned on this!
      *
-     * @param $entity Entity|Entity[]
+     * @param $entity Entity
      * @param $limit int Limit of changes, may not be effective on every driver! Default 1. TODO: Will not be used currently
      * @return false|Entity
      * @throws \Exception
@@ -120,7 +120,7 @@ class MySQLService extends DatabaseService implements Service
      *
      * For safety it will default limit on 1 row only, you can override it but be warned on this!
      *
-     * @param $entity Entity|Entity[]
+     * @param $entity Entity
      * @param $limit int Limit of changes, may not be effective on every driver! Default 1
      * @return boolean successful delete?
      * @throws \Exception

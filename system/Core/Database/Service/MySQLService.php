@@ -4,6 +4,7 @@
 namespace Core\Database\Service;
 
 use Core\Database\DatabaseService;
+use Core\Database\Engine\MySQLEngine;
 use Core\Database\EngineFactory;
 use Core\Database\Entity;
 
@@ -15,6 +16,13 @@ use Core\Database\Entity;
 class MySQLService extends DatabaseService implements Service
 {
 
+    /** @var int Fetch method (use \PDO::FETCH_* */
+    protected $fetchMethod = \PDO::FETCH_CLASS;
+
+    /** @var null|string Full namespace and class of entity, only when method is FETCH_CLASS */
+    protected $fetchClass = null;
+
+
     public function __construct($engine = null)
     {
         if ($engine === null)
@@ -25,6 +33,9 @@ class MySQLService extends DatabaseService implements Service
         $this->driver = EngineFactory::DRIVER_MYSQL;
 
         parent::__construct($engine);
+
+        /** @var MySQLEngine engine */
+        $this->engine = $engine;
     }
 
     /**
@@ -39,7 +50,18 @@ class MySQLService extends DatabaseService implements Service
      */
     public function create($entity)
     {
-        return $this->engine->select($sql, $bind, \PDO::FETCH_CLASS, '\App\Models\\'.$this->class);
+        $result = $this->engine->insert(PREFIX . $this->table, get_object_vars($entity));
+        if ($result === false) {
+            return false;
+        }
+
+        if (count($this->primaryKeys) == 1) {
+            $entity->{$this->primaryKeys[0]} = $result;
+        }else{
+            // TODO: We can't map this, we don't get multiple primary keys back unfortunately. Solution still needed
+        }
+
+        return $entity;
     }
 
     /**
@@ -51,12 +73,12 @@ class MySQLService extends DatabaseService implements Service
      *
      * @param $sql string
      * @param $bind array
-     * @return false|Entity[]
+     * @return false|Entity[]|object
      * @throws \Exception
      */
     public function read($sql, $bind = array())
     {
-        // TODO: Implement read() method.
+        return $this->engine->select($sql, $bind, $this->fetchMethod, $this->fetchClass);
     }
 
     /**
@@ -67,13 +89,30 @@ class MySQLService extends DatabaseService implements Service
      * For safety it will default limit on 1 row only, you can override it but be warned on this!
      *
      * @param $entity Entity|Entity[]
-     * @param $limit int Limit of changes, may not be effective on every driver! Default 1
+     * @param $limit int Limit of changes, may not be effective on every driver! Default 1. TODO: Will not be used currently
      * @return false|Entity
      * @throws \Exception
      */
     public function update($entity, $limit = 1)
     {
-        // TODO: Implement update() method.
+        $primaryValues = array();
+
+        foreach($this->primaryKeys as $pk) {
+            $primaryValues[$pk] = $entity->{$pk};
+        }
+
+        $result = $this->engine->update(PREFIX . $this->table, get_object_vars($entity), $primaryValues);
+        if ($result === false) {
+            return false;
+        }
+
+        if (count($this->primaryKeys) == 1) {
+            $entity->{$this->primaryKeys[0]} = $result;
+        }else{
+            // TODO: We can't map this, we don't get multiple primary keys back unfortunately. Solution still needed
+        }
+
+        return $entity;
     }
 
     /**
@@ -88,6 +127,6 @@ class MySQLService extends DatabaseService implements Service
      */
     public function delete($entity, $limit = 1)
     {
-        // TODO: Implement delete() method.
+        return $this->engine->delete(PREFIX . $this->table, array($this->primaryKey => $object->{$this->primaryKey}), $limit) !== false;
     }
 }

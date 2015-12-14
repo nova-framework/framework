@@ -17,7 +17,7 @@ abstract class DatabaseService
     /** @var Engine|MySQLEngine database engine we will use. */
     protected $engine;
 
-    /** @var string Table name. */
+    /** @var string Table name. Don't use prefix here! */
     protected $table;
 
     /** @var string[]|array Primary keys. */

@@ -2,6 +2,8 @@
 # Framework specific
 system/Core/Config.php
 .DS_Store
+vendor
+composer.lock
 
 # IDE's
 

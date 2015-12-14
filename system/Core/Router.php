@@ -12,6 +12,7 @@ namespace Core;
 use Core\Route;
 use Helpers\Request;
 use Helpers\Url;
+use Helpers\Inflector;
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -19,6 +20,8 @@ use Helpers\Url;
 class Router
 {
     private static $instance;
+
+    private static $routeGroup = '';
 
     /**
      * Array of routes
@@ -43,13 +46,16 @@ class Router
 
     public static function &getInstance()
     {
-        if (! self::$instance) {
-            $appRouter = APPROUTER;
+        $appRouter = APPROUTER;
 
-            self::$instance = new $appRouter();
+        if (! self::$instance) {
+            $router = new $appRouter();
+        }
+        else {
+            $router =& self::$instance;
         }
 
-        return self::$instance;
+        return $router;
     }
 
     /**
@@ -77,6 +83,24 @@ class Router
         $router->callback($callback);
     }
 
+    /**
+     * Defines a Route Group.
+     *
+     * @param string $group The scope of the current Routes Group
+     * @param callback $callback Callback object called to define the Routes.
+     */
+    public static function group($group, $callback)
+    {
+        // Set the current Routes Group
+        self::$routeGroup = trim($group, '/');
+
+        // Call the Callback, to define the Routes on the current Group.
+        call_user_func($callback);
+
+        // Reset the Routes Group to default (none).
+        self::$routeGroup = '';
+    }
+
     public function callback($callback = null)
     {
         if (is_null($callback)) {
@@ -96,7 +120,7 @@ class Router
     public function addRoute($method, $route, $callback)
     {
         $method = strtoupper($method);
-        $pattern = ltrim($route, '/');
+        $pattern = ltrim(self::$routeGroup.'/'.$route, '/');
 
         $route = new Route($method, $pattern, $callback);
 
@@ -132,9 +156,15 @@ class Router
 
     public function dispatch()
     {
-        // Detect the URI and the HTTP Method.
+        // Detect the current URI.
         $uri = Url::detectUri();
 
+        // First, we will supose that URI is associated with an Asset File.
+        if (Request::isGet() && $this->dispatchFile($uri)) {
+            return true;
+        }
+
+        // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();
 
         foreach ($this->routes as $route) {
@@ -155,4 +185,84 @@ class Router
 
         return false;
     }
+
+    protected function dispatchFile($uri)
+    {
+        // For properly Assets serving, the file URI should be as following:
+        //
+        // /templates/default/assets/css/style.css
+        // /modules/blog/assets/css/style.css
+
+        if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
+            // We need to classify the path name (the Module/Template path).
+            $assetsPath = Inflector::classify($matches[1].'/'.$matches[2].'/Assets/');
+
+            $filePath = realpath(APP.$assetsPath.$matches[3]);
+
+            // Serve the specified Asset File.
+            $this->serveFile($filePath);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function serveFile($filePath)
+    {
+        $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
+
+        $expires = 60 * 60 * 24 * 365; // Cache for one year
+
+        if (! file_exists($filePath)) {
+            header("$httpProtocol 404 Not Found");
+
+            return false;
+        }
+        else if (! is_readable($filePath)) {
+            header("$httpProtocol 403 Forbidden");
+
+            return false;
+        }
+        //
+        // Collect the current file information.
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); // Return mime type ala mimetype extension
+
+        $contentType = finfo_file($finfo, $filePath);
+
+        finfo_close($finfo);
+
+        // There is a bug with finfo_file();
+        // https://bugs.php.net/bug.php?id=53035
+        //
+        // Hard coding the correct mime types for presently needed file extensions
+        switch($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
+            case 'css':
+                $contentType = 'text/css';
+                break;
+            case 'js':
+                $contentType = 'application/javascript';
+                break;
+            default:
+                break;
+        }
+
+        //
+        // Prepare and send the headers with browser-side caching support.
+
+        // Firstly, we finalize the output buffering.
+        if (ob_get_level()) ob_end_clean();
+
+        header("$httpProtocol 200 OK");
+        header('Access-Control-Allow-Origin: *');
+        header('Content-type: ' .$contentType);
+        header('Content-Length: ' .filesize($filePath));
+
+        // Send the current file content.
+        readfile($filePath);
+
+        return true;
+    }
+
 }

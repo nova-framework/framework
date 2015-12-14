@@ -13,7 +13,8 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=5.5.0",
+        "doctrine/inflector": "1.0.*"
     },
     "autoload": {
         "psr-4": {

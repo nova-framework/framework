@@ -91,7 +91,7 @@ class MySQLEngine extends \PDO implements Engine
      * Insert data in table
      * @param  string $table table name
      * @param  array $data  array of columns and values
-     * @return int inserted id
+     * @return int|false inserted id or false on failure
      */
     public function insert($table, $data)
     {
@@ -106,7 +106,9 @@ class MySQLEngine extends \PDO implements Engine
             $stmt->bindValue(":$key", $value);
         }
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            return false;
+        }
         return $this->lastInsertId();
     }
 
@@ -115,7 +117,7 @@ class MySQLEngine extends \PDO implements Engine
      * @param  string $table table name
      * @param  array $data  array of columns and values
      * @param  array $where array of columns and values
-     * @return int Row count
+     * @return int|false Row count or false on failure
      */
     public function update($table, $data, $where)
     {
@@ -149,7 +151,9 @@ class MySQLEngine extends \PDO implements Engine
             $stmt->bindValue(":where_$key", $value);
         }
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            return false;
+        }
         return $stmt->rowCount();
     }
 
@@ -159,7 +163,7 @@ class MySQLEngine extends \PDO implements Engine
      * @param  string $table table name
      * @param  array $where array of columns and values
      * @param  integer   $limit limit number of records
-     * @return int Row count
+     * @return int|false Row count or false on failure
      */
     public function delete($table, $where, $limit = 1)
     {
@@ -188,7 +192,9 @@ class MySQLEngine extends \PDO implements Engine
             $stmt->bindValue(":$key", $value);
         }
 
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            return false;
+        }
         return $stmt->rowCount();
     }
 

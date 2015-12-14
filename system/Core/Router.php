@@ -197,12 +197,7 @@ class Router
             $pathName = str_replace(array('-', '_'), '', ucwords($matches[1].'/'.$matches[2], '-_'));
 
             $filePath = realpath(APP.$pathName.'/Assets/'.$matches[3]);
-        }
-        else {
-            $filePath = '';
-        }
 
-        if(! empty($filePath)) {
             // Serve the specified Asset File.
             $this->serveFile($filePath);
 

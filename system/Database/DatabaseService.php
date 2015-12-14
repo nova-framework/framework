@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Smvc\Core\Database;
-use Smvc\Core\Database\Engine\Engine;
-use Smvc\Core\Database\Engine\MySQLEngine;
+namespace Smvc\Database;
+use Smvc\Database\Engine\Engine;
+use Smvc\Database\Engine\MySQLEngine;
 
 /**
  * Class DatabaseService.

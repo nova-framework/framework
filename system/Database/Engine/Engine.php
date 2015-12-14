@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Smvc\Core\Database\Engine;
+namespace Smvc\Database\Engine;
 
 /**
  * Interface Engine

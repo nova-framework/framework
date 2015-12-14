@@ -18,7 +18,7 @@ abstract class EngineFactory
      *
      * @param $driver string Driver class name (use constants in factory)
      * @param null|array $config Array of configuration
-     * @return null|ENgine
+     * @return null|Engine|\PDO
      */
     public static function getEngine($driver = null, $config = null)
     {

@@ -43,7 +43,7 @@ class Logger
     *
     * @var string
     */
-    public static $errorFile = ROOT.'tmp/logs/error.log';
+    public static $errorFile = null;
 
     /**
     * store errors for output.
@@ -107,6 +107,8 @@ class Logger
     */
     public static function newMessage($exception)
     {
+        self::$errorFile = ROOT.'tmp/logs/error.log';
+
         $message = $exception->getMessage();
         $code = $exception->getCode();
         $file = $exception->getFile();
@@ -157,6 +159,8 @@ class Logger
     */
     public static function errorMessage($error)
     {
+        self::$errorFile = ROOT.'tmp/logs/error.log';
+
         $date = date('Y-m-d G:iA');
         $logMessage = "$date - $error\n\n";
         $systempath = dirname(__DIR__);

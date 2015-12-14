@@ -51,4 +51,149 @@ class MySQLEngine extends \PDO implements Engine
     {
         return $this;
     }
+
+
+    /**
+     * Select from the database
+     *
+     * @param  string $sql       sql query
+     * @param  array  $array     named params
+     * @param  int    $fetchMode Fetch mode (use \PDO::FETCH_*)
+     * @param  string $class     class name for using with \PDO::FETCH_CLASS
+     * @return array            returns an array of records
+     */
+    public function select($sql, $array = array(), $fetchMode = \PDO::FETCH_OBJ, $class = '')
+    {
+        $stmt = $this->prepare($sql);
+        foreach ($array as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue("$key", $value);
+            }
+        }
+
+        $stmt->execute();
+
+        if ($fetchMode === PDO::FETCH_CLASS) {
+            return $stmt->fetchAll($fetchMode, $class);
+        } else {
+            return $stmt->fetchAll($fetchMode);
+        }
+    }
+
+    /**
+     * Insert data in table
+     * @param  string $table table name
+     * @param  array $data  array of columns and values
+     * @return int inserted id
+     */
+    public function insert($table, $data)
+    {
+        ksort($data);
+
+        $fieldNames = implode(',', array_keys($data));
+        $fieldValues = ':'.implode(', :', array_keys($data));
+
+        $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
+
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        $stmt->execute();
+        return $this->lastInsertId();
+    }
+
+    /**
+     * Update data in table
+     * @param  string $table table name
+     * @param  array $data  array of columns and values
+     * @param  array $where array of columns and values
+     * @return int Row count
+     */
+    public function update($table, $data, $where)
+    {
+        ksort($data);
+
+        $fieldDetails = null;
+        foreach ($data as $key => $value) {
+            $fieldDetails .= "$key = :field_$key,";
+        }
+        $fieldDetails = rtrim($fieldDetails, ',');
+
+        $whereDetails = null;
+        $i = 0;
+        foreach ($where as $key => $value) {
+            if ($i == 0) {
+                $whereDetails .= "$key = :where_$key";
+            } else {
+                $whereDetails .= " AND $key = :where_$key";
+            }
+            $i++;
+        }
+        $whereDetails = ltrim($whereDetails, ' AND ');
+
+        $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
+
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":field_$key", $value);
+        }
+
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":where_$key", $value);
+        }
+
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Delete method
+     *
+     * @param  string $table table name
+     * @param  array $where array of columns and values
+     * @param  integer   $limit limit number of records
+     * @return int Row count
+     */
+    public function delete($table, $where, $limit = 1)
+    {
+        ksort($where);
+
+        $whereDetails = null;
+        $i = 0;
+        foreach ($where as $key => $value) {
+            if ($i == 0) {
+                $whereDetails .= "$key = :$key";
+            } else {
+                $whereDetails .= " AND $key = :$key";
+            }
+            $i++;
+        }
+        $whereDetails = ltrim($whereDetails, ' AND ');
+
+        //if limit is a number use a limit on the query
+        if (is_numeric($limit)) {
+            $uselimit = "LIMIT $limit";
+        }
+
+        $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails $uselimit");
+
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Truncate table
+     * @param  string $table table name
+     * @return int number of rows affected
+     */
+    public function truncate($table)
+    {
+        return $this->exec("TRUNCATE TABLE $table");
+    }
 }

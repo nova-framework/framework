@@ -38,37 +38,45 @@ class ClassicRouter extends \Smvc\Core\Router
         // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();
 
+        // The URI used by autoDispatch is, by default, the incoming one.
+        $autoUri = $uri;
+
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method, false)) {
-                // Found a valid Route; invoke the autoDispatch and go out.
+                // Found a valid Route; process its options.
                 $callback = $route->callback();
 
-                if (! is_object($callback)) {
-                    $regex = $route->regex();
-
-                    if (($route->pattern() === '*') || ($route->pattern() === $uri)) {
-                        $autoUri = $uri;
-                    }
-                    else if (! empty($regex) && (strpos($route->pattern(), ':') !== false)) {
-                        $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
-                    }
-                    else {
-                        $autoUri = $callback;
-                    }
-
-                    $this->autoDispatch($autoUri);
-                } else {
+                if (is_object($callback)) {
                     $this->invokeObject($callback, $route->params());
+
+                    return true;
                 }
 
-                return true;
+                $pattern = $route->pattern();
+
+                // Wildcard Route; stop processing.
+                if ($pattern === '*') {
+                    break;
+                }
+
+                // Pattern based Route.
+                $regex = $route->regex();
+
+                if (! empty($regex)) {
+                    $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
+                }
+                else {
+                    $autoUri = $callback;
+                }
+
+                break;
             }
         }
 
         // We arrived there
-        $routeFound = $this->autoDispatch($uri);
+        $result = $this->autoDispatch($autoUri);
 
-        if (!$routeFound) {
+        if (!$result) {
             // No valid Route found; invoke the Error Callback with the current URI as parameter.
             $params = array(
                 htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
@@ -85,7 +93,7 @@ class ClassicRouter extends \Smvc\Core\Router
    /**
      * Ability to call controllers in their module/directory/controller/method/param way.
      */
-    public static function autoDispatch($uri)
+    public function autoDispatch($uri)
     {
         // NOTE: This Auto-Dispatch routing use the styles:
         //

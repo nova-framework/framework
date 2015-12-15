@@ -22,6 +22,14 @@ Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('/admin/(:any)(/(:all))', 'App\Controllers\Demo@test');
 Router::any('database', 'App\Controllers\Demo@database');
 Router::any('(:all)', 'App\Controllers\Demo@catchAll');
+/*
+// Classic Routing
+Router::any('', 'welcome/index');
+Router::any('subpage', 'welcome/subpage');
+Router::any('/admin/(:any)(/(:all))', 'demo/test');
+Router::any('database', 'demo/database');
+Router::any('(:all)', 'demo/catchall');
+*/
 /** End static routes */
 
 /** Module routes. */

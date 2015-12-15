@@ -9,9 +9,9 @@ define('DIR', '/');
  * Set the Application Router.
  */
 // Default Routing
-define('APPROUTER', '\Smvc\Core\Router');
+//define('APPROUTER', '\Smvc\Core\Router');
 // Classic Routing
-//define('APPROUTER', '\App\Core\ClassicRouter');
+define('APPROUTER', '\App\Core\ClassicRouter');
 
 /**
  * Set default controller and method for legacy calls.

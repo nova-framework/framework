@@ -27,9 +27,9 @@ class MySQLService extends DatabaseService implements Service
     {
         if ($engine === null)
         {
-            $engine = EngineFactory::getEngine(EngineFactory::DRIVER_MYSQL);
+            $engine = EngineFactory::getEngine();
         }
-
+        
         $this->driver = EngineFactory::DRIVER_MYSQL;
 
         parent::__construct($engine);

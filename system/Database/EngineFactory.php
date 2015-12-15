@@ -4,6 +4,7 @@
 namespace Smvc\Database;
 
 
+use Smvc\Core\Config;
 use Smvc\Database\Engine\Engine;
 
 abstract class EngineFactory
@@ -16,52 +17,42 @@ abstract class EngineFactory
      * Get instance of the database engine you prefer.
      * Please use the constants in this class as a driver parameter
      *
-     * @param $driver string Driver class name (use constants in factory)
-     * @param null|array $config Array of configuration
+     * @param $connectionName string Name of the connection provided in the configuration
      * @return null|Engine|\PDO
      * @throws \Exception
      */
-    public static function getEngine($driver = null, $config = null)
+    public static function getEngine($connectionName = 'default')
     {
-        // If no driver given, use default
+        $config = Config::get('database');
+        if (!isset($config[$connectionName])) {
+            throw new \Exception("Connection name '".$connectionName."' is not defined in your configuration!");
+        }
+
+        $engineConfig = $config[$connectionName];
+
+        // Make the engine
+        $engineName = $engineConfig['engine'];
+        $driver = constant("static::DRIVER_" . strtoupper($engineName));
         if ($driver === null) {
-            $driver = constant("static::DRIVER_" . strtoupper(DB_TYPE));
-            if ($driver === null) {
-                throw new \Exception("Driver not found, check your config.php, DB_TYPE");
-            }
+            throw new \Exception("Driver not found, check your config.php, DB_TYPE");
         }
 
-        // If no config is given, use the default
-        if ($config === null) {
-            $config = array(
-                'host' => DB_HOST,
-                'database' => DB_NAME,
-                'user' => DB_USER,
-                'password' => DB_PASS,
-                'prefix' => PREFIX
-            );
-        }
-
-        // Config string
-        $configString = $driver . ':' . $config['host'] . ':' . $config['database'] . ':' . $config['user'] . ':'
-            . $config['password'] . ':' . $config['prefix'];
-
-        // Engine
-        if (isset(static::$instances[$configString])) {
-            return static::$instances[$configString];
+        // Engine, when already have an instance, return it!
+        if (isset(static::$instances[$connectionName])) {
+            return static::$instances[$connectionName];
         }
 
         // Make new instance, can throw exceptions!
         $class = '\Smvc\Database\Engine\\' . $driver;
-        $engine = new $class($config);
+        $engine = new $class($engineConfig['config']);
 
         // If no success
         if (!$engine instanceof Engine) {
-            return null;
+            throw new \Exception("Driver creation failed! Check your extended logs for errors.");
         }
 
         // Save instance
-        static::$instances[$configString] = $engine;
+        static::$instances[$connectionName] = $engine;
 
         // Return instance
         return $engine;

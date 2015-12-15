@@ -43,7 +43,7 @@ class MySQLEngine extends \PDO implements Engine
 
     /**
      * Get native connection. Could be \PDO
-     * @return mixed|\PDO
+     * @return \PDO
      */
     public function getConnection()
     {

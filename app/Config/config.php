@@ -20,3 +20,21 @@ Config::set('emailer', array(
     'mailer_smtp_pass'     => '',    // Only when using SMTPAuth
     'mailer_smtp_authtype' => ''     // Options are LOGIN (default), PLAIN, NTLM, CRAM-MD5. Blank when not use SMTPAuth.
 ));
+
+
+/**
+ * Database configurations
+ *
+ * By default, the 'default' connection will be used when no connection name is given to the engine factory.
+ */
+Config::set('database', array(
+    'default' => array(
+        'engine' => 'mysql',
+        'config' => array(
+            'host' => 'localhost',
+            'database' => 'dbname',
+            'user' => 'root',
+            'pass' => 'password'
+        )
+    )
+));

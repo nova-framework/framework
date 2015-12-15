@@ -29,7 +29,7 @@ class Error extends Controller
     /**
      * Load a 404 page with the error message.
      */
-    public function index($error = null)
+    public function error404($error = null)
     {
         $data['title'] = '404';
         $data['error'] = $error;
@@ -37,7 +37,7 @@ class Error extends Controller
         View::addHeader("HTTP/1.0 404 Not Found");
 
         View::renderTemplate('header', $data);
-        View::render('Error/404', $data);
+        View::render('Error/error404', $data);
         View::renderTemplate('footer', $data);
     }
 }

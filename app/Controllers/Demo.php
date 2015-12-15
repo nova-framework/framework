@@ -52,6 +52,10 @@ class Demo extends Controller
 
         // Use it without the Services:
         $engine = EngineFactory::getEngine();
+        $result_plain = $engine->select('SELECT * FROM '.PREFIX.'car');
+        var_dump($result_plain);
+
+        // Using the select and prefix the SELECT in the sql is optional for the MySQL Engine!
         $result_plain = $engine->select('* FROM '.PREFIX.'car');
         var_dump($result_plain);
 

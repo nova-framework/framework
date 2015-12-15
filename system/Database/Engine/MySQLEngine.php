@@ -62,7 +62,10 @@ class MySQLEngine extends \PDO implements Engine
      */
     public function select($sql, $array = array(), $fetchMode = \PDO::FETCH_OBJ, $class = null)
     {
-        $stmt = $this->prepare("SELECT " . $sql);
+        if (strtolower(substr($sql, 0, 7)) !== 'select ') {
+            $sql = "SELECT " . $sql;
+        }
+        $stmt = $this->prepare($sql);
         foreach ($array as $key => $value) {
             if (is_int($value)) {
                 $stmt->bindValue("$key", $value, \PDO::PARAM_INT);

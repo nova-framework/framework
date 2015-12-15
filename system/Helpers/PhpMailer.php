@@ -10,6 +10,7 @@
  */
 
 namespace Smvc\Helpers;
+use Smvc\Core\Config;
 
 
 /**
@@ -23,21 +24,23 @@ class PhpMailer extends \PHPMailer
     {
         parent::__construct();
 
+        $config = Config::get('emailer');
+
         // Set all config in myself
-        $this->CharSet = MAILER_CHARSET;
-        $this->FromName = MAILER_FROM_NAME;
-        $this->From = MAILER_FROM_EMAIL;
-        $this->Mailer = MAILER_MAILER;
+        $this->CharSet = $config['mailer_charset'];
+        $this->FromName = $config['mailer_from_name'];
+        $this->From = $config['mailer_from_email'];
+        $this->Mailer = $config['mailer_mailer'];
 
         if ($this->Mailer === 'smtp')
         {
-            $this->Host = MAILER_SMTP_HOST;
-            $this->Port = MAILER_SMTP_PORT;
-            $this->SMTPSecure = MAILER_SMTP_SECURE;
-            $this->SMTPAuth = MAILER_SMTP_AUTH;
-            $this->Username = MAILER_SMTP_USER;
-            $this->Password = MAILER_SMTP_PASS;
-            $this->AuthType = MAILER_SMTP_AUTHTYPE;
+            $this->Host = $config['mailer_smtp_host'];
+            $this->Port = $config['mailer_smtp_port'];
+            $this->SMTPSecure = $config['mailer_smtp_secure'];
+            $this->SMTPAuth = $config['mailer_smtp_auth'];
+            $this->Username = $config['mailer_smtp_user'];
+            $this->Password = $config['mailer_smtp_pass'];
+            $this->AuthType = $config['mailer_smtp_authtype'];
         }
     }
 }

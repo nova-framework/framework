@@ -48,8 +48,10 @@ class Route
      */
     public function __construct($method, $pattern, $callback)
     {
-        $this->method   = $method;
-        $this->pattern  = $pattern;
+        $this->method = strtoupper($method);
+
+        $this->pattern = ! empty($pattern) ? $pattern : '/';
+
         $this->callback = $callback;
     }
 
@@ -66,12 +68,10 @@ class Route
             return false;
         }
 
-        // Wildcard or exact match.
-        if (($this->pattern === '*') || ($this->pattern === $uri)) {
+        // Exact match Route.
+        if ($this->pattern == $uri) {
             return true;
         }
-
-        $last_char = substr($this->pattern, -1);
 
         // Build the regex for matching.
         if (strpos($this->pattern, ':') !== false) {
@@ -86,15 +86,6 @@ class Route
 
         if ($optionals) {
             $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
-        }
-
-        $regex = str_replace('/*', '(/?|/.*?)', $regex);
-
-        // Fix trailing slash.
-        if ($last_char === '/') {
-            $regex .= '?';
-        } else { // Allow trailing slash.
-            $regex .= '/?';
         }
 
         // Attempt to match the Route and extract the parameters.

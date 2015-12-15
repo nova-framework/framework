@@ -52,16 +52,10 @@ class ClassicRouter extends \Smvc\Core\Router
                     return true;
                 }
 
-                $pattern = $route->pattern();
-
-                // Wildcard Route; stop processing.
-                if ($pattern === '*') {
-                    break;
-                }
-
                 // Pattern based Route.
                 $regex = $route->regex();
 
+                // Wilcard Routes match any Route, while those pattern based should be processed.
                 if (! empty($regex)) {
                     $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
                 }

@@ -28,7 +28,7 @@ Router::any('', '/welcome/index');
 Router::any('subpage', '/welcome/subpage');
 Router::any('/admin/(:any)(/(:all))', '/demo/test/$1/$2');
 Router::any('database', '/demo/database');
-Router::any('(:all)', '/demo/catchall');
+Router::any('(:all)', '/demo/catchall/$1');
 */
 /** End static routes */
 

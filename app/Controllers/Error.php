@@ -19,7 +19,7 @@ use Smvc\Core\View;
 class Error extends Controller
 {
     /**
-     * Constructor
+     * Call the parent construct
      */
     public function __construct()
     {

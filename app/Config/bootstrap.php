@@ -26,3 +26,6 @@ date_default_timezone_set('Europe/Rome');
  * Start sessions.
  */
 Session::init();
+
+/** load routes */
+require dirname(__FILE__).'/routes.php';

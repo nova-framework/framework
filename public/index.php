@@ -5,10 +5,11 @@
 define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
-define('APP', realpath('../app').DS);
-define('SYSTEM', realpath('../system').DS);
 define('PUBLICDIR', realpath('./').DS);
 define('ROOT', realpath('../').DS);
+define('APP', ROOT.'app'.DS);
+define('SYSTEM', ROOT.'system'.DS);
+
 
 /** load composer autoloader */
 if (file_exists(ROOT.'vendor/autoload.php')) {
@@ -18,10 +19,6 @@ if (file_exists(ROOT.'vendor/autoload.php')) {
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
     echo "<p>Once composer is installed navigate to the working directory in your terminal/command promt and enter 'composer install'</p>";
     exit;
-}
-
-if (!is_readable(SYSTEM.'Core/Config.php')) {
-    die('No Config.php found, configure and rename Config.example.php to Config.php in app/Core.');
 }
 
 /*
@@ -67,6 +64,3 @@ if (defined('ENVIRONMENT')) {
 
 /** initiate config */
 require APP.'Config/bootstrap.php';
-
-/** load routes */
-require APP.'Config/routes.php';

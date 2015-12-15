@@ -1,95 +1,146 @@
 <?php
 /**
- * Language - simple language handler.
+ * Language - Language handler.
  *
- * @author Bartek Kuśmierczuk - contact@qsma.pl - http://qsma.pl
- * @version 2.2
- * @date November 18, 2014
- * @date updated Sept 19, 2015
+ * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @version 3.0
+ * @date December 15th, 2015
  */
+
 
 namespace Smvc\Core;
 
+use Smvc\Core\Config;
 use Smvc\Core\Error;
+use Smvc\Helpers\Inflector;
 
 /**
- * Language class to load the requested language file.
+ * Language class to load the requested domain language file.
  */
 class Language
 {
+    private $code   = 'en';
+    private $info   = 'English';
+    private $name   = 'English';
+    private $locale = 'en-US';
+
     /**
      * Variable holds array with language.
      *
      * @var array
      */
-    private $array;
+    private $messages = array();
 
-    /**
-     * Load language function.
-     *
-     * @param string $name
-     * @param string $code
-     */
-    public function load($name, $code = LANGUAGE_CODE)
+    // The domain instances array.
+    private static $instances = array();
+
+
+    public function __construct($domain, $code)
     {
-        /** lang file */
-        $file = SYSTEM."language/$code/$name.php";
+        $languages = Config::get('languages');
 
-        /** check if is readable */
-        if (is_readable($file)) {
-            /** require file */
-            $this->array = include($file);
-        } else {
-            /** display error */
-            echo Error::display("Could not load language file '$code/$name.php'");
-            die;
+        if(isset($code, $languages)) {
+            $info = $languages[$code];
+
+            $this->code = $code;
+
+            $this->info   = $info['info'];
+            $this->name   = $info['name'];
+            $this->locale = $info['locale'];
+        }
+        else {
+            $code = 'en';
+        }
+
+        //
+        $pathName = Inflector::classify($domain);
+
+        $langPath = '';
+
+        if($pathName == 'System') {
+            $langPath = SYSTEM;
+        }
+        else if($pathName == 'App') {
+            $langPath = APP;
+        }
+        else if(is_dir(APP.'Modules'.DS.$pathName)) {
+            $langPath = APP.'Modules/'.$pathName;
+        }
+        else if(is_dir(APP.'Themes'.DS.$pathName)) {
+            $langPath = APP.'Themes/'.$pathName;
+        }
+
+        if(empty($langPath)) {
+            return;
+        }
+
+        $filePath = str_replace('/', DS, $langPath.'/Language/'.$code.'/messages.php');
+
+        // Check if the language file is readable.
+        if(! is_readable($filePath)) {
+            return;
+        }
+
+        // Get the domain messages from the language file.
+        $messages = include($filePath);
+
+        // Final Consistency check.
+        if(is_array($messages) && ! empty($messages)) {
+            $this->messages = $messages;
         }
     }
 
-    /**
-     * Get element from language array by key.
-     *
-     * @param  string $value
-     *
-     * @return string
-     */
-    public function get($value)
+    public static function &get($domain = 'app', $code = LANGUAGE_CODE)
     {
-        if (!empty($this->array[$value])) {
-            return $this->array[$value];
-        } else {
-            return $value;
+        // The ID code is something like: 'en/system', 'en/app', 'en/file_manager' or 'en/template/admin'
+        $id = $code.'/'.$domain;
+
+        // Initialize the domain instance, if not already exists.
+        if(! isset(self::$instances[$id])) {
+            self::$instances[$id] = new self($domain, $code);
         }
+
+        return self::$instances[$id];
     }
 
-    /**
-     * Get lang for views.
-     *
-     * @param  string $value this is "word" value from language file
-     * @param  string $name  name of file with language
-     * @param  string $code  optional, language code
-     *
-     * @return string
-     */
-    public static function show($value, $name, $code = LANGUAGE_CODE)
+    public function translate($message, $params = array())
     {
-        /** lang file */
-        $file = SYSTEM."language/$code/$name.php";
-
-        /** check if is readable */
-        if (is_readable($file)) {
-            /** require file */
-            $array = include($file);
-        } else {
-            /** display error */
-            echo Error::display("Could not load language file '$code/$name.php'");
-            die;
+        // Update the current message with the domain translation, if we have one.
+        if(isset($this->messages[$message]) && ! empty($this->messages[$message])) {
+            $message = $this->messages[$message];
         }
 
-        if (!empty($array[$value])) {
-            return $array[$value];
-        } else {
-            return $value;
+        if(empty($params)) {
+            return $message;
         }
+
+        return \MessageFormatter::formatMessage($this->locale, $message, $params);
     }
+
+    // Public Getters
+    public function code()
+    {
+        return $this->code;
+    }
+
+    public function info()
+    {
+        return $this->info;
+    }
+
+    public function name()
+    {
+        return $this->name;
+    }
+
+    public function locale()
+    {
+        return $this->locale;
+    }
+
+    function messages()
+    {
+        return $this->messages;
+    }
+
 }

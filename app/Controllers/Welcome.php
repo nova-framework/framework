@@ -24,7 +24,6 @@ class Welcome extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->language->load('Welcome');
     }
 
     /**
@@ -32,8 +31,9 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['title'] = $this->language->get('welcome_text');
-        $data['welcome_message'] = $this->language->get('welcome_message');
+        $data['title'] = __('Welcome');
+        $data['welcome_message'] = __('Hello, welcome from the welcome controller! <br/>
+This content can be changed in <code>/app/views/welcome/welcome.php</code>');
 
         View::renderTemplate('header', $data);
         View::render('welcome/welcome', $data);
@@ -45,8 +45,9 @@ class Welcome extends Controller
      */
     public function subPage()
     {
-        $data['title'] = $this->language->get('subpage_text');
-        $data['welcome_message'] = $this->language->get('subpage_message');
+        $data['title'] = __('Subpage');
+        $data['welcome_message'] = __('Hello, welcome from the welcome controller and subpage method! <br/>
+This content can be changed in <code>/app/views/welcome/subpage.php</code>');
 
         View::renderTemplate('header', $data);
         View::render('welcome/subpage', $data);

@@ -35,7 +35,7 @@ class Router
      *
      * @var null $errorCallback
      */
-    private $errorCallback = '\Smvc\Core\Error@index';
+    private $errorCallback = '\App\Controllers\Error@error404';
 
 
     // Constructor

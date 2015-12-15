@@ -38,7 +38,7 @@ $hooks->run('routes');
 /** End Module routes. */
 
 /** If no route found. */
-Router::error('\Smvc\Core\Error@index');
+Router::error('\App\Controllers\Error@error404');
 
 /** Execute matched routes. */
 $router->dispatch();

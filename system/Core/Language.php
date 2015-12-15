@@ -66,8 +66,8 @@ class Language
         else if(is_dir(APP.'Modules'.DS.$pathName)) {
             $langPath = APP.'Modules/'.$pathName;
         }
-        else if(is_dir(APP.'Themes'.DS.$pathName)) {
-            $langPath = APP.'Themes/'.$pathName;
+        else if(is_dir(APP.'Templates'.DS.$pathName)) {
+            $langPath = APP.'Templates/'.$pathName;
         }
 
         if(empty($langPath)) {

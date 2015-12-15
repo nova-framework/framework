@@ -24,7 +24,7 @@ $hooks = Hooks::get();
 	<!-- CSS -->
 	<?php
 	Assets::css(array(
-		'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
+		'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
 		Url::templatePath() . 'css/style.css',
 	));
 

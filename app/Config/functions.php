@@ -1,4 +1,11 @@
 <?php
+/**
+ * Useful functions, application wide accessible.
+ *
+ * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @version 3.0
+ * @date December 15th, 2015
+ */
 
 use Smvc\Core\Language;
 

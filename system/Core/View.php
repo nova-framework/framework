@@ -31,7 +31,7 @@ class View
     {
         self::sendHeaders();
 
-        require APP."views/$path.php";
+        require APP."Views/$path.php";
     }
 
     /**

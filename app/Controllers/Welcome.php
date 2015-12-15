@@ -36,7 +36,7 @@ class Welcome extends Controller
 This content can be changed in <code>/app/views/welcome/welcome.php</code>');
 
         View::renderTemplate('header', $data);
-        View::render('welcome/welcome', $data);
+        View::render('Welcome/welcome', $data);
         View::renderTemplate('footer', $data);
     }
 
@@ -50,7 +50,7 @@ This content can be changed in <code>/app/views/welcome/welcome.php</code>');
 This content can be changed in <code>/app/views/welcome/subpage.php</code>');
 
         View::renderTemplate('header', $data);
-        View::render('welcome/subpage', $data);
+        View::render('Welcome/subpage', $data);
         View::renderTemplate('footer', $data);
     }
 }

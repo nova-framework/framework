@@ -37,7 +37,7 @@ class Error extends Controller
         View::addHeader("HTTP/1.0 404 Not Found");
 
         View::renderTemplate('header', $data);
-        View::render('error/404', $data);
+        View::render('Error/404', $data);
         View::renderTemplate('footer', $data);
     }
 }

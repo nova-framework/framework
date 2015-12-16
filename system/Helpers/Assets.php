@@ -59,12 +59,12 @@ class Assets
             static::resource($files, $type);
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
-                static::resource(URI_PREFIX.$path, $type);
+                static::resource(DIR.$path, $type);
             } else {
                 $source = static::collect($files, $type);
                 $source = JsMin::minify($source);// Minify::js($source);
                 file_put_contents($path, $source);
-                static::resource(URI_PREFIX.$path, $type);
+                static::resource(DIR.$path, $type);
             }
         }
     }
@@ -85,12 +85,12 @@ class Assets
             static::resource($files, $type);
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
-                static::resource(URI_PREFIX.$path, $type);
+                static::resource(DIR.$path, $type);
             } else {
                 $source = static::collect($files, $type);
                 $source = static::compress($source);
                 file_put_contents($path, $source);
-                static::resource(URI_PREFIX.$path, $type);
+                static::resource(DIR.$path, $type);
             }
         }
     }

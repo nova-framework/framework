@@ -19,6 +19,6 @@ class Car extends MySQLService
 
     public function getAll()
     {
-        return $this->read("* FROM " . PREFIX . "car");
+        return $this->read("* FROM " . DB_PREFIX . "car");
     }
 }

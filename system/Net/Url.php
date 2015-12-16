@@ -21,12 +21,12 @@ class Url
      * Redirect to chosen url.
      *
      * @param  string  $url      the url to redirect to
-     * @param  boolean $fullpath if true use only url in redirect instead of using URI_PREFIX
+     * @param  boolean $fullpath if true use only url in redirect instead of using DIR
      */
     public static function redirect($url = null, $fullpath = false)
     {
         if ($fullpath == false) {
-            $url = URI_PREFIX . $url;
+            $url = DIR . $url;
         }
 
         header('Location: '.$url);
@@ -68,7 +68,7 @@ class Url
      */
     public static function templatePath($custom = TEMPLATE)
     {
-        return URI_PREFIX.'templates/'.$custom.'/';
+        return DIR.'templates/'.$custom.'/';
 
     }
 

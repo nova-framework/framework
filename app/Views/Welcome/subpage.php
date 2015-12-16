@@ -13,6 +13,6 @@ use Smvc\Core\Language;
 
 <p><?php echo $data['welcome_message'] ?></p>
 
-<a class="btn btn-md btn-success" href="<?php echo URI_PREFIX;?>">
+<a class="btn btn-md btn-success" href="<?php echo DIR;?>">
 	<?php echo __('Home'); ?>
 </a>

@@ -14,7 +14,7 @@ use Smvc\Language;
 
 function site_url($path = '')
 {
-    return URI_PREFIX .ltrim($path, '/');
+    return DIR .ltrim($path, '/');
 }
 
 //

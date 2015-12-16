@@ -10,7 +10,7 @@
 /**
  * Define relative base path.
  */
-define('URI_PREFIX', '/');
+define('DIR', '/');
 
 /**
  * Set the Application Router.
@@ -39,7 +39,7 @@ define('LANGUAGE_CODE', 'en');
 /**
  * PREFER to be used in database calls default is smvc_
  */
-define('PREFIX', 'smvc_');
+define('DB_PREFIX', 'smvc_');
 
 /**
  * Set prefix for sessions.

@@ -91,8 +91,8 @@ class ClassicRouter extends \Smvc\Net\Router
     {
         // NOTE: This Auto-Dispatch routing use the styles:
         //
-        // <URI_PREFIX><directory><controller><method><params>
-        // <URI_PREFIX><module><directory><controller><method><params>
+        // <DIR><directory><controller><method><params>
+        // <DIR><module><directory><controller><method><params>
 
         $parts = explode('/', trim($uri, '/'));
 
@@ -100,7 +100,7 @@ class ClassicRouter extends \Smvc\Net\Router
         $controller = '';
 
         if (! empty($parts)) {
-            // Classify, to permit: '<URI_PREFIX>/file_manager/admin/' -> '<SMVC>/Modules/FileManager/Admin/
+            // Classify, to permit: '<DIR>/file_manager/admin/' -> '<SMVC>/Modules/FileManager/Admin/
             $controller = Inflector::classify(array_shift($parts));
         }
 
@@ -113,7 +113,7 @@ class ClassicRouter extends \Smvc\Net\Router
             $basePath   = 'Modules/'.$controller.'/Controllers/';
 
             // Go further only if have other URI Parts, to permit URL mappings like:
-            // '<URI_PREFIX>/clients' -> '<SMVC>/app/Modules/Clients/Controllers/Clients.php'
+            // '<DIR>/clients' -> '<SMVC>/app/Modules/Clients/Controllers/Clients.php'
             if (! empty($parts)) {
                 $controller = Inflector::classify(array_shift($parts));
             }

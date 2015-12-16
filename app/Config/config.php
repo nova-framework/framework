@@ -57,7 +57,7 @@ Config::set('database', array(
             'host' => 'localhost',
             'database' => 'dbname',
             'user' => 'root',
-            'pass' => 'password'
+            'password' => 'password'
         )
     )
 ));

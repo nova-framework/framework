@@ -10,7 +10,8 @@
  */
 
 namespace Smvc\Helpers;
-use Smvc\Core\Config;
+
+use Smvc\Config;
 
 
 /**

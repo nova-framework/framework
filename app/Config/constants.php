@@ -16,7 +16,7 @@ define('DIR', '/');
  * Set the Application Router.
  */
 // Default Routing
-define('APPROUTER', '\Smvc\Core\Router');
+define('APPROUTER', '\Smvc\Net\Router');
 // Classic Routing
 //define('APPROUTER', '\App\Core\ClassicRouter');
 

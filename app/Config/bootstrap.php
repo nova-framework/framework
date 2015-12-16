@@ -7,10 +7,10 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Core\Config;
-use Smvc\Core\Router;
 use Smvc\Helpers\Session;
 use Smvc\Modules\Manager as Modules;
+use Smvc\Net\Router;
+use Smvc\Config;
 
 /**
  * Turn on output buffering.
@@ -25,8 +25,8 @@ require dirname(__FILE__).'/config.php';
  * Turn on custom error handling.
  */
 
-set_exception_handler('Smvc\Core\Logger::ExceptionHandler');
-set_error_handler('Smvc\Core\Logger::ErrorHandler');
+set_exception_handler('Smvc\Logger::ExceptionHandler');
+set_error_handler('Smvc\Logger::ErrorHandler');
 
 /**
  * Set timezone.

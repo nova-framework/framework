@@ -6,7 +6,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Smvc\Net;
 
 /**
  * It contains the request information and provide methods to fetch request body.

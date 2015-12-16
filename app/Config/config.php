@@ -7,7 +7,7 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Core\Config;
+use Smvc\Config;
 
 /**
  * Set the Framework's timezone.

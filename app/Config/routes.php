@@ -8,7 +8,7 @@
  */
 
 /** Create alias for Router. */
-use Smvc\Core\Router;
+use Smvc\Net\Router;
 use Smvc\Helpers\Hooks;
 
 /** Define static routes. */

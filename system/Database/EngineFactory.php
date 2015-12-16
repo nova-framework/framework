@@ -4,7 +4,7 @@
 namespace Smvc\Database;
 
 
-use Smvc\Core\Config;
+use Smvc\Config;
 use Smvc\Database\Engine\Engine;
 
 abstract class EngineFactory

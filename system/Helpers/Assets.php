@@ -10,7 +10,7 @@ namespace Smvc\Helpers;
  * @date May 18 2015
  */
 
-use Smvc\Helpers\Url;
+use Smvc\Net\Url;
 use Smvc\Helpers\JsMin;
 
 class Assets

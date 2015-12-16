@@ -8,7 +8,7 @@
  */
 
 
-namespace Smvc\Core;
+namespace Smvc;
 
 
 class Config {

@@ -4,7 +4,7 @@
  */
 
 use Smvc\Helpers\Assets;
-use Smvc\Helpers\Url;
+use Smvc\Net\Url;
 use Smvc\Helpers\Hooks;
 
 //initialise hooks

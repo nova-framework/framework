@@ -31,7 +31,7 @@ class View
     {
         self::sendHeaders();
 
-        require APP."Views".DS.str_replace('/', DS, $path).".php";
+        require APPPATH."Views".DS.str_replace('/', DS, $path).".php";
     }
 
     /**
@@ -45,7 +45,7 @@ class View
     {
         self::sendHeaders();
 
-        require APP."Modules".DS.str_replace('/', DS, $path).".php";
+        require APPPATH."Modules".DS.str_replace('/', DS, $path).".php";
     }
 
     /**
@@ -59,7 +59,7 @@ class View
     {
         self::sendHeaders();
 
-        require PUBLICDIR."templates".DS.$custom.DS.str_replace('/', DS, $path).".php";
+        require WEBPATH."templates".DS.$custom.DS.str_replace('/', DS, $path).".php";
     }
 
     /**

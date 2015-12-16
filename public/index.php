@@ -5,15 +5,16 @@
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
-define('PUBLICDIR', realpath(__DIR__).DS);
-define('ROOT', realpath(dirname(__DIR__)).DS);
-define('APP', ROOT.'app'.DS);
-define('SYSTEM', ROOT.'system'.DS);
+define('BASEPATH', realpath(dirname(__DIR__)).DS);
+// The Application paths.
+define('WEBPATH', realpath(__DIR__).DS);
+define('APPPATH', BASEPATH.'app'.DS);
+define('SYSPATH', BASEPATH.'system'.DS);
 
 
 /** load composer autoloader */
-if (file_exists(ROOT.'vendor'.DS.'autoload.php')) {
-    require ROOT.'vendor'.DS.'autoload.php';
+if (file_exists(BASEPATH.'vendor'.DS.'autoload.php')) {
+    require BASEPATH.'vendor'.DS.'autoload.php';
 } else {
     echo "<h1>Please install via composer.json</h1>";
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
@@ -63,4 +64,4 @@ if (defined('ENVIRONMENT')) {
 }
 
 /** initiate config */
-require APP.'Config'.DS.'bootstrap.php';
+require APPPATH.'Config'.DS.'bootstrap.php';

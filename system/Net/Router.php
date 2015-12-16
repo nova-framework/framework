@@ -224,7 +224,7 @@ class Router
             // We need to classify the path name (the Module/Template path).
             $assetsPath = Inflector::classify($matches[1].'/'.$matches[2].'/Assets/');
 
-            $filePath = realpath(APP.$assetsPath.$matches[3]);
+            $filePath = realpath(APPPATH.$assetsPath.$matches[3]);
 
             // Serve the specified Asset File.
             $this->serveFile($filePath);

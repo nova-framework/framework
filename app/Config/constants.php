@@ -10,7 +10,7 @@
 /**
  * Define relative base path.
  */
-define('DIR', '/');
+define('URI_PREFIX', '/');
 
 /**
  * Set the Application Router.

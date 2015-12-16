@@ -10,6 +10,8 @@
 
 namespace Smvc\Helpers;
 
+use Smvc\Core\Config;
+
 use PDO;
 
 /**
@@ -32,13 +34,17 @@ class Database extends PDO
      */
     public static function get($group = false)
     {
+        $config = Config::get('database');
+
+        $config = $config['default'];
+
         // Determining if exists or it's not empty, then use default group defined in config
         $group = !$group ? array (
-            'type' => DB_TYPE,
-            'host' => DB_HOST,
-            'name' => DB_NAME,
-            'user' => DB_USER,
-            'pass' => DB_PASS
+            'type' => $config['engine'],             // old DB_TYPE
+            'host' => $config['config']['host'],     // old DB_HOST
+            'name' => $config['config']['database'], // old DB_NAME
+            'user' => $config['config']['user'],     // old DB_USER
+            'pass' => $config['config']['password'], // old DB_PASS
         ) : $group;
 
         // Group information

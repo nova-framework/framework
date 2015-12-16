@@ -49,9 +49,9 @@ define('SESSION_PREFIX', 'smvc_');
 /**
  * Optional create a constant for the name of the site.
  */
-define('SITETITLE', 'V3.0');
+define('SITE_TITLE', 'V3.0');
 
 /**
  * Optional set a site email address.
  */
-// define('SITEEMAIL', 'email@domain.com');
+// define('SITE_EMAIL', 'email@domain.com');

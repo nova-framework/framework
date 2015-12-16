@@ -145,25 +145,13 @@ class ClassicRouter extends \Smvc\Core\Router
         // Get the normalized Method
         $method = !empty($parts) ? array_shift($parts) : DEFAULT_METHOD;
 
-        // Get the Controller's className.
+        // Get the Controller's class name.
         $controller = str_replace(array('//', '/'), '\\', 'App/'.$basePath.$directory.$controller);
 
-        // Controller's Methods starting with '_' are not allowed also to be called on Router.
-        if (($method[0] === '_') || !class_exists($controller)) {
-            return false;
-        }
+        // Get the parameters, if any.
+        $params = !empty($parts) ? $parts : array();
 
-        // Initialize the Controller
-        $controller = new $controller();
-
-        // Check for a valid public Controller's Method.
-        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
-            return false;
-        }
-
-        // Execute the current Controller's Method with the given arguments.
-        call_user_func_array(array($controller, $method), !empty($parts) ? $parts : array());
-
-        return true;
+        // Invoke the Controller's Method with the given arguments.
+        return $this->invokeController($controller, $method, $params);
     }
 }

@@ -128,6 +128,34 @@ class Router
     }
 
     /**
+     * Invoke the Controller's Method with its associated parameters.
+     *
+     * @param  string $controller to be instantiated
+     * @param  string $method method to be invoked
+     * @param  array  $params parameters passed to method
+     */
+    protected function invokeController($controller, $method, $params)
+    {
+        // Check first if the Controller exists.
+        if (!class_exists($controller)) {
+            return false;
+        }
+
+        // Initialize the Controller.
+        $controller = new $controller();
+
+        // Controller's Methods starting with '_' are not allowed also to be called on the Router.
+        if (($method[0] === '_') || ! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
+            return false;
+        }
+
+        // Execute the Controller's Method with the given arguments.
+        call_user_func_array(array($controller, $method), $params);
+
+        return true;
+    }
+
+    /**
      * Invoke the callback with its associated parameters.
      *
      * @param  object $callback
@@ -138,7 +166,9 @@ class Router
     {
         if (is_object($callback)) {
             // Call the Closure.
-            return call_user_func_array($callback, $params);
+            call_user_func_array($callback, $params);
+
+            return true;
         }
 
         // Call the object Controller and its Method.
@@ -147,11 +177,8 @@ class Router
         $controller = $segments[0];
         $method     = $segments[1];
 
-        // Initialize the Controller
-        $controller = new $controller();
-
-        // Execute the Controller's Method with the given arguments.
-        return call_user_func_array(array($controller, $method), $params);
+        // Invoke the Controller's Method with the given arguments.
+        return $this->invokeController($controller, $method, $params);
     }
 
     public function dispatch()

@@ -105,7 +105,7 @@ class ClassicRouter extends \Smvc\Net\Router
         }
 
         // Verify if the first URI part match a Module.
-        $testPath = SMVC.'Modules/'.$controller;
+        $testPath = SMVC.'Modules'.DS.$controller;
 
         if (! empty($controller) && is_dir($testPath)) {
             // Walking in a Module path.
@@ -126,10 +126,10 @@ class ClassicRouter extends \Smvc\Net\Router
         $directory = '';
 
         while (! empty($parts)) {
-            $testPath = SMVC.$basePath.$directory.$controller;
+            $testPath = SMVC.str_replace('/', DS, $basePath.$directory.$controller);
 
             if (! is_readable($testPath .'.php') && is_dir($testPath)) {
-                $directory .= $controller .'/';
+                $directory .= $controller .DS;
                 $controller = Inflector::classify(array_shift($parts));
 
                 continue;

@@ -1,7 +1,7 @@
 <?php
 
-
 namespace Smvc\Database;
+
 use Smvc\Database\Engine\Engine;
 use Smvc\Database\Engine\MySQLEngine;
 

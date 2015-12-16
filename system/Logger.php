@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Core;
+namespace Smvc;
 
 use Smvc\Helpers\PhpMailer as Mailer;
 
@@ -114,7 +114,7 @@ class Logger
         $trace = $exception->getTraceAsString();
         $trace = str_replace(DB_PASS, '********', $trace);
         $date = date('M d, Y G:iA');
-        $rootpath = dirname(dirname(__DIR__));
+        $rootpath = dirname(__DIR__);
 
         $logMessage = "Exception information:\n
            Date: {$date}\n
@@ -159,7 +159,7 @@ class Logger
     {
         $date = date('Y-m-d G:iA');
         $logMessage = "$date - $error\n\n";
-        $rootpath = dirname(dirname(__DIR__));
+        $rootpath = dirname(__DIR__);
 
         if (is_file($rootpath.self::$errorFile) === false) {
             file_put_contents($rootpath.self::$errorFile, '');
@@ -191,12 +191,12 @@ class Logger
     {
         if (self::$emailError == true) {
             $mail = new Mailer();
-            
+
             $mail->setFrom(SITEEMAIL);
             $mail->addAddress(SITEEMAIL);
             $mail->subject('New error on '.SITETITLE);
             $mail->body($message);
-            
+
             $mail->send();
         }
     }

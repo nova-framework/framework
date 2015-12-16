@@ -7,26 +7,26 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Core\Config;
-use Smvc\Core\Router;
 use Smvc\Helpers\Session;
 use Smvc\Modules\Manager as Modules;
+use Smvc\Net\Router;
+use Smvc\Config;
 
 /**
  * Turn on output buffering.
  */
 ob_start();
 
-require dirname(__FILE__).'/constants.php';
-require dirname(__FILE__).'/functions.php';
-require dirname(__FILE__).'/config.php';
+require dirname(__FILE__).DS.'constants.php';
+require dirname(__FILE__).DS.'functions.php';
+require dirname(__FILE__).DS.'config.php';
 
 /**
  * Turn on custom error handling.
  */
 
-set_exception_handler('Smvc\Core\Logger::ExceptionHandler');
-set_error_handler('Smvc\Core\Logger::ErrorHandler');
+set_exception_handler('Smvc\Logger::ExceptionHandler');
+set_error_handler('Smvc\Logger::ErrorHandler');
 
 /**
  * Set timezone.
@@ -42,7 +42,7 @@ Session::init();
 $router = Router::getInstance();
 
 /** load routes */
-require dirname(__FILE__).'/routes.php';
+require dirname(__FILE__).DS.'routes.php';
 
 /** bootstrap the active modules (and their associated routes) */
 Modules::bootstrap();

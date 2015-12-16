@@ -9,7 +9,7 @@
 
 namespace Smvc\Modules;
 
-use Smvc\Core\Config;
+use Smvc\Config;
 
 
 class Manager

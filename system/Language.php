@@ -8,11 +8,11 @@
  */
 
 
-namespace Smvc\Core;
+namespace Smvc;
 
-use Smvc\Core\Config;
-use Smvc\Core\Error;
 use Smvc\Helpers\Inflector;
+use Smvc\Config;
+use Smvc\Error;
 
 /**
  * Language class to load the requested domain language file.

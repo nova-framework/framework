@@ -7,7 +7,7 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Core\Language;
+use Smvc\Language;
 
 
 // A very useful URL helper.

@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Core;
+namespace Smvc;
 
 /**
  * Error class to generate 404 pages.

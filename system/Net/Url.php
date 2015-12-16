@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Smvc\Net;
 
 use Smvc\Helpers\Session;
 

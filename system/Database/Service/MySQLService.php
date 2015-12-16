@@ -29,7 +29,7 @@ class MySQLService extends DatabaseService implements Service
         {
             $engine = EngineFactory::getEngine();
         }
-        
+
         $this->driver = EngineFactory::DRIVER_MYSQL;
 
         parent::__construct($engine);
@@ -50,7 +50,7 @@ class MySQLService extends DatabaseService implements Service
      */
     public function create($entity)
     {
-        $result = $this->engine->insert(PREFIX . $this->table, get_object_vars($entity));
+        $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($entity));
         if ($result === false) {
             return false;
         }
@@ -101,7 +101,7 @@ class MySQLService extends DatabaseService implements Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        $result = $this->engine->update(PREFIX . $this->table, get_object_vars($entity), $primaryValues);
+        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues);
         if ($result === false) {
             return false;
         }
@@ -133,6 +133,6 @@ class MySQLService extends DatabaseService implements Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        return $this->engine->delete(PREFIX . $this->table, $primaryValues, $limit) !== false;
+        return $this->engine->delete(DB_PREFIX . $this->table, $primaryValues, $limit) !== false;
     }
 }

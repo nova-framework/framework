@@ -58,16 +58,16 @@ class Language
         $langPath = '';
 
         if($pathName == 'System') {
-            $langPath = SYSTEM;
+            $langPath = SYSPATH;
         }
         else if($pathName == 'App') {
-            $langPath = APP;
+            $langPath = APPPATH;
         }
-        else if(is_dir(APP.'Modules'.DS.$pathName)) {
-            $langPath = APP.'Modules/'.$pathName;
+        else if(is_dir(APPPATH.'Modules'.DS.$pathName)) {
+            $langPath = APPPATH.'Modules/'.$pathName;
         }
-        else if(is_dir(APP.'Templates'.DS.$pathName)) {
-            $langPath = APP.'Templates/'.$pathName;
+        else if(is_dir(APPPATH.'Templates'.DS.$pathName)) {
+            $langPath = APPPATH.'Templates/'.$pathName;
         }
 
         if(empty($langPath)) {

@@ -39,7 +39,7 @@ define('LANGUAGE_CODE', 'en');
 /**
  * PREFER to be used in database calls default is smvc_
  */
-define('PREFIX', 'smvc_');
+define('DB_PREFIX', 'smvc_');
 
 /**
  * Set prefix for sessions.

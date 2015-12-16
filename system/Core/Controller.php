@@ -11,7 +11,6 @@
 namespace Smvc\Core;
 
 use Smvc\Core\View;
-use Smvc\Core\Language;
 
 /**
  * Core controller, all other controllers extend this base controller.

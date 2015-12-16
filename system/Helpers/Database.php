@@ -36,15 +36,16 @@ class Database extends PDO
     {
         $config = Config::get('database');
 
-        $config = $config['default'];
+        $options = $config['default'];
+        $config  = $options['config'];
 
         // Determining if exists or it's not empty, then use default group defined in config
         $group = !$group ? array (
-            'type' => $config['engine'],             // old DB_TYPE
-            'host' => $config['config']['host'],     // old DB_HOST
-            'name' => $config['config']['database'], // old DB_NAME
-            'user' => $config['config']['user'],     // old DB_USER
-            'pass' => $config['config']['password'], // old DB_PASS
+            'type' => $options['engine'],  // old DB_TYPE
+            'host' => $config['host'],     // old DB_HOST
+            'name' => $config['database'], // old DB_NAME
+            'user' => $config['user'],     // old DB_USER
+            'pass' => $config['password'], // old DB_PASS
         ) : $group;
 
         // Group information

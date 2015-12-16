@@ -11,9 +11,6 @@
 use Smvc\Core\Router;
 use Smvc\Helpers\Hooks;
 
-/** Get the Router instance. */
-$router = Router::getInstance();
-
 /** Define static routes. */
 
 // Default Routing
@@ -40,5 +37,3 @@ $hooks->run('routes');
 /** If no route found. */
 Router::error('\App\Controllers\Error@error404');
 
-/** Execute matched routes. */
-$router->dispatch();

@@ -10,6 +10,11 @@
 use Smvc\Core\Config;
 
 /**
+ * Set the Framework's timezone.
+ */
+Config::set('timezone', 'Europe/Rome');
+
+/**
  * All known Languages
  */
 Config::set('languages', array(
@@ -60,4 +65,12 @@ Config::set('database', array(
             'password' => 'password'
         )
     )
+));
+
+/**
+ * Active Modules
+ */
+Config::set('modules', array(
+    //'Blog',
+    //'Page'
 ));

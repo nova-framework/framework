@@ -2,7 +2,7 @@
 
 // Who invented the alias DIRECTORY_SEPARATOR for '/' probably is a Spanish called:
 // Juan-Carlos Julio Mario Emanuel Carmen-Garcias Martinez de Santa-Maria della Fè.
-define('DS', DIRECTORY_SEPARATOR);
+defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
 define('PUBLICDIR', realpath(__DIR__).DS);

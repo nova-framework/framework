@@ -7,8 +7,9 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Helpers\Session;
+use Smvc\Core\Config;
 use Smvc\Core\Router;
+use Smvc\Helpers\Session;
 use Smvc\Modules\Manager as Modules;
 
 /**
@@ -30,7 +31,7 @@ set_error_handler('Smvc\Core\Logger::ErrorHandler');
 /**
  * Set timezone.
  */
-date_default_timezone_set('Europe/Rome');
+date_default_timezone_set(Config::get('timezone'));
 
 /**
  * Start sessions.

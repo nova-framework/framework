@@ -61,3 +61,10 @@ Config::set('database', array(
         )
     )
 ));
+
+/**
+ * Active Modules
+ */
+Config::set('modules', array(
+
+));

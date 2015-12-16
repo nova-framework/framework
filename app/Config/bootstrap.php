@@ -8,6 +8,8 @@
  */
 
 use Smvc\Helpers\Session;
+use Smvc\Core\Router;
+use Smvc\Modules\Manager as Modules;
 
 /**
  * Turn on output buffering.
@@ -35,5 +37,14 @@ date_default_timezone_set('Europe/Rome');
  */
 Session::init();
 
+/** Get the Router instance. */
+$router = Router::getInstance();
+
 /** load routes */
 require dirname(__FILE__).'/routes.php';
+
+/** bootstrap the active modules (and their associated routes) */
+Modules::boostrap();
+
+/** Execute matched routes. */
+$router->dispatch();

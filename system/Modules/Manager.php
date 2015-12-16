@@ -33,7 +33,7 @@ class Manager
                 continue;
             }
 
-            include $filePath;
+            require $filePath;
         }
     }
 }

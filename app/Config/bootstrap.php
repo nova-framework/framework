@@ -44,7 +44,7 @@ $router = Router::getInstance();
 require dirname(__FILE__).'/routes.php';
 
 /** bootstrap the active modules (and their associated routes) */
-Modules::boostrap();
+Modules::bootstrap();
 
 /** Execute matched routes. */
 $router->dispatch();

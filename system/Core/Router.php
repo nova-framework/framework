@@ -130,9 +130,9 @@ class Router
     /**
      * Invoke the Controller's Method with its associated parameters.
      *
-     * @param  string $controller
-     * @param  string $method
-     * @param  array  $params array of matched parameters
+     * @param  string $controller to be instantiated
+     * @param  string $method method to be invoked
+     * @param  array  $params parameters passed to method
      */
     protected function invokeController($controller, $method, $params)
     {

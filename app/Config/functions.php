@@ -8,7 +8,15 @@
  */
 
 use Smvc\Language;
+use Smvc\Core\Controller;
 
+
+// Return the current Controller instance.
+
+function &get_instance()
+{
+    return Controller::getInstance();
+}
 
 // A very useful URL helper.
 

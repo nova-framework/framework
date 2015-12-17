@@ -134,25 +134,39 @@ class Router
      * @param  string $method method to be invoked
      * @param  array  $params parameters passed to method
      */
-    protected function invokeController($controller, $method, $params)
+    protected function invokeController($className, $method, $params)
     {
+        // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
+        switch($method) {
+            case 'beforeFlight':
+            case 'afterFlight':
+                return false;
+
+            default:
+                if ($method[0] === '_') {
+                    return false;
+                }
+
+                break;
+        }
+
         // Check first if the Controller exists.
-        if (!class_exists($controller)) {
+        if (!class_exists($className)) {
             return false;
         }
 
         // Initialize the Controller.
-        $controller = new $controller();
+        $controller = new $className();
 
-        // Controller's Methods starting with '_' are not allowed also to be called on the Router.
-        if (($method[0] === '_') || ! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
+        // The called Method should be defined in the called Controller, not in one of its parents.
+        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
             return false;
         }
 
-        // Execute the Controller's Method with the given arguments.
-        call_user_func_array(array($controller, $method), $params);
+        $controller->initialize($className, $method, $params);
 
-        return true;
+        // Execute the Controller's Method with the given arguments.
+        return $controller->execute($method, $params);
     }
 
     /**

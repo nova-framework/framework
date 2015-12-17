@@ -15,10 +15,22 @@ namespace Smvc\Core;
  */
 class View
 {
+    private static $legacyPath = false;
+
     /**
      * @var array Array of HTTP headers
      */
     private static $headers = array();
+
+    /**
+     * Enable/disable the legacy View Path style.
+     *
+     * * @param  bool $enable flag value
+     */
+    public static function legacyPath($enable)
+    {
+        self::$legacyPath = $enable;
+    }
 
     /**
      * Include template file.
@@ -29,9 +41,19 @@ class View
      */
     public static function render($path, $data = false, $error = false)
     {
+        if(self::$legacyPath) {
+            $viewPath = APPPATH."Views".DS;
+        }
+        else {
+            // Get the Controller instance.
+            $instance =& get_instance();
+
+            $viewPath = $instance->viewsPath();
+        }
+
         self::sendHeaders();
 
-        require APPPATH."Views".DS.str_replace('/', DS, $path).".php";
+        require $viewPath.str_replace('/', DS, $path).".php";
     }
 
     /**

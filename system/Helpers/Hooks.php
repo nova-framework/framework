@@ -37,9 +37,8 @@ class Hooks
     /**
      * Initial hooks.
      *
-     * @param  integer $id
-     *
-     * @return $instance
+     * @param integer $id
+     * @return Hooks $instance
      */
     public static function get($id = 0)
     {
@@ -118,11 +117,12 @@ class Hooks
      *
      * @param string $where hook to use
      * @param string $function function to attach to hook
+     * @throws \Exception
      */
     public static function addHook($where, $function)
     {
         if (!isset(self::$hooks[$where])) {
-            die("There is no such place ($where) for hooks.");
+            throw new \Exception("There is no place with the name '$where' in the hook helper!");
         } else {
             $theseHooks = explode('|', self::$hooks[$where]);
             $theseHooks[] = $function;
@@ -138,6 +138,7 @@ class Hooks
      * @param  string $args option arguments
      *
      * @return object - returns the called function
+     * @throws \Exception
      */
     public function run($where, $args = '')
     {
@@ -168,7 +169,7 @@ class Hooks
 
             return $result;
         } else {
-            die("There is no such place ($where) for hooks.");
+            throw new \Exception("There is no place with the name '$where' in the hook helper!");
         }
     }
 

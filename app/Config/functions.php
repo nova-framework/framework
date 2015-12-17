@@ -8,7 +8,25 @@
  */
 
 use Smvc\Language;
+use Smvc\Core\Controller;
 
+
+// Return the current Controller instance.
+
+function &get_instance()
+{
+    return Controller::getInstance();
+}
+
+// String helpers.
+
+function str_starts_with($haystack, $needle) {
+    return (($needle === '') || (strpos($haystack, $needle) === 0));
+}
+
+function str_ends_with($haystack, $needle) {
+    return (($needle === '') || (substr($haystack, - strlen($needle)) === $needle));
+}
 
 // A very useful URL helper.
 

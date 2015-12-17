@@ -3,8 +3,6 @@
  * Sample layout
  */
 
-use Smvc\Core\Language;
-
 ?>
 
 <div class="page-header">

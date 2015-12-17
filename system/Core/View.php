@@ -58,15 +58,7 @@ class View
 
     public static function layout($layout = null, $view = null)
     {
-        // Get the Controller instance.
-        $instance =& get_instance();
-
-        $layout = $layout ? $layout : $instance->layout();
-
-        $filePath = self::getTemplatePath();
-
-        // Adjust the filePath for Layouts
-        $filePath = realpath($filePath.'Layouts'.DS.$layout.'.php');
+        $filePath = self::getLayoutPath($layout);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException("File not found for the Layout: " .$layout);
@@ -158,16 +150,6 @@ class View
         return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 
-    private static function getTemplatePath()
-    {
-        // Get the Controller instance.
-        $instance =& get_instance();
-
-        $template = $instance->template();
-
-        return APPPATH.'Templates'.DS.$template.DS;
-    }
-
     private static function getViewPath($path)
     {
         if ($path[0] === '/') {
@@ -181,6 +163,29 @@ class View
         }
 
         return realpath($viewPath.$path.'.php');
+    }
+    
+    private static function getTemplatePath()
+    {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        $template = $instance->template();
+
+        return APPPATH.'Templates'.DS.$template.DS;
+    }
+
+    private static function getLayoutPath($layout = null)
+    {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        $layout = $layout ? $layout : $instance->layout();
+
+        $filePath = self::getTemplatePath();
+
+        // Adjust the filePath for Layouts
+        return realpath($filePath.'Layouts'.DS.$layout.'.php');
     }
 
     private static function getFragmentPath($fragment, $fromTpl = true)

@@ -26,7 +26,7 @@ class ThemedDemo extends ThemedController
     }
 
     /**
-     * Define Index page title and message, then create and return the View
+     * Define Index page title and message, then create and return the View instance
      */
     public function index()
     {
@@ -39,7 +39,7 @@ This content can be changed in <code>/app/views/welcome/welcome.php</code>');
     }
 
     /**
-     * Define Subpage page title and message, then create and return the View
+     * Define Subpage page title and message, then create and return the View instance
      */
     public function subPage()
     {

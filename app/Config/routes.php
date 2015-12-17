@@ -18,6 +18,10 @@ Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('admin/(:any)(/(:all))', 'App\Controllers\Demo@test');
 Router::any('database', 'App\Controllers\Demo@database');
+
+Router::any('themed/welcome', 'App\Controllers\ThemedDemo@index');
+Router::any('themed/subpage', 'App\Controllers\ThemedDemo@subPage');
+
 Router::any('(:all)', 'App\Controllers\Demo@catchAll');
 /*
 // Classic Routing

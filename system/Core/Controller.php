@@ -1,12 +1,12 @@
 <?php
 /**
- * Controller - base controller
+ * Router - routing urls to closures and controllers.
  *
- * @author David Carr - dave@daveismyname.com
- * @version 2.2
- * @date June 27, 2014
- * @date updated Sept 19, 2015
+ * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @version 3.0
+ * @date December 17th, 2015
  */
+
 
 namespace Smvc\Core;
 
@@ -31,8 +31,9 @@ abstract class Controller
     protected $className;
     protected $viewsPath;
 
-    // Execute the auto-rendering phase.
-    private $autoRender = true;
+    // Theming support.
+    protected $template = 'Default';
+    protected $layout   = 'default';
 
     /**
      * Constructor
@@ -45,15 +46,6 @@ abstract class Controller
     public static function &getInstance()
     {
         return self::$instance;
-    }
-
-    public function autoRender($value = null)
-    {
-        if(is_null($value)) {
-            return $this->autoRender;
-        }
-
-        $this->autoRender = $value;
     }
 
     public function initialize($className, $method, $params)
@@ -109,23 +101,28 @@ abstract class Controller
             return true;
         }
 
-        if(is_null($result) || is_bool($result) || ! $this->autoRender) {
-            // No auto-rendering wanted; finish the Flight.
+        if($result instanceof View) {
+            $result->display();
+
             return true;
         }
 
-        if(is_string($result)) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8');
+        if(is_null($result) || is_bool($result)) {
+            // No auto-rendering wanted; stop the Flight.
+            return true;
         }
-        else if(is_array($result)) {
+
+        if(is_array($result)) {
             View::addHeader('Content-Type: application/json');
 
             $result = json_encode($result);
         }
-        else if($result instanceof View) {
-            // TBD
-
-            return true;
+        else if(is_string($result)) {
+            View::addHeader('Content-Type: text/html; charset=UTF-8');
+        }
+        else if(is_integer($result)) {
+            // Just to see '0' on webpage and nothing more.
+            $result = sprintf('%d', $result);
         }
 
         View::sendHeaders();
@@ -133,7 +130,6 @@ abstract class Controller
         echo $result;
 
         return true;
-
     }
 
     // Some getters.
@@ -156,6 +152,16 @@ abstract class Controller
     public function viewsPath()
     {
         return $this->viewsPath;
+    }
+
+    public function template()
+    {
+        return $this->template;
+    }
+
+    public function layout()
+    {
+        return $this->layout;
     }
 
 }

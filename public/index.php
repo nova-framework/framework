@@ -1,32 +1,25 @@
 <?php
-/**
- * SimpleMVC specifed directory default is '.'
- * If app folder is not in the same directory update it's path
- */
-$smvc = '../app/';
-$system = '../system/';
-$root = '../';
+
+// Who invented the alias DIRECTORY_SEPARATOR for '/' probably is a Spanish called:
+// Juan-Carlos Julio Mario Emanuel Carmen-Garcias Martinez de Santa-Maria della Fè.
+defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
-define('SMVC', realpath($smvc).DIRECTORY_SEPARATOR);
-define('SYSTEM', realpath($system).DIRECTORY_SEPARATOR);
+define('BASEPATH', realpath(dirname(__DIR__)).DS);
+// The Application paths.
+define('WEBPATH', realpath(__DIR__).DS);
+define('APPPATH', BASEPATH.'app'.DS);
+define('SYSPATH', BASEPATH.'system'.DS);
 
-/** Unset non used variables */
-unset($smvc);
-unset($system);
 
 /** load composer autoloader */
-if (file_exists($root.'vendor/autoload.php')) {
-    require $root.'vendor/autoload.php';
+if (file_exists(BASEPATH.'vendor'.DS.'autoload.php')) {
+    require BASEPATH.'vendor'.DS.'autoload.php';
 } else {
     echo "<h1>Please install via composer.json</h1>";
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
     echo "<p>Once composer is installed navigate to the working directory in your terminal/command promt and enter 'composer install'</p>";
     exit;
-}
-
-if (!is_readable(SYSTEM.'/Core/Config.php')) {
-    die('No Config.php found, configure and rename Config.example.php to Config.php in app/Core.');
 }
 
 /*
@@ -71,7 +64,4 @@ if (defined('ENVIRONMENT')) {
 }
 
 /** initiate config */
-new \Core\Config();
-
-/** load routes */
-require SYSTEM.'Core/routes.php';
+require APPPATH.'Config'.DS.'bootstrap.php';

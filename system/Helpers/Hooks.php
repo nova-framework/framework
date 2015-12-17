@@ -7,7 +7,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
 /**
  * Hooks allow code to be injected into various parts of the framework.
@@ -59,7 +59,7 @@ class Hooks
         ));
 
         //load modules
-        self::loadPlugins(SMVC.'Modules/');
+        self::loadPlugins(APPPATH.'Modules/');
         $instance = new self();
         self::$instances[$id] = $instance;
         return $instance;
@@ -101,7 +101,7 @@ class Hooks
             while ($file = readdir($handle)) {
                 if (is_file($fromFolder.$file)) {
                     //only load modulename.module.php file
-                    if(preg_match('@module.php@', $file)) {
+                    if (preg_match('@module.php@', $file)) {
                         require_once $fromFolder . $file;
                     }
                     self::$plugins [$file] ['file'] = $file;

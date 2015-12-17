@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Core;
+namespace Smvc\Core;
 
 /**
  * View class to load template and views files.
@@ -31,7 +31,7 @@ class View
     {
         self::sendHeaders();
 
-        require SMVC."views/$path.php";
+        require APPPATH."Views".DS.str_replace('/', DS, $path).".php";
     }
 
     /**
@@ -45,7 +45,7 @@ class View
     {
         self::sendHeaders();
 
-        require SMVC."Modules/$path.php";
+        require APPPATH."Modules".DS.str_replace('/', DS, $path).".php";
     }
 
     /**
@@ -59,7 +59,7 @@ class View
     {
         self::sendHeaders();
 
-        require $_SERVER['DOCUMENT_ROOT']."/".DIR."templates/$custom/$path.php";
+        require WEBPATH."templates".DS.$custom.DS.str_replace('/', DS, $path).".php";
     }
 
     /**

@@ -1,2 +1,11 @@
-system/Core/Config.php
+
+# Framework specific
 .DS_Store
+vendor
+composer.lock
+
+# IDE's
+
+## IntelliJ IDEA / PhpStorm
+.idea
+*.iml

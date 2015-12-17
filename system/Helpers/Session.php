@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
 /**
  * Prefix sessions with useful methods.
@@ -142,7 +142,7 @@ class Session
                 session_destroy();
             } elseif ($prefix == true) {
                 /** clear all session for set SESSION_PREFIX */
-                foreach($_SESSION as $key => $value) {
+                foreach ($_SESSION as $key => $value) {
                     if (strpos($key, SESSION_PREFIX) === 0) {
                         unset($_SESSION[$key]);
                     }

@@ -1,5 +1,5 @@
 <?php
-namespace Helpers;
+namespace Smvc\Helpers;
 
 /**
  * Assets static helper
@@ -10,8 +10,8 @@ namespace Helpers;
  * @date May 18 2015
  */
 
-use Helpers\Url;
-use Helpers\JsMin;
+use Smvc\Net\Url;
+use Smvc\Helpers\JsMin;
 
 class Assets
 {
@@ -99,9 +99,9 @@ class Assets
     {
         $content = null;
         if (is_array($files)) {
-            foreach($files as $file) {
-                if(!empty($file)){
-                       if(strpos(basename($file),'.min.')===false && $type == 'css') { //compress files that aren't minified
+            foreach ($files as $file) {
+                if (!empty($file)) {
+                    if (strpos(basename($file), '.min.') === false && $type == 'css') { //compress files that aren't minified
                         $content.= static::compress(file_get_contents($file));
                     } else {
                         $content.= file_get_contents($file);
@@ -109,8 +109,8 @@ class Assets
                 }
             }
         } else {
-            if(!empty($files)){
-                   if(strpos(basename($files),'.min.')===false && $type == 'css') { //compress files that aren't minified
+            if (!empty($files)) {
+                if (strpos(basename($files), '.min.') === false && $type == 'css') { //compress files that aren't minified
                     $content.= static::compress(file_get_contents($files));
                 } else {
                     $content.= file_get_contents($files);

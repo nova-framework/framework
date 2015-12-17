@@ -7,7 +7,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
 /**
  * Split records into multiple pages.
@@ -259,5 +259,4 @@ class Paginator
 
         return $pagination;
     }
-
 }

@@ -3,9 +3,9 @@
  * Sample layout
  */
 
-use Helpers\Assets;
-use Helpers\Url;
-use Helpers\Hooks;
+use Smvc\Helpers\Assets;
+use Smvc\Net\Url;
+use Smvc\Helpers\Hooks;
 
 //initialise hooks
 $hooks = Hooks::get();
@@ -19,12 +19,12 @@ $hooks = Hooks::get();
 	//hook for plugging in meta tags
 	$hooks->run('meta');
 	?>
-	<title><?php echo $data['title'].' - '.SITETITLE;?></title>
+	<title><?php echo $data['title'].' - '.SITE_TITLE;?></title>
 
 	<!-- CSS -->
 	<?php
 	Assets::css(array(
-		'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
+		'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
 		Url::templatePath() . 'css/style.css',
 	));
 

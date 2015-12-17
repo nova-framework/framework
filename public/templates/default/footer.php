@@ -3,9 +3,9 @@
  * Sample layout
  */
 
-use Helpers\Assets;
-use Helpers\Url;
-use Helpers\Hooks;
+use Smvc\Helpers\Assets;
+use Smvc\Net\Url;
+use Smvc\Helpers\Hooks;
 
 //initialise hooks
 $hooks = Hooks::get();
@@ -17,7 +17,7 @@ $hooks = Hooks::get();
 <?php
 Assets::js(array(
 	Url::templatePath() . 'js/jquery.js',
-	'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'
+	'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'
 ));
 
 //hook for plugging in javascript

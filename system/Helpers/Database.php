@@ -8,12 +8,16 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
+
+use Smvc\Config;
 
 use PDO;
 
 /**
  * Extending PDO to use custom methods.
+ *
+ * @deprecated since v3.0
  */
 class Database extends PDO
 {
@@ -30,13 +34,18 @@ class Database extends PDO
      */
     public static function get($group = false)
     {
+        $config = Config::get('database');
+
+        $options = $config['default'];
+        $config  = $options['config'];
+
         // Determining if exists or it's not empty, then use default group defined in config
         $group = !$group ? array (
-            'type' => DB_TYPE,
-            'host' => DB_HOST,
-            'name' => DB_NAME,
-            'user' => DB_USER,
-            'pass' => DB_PASS
+            'type' => $options['engine'],  // old DB_TYPE
+            'host' => $config['host'],     // old DB_HOST
+            'name' => $config['database'], // old DB_NAME
+            'user' => $config['user'],     // old DB_USER
+            'pass' => $config['password'], // old DB_PASS
         ) : $group;
 
         // Group information

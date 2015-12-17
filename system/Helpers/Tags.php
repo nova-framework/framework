@@ -7,9 +7,9 @@
  * @date Sept 19, 2015
  */
 
-namespace Helpers;
+namespace Smvc\Helpers;
 
-use Helpers\Database;
+use Smvc\Helpers\Database;
 
 /**
  * Collection of useful methods.
@@ -60,10 +60,10 @@ class Tags
         $string = str_replace('[year]', date('Y'), $string);
 
         //name of website
-        $string = str_replace('[sitetitle]', SITETITLE, $string);
+        $string = str_replace('[sitetitle]', SITE_TITLE, $string);
 
         //site email address
-        $string = str_replace('[siteemail]', SITEEMAIL, $string);
+        $string = str_replace('[siteemail]', SITE_EMAIL, $string);
 
         //feedburner subscribe form
         $string = preg_replace_callback("(\[feedburner(.*?)])is", function ($matches) {

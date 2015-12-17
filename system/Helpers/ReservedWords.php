@@ -1,5 +1,5 @@
 <?php
-namespace Helpers;
+namespace Smvc\Helpers;
 
 class ReservedWords
 {

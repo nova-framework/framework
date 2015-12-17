@@ -30,39 +30,26 @@ class ThemedController extends Controller
 
     public function afterFlight($result)
     {
-        $this->renderLayout($result);
+        if($result instanceof View) {
+            $this->renderLayout($result);
 
-        // Return false to stop the Flight.
-        return false;
+            // Rendered the View; stop the Flight.
+            return false;
+        }
+
+        // Return true to continue the Flight.
+        return true;
     }
 
-    protected function renderLayout($data)
+    protected function renderLayout($view)
     {
-        $title = '';
+        $layout = $this->layout();
 
-        if($data instanceof View) {
-            $title = $data->get('title');
+        //
+        $title   = $view->get('title');
+        $content = $view->fetch();
 
-            $content = $data->fetch();
-        }
-        else if(is_array($data)) {
-            $content = json_encode($data);
-        }
-        else if(is_integer($data)) {
-            // Just to see '0' on webpage and nothing more.
-            $content = sprintf('%d', $data);
-        }
-        else if(is_bool($data)) {
-            // Just to see '0' on webpage and nothing more.
-            $content = $data ? 'true' : 'false';
-        }
-        else {
-            $content = $data;
-        }
-
-        $title = ! empty($title) ? $title : __('Welcome');
-
-        View::layout($this->layout())
+        View::layout($layout)
             ->withTitle($title)
             ->withContent($content)
             ->display();

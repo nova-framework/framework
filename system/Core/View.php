@@ -50,7 +50,7 @@ class View
         $filePath = self::getFilePath($view);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException("File not found for the View: " .$filePath);
+            throw new \UnexpectedValueException("File not found for the View: " .$view);
         }
 
         return new View($filePath);
@@ -115,7 +115,7 @@ class View
     {
         return isset($this->data[$key]) ? $this->data[$key] : null;
     }
-    
+
     private static function getFilePath($path, $isLayout = false)
     {
         // Get the Controller instance.
@@ -191,7 +191,7 @@ class View
 
         self::sendHeaders();
 
-        require $viewpath.str_replace('/', DS, $path).".php";
+        require $viewPath.str_replace('/', DS, $path).".php";
     }
 
     /**

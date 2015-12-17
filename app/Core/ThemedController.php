@@ -17,6 +17,9 @@ use Smvc\Core\Controller;
  */
 class ThemedController extends Controller
 {
+    protected $layout = 'themed';
+
+
     /**
      * Call the parent construct
      */
@@ -27,38 +30,42 @@ class ThemedController extends Controller
 
     public function afterFlight($result)
     {
-        $title = __('Welcome');
+        $this->renderLayout($result);
 
-        if($result instanceof View) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8');
+        // Return false to stop the Flight.
+        return false;
+    }
 
-            $title = $result->get('title');
+    protected function renderLayout($data)
+    {
+        $title = '';
 
-            $content = $result->fetch();
+        if($data instanceof View) {
+            $title = $data->get('title');
+
+            $content = $data->fetch();
         }
-        else if(is_array($result)) {
-            View::addHeader('Content-Type: application/json');
-
-            $content = json_encode($result);
+        else if(is_array($data)) {
+            $content = json_encode($data);
         }
-        else if(is_string($result)) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8');
-        }
-        else if(is_integer($result)) {
+        else if(is_integer($data)) {
             // Just to see '0' on webpage and nothing more.
-            $content = sprintf('%d', $result);
+            $content = sprintf('%d', $data);
+        }
+        else if(is_bool($data)) {
+            // Just to see '0' on webpage and nothing more.
+            $content = $data ? 'true' : 'false';
         }
         else {
-            $content = $result;
+            $content = $data;
         }
+
+        $title = ! empty($title) ? $title : __('Welcome');
 
         View::layout($this->layout())
             ->withTitle($title)
             ->withContent($content)
             ->display();
-
-        // Return false to stop the Flight.
-        return false;
     }
 
 }

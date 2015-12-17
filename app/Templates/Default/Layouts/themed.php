@@ -46,6 +46,9 @@ $hooks->run('afterBody');
 
 <div class="container">
     <div class="row">
+        <h4 class="text-right"><?= __('Layout: Themed'); ?></h4>
+    </div>
+    <div class="row">
         <!-- Content Area -->
         <?= $content; ?>
     </div>

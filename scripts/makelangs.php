@@ -9,6 +9,7 @@ $languages = array(
     'cs',
     'de',
     'en',
+    'es',
     'fr',
     'it',
     'nl',

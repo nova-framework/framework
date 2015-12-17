@@ -71,7 +71,7 @@ abstract class Controller
             $viewsPath = str_replace('/', DS, 'Views/'.$matches[1]);
         }
         // Secondly, check on the Modules path.
-        else if(preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $className, $matches)) {
+        else if(preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
             $this->module = $matches[1];
 
             // The View paths are in Module sub-directories.

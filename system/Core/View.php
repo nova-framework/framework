@@ -47,7 +47,7 @@ class View
 
     public static function make($view)
     {
-        $filePath = self::getFilePath($view);
+        $filePath = self::getViewPath($view);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException("File not found for the View: " .$view);
@@ -56,9 +56,17 @@ class View
         return new View($filePath);
     }
 
-    public static function layout($layout = null)
+    public static function layout($layout = null, $view = null)
     {
-        $filePath = self::getFilePath($layout, true);
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        $layout = $layout ? $layout : $instance->layout();
+
+        $filePath = self::getTemplatePath();
+
+        // Adjust the filePath for Layouts
+        $filePath = realpath($filePath.'Layouts'.DS.$layout.'.php');
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException("File not found for the Layout: " .$layout);
@@ -66,7 +74,35 @@ class View
 
         self::addHeader('Content-Type: text/html; charset=UTF-8');
 
-        return new View($filePath);
+        $layoutView = new View($filePath);
+
+        if($view) {
+            $layoutView->data($view->data());
+
+            $layoutView->with('content', $view->fetch());
+        }
+
+        return $layoutView;
+    }
+
+    public static function fragment($fragment = null, $view = null)
+    {
+        $filePath = self::getTemplatePath();
+
+        // Adjust the filePath for Fragments
+        $filePath = realpath($filePath.'Fragments'.DS.$fragment.'.php');
+
+        if (! is_readable($filePath)) {
+            throw new \UnexpectedValueException("File not found for the Fragment: " .$fragment);
+        }
+
+        $fragView = new View($filePath);
+
+        if($view) {
+            $fragView->data($view->data());
+        }
+
+        return $fragView;
     }
 
     public static function json($data)
@@ -78,6 +114,15 @@ class View
         }
 
         throw new \UnexpectedValueException("Unexpected parameter on View::json");
+    }
+
+    public function data(array $data = null)
+    {
+        if(is_null($data)) {
+            return $this->data;
+        }
+
+        $this->data = $data;
     }
 
     public function fetch()
@@ -116,22 +161,25 @@ class View
         return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 
-    private static function getFilePath($path, $isLayout = false)
+    private static function getTemplatePath()
     {
         // Get the Controller instance.
         $instance =& get_instance();
 
-        if($isLayout) {
-            $path = $path ? $path : $instance->layout();
+        $template = $instance->template();
 
-            $template = $instance->template();
+        return APPPATH.'Templates'.DS.$template.DS;
+    }
 
-            $viewPath = APPPATH.str_replace('/', DS, "Templates/".$template.'/Layouts/');
-        }
-        else if ($path[0] === '/') {
+    private static function getViewPath($path)
+    {
+        if ($path[0] === '/') {
             $viewPath = APPPATH."Views";
         }
         else {
+            // Get the Controller instance.
+            $instance =& get_instance();
+
             $viewPath = $instance->viewsPath();
         }
 

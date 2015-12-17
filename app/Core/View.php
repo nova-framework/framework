@@ -24,10 +24,8 @@ class View
      * Include template file.
      *
      * @param  string $path  path to file from views folder
-     * @param  array  $data  array of data
-     * @param  array  $error array of errors
      */
-    public static function render($path, $data = false, $error = false)
+    public static function render($path)
     {
         self::sendHeaders();
         
@@ -38,10 +36,8 @@ class View
      * Include template file.
      *
      * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
      */
-    public static function renderModule($path, $data = false, $error = false)
+    public static function renderModule($path)
     {
         self::sendHeaders();
         
@@ -52,10 +48,9 @@ class View
      * Return absolute path to selected template directory.
      *
      * @param  string  $path  path to file from views folder
-     * @param  array   $data  array of data
      * @param  string  $custom path to template folder
      */
-    public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
+    public static function renderTemplate($path, $custom = TEMPLATE)
     {
         self::sendHeaders();
 
@@ -77,7 +72,7 @@ class View
      *
      * @param array $headers
      */
-    public function addHeaders(array $headers = array())
+    public function addHeaders($headers = array())
     {
         self::$headers = array_merge(self::$headers, $headers);
     }

@@ -115,10 +115,10 @@ abstract class Controller
         }
 
         if(is_string($result)) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8', true);
+            View::addHeader('Content-Type: text/html; charset=UTF-8');
         }
         else if(is_array($result)) {
-            View::addHeader('Content-Type: application/json', true);
+            View::addHeader('Content-Type: application/json');
 
             $result = json_encode($result);
         }

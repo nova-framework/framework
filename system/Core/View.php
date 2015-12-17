@@ -49,20 +49,20 @@ class View
     {
         if (! str_starts_with($method, 'with'))
         {
-            throw new \BadMethodCallException("Method View::$method() does not exist!");
+            throw new \BadMethodCallException('Invalid method called: View::'.$method);
         }
 
         $variable = Inflector::tableize(substr($method, 4));
 
         return $this->with($variable, array_shift($params));
     }
-    
+
     public static function make($view)
     {
         $filePath = self::getViewPath($view);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException("File not found for View: " .$view);
+            throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
         return new View($filePath);
@@ -73,7 +73,7 @@ class View
         $filePath = self::getLayoutPath($layout);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException("File not found for Layout: " .$layout);
+            throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
         self::addHeader('Content-Type: text/html; charset=UTF-8');
@@ -94,7 +94,7 @@ class View
         $filePath = self::getFragmentPath($fragment, $fromTpl);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException("File not found for Fragment: " .$fragment);
+            throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
         $fragView = new View($filePath);
@@ -114,7 +114,7 @@ class View
             return new View($data, true);
         }
 
-        throw new \UnexpectedValueException("Unexpected parameter on View::json");
+        throw new \UnexpectedValueException('Unexpected parameter on View::json');
     }
 
     public function data(array $data = null)
@@ -124,6 +124,8 @@ class View
         }
 
         $this->data = $data;
+
+        return $this;
     }
 
     public function fetch()

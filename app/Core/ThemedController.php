@@ -43,13 +43,11 @@ class ThemedController extends Controller
 
     protected function renderLayout($view)
     {
-        $layout = $this->layout();
+        $title = $view->get('title');
 
-        //
-        $title   = $view->get('title');
         $content = $view->fetch();
 
-        View::layout($layout)
+        View::layout($this->layout)
             ->withTitle($title)
             ->withContent($content)
             ->display();

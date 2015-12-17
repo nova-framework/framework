@@ -18,7 +18,7 @@ use Smvc\Helpers\PhpMailer as Mailer;
 class Logger
 {
     /**
-    * Determins if error should be emailed to SITEEMAIL defined in app/Core/Config.php.
+    * Determins if error should be emailed to SITE_EMAIL defined in app/Core/Config.php.
     *
     * @var boolean
     */
@@ -192,9 +192,9 @@ class Logger
         if (self::$emailError == true) {
             $mail = new Mailer();
 
-            $mail->setFrom(SITEEMAIL);
-            $mail->addAddress(SITEEMAIL);
-            $mail->subject('New error on '.SITETITLE);
+            $mail->setFrom(SITE_EMAIL);
+            $mail->addAddress(SITE_EMAIL);
+            $mail->subject('New error on '.SITE_TITLE);
             $mail->body($message);
 
             $mail->send();

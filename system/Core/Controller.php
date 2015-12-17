@@ -31,6 +31,9 @@ abstract class Controller
     protected $className;
     protected $viewsPath;
 
+    // Execute the auto-rendering phase.
+    private $autoRender = true;
+
     /**
      * Constructor
      */
@@ -42,6 +45,15 @@ abstract class Controller
     public static function &getInstance()
     {
         return self::$instance;
+    }
+
+    public function autoRender($value = null)
+    {
+        if(is_null($value)) {
+            return $this->autoRender;
+        }
+
+        $this->autoRender = $value;
     }
 
     public function initialize($className, $method, $params)
@@ -82,7 +94,7 @@ abstract class Controller
         return true;
     }
 
-    public function execute($method, $params)
+    public function execute()
     {
         if($this->beforeFlight() === false) {
             // Is wanted to stop the Flight.
@@ -90,14 +102,14 @@ abstract class Controller
         }
 
         // Execute the Controller's Method with the given arguments.
-        $result = call_user_func_array(array($this, $method), $params);
+        $result = call_user_func_array(array($this, $this->method()), $this->params());
 
         if($this->afterFlight($result) === false) {
             // Is wanted to stop the Flight.
             return true;
         }
 
-        if(is_null($result) || is_bool($result)) {
+        if(is_null($result) || is_bool($result) || ! $this->autoRender) {
             // No auto-rendering wanted; finish the Flight.
             return true;
         }

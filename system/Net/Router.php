@@ -165,8 +165,8 @@ class Router
 
         $controller->initialize($className, $method, $params);
 
-        // Execute the Controller's Method with the given arguments.
-        return $controller->execute($method, $params);
+        // Start the Flight and return the result.
+        return $controller->execute();
     }
 
     /**

@@ -85,12 +85,9 @@ class View
         return $layoutView;
     }
 
-    public static function fragment($fragment = null, $view = null)
+    public static function fragment($fragment = null, $fromTpl = true, $view = null)
     {
-        $filePath = self::getTemplatePath();
-
-        // Adjust the filePath for Fragments
-        $filePath = realpath($filePath.'Fragments'.DS.$fragment.'.php');
+        $filePath = self::getFragmentPath($fragment, $fromTpl);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException("File not found for the Fragment: " .$fragment);
@@ -183,7 +180,31 @@ class View
             $viewPath = $instance->viewsPath();
         }
 
-        return $viewPath.$path.'.php';
+        return realpath($viewPath.$path.'.php');
+    }
+
+    private static function getFragmentPath($fragment, $fromTpl = true)
+    {
+        if($fromTpl) {
+            $filePath = self::getTemplatePath();
+        }
+        else {
+            $filePath = APPPATH;
+
+            // Get the Controller instance.
+            $instance =& get_instance();
+
+            $module = $instance->module();
+
+            if($module) {
+                $filePath .= 'Modules'.DS.$module.DS;
+            }
+
+            $filePath .= 'Views'.DS;
+        }
+
+        // Adjust the filePath for Fragments
+        return realpath($filePath.'Fragments'.DS.$fragment.'.php');
     }
 
     public function __call($method, $params)

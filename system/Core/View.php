@@ -44,6 +44,9 @@ class View
         if(self::$legacyPath) {
             $viewPath = APPPATH."Views".DS;
         }
+        else if ($path[0] === '/') {
+            $viewPath = APPPATH."Views";
+        }
         else {
             // Get the Controller instance.
             $instance =& get_instance();

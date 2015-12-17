@@ -24,7 +24,7 @@ class View
     private static $headers = array();
 
     /*
-     * The Enhanced View begins there.
+     * The View's internal stored variables.
      */
     protected $path = null;
 
@@ -45,12 +45,24 @@ class View
         }
     }
 
+    public function __call($method, $params)
+    {
+        if (! str_starts_with($method, 'with'))
+        {
+            throw new \BadMethodCallException("Method View::$method() does not exist!");
+        }
+
+        $variable = Inflector::tableize(substr($method, 4));
+
+        return $this->with($variable, array_shift($params));
+    }
+    
     public static function make($view)
     {
         $filePath = self::getViewPath($view);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException("File not found for the View: " .$view);
+            throw new \UnexpectedValueException("File not found for View: " .$view);
         }
 
         return new View($filePath);
@@ -61,7 +73,7 @@ class View
         $filePath = self::getLayoutPath($layout);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException("File not found for the Layout: " .$layout);
+            throw new \UnexpectedValueException("File not found for Layout: " .$layout);
         }
 
         self::addHeader('Content-Type: text/html; charset=UTF-8');
@@ -82,7 +94,7 @@ class View
         $filePath = self::getFragmentPath($fragment, $fromTpl);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException("File not found for the Fragment: " .$fragment);
+            throw new \UnexpectedValueException("File not found for Fragment: " .$fragment);
         }
 
         $fragView = new View($filePath);
@@ -164,7 +176,7 @@ class View
 
         return realpath($viewPath.$path.'.php');
     }
-    
+
     private static function getTemplatePath()
     {
         // Get the Controller instance.
@@ -211,22 +223,6 @@ class View
         // Adjust the filePath for Fragments
         return realpath($filePath.'Fragments'.DS.$fragment.'.php');
     }
-
-    public function __call($method, $params)
-    {
-        if (! str_starts_with($method, 'with'))
-        {
-            throw new \BadMethodCallException("Method View::$method() does not exist!");
-        }
-
-        $variable = Inflector::tableize(substr($method, 4));
-
-        return $this->with($variable, array_shift($params));
-    }
-
-    /*
-     * The Enhanced View ends there.
-     */
 
     /**
      * Include template file.

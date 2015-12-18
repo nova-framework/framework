@@ -171,11 +171,16 @@ class View
 
     public function loadData($data)
     {
-        if (! is_array($data)) {
-            throw new \UnexpectedValueException('Unexpected parameter on View::loadData');
+        if($data instanceof View) {
+            $this->data = $data->data();
         }
+        else {
+            if (! is_array($data)) {
+                throw new \UnexpectedValueException('Unexpected parameter on View::loadData');
+            }
 
-        $this->data = $data;
+            $this->data = $data;
+        }
 
         return $this;
     }

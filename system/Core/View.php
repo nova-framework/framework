@@ -195,12 +195,12 @@ class View
         return realpath($viewPath.$path.'.php');
     }
 
-    private static function templatePath()
+    private static function templatePath($template = null)
     {
         // Get the Controller instance.
         $instance =& get_instance();
 
-        $template = $instance->template();
+        $template = $template ? $template : $instance->template();
 
         return APPPATH.'Templates'.DS.$template.DS;
     }
@@ -251,7 +251,7 @@ class View
      * @param  array  $data  array of data
      * @param  array  $error array of errors
      */
-    public static function render($path, $data = false, $error = false)
+    public static function render($path, $data = false, $error = false, $fetch = false)
     {
         // Get the Controller instance.
         $instance =& get_instance();
@@ -271,9 +271,19 @@ class View
             }
         }
 
+        if($fetch) {
+            ob_start();
+        }
+
         self::sendHeaders();
 
         require $viewPath.str_replace('/', DS, $path).".php";
+
+        if($fetch) {
+            return ob_get_clean();
+        }
+
+        return false;
     }
 
     /**
@@ -283,7 +293,7 @@ class View
      * @param  array $data  array of data
      * @param  array $error array of errors
      */
-    public static function renderModule($module, $path, $data = false, $error = false)
+    public static function renderModule($module, $path, $data = false, $error = false, $fetch = false)
     {
         $viewPath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
 
@@ -294,9 +304,47 @@ class View
             }
         }
 
+        if($fetch) {
+            ob_start();
+        }
+
         self::sendHeaders();
 
         require $viewPath.str_replace('/', DS, $path).".php";
+
+
+        if($fetch) {
+            return ob_get_clean();
+        }
+
+        return false;
+    }
+
+    /**
+     * Return absolute path to selected template directory.
+     *
+     * @param  string  $layout layout name
+     * @param  array   $data  array of data
+     * @param  string  $custom path to template folder
+     */
+    public static function renderLayout($layout, $content, $data = false, $custom = null)
+    {
+        $filePath = self::templatePath($custom).'Layouts'.DS.$layout.DS;
+
+        if (! is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: '.$filePath);
+        }
+
+        if($data) {
+            // Extract the rendering variables.
+            foreach($data as $name => $value) {
+                ${$name} = $value;
+            }
+        }
+
+        self::sendHeaders();
+
+        require $filePath;
     }
 
     /**

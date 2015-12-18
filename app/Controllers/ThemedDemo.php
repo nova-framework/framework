@@ -17,6 +17,8 @@ use App\Core\ThemedController;
  */
 class ThemedDemo extends ThemedController
 {
+    private $viewFilePath;
+
     /**
      * Call the parent construct
      */
@@ -25,13 +27,23 @@ class ThemedDemo extends ThemedController
         parent::__construct();
     }
 
+    public function beforeFlight()
+    {
+        $basePath = str_replace(BASEPATH, '', $this->viewsPath);
+
+        $this->viewFilePath = DS.$basePath.$this->method.'.php';
+
+        // Leave to Parent's Method the Flight decision.
+        return parent::beforeFlight();
+    }
+
     /**
      * Define Index page title and message, then create and return the View instance
      */
     public function index()
     {
         $message = __('Hello, welcome from the welcome controller! <br/>
-This content can be changed in <code>/app/views/welcome/welcome.php</code>');
+This content can be changed in <code>{0}</code>', $this->viewFilePath);
 
         return View::make('welcome')
             ->withTitle(__('Welcome'))
@@ -43,8 +55,10 @@ This content can be changed in <code>/app/views/welcome/welcome.php</code>');
      */
     public function subPage()
     {
+        $viewPath = DS.str_replace(BASEPATH, '', $this->viewsPath).'subpage.php';
+
         $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>/app/views/welcome/subpage.php</code>');
+This content can be changed in <code>{0}</code>', $this->viewFilePath);
 
         return View::make('subpage')
             ->withTitle(__('Subpage'))

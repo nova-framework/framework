@@ -13,7 +13,7 @@ use Smvc\Core\View;
 use App\Core\ThemedController;
 
 /**
- * Sample Themed Controller showing a construct and 2 methods and their typical usage.
+ * Sample Themed Controller with its typical usage.
  */
 class ThemedDemo extends ThemedController
 {
@@ -49,7 +49,7 @@ class ThemedDemo extends ThemedController
     }
 
     /**
-     * Define Index page title and message, then create and return the View instance
+     * CakePHP style - Define Welcome page title and message.
      */
     public function welcome()
     {
@@ -63,7 +63,7 @@ This content can be changed in <code>{0}</code>', $this->viewFilePath);
     }
 
     /**
-     * Define Subpage page title and message, then create and return the View instance
+     * Laravel style - Define Subpage page message, then create and return the View instance
      */
     public function subPage()
     {
@@ -74,5 +74,9 @@ This content can be changed in <code>{0}</code>', $this->viewFilePath);
             ->withTitle(__('Subpage'))
             ->withMessage($message);
     }
+
+    /**
+     * Gagnam style - TBD
+     */
 
 }

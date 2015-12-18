@@ -19,7 +19,7 @@ class ClassicController extends BaseController
 {
     protected $layout = 'default';
 
-    
+
     /**
      * Call the parent construct
      */
@@ -34,7 +34,7 @@ class ClassicController extends BaseController
         // The available information on this method are:
         // className, called method and parameters; optionally, the module name
 
-        // Leave to the parent's method the Flight decisions.
+        // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
 
@@ -61,7 +61,7 @@ class ClassicController extends BaseController
             return false;
         }
 
-        // Leave to the parent's method the Flight decisions.
+        // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
 

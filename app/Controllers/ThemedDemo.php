@@ -36,7 +36,7 @@ class ThemedDemo extends ThemedController
 
         $this->viewFilePath = $viewsPath.$method.'.php';
 
-        // Leave to the parent's method the Flight decisions.
+        // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
 
@@ -44,7 +44,7 @@ class ThemedDemo extends ThemedController
     {
         // Do some processing there, even deciding to stop the Flight, if case.
 
-        // Leave to the parent's method the Flight decisions.
+        // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
 

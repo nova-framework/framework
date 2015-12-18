@@ -23,7 +23,7 @@ class BaseController extends Controller
     protected $autoRender = true;
     protected $useLayout  = false;
 
-    
+
     /**
      * Call the parent construct
      */
@@ -34,13 +34,13 @@ class BaseController extends Controller
 
     public function beforeFlight()
     {
-        // Leave to the parent's method the Flight decisions.
+        // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
 
     public function afterFlight($result)
     {
-        // Leave to the parent's method the Flight decisions.
+        // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
 

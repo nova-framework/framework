@@ -29,9 +29,11 @@ class ThemedDemo extends ThemedController
 
     public function beforeFlight()
     {
-        $basePath = str_replace(BASEPATH, '', $this->viewsPath);
+        $basePath = DS.str_replace(BASEPATH, '', $this->viewsPath);
 
-        $this->viewFilePath = DS.$basePath.$this->method.'.php';
+        $method = $this->method;
+
+        $this->viewFilePath = $basePath.$method.'.php';
 
         // Leave to Parent's Method the Flight decision.
         return parent::beforeFlight();

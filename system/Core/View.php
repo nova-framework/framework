@@ -120,10 +120,12 @@ class View
             return json_encode($this->data);
         }
 
+        // Prepare the rendering variables.
         foreach($this->data as $name => $value) {
             ${$name} = $value;
         }
 
+        // Execute the rendering, then capture and return the output.
         ob_start();
 
         require $this->path;
@@ -133,9 +135,19 @@ class View
 
     public function display()
     {
+        if ($this->json) {
+            echo json_encode($this->data);
+        }
+
+        // Prepare the rendering variables.
+        foreach($this->data as $name => $value) {
+            ${$name} = $value;
+        }
+
+        // Execute the rendering to output.
         self::sendHeaders();
 
-        echo $this->fetch();
+        require $this->path;
     }
 
     public function with($key, $value = null)
@@ -256,10 +268,16 @@ class View
 
         if ($path[0] === '/') {
             // A Views "Root" Path is wanted.
-            $viewPath = APPPATH."Views";
+            $basePath = APPPATH."Views";
         }
         else {
-            $viewPath = $instance->viewsPath();
+            $basePath = $instance->viewsPath();
+        }
+
+        $filePath = $basePath.str_replace('/', DS, $path).".php";
+
+        if (! is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
         if($data) {
@@ -275,7 +293,7 @@ class View
             ob_start();
         }
 
-        require $viewPath.str_replace('/', DS, $path).".php";
+        require $filePath;
 
         if($fetch) {
             return ob_get_clean();
@@ -293,7 +311,13 @@ class View
      */
     public static function renderModule($module, $path, $data = false, $error = false, $fetch = false)
     {
-        $viewPath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
+        $basePath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
+
+        $filePath = $basePath.str_replace('/', DS, $path).".php";
+
+        if (! is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: '.$filePath);
+        }
 
         if($data) {
             // Extract the rendering variables.
@@ -308,7 +332,7 @@ class View
             ob_start();
         }
 
-        require $viewPath.str_replace('/', DS, $path).".php";
+        require $filePath;
 
         if($fetch) {
             return ob_get_clean();
@@ -353,7 +377,13 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
-        $viewPath = WEBPATH."templates".DS.$custom.DS;
+        $basePath = WEBPATH."templates".DS.$custom.DS;
+
+        $filePath = $basePath.str_replace('/', DS, $path).".php";
+
+        if (! is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: '.$filePath);
+        }
 
         if($data) {
             // Extract the rendering variables.
@@ -364,7 +394,7 @@ class View
 
         self::sendHeaders();
 
-        require $viewPath.str_replace('/', DS, $path).".php";
+        require $filePath;
     }
 
     /**

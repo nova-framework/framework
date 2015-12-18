@@ -1,6 +1,6 @@
 <?php
 /**
- * ThemedController - Base Class for all themed Controllers.
+ * ThemedController - Base Class for all Themed Controllers.
  *
  * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
  * @version 3.0

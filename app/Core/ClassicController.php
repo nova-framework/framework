@@ -1,6 +1,6 @@
 <?php
 /**
- * ThemedController - Base Class for all themed Controllers.
+ * ClassicController - Base Class for all Classic Controllers.
  *
  * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
  * @version 3.0
@@ -17,7 +17,7 @@ use Smvc\Core\Controller;
  */
 class ClassicController extends Controller
 {
-    protected $layout = 'themed';
+    protected $layout = 'default';
 
     // Store the Controller's variables.
     protected $data = array();

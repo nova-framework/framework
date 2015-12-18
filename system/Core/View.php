@@ -38,28 +38,33 @@ class View
     {
         if(! $isJson) {
             $this->path = $param;
+
+            return;
         }
-        else {
-            $this->isJson = true;
-            $this->data = $param;
+
+        if (! is_array($param)) {
+            throw new \UnexpectedValueException('Parameter should be Array, on View::__construct');
         }
+
+        $this->isJson = true;
+        $this->data = $param;
     }
 
     public function __call($method, $params)
     {
-        if (! str_starts_with($method, 'with'))
+        if (strpos($method, 'with') !== 0)
         {
             throw new \BadMethodCallException('Invalid method called: View::'.$method);
         }
 
-        $variable = Inflector::tableize(substr($method, 4));
+        $key = Inflector::tableize(substr($method, 4));
 
-        return $this->with($variable, array_shift($params));
+        return $this->with($key, array_shift($params));
     }
 
     public static function make($view)
     {
-        $filePath = self::getViewPath($view);
+        $filePath = self::viewPath($view);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException('File not found: '.$filePath);
@@ -70,7 +75,7 @@ class View
 
     public static function layout($layout = null)
     {
-        $filePath = self::getLayoutPath($layout);
+        $filePath = self::layoutPath($layout);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException('File not found: '.$filePath);
@@ -83,7 +88,7 @@ class View
 
     public static function fragment($fragment, $fromTemplate = true)
     {
-        $filePath = self::getFragmentPath($fragment, $fromTemplate);
+        $filePath = self::fragmentPath($fragment, $fromTemplate);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException('File not found: '.$filePath);
@@ -94,13 +99,13 @@ class View
 
     public static function json($data)
     {
-        if (is_array($data)) {
-            self::addHeader('Content-Type: application/json');
-
-            return new View($data, true);
+        if (! is_array($data)) {
+            throw new \UnexpectedValueException('Unexpected parameter on View::json');
         }
 
-        throw new \UnexpectedValueException('Unexpected parameter on View::json');
+        self::addHeader('Content-Type: application/json');
+
+        return new View($data, true);
     }
 
     public function fetch()
@@ -166,9 +171,10 @@ class View
         return $this;
     }
 
-    private static function getViewPath($path)
+    private static function viewPath($path)
     {
         if ($path[0] === '/') {
+            // An Views "root" path is wanted.
             $viewPath = APPPATH."Views";
         }
         else {
@@ -181,7 +187,7 @@ class View
         return realpath($viewPath.$path.'.php');
     }
 
-    private static function getTemplatePath()
+    private static function templatePath()
     {
         // Get the Controller instance.
         $instance =& get_instance();
@@ -191,33 +197,35 @@ class View
         return APPPATH.'Templates'.DS.$template.DS;
     }
 
-    private static function getLayoutPath($layout = null)
+    private static function layoutPath($layout = null)
     {
         // Get the Controller instance.
         $instance =& get_instance();
 
         $layout = $layout ? $layout : $instance->layout();
 
-        $filePath = self::getTemplatePath();
+        $filePath = self::templatePath();
 
         // Adjust the filePath for Layouts
-        return realpath($filePath.'Layouts'.DS.$layout.'.php');
+        return $filePath.'Layouts'.DS.$layout.'.php';
     }
 
-    private static function getFragmentPath($fragment, $fromTemplate = true)
+    private static function fragmentPath($fragment, $fromTemplate = true)
     {
         if($fromTemplate) {
-            $filePath = self::getTemplatePath();
+            $filePath = self::templatePath();
         }
         else {
-            $filePath = APPPATH;
-
             // Get the Controller instance.
             $instance =& get_instance();
 
             $module = $instance->module();
 
+            // Calculate the filePath.
+            $filePath = APPPATH;
+
             if($module) {
+                // Adjust the filePath for Module.
                 $filePath .= 'Modules'.DS.$module.DS;
             }
 
@@ -225,7 +233,7 @@ class View
         }
 
         // Adjust the filePath for Fragments
-        return realpath($filePath.'Fragments'.DS.$fragment.'.php');
+        return $filePath.'Fragments'.DS.$fragment.'.php';
     }
 
     /**
@@ -247,6 +255,13 @@ class View
             $viewPath = $instance->viewsPath();
         }
 
+        if($data) {
+            // Extract the rendering variables.
+            foreach($data as $name => $value) {
+                ${$name} = $value;
+            }
+        }
+
         self::sendHeaders();
 
         require $viewPath.str_replace('/', DS, $path).".php";
@@ -263,6 +278,13 @@ class View
     {
         $viewPath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
 
+        if($data) {
+            // Extract the rendering variables.
+            foreach($data as $name => $value) {
+                ${$name} = $value;
+            }
+        }
+
         self::sendHeaders();
 
         require $viewPath.str_replace('/', DS, $path).".php";
@@ -277,9 +299,18 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
+        $viewPath = WEBPATH."templates".DS.$custom.DS;
+
+        if($data) {
+            // Extract the rendering variables.
+            foreach($data as $name => $value) {
+                ${$name} = $value;
+            }
+        }
+
         self::sendHeaders();
 
-        require WEBPATH."templates".DS.$custom.DS.str_replace('/', DS, $path).".php";
+        require $viewPath.str_replace('/', DS, $path).".php";
     }
 
     /**

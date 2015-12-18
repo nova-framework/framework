@@ -96,11 +96,6 @@ abstract class Controller
         // Execute the Controller's Method with the given arguments.
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
-        if(is_null($result) || is_bool($result)) {
-            // No auto-rendering wanted; stop the Flight.
-            return true;
-        }
-
         if($this->afterFlight($result) === false) {
             // Is wanted to stop the Flight.
             return true;
@@ -111,6 +106,11 @@ abstract class Controller
             return true;
         }
 
+        if(is_null($result) || is_bool($result)) {
+            // No auto-rendering wanted; stop the Flight.
+            return true;
+        }
+        
         if(is_array($result)) {
             View::addHeader('Content-Type: application/json');
 

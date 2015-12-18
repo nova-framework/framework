@@ -15,13 +15,14 @@ use Smvc\Core\Controller;
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
  */
-class ThemedController extends Controller
+class ClassicController extends Controller
 {
     protected $layout = 'themed';
 
     // Store the Controller's variables.
     protected $data = array();
 
+    protected $autoRender = true;
 
     /**
      * Call the parent construct
@@ -43,26 +44,13 @@ class ThemedController extends Controller
 
     public function afterFlight($result)
     {
-        if($result instanceof View) {
-            View::layout($this->layout())
-                ->loadView($result, true)
-                ->display();
-
-            // Stop the Flight.
-            return false;
-        }
-        else if(is_null($result)) {
+        if(is_null($result) && $this->autoRender) {
             $data =& $this->data();
 
             if(! empty($data)) {
-                $content = View::make($this->method())
-                    ->loadData($data)
-                    ->fetch();
+                $content = View::render($this->method(), $data, false, true);
 
-                View::layout($this->layout())
-                    ->loadData($data)
-                    ->withContent($content)
-                    ->display();
+                View::renderLayout($this->layout(), $content, $data);
 
                 // Stop the Flight.
                 return false;
@@ -71,6 +59,15 @@ class ThemedController extends Controller
 
         // Leave to the parent's method the Flight decisions.
         return parent::afterFlight($result);
+    }
+
+    public function autoRender($value = null)
+    {
+        if(is_null($value)) {
+            return $this->autoRender;
+        }
+
+        $this->autoRender = $value;
     }
 
     public function data($name = null)

@@ -22,6 +22,9 @@ Router::any('database', 'App\Controllers\Demo@database');
 Router::any('themed/welcome', 'App\Controllers\ThemedDemo@welcome');
 Router::any('themed/subpage', 'App\Controllers\ThemedDemo@subPage');
 
+Router::any('classic/welcome', 'App\Controllers\ClassicDemo@welcome');
+Router::any('classic/subpage', 'App\Controllers\ClassicDemo@subPage');
+
 Router::any('(:all)', 'App\Controllers\Demo@catchAll');
 /*
 // Classic Routing

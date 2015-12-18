@@ -100,29 +100,10 @@ abstract class Controller
             // Is wanted to stop the Flight.
             return true;
         }
-        else if($result instanceof View) {
+
+        if($result instanceof View) {
             $result->display();
-
-            return true;
         }
-
-        if(is_null($result) || is_bool($result)) {
-            // No auto-rendering wanted; stop the Flight.
-            return true;
-        }
-
-        if(is_array($result)) {
-            View::addHeader('Content-Type: application/json');
-
-            $result = json_encode($result);
-        }
-        else if(is_string($result)) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8');
-        }
-
-        View::sendHeaders();
-
-        echo $result;
 
         return true;
     }

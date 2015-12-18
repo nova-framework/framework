@@ -40,8 +40,26 @@ class BaseController extends Controller
 
     public function afterFlight($result)
     {
-        // Leave to parent's method the Flight decisions.
-        return parent::afterFlight($result);
+        if(is_array($result)) {
+            View::addHeader('Content-Type: application/json');
+
+            $result = json_encode($result);
+        }
+        else if(is_string($result)) {
+            View::addHeader('Content-Type: text/html; charset=UTF-8');
+        }
+        else {
+            // Leave to parent's method the Flight decisions.
+            return parent::afterFlight($result);
+        }
+
+        // Output the... output.
+        View::sendHeaders();
+
+        echo $result;
+
+        // Stop the Flight.
+        return false;
     }
 
     public function autoRender($value = null)

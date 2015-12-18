@@ -3,9 +3,10 @@
  * View - load template pages
  *
  * @author David Carr - dave@daveismyname.com
- * @version 2.2
+ * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @version 3.0
  * @date June 27, 2014
- * @date updated Sept 19, 2015
+ * @date updated Dec 18, 2015
  */
 
 namespace Smvc\Core;
@@ -29,14 +30,14 @@ class View
     protected $path = null;
 
     protected $data = array();
-    protected $isJson = false;
+    protected $json = false;
 
     /**
      * Constructor
      */
-    public function __construct($param, $isJson = false)
+    public function __construct($param, $json = false)
     {
-        if(! $isJson) {
+        if(! $json) {
             $this->path = $param;
 
             return;
@@ -46,7 +47,7 @@ class View
             throw new \UnexpectedValueException('Parameter should be Array, on View::__construct');
         }
 
-        $this->isJson = true;
+        $this->json = true;
         $this->data = $param;
     }
 
@@ -108,9 +109,14 @@ class View
         return new View($data, true);
     }
 
+    public function isJson()
+    {
+        return $this->json;
+    }
+
     public function fetch()
     {
-        if ($this->isJson) {
+        if ($this->json) {
             return json_encode($this->data);
         }
 

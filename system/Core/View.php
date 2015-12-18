@@ -287,10 +287,11 @@ class View
             }
         }
 
-        self::sendHeaders();
-
         if($fetch) {
             ob_start();
+        }
+        else {
+            self::sendHeaders();
         }
 
         require $filePath;
@@ -326,10 +327,11 @@ class View
             }
         }
 
-        self::sendHeaders();
-
         if($fetch) {
             ob_start();
+        }
+        else {
+            self::sendHeaders();
         }
 
         require $filePath;

@@ -101,11 +101,16 @@ abstract class Controller
             return true;
         }
 
+        $this->renderResult($result);
+
+        return true;
+    }
+
+    protected function renderResult($result)
+    {
         if($result instanceof View) {
             $result->display();
         }
-
-        return true;
     }
 
     // Some getters.

@@ -40,6 +40,12 @@ class BaseController extends Controller
 
     public function afterFlight($result)
     {
+        // Leave to parent's method the Flight decisions.
+        return parent::afterFlight();
+    }
+
+    protected function renderResult($result)
+    {
         if(is_array($result)) {
             View::addHeader('Content-Type: application/json');
 
@@ -49,17 +55,15 @@ class BaseController extends Controller
             View::addHeader('Content-Type: text/html; charset=UTF-8');
         }
         else {
-            // Leave to parent's method the Flight decisions.
-            return parent::afterFlight($result);
+            parent::renderResult($result);
+
+            return;
         }
 
-        // Output the... output.
+        // Output the result.
         View::sendHeaders();
 
         echo $result;
-
-        // Stop the Flight.
-        return false;
     }
 
     public function autoRender($value = null)

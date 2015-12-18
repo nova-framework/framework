@@ -44,7 +44,11 @@ class ClassicController extends Controller
 
     public function afterFlight($result)
     {
-        if(is_null($result) && $this->autoRender) {
+        if(! $this->autoRender) {
+            return false;
+        }
+
+        if(is_null($result)) {
             $data =& $this->data();
 
             if(! empty($data)) {

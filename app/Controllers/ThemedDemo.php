@@ -49,7 +49,7 @@ class ThemedDemo extends ThemedController
     }
 
     /**
-     * CakePHP style - Define Welcome page title and message.
+     * CakePHP style - Define Welcome page message and set the Controller's variables.
      */
     public function welcome()
     {

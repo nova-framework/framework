@@ -4,7 +4,7 @@
  *
  * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
  * @version 3.0
- * @date December 17th, 2015
+ * @date December 18th, 2015
  */
 
 namespace App\Core;
@@ -125,7 +125,7 @@ class ClassicController extends Controller
 
         $this->data = $data + $this->data;
 
-        // Activate the Layout Rendering.
+        // Auto-activate the Rendering on Layout.
         $this->useLayout = true;
     }
 

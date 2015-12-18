@@ -15,7 +15,7 @@ use App\Core\ThemedController;
 /**
  * Sample Themed Controller with its typical usage.
  */
-class ThemedDemo extends ThemedController
+class ThemedWelcome extends ThemedController
 {
     private $viewFilePath;
 

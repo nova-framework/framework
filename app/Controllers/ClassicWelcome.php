@@ -15,7 +15,7 @@ use App\Core\ClassicController;
 /**
  * Sample Themed Controller with its typical usage.
  */
-class ClassicDemo extends ClassicController
+class ClassicWelcome extends ClassicController
 {
     private $viewFilePath;
 

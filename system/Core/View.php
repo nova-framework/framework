@@ -212,10 +212,10 @@ class View
 
         $layout = $layout ? $layout : $instance->layout();
 
-        $filePath = self::templatePath($template);
+        $basePath = self::templatePath($template);
 
         // Adjust the filePath for Layouts
-        return $filePath.'Layouts'.DS.$layout.'.php';
+        return $basePath.'Layouts'.DS.$layout.'.php';
     }
 
     private static function fragmentPath($fragment, $fromTemplate = true)
@@ -224,24 +224,25 @@ class View
         $instance =& get_instance();
 
         if($fromTemplate) {
-            $filePath = self::templatePath();
+            $basePath = self::templatePath();
         }
         else {
-            $module = $instance->module();
-
             // Calculate the filePath.
-            $filePath = APPPATH;
+            $basePath = APPPATH;
+
+            // If we are in a Module, we should adjust the basePath.
+            $module = $instance->module();
 
             if($module) {
                 // Adjust the filePath for Module.
-                $filePath .= 'Modules'.DS.$module.DS;
+                $basePath .= 'Modules'.DS.$module.DS;
             }
 
-            $filePath .= 'Views'.DS;
+            $basePath .= 'Views'.DS;
         }
 
         // Adjust the filePath for Fragments
-        return $filePath.'Fragments'.DS.$fragment.'.php';
+        return $basePath.'Fragments'.DS.$fragment.'.php';
     }
 
     /**

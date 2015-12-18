@@ -19,7 +19,7 @@ Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('admin/(:any)(/(:all))', 'App\Controllers\Demo@test');
 Router::any('database', 'App\Controllers\Demo@database');
 
-Router::any('themed/welcome', 'App\Controllers\ThemedDemo@index');
+Router::any('themed/welcome', 'App\Controllers\ThemedDemo@welcome');
 Router::any('themed/subpage', 'App\Controllers\ThemedDemo@subPage');
 
 Router::any('(:all)', 'App\Controllers\Demo@catchAll');

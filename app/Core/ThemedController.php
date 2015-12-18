@@ -19,6 +19,9 @@ class ThemedController extends Controller
 {
     protected $layout = 'themed';
 
+    // Store the Controller's variables.
+    protected $data = array();
+
 
     /**
      * Call the parent construct
@@ -48,9 +51,61 @@ class ThemedController extends Controller
             // We rendered the View in its Layout; stop the Flight.
             return false;
         }
+        else if(is_null($result)) {
+            $data = $this->data();
+
+            if(! empty($data)) {
+                $content = View::make($this->method())
+                    ->data($data)
+                    ->fetch();
+
+                View::layout($this->layout())
+                ->withContent($content)
+                ->display();
+
+                // We rendered the View in its Layout; stop the Flight.
+                return false;
+            }
+        }
 
         // Leave to Parent's Method the Flight decision.
         return parent::afterFlight($result);
+    }
+
+    public function data($name = null)
+    {
+        if(is_null($name)) {
+            return $this->data;
+        }
+        else if(isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    public function set($name, $value = null)
+    {
+        if (is_array($name)) {
+            if (is_array($value)) {
+                $data = array_combine($name, $value);
+            }
+            else {
+                $data = $name;
+            }
+        }
+        else {
+            $data = array($name => $value);
+        }
+
+        $this->data = $data + $this->data;
+    }
+
+    public function title($title)
+    {
+        $data = array('title' => $title);
+
+        $this->data = $data + $this->data;
     }
 
 }

@@ -51,14 +51,15 @@ class ThemedDemo extends ThemedController
     /**
      * Define Index page title and message, then create and return the View instance
      */
-    public function index()
+    public function welcome()
     {
         $message = __('Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>', $this->viewFilePath);
 
-        return View::make('welcome')
-            ->withTitle(__('Welcome'))
-            ->withMessage($message);
+       // Setup the View variables.
+        $this->title(__('Welcome'));
+
+        $this->set('message', $message);
     }
 
     /**
@@ -66,8 +67,6 @@ This content can be changed in <code>{0}</code>', $this->viewFilePath);
      */
     public function subPage()
     {
-        $viewPath = DS.str_replace(BASEPATH, '', $this->viewsPath).'subpage.php';
-
         $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>{0}</code>', $this->viewFilePath);
 

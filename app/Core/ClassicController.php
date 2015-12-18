@@ -46,7 +46,7 @@ class ClassicController extends Controller
     public function afterFlight($result)
     {
         if(($result === false) || ! $this->autoRender) {
-            // Erorrs in called Method or isn't wanted the auto-Rendering; stop the Flight.
+            // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
             return false;
         }
 

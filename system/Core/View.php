@@ -317,7 +317,19 @@ class View
      */
     public static function renderModule($module, $path, $data = false, $error = false, $fetch = false)
     {
-        $basePath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        if ($path[0] === '/') {
+            // A Views "Root" Path is wanted.
+            $basePath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
+        }
+        else if($instance->module() == $modules) {
+            $basePath = $instance->viewsPath();
+        }
+        else {
+            throw new \UnexpectedValueException('Invalid Module requested: '.$module);
+        }
 
         $filePath = $basePath.str_replace('/', DS, $path).".php";
 

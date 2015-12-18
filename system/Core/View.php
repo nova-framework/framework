@@ -68,7 +68,7 @@ class View
         return new View($filePath);
     }
 
-    public static function layout($layout = null, $view = null)
+    public static function layout($layout = null)
     {
         $filePath = self::getLayoutPath($layout);
 
@@ -78,32 +78,18 @@ class View
 
         self::addHeader('Content-Type: text/html; charset=UTF-8');
 
-        $layoutView = new View($filePath);
-
-        if($view) {
-            $layoutView->data = $view->data();
-
-            $layoutView->with('content', $view->fetch());
-        }
-
-        return $layoutView;
+        return new View($filePath);
     }
 
-    public static function fragment($fragment = null, $fromTpl = true, $view = null)
+    public static function fragment($fragment, $fromTemplate = true)
     {
-        $filePath = self::getFragmentPath($fragment, $fromTpl);
+        $filePath = self::getFragmentPath($fragment, $fromTemplate);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        $fragView = new View($filePath);
-
-        if($view) {
-            $fragView->data = $view->data();
-        }
-
-        return $fragView;
+        return new View($filePath);
     }
 
     public static function json($data)
@@ -115,17 +101,6 @@ class View
         }
 
         throw new \UnexpectedValueException('Unexpected parameter on View::json');
-    }
-
-    public function data(array $data = null)
-    {
-        if(is_null($data)) {
-            return $this->data;
-        }
-
-        $this->data = $data;
-
-        return $this;
     }
 
     public function fetch()
@@ -162,6 +137,33 @@ class View
     public function get($key)
     {
         return isset($this->data[$key]) ? $this->data[$key] : null;
+    }
+
+    public function data(array $data = null)
+    {
+        if(is_null($data)) {
+            return $this->data;
+        }
+
+        $this->data = $data;
+
+        return $this;
+    }
+
+    public function load($view)
+    {
+        $this->data = $view->data();
+
+        return $this;
+    }
+
+    public function loadView($view)
+    {
+        $this->data = $view->data();
+
+        $this->with('content', $view->fetch());
+
+        return $this;
     }
 
     private static function getViewPath($path)
@@ -202,9 +204,9 @@ class View
         return realpath($filePath.'Layouts'.DS.$layout.'.php');
     }
 
-    private static function getFragmentPath($fragment, $fromTpl = true)
+    private static function getFragmentPath($fragment, $fromTemplate = true)
     {
-        if($fromTpl) {
+        if($fromTemplate) {
             $filePath = self::getTemplatePath();
         }
         else {

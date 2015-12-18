@@ -31,26 +31,16 @@ class ThemedController extends Controller
     public function afterFlight($result)
     {
         if($result instanceof View) {
-            $this->renderLayout($result);
+            View::layout($this->layout)
+                ->loadView($result)
+                ->display();
 
-            // Rendered the View; stop the Flight.
+            // We rendered the View in its Layout; stop the Flight.
             return false;
         }
 
         // Return true to continue the Flight.
         return true;
-    }
-
-    protected function renderLayout($view)
-    {
-        $title = $view->get('title');
-
-        $content = $view->fetch();
-
-        View::layout($this->layout)
-            ->withTitle($title)
-            ->withContent($content)
-            ->display();
     }
 
 }

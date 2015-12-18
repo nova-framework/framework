@@ -185,15 +185,15 @@ class View
         return $this;
     }
 
-    public function loadView($view, $fetch = false)
+    public function loadView($view)
     {
-        $this->data = $view->data();
+        if($view instanceof View) {
+            $this->data = $view->data();
 
-        if($fetch) {
-            $this->with('content', $view->fetch());
+            return $this->with('content', $view->fetch());
         }
 
-        return $this;
+        throw new \UnexpectedValueException('Unknown parameter on View::loadView');
     }
 
     private static function viewPath($path)

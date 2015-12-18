@@ -42,7 +42,7 @@ class ThemedController extends BaseController
     {
         if($result instanceof View) {
             View::layout($this->layout())
-                ->loadView($result, true)
+                ->loadView($result)
                 ->display();
 
             // Stop the Flight.

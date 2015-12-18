@@ -17,6 +17,8 @@ use Smvc\Helpers\Session;
  */
 class Url
 {
+    private static $segments = array();
+
     /**
      * Redirect to chosen url.
      *
@@ -151,9 +153,22 @@ class Url
      */
     public static function segments()
     {
-        return explode('/', $_SERVER['REQUEST_URI']);
+        if(empty(self::$segments)) {
+            $uri = self::detectUri();
+
+            self::$segments = array_filter(explode('/', $uri), 'strlen');
+        }
+
+        return self::$segments;
     }
 
+    public static function segment($id)
+    {
+        $segments = self::segments();
+
+        return getSegment($segments, $id);
+    }
+    
     /**
      * Get item in array.
      *

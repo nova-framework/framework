@@ -227,18 +227,15 @@ class View
             $basePath = self::templatePath();
         }
         else {
-            // Calculate the filePath.
-            $basePath = APPPATH;
+            $basePath = APPPATH.'Views'.DS;
 
             // If we are in a Module, we should adjust the basePath.
             $module = $instance->module();
 
             if($module) {
                 // Adjust the filePath for Module.
-                $basePath .= 'Modules'.DS.$module.DS;
+                $basePath = APPPATH.'Modules'.DS.$module.DS;
             }
-
-            $basePath .= 'Views'.DS;
         }
 
         // Adjust the filePath for Fragments

@@ -40,6 +40,14 @@ class ThemedDemo extends ThemedController
         return parent::beforeFlight();
     }
 
+    public function afterFlight($result)
+    {
+        // Do some processing there, deciding to stop the Flight, if is case.
+
+        // Leave to Parent's Method the Flight decision.
+        return parent::afterFlight($result);
+    }
+
     /**
      * Define Index page title and message, then create and return the View instance
      */

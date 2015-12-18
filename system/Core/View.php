@@ -81,7 +81,7 @@ class View
         $layoutView = new View($filePath);
 
         if($view) {
-            $layoutView->data($view->data());
+            $layoutView->data = $view->data();
 
             $layoutView->with('content', $view->fetch());
         }
@@ -100,7 +100,7 @@ class View
         $fragView = new View($filePath);
 
         if($view) {
-            $fragView->data($view->data());
+            $fragView->data = $view->data();
         }
 
         return $fragView;

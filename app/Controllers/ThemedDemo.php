@@ -32,7 +32,7 @@ class ThemedDemo extends ThemedController
     {
         $method = $this->method();
 
-        $viewsPath = DS.str_replace(BASEPATH, '', $this->viewsPath());
+        $viewsPath = str_replace(BASEPATH, '', $this->viewsPath());
 
         $this->viewFilePath = $viewsPath.$method.'.php';
 

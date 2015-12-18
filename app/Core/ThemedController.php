@@ -41,7 +41,7 @@ class ThemedController extends Controller
     public function afterFlight($result)
     {
         if($result instanceof View) {
-            View::layout($this->layout)
+            View::layout($this->layout())
                 ->loadView($result, true)
                 ->display();
 

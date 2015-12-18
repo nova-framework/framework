@@ -19,6 +19,7 @@ class ThemedDemo extends ThemedController
 {
     private $viewFilePath;
 
+
     /**
      * Call the parent construct
      */
@@ -29,9 +30,9 @@ class ThemedDemo extends ThemedController
 
     public function beforeFlight()
     {
-        $basePath = DS.str_replace(BASEPATH, '', $this->viewsPath);
+        $method = $this->method();
 
-        $method = $this->method;
+        $basePath = DS.str_replace(BASEPATH, '', $this->viewsPath());
 
         $this->viewFilePath = $basePath.$method.'.php';
 

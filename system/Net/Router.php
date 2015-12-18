@@ -238,18 +238,18 @@ class Router
         $filePath = '';
 
         if(preg_match('#^assets/(.*)$#i', $uri, $matches)) {
-            $filePath = 'assets/'.$matches[1];
+            $filePath = BASEPATH.'assets'.DS.$matches[1];
         }
         else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
             // We need to classify the path name (the Module/Template path).
-            $assetsPath = Inflector::classify($matches[1].'/'.$matches[2].'/Assets/');
+            $basePath = Inflector::classify($matches[1].DS.$matches[2]);
 
-            $filePath = $assetsPath.$matches[3];
+            $filePath = APPPATH.$basePath.DS.'Assets'.DS.$matches[3];
         }
 
         if(! empty($filePath)) {
             // Make the filePath absolute.
-            $filePath = realpath(APPPATH.$filePath);
+            $filePath = realpath($filePath);
 
             // Serve the specified Asset File.
             $this->serveFile($filePath);

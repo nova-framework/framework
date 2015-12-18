@@ -28,6 +28,16 @@ class ThemedController extends Controller
         parent::__construct();
     }
 
+    public function beforeFlight()
+    {
+        // Do some processing there and stop the Flight if is case.
+        // Available information on this method:
+        // className, called method and parameters; also the module name, if any
+
+        // Leave to Parent's Method the Flight decision.
+        return parent::beforeFlight();
+    }
+
     public function afterFlight($result)
     {
         if($result instanceof View) {

@@ -248,9 +248,6 @@ class Router
         }
 
         if(! empty($filePath)) {
-            // Make the filePath absolute.
-            $filePath = realpath($filePath);
-
             // Serve the specified Asset File.
             $this->serveFile($filePath);
 

@@ -110,7 +110,7 @@ abstract class Controller
             // No auto-rendering wanted; stop the Flight.
             return true;
         }
-        
+
         if(is_array($result)) {
             View::addHeader('Content-Type: application/json');
 
@@ -149,14 +149,22 @@ abstract class Controller
         return $this->viewsPath;
     }
 
-    public function template()
+    public function template($value = null)
     {
-        return $this->template;
+        if(is_null($value)) {
+            return $this->template;
+        }
+
+        $this->template = $value;
     }
 
-    public function layout()
+    public function layout($value = null)
     {
-        return $this->layout;
+        if(is_null($value)) {
+            return $this->layout;
+        }
+
+        $this->layout = $value;
     }
 
 }

@@ -11,7 +11,7 @@
 
 <p><?= $message ?></p>
 
-<a class="btn btn-md btn-success" href="<?= site_url('themed/welcome'); ?>">
+<a class="btn btn-md btn-success" href="<?= site_url('classic/welcome'); ?>">
 	<?= __('Home'); ?>
 </a>
 

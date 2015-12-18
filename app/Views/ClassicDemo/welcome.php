@@ -11,7 +11,7 @@
 
 <p><?= $message ?></p>
 
-<a class="btn btn-md btn-success" href="<?= site_url('themed/subpage'); ?>">
+<a class="btn btn-md btn-success" href="<?= site_url('classic/subpage'); ?>">
 	<?= __('Open subpage'); ?>
 </a>
 

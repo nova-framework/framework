@@ -23,6 +23,7 @@ class ClassicController extends Controller
     protected $data = array();
 
     protected $autoRender = true;
+    protected $useLayout  = false;
 
     /**
      * Call the parent construct
@@ -54,7 +55,14 @@ class ClassicController extends Controller
             if(! empty($data)) {
                 $content = View::render($this->method(), $data, false, true);
 
-                View::renderLayout($this->layout(), $content, $data);
+                if($this->useLayout) {
+                    View::renderLayout($this->layout(), $content, $data);
+                }
+                else {
+                    View::sendHeaders();
+                    
+                    echo $content;
+                }
 
                 // Stop the Flight.
                 return false;
@@ -72,6 +80,15 @@ class ClassicController extends Controller
         }
 
         $this->autoRender = $value;
+    }
+
+    public function useLayout($value = null)
+    {
+        if(is_null($value)) {
+            return $this->useLayout;
+        }
+
+        $this->useLayout = $value;
     }
 
     public function data($name = null)
@@ -108,6 +125,9 @@ class ClassicController extends Controller
         $data = array('title' => $title);
 
         $this->data = $data + $this->data;
+
+        // Activate the Layout Rendering.
+        $this->useLayout = true;
     }
 
 }

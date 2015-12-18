@@ -269,11 +269,11 @@ class View
             }
         }
 
+        self::sendHeaders();
+
         if($fetch) {
             ob_start();
         }
-
-        self::sendHeaders();
 
         require $viewPath.str_replace('/', DS, $path).".php";
 
@@ -302,11 +302,11 @@ class View
             }
         }
 
+        self::sendHeaders();
+
         if($fetch) {
             ob_start();
         }
-
-        self::sendHeaders();
 
         require $viewPath.str_replace('/', DS, $path).".php";
 

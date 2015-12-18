@@ -45,11 +45,11 @@ class ClassicController extends Controller
 
     public function afterFlight($result)
     {
-        if(! $this->autoRender) {
+        if(($result === false) || ! $this->autoRender) {
             return false;
         }
 
-        if(is_null($result)) {
+        if(($result === true) || is_null($result)) {
             $data =& $this->data();
 
             if(! empty($data)) {
@@ -60,7 +60,7 @@ class ClassicController extends Controller
                 }
                 else {
                     View::sendHeaders();
-                    
+
                     echo $content;
                 }
 

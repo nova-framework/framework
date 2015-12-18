@@ -32,9 +32,9 @@ class ThemedDemo extends ThemedController
     {
         $method = $this->method();
 
-        $basePath = DS.str_replace(BASEPATH, '', $this->viewsPath());
+        $viewsPath = DS.str_replace(BASEPATH, '', $this->viewsPath());
 
-        $this->viewFilePath = $basePath.$method.'.php';
+        $this->viewFilePath = $viewsPath.$method.'.php';
 
         // Leave to Parent's Method the Flight decision.
         return parent::beforeFlight();

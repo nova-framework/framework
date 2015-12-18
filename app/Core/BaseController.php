@@ -97,7 +97,7 @@ class BaseController extends Controller
 
         $this->data = $data + $this->data;
 
-        // Auto-activate the Rendering on Layout.
+        // Activate the Rendering on Layout.
         $this->useLayout = true;
     }
 

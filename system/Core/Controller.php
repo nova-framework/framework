@@ -135,22 +135,14 @@ abstract class Controller
         return $this->viewsPath;
     }
 
-    public function template($value = null)
+    public function template()
     {
-        if(is_null($value)) {
-            return $this->template;
-        }
-
-        $this->template = $value;
+        return $this->template;
     }
 
-    public function layout($value = null)
+    public function layout()
     {
-        if(is_null($value)) {
-            return $this->layout;
-        }
-
-        $this->layout = $value;
+        return $this->layout;
     }
 
 }

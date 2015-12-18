@@ -49,8 +49,9 @@ This content can be changed in <code>/app/views/welcome/welcome.php</code>');
         $data['welcome_message'] = __('Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/views/welcome/subpage.php</code>');
 
-        View::renderTemplate('header', $data);
-        View::render('subpage', $data);
-        View::renderTemplate('footer', $data);
+        // Render the Page using the Content fetching and the Layout.
+        $content = View::render('subpage', $data, false, true);
+
+        View::renderLayout('default', $content, $data);
     }
 }

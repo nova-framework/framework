@@ -13,7 +13,7 @@ use Smvc\Core\View;
 use Smvc\Core\Controller;
 
 /**
- * Sample controller showing a construct and 2 methods and their typical usage.
+ * Simple themed controller showing the typical usage of the Flight Control method.
  */
 class ThemedController extends Controller
 {

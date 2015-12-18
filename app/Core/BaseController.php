@@ -66,7 +66,7 @@ class BaseController extends Controller
         echo $result;
     }
 
-    protected function autoRender($value = null)
+    public function autoRender($value = null)
     {
         if(is_null($value)) {
             return $this->autoRender;
@@ -75,7 +75,7 @@ class BaseController extends Controller
         $this->autoRender = $value;
     }
 
-    protected function useLayout($value = null)
+    public function useLayout($value = null)
     {
         if(is_null($value)) {
             return $this->useLayout;
@@ -96,7 +96,7 @@ class BaseController extends Controller
         return null;
     }
 
-    protected function set($name, $value = null)
+    public function set($name, $value = null)
     {
         if (is_array($name)) {
             if (is_array($value)) {
@@ -113,7 +113,7 @@ class BaseController extends Controller
         $this->data = $data + $this->data;
     }
 
-    protected function title($title)
+    public function title($title)
     {
         $data = array('title' => $title);
 

@@ -46,27 +46,26 @@ class ClassicController extends Controller
     public function afterFlight($result)
     {
         if(($result === false) || ! $this->autoRender) {
+            // Erorrs in called Method or isn't wanted the auto-Rendering; stop the Flight.
             return false;
         }
 
         if(($result === true) || is_null($result)) {
             $data =& $this->data();
 
-            if(! empty($data)) {
-                $content = View::render($this->method(), $data, false, true);
+            $content = View::render($this->method(), $data, false, true);
 
-                if($this->useLayout) {
-                    View::renderLayout($this->layout(), $content, $data);
-                }
-                else {
-                    View::sendHeaders();
-
-                    echo $content;
-                }
-
-                // Stop the Flight.
-                return false;
+            if($this->useLayout) {
+                View::renderLayout($this->layout(), $content, $data);
             }
+            else {
+                View::sendHeaders();
+
+                echo $content;
+            }
+
+            // The current Page was rendered there; stop the Flight.
+            return false;
         }
 
         // Leave to the parent's method the Flight decisions.

@@ -155,18 +155,13 @@ class View
         return $this;
     }
 
-    public function load($view)
+    public function loadView($view, $fetch = false)
     {
         $this->data = $view->data();
 
-        return $this;
-    }
-
-    public function loadView($view)
-    {
-        $this->data = $view->data();
-
-        $this->with('content', $view->fetch());
+        if($fetch) {
+            $this->with('content', $view->fetch());
+        }
 
         return $this;
     }

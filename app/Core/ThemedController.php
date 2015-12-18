@@ -32,7 +32,7 @@ class ThemedController extends Controller
     {
         if($result instanceof View) {
             View::layout($this->layout)
-                ->loadView($result)
+                ->loadView($result, true)
                 ->display();
 
             // We rendered the View in its Layout; stop the Flight.

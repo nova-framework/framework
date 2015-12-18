@@ -39,8 +39,8 @@ class ThemedController extends Controller
             return false;
         }
 
-        // Return true to continue the Flight.
-        return true;
+        // Leave to Parent's Method the Flight decision.
+        return parent::afterFlight($result);
     }
 
 }

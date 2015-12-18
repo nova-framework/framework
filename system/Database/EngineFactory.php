@@ -10,6 +10,7 @@ use Smvc\Database\Engine\Engine;
 abstract class EngineFactory
 {
     const DRIVER_MYSQL = "MySQLEngine";
+    const DRIVER_SQLITE = "SQLiteEngine";
 
     private static $instances = array();
 

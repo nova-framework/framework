@@ -10,17 +10,14 @@
 namespace App\Core;
 
 use Smvc\Core\View;
-use Smvc\Core\Controller;
+use App\Core\BaseController;
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
  */
-class ThemedController extends Controller
+class ThemedController extends BaseController
 {
     protected $layout = 'themed';
-
-    // Store the Controller's variables.
-    protected $data = array();
 
 
     /**
@@ -48,13 +45,19 @@ class ThemedController extends Controller
                 ->loadView($result, true)
                 ->display();
 
-            // Stop the Flight.
+            // The current Page was rendered there; stop the Flight.
             return false;
         }
-        else if(is_null($result)) {
+
+        if(($result === false) || ! $this->autoRender) {
+            // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
+            return false;
+        }
+
+        if(($result === true) || is_null($result)) {
             $data =& $this->data();
 
-            if(! empty($data)) {
+            if($this->useLayout) {
                 $content = View::make($this->method())
                     ->loadData($data)
                     ->fetch();
@@ -63,50 +66,19 @@ class ThemedController extends Controller
                     ->loadData($data)
                     ->withContent($content)
                     ->display();
-
-                // Stop the Flight.
-                return false;
             }
+            else {
+                View::make($this->method())
+                    ->loadData($data)
+                    ->display();
+            }
+
+            // The current Page was rendered there; stop the Flight.
+            return false;
         }
 
         // Leave to the parent's method the Flight decisions.
         return parent::afterFlight($result);
-    }
-
-    public function data($name = null)
-    {
-        if(is_null($name)) {
-            return $this->data;
-        }
-        else if(isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        return null;
-    }
-
-    public function set($name, $value = null)
-    {
-        if (is_array($name)) {
-            if (is_array($value)) {
-                $data = array_combine($name, $value);
-            }
-            else {
-                $data = $name;
-            }
-        }
-        else {
-            $data = array($name => $value);
-        }
-
-        $this->data = $data + $this->data;
-    }
-
-    public function title($title)
-    {
-        $data = array('title' => $title);
-
-        $this->data = $data + $this->data;
     }
 
 }

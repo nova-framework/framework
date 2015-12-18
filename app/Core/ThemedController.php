@@ -28,7 +28,7 @@ class ThemedController extends BaseController
         parent::__construct();
     }
 
-    public function beforeFlight()
+    protected function beforeFlight()
     {
         // Do some processing there and stop the Flight, if is the case.
         // The available information on this method are:
@@ -38,7 +38,7 @@ class ThemedController extends BaseController
         return parent::beforeFlight();
     }
 
-    public function afterFlight($result)
+    protected function afterFlight($result)
     {
         if($result instanceof View) {
             View::layout($this->layout())

@@ -32,13 +32,13 @@ class BaseController extends Controller
         parent::__construct();
     }
 
-    public function beforeFlight()
+    protected function beforeFlight()
     {
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
 
-    public function afterFlight($result)
+    protected function afterFlight($result)
     {
         // Leave to parent's method the Flight decisions.
         return parent::afterFlight();

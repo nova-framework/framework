@@ -76,12 +76,12 @@ abstract class Controller
         $this->viewsPath = APPPATH .$viewsPath .DS;
     }
 
-    public function beforeFlight()
+    protected function beforeFlight()
     {
         return true;
     }
 
-    public function afterFlight($result)
+    protected function afterFlight($result)
     {
         return true;
     }

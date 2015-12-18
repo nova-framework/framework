@@ -28,7 +28,7 @@ class ThemedWelcome extends ThemedController
         parent::__construct();
     }
 
-    public function beforeFlight()
+    protected function beforeFlight()
     {
         $method = $this->method();
 
@@ -40,7 +40,7 @@ class ThemedWelcome extends ThemedController
         return parent::beforeFlight();
     }
 
-    public function afterFlight($result)
+    protected function afterFlight($result)
     {
         // Do some processing there, even deciding to stop the Flight, if case.
 

@@ -70,7 +70,7 @@ abstract class Controller
             $viewsPath = str_replace('/', DS, 'Modules/'.$matches[1].'/Views/'.$matches[2]);
         }
         else {
-            throw \Exception('Failed to calculate the Views Path for the Class: '.$className);
+            throw \Exception('Unknown Views Path for the Class: '.$className);
         }
 
         $this->viewsPath = APPPATH .$viewsPath .DS;
@@ -96,19 +96,18 @@ abstract class Controller
         // Execute the Controller's Method with the given arguments.
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
+        if(is_null($result) || is_bool($result)) {
+            // No auto-rendering wanted; stop the Flight.
+            return true;
+        }
+
         if($this->afterFlight($result) === false) {
             // Is wanted to stop the Flight.
             return true;
         }
-
-        if($result instanceof View) {
+        else if($result instanceof View) {
             $result->display();
 
-            return true;
-        }
-
-        if(is_null($result) || is_bool($result)) {
-            // No auto-rendering wanted; stop the Flight.
             return true;
         }
 
@@ -119,10 +118,6 @@ abstract class Controller
         }
         else if(is_string($result)) {
             View::addHeader('Content-Type: text/html; charset=UTF-8');
-        }
-        else if(is_integer($result)) {
-            // Just to see '0' on webpage and nothing more.
-            $result = sprintf('%d', $result);
         }
 
         View::sendHeaders();

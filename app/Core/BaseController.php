@@ -20,8 +20,7 @@ class BaseController extends Controller
     // Store the Controller's variables.
     protected $data = array();
 
-    protected $autoRender = true;
-    protected $useLayout  = false;
+    protected $useLayout = false;
 
 
     /**
@@ -64,15 +63,6 @@ class BaseController extends Controller
         View::sendHeaders();
 
         echo $result;
-    }
-
-    protected function autoRender($value = null)
-    {
-        if(is_null($value)) {
-            return $this->autoRender;
-        }
-
-        $this->autoRender = $value;
     }
 
     protected function useLayout($value = null)

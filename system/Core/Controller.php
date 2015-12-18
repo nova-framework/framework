@@ -35,6 +35,8 @@ abstract class Controller
     protected $template = 'Default';
     protected $layout   = 'default';
 
+    protected $autoRender = true;
+
     /**
      * Constructor
      */
@@ -96,8 +98,8 @@ abstract class Controller
         // Execute the Controller's Method with the given arguments.
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
-        if($this->afterFlight($result) === false) {
-            // Is wanted to stop the Flight.
+        if(($this->afterFlight($result) === false) || ! $this->autoRender) {
+            // Is wanted to stop the Flight or there is no auto-rendering.
             return true;
         }
 
@@ -111,6 +113,15 @@ abstract class Controller
         if($result instanceof View) {
             $result->display();
         }
+    }
+
+    protected function autoRender($value = null)
+    {
+        if(is_null($value)) {
+            return $this->autoRender;
+        }
+
+        $this->autoRender = $value;
     }
 
     // Some getters.

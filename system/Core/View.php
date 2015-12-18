@@ -205,14 +205,14 @@ class View
         return APPPATH.'Templates'.DS.$template.DS;
     }
 
-    private static function layoutPath($layout = null)
+    private static function layoutPath($layout = null, $template = null)
     {
         // Get the Controller instance.
         $instance =& get_instance();
 
         $layout = $layout ? $layout : $instance->layout();
 
-        $filePath = self::templatePath();
+        $filePath = self::templatePath($template);
 
         // Adjust the filePath for Layouts
         return $filePath.'Layouts'.DS.$layout.'.php';
@@ -312,7 +312,6 @@ class View
 
         require $viewPath.str_replace('/', DS, $path).".php";
 
-
         if($fetch) {
             return ob_get_clean();
         }
@@ -329,7 +328,7 @@ class View
      */
     public static function renderLayout($layout, $content, $data = false, $custom = null)
     {
-        $filePath = self::templatePath($custom).'Layouts'.DS.$layout.DS;
+        $filePath = self::layoutPath($layout, $custom);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException('File not found: '.$filePath);

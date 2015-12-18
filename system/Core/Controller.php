@@ -135,7 +135,7 @@ abstract class Controller
         return $this->viewsPath;
     }
 
-    protected function template($value = null)
+    public function template($value = null)
     {
         if(is_null($value)) {
             return $this->template;
@@ -144,7 +144,7 @@ abstract class Controller
         $this->template = $value;
     }
 
-    protected function layout($value = null)
+    public function layout($value = null)
     {
         if(is_null($value)) {
             return $this->layout;

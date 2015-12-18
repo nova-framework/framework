@@ -65,7 +65,16 @@ Config::set('database', array(
             'user' => 'root',
             'password' => 'password'
         )
+    ),
+    /** Extra connections can be added here, some examples: */
+    /*
+    'sqlite' => array(
+        'engine' => 'sqlite',
+        'config' => array(
+            'file' => APPPATH . 'database.sqlite'
+        )
     )
+    */
 ));
 
 /**

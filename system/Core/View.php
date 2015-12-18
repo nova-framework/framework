@@ -145,15 +145,22 @@ class View
         return $this;
     }
 
-    public function getVar($key)
+    public function data($name = null)
     {
-        return isset($this->data[$key]) ? $this->data[$key] : null;
+        if(is_null($name)) {
+            return $this->data;
+        }
+        else if(isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return null;
     }
 
-    public function data(array $data = null)
+    public function loadData($data)
     {
-        if(is_null($data)) {
-            return $this->data;
+        if (! is_array($data)) {
+            throw new \UnexpectedValueException('Unexpected parameter on View::loadData');
         }
 
         $this->data = $data;

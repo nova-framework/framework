@@ -36,15 +36,15 @@ class ThemedDemo extends ThemedController
 
         $this->viewFilePath = $viewsPath.$method.'.php';
 
-        // Leave to Parent's Method the Flight decision.
+        // Leave to the parent's method the Flight decisions.
         return parent::beforeFlight();
     }
 
     public function afterFlight($result)
     {
-        // Do some processing there, deciding to stop the Flight, if is case.
+        // Do some processing there, even deciding to stop the Flight, if case.
 
-        // Leave to Parent's Method the Flight decision.
+        // Leave to the parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
 

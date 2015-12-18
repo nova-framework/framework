@@ -33,11 +33,11 @@ class ThemedController extends Controller
 
     public function beforeFlight()
     {
-        // Do some processing there and stop the Flight if is case.
-        // Available information on this method:
-        // className, called method and parameters; also the module name, if any
+        // Do some processing there and stop the Flight, if is the case.
+        // The available information on this method are:
+        // className, called method and parameters; optionally, the module name
 
-        // Leave to Parent's Method the Flight decision.
+        // Leave to the parent's method the Flight decisions.
         return parent::beforeFlight();
     }
 
@@ -48,7 +48,7 @@ class ThemedController extends Controller
                 ->loadView($result, true)
                 ->display();
 
-            // We rendered the View in its Layout; stop the Flight.
+            // Stop the Flight.
             return false;
         }
         else if(is_null($result)) {
@@ -56,20 +56,20 @@ class ThemedController extends Controller
 
             if(! empty($data)) {
                 $content = View::make($this->method())
-                    ->data($data)
+                    ->loadData($data)
                     ->fetch();
 
                 View::layout($this->layout())
-                    ->data($data)
+                    ->loadData($data)
                     ->withContent($content)
                     ->display();
 
-                // We rendered the View in its Layout; stop the Flight.
+                // Stop the Flight.
                 return false;
             }
         }
 
-        // Leave to Parent's Method the Flight decision.
+        // Leave to the parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
 

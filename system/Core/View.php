@@ -57,9 +57,9 @@ class View
             throw new \BadMethodCallException('Invalid method called: View::'.$method);
         }
 
-        $key = Inflector::tableize(substr($method, 4));
+        $varname = Inflector::tableize(substr($method, 4));
 
-        return $this->with($key, array_shift($params));
+        return $this->with($varname, array_shift($params));
     }
 
     public static function make($view)
@@ -139,7 +139,7 @@ class View
         return $this;
     }
 
-    public function get($key)
+    public function getVar($key)
     {
         return isset($this->data[$key]) ? $this->data[$key] : null;
     }
@@ -173,14 +173,14 @@ class View
 
     private static function viewPath($path)
     {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
         if ($path[0] === '/') {
-            // An Views "root" path is wanted.
+            // A Views "Root" path is wanted.
             $viewPath = APPPATH."Views";
         }
         else {
-            // Get the Controller instance.
-            $instance =& get_instance();
-
             $viewPath = $instance->viewsPath();
         }
 
@@ -212,13 +212,13 @@ class View
 
     private static function fragmentPath($fragment, $fromTemplate = true)
     {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
         if($fromTemplate) {
             $filePath = self::templatePath();
         }
         else {
-            // Get the Controller instance.
-            $instance =& get_instance();
-
             $module = $instance->module();
 
             // Calculate the filePath.
@@ -245,13 +245,14 @@ class View
      */
     public static function render($path, $data = false, $error = false)
     {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
         if ($path[0] === '/') {
+            // A Views "Root" Path is wanted.
             $viewPath = APPPATH."Views";
         }
         else {
-            // Get the Controller instance.
-            $instance =& get_instance();
-
             $viewPath = $instance->viewsPath();
         }
 

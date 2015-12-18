@@ -60,8 +60,9 @@ class ThemedController extends Controller
                     ->fetch();
 
                 View::layout($this->layout())
-                ->withContent($content)
-                ->display();
+                    ->data($data)
+                    ->withContent($content)
+                    ->display();
 
                 // We rendered the View in its Layout; stop the Flight.
                 return false;

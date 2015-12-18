@@ -41,7 +41,7 @@ class ClassicController extends BaseController
     public function afterFlight($result)
     {
         if(($result === false) || ! $this->autoRender) {
-            // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
+            // Stop the Flight.
             return false;
         }
 
@@ -52,12 +52,14 @@ class ClassicController extends BaseController
                 $content = View::render($this->method(), $data, false, true);
 
                 View::renderLayout($this->layout(), $content, $data);
-            }
-            else {
-                View::render($this->method(), $data, false);
+
+                // Stop the Flight.
+                return false;
             }
 
-            // The current Page was rendered there; stop the Flight.
+            View::render($this->method(), $data, false);
+
+            // Stop the Flight.
             return false;
         }
 

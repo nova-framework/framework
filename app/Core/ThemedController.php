@@ -45,7 +45,7 @@ class ThemedController extends BaseController
                 ->loadView($result, true)
                 ->display();
 
-            // The current Page was rendered there; stop the Flight.
+            // Stop the Flight.
             return false;
         }
 
@@ -66,14 +66,16 @@ class ThemedController extends BaseController
                     ->loadData($data)
                     ->withContent($content)
                     ->display();
-            }
-            else {
-                View::make($this->method())
-                    ->loadData($data)
-                    ->display();
+
+                // Stop the Flight.
+                return false;
             }
 
-            // The current Page was rendered there; stop the Flight.
+            View::make($this->method())
+                ->loadData($data)
+                ->display();
+
+            // Stop the Flight.
             return false;
         }
 

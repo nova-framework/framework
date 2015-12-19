@@ -16,6 +16,12 @@ interface Engine
     public function getDriverName();
 
     /**
+     * Get driver code, used in config as driver string.
+     * @return string
+     */
+    public function getDriverCode();
+
+    /**
      * Get configuration for instance
      * @return array
      */
@@ -26,4 +32,12 @@ interface Engine
      * @return mixed|\PDO
      */
     public function getConnection();
+
+    /**
+     * Basic execute statement. Only for small queries with no binding parameters
+     *
+     * @param $sql
+     * @return mixed
+     */
+    public function executeSimpleQuery($sql);
 }

@@ -63,6 +63,11 @@ class View
         return $this->with($varname, array_shift($params));
     }
 
+    /**
+     * Make view
+     * @param $view
+     * @return View
+     */
     public static function make($view)
     {
         $filePath = self::viewPath($view);
@@ -74,6 +79,11 @@ class View
         return new View($filePath);
     }
 
+    /**
+     * Make view layout
+     * @param null $layout
+     * @return View
+     */
     public static function layout($layout = null)
     {
         $filePath = self::layoutPath($layout);

@@ -1,28 +1,61 @@
 <?php
+/**
+ * Abstract Database Service.
+ *
+ * @author Tom Valk - tomvalk@lt-box.info
+ * @version 3.0
+ * @date December 19th, 2015
+ */
 
+namespace Nova\Database;
 
-namespace Nova\Database\Service;
-use Nova\Database\Entity;
+use Nova\Database\Engine;
 
 /**
- * Interface Service for Database Services
- * Use this to create classes in \Core\Database\Service
- *
- * @package Core\Database\Service
+ * Class DatabaseService.
+ * @package Core\Database
  */
-interface Service
+abstract class Service
 {
+    /** @var string Driver name, should be in the config as default. */
+    protected $driver;
+
+    /** @var Engine database engine we will use. */
+    protected $engine;
+
+    /** @var string Table name. Don't use prefix here! */
+    protected $table;
+
+    /** @var string[]|array Primary keys. */
+    protected $primaryKeys;
+
+
+    /**
+     * DatabaseService constructor.
+     * @param Engine|null $engine
+     */
+    public function __construct($engine = null)
+    {
+        if ($engine === null || !$engine instanceof Engine)
+        {
+            $engine = EngineFactory::getEngine();
+        }
+
+        $this->engine = $engine;
+    }
+
+
     /**
      * Create the entity in the database. Will try to insert it into the database
      * Can throw Exceptions on failure or return false.
      *
      * On success it will return the entity including the (optional) inserted ID (primary key, when only one)
      *
-     * @param $entity Entity
+     * @param $entity Entity|Entity[] One ore multiple entit(y|ies), only when engine and service supports multiple entities!
      * @return false|Entity
      * @throws \Exception
      */
-    public function create($entity);
+    abstract public function create($entity);
 
 
     /**
@@ -37,7 +70,7 @@ interface Service
      * @return false|Entity[]
      * @throws \Exception
      */
-    public function read($sql, $bind = array());
+    abstract public function read($sql, $bind = array());
 
 
     /**
@@ -52,7 +85,7 @@ interface Service
      * @return false|Entity
      * @throws \Exception
      */
-    public function update($entity, $limit = 1);
+    abstract public function update($entity, $limit = 1);
 
 
     /**
@@ -65,5 +98,5 @@ interface Service
      * @return boolean successful delete?
      * @throws \Exception
      */
-    public function delete($entity, $limit = 1);
+    abstract public function delete($entity, $limit = 1);
 }

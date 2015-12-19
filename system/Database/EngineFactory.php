@@ -1,16 +1,22 @@
 <?php
-
+/**
+ * Engine Factory.
+ *
+ * @author Tom Valk - tomvalk@lt-box.info
+ * @version 3.0
+ * @date December 19th, 2015
+ */
 
 namespace Nova\Database;
 
 
 use Nova\Config;
-use Nova\Database\Engine\Engine;
+use Nova\Database\Engine;
 
 abstract class EngineFactory
 {
-    const DRIVER_MYSQL = "MySQLEngine";
-    const DRIVER_SQLITE = "SQLiteEngine";
+    const DRIVER_MYSQL = "MySQL";
+    const DRIVER_SQLITE = "SQLite";
 
     private static $instances = array();
 
@@ -19,7 +25,7 @@ abstract class EngineFactory
      * Please use the constants in this class as a driver parameter
      *
      * @param $connectionName string Name of the connection provided in the configuration
-     * @return null|Engine|\PDO
+     * @return Engine|\PDO|null
      * @throws \Exception
      */
     public static function getEngine($connectionName = 'default')

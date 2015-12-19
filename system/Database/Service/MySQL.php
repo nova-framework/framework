@@ -1,10 +1,15 @@
 <?php
-
+/**
+ * MySQL Service.
+ *
+ * @author Tom Valk - tomvalk@lt-box.info
+ * @version 3.0
+ * @date December 19th, 2015
+ */
 
 namespace Nova\Database\Service;
 
-use Nova\Database\DatabaseService;
-use Nova\Database\Engine\MySQLEngine;
+use Nova\Database\Service;
 use Nova\Database\EngineFactory;
 use Nova\Database\Entity;
 
@@ -13,7 +18,7 @@ use Nova\Database\Entity;
  *
  * @package Core\Database\Service
  */
-class MySQLService extends DatabaseService implements Service
+class MySQL extends Service
 {
 
     /** @var int Fetch method (use \PDO::FETCH_* */
@@ -34,31 +39,47 @@ class MySQLService extends DatabaseService implements Service
 
         parent::__construct($engine);
 
-        /** @var MySQLEngine engine */
+        /** @var \Nova\Database\Engine\MySQL engine */
         $this->engine = $engine;
     }
 
     /**
-     * Create the entity in the database. Will try to insert it into the database
+     * Create the entity (or entities) in the database. Will try to insert it into the database
      * Can throw Exceptions on failure or return false.
      *
      * On success it will return the entity including the (optional) inserted ID (primary key, when only one)
      *
-     * @param $entity Entity
+     * @param $entity Entity|Entity[] One or multiple entit(y|ies) to create in the database
      * @return false|Entity
      * @throws \Exception
      */
     public function create($entity)
     {
-        $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($entity));
-        if ($result === false) {
-            return false;
+        // If it isn't already an array, make it an array, to keep code simple.
+        if (!is_array($entity)) {
+            $entity = array($entity);
         }
 
-        if (count($this->primaryKeys) == 1) {
-            $entity->{$this->primaryKeys[0]} = $result;
-        }else{
-            // TODO: We can't map this, we don't get multiple primary keys back unfortunately. Solution still needed
+        // Loop and insert
+        foreach($entity as $idx => $entit)
+        {
+            // Insert
+            $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($entit));
+            if ($result === false) {
+                // On error, return inmidiate.
+                return false;
+            }
+
+            // If only one Primary Key, we will set it in the entity.
+            if (count($this->primaryKeys) == 1 && $entit->{$this->primaryKeys[0]} == null) {
+                $entity[$idx]->{$this->primaryKeys[0]} = $result;
+            }
+
+        }
+
+        // Return same format as before
+        if (count($entity) === 1) {
+            return $entity[0];
         }
 
         return $entity;
@@ -89,7 +110,7 @@ class MySQLService extends DatabaseService implements Service
      * For safety it will default limit on 1 row only, you can override it but be warned on this!
      *
      * @param $entity Entity
-     * @param $limit int Limit of changes, may not be effective on every driver! Default 1. TODO: Will not be used currently
+     * @param $limit int Limit of changes, may not be effective on every driver! Default 1.
      * @return false|Entity
      * @throws \Exception
      */
@@ -101,15 +122,14 @@ class MySQLService extends DatabaseService implements Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues);
+        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues, $limit);
         if ($result === false) {
             return false;
         }
 
-        if (count($this->primaryKeys) == 1) {
+        // Primary Key, put it back into the entity.
+        if (count($this->primaryKeys) == 1 && $entity->{$this->primaryKeys[0]} == null) {
             $entity->{$this->primaryKeys[0]} = $result;
-        }else{
-            // TODO: We can't map this, we don't get multiple primary keys back unfortunately. Solution still needed
         }
 
         return $entity;
@@ -118,10 +138,10 @@ class MySQLService extends DatabaseService implements Service
     /**
      * Delete an entity from the database. Can also handle multiple entities with an array given in the $entity parameter
      *
-     * For safety it will default limit on 1 row only, you can override it but be warned on this!
+     * For safety it will limit on 1 row only by default, you can disable by giving null into the limit.
      *
      * @param $entity Entity
-     * @param $limit int Limit of changes, may not be effective on every driver! Default 1
+     * @param $limit int|null Limit of changes, may not be effective on every driver! Default 1. Null for infinity.
      * @return boolean successful delete?
      * @throws \Exception
      */

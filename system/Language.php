@@ -34,7 +34,11 @@ class Language
     // The domain instances array.
     private static $instances = array();
 
-
+    /**
+     * Language constructor.
+     * @param string $domain
+     * @param string $code
+     */
     public function __construct($domain, $code)
     {
         $languages = Config::get('languages');
@@ -90,6 +94,12 @@ class Language
         }
     }
 
+    /**
+     * Get instance of language with domain and code (optional).
+     * @param string $domain Optional custom domain
+     * @param string $code Optional custom language code.
+     * @return Language
+     */
     public static function &get($domain = 'app', $code = LANGUAGE_CODE)
     {
         // The ID code is something like: 'en/system', 'en/app', 'en/file_manager' or 'en/template/admin'
@@ -103,6 +113,12 @@ class Language
         return self::$instances[$id];
     }
 
+    /**
+     * Translate a message with optional formatting
+     * @param string $message Original message.
+     * @param array $params Optional params for formatting.
+     * @return string
+     */
     public function translate($message, $params = array())
     {
         // Update the current message with the domain translation, if we have one.
@@ -124,26 +140,47 @@ class Language
     }
 
     // Public Getters
+
+    /**
+     * Get current code
+     * @return string
+     */
     public function code()
     {
         return $this->code;
     }
 
+    /**
+     * Get current info
+     * @return string
+     */
     public function info()
     {
         return $this->info;
     }
 
+    /**
+     * Get current name
+     * @return string
+     */
     public function name()
     {
         return $this->name;
     }
 
+    /**
+     * Get current locale
+     * @return string
+     */
     public function locale()
     {
         return $this->locale;
     }
 
+    /**
+     * Get all messages
+     * @return array
+     */
     function messages()
     {
         return $this->messages;

@@ -67,14 +67,23 @@ class Manager
      */
     public function trigger($name, $params = array(), $callback = null)
     {
+        // Create a new Event.
+        $event = new Event($name, $params);
+
+        // Deploy the Event notification to Listeners.
+        $this->notify($event, $callback);
+    }
+
+    public function notify(Event $event, $callback = null)
+    {
+        // Preserve a instance of the Current Controller.
+        $controller = Controller::getInstance();
+
         foreach ($this->listeners as $listener) {
-            if ($listener[0] !== $name) {
+            if ($listener[0] !== $event->name()) {
                 // The current Listener do not observe this type of Event; continue.
                 continue;
             }
-
-            // Create a new Event.
-            $event = new Event($name, $params);
 
             // Invoke the Listener's Callback and pass the Event as parameter.
             $result = invokeObject($listener[1], $event);
@@ -87,6 +96,9 @@ class Manager
             // Invoke the Notifier and pass the result from Listener as parameter.
             invokeNotifier($callback, $result);
         }
+
+        // Ensure restoration of the right Controller instance.
+        $controller->setInstance();
     }
 
     /**

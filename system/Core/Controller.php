@@ -54,6 +54,11 @@ abstract class Controller
         return self::$instance;
     }
 
+    public function setInstance()
+    {
+        self::$instance =& $this;
+    }
+
     public function initialize($className, $method, $params = array())
     {
         $this->className = $className;

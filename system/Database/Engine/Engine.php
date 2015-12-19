@@ -5,7 +5,7 @@ namespace Nova\Database\Engine;
 
 /**
  * Interface Engine
- * @package Core\Database\Engine
+ * @package Nova\Database\Engine
  */
 interface Engine
 {

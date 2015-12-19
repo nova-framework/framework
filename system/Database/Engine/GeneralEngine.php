@@ -7,7 +7,7 @@ namespace Nova\Database\Engine;
  * Interface GeneralEngine
  * For implementing basic SQL language engines
  *
- * @package Database\Engine
+ * @package Nova\Database\Engine
  */
 interface GeneralEngine
 {

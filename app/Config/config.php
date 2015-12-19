@@ -7,7 +7,7 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Config;
+use Nova\Config;
 
 /**
  * Set the Framework's timezone.

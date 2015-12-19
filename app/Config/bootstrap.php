@@ -7,10 +7,10 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Helpers\Session;
-use Smvc\Modules\Manager as Modules;
-use Smvc\Net\Router;
-use Smvc\Config;
+use Nova\Helpers\Session;
+use Nova\Modules\Manager as Modules;
+use Nova\Net\Router;
+use Nova\Config;
 
 /**
  * Turn on output buffering.
@@ -25,8 +25,8 @@ require dirname(__FILE__).DS.'config.php';
  * Turn on custom error handling.
  */
 
-set_exception_handler('Smvc\Logger::ExceptionHandler');
-set_error_handler('Smvc\Logger::ErrorHandler');
+set_exception_handler('Nova\Logger::ExceptionHandler');
+set_error_handler('Nova\Logger::ErrorHandler');
 
 /**
  * Set timezone.

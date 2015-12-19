@@ -10,8 +10,8 @@
 
 namespace App\Controllers;
 
-use Smvc\Core\Controller;
-use Smvc\Core\View;
+use Nova\Core\Controller;
+use Nova\Core\View;
 
 /**
  * Error class to generate 404 pages.

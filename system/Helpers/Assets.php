@@ -1,5 +1,5 @@
 <?php
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 /**
  * Assets static helper
@@ -10,8 +10,8 @@ namespace Smvc\Helpers;
  * @date May 18 2015
  */
 
-use Smvc\Net\Url;
-use Smvc\Helpers\JsMin;
+use Nova\Net\Url;
+use Nova\Helpers\JsMin;
 
 class Assets
 {

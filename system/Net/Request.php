@@ -6,7 +6,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Net;
+namespace Nova\Net;
 
 /**
  * It contains the request information and provide methods to fetch request body.

@@ -1,8 +1,8 @@
 <?php
 
 
-namespace Smvc\Database\Service;
-use Smvc\Database\Entity;
+namespace Nova\Database\Service;
+use Nova\Database\Entity;
 
 /**
  * Interface Service for Database Services

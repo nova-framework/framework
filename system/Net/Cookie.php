@@ -6,7 +6,7 @@
  * @date June 10, 2015
  */
 
-namespace Smvc\Net;
+namespace Nova\Net;
 
 
 class Cookie

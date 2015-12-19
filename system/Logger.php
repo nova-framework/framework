@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc;
+namespace Nova;
 
-use Smvc\Helpers\PhpMailer as Mailer;
+use Nova\Helpers\PhpMailer as Mailer;
 
 /**
  * Record and email/display errors or a custom error message.

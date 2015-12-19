@@ -7,7 +7,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 /**
  * Hooks allow code to be injected into various parts of the framework.

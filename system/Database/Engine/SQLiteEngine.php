@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Smvc\Database\Engine;
+namespace Nova\Database\Engine;
 
 
 class SQLiteEngine extends \PDO implements Engine

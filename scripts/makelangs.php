@@ -9,6 +9,7 @@ $languages = array(
     'cs',
     'de',
     'en',
+    'es',
     'fr',
     'it',
     'nl',
@@ -56,7 +57,7 @@ if(is_dir(BASEPATH .'app'.DS.'Modules')) {
     $dirs = glob($path , GLOB_ONLYDIR);
 
     foreach($dirs as $module) {
-        $workPaths[] = str_replace('/', DS, 'app/Modules/'.$module);
+        $workPaths[] = str_replace('/', DS, 'app/Modules/'.basename($module));
     }
 }
 
@@ -66,7 +67,7 @@ if(is_dir(BASEPATH .'app'.DS.'Templates')) {
     $dirs = glob($path , GLOB_ONLYDIR);
 
     foreach($dirs as $template) {
-        $workPaths[] = str_replace('/', DS, 'app/Templates/'.$template);
+        $workPaths[] = str_replace('/', DS, 'app/Templates/'.basename($template));
     }
 }
 

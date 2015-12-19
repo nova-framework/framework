@@ -18,6 +18,9 @@ use Smvc\Core\Controller;
  */
 class Welcome extends Controller
 {
+    private $basePath;
+
+
     /**
      * Call the parent construct
      */
@@ -26,18 +29,40 @@ class Welcome extends Controller
         parent::__construct();
     }
 
+    protected function beforeFlight()
+    {
+        $this->basePath = str_replace(BASEPATH, '', $this->viewsPath());
+
+        // Leave to parent's method the Flight decisions.
+        return parent::beforeFlight();
+    }
+
+    protected function afterFlight($result)
+    {
+        // Do some processing there, even deciding to stop the Flight, if case.
+
+        // Leave to parent's method the Flight decisions.
+        return parent::afterFlight($result);
+    }
+
     /**
      * Define Index page title and load template files
      */
     public function index()
     {
+        $viewName = 'welcome';
+
+        $filePath = $this->basePath.$viewName.'.php';
+
         $data['title'] = __('Welcome');
         $data['welcome_message'] = __('Hello, welcome from the welcome controller! <br/>
-This content can be changed in <code>/app/views/welcome/welcome.php</code>');
-
+This content can be changed in <code>{0}</code>', $filePath);
+        /*
         View::renderTemplate('header', $data);
-        View::render('welcome', $data);
+        View::render($viewName, $data);
         View::renderTemplate('footer', $data);
+        */
+        View::renderView($viewName, $data, 'legacy');
     }
 
     /**
@@ -45,12 +70,17 @@ This content can be changed in <code>/app/views/welcome/welcome.php</code>');
      */
     public function subPage()
     {
+        $viewName = 'subpage';
+
+        $filePath = $this->basePath.$viewName.'.php';
+
         $data['title'] = __('Subpage');
         $data['welcome_message'] = __('Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>/app/views/welcome/subpage.php</code>');
+This content can be changed in <code>{0}</code>', $filePath);
 
-        View::renderTemplate('header', $data);
-        View::render('subpage', $data);
-        View::renderTemplate('footer', $data);
+        // Render the Page using the Content fetching and the Layout.
+        $content = View::render($viewName, $data, true);
+
+        View::renderLayout('legacy', $content, $data);
     }
 }

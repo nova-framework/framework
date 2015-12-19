@@ -20,6 +20,9 @@ abstract class Controller
     // The Controller's instance.
     private static $instance;
 
+    // The Controller's variables.
+    protected $data = array();
+
     // Module where the Controller is located.
     protected $module = null;
     //
@@ -34,6 +37,9 @@ abstract class Controller
     // Theming support.
     protected $template = 'Default';
     protected $layout   = 'default';
+
+    protected $autoRender = true;
+    protected $useLayout  = false;
 
     /**
      * Constructor
@@ -70,18 +76,18 @@ abstract class Controller
             $viewsPath = str_replace('/', DS, 'Modules/'.$matches[1].'/Views/'.$matches[2]);
         }
         else {
-            throw \Exception('Failed to calculate the Views Path for the Class: '.$className);
+            throw \Exception('Unknown Views Path for the Class: '.$className);
         }
 
         $this->viewsPath = APPPATH .$viewsPath .DS;
     }
 
-    public function beforeFlight()
+    protected function beforeFlight()
     {
         return true;
     }
 
-    public function afterFlight($result)
+    protected function afterFlight($result)
     {
         return true;
     }
@@ -96,20 +102,22 @@ abstract class Controller
         // Execute the Controller's Method with the given arguments.
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
-        if($this->afterFlight($result) === false) {
-            // Is wanted to stop the Flight.
+        if(($this->afterFlight($result) === false) || ! $this->autoRender) {
+            // Is wanted to stop the Flight or there is no auto-rendering.
             return true;
         }
 
+        $this->renderResult($result);
+
+        return true;
+    }
+
+    protected function renderResult($result)
+    {
         if($result instanceof View) {
             $result->display();
 
-            return true;
-        }
-
-        if(is_null($result) || is_bool($result)) {
-            // No auto-rendering wanted; stop the Flight.
-            return true;
+            return;
         }
 
         if(is_array($result)) {
@@ -120,16 +128,71 @@ abstract class Controller
         else if(is_string($result)) {
             View::addHeader('Content-Type: text/html; charset=UTF-8');
         }
-        else if(is_integer($result)) {
-            // Just to see '0' on webpage and nothing more.
-            $result = sprintf('%d', $result);
+        else {
+            return;
         }
 
+        // Output the result.
         View::sendHeaders();
 
         echo $result;
+    }
 
-        return true;
+    protected function autoRender($value = null)
+    {
+        if(is_null($value)) {
+            return $this->autoRender;
+        }
+
+        $this->autoRender = $value;
+    }
+
+    protected function useLayout($value = null)
+    {
+        if(is_null($value)) {
+            return $this->useLayout;
+        }
+
+        $this->useLayout = $value;
+    }
+
+    public function data($name = null)
+    {
+        if(is_null($name)) {
+            return $this->data;
+        }
+        else if(isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    protected function set($name, $value = null)
+    {
+        if (is_array($name)) {
+            if (is_array($value)) {
+                $data = array_combine($name, $value);
+            }
+            else {
+                $data = $name;
+            }
+        }
+        else {
+            $data = array($name => $value);
+        }
+
+        $this->data = $data + $this->data;
+    }
+
+    protected function title($title)
+    {
+        $data = array('title' => $title);
+
+        $this->data = $data + $this->data;
+
+        // Activate the Rendering on Layout.
+        $this->useLayout = true;
     }
 
     // Some getters.

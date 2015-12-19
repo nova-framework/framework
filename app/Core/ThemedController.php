@@ -1,6 +1,6 @@
 <?php
 /**
- * ThemedController - Base Class for all themed Controllers.
+ * ThemedController - Base Class for all Themed Controllers.
  *
  * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
  * @version 3.0
@@ -13,10 +13,13 @@ use Smvc\Core\View;
 use Smvc\Core\Controller;
 
 /**
- * Sample controller showing a construct and 2 methods and their typical usage.
+ * Simple themed controller showing the typical usage of the Flight Control method.
  */
 class ThemedController extends Controller
 {
+    protected $layout = 'themed';
+
+
     /**
      * Call the parent construct
      */
@@ -25,40 +28,58 @@ class ThemedController extends Controller
         parent::__construct();
     }
 
-    public function afterFlight($result)
+    protected function beforeFlight()
     {
-        $title = __('Welcome');
+        // Do some processing there and stop the Flight, if is the case.
+        // The available information on this method are:
+        // className, called method and parameters; optionally, the module name
 
-        if($result instanceof View) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8');
+        // Leave to parent's method the Flight decisions.
+        return parent::beforeFlight();
+    }
 
-            $title = $result->get('title');
-
-            $content = $result->fetch();
-        }
-        else if(is_array($result)) {
-            View::addHeader('Content-Type: application/json');
-
-            $content = json_encode($result);
-        }
-        else if(is_string($result)) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8');
-        }
-        else if(is_integer($result)) {
-            // Just to see '0' on webpage and nothing more.
-            $content = sprintf('%d', $result);
-        }
-        else {
-            $content = $result;
+    protected function afterFlight($result)
+    {
+        if(($result === false) || ! $this->autoRender) {
+            // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
+            return false;
         }
 
-        View::layout($this->layout())
-            ->withTitle($title)
-            ->withContent($content)
-            ->display();
+        if(($result === true) || is_null($result)) {
+            $data =& $this->data();
 
-        // Return false to stop the Flight.
-        return false;
+            if($this->useLayout) {
+                $content = View::make($this->method())
+                    ->loadData($data)
+                    ->fetch();
+
+                View::layout($this->layout())
+                    ->loadData($data)
+                    ->withContent($content)
+                    ->display();
+
+                // Stop the Flight.
+                return false;
+            }
+
+            View::make($this->method())
+                ->loadData($data)
+                ->display();
+
+            // Stop the Flight.
+            return false;
+        }
+        else if($result instanceof View) {
+            View::layout($this->layout())
+                ->loadView($result)
+                ->display();
+
+            // Stop the Flight.
+            return false;
+        }
+
+        // Leave to parent's method the Flight decisions.
+        return parent::afterFlight($result);
     }
 
 }

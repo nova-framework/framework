@@ -20,6 +20,9 @@ abstract class Controller
     // The Controller's instance.
     private static $instance;
 
+    // The Controller's variables.
+    protected $data = array();
+
     // Module where the Controller is located.
     protected $module = null;
     //
@@ -36,6 +39,7 @@ abstract class Controller
     protected $layout   = 'default';
 
     protected $autoRender = true;
+    protected $useLayout  = false;
 
     /**
      * Constructor
@@ -112,7 +116,26 @@ abstract class Controller
     {
         if($result instanceof View) {
             $result->display();
+
+            return;
         }
+
+        if(is_array($result)) {
+            View::addHeader('Content-Type: application/json');
+
+            $result = json_encode($result);
+        }
+        else if(is_string($result)) {
+            View::addHeader('Content-Type: text/html; charset=UTF-8');
+        }
+        else {
+            return;
+        }
+
+        // Output the result.
+        View::sendHeaders();
+
+        echo $result;
     }
 
     protected function autoRender($value = null)
@@ -122,6 +145,54 @@ abstract class Controller
         }
 
         $this->autoRender = $value;
+    }
+
+    protected function useLayout($value = null)
+    {
+        if(is_null($value)) {
+            return $this->useLayout;
+        }
+
+        $this->useLayout = $value;
+    }
+
+    public function data($name = null)
+    {
+        if(is_null($name)) {
+            return $this->data;
+        }
+        else if(isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    protected function set($name, $value = null)
+    {
+        if (is_array($name)) {
+            if (is_array($value)) {
+                $data = array_combine($name, $value);
+            }
+            else {
+                $data = $name;
+            }
+        }
+        else {
+            $data = array($name => $value);
+        }
+
+        $this->data = $data + $this->data;
+    }
+
+    protected function title($title)
+    {
+        $data = array('title' => $title);
+
+        $this->data = $data + $this->data;
+
+        // Activate the Rendering on Layout.
+        $this->useLayout = true;
     }
 
     // Some getters.

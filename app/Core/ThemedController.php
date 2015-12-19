@@ -10,12 +10,12 @@
 namespace App\Core;
 
 use Smvc\Core\View;
-use App\Core\BaseController;
+use Smvc\Core\Controller;
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
  */
-class ThemedController extends BaseController
+class ThemedController extends Controller
 {
     protected $layout = 'themed';
 

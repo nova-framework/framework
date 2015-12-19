@@ -30,7 +30,7 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
         // Set config in class variable.
         $this->config = $config;
 
-        $dsn = "sqlite:" . $config['file'];
+        $dsn = "sqlite:" . BASEPATH . 'storage' . DS . 'persistent' . DS . $config['file'];
 
         parent::__construct($dsn);
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -71,6 +71,7 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
     {
         return EngineFactory::DRIVER_SQLITE;
     }
+
 
 
 

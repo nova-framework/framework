@@ -70,14 +70,15 @@ Config::set('database', array(
         )
     ),
     /** Extra connections can be added here, some examples: */
-    /*
+
     'sqlite' => array(
         'engine' => 'sqlite',
         'config' => array(
-            'file' => APPPATH . 'database.sqlite'
+            'file'          => 'database.sqlite',
+            'fetch_method'  => \PDO::FETCH_OBJ // Not required, default is OBJ.
         )
     )
-    */
+
 ));
 
 /**

@@ -317,6 +317,8 @@ class View
      */
     public static function renderModule($module, $path, $data = false, $error = false, $fetch = false)
     {
+        $module = Inflector::classify($module);
+
         // Get the Controller instance.
         $instance =& get_instance();
 

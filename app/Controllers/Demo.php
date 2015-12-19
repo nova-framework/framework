@@ -173,6 +173,8 @@ class Demo extends Controller
         $result = $engine->delete(DB_PREFIX . 'car', array('model' => 'Model X P90'));
         var_dump($result);
 
+        var_dump($engine->getTotalQueries());
+
         echo "</pre>";
     }
 }

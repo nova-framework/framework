@@ -39,6 +39,12 @@ interface Engine
      */
     public function getConnection();
 
+    /**
+     * Get total executed queries.
+     *
+     * @return int
+     */
+    public function getTotalQueries();
 
 
 

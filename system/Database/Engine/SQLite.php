@@ -18,6 +18,8 @@ class SQLite extends \PDO implements Engine
     private $method = \PDO::FETCH_OBJ;
     /** @var array Config from the user's app config. */
     private $config;
+    /** @var int Count */
+    private $queryCount;
 
 
     /**
@@ -32,6 +34,8 @@ class SQLite extends \PDO implements Engine
         if (isset($config['fetch_method'])) {
             $this->method = $config['fetch_method'];
         }
+
+        $this->queryCount = 0;
 
         // Set config in class variable.
         $this->config = $config;
@@ -93,6 +97,8 @@ class SQLite extends \PDO implements Engine
             $method = \PDO::FETCH_OBJ;
         }
 
+        $this->queryCount++;
+
         if (!$fetch) {
             return $this->exec($sql);
         }
@@ -143,6 +149,8 @@ class SQLite extends \PDO implements Engine
 
         // Execute, hold status
         $status = $stmt->execute();
+
+        $this->queryCount++;
 
         // If failed, return now, and don't continue with fetching.
         if (!$status) {
@@ -218,6 +226,7 @@ class SQLite extends \PDO implements Engine
             }
 
             // Execute
+            $this->queryCount++;
             if (!$stmt->execute()) {
                 $failure = true;
 
@@ -301,6 +310,7 @@ class SQLite extends \PDO implements Engine
         }
 
         // Execute
+        $this->queryCount++;
         if (!$stmt->execute()) {
             return false;
         }
@@ -346,6 +356,7 @@ class SQLite extends \PDO implements Engine
         }
 
         // Execute and return if failure.
+        $this->queryCount++;
         if (!$stmt->execute()) {
             return false;
         }
@@ -384,6 +395,19 @@ class SQLite extends \PDO implements Engine
             }
         }
 
+        $this->queryCount++;
+
         return $stmt;
+    }
+
+
+    /**
+     * Get total executed queries.
+     *
+     * @return int
+     */
+    public function getTotalQueries()
+    {
+        return $this->queryCount;
     }
 }

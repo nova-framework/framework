@@ -239,6 +239,7 @@ class MySQL extends \PDO implements Engine
             }
 
             // Execute
+            $this->queryCount++;
             if (!$stmt->execute()) {
                 $failure = true;
 
@@ -328,6 +329,7 @@ class MySQL extends \PDO implements Engine
         }
 
         // Execute
+        $this->queryCount++;
         if (!$stmt->execute()) {
             return false;
         }
@@ -379,6 +381,7 @@ class MySQL extends \PDO implements Engine
         }
 
         // Execute and return if failure.
+        $this->queryCount++;
         if (!$stmt->execute()) {
             return false;
         }
@@ -393,6 +396,7 @@ class MySQL extends \PDO implements Engine
      */
     public function truncate($table)
     {
+        $this->queryCount++;
         return $this->exec("TRUNCATE TABLE $table");
     }
 
@@ -427,6 +431,19 @@ class MySQL extends \PDO implements Engine
             }
         }
 
+        $this->queryCount++;
+
         return $stmt;
+    }
+
+
+    /**
+     * Get total executed queries.
+     *
+     * @return int
+     */
+    public function getTotalQueries()
+    {
+        return $this->queryCount;
     }
 }

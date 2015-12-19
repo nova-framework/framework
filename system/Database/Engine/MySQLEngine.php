@@ -280,11 +280,9 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
         $whereDetails = ltrim($whereDetails, ' AND ');
 
         // Limit
-        $optionalLimit = " LIMIT ";
-        if ($limit === null) {
-            $optionalLimit = "";
-        }else{
-            $optionalLimit .= intval($limit);
+        $optionalLimit = "";
+        if (is_numeric($limit)) {
+            $optionalLimit = " LIMIT " . $limit;
         }
 
         // Prepare statement.
@@ -309,26 +307,57 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
         return $stmt->rowCount();
     }
 
+    /**
+     * Execute Delete statement, this will automatically build the query for you.
+     *
+     * @param string $table Table to execute the statement.
+     * @param array $where Use key->value like column->value for where mapping.
+     * @param int $limit Limit the update statement, not supported by every engine!
+     * @return bool|int Row Count, number of deleted rows, or false on failure.
+     *
+     * @throws \Exception
+     */
+    function executeDelete($table, $where, $limit = 1)
+    {
+        // Sort in where keys.
+        ksort($where);
 
+        // Bind the where details.
+        $whereDetails = null;
+        $idx = 0;
+        foreach ($where as $key => $value) {
+            if ($idx == 0) {
+                $whereDetails .= "$key = :$key";
+            } else {
+                $whereDetails .= " AND $key = :$key";
+            }
+            $idx++;
+        }
+        $whereDetails = ltrim($whereDetails, ' AND ');
 
+        // If limit is a number use a limit on the query
+        $optionalLimit = "";
+        if (is_numeric($limit)) {
+            $optionalLimit = "LIMIT $limit";
+        }
 
+        // Prepare statement
+        $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails $optionalLimit");
 
+        // Bind
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
 
+        // Execute and return if failure.
+        if (!$stmt->execute()) {
+            return false;
+        }
+        // Return rowcount when succeeded.
+        return $stmt->rowCount();
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
     /** Old style mysql engine (like the 2.* database helper): */
     /**

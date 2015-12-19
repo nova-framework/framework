@@ -3,7 +3,7 @@
 
 namespace App\Models\Entities;
 
-use Smvc\Database\Entity;
+use Nova\Database\Entity;
 
 class Car extends Entity
 {

@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Core;
+namespace Nova\Core;
 
-use Smvc\Helpers\Database;
+use Nova\Helpers\Database;
 
 /**
  * Base model class all other models will extend from this base.

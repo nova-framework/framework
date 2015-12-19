@@ -8,7 +8,7 @@
 * @date updated Sept 19, 2015
 */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 /**
  * Sets some default functions and settings.

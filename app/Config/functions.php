@@ -7,8 +7,8 @@
  * @date December 15th, 2015
  */
 
-use Smvc\Language;
-use Smvc\Core\Controller;
+use Nova\Language;
+use Nova\Core\Controller;
 
 
 // Return the current Controller instance.

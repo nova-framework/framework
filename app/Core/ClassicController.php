@@ -9,8 +9,8 @@
 
 namespace App\Core;
 
-use Smvc\Core\View;
-use Smvc\Core\Controller;
+use Nova\Core\View;
+use Nova\Core\Controller;
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.

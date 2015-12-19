@@ -7,7 +7,7 @@
  * @date December 19th, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 use GUMP;
 

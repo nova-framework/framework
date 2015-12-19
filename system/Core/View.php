@@ -9,10 +9,10 @@
  * @date updated Dec 18, 2015
  */
 
-namespace Smvc\Core;
+namespace Nova\Core;
 
-use Smvc\Core\Controller;
-use Smvc\Helpers\Inflector;
+use Nova\Core\Controller;
+use Nova\Helpers\Inflector;
 
 /**
  * View class to load template and views files.

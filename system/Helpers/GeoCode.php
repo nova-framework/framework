@@ -7,7 +7,7 @@
  * @date April 27, 2015
  * @date updated Sept 19, 2015
  */
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 /**
  * Collection of methods for working with Google's GeoCoder.

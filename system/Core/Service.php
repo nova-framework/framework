@@ -7,7 +7,7 @@
  * @data December 14, 2015 - Now only working as abstract for generic services.
  */
 
-namespace Smvc\Core;
+namespace Nova\Core;
 
 /**
  * Abstract Class Service, Your service classes need to extend this abstract class.

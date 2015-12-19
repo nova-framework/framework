@@ -8,8 +8,8 @@
  */
 
 /** Create alias for Router. */
-use Smvc\Net\Router;
-use Smvc\Helpers\Hooks;
+use Nova\Net\Router;
+use Nova\Helpers\Hooks;
 
 /** Define static routes. */
 

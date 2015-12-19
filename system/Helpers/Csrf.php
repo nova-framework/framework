@@ -7,9 +7,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
-use Smvc\Helpers\Session;
+use Nova\Helpers\Session;
 
 /**
  * Instructions:

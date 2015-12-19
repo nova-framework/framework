@@ -9,7 +9,7 @@
 
 namespace App\Controllers;
 
-use Smvc\Core\View;
+use Nova\Core\View;
 use App\Core\ThemedController;
 
 /**

@@ -7,7 +7,7 @@
 ** This code is in the public domain.
 */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 /**
  * RainCaptcha: Anti-spam protection for your website.

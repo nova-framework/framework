@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Smvc\Database;
+namespace Nova\Database;
 
 /**
  * Class Entity, can be extended with your database entities

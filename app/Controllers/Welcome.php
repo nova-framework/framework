@@ -57,10 +57,12 @@ class Welcome extends Controller
         $data['title'] = __('Welcome');
         $data['welcome_message'] = __('Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
-
+        /*
         View::renderTemplate('header', $data);
         View::render($viewName, $data);
         View::renderTemplate('footer', $data);
+        */
+        View::renderView($viewName, $data);
     }
 
     /**

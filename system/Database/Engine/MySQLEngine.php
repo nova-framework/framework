@@ -187,8 +187,9 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
         }
 
         // Transaction?
+        $transactionStatus = false;
         if ($transaction) {
-            $this->beginTransaction();
+            $transactionStatus = $this->beginTransaction();
         }
 
         // Holding status
@@ -218,6 +219,11 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
 
             // If no error, capture the last inserted id
             $ids[] = $this->lastInsertId();
+        }
+
+        // Commit when in transaction
+        if ($transaction && $transactionStatus) {
+            $failure = !$this->commit();
         }
 
         // Check for failures

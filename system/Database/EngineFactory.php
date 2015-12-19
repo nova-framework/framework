@@ -6,6 +6,7 @@ namespace Nova\Database;
 
 use Nova\Config;
 use Nova\Database\Engine\Engine;
+use Nova\Database\Engine\GeneralEngine;
 
 abstract class EngineFactory
 {
@@ -19,7 +20,7 @@ abstract class EngineFactory
      * Please use the constants in this class as a driver parameter
      *
      * @param $connectionName string Name of the connection provided in the configuration
-     * @return null|Engine|\PDO
+     * @return GeneralEngine|Engine|\PDO|null
      * @throws \Exception
      */
     public static function getEngine($connectionName = 'default')

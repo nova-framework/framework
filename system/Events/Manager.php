@@ -22,16 +22,21 @@ class Manager
 
     public function __construct()
     {
+        self::$instance =& $this;
+
         $this->events = new SplPriorityQueue;
     }
 
     public static function &getInstance()
     {
         if (! self::$instance) {
-            self::$instance = new self();
+            $manager = new self();
+        }
+        else {
+            $manager =& self::$instance;
         }
 
-        return self::$instance;
+        return $manager;
     }
 
     public static function addEvent($name, $callback, $priority = 0)
@@ -74,9 +79,11 @@ class Manager
 
             $result = invokeObject($callback, $event);
 
-            if ($notifier) {
-                invokeNotifier($notifier, $result);
+            if ($notifier === null) {
+                continue;
             }
+
+            invokeNotifier($notifier, $result);
         }
     }
 
@@ -86,7 +93,7 @@ class Manager
      * @param  object $callback
      * @param  object $event Event parameter
      */
-    protected function invokeObject($callback, Event $event)
+    private function invokeObject($callback, $event)
     {
         if (is_object($callback)) {
             // Call the Closure.
@@ -107,13 +114,15 @@ class Manager
         // Initialize the Class.
         $object = new $className();
 
-        // The called Method should be defined in the called Class, not in one of its parents.
-        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
-            return false;
-        }
-
         if($object instanceof Controller) {
-            // We call a Controller; should be properly initialized before executing its Method.
+            // We are going to call-out a Controller; special setup is required.
+
+            // The called Method should be defined in the called Controller, not in one of its parents.
+            if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
+                return false;
+            }
+
+            // The Controller instance should be properly initialized before executing its Method.
             $object->initialize($className, $method);
         }
 
@@ -127,7 +136,7 @@ class Manager
      * @param  object $callback
      * @param  object $result result parameter
      */
-    protected function invokeNotifier($callback, $result)
+    private function invokeNotifier($callback, $result)
     {
         if (is_object($callback)) {
             // Call the Closure.

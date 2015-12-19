@@ -324,7 +324,7 @@ class View
             // A Views "Root" Path is wanted.
             $basePath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
         }
-        else if($instance->module() == $modules) {
+        else if($instance->module() == $module) {
             $basePath = $instance->viewsPath();
         }
         else {

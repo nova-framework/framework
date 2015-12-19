@@ -76,7 +76,7 @@ This content can be changed in <code>{0}</code>', $this->viewFilePath);
     }
 
     /**
-     * Gagnam style - TBD
+     * Gangnam style - TBD
      */
 
 }

@@ -160,6 +160,83 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
         return false;
     }
 
+    /**
+     * Execute insert query, will automatically build query for you.
+     * You can also give an array as $data, this will try to insert each entry in the array.
+     * Not all engine's support this! Check the manual!
+     *
+     * @param string $table Table to execute the insert.
+     * @param array $data Represents one record, could also have multidimensional arrays inside to insert
+     *                    multiple rows in one call. The engine must support this! Check manual!
+     * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
+     * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
+     *
+     * @throws \Exception
+     */
+    function executeInsert($table, $data, $transaction = false)
+    {
+        // Check for valid data.
+        if (!is_array($data)) {
+            throw new \Exception("Data to insert must be an array of column -> value. MySQL Driver supports multidimensional multiple inserts.");
+        }
+
+        // Check for multidimensional, multiple inserts
+        if (!is_array($data[0])) {
+            // Currently not multi insert, make it to use same code.
+            $data = array($data);
+        }
+
+        // Transaction?
+        if ($transaction) {
+            $this->beginTransaction();
+        }
+
+        // Holding status
+        $failure = false;
+        $ids = array();
+
+        // Loop every record to insert
+        foreach($data as $record) {
+            ksort($record);
+
+            $fieldNames = implode(',', array_keys($record));
+            $fieldValues = ':'.implode(', :', array_keys($record));
+
+            $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
+
+            foreach ($record as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+
+            // Execute
+            if (!$stmt->execute()) {
+                $failure = true;
+
+                // We need to exit foreach, to inform about the error, or rollback.
+                break 1;
+            }
+
+            // If no error, capture the last inserted id
+            $ids[] = $this->lastInsertId();
+        }
+
+        // Check for failures
+        if ($failure) {
+            // Ok, rollback when using transactions.
+            if ($transaction) {
+                $this->rollBack();
+            }
+
+            // False on error.
+            return false;
+        }
+
+        if (count($ids) === 1) {
+            return $ids[0];
+        }
+        return $ids;
+    }
+
 
 
 

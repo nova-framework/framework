@@ -17,7 +17,7 @@ class Manager
 {
     private static $instance;
 
-    private $events;
+    private $listeners;
 
 
     public function __construct()
@@ -67,22 +67,24 @@ class Manager
      */
     public function trigger($name, $params = array(), $notifier = null)
     {
-        foreach ($this->events as $eventInfo) {
-            if ($eventInfo[0] != $name) {
-                // Event Name not match; continue.
+        foreach ($this->listeners as $listener) {
+            if ($listener[0] != $name) {
+                // The current Listener do not observe this type of Event; continue.
                 continue;
             }
 
-            $callback = $eventInfo[1];
-
+            // Create a new Event.
             $event = new Event($name, $params);
 
-            $result = invokeObject($callback, $event);
+            // Invoke the Listener's Callback and pass the Event as parameter.
+            $result = invokeObject($listener[1], $event);
 
             if ($notifier === null) {
+                // There is not Notifier; continue.
                 continue;
             }
 
+            // Invoke the Notifier and pass the result from Listener as parameter.
             invokeNotifier($notifier, $result);
         }
     }

@@ -371,4 +371,38 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
     {
         return $this->exec("TRUNCATE TABLE $table");
     }
+
+    /**
+     * Prepare the query and return a prepared statement.
+     * Optional bind is available.
+     *
+     * @param string $sql Query
+     * @param array $bind optional binding values
+     * @param int|null $method custom method
+     * @param string|null $class class fetch, the class, full class with namespace.
+     * @return \PDOStatement|mixed
+     *
+     * @throws \Exception
+     */
+    function rawStatement($sql, $bind = array(), $method = null, $class = null)
+    {
+        // What method? Use default if no method is given my the call.
+        if ($method === null) {
+            $method = $this->method;
+        }
+
+        // Prepare and get statement from PDO.
+        $stmt = $this->prepare($sql);
+
+        // Bind the key and values (only if given).
+        foreach ($bind as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue("$key", $value);
+            }
+        }
+
+        return $stmt;
+    }
 }

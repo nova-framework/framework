@@ -63,4 +63,19 @@ interface GeneralEngine
      * @throws \Exception
      */
     function executeDelete($table, $where, $limit = 1);
+
+
+    /**
+     * Prepare the query and return a prepared statement.
+     * Optional bind is available.
+     *
+     * @param string $sql Query
+     * @param array $bind optional binding values
+     * @param int|null $method custom method
+     * @param string|null $class class fetch, the class, full class with namespace.
+     * @return \PDOStatement|mixed
+     *
+     * @throws \Exception
+     */
+    function rawStatement($sql, $bind = array(), $method = null, $class = null);
 }

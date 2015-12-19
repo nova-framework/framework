@@ -45,7 +45,7 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
 
         $dsn = "mysql:host=" . $config['host'] . ";port=" . $config['port'] . ";dbname=" . $config['database'] . ";charset=" . $config['charset'];
 
-        parent::__construct($dsn, $config['user'], $config['password']);
+        parent::__construct($dsn, $config['user'], $config['password'], array(\PDO::MYSQL_ATTR_COMPRESS => true));
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 

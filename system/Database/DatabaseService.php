@@ -3,6 +3,7 @@
 namespace Nova\Database;
 
 use Nova\Database\Engine\Engine;
+use Nova\Database\Engine\GeneralEngine;
 use Nova\Database\Engine\MySQLEngine;
 
 /**
@@ -14,7 +15,7 @@ abstract class DatabaseService
     /** @var string Driver name, should be in the config as default. */
     protected $driver;
 
-    /** @var Engine|MySQLEngine database engine we will use. */
+    /** @var GeneralEngine|Engine database engine we will use. */
     protected $engine;
 
     /** @var string Table name. Don't use prefix here! */

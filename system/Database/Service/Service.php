@@ -18,7 +18,7 @@ interface Service
      *
      * On success it will return the entity including the (optional) inserted ID (primary key, when only one)
      *
-     * @param $entity Entity
+     * @param $entity Entity|Entity[] One ore multiple entit(y|ies), only when engine and service supports multiple entities!
      * @return false|Entity
      * @throws \Exception
      */

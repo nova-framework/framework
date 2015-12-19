@@ -62,7 +62,7 @@ This content can be changed in <code>{0}</code>', $filePath);
         View::render($viewName, $data);
         View::renderTemplate('footer', $data);
         */
-        View::renderView($viewName, $data);
+        View::renderView($viewName, $data, 'legacy');
     }
 
     /**

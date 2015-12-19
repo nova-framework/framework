@@ -91,6 +91,64 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
         return $statement->fetchAll();
     }
 
+    /**
+     * Execute Query, bind values into the $sql query. And give optional method and class for fetch result
+     * The result MUST be an array!
+     *
+     * @param string $sql
+     * @param array $bind
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    function executeQuery($sql, $bind = array(), $method = null, $class = null)
+    {
+        // What method? Use default if no method is given my the call.
+        if ($method === null) {
+            $method = $this->method;
+        }
+
+        // Prepare statement
+        $stmt = $this->prepare($sql);
+
+        // Bind values
+        foreach ($bind as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue("$key", $value);
+            }
+        }
+
+        // Execute, hold status
+        $status = $stmt->execute();
+
+        // If failed, return now, and don't continue with fetching.
+        if (!$status) {
+            return false;
+        }
+
+        // Continue with fetching all records.
+        if ($method === \PDO::FETCH_CLASS) {
+            if (!$class) {
+                throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
+            }
+
+            // Fetch in class
+            $result = $stmt->fetchAll($method, $class);
+        } else {
+            // We will fetch here too ;)
+            $result = $stmt->fetchAll($method);
+        }
+
+        if (is_array($result) && count($result) > 0) {
+            return $result;
+        }
+        return false;
+    }
+
 
 
 

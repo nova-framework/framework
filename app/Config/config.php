@@ -61,10 +61,12 @@ Config::set('database', array(
         'engine' => 'mysql',
         'config' => array(
             'host' => 'localhost',
+            'port' => 3306, // Not required, default is 3306
             'database' => 'dbname',
             'user' => 'root',
             'password' => 'password',
-            'fetch_method' => \PDO::FETCH_OBJ // Not required, default is OBJ.
+            'fetch_method' => \PDO::FETCH_OBJ, // Not required, default is OBJ.
+            'charset' => 'utf8' // Not required, default and recommended is utf8.
         )
     ),
     /** Extra connections can be added here, some examples: */

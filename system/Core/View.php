@@ -398,7 +398,9 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
-        $basePath = WEBPATH."templates".DS.$custom.DS;
+        $custom = Inflector::classify($custom);
+
+        $basePath = self::templatePath($custom)."Layouts".DS.'partials'.DS;
 
         $filePath = $basePath.str_replace('/', DS, $path).".php";
 

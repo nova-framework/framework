@@ -49,7 +49,7 @@ class ClassicController extends Controller
             $data =& $this->data();
 
             if($this->useLayout) {
-                $content = View::render($this->method(), $data, false, true);
+                $content = View::render($this->method(), $data, true);
 
                 View::renderLayout($this->layout(), $content, $data);
 

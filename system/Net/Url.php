@@ -70,7 +70,7 @@ class Url
      */
     public static function templatePath($custom = TEMPLATE)
     {
-        return DIR.'templates/'.$custom.'/';
+        return DIR.'templates/'.$custom.'/assets/';
 
     }
 
@@ -82,7 +82,7 @@ class Url
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        return "templates/".$custom."/";
+        return "templates/".$custom."/assets/";
     }
 
     /**
@@ -168,7 +168,7 @@ class Url
 
         return getSegment($segments, $id);
     }
-    
+
     /**
      * Get item in array.
      *

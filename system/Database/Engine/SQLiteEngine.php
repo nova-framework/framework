@@ -4,7 +4,9 @@
 namespace Nova\Database\Engine;
 
 
-class SQLiteEngine extends \PDO implements Engine
+use Nova\Database\EngineFactory;
+
+class SQLiteEngine extends \PDO implements Engine, GeneralEngine
 {
 
     private $config;
@@ -49,6 +51,30 @@ class SQLiteEngine extends \PDO implements Engine
     {
         return $this;
     }
+
+    /**
+     * Get driver code, used in config as driver string.
+     * @return string
+     */
+    public function getDriverCode()
+    {
+        return EngineFactory::DRIVER_SQLITE;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**
@@ -194,4 +220,5 @@ class SQLiteEngine extends \PDO implements Engine
         }
         return $stmt->rowCount();
     }
+
 }

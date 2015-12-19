@@ -138,12 +138,12 @@ class Manager
      */
     private function invokeNotifier($callback, $result)
     {
-        if (is_object($callback)) {
+        if (is_object($callback) || is_array($callback)) {
             // Call the Closure.
             return call_user_func($callback, $result);
         }
 
-        // Call the object Class and its Method.
+        // Call the object Class and its static Method.
         $result = explode('@', $callback);
 
         $className = $segments[0];
@@ -154,7 +154,7 @@ class Manager
             return false;
         }
 
-        // Execute the Object's static Method and return the result.
+        // Execute the Object's Method and return the result.
         return call_user_func(array($className, $method), $result);
     }
 

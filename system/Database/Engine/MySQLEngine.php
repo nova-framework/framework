@@ -1,12 +1,14 @@
 <?php
 
-
 namespace Nova\Database\Engine;
 
+use Nova\Database\EngineFactory;
 
-class MySQLEngine extends \PDO implements Engine
+class MySQLEngine extends \PDO implements Engine, GeneralEngine
 {
-
+    /** @var int PDO Fetch method. */
+    private $method = \PDO::FETCH_OBJ;
+    /** @var array Config from the user's app config. */
     private $config;
 
     /**
@@ -14,12 +16,31 @@ class MySQLEngine extends \PDO implements Engine
      * Please use the Factory to maintain instances of the drivers.
      *
      * @param $config array
+     *
      * @throws \PDOException
      */
     public function __construct($config) {
+        // Will set the default method when provided in the config.
+        if (isset($config['fetch_method'])) {
+            $this->method = $config['fetch_method'];
+        }
+
+        // Default port if no port is provided.
+        if (!isset($config['port'])) {
+            $config['port'] = 3306;
+        }
+
+        // Default charset if no charset is given
+        if (!isset($config['charset'])) {
+            $config['charset'] = 'utf8';
+        }
+
+        // Set config in class variable.
         $this->config = $config;
 
-        parent::__construct("mysql:host=" . $config['host'] . ";dbname=" . $config['database'] . ";charset=utf8", $config['user'], $config['password']);
+        $dsn = "mysql:host=" . $config['host'] . ";port=" . $config['port'] . ";dbname=" . $config['database'] . ";charset=" . $config['charset'];
+
+        parent::__construct($dsn, $config['user'], $config['password']);
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
@@ -50,7 +71,117 @@ class MySQLEngine extends \PDO implements Engine
         return $this;
     }
 
+    /**
+     * Get driver code, used in config as driver string.
+     * @return string
+     */
+    public function getDriverCode()
+    {
+        return EngineFactory::DRIVER_MYSQL;
+    }
 
+
+    /**
+     * Basic execute statement. Only for small queries with no binding parameters
+     * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
+     * This will only return an array or boolean. Depends on your operation!
+     *
+     * @param $sql
+     * @return mixed
+     */
+    public function executeSimpleQuery($sql)
+    {
+        $method = $this->method;
+        if ($this->method === \PDO::FETCH_CLASS) {
+            // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
+            $method = \PDO::FETCH_OBJ;
+        }
+
+        $statement = $this->query($sql, $method);
+
+        return $statement->fetchAll();
+    }
+
+    /**
+     * Execute Query, bind values into the $sql query. And give optional method and class for fetch result
+     * The result MUST be an array!
+     *
+     * @param string $sql
+     * @param array $bind
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    function executeQuery($sql, $bind = array(), $method = null, $class = null)
+    {
+        // What method? Use default if no method is given my the call.
+        if ($method === null) {
+            $method = $this->method;
+        }
+
+        // Prepare and get statement from PDO.
+        $stmt = $this->prepare($sql);
+
+        // Bind the key and values (only if given).
+        foreach ($bind as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue("$key", $value);
+            }
+        }
+
+        // Execute, we should capture the status of the result.
+        $status = $stmt->execute();
+
+        // If failed, return now, and don't continue with fetching.
+        if (!$status) {
+            return false;
+        }
+
+        // Continue with fetching all records.
+        if ($method === \PDO::FETCH_CLASS) {
+            if (!$class) {
+                throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
+            }
+
+            // Fetch in class
+            $result = $stmt->fetchAll($method, $class);
+        } else {
+            // We will fetch here too ;)
+            $result = $stmt->fetchAll($method);
+        }
+
+        if (is_array($result) && count($result) > 0) {
+            return $result;
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /** Old style mysql engine (like the 2.* database helper): */
     /**
      * Select from the database
      *
@@ -210,4 +341,5 @@ class MySQLEngine extends \PDO implements Engine
     {
         return $this->exec("TRUNCATE TABLE $table");
     }
+
 }

@@ -290,6 +290,49 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
         return $stmt->rowCount();
     }
 
+    /**
+     * Execute Delete statement, this will automatically build the query for you.
+     *
+     * @param string $table Table to execute the statement.
+     * @param array $where Use key->value like column->value for where mapping.
+     * @param int $limit Limit the update statement, not supported by every engine! NOT SUPPORTED BY SQLITE (most versions)
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    function executeDelete($table, $where, $limit = 1)
+    {
+        // Sort in where keys.
+        ksort($where);
+
+        // Bind the where details.
+        $whereDetails = null;
+        $idx = 0;
+        foreach ($where as $key => $value) {
+            if ($idx == 0) {
+                $whereDetails .= "$key = :$key";
+            } else {
+                $whereDetails .= " AND $key = :$key";
+            }
+            $idx++;
+        }
+        $whereDetails = ltrim($whereDetails, ' AND ');
+
+        // Prepare statement
+        $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
+
+        // Bind
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        // Execute and return if failure.
+        if (!$stmt->execute()) {
+            return false;
+        }
+        // Return rowcount when succeeded.
+        return $stmt->rowCount();
+    }
 
 
 

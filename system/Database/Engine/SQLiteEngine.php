@@ -72,6 +72,25 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
         return EngineFactory::DRIVER_SQLITE;
     }
 
+    /**
+     * Basic execute statement. Only for small queries with no binding parameters
+     *
+     * @param $sql
+     * @return mixed
+     */
+    public function executeSimpleQuery($sql)
+    {
+        $method = $this->method;
+        if ($this->method === \PDO::FETCH_CLASS) {
+            // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
+            $method = \PDO::FETCH_OBJ;
+        }
+
+        $statement = $this->query($sql, $method);
+
+        return $statement->fetchAll();
+    }
+
 
 
 

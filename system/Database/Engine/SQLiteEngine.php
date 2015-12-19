@@ -8,8 +8,11 @@ use Nova\Database\EngineFactory;
 
 class SQLiteEngine extends \PDO implements Engine, GeneralEngine
 {
-
+    /** @var int PDO Fetch method. */
+    private $method = \PDO::FETCH_OBJ;
+    /** @var array Config from the user's app config. */
     private $config;
+
 
     /**
      * SQLiteEngine constructor.
@@ -19,9 +22,17 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
      * @throws \PDOException
      */
     public function __construct($config) {
+        // Will set the default method when provided in the config.
+        if (isset($config['fetch_method'])) {
+            $this->method = $config['fetch_method'];
+        }
+
+        // Set config in class variable.
         $this->config = $config;
 
-        parent::__construct("sqlite:" . $config['file']);
+        $dsn = "sqlite:" . $config['file'];
+
+        parent::__construct($dsn);
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
@@ -31,7 +42,7 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
      */
     public function getDriverName()
     {
-        return "SQlite Driver";
+        return "SQLite Driver";
     }
 
     /**
@@ -60,7 +71,6 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
     {
         return EngineFactory::DRIVER_SQLITE;
     }
-
 
 
 

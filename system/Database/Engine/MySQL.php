@@ -1,4 +1,11 @@
 <?php
+/**
+ * MySQL Engine.
+ *
+ * @author Tom Valk - tomvalk@lt-box.info
+ * @version 3.0
+ * @date December 19th, 2015
+ */
 
 namespace Nova\Database\Engine;
 
@@ -11,6 +18,8 @@ class MySQL extends \PDO implements Engine
     private $method = \PDO::FETCH_OBJ;
     /** @var array Config from the user's app config. */
     private $config;
+    /** @var int Counting how much queries have been executed in total. */
+    private $queryCount;
 
     /**
      * MySQLEngine constructor.
@@ -35,6 +44,9 @@ class MySQL extends \PDO implements Engine
         if (!isset($config['charset'])) {
             $config['charset'] = 'utf8';
         }
+
+        // Reset query counter
+        $this->queryCount = 0;
 
         // Set config in class variable.
         $this->config = $config;
@@ -99,6 +111,8 @@ class MySQL extends \PDO implements Engine
             $method = \PDO::FETCH_OBJ;
         }
 
+        $this->queryCount++;
+
         if (!$fetch) {
             return $this->exec($sql);
         }
@@ -149,6 +163,7 @@ class MySQL extends \PDO implements Engine
 
         // Execute, we should capture the status of the result.
         $status = $stmt->execute();
+        $this->queryCount++;
 
         // If failed, return now, and don't continue with fetching.
         if (!$status) {

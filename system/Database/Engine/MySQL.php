@@ -1,23 +1,22 @@
 <?php
 
-
 namespace Nova\Database\Engine;
 
 use Nova\Database\EngineFactory;
 
-class SQLiteEngine extends \PDO implements Engine
+class MySQL extends \PDO implements Engine
 {
     /** @var int PDO Fetch method. */
     private $method = \PDO::FETCH_OBJ;
     /** @var array Config from the user's app config. */
     private $config;
 
-
     /**
-     * SQLiteEngine constructor.
+     * MySQLEngine constructor.
      * Please use the Factory to maintain instances of the drivers.
      *
      * @param $config array
+     *
      * @throws \PDOException
      */
     public function __construct($config) {
@@ -26,12 +25,22 @@ class SQLiteEngine extends \PDO implements Engine
             $this->method = $config['fetch_method'];
         }
 
+        // Default port if no port is provided.
+        if (!isset($config['port'])) {
+            $config['port'] = 3306;
+        }
+
+        // Default charset if no charset is given
+        if (!isset($config['charset'])) {
+            $config['charset'] = 'utf8';
+        }
+
         // Set config in class variable.
         $this->config = $config;
 
-        $dsn = "sqlite:" . BASEPATH . 'storage' . DS . 'persistent' . DS . $config['file'];
+        $dsn = "mysql:host=" . $config['host'] . ";port=" . $config['port'] . ";dbname=" . $config['database'] . ";charset=" . $config['charset'];
 
-        parent::__construct($dsn);
+        parent::__construct($dsn, $config['user'], $config['password'], array(\PDO::MYSQL_ATTR_COMPRESS => true));
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
@@ -41,7 +50,7 @@ class SQLiteEngine extends \PDO implements Engine
      */
     public function getDriverName()
     {
-        return "SQLite Driver";
+        return "MySQL Driver";
     }
 
     /**
@@ -55,7 +64,7 @@ class SQLiteEngine extends \PDO implements Engine
 
     /**
      * Get native connection. Could be \PDO
-     * @return mixed|\PDO
+     * @return \PDO
      */
     public function getConnection()
     {
@@ -68,11 +77,14 @@ class SQLiteEngine extends \PDO implements Engine
      */
     public function getDriverCode()
     {
-        return EngineFactory::DRIVER_SQLITE;
+        return EngineFactory::DRIVER_MYSQL;
     }
+
 
     /**
      * Basic execute statement. Only for queries with no binding parameters
+     * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
+     * This will only return an array or boolean. Depends on your operation and if fetch is on.
      *
      * @param $sql
      * @param $fetch
@@ -99,7 +111,7 @@ class SQLiteEngine extends \PDO implements Engine
     }
 
     /**
-     * Execute Query, bind values into the $sql query. And give optional method and class for fetch result
+     * Execute Select Query, bind values into the $sql query. And give optional method and class for fetch result
      * The result MUST be an array!
      *
      * @param string $sql
@@ -112,7 +124,7 @@ class SQLiteEngine extends \PDO implements Engine
      */
     function select($sql, $bind = array(), $method = null, $class = null)
     {
-        // Append select if it isn't
+        // Append select if it isn't appended.
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
             $sql = "SELECT " . $sql;
         }
@@ -122,10 +134,10 @@ class SQLiteEngine extends \PDO implements Engine
             $method = $this->method;
         }
 
-        // Prepare statement
+        // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
-        // Bind values
+        // Bind the key and values (only if given).
         foreach ($bind as $key => $value) {
             if (is_int($value)) {
                 $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
@@ -134,7 +146,7 @@ class SQLiteEngine extends \PDO implements Engine
             }
         }
 
-        // Execute, hold status
+        // Execute, we should capture the status of the result.
         $status = $stmt->execute();
 
         // If failed, return now, and don't continue with fetching.
@@ -170,7 +182,7 @@ class SQLiteEngine extends \PDO implements Engine
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
      * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
-     * @return int|bool
+     * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
      *
      * @throws \Exception
      */
@@ -250,7 +262,7 @@ class SQLiteEngine extends \PDO implements Engine
      * @param string $table Table to execute the statement.
      * @param array $data The updated array, will map into an update statement.
      * @param array $where Use key->value like column->value for where mapping.
-     * @param int $limit Limit the update statement, not supported by every engine! NOT SUPPORTED BY SQLITE!
+     * @param int $limit Limit the update statement, not supported by every engine!
      * @return int|bool
      *
      * @throws \Exception
@@ -280,8 +292,14 @@ class SQLiteEngine extends \PDO implements Engine
         }
         $whereDetails = ltrim($whereDetails, ' AND ');
 
+        // Limit
+        $optionalLimit = "";
+        if (is_numeric($limit)) {
+            $optionalLimit = " LIMIT " . $limit;
+        }
+
         // Prepare statement.
-        $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
+        $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails $optionalLimit");
 
         // Bind fields
         foreach ($data as $key => $value) {
@@ -307,8 +325,8 @@ class SQLiteEngine extends \PDO implements Engine
      *
      * @param string $table Table to execute the statement.
      * @param array $where Use key->value like column->value for where mapping.
-     * @param int $limit Limit the update statement, not supported by every engine! NOT SUPPORTED BY SQLITE (most versions)
-     * @return bool
+     * @param int $limit Limit the update statement, not supported by every engine!
+     * @return bool|int Row Count, number of deleted rows, or false on failure.
      *
      * @throws \Exception
      */
@@ -330,8 +348,14 @@ class SQLiteEngine extends \PDO implements Engine
         }
         $whereDetails = ltrim($whereDetails, ' AND ');
 
+        // If limit is a number use a limit on the query
+        $optionalLimit = "";
+        if (is_numeric($limit)) {
+            $optionalLimit = "LIMIT $limit";
+        }
+
         // Prepare statement
-        $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
+        $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails $optionalLimit");
 
         // Bind
         foreach ($where as $key => $value) {
@@ -344,6 +368,16 @@ class SQLiteEngine extends \PDO implements Engine
         }
         // Return rowcount when succeeded.
         return $stmt->rowCount();
+    }
+
+    /**
+     * Truncate table
+     * @param  string $table table name
+     * @return int number of rows affected
+     */
+    public function truncate($table)
+    {
+        return $this->exec("TRUNCATE TABLE $table");
     }
 
     /**

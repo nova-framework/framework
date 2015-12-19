@@ -10,8 +10,8 @@ use Nova\Database\Engine\GeneralEngine;
 
 abstract class EngineFactory
 {
-    const DRIVER_MYSQL = "MySQLEngine";
-    const DRIVER_SQLITE = "SQLiteEngine";
+    const DRIVER_MYSQL = "MySQL";
+    const DRIVER_SQLITE = "SQLite";
 
     private static $instances = array();
 
@@ -20,7 +20,7 @@ abstract class EngineFactory
      * Please use the constants in this class as a driver parameter
      *
      * @param $connectionName string Name of the connection provided in the configuration
-     * @return GeneralEngine|Engine|\PDO|null
+     * @return Engine|\PDO|null
      * @throws \Exception
      */
     public static function getEngine($connectionName = 'default')

@@ -4,7 +4,6 @@
 namespace Nova\Database\Service;
 
 use Nova\Database\Service;
-use Nova\Database\Engine\MySQLEngine;
 use Nova\Database\EngineFactory;
 use Nova\Database\Entity;
 
@@ -13,7 +12,7 @@ use Nova\Database\Entity;
  *
  * @package Core\Database\Service
  */
-class MySQLService extends Service
+class MySQL extends Service
 {
 
     /** @var int Fetch method (use \PDO::FETCH_* */
@@ -34,7 +33,7 @@ class MySQLService extends Service
 
         parent::__construct($engine);
 
-        /** @var MySQLEngine engine */
+        /** @var \Nova\Database\Engine\MySQL engine */
         $this->engine = $engine;
     }
 
@@ -59,7 +58,7 @@ class MySQLService extends Service
         foreach($entity as $idx => $entit)
         {
             // Insert
-            $result = $this->engine->executeInsert(DB_PREFIX . $this->table, get_object_vars($entit));
+            $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($entit));
             if ($result === false) {
                 // On error, return inmidiate.
                 return false;
@@ -94,7 +93,7 @@ class MySQLService extends Service
      */
     public function read($sql, $bind = array())
     {
-        return $this->engine->executeQuery($sql, $bind, $this->fetchMethod, $this->fetchClass);
+        return $this->engine->select($sql, $bind, $this->fetchMethod, $this->fetchClass);
     }
 
     /**
@@ -117,7 +116,7 @@ class MySQLService extends Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        $result = $this->engine->executeUpdate(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues, $limit);
+        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues, $limit);
         if ($result === false) {
             return false;
         }
@@ -148,6 +147,6 @@ class MySQLService extends Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        return $this->engine->executeDelete(DB_PREFIX . $this->table, $primaryValues, $limit) !== false;
+        return $this->engine->delete(DB_PREFIX . $this->table, $primaryValues, $limit) !== false;
     }
 }

@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Net;
+namespace Nova\Net;
 
-use Smvc\Helpers\Session;
+use Nova\Helpers\Session;
 
 /**
  * Collection of methods for working with urls.

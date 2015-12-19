@@ -11,7 +11,7 @@ define("WEBROOT", BASEPATH.'public'.DS);
 require BASEPATH .'vendor/autoload.php';
 
 //
-use Smvc\Helpers\Inflector;
+use Nova\Helpers\Inflector;
 
 
 //

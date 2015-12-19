@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Smvc\\" : "system/",
+            "Nova\\" : "system/",
             "App\\" : "app/"
         }
     },

@@ -8,9 +8,9 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
-use Smvc\Config;
+use Nova\Config;
 
 use PDO;
 

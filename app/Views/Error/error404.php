@@ -3,7 +3,7 @@
  * Sample layout
  */
 
-use Smvc\Error;
+use Nova\Error;
 
 ?>
 <div class="container content">

@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Smvc\Database;
+namespace Nova\Database;
 
 
-use Smvc\Config;
-use Smvc\Database\Engine\Engine;
+use Nova\Config;
+use Nova\Database\Engine\Engine;
 
 abstract class EngineFactory
 {
@@ -44,7 +44,7 @@ abstract class EngineFactory
         }
 
         // Make new instance, can throw exceptions!
-        $class = '\Smvc\Database\Engine\\' . $driver;
+        $class = '\Nova\Database\Engine\\' . $driver;
         $engine = new $class($engineConfig['config']);
 
         // If no success

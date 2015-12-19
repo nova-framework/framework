@@ -8,7 +8,7 @@
  */
 
 
-namespace Smvc;
+namespace Nova;
 
 
 class Config {

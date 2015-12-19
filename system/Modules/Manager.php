@@ -7,9 +7,9 @@
  * @date December 16th, 2015
  */
 
-namespace Smvc\Modules;
+namespace Nova\Modules;
 
-use Smvc\Config;
+use Nova\Config;
 
 
 class Manager

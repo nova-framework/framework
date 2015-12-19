@@ -10,7 +10,7 @@
 
 namespace Nova\Helpers;
 
-use Nova\Database\Engine\MySQLEngine;
+use Nova\Database\Engine\MySQL;
 use Nova\Database\EngineFactory;
 use PDO;
 
@@ -25,7 +25,7 @@ class Database
      * Static method get
      *
      * @param mixed $group
-     * @return MySQLEngine|null
+     * @return MySQL|null
      * @deprecated use the engine factory!
      * @throws \Exception
      */
@@ -34,7 +34,7 @@ class Database
         // Make the engine with the factory
         $engine = EngineFactory::getEngine();
 
-        if ($engine instanceof MySQLEngine) {
+        if ($engine instanceof MySQL) {
             return $engine;
         }
 

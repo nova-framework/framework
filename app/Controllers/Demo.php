@@ -57,7 +57,7 @@ class Demo extends Controller
 
         // Use it without the Services:
         $engine = EngineFactory::getEngine();
-        $result_plain = $engine->executeQuery('SELECT * FROM ' . DB_PREFIX . 'car');
+        $result_plain = $engine->select('SELECT * FROM ' . DB_PREFIX . 'car');
         var_dump($result_plain);
 
         // Using the select and prefix the SELECT in the sql is optional for the MySQL Engine!
@@ -92,7 +92,7 @@ class Demo extends Controller
 
         $cars = array($car1, $car2);
 
-        $result = $engine->executeInsert(DB_PREFIX . 'car', $cars, true); // True means to use transactions.
+        $result = $engine->insert(DB_PREFIX . 'car', $cars, true); // True means to use transactions.
         var_dump($result);
 
 
@@ -141,11 +141,11 @@ class Demo extends Controller
         $engine = EngineFactory::getEngine('sqlite');
 
         // You can use simple query when not require to bind any values.
-        $result = $engine->executeSimpleQuery("SELECT * FROM " . DB_PREFIX . "car;");
+        $result = $engine->raw("SELECT * FROM " . DB_PREFIX . "car;", true);
         var_dump($result);
 
         // Don't use it when you have a where, or inject dynamic parameters
-        $result = $engine->executeQuery("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE :model", array(':model' => 'Model S'));
+        $result = $engine->select("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE :model", array(':model' => 'Model S'));
         var_dump($result);
         echo "<br><br><br>";
 
@@ -162,15 +162,15 @@ class Demo extends Controller
         );
 
         // Insert it!
-        $result = $engine->executeInsert(DB_PREFIX . 'car', array($car1, $car2));
+        $result = $engine->insert(DB_PREFIX . 'car', array($car1, $car2));
         var_dump($result);
 
         // Update something!
-        $result = $engine->executeUpdate(DB_PREFIX . 'car', array('model' => 'Model X ?'), array('model' => 'Model X P90D'));
+        $result = $engine->update(DB_PREFIX . 'car', array('model' => 'Model X ?'), array('model' => 'Model X P90D'));
         var_dump($result);
 
         // Delete the P90, not the P90D!
-        $result = $engine->executeDelete(DB_PREFIX . 'car', array('model' => 'Model X P90'));
+        $result = $engine->delete(DB_PREFIX . 'car', array('model' => 'Model X P90'));
         var_dump($result);
 
         echo "</pre>";

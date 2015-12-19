@@ -77,5 +77,5 @@ interface GeneralEngine
      *
      * @throws \Exception
      */
-    function rawStatement($sql, $bind = array(), $method = null, $class = null);
+    function rawPrepare($sql, $bind = array(), $method = null, $class = null);
 }

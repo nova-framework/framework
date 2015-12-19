@@ -388,7 +388,7 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
      *
      * @throws \Exception
      */
-    function rawStatement($sql, $bind = array(), $method = null, $class = null)
+    function rawPrepare($sql, $bind = array(), $method = null, $class = null)
     {
         // What method? Use default if no method is given my the call.
         if ($method === null) {

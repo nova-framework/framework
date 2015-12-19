@@ -7,12 +7,12 @@
  * @date December 11th, 2015
  */
 
-namespace Smvc\Net;
+namespace Nova\Net;
 
-use Smvc\Helpers\Inflector;
-use Smvc\Net\Request;
-use Smvc\Net\Route;
-use Smvc\Net\Url;
+use Nova\Helpers\Inflector;
+use Nova\Net\Request;
+use Nova\Net\Route;
+use Nova\Net\Url;
 
 /**
  * Router class will load requested controller / closure based on url.

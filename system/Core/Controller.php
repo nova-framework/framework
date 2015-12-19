@@ -8,9 +8,9 @@
  */
 
 
-namespace Smvc\Core;
+namespace Nova\Core;
 
-use Smvc\Core\View;
+use Nova\Core\View;
 
 /**
  * Core controller, all other controllers extend this base controller.

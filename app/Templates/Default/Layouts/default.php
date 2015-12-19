@@ -3,8 +3,8 @@
  * Frontend Default Layout
  */
 
-use Smvc\Helpers\Assets;
-use Smvc\Helpers\Hooks;
+use Nova\Helpers\Assets;
+use Nova\Helpers\Hooks;
 
 // Initialise hooks
 $hooks = Hooks::get();

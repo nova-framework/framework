@@ -7,7 +7,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 /**
  * Split records into multiple pages.

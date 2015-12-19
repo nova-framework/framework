@@ -7,7 +7,7 @@
  * @date December 11th, 2015
  */
 
-namespace Smvc\Net;
+namespace Nova\Net;
 
 /**
  * The Route class is responsible for routing an HTTP request to an assigned callback function.

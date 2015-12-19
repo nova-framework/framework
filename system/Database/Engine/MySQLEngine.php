@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Smvc\Database\Engine;
+namespace Nova\Database\Engine;
 
 
 class MySQLEngine extends \PDO implements Engine

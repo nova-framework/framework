@@ -7,7 +7,7 @@
  * @date December 16th, 2015
  */
 
-namespace Smvc\Modules;
+namespace Nova\Modules;
 
 
 abstract class AbstractModule

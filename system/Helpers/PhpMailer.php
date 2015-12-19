@@ -9,9 +9,9 @@
  * @since 3.0
  */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
-use Smvc\Config;
+use Nova\Config;
 
 
 /**

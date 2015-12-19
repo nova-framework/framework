@@ -2,9 +2,9 @@
 namespace App\Controllers;
 
 use App\Services\Database\Car;
-use Smvc\Core\View;
-use Smvc\Core\Controller;
-use Smvc\Database\EngineFactory;
+use Nova\Core\View;
+use Nova\Core\Controller;
+use Nova\Database\EngineFactory;
 
 /*
 *

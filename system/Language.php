@@ -8,11 +8,11 @@
  */
 
 
-namespace Smvc;
+namespace Nova;
 
-use Smvc\Helpers\Inflector;
-use Smvc\Config;
-use Smvc\Error;
+use Nova\Helpers\Inflector;
+use Nova\Config;
+use Nova\Error;
 
 /**
  * Language class to load the requested domain language file.

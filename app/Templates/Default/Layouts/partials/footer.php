@@ -3,9 +3,9 @@
  * Sample layout
  */
 
-use Smvc\Helpers\Assets;
-use Smvc\Net\Url;
-use Smvc\Helpers\Hooks;
+use Nova\Helpers\Assets;
+use Nova\Net\Url;
+use Nova\Helpers\Hooks;
 
 //initialise hooks
 $hooks = Hooks::get();

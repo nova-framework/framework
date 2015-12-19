@@ -10,8 +10,8 @@
 
 namespace App\Controllers;
 
-use Smvc\Core\View;
-use Smvc\Core\Controller;
+use Nova\Core\View;
+use Nova\Core\Controller;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.

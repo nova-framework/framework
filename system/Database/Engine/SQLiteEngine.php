@@ -73,12 +73,13 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
     }
 
     /**
-     * Basic execute statement. Only for small queries with no binding parameters
+     * Basic execute statement. Only for queries with no binding parameters
      *
      * @param $sql
+     * @param $fetch
      * @return mixed
      */
-    public function executeSimpleQuery($sql)
+    public function executeSimpleQuery($sql, $fetch = false)
     {
         $method = $this->method;
         if ($this->method === \PDO::FETCH_CLASS) {
@@ -86,8 +87,11 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
             $method = \PDO::FETCH_OBJ;
         }
 
-        $statement = $this->query($sql, $method);
+        if (!$fetch) {
+            return $this->exec($sql);
+        }
 
+        $statement = $this->query($sql, $method);
         return $statement->fetchAll();
     }
 

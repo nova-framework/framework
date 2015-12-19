@@ -87,14 +87,15 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
 
 
     /**
-     * Basic execute statement. Only for small queries with no binding parameters
+     * Basic execute statement. Only for queries with no binding parameters
      * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
-     * This will only return an array or boolean. Depends on your operation!
+     * This will only return an array or boolean. Depends on your operation and if fetch is on.
      *
      * @param $sql
+     * @param $fetch
      * @return mixed
      */
-    public function executeSimpleQuery($sql)
+    public function executeSimpleQuery($sql, $fetch = false)
     {
         $method = $this->method;
         if ($this->method === \PDO::FETCH_CLASS) {
@@ -102,8 +103,11 @@ class MySQLEngine extends \PDO implements Engine, GeneralEngine
             $method = \PDO::FETCH_OBJ;
         }
 
-        $statement = $this->query($sql, $method);
+        if (!$fetch) {
+            return $this->exec($sql);
+        }
 
+        $statement = $this->query($sql, $method);
         return $statement->fetchAll();
     }
 

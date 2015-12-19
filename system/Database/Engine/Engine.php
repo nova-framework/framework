@@ -34,10 +34,11 @@ interface Engine
     public function getConnection();
 
     /**
-     * Basic execute statement. Only for small queries with no binding parameters
+     * Basic execute statement. Only for queries with no binding parameters
      *
-     * @param $sql
+     * @param string $sql
+     * @param boolean $fetch
      * @return mixed
      */
-    public function executeSimpleQuery($sql);
+    public function executeSimpleQuery($sql, $fetch = false);
 }

@@ -5,8 +5,7 @@ namespace Nova\Database;
 
 
 use Nova\Config;
-use Nova\Database\Engine\Engine;
-use Nova\Database\Engine\GeneralEngine;
+use Nova\Database\Engine;
 
 abstract class EngineFactory
 {

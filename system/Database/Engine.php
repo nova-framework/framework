@@ -4,15 +4,53 @@
 namespace Nova\Database\Engine;
 
 /**
- * Interface GeneralEngine
- * For implementing basic SQL language engines
- *
+ * Interface Engine
  * @package Nova\Database\Engine
  */
-interface GeneralEngine
+interface Engine
 {
     /**
-     * Execute Query, bind values into the $sql query. And give optional method and class for fetch result
+     * Get the name of the driver
+     * @return string
+     */
+    public function getDriverName();
+
+    /**
+     * Get driver code, used in config as driver string.
+     * @return string
+     */
+    public function getDriverCode();
+
+    /**
+     * Get configuration for instance
+     * @return array
+     */
+    public function getConfiguration();
+
+    /**
+     * Get native connection. Could be \PDO
+     * @return mixed|\PDO
+     */
+    public function getConnection();
+
+
+
+
+    /** Generic Public Api Commands */
+
+    /**
+     * Basic execute statement. Only for queries with no binding parameters
+     *
+     * @param string $sql
+     * @param boolean $fetch
+     * @return mixed
+     */
+    public function raw($sql, $fetch = false);
+    public function rawQuery($sql, $fetch = false);
+
+
+    /**
+     * Execute Select Query, bind values into the $sql query. And give optional method and class for fetch result
      * The result MUST be an array!
      *
      * @param string $sql
@@ -23,7 +61,7 @@ interface GeneralEngine
      *
      * @throws \Exception
      */
-    function executeQuery($sql, $bind = array(), $method = null, $class = null);
+    function select($sql, $bind = array(), $method = null, $class = null);
 
     /**
      * Execute insert query, will automatically build query for you.
@@ -37,7 +75,7 @@ interface GeneralEngine
      *
      * @throws \Exception
      */
-    function executeInsert($table, $data);
+    function insert($table, $data);
 
     /**
      * Execute update query, will automatically build query for you.
@@ -50,7 +88,7 @@ interface GeneralEngine
      *
      * @throws \Exception
      */
-    function executeUpdate($table, $data, $where, $limit = 1);
+    function update($table, $data, $where, $limit = 1);
 
     /**
      * Execute Delete statement, this will automatically build the query for you.
@@ -62,7 +100,7 @@ interface GeneralEngine
      *
      * @throws \Exception
      */
-    function executeDelete($table, $where, $limit = 1);
+    function delete($table, $where, $limit = 1);
 
 
     /**

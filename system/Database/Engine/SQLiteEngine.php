@@ -3,10 +3,9 @@
 
 namespace Nova\Database\Engine;
 
-
 use Nova\Database\EngineFactory;
 
-class SQLiteEngine extends \PDO implements Engine, GeneralEngine
+class SQLiteEngine extends \PDO implements Engine
 {
     /** @var int PDO Fetch method. */
     private $method = \PDO::FETCH_OBJ;
@@ -79,7 +78,7 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
      * @param $fetch
      * @return mixed
      */
-    public function executeSimpleQuery($sql, $fetch = false)
+    public function raw($sql, $fetch = false)
     {
         $method = $this->method;
         if ($this->method === \PDO::FETCH_CLASS) {
@@ -94,6 +93,10 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
         $statement = $this->query($sql, $method);
         return $statement->fetchAll();
     }
+    public function rawQuery($sql, $fetch = false)
+    {
+        return $this->raw($sql, $fetch);
+    }
 
     /**
      * Execute Query, bind values into the $sql query. And give optional method and class for fetch result
@@ -107,8 +110,13 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
      *
      * @throws \Exception
      */
-    function executeQuery($sql, $bind = array(), $method = null, $class = null)
+    function select($sql, $bind = array(), $method = null, $class = null)
     {
+        // Append select if it isn't
+        if (strtolower(substr($sql, 0, 7)) !== 'select ') {
+            $sql = "SELECT " . $sql;
+        }
+
         // What method? Use default if no method is given my the call.
         if ($method === null) {
             $method = $this->method;
@@ -166,7 +174,7 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
      *
      * @throws \Exception
      */
-    function executeInsert($table, $data, $transaction = false)
+    function insert($table, $data, $transaction = false)
     {
         // Check for valid data.
         if (!is_array($data)) {
@@ -247,7 +255,7 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
      *
      * @throws \Exception
      */
-    function executeUpdate($table, $data, $where, $limit = 1)
+    function update($table, $data, $where, $limit = 1)
     {
         // Sort on key
         ksort($data);
@@ -304,7 +312,7 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
      *
      * @throws \Exception
      */
-    function executeDelete($table, $where, $limit = 1)
+    function delete($table, $where, $limit = 1)
     {
         // Sort in where keys.
         ksort($where);

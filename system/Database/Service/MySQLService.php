@@ -3,7 +3,7 @@
 
 namespace Nova\Database\Service;
 
-use Nova\Database\DatabaseService;
+use Nova\Database\Service;
 use Nova\Database\Engine\MySQLEngine;
 use Nova\Database\EngineFactory;
 use Nova\Database\Entity;
@@ -13,7 +13,7 @@ use Nova\Database\Entity;
  *
  * @package Core\Database\Service
  */
-class MySQLService extends DatabaseService implements Service
+class MySQLService extends Service
 {
 
     /** @var int Fetch method (use \PDO::FETCH_* */

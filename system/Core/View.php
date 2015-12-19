@@ -362,12 +362,12 @@ class View
         return false;
     }
 
-    public static function renderView($data = false, $layout = null, $custom = null)
+    public static function renderView($view, $data = false, $layout = null, $custom = null)
     {
         // Render the Page using the Content fetching and the Layout.
-        $content = self::render($layout, $data, true);
+        $content = self::render($view, $data, true);
 
-        self::renderLayout($custom, $content, $data);
+        self::renderLayout($layout, $content, $data, $custom);
     }
 
     public static function renderLayout($layout, $content, $data = false, $custom = null)

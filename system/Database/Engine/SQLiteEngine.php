@@ -232,6 +232,64 @@ class SQLiteEngine extends \PDO implements Engine, GeneralEngine
         return $ids;
     }
 
+    /**
+     * Execute update query, will automatically build query for you.
+     *
+     * @param string $table Table to execute the statement.
+     * @param array $data The updated array, will map into an update statement.
+     * @param array $where Use key->value like column->value for where mapping.
+     * @param int $limit Limit the update statement, not supported by every engine! NOT SUPPORTED BY SQLITE!
+     * @return int|bool
+     *
+     * @throws \Exception
+     */
+    function executeUpdate($table, $data, $where, $limit = 1)
+    {
+        // Sort on key
+        ksort($data);
+
+        // Column :bind for auto binding.
+        $fieldDetails = null;
+        foreach ($data as $key => $value) {
+            $fieldDetails .= "$key = :field_$key,";
+        }
+        $fieldDetails = rtrim($fieldDetails, ',');
+
+        // Where :bind for auto binding
+        $whereDetails = null;
+        $idx = 0;
+        foreach ($where as $key => $value) {
+            if ($idx == 0) {
+                $whereDetails .= "$key = :where_$key";
+            } else {
+                $whereDetails .= " AND $key = :where_$key";
+            }
+            $idx++;
+        }
+        $whereDetails = ltrim($whereDetails, ' AND ');
+
+        // Prepare statement.
+        $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
+
+        // Bind fields
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":field_$key", $value);
+        }
+
+        // Bind values
+        foreach ($where as $key => $value) {
+            $stmt->bindValue(":where_$key", $value);
+        }
+
+        // Execute
+        if (!$stmt->execute()) {
+            return false;
+        }
+
+        // Row count, affected rows
+        return $stmt->rowCount();
+    }
+
 
 
 

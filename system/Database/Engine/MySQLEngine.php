@@ -6,6 +6,11 @@ use Nova\Database\EngineFactory;
 
 class MySQLEngine extends \PDO implements Engine, GeneralEngine
 {
+    /**
+     * Use the legacy engine trait here!
+     */
+    use LegacyEngine;
+
     /** @var int PDO Fetch method. */
     private $method = \PDO::FETCH_OBJ;
     /** @var array Config from the user's app config. */

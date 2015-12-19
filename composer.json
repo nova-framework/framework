@@ -15,7 +15,8 @@
     "require": {
         "php": ">=5.5.0",
         "doctrine/inflector": "1.0.*",
-        "phpmailer/phpmailer": "5.2.*"
+        "phpmailer/phpmailer": "5.2.*",
+        "wixel/gump": "dev-master"
     },
     "autoload": {
         "psr-4": {

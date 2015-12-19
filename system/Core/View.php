@@ -362,13 +362,14 @@ class View
         return false;
     }
 
-    /**
-     * Return absolute path to selected template directory.
-     *
-     * @param  string  $layout layout name
-     * @param  array   $data  array of data
-     * @param  string  $custom path to template folder
-     */
+    public static function renderView($data = false, $layout = null, $custom = null)
+    {
+        // Render the Page using the Content fetching and the Layout.
+        $content = self::render($layout, $data, true);
+
+        self::renderLayout($custom, $content, $data);
+    }
+
     public static function renderLayout($layout, $content, $data = false, $custom = null)
     {
         $filePath = self::layoutPath($layout, $custom);

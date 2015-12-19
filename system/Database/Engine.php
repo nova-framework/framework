@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Nova\Database\Engine;
+namespace Nova\Database;
 
 /**
  * Interface Engine

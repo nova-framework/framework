@@ -3,6 +3,7 @@
 
 namespace Nova\Database\Engine;
 
+use Nova\Database\Engine;
 use Nova\Database\EngineFactory;
 
 class SQLite extends \PDO implements Engine

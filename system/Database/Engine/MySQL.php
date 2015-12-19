@@ -2,6 +2,7 @@
 
 namespace Nova\Database\Engine;
 
+use Nova\Database\Engine;
 use Nova\Database\EngineFactory;
 
 class MySQL extends \PDO implements Engine

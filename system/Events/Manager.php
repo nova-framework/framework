@@ -63,12 +63,12 @@ class Manager
      *
      * @param  string $name name of the event
      * @param  array  $params array of parameters
-     * @param  string $notifier callback invoked after Event deploying
+     * @param  string $callback callback invoked after Event deploying
      */
-    public function trigger($name, $params = array(), $notifier = null)
+    public function trigger($name, $params = array(), $callback = null)
     {
         foreach ($this->listeners as $listener) {
-            if ($listener[0] != $name) {
+            if ($listener[0] !== $name) {
                 // The current Listener do not observe this type of Event; continue.
                 continue;
             }
@@ -85,7 +85,7 @@ class Manager
             }
 
             // Invoke the Notifier and pass the result from Listener as parameter.
-            invokeNotifier($notifier, $result);
+            invokeNotifier($callback, $result);
         }
     }
 

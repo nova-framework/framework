@@ -1,5 +1,5 @@
 <?php
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
 class Password
 {

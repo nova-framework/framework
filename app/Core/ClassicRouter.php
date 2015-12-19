@@ -9,15 +9,15 @@
 
 namespace App\Core;
 
-use Smvc\Helpers\Inflector;
-use Smvc\Net\Route;
-use Smvc\Net\Request;
-use Smvc\Net\Url;
+use Nova\Helpers\Inflector;
+use Nova\Net\Route;
+use Nova\Net\Request;
+use Nova\Net\Url;
 
 /**
  * Router class will load requested controller / closure based on url.
  */
-class ClassicRouter extends \Smvc\Net\Router
+class ClassicRouter extends \Nova\Net\Router
 {
     // Constructor
     public function __construct()

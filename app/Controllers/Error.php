@@ -10,8 +10,8 @@
 
 namespace App\Controllers;
 
-use Smvc\Core\Controller;
-use Smvc\Core\View;
+use Nova\Core\Controller;
+use Nova\Core\View;
 
 /**
  * Error class to generate 404 pages.
@@ -36,8 +36,6 @@ class Error extends Controller
 
         View::addHeader("HTTP/1.0 404 Not Found");
 
-        View::renderTemplate('header', $data);
-        View::render('Error/error404', $data);
-        View::renderTemplate('footer', $data);
+        View::renderView('error404', $data);
     }
 }

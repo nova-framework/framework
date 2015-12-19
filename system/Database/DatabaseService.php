@@ -1,9 +1,9 @@
 <?php
 
-namespace Smvc\Database;
+namespace Nova\Database;
 
-use Smvc\Database\Engine\Engine;
-use Smvc\Database\Engine\MySQLEngine;
+use Nova\Database\Engine\Engine;
+use Nova\Database\Engine\MySQLEngine;
 
 /**
  * Class DatabaseService.

@@ -7,9 +7,9 @@
  * @date Sept 19, 2015
  */
 
-namespace Smvc\Helpers;
+namespace Nova\Helpers;
 
-use Smvc\Helpers\Database;
+use Nova\Helpers\Database;
 
 /**
  * Collection of useful methods.

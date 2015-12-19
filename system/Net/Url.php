@@ -8,15 +8,17 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Smvc\Net;
+namespace Nova\Net;
 
-use Smvc\Helpers\Session;
+use Nova\Helpers\Session;
 
 /**
  * Collection of methods for working with urls.
  */
 class Url
 {
+    private static $segments = array();
+
     /**
      * Redirect to chosen url.
      *
@@ -68,7 +70,7 @@ class Url
      */
     public static function templatePath($custom = TEMPLATE)
     {
-        return DIR.'templates/'.$custom.'/';
+        return DIR.'templates/'.$custom.'/assets/';
 
     }
 
@@ -80,7 +82,7 @@ class Url
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        return "templates/".$custom."/";
+        return "templates/".$custom."/assets/";
     }
 
     /**
@@ -151,7 +153,20 @@ class Url
      */
     public static function segments()
     {
-        return explode('/', $_SERVER['REQUEST_URI']);
+        if(empty(self::$segments)) {
+            $uri = self::detectUri();
+
+            self::$segments = array_filter(explode('/', $uri), 'strlen');
+        }
+
+        return self::$segments;
+    }
+
+    public static function segment($id)
+    {
+        $segments = self::segments();
+
+        return getSegment($segments, $id);
     }
 
     /**

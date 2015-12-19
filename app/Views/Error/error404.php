@@ -3,7 +3,7 @@
  * Sample layout
  */
 
-use Smvc\Error;
+use Nova\Error;
 
 ?>
 <div class="container content">
@@ -12,7 +12,7 @@ use Smvc\Error;
 
 			<h1>404</h1>
 
-			<?php echo $data['error'];?>
+			<?php echo $error;?>
 
 			<hr />
 

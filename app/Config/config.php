@@ -63,7 +63,8 @@ Config::set('database', array(
             'host' => 'localhost',
             'database' => 'dbname',
             'user' => 'root',
-            'password' => 'password'
+            'password' => 'password',
+            'fetchmethod' => \PDO::FETCH_OBJ // Not required, default is OBJ.
         )
     ),
     /** Extra connections can be added here, some examples: */

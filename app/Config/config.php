@@ -70,7 +70,6 @@ Config::set('database', array(
         )
     ),
     /** Extra connections can be added here, some examples: */
-
     'sqlite' => array(
         'engine' => 'sqlite',
         'config' => array(

@@ -12,7 +12,6 @@ namespace Nova\Helpers;
 
 use Nova\Database\Engine\MySQL;
 use Nova\Database\EngineFactory;
-use PDO;
 
 /**
  * Extending PDO to use custom methods.

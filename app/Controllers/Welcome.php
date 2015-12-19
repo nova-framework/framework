@@ -77,7 +77,7 @@ This content can be changed in <code>{0}</code>', $filePath);
 This content can be changed in <code>{0}</code>', $filePath);
 
         // Render the Page using the Content fetching and the Layout.
-        $content = View::render($viewName, $data, false, true);
+        $content = View::render($viewName, $data, true);
 
         View::renderLayout('legacy', $content, $data);
     }

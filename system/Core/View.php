@@ -266,7 +266,7 @@ class View
      * @param  array  $data  array of data
      * @param  array  $error array of errors
      */
-    public static function render($path, $data = false, $error = false, $fetch = false)
+    public static function render($path, $data = false, $fetch = false)
     {
         // Get the Controller instance.
         $instance =& get_instance();
@@ -315,7 +315,7 @@ class View
      * @param  array $data  array of data
      * @param  array $error array of errors
      */
-    public static function renderModule($module, $path, $data = false, $error = false, $fetch = false)
+    public static function renderModule($module, $path, $data = false, $fetch = false)
     {
         $module = Inflector::classify($module);
 

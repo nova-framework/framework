@@ -40,15 +40,6 @@ class ThemedController extends BaseController
 
     protected function afterFlight($result)
     {
-        if($result instanceof View) {
-            View::layout($this->layout())
-                ->loadView($result)
-                ->display();
-
-            // Stop the Flight.
-            return false;
-        }
-
         if(($result === false) || ! $this->autoRender) {
             // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
             return false;
@@ -73,6 +64,14 @@ class ThemedController extends BaseController
 
             View::make($this->method())
                 ->loadData($data)
+                ->display();
+
+            // Stop the Flight.
+            return false;
+        }
+        else if($result instanceof View) {
+            View::layout($this->layout())
+                ->loadView($result)
                 ->display();
 
             // Stop the Flight.

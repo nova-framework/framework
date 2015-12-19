@@ -17,7 +17,7 @@ use App\Core\ClassicController;
  */
 class ClassicWelcome extends ClassicController
 {
-    private $viewFilePath;
+    private $filePath;
 
 
     /**
@@ -34,7 +34,7 @@ class ClassicWelcome extends ClassicController
 
         $viewsPath = str_replace(BASEPATH, '', $this->viewsPath());
 
-        $this->viewFilePath = $viewsPath.$method.'.php';
+        $this->filePath = $viewsPath.$method.'.php';
 
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
@@ -54,7 +54,7 @@ class ClassicWelcome extends ClassicController
     public function welcome()
     {
         $message = __('Hello, welcome from the welcome controller! <br/>
-This content can be changed in <code>{0}</code>', $this->viewFilePath);
+This content can be changed in <code>{0}</code>', $this->filePath);
 
        // Setup the View variables.
         $this->title(__('Welcome'));
@@ -68,7 +68,7 @@ This content can be changed in <code>{0}</code>', $this->viewFilePath);
     public function subPage()
     {
         $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>{0}</code>', $this->viewFilePath);
+This content can be changed in <code>{0}</code>', $this->filePath);
 
        // Setup the View variables.
         $this->title(__('Subpage'));

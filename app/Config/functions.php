@@ -38,10 +38,16 @@ function site_url($path = '')
 //
 // I18N functions
 
+/**
+ * Get formatted translated message back.
+ * @param string $message English default message
+ * @param mixed $args
+ * @return string|void
+ */
 function __($message, $args = null)
 {
     if (! $message) {
-        return;
+        return '';
     }
 
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
@@ -51,10 +57,17 @@ function __($message, $args = null)
     return $language->translate($message, $params);
 }
 
+/**
+ * Get formatted translated message back with domain.
+ * @param string $domain
+ * @param string $message
+ * @param mixed $args
+ * @return string|void
+ */
 function __d($domain, $message, $args = null)
 {
     if (! $message) {
-        return;
+        return '';
     }
 
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);

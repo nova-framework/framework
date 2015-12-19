@@ -17,7 +17,10 @@ use Nova\Helpers\Hooks;
 Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('admin/(:any)(/(:all))', 'App\Controllers\Demo@test');
+
 Router::any('database', 'App\Controllers\Demo@database');
+Router::any('database/insert', 'App\Controllers\Demo@databaseInsert');
+Router::any('database/sqlite', 'App\Controllers\Demo@databaseSqlite');
 
 Router::any('themed/welcome', 'App\Controllers\ThemedWelcome@welcome');
 Router::any('themed/subpage', 'App\Controllers\ThemedWelcome@subPage');

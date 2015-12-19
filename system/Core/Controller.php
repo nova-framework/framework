@@ -54,7 +54,7 @@ abstract class Controller
         return self::$instance;
     }
 
-    public function initialize($className, $method, $params)
+    public function initialize($className, $method, $params = array())
     {
         $this->className = $className;
 

@@ -9,9 +9,9 @@
 
 namespace App\Controllers\Demos;
 
+use App\Core\ClassicController;
 use Nova\Core\View;
 use Nova\Events\Manager as EventManager;
-use App\Core\ClassicController;
 
 /**
  * Sample Themed Controller with its typical usage.

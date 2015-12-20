@@ -46,6 +46,23 @@ class Manager
         $manager->attach($name, $callback, $priority);
     }
 
+    public static function sendEvent($name, $params = array(), &$result = null)
+    {
+        $manager = self::getInstance();
+
+        $manager->trigger($name, $params, function($data) use (&$result) {
+            if(is_array($result)) {
+                $result[] = $data;
+            }
+            else if(is_string($result)) {
+                $result .= $data;
+            }
+            else {
+                $result = $data;
+            }
+        });
+    }
+
     /**
      * Attach the Callback with its associated Event parameter.
      *

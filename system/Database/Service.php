@@ -38,7 +38,7 @@ abstract class Service
     {
         if ($engine === null || !$engine instanceof Engine)
         {
-            $engine = EngineFactory::getEngine();
+            $engine = Manager::getEngine();
         }
 
         $this->engine = $engine;

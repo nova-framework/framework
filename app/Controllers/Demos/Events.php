@@ -56,20 +56,28 @@ class Events extends ClassicController
      */
     public function index()
     {
-        $eventManager = EventManager::getInstance();
-
         $params = array('path' => $this->filePath);
 
-        $message = __('Default Message');
-
-        $eventManager->trigger('welcome', $params, function($result) use (&$message) {
-            $message = $result;
-        });
+        $message = $this->fetchMessage('welcome', $params);
 
         // Setup the View variables.
         $this->title(__('Welcome'));
 
         $this->set('message', $message);
+    }
+
+    private function fetchMessage($event, $params)
+    {
+        $eventManager = EventManager::getInstance();
+
+        // Trigger the Event and capture the result.
+        $message = '';
+
+        $eventManager->trigger($event, $params, function($result) use (&$message) {
+            $message = $result;
+        });
+
+        return $message;
     }
 
 }

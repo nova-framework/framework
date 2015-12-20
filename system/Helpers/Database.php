@@ -11,7 +11,7 @@
 namespace Nova\Helpers;
 
 use Nova\Database\Engine\MySQL;
-use Nova\Database\EngineFactory;
+use Nova\Database\Manager;
 
 /**
  * Extending PDO to use custom methods.
@@ -31,7 +31,7 @@ class Database
     public static function get($group = false)
     {
         // Make the engine with the factory
-        $engine = EngineFactory::getEngine();
+        $engine = Manager::getEngine();
 
         if ($engine instanceof MySQL) {
             return $engine;

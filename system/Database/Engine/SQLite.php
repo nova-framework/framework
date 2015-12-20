@@ -10,7 +10,7 @@
 namespace Nova\Database\Engine;
 
 use Nova\Database\Engine;
-use Nova\Database\EngineFactory;
+use Nova\Database\Manager;
 
 class SQLite extends \PDO implements Engine
 {
@@ -79,7 +79,7 @@ class SQLite extends \PDO implements Engine
      */
     public function getDriverCode()
     {
-        return EngineFactory::DRIVER_SQLITE;
+        return Manager::DRIVER_SQLITE;
     }
 
     /**

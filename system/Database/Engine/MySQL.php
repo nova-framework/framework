@@ -10,7 +10,7 @@
 namespace Nova\Database\Engine;
 
 use Nova\Database\Engine;
-use Nova\Database\EngineFactory;
+use Nova\Database\Manager;
 
 class MySQL extends \PDO implements Engine
 {
@@ -90,7 +90,7 @@ class MySQL extends \PDO implements Engine
      */
     public function getDriverCode()
     {
-        return EngineFactory::DRIVER_MYSQL;
+        return Manager::DRIVER_MYSQL;
     }
 
 

@@ -57,9 +57,6 @@ class Manager
             else if(is_string($result)) {
                 $result .= $data;
             }
-            else {
-                $result = $data;
-            }
         });
     }
 

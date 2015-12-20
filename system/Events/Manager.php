@@ -171,6 +171,11 @@ class Manager
             return false;
         }
 
+        // The called Method should be defined in the called Controller, not in one of its parents.
+        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
+            return false;
+        }
+        
         // Execute the Object's Method and return the result.
         return call_user_func(array($className, $method), $result);
     }

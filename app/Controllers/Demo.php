@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Services\Database\Car;
 use Nova\Core\View;
 use Nova\Core\Controller;
-use Nova\Database\EngineFactory;
+use Nova\Database\Manager;
 
 /*
 *
@@ -56,7 +56,7 @@ class Demo extends Controller
         echo "<pre>Plain:<br>";
 
         // Use it without the Services:
-        $engine = EngineFactory::getEngine();
+        $engine = Manager::getEngine();
         $result_plain = $engine->select('SELECT * FROM ' . DB_PREFIX . 'car');
         var_dump($result_plain);
 
@@ -85,7 +85,7 @@ class Demo extends Controller
         echo "Demo of inserting with engine's<br><pre>";
 
         // Make new car with mysql engine
-        $engine = EngineFactory::getEngine();
+        $engine = Manager::getEngine();
 
         $car1 = array('makeid' => 1, 'model' => 'Model X', 'type' => '90D', 'costs' => 75000);
         $car2 = array('makeid' => 1, 'model' => 'Model X', 'type' => 'P90D', 'costs' => 95000);
@@ -138,7 +138,7 @@ class Demo extends Controller
     public function databaseSqlite()
     {
         echo "<pre>";
-        $engine = EngineFactory::getEngine('sqlite');
+        $engine = Manager::getEngine('sqlite');
 
         // You can use simple query when not require to bind any values.
         $result = $engine->raw("SELECT * FROM " . DB_PREFIX . "car;", true);

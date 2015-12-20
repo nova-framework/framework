@@ -54,10 +54,18 @@ class Manager
             if(is_array($result)) {
                 $result[] = $data;
             }
-            else if(is_string($result) && is_string($data)) {
+            else if(is_string($result)) {
+                if(! is_string($data) && ! is_integer($data)) {
+                    throw new \UnexpectedValueException('Unsupported Data type while the Result is String');
+                }
+
                 $result .= $data;
             }
-            else if(is_bool($result) && is_bool($data)) {
+            else if(is_bool($result)) {
+                if(! is_bool($data)) {
+                    throw new \UnexpectedValueException('Unsupported Data type while the Result is Boolean');
+                }
+
                 $result = $result ? $data : false;
             }
             else if(! is_null($result)) {

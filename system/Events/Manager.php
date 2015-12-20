@@ -131,13 +131,13 @@ class Manager
         // Initialize the Class.
         $object = new $className();
 
+        // The called Method should be defined in the called Controller, not in one of its parents.
+        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
+            return false;
+        }
+
         if($object instanceof Controller) {
             // We are going to call-out a Controller; special setup is required.
-
-            // The called Method should be defined in the called Controller, not in one of its parents.
-            if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
-                return false;
-            }
 
             // The Controller instance should be properly initialized before executing its Method.
             $object->initialize($className, $method);

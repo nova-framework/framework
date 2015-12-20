@@ -58,7 +58,7 @@ class Events extends ClassicController
     {
         $params = array('path' => $this->filePath);
 
-        $message = $this->fetchMessage('welcome', $params);
+        $message = $this->fetchEvent('welcome', $params);
 
         // Setup the View variables.
         $this->title(__('Welcome'));
@@ -66,18 +66,18 @@ class Events extends ClassicController
         $this->set('message', $message);
     }
 
-    private function fetchMessage($event, $params)
+    private function fetchEvent($event, $params)
     {
         $eventManager = EventManager::getInstance();
 
         // Trigger the Event and capture the result.
-        $message = '';
+        $data = '';
 
-        $eventManager->trigger($event, $params, function($result) use (&$message) {
-            $message .= $result;
+        $eventManager->trigger($event, $params, function($result) use (&$data) {
+            $data .= $result;
         });
 
-        return $message;
+        return $data;
     }
 
 }

@@ -57,6 +57,9 @@ class Manager
             else if(is_string($result)) {
                 $result .= $data;
             }
+            else if(! is_null($result)) {
+                throw new \UnexpectedValueException('Unsuported Result type');
+            }
         });
     }
 

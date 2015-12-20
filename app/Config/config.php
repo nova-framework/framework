@@ -87,3 +87,13 @@ Config::set('modules', array(
     //'Blog',
     //'Page'
 ));
+
+
+/**
+ * Events Management
+ */
+
+use Nova\Events\Manager as EventManager;
+
+
+EventManager::addListener('welcome', 'App\Controllers\Demos\EventListener@welcome');

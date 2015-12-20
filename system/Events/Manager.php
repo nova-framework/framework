@@ -24,7 +24,7 @@ class Manager
     {
         self::$instance =& $this;
 
-        $this->events = new SplPriorityQueue;
+        $this->events = new \SplPriorityQueue();
     }
 
     public static function &getInstance()
@@ -39,7 +39,7 @@ class Manager
         return $manager;
     }
 
-    public static function addEvent($name, $callback, $priority = 0)
+    public static function addListener($name, $callback, $priority = 0)
     {
         $manager = self::getInstance();
 
@@ -83,13 +83,13 @@ class Manager
             $name     = $eventInfo[0];
             $callback = $eventInfo[1];
 
-            if ($name !== $event->name()) {
+            if ($name != $event->name()) {
                 // The current Listener do not observe this type of Event; continue.
                 continue;
             }
 
             // Invoke the Listener's Callback and pass the Event as parameter.
-            $result = invokeObject($callback, $event);
+            $result = $this->invokeObject($callback, $event);
 
             if ($notifier === null) {
                 // There is no Notifier; continue.
@@ -97,7 +97,7 @@ class Manager
             }
 
             // Invoke the Notifier and pass the result from Listener as parameter.
-            invokeNotifier($notifier, $result);
+            $this->invokeNotifier($notifier, $result);
         }
 
         // Ensure restoration of the right Controller instance.

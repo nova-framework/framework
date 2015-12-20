@@ -74,7 +74,7 @@ class Events extends ClassicController
         $message = '';
 
         $eventManager->trigger($event, $params, function($result) use (&$message) {
-            $message = $result;
+            $message .= $result;
         });
 
         return $message;

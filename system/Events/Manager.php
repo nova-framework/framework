@@ -74,7 +74,7 @@ class Manager
         $this->notify($event, $callback);
     }
 
-    public function notify(Event $event, $callback = null)
+    public function notify($event, $callback = null)
     {
         // Preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
@@ -88,7 +88,7 @@ class Manager
             // Invoke the Listener's Callback and pass the Event as parameter.
             $result = invokeObject($listener[1], $event);
 
-            if ($notifier === null) {
+            if ($callback === null) {
                 // There is not Notifier; continue.
                 continue;
             }

@@ -18,8 +18,6 @@ use Nova\Events\Manager as EventManager;
  */
 class Events extends ClassicController
 {
-    protected $layout = 'legacy';
-
     private $filePath;
 
 

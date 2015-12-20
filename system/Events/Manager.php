@@ -54,8 +54,11 @@ class Manager
             if(is_array($result)) {
                 $result[] = $data;
             }
-            else if(is_string($result)) {
+            else if(is_string($result) && is_string($data)) {
                 $result .= $data;
+            }
+            else if(is_bool($result) && is_bool($data)) {
+                $result = $result ? $data : false;
             }
             else if(! is_null($result)) {
                 throw new \UnexpectedValueException('Unsupported Result type');

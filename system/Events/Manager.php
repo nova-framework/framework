@@ -11,7 +11,7 @@ namespace Nova\Events;
 
 use Nova\Core\Controller;
 use Nova\Core\Event;
-use Nova\Events\PriorityQueue;
+use Nova\Utils\PriorityQueue;
 
 
 class Manager

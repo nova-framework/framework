@@ -7,7 +7,7 @@
  * @date December 21th, 2015
  */
 
-namespace Nova\Events;
+namespace Nova\Utils;
 
 
 class PriorityQueue extends \SplPriorityQueue

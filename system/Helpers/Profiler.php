@@ -28,12 +28,12 @@ class Profiler
 
         $total_queries = $engine->getTotalQueries();
 
-        $queries_str = ($total_queries == 1) ? __('query') : __('queries');
+        $queries_str = ($total_queries == 1) ? __d('system', 'query') : __d('system', 'queries');
 
         $estimated_users = sprintf("%0d", intval(25 / $exectime));
 
         //
-        $retval = __('Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> %s | UMAX: <b>{3}</b>',
+        $retval = __d('system', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> %s | UMAX: <b>{3}</b>',
                         $elapsed_time,
                         $memory_usage,
                         $total_queries,

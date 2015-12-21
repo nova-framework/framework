@@ -321,9 +321,11 @@ class View
     /**
      * Include template file.
      *
-     * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
+     * @param  string $module module
+     * @param  string $path path to file from Modules folder
+     * @param  array|boolean $data array or boolean of data
+     * @param  array|boolean $fetch fetch data
+     * @return bool|string
      */
     public static function renderModule($module, $path, $data = false, $fetch = false)
     {
@@ -404,8 +406,9 @@ class View
      * Return absolute path to selected template directory.
      *
      * @param  string  $path  path to file from views folder
-     * @param  array   $data  array of data
+     * @param  array|boolean   $data  array of data
      * @param  string  $custom path to template folder
+     * @throws \UnexpectedValueException
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {

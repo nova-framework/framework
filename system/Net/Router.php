@@ -9,6 +9,7 @@
 
 namespace Nova\Net;
 
+use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
 use Nova\Net\Request;
 use Nova\Net\Response;
@@ -27,7 +28,7 @@ class Router
     /**
      * Array of routes
      *
-     * @var array $routes
+     * @var Route[] $routes
      */
     protected $routes = array();
 
@@ -164,6 +165,7 @@ class Router
         }
 
         // Initialize the Controller.
+        /** @var Controller $controller */
         $controller = new $className();
 
         // The called Method should be defined in the called Controller, not in one of its parents.
@@ -180,7 +182,7 @@ class Router
     /**
      * Invoke the callback with its associated parameters.
      *
-     * @param  object $callback
+     * @param  callable $callback
      * @param  array $params array of matched parameters
      * @return bool
      */

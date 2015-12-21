@@ -64,7 +64,7 @@ Config::set('database', array(
             'host'          => 'localhost',
             'port'          => 3306, // Not required, default is 3306
             'database'      => 'dbname',
-            'user'          => 'root',
+            'username'      => 'root',
             'password'      => 'password',
             'fetch_method'  => \PDO::FETCH_OBJ, // Not required, default is OBJ.
             'charset'       => 'utf8' // Not required, default and recommended is utf8.

@@ -11,7 +11,7 @@ namespace Nova\Events;
 
 use Nova\Core\Controller;
 use Nova\Core\Event;
-use Nova\Utils\PriorityQueue;
+use Nova\Events\Listener;
 
 
 class Manager
@@ -83,12 +83,12 @@ class Manager
     public function attach($name, $callback, $priority = 0)
     {
         if(! isset($this->events[$name])) {
-            $this->events[$name] = new PriorityQueue();
+            $this->events[$name] = array();
         }
 
-        $callbacks =& $this->events[$name];
+        $listeners =& $this->events[$name];
 
-        $callbacks->insert($callback, $priority);
+        $listeners[] = new Listener($name, $callback, $priority);
     }
 
     public function clear($name = null)
@@ -118,7 +118,7 @@ class Manager
         $this->notify($event, $callback);
     }
 
-    public function notify($event, $notifier = null)
+    public function notify($event, $callback = null)
     {
         $name = $event->name();
 
@@ -127,18 +127,23 @@ class Manager
             return;
         }
 
-        $callbacks = clone $this->events[$name];
+        $listeners = $this->events[$name];
+
+        // Sort the current Event Listeners by Priority.
+        usort($listeners, function($first, $second) {
+            return ($first->priority() - $second->priority());
+        });
 
         // First, preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
 
-        foreach ($callbacks as $callback) {
+        foreach ($listeners as $listener) {
             // Invoke the Listener's Callback and pass the Event as parameter.
-            $result = $this->invokeObject($callback, $event);
+            $result = $this->invokeObject($listener->callback(), $event);
 
             if ($notifier) {
                 // Invoke the Notifier with the previous invocation Result as parameter.
-                $this->invokeNotifier($notifier, $result);
+                $this->invokeNotifier($callback, $result);
             }
         }
 

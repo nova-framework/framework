@@ -7,10 +7,10 @@
  * @date December 15th, 2015
  */
 
-use Nova\Helpers\Session;
 use Nova\Modules\Manager as Modules;
-use Nova\Net\Router;
 use Nova\Events\Manager as Events;
+use Nova\Net\Session;
+use Nova\Net\Router;
 use Nova\Config;
 
 /**

@@ -165,7 +165,7 @@ class Manager
 
             if ($callback) {
                 // Invoke the Callback with the Result as parameter.
-                call_user_func($callback, $result);
+                $this->invokeCallback($callback, $result);
             }
         }
 
@@ -214,6 +214,16 @@ class Manager
 
         // Execute the Object's Method and return the result.
         return call_user_func(array($object, $method), $param);
+    }
+
+    protected function invokeCallback($callback, $param)
+    {
+        if (is_object($callback)) {
+            // Call the Closure.
+            return call_user_func($callback, $param);
+        }
+
+        return false;
     }
 
     protected function sortListeners()

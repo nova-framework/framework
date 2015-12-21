@@ -10,7 +10,7 @@
 
 namespace Nova\Net;
 
-use Nova\Helpers\Session;
+use Nova\Net\Session;
 
 /**
  * Collection of methods for working with urls.

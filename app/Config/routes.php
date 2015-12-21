@@ -9,7 +9,6 @@
 
 /** Create alias for Router. */
 use Nova\Net\Router;
-use Nova\Helpers\Hooks;
 
 /** Define static routes. */
 
@@ -40,11 +39,6 @@ Router::any('database', 'demo/database');
 Router::any('(:all)', 'demo/catchall/$1');
 */
 /** End static routes */
-
-/** Module routes. */
-$hooks = Hooks::get();
-$hooks->run('routes');
-/** End Module routes. */
 
 /** If no route found. */
 Router::error('\App\Controllers\Error@error404');

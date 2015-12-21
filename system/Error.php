@@ -27,8 +27,8 @@ class Error
     {
         $row = '';
         if (is_array($error)) {
-            foreach ($error as $error) {
-                $row.= "<div class='$class'>$error</div>";
+            foreach ($error as $err) {
+                $row.= "<div class='$class'>$err</div>";
             }
             return $row;
         } else {

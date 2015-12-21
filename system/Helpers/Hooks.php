@@ -82,8 +82,8 @@ class Hooks
      */
     public static function setHooks($where)
     {
-        foreach ($where as $where) {
-            self::setHook($where);
+        foreach ($where as $wher) {
+            self::setHook($wher);
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Engine Factory.
+ * Engine Manager (Factory).
  *
  * @author Tom Valk - tomvalk@lt-box.info
  * @version 3.0
@@ -13,7 +13,7 @@ namespace Nova\Database;
 use Nova\Config;
 use Nova\Database\Engine;
 
-abstract class EngineFactory
+abstract class Manager
 {
     const DRIVER_MYSQL = "MySQL";
     const DRIVER_SQLITE = "SQLite";

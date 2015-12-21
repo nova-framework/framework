@@ -10,7 +10,7 @@
 namespace Nova\Database\Service;
 
 use Nova\Database\Service;
-use Nova\Database\EngineFactory;
+use Nova\Database\Manager;
 use Nova\Database\Entity;
 
 /**
@@ -32,10 +32,10 @@ class MySQL extends Service
     {
         if ($engine === null)
         {
-            $engine = EngineFactory::getEngine();
+            $engine = Manager::getEngine();
         }
 
-        $this->driver = EngineFactory::DRIVER_MYSQL;
+        $this->driver = Manager::DRIVER_MYSQL;
 
         parent::__construct($engine);
 

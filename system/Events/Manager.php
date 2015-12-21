@@ -82,7 +82,7 @@ class Manager
      */
     public function attach($name, $callback, $priority = 0)
     {
-        if(! isset($this->events[$name])) {
+        if(! array_key_exists($name, $this->events)) {
             $this->events[$name] = array();
         }
 
@@ -94,6 +94,7 @@ class Manager
     public function clear($name = null)
     {
         if($name !== null) {
+            // Is wanted to clear the Listeners from a specific Event.
             unset($this->events[$name]);
 
             return;
@@ -129,9 +130,9 @@ class Manager
 
         $listeners = $this->events[$name];
 
-        // Sort the current Event Listeners by Priority.
-        usort($listeners, function($first, $second) {
-            return ($first->priority() - $second->priority());
+        // Sort the current Listeners by Priority.
+        usort($listeners, function($a, $b) {
+            return ($a->priority() - $b->priority());
         });
 
         // First, preserve a instance of the Current Controller.

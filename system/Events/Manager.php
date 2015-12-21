@@ -38,6 +38,13 @@ class Manager
         return $manager;
     }
 
+    public static function initialize()
+    {
+        $manager = self::getInstance();
+
+        $manager->sortListeners();
+    }
+
     public static function addListener($name, $callback, $priority = 0)
     {
         $manager = self::getInstance();
@@ -76,9 +83,9 @@ class Manager
     /**
      * Attach the Callback with its associated Event parameter.
      *
-     * @param  object $callback
-     * @param  array  $params array of matched parameters
-     * @param  string $message
+     * @param  string $name name of the Event
+     * @param  object $callback Callback executed on Event deploying
+     * @param  integer $priority priority
      */
     public function attach($name, $callback, $priority = 0)
     {
@@ -89,10 +96,24 @@ class Manager
         $listeners =& $this->events[$name];
 
         $listeners[] = new Listener($name, $callback, $priority);
+    }
 
-        // Sort the current Listeners on the specified Event, by Priority.
-        usort($listeners, function($a, $b) {
-            return ($a->priority() - $b->priority());
+    /**
+     * Dettach a Listener from the specified Event.
+     *
+     * @param  string $name name of the Event
+     * @param  object $callback Callback executed on Event deploying
+     */
+    public function dettach($name, $callback)
+    {
+        if(! array_key_exists($name, $this->events)) {
+            return;
+        }
+
+        $listeners =& $this->events[$name];
+
+        $listeners = array_filter($listeners, function($listener) use ($callback) {
+            return ($listener->callback() !== $callback);
         });
     }
 
@@ -158,7 +179,7 @@ class Manager
      * @param  object $callback
      * @param  object $event Event parameter
      */
-    private function invokeObject($callback, $param)
+    protected function invokeObject($callback, $param)
     {
         if (is_object($callback)) {
             // Call the Closure.
@@ -195,4 +216,18 @@ class Manager
         return call_user_func(array($object, $method), $param);
     }
 
+    protected function sortListeners()
+    {
+        $events = array();
+
+        foreach($this->events as $name => $listeners) {
+            usort($listeners, function($a, $b) {
+                return ($a->priority() - $b->priority());
+            });
+
+            $events[$name] = $listeners;
+        }
+
+        $this->events = $events;
+    }
 }

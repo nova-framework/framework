@@ -10,6 +10,7 @@
 use Nova\Helpers\Session;
 use Nova\Modules\Manager as Modules;
 use Nova\Net\Router;
+use Nova\Events\Manager as Events;
 use Nova\Config;
 
 /**
@@ -46,6 +47,9 @@ require dirname(__FILE__).DS.'routes.php';
 
 /** bootstrap the active modules (and their associated routes) */
 Modules::bootstrap();
+
+/** initialize the Events */
+Events::initialize();
 
 /** Execute matched routes. */
 $router->dispatch();

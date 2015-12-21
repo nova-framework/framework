@@ -10,7 +10,7 @@
 namespace App\Core;
 
 use Nova\Helpers\Inflector;
-use Nova\Net\Route;
+
 use Nova\Net\Request;
 use Nova\Net\Router;
 use Nova\Net\Url;

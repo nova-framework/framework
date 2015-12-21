@@ -2,7 +2,7 @@
 namespace App\Controllers;
 
 use App\Services\Database\Car;
-use Nova\Core\View;
+
 use Nova\Core\Controller;
 use Nova\Database\Manager;
 

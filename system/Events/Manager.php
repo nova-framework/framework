@@ -11,7 +11,6 @@ namespace Nova\Events;
 
 use Nova\Core\Controller;
 use Nova\Core\Event;
-use Nova\Events\Listener;
 
 
 class Manager

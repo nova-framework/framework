@@ -59,8 +59,10 @@ class Route
      * Checks if a URL and HTTP method matches the Route pattern.
      *
      * @param string $uri Requested URL
-     * @param string $pattern URL pattern
-     * @return boolean Match status
+     * @param $method
+     * @param bool $optionals
+     * @return bool Match status
+     * @internal param string $pattern URL pattern
      */
     public function match($uri, $method, $optionals = true)
     {

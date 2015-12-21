@@ -145,6 +145,12 @@ class Manager
         $this->notify($event, $callback);
     }
 
+    /**
+     * Notify event
+     *
+     * @param $event
+     * @param null|callable $callback
+     */
     public function notify($event, $callback = null)
     {
         $name = $event->name();
@@ -176,8 +182,11 @@ class Manager
     /**
      * Invoke the Object Callback with its associated parameters.
      *
-     * @param  object $callback
-     * @param  object $event Event parameter
+     * @param callable $callback
+     * @param mixed|null $param
+     * @return bool|mixed
+     * @throws
+     * @internal param object $event Event parameter
      */
     protected function invokeObject($callback, $param)
     {

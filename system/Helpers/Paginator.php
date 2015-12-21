@@ -82,7 +82,7 @@ class Paginator
      *
      * Gets the current page number if needed anywhere in your application.
      *
-     * @var numeric
+     * @return number
      */
     public function getInstance()
     {
@@ -94,7 +94,7 @@ class Paginator
      *
      * Sets the instance parameter, if numeric value is 0 then set to 1.
      *
-     * @var numeric
+     * @var number
      */
     private function setInstance()
     {
@@ -152,7 +152,8 @@ class Paginator
      *
      * Also see the file in the helpers folder page_eloq.md for more help.
      *
-     * @var numeric
+     * @var number
+     * @return number
      */
     public function getLimit2()
     {

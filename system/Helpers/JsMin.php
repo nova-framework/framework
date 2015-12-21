@@ -163,7 +163,7 @@ class JSMin
      * ACTION_DELETE_A_B = Get the next B.
      *
      * @param int $command
-     * @throws JSMin_UnterminatedRegExpException|JSMin_UnterminatedStringException
+     * @throws \Exception
      */
     protected function action($command)
     {
@@ -192,6 +192,7 @@ class JSMin
                 $this->lastByteOut = $this->a;
 
                 // fallthrough intentional
+                break;
             case self::ACTION_DELETE_A:
                 $this->a = $this->b;
                 if ($this->a === "'" || $this->a === '"') { // string literal
@@ -206,7 +207,7 @@ class JSMin
                         }
                         if ($this->isEOF($this->a)) {
                             $byte = $this->inputIndex - 1;
-                            throw new Exception(
+                            throw new \Exception(
                                 "JSMin: Unterminated String at byte {$byte}: {$str}"
                             );
                         }
@@ -222,6 +223,7 @@ class JSMin
                 }
 
                 // fallthrough intentional
+                break;
             case self::ACTION_DELETE_A_B:
                 $this->b = $this->next();
                 if ($this->b === '/' && $this->isRegexpLiteral()) {
@@ -244,7 +246,7 @@ class JSMin
                                     $pattern .= $this->a;
                                 }
                                 if ($this->isEOF($this->a)) {
-                                    throw new Exception("JSMin: Unterminated set in RegExp at byte "
+                                    throw new \Exception("JSMin: Unterminated set in RegExp at byte "
                                             . $this->inputIndex .": {$pattern}");
                                 }
                             }
@@ -258,7 +260,7 @@ class JSMin
                             $pattern .= $this->a;
                         } elseif ($this->isEOF($this->a)) {
                             $byte = $this->inputIndex - 1;
-                            throw new Exception("JSMin: Unterminated RegExp at byte {$byte}: {$pattern}");
+                            throw new \Exception("JSMin: Unterminated RegExp at byte {$byte}: {$pattern}");
                         }
                         $this->output .= $this->a;
                         $this->lastByteOut = $this->a;
@@ -392,7 +394,7 @@ class JSMin
     /**
      * Consume a multiple line comment from input (possibly retaining it)
      *
-     * @throws JSMin_UnterminatedCommentException
+     * @throws \Exception
      */
     protected function consumeMultipleLineComment()
     {
@@ -417,7 +419,7 @@ class JSMin
                     return;
                 }
             } elseif ($get === null) {
-                throw new Exception("JSMin: Unterminated comment at byte {$this->inputIndex}: /*{$comment}");
+                throw new \Exception("JSMin: Unterminated comment at byte {$this->inputIndex}: /*{$comment}");
             }
             $comment .= $get;
         }

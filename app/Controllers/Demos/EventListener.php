@@ -29,6 +29,9 @@ class EventListener extends ClassicController
 
     /**
      * Return the Welcome message.
+     *
+     * @param mixed $event
+     * @return string|void
      */
     public function welcome($event)
     {

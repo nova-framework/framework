@@ -83,6 +83,8 @@ class Data
 
     /**
      * key - this will generate a 32 character key
+     *
+     * @param int $length
      * @return string
      */
     public static function createKey($length = 32)

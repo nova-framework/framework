@@ -36,8 +36,8 @@ class Session
     /**
      * Add value to a session.
      *
-     * @param string $key   name the data to save
-     * @param string $value the data to save
+     * @param string $key name the data to save
+     * @param bool|string $value the data to save
      */
     public static function set($key, $value = false)
     {

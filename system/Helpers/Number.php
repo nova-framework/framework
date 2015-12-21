@@ -18,10 +18,9 @@ class Number
     /**
      * Formats a number to start with 0 useful for mobile numbers.
      *
-     * @param  numeric $number the number
-     * @param  numeric $prefix the number should start with
-     *
-     * @return string        the formatted number
+     * @param  number $number the number
+     * @param number|string $prefix the number should start with
+     * @return string the formatted number
      */
     public static function format($number, $prefix = '4')
     {

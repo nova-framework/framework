@@ -137,9 +137,10 @@ class Router
     /**
      * Invoke the Controller's Method with its associated parameters.
      *
-     * @param  string $controller to be instantiated
+     * @param  string $className to be instantiated
      * @param  string $method method to be invoked
-     * @param  array  $params parameters passed to method
+     * @param  array $params parameters passed to method
+     * @return bool
      */
     protected function invokeController($className, $method, $params)
     {
@@ -180,8 +181,8 @@ class Router
      * Invoke the callback with its associated parameters.
      *
      * @param  object $callback
-     * @param  array  $params array of matched parameters
-     * @param  string $message
+     * @param  array $params array of matched parameters
+     * @return bool
      */
     protected function invokeObject($callback, $params = array())
     {
@@ -202,6 +203,10 @@ class Router
         return $this->invokeController($controller, $method, $params);
     }
 
+    /**
+     * Dispatch route
+     * @return bool
+     */
     public function dispatch()
     {
         // Detect the current URI.

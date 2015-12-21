@@ -28,6 +28,8 @@ class Error extends Controller
 
     /**
      * Load a 404 page with the error message.
+     *
+     * @param mixed $error
      */
     public function error404($error = null)
     {

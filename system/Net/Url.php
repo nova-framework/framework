@@ -64,7 +64,7 @@ class Url
     /**
      * Created the absolute address to the template folder.
      *
-     * @param  boolean $custom
+     * @param bool|string $custom
      * @return string url to template folder
      */
     public static function templatePath($custom = TEMPLATE)
@@ -76,7 +76,7 @@ class Url
     /**
      * Created the relative address to the template folder.
      *
-     * @param  boolean $custom
+     * @param bool|string $custom
      * @return string url to template folder
      */
     public static function relativeTemplatePath($custom = TEMPLATE)

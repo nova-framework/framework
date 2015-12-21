@@ -26,6 +26,10 @@ class ClassicRouter extends Router
         parent::__construct();
     }
 
+    /**
+     * Dispatch
+     * @return bool
+     */
     public function dispatch()
     {
         // Detect the current URI.
@@ -57,10 +61,9 @@ class ClassicRouter extends Router
                 $regex = $route->regex();
 
                 // Wilcard Routes match any Route, while those pattern based should be processed.
-                if (! empty($regex)) {
-                    $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
-                }
-                else {
+                if (!empty($regex)) {
+                    $autoUri = preg_replace('#^' . $regex . '$#', $callback, $uri);
+                } else {
                     $autoUri = $callback;
                 }
 
@@ -85,8 +88,10 @@ class ClassicRouter extends Router
         return true;
     }
 
-   /**
+    /**
      * Ability to call controllers in their module/directory/controller/method/param way.
+     * @param string $uri
+     * @return bool
      */
     public function autoDispatch($uri)
     {
@@ -100,37 +105,37 @@ class ClassicRouter extends Router
         // Loop through URI parts, checking for the Controller file including its path.
         $controller = '';
 
-        if (! empty($parts)) {
+        if (!empty($parts)) {
             // Classify, to permit: '<DIR>/file_manager/admin/' -> '<SMVC>/Modules/FileManager/Admin/
             $controller = Inflector::classify(array_shift($parts));
         }
 
         // Verify if the first URI part match a Module.
-        $testPath = SMVC.'Modules'.DS.$controller;
+        $testPath = SMVC . 'Modules' . DS . $controller;
 
-        if (! empty($controller) && is_dir($testPath)) {
+        if (!empty($controller) && is_dir($testPath)) {
             // Walking in a Module path.
             $moduleName = $controller;
-            $basePath   = 'Modules/'.$controller.'/Controllers/';
+            $basePath = 'Modules/' . $controller . '/Controllers/';
 
             // Go further only if have other URI Parts, to permit URL mappings like:
             // '<DIR>/clients' -> '<SMVC>/app/Modules/Clients/Controllers/Clients.php'
-            if (! empty($parts)) {
+            if (!empty($parts)) {
                 $controller = Inflector::classify(array_shift($parts));
             }
         } else {
             $moduleName = '';
-            $basePath   = 'Controllers/';
+            $basePath = 'Controllers/';
         }
 
         // Check for the Controller, even in sub-directories.
         $directory = '';
 
-        while (! empty($parts)) {
-            $testPath = SMVC.str_replace('/', DS, $basePath.$directory.$controller);
+        while (!empty($parts)) {
+            $testPath = SMVC . str_replace('/', DS, $basePath . $directory . $controller);
 
-            if (! is_readable($testPath .'.php') && is_dir($testPath)) {
-                $directory .= $controller .DS;
+            if (!is_readable($testPath . '.php') && is_dir($testPath)) {
+                $directory .= $controller . DS;
                 $controller = Inflector::classify(array_shift($parts));
 
                 continue;
@@ -147,7 +152,7 @@ class ClassicRouter extends Router
         $method = !empty($parts) ? array_shift($parts) : DEFAULT_METHOD;
 
         // Get the Controller's class name.
-        $controller = str_replace(array('//', '/'), '\\', 'App/'.$basePath.$directory.$controller);
+        $controller = str_replace(array('//', '/'), '\\', 'App/' . $basePath . $directory . $controller);
 
         // Get the parameters, if any.
         $params = !empty($parts) ? $parts : array();

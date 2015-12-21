@@ -18,7 +18,7 @@ class Paginator
     /**
      * Set the number of items per page.
      *
-     * @var numeric
+     * @var number
      */
     private $perPage;
 
@@ -32,7 +32,7 @@ class Paginator
     /**
      * Sets the page number.
      *
-     * @var numeric
+     * @var number
      */
     private $page;
 
@@ -46,7 +46,7 @@ class Paginator
     /**
      * Set the total number of records/items.
      *
-     * @var numeric
+     * @var number
      */
     private $totalRows = 0;
 
@@ -55,8 +55,8 @@ class Paginator
      *
      *  Pass values when class is istantiated.
      *
-     * @param numeric  $perPage  sets the number of iteems per page
-     * @param numeric  $instance sets the instance for the GET parameter
+     * @param number  $perPage  sets the number of iteems per page
+     * @param number  $instance sets the instance for the GET parameter
      */
     public function __construct($perPage, $instance)
     {
@@ -70,7 +70,7 @@ class Paginator
      *
      * Creates the starting point for limiting the dataset.
      *
-     * @return numeric
+     * @return number
      */
     public function getStart()
     {

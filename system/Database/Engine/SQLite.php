@@ -123,7 +123,7 @@ class SQLite extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    function select($sql, $bind = array(), $method = null, $class = null)
+    public function select($sql, $bind = array(), $method = null, $class = null)
     {
         // Append select if it isn't
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
@@ -189,7 +189,7 @@ class SQLite extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    function insert($table, $data, $transaction = false)
+    public function insert($table, $data, $transaction = false)
     {
         // Check for valid data.
         if (!is_array($data)) {
@@ -271,7 +271,7 @@ class SQLite extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    function update($table, $data, $where, $limit = 1)
+    public function update($table, $data, $where, $limit = 1)
     {
         // Sort on key
         ksort($data);
@@ -329,7 +329,7 @@ class SQLite extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    function delete($table, $where, $limit = 1)
+    public function delete($table, $where, $limit = 1)
     {
         // Sort in where keys.
         ksort($where);
@@ -376,7 +376,7 @@ class SQLite extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    function rawPrepare($sql, $bind = array(), $method = null, $class = null)
+    public function rawPrepare($sql, $bind = array(), $method = null, $class = null)
     {
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);

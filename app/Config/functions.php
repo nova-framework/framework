@@ -28,17 +28,6 @@ function str_ends_with($haystack, $needle) {
     return (($needle === '') || (substr($haystack, - strlen($needle)) === $needle));
 }
 
-function printStringArray($data)
-{
-    if($data === null) {
-        return;
-    }
-
-    foreach($data as $str) {
-        echo $str;
-    }
-}
-
 // A very useful URL helper.
 
 function site_url($path = '')

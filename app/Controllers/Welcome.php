@@ -11,12 +11,12 @@
 namespace App\Controllers;
 
 use Nova\Core\View;
-use Nova\Core\Controller;
+use App\Core\BaseController;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.
  */
-class Welcome extends Controller
+class Welcome extends BaseController
 {
     private $basePath;
 

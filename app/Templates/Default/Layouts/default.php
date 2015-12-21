@@ -14,7 +14,9 @@ use Nova\Helpers\Assets;
 	<meta charset="utf-8">
 	<?php
 	// Add Controller specific data.
-    printStringArray($pageMetaData);
+    foreach($pageMetaData as $str) {
+        echo $str;
+    }
 	?>
 	<title><?= $title.' - '.SITE_TITLE; ?></title>
 
@@ -28,25 +30,22 @@ use Nova\Helpers\Assets;
 	));
 
 	//Add Controller specific CSS files.
-    if (isset($headerCSS)) {
-        Assets::css($headerCSS);
-
-    }
+    Assets::css($headerCSS);
 
     Assets::js(array(
         '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
     ));
 
     //Add Controller specific JS files.
-    if (isset($headerJScript)) {
-        Assets::js($headerJScript);
-    }
+    Assets::js($headerJScript);
 	?>
 </head>
 <body>
 <?php
 // Add Controller specific data.
-printStringArray($afterBodyArea);
+foreach($afterBodyArea as $str) {
+    echo $str;
+}
 ?>
 
 <div class="container">
@@ -56,17 +55,17 @@ printStringArray($afterBodyArea);
 
 <!-- JS -->
 <?php
+// Add Controller specific data.
+foreach($footerArea as $str) {
+    echo $str;
+}
+
 Assets::js(array(
 	'//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'
 ));
 
 //Add Controller specific JS files.
-if (isset($footerJScript)) {
-    Assets::js($footerJScript);
-}
-
-// Add Controller specific data.
-printStringArray($footerArea);
+Assets::js($footerJScript);
 ?>
 
 </body>

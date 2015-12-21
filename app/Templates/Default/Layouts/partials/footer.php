@@ -10,17 +10,19 @@ use Nova\Helpers\Assets;
 
 <!-- JS -->
 <?php
+
+// Add Controller specific data.
+foreach($footerArea as $str) {
+    echo $str;
+}
+
 Assets::js(array(
     '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'
 ));
 
 //Add Controller specific JS files.
-if (isset($footerJScript)) {
-    Assets::js($footerJScript);
-}
+Assets::js($footerJScript);
 
-// Add Controller specific data.
-printStringArray($footerArea);
 ?>
 
 </body>

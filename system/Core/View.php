@@ -296,6 +296,13 @@ class View
         }
 
         if($data) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;
@@ -350,6 +357,13 @@ class View
         }
 
         if($data) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;
@@ -382,6 +396,9 @@ class View
 
     public static function renderLayout($layout, $content, $data = false, $custom = null)
     {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
         $filePath = self::layoutPath($layout, $custom);
 
         if (! is_readable($filePath)) {
@@ -389,6 +406,13 @@ class View
         }
 
         if($data) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;
@@ -409,6 +433,9 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
         $custom = Inflector::classify($custom);
 
         $basePath = self::templatePath($custom)."Layouts".DS.'partials'.DS;
@@ -420,6 +447,13 @@ class View
         }
 
         if($data) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;

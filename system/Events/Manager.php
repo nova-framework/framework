@@ -17,14 +17,12 @@ class Manager
 {
     private static $instance;
 
-    private $listeners;
+    private $events = array();
 
 
     public function __construct()
     {
         self::$instance =& $this;
-
-        $this->events = new \SplPriorityQueue();
     }
 
     public static function &getInstance()
@@ -83,7 +81,13 @@ class Manager
      */
     public function attach($name, $callback, $priority = 0)
     {
-        $this->events->insert(array($name, $callback), $priority);
+        if(! isset($this->events[$name])) {
+            $this->events[$name] = new \SplPriorityQueue();
+        }
+
+        $callbacks =& $this->events[$name];
+
+        $callbacks->insert($callback, $priority);
     }
 
     /**
@@ -104,18 +108,19 @@ class Manager
 
     public function notify($event, $notifier = null)
     {
+        $name = $event->name();
+
+        if(! isset($this->events[$name])) {
+            // The current Listener do not observe this type of Event; return.
+            return;
+        }
+
+        $callbacks = $this->events[$name];
+
         // Preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
 
-        foreach ($this->events as $eventInfo) {
-            $name     = $eventInfo[0];
-            $callback = $eventInfo[1];
-
-            if ($name != $event->name()) {
-                // The current Listener do not observe this type of Event; continue.
-                continue;
-            }
-
+        foreach ($callbacks as $callback) {
             // Invoke the Listener's Callback and pass the Event as parameter.
             $result = $this->invokeObject($callback, $event);
 
@@ -138,11 +143,11 @@ class Manager
      * @param  object $callback
      * @param  object $event Event parameter
      */
-    private function invokeObject($callback, $event)
+    private function invokeObject($callback, $params)
     {
         if (is_object($callback)) {
             // Call the Closure.
-            return call_user_func($callback, $event);
+            return call_user_func($callback, $params);
         }
 
         // Call the object Class and its Method.
@@ -172,7 +177,7 @@ class Manager
         }
 
         // Execute the Object's Method and return the result.
-        return call_user_func(array($object, $method), $event);
+        return call_user_func(array($object, $method), $params);
     }
 
     /**
@@ -181,11 +186,11 @@ class Manager
      * @param  object $callback
      * @param  object $result result parameter
      */
-    private function invokeNotifier($callback, $result)
+    private function invokeNotifier($callback, $params)
     {
         if (is_object($callback) || is_array($callback)) {
             // Call the Closure.
-            return call_user_func($callback, $result);
+            return call_user_func($callback, $param);
         }
 
         // Call the object Class and its static Method.
@@ -205,7 +210,7 @@ class Manager
         }
 
         // Execute the Object's Method and return the result.
-        return call_user_func(array($className, $method), $result);
+        return call_user_func(array($className, $method), $params);
     }
 
 }

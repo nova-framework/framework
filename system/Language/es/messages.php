@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> %s | UMAX: <b>{3}</b>' => '',
   'The :field URL does not exist.' => 'El :field URL no existe.',
   'The :field field can have the following extensions :param.' => 'El campo :field puede tener las siguientes extensiones :param.',
   'The :field field contains a value that is not accepted.' => 'The campo :field contiene un valor que no es aceptado.',
@@ -30,4 +31,6 @@ return array (
   'The :field field needs to have an age greater than or equal to :param.' => 'El campo :field necesita tener una edad más grande o igual a :param.',
   'The :field field needs to start with :param.' => 'El campo :field necesita iniciar con :param.',
   'There is no validation rule for :field.' => 'No hay una regla de validación para :field.',
+  'queries' => '',
+  'query' => '',
 );

@@ -11,6 +11,7 @@ namespace Nova\Events;
 
 use Nova\Core\Controller;
 use Nova\Core\Event;
+use Nova\Events\PriorityQueue;
 
 
 class Manager
@@ -82,7 +83,7 @@ class Manager
     public function attach($name, $callback, $priority = 0)
     {
         if(! isset($this->events[$name])) {
-            $this->events[$name] = new \SplPriorityQueue();
+            $this->events[$name] = new PriorityQueue();
         }
 
         $callbacks =& $this->events[$name];

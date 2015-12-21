@@ -100,12 +100,12 @@ class ClassicRouter extends \Nova\Net\Router
         $controller = '';
 
         if (! empty($parts)) {
-            // Classify, to permit: '<DIR>/file_manager/admin/' -> '<SMVC>/Modules/FileManager/Admin/
+            // Classify, to permit: '<DIR>/file_manager/admin/' -> '<APPPATH>/Modules/FileManager/Admin/
             $controller = Inflector::classify(array_shift($parts));
         }
 
         // Verify if the first URI part match a Module.
-        $testPath = SMVC.'Modules'.DS.$controller;
+        $testPath = APPPATH.'Modules'.DS.$controller;
 
         if (! empty($controller) && is_dir($testPath)) {
             // Walking in a Module path.
@@ -113,7 +113,7 @@ class ClassicRouter extends \Nova\Net\Router
             $basePath   = 'Modules/'.$controller.'/Controllers/';
 
             // Go further only if have other URI Parts, to permit URL mappings like:
-            // '<DIR>/clients' -> '<SMVC>/app/Modules/Clients/Controllers/Clients.php'
+            // '<DIR>/clients' -> '<APPPATH>/app/Modules/Clients/Controllers/Clients.php'
             if (! empty($parts)) {
                 $controller = Inflector::classify(array_shift($parts));
             }
@@ -126,7 +126,7 @@ class ClassicRouter extends \Nova\Net\Router
         $directory = '';
 
         while (! empty($parts)) {
-            $testPath = SMVC.str_replace('/', DS, $basePath.$directory.$controller);
+            $testPath = APPPATH.str_replace('/', DS, $basePath.$directory.$controller);
 
             if (! is_readable($testPath .'.php') && is_dir($testPath)) {
                 $directory .= $controller .DS;

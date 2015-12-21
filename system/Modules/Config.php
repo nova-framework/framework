@@ -10,7 +10,7 @@
 namespace Nova\Modules;
 
 
-abstract class AbstractModule
+abstract class Config
 {
 
 }

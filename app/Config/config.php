@@ -94,4 +94,4 @@ Config::set('modules', array(
  * Events Management
  */
 
-EventManager::listen('welcome', 'App\Controllers\Demos\EventListener@welcome');
+EventManager::addEvent('welcome', 'App\Controllers\Demos\EventListener@welcome');

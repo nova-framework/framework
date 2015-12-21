@@ -38,7 +38,7 @@ class Manager
         return $manager;
     }
 
-    public static function listen($name, $callback, $priority = 0)
+    public static function addEvent($name, $callback, $priority = 0)
     {
         $manager = self::getInstance();
 

@@ -414,10 +414,6 @@ class MySQL extends \PDO implements Engine
      */
     function rawPrepare($sql, $bind = array(), $method = null, $class = null)
     {
-        // What method? Use default if no method is given my the call.
-        if ($method === null) {
-            $method = $this->method;
-        }
 
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);

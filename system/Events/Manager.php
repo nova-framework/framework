@@ -136,13 +136,10 @@ class Manager
             // Invoke the Listener's Callback and pass the Event as parameter.
             $result = $this->invokeObject($callback, $event);
 
-            if ($notifier === null) {
-                // There is no Notifier; continue.
-                continue;
+            if ($notifier) {
+                // Invoke the Notifier and pass the result from Listener as parameter.
+                $this->invokeNotifier($notifier, $result);
             }
-
-            // Invoke the Notifier and pass the result from Listener as parameter.
-            $this->invokeNotifier($notifier, $result);
         }
 
         // Ensure restoration of the right Controller instance.
@@ -212,12 +209,7 @@ class Manager
         $method    = $segments[1];
 
         // Check first if the Class exists.
-        if (!class_exists($className)) {
-            return false;
-        }
-
-        // The called Method should be defined in the called Class; we don't instatiate the Class.
-        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($className)))) {
+        if (! class_exists($className)) {
             return false;
         }
 

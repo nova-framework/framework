@@ -1,6 +1,6 @@
 <?php
 /**
- * BaseController - Base Class for all App Controllers.
+ * BaseController - Base Class for all App Controllers who use Templates.
  *
  * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
  * @version 3.0

@@ -218,7 +218,7 @@ class Validator extends GUMP {
 
         foreach($fields as $field) {
             if(array_key_exists($field, $data)) {
-                $retval[$field] = filter_var($data[$fields], FILTER_SANITIZE_STRING);
+                $retval[$field] = filter_var($data[$field], FILTER_SANITIZE_STRING);
             }
         }
 

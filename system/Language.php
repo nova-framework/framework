@@ -11,7 +11,8 @@
 namespace Nova;
 
 use Nova\Helpers\Inflector;
-
+use Nova\Config;
+use Nova\Error;
 
 /**
  * Language class to load the requested domain language file.

@@ -9,7 +9,7 @@
 
 namespace App\Controllers\Demos;
 
-
+use Nova\Core\View;
 use App\Core\ClassicController;
 
 /**

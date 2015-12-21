@@ -11,7 +11,7 @@
 
 namespace Nova\Core;
 
-
+use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
 
 /**

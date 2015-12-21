@@ -10,7 +10,7 @@
 
 namespace Nova\Core;
 
-
+use Nova\Core\View;
 
 /**
  * Core controller, all other controllers extend this base controller.

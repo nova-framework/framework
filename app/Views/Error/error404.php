@@ -3,6 +3,7 @@
  * Sample layout
  */
 
+use Nova\Error;
 
 ?>
 <div class="container content">

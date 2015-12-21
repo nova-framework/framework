@@ -7,17 +7,19 @@
  * @date December 17th, 2015
  */
 
-namespace App\Controllers;
+namespace App\Controllers\Demos;
 
 use Nova\Core\View;
-use App\Core\ThemedController;
+use App\Core\ClassicController;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class ThemedWelcome extends ThemedController
+class Classic extends ClassicController
 {
-    private $basePath;
+    protected $layout = 'legacy';
+
+    private $filePath;
 
 
     /**
@@ -30,7 +32,11 @@ class ThemedWelcome extends ThemedController
 
     protected function beforeFlight()
     {
-        $this->basePath = str_replace(BASEPATH, '', $this->viewsPath());
+        $method = $this->method();
+
+        $viewsPath = str_replace(BASEPATH, '', $this->viewsPath());
+
+        $this->filePath = $viewsPath.$method.'.php';
 
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
@@ -45,16 +51,12 @@ class ThemedWelcome extends ThemedController
     }
 
     /**
-     * CakePHP style - Define Welcome page message and set the Controller's variables.
+     * Define Welcome page message and set the Controller's variables.
      */
     public function welcome()
     {
-        $viewName = $this->method();
-
-        $filePath = $this->basePath.$viewName.'.php';
-
         $message = __('Hello, welcome from the welcome controller! <br/>
-This content can be changed in <code>{0}</code>', $filePath);
+This content can be changed in <code>{0}</code>', $this->filePath);
 
        // Setup the View variables.
         $this->title(__('Welcome'));
@@ -63,24 +65,17 @@ This content can be changed in <code>{0}</code>', $filePath);
     }
 
     /**
-     * Laravel style - Define Subpage page message, then create and return the View instance
+     * Define Subpage page message and set the Controller's variables.
      */
     public function subPage()
     {
-        $viewName = 'subpage';
-
-        $filePath = $this->basePath.$viewName.'.php';
-
         $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>{0}</code>', $filePath);
+This content can be changed in <code>{0}</code>', $this->filePath);
 
-        return View::make($viewName)
-            ->withTitle(__('Subpage'))
-            ->withMessage($message);
+       // Setup the View variables.
+        $this->title(__('Subpage'));
+
+        $this->set('message', $message);
     }
-
-    /**
-     * Gangnam style - TBD
-     */
 
 }

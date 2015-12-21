@@ -1,5 +1,8 @@
 <?php
 
+// Store the Framework's starting time in a define.
+define('FRAMEWORK_STARTING_MICROTIME', microtime(true));
+
 // Who invented the alias DIRECTORY_SEPARATOR for '/' probably is a Spanish called:
 // Juan-Carlos Julio Mario Emanuel Carmen-Garcias Martinez de Santa-Maria della Fè.
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);

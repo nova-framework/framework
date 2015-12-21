@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Nova\Helpers;
+namespace Nova\Net;
 
 /**
  * Prefix sessions with useful methods.

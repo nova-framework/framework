@@ -9,7 +9,6 @@
 
 /** Create alias for Router. */
 use Nova\Net\Router;
-use Nova\Helpers\Hooks;
 
 /** Define static routes. */
 
@@ -22,11 +21,13 @@ Router::any('database', 'App\Controllers\Demo@database');
 Router::any('database/insert', 'App\Controllers\Demo@databaseInsert');
 Router::any('database/sqlite', 'App\Controllers\Demo@databaseSqlite');
 
-Router::any('themed/welcome', 'App\Controllers\ThemedWelcome@welcome');
-Router::any('themed/subpage', 'App\Controllers\ThemedWelcome@subPage');
+Router::any('demos/themed/welcome', 'App\Controllers\Demos\Themed@welcome');
+Router::any('demos/themed/subpage', 'App\Controllers\Demos\Themed@subPage');
 
-Router::any('classic/welcome', 'App\Controllers\ClassicWelcome@welcome');
-Router::any('classic/subpage', 'App\Controllers\ClassicWelcome@subPage');
+Router::any('demos/classic/welcome', 'App\Controllers\Demos\Classic@welcome');
+Router::any('demos/classic/subpage', 'App\Controllers\Demos\Classic@subPage');
+
+Router::any('demos/events', 'App\Controllers\Demos\Events@index');
 
 Router::any('(:all)', 'App\Controllers\Demo@catchAll');
 /*
@@ -38,11 +39,6 @@ Router::any('database', 'demo/database');
 Router::any('(:all)', 'demo/catchall/$1');
 */
 /** End static routes */
-
-/** Module routes. */
-$hooks = Hooks::get();
-$hooks->run('routes');
-/** End Module routes. */
 
 /** If no route found. */
 Router::error('\App\Controllers\Error@error404');

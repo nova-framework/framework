@@ -1,14 +1,15 @@
 <?php
 /**
- * Bootstrap handler - perform the SMVC Framework boot stage.
+ * Bootstrap handler - perform the Nova Framework's bootstrap stage.
  *
  * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
  * @version 3.0
  * @date December 15th, 2015
  */
 
-use Nova\Helpers\Session;
 use Nova\Modules\Manager as Modules;
+use Nova\Events\Manager as Events;
+use Nova\Net\Session;
 use Nova\Net\Router;
 use Nova\Config;
 
@@ -46,6 +47,9 @@ require dirname(__FILE__).DS.'routes.php';
 
 /** bootstrap the active modules (and their associated routes) */
 Modules::bootstrap();
+
+/** initialize the Events */
+Events::initialize();
 
 /** Execute matched routes. */
 $router->dispatch();

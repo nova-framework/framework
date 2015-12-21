@@ -9,7 +9,7 @@
 
 namespace Nova\Helpers;
 
-use Nova\Helpers\Session;
+use Nova\Net\Session;
 
 /**
  * Instructions:

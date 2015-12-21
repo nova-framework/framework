@@ -42,22 +42,39 @@ class Session
     public static function set($key, $value = false)
     {
         /**
-         * Check whether session is set in array or not
-         * If array then set all session key-values in foreach loop
-         */
+        * Check whether session is set in array or not
+        * If array then set all session key-values in foreach loop
+        */
         if (is_array($key) && $value === false) {
             foreach ($key as $name => $value) {
-                $_SESSION[SESSION_PREFIX . $name] = $value;
+                $_SESSION[SESSION_PREFIX.$name] = $value;
             }
         } else {
-            $_SESSION[SESSION_PREFIX . $key] = $value;
+            $_SESSION[SESSION_PREFIX.$key] = $value;
         }
+    }
+
+    /**
+     * Extract item from session then delete from the session, finally return the item.
+     *
+     * @param  string $key item to extract
+     *
+     * @return mixed|null      return item or null when key does not exists
+     */
+    public static function pull($key)
+    {
+        if (isset($_SESSION[SESSION_PREFIX.$key])) {
+            $value = $_SESSION[SESSION_PREFIX.$key];
+            unset($_SESSION[SESSION_PREFIX.$key]);
+            return $value;
+        }
+        return null;
     }
 
     /**
      * Get item from session.
      *
-     * @param  string $key item to look for in session
+     * @param  string  $key       item to look for in session
      * @param  boolean $secondkey if used then use as a second key
      *
      * @return mixed|null         returns the key value, or null if key doesn't exists
@@ -65,12 +82,12 @@ class Session
     public static function get($key, $secondkey = false)
     {
         if ($secondkey == true) {
-            if (isset($_SESSION[SESSION_PREFIX . $key][$secondkey])) {
-                return $_SESSION[SESSION_PREFIX . $key][$secondkey];
+            if (isset($_SESSION[SESSION_PREFIX.$key][$secondkey])) {
+                return $_SESSION[SESSION_PREFIX.$key][$secondkey];
             }
         } else {
-            if (isset($_SESSION[SESSION_PREFIX . $key])) {
-                return $_SESSION[SESSION_PREFIX . $key];
+            if (isset($_SESSION[SESSION_PREFIX.$key])) {
+                return $_SESSION[SESSION_PREFIX.$key];
             }
         }
         return null;
@@ -107,6 +124,7 @@ class Session
         return $_SESSION;
     }
 
+
     /**
      * Empties and destroys the session.
      *
@@ -119,7 +137,7 @@ class Session
         /** only run if session has started */
         if (self::$sessionStarted == true) {
             /** if key is empty and $prefix is false */
-            if ($key == '' && $prefix == false) {
+            if ($key =='' && $prefix == false) {
                 session_unset();
                 session_destroy();
             } elseif ($prefix == true) {
@@ -131,10 +149,16 @@ class Session
                 }
             } else {
                 /** clear specified session key */
-                unset($_SESSION[SESSION_PREFIX . $key]);
+                unset($_SESSION[SESSION_PREFIX.$key]);
             }
         }
     }
+
+    /**
+     *
+     *
+      * @return string return the message inside div
+     */
 
     /**
      * Display a one time message, then clear if from the session.
@@ -149,32 +173,9 @@ class Session
         if (!empty($msg)) {
             return "<div class='alert alert-success alert-dismissable'>
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                    <h4><i class='fa fa-check'></i> " . $msg . "</h4>
+                    <h4><i class='fa fa-check'></i> ".$msg."</h4>
                   </div>";
         }
         return '';
-    }
-
-    /**
-     *
-     *
-     * @return string return the message inside div
-     */
-
-    /**
-     * Extract item from session then delete from the session, finally return the item.
-     *
-     * @param  string $key item to extract
-     *
-     * @return mixed|null      return item or null when key does not exists
-     */
-    public static function pull($key)
-    {
-        if (isset($_SESSION[SESSION_PREFIX . $key])) {
-            $value = $_SESSION[SESSION_PREFIX . $key];
-            unset($_SESSION[SESSION_PREFIX . $key]);
-            return $value;
-        }
-        return null;
     }
 }

@@ -36,7 +36,8 @@ abstract class Service
      */
     public function __construct($engine = null)
     {
-        if ($engine === null || !$engine instanceof Engine) {
+        if ($engine === null || !$engine instanceof Engine)
+        {
             $engine = Manager::getEngine();
         }
 

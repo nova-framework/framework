@@ -1,12 +1,12 @@
 <?php
 /**
- * Curl class
- *
- * @author SecretD - https://github.com/SecretD
- * @version 2.2
- * @date Sept 22, 2014
- * @date updated Sept 19, 2015
- */
+* Curl class
+*
+* @author SecretD - https://github.com/SecretD
+* @version 2.2
+* @date Sept 22, 2014
+* @date updated Sept 19, 2015
+*/
 
 namespace Nova\Helpers;
 
@@ -16,14 +16,14 @@ namespace Nova\Helpers;
 class SimpleCurl
 {
     /**
-     * Performs a get request on the chosen link and the chosen parameters
-     * in the array.
-     *
-     * @param string $url
-     * @param array $params
-     *
-     * @return string returns the content of the given url
-     */
+    * Performs a get request on the chosen link and the chosen parameters
+    * in the array.
+    *
+    * @param string $url
+    * @param array $params
+    *
+    * @return string returns the content of the given url
+    */
     public static function get($url, $params = array())
     {
         $url = $url . '?' . http_build_query($params, '', '&');
@@ -44,14 +44,14 @@ class SimpleCurl
     }
 
     /**
-     * Performs a post request on the chosen link and the chosen parameters
-     * in the array.
-     *
-     * @param string $url
-     * @param array $fields
-     *
-     * @return string returns the content of the given url after post
-     */
+    * Performs a post request on the chosen link and the chosen parameters
+    * in the array.
+    *
+    * @param string $url
+    * @param array $fields
+    *
+    * @return string returns the content of the given url after post
+    */
     public static function post($url, $fields = array())
     {
         $ch = curl_init();
@@ -74,14 +74,14 @@ class SimpleCurl
     }
 
     /**
-     * Performs a put request on the chosen link and the chosen parameters
-     * in the array.
-     *
-     * @param string $url
-     * @param array $fields
-     *
-     * @return string with the contents of the site
-     */
+    * Performs a put request on the chosen link and the chosen parameters
+    * in the array.
+    *
+    * @param string $url
+    * @param array $fields
+    *
+    * @return string with the contents of the site
+    */
     public static function put($url, $fields = array())
     {
         $post_field_string = http_build_query($fields);
@@ -93,7 +93,7 @@ class SimpleCurl
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_CUSTOMREQUEST => "PUT",
             CURLOPT_POSTFIELDS => $post_field_string
-        );
+            );
         curl_setopt_array($ch, $options);
 
         $response = curl_exec($ch);

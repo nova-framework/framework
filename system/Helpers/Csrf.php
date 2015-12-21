@@ -42,9 +42,9 @@ class Csrf
      */
     public static function makeToken()
     {
-        $max_time = 60 * 60 * 24; // token is valid for 1 day
+        $max_time    = 60 * 60 * 24; // token is valid for 1 day
         $csrf_token = Session::get('csrf_token');
-        $stored_time = Session::get('csrf_token_time');
+        $stored_time  = Session::get('csrf_token_time');
 
         if ($max_time + $stored_time <= time() || empty($csrf_token)) {
             Session::set('csrf_token', md5(uniqid(rand(), true)));

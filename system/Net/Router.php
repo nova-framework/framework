@@ -43,6 +43,20 @@ class Router
         self::$instance =& $this;
     }
 
+    public static function &getInstance()
+    {
+        $appRouter = APPROUTER;
+
+        if (! self::$instance) {
+            $router = new $appRouter();
+        }
+        else {
+            $router =& self::$instance;
+        }
+
+        return $router;
+    }
+
     /**
      * Defines a route with or without Callback and Method.
      *
@@ -56,36 +70,6 @@ class Router
         $router->addRoute($method, $params[0], $params[1]);
     }
 
-    public static function &getInstance()
-    {
-        $appRouter = APPROUTER;
-
-        if (!self::$instance) {
-            $router = new $appRouter();
-        } else {
-            $router =& self::$instance;
-        }
-
-        return $router;
-    }
-
-    /**
-     * Maps a Method and URL pattern to a Callback.
-     *
-     * @param string $method HTTP metod to match
-     * @param string $route URL pattern to match
-     * @param callback $callback Callback object
-     */
-    public function addRoute($method, $route, $callback)
-    {
-        $method = strtoupper($method);
-        $pattern = ltrim(self::$routeGroup . '/' . $route, '/');
-
-        $route = new Route($method, $pattern, $callback);
-
-        array_push($this->routes, $route);
-    }
-
     /**
      * Defines callback if route is not found.
      *
@@ -96,21 +80,6 @@ class Router
         $router = self::getInstance();
 
         $router->callback($callback);
-    }
-
-    /**
-     * Router callback
-     * @param null $callback
-     * @return callback|null
-     */
-    public function callback($callback = null)
-    {
-        if (is_null($callback)) {
-            return $this->errorCallback;
-        }
-
-        $this->errorCallback = $callback;
-        return null;
     }
 
     /**
@@ -129,6 +98,108 @@ class Router
 
         // Reset the Routes Group to default (none).
         self::$routeGroup = '';
+    }
+
+    /**
+     * Router callback
+     * @param null $callback
+     * @return callback|null
+     */
+    public function callback($callback = null)
+    {
+        if (is_null($callback)) {
+            return $this->errorCallback;
+        }
+
+        $this->errorCallback = $callback;
+        return null;
+    }
+
+    /**
+     * Maps a Method and URL pattern to a Callback.
+     *
+     * @param string $method HTTP metod to match
+     * @param string $route URL pattern to match
+     * @param callback $callback Callback object
+     */
+    public function addRoute($method, $route, $callback)
+    {
+        $method = strtoupper($method);
+        $pattern = ltrim(self::$routeGroup.'/'.$route, '/');
+
+        $route = new Route($method, $pattern, $callback);
+
+        array_push($this->routes, $route);
+    }
+
+    /**
+     * Invoke the Controller's Method with its associated parameters.
+     *
+     * @param  string $className to be instantiated
+     * @param  string $method method to be invoked
+     * @param  array $params parameters passed to method
+     * @return bool
+     */
+    protected function invokeController($className, $method, $params)
+    {
+        // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
+        switch($method) {
+            case 'beforeFlight':
+            case 'afterFlight':
+                return false;
+
+            default:
+                if ($method[0] === '_') {
+                    return false;
+                }
+
+                break;
+        }
+
+        // Check first if the Controller exists.
+        if (!class_exists($className)) {
+            return false;
+        }
+
+        // Initialize the Controller.
+        /** @var Controller $controller */
+        $controller = new $className();
+
+        // The called Method should be defined in the called Controller, not in one of its parents.
+        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
+            return false;
+        }
+
+        $controller->initialize($className, $method, $params);
+
+        // Start the Flight and return the result.
+        return $controller->execute();
+    }
+
+    /**
+     * Invoke the callback with its associated parameters.
+     *
+     * @param  callable $callback
+     * @param  array $params array of matched parameters
+     * @return bool
+     */
+    protected function invokeObject($callback, $params = array())
+    {
+        if (is_object($callback)) {
+            // Call the Closure.
+            call_user_func_array($callback, $params);
+
+            return true;
+        }
+
+        // Call the object Controller and its Method.
+        $segments = explode('@', $callback);
+
+        $controller = $segments[0];
+        $method     = $segments[1];
+
+        // Invoke the Controller's Method with the given arguments.
+        return $this->invokeController($controller, $method, $params);
     }
 
     /**
@@ -177,16 +248,17 @@ class Router
 
         $filePath = '';
 
-        if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
-            $filePath = BASEPATH . 'assets' . DS . $matches[1];
-        } else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
+        if(preg_match('#^assets/(.*)$#i', $uri, $matches)) {
+            $filePath = BASEPATH.'assets'.DS.$matches[1];
+        }
+        else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
             // We need to classify the path name (the Module/Template path).
-            $basePath = Inflector::classify($matches[1] . DS . $matches[2]);
+            $basePath = Inflector::classify($matches[1].DS.$matches[2]);
 
-            $filePath = APPPATH . $basePath . DS . 'Assets' . DS . $matches[3];
+            $filePath = APPPATH.$basePath.DS.'Assets'.DS.$matches[3];
         }
 
-        if (!empty($filePath)) {
+        if(! empty($filePath)) {
             // Serve the specified Asset File.
             Response::serveFile($filePath);
 
@@ -194,76 +266,6 @@ class Router
         }
 
         return false;
-    }
-
-    /**
-     * Invoke the callback with its associated parameters.
-     *
-     * @param  callable $callback
-     * @param  array $params array of matched parameters
-     * @return bool
-     */
-    protected function invokeObject($callback, $params = array())
-    {
-        if (is_object($callback)) {
-            // Call the Closure.
-            call_user_func_array($callback, $params);
-
-            return true;
-        }
-
-        // Call the object Controller and its Method.
-        $segments = explode('@', $callback);
-
-        $controller = $segments[0];
-        $method = $segments[1];
-
-        // Invoke the Controller's Method with the given arguments.
-        return $this->invokeController($controller, $method, $params);
-    }
-
-    /**
-     * Invoke the Controller's Method with its associated parameters.
-     *
-     * @param  string $className to be instantiated
-     * @param  string $method method to be invoked
-     * @param  array $params parameters passed to method
-     * @return bool
-     */
-    protected function invokeController($className, $method, $params)
-    {
-        // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
-        switch ($method) {
-            case 'beforeFlight':
-            case 'afterFlight':
-                return false;
-
-            default:
-                if ($method[0] === '_') {
-                    return false;
-                }
-
-                break;
-        }
-
-        // Check first if the Controller exists.
-        if (!class_exists($className)) {
-            return false;
-        }
-
-        // Initialize the Controller.
-        /** @var Controller $controller */
-        $controller = new $className();
-
-        // The called Method should be defined in the called Controller, not in one of its parents.
-        if (!in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
-            return false;
-        }
-
-        $controller->initialize($className, $method, $params);
-
-        // Start the Flight and return the result.
-        return $controller->execute();
     }
 
 }

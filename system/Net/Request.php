@@ -34,40 +34,40 @@ class Request
     /**
      * Safer and better access to $_POST.
      *
-     * @param  string $key
+     * @param  string   $key
      * @static static method
      *
      * @return mixed
      */
     public static function post($key)
     {
-        return array_key_exists($key, $_POST) ? $_POST[$key] : null;
+        return array_key_exists($key, $_POST)? $_POST[$key]: null;
     }
 
     /**
      * Safer and better access to $_FILES.
      *
-     * @param  string $key
+     * @param  string   $key
      * @static static method
      *
      * @return mixed
      */
     public static function files($key)
     {
-        return array_key_exists($key, $_FILES) ? $_FILES[$key] : null;
+        return array_key_exists($key, $_FILES)? $_FILES[$key]: null;
     }
 
     /**
      * Safer and better access to $_GET.
      *
-     * @param  string $key
+     * @param  string   $key
      * @static static method
      *
      * @return mixed
      */
     public static function query($key)
     {
-        return array_key_exists($key, $_GET) ? $_GET[$key] : null;
+        return array_key_exists($key, $_GET)? $_GET[$key]: null;
     }
 
     /**

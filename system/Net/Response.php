@@ -19,11 +19,12 @@ class Response
 
         // $expires = 60 * 60 * 24 * 365; // Cache for one year
 
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             header("$httpProtocol 404 Not Found");
 
             return false;
-        } else if (!is_readable($filePath)) {
+        }
+        else if (! is_readable($filePath)) {
             header("$httpProtocol 403 Forbidden");
 
             return false;
@@ -41,7 +42,7 @@ class Response
         // https://bugs.php.net/bug.php?id=53035
         //
         // Hard coding the correct mime types for presently needed file extensions
-        switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
+        switch($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
             case 'css':
                 $contentType = 'text/css';
                 break;
@@ -60,8 +61,8 @@ class Response
 
         header("$httpProtocol 200 OK");
         header('Access-Control-Allow-Origin: *');
-        header('Content-type: ' . $contentType);
-        header('Content-Length: ' . filesize($filePath));
+        header('Content-type: ' .$contentType);
+        header('Content-Length: ' .filesize($filePath));
 
         // Send the current file content.
         readfile($filePath);

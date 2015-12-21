@@ -18,7 +18,8 @@ class Cookie
     {
         if (isset($_COOKIE[$key])) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -27,16 +28,18 @@ class Cookie
     {
         $retval = false;
 
-        if (!headers_sent()) {
+        if (! headers_sent()) {
             if ($domain === false) {
                 $domain = $_SERVER['HTTP_HOST'];
             }
 
             if ($expiry === -1) {
                 $expiry = 1893456000; // Lifetime = 2030-01-01 00:00:00
-            } else if (is_numeric($expiry)) {
+            }
+            else if (is_numeric($expiry)) {
                 $expiry += time();
-            } else {
+            }
+            else {
                 $expiry = strtotime($expiry);
             }
 

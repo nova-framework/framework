@@ -21,7 +21,7 @@ class Url
     /**
      * Redirect to chosen url.
      *
-     * @param  string $url the url to redirect to
+     * @param  string  $url      the url to redirect to
      * @param  boolean $fullpath if true use only url in redirect instead of using DIR
      */
     public static function redirect($url = null, $fullpath = false)
@@ -30,8 +30,35 @@ class Url
             $url = DIR . $url;
         }
 
-        header('Location: ' . $url);
+        header('Location: '.$url);
         exit;
+    }
+
+    /**
+     * Detect the true URI, inspired by CodeIgniter 2
+     *
+     * * @return string parsed URI
+     */
+    public static function detectUri()
+    {
+        $requestUri = $_SERVER['REQUEST_URI'];
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+
+        $pathName = dirname($scriptName);
+
+        if (strpos($requestUri, $scriptName) === 0) {
+            $requestUri = substr($requestUri, strlen($scriptName));
+        } else if (strpos($requestUri, $pathName) === 0) {
+            $requestUri = substr($requestUri, strlen($pathName));
+        }
+
+        if (($requestUri == '/') || empty($requestUri)) {
+            return '/';
+        }
+
+        $uri = parse_url($requestUri, PHP_URL_PATH);
+
+        return str_replace(array('//', '../'), '/', ltrim($uri, '/'));
     }
 
     /**
@@ -42,7 +69,7 @@ class Url
      */
     public static function templatePath($custom = TEMPLATE)
     {
-        return DIR . 'templates/' . $custom . '/assets/';
+        return DIR.'templates/'.$custom.'/assets/';
 
     }
 
@@ -54,7 +81,7 @@ class Url
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        return "templates/" . $custom . "/assets/";
+        return "templates/".$custom."/assets/";
     }
 
     /**
@@ -62,19 +89,19 @@ class Url
      * used as the url label <a href=''>$custom</a>.
      *
      *
-     * @param  string $text data containing the text to read
+     * @param  string $text   data containing the text to read
      * @param  string $custom if provided, this is used for the link label
      *
      * @return string         returns the data with links created around urls
      */
     public static function autoLink($text, $custom = null)
     {
-        $regex = '@(http)?(s)?(://)?(([-\w]+\.)+([^\s]+)+[^,.\s])@';
+        $regex   = '@(http)?(s)?(://)?(([-\w]+\.)+([^\s]+)+[^,.\s])@';
 
         if ($custom === null) {
             $replace = '<a href="http$2://$4">$1$2$3$4</a>';
         } else {
-            $replace = '<a href="http$2://$4">' . $custom . '</a>';
+            $replace = '<a href="http$2://$4">'.$custom.'</a>';
         }
 
         return preg_replace($regex, $replace, $text);
@@ -114,15 +141,8 @@ class Url
      */
     public static function previous()
     {
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        header('Location: '. $_SERVER['HTTP_REFERER']);
         exit;
-    }
-
-    public static function segment($id)
-    {
-        $segments = self::segments();
-
-        return getSegment($segments, $id);
     }
 
     /**
@@ -132,7 +152,7 @@ class Url
      */
     public static function segments()
     {
-        if (empty(self::$segments)) {
+        if(empty(self::$segments)) {
             $uri = self::detectUri();
 
             self::$segments = array_filter(explode('/', $uri), 'strlen');
@@ -141,31 +161,11 @@ class Url
         return self::$segments;
     }
 
-    /**
-     * Detect the true URI, inspired by CodeIgniter 2
-     *
-     * * @return string parsed URI
-     */
-    public static function detectUri()
+    public static function segment($id)
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
-        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $segments = self::segments();
 
-        $pathName = dirname($scriptName);
-
-        if (strpos($requestUri, $scriptName) === 0) {
-            $requestUri = substr($requestUri, strlen($scriptName));
-        } else if (strpos($requestUri, $pathName) === 0) {
-            $requestUri = substr($requestUri, strlen($pathName));
-        }
-
-        if (($requestUri == '/') || empty($requestUri)) {
-            return '/';
-        }
-
-        $uri = parse_url($requestUri, PHP_URL_PATH);
-
-        return str_replace(array('//', '../'), '/', ltrim($uri, '/'));
+        return getSegment($segments, $id);
     }
 
     /**

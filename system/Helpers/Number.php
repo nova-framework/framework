@@ -32,19 +32,19 @@ class Number
         if (is_numeric($number)) {
             //if number doesn't start with a 0 or a $prefix add a 0 to the start.
             if ($number[0] != 0 && $number[0] != $prefix) {
-                $number = "0" . $number;
+                $number = "0".$number;
             }
 
             //if number starts with a 0 replace with $prefix
             if ($number[0] == 0) {
                 $number[0] = str_replace("0", $prefix, $number[0]);
-                $number = $prefix . $number;
+                $number = $prefix.$number;
             }
 
             //return the number
             return $number;
 
-            //number is not a number
+        //number is not a number
         } else {
             //return nothing
             return false;
@@ -64,7 +64,7 @@ class Number
         if ($val1 > 0 && $val2 > 0) {
             $division = $val1 / $val2;
             $res = $division * 100;
-            return round($res) . '%';
+            return round($res).'%';
         } else {
             return '0%';
         }

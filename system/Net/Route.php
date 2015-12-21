@@ -50,7 +50,7 @@ class Route
     {
         $this->method = strtoupper($method);
 
-        $this->pattern = !empty($pattern) ? $pattern : '/';
+        $this->pattern = ! empty($pattern) ? $pattern : '/';
 
         $this->callback = $callback;
     }
@@ -91,7 +91,7 @@ class Route
         }
 
         // Attempt to match the Route and extract the parameters.
-        if (preg_match('#^' . $regex . '(?:\?.*)?$#i', $uri, $matches)) {
+        if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
             // Remove $matched[0] as [1] is the first parameter.
             array_shift($matches);
             // Store the extracted parameters.

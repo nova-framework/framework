@@ -6,11 +6,11 @@
 ?>
 
 <div class="page-header">
-    <h1><?php echo $title ?></h1>
+	<h1><?php echo $title ?></h1>
 </div>
 
 <p><?php echo $welcome_message ?></p>
 
-<a class="btn btn-md btn-success" href="<?php echo DIR; ?>subpage">
-    <?php echo __('Open subpage'); ?>
+<a class="btn btn-md btn-success" href="<?php echo DIR;?>subpage">
+	<?php echo __('Open subpage'); ?>
 </a>

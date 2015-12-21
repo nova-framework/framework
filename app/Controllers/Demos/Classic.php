@@ -30,6 +30,26 @@ class Classic extends ClassicController
         parent::__construct();
     }
 
+    protected function beforeFlight()
+    {
+        $method = $this->method();
+
+        $viewsPath = str_replace(BASEPATH, '', $this->viewsPath());
+
+        $this->filePath = $viewsPath.$method.'.php';
+
+        // Leave to parent's method the Flight decisions.
+        return parent::beforeFlight();
+    }
+
+    protected function afterFlight($result)
+    {
+        // Do some processing there, even deciding to stop the Flight, if case.
+
+        // Leave to parent's method the Flight decisions.
+        return parent::afterFlight($result);
+    }
+
     /**
      * Define Welcome page message and set the Controller's variables.
      */
@@ -38,7 +58,7 @@ class Classic extends ClassicController
         $message = __('Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>', $this->filePath);
 
-        // Setup the View variables.
+       // Setup the View variables.
         $this->title(__('Welcome'));
 
         $this->set('message', $message);
@@ -52,30 +72,10 @@ This content can be changed in <code>{0}</code>', $this->filePath);
         $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>{0}</code>', $this->filePath);
 
-        // Setup the View variables.
+       // Setup the View variables.
         $this->title(__('Subpage'));
 
         $this->set('message', $message);
-    }
-
-    protected function beforeFlight()
-    {
-        $method = $this->method();
-
-        $viewsPath = str_replace(BASEPATH, '', $this->viewsPath());
-
-        $this->filePath = $viewsPath . $method . '.php';
-
-        // Leave to parent's method the Flight decisions.
-        return parent::beforeFlight();
-    }
-
-    protected function afterFlight($result)
-    {
-        // Do some processing there, even deciding to stop the Flight, if case.
-
-        // Leave to parent's method the Flight decisions.
-        return parent::afterFlight($result);
     }
 
 }

@@ -40,7 +40,7 @@ class Ftp
     public function __construct($host, $user, $pass, $base)
     {
         //set the basepath
-        $this->basePath = $base . '/';
+        $this->basePath = $base.'/';
 
         //open a connection
         $this->conn = ftp_connect($host);
@@ -64,8 +64,8 @@ class Ftp
      */
     public function makeDirectory($dirToCreate)
     {
-        if (!file_exists($this->basePath . $dirToCreate)) {
-            ftp_mkdir($this->conn, $this->basePath . $dirToCreate);
+        if (!file_exists($this->basePath.$dirToCreate)) {
+            ftp_mkdir($this->conn, $this->basePath.$dirToCreate);
         }
     }
 
@@ -76,7 +76,7 @@ class Ftp
      */
     public function deleteDirectory($dir)
     {
-        ftp_rmdir($this->conn, $this->basePath . $dir);
+        ftp_rmdir($this->conn, $this->basePath.$dir);
     }
 
     /**
@@ -90,7 +90,7 @@ class Ftp
     public function folderPermission($folderChmod, $permission)
     {
         if (ftp_chmod($this->conn, $permission, $folderChmod) !== false) {
-            return "<p>$folderChmod chmoded successfully to " . $permission . "</p>\n";
+            return "<p>$folderChmod chmoded successfully to ".$permission."</p>\n";
         }
         return '';
     }
@@ -99,13 +99,13 @@ class Ftp
      * Upload file to FTP server.
      *
      * @param  string $remoteFile path and filename for remote file
-     * @param  string $localFile local path to file
+     * @param  string $localFile  local path to file
      *
      * @return string             message
      */
     public function uploadFile($remoteFile, $localFile)
     {
-        if (ftp_put($this->conn, $this->basePath . $remoteFile, $localFile, FTP_ASCII)) {
+        if (ftp_put($this->conn, $this->basePath.$remoteFile, $localFile, FTP_ASCII)) {
             return "<p>successfully uploaded $localFile to $remoteFile</p>\n";
         } else {
             return "<p>There was a problem while uploading $remoteFile</p>\n";
@@ -119,6 +119,6 @@ class Ftp
      */
     public function deleteFile($file)
     {
-        ftp_delete($this->conn, $this->basePath . $file);
+        ftp_delete($this->conn, $this->basePath.$file);
     }
 }

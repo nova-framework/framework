@@ -32,7 +32,7 @@ abstract class Manager
     {
         $config = Config::get('database');
         if (!isset($config[$connectionName])) {
-            throw new \Exception("Connection name '" . $connectionName . "' is not defined in your configuration!");
+            throw new \Exception("Connection name '".$connectionName."' is not defined in your configuration!");
         }
 
         $engineConfig = $config[$connectionName];

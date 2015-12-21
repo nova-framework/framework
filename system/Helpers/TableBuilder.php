@@ -50,44 +50,64 @@ class TableBuilder
      */
     const AUTO_INCREMENT = 1;
     const CURRENT_TIMESTAMP = 2;
-    /**
-     * @var array Type aliases
-     */
-    private static $typeAliases = array(
-        'int' => 'INT(11)',
-        'string' => 'VARCHAR(255)',
-        'description' => 'TINYTEXT'
-    );
+
     /**
      * @var Engine A database instance
      */
     protected $db;
+
     /**
      * @var string Compiled SQL query
      */
     private $sql = '';
+
     /**
      * Name
      *
-     * @var string $name Table name
+     * @var string $name   Table name
      */
     private $name = '';
+
     /**
      * fields
      *
-     * @var array $fields Table fields
+     * @var array  $fields Table fields
      */
     private $fields = array();
+
     /**
      * pk
      *
      * @var string $pk Primary key field
      */
     private $pk = '';
+
     /**
      * @var boolean Prevents errors in case if table already exists
      */
     private $notExists = false;
+
+    /**
+     * @var array Type aliases
+     */
+    private static $typeAliases = array (
+        'int'         => 'INT(11)',
+        'string'      => 'VARCHAR(255)',
+        'description' => 'TINYTEXT'
+    );
+
+    /**
+     * Set alias.
+     * Alias is just a way to simplify datatype of field in expression.
+     * You probably don't want to write a lot of times INT(11), so you can add 'int' alias 'INT(11)'
+     *
+     * @param string $aliasName - Name of the Alias
+     * @param string $aliasType - Type of the Alias
+     */
+    public static function setAlias($aliasName, $aliasType)
+    {
+        self::$typeAliases[$aliasName] = $aliasType;
+    }
 
     /**
      * Table builder constructor.
@@ -97,7 +117,7 @@ class TableBuilder
      * you'll set second parameter false.
      *
      * @param PDO|null $db - PDO instance (it can be a \helper\database instance)
-     * @param boolean $id - A flag to add or not to add `id` field automatically
+     * @param boolean  $id - A flag to add or not to add `id` field automatically
      */
     public function __construct(\PDO $db = null, $id = true)
     {
@@ -112,11 +132,38 @@ class TableBuilder
     }
 
     /**
+     * Private utility for converting constants into strings.
+     *
+     * @param int|array $constant - Constant(s) to convert
+     * @return string
+     */
+    private function getOptions($constant)
+    {
+        if (is_array($constant)) {
+            $str = '';
+
+            foreach ($constant as $value) {
+                $str .= $this->getOptions($value);
+            }
+
+            return trim($str);
+        }
+
+        switch ($constant) {
+            case self::AUTO_INCREMENT:
+                return 'AUTO_INCREMENT';
+
+            default:
+                return '';
+        }
+    }
+
+    /**
      * Add a field to table definition.
      *
-     * @param string $field - Field name
-     * @param string $type - Type of the field, for types, please visit CREATE TABLE page for reference
-     * @param boolean $null - NOT null or null
+     * @param string    $field   - Field name
+     * @param string    $type    - Type of the field, for types, please visit CREATE TABLE page for reference
+     * @param boolean   $null    - NOT null or null
      * @param array|int $options - Options, it's either array of constants or just one constant
      */
     public function addField($field, $type, $null = false, $options = 0)
@@ -126,18 +173,27 @@ class TableBuilder
             $type = self::$typeAliases[$type];
         }
 
-        $this->fields[$field] = array(
-            'type' => $type,
-            'null' => $null,
+        $this->fields[$field] = array (
+            'type'    => $type,
+            'null'    => $null,
             'options' => $options
         );
 
         if ($options === self::CURRENT_TIMESTAMP ||
             is_array($options) &&
-            in_array(self::CURRENT_TIMESTAMP, $options)
-        ) {
+            in_array(self::CURRENT_TIMESTAMP, $options)) {
             $this->fields[$field]['default'] = 'CURRENT_TIMESTAMP';
         }
+    }
+
+    /**
+     * Sets 'IF NOT EXISTS' property
+     *
+     * @param boolean $boolean
+     */
+    public function setNotExists($boolean)
+    {
+        $this->notExists = $boolean;
     }
 
     /**
@@ -158,29 +214,6 @@ class TableBuilder
     }
 
     /**
-     * Set alias.
-     * Alias is just a way to simplify datatype of field in expression.
-     * You probably don't want to write a lot of times INT(11), so you can add 'int' alias 'INT(11)'
-     *
-     * @param string $aliasName - Name of the Alias
-     * @param string $aliasType - Type of the Alias
-     */
-    public static function setAlias($aliasName, $aliasType)
-    {
-        self::$typeAliases[$aliasName] = $aliasType;
-    }
-
-    /**
-     * Sets 'IF NOT EXISTS' property
-     *
-     * @param boolean $boolean
-     */
-    public function setNotExists($boolean)
-    {
-        $this->notExists = $boolean;
-    }
-
-    /**
      * Set name of table
      *
      * @param string $name - A name for database
@@ -197,7 +230,7 @@ class TableBuilder
      * Note: to add CURRENT_TIMESTAMP, use addField method and $options argument!
      *
      * @param string $field - Field that need default value
-     * @param mixed $value - Value that you want to add
+     * @param mixed  $value - Value that you want to add
      */
     public function setDefault($field, $value)
     {
@@ -206,20 +239,6 @@ class TableBuilder
         }
 
         $this->fields[$field]['default'] = $value;
-    }
-
-    /**
-     * Get SQL, if you might need it.
-     *
-     * @return string
-     */
-    public function getSQL()
-    {
-        if (!$this->sql) {
-            $this->generateSQL();
-        }
-
-        return $this->sql;
     }
 
     /**
@@ -258,30 +277,17 @@ class TableBuilder
     }
 
     /**
-     * Private utility for converting constants into strings.
+     * Get SQL, if you might need it.
      *
-     * @param int|array $constant - Constant(s) to convert
      * @return string
      */
-    private function getOptions($constant)
+    public function getSQL()
     {
-        if (is_array($constant)) {
-            $str = '';
-
-            foreach ($constant as $value) {
-                $str .= $this->getOptions($value);
-            }
-
-            return trim($str);
+        if (!$this->sql) {
+            $this->generateSQL();
         }
 
-        switch ($constant) {
-            case self::AUTO_INCREMENT:
-                return 'AUTO_INCREMENT';
-
-            default:
-                return '';
-        }
+        return $this->sql;
     }
 
     /**

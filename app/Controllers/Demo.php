@@ -10,7 +10,6 @@ use Nova\Database\Manager;
 *
 * Demo controller
 */
-
 class Demo extends Controller
 {
 
@@ -39,7 +38,7 @@ class Demo extends Controller
             'param4' => $param4
         );
 
-        echo '<pre>' . var_export($params, true) . '</pre>';
+        echo '<pre>'.var_export($params, true).'</pre>';
     }
 
     public function catchAll($str)
@@ -63,7 +62,7 @@ class Demo extends Controller
 
         // Using the select and prefix the SELECT in the sql is optional for the MySQL Engine!
         // WARNING: this is using an old funciton syntax.
-        $result_plain = $engine->select('* FROM ' . DB_PREFIX . 'car');
+        $result_plain = $engine->select('* FROM '.DB_PREFIX.'car');
         var_dump($result_plain);
 
         echo "<br><br>Service:<br>";
@@ -95,6 +94,7 @@ class Demo extends Controller
 
         $result = $engine->insert(DB_PREFIX . 'car', $cars, true); // True means to use transactions.
         var_dump($result);
+
 
 
         // Insert with service

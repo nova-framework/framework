@@ -34,12 +34,12 @@ class Profiler
 
         //
         $retval = __d('system', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> %s | UMAX: <b>{3}</b>',
-            $elapsed_time,
-            $memory_usage,
-            $total_queries,
-            $queries_str,
-            $estimated_users
-        );
+                        $elapsed_time,
+                        $memory_usage,
+                        $total_queries,
+                        $queries_str,
+                        $estimated_users
+                    );
 
         return $retval;
     }

@@ -7,8 +7,7 @@ use Nova\Database\Service\MySQL;
 
 class Car extends MySQL
 {
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         $this->table = "car";

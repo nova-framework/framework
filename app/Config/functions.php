@@ -20,21 +20,19 @@ function &get_instance()
 
 // String helpers.
 
-function str_starts_with($haystack, $needle)
-{
+function str_starts_with($haystack, $needle) {
     return (($needle === '') || (strpos($haystack, $needle) === 0));
 }
 
-function str_ends_with($haystack, $needle)
-{
-    return (($needle === '') || (substr($haystack, -strlen($needle)) === $needle));
+function str_ends_with($haystack, $needle) {
+    return (($needle === '') || (substr($haystack, - strlen($needle)) === $needle));
 }
 
 // A very useful URL helper.
 
 function site_url($path = '')
 {
-    return DIR . ltrim($path, '/');
+    return DIR .ltrim($path, '/');
 }
 
 //
@@ -48,7 +46,7 @@ function site_url($path = '')
  */
 function __($message, $args = null)
 {
-    if (!$message) {
+    if (! $message) {
         return '';
     }
 
@@ -68,7 +66,7 @@ function __($message, $args = null)
  */
 function __d($domain, $message, $args = null)
 {
-    if (!$message) {
+    if (! $message) {
         return '';
     }
 

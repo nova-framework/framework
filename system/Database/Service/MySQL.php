@@ -30,7 +30,8 @@ class MySQL extends Service
 
     public function __construct($engine = null)
     {
-        if ($engine === null) {
+        if ($engine === null)
+        {
             $engine = Manager::getEngine();
         }
 
@@ -60,7 +61,8 @@ class MySQL extends Service
         }
 
         // Loop and insert
-        foreach ($entity as $idx => $entit) {
+        foreach($entity as $idx => $entit)
+        {
             // Insert
             $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($entit));
             if ($result === false) {
@@ -116,7 +118,7 @@ class MySQL extends Service
     {
         $primaryValues = array();
 
-        foreach ($this->primaryKeys as $pk) {
+        foreach($this->primaryKeys as $pk) {
             $primaryValues[$pk] = $entity->{$pk};
         }
 
@@ -147,7 +149,7 @@ class MySQL extends Service
     {
         $primaryValues = array();
 
-        foreach ($this->primaryKeys as $pk) {
+        foreach($this->primaryKeys as $pk) {
             $primaryValues[$pk] = $entity->{$pk};
         }
 

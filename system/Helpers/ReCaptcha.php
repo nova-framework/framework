@@ -33,7 +33,7 @@ class ReCaptcha
         $this->remoteip = $_SERVER['REMOTE_ADDR'];
 
         $this->recaptcha_sitekey = Config::get('recaptcha_sitekey');
-        $this->recaptcha_secret = Config::get('recaptcha_secret');
+        $this->recaptcha_secret  = Config::get('recaptcha_secret');
     }
 
     /**
@@ -49,10 +49,10 @@ class ReCaptcha
         }
 
         $google_url = sprintf('%s?secret=%s&response=%s&remoteip=%s',
-            self::GOOGLEHOST,
-            $this->recaptcha_secret,
-            $response,
-            $this->remoteip);
+                            self::GOOGLEHOST,
+                            $this->recaptcha_secret,
+                            $response,
+                            $this->remoteip);
 
         $response = file_get_contents($google_url);
 

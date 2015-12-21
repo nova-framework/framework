@@ -8,8 +8,8 @@ class Password
      * Hash the password using the specified algorithm
      *
      * @param string $password The password to hash
-     * @param int $algo The algorithm to use (Defined by PASSWORD_* constants)
-     * @param array $options The options for the algorithm to use
+     * @param int    $algo     The algorithm to use (Defined by PASSWORD_* constants)
+     * @param array  $options  The options for the algorithm to use
      *
      * @return string|false The hashed password, or false on error.
      */
@@ -44,9 +44,9 @@ class Password
      *
      * If the answer is true, after validating the password using password_verify, rehash it.
      *
-     * @param string $hash The hash to test
-     * @param int $algo The algorithm used for new password hashes
-     * @param array $options The options array passed to password_hash
+     * @param string $hash    The hash to test
+     * @param int    $algo    The algorithm used for new password hashes
+     * @param array  $options The options array passed to password_hash
      *
      * @return boolean True if the password needs to be rehashed.
      */
@@ -60,7 +60,7 @@ class Password
      * Verify a password against a hash using a timing attack resistant approach
      *
      * @param string $password The password to verify
-     * @param string $hash The hash to verify against
+     * @param string $hash     The hash to verify against
      *
      * @return boolean If the password matches the hash
      */

@@ -8,16 +8,16 @@ define('FRAMEWORK_STARTING_MICROTIME', microtime(true));
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
-define('BASEPATH', realpath(dirname(__DIR__)) . DS);
+define('BASEPATH', realpath(dirname(__DIR__)).DS);
 // The Application paths.
-define('WEBPATH', realpath(__DIR__) . DS);
-define('APPPATH', BASEPATH . 'app' . DS);
-define('SYSPATH', BASEPATH . 'system' . DS);
+define('WEBPATH', realpath(__DIR__).DS);
+define('APPPATH', BASEPATH.'app'.DS);
+define('SYSPATH', BASEPATH.'system'.DS);
 
 
 /** load composer autoloader */
-if (file_exists(BASEPATH . 'vendor' . DS . 'autoload.php')) {
-    require BASEPATH . 'vendor' . DS . 'autoload.php';
+if (file_exists(BASEPATH.'vendor'.DS.'autoload.php')) {
+    require BASEPATH.'vendor'.DS.'autoload.php';
 } else {
     echo "<h1>Please install via composer.json</h1>";
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
@@ -42,7 +42,7 @@ if (file_exists(BASEPATH . 'vendor' . DS . 'autoload.php')) {
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-define('ENVIRONMENT', 'development');
+    define('ENVIRONMENT', 'development');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -67,4 +67,4 @@ if (defined('ENVIRONMENT')) {
 }
 
 /** initiate config */
-require APPPATH . 'Config' . DS . 'bootstrap.php';
+require APPPATH.'Config'.DS.'bootstrap.php';

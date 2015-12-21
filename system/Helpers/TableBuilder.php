@@ -10,8 +10,9 @@
 
 namespace Nova\Helpers;
 
-use PDO;
-use Nova\Helpers\Database;
+use Nova\Database\Engine;
+use Nova\Database\Manager;
+use \PDO;
 
 /**
  * Table builder class for SimpleMVCFramework.
@@ -51,7 +52,7 @@ class TableBuilder
     const CURRENT_TIMESTAMP = 2;
 
     /**
-     * @var \helpers\database A database instance
+     * @var Engine A database instance
      */
     protected $db;
 
@@ -77,7 +78,7 @@ class TableBuilder
     /**
      * pk
      *
-     * @var strin  $pk     Primary key field
+     * @var string $pk Primary key field
      */
     private $pk = '';
 
@@ -118,11 +119,11 @@ class TableBuilder
      * @param PDO|null $db - PDO instance (it can be a \helper\database instance)
      * @param boolean  $id - A flag to add or not to add `id` field automatically
      */
-    public function __construct(PDO $db = null, $id = true)
+    public function __construct(\PDO $db = null, $id = true)
     {
         // If database is not given, create new database instance.
         // database is in the same namespace, we don't need to specify namespace
-        $this->db = !$db ? Database::get() : $db;
+        $this->db = !$db ? Manager::getEngine() : $db;
 
         if ($id === true) {
             $this->addField('id', 'INT(11)', false, self::AUTO_INCREMENT);

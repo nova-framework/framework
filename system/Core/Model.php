@@ -10,7 +10,7 @@
 
 namespace Nova\Core;
 
-use Nova\Helpers\Database;
+use Nova\Database\Manager;
 
 /**
  * Base model class all other models will extend from this base.
@@ -26,10 +26,12 @@ abstract class Model
 
     /**
      * Create a new instance of the database helper.
+     *
+     * @param string $connectionName Custom connection name, default is 'default'
      */
-    public function __construct()
+    public function __construct($connectionName = 'default')
     {
         /** connect to PDO here. */
-        $this->db = Database::get();
+        $this->db = Manager::getEngine($connectionName);
     }
 }

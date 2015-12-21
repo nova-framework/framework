@@ -28,6 +28,41 @@ class Themed extends ThemedController
         parent::__construct();
     }
 
+    /**
+     * CakePHP style - Define Welcome page message and set the Controller's variables.
+     */
+    public function welcome()
+    {
+        $viewName = $this->method();
+
+        $filePath = $this->basePath . $viewName . '.php';
+
+        $message = __('Hello, welcome from the welcome controller! <br/>
+This content can be changed in <code>{0}</code>', $filePath);
+
+        // Setup the View variables.
+        $this->title(__('Welcome'));
+
+        $this->set('message', $message);
+    }
+
+    /**
+     * Laravel style - Define Subpage page message, then create and return the View instance
+     */
+    public function subPage()
+    {
+        $viewName = 'subpage';
+
+        $filePath = $this->basePath . $viewName . '.php';
+
+        $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
+This content can be changed in <code>{0}</code>', $filePath);
+
+        return View::make($viewName)
+            ->withTitle(__('Subpage'))
+            ->withMessage($message);
+    }
+
     protected function beforeFlight()
     {
         $this->basePath = str_replace(BASEPATH, '', $this->viewsPath());
@@ -42,41 +77,6 @@ class Themed extends ThemedController
 
         // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
-    }
-
-    /**
-     * CakePHP style - Define Welcome page message and set the Controller's variables.
-     */
-    public function welcome()
-    {
-        $viewName = $this->method();
-
-        $filePath = $this->basePath.$viewName.'.php';
-
-        $message = __('Hello, welcome from the welcome controller! <br/>
-This content can be changed in <code>{0}</code>', $filePath);
-
-       // Setup the View variables.
-        $this->title(__('Welcome'));
-
-        $this->set('message', $message);
-    }
-
-    /**
-     * Laravel style - Define Subpage page message, then create and return the View instance
-     */
-    public function subPage()
-    {
-        $viewName = 'subpage';
-
-        $filePath = $this->basePath.$viewName.'.php';
-
-        $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>{0}</code>', $filePath);
-
-        return View::make($viewName)
-            ->withTitle(__('Subpage'))
-            ->withMessage($message);
     }
 
     /**

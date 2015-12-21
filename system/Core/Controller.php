@@ -11,7 +11,6 @@
 namespace Nova\Core;
 
 
-
 /**
  * Core controller, all other controllers extend this base controller.
  */
@@ -36,10 +35,10 @@ abstract class Controller
 
     // Theming support.
     protected $template = 'Default';
-    protected $layout   = 'default';
+    protected $layout = 'default';
 
     protected $autoRender = true;
-    protected $useLayout  = false;
+    protected $useLayout = false;
 
     /**
      * Constructor
@@ -70,36 +69,24 @@ abstract class Controller
         $classPath = str_replace('\\', '/', $className);
 
         // First, check on the App path.
-        if(preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
-            $viewsPath = str_replace('/', DS, 'Views/'.$matches[1]);
-        }
-        // Secondly, check on the Modules path.
-        else if(preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
+        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
+            $viewsPath = str_replace('/', DS, 'Views/' . $matches[1]);
+        } // Secondly, check on the Modules path.
+        else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
             $this->module = $matches[1];
 
             // The View paths are in Module sub-directories.
-            $viewsPath = str_replace('/', DS, 'Modules/'.$matches[1].'/Views/'.$matches[2]);
+            $viewsPath = str_replace('/', DS, 'Modules/' . $matches[1] . '/Views/' . $matches[2]);
+        } else {
+            throw \Exception('Unknown Views Path for the Class: ' . $className);
         }
-        else {
-            throw \Exception('Unknown Views Path for the Class: '.$className);
-        }
 
-        $this->viewsPath = APPPATH .$viewsPath .DS;
-    }
-
-    protected function beforeFlight()
-    {
-        return true;
-    }
-
-    protected function afterFlight($result)
-    {
-        return true;
+        $this->viewsPath = APPPATH . $viewsPath . DS;
     }
 
     public function execute()
     {
-        if($this->beforeFlight() === false) {
+        if ($this->beforeFlight() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
@@ -107,7 +94,7 @@ abstract class Controller
         // Execute the Controller's Method with the given arguments.
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
-        if(($this->afterFlight($result) === false) || ! $this->autoRender) {
+        if (($this->afterFlight($result) === false) || !$this->autoRender) {
             // Is wanted to stop the Flight or there is no auto-rendering.
             return true;
         }
@@ -117,23 +104,41 @@ abstract class Controller
         return true;
     }
 
+    protected function beforeFlight()
+    {
+        return true;
+    }
+
+    public function method()
+    {
+        return $this->method;
+    }
+
+    public function params()
+    {
+        return $this->params;
+    }
+
+    protected function afterFlight($result)
+    {
+        return true;
+    }
+
     protected function renderResult($result)
     {
-        if($result instanceof View) {
+        if ($result instanceof View) {
             $result->display();
 
             return;
         }
 
-        if(is_array($result)) {
+        if (is_array($result)) {
             View::addHeader('Content-Type: application/json');
 
             $result = json_encode($result);
-        }
-        else if(is_string($result)) {
+        } else if (is_string($result)) {
             View::addHeader('Content-Type: text/html; charset=UTF-8');
-        }
-        else {
+        } else {
             return;
         }
 
@@ -143,9 +148,42 @@ abstract class Controller
         echo $result;
     }
 
+    public function data($name = null)
+    {
+        if (is_null($name)) {
+            return $this->data;
+        } else if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    public function module()
+    {
+        return $this->module;
+    }
+
+    public function viewsPath()
+    {
+        return $this->viewsPath;
+    }
+
+    // Some getters.
+
+    public function template()
+    {
+        return $this->template;
+    }
+
+    public function layout()
+    {
+        return $this->layout;
+    }
+
     protected function autoRender($value = null)
     {
-        if(is_null($value)) {
+        if (is_null($value)) {
             return $this->autoRender;
         }
 
@@ -154,23 +192,11 @@ abstract class Controller
 
     protected function useLayout($value = null)
     {
-        if(is_null($value)) {
+        if (is_null($value)) {
             return $this->useLayout;
         }
 
         $this->useLayout = $value;
-    }
-
-    public function data($name = null)
-    {
-        if(is_null($name)) {
-            return $this->data;
-        }
-        else if(isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        return null;
     }
 
     protected function set($name, $value = null)
@@ -178,12 +204,10 @@ abstract class Controller
         if (is_array($name)) {
             if (is_array($value)) {
                 $data = array_combine($name, $value);
-            }
-            else {
+            } else {
                 $data = $name;
             }
-        }
-        else {
+        } else {
             $data = array($name => $value);
         }
 
@@ -198,38 +222,6 @@ abstract class Controller
 
         // Activate the Rendering on Layout.
         $this->useLayout = true;
-    }
-
-    // Some getters.
-
-    public function module()
-    {
-        return $this->module;
-    }
-
-    public function method()
-    {
-        return $this->method;
-    }
-
-    public function params()
-    {
-        return $this->params;
-    }
-
-    public function viewsPath()
-    {
-        return $this->viewsPath;
-    }
-
-    public function template()
-    {
-        return $this->template;
-    }
-
-    public function layout()
-    {
-        return $this->layout;
     }
 
 }

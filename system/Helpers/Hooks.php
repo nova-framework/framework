@@ -58,21 +58,11 @@ class Hooks
         ));
 
         //load modules
-        self::loadPlugins(APPPATH.'Modules/');
+        self::loadPlugins(APPPATH . 'Modules/');
         $instance = new self();
         self::$instances[$id] = $instance;
         return $instance;
 
-    }
-
-    /**
-     * Adds hook to hook list.
-     *
-     * @param string $where Hook to add.
-     */
-    public static function setHook($where)
-    {
-        self::$hooks[$where] = '';
     }
 
     /**
@@ -88,6 +78,16 @@ class Hooks
     }
 
     /**
+     * Adds hook to hook list.
+     *
+     * @param string $where Hook to add.
+     */
+    public static function setHook($where)
+    {
+        self::$hooks[$where] = '';
+    }
+
+    /**
      * Load all modules found in folder.
      *
      * Only load modulename.module.php files
@@ -98,14 +98,14 @@ class Hooks
     {
         if ($handle = opendir($fromFolder)) {
             while ($file = readdir($handle)) {
-                if (is_file($fromFolder.$file)) {
+                if (is_file($fromFolder . $file)) {
                     //only load modulename.module.php file
                     if (preg_match('@module.php@', $file)) {
                         require_once $fromFolder . $file;
                     }
                     self::$plugins [$file] ['file'] = $file;
-                } elseif ((is_dir($fromFolder.$file)) && ($file != '.') && ($file != '..')) {
-                    self::loadPlugins($fromFolder.$file.'/');
+                } elseif ((is_dir($fromFolder . $file)) && ($file != '.') && ($file != '..')) {
+                    self::loadPlugins($fromFolder . $file . '/');
                 }
             }
             closedir($handle);
@@ -129,6 +129,20 @@ class Hooks
             self::$hooks[$where] = implode('|', $theseHooks);
 
         }
+    }
+
+    /**
+     * Execute hooks attached to run and collect instead of running
+     *
+     * @param  string $where hook
+     * @param  string $args optional arguments
+     * @return object - returns output of hook call
+     */
+    public function collectHook($where, $args = null)
+    {
+        ob_start();
+        echo $this->run($where, $args);
+        return ob_get_clean();
     }
 
     /**
@@ -171,19 +185,5 @@ class Hooks
         } else {
             throw new \Exception("There is no place with the name '$where' in the hook helper!");
         }
-    }
-
-    /**
-     * Execute hooks attached to run and collect instead of running
-     *
-     * @param  string $where hook
-     * @param  string $args optional arguments
-     * @return object - returns output of hook call
-     */
-    public function collectHook($where, $args = null)
-    {
-        ob_start();
-            echo $this->run($where, $args);
-        return ob_get_clean();
     }
 }

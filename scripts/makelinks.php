@@ -3,48 +3,50 @@
 
 define("DS", DIRECTORY_SEPARATOR);
 
-define("BASEPATH", dirname(dirname(__FILE__)) .DS);
+define("BASEPATH", dirname(dirname(__FILE__)) . DS);
 
-define("WEBROOT", BASEPATH.'public'.DS);
+define("WEBROOT", BASEPATH . 'public' . DS);
 
 // Init the Composer autoloading.
-require BASEPATH .'vendor/autoload.php';
+require BASEPATH . 'vendor/autoload.php';
 
 //
 use Nova\Helpers\Inflector;
 
 
 //
-function mkdirs($dir, $mode = 0777, $recursive = true) {
-  if( is_null($dir) || $dir === "" ) {
+function mkdirs($dir, $mode = 0777, $recursive = true)
+{
+    if (is_null($dir) || $dir === "") {
+        return false;
+    }
+
+    if (is_dir($dir) || $dir === "/") {
+        return true;
+    }
+
+    if (mkdirs(dirname($dir), $mode, $recursive)) {
+        return mkdir($dir, $mode);
+    }
+
     return false;
-  }
-
-  if( is_dir($dir) || $dir === "/" ) {
-    return true;
-  }
-
-  if( mkdirs(dirname($dir), $mode, $recursive) ) {
-    return mkdir($dir, $mode);
-  }
-
-  return false;
 }
+
 //
-function phpGrep($path) {
+function phpGrep($path)
+{
     $ret = array();
 
     $fp = opendir($path);
 
-    while($f = readdir($fp)) {
-        if( preg_match("#^\.+$#", $f) ) continue; // ignore symbolic links
+    while ($f = readdir($fp)) {
+        if (preg_match("#^\.+$#", $f)) continue; // ignore symbolic links
 
-        $file_full_path = $path.DS.$f;
+        $file_full_path = $path . DS . $f;
 
-        if(is_dir($file_full_path)) {
+        if (is_dir($file_full_path)) {
             $ret = array_unique(array_merge($ret, phpGrep($file_full_path)));
-        }
-        else {
+        } else {
             $ret[] = $file_full_path;
         }
     }
@@ -52,37 +54,36 @@ function phpGrep($path) {
     return $ret;
 }
 
-function makeSymlink($path) {
-    if(preg_match('#^assets/(.*)$#i', $path, $matches)) {
-        $filePath = 'assets/'.$matches[1];
-    }
-    else if(preg_match('#^app/(templates|modules)/(.+)/assets/(.*)$#i', $path, $matches)) {
+function makeSymlink($path)
+{
+    if (preg_match('#^assets/(.*)$#i', $path, $matches)) {
+        $filePath = 'assets/' . $matches[1];
+    } else if (preg_match('#^app/(templates|modules)/(.+)/assets/(.*)$#i', $path, $matches)) {
         // We need to classify the second match string (the Module/Template name).
         $module = Inflector::tableize($matches[2]);
 
-        $filePath = $matches[1].'/'.$module.'/assets/'.$matches[3];
+        $filePath = $matches[1] . '/' . $module . '/assets/' . $matches[3];
     }
 
     //
-    $linkPath = WEBROOT.$filePath;
+    $linkPath = WEBROOT . $filePath;
 
-    $dirPath = WEBROOT.dirname($filePath);
+    $dirPath = WEBROOT . dirname($filePath);
 
-    $targetPath = str_repeat('../', count(explode('/', dirname($path))) + 1).$path;
+    $targetPath = str_repeat('../', count(explode('/', dirname($path))) + 1) . $path;
 
     // Check if our target is an already existing symlink or directory, with cleanup.
-    if(is_link($linkPath)) {
+    if (is_link($linkPath)) {
         $target = readlink($linkPath);
 
         $target = str_replace('../', '', $target);
 
-        if($target == $filePath) {
+        if ($target == $filePath) {
             return;
         }
 
         unlink($linkPath);
-    }
-    else if(is_dir($linkPath)) {
+    } else if (is_dir($linkPath)) {
         recursiveRemoveDirs($linkPath);
     }
 
@@ -94,19 +95,18 @@ function makeSymlink($path) {
 
 function recursiveRemoveDirs($dir)
 {
-    if(! is_dir($dir)) {
+    if (!is_dir($dir)) {
         return;
     }
 
     $files = array_diff(scandir($dir), array('..', '.'));
 
     foreach ($files as $file) {
-        $filePath = $dir.'/'.$file;
+        $filePath = $dir . '/' . $file;
 
-        if( is_dir($filePath) ) {
+        if (is_dir($filePath)) {
             recursiveRemoveDirs($filePath);
-        }
-        else {
+        } else {
             unlink($filePath);
         }
     }
@@ -119,17 +119,16 @@ function removeInvalidSymlinks($path)
     $files = array_diff(scandir($path), array(".", ".."));
 
     foreach ($files as $file) {
-        $filePath = $path.DS.$file;
+        $filePath = $path . DS . $file;
 
         if (is_dir($filePath)) {
             removeInvalidSymlinks($filePath);
-        }
-        else if(is_link($filePath)) {
+        } else if (is_link($filePath)) {
             $target = readlink($filePath);
 
-            $target = BASEPATH.str_replace('../', '', $target);
+            $target = BASEPATH . str_replace('../', '', $target);
 
-            if(is_readable(realpath($target))) {
+            if (is_readable(realpath($target))) {
                 continue;
             }
 
@@ -142,11 +141,10 @@ function removeEmptySubDirs($path)
 {
     $empty = true;
 
-    foreach (glob($path .DS ."*") as $file) {
+    foreach (glob($path . DS . "*") as $file) {
         if (is_dir($file)) {
-            if (! removeEmptySubDirs($file)) $empty = false;
-        }
-        else {
+            if (!removeEmptySubDirs($file)) $empty = false;
+        } else {
             $empty = false;
         }
     }
@@ -162,51 +160,51 @@ $workPaths = array(
 );
 
 //
-if(is_dir(BASEPATH .'app'.DS.'Modules')) {
-    $path = str_replace('/', DS, BASEPATH .'app/Modules/*');
+if (is_dir(BASEPATH . 'app' . DS . 'Modules')) {
+    $path = str_replace('/', DS, BASEPATH . 'app/Modules/*');
 
-    $dirs = glob($path , GLOB_ONLYDIR);
+    $dirs = glob($path, GLOB_ONLYDIR);
 
-    foreach($dirs as $module) {
-        $workPaths[] = str_replace('/', DS, 'app/Modules/'.basename($module));
+    foreach ($dirs as $module) {
+        $workPaths[] = str_replace('/', DS, 'app/Modules/' . basename($module));
     }
 }
 
-if(is_dir(BASEPATH .'app'.DS.'Templates')) {
-    $path = str_replace('/', DS, BASEPATH .'app/Templates/*');
+if (is_dir(BASEPATH . 'app' . DS . 'Templates')) {
+    $path = str_replace('/', DS, BASEPATH . 'app/Templates/*');
 
-    $dirs = glob($path , GLOB_ONLYDIR);
+    $dirs = glob($path, GLOB_ONLYDIR);
 
-    foreach($dirs as $template) {
-        $workPaths[] = str_replace('/', DS, 'app/Templates/'.basename($template));
+    foreach ($dirs as $template) {
+        $workPaths[] = str_replace('/', DS, 'app/Templates/' . basename($template));
     }
 }
 
 //
 $options = getopt('', array('path::'));
 
-if(! empty($options['path'])) {
+if (!empty($options['path'])) {
     $worksPaths = array_map('trim', explode(',', $options['path']));
 }
 
 //
-foreach($workPaths as $workPath) {
-    $searchPath = BASEPATH .$workPath .(($workPath == 'assets') ? '' : '/Assets');
+foreach ($workPaths as $workPath) {
+    $searchPath = BASEPATH . $workPath . (($workPath == 'assets') ? '' : '/Assets');
 
-    if(! is_dir($searchPath)) {
-	continue;
+    if (!is_dir($searchPath)) {
+        continue;
     }
 
     $results = phpGrep($searchPath);
 
-    if(empty($results)) {
+    if (empty($results)) {
         continue;
     }
 
-    foreach($results as $path) {
+    foreach ($results as $path) {
         $filePath = str_replace(array(BASEPATH, '//'), array('', '/'), $path);
 
-        switch($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
+        switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
             case 'css':
             case 'js':
             case 'png':
@@ -226,13 +224,13 @@ foreach($workPaths as $workPath) {
 
 echo 'Asset Symlinks created, cleaning up... ';
 
-foreach(array('assets', 'modules', 'templates') as $path) {
-    $path = WEBROOT.$path;
+foreach (array('assets', 'modules', 'templates') as $path) {
+    $path = WEBROOT . $path;
 
     removeInvalidSymlinks($path);
     removeEmptySubDirs($path);
 }
 
-echo 'Done.'.PHP_EOL;
+echo 'Done.' . PHP_EOL;
 
 

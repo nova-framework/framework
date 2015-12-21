@@ -18,7 +18,7 @@ class Error
     /**
      * Display errors.
      *
-     * @param  array  $error an error of errors
+     * @param  array $error an error of errors
      * @param  string $class name of class to apply to div
      *
      * @return string return the errors inside divs
@@ -28,7 +28,7 @@ class Error
         $row = '';
         if (is_array($error)) {
             foreach ($error as $err) {
-                $row.= "<div class='$class'>$err</div>";
+                $row .= "<div class='$class'>$err</div>";
             }
             return $row;
         } else {

@@ -25,18 +25,6 @@ class Manager
         self::$instance =& $this;
     }
 
-    public static function &getInstance()
-    {
-        if (! self::$instance) {
-            $manager = new self();
-        }
-        else {
-            $manager =& self::$instance;
-        }
-
-        return $manager;
-    }
-
     public static function initialize()
     {
         $manager = self::getInstance();
@@ -44,39 +32,37 @@ class Manager
         $manager->sortListeners();
     }
 
+    public static function &getInstance()
+    {
+        if (!self::$instance) {
+            $manager = new self();
+        } else {
+            $manager =& self::$instance;
+        }
+
+        return $manager;
+    }
+
+    protected function sortListeners()
+    {
+        $events = array();
+
+        foreach ($this->events as $name => $listeners) {
+            usort($listeners, function ($a, $b) {
+                return ($a->priority() - $b->priority());
+            });
+
+            $events[$name] = $listeners;
+        }
+
+        $this->events = $events;
+    }
+
     public static function addListener($name, $callback, $priority = 0)
     {
         $manager = self::getInstance();
 
         $manager->attach($name, $callback, $priority);
-    }
-
-    public static function sendEvent($name, $params = array(), &$result = null)
-    {
-        $manager = self::getInstance();
-
-        $manager->trigger($name, $params, function($data) use (&$result) {
-            if(is_array($result)) {
-                $result[] = $data;
-            }
-            else if(is_string($result)) {
-                if(! is_string($data) && ! is_integer($data)) {
-                    throw new \UnexpectedValueException('Unsupported Data type while the Result is String');
-                }
-
-                $result .= $data;
-            }
-            else if(is_bool($result)) {
-                if(! is_bool($data)) {
-                    throw new \UnexpectedValueException('Unsupported Data type while the Result is Boolean');
-                }
-
-                $result = $result ? $data : false;
-            }
-            else if(! is_null($result)) {
-                throw new \UnexpectedValueException('Unsupported Result type');
-            }
-        });
     }
 
     /**
@@ -88,7 +74,7 @@ class Manager
      */
     public function attach($name, $callback, $priority = 0)
     {
-        if(! array_key_exists($name, $this->events)) {
+        if (!array_key_exists($name, $this->events)) {
             $this->events[$name] = array();
         }
 
@@ -97,42 +83,36 @@ class Manager
         $listeners[] = new Listener($name, $callback, $priority);
     }
 
-    /**
-     * Dettach a Listener from the specified Event.
-     *
-     * @param  string $name name of the Event
-     * @param  object $callback Callback executed on Event deploying
-     */
-    public function dettach($name, $callback)
+    public static function sendEvent($name, $params = array(), &$result = null)
     {
-        if(! array_key_exists($name, $this->events)) {
-            return;
-        }
+        $manager = self::getInstance();
 
-        $listeners =& $this->events[$name];
+        $manager->trigger($name, $params, function ($data) use (&$result) {
+            if (is_array($result)) {
+                $result[] = $data;
+            } else if (is_string($result)) {
+                if (!is_string($data) && !is_integer($data)) {
+                    throw new \UnexpectedValueException('Unsupported Data type while the Result is String');
+                }
 
-        $listeners = array_filter($listeners, function($listener) use ($callback) {
-            return ($listener->callback() !== $callback);
+                $result .= $data;
+            } else if (is_bool($result)) {
+                if (!is_bool($data)) {
+                    throw new \UnexpectedValueException('Unsupported Data type while the Result is Boolean');
+                }
+
+                $result = $result ? $data : false;
+            } else if (!is_null($result)) {
+                throw new \UnexpectedValueException('Unsupported Result type');
+            }
         });
-    }
-
-    public function clear($name = null)
-    {
-        if($name !== null) {
-            // Is wanted to clear the Listeners from a specific Event.
-            unset($this->events[$name]);
-
-            return;
-        }
-
-        $this->events = array();
     }
 
     /**
      * Trigger an Event deploying to the Listeners registered for it.
      *
      * @param  string $name name of the event
-     * @param  array  $params array of parameters
+     * @param  array $params array of parameters
      * @param  string $callback callback invoked after Event deploying
      */
     public function trigger($name, $params = array(), $callback = null)
@@ -154,7 +134,7 @@ class Manager
     {
         $name = $event->name();
 
-        if(! array_key_exists($name, $this->events)) {
+        if (!array_key_exists($name, $this->events)) {
             // There are no Listeners to observe this type of Event.
             return;
         }
@@ -198,7 +178,7 @@ class Manager
         $segments = explode('@', $callback);
 
         $className = $segments[0];
-        $method    = $segments[1];
+        $method = $segments[1];
 
         // Check first if the Class exists.
         if (!class_exists($className)) {
@@ -209,11 +189,11 @@ class Manager
         $object = new $className();
 
         // The called Method should be defined in the called Class, not in one of its parents.
-        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
+        if (!in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
             return false;
         }
 
-        if($object instanceof Controller) {
+        if ($object instanceof Controller) {
             // We are going to call-out a Controller; special setup is required.
 
             // The Controller instance should be properly initialized before executing its Method.
@@ -234,18 +214,34 @@ class Manager
         return false;
     }
 
-    protected function sortListeners()
+    /**
+     * Dettach a Listener from the specified Event.
+     *
+     * @param  string $name name of the Event
+     * @param  object $callback Callback executed on Event deploying
+     */
+    public function dettach($name, $callback)
     {
-        $events = array();
-
-        foreach($this->events as $name => $listeners) {
-            usort($listeners, function($a, $b) {
-                return ($a->priority() - $b->priority());
-            });
-
-            $events[$name] = $listeners;
+        if (!array_key_exists($name, $this->events)) {
+            return;
         }
 
-        $this->events = $events;
+        $listeners =& $this->events[$name];
+
+        $listeners = array_filter($listeners, function ($listener) use ($callback) {
+            return ($listener->callback() !== $callback);
+        });
+    }
+
+    public function clear($name = null)
+    {
+        if ($name !== null) {
+            // Is wanted to clear the Listeners from a specific Event.
+            unset($this->events[$name]);
+
+            return;
+        }
+
+        $this->events = array();
     }
 }

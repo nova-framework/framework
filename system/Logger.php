@@ -18,85 +18,44 @@ use Nova\Helpers\PhpMailer as Mailer;
 class Logger
 {
     /**
-    * Determins if error should be emailed to SITE_EMAIL defined in app/Core/Config.php.
-    *
-    * @var boolean
-    */
+     * Path to error file.
+     *
+     * @var string
+     */
+    public static $errorFile = '/tmp/logs/error.log';
+    /**
+     * store errors for output.
+     *
+     * @var string
+     */
+    public static $error;
+    /**
+     * Determins if error should be emailed to SITE_EMAIL defined in app/Core/Config.php.
+     *
+     * @var boolean
+     */
     private static $emailError = false;
-
     /**
-    * Clear the errorlog.
-    *
-    * @var boolean
-    */
+     * Clear the errorlog.
+     *
+     * @var boolean
+     */
     private static $clear = false;
-
     /**
-    * show the error.
-    *
-    * @var boolean
-    */
+     * show the error.
+     *
+     * @var boolean
+     */
     private static $display = false;
 
     /**
-    * Path to error file.
-    *
-    * @var string
-    */
-    public static $errorFile = '/tmp/logs/error.log';
-
-    /**
-    * store errors for output.
-    *
-    * @var string
-    */
-    public static $error;
-
-    /**
-    * In the event of an error show this message.
-    */
-    public static function customErrorMsg()
-    {
-        if (self::$display) {
-            echo '<pre>'.self::$error.'</pre>';
-        } else {
-            echo "<p>An error occured, The error has been reported.</p>";
-            exit;
-        }
-
-    }
-
-    /**
-    * Saved the exception and calls customer error function.
-    *
-    * @param  \Exception $e
-    */
+     * Saved the exception and calls customer error function.
+     *
+     * @param  \Exception $e
+     */
     public static function exceptionHandler($e)
     {
         self::newMessage($e);
-    }
-
-    /**
-     * Saves error message from exception.
-     *
-     * @param  number $number  error number
-     * @param  string  $message the error
-     * @param  string  $file    file originated from
-     * @param  number $line    line number
-     *
-     * @return int
-     */
-    public static function errorHandler($number, $message, $file, $line)
-    {
-        $msg = "$message in $file on line $line";
-
-        if (($number !== E_NOTICE) && ($number < 2048)) {
-            self::errorMessage($msg);
-            self::$error = $msg;
-            self::customErrorMsg();
-        }
-
-        return 0;
     }
 
     /**
@@ -128,12 +87,12 @@ class Logger
            {$trace}\n
            ---------\n\n";
 
-        if (is_file($rootpath.self::$errorFile) === false) {
-            file_put_contents($rootpath.self::$errorFile, '');
+        if (is_file($rootpath . self::$errorFile) === false) {
+            file_put_contents($rootpath . self::$errorFile, '');
         }
 
         if (self::$clear) {
-            $f = fopen($rootpath.self::$errorFile, "r+");
+            $f = fopen($rootpath . self::$errorFile, "r+");
             if ($f !== false) {
                 ftruncate($f, 0);
                 fclose($f);
@@ -141,13 +100,69 @@ class Logger
         }
 
         // Append
-        file_put_contents($rootpath.self::$errorFile, $logMessage, FILE_APPEND);
+        file_put_contents($rootpath . self::$errorFile, $logMessage, FILE_APPEND);
 
         self::$error = $logMessage;
         self::customErrorMsg();
 
         //send email
         self::sendEmail($logMessage);
+    }
+
+    /**
+     * In the event of an error show this message.
+     */
+    public static function customErrorMsg()
+    {
+        if (self::$display) {
+            echo '<pre>' . self::$error . '</pre>';
+        } else {
+            echo "<p>An error occured, The error has been reported.</p>";
+            exit;
+        }
+
+    }
+
+    /**
+     * Send Email upon error.
+     *
+     * @param  string $message holds the error to send
+     */
+    public static function sendEmail($message)
+    {
+        if (self::$emailError == true) {
+            $mail = new Mailer();
+
+            $mail->setFrom(SITE_EMAIL);
+            $mail->addAddress(SITE_EMAIL);
+            $mail->subject('New error on ' . SITE_TITLE);
+            $mail->body($message);
+
+            $mail->send();
+        }
+    }
+
+    /**
+     * Saves error message from exception.
+     *
+     * @param  number $number error number
+     * @param  string $message the error
+     * @param  string $file file originated from
+     * @param  number $line line number
+     *
+     * @return int
+     */
+    public static function errorHandler($number, $message, $file, $line)
+    {
+        $msg = "$message in $file on line $line";
+
+        if (($number !== E_NOTICE) && ($number < 2048)) {
+            self::errorMessage($msg);
+            self::$error = $msg;
+            self::customErrorMsg();
+        }
+
+        return 0;
     }
 
     /**
@@ -163,12 +178,12 @@ class Logger
         $logMessage = "$date - $error\n\n";
         $rootpath = dirname(__DIR__);
 
-        if (is_file($rootpath.self::$errorFile) === false) {
-            file_put_contents($rootpath.self::$errorFile, '');
+        if (is_file($rootpath . self::$errorFile) === false) {
+            file_put_contents($rootpath . self::$errorFile, '');
         }
 
         if (self::$clear) {
-            $f = fopen($rootpath.self::$errorFile, "r+");
+            $f = fopen($rootpath . self::$errorFile, "r+");
             if ($f !== false) {
                 ftruncate($f, 0);
                 fclose($f);
@@ -177,29 +192,10 @@ class Logger
             $content = null;
         } else {
             // Append
-            file_put_contents($rootpath.self::$errorFile, $logMessage, FILE_APPEND);
+            file_put_contents($rootpath . self::$errorFile, $logMessage, FILE_APPEND);
         }
 
         /** send email */
         self::sendEmail($logMessage);
-    }
-
-    /**
-     * Send Email upon error.
-     *
-     * @param  string $message holds the error to send
-     */
-    public static function sendEmail($message)
-    {
-        if (self::$emailError == true) {
-            $mail = new Mailer();
-
-            $mail->setFrom(SITE_EMAIL);
-            $mail->addAddress(SITE_EMAIL);
-            $mail->subject('New error on '.SITE_TITLE);
-            $mail->body($message);
-
-            $mail->send();
-        }
     }
 }

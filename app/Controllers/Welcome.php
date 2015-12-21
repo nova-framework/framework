@@ -29,22 +29,6 @@ class Welcome extends Controller
         parent::__construct();
     }
 
-    protected function beforeFlight()
-    {
-        $this->basePath = str_replace(BASEPATH, '', $this->viewsPath());
-
-        // Leave to parent's method the Flight decisions.
-        return parent::beforeFlight();
-    }
-
-    protected function afterFlight($result)
-    {
-        // Do some processing there, even deciding to stop the Flight, if case.
-
-        // Leave to parent's method the Flight decisions.
-        return parent::afterFlight($result);
-    }
-
     /**
      * Define Index page title and load template files
      */
@@ -52,7 +36,7 @@ class Welcome extends Controller
     {
         $viewName = 'welcome';
 
-        $filePath = $this->basePath.$viewName.'.php';
+        $filePath = $this->basePath . $viewName . '.php';
 
         $data['title'] = __('Welcome');
         $data['welcome_message'] = __('Hello, welcome from the welcome controller! <br/>
@@ -72,7 +56,7 @@ This content can be changed in <code>{0}</code>', $filePath);
     {
         $viewName = 'subpage';
 
-        $filePath = $this->basePath.$viewName.'.php';
+        $filePath = $this->basePath . $viewName . '.php';
 
         $data['title'] = __('Subpage');
         $data['welcome_message'] = __('Hello, welcome from the welcome controller and subpage method! <br/>
@@ -82,5 +66,21 @@ This content can be changed in <code>{0}</code>', $filePath);
         $content = View::render($viewName, $data, true);
 
         View::renderLayout('legacy', $content, $data);
+    }
+
+    protected function beforeFlight()
+    {
+        $this->basePath = str_replace(BASEPATH, '', $this->viewsPath());
+
+        // Leave to parent's method the Flight decisions.
+        return parent::beforeFlight();
+    }
+
+    protected function afterFlight($result)
+    {
+        // Do some processing there, even deciding to stop the Flight, if case.
+
+        // Leave to parent's method the Flight decisions.
+        return parent::afterFlight($result);
     }
 }

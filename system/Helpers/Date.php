@@ -19,7 +19,7 @@ class Date
      * get the difference between 2 dates
      *
      * @param  int $from start date
-     * @param  int $to   end date
+     * @param  int $to end date
      * @param  string $type the type of difference to return
      * @return string or array, if type is set then a string is returned otherwise an array is returned
      */
@@ -43,9 +43,9 @@ class Date
      *
      * Taken from http://mugurel.sumanariu.ro/php-2/php-how-to-calculate-number-of-work-days-between-2-dates/
      *
-     * @param  string     $startDate date in the format of Y-m-d
-     * @param  string     $endDate date in the format of Y-m-d
-     * @param  boolean  $weekendDays returns the number of weekends
+     * @param  string $startDate date in the format of Y-m-d
+     * @param  string $endDate date in the format of Y-m-d
+     * @param  boolean $weekendDays returns the number of weekends
      * @return integer  returns the total number of days
      */
     public static function businessDays($startDate, $endDate, $weekendDays = false)
@@ -67,7 +67,7 @@ class Date
                 if ($whatDay > 5) { // 6 and 7 are weekend days
                     $weekends++;
                 }
-                $begin+=86400; // +1 day
+                $begin += 86400; // +1 day
             };
 
             if ($weekendDays == true) {
@@ -80,20 +80,20 @@ class Date
     }
 
     /**
-    * get an array of dates between 2 dates (not including weekends)
-    *
-    * @param  date    $startDate start date
-    * @param  date    $endDate end date
-    * @param  integer $nonWork day of week(int) where weekend begins - 5 = fri -> sun, 6 = sat -> sun, 7 = sunday
-    * @return array   list of dates between $startDate and $endDate
-    */
+     * get an array of dates between 2 dates (not including weekends)
+     *
+     * @param  date $startDate start date
+     * @param  date $endDate end date
+     * @param  integer $nonWork day of week(int) where weekend begins - 5 = fri -> sun, 6 = sat -> sun, 7 = sunday
+     * @return array   list of dates between $startDate and $endDate
+     */
     public static function businessDates($startDate, $endDate, $nonWork = 6)
     {
-        $begin    = new \DateTime($startDate);
-        $end      = new \DateTime($endDate);
-        $holiday  = array();
+        $begin = new \DateTime($startDate);
+        $end = new \DateTime($endDate);
+        $holiday = array();
         $interval = new \DateInterval('P1D');
-        $dateRange= new \DatePeriod($begin, $interval, $end);
+        $dateRange = new \DatePeriod($begin, $interval, $end);
         $dates = array();
         foreach ($dateRange as $date) {
             if ($date->format("N") < $nonWork and !in_array($date->format("Y-m-d"), $holiday)) {
@@ -121,10 +121,10 @@ class Date
             return cal_days_in_month(CAL_GREGORIAN, $month, $year);
         }
         if ($year >= 1970) {
-            return (int) date('t', mktime(12, 0, 0, $month, 1, $year));
+            return (int)date('t', mktime(12, 0, 0, $month, 1, $year));
         }
         if ($month == 2) {
-            if ($year % 400 === 0 or ( $year % 4 === 0 && $year % 100 !== 0)) {
+            if ($year % 400 === 0 or ($year % 4 === 0 && $year % 100 !== 0)) {
                 return 29;
             }
         }

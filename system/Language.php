@@ -18,20 +18,19 @@ use Nova\Helpers\Inflector;
  */
 class Language
 {
-    private $code   = 'en';
-    private $info   = 'English';
-    private $name   = 'English';
+    private static $instances = array();
+    private $code = 'en';
+    private $info = 'English';
+    private $name = 'English';
     private $locale = 'en-US';
 
+    // The domain instances array.
     /**
      * Variable holds array with language.
      *
      * @var array
      */
     private $messages = array();
-
-    // The domain instances array.
-    private static $instances = array();
 
     /**
      * Language constructor.
@@ -42,16 +41,15 @@ class Language
     {
         $languages = Config::get('languages');
 
-        if(isset($code, $languages)) {
+        if (isset($code, $languages)) {
             $info = $languages[$code];
 
             $this->code = $code;
 
-            $this->info   = $info['info'];
-            $this->name   = $info['name'];
+            $this->info = $info['info'];
+            $this->name = $info['name'];
             $this->locale = $info['locale'];
-        }
-        else {
+        } else {
             $code = 'en';
         }
 
@@ -60,27 +58,24 @@ class Language
 
         $langPath = '';
 
-        if($pathName == 'System') {
+        if ($pathName == 'System') {
             $langPath = SYSPATH;
-        }
-        else if($pathName == 'App') {
+        } else if ($pathName == 'App') {
             $langPath = APPPATH;
-        }
-        else if(is_dir(APPPATH.'Modules'.DS.$pathName)) {
-            $langPath = APPPATH.'Modules/'.$pathName;
-        }
-        else if(is_dir(APPPATH.'Templates'.DS.$pathName)) {
-            $langPath = APPPATH.'Templates/'.$pathName;
+        } else if (is_dir(APPPATH . 'Modules' . DS . $pathName)) {
+            $langPath = APPPATH . 'Modules/' . $pathName;
+        } else if (is_dir(APPPATH . 'Templates' . DS . $pathName)) {
+            $langPath = APPPATH . 'Templates/' . $pathName;
         }
 
-        if(empty($langPath)) {
+        if (empty($langPath)) {
             return;
         }
 
-        $filePath = str_replace('/', DS, $langPath.'/Language/'.$code.'/messages.php');
+        $filePath = str_replace('/', DS, $langPath . '/Language/' . $code . '/messages.php');
 
         // Check if the language file is readable.
-        if(! is_readable($filePath)) {
+        if (!is_readable($filePath)) {
             return;
         }
 
@@ -88,7 +83,7 @@ class Language
         $messages = include($filePath);
 
         // Final Consistency check.
-        if(is_array($messages) && ! empty($messages)) {
+        if (is_array($messages) && !empty($messages)) {
             $this->messages = $messages;
         }
     }
@@ -102,10 +97,10 @@ class Language
     public static function &get($domain = 'app', $code = LANGUAGE_CODE)
     {
         // The ID code is something like: 'en/system', 'en/app', 'en/file_manager' or 'en/template/admin'
-        $id = $code.'/'.$domain;
+        $id = $code . '/' . $domain;
 
         // Initialize the domain instance, if not already exists.
-        if(! isset(self::$instances[$id])) {
+        if (!isset(self::$instances[$id])) {
             self::$instances[$id] = new self($domain, $code);
         }
 
@@ -121,11 +116,11 @@ class Language
     public function translate($message, $params = array())
     {
         // Update the current message with the domain translation, if we have one.
-        if(isset($this->messages[$message]) && ! empty($this->messages[$message])) {
+        if (isset($this->messages[$message]) && !empty($this->messages[$message])) {
             $message = $this->messages[$message];
         }
 
-        if(empty($params)) {
+        if (empty($params)) {
             return $message;
         }
 

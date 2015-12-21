@@ -33,8 +33,7 @@ class PhpMailer extends \PHPMailer
         $this->From = $config['from_email'];
         $this->Mailer = $config['mailer'];
 
-        if ($this->Mailer === 'smtp')
-        {
+        if ($this->Mailer === 'smtp') {
             $this->Host = $config['smtp_host'];
             $this->Port = $config['smtp_port'];
             $this->SMTPSecure = $config['smtp_secure'];

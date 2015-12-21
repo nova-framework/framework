@@ -40,30 +40,18 @@ class View
      */
     public function __construct($param, $json = false)
     {
-        if(! $json) {
+        if (!$json) {
             $this->path = $param;
 
             return;
         }
 
-        if (! is_array($param)) {
+        if (!is_array($param)) {
             throw new \UnexpectedValueException('Parameter should be Array, on View::__construct');
         }
 
         $this->json = true;
         $this->data = $param;
-    }
-
-    public function __call($method, $params)
-    {
-        if (strpos($method, 'with') !== 0)
-        {
-            throw new \BadMethodCallException('Invalid method called: View::'.$method);
-        }
-
-        $varname = Inflector::tableize(substr($method, 4));
-
-        return $this->with($varname, array_shift($params));
     }
 
     /**
@@ -76,11 +64,26 @@ class View
     {
         $filePath = self::viewPath($view);
 
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+        if (!is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: ' . $filePath);
         }
 
         return new View($filePath);
+    }
+
+    private static function viewPath($path)
+    {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        if ($path[0] === '/') {
+            // A Views "Root" path is wanted.
+            $viewPath = APPPATH . "Views";
+        } else {
+            $viewPath = $instance->viewsPath();
+        }
+
+        return realpath($viewPath . $path . '.php');
     }
 
     /**
@@ -93,159 +96,13 @@ class View
     {
         $filePath = self::layoutPath($layout);
 
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+        if (!is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: ' . $filePath);
         }
 
         self::addHeader('Content-Type: text/html; charset=UTF-8');
 
         return new View($filePath);
-    }
-
-    /**
-     * @param $fragment
-     * @param bool $fromTemplate
-     * @return View
-     * @throws \UnexpectedValueException
-     */
-    public static function fragment($fragment, $fromTemplate = true)
-    {
-        $filePath = self::fragmentPath($fragment, $fromTemplate);
-
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
-        }
-
-        return new View($filePath);
-    }
-
-    /**
-     * @param $data
-     * @return View
-     * @throws \UnexpectedValueException
-     */
-    public static function json($data)
-    {
-        if (! is_array($data)) {
-            throw new \UnexpectedValueException('Unexpected parameter on View::json');
-        }
-
-        self::addHeader('Content-Type: application/json');
-
-        return new View($data, true);
-    }
-
-    public function isJson()
-    {
-        return $this->json;
-    }
-
-    public function fetch()
-    {
-        if ($this->json) {
-            return json_encode($this->data);
-        }
-
-        // Prepare the rendering variables.
-        foreach($this->data as $name => $value) {
-            ${$name} = $value;
-        }
-
-        // Execute the rendering, then capture and return the output.
-        ob_start();
-
-        require $this->path;
-
-        return ob_get_clean();
-    }
-
-    public function display()
-    {
-        if ($this->json) {
-            echo json_encode($this->data);
-        }
-
-        // Prepare the rendering variables.
-        foreach($this->data as $name => $value) {
-            ${$name} = $value;
-        }
-
-        // Execute the rendering to output.
-        self::sendHeaders();
-
-        require $this->path;
-    }
-
-    public function with($key, $value = null)
-    {
-        $this->data[$key] = $value;
-
-        return $this;
-    }
-
-    public function data($name = null)
-    {
-        if(is_null($name)) {
-            return $this->data;
-        }
-        else if(isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        return null;
-    }
-
-    public function loadData($data)
-    {
-        if($data instanceof View) {
-            $this->data = $data->data();
-        }
-        else {
-            if (! is_array($data)) {
-                throw new \UnexpectedValueException('Unexpected parameter on View::loadData');
-            }
-
-            $this->data = $data;
-        }
-
-        return $this;
-    }
-
-    public function loadView($view)
-    {
-        if($view instanceof View) {
-            $this->data = $view->data();
-
-            return $this->with('content', $view->fetch());
-        }
-
-        throw new \UnexpectedValueException('Unknown parameter on View::loadView');
-    }
-
-    private static function viewPath($path)
-    {
-        // Get the Controller instance.
-        $instance =& get_instance();
-
-        if ($path[0] === '/') {
-            // A Views "Root" path is wanted.
-            $viewPath = APPPATH."Views";
-        }
-        else {
-            $viewPath = $instance->viewsPath();
-        }
-
-        return realpath($viewPath.$path.'.php');
-    }
-
-    private static function templatePath($template = null)
-    {
-        // Get the Controller instance.
-        $instance =& get_instance();
-
-        $template = $template ? $template : $instance->template();
-
-        return APPPATH.'Templates'.DS.$template.DS;
     }
 
     private static function layoutPath($layout = null, $template = null)
@@ -258,7 +115,44 @@ class View
         $basePath = self::templatePath($template);
 
         // Adjust the filePath for Layouts
-        return $basePath.'Layouts'.DS.$layout.'.php';
+        return $basePath . 'Layouts' . DS . $layout . '.php';
+    }
+
+    private static function templatePath($template = null)
+    {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        $template = $template ? $template : $instance->template();
+
+        return APPPATH . 'Templates' . DS . $template . DS;
+    }
+
+    /**
+     * Add HTTP header to headers array.
+     *
+     * @param  string $header HTTP header text
+     */
+    public function addHeader($header)
+    {
+        self::$headers[] = $header;
+    }
+
+    /**
+     * @param $fragment
+     * @param bool $fromTemplate
+     * @return View
+     * @throws \UnexpectedValueException
+     */
+    public static function fragment($fragment, $fromTemplate = true)
+    {
+        $filePath = self::fragmentPath($fragment, $fromTemplate);
+
+        if (!is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: ' . $filePath);
+        }
+
+        return new View($filePath);
     }
 
     private static function fragmentPath($fragment, $fromTemplate = true)
@@ -266,74 +160,38 @@ class View
         // Get the Controller instance.
         $instance =& get_instance();
 
-        if($fromTemplate) {
+        if ($fromTemplate) {
             $basePath = self::templatePath();
-        }
-        else {
-            $basePath = APPPATH.'Views'.DS;
+        } else {
+            $basePath = APPPATH . 'Views' . DS;
 
             // If we are in a Module, we should adjust the basePath.
             $module = $instance->module();
 
-            if($module) {
+            if ($module) {
                 // Adjust the filePath for Module.
-                $basePath = APPPATH.'Modules'.DS.$module.DS;
+                $basePath = APPPATH . 'Modules' . DS . $module . DS;
             }
         }
 
         // Adjust the filePath for Fragments
-        return $basePath.'Fragments'.DS.$fragment.'.php';
+        return $basePath . 'Fragments' . DS . $fragment . '.php';
     }
 
     /**
-     * Include template file.
-     *
-     * @param string $path path to file from views folder
-     * @param array|bool $data array of data
-     * @param bool $fetch
-     * @return bool|string
-     * @internal param array $error array of errors
+     * @param $data
+     * @return View
+     * @throws \UnexpectedValueException
      */
-    public static function render($path, $data = false, $fetch = false)
+    public static function json($data)
     {
-        // Get the Controller instance.
-        $instance =& get_instance();
-
-        if ($path[0] === '/') {
-            // A Views "Root" Path is wanted.
-            $basePath = APPPATH."Views";
-        }
-        else {
-            $basePath = $instance->viewsPath();
+        if (!is_array($data)) {
+            throw new \UnexpectedValueException('Unexpected parameter on View::json');
         }
 
-        $filePath = $basePath.str_replace('/', DS, $path).".php";
+        self::addHeader('Content-Type: application/json');
 
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
-        }
-
-        if($data) {
-            // Extract the rendering variables.
-            foreach($data as $name => $value) {
-                ${$name} = $value;
-            }
-        }
-
-        if($fetch) {
-            ob_start();
-        }
-        else {
-            self::sendHeaders();
-        }
-
-        require $filePath;
-
-        if($fetch) {
-            return ob_get_clean();
-        }
-
-        return false;
+        return new View($data, true);
     }
 
     /**
@@ -354,38 +212,35 @@ class View
 
         if ($path[0] === '/') {
             // A Views "Root" Path is wanted.
-            $basePath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
-        }
-        else if($instance->module() == $module) {
+            $basePath = APPPATH . str_replace('/', DS, "Modules/" . $module . '/Views/');
+        } else if ($instance->module() == $module) {
             $basePath = $instance->viewsPath();
-        }
-        else {
-            throw new \UnexpectedValueException('Invalid Module requested: '.$module);
-        }
-
-        $filePath = $basePath.str_replace('/', DS, $path).".php";
-
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+        } else {
+            throw new \UnexpectedValueException('Invalid Module requested: ' . $module);
         }
 
-        if($data) {
+        $filePath = $basePath . str_replace('/', DS, $path) . ".php";
+
+        if (!is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: ' . $filePath);
+        }
+
+        if ($data) {
             // Extract the rendering variables.
-            foreach($data as $name => $value) {
+            foreach ($data as $name => $value) {
                 ${$name} = $value;
             }
         }
 
-        if($fetch) {
+        if ($fetch) {
             ob_start();
-        }
-        else {
+        } else {
             self::sendHeaders();
         }
 
         require $filePath;
 
-        if($fetch) {
+        if ($fetch) {
             return ob_get_clean();
         }
 
@@ -400,17 +255,66 @@ class View
         self::renderLayout($layout, $content, $data, $custom);
     }
 
+    /**
+     * Include template file.
+     *
+     * @param string $path path to file from views folder
+     * @param array|bool $data array of data
+     * @param bool $fetch
+     * @return bool|string
+     * @internal param array $error array of errors
+     */
+    public static function render($path, $data = false, $fetch = false)
+    {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        if ($path[0] === '/') {
+            // A Views "Root" Path is wanted.
+            $basePath = APPPATH . "Views";
+        } else {
+            $basePath = $instance->viewsPath();
+        }
+
+        $filePath = $basePath . str_replace('/', DS, $path) . ".php";
+
+        if (!is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: ' . $filePath);
+        }
+
+        if ($data) {
+            // Extract the rendering variables.
+            foreach ($data as $name => $value) {
+                ${$name} = $value;
+            }
+        }
+
+        if ($fetch) {
+            ob_start();
+        } else {
+            self::sendHeaders();
+        }
+
+        require $filePath;
+
+        if ($fetch) {
+            return ob_get_clean();
+        }
+
+        return false;
+    }
+
     public static function renderLayout($layout, $content, $data = false, $custom = null)
     {
         $filePath = self::layoutPath($layout, $custom);
 
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+        if (!is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: ' . $filePath);
         }
 
-        if(is_array($data)) {
+        if (is_array($data)) {
             // Extract the rendering variables.
-            foreach($data as $name => $value) {
+            foreach ($data as $name => $value) {
                 ${$name} = $value;
             }
         }
@@ -423,26 +327,26 @@ class View
     /**
      * Return absolute path to selected template directory.
      *
-     * @param  string  $path  path to file from views folder
-     * @param  array|boolean   $data  array of data
-     * @param  string  $custom path to template folder
+     * @param  string $path path to file from views folder
+     * @param  array|boolean $data array of data
+     * @param  string $custom path to template folder
      * @throws \UnexpectedValueException
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
         $custom = Inflector::classify($custom);
 
-        $basePath = self::templatePath($custom)."Layouts".DS.'partials'.DS;
+        $basePath = self::templatePath($custom) . "Layouts" . DS . 'partials' . DS;
 
-        $filePath = $basePath.str_replace('/', DS, $path).".php";
+        $filePath = $basePath . str_replace('/', DS, $path) . ".php";
 
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+        if (!is_readable($filePath)) {
+            throw new \UnexpectedValueException('File not found: ' . $filePath);
         }
 
-        if($data) {
+        if ($data) {
             // Extract the rendering variables.
-            foreach($data as $name => $value) {
+            foreach ($data as $name => $value) {
                 ${$name} = $value;
             }
         }
@@ -452,24 +356,44 @@ class View
         require $filePath;
     }
 
-    /**
-     * Add HTTP header to headers array.
-     *
-     * @param  string  $header HTTP header text
-     */
-    public function addHeader($header)
+    public function __call($method, $params)
     {
-        self::$headers[] = $header;
+        if (strpos($method, 'with') !== 0) {
+            throw new \BadMethodCallException('Invalid method called: View::' . $method);
+        }
+
+        $varname = Inflector::tableize(substr($method, 4));
+
+        return $this->with($varname, array_shift($params));
     }
 
-    /**
-     * Add an array with headers to the view.
-     *
-     * @param array $headers
-     */
-    public function addHeaders(array $headers = array())
+    public function with($key, $value = null)
     {
-        self::$headers = array_merge(self::$headers, $headers);
+        $this->data[$key] = $value;
+
+        return $this;
+    }
+
+    public function isJson()
+    {
+        return $this->json;
+    }
+
+    public function display()
+    {
+        if ($this->json) {
+            echo json_encode($this->data);
+        }
+
+        // Prepare the rendering variables.
+        foreach ($this->data as $name => $value) {
+            ${$name} = $value;
+        }
+
+        // Execute the rendering to output.
+        self::sendHeaders();
+
+        require $this->path;
     }
 
     /**
@@ -482,5 +406,71 @@ class View
                 header($header, true);
             }
         }
+    }
+
+    public function loadData($data)
+    {
+        if ($data instanceof View) {
+            $this->data = $data->data();
+        } else {
+            if (!is_array($data)) {
+                throw new \UnexpectedValueException('Unexpected parameter on View::loadData');
+            }
+
+            $this->data = $data;
+        }
+
+        return $this;
+    }
+
+    public function data($name = null)
+    {
+        if (is_null($name)) {
+            return $this->data;
+        } else if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return null;
+    }
+
+    public function loadView($view)
+    {
+        if ($view instanceof View) {
+            $this->data = $view->data();
+
+            return $this->with('content', $view->fetch());
+        }
+
+        throw new \UnexpectedValueException('Unknown parameter on View::loadView');
+    }
+
+    public function fetch()
+    {
+        if ($this->json) {
+            return json_encode($this->data);
+        }
+
+        // Prepare the rendering variables.
+        foreach ($this->data as $name => $value) {
+            ${$name} = $value;
+        }
+
+        // Execute the rendering, then capture and return the output.
+        ob_start();
+
+        require $this->path;
+
+        return ob_get_clean();
+    }
+
+    /**
+     * Add an array with headers to the view.
+     *
+     * @param array $headers
+     */
+    public function addHeaders(array $headers = array())
+    {
+        self::$headers = array_merge(self::$headers, $headers);
     }
 }

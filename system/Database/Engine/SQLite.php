@@ -29,7 +29,8 @@ class SQLite extends \PDO implements Engine
      * @param $config array
      * @throws \PDOException
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
         // Will set the default method when provided in the config.
         if (isset($config['fetch_method'])) {
             $this->method = $config['fetch_method'];
@@ -82,6 +83,11 @@ class SQLite extends \PDO implements Engine
         return Manager::DRIVER_SQLITE;
     }
 
+    public function rawQuery($sql, $fetch = false)
+    {
+        return $this->raw($sql, $fetch);
+    }
+
     /**
      * Basic execute statement. Only for queries with no binding parameters
      *
@@ -105,10 +111,6 @@ class SQLite extends \PDO implements Engine
 
         $statement = $this->query($sql, $method);
         return $statement->fetchAll();
-    }
-    public function rawQuery($sql, $fetch = false)
-    {
-        return $this->raw($sql, $fetch);
     }
 
     /**
@@ -213,11 +215,11 @@ class SQLite extends \PDO implements Engine
         $ids = array();
 
         // Loop every record to insert
-        foreach($data as $record) {
+        foreach ($data as $record) {
             ksort($record);
 
             $fieldNames = implode(',', array_keys($record));
-            $fieldValues = ':'.implode(', :', array_keys($record));
+            $fieldValues = ':' . implode(', :', array_keys($record));
 
             $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 

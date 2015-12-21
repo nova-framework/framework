@@ -18,9 +18,9 @@ use Nova\Config;
  */
 ob_start();
 
-require dirname(__FILE__).DS.'constants.php';
-require dirname(__FILE__).DS.'functions.php';
-require dirname(__FILE__).DS.'config.php';
+require dirname(__FILE__) . DS . 'constants.php';
+require dirname(__FILE__) . DS . 'functions.php';
+require dirname(__FILE__) . DS . 'config.php';
 
 /**
  * Turn on custom error handling.
@@ -43,7 +43,7 @@ Session::init();
 $router = Router::getInstance();
 
 /** load routes */
-require dirname(__FILE__).DS.'routes.php';
+require dirname(__FILE__) . DS . 'routes.php';
 
 /** bootstrap the active modules (and their associated routes) */
 Modules::bootstrap();

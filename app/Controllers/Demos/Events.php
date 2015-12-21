@@ -29,26 +29,6 @@ class Events extends ClassicController
         parent::__construct();
     }
 
-    protected function beforeFlight()
-    {
-        $method = $this->method();
-
-        $viewsPath = str_replace(BASEPATH, '', $this->viewsPath());
-
-        $this->filePath = $viewsPath.$method.'.php';
-
-        // Leave to parent's method the Flight decisions.
-        return parent::beforeFlight();
-    }
-
-    protected function afterFlight($result)
-    {
-        // Do some processing there, even deciding to stop the Flight, if case.
-
-        // Leave to parent's method the Flight decisions.
-        return parent::afterFlight($result);
-    }
-
     /**
      * Define Welcome page message and set the Controller's variables.
      */
@@ -65,6 +45,26 @@ class Events extends ClassicController
         $this->title(__('Welcome'));
 
         $this->set('message', $message);
+    }
+
+    protected function beforeFlight()
+    {
+        $method = $this->method();
+
+        $viewsPath = str_replace(BASEPATH, '', $this->viewsPath());
+
+        $this->filePath = $viewsPath . $method . '.php';
+
+        // Leave to parent's method the Flight decisions.
+        return parent::beforeFlight();
+    }
+
+    protected function afterFlight($result)
+    {
+        // Do some processing there, even deciding to stop the Flight, if case.
+
+        // Leave to parent's method the Flight decisions.
+        return parent::afterFlight($result);
     }
 
 }

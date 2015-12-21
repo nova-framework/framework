@@ -19,7 +19,7 @@ class Listener
 
     public function __construct($name, $callback, $priority = 0)
     {
-        $this->name    = $name;
+        $this->name = $name;
         $this->callback = $callback;
         $this->priority = $priority;
     }

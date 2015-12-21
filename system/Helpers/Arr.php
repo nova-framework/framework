@@ -17,9 +17,9 @@ class Arr
     /**
      * Sets an array value.
      *
-     * @param array  $array
+     * @param array $array
      * @param string $path
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return void
      */
@@ -39,7 +39,7 @@ class Arr
     /**
      * Search for an array value. Returns TRUE if the array key exists and FALSE if not.
      *
-     * @param array  $array
+     * @param array $array
      * @param string $path
      *
      * @return bool
@@ -60,9 +60,9 @@ class Arr
     /**
      * Returns value from array
      *
-     * @param array  $array
+     * @param array $array
      * @param string $path
-     * @param mixed  $default
+     * @param mixed $default
      *
      * @return array|null
      */
@@ -82,8 +82,8 @@ class Arr
     /**
      * Remove an array value.
      *
-     * @param   array  $array Array you want to modify
-     * @param   string $path  Array path
+     * @param   array $array Array you want to modify
+     * @param   string $path Array path
      *
      * @return  boolean
      */
@@ -129,8 +129,8 @@ class Arr
     /**
      * Returns the values from a single column of the input array, identified by the key.
      *
-     * @param   array  $array Array to pluck from
-     * @param   string $key   Array key
+     * @param   array $array Array to pluck from
+     * @param   string $key Array key
      *
      * @return  array
      */

@@ -25,11 +25,11 @@ class Document
     public static function getFileType($extension)
     {
         $images = array('jpg', 'gif', 'png', 'bmp');
-        $docs   = array('txt', 'rtf', 'doc', 'docx', 'pdf');
-        $apps   = array('zip', 'rar', 'exe', 'html');
-        $video  = array('mpg', 'wmv', 'avi', 'mp4');
-        $audio  = array('wav', 'mp3');
-        $db     = array('sql', 'csv', 'xls','xlsx');
+        $docs = array('txt', 'rtf', 'doc', 'docx', 'pdf');
+        $apps = array('zip', 'rar', 'exe', 'html');
+        $video = array('mpg', 'wmv', 'avi', 'mp4');
+        $audio = array('wav', 'mp3');
+        $db = array('sql', 'csv', 'xls', 'xlsx');
 
         if (in_array($extension, $images)) {
             return "Image";
@@ -55,7 +55,7 @@ class Document
     /**
      * Create a human friendly measure of the size provided.
      *
-     * @param  integer  $bytes     file size
+     * @param  integer $bytes file size
      * @param  integer $precision precision to be used
      *
      * @return string             size with measure
@@ -124,7 +124,7 @@ class Document
      */
     public static function getFolderSize($path)
     {
-        $io = popen('/usr/bin/du -sb '.$path, 'r');
+        $io = popen('/usr/bin/du -sb ' . $path, 'r');
         $size = intval(fgets($io, 80));
         pclose($io);
         return $size;
@@ -145,7 +145,7 @@ class Document
     /**
      * Remove extension of file.
      *
-     * @param  string  $file filename and extension
+     * @param  string $file filename and extension
      *
      * @return string file name missing extension
      */

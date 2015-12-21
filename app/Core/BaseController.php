@@ -32,8 +32,8 @@ class BaseController extends Controller
 
         // Setup the Data Entries.
         $this->data = array(
-            'pageMetaData' => array(),
-            'headerCSS' => array(),
+            'pageMetaData'  => array(),
+            'headerCSS'     => array(),
             'headerJScript' => array(),
             'footerJScript' => array(),
             'afterBodyArea' => array(),
@@ -52,30 +52,19 @@ class BaseController extends Controller
         );
 
         // Broadcast the Event to all its Listeners; if they return a valid array, merge it to Data.
-        $this->events->trigger('App.BaseController.BeforeFlight', $params, function($result) use (&$data) {
+        $this->events->trigger('App.Core.BaseController.BeforeFlight', $params, function($result) use (&$data) {
             if(! is_array($result)) {
                 return;
             }
 
             foreach($result as $key => $value) {
-                switch($key) {
-                    case 'pageMetaData':
-                    case 'headerCSS':
-                    case 'headerJScript':
-                    case 'footerJScript':
-                    case 'afterBodyArea':
-                    case 'footerArea':
-                        break;
-                    default:
-                        continue;
+                if(is_array($value) && is_array($data[$key])) {
+                    $data[$key] = array_merge($data[$key], $value);
+
+                    continue;
                 }
 
-                if(is_array($value)) {
-                    $data[$key] = array_merge($data[$key], $value);
-                }
-                else if(is_string($value)) {
-                    $data[$key] = $value;
-                }
+                $data[$key] = $value;
             }
         });
 

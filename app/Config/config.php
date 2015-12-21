@@ -8,7 +8,7 @@
  */
 
 use Nova\Config;
-use Nova\Events\Manager as EventManager;
+use Nova\Events\Manager as Events;
 
 /**
  * Set the Framework's timezone.
@@ -94,4 +94,4 @@ Config::set('modules', array(
  * Events Management
  */
 
-EventManager::addListener('welcome', 'App\Controllers\Demos\EventListener@welcome');
+Events::addListener('welcome', 'App\Controllers\Demos\EventListener@welcome');

@@ -89,6 +89,11 @@ class Manager
         $listeners =& $this->events[$name];
 
         $listeners[] = new Listener($name, $callback, $priority);
+
+        // Sort the current Listeners on the specified Event, by Priority.
+        usort($listeners, function($a, $b) {
+            return ($a->priority() - $b->priority());
+        });
     }
 
     public function clear($name = null)
@@ -123,28 +128,23 @@ class Manager
     {
         $name = $event->name();
 
-        if(! isset($this->events[$name])) {
+        if(! array_key_exists($name, $this->events)) {
             // There are no Listeners to observe this type of Event.
             return;
         }
 
         $listeners = $this->events[$name];
 
-        // Sort the current Listeners by Priority.
-        usort($listeners, function($a, $b) {
-            return ($a->priority() - $b->priority());
-        });
-
         // First, preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
 
         foreach ($listeners as $listener) {
-            // Invoke the Listener's Callback and pass the Event as parameter.
+            // Invoke the Listener's Callback with the Event as parameter.
             $result = $this->invokeObject($listener->callback(), $event);
 
-            if ($notifier) {
-                // Invoke the Notifier with the previous invocation Result as parameter.
-                $this->invokeNotifier($callback, $result);
+            if ($callback) {
+                // Invoke the Callback with the Result as parameter.
+                call_user_func($callback, $result);
             }
         }
 
@@ -193,34 +193,6 @@ class Manager
 
         // Execute the Object's Method and return the result.
         return call_user_func(array($object, $method), $param);
-    }
-
-    /**
-     * Invoke the Notifier Callback with its associated parameter.
-     *
-     * @param  object $callback
-     * @param  object $result result parameter
-     */
-    private function invokeNotifier($callback, $param)
-    {
-        if (is_object($callback) || is_array($callback)) {
-            // Call the Closure.
-            return call_user_func($callback, $param);
-        }
-
-        // Call the object Class and its static Method.
-        $result = explode('@', $callback);
-
-        $className = $segments[0];
-        $method    = $segments[1];
-
-        // Check first if the Class exists.
-        if (! class_exists($className)) {
-            return false;
-        }
-
-        // Execute the Object's Method and return the result.
-        return call_user_func(array($className, $method), $param);
     }
 
 }

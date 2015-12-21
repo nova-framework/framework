@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstrap handler - perform the SMVC Framework boot stage.
+ * Bootstrap handler - perform the Nova Framework's bootstrap stage.
  *
  * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
  * @version 3.0

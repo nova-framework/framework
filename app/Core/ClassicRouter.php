@@ -12,12 +12,13 @@ namespace App\Core;
 use Nova\Helpers\Inflector;
 use Nova\Net\Route;
 use Nova\Net\Request;
+use Nova\Net\Router;
 use Nova\Net\Url;
 
 /**
  * Router class will load requested controller / closure based on url.
  */
-class ClassicRouter extends \Nova\Net\Router
+class ClassicRouter extends Router
 {
     // Constructor
     public function __construct()

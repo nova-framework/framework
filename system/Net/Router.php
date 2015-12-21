@@ -102,6 +102,11 @@ class Router
         self::$routeGroup = '';
     }
 
+    /**
+     * Router callback
+     * @param null $callback
+     * @return callback|null
+     */
     public function callback($callback = null)
     {
         if (is_null($callback)) {
@@ -109,13 +114,14 @@ class Router
         }
 
         $this->errorCallback = $callback;
+        return null;
     }
 
     /**
      * Maps a Method and URL pattern to a Callback.
      *
      * @param string $method HTTP metod to match
-     * @param string $pattern URL pattern to match
+     * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
     public function addRoute($method, $route, $callback)

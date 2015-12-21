@@ -181,6 +181,7 @@ class Url
         if (array_key_exists($id, $segments)) {
             return $segments[$id];
         }
+        return '';
     }
 
     /**

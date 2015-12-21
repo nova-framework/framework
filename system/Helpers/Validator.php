@@ -271,11 +271,11 @@ class Validator extends GUMP {
     protected function validate_equalsfield($field, $input, $param = null)
     {
         if ((!isset($input[$field]) || empty($input[$field])) && (!isset($input[$param]) || empty($input[$param]))) {
-            return;
+            return null;
         }
 
         if ($input[$field] == $input[$param]) {
-          return;
+          return null;
         }
 
         return array(

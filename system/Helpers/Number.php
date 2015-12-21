@@ -54,8 +54,8 @@ class Number
     /**
      * Returns the percentage.
      *
-     * @param  numeric $val1 start number
-     * @param  numeric $val2 end number
+     * @param  number $val1 start number
+     * @param  number $val2 end number
      *
      * @return string       returns the percentage
      */

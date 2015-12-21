@@ -18,7 +18,7 @@ class Data
     /**
      * print_r call wrapped in pre tags
      *
-     * @param  string or array $data
+     * @param  string $data or array $data
      */
     public static function pr($data)
     {
@@ -30,7 +30,7 @@ class Data
     /**
      * var_dump call
      *
-     * @param  string or array $data
+     * @param  string $data or array $data
      */
     public static function vd($data)
     {

@@ -43,7 +43,7 @@ class RainCaptcha
     /**
      * Generate an image for the captcha.
      *
-     * @return image
+     * @return string the imaga
      */
     public function getImage()
     {

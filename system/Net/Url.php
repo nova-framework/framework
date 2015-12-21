@@ -198,7 +198,7 @@ class Url
     /**
      * Get first item in array
      *
-     * @param  array segments
+     * @param  array $segments segments
      * @return int - returns first first array index
      */
     public static function firstSegment($segments)

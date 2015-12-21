@@ -37,7 +37,7 @@ class Manager
         return $manager;
     }
 
-    public static function addListener($name, $callback, $priority = 0)
+    public static function listen($name, $callback, $priority = 0)
     {
         $manager = self::getInstance();
 
@@ -90,6 +90,17 @@ class Manager
         $callbacks->insert($callback, $priority);
     }
 
+    public function clear($name = null)
+    {
+        if($name !== null) {
+            unset($this->events[$name]);
+
+            return;
+        }
+
+        $this->events = array();
+    }
+
     /**
      * Trigger an Event deploying to the Listeners registered for it.
      *
@@ -111,11 +122,11 @@ class Manager
         $name = $event->name();
 
         if(! isset($this->events[$name])) {
-            // The current Listener do not observe this type of Event; return.
+            // The current Listener do not observe this type of Event.
             return;
         }
 
-        $callbacks = $this->events[$name];
+        $callbacks = clone $this->events[$name];
 
         // Preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
@@ -190,7 +201,7 @@ class Manager
     {
         if (is_object($callback) || is_array($callback)) {
             // Call the Closure.
-            return call_user_func($callback, $param);
+            return call_user_func($callback, $params);
         }
 
         // Call the object Class and its static Method.

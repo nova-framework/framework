@@ -96,4 +96,4 @@ Config::set('modules', array(
 use Nova\Events\Manager as EventManager;
 
 
-EventManager::addListener('welcome', 'App\Controllers\Demos\EventListener@welcome');
+EventManager::listen('welcome', 'App\Controllers\Demos\EventListener@welcome');

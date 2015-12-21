@@ -218,7 +218,7 @@ class Manager
 
     protected function invokeCallback($callback, $param)
     {
-        if (is_object($callback)) {
+        if (is_callable($callback)) {
             // Call the Closure.
             return call_user_func($callback, $param);
         }

@@ -7,7 +7,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Nova\Net;
+namespace Nova\Helpers;
 
 use Nova\Net\Session;
 

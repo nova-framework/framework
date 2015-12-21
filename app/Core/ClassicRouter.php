@@ -111,7 +111,7 @@ class ClassicRouter extends Router
         }
 
         // Verify if the first URI part match a Module.
-        $testPath = SMVC . 'Modules' . DS . $controller;
+        $testPath = APPPATH . 'Modules' . DS . $controller;
 
         if (!empty($controller) && is_dir($testPath)) {
             // Walking in a Module path.
@@ -132,7 +132,7 @@ class ClassicRouter extends Router
         $directory = '';
 
         while (!empty($parts)) {
-            $testPath = SMVC . str_replace('/', DS, $basePath . $directory . $controller);
+            $testPath = APPPATH . str_replace('/', DS, $basePath . $directory . $controller);
 
             if (!is_readable($testPath . '.php') && is_dir($testPath)) {
                 $directory .= $controller . DS;

@@ -408,7 +408,7 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if(is_array($data)) {
+        if($data) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;

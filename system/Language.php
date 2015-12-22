@@ -2,7 +2,7 @@
 /**
  * Language - Language handler.
  *
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 15th, 2015
  */

@@ -66,7 +66,7 @@ class Manager
         // Create a new Event.
         $event = new Event($name, $params);
 
-        return $manager->trigger($event, function($data) use (&$result) {
+        return $manager->notify($event, function($data) use (&$result) {
             if(is_array($result)) {
                 $result[] = $data;
             }
@@ -122,7 +122,7 @@ class Manager
     public function dettach($name, $callback)
     {
         if(! array_key_exists($name, $this->events)) {
-            return;
+            return false;
         }
 
         $listeners =& $this->events[$name];
@@ -130,6 +130,8 @@ class Manager
         $listeners = array_filter($listeners, function($listener) use ($callback) {
             return ($listener->callback() !== $callback);
         });
+
+        return true;
     }
 
     public function clear($name = null)
@@ -137,11 +139,11 @@ class Manager
         if($name !== null) {
             // Is wanted to clear the Listeners from a specific Event.
             unset($this->events[$name]);
-
-            return;
         }
-
-        $this->events = array();
+        else {
+            // Clear the entire Events list.
+            $this->events = array();
+        }
     }
 
     /**

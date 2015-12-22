@@ -174,14 +174,14 @@ class Url
      * @param  array $segments array
      * @param  int $id array index
      *
-     * @return string - returns array index
+     * @return string|null - returns array index
      */
     public static function getSegment($segments, $id)
     {
         if (array_key_exists($id, $segments)) {
             return $segments[$id];
         }
-        return '';
+        return null;
     }
 
     /**

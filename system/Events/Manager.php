@@ -63,7 +63,10 @@ class Manager
     {
         $manager = self::getInstance();
 
-        $manager->trigger($name, $params, function($data) use (&$result) {
+        // Create a new Event.
+        $event = new Event($name, $params);
+
+        return $manager->trigger($event, function($data) use (&$result) {
             if(is_array($result)) {
                 $result[] = $data;
             }
@@ -154,7 +157,7 @@ class Manager
         $event = new Event($name, $params);
 
         // Deploy the Event notification to Listeners.
-        $this->notify($event, $callback);
+        return $this->notify($event, $callback);
     }
 
     public function notify($event, $callback = null)
@@ -163,7 +166,7 @@ class Manager
 
         if(! array_key_exists($name, $this->events)) {
             // There are no Listeners to observe this type of Event.
-            return;
+            return false;
         }
 
         $listeners = $this->events[$name];
@@ -183,6 +186,8 @@ class Manager
 
         // Ensure the restoration of the right Controller instance.
         $controller->setInstance();
+
+        return true;
     }
 
     /**

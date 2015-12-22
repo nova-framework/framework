@@ -56,13 +56,23 @@ class BaseController extends Controller
             }
 
             foreach($result as $key => $value) {
-                if(is_array($value) && is_array($data[$key])) {
-                    $data[$key] = array_merge($data[$key], $value);
+                switch($key) {
+                    case 'pageMetaData':
+                    case 'styleSheets':
+                    case 'headerJScript':
+                    case 'footerJScript':
+                        if(! is_array($value)) {
+                            continue;
+                        }
 
-                    continue;
+                        break;
+                    default:
+                        continue;
                 }
 
-                $data[$key] = $value;
+                if(! empty($value)) {
+                    $data[$key] = array_merge($data[$key], $value);
+                }
             }
         });
 

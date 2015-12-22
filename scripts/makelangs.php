@@ -92,10 +92,10 @@ foreach($workPaths as $workPath) {
     }
 
     if($workPath == 'app') {
-        $pattern = '#__\((\'|")(.*)\1(?:,.*){0,1}\)#smU';
+        $pattern = '#__\(\'(.*)\'(?:,.*)?\)#smU';
     }
     else {
-        $pattern = '#__d\(\'(.+?)\',\s?\'(.+?)\'(?:,.*)?\)#s';
+        $pattern = '#__d\(\'(?:.*)?\',.?\s?\'(.*)\'(?:,.*)?\)#smU';
     }
 
     echo "Using PATERN: '" .$pattern."'\n";
@@ -116,17 +116,8 @@ foreach($workPaths as $workPath) {
         $content = file_get_contents($filePath);
 
         if(preg_match_all($pattern, $content, $matches)) {
-            foreach($matches[2] as $message) {
-                $message = trim($message);
-
-                //$message = trim($message, "'");
-
-                if(preg_match("/^'(.+)',.*$/s", $message, $parts)) {
-                    $message = $parts[1];
-                }
-                else {
-                    $message = trim($message, "'");
-                }
+            foreach($matches[1] as $message) {
+                //$message = trim($message);
 
                 if($message == '$msg, $args = null') {
                     // This is the function

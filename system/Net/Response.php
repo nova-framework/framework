@@ -56,12 +56,33 @@ class Response
         //
         // Prepare and send the headers with browser-side caching support.
 
+        // Get the last-modified-date of this very file
+        $lastModified = filemtime($filePath);
+
+        // Get the HTTP_IF_MODIFIED_SINCE header if set
+        $ifModifiedSince = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
+
         // Firstly, we finalize the output buffering.
         if (ob_get_level()) ob_end_clean();
 
-        header("$httpProtocol 200 OK");
         header('Access-Control-Allow-Origin: *');
         header('Content-type: ' .$contentType);
+        header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s', $lastModified).' GMT');
+        //header('Etag: '.$etagFile);
+        header('Cache-Control: max-age='.$expires);
+
+        // Check if page has changed. If not, send 304 and exit
+        if (@strtotime($ifModifiedSince) == $lastModified) {
+            header("$httpProtocol 304 Not Modified");
+
+            return true;
+        }
+
+        //
+        // Send the current file.
+
+        header("$httpProtocol 200 OK");
         header('Content-Length: ' .filesize($filePath));
 
         // Send the current file content.

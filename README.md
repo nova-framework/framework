@@ -1,33 +1,38 @@
 # framework
-Version 3 of the Framework
 
-This is a temp readme, for beta testing.
+Version 3 of the Framework.
 
-#Install
-To be updated - 3.0 is currently been refractored once finalished these instructions will be updated.
+This is a temp readme for beta testing.
 
-This has been tested with php 5.6 and php 7 (RC8) please report any bugs, this system has not been tested enough to be considered stable.
+*** **Not for production use yet!** ***
 
-#Namespace change
+## Install
 
-classes in app/Controller app/Model and app/Modules now have a namespace starting with App:
+To be updated - 3.0 is currently been refactored. Once finalized, these instructions will be updated.
 
-* App\Controllers
-* App\Models
-* App\Modules
+This has been tested with php 5.6 and php 7 (RC8), please [report](https://github.com/simple-mvc-framework/framework/issues/new) any bugs. This system has not been tested enough to be considered stable.
 
-That is only for classes within app this is not needed for classes within system.
+## Namespace change
 
-#Error Log
-The error log is no longer a .html file but rather a log file. On a production server it should be outside the document root, in order to see the any errors there are a few options:
+Classes in `app/Controller`, `app/Model` and `app/Modules` now have a namespace starting with `App`:
 
-* Open system/logs/error.log
-* OR open system/Core/Logger.php set $display to true to print errors to the screen
-* set $emailError to true and setup the siteEmail const in system/Core/Config.php this relies on an email server (not provided by the framework)
+* `App\Controllers`
+* `App\Models`
+* `App\Modules`
+* ...
 
-#Video introduction and setup
-this is an introduction to 3.0 whilst in beta, how to install and get up and running with the major changes.
+That is only for classes within `app`. This is not needed for classes within `system`.
 
-Not for production use yet.
+## Error Log
+
+The error log is no longer a `.html` file but rather a log file. On a production server it should be outside the document root, in order to see any errors there are a few options:
+
+* open `system/logs/error.log`
+* OR open `system/Core/Logger.php`, set `$display` to **true** to print errors to the screen
+* set `$emailError` to **true** and setup the `siteEmail` const in `system/Core/Config.php`. This relies on an email server (not provided by the framework).
+
+## Video introduction and setup
+
+This is an introduction to 3.0 whilst in beta: how to install and get up and running with the major changes.
 
 https://www.youtube.com/watch?v=28l8lJz-oRM

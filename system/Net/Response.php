@@ -17,7 +17,7 @@ class Response
     {
         $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
 
-        // $expires = 60 * 60 * 24 * 365; // Cache for one year
+        $expires = 60 * 60 * 24 * 365; // Cache for one year
 
         if (! file_exists($filePath)) {
             header("$httpProtocol 404 Not Found");

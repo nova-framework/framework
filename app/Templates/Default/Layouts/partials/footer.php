@@ -16,8 +16,8 @@ Assets::js(array(
 ));
 
 //Add Controller specific JS files.
-if(is_array($footerJScript)) {
-    Assets::js($footerJScript);
+if(is_array($footerJScripts)) {
+    Assets::js($footerJScripts);
 }
 
 ?>

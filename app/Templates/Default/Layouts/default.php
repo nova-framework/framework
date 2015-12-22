@@ -14,8 +14,8 @@ use Nova\Helpers\Assets;
 	<meta charset="utf-8">
 	<?php
 	// Add Controller specific data.
-    if (is_array($pageMetaData)) {
-        foreach($pageMetaData as $str) {
+    if (is_array($headerMetaData)) {
+        foreach($headerMetaData as $str) {
             echo $str;
         }
     }
@@ -32,8 +32,8 @@ use Nova\Helpers\Assets;
 	));
 
 	//Add Controller specific CSS files.
-    if (is_array($styleSheets)) {
-        Assets::css($styleSheets);
+    if (is_array($headerCSSheets)) {
+        Assets::css($headerCSSheets);
     }
 
     Assets::js(array(
@@ -41,7 +41,9 @@ use Nova\Helpers\Assets;
     ));
 
     //Add Controller specific JS files.
-    Assets::js($headerJScript);
+    if (is_array($headerJScripts)) {
+        Assets::js($headerJScripts);
+    }
 	?>
 </head>
 <body>
@@ -58,8 +60,8 @@ Assets::js(array(
 ));
 
 //Add Controller specific JS files.
-if(is_array($footerJScript)) {
-    Assets::js($footerJScript);
+if(is_array($footerJScripts)) {
+    Assets::js($footerJScripts);
 }
 ?>
 

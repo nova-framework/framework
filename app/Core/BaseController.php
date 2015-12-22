@@ -32,10 +32,10 @@ class BaseController extends Controller
 
         // Setup the Data Entries.
         $this->data = array(
-            'pageMetaData'  => array(),
-            'styleSheets'   => array(),
-            'headerJScript' => array(),
-            'footerJScript' => array(),
+            'headerMetaData' => array(),
+            'headerCSSheets'  => array(),
+            'headerJScripts'  => array(),
+            'footerJScripts'  => array(),
         );
     }
 
@@ -57,10 +57,10 @@ class BaseController extends Controller
 
             foreach($result as $key => $value) {
                 switch($key) {
-                    case 'pageMetaData':
-                    case 'styleSheets':
-                    case 'headerJScript':
-                    case 'footerJScript':
+                    case 'headerMetaData':
+                    case 'headerCSSheets':
+                    case 'headerJScripts':
+                    case 'footerJScripts':
                         if(! is_array($value)) {
                             continue;
                         }

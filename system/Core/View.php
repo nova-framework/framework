@@ -291,7 +291,7 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
             $data = $data + $instance->data();
         }
         else {
@@ -352,7 +352,7 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
             $data = $data + $instance->data();
         }
         else {
@@ -401,7 +401,7 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
             $data = $data + $instance->data();
         }
         else {
@@ -442,7 +442,7 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
             $data = $data + $instance->data();
         }
         else {

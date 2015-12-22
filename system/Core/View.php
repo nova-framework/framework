@@ -13,17 +13,13 @@ namespace Nova\Core;
 
 use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
+use Nova\Net\Response;
 
 /**
  * View class to load template and views files.
  */
 class View
 {
-    /**
-     * @var array Array of HTTP headers
-     */
-    private static $headers = array();
-
     /*
      * The View's internal stored variables.
      */
@@ -97,7 +93,7 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        self::addHeader('Content-Type: text/html; charset=UTF-8');
+        Response::addHeader('Content-Type: text/html; charset=UTF-8');
 
         return new View($filePath);
     }
@@ -130,7 +126,7 @@ class View
             throw new \UnexpectedValueException('Unexpected parameter on View::json');
         }
 
-        self::addHeader('Content-Type: application/json');
+        Response::addHeader('Content-Type: application/json');
 
         return new View($data, true);
     }
@@ -159,7 +155,7 @@ class View
         return ob_get_clean();
     }
 
-    public function display()
+    public function render()
     {
         if ($this->json) {
             echo json_encode($this->data);
@@ -171,7 +167,7 @@ class View
         }
 
         // Execute the rendering to output.
-        self::sendHeaders();
+        Response::sendHeaders();
 
         require $this->path;
     }
@@ -294,7 +290,7 @@ class View
      * @return bool|string
      * @internal param array $error array of errors
      */
-    public static function render($path, $data = false, $fetch = false)
+    public static function renderView($path, $data = false, $fetch = false)
     {
         // Get the Controller instance.
         $instance =& get_instance();
@@ -313,7 +309,14 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;
@@ -324,7 +327,7 @@ class View
             ob_start();
         }
         else {
-            self::sendHeaders();
+            Response::sendHeaders();
         }
 
         require $filePath;
@@ -369,7 +372,14 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;
@@ -380,7 +390,7 @@ class View
             ob_start();
         }
         else {
-            self::sendHeaders();
+            Response::sendHeaders();
         }
 
         require $filePath;
@@ -392,30 +402,40 @@ class View
         return false;
     }
 
-    public static function renderView($view, $data = false, $layout = null, $custom = null)
+    public static function renderPage($view, $data = false, $layout = null, $custom = null)
     {
         // Render the Page using the Content fetching and the Layout.
-        $content = self::render($view, $data, true);
+        $content = self::renderView($view, $data, true);
 
         self::renderLayout($layout, $content, $data, $custom);
     }
 
     public static function renderLayout($layout, $content, $data = false, $custom = null)
     {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
         $filePath = self::layoutPath($layout, $custom);
 
         if (! is_readable($filePath)) {
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;
             }
         }
 
-        self::sendHeaders();
+        Response::sendHeaders();
 
         require $filePath;
     }
@@ -430,6 +450,9 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
+        // Get the Controller instance.
+        $instance =& get_instance();
+
         $custom = Inflector::classify($custom);
 
         $basePath = self::templatePath($custom)."Layouts".DS.'partials'.DS;
@@ -440,47 +463,23 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        if($data) {
+        if(is_array($data)) {
+            $data = $data + $instance->data();
+        }
+        else {
+            $data = $instance->data();
+        }
+
+        if(! empty($data)) {
             // Extract the rendering variables.
             foreach($data as $name => $value) {
                 ${$name} = $value;
             }
         }
 
-        self::sendHeaders();
+        Response::sendHeaders();
 
         require $filePath;
     }
 
-    /**
-     * Add HTTP header to headers array.
-     *
-     * @param  string  $header HTTP header text
-     */
-    public function addHeader($header)
-    {
-        self::$headers[] = $header;
-    }
-
-    /**
-     * Add an array with headers to the view.
-     *
-     * @param array $headers
-     */
-    public function addHeaders(array $headers = array())
-    {
-        self::$headers = array_merge(self::$headers, $headers);
-    }
-
-    /**
-     * Send headers
-     */
-    public static function sendHeaders()
-    {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
-    }
 }

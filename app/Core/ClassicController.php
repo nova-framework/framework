@@ -10,14 +10,16 @@
 namespace App\Core;
 
 use Nova\Core\View;
-use Nova\Core\Controller;
+use App\Core\BaseController;
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
  */
-class ClassicController extends Controller
+class ClassicController extends BaseController
 {
     protected $layout = 'default';
+
+    protected $events = null;
 
 
     /**
@@ -30,10 +32,6 @@ class ClassicController extends Controller
 
     protected function beforeFlight()
     {
-        // Do some processing there and stop the Flight, if is the case.
-        // The available information on this method are:
-        // className, called method and parameters; optionally, the module name
-
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
@@ -49,7 +47,7 @@ class ClassicController extends Controller
             $data =& $this->data();
 
             if($this->useLayout) {
-                $content = View::render($this->method(), $data, true);
+                $content = View::renderView($this->method(), $data, true);
 
                 View::renderLayout($this->layout(), $content, $data);
 
@@ -57,7 +55,7 @@ class ClassicController extends Controller
                 return false;
             }
 
-            View::render($this->method(), $data, false);
+            View::renderView($this->method(), $data, false);
 
             // Stop the Flight.
             return false;

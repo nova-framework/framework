@@ -12,6 +12,7 @@ namespace App\Controllers;
 
 use Nova\Core\Controller;
 use Nova\Core\View;
+use Nova\Net\Response;
 
 /**
  * Error class to generate 404 pages.
@@ -36,8 +37,8 @@ class Error extends Controller
         $data['title'] = '404';
         $data['error'] = $error;
 
-        View::addHeader("HTTP/1.0 404 Not Found");
+        Response::addHeader("HTTP/1.0 404 Not Found");
 
-        View::renderView('error404', $data);
+        View::renderPage('error404', $data);
     }
 }

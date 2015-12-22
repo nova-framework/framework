@@ -63,9 +63,15 @@ class Manager
     {
         $manager = self::getInstance();
 
+        if(! $manager->exists($name)) {
+            // There are no Listeners registered for this Event.
+            return false;
+        }
+
         // Create a new Event.
         $event = new Event($name, $params);
 
+        // Deploy the Event to its Listeners and parse the Result from every one.
         return $manager->notify($event, function($data) use (&$result) {
             if(is_array($result)) {
                 $result[] = $data;

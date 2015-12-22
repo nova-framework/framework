@@ -92,7 +92,7 @@ class Manager
 
         if($listeners === null) {
             // There are no Listeners registered for this Event.
-            throw new \Exception("There is no place with the name '$where' in the Legacy Hook helper!");
+            throw new \Exception("There is no place with the name '$where' in the (legacy) Hook helper!");
         }
 
         // First, preserve a instance of the Current Controller.
@@ -127,17 +127,13 @@ class Manager
                 }
 
                 if($object instanceof Controller) {
-                    // We are going to call-out a Controller; special setup is required.
-                    // The Controller instance should be properly initialized before executing its Method.
                     $object->initialize($className, $method);
                 }
 
                 $result = call_user_func(array($object, $method), $result);
             }
-            else {
-                if (function_exists($callback)) {
-                    $result = call_user_func($callback, $result);
-                }
+            else if (function_exists($callback)) {
+                $result = call_user_func($callback, $result);
             }
         }
 

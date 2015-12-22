@@ -2,7 +2,7 @@
 /**
  * BaseController - Base Class for all App Controllers who use Templates.
  *
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 18th, 2015
  */

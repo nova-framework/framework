@@ -4,39 +4,44 @@
  */
 
 use Nova\Helpers\Assets;
-use Nova\Net\Url;
-use Nova\Helpers\Hooks;
 
-//initialise hooks
-$hooks = Hooks::get();
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo LANGUAGE_CODE; ?>">
+<html lang="<?= LANGUAGE_CODE; ?>">
 <head>
-	<!-- Site meta -->
-	<meta charset="utf-8">
-	<?php
-	//hook for plugging in meta tags
-	$hooks->run('meta');
-	?>
-	<title><?php echo $data['title'].' - '.SITE_TITLE;?></title>
 
-	<!-- CSS -->
-	<?php
-	Assets::css(array(
-		'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
-		Url::templatePath() . 'css/style.css',
-	));
+    <!-- Site meta -->
+    <meta charset="utf-8">
+    <?php
+    // Add Controller specific data.
+    if (is_array($headerMetaData)) {
+        foreach($headerMetaData as $str) {
+            echo $str;
+        }
+    }
+    ?>
+    <title><?= $title.' - '.SITE_TITLE; ?></title>
 
-	//hook for plugging in css
-	$hooks->run('css');
-	?>
+    <!-- CSS -->
+    <?php
+    Assets::css(array(
+        '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
+        '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css',
+        '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css',
+        site_url('templates/default/assets/css/style.css')
+    ));
 
+    //Add Controller specific CSS files.
+    Assets::css($headerCSSheets);
+
+    Assets::js(array(
+        '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+    ));
+
+    //Add Controller specific JS files.
+    Assets::js($headerJScripts);
+    ?>
 </head>
 <body>
-<?php
-//hook for running code after body tag
-$hooks->run('afterBody');
-?>
 
 <div class="container">

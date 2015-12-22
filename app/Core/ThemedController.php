@@ -10,14 +10,17 @@
 namespace App\Core;
 
 use Nova\Core\View;
-use Nova\Core\Controller;
+use App\Core\BaseController;
+
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
  */
-class ThemedController extends Controller
+class ThemedController extends BaseController
 {
     protected $layout = 'themed';
+
+    protected $events = null;
 
 
     /**
@@ -30,10 +33,6 @@ class ThemedController extends Controller
 
     protected function beforeFlight()
     {
-        // Do some processing there and stop the Flight, if is the case.
-        // The available information on this method are:
-        // className, called method and parameters; optionally, the module name
-
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
@@ -56,7 +55,7 @@ class ThemedController extends Controller
                 View::layout($this->layout())
                     ->loadData($data)
                     ->withContent($content)
-                    ->display();
+                    ->render();
 
                 // Stop the Flight.
                 return false;
@@ -64,7 +63,7 @@ class ThemedController extends Controller
 
             View::make($this->method())
                 ->loadData($data)
-                ->display();
+                ->render();
 
             // Stop the Flight.
             return false;
@@ -72,7 +71,7 @@ class ThemedController extends Controller
         else if($result instanceof View) {
             View::layout($this->layout())
                 ->loadView($result)
-                ->display();
+                ->render();
 
             // Stop the Flight.
             return false;

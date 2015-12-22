@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> %s | UMAX: <b>{3}</b>' => '',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => '',
   'The :field URL does not exist.' => 'El :field URL no existe.',
   'The :field field can have the following extensions :param.' => 'El campo :field puede tener las siguientes extensiones :param.',
   'The :field field contains a value that is not accepted.' => 'The campo :field contiene un valor que no es aceptado.',
@@ -13,7 +13,7 @@ return array (
   'The :field field may only contain a numeric value.' => 'El campo :field solo puedo contener un valor numérico',
   'The :field field may only contain a true or false value.' => 'El campo :field solo puedo contener un valor verdadero o falso',
   'The :field field may only contain alpha characters &amp; dashes.' => 'El campo :field solo puedo contener caracteres alfabéticos, &amp; y guión.',
-  'The :field field may only contain alpha characters (a-z' => 'El campo :field solo puedo contener caracteres alfabéticos (a-z',
+  'The :field field may only contain alpha characters (a-z).' => 'El campo :field solo puedo contener caracteres alfabéticos (a-z).',
   'The :field field may only contain alpha-numeric characters.' => 'El campo :field solo puedo contener caracteres alfanuméricos',
   'The :field field may only contain numeric characters.' => 'El campo :field solo puedo contener caracteres numéricos',
   'The :field field needs contain a value from its drop down list.' => 'El campo :field necesita contener un valor de su lista de selección.',

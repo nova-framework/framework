@@ -11,6 +11,7 @@
 namespace Nova\Core;
 
 use Nova\Core\View;
+use Nova\Net\Response;
 
 /**
  * Core controller, all other controllers extend this base controller.
@@ -126,19 +127,19 @@ abstract class Controller
         }
 
         if(is_array($result)) {
-            View::addHeader('Content-Type: application/json');
+            Response::addHeader('Content-Type: application/json');
 
             $result = json_encode($result);
         }
         else if(is_string($result)) {
-            View::addHeader('Content-Type: text/html; charset=UTF-8');
+            Response::addHeader('Content-Type: text/html; charset=UTF-8');
         }
         else {
             return;
         }
 
         // Output the result.
-        View::sendHeaders();
+        Response::sendHeaders();
 
         echo $result;
     }

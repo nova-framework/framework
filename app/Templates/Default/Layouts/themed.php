@@ -1,13 +1,10 @@
 <?php
 /**
- * Frontend Default Layout
+ * Frontend Themed Layout
  */
 
 use Nova\Helpers\Assets;
-use Nova\Helpers\Hooks;
 
-// Initialise hooks
-$hooks = Hooks::get();
 ?>
 <!DOCTYPE html>
 <html lang="<?= LANGUAGE_CODE; ?>">
@@ -16,8 +13,12 @@ $hooks = Hooks::get();
 	<!-- Site meta -->
 	<meta charset="utf-8">
 	<?php
-	//hook for plugging in meta tags
-	$hooks->run('meta');
+	// Add Controller specific data.
+	if (is_array($headerMetaData)) {
+        foreach($headerMetaData as $str) {
+            echo $str;
+        }
+    }
 	?>
 	<title><?= $title.' - '.SITE_TITLE; ?></title>
 
@@ -30,38 +31,33 @@ $hooks = Hooks::get();
 		site_url('templates/default/assets/css/style.css')
 	));
 
-	// Hook for plugging in css
-	$hooks->run('css');
+	//Add Controller specific CSS files.
+    Assets::css($headerCSSheets);
 
     Assets::js(array(
         '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
     ));
+
+    //Add Controller specific JS files.
+    Assets::js($headerJScripts);
 	?>
 </head>
 <body>
-<?php
-// Hook for running code after body tag
-$hooks->run('afterBody');
-?>
 
 <div class="container">
-    <div class="row">
-        <!-- Content Area -->
-        <?= $content; ?>
-    </div>
+    <!-- Content Area -->
+    <?= $content; ?>
 </div>
 
 <!-- JS -->
 <?php
+
 Assets::js(array(
 	'//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'
 ));
 
-// Hook for plugging in javascript
-$hooks->run('js');
-
-// Hook for plugging in code into the footer
-$hooks->run('footer');
+//Add Controller specific JS files.
+Assets::js($footerJScripts);
 ?>
 
 </body>

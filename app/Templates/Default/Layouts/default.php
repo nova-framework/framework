@@ -32,18 +32,14 @@ use Nova\Helpers\Assets;
 	));
 
 	//Add Controller specific CSS files.
-    if (is_array($headerCSSheets)) {
-        Assets::css($headerCSSheets);
-    }
+    Assets::css($headerCSSheets);
 
     Assets::js(array(
         '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
     ));
 
     //Add Controller specific JS files.
-    if (is_array($headerJScripts)) {
-        Assets::js($headerJScripts);
-    }
+    Assets::js($headerJScripts);
 	?>
 </head>
 <body>
@@ -60,9 +56,7 @@ Assets::js(array(
 ));
 
 //Add Controller specific JS files.
-if(is_array($footerJScripts)) {
-    Assets::js($footerJScripts);
-}
+Assets::js($footerJScripts);
 ?>
 
 </body>

@@ -3,7 +3,7 @@
  * View - load template pages
  *
  * @author David Carr - dave@daveismyname.com
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date June 27, 2014
  * @date updated Dec 18, 2015

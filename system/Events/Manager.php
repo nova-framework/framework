@@ -2,7 +2,7 @@
 /**
  * Events Manager - Manage the Events and dispatch them to listeners.
  *
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 19th, 2015
  */

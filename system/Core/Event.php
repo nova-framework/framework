@@ -2,7 +2,7 @@
 /**
  * Event - Store the information required by an Event deploying.
  *
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 19th, 2015
  */

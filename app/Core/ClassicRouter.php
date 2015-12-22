@@ -2,7 +2,7 @@
 /**
  * ClassicRoute - manage, in classic style, a route to an HTTP request and an assigned callback function.
  *
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 11th, 2015
  */

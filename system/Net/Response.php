@@ -12,6 +12,42 @@ namespace Nova\Net;
 
 class Response
 {
+    /**
+     * @var array Array of HTTP headers
+     */
+    private static $headers = array();
+
+    /**
+     * Add HTTP header to headers array.
+     *
+     * @param  string  $header HTTP header text
+     */
+    public function addHeader($header)
+    {
+        self::$headers[] = $header;
+    }
+
+    /**
+     * Add an array with headers to the view.
+     *
+     * @param array $headers
+     */
+    public function addHeaders(array $headers = array())
+    {
+        self::$headers = array_merge(self::$headers, $headers);
+    }
+
+    /**
+     * Send headers
+     */
+    public static function sendHeaders()
+    {
+        if (!headers_sent()) {
+            foreach (self::$headers as $header) {
+                header($header, true);
+            }
+        }
+    }
 
     public static function serveFile($filePath)
     {

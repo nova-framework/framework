@@ -13,17 +13,13 @@ namespace Nova\Core;
 
 use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
+use Nova\Net\Response;
 
 /**
  * View class to load template and views files.
  */
 class View
 {
-    /**
-     * @var array Array of HTTP headers
-     */
-    private static $headers = array();
-
     /*
      * The View's internal stored variables.
      */
@@ -92,7 +88,7 @@ class View
             throw new \UnexpectedValueException('File not found: '.$filePath);
         }
 
-        self::addHeader('Content-Type: text/html; charset=UTF-8');
+        Response::addHeader('Content-Type: text/html; charset=UTF-8');
 
         return new View($filePath);
     }
@@ -114,7 +110,7 @@ class View
             throw new \UnexpectedValueException('Unexpected parameter on View::json');
         }
 
-        self::addHeader('Content-Type: application/json');
+        Response::addHeader('Content-Type: application/json');
 
         return new View($data, true);
     }
@@ -155,7 +151,7 @@ class View
         }
 
         // Execute the rendering to output.
-        self::sendHeaders();
+        Response::sendHeaders();
 
         require $this->path;
     }
@@ -313,7 +309,7 @@ class View
             ob_start();
         }
         else {
-            self::sendHeaders();
+            Response::sendHeaders();
         }
 
         require $filePath;
@@ -374,7 +370,7 @@ class View
             ob_start();
         }
         else {
-            self::sendHeaders();
+            Response::sendHeaders();
         }
 
         require $filePath;
@@ -419,7 +415,7 @@ class View
             }
         }
 
-        self::sendHeaders();
+        Response::sendHeaders();
 
         require $filePath;
     }
@@ -460,40 +456,9 @@ class View
             }
         }
 
-        self::sendHeaders();
+        Response::sendHeaders();
 
         require $filePath;
     }
 
-    /**
-     * Add HTTP header to headers array.
-     *
-     * @param  string  $header HTTP header text
-     */
-    public function addHeader($header)
-    {
-        self::$headers[] = $header;
-    }
-
-    /**
-     * Add an array with headers to the view.
-     *
-     * @param array $headers
-     */
-    public function addHeaders(array $headers = array())
-    {
-        self::$headers = array_merge(self::$headers, $headers);
-    }
-
-    /**
-     * Send headers
-     */
-    public static function sendHeaders()
-    {
-        if (!headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
-        }
-    }
 }

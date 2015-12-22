@@ -176,6 +176,5 @@ class Session
                     <h4><i class='fa fa-check'></i> ".$msg."</h4>
                   </div>";
         }
-        return '';
     }
 }

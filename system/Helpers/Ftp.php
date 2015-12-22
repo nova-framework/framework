@@ -92,7 +92,6 @@ class Ftp
         if (ftp_chmod($this->conn, $permission, $folderChmod) !== false) {
             return "<p>$folderChmod chmoded successfully to ".$permission."</p>\n";
         }
-        return '';
     }
 
     /**

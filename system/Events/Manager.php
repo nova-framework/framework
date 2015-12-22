@@ -20,6 +20,8 @@ class Manager
 
     private $events = array();
 
+    private static $hookPath = 'Nova.Events.LegacyHook_';
+
 
     public function __construct()
     {
@@ -59,6 +61,92 @@ class Manager
         return $manager->exists($name);
     }
 
+    //
+    // Hooks Compat/Legacy methods.
+
+    public static function addHook($where, $callback)
+    {
+        $name = self::$hookPath .$where;
+
+        self::addListener($name, $callback);
+    }
+
+    public static function hasHook($where)
+    {
+        $name = self::$hookPath .$where;
+
+        return self::hasEvent($name);
+    }
+
+    public static function runHook($where, $args = '')
+    {
+        // Prepare the parameters.
+        $name = self::$hookPath .$where;
+
+        $result = $args;
+
+        // Get the EventManager instance.
+        $manager = self::getInstance();
+
+        $listeners = $manager->listeners($name);
+
+        if($listeners === null) {
+            // There are no Listeners registered for this Event.
+            throw new \Exception("There is no place with the name '$where' in the Legacy Hook helper!");
+        }
+
+        // First, preserve a instance of the Current Controller.
+        $controller = Controller::getInstance();
+
+        foreach ($listeners as $listener) {
+            $callback = $listener->callback();
+
+            if (preg_match("/@/i", $callback)) {
+                //grab all parts based on a / separator
+                $parts = explode('/', $callback);
+
+                //collect the last index of the array
+                $last = end($parts);
+
+                //grab the controller name and method call
+                $segments = explode('@', $last);
+
+                $className = $segments[0];
+                $method    = $segments[1];
+
+                // Check first if the Class exists.
+                if (! class_exists($className)) {
+                    throw new \Exception("Class not found: $className");
+                }
+
+                $object = new $className();
+
+                // The called Method should be defined in the called Class, not in one of its parents.
+                if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
+                     throw new \Exception("Method not found: $className::$method");
+                }
+
+                if($object instanceof Controller) {
+                    // We are going to call-out a Controller; special setup is required.
+                    // The Controller instance should be properly initialized before executing its Method.
+                    $object->initialize($className, $method);
+                }
+
+                $result = call_user_func(array($object, $method), $result);
+            }
+            else {
+                if (function_exists($callback)) {
+                    $result = call_user_func($callback, $result);
+                }
+            }
+        }
+
+        // Ensure the restoration of the right Controller instance.
+        $controller->setInstance();
+
+        return $result;
+    }
+
     public static function sendEvent($name, $params = array(), &$result = null)
     {
         $manager = self::getInstance();
@@ -94,6 +182,20 @@ class Manager
                 throw new \UnexpectedValueException('Unsupported Result type');
             }
         });
+    }
+
+    public function events()
+    {
+        return $this->events();
+    }
+
+    public function listeners($name)
+    {
+        if(isset($this->events[$name])) {
+            return $this->events[$name];
+        }
+
+        return null;
     }
 
     public function exists($name)
@@ -232,7 +334,6 @@ class Manager
 
         if($object instanceof Controller) {
             // We are going to call-out a Controller; special setup is required.
-
             // The Controller instance should be properly initialized before executing its Method.
             $object->initialize($className, $method);
         }

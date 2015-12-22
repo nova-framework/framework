@@ -139,7 +139,7 @@ class View
         return ob_get_clean();
     }
 
-    public function display()
+    public function render()
     {
         if ($this->json) {
             echo json_encode($this->data);
@@ -272,7 +272,7 @@ class View
      * @param  array  $data  array of data
      * @param  array  $error array of errors
      */
-    public static function render($path, $data = false, $fetch = false)
+    public static function renderView($path, $data = false, $fetch = false)
     {
         // Get the Controller instance.
         $instance =& get_instance();
@@ -382,10 +382,10 @@ class View
         return false;
     }
 
-    public static function renderView($view, $data = false, $layout = null, $custom = null)
+    public static function renderPage($view, $data = false, $layout = null, $custom = null)
     {
         // Render the Page using the Content fetching and the Layout.
-        $content = self::render($view, $data, true);
+        $content = self::renderView($view, $data, true);
 
         self::renderLayout($layout, $content, $data, $custom);
     }

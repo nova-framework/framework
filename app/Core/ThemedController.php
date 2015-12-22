@@ -55,7 +55,7 @@ class ThemedController extends BaseController
                 View::layout($this->layout())
                     ->loadData($data)
                     ->withContent($content)
-                    ->display();
+                    ->render();
 
                 // Stop the Flight.
                 return false;
@@ -63,7 +63,7 @@ class ThemedController extends BaseController
 
             View::make($this->method())
                 ->loadData($data)
-                ->display();
+                ->render();
 
             // Stop the Flight.
             return false;
@@ -71,7 +71,7 @@ class ThemedController extends BaseController
         else if($result instanceof View) {
             View::layout($this->layout())
                 ->loadView($result)
-                ->display();
+                ->render();
 
             // Stop the Flight.
             return false;

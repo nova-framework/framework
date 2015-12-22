@@ -37,6 +37,6 @@ class Error extends Controller
 
         Response::addHeader("HTTP/1.0 404 Not Found");
 
-        View::renderView('error404', $data);
+        View::renderPage('error404', $data);
     }
 }

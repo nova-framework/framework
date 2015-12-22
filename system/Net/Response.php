@@ -17,7 +17,7 @@ class Response
      */
     private static $headers = array();
 
-/**
+    /**
      * @var array A listing of HTTP status codes
      * @author http://coreymaynard.com/blog/creating-a-restful-api-with-php/
      */
@@ -73,11 +73,13 @@ class Response
      */
     public static function setStatus($code)
     {
+        if (! isset(self::$status[$code])) {
+            return;
+        }
+
         $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
 
-        if (isset(self::$status[$code])) {
-           self::addHeader("$httpProtocol $code " . self::$status[$code]);
-        }
+        self::addHeader("$httpProtocol $code " . self::$status[$code]);
     }
 
     /**

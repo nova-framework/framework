@@ -59,10 +59,10 @@ class Welcome extends BaseController
 This content can be changed in <code>{0}</code>', $filePath);
         /*
         View::renderTemplate('header', $data);
-        View::render($viewName, $data);
+        View::renderView($viewName, $data);
         View::renderTemplate('footer', $data);
         */
-        View::renderView($viewName, $data, 'legacy');
+        View::renderPage($viewName, $data, 'legacy');
     }
 
     /**
@@ -79,7 +79,7 @@ This content can be changed in <code>{0}</code>', $filePath);
 This content can be changed in <code>{0}</code>', $filePath);
 
         // Render the Page using the Content fetching and the Layout.
-        $content = View::render($viewName, $data, true);
+        $content = View::renderView($viewName, $data, true);
 
         View::renderLayout('legacy', $content, $data);
     }

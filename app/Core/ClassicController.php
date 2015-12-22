@@ -47,7 +47,7 @@ class ClassicController extends BaseController
             $data =& $this->data();
 
             if($this->useLayout) {
-                $content = View::render($this->method(), $data, true);
+                $content = View::renderView($this->method(), $data, true);
 
                 View::renderLayout($this->layout(), $content, $data);
 
@@ -55,7 +55,7 @@ class ClassicController extends BaseController
                 return false;
             }
 
-            View::render($this->method(), $data, false);
+            View::renderView($this->method(), $data, false);
 
             // Stop the Flight.
             return false;

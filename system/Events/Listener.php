@@ -2,7 +2,7 @@
 /**
  * Listener - Store the information who represent an Event Listener.
  *
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 21th, 2015
  */

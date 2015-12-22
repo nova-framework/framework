@@ -2,7 +2,7 @@
 /**
  * Config - manage the system wide configuration parameters.
  *
- * @author Virgil-Adrian Teaca - virgil@@giulianaeassociati.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 14th, 2015
  */

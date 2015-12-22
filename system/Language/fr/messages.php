@@ -13,7 +13,7 @@ return array (
   'The :field field may only contain a numeric value.' => '',
   'The :field field may only contain a true or false value.' => '',
   'The :field field may only contain alpha characters &amp; dashes.' => '',
-  'The :field field may only contain alpha characters (a-z' => '',
+  'The :field field may only contain alpha characters (a-z).' => '',
   'The :field field may only contain alpha-numeric characters.' => '',
   'The :field field may only contain numeric characters.' => '',
   'The :field field needs contain a value from its drop down list.' => '',

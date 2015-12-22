@@ -95,7 +95,7 @@ foreach($workPaths as $workPath) {
         $pattern = '#__\((\'|")(.*)\1(?:,.*){0,1}\)#smU';
     }
     else {
-        $pattern = '#__d\((.+?),(.+?)\)#s';
+        $pattern = '#__d\(\'(.+?)\',\s?\'(.+?)\'(?:,.*)?\)#s';
     }
 
     echo "Using PATERN: '" .$pattern."'\n";

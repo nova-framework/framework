@@ -52,6 +52,13 @@ class Manager
         $manager->attach($name, $callback, $priority);
     }
 
+    public static function hasEvent($name)
+    {
+        $manager = self::getInstance();
+
+        return $manager->exists($name);
+    }
+
     public static function sendEvent($name, $params = array(), &$result = null)
     {
         $manager = self::getInstance();
@@ -78,6 +85,11 @@ class Manager
                 throw new \UnexpectedValueException('Unsupported Result type');
             }
         });
+    }
+
+    public function exists($name)
+    {
+        return isset($this->events[$name]);
     }
 
     /**

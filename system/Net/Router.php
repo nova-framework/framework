@@ -9,6 +9,7 @@
 
 namespace Nova\Net;
 
+use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
 use Nova\Net\Request;
 use Nova\Net\Response;
@@ -27,7 +28,7 @@ class Router
     /**
      * Array of routes
      *
-     * @var array $routes
+     * @var Route[] $routes
      */
     protected $routes = array();
 
@@ -102,6 +103,11 @@ class Router
         self::$routeGroup = '';
     }
 
+    /**
+     * Router callback
+     * @param null $callback
+     * @return callback|null
+     */
     public function callback($callback = null)
     {
         if (is_null($callback)) {
@@ -109,13 +115,14 @@ class Router
         }
 
         $this->errorCallback = $callback;
+        return null;
     }
 
     /**
      * Maps a Method and URL pattern to a Callback.
      *
      * @param string $method HTTP metod to match
-     * @param string $pattern URL pattern to match
+     * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
     public function addRoute($method, $route, $callback)
@@ -131,9 +138,10 @@ class Router
     /**
      * Invoke the Controller's Method with its associated parameters.
      *
-     * @param  string $controller to be instantiated
+     * @param  string $className to be instantiated
      * @param  string $method method to be invoked
-     * @param  array  $params parameters passed to method
+     * @param  array $params parameters passed to method
+     * @return bool
      */
     protected function invokeController($className, $method, $params)
     {
@@ -157,6 +165,7 @@ class Router
         }
 
         // Initialize the Controller.
+        /** @var Controller $controller */
         $controller = new $className();
 
         // The called Method should be defined in the called Controller, not in one of its parents.
@@ -173,9 +182,9 @@ class Router
     /**
      * Invoke the callback with its associated parameters.
      *
-     * @param  object $callback
-     * @param  array  $params array of matched parameters
-     * @param  string $message
+     * @param  callable $callback
+     * @param  array $params array of matched parameters
+     * @return bool
      */
     protected function invokeObject($callback, $params = array())
     {
@@ -196,6 +205,10 @@ class Router
         return $this->invokeController($controller, $method, $params);
     }
 
+    /**
+     * Dispatch route
+     * @return bool
+     */
     public function dispatch()
     {
         // Detect the current URI.

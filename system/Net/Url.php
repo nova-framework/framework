@@ -64,7 +64,7 @@ class Url
     /**
      * Created the absolute address to the template folder.
      *
-     * @param  boolean $custom
+     * @param bool|string $custom
      * @return string url to template folder
      */
     public static function templatePath($custom = TEMPLATE)
@@ -76,7 +76,7 @@ class Url
     /**
      * Created the relative address to the template folder.
      *
-     * @param  boolean $custom
+     * @param bool|string $custom
      * @return string url to template folder
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
@@ -174,13 +174,14 @@ class Url
      * @param  array $segments array
      * @param  int $id array index
      *
-     * @return string - returns array index
+     * @return string|null - returns array index
      */
     public static function getSegment($segments, $id)
     {
         if (array_key_exists($id, $segments)) {
             return $segments[$id];
         }
+        return null;
     }
 
     /**
@@ -197,7 +198,7 @@ class Url
     /**
      * Get first item in array
      *
-     * @param  array segments
+     * @param  array $segments segments
      * @return int - returns first first array index
      */
     public static function firstSegment($segments)

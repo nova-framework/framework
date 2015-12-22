@@ -30,6 +30,9 @@ class View
 
     /**
      * Constructor
+     * @param array $param
+     * @param mixed $json
+     * @throws \UnexpectedValueException
      */
     public function __construct($param, $json = false)
     {
@@ -63,6 +66,7 @@ class View
      * Make view
      * @param $view
      * @return View
+     * @throws \UnexpectedValueException
      */
     public static function make($view)
     {
@@ -79,6 +83,7 @@ class View
      * Make view layout
      * @param null $layout
      * @return View
+     * @throws \UnexpectedValueException
      */
     public static function layout($layout = null)
     {
@@ -93,6 +98,12 @@ class View
         return new View($filePath);
     }
 
+    /**
+     * @param $fragment
+     * @param bool $fromTemplate
+     * @return View
+     * @throws \UnexpectedValueException
+     */
     public static function fragment($fragment, $fromTemplate = true)
     {
         $filePath = self::fragmentPath($fragment, $fromTemplate);
@@ -104,6 +115,11 @@ class View
         return new View($filePath);
     }
 
+    /**
+     * @param $data
+     * @return View
+     * @throws \UnexpectedValueException
+     */
     public static function json($data)
     {
         if (! is_array($data)) {
@@ -268,9 +284,11 @@ class View
     /**
      * Include template file.
      *
-     * @param  string $path  path to file from views folder
-     * @param  array  $data  array of data
-     * @param  array  $error array of errors
+     * @param string $path path to file from views folder
+     * @param array|bool $data array of data
+     * @param bool $fetch
+     * @return bool|string
+     * @internal param array $error array of errors
      */
     public static function renderView($path, $data = false, $fetch = false)
     {
@@ -324,9 +342,11 @@ class View
     /**
      * Include template file.
      *
-     * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
+     * @param  string $module module
+     * @param  string $path path to file from Modules folder
+     * @param  array|boolean $data array or boolean of data
+     * @param  array|boolean $fetch fetch data
+     * @return bool|string
      */
     public static function renderModule($module, $path, $data = false, $fetch = false)
     {
@@ -424,8 +444,9 @@ class View
      * Return absolute path to selected template directory.
      *
      * @param  string  $path  path to file from views folder
-     * @param  array   $data  array of data
+     * @param  array|boolean   $data  array of data
      * @param  string  $custom path to template folder
+     * @throws \UnexpectedValueException
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {

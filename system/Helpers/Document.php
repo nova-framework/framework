@@ -147,7 +147,7 @@ class Document
      *
      * @param  string  $file filename and extension
      *
-     * @return file name missing extension
+     * @return string file name missing extension
      */
     public static function removeExtension($file)
     {

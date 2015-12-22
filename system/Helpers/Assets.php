@@ -11,7 +11,6 @@ namespace Nova\Helpers;
  */
 
 use Nova\Net\Url;
-use Nova\Helpers\JsMin;
 
 class Assets
 {
@@ -45,7 +44,7 @@ class Assets
 
     /**
      * load js scripts
-     * @param  String|Array  $files      paths to file/s
+     * @param  String|array  $files      paths to file/s
      * @param  boolean       $cache      if set to true a cache will be created and serverd
      * @param  boolean       $refresh    if true the cache will be updated
      * @param  string        $cachedMins minutes to hold the cache
@@ -73,7 +72,7 @@ class Assets
 
     /**
      * load css scripts
-     * @param  String|Array  $files      paths to file/s
+     * @param  String|array  $files      paths to file/s
      * @param  boolean       $cache      if set to true a cache will be created and serverd
      * @param  boolean       $refresh    if true the cache will be updated
      * @param  string        $cachedMins minutes to hold the cache

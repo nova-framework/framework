@@ -25,9 +25,10 @@ class Error
      */
     public static function display($error, $class = 'alert alert-danger')
     {
+        $row = '';
         if (is_array($error)) {
-            foreach ($error as $error) {
-                $row.= "<div class='$class'>$error</div>";
+            foreach ($error as $what) {
+                $row.= "<div class='$class'>$what</div>";
             }
             return $row;
         } else {
@@ -35,5 +36,6 @@ class Error
                 return "<div class='$class'>$error</div>";
             }
         }
+        return null;
     }
 }

@@ -69,7 +69,7 @@ class Logger
     /**
     * Saved the exception and calls customer error function.
     *
-    * @param  exeption $e
+    * @param  \Exception $e
     */
     public static function exceptionHandler($e)
     {
@@ -77,13 +77,15 @@ class Logger
     }
 
     /**
-    * Saves error message from exception.
-    *
-    * @param  numeric $number  error number
-    * @param  string  $message the error
-    * @param  string  $file    file originated from
-    * @param  numeric $line    line number
-    */
+     * Saves error message from exception.
+     *
+     * @param  number $number  error number
+     * @param  string  $message the error
+     * @param  string  $file    file originated from
+     * @param  number $line    line number
+     *
+     * @return int
+     */
     public static function errorHandler($number, $message, $file, $line)
     {
         $msg = "$message in $file on line $line";
@@ -98,13 +100,13 @@ class Logger
     }
 
     /**
-    * New exception.
-    *
-    * @param  Exception $exception
-    * @param  boolean   $printError show error or not
-    * @param  boolean   $clear       clear the errorlog
-    * @param  string    $errorFile  file to save to
-    */
+     * New exception.
+     *
+     * @param  \Exception $exception
+     * @internal param bool $printError show error or not
+     * @internal param bool $clear clear the errorlog
+     * @internal param string $errorFile file to save to
+     */
     public static function newMessage($exception)
     {
         $message = $exception->getMessage();
@@ -149,12 +151,12 @@ class Logger
     }
 
     /**
-    * Custom error.
-    *
-    * @param  string  $error       the error
-    * @param  boolean $printError display error
-    * @param  string  $errorFile  file to save to
-    */
+     * Custom error.
+     *
+     * @param  string $error the error
+     * @internal param bool $printError display error
+     * @internal param string $errorFile file to save to
+     */
     public static function errorMessage($error)
     {
         $date = date('Y-m-d G:iA');

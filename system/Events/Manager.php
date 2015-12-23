@@ -50,21 +50,22 @@ class Manager
 
     public static function addListener($name, $callback, $priority = 0)
     {
+        // Get the EventManager instance.
+        $manager = self::getInstance();
+
         if(empty($name)) {
             throw new \UnexpectedValueException('The Event Name can not be empty');
         }
-
-        // Get the EventManager instance.
-        $manager = self::getInstance();
 
         $manager->attach($name, $callback, $priority);
     }
 
     public static function hasEvent($name)
     {
-        if(! empty($name)) {
-            $manager = self::getInstance();
+        // Get the EventManager instance.
+        $manager = self::getInstance();
 
+        if(! empty($name)) {
             return $manager->exists($name);
         }
 
@@ -76,14 +77,14 @@ class Manager
 
     public static function addHook($where, $callback)
     {
+        // Get the EventManager instance.
+        $manager = self::getInstance();
+
         if(empty($where)) {
             throw new \UnexpectedValueException('The Hook Name can not be empty');
         }
 
         $name = self::$hookPath .$where;
-
-        // Get the EventManager instance.
-        $manager = self::getInstance();
 
         $manager->attach($name, $callback);
     }
@@ -104,6 +105,9 @@ class Manager
 
     public static function runHook($where, $args = '')
     {
+        // Get the EventManager instance.
+        $manager = self::getInstance();
+
         if (empty($where)) {
             throw new \UnexpectedValueException('The Hook Name can not be empty');
         }
@@ -113,9 +117,7 @@ class Manager
 
         $result = $args;
 
-        // Get the EventManager instance.
-        $manager = self::getInstance();
-
+        // Get the Listerners registered to this Event.
         $listeners = $manager->listeners($name);
 
         if($listeners === null) {
@@ -126,6 +128,7 @@ class Manager
         // First, preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
 
+        // Execute every Listener Callback, passing Result as parameter.
         foreach ($listeners as $listener) {
             $result = $manager->invokeObject($listener->callback(), $result);
         }
@@ -191,6 +194,7 @@ class Manager
             return $this->events[$name];
         }
 
+        // Let's make Tom happy! ;)
         return null;
     }
 
@@ -295,11 +299,13 @@ class Manager
             return false;
         }
 
+        // Get the Listerners registered to this Event.
         $listeners = $this->events[$name];
 
         // First, preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
 
+        // Deploy the Event to every Listener registered.
         foreach ($listeners as $listener) {
             // Invoke the Listener's Callback with the Event as parameter.
             $result = $this->invokeObject($listener->callback(), $event);

@@ -43,7 +43,7 @@ class View
         }
 
         if (! is_array($param)) {
-            throw new \UnexpectedValueException('Parameter should be Array, on View::__construct');
+            throw new \UnexpectedValueException('Parameter should be an Array');
         }
 
         $this->json = true;
@@ -123,7 +123,7 @@ class View
     public static function json($data)
     {
         if (! is_array($data)) {
-            throw new \UnexpectedValueException('Unexpected parameter on View::json');
+            throw new \UnexpectedValueException('Unexpected parameter');
         }
 
         Response::addHeader('Content-Type: application/json');
@@ -198,7 +198,7 @@ class View
         }
         else {
             if (! is_array($data)) {
-                throw new \UnexpectedValueException('Unexpected parameter on View::loadData');
+                throw new \UnexpectedValueException('Unexpected parameter');
             }
 
             $this->data = $data;
@@ -215,7 +215,7 @@ class View
             return $this->with('content', $view->fetch());
         }
 
-        throw new \UnexpectedValueException('Unknown parameter on View::loadView');
+        throw new \UnexpectedValueException('Unknown parameter');
     }
 
     private static function viewPath($path)

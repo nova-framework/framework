@@ -301,7 +301,7 @@ class Router
     protected function config($key = null)
     {
         if($key !== null) {
-            return isset($this->config[$key]) ? $this->config[$key] : null;
+            return array_key_exists($key, $this->config) ? $this->config[$key] : null;
         }
 
         return $this->config;

@@ -20,7 +20,7 @@ class Manager
 
     private $events = array();
 
-    private static $hookPath = 'Nova.Events.LegacyHook_';
+    private static $hookPath = 'Nova.Events.Manager.LegacyHook_';
 
 
     public function __construct()
@@ -42,6 +42,7 @@ class Manager
 
     public static function initialize()
     {
+        // Get the EventManager instance.
         $manager = self::getInstance();
 
         $manager->sortListeners();
@@ -49,16 +50,26 @@ class Manager
 
     public static function addListener($name, $callback, $priority = 0)
     {
+        // Get the EventManager instance.
         $manager = self::getInstance();
+
+        if(empty($name)) {
+            throw new \UnexpectedValueException('The Event Name can not be empty');
+        }
 
         $manager->attach($name, $callback, $priority);
     }
 
     public static function hasEvent($name)
     {
+        // Get the EventManager instance.
         $manager = self::getInstance();
 
-        return $manager->exists($name);
+        if(! empty($name)) {
+            return $manager->exists($name);
+        }
+
+        return false;
     }
 
     //
@@ -66,75 +77,60 @@ class Manager
 
     public static function addHook($where, $callback)
     {
+        // Get the EventManager instance.
+        $manager = self::getInstance();
+
+        if(empty($where)) {
+            throw new \UnexpectedValueException('The Hook Name can not be empty');
+        }
+
         $name = self::$hookPath .$where;
 
-        self::addListener($name, $callback);
+        $manager->attach($name, $callback);
     }
 
     public static function hasHook($where)
     {
-        $name = self::$hookPath .$where;
+        // Get the EventManager instance.
+        $manager = self::getInstance();
 
-        return self::hasEvent($name);
+        if(! empty($where)) {
+            $name = self::$hookPath .$where;
+
+            return $manager->exists($name);
+        }
+
+        return false;
     }
 
     public static function runHook($where, $args = '')
     {
+        // Get the EventManager instance.
+        $manager = self::getInstance();
+
+        if (empty($where)) {
+            throw new \UnexpectedValueException('The Hook Name can not be empty');
+        }
+
         // Prepare the parameters.
         $name = self::$hookPath .$where;
 
         $result = $args;
 
-        // Get the EventManager instance.
-        $manager = self::getInstance();
-
+        // Get the Listerners registered to this Event.
         $listeners = $manager->listeners($name);
 
         if($listeners === null) {
             // There are no Listeners registered for this Event.
-            throw new \Exception("There is no place with the name '$where' in the (legacy) Hook helper!");
+            return false;
         }
 
         // First, preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
 
+        // Execute every Listener Callback, passing Result as parameter.
         foreach ($listeners as $listener) {
-            $callback = $listener->callback();
-
-            if (preg_match("/@/i", $callback)) {
-                //grab all parts based on a / separator
-                $parts = explode('/', $callback);
-
-                //collect the last index of the array
-                $last = end($parts);
-
-                //grab the controller name and method call
-                $segments = explode('@', $last);
-
-                $className = $segments[0];
-                $method    = $segments[1];
-
-                // Check first if the Class exists.
-                if (! class_exists($className)) {
-                    throw new \Exception("Class not found: $className");
-                }
-
-                $object = new $className();
-
-                // The called Method should be defined in the called Class, not in one of its parents.
-                if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
-                     throw new \Exception("Method not found: $className::$method");
-                }
-
-                if($object instanceof Controller) {
-                    $object->initialize($className, $method);
-                }
-
-                $result = call_user_func(array($object, $method), $result);
-            }
-            else if (function_exists($callback)) {
-                $result = call_user_func($callback, $result);
-            }
+            $result = $manager->invokeObject($listener->callback(), $result);
         }
 
         // Ensure the restoration of the right Controller instance.
@@ -145,7 +141,12 @@ class Manager
 
     public static function sendEvent($name, $params = array(), &$result = null)
     {
+        // Get the EventManager instance.
         $manager = self::getInstance();
+
+        if(empty($name)) {
+            throw new \UnexpectedValueException('The Event Name can not be empty');
+        }
 
         if(! $manager->exists($name)) {
             // There are no Listeners registered for this Event.
@@ -180,6 +181,8 @@ class Manager
         });
     }
 
+    // Some getters
+
     public function events()
     {
         return $this->events();
@@ -187,16 +190,23 @@ class Manager
 
     public function listeners($name)
     {
-        if(isset($this->events[$name])) {
+        if(! empty($name) && isset($this->events[$name])) {
             return $this->events[$name];
         }
 
+        // Let's make Tom happy! ;)
         return null;
     }
 
+    // Confirm if there are one or more Listeners registered to this Event Name.
+
     public function exists($name)
     {
-        return isset($this->events[$name]);
+        if(! empty($name)) {
+            return isset($this->events[$name]);
+        }
+
+        return false;
     }
 
     /**
@@ -208,6 +218,10 @@ class Manager
      */
     public function attach($name, $callback, $priority = 0)
     {
+        if(empty($name)) {
+            throw new \UnexpectedValueException('The Event Name can not be empty');
+        }
+
         if(! array_key_exists($name, $this->events)) {
             $this->events[$name] = array();
         }
@@ -225,7 +239,7 @@ class Manager
      */
     public function dettach($name, $callback)
     {
-        if(! array_key_exists($name, $this->events)) {
+        if(empty($name) || ! $this->exists($name)) {
             return false;
         }
 
@@ -259,6 +273,10 @@ class Manager
      */
     public function trigger($name, $params = array(), $callback = null)
     {
+        if(empty($name)) {
+            throw new \UnexpectedValueException('The Event Name can not be empty');
+        }
+
         // Create a new Event.
         $event = new Event($name, $params);
 
@@ -276,16 +294,18 @@ class Manager
     {
         $name = $event->name();
 
-        if(! array_key_exists($name, $this->events)) {
+        if(! $this->exists($name)) {
             // There are no Listeners to observe this type of Event.
             return false;
         }
 
+        // Get the Listerners registered to this Event.
         $listeners = $this->events[$name];
 
         // First, preserve a instance of the Current Controller.
         $controller = Controller::getInstance();
 
+        // Deploy the Event to every Listener registered.
         foreach ($listeners as $listener) {
             // Invoke the Listener's Callback with the Event as parameter.
             $result = $this->invokeObject($listener->callback(), $event);
@@ -326,7 +346,7 @@ class Manager
 
         // Check first if the Class exists.
         if (!class_exists($className)) {
-            return false;
+            throw new \Exception("Class not found: $className");
         }
 
         // Initialize the Class.
@@ -334,7 +354,7 @@ class Manager
 
         // The called Method should be defined in the called Class, not in one of its parents.
         if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
-            return false;
+            throw new \Exception("Method not found: $className@$method");
         }
 
         if($object instanceof Controller) {
@@ -354,7 +374,7 @@ class Manager
             return call_user_func($callback, $param);
         }
 
-        return false;
+        throw new \UnexpectedValueException('Unsupported Callback type');
     }
 
     protected function sortListeners()

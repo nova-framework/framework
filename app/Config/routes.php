@@ -21,15 +21,10 @@ Router::any('database', 'App\Controllers\Demo@database');
 Router::any('database/insert', 'App\Controllers\Demo@databaseInsert');
 Router::any('database/sqlite', 'App\Controllers\Demo@databaseSqlite');
 
-Router::any('demos/themed/welcome', 'App\Controllers\Demos\Themed@welcome');
-Router::any('demos/themed/subpage', 'App\Controllers\Demos\Themed@subPage');
+// WARNING! The following Route catch all the Requests!
+// That's why it should be defined last and/or in the last Module.
+//Router::any('(:all)', 'App\Controllers\Demo@catchAll');
 
-Router::any('demos/classic/welcome', 'App\Controllers\Demos\Classic@welcome');
-Router::any('demos/classic/subpage', 'App\Controllers\Demos\Classic@subPage');
-
-Router::any('demos/events', 'App\Controllers\Demos\Events@index');
-
-Router::any('(:all)', 'App\Controllers\Demo@catchAll');
 /*
 // Classic Routing
 Router::any('', 'welcome/index');

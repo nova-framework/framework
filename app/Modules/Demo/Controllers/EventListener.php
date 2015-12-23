@@ -7,7 +7,7 @@
  * @date December 17th, 2015
  */
 
-namespace App\Controllers\Demos;
+namespace App\Modules\Demo\Controllers;
 
 use Nova\Core\Event;
 use Nova\Core\View;
@@ -37,7 +37,7 @@ class EventListener extends ClassicController
     {
         $params = $event->params();
 
-        $message = __('Hello, welcome from the welcome controller! <br/>
+        $message = __d('demo', 'Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>', $params['path']);
 
         return $message;

@@ -37,8 +37,8 @@ Config::set('languages', array(
  */
 Config::set('emailer', array(
     'charset'       => 'iso-8859-1',
-    'from_name'     => 'SMVC Website',
-    'from_email'    => 'smvc@localhost',
+    'from_name'     => 'Nova Website',
+    'from_email'    => 'nova@localhost',
     'mailer'        => 'mail',           // Could be 'mail' => 'sendmail' or 'smtp'
 
     /** Only when using smtp as mailer: */
@@ -85,13 +85,5 @@ Config::set('database', array(
  * Active Modules
  */
 Config::set('modules', array(
-    //'Blog',
-    //'Page'
+    'Demo',
 ));
-
-
-/**
- * Events Management
- */
-
-Events::addListener('welcome', 'App\Controllers\Demos\EventListener@welcome');

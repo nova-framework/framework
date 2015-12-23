@@ -7,18 +7,17 @@
  * @date December 17th, 2015
  */
 
-namespace App\Controllers\Demos;
+namespace App\Modules\Demo\Controllers;
 
-use Nova\Core\View;
 use App\Core\ClassicController;
+use Nova\Core\View;
+use Nova\Events\Manager as EventManager;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class Classic extends ClassicController
+class Events extends ClassicController
 {
-    protected $layout = 'legacy';
-
     private $filePath;
 
 
@@ -53,27 +52,17 @@ class Classic extends ClassicController
     /**
      * Define Welcome page message and set the Controller's variables.
      */
-    public function welcome()
+    public function index()
     {
-        $message = __('Hello, welcome from the welcome controller! <br/>
-This content can be changed in <code>{0}</code>', $this->filePath);
+        $params = array('path' => $this->filePath);
 
-       // Setup the View variables.
-        $this->title(__('Welcome'));
+        // Get the Message.
+        $message = '';
 
-        $this->set('message', $message);
-    }
+        EventManager::sendEvent('welcome', $params, $message);
 
-    /**
-     * Define Subpage page message and set the Controller's variables.
-     */
-    public function subPage()
-    {
-        $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>{0}</code>', $this->filePath);
-
-       // Setup the View variables.
-        $this->title(__('Subpage'));
+        // Setup the View variables.
+        $this->title(__d('demo', 'Welcome'));
 
         $this->set('message', $message);
     }

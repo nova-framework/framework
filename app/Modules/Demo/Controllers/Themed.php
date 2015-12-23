@@ -7,7 +7,7 @@
  * @date December 17th, 2015
  */
 
-namespace App\Controllers\Demos;
+namespace App\Modules\Demo\Controllers;
 
 use Nova\Core\View;
 use App\Core\ThemedController;
@@ -53,11 +53,11 @@ class Themed extends ThemedController
 
         $filePath = $this->basePath.$viewName.'.php';
 
-        $message = __('Hello, welcome from the welcome controller! <br/>
+        $message = __d('demo', 'Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
 
        // Setup the View variables.
-        $this->title(__('Welcome'));
+        $this->title(__d('demo', 'Welcome'));
 
         $this->set('message', $message);
     }
@@ -71,11 +71,11 @@ This content can be changed in <code>{0}</code>', $filePath);
 
         $filePath = $this->basePath.$viewName.'.php';
 
-        $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
+        $message = __d('demo', 'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
 
         return View::make($viewName)
-            ->withTitle(__('Subpage'))
+            ->withTitle(__d('demo', 'Subpage'))
             ->withMessage($message);
     }
 

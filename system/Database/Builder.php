@@ -23,7 +23,7 @@ use \PDO;
  *
  * Example of usage:
  *
- * // After namespace: use \Nova\Database\Builder;
+ * // After namespace: use \Nova\Database\Builder as TableBuilder;
  *
  * // Model or Controller method
  * $tableBuilder = new TableBuilder;

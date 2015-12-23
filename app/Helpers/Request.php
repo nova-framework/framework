@@ -3,7 +3,7 @@
  * Request Class
  *
  * @version 2.2
- * @date updated Sept 19, 2015
+ * @date updated Dec 23, 2015
  */
 
 namespace Helpers;
@@ -23,7 +23,11 @@ class Request
      */
     public static function post($key)
     {
-        return array_key_exists($key, $_POST)? $_POST[$key]: null;
+        if(empty($key)){
+            return isset($_POST) ? $_POST : null;
+        }else{
+            return array_key_exists($key, $_POST)? $_POST[$key]: null;
+        }
     }
 
     /**
@@ -36,7 +40,11 @@ class Request
      */
     public static function get($key)
     {
-        return array_key_exists($key, $_GET)? $_GET[$key]: null;
+        if(empty($key)){
+            return isset($_GET) ? $_GET : null;
+        }else{
+            return array_key_exists($key, $_GET)? $_GET[$key]: null;
+        }
     }
 
     /**
@@ -47,9 +55,13 @@ class Request
      *
      * @return mixed
      */
-    public static function files($key)
+    public static function files($key=null)
     {
-        return array_key_exists($key, $_FILES)? $_FILES[$key]: null;
+        if(empty($key)){
+            return isset($_FILES) ? $_FILES : null;
+        }else{
+            return array_key_exists($key, $_FILES)? $_FILES[$key]: null;
+        }
     }
 
     /**
@@ -60,9 +72,13 @@ class Request
      *
      * @return mixed
      */
-    public static function query($key)
+    public static function query($key=null)
     {
-        return array_key_exists($key, $_GET)? $_GET[$key]: null;
+        if(empty($key)){
+            return isset($_GET) ? $_GET : null;
+        }else{
+            return array_key_exists($key, $_GET)? $_GET[$key]: null;
+        }
     }
 
     /**
@@ -80,6 +96,38 @@ class Request
         return false;
     }
 
+    /**
+     * Safer and better access to PUT parameter.
+     *
+     * @param  string   $key
+     * @static static method
+     *
+     * @return mixed
+     */
+    public static function put($key=null)
+    {
+        parse_str(file_get_contents("php://input"),$_PUT);
+        if(empty($key)){
+            return isset($_PUT) ? $_PUT : null;
+        }else{
+            return array_key_exists($key, $_PUT)? $_PUT[$key]: null;
+        }
+    }
+
+    /**
+     * Safer and better access to DELETE parameter.
+     *
+     * @param  string   $key
+     * @static static method
+     *
+     * @return mixed
+     */
+    public static function del($key)
+    {
+        parse_str(file_get_contents("php://input"),$_DEL);
+        return array_key_exists($key, $_DEL)? $_DEL[$key]: null;
+    }
+    
     /**
      * Detect if request is POST request.
      *
@@ -102,5 +150,29 @@ class Request
     public static function isGet()
     {
         return $_SERVER["REQUEST_METHOD"] === "GET";
+    }
+    
+    /**
+     * Detect if request is PUT request.
+     *
+     * @static static method
+     *
+     * @return boolean
+     */
+    public static function isPut()
+    {
+        return $_SERVER["REQUEST_METHOD"] === "PUT";
+    }
+    
+    /**
+     * Detect if request is DELETE request.
+     *
+     * @static static method
+     *
+     * @return boolean
+     */
+    public static function isDelete()
+    {
+        return $_SERVER["REQUEST_METHOD"] === "DELETE";
     }
 }

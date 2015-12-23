@@ -85,13 +85,7 @@ Config::set('database', array(
  * Active Modules
  */
 Config::set('modules', array(
+    'Demo',
     //'Blog',
     //'Page'
 ));
-
-
-/**
- * Events Management
- */
-
-Events::addListener('welcome', 'App\Controllers\Demos\EventListener@welcome');

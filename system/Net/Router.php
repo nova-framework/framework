@@ -283,7 +283,7 @@ class Router
         }
         else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
             // We need to classify the path name (the Module/Template path).
-            $basePath = Inflector::classify($matches[1].DS.$matches[2]);
+            $basePath = ucfirst($matches[1]) .DS .Inflector::classify($matches[2]);
 
             $filePath = APPPATH.$basePath.DS.'Assets'.DS.$matches[3];
         }

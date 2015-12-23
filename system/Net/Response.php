@@ -90,7 +90,7 @@ class Response
      * @link http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
      * @param int $code
      */
-    public static function setStatus($code)
+    public static function addStatus($code)
     {
         if (! isset(self::$status[$code])) {
             return;

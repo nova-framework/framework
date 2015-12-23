@@ -59,7 +59,7 @@ use Nova\Helpers\Profiler;
             <div class="col-lg-8">
                 <p class="text-muted pull-right">
                     <?php if(ENVIRONMENT == 'development') { ?>
-                    <small><?= Profiler::report(false); ?></small>
+                    <small><?= Profiler::report(); ?></small>
                     <?php } ?>
                 </p>
             </div>

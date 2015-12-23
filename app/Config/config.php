@@ -30,6 +30,13 @@ Config::set('routing', array(
 ));
 
 /**
+ * Profiler configuration
+ */
+Config::set('profiling', array(
+    'with_queries' => false
+));
+
+/**
  * All known Languages
  */
 Config::set('languages', array(

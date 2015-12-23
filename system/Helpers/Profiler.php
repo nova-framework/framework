@@ -11,20 +11,23 @@ namespace Nova\Helpers;
 
 
 use Nova\Database\Manager;
-
+use Nova\Config;
 
 class Profiler
 {
 
-    public static function report($withQueries = true)
+    public static function report()
     {
+        $options = Config::get('profiling');
+
+        // Calculate the variables.
         $exectime = microtime(true) - FRAMEWORK_STARTING_MICROTIME;
 
         $elapsed_time = sprintf("%01.4f", $exectime);
 
         $memory_usage = Number::humanSize(memory_get_usage());
 
-        if($withQueries) {
+        if($options['with_queries'] == true) {
             $engine = Manager::getEngine();
 
             $total_queries = $engine->getTotalQueries();

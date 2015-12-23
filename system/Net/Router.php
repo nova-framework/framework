@@ -15,6 +15,7 @@ use Nova\Net\Request;
 use Nova\Net\Response;
 use Nova\Net\Route;
 use Nova\Net\Url;
+use Nova\Config;
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -33,17 +34,29 @@ class Router
     protected $routes = array();
 
     /**
+     * Default Route, usualy the Catch-All one.
+     */
+    private $defaultRoute = null;
+
+    /**
      * Set an Error Callback
      *
      * @var null $errorCallback
      */
     private $errorCallback = '\App\Controllers\Error@error404';
 
+    /**
+     * The Configuration options.
+     */
+    private $config;
+
 
     // Constructor
     public function __construct()
     {
         self::$instance =& $this;
+
+        $this->config = Config::get('routing');
     }
 
     public static function &getInstance()
@@ -83,6 +96,13 @@ class Router
         $router = self::getInstance();
 
         $router->callback($callback);
+    }
+
+    public static function catchAll($callback)
+    {
+        $router =& self::getInstance();
+
+        $router->defaultRoute = new Route('ANY', '(:all)', $callback);
     }
 
     /**
@@ -211,6 +231,8 @@ class Router
      */
     public function dispatch()
     {
+        $patterns = $this->config('patterns');
+
         // Detect the current URI.
         $uri = Url::detectUri();
 
@@ -222,8 +244,13 @@ class Router
         // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();
 
+        // If there exists a Catch-All Route, firstly we add it to Routes list.
+        if($this->defaultRoute !== null) {
+            array_push($this->routes, $this->defaultRoute);
+        }
+
         foreach ($this->routes as $route) {
-            if ($route->match($uri, $method)) {
+            if ($route->match($uri, $method, $patterns)) {
                 // Found a valid Route; invoke the Route's Callback and go out.
                 $this->invokeObject($route->callback(), $route->params());
 
@@ -256,7 +283,7 @@ class Router
         }
         else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
             // We need to classify the path name (the Module/Template path).
-            $basePath = Inflector::classify($matches[1].DS.$matches[2]);
+            $basePath = ucfirst($matches[1]) .DS .Inflector::classify($matches[2]);
 
             $filePath = APPPATH.$basePath.DS.'Assets'.DS.$matches[3];
         }
@@ -269,6 +296,15 @@ class Router
         }
 
         return false;
+    }
+
+    protected function config($key = null)
+    {
+        if($key !== null) {
+            return array_key_exists($key, $this->config) ? $this->config[$key] : null;
+        }
+
+        return $this->config;
     }
 
 }

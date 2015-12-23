@@ -8,14 +8,14 @@
  * @date updated Sept 19, 2015
  */
 
-namespace Nova\Helpers;
+namespace Nova\Database;
 
 use Nova\Database\Engine;
 use Nova\Database\Manager;
 use \PDO;
 
 /**
- * Table builder class for SimpleMVCFramework.
+ * Table builder class for Nova Framework.
  * This class' purpose is to generate SQL code and execute query
  * to create MySQL table.
  *
@@ -23,10 +23,10 @@ use \PDO;
  *
  * Example of usage:
  *
- * // After namespace: use \helpers\tableBuilder;
+ * // After namespace: use \Nova\Database\Builder as TableBuilder;
  *
  * // Model or Controller method
- * $tableBuilder = new tableBuilder;
+ * $tableBuilder = new TableBuilder;
  *
  * $tableBuilder->addField('name', 'string', false);
  * $tableBuilder->addField('description', 'description', false);
@@ -42,7 +42,7 @@ use \PDO;
  * @author volter9
  * @copyright volter9 ( c ) 2014
  */
-class TableBuilder
+class Builder
 {
     /**
      * @const int AUTO_INCREMENT    AUTO_INCREMENT flat

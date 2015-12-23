@@ -21,9 +21,8 @@ Router::any('database', 'App\Controllers\Demo@database');
 Router::any('database/insert', 'App\Controllers\Demo@databaseInsert');
 Router::any('database/sqlite', 'App\Controllers\Demo@databaseSqlite');
 
-// WARNING! The following Route catch all the Requests!
-// That's why it should be defined last and/or in the last Module.
-//Router::any('(:all)', 'App\Controllers\Demo@catchAll');
+// All the un-matched Requests will be routed there.
+Router::catchAll('App\Controllers\Demo@catchAll');
 
 /*
 // Classic Routing
@@ -35,6 +34,5 @@ Router::any('(:all)', 'demo/catchall/$1');
 */
 /** End static routes */
 
-/** If no route found. */
+/** If no Route found and no Catch-All Route defined. */
 Router::error('\App\Controllers\Error@error404');
-

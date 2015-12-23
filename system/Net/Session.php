@@ -33,6 +33,15 @@ class Session
         }
     }
 
+    public static function exists($key)
+    {
+        if (isset($_SESSION[SESSION_PREFIX.$key])) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Add value to a session.
      *
@@ -169,12 +178,27 @@ class Session
      */
     public static function message($sessionName = 'success')
     {
-        $msg = Session::pull($sessionName);
-        if (!empty($msg)) {
-            return "<div class='alert alert-success alert-dismissable'>
-                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                    <h4><i class='fa fa-check'></i> ".$msg."</h4>
-                  </div>";
+        $data = Session::pull($sessionName);
+
+        if (empty($data)) {
+            // Let's make Tom happy!
+            return null;
         }
+
+        if(! is_array($data)) {
+            // The message is structured in the Default style.
+            $alertType = $sessionName;
+            $alertText = $data;
+        }
+        else {
+            // The message is structured in the Hadrianus style.
+            $alertType = $data['type'];
+            $alertText = $data['text'];
+        }
+
+        return "<div class='alert alert-".$alertType." alert-dismissable'>
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
+                    <h4><i class='fa fa-check'></i> ".$alertText."</h4>
+                </div>";
     }
 }

@@ -17,8 +17,6 @@ use App\Core\ClassicController;
  */
 class Classic extends ClassicController
 {
-    protected $layout = 'legacy';
-
     private $filePath;
 
 

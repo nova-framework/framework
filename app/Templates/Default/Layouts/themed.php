@@ -4,6 +4,7 @@
  */
 
 use Nova\Helpers\Assets;
+use Nova\Helpers\Profiler;
 
 ?>
 <!DOCTYPE html>
@@ -48,6 +49,23 @@ use Nova\Helpers\Assets;
     <!-- Content Area -->
     <?= $content; ?>
 </div>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row" style="margin: 15px 0 0;">
+            <div class="col-lg-4">
+                <p class="text-muted">Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.simplemvcframework.com/" target="_blank"><b>Nova Framework</b></a></p>
+            </div>
+            <div class="col-lg-8">
+                <p class="text-muted pull-right">
+                    <?php if(ENVIRONMENT == 'development') { ?>
+                    <small><?= Profiler::report(); ?></small>
+                    <?php } ?>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
 
 <!-- JS -->
 <?php

@@ -234,7 +234,7 @@ class Router
         // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();
 
-        // If there is a Catch-All (default) Route, add it to Routes.
+        // If there exists a Catch-All Route, firstly we add it to Routes list.
         if($this->defaultRoute !== null) {
             array_push($this->routes, $this->defaultRoute);
         }

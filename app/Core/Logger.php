@@ -88,12 +88,12 @@ class Logger
     /**
     * New exception.
     *
-    * @param  Exception $exception
+    * @param  Throwable/Exception $exception
     * @param  boolean   $printError show error or not
     * @param  boolean   $clear       clear the errorlog
     * @param  string    $errorFile  file to save to
     */
-    public static function newMessage(\Exception $exception)
+    public static function newMessage($exception)
     {
 
         $message = $exception->getMessage();

@@ -185,13 +185,15 @@ class Session
             return null;
         }
 
-        if(is_array($data)) {
-            $alertType = $data['type'];
-            $alertText = $data['text'];
-        }
-        else {
+        if(! is_array($data)) {
+            // The message is structured in the Default style.
             $alertType = $sessionName;
             $alertText = $data;
+        }
+        else {
+            // The message is structured in the Hadrianus style.
+            $alertType = $data['type'];
+            $alertText = $data['text'];
         }
 
         return "<div class='alert alert-".$alertType." alert-dismissable'>

@@ -47,6 +47,7 @@ class BaseController extends Controller
             'controller' => $this->className,
             'method'     => $this->method,
             'params'     => $this->params,
+            'context'    => $this->module ? $this->module : 'App'
         );
 
         // Broadcast the Event to all its Listeners; if they return a valid array, merge it to Data.

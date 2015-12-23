@@ -21,7 +21,7 @@ Router::any('database', 'App\Controllers\Demo@database');
 Router::any('database/insert', 'App\Controllers\Demo@databaseInsert');
 Router::any('database/sqlite', 'App\Controllers\Demo@databaseSqlite');
 
-// WARNING! This Route catch all the Requests!
+// WARNING! The following Route catch all the Requests!
 // That's why it should be defined last and/or in the last Module.
 //Router::any('(:all)', 'App\Controllers\Demo@catchAll');
 

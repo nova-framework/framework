@@ -33,6 +33,11 @@ class Router
     protected $routes = array();
 
     /**
+     * Default Route, usualy the Catch-All one.
+     */
+    private $defaultRoute = null;
+
+    /**
      * Set an Error Callback
      *
      * @var null $errorCallback
@@ -83,6 +88,13 @@ class Router
         $router = self::getInstance();
 
         $router->callback($callback);
+    }
+
+    public static function catchAll($callback)
+    {
+        $router =& self::getInstance();
+
+        $router->defaultRoute = new Route('ANY', '(:all)', $callback);
     }
 
     /**
@@ -221,6 +233,11 @@ class Router
 
         // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();
+
+        // If there is a Catch-All (default) Route, add it to Routes.
+        if($this->defaultRoute !== null) {
+            array_push($this->routes, $this->defaultRoute);
+        }
 
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method)) {

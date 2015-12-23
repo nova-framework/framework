@@ -109,7 +109,7 @@ class Request
      *
      * @return mixed
      */
-    public static function del($key)
+    public static function delete($key)
     {
         parse_str(file_get_contents("php://input"), $_DELETE);
 

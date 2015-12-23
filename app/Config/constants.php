@@ -21,12 +21,6 @@ define('APPROUTER', '\Nova\Net\Router');
 //define('APPROUTER', '\App\Core\ClassicRouter');
 
 /**
- * Set default controller and method for legacy calls.
- */
-define('DEFAULT_CONTROLLER', 'Welcome');
-define('DEFAULT_METHOD', 'index');
-
-/**
  * Set the default template.
  */
 define('TEMPLATE', 'default');

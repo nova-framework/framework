@@ -16,6 +16,20 @@ use Nova\Events\Manager as Events;
 Config::set('timezone', 'Europe/Rome');
 
 /**
+ * Routing configuration
+ */
+Config::set('routing', array(
+    'patterns' => array(
+        //':hex'    => '[[:xdigit:]]+',
+        //':uuidV4' => '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
+    ),
+    'auto_dispatch' => array(
+        'default_controller' => 'Welcome',
+        'default_method'     => 'index'
+    )
+));
+
+/**
  * All known Languages
  */
 Config::set('languages', array(

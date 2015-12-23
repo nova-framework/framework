@@ -198,6 +198,5 @@ class Session
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
                     <h4><i class='fa fa-check'></i> ".$alertText."</h4>
                 </div>";
-        }
     }
 }

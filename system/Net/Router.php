@@ -15,6 +15,7 @@ use Nova\Net\Request;
 use Nova\Net\Response;
 use Nova\Net\Route;
 use Nova\Net\Url;
+use Nova\Config;
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -44,11 +45,18 @@ class Router
      */
     private $errorCallback = '\App\Controllers\Error@error404';
 
+    /**
+     * The Configuration options.
+     */
+    private $config;
+
 
     // Constructor
     public function __construct()
     {
         self::$instance =& $this;
+
+        $this->config = Config::get('routing');
     }
 
     public static function &getInstance()
@@ -223,6 +231,8 @@ class Router
      */
     public function dispatch()
     {
+        $patterns = $this->config('patterns');
+
         // Detect the current URI.
         $uri = Url::detectUri();
 
@@ -240,7 +250,7 @@ class Router
         }
 
         foreach ($this->routes as $route) {
-            if ($route->match($uri, $method)) {
+            if ($route->match($uri, $method, $patterns)) {
                 // Found a valid Route; invoke the Route's Callback and go out.
                 $this->invokeObject($route->callback(), $route->params());
 
@@ -286,6 +296,15 @@ class Router
         }
 
         return false;
+    }
+
+    protected function config($key = null)
+    {
+        if($key !== null) {
+            return isset($this->config[$key]) ? $this->config[$key] : null;
+        }
+
+        return $this->config;
     }
 
 }

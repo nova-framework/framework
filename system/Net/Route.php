@@ -77,17 +77,21 @@ class Route
 
         // Build the regex for matching.
         if (strpos($this->pattern, ':') !== false) {
-            $regex = str_replace(
-                array(':any', ':num', ':all', ':hex', ':uuidV4'),
-                array('[^/]+', '-?[0-9]+', '.*', '[[:xdigit:]]+', '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'),
-                $this->pattern
-            );
+            $regex = str_replace(array(':any', ':num', ':all'), array('[^/]+', '-?[0-9]+', '.*'), $this->pattern);
         } else {
             $regex = $this->pattern;
         }
 
-        if ($optionals) {
-            $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
+        if ($optionals !== false) {
+            $searches = array('(/', ')');
+            $replaces = array('(?:/', ')?');
+
+            if(is_array($optionals) && ! empty($optionals)) {
+                $searches = array_merge(array_keys($optionals),   $searches);
+                $replaces = array_merge(array_values($optionals), $replaces);
+            }
+
+            $regex = str_replace($searches, $replaces, $regex);
         }
 
         // Attempt to match the Route and extract the parameters.

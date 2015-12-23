@@ -47,5 +47,8 @@ class PhpMailer extends \PHPMailer
         $this->Username   = $config['smtp_user'];
         $this->Password   = $config['smtp_pass'];
         $this->AuthType   = $config['smtp_authtype'];
+
+        // Let's make Tom even more happy!
+        return null;
     }
 }

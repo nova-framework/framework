@@ -10,6 +10,6 @@
 $configDir = dirname(__FILE__) .DS;
 
 //
-//include $configDir .'constants.php';
+include $configDir .'constants.php';
 include $configDir .'config.php';
 include $configDir .'routes.php';

@@ -9,7 +9,8 @@
 
 use Nova\Net\Router;
 
-/** The known Routes definition. */
+
+/** The Module's known Routes definition. */
 
 Router::any('demos/themed/welcome', 'App\Modules\Demo\Controllers\Themed@welcome');
 Router::any('demos/themed/subpage', 'App\Modules\Demo\Controllers\Themed@subPage');

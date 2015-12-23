@@ -10,8 +10,15 @@
 use Nova\Config;
 use Nova\Events\Manager as Events;
 
+
 /**
- * Events Management
+ * Additional Configuration for this Module.
+ */
+Config::set('demo_message', 'Shiny Demo!');
+
+
+/**
+ * Events Management for this Module.
  */
 
 Events::addListener('welcome', 'App\Modules\Demo\Controllers\EventListener@welcome');

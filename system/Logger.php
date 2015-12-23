@@ -11,6 +11,7 @@
 namespace Nova;
 
 use Nova\Helpers\PhpMailer as Mailer;
+use Nova\Config;
 
 /**
  * Record and email/display errors or a custom error message.
@@ -51,6 +52,18 @@ class Logger
     * @var string
     */
     public static $error;
+
+
+    public static function initialize()
+    {
+        $options = Config::get('logger');
+
+        if($options === null) {
+            return;
+        }
+
+        self::$display = $options['display_errors'];
+    }
 
     /**
     * In the event of an error show this message.

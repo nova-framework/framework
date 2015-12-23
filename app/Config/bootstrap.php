@@ -12,6 +12,7 @@ use Nova\Events\Manager as Events;
 use Nova\Net\Session;
 use Nova\Net\Router;
 use Nova\Config;
+use Nova\Logger;
 
 /**
  * Turn on output buffering.
@@ -25,6 +26,9 @@ require dirname(__FILE__).DS.'config.php';
 /**
  * Turn on custom error handling.
  */
+
+Logger::initialize();
+
 
 set_exception_handler('Nova\Logger::ExceptionHandler');
 set_error_handler('Nova\Logger::ErrorHandler');

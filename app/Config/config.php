@@ -10,16 +10,27 @@
 use Nova\Config;
 use Nova\Events\Manager as Events;
 
+
 /**
- * Set the Framework's timezone.
+ * Logger configuration
  */
-Config::set('timezone', 'Europe/Rome');
+Config::set('logger', array(
+    'display_errors' => false
+));
+
+/**
+ * Profiler configuration
+ */
+Config::set('profiler', array(
+    'with_queries' => false
+));
 
 /**
  * Routing configuration
  */
 Config::set('routing', array(
     'patterns' => array(
+        // Who really need those niche patterns, can uncomment them... ;)
         //':hex'    => '[[:xdigit:]]+',
         //':uuidV4' => '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
     ),
@@ -30,11 +41,9 @@ Config::set('routing', array(
 ));
 
 /**
- * Profiler configuration
+ * Set the Framework's timezone.
  */
-Config::set('profiling', array(
-    'with_queries' => false
-));
+Config::set('timezone', 'Europe/Rome');
 
 /**
  * All known Languages

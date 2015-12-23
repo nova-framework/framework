@@ -18,7 +18,7 @@ class Profiler
 
     public static function report()
     {
-        $options = Config::get('profiling');
+        $options = Config::get('profiler');
 
         // Calculate the variables.
         $exectime = microtime(true) - FRAMEWORK_STARTING_MICROTIME;

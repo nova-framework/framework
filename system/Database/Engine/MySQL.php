@@ -139,7 +139,7 @@ class MySQL extends \PDO implements Engine
 
         $this->queryCount++;
 
-        // We don't want to map in memory a entire Billion Records Table, so we return right on a Statement.
+        // We don't want to map in memory an entire Billion Records Table, so we return right on a Statement.
         return $this->query($sql, $method);
     }
 
@@ -236,6 +236,7 @@ class MySQL extends \PDO implements Engine
 
         // Transaction?
         $transactionStatus = false;
+
         if ($transaction) {
             $transactionStatus = $this->beginTransaction();
         }
@@ -259,6 +260,7 @@ class MySQL extends \PDO implements Engine
 
             // Execute
             $this->queryCount++;
+
             if (!$stmt->execute()) {
                 $failure = true;
 
@@ -334,14 +336,17 @@ class MySQL extends \PDO implements Engine
 
         // Column :bind for auto binding.
         $fieldDetails = null;
+
         foreach ($data as $key => $value) {
             $fieldDetails .= "$key = :field_$key,";
         }
+
         $fieldDetails = rtrim($fieldDetails, ',');
 
         // Where :bind for auto binding
         $whereDetails = null;
         $idx = 0;
+
         foreach ($where as $key => $value) {
             if ($idx == 0) {
                 $whereDetails .= "$key = :where_$key";
@@ -350,10 +355,12 @@ class MySQL extends \PDO implements Engine
             }
             $idx++;
         }
+
         $whereDetails = ltrim($whereDetails, ' AND ');
 
         // Limit
         $optionalLimit = "";
+        
         if (is_numeric($limit)) {
             $optionalLimit = " LIMIT " . $limit;
         }
@@ -373,6 +380,7 @@ class MySQL extends \PDO implements Engine
 
         // Execute
         $this->queryCount++;
+
         if (!$stmt->execute()) {
             return false;
         }
@@ -399,6 +407,7 @@ class MySQL extends \PDO implements Engine
         // Bind the where details.
         $whereDetails = null;
         $idx = 0;
+
         foreach ($where as $key => $value) {
             if ($idx == 0) {
                 $whereDetails .= "$key = :$key";
@@ -407,10 +416,12 @@ class MySQL extends \PDO implements Engine
             }
             $idx++;
         }
+
         $whereDetails = ltrim($whereDetails, ' AND ');
 
         // If limit is a number use a limit on the query
         $optionalLimit = "";
+
         if (is_numeric($limit)) {
             $optionalLimit = "LIMIT $limit";
         }
@@ -425,9 +436,11 @@ class MySQL extends \PDO implements Engine
 
         // Execute and return if failure.
         $this->queryCount++;
+
         if (!$stmt->execute()) {
             return false;
         }
+
         // Return rowcount when succeeded.
         return $stmt->rowCount();
     }

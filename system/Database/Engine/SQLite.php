@@ -48,7 +48,7 @@ class SQLite extends \PDO implements Engine
         $dsn = "sqlite:" . BASEPATH . 'storage' . DS . 'persistent' . DS . $config['file'];
 
         parent::__construct($dsn);
-        
+
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
@@ -110,6 +110,7 @@ class SQLite extends \PDO implements Engine
         }
 
         $statement = $this->query($sql, $method);
+
         return $statement->fetchAll();
     }
 
@@ -120,7 +121,7 @@ class SQLite extends \PDO implements Engine
 
         $this->queryCount++;
 
-        // We don't want to map in memory a entire Billion Records Table, so we return right on a Statement.
+        // We don't want to map in memory an entire Billion Records Table, so we return right on a Statement.
         return $this->query($sql, $method);
     }
 
@@ -186,6 +187,7 @@ class SQLite extends \PDO implements Engine
         if (is_array($result) && count($result) > 0) {
             return $result;
         }
+
         return false;
     }
 
@@ -217,6 +219,7 @@ class SQLite extends \PDO implements Engine
 
         // Transaction?
         $transactionStatus = false;
+
         if ($transaction) {
             $transactionStatus = $this->beginTransaction();
         }
@@ -240,6 +243,7 @@ class SQLite extends \PDO implements Engine
 
             // Execute
             $this->queryCount++;
+
             if (!$stmt->execute()) {
                 $failure = true;
 
@@ -315,22 +319,27 @@ class SQLite extends \PDO implements Engine
 
         // Column :bind for auto binding.
         $fieldDetails = null;
+
         foreach ($data as $key => $value) {
             $fieldDetails .= "$key = :field_$key,";
         }
+
         $fieldDetails = rtrim($fieldDetails, ',');
 
         // Where :bind for auto binding
         $whereDetails = null;
         $idx = 0;
+
         foreach ($where as $key => $value) {
             if ($idx == 0) {
                 $whereDetails .= "$key = :where_$key";
             } else {
                 $whereDetails .= " AND $key = :where_$key";
             }
+
             $idx++;
         }
+
         $whereDetails = ltrim($whereDetails, ' AND ');
 
         // Prepare statement.
@@ -348,6 +357,7 @@ class SQLite extends \PDO implements Engine
 
         // Execute
         $this->queryCount++;
+
         if (!$stmt->execute()) {
             return false;
         }
@@ -374,14 +384,17 @@ class SQLite extends \PDO implements Engine
         // Bind the where details.
         $whereDetails = null;
         $idx = 0;
+
         foreach ($where as $key => $value) {
             if ($idx == 0) {
                 $whereDetails .= "$key = :$key";
             } else {
                 $whereDetails .= " AND $key = :$key";
             }
+
             $idx++;
         }
+
         $whereDetails = ltrim($whereDetails, ' AND ');
 
         // Prepare statement
@@ -394,9 +407,11 @@ class SQLite extends \PDO implements Engine
 
         // Execute and return if failure.
         $this->queryCount++;
+
         if (!$stmt->execute()) {
             return false;
         }
+        
         // Return rowcount when succeeded.
         return $stmt->rowCount();
     }

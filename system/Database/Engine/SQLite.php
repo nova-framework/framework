@@ -30,6 +30,11 @@ class SQLite extends \PDO implements Engine
      * @throws \PDOException
      */
     public function __construct($config) {
+        // Check for valid Config.
+        if (!is_array($config)) {
+            throw new \UnexpectedValueException('Parameter should be an Array');
+        }
+
         // Will set the default method when provided in the config.
         if (isset($config['fetch_method'])) {
             $this->method = $config['fetch_method'];
@@ -43,6 +48,7 @@ class SQLite extends \PDO implements Engine
         $dsn = "sqlite:" . BASEPATH . 'storage' . DS . 'persistent' . DS . $config['file'];
 
         parent::__construct($dsn);
+        
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 

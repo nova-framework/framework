@@ -130,14 +130,15 @@ class SQLite extends \PDO implements Engine
      * The result MUST be an array!
      *
      * @param string $sql
-     * @param array $bind
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
      * @return array|null
      *
      * @throws \Exception
      */
-    public function select($sql, $bind = array(), $method = null, $class = null)
+    public function select($sql, $bind = array(), $fetchAll = false, $method = null, $class = null)
     {
         // Append select if it isn't
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
@@ -171,24 +172,69 @@ class SQLite extends \PDO implements Engine
             return false;
         }
 
-        // Continue with fetching all records.
-        if ($method === \PDO::FETCH_CLASS) {
+        if($fetchAll) {
+            // Continue with fetching all records.
+            if ($method === PDO::FETCH_CLASS) {
+                if (!$class) {
+                    throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
+                }
+
+                // Fetch in class
+                $result = $stmt->fetchAll($method, $class);
+            } else {
+                $result = $stmt->fetchAll($method);
+            }
+
+            if (is_array($result) && count($result) > 0) {
+                return $result;
+            }
+
+            return false;
+        }
+
+        // Continue with fetching one record.
+        if ($method === PDO::FETCH_CLASS) {
             if (!$class) {
                 throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
             }
 
             // Fetch in class
-            $result = $stmt->fetchAll($method, $class);
-        } else {
-            // We will fetch here too ;)
-            $result = $stmt->fetchAll($method);
+            return $stmt->fetch($method, $class);
+        }
+        else {
+            return $stmt->fetch($method);
         }
 
-        if (is_array($result) && count($result) > 0) {
-            return $result;
-        }
-
+        // Just in case...
         return false;
+    }
+
+    /*
+     * Convenience method for fetching one record.
+     *
+     * @param string $sql
+     * @param array $bind
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null
+     */
+    public function selectOne($sql, $bindParams = array(), $method = null, $class = null)
+    {
+        return $this->select($sql, $bindParams, false, $method, $class);
+    }
+
+    /*
+     * Convenience method for fetching all records.
+     *
+     * @param string $sql
+     * @param array $bind
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null
+     */
+    public function selectAll($sql, $bindParams = array(), $method = null, $class = null)
+    {
+        return $this->select($sql, $bindParams, true, $method, $class);
     }
 
     /**
@@ -291,7 +337,7 @@ class SQLite extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    public function superInsert($table, $data, $transaction = false)
+    public function insertAll($table, $data, $transaction = false)
     {
         // Check for valid data.
         if (!is_array($data)) {

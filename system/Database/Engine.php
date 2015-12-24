@@ -66,14 +66,29 @@ interface Engine
      * The result MUST be an array!
      *
      * @param string $sql
-     * @param array $bind
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
      * @return array|null
      *
      * @throws \Exception
      */
-    function select($sql, $bind = array(), $method = null, $class = null);
+    public function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null);
+
+    /*
+     * Convenience methods for selecting records.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function selectOne($sql, $bindParams = array(), $method = null, $class = null);
+    public function selectAll($sql, $bindParams = array(), $method = null, $class = null);
 
     /**
      * Execute insert query, will automatically build query for you.
@@ -88,7 +103,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function insert($table, $data, $transaction = false, $multipleInserts = false);
+    public function insert($table, $data, $transaction = false, $multipleInserts = false);
 
     /**
      * Execute insert query, will automatically build query for you.
@@ -102,7 +117,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function superInsert($table, $data, $transaction = false);
+    public function insertAll($table, $data, $transaction = false);
 
     /**
      * Execute update query, will automatically build query for you.
@@ -115,7 +130,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function update($table, $data, $where, $limit = 1);
+    public function update($table, $data, $where, $limit = 1);
 
     /**
      * Execute Delete statement, this will automatically build the query for you.
@@ -127,7 +142,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function delete($table, $where, $limit = 1);
+    public function delete($table, $where, $limit = 1);
 
     /**
      * Truncate table
@@ -148,5 +163,5 @@ interface Engine
      *
      * @throws \Exception
      */
-    function rawPrepare($sql, $bind = array(), $method = null, $class = null);
+    public function rawPrepare($sql, $bind = array(), $method = null, $class = null);
 }

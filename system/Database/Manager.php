@@ -20,6 +20,7 @@ abstract class Manager
 
     /** @var Engine[] engine instances */
     private static $engineInstances = array();
+
     /** @var Service[] service instances */
     private static $serviceInstances = array();
 
@@ -27,34 +28,38 @@ abstract class Manager
      * Get instance of the database engine you prefer.
      * Please use the constants in this class as a driver parameter
      *
-     * @param $connectionName string Name of the connection provided in the configuration
+     * @param $linkName string Name of the connection provided in the configuration
      * @return Engine|\PDO|null
      * @throws \Exception
      */
-    public static function getEngine($connectionName = 'default')
+    public static function getEngine($linkName = 'default')
     {
         $config = Config::get('database');
-        if (!isset($config[$connectionName])) {
-            throw new \Exception("Connection name '".$connectionName."' is not defined in your configuration!");
+
+        if (!isset($config[$linkName])) {
+            throw new \Exception("Connection name '".$linkName."' is not defined in your configuration!");
         }
 
-        $engineConfig = $config[$connectionName];
+        $options = $config[$linkName];
 
         // Make the engine
-        $engineName = $engineConfig['engine'];
+        $engineName = $options['engine'];
+
         $driver = constant("static::DRIVER_" . strtoupper($engineName));
+
         if ($driver === null) {
             throw new \Exception("Driver not found, check your config.php, DB_TYPE");
         }
 
         // Engine, when already have an instance, return it!
-        if (isset(static::$engineInstances[$connectionName])) {
-            return static::$engineInstances[$connectionName];
+        if (isset(static::$engineInstances[$linkName])) {
+            return static::$engineInstances[$linkName];
         }
 
         // Make new instance, can throw exceptions!
-        $class = '\Nova\Database\Engine\\' . $driver;
-        $engine = new $class($engineConfig['config']);
+        $className = '\Nova\Database\Engine\\' . $driver;
+
+        $engine = new $className($options['config']);
 
         // If no success
         if (!$engine instanceof Engine) {
@@ -62,7 +67,7 @@ abstract class Manager
         }
 
         // Save instance
-        static::$engineInstances[$connectionName] = $engine;
+        static::$engineInstances[$linkName] = $engine;
 
         // Return instance
         return $engine;

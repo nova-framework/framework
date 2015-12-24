@@ -4,8 +4,10 @@
 vendor
 composer.lock
 
-# IDE's
+# Test specific
+storage/persistent/test.sqlite
 
+# IDE's
 ## IntelliJ IDEA / PhpStorm
 .idea
 *.iml

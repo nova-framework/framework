@@ -81,7 +81,7 @@ abstract class Manager
         $className = $serviceName;
 
         // Check if absolute or relative service namespace is given
-        if (substr($serviceName, 0, 2) !== 'App') {
+        if (substr($serviceName, 0, 12) !== 'App\Modules\\') {
             // Relative!
             $className = 'App\Services\Database\\' . $serviceName;
         }

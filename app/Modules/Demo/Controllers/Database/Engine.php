@@ -22,7 +22,7 @@ class Engine extends ThemedController
         $engine = \Nova\Database\Manager::getEngine();
 
         // Example 1, Demo 2:
-        $demo2_example1 = $engine->select("SELECT * FROM " . DB_PREFIX . "car;");
+        $demo2_example1 = $engine->selectAll("SELECT * FROM " . DB_PREFIX . "car;");
 
 
         $this->set('demo2_example1', $demo2_example1);

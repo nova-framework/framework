@@ -42,11 +42,17 @@
 
 <h2>Demo #2, Usage of the engine.</h2>
 <p>How can we use it, now it's pretty easy. We have the following methods we could use:</p>
-<pre>function select($sql, $bind = array(), $method = null, $class = null);
+<pre>function selectOne($sql, $bindParams = array(), $method = null, $class = null);
+function selectAll($sql, $bindParams = array(), $method = null, $class = null);
+function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null);
+
 function insert($table, $data, $transaction = false, $multipleInserts = false);
 function superInsert($table, $data, $transaction = false);
+
 function update($table, $data, $where, $limit = 1);
+
 function delete($table, $where, $limit = 1);
+
 function truncate($table);
 
 // And these are raw functions we could use to make special queries etc.
@@ -54,12 +60,14 @@ function rawPrepare($sql, $bind = array(), $method = null, $class = null);
 public function raw($sql, $fetch = false);
 public function rawQuery($sql);</pre>
 
+<br>
 <h4>Example, select all cars from our demo database:</h4>
 <p>For example we could fetch all our cars from our MySQL Database:</p>
-<h5>Code</h5>
-<pre>$cars = $engine->select("SELECT * FROM " . DB_PREFIX . "car;");</pre>
-<h5>Result</h5>
+<strong>Code</strong>
+<pre>$cars = $engine->selectAll("SELECT * FROM " . DB_PREFIX . "car;");</pre>
+<strong>Result</strong>
 <pre><?php var_dump($demo2_example1); ?></pre>
+
 
 <?php
 
@@ -68,7 +76,7 @@ public function rawQuery($sql);</pre>
 
 <p><?= $message ?></p>
 
-<a class="btn btn-md btn-success" href="<?= site_url('demos/classic/welcome'); ?>">
+<a class="btn btn-lg btn-success" href="<?= site_url('demos'); ?>">
     <?= __d('demo', 'Home'); ?>
 </a>
 

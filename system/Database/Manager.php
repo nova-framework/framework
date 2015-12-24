@@ -20,7 +20,7 @@ abstract class Manager
 
     /** @var Engine[] engine instances */
     private static $engineInstances = array();
-    
+
     /** @var Service[] service instances */
     private static $serviceInstances = array();
 
@@ -76,22 +76,28 @@ abstract class Manager
 
     /**
      * Get service instance with class service name
-     * @param string $serviceName the relative namespace class name (relative from App\Services\Database\)
+     * @param string $serviceName the relative or absolute namespace class name (relative from App\Services\Database\)
      * @param Engine|string|null $engine Use the following engine.
      * @return Service|null
      * @throws \Exception
      */
     public static function getService($serviceName, $engine = 'default')
     {
-        $className = 'App\Services\Database\\' . $serviceName;
+        $className = $serviceName;
+
+        // Check if absolute or relative service namespace is given
+        if (substr($serviceName, 0, 12) !== 'App\Modules\\') {
+            // Relative!
+            $className = 'App\Services\Database\\' . $serviceName;
+        }
 
         if ($engine !== null && is_string($engine)) {
             $engine = self::getEngine($engine);
         }
 
-        if (isset(static::$serviceInstances[$serviceName])) {
-            static::$serviceInstances[$serviceName]->setEngine($engine);
-            return static::$serviceInstances[$serviceName];
+        if (isset(static::$serviceInstances[$className])) {
+            static::$serviceInstances[$className]->setEngine($engine);
+            return static::$serviceInstances[$className];
         }
 
         $service = new $className();
@@ -102,7 +108,7 @@ abstract class Manager
 
         $service->setEngine($engine);
 
-        static::$serviceInstances[$serviceName] = $service;
+        static::$serviceInstances[$className] = $service;
 
         return $service;
     }

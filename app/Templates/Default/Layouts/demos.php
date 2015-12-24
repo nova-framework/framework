@@ -5,6 +5,14 @@
 
 use Nova\Helpers\Assets;
 use Nova\Helpers\Profiler;
+use Nova\Net\Url;
+
+// Calculate the current URL
+$segments = Url::segments();
+
+$current_uri = array_shift($segments).'/'.((count($segments) > 0) ? array_shift($segments) : 'index');
+
+$current_url = site_url($current_uri);
 
 ?>
 <!DOCTYPE html>
@@ -55,7 +63,7 @@ use Nova\Helpers\Profiler;
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?php echo site_url($dashboardUri); ?>"><strong><?= __d('default', 'Nova Framework'); ?></strong></a>
+            <a class="navbar-brand" href="<?= $dashboardUrl; ?>"><strong><?= __d('default', 'Nova Framework'); ?></strong></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->

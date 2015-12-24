@@ -32,7 +32,7 @@ class BaseController extends ThemedController
         $demoMenu = Config::get('demos_menu');
 
         $this->set('topMenuItems', $demoMenu);
-        $this->set('dashboardUri', site_url('demos'));
+        $this->set('dashboardUrl', site_url('demos'));
     }
 
     protected function beforeFlight()

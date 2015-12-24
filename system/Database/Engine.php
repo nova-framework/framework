@@ -129,6 +129,12 @@ interface Engine
      */
     function delete($table, $where, $limit = 1);
 
+    /**
+     * Truncate table
+     * @param  string $table table name
+     * @return int number of rows affected
+     */
+    public function truncate($table);
 
     /**
      * Prepare the query and return a prepared statement.

@@ -360,7 +360,7 @@ class MySQL extends \PDO implements Engine
 
         // Limit
         $optionalLimit = "";
-        
+
         if (is_numeric($limit)) {
             $optionalLimit = " LIMIT " . $limit;
         }
@@ -453,6 +453,7 @@ class MySQL extends \PDO implements Engine
     public function truncate($table)
     {
         $this->queryCount++;
+        
         return $this->exec("TRUNCATE TABLE $table");
     }
 

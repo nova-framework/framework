@@ -411,9 +411,20 @@ class SQLite extends \PDO implements Engine
         if (!$stmt->execute()) {
             return false;
         }
-        
+
         // Return rowcount when succeeded.
         return $stmt->rowCount();
+    }
+
+    /**
+     * Truncate table
+     * @param  string $table table name
+     * @return int number of rows affected
+     */
+    public function truncate($table)
+    {
+        // Nope! There is no support for 'truncate'
+        return false;
     }
 
     /**

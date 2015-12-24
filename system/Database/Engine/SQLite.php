@@ -106,9 +106,16 @@ class SQLite extends \PDO implements Engine
         $statement = $this->query($sql, $method);
         return $statement->fetchAll();
     }
-    public function rawQuery($sql, $fetch = false)
+
+    public function rawQuery($sql)
     {
-        return $this->raw($sql, $fetch);
+        // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
+        $method = ($this->method !== \PDO::FETCH_CLASS) ? $this->method : \PDO::FETCH_OBJ;
+
+        $this->queryCount++;
+
+        // We don't want to map in memory a entire Billion Records Table, so we return right on a Statement.
+        return $this->query($sql, $method);
     }
 
     /**
@@ -184,13 +191,13 @@ class SQLite extends \PDO implements Engine
      * @param string $table Table to execute the insert.
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
-     * @param bool $multipleInserts Specify to execute multiple inserts.
      * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
+     * @param bool $multipleInserts Specify to execute multiple inserts.
      * @return int|bool
      *
      * @throws \Exception
      */
-    public function insert($table, $data, $multipleInserts = false, $transaction = false)
+    public function insert($table, $data, $transaction = false, $multipleInserts = false)
     {
         // Check for valid data.
         if (!is_array($data)) {
@@ -198,7 +205,7 @@ class SQLite extends \PDO implements Engine
         }
 
         if (! $multipleInserts) {
-            // Currently not multi insert, make it to use same code.
+            // Currently not using multi insert, make data to use same code.
             $data = array($data);
         }
 
@@ -259,6 +266,29 @@ class SQLite extends \PDO implements Engine
         }
 
         return $ids;
+    }
+
+    /**
+     * Execute insert query, will automatically build query for you.
+     * You can also give an array as $data, this will try to insert each entry in the array.
+     * Not all engine's support this! Check the manual!
+     *
+     * @param string $table Table to execute the insert.
+     * @param array $data Represents one record, could also have multidimensional arrays inside to insert
+     *                    multiple rows in one call. The engine must support this! Check manual!
+     * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
+     * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
+     *
+     * @throws \Exception
+     */
+    public function superInsert($table, $data, $transaction = false)
+    {
+        // Check for valid data.
+        if (!is_array($data)) {
+            throw new \Exception("Data to insert must be an array of column -> value. MySQL Driver supports multidimensional multiple inserts.");
+        }
+
+        return $this->insert($table, $data, $transaction, is_array($data[0]))
     }
 
     /**

@@ -76,7 +76,7 @@ interface Engine
      */
     public function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null);
 
-    /*
+    /**
      * Convenience methods for selecting records.
      *
      * @param string $sql
@@ -98,8 +98,9 @@ interface Engine
      * @param string $table Table to execute the insert.
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
+     * @param bool $transaction
      * @param bool $multipleInserts Specify to execute multiple inserts.
-     * @return int|bool
+     * @return bool|int
      *
      * @throws \Exception
      */
@@ -113,9 +114,8 @@ interface Engine
      * @param string $table Table to execute the insert.
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
-     * @return int|bool
-     *
-     * @throws \Exception
+     * @param bool $transaction
+     * @return bool|int
      */
     public function insertAll($table, $data, $transaction = false);
 

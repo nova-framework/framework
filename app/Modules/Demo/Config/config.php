@@ -23,7 +23,7 @@ Config::set('demo_message', 'Shiny Demo!');
 Config::set('demos_menu', array(
     'dashboard' => array(
         'name'      => __d('demo', 'Dashboard'),
-        'url'       => site_url('demos/dashboard'),
+        'url'       => site_url('demos'),
         'icon'      => 'fa fa-dashboard',
     ),
     'platform' => array(

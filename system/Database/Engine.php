@@ -58,7 +58,7 @@ interface Engine
      * @return mixed
      */
     public function raw($sql, $fetch = false);
-    public function rawQuery($sql, $fetch = false);
+    public function rawQuery($sql);
 
 
     /**

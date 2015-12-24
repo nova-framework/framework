@@ -2,10 +2,11 @@
 
 namespace App\Modules\Demo\Controllers\Database;
 
-use App\Core\ThemedController;
 use App\Models\Entities\Car;
+use App\Modules\Demo\Core\BaseController;
 
-class Service extends ThemedController
+
+class Service extends BaseController
 {
     /**
      * Call the parent construct

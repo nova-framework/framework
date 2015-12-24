@@ -2,7 +2,8 @@
 
 namespace App\Modules\Demo\Controllers\Database;
 
-use App\Core\ThemedController;
+use App\Modules\Demo\Core\BaseController;
+
 
 class Engine extends ThemedController
 {

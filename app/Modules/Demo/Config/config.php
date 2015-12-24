@@ -23,7 +23,7 @@ Config::set('demo_message', 'Shiny Demo!');
 Config::set('demos_menu', array(
     'dashboard' => array(
         'name'      => __d('demo', 'Dashboard'),
-        'url'       => site_url('demos/dashboard'),
+        'url'       => site_url('demos'),
         'icon'      => 'fa fa-dashboard',
     ),
     'platform' => array(
@@ -31,12 +31,12 @@ Config::set('demos_menu', array(
         'icon'      => 'fa fa-server',
         'children'  => array(
             array(
-                'name' => __d('system', 'Themed Controller'),
+                'name' => __d('demo', 'Themed Controller'),
                 'url'  => site_url('demos/themed/welcome'),
                 'icon' => 'fa fa-gears',
             ),
             array(
-                'name' => __d('system', 'Classic Controller'),
+                'name' => __d('demo', 'Classic Controller'),
                 'url'  => site_url('demos/classic/welcome'),
                 'icon' => 'fa fa-gears',
             ),
@@ -52,27 +52,27 @@ Config::set('demos_menu', array(
         'icon'      => 'fa fa-server',
         'children'  => array(
             array(
-                'name' => __d('system', 'MySQL Export'),
+                'name' => __d('demo', 'MySQL Export'),
                 'url'  => site_url('demos/database/mysqlexport'),
                 'icon' => 'fa fa-gears',
             ),
             array(
-                'name' => __d('system', 'Engine MySQL'),
+                'name' => __d('demo', 'Engine MySQL'),
                 'url'  => site_url('demos/database/engine/basic/mysql'),
                 'icon' => 'fa fa-gears',
             ),
             array(
-                'name' => __d('system', 'Engine SQLite'),
+                'name' => __d('demo', 'Engine SQLite'),
                 'url'  => site_url('demos/database/engine/basic/sqlite'),
                 'icon' => 'fa fa-gears',
             ),
             array(
-                'name' => __d('system', 'Service MySQL'),
+                'name' => __d('demo', 'Service MySQL'),
                 'url'  => site_url('demos/database/service/basic/mysql'),
                 'icon' => 'fa fa-gears',
             ),
             array(
-                'name' => __d('system', 'Service SQLite'),
+                'name' => __d('demo', 'Service SQLite'),
                 'url'  => site_url('demos/database/service/basic/sqlite'),
                 'icon' => 'fa fa-gears',
             ),

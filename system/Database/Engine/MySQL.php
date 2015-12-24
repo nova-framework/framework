@@ -192,7 +192,7 @@ class MySQL extends \PDO implements Engine
 
         if($fetchAll) {
             // Continue with fetching all records.
-            if ($method === PDO::FETCH_CLASS) {
+            if ($method === \PDO::FETCH_CLASS) {
                 if (!$class) {
                     throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
                 }
@@ -212,7 +212,7 @@ class MySQL extends \PDO implements Engine
         }
 
         // Continue with fetching one record.
-        if ($method === PDO::FETCH_CLASS) {
+        if ($method === \PDO::FETCH_CLASS) {
             if (!$class) {
                 throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
             }
@@ -223,33 +223,34 @@ class MySQL extends \PDO implements Engine
         else {
             return $stmt->fetch($method);
         }
-
-        // Just in case...
-        return false;
     }
 
-    /*
+    /**
      * Convenience method for fetching one record.
      *
      * @param string $sql
-     * @param array $bind
+     * @param array $bindParams
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
      * @return array|null
+     * @throws \Exception
+     * @internal param array $bind
      */
     public function selectOne($sql, $bindParams = array(), $method = null, $class = null)
     {
         return $this->select($sql, $bindParams, false, $method, $class);
     }
 
-    /*
+    /**
      * Convenience method for fetching all records.
      *
      * @param string $sql
-     * @param array $bind
+     * @param array $bindParams
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
      * @return array|null
+     * @throws \Exception
+     * @internal param array $bind
      */
     public function selectAll($sql, $bindParams = array(), $method = null, $class = null)
     {
@@ -363,7 +364,7 @@ class MySQL extends \PDO implements Engine
             throw new \Exception("Data to insert must be an array of column -> value. MySQL Driver supports multidimensional multiple inserts.");
         }
 
-        return $this->insert($table, $data, $transaction, is_array($data[0]))
+        return $this->insert($table, $data, $transaction, is_array($data[0]));
     }
 
     /**

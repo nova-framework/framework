@@ -67,15 +67,26 @@ interface Engine
      *
      * @param string $sql
      * @param array $bind
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
      * @return array|null
      *
      * @throws \Exception
      */
-    public function select($sql, $bind = array(), $method = null, $class = null);
+    public function select($sql, $bind = array(), $fetchAll = false, $method = null, $class = null);
 
-    // Convenience methods for selecting records.
+    /*
+     * Convenience methods for selecting records.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
     public function selectOne($sql, $bindParams = array(), $method = null, $class = null);
     public function selectAll($sql, $bindParams = array(), $method = null, $class = null);
 

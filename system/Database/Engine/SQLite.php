@@ -298,7 +298,7 @@ class SQLite extends \PDO implements Engine
             throw new \Exception("Data to insert must be an array of column -> value. MySQL Driver supports multidimensional multiple inserts.");
         }
 
-        return $this->insert($table, $data, $transaction, is_array($data[0]))
+        return $this->insert($table, $data, $transaction, is_array($data[0]));
     }
 
     /**

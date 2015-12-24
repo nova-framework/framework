@@ -5,4 +5,5 @@ php:
   - '7.0'
   - hhvm
 
-install: ./scripts/update_composer.sh
+install: composer install --dev
+script: phpunit

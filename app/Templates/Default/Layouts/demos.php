@@ -5,6 +5,14 @@
 
 use Nova\Helpers\Assets;
 use Nova\Helpers\Profiler;
+use Nova\Net\Url;
+
+// Calculate the current URL
+$segments = Url::segments();
+
+$current_uri = array_shift($segments).'/'.((count($segments) > 0) ? array_shift($segments) : 'index');
+
+$current_url = site_url($current_uri);
 
 ?>
 <!DOCTYPE html>

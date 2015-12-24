@@ -423,8 +423,7 @@ class SQLite extends \PDO implements Engine
      */
     public function truncate($table)
     {
-        // @Tom: There is support for 'truncate' in SQLite ?
-        return false;
+        throw new \BadMethodCallException('TRUNCATE can not be called in SQLite Engine!');
     }
 
     /**

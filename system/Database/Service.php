@@ -96,9 +96,9 @@ abstract class Service
      * @return false|Entity[]|object
      * @throws \Exception
      */
-    public function read($sql, $bind = array())
+    public function read($sql, $bindParams = array())
     {
-        return $this->engine->select($sql, $bind, $this->fetchMethod, $this->fetchClass);
+        return $this->engine->selectAll($sql, $bindParams, $this->fetchMethod, $this->fetchClass);
     }
 
     /**

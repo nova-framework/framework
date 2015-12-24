@@ -58,12 +58,12 @@ class Demo extends Controller
 
         // Use it without the Services:
         $engine = Manager::getEngine();
-        $result_plain = $engine->select('SELECT * FROM ' . DB_PREFIX . 'car');
+        $result_plain = $engine->select('SELECT * FROM ' . DB_PREFIX . 'car', true);
         var_dump($result_plain);
 
         // Using the select and prefix the SELECT in the sql is optional for the MySQL Engine!
         // WARNING: this is using an old funciton syntax.
-        $result_plain = $engine->select('* FROM '.DB_PREFIX.'car');
+        $result_plain = $engine->select('* FROM '.DB_PREFIX.'car', true);
         var_dump($result_plain);
 
         echo "<br><br>Service:<br>";
@@ -146,7 +146,7 @@ class Demo extends Controller
         var_dump($result);
 
         // Don't use it when you have a where, or inject dynamic parameters
-        $result = $engine->select("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE :model", array(':model' => 'Model S'));
+        $result = $engine->selectAll("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE :model", array(':model' => 'Model S'));
         var_dump($result);
         echo "<br><br><br>";
 
@@ -163,7 +163,7 @@ class Demo extends Controller
         );
 
         // Insert it!
-        $result = $engine->superInsert(DB_PREFIX . 'car', array($car1, $car2));
+        $result = $engine->insertAll(DB_PREFIX . 'car', array($car1, $car2));
         var_dump($result);
 
         // Update something!

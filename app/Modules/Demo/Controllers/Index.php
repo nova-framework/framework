@@ -9,12 +9,12 @@
 
 namespace App\Modules\Demo\Controllers;
 
-use App\Core\ThemedController;
+use App\Modules\Demo\Core\BaseController;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class Index extends ThemedController
+class Index extends BaseController
 {
     private $basePath;
 

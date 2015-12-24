@@ -2,9 +2,10 @@
 
 namespace App\Modules\Demo\Controllers\Database;
 
-use App\Core\ThemedController;
+use App\Modules\Demo\Core\BaseController;
 
-class Export extends ThemedController
+
+class Export extends BaseController
 {
     /**
      * Call the parent construct

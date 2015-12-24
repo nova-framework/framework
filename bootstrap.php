@@ -40,20 +40,27 @@ date_default_timezone_set(Config::get('timezone'));
  */
 //Session::init(); // No session in tests!
 
-/** Get the Router instance. */
+/**
+ * Get the Router instance.
+ * */
 $router = Router::getInstance();
 
-/** load routes */
+/**
+ * load routes
+ * */
 require_once $configDir.'routes.php'; // Default routes, we will only change the routes later in tests!
 
-/** bootstrap the active modules (and their associated routes) */
+/**
+ * bootstrap the active modules (and their associated routes)
+ * */
 Modules::bootstrap();
 
-/** initialize the Events */
+/**
+ * initialize the Events
+ * */
 Events::initialize();
 
-
-// Error reporting
+// Let the errors be reported so we could see them in our consoles!
 error_reporting(E_ALL);
 set_exception_handler(null);
 set_error_handler(null);

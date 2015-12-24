@@ -94,10 +94,6 @@ var_dump($result)</pre>
 <pre><?php var_dump($demo4_example1); ?></pre>
 
 
-
-
-<p><?= $message ?></p>
-
 <a class="btn btn-lg btn-success" href="<?= site_url('demos'); ?>">
     <?= __d('demo', 'Home'); ?>
 </a>

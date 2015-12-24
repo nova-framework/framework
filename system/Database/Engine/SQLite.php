@@ -184,20 +184,20 @@ class SQLite extends \PDO implements Engine
      * @param string $table Table to execute the insert.
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
+     * @param bool $multipleInserts Specify to execute multiple inserts.
      * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
      * @return int|bool
      *
      * @throws \Exception
      */
-    public function insert($table, $data, $transaction = false)
+    public function insert($table, $data, $multipleInserts = false, $transaction = false)
     {
         // Check for valid data.
         if (!is_array($data)) {
             throw new \Exception("Data to insert must be an array of column -> value. MySQL Driver supports multidimensional multiple inserts.");
         }
 
-        // Check for multidimensional, multiple inserts
-        if (!is_array($data[0])) {
+        if (! $multipleInserts) {
             // Currently not multi insert, make it to use same code.
             $data = array($data);
         }
@@ -254,9 +254,10 @@ class SQLite extends \PDO implements Engine
             return false;
         }
 
-        if (count($ids) === 1) {
-            return $ids[0];
+        if (! $multipleInserts) {
+            return (count($ids) == 1) ? array_shift($ids) : 0;
         }
+
         return $ids;
     }
 

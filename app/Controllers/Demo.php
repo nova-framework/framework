@@ -93,7 +93,7 @@ class Demo extends Controller
 
         $cars = array($car1, $car2);
 
-        $result = $engine->insert(DB_PREFIX . 'car', $cars, true); // True means to use transactions.
+        $result = $engine->insert(DB_PREFIX . 'car', $cars, true, true); // True means to use multiple inserts, second true is for using transactions.
         var_dump($result);
 
 
@@ -163,7 +163,7 @@ class Demo extends Controller
         );
 
         // Insert it!
-        $result = $engine->insert(DB_PREFIX . 'car', array($car1, $car2));
+        $result = $engine->insert(DB_PREFIX . 'car', array($car1, $car2), true); // True means to use multiple inserts
         var_dump($result);
 
         // Update something!

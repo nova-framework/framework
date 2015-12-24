@@ -11,12 +11,15 @@ namespace App\Modules\Demo\Controllers;
 
 use Nova\Core\View;
 use App\Core\ClassicController;
+use Nova\Config;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
 class Classic extends ClassicController
 {
+    protected $layout = 'demos';
+
     private $filePath;
 
 
@@ -26,6 +29,12 @@ class Classic extends ClassicController
     public function __construct()
     {
         parent::__construct();
+
+        //
+        $demoMenu = Config::get('demos_menu');
+
+        $this->set('topMenuItems', $demoMenu);
+        $this->set('dashboardUri', 'demos/dashboard');
     }
 
     protected function beforeFlight()

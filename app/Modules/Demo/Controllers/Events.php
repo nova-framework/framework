@@ -9,14 +9,14 @@
 
 namespace App\Modules\Demo\Controllers;
 
-use App\Core\ClassicController;
+use App\Modules\Demo\Core\BaseController;
 use Nova\Core\View;
 use Nova\Events\Manager as EventManager;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class Events extends ClassicController
+class Events extends BaseController
 {
     private $filePath;
 

@@ -17,6 +17,38 @@ use Nova\Events\Manager as Events;
 Config::set('demo_message', 'Shiny Demo!');
 
 
+/*
+ * The Administration Menu
+ */
+Config::set('demos_menu', array(
+    'dashboard' => array(
+        'name'      => __d('demo', 'Dashboard'),
+        'url'       => site_url('demos/dashboard'),
+        'icon'      => 'fa fa-dashboard',
+    ),
+    'platform' => array(
+        'name'      => __d('demo', 'Controllers'),
+        'icon'      => 'fa fa-server',
+        'children'  => array(
+            array(
+                'name' => __d('system', 'Themed Controller'),
+                'url'  => site_url('demos/themed/welcome'),
+                'icon' => 'fa fa-gears',
+            ),
+            array(
+                'name' => __d('system', 'Classic Controller'),
+                'url'  => site_url('demos/classic/welcome'),
+                'icon' => 'fa fa-gears',
+            ),
+        ),
+    ),
+    'events' => array(
+        'name'      => __d('demo', 'Events'),
+        'url'       => site_url('demos/events'),
+        'icon'      => 'fa fa-gears',
+    ),
+));
+
 /**
  * Events Management for this Module.
  */

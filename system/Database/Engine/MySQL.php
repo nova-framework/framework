@@ -256,20 +256,6 @@ class MySQL extends \PDO implements Engine
         return $this->select($sql, $bindParams, true, $method, $class);
     }
 
-    /*
-     * Convenience method for fetching all records.
-     *
-     * @param string $sql
-     * @param array $bind
-     * @param null $method Customized method for fetching, null for engine default or config default.
-     * @param null $class Class for fetching into classes.
-     * @return array|null
-     */
-    public function selectAll($sql, $bindParams = array(), $method = null, $class = null)
-    {
-        return $this->select($sql, $bindParams, true, $method, $class);
-    }
-
     /**
      * Execute insert query, will automatically build query for you.
      * You can also give an array as $data, this will try to insert each entry in the array.

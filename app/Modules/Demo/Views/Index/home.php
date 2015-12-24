@@ -55,6 +55,12 @@
                 <a href="/demos/database/engine/basic/sqlite" class="list-group-item">
                     <i class="fa fa-cubes"></i> Basic Engine Demo (SQLite)
                 </a>
+                <a href="/demos/database/service/basic/mysql" class="list-group-item">
+                    <i class="fa fa-cubes"></i> Basic Engine DBAL Demo (MySQL)
+                </a>
+                <a href="/demos/database/service/basic/sqlite" class="list-group-item">
+                    <i class="fa fa-cubes"></i> Basic Engine DBAL Demo (SQLite)
+                </a>
             </div>
         </div>
     </div>

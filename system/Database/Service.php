@@ -92,7 +92,7 @@ abstract class Service
      * Make sure you are giving the parameters in the $bind parameter.
      *
      * @param $sql string
-     * @param $bind array
+     * @param array $bindParams
      * @return false|Entity[]|object
      * @throws \Exception
      */

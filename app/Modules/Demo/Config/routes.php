@@ -26,3 +26,5 @@ Router::any('demos/events', 'App\Modules\Demo\Controllers\Events@index');
 Router::get('demos/database/mysqlexport', 'App\Modules\Demo\Controllers\Database\Export@mysql');
 Router::get('demos/database/engine/basic/mysql', 'App\Modules\Demo\Controllers\Database\Engine@basicMysql');
 Router::get('demos/database/engine/basic/sqlite', 'App\Modules\Demo\Controllers\Database\Engine@basicSqlite');
+Router::get('demos/database/service/basic/mysql', 'App\Modules\Demo\Controllers\Database\Service@basicMysql');
+Router::get('demos/database/service/basic/sqlite', 'App\Modules\Demo\Controllers\Database\Service@basicSqlite');

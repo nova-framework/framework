@@ -178,11 +178,12 @@ class Demo extends Controller
 
 
         // Service
-        $carservice = new CarLite();
+        $carservice = Manager::getService('Car', 'sqlite');
+        var_dump($carservice);
         echo "SERVICES: ===============<BR>";
         var_dump($carservice->getAll());
 
-        $carnew = new \App\Models\Entities\CarLite();
+        $carnew = new \App\Models\Entities\Car();
         $carnew->make = 'BMW';
         $carnew->model = 'test';
         $carnew->costs = 10;

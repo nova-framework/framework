@@ -27,11 +27,11 @@ abstract class Model
     /**
      * Create a new instance of the database helper.
      *
-     * @param string $connectionName Custom connection name, default is 'default'
+     * @param string $linkName Custom connection name, default is 'default'
      */
-    public function __construct($connectionName = 'default')
+    public function __construct($linkName = 'default')
     {
         /** connect to PDO here. */
-        $this->db = Manager::getEngine($connectionName);
+        $this->db = Manager::getEngine($linkName);
     }
 }

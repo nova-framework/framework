@@ -73,7 +73,11 @@ interface Engine
      *
      * @throws \Exception
      */
-    function select($sql, $bind = array(), $method = null, $class = null);
+    public function select($sql, $bind = array(), $method = null, $class = null);
+
+    // Convenience methods for selecting records.
+    public function selectOne($sql, $bindParams = array(), $method = null, $class = null);
+    public function selectAll($sql, $bindParams = array(), $method = null, $class = null);
 
     /**
      * Execute insert query, will automatically build query for you.
@@ -88,7 +92,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function insert($table, $data, $transaction = false, $multipleInserts = false);
+    public function insert($table, $data, $transaction = false, $multipleInserts = false);
 
     /**
      * Execute insert query, will automatically build query for you.
@@ -102,7 +106,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function superInsert($table, $data, $transaction = false);
+    public function superInsert($table, $data, $transaction = false);
 
     /**
      * Execute update query, will automatically build query for you.
@@ -115,7 +119,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function update($table, $data, $where, $limit = 1);
+    public function update($table, $data, $where, $limit = 1);
 
     /**
      * Execute Delete statement, this will automatically build the query for you.
@@ -127,7 +131,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    function delete($table, $where, $limit = 1);
+    public function delete($table, $where, $limit = 1);
 
     /**
      * Truncate table
@@ -148,5 +152,5 @@ interface Engine
      *
      * @throws \Exception
      */
-    function rawPrepare($sql, $bind = array(), $method = null, $class = null);
+    public function rawPrepare($sql, $bind = array(), $method = null, $class = null);
 }

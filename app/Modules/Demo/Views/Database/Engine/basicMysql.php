@@ -38,10 +38,7 @@
 </p>
 <pre>$engine = \Nova\Database\Manager::getEngine(); // Leaving the parameter empty is the same as using 'default' there.</pre>
 
-
-
-<h2>Demo #2, Usage of the engine.</h2>
-<p>How can we use it, now it's pretty easy. We have the following methods we could use:</p>
+<h4>Functions on the Engines:</h4>
 <pre>function selectOne($sql, $bindParams = array(), $method = null, $class = null);
 function selectAll($sql, $bindParams = array(), $method = null, $class = null);
 function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null);
@@ -60,7 +57,10 @@ function rawPrepare($sql, $bind = array(), $method = null, $class = null);
 public function raw($sql, $fetch = false);
 public function rawQuery($sql);</pre>
 
-<br>
+<br><br>
+<h2>Demo #2, Select Usage of the engine.</h2>
+<p>How can we use it, now it's pretty easy. We have the following methods we could use:</p>
+
 <h4>Example, select all cars from our demo database:</h4>
 <p>For example we could fetch all our cars from our MySQL Database:</p>
 <strong>Code</strong>
@@ -68,10 +68,32 @@ public function rawQuery($sql);</pre>
 <strong>Result</strong>
 <pre><?php var_dump($demo2_example1); ?></pre>
 
+<br><br>
+<h2>Demo #3, Inserting data</h2>
+<p>How to insert, also easy, just like this example:</p>
 
-<?php
+<strong>Code</strong>
+<pre>$data = array('make' => 'BMW', 'model' => 'i8', 'costs' => 138000);
+$carid = $engine->insert(DB_PREFIX . 'car', $data);
 
-?>
+var_dump($carid);</pre>
+
+<strong>Result</strong>
+<pre><?php var_dump($demo3_example1); ?></pre>
+
+
+
+<br><br>
+<h2>Demo #4, Removing the last inserted BMW i8 (demo #3)</h2>
+
+<strong>Code</strong>
+<pre>$result = $engine->delete(DB_PREFIX . 'car', array('carid' => $carid));
+var_dump($result)</pre>
+
+<strong>Result</strong>
+<pre><?php var_dump($demo4_example1); ?></pre>
+
+
 
 
 <p><?= $message ?></p>

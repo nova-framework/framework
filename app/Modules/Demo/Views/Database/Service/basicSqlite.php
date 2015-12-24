@@ -5,7 +5,7 @@
 
 <h2>Demo #1, Define service and entity in your app</h2>
 <p>To use the Services (DBAL) with your entities, you should define those first.
-In our example here we are defining a Car entity and a Car service. Both are very simple. Sources:</p>
+    In our example here we are defining a Car entity and a Car service. Both are very simple. Sources:</p>
 
 <p>In our config we have declared several prepared links, we gave them names. Example of configuration, configured in <kbd>app/Config/config.php</kbd></p>
 
@@ -47,7 +47,7 @@ class Car extends Service
 
 <h4>Service Instance</h4>
 <p>Before we can continue we need to get our Service instance. Use the Manager to get an instance:</p>
-<pre>$carservice = \Nova\Database\Manager::getService('car');</pre>
+<pre>$carservice = \Nova\Database\Manager::getService('car', 'sqlite');</pre>
 
 
 <h4>Selecting with our custom made getAll() function.</h4>

@@ -51,5 +51,32 @@ class Service extends ThemedController
     public function basicSqlite()
     {
         $this->title('Basic SQLite DBAL Service Demo');
+
+        // Get Car service
+        $carservice = \Nova\Database\Manager::getService('car', 'sqlite');
+
+        // Demo 2 Make new Car entity
+        $demo2 = $carservice->getAll();
+
+
+        // Demo 3 Insert new Car
+        $car = new Car(); // Create our entity
+        $car->make = 'BMW';
+        $car->model = '1-serie';
+        $car->costs = 40000;
+
+        $carservice->create($car); // CREATE operation
+
+        // Output our car model again, you will see that the carid is now filled in!
+        $demo3 = $car;
+
+
+        // Demo 4 delete last car instance
+        $demo4 = $carservice->delete($car);
+
+
+        $this->set('demo2', $demo2);
+        $this->set('demo3', $demo3);
+        $this->set('demo4', $demo4);
     }
 }

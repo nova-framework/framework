@@ -5,7 +5,7 @@ namespace App\Modules\Demo\Controllers\Database;
 use App\Modules\Demo\Core\BaseController;
 
 
-class Engine extends ThemedController
+class Engine extends BaseController
 {
     /**
      * Call the parent construct

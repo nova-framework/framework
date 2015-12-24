@@ -18,7 +18,8 @@ abstract class Manager
     const DRIVER_MYSQL = "MySQL";
     const DRIVER_SQLITE = "SQLite";
 
-    private static $instances = array();
+    private static $engineInstances = array();
+    private static $serviceInstances = array();
 
     /**
      * Get instance of the database engine you prefer.
@@ -45,8 +46,8 @@ abstract class Manager
         }
 
         // Engine, when already have an instance, return it!
-        if (isset(static::$instances[$connectionName])) {
-            return static::$instances[$connectionName];
+        if (isset(static::$engineInstances[$connectionName])) {
+            return static::$engineInstances[$connectionName];
         }
 
         // Make new instance, can throw exceptions!
@@ -59,9 +60,35 @@ abstract class Manager
         }
 
         // Save instance
-        static::$instances[$connectionName] = $engine;
+        static::$engineInstances[$connectionName] = $engine;
 
         // Return instance
         return $engine;
+    }
+
+
+    /**
+     * Get service instance with class service name
+     * @param string $serviceName the relative namespace class name (relative from App\Services\Database\)
+     * @return Service|null
+     * @throws \Exception
+     */
+    public static function getService($serviceName)
+    {
+        $class = 'App\Services\Database\\' . $serviceName;
+
+        if (isset(static::$serviceInstances[$serviceName])) {
+            return static::$serviceInstances[$serviceName];
+        }
+
+        $service = new $class();
+
+        if (!$service instanceof Service) {
+            throw new \Exception("Class not found '".$class."'!");
+        }
+
+        static::$serviceInstances[$serviceName] = $service;
+
+        return $service;
     }
 }

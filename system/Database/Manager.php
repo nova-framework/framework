@@ -18,7 +18,9 @@ abstract class Manager
     const DRIVER_MYSQL = "MySQL";
     const DRIVER_SQLITE = "SQLite";
 
+    /** @var Engine[] engine instances */
     private static $engineInstances = array();
+    /** @var Service[] service instances */
     private static $serviceInstances = array();
 
     /**
@@ -70,14 +72,20 @@ abstract class Manager
     /**
      * Get service instance with class service name
      * @param string $serviceName the relative namespace class name (relative from App\Services\Database\)
+     * @param Engine|string|null $engine Use the following engine.
      * @return Service|null
      * @throws \Exception
      */
-    public static function getService($serviceName)
+    public static function getService($serviceName, $engine = 'default')
     {
         $class = 'App\Services\Database\\' . $serviceName;
 
+        if ($engine !== null && is_string($engine)) {
+            $engine = self::getEngine($engine);
+        }
+
         if (isset(static::$serviceInstances[$serviceName])) {
+            static::$serviceInstances[$serviceName]->setEngine($engine);
             return static::$serviceInstances[$serviceName];
         }
 
@@ -86,6 +94,8 @@ abstract class Manager
         if (!$service instanceof Service) {
             throw new \Exception("Class not found '".$class."'!");
         }
+
+        $service->setEngine($engine);
 
         static::$serviceInstances[$serviceName] = $service;
 

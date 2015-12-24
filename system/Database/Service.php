@@ -31,20 +31,6 @@ abstract class Service
 
 
     /**
-     * DatabaseService constructor.
-     * @param Engine|string|null $engine Engine instance or connection name from config.
-     */
-    public function __construct($engine = 'default')
-    {
-        if (! $engine instanceof Engine)
-        {
-            $engine = Manager::getEngine($engine);
-        }
-
-        $this->engine = $engine;
-    }
-
-    /**
      * Set engine for this service.
      * @param Engine $engine
      */

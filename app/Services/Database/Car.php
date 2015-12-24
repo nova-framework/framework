@@ -3,9 +3,9 @@
 
 namespace App\Services\Database;
 
-use Nova\Database\Service\MySQL;
+use Nova\Database\Service;
 
-class Car extends MySQL
+class Car extends Service
 {
     public function __construct() {
         parent::__construct();

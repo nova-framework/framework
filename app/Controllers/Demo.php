@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Services\Database\Car;
+use App\Services\Database\CarLite;
 use Nova\Core\View;
 use Nova\Core\Controller;
 use Nova\Database\Manager;
@@ -174,6 +175,23 @@ class Demo extends Controller
         var_dump($result);
 
         var_dump($engine->getTotalQueries());
+
+
+        // Service
+        $carservice = Manager::getService('Car', 'sqlite');
+        var_dump($carservice);
+        echo "SERVICES: ===============<BR>";
+        var_dump($carservice->getAll());
+
+        $carnew = new \App\Models\Entities\Car();
+        $carnew->make = 'BMW';
+        $carnew->model = 'test';
+        $carnew->costs = 10;
+        $result = $carservice->create($carnew);
+        var_dump($result);
+
+        echo "SERVICES: ===============<BR>";
+        var_dump($carservice->getAll());
 
         echo "</pre>";
     }

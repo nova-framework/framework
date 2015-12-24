@@ -24,3 +24,4 @@ Router::any('demos/events', 'App\Modules\Demo\Controllers\Events@index');
 
 /** Database & Database Abstraction Layer demo */
 Router::get('demos/database/engine/basic/mysql', 'App\Modules\Demo\Controllers\Database\Engine@basicMysql');
+Router::get('demos/database/engine/basic/sqlite', 'App\Modules\Demo\Controllers\Database\Engine@basicSqlite');

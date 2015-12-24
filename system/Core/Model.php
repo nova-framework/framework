@@ -48,8 +48,6 @@ abstract class Model
         {
             return call_user_func_array([$this->db, $name], $params);
         }
-
-        return false;
     }
 
 }

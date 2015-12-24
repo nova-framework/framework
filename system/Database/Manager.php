@@ -78,32 +78,32 @@ abstract class Manager
      */
     public static function getService($serviceName, $engine = 'default')
     {
-        $class = $serviceName;
+        $className = $serviceName;
 
         // Check if absolute or relative service namespace is given
         if (substr($serviceName, 0, 2) !== 'App') {
             // Relative!
-            $class = 'App\Services\Database\\' . $serviceName;
+            $className = 'App\Services\Database\\' . $serviceName;
         }
 
         if ($engine !== null && is_string($engine)) {
             $engine = self::getEngine($engine);
         }
 
-        if (isset(static::$serviceInstances[$class])) {
-            static::$serviceInstances[$class]->setEngine($engine);
-            return static::$serviceInstances[$class];
+        if (isset(static::$serviceInstances[$className])) {
+            static::$serviceInstances[$className]->setEngine($engine);
+            return static::$serviceInstances[$className];
         }
 
-        $service = new $class();
+        $service = new $className();
 
         if (!$service instanceof Service) {
-            throw new \Exception("Class not found '".$class."'!");
+            throw new \Exception("Class not found '".$className."'!");
         }
 
         $service->setEngine($engine);
 
-        static::$serviceInstances[$class] = $service;
+        static::$serviceInstances[$className] = $service;
 
         return $service;
     }

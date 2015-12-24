@@ -76,7 +76,7 @@ interface Engine
      */
     public function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null);
 
-    /*
+    /**
      * Convenience methods for selecting records.
      *
      * @param string $sql

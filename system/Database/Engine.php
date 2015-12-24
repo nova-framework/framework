@@ -117,7 +117,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    public function superInsert($table, $data, $transaction = false);
+    public function insertAll($table, $data, $transaction = false);
 
     /**
      * Execute update query, will automatically build query for you.

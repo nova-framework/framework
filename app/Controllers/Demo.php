@@ -163,7 +163,7 @@ class Demo extends Controller
         );
 
         // Insert it!
-        $result = $engine->superInsert(DB_PREFIX . 'car', array($car1, $car2));
+        $result = $engine->insertAll(DB_PREFIX . 'car', array($car1, $car2));
         var_dump($result);
 
         // Update something!

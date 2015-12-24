@@ -337,7 +337,7 @@ class SQLite extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    public function superInsert($table, $data, $transaction = false)
+    public function insertAll($table, $data, $transaction = false)
     {
         // Check for valid data.
         if (!is_array($data)) {

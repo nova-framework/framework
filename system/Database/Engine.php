@@ -83,11 +83,26 @@ interface Engine
      * @param string $table Table to execute the insert.
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
+     * @param bool $multipleInserts Specify to execute multiple inserts.
      * @return int|bool
      *
      * @throws \Exception
      */
-    function insert($table, $data);
+    function insert($table, $data, $transaction = false, $multipleInserts = false);
+
+    /**
+     * Execute insert query, will automatically build query for you.
+     * You can also give an array as $data, this will try to insert each entry in the array.
+     * Not all engine's support this! Check the manual!
+     *
+     * @param string $table Table to execute the insert.
+     * @param array $data Represents one record, could also have multidimensional arrays inside to insert
+     *                    multiple rows in one call. The engine must support this! Check manual!
+     * @return int|bool
+     *
+     * @throws \Exception
+     */
+    function superInsert($table, $data, $transaction = false);
 
     /**
      * Execute update query, will automatically build query for you.

@@ -194,14 +194,14 @@ class View
     public function loadData($data)
     {
         if($data instanceof View) {
-            $this->data = $data->data();
+            $this->data = array_merge($this->data, $data->data());
         }
         else {
             if (! is_array($data)) {
                 throw new \UnexpectedValueException('Unexpected parameter');
             }
 
-            $this->data = $data;
+            $this->data = array_merge($this->data, $data);
         }
 
         return $this;

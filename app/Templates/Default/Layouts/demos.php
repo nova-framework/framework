@@ -63,7 +63,7 @@ $current_url = site_url($current_uri);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?= $dashboardUri; ?>"><strong><?= __d('default', 'Nova Framework'); ?></strong></a>
+            <a class="navbar-brand" href="<?= $dashboardUrl; ?>"><strong><?= __d('default', 'Nova Framework'); ?></strong></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->

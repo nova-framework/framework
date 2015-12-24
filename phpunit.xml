@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit bootstrap="./bootstrap.php">
+    <php>
+        <const name="PHPUNIT_RUNNING" value="true"/>
+    </php>
+    <testsuites>
+        <testsuite name="Nova Framework basic test suites">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

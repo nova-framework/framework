@@ -18,6 +18,9 @@
         "phpmailer/phpmailer": "5.2.*",
         "wixel/gump": "dev-master"
     },
+    "require-dev": {
+        "phpunit/phpunit": "5.1.3"
+    },
     "autoload": {
         "psr-4": {
             "Nova\\" : "system/",

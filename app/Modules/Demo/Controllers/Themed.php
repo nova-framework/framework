@@ -10,12 +10,12 @@
 namespace App\Modules\Demo\Controllers;
 
 use Nova\Core\View;
-use App\Core\ThemedController;
+use App\Modules\Demo\Core\BaseController;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class Themed extends ThemedController
+class Themed extends BaseController
 {
     private $basePath;
 

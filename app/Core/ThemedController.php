@@ -71,6 +71,7 @@ class ThemedController extends BaseController
         else if($result instanceof View) {
             View::layout($this->layout())
                 ->loadView($result)
+                ->loadData($this->data())
                 ->render();
 
             // Stop the Flight.

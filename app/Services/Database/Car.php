@@ -8,8 +8,6 @@ use Nova\Database\Service;
 class Car extends Service
 {
     public function __construct() {
-        parent::__construct();
-
         $this->table = "car";
         $this->primaryKeys = array("carid");
         $this->fetchMethod = \PDO::FETCH_CLASS;

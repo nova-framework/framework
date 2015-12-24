@@ -11,6 +11,7 @@ use Nova\Net\Router;
 
 
 /** The Module's known Routes definition. */
+Router::get('demos', 'App\Modules\Demo\Controllers\Index@home');
 
 Router::any('demos/themed/welcome', 'App\Modules\Demo\Controllers\Themed@welcome');
 Router::any('demos/themed/subpage', 'App\Modules\Demo\Controllers\Themed@subPage');

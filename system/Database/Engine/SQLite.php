@@ -134,7 +134,7 @@ class SQLite extends \PDO implements Engine
      * @param bool $fetchAll Ask the method to fetch all the records or not.
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
-     * @return array|null
+     * @return array|null|false
      * @throws \Exception
      * @internal param array $bindParams
      */
@@ -213,7 +213,7 @@ class SQLite extends \PDO implements Engine
      * @param array $bindParams
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
-     * @return array|null|object
+     * @return array|null|object|false
      * @throws \Exception
      */
     public function selectOne($sql, $bindParams = array(), $method = null, $class = null)
@@ -228,7 +228,7 @@ class SQLite extends \PDO implements Engine
      * @param array $bindParams
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
-     * @return array|null
+     * @return array|null|false
      * @throws \Exception
      */
     public function selectAll($sql, $bindParams = array(), $method = null, $class = null)

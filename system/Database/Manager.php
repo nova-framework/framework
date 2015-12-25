@@ -86,6 +86,8 @@ abstract class Manager
      */
     public static function getService($serviceName, $fromModule = null, $engine = 'default')
     {
+        $serviceName = ltrim($serviceName, '\\');
+
         // Get the Controller instance.
         $instance =& get_instance();
 
@@ -95,11 +97,11 @@ abstract class Manager
         //
         // Calculate the Service's fully qualified Class Name.
 
-        $classPath = str_replace('\\', '/', ltrim($serviceName, '\\'));
+        $classPath = str_replace('\\', '/', $serviceName);
 
         if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
             // A fully qualified className, with complete namespace.
-            $className = ltrim($serviceName, '\\');
+            $className = $serviceName);
         }
         else if(($fromModule !== null) && ! empty($fromModule)) {
             $fromModule = Inflector::classify($fromModule);

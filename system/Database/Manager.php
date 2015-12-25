@@ -102,19 +102,21 @@ abstract class Manager
 
         if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
             // A fully qualified className, with complete namespace.
-            $className = $serviceName;
+            $classPath = '\\';
         }
         else if(($fromModule !== null) && ! empty($fromModule)) {
             $fromModule = Inflector::classify($fromModule);
 
-            $className = 'App\Modules\\'.$fromModule.'\Services\Database\\'.$serviceName;
+            $classPath = '\App\Modules\\'.$fromModule.'\Services\Database\\';
         }
         else if($thatModule !== null) {
-            $className = 'App\Modules\\'.$thatModule.'\Services\Database\\'.$serviceName;
+            $classPath = '\App\Modules\\'.$thatModule.'\Services\Database\\';
         }
         else {
-            $className = 'App\Services\Database\\' . $serviceName;
+            $classPath = '\App\Services\Database\\';
         }
+
+        $className = $classPath.$serviceName;
 
         if (($engine !== null) && is_string($engine)) {
             $engine = self::getEngine($engine);

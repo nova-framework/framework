@@ -99,7 +99,7 @@ abstract class Manager
 
         if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
             // A fully qualified className, with complete namespace.
-            $className = $serviceName;
+            $className = ltrim($serviceName, '\\');
         }
         else if(($fromModule !== null) && ! empty($fromModule)) {
             $fromModule = Inflector::classify($fromModule);

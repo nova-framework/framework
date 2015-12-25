@@ -47,7 +47,7 @@ class Car extends Service
 
 <h4>Service Instance</h4>
 <p>Before we can continue we need to get our Service instance. Use the Manager to get an instance:</p>
-<pre>$carservice = \Nova\Database\Manager::getService('car', 'sqlite');</pre>
+<pre>$carservice = \Nova\Database\Manager::getService('Car', 'sqlite');</pre>
 
 
 <h4>Selecting with our custom made getAll() function.</h4>

@@ -107,7 +107,7 @@ abstract class Manager
 
         if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
             if ($fromModule !== null) {
-                throw new \UnexpectedValueException('An fully qualified Class Name called while a Module is specified');
+                throw new \UnexpectedValueException('Fully qualified Class Name called while a Module is specified');
             }
 
             // A fully qualified className, with complete namespace.
@@ -128,6 +128,7 @@ abstract class Manager
 
         if (isset(static::$serviceInstances[$className])) {
             static::$serviceInstances[$className]->setEngine($engine);
+            
             return static::$serviceInstances[$className];
         }
 

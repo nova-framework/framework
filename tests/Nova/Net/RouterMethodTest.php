@@ -7,7 +7,7 @@
  * @date December 25th, 2015
  */
 
-namespace Nova\Tests\Net\Router;
+namespace Nova\Tests\Net;
 
 /**
  * Class RouterMethodTest
@@ -203,7 +203,7 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected_method_match, $current_method_match);
     }
 
-    
+
     /**
      * @covers \Nova\Net\Router
      * @covers \Nova\Net\Route

@@ -106,6 +106,10 @@ abstract class Manager
         $classPath = str_replace('\\', '/', $serviceName);
 
         if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
+            if ($fromModule !== null) {
+                throw new \UnexpectedValueException('An fully qualified Class Name called while a Module is specified');
+            }
+
             // A fully qualified className, with complete namespace.
             $classPath = '\\';
         }
@@ -128,14 +132,14 @@ abstract class Manager
         }
 
         if (! class_exists($className)) {
-            throw new \Exception("Class not found: '".$className);
+            throw new \Exception("Class not found: ".$className);
         }
 
         // Get a Service instance.
         $service = new $className();
 
         if (! $service instanceof Service) {
-            throw new \Exception("Invalid Service called: '".$className);
+            throw new \Exception("Invalid Service called: ".$className);
         }
 
         $service->setEngine($engine);

@@ -65,7 +65,7 @@ abstract class Manager
         if (! class_exists($className)) {
             throw new \Exception("Class not found: ".$className);
         }
-        
+
         $engine = new $className($options['config']);
 
         // If no success
@@ -111,7 +111,7 @@ abstract class Manager
 
         if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
             if ($fromModule !== null) {
-                throw new \UnexpectedValueException('Fully qualified Class Name called while a Module is specified');
+                throw new \UnexpectedValueException('Fully qualified Class Name while a Module is specified');
             }
 
             // A fully qualified className, with complete namespace.

@@ -73,7 +73,7 @@ $router = Router::getInstance();
 /**
  * load routes
  * */
-require_once $configDir.'routes.php'; // Default routes, we will only change the routes later in tests!
+// require_once $configDir.'routes.php'; // Default routes, we will only change the routes later in tests!
 
 /**
  * bootstrap the active modules (and their associated routes)

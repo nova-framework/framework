@@ -2,6 +2,9 @@
 
 namespace Nova\Tests\Net\Router;
 
+use Guzzle\Http\Url;
+use Nova\Core\Controller;
+
 class RouterMethodTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -21,7 +24,10 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Nova\Net\Router::addRoute
      * @covers \Nova\Net\Router::__callStatic
+     * @covers \Nova\Net\Router::invokeController
      * @covers \Nova\Net\Router::dispatch
+     * @covers \Nova\Net\Route
+     * @covers \Nova\Net\Url::detectUri
      */
     public function testBasicGet()
     {
@@ -56,9 +62,74 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Nova\Net\Router::addRoute
      * @covers \Nova\Net\Router::dispatch
+     * @covers \Nova\Net\Router::invokeController
+     * @covers \Nova\Net\Route
+     * @covers \Nova\Net\Url::detectUri
      */
     public function testParameterGet()
     {
+        $expected_1 = 'Anyparam123';
+        $current_1 = '';
 
+        $expected_2 = 1234;
+        $current_2 = 0;
+
+        // Add testing routes
+        \Nova\Net\Router::getInstance()->addRoute('GET', '/test/get/param/any/(:any)', function($param) use(&$current_1) {
+            $current_1 = $param;
+        });
+
+        // Add testing routes
+        \Nova\Net\Router::getInstance()->addRoute('GET', '/test/get/param/num/(:num)', function($param) use(&$current_2) {
+            $current_2 = $param;
+        });
+
+
+        $this->spoofRouter('/test/get/param/any/Anyparam123');
+        \Nova\Net\Router::getInstance()->dispatch();
+
+        $this->spoofRouter('/test/get/param/num/1234');
+        \Nova\Net\Router::getInstance()->dispatch();
+
+
+        $this->assertEquals($expected_1, $current_1);
+        $this->assertEquals($expected_2, $current_2);
+    }
+
+
+    /**
+     * @covers \Nova\Net\Router::addRoute
+     * @covers \Nova\Net\Router::dispatch
+     * @covers \Nova\Net\Router::invokeController
+     * @covers \Nova\Net\Route
+     * @covers \Nova\Net\Url::detectUri
+     * @covers \Nova\Net\Request::getMethod
+     * @covers \Nova\Net\Request::isPost
+     */
+    public function testBasicPost()
+    {
+        $expected_method = 'POST';
+        $expected_url = 'test/post/1';
+        $expected_method_match = true;
+
+        $current_method = '';
+        $current_url = '';
+        $current_method_match = false;
+
+        // Add testing routes
+        \Nova\Net\Router::getInstance()->addRoute('POST', '/test/post/1', function() use(&$current_method, &$current_method_match, &$current_url) {
+            $current_url = \Nova\Net\Url::detectUri();
+            $current_method = \Nova\Net\Request::getMethod();
+            $current_method_match = \Nova\Net\Request::isPost();
+        });
+
+        // Spoof and execute
+        $this->spoofRouter('/test/post/1', 'POST');
+        \Nova\Net\Router::getInstance()->dispatch();
+
+        // Assert
+        $this->assertEquals($expected_method, $current_method);
+        $this->assertEquals($expected_url, $current_url);
+        $this->assertEquals($expected_method_match, $current_method_match);
     }
 }

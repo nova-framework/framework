@@ -21,7 +21,10 @@ before_script:
 
 install: composer install --dev
 
-script: phpunit
+script:
+  - mkdir -p build/logs
+  - php vendor/bin/phpunit -c phpunit.xml
 
-after_script:
-  - php vendor/bin/coveralls -v
+after_success:
+  - travis_retry php vendor/bin/coveralls -v
+

@@ -4,10 +4,19 @@ php:
   - '7.0'
   - hhvm
   - 'nightly'
+
+env:
+  - DB=mysql
+
+services:
+  - mysql
+
 matrix:
   allow_failures:
     - php: 'nightly'
 
-before_script: composer self-update
+before_script:
+  - composer self-update
+  - mysql < scripts/testing_mysql.sql
 install: composer install --dev
 script: phpunit

@@ -168,7 +168,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
             $this->engine->insertAll(DB_PREFIX . 'car', $data_4, true);
             $this->assertFalse(true, 'Inserting error data should give exceptions!');
         }catch(\Exception $e) {
-            $this->assertContains("'costs' cannot be null", $e->getMessage());
+            $this->assertContains("null", $e->getMessage());
         }
 
         // Check if the other one is still inserted!

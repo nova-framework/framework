@@ -11,6 +11,7 @@ namespace Nova\Tests\Database\Engine;
  */
 class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var \Nova\Database\Engine\SQLite */
     private $engine;
 
     private function prepareEngine()
@@ -167,7 +168,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
             $this->engine->insertAll(DB_PREFIX . 'car', $data_4, true);
             $this->assertFalse(true, 'Inserting error data should give exceptions!');
         }catch(\Exception $e) {
-            $this->assertContains("NOT NULL constraint failed", $e->getMessage());
+            $this->assertContains("NULL", $e->getMessage());
         }
 
         // Check if the other one is still inserted!

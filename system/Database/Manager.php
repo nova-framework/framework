@@ -12,6 +12,9 @@ namespace Nova\Database;
 
 use Nova\Config;
 use Nova\Database\Engine;
+use Nova\Core\Controller;
+use Nova\Helpers\Inflector;
+
 
 abstract class Manager
 {
@@ -81,17 +84,36 @@ abstract class Manager
      * @return Service|null
      * @throws \Exception
      */
-    public static function getService($serviceName, $engine = 'default')
+    public static function getService($serviceName, $fromModule = null, $engine = 'default')
     {
-        $className = $serviceName;
+        // Get the Controller instance.
+        $instance =& get_instance();
 
-        // Check if absolute or relative service namespace is given
-        if (substr($serviceName, 0, 12) !== 'App\Modules\\') {
-            // Relative!
+        // Get the current Module name.
+        $thatModule = $instance->module();
+
+        //
+        // Calculate the Service's fully qualified Class Name.
+
+        $classPath = str_replace('\\', '/', ltrim($serviceName, '\\'));
+
+        if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
+            // A fully qualified className, with complete namespace.
+            $className = $serviceName;
+        }
+        else if(($fromModule !== null) && ! empty($fromModule)) {
+            $fromModule = Inflector::classify($fromModule);
+
+            $className = 'App\Modules\\'.$fromModule.'\Services\Database\\'.$serviceName;
+        }
+        else if($thatModule !== null) {
+            $className = 'App\Modules\\'.$thatModule.'\Services\Database\\'.$serviceName;
+        }
+        else {
             $className = 'App\Services\Database\\' . $serviceName;
         }
 
-        if ($engine !== null && is_string($engine)) {
+        if (($engine !== null) && is_string($engine)) {
             $engine = self::getEngine($engine);
         }
 
@@ -100,10 +122,15 @@ abstract class Manager
             return static::$serviceInstances[$className];
         }
 
+        if (! class_exists($className)) {
+            throw new \Exception("Class not found '".$className."'!");
+        }
+
+        // Get a Service instance.
         $service = new $className();
 
-        if (!$service instanceof Service) {
-            throw new \Exception("Class not found '".$className."'!");
+        if (! $service instanceof Service) {
+            throw new \Exception("Invalid Service called '".$className."'!");
         }
 
         $service->setEngine($engine);

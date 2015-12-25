@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demo\Controllers\Database;
 
-use App\Models\Entities\Car;
+use App\Modules\Demo\Models\Entities\Car;
 use App\Modules\Demo\Core\BaseController;
 
 

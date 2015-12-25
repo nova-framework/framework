@@ -51,13 +51,49 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareEngine();
 
+        // === Select All, No WHERE.
+
         // First, we will get ALL our cars, we will use the selectAll
-        // TODO: Add selectAll test
+        $all = $this->engine->selectAll("SELECT * FROM " . DB_PREFIX . "car");
 
-        // TODO: Select One, only get the Model S
+        $this->assertGreaterThanOrEqual(2, count($all), "Select should return array of 2 or more");
 
-        // TODO: Select all, but different fetch method
+        // Check one in the array
+        $this->assertObjectHasAttribute('carid', $all[0]);
+        $this->assertObjectHasAttribute('make', $all[0]);
+        $this->assertObjectHasAttribute('model', $all[0]);
+        $this->assertObjectHasAttribute('costs', $all[0]);
 
-        // TODO: fetch one, doesn't exists in db!
+
+        // === Select One, Only get the Model S
+        $model_s = $this->engine->selectOne("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE 'Model S';");
+
+        $this->assertNotNull($model_s);
+        $this->assertObjectHasAttribute('carid', $model_s);
+        $this->assertObjectHasAttribute('make', $model_s);
+        $this->assertObjectHasAttribute('model', $model_s);
+        $this->assertObjectHasAttribute('costs', $model_s);
+        $this->assertEquals(1, $model_s->carid);
+        $this->assertEquals('Tesla', $model_s->make);
+
+
+
+        // === Select All, Fetch With ASSOC
+        $all_assoc = $this->engine->selectAll("SELECT * FROM " . DB_PREFIX . "car", array(), \PDO::FETCH_ASSOC);
+
+        $this->assertGreaterThanOrEqual(2, count($all_assoc), "Select should return array of 2 or more");
+
+        // Check one in the array
+        $this->assertArrayHasKey('carid', $all_assoc[0]);
+        $this->assertArrayHasKey('make', $all_assoc[0]);
+        $this->assertArrayHasKey('model', $all_assoc[0]);
+        $this->assertArrayHasKey('costs', $all_assoc[0]);
+
+
+
+        // === Select One, But this doesn't exists.
+        $notthere = $this->engine->selectOne("SELECT * FROM " . DB_PREFIX . "car WHERE make LIKE 'Renault';");
+
+        $this->assertFalse($notthere);
     }
 }

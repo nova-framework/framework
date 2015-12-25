@@ -21,7 +21,7 @@ class Service extends BaseController
         $this->title('Basic MySQL DBAL Service Demo');
 
         // Get Car service
-        $carservice = \Nova\Database\Manager::getService('car');
+        $carservice = \Nova\Database\Manager::getService('Car');
 
         // Demo 2 Make new Car entity
         $demo2 = $carservice->getAll();
@@ -54,7 +54,7 @@ class Service extends BaseController
         $this->title('Basic SQLite DBAL Service Demo');
 
         // Get Car service
-        $carservice = \Nova\Database\Manager::getService('car', 'sqlite');
+        $carservice = \Nova\Database\Manager::getService('Car', 'sqlite');
 
         // Demo 2 Make new Car entity
         $demo2 = $carservice->getAll();

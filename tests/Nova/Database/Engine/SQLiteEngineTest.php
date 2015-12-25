@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * SQLite Engine Tests
+ *
+ * @author Tom Valk - tomvalk@lt-box.info
+ * @version 3.0
+ * @date December 25th, 2015
+ */
 
 namespace Nova\Tests\Database\Engine;
 

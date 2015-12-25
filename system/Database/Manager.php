@@ -128,14 +128,14 @@ abstract class Manager
         }
 
         if (! class_exists($className)) {
-            throw new \Exception("Class not found '".$className."'!");
+            throw new \Exception("Class not found: '".$className);
         }
 
         // Get a Service instance.
         $service = new $className();
 
         if (! $service instanceof Service) {
-            throw new \Exception("Invalid Service called '".$className."'!");
+            throw new \Exception("Invalid Service called: '".$className);
         }
 
         $service->setEngine($engine);

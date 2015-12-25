@@ -185,7 +185,7 @@ class Manager
 
     public function events()
     {
-        return $this->events();
+        return $this->events;
     }
 
     public function listeners($name)

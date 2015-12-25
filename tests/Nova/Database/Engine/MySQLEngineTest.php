@@ -181,4 +181,46 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         $this->engine->rawQuery("DELETE FROM " . DB_PREFIX . "car WHERE make LIKE 'Nova Cars';");
         $this->engine->commit();
     }
+
+    /**
+     * @covers \Nova\Database\Manager::getEngine
+     * @covers \Nova\Database\Engine\MySQL::__construct
+     * @covers \Nova\Database\Engine\MySQL::selectOne
+     * @covers \Nova\Database\Engine\MySQL::insert
+     * @covers \Nova\Database\Engine\MySQL::update
+     * @covers \Nova\Database\Engine\MySQL::rawQuery
+     * @covers \Nova\Database\Engine\MySQL::commit
+     */
+    public function testUpdating()
+    {
+        $this->prepareEngine();
+
+        // === Will add our test car fist, We will edit this one a few times
+        $data = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Update_1', 'costs' => 18000);
+        $id = $this->engine->insert(DB_PREFIX . 'car', $data);
+
+        $this->assertGreaterThanOrEqual(2, $id);
+
+        // === Basic simple update
+        $data_update_1 = array('costs' => 20000);
+        $update_1 = $this->engine->update(DB_PREFIX . 'car', $data_update_1, array('carid' => $id));
+
+        $this->assertNotFalse($update_1);
+
+        // Test if it's changed
+        $result_1 = $this->engine->selectOne("SELECT * FROM " . DB_PREFIX . "car WHERE carid = :carid", array('carid' => $id));
+
+        $this->assertNotNull($result_1);
+        $this->assertObjectHasAttribute('carid', $result_1);
+        $this->assertObjectHasAttribute('make', $result_1);
+        $this->assertObjectHasAttribute('model', $result_1);
+        $this->assertObjectHasAttribute('costs', $result_1);
+
+        $this->assertEquals(20000, $result_1->costs);
+
+
+
+        // Cleanup
+        $this->engine->rawQuery("DELETE FROM " . DB_PREFIX . "car WHERE make LIKE 'Nova Cars';");
+    }
 }

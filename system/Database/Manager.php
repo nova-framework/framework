@@ -90,7 +90,7 @@ abstract class Manager
         $instance =& get_instance();
 
         // Get the current Module name.
-        $thatModule = $instance->module();
+        $thatModule = $instance ? $instance->module() : null;
 
         //
         // Calculate the Service's fully qualified Class Name.

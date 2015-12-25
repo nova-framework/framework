@@ -16,7 +16,6 @@ matrix:
     - php: 'nightly'
 
 before_script:
-  - phpenv config-add xdebug.ini
   - composer self-update
   - mysql < scripts/testing_mysql.sql
 

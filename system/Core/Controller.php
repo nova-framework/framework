@@ -82,7 +82,7 @@ abstract class Controller
             $viewsPath = str_replace('/', DS, 'Modules/'.$matches[1].'/Views/'.$matches[2]);
         }
         else {
-            throw \Exception('Unknown Views Path for the Class: '.$className);
+            throw new \Exception('Unknown Views Path for the Class: '.$className);
         }
 
         $this->viewsPath = APPPATH .$viewsPath .DS;

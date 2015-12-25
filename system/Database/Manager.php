@@ -93,7 +93,12 @@ abstract class Manager
         $instance =& get_instance();
 
         // Get the current Module name.
-        $thatModule = $instance ? $instance->module() : null;
+        if(($fromModule !== null) && ! empty($fromModule)) {
+            $module = Inflector::classify($fromModule);
+        }
+        else {
+            $module = $instance ? $instance->module() : null;
+        }
 
         //
         // Calculate the Service's fully qualified Class Name.
@@ -104,13 +109,8 @@ abstract class Manager
             // A fully qualified className, with complete namespace.
             $classPath = '\\';
         }
-        else if(($fromModule !== null) && ! empty($fromModule)) {
-            $fromModule = Inflector::classify($fromModule);
-
-            $classPath = '\App\Modules\\'.$fromModule.'\Services\Database\\';
-        }
-        else if($thatModule !== null) {
-            $classPath = '\App\Modules\\'.$thatModule.'\Services\Database\\';
+        else if($module !== null) {
+            $classPath = '\App\Modules\\'.$module.'\Services\Database\\';
         }
         else {
             $classPath = '\App\Services\Database\\';

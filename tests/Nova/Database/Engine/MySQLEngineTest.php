@@ -223,4 +223,46 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         // Cleanup
         $this->engine->rawQuery("DELETE FROM " . DB_PREFIX . "car WHERE make LIKE 'Nova Cars';");
     }
+
+    /**
+     * @covers \Nova\Database\Manager::getEngine
+     * @covers \Nova\Database\Engine\MySQL::__construct
+     * @covers \Nova\Database\Engine\MySQL::insert
+     * @covers \Nova\Database\Engine\MySQL::selectAll
+     * @covers \Nova\Database\Engine\MySQL::delete
+     */
+    public function testDeleting()
+    {
+        $this->prepareEngine();
+
+        // === Basic test by inserting and deleting several records
+        $data_1 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Delete_1', 'costs' => 18000);
+        $id_1 = $this->engine->insert(DB_PREFIX . 'car', $data_1);
+
+        $data_2 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Delete_2', 'costs' => 18000);
+        $id_2 = $this->engine->insert(DB_PREFIX . 'car', $data_2);
+
+        $data_3 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Delete_3', 'costs' => 99999);
+        $id_3 = $this->engine->insert(DB_PREFIX . 'car', $data_3);
+
+        $this->assertGreaterThanOrEqual(2, $id_1);
+        $this->assertGreaterThanOrEqual(2, $id_2);
+        $this->assertGreaterThanOrEqual(2, $id_3);
+
+        // Delete all 3 with several styles
+        $delete_1 = $this->engine->delete(DB_PREFIX . 'car', array('carid' => $id_1));
+        $delete_2 = $this->engine->delete(DB_PREFIX . 'car', array('model' => 'FrameworkCar_Delete_2'));
+        $delete_3 = $this->engine->delete(DB_PREFIX . 'car', array('costs' => 99999));
+
+        $this->assertNotFalse($delete_1);
+        $this->assertNotFalse($delete_2);
+        $this->assertNotFalse($delete_3);
+
+        // Check if we still can find the inserted records
+        $sql = "SELECT * FROM " . DB_PREFIX . "car WHERE carid = :carid1 OR carid = :carid2 OR carid = :carid3;";
+        $all = $this->engine->selectAll($sql, array(':carid1' => $id_1,':carid2' => $id_2,':carid3' => $id_3));
+
+        // Should be empty => false.
+        $this->assertFalse($all);
+    }
 }

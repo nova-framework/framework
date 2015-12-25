@@ -80,6 +80,7 @@ abstract class Manager
     /**
      * Get service instance with class service name
      * @param string $serviceName the relative or absolute namespace class name (relative from App\Services\Database\)
+     * @param string|null $fromModule Ask the service to be loaded from specified Module.
      * @param Engine|string|null $engine Use the following engine.
      * @return Service|null
      * @throws \Exception

@@ -206,28 +206,30 @@ class SQLite extends \PDO implements Engine
         }
     }
 
-    /*
+    /**
      * Convenience method for fetching one record.
      *
      * @param string $sql
-     * @param array $bind
+     * @param array $bindParams
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
-     * @return array|null
+     * @return array|null|object
+     * @throws \Exception
      */
     public function selectOne($sql, $bindParams = array(), $method = null, $class = null)
     {
         return $this->select($sql, $bindParams, false, $method, $class);
     }
 
-    /*
+    /**
      * Convenience method for fetching all records.
      *
      * @param string $sql
-     * @param array $bind
+     * @param array $bindParams
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
      * @return array|null
+     * @throws \Exception
      */
     public function selectAll($sql, $bindParams = array(), $method = null, $class = null)
     {

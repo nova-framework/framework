@@ -62,6 +62,10 @@ abstract class Manager
         // Make new instance, can throw exceptions!
         $className = '\Nova\Database\Engine\\' . $driver;
 
+        if (! class_exists($className)) {
+            throw new \Exception("Class not found: ".$className);
+        }
+        
         $engine = new $className($options['config']);
 
         // If no success
@@ -128,7 +132,7 @@ abstract class Manager
 
         if (isset(static::$serviceInstances[$className])) {
             static::$serviceInstances[$className]->setEngine($engine);
-            
+
             return static::$serviceInstances[$className];
         }
 

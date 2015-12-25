@@ -27,5 +27,14 @@
             "App\\" : "app/"
         }
     },
-    "minimum-stability": "dev"
+    "autoload-dev": {
+        "psr-4": {
+            "Nova\\Tests\\": "tests/Nova"
+        }
+    },
+    "minimum-stability": "dev",
+    
+    "archive": {
+        "exclude": ["!vendor", "tests", "*phpunit.xml", ".travis.yml", "composer.phar"]
+    }
 }

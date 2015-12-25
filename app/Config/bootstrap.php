@@ -14,14 +14,17 @@ use Nova\Net\Router;
 use Nova\Config;
 use Nova\Logger;
 
+// The current configuration files directory.
+$configDir = dirname(__FILE__) .DS;
+
 /**
  * Turn on output buffering.
  */
 ob_start();
 
-require dirname(__FILE__).DS.'constants.php';
-require dirname(__FILE__).DS.'functions.php';
-require dirname(__FILE__).DS.'config.php';
+require $configDir .'constants.php';
+require $configDir .'functions.php';
+require $configDir .'config.php';
 
 /**
  * Turn on custom error handling.
@@ -47,7 +50,7 @@ Session::init();
 $router = Router::getInstance();
 
 /** load routes */
-require dirname(__FILE__).DS.'routes.php';
+require $configDir .'routes.php';
 
 /** bootstrap the active modules (and their associated routes) */
 Modules::bootstrap();

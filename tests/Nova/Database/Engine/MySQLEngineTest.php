@@ -2,6 +2,7 @@
 
 
 namespace Nova\Tests\Database\Engine;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Class MySQLEngineTest
@@ -96,5 +97,88 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         $notthere = $this->engine->selectOne("SELECT * FROM " . DB_PREFIX . "car WHERE make LIKE 'Renault';");
 
         $this->assertFalse($notthere);
+    }
+
+    /**
+     * @covers \Nova\Database\Manager::getEngine
+     * @covers \Nova\Database\Engine\MySQL::__construct
+     * @covers \Nova\Database\Engine\MySQL::selectAll
+     * @covers \Nova\Database\Engine\MySQL::insert
+     * @covers \Nova\Database\Engine\MySQL::insertAll
+     * @covers \Nova\Database\Engine\MySQL::rawQuery
+     * @covers \Nova\Database\Engine\MySQL::commit
+     */
+    public function testInserting()
+    {
+        $this->prepareEngine();
+
+        // === Single insert
+        $data_1 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_1', 'costs' => 18000);
+        $insert_1 = $this->engine->insert(DB_PREFIX . 'car', $data_1);
+
+        $this->assertNotFalse($insert_1);
+        $this->assertGreaterThan(2, $insert_1);
+
+
+        // === Will try to insert wrong data, should give error/exception
+        try{
+            $this->engine->insert(null, null);
+            $this->assertTrue(false, 'Exception isnt thrown when inserting errornous data!');
+        }catch(\Exception $e) {
+            $this->assertTrue(true, 'Exception IS thrown when inserting errornous data!');
+        }
+
+
+        // === Tripple, non transaction insert
+        $data_2 = array(
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_2', 'costs' => 28000),
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_3', 'costs' => 38000),
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_4', 'costs' => 48000)
+        );
+        $insert_2 = $this->engine->insertAll(DB_PREFIX . 'car', $data_2, false);
+
+        $this->assertEquals(3, count($insert_2));
+        foreach($insert_2 as $key => $value) {
+            $this->assertNotEmpty($value);
+        }
+
+
+        // === Tripple, with transaction insert
+        $data_3 = array(
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_5', 'costs' => 21000),
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_6', 'costs' => 31000),
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_7', 'costs' => 41000)
+        );
+        $insert_3 = $this->engine->insertAll(DB_PREFIX . 'car', $data_3, true);
+
+        $this->assertEquals(3, count($insert_3));
+        foreach($insert_3 as $key => $value) {
+            $this->assertNotEmpty($value);
+        }
+
+
+        // === Triple, with transaction but we will generate one error
+        $data_4 = array(
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_8', 'costs' => NULL), // We MUST give costs, generate error!
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_9', 'costs' => 31000),
+            array('make' => 'Nova Cars', 'model' => 'FrameworkCar_10', 'costs' => null) // We MUST give costs, generate error!
+        );
+
+        try {
+            $this->engine->insertAll(DB_PREFIX . 'car', $data_4, true);
+            $this->assertFalse(true, 'Inserting error data should give exceptions!');
+        }catch(\Exception $e) {
+            $this->assertContains("'costs' cannot be null", $e->getMessage());
+        }
+
+        // Check if the other one is still inserted!
+        $wronginserted = $this->engine->selectAll("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE 'FrameworkCar_9';");
+
+        // Should be false!
+        $this->assertFalse($wronginserted, 'Transaction inserts should rollback after detecting errors!');
+
+        // Cleanup all our test cars
+        $this->engine->rawQuery("DELETE FROM " . DB_PREFIX . "car WHERE make LIKE 'Nova Cars';");
+        $this->engine->commit();
     }
 }

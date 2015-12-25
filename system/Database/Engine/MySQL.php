@@ -247,7 +247,7 @@ class MySQL extends \PDO implements Engine
      * @param array $bindParams
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
-     * @return array|null
+     * @return array|null|false
      * @throws \Exception
      */
     public function selectAll($sql, $bindParams = array(), $method = null, $class = null)

@@ -1,0 +1,4 @@
+# php-coveralls
+service_name: travis-ci
+src_dir: system
+coverage_clover: tmp/test/coverage.xml

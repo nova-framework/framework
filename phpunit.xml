@@ -5,12 +5,31 @@
          convertWarningsToExceptions="true"
          stopOnFailure="false"
          bootstrap="./bootstrap.php">
+
     <php>
         <const name="PHPUNIT_RUNNING" value="true"/>
     </php>
+
     <testsuites>
         <testsuite name="Nova Framework">
             <directory>./tests/Nova</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./system/Net</directory>
+            <directory suffix=".php">./system/Database</directory>
+            <exclude>
+                <file>/system/Net/Cookie.php</file>
+                <file>/system/Net/Session.php</file>
+                <file>/system/Database/Builder.php</file>
+                <file>/system/Database/Entity.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-clover" target="./tmp/test/coverage.xml" />
+    </logging>
 </phpunit>

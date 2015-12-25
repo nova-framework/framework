@@ -18,5 +18,10 @@ matrix:
 before_script:
   - composer self-update
   - mysql < scripts/testing_mysql.sql
+
 install: composer install --dev
+
 script: phpunit
+
+after_script:
+  - php vendor/bin/coveralls -v

@@ -19,7 +19,9 @@
         "wixel/gump": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "5.1.3"
+        "phpunit/phpunit": "5.1.3",
+        "phpunit/php-code-coverage": "^3",
+        "satooshi/php-coveralls": "0.7.*"
     },
     "autoload": {
         "psr-4": {
@@ -33,7 +35,7 @@
         }
     },
     "minimum-stability": "dev",
-    
+
     "archive": {
         "exclude": ["!vendor", "tests", "*phpunit.xml", ".travis.yml", "composer.phar"]
     }

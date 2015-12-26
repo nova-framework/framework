@@ -2,6 +2,7 @@
 
 return array (
   'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => 'Tiempo transcurrido: <b>{0}</b> seg | Uso de memoria: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>',
+  'MySQL Driver' => '',
   'The :field URL does not exist.' => 'El :field URL no existe.',
   'The :field field can have the following extensions :param.' => 'El campo :field puede tener las siguientes extensiones :param.',
   'The :field field contains a value that is not accepted.' => 'The campo :field contiene un valor que no es aceptado.',

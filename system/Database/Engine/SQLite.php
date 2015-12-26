@@ -42,7 +42,7 @@ class SQLite extends BaseEngine
      */
     public function getDriverName()
     {
-        return "SQLite Driver";
+        return __d('system', 'MySQL Driver');
     }
 
     /**

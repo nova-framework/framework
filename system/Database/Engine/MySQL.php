@@ -63,7 +63,7 @@ class MySQL extends BaseEngine
      */
     public function getDriverName()
     {
-        return "MySQL Driver";
+        return __d('system', 'MySQL Driver');
     }
 
     /**

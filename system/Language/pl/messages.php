@@ -2,6 +2,7 @@
 
 return array (
   'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => '',
+  'MySQL Driver' => '',
   'The :field URL does not exist.' => '',
   'The :field field can have the following extensions :param.' => '',
   'The :field field contains a value that is not accepted.' => '',

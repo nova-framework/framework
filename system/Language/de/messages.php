@@ -3,6 +3,7 @@
 return array (
   'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => 'Laufzeit: <b>{0}</b> Sek. | Speichernutzung: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>',
   'MySQL Driver' => '',
+  'SQLite Driver' => '',
   'The :field URL does not exist.' => 'Die :field URL existiert nicht.',
   'The :field field can have the following extensions :param.' => 'Das :field Feld kann folgende Erweiterungen haben: :param',
   'The :field field contains a value that is not accepted.' => 'Das :field Feld enthält einen Wert, der nicht akzeptiert wird.',

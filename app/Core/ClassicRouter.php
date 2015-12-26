@@ -44,10 +44,13 @@ class ClassicRouter extends Router
 
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method, false)) {
-                // Found a valid Route; process its options.
+                // Found a valid Route; process it.
+                $this->matchedRoute = $route;
+
                 $callback = $route->callback();
 
                 if (is_object($callback)) {
+                    // Invoke the Route's Callback with the associated parameters.
                     $this->invokeObject($callback, $route->params());
 
                     return true;
@@ -56,7 +59,7 @@ class ClassicRouter extends Router
                 // Pattern based Route.
                 $regex = $route->regex();
 
-                // Wilcard Routes match any Route, while those pattern based should be processed.
+                // Prepare the URI used by autoDispatch, applying the REGEX if exists.
                 if (! empty($regex)) {
                     $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
                 }
@@ -144,6 +147,7 @@ class ClassicRouter extends Router
 
         // Get the normalized Controller
         $defaultOne = !empty($moduleName) ? $moduleName : $options['default_controller'];
+
         $controller = !empty($controller) ? $controller : $defaultOne;
 
         // Get the normalized Method

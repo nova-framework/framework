@@ -360,7 +360,7 @@ abstract class Base extends \PDO implements Engine
 
         foreach ($data as $key => $value) {
             if($idx > 0) {
-                $whereDetails .= ', ';
+                $fieldsDetails .= ', ';
             }
 
             $fieldDetails .= "$key = :field_$key";

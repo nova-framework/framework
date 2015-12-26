@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demo\Controllers\Database;
 
-use App\Models\Entities\Car;
+use App\Modules\Demo\Models\Entities\Car;
 use App\Modules\Demo\Core\BaseController;
 
 
@@ -54,7 +54,7 @@ class Service extends BaseController
         $this->title('Basic SQLite DBAL Service Demo');
 
         // Get Car service
-        $carservice = \Nova\Database\Manager::getService('Car', 'sqlite');
+        $carservice = \Nova\Database\Manager::getService('Car', null, 'sqlite');
 
         // Demo 2 Make new Car entity
         $demo2 = $carservice->getAll();

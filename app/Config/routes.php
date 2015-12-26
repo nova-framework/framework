@@ -17,10 +17,6 @@ Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('admin/(:any)(/(:all))', 'App\Controllers\Demo@test');
 
-Router::any('database', 'App\Controllers\Demo@database');
-Router::any('database/insert', 'App\Controllers\Demo@databaseInsert');
-Router::any('database/sqlite', 'App\Controllers\Demo@databaseSqlite');
-
 // All the un-matched Requests will be routed there.
 Router::catchAll('App\Controllers\Demo@catchAll');
 
@@ -29,7 +25,6 @@ Router::catchAll('App\Controllers\Demo@catchAll');
 Router::any('', 'welcome/index');
 Router::any('subpage', 'welcome/subpage');
 Router::any('admin/(:any)/(:all)', 'demo/test/$1/$2');
-Router::any('database', 'demo/database');
 Router::any('(:all)', 'demo/catchall/$1');
 */
 /** End static routes */

@@ -12,6 +12,9 @@ namespace Nova\Database;
 
 use Nova\Config;
 use Nova\Database\Engine;
+use Nova\Core\Controller;
+use Nova\Helpers\Inflector;
+
 
 abstract class Manager
 {
@@ -59,6 +62,10 @@ abstract class Manager
         // Make new instance, can throw exceptions!
         $className = '\Nova\Database\Engine\\' . $driver;
 
+        if (! class_exists($className)) {
+            throw new \Exception("Class not found: ".$className);
+        }
+
         $engine = new $className($options['config']);
 
         // If no success
@@ -77,33 +84,67 @@ abstract class Manager
     /**
      * Get service instance with class service name
      * @param string $serviceName the relative or absolute namespace class name (relative from App\Services\Database\)
+     * @param string|null $fromModule Ask the service to be loaded from specified Module.
      * @param Engine|string|null $engine Use the following engine.
      * @return Service|null
      * @throws \Exception
      */
-    public static function getService($serviceName, $engine = 'default')
+    public static function getService($serviceName, $fromModule = null, $engine = 'default')
     {
-        $className = $serviceName;
+        $serviceName = ltrim($serviceName, '\\');
 
-        // Check if absolute or relative service namespace is given
-        if (substr($serviceName, 0, 12) !== 'App\Modules\\') {
-            // Relative!
-            $className = 'App\Services\Database\\' . $serviceName;
+        // Get the Controller instance.
+        $instance =& get_instance();
+
+        // Get the current Module name.
+        if(($fromModule !== null) && ! empty($fromModule)) {
+            $module = Inflector::classify($fromModule);
+        }
+        else {
+            $module = $instance ? $instance->module() : null;
         }
 
-        if ($engine !== null && is_string($engine)) {
+        //
+        // Calculate the Service's fully qualified Class Name.
+
+        $classPath = str_replace('\\', '/', $serviceName);
+
+        if (preg_match('#^App/(Services|Modules)/(.*)$#i', $classPath)) {
+            if ($fromModule !== null) {
+                throw new \UnexpectedValueException('Fully qualified Class Name while a Module is specified');
+            }
+
+            // A fully qualified className, with complete namespace.
+            $classPath = '\\';
+        }
+        else if($module !== null) {
+            $classPath = '\App\Modules\\'.$module.'\Services\Database\\';
+        }
+        else {
+            $classPath = '\App\Services\Database\\';
+        }
+
+        $className = $classPath.$serviceName;
+
+        if (($engine !== null) && is_string($engine)) {
             $engine = self::getEngine($engine);
         }
 
         if (isset(static::$serviceInstances[$className])) {
             static::$serviceInstances[$className]->setEngine($engine);
+
             return static::$serviceInstances[$className];
         }
 
+        if (! class_exists($className)) {
+            throw new \Exception("Class not found: ".$className);
+        }
+
+        // Get a Service instance.
         $service = new $className();
 
-        if (!$service instanceof Service) {
-            throw new \Exception("Class not found '".$className."'!");
+        if (! $service instanceof Service) {
+            throw new \Exception("Invalid Service called: ".$className);
         }
 
         $service->setEngine($engine);

@@ -1,9 +1,9 @@
 <?php
 
-
-namespace App\Models\Entities;
+namespace App\Modules\Demo\Models\Entities;
 
 use Nova\Database\Entity;
+
 
 class Car extends Entity
 {

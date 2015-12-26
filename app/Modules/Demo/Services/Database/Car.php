@@ -1,17 +1,17 @@
 <?php
 
-
-namespace App\Services\Database;
+namespace App\Modules\Demo\Services\Database;
 
 use Nova\Database\Service;
+
 
 class Car extends Service
 {
     public function __construct() {
-        $this->table = "car";
+        $this->table       = "car";
         $this->primaryKeys = array("carid");
         $this->fetchMethod = \PDO::FETCH_CLASS;
-        $this->fetchClass = '\App\Models\Entities\Car';
+        $this->fetchClass  = '\App\Modules\Demo\Models\Entities\Car';
     }
 
 
@@ -19,4 +19,5 @@ class Car extends Service
     {
         return $this->read("SELECT * FROM " . DB_PREFIX . "car");
     }
+
 }

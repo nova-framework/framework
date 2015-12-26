@@ -359,10 +359,10 @@ abstract class Base extends \PDO implements Engine
         $fieldDetails = '';
 
         $idx = 0;
-        
+
         foreach ($data as $key => $value) {
             if($idx > 0) {
-                $fieldsDetails .= ', ';
+                $fieldDetails .= ', ';
             }
 
             $fieldDetails .= "$key = :field_$key";

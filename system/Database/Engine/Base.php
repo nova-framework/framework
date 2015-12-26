@@ -356,28 +356,44 @@ abstract class Base extends \PDO implements Engine
         ksort($data);
 
         // Column :bind for auto binding.
-        $fieldDetails = null;
+        $fieldDetails = '';
 
         foreach ($data as $key => $value) {
-            $fieldDetails .= "$key = :field_$key,";
+            if($idx > 0) {
+                $whereDetails .= ', ';
+            }
+
+            if(($pos = strpos($key, ' ')) > 0) {
+                $key = substr($key, $pos);
+            }
+
+            $fieldDetails .= "$key = :field_$key";
         }
 
-        $fieldDetails = rtrim($fieldDetails, ',');
-
         // Where :bind for auto binding
-        $whereDetails = null;
+        $whereDetails = '';
+
         $idx = 0;
 
         foreach ($where as $key => $value) {
-            if ($idx == 0) {
-                $whereDetails .= "$key = :where_$key";
-            } else {
-                $whereDetails .= " AND $key = :where_$key";
+            if($idx > 0) {
+                $whereDetails .= ' AND ';
             }
+
+            if(strpos($key, ' ') > 0) {
+                $segments = explode(' ', $key);
+
+                $key      = $segments[0];
+                $operator = $segments[1];
+            }
+            else {
+                $operator = '=';
+            }
+
+            $whereDetails .= "$key $operator :where_$key";
+
             $idx++;
         }
-
-        $whereDetails = ltrim($whereDetails, ' AND ');
 
         // Prepare statement.
         $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
@@ -430,7 +446,17 @@ abstract class Base extends \PDO implements Engine
                     $whereDetails .= ' AND ';
                 }
 
-                $whereDetails .= "$key = :$key";
+                if(strpos($key, ' ') > 0) {
+                    $segments = explode(' ', $key);
+
+                    $key      = $segments[0];
+                    $operator = $segments[1];
+                }
+                else {
+                    $operator = '=';
+                }
+
+                $whereDetails .= "$key $operator :$key";
 
                 $idx++;
             }

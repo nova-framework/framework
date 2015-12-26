@@ -74,7 +74,7 @@ abstract class Base extends \PDO implements Engine
     /**
      * Get the current fetching Method
      */
-    public function getMethod()
+    public function getFetchMethod()
     {
         return $this->method;
     }

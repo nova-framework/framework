@@ -30,7 +30,7 @@ interface Engine
     /**
      * Get the current fetching Method
      */
-    public function getMethod();
+    public function getFetchMethod();
 
     /**
      * Get configuration for instance

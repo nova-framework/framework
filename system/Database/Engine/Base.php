@@ -429,6 +429,8 @@ abstract class Base extends \PDO implements Engine
             }
 
             $fieldDetails .= "$key = :field_$key";
+
+            $idx++;
         }
 
         // Where :bind for auto binding

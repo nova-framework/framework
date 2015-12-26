@@ -22,7 +22,7 @@ abstract class Base extends \PDO implements Engine
     private $config;
 
     /** @var int Counting how much queries have been executed in total. */
-    private $queryCount;
+    protected $queryCount;
 
     /**
      * MySQLEngine constructor.

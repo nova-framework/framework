@@ -358,6 +358,8 @@ abstract class Base extends \PDO implements Engine
         // Column :bind for auto binding.
         $fieldDetails = '';
 
+        $idx = 0;
+        
         foreach ($data as $key => $value) {
             if($idx > 0) {
                 $fieldsDetails .= ', ';

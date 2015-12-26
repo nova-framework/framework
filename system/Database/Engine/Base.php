@@ -35,7 +35,7 @@ abstract class Base extends \PDO implements Engine
     public function __construct($dsn, $config = array(), $options = array()) {
         // Check for valid Config.
         if (! is_array($config) || ! is_array($options)) {
-            throw new \UnexpectedValueException('Parameter should be an Array');
+            throw new \UnexpectedValueException('Config and Options parameters should be Arrays');
         }
 
         // Will set the default method when provided in the config.

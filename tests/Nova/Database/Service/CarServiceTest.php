@@ -8,7 +8,7 @@
  */
 
 namespace Nova\Tests\Database\Service;
-use App\Services\Database\Car;
+use App\Modules\Demo\Services\Database\Car;
 
 /**
  * Class CarServiceTest
@@ -24,15 +24,15 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
 
     private function prepareService($linkName = 'default')
     {
-        $this->carservice = \Nova\Database\Manager::getService('Car', $linkName);
+        $this->carservice = \Nova\Database\Manager::getService('Car', 'Demo', $linkName);
         $this->assertInstanceOf('\Nova\Database\Service', $this->carservice);
-        $this->assertInstanceOf('\App\Services\Database\Car', $this->carservice);
+        $this->assertInstanceOf('\App\Modules\Demo\Services\Database\Car', $this->carservice);
     }
 
     /**
      * @covers \Nova\Database\Manager::getService
      * @covers \Nova\Database\Service
-     * @covers \App\Services\Database\Car
+     * @covers \App\Modules\Demo\Services\Database\Car
      */
     public function testPrepareService()
     {

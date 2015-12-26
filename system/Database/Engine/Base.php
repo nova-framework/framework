@@ -433,6 +433,9 @@ abstract class Base extends \PDO implements Engine
             $idx++;
         }
 
+        // Sort in where keys.
+        ksort($where);
+        
         // Where :bind for auto binding
         $whereDetails = '';
 

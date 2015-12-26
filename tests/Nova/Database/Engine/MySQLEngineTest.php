@@ -109,7 +109,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Engine\MySQL::__construct
      * @covers \Nova\Database\Engine\MySQL::selectAll
      * @covers \Nova\Database\Engine\MySQL::insert
-     * @covers \Nova\Database\Engine\MySQL::insertAll
+     * @covers \Nova\Database\Engine\MySQL::insertBatch
      * @covers \Nova\Database\Engine\MySQL::rawQuery
      * @covers \Nova\Database\Engine\MySQL::commit
      */
@@ -140,7 +140,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_3', 'costs' => 38000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_4', 'costs' => 48000)
         );
-        $insert_2 = $this->engine->insertAll(DB_PREFIX . 'car', $data_2, false);
+        $insert_2 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_2, false);
 
         $this->assertEquals(3, count($insert_2));
         foreach($insert_2 as $key => $value) {
@@ -154,7 +154,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_6', 'costs' => 31000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_7', 'costs' => 41000)
         );
-        $insert_3 = $this->engine->insertAll(DB_PREFIX . 'car', $data_3, true);
+        $insert_3 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_3, true);
 
         $this->assertEquals(3, count($insert_3));
         foreach($insert_3 as $key => $value) {
@@ -170,7 +170,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         );
 
         try {
-            $this->engine->insertAll(DB_PREFIX . 'car', $data_4, true);
+            $this->engine->insertBatch(DB_PREFIX . 'car', $data_4, true);
             $this->assertFalse(true, 'Inserting error data should give exceptions!');
         }catch(\Exception $e) {
             $this->assertContains("null", $e->getMessage());

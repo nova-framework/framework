@@ -110,7 +110,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Engine\SQLite::__construct
      * @covers \Nova\Database\Engine\SQLite::selectAll
      * @covers \Nova\Database\Engine\SQLite::insert
-     * @covers \Nova\Database\Engine\SQLite::insertAll
+     * @covers \Nova\Database\Engine\SQLite::insertBatch
      * @covers \Nova\Database\Engine\SQLite::rawQuery
      * @covers \Nova\Database\Engine\SQLite::commit
      */
@@ -141,7 +141,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_3', 'costs' => 38000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_4', 'costs' => 48000)
         );
-        $insert_2 = $this->engine->insertAll(DB_PREFIX . 'car', $data_2, false);
+        $insert_2 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_2, false);
 
         $this->assertEquals(3, count($insert_2));
         foreach($insert_2 as $key => $value) {
@@ -155,7 +155,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_6', 'costs' => 31000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_7', 'costs' => 41000)
         );
-        $insert_3 = $this->engine->insertAll(DB_PREFIX . 'car', $data_3, true);
+        $insert_3 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_3, true);
 
         $this->assertEquals(3, count($insert_3));
         foreach($insert_3 as $key => $value) {
@@ -171,7 +171,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
         );
 
         try {
-            $this->engine->insertAll(DB_PREFIX . 'car', $data_4, true);
+            $this->engine->insertBatch(DB_PREFIX . 'car', $data_4, true);
             $this->assertFalse(true, 'Inserting error data should give exceptions!');
         }catch(\Exception $e) {
             $this->assertContains("NULL", $e->getMessage());

@@ -23,7 +23,7 @@ abstract class Base extends \PDO implements Engine
     protected $config;
 
     /** @var int Counting how much queries have been executed in total. */
-    protected $queryCount;
+    protected $queryCount = 0;
 
     /**
      * MySQLEngine constructor.
@@ -43,9 +43,6 @@ abstract class Base extends \PDO implements Engine
         if (isset($config['fetch_method'])) {
             $this->method = $config['fetch_method'];
         }
-
-        // Reset the query counter
-        $this->queryCount = 0;
 
         // Store the config in class variable.
         $this->config = $config;

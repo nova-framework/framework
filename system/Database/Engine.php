@@ -28,6 +28,11 @@ interface Engine
     public function getDriverCode();
 
     /**
+     * Get the current fetching Method
+     */
+    public function getMethod();
+
+    /**
      * Get configuration for instance
      * @return array
      */

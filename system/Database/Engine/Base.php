@@ -16,7 +16,7 @@ use Nova\Database\Manager;
 abstract class Base extends \PDO implements Engine
 {
     /** @var int PDO Fetch method. */
-    private $method = \PDO::FETCH_OBJ;
+    protected $method = \PDO::FETCH_OBJ;
 
     /** @var array Config from the user's app config. */
     private $config;
@@ -70,6 +70,14 @@ abstract class Base extends \PDO implements Engine
      * @return string
      */
     abstract public function getDriverCode();
+
+    /**
+     * Get the current fetching Method
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
 
     /**
      * Get configuration for instance

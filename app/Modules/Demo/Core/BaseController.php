@@ -29,16 +29,14 @@ class BaseController extends ThemedController
     {
         parent::__construct();
 
-        $demoMenu = Config::get('demos_menu');
+        $menuItems = Config::get('demos_menu');
 
-        $this->set('topMenuItems', $demoMenu);
+        $this->set('topMenuItems', $menuItems);
         $this->set('dashboardUrl', site_url('demos'));
     }
 
     protected function beforeFlight()
     {
-        $data =& $this->data;
-
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }

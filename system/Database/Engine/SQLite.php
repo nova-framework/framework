@@ -54,7 +54,7 @@ class SQLite extends BaseEngine
         return Manager::DRIVER_SQLITE;
     }
 
-    public function insertBatch($table, $data, $transaction)
+    public function insertBatch($table, $data, $transaction = false)
     {
         throw new \BadMethodCallException('Multiple Inserts are unsupported on SQLite Engine');
     }

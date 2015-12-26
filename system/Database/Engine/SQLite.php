@@ -130,7 +130,7 @@ class SQLite extends \PDO implements Engine
      * The result MUST be an array!
      *
      * @param string $sql
-     * @param array $bind
+     * @param array $bindParams
      * @param bool $fetchAll Ask the method to fetch all the records or not.
      * @param null $method Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
@@ -138,7 +138,7 @@ class SQLite extends \PDO implements Engine
      * @throws \Exception
      * @internal param array $bindParams
      */
-    public function select($sql, $bind = array(), $fetchAll = false, $method = null, $class = null)
+    public function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null)
     {
         // Append select if it isn't
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
@@ -154,7 +154,7 @@ class SQLite extends \PDO implements Engine
         $stmt = $this->prepare($sql);
 
         // Bind values
-        foreach ($bind as $key => $value) {
+        foreach ($bindParams as $key => $value) {
             if (is_int($value)) {
                 $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
             } else {

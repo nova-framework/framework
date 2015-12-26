@@ -39,6 +39,11 @@ class Router
     private $defaultRoute = null;
 
     /**
+     * Matched Route, the current found Route, if any.
+     */
+    protected $matchedRoute = null;
+
+    /**
      * Set an Error Callback
      *
      * @var null $errorCallback
@@ -145,14 +150,25 @@ class Router
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
-    public function addRoute($method, $route, $callback)
+    public function addRoute($method, $route, $callback = null)
     {
         $method = strtoupper($method);
         $pattern = ltrim(self::$routeGroup.'/'.$route, '/');
 
         $route = new Route($method, $pattern, $callback);
 
+        // Add the current Route instance to the known Routes list.
         array_push($this->routes, $route);
+    }
+
+    /**
+     * Return the current Matched Route, if there is any.
+     *
+     * @return null|Route
+     */
+    public function matchedRoute()
+    {
+        return $this->matchedRoute;
     }
 
     /**
@@ -251,8 +267,15 @@ class Router
 
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method, $patterns)) {
-                // Found a valid Route; invoke the Route's Callback and go out.
-                $this->invokeObject($route->callback(), $route->params());
+                // Found a valid Route; process it.
+                $this->matchedRoute = $route;
+
+                $callback = $route->callback();
+
+                if($callback !== null) {
+                    // Invoke the Route's Callback with the associated parameters.
+                    $this->invokeObject($callback, $route->params());
+                }
 
                 return true;
             }

@@ -363,10 +363,6 @@ abstract class Base extends \PDO implements Engine
                 $whereDetails .= ', ';
             }
 
-            if(($pos = strpos($key, ' ')) > 0) {
-                $key = substr($key, $pos);
-            }
-
             $fieldDetails .= "$key = :field_$key";
         }
 

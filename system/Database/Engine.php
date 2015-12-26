@@ -139,7 +139,7 @@ interface Engine
      * Execute Delete statement, this will automatically build the query for you.
      *
      * @param string $table Table to execute the statement.
-     * @param array $where Use key->value like column->value for where mapping.
+     * @param array|string $where Use a string or key->value like column->value for where mapping.
      * @return bool
      *
      * @throws \Exception

@@ -407,7 +407,7 @@ abstract class Base extends \PDO implements Engine
      * Execute Delete statement, this will automatically build the query for you.
      *
      * @param string $table Table to execute the statement.
-     * @param array $where Use key->value like column->value for where mapping.
+     * @param array|string $where Use a string or key->value like column->value for where mapping.
      * @return bool|int Row Count, number of deleted rows, or false on failure.
      *
      * @throws \Exception
@@ -418,26 +418,35 @@ abstract class Base extends \PDO implements Engine
         ksort($where);
 
         // Bind the where details.
-        $whereDetails = null;
-        $idx = 0;
+        $whereDetails = '';
 
-        foreach ($where as $key => $value) {
-            if ($idx == 0) {
+        if(is_array($where)) {
+            ksort($where);
+
+            $idx = 0;
+
+            foreach ($where as $key => $value) {
+                if($idx > 0) {
+                    $whereDetails .= ' AND ';
+                }
+
                 $whereDetails .= "$key = :$key";
-            } else {
-                $whereDetails .= " AND $key = :$key";
-            }
-            $idx++;
-        }
 
-        $whereDetails = ltrim($whereDetails, ' AND ');
+                $idx++;
+            }
+        }
+        else if(is_string($where)) {
+            $whereDetails = $where;
+        }
 
         // Prepare statement
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
-        // Bind
-        foreach ($where as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+        // Bind parameters.
+        if(is_array($where)) {
+            foreach ($where as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
         }
 
         // Execute and return if failure.

@@ -169,9 +169,9 @@ abstract class Base extends \PDO implements Engine
         // Bind the key and values (only if given).
         foreach ($bindParams as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
             } else {
-                $stmt->bindValue("$key", $value);
+                $stmt->bindValue(":$key", $value);
             }
         }
 
@@ -558,25 +558,25 @@ abstract class Base extends \PDO implements Engine
      * Optional bind is available.
      *
      * @param string $sql Query
-     * @param array $bind optional binding values
+     * @param array $bindParams optional binding values
      * @param int|null $method custom method
      * @param string|null $class class fetch, the class, full class with namespace.
      * @return \PDOStatement|mixed
      *
      * @throws \Exception
      */
-    public function rawPrepare($sql, $bind = array(), $method = null, $class = null)
+    public function rawPrepare($sql, $bindParams = array(), $method = null, $class = null)
     {
 
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
-        foreach ($bind as $key => $value) {
+        foreach ($bindParams as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
             } else {
-                $stmt->bindValue("$key", $value);
+                $stmt->bindValue(":$key", $value);
             }
         }
 

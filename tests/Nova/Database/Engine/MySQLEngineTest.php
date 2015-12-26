@@ -265,7 +265,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
         // Check if we still can find the inserted records
         $sql = "SELECT * FROM " . DB_PREFIX . "car WHERE carid = :carid1 OR carid = :carid2 OR carid = :carid3;";
-        $all = $this->engine->selectAll($sql, array(':carid1' => $id_1,':carid2' => $id_2,':carid3' => $id_3));
+        $all = $this->engine->selectAll($sql, array('carid1' => $id_1,'carid2' => $id_2,'carid3' => $id_3));
 
         // Should be empty => false.
         $this->assertFalse($all);

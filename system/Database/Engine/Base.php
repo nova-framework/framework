@@ -19,7 +19,7 @@ abstract class Base extends \PDO implements Engine
     protected $method = \PDO::FETCH_OBJ;
 
     /** @var array Config from the user's app config. */
-    private $config;
+    protected $config;
 
     /** @var int Counting how much queries have been executed in total. */
     protected $queryCount;

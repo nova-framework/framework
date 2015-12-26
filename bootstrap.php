@@ -31,6 +31,31 @@ require_once $configDir.'config.php';
 
 
 /**
+ * Our test db config, replace it here.:
+ */
+Config::set('database', array(
+    'default' => array(
+        'engine' => 'mysql',
+        'config' => array(
+            'host'          => 'localhost',
+            'port'          => 3306, // Not required, default is 3306
+            'database'      => 'testdb1',
+            'username'      => 'root',
+            'password'      => '',
+            'fetch_method'  => \PDO::FETCH_OBJ, // Not required, default is OBJ.
+            'charset'       => 'utf8' // Not required, default and recommended is utf8.
+        )
+    ),
+    'sqlite' => array(
+        'engine' => 'sqlite',
+        'config' => array(
+            'file'          => 'test.sqlite',
+            'fetch_method'  => \PDO::FETCH_OBJ // Not required, default is OBJ.
+        )
+    )
+));
+
+/**
  * Set timezone.
  */
 date_default_timezone_set(Config::get('timezone'));
@@ -48,7 +73,7 @@ $router = Router::getInstance();
 /**
  * load routes
  * */
-require_once $configDir.'routes.php'; // Default routes, we will only change the routes later in tests!
+// require_once $configDir.'routes.php'; // Default routes, we will only change the routes later in tests!
 
 /**
  * bootstrap the active modules (and their associated routes)

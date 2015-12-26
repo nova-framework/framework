@@ -5,7 +5,8 @@ vendor
 composer.lock
 
 # Test specific
-storage/persistent/test.sqlite
+tmp/test/*
+build/
 
 # IDE's
 ## IntelliJ IDEA / PhpStorm

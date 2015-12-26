@@ -1,4 +1,4 @@
-# framework
+# Nova Framework [![Build Status](https://travis-ci.org/simple-mvc-framework/framework.svg?branch=3.0-beta)](https://travis-ci.org/simple-mvc-framework/framework)
 
 Version 3 of the Framework.
 

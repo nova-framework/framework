@@ -3,8 +3,9 @@
  * MySQL Engine.
  *
  * @author Tom Valk - tomvalk@lt-box.info
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
- * @date December 19th, 2015
+ * @date December 27th, 2015
  */
 
 namespace Nova\Database\Engine;
@@ -435,7 +436,7 @@ abstract class Base extends \PDO implements Engine
 
         // Sort in where keys.
         ksort($where);
-        
+
         // Where :bind for auto binding
         $whereDetails = '';
 

@@ -26,7 +26,6 @@ class Service extends BaseController
         // Demo 2 Make new Car entity
         $demo2 = $carservice->getAll();
 
-
         // Demo 3 Insert new Car
         $car = new Car(); // Create our entity
         $car->make = 'BMW';
@@ -38,10 +37,8 @@ class Service extends BaseController
         // Output our car model again, you will see that the carid is now filled in!
         $demo3 = $car;
 
-
         // Demo 4 delete last car instance
         $demo4 = $carservice->delete($car);
-
 
         $this->set('demo2', $demo2);
         $this->set('demo3', $demo3);
@@ -59,9 +56,9 @@ class Service extends BaseController
         // Demo 2 Make new Car entity
         $demo2 = $carservice->getAll();
 
-
         // Demo 3 Insert new Car
         $car = new Car(); // Create our entity
+
         $car->make = 'BMW';
         $car->model = '1-serie';
         $car->costs = 40000;
@@ -71,13 +68,12 @@ class Service extends BaseController
         // Output our car model again, you will see that the carid is now filled in!
         $demo3 = $car;
 
-
         // Demo 4 delete last car instance
         $demo4 = $carservice->delete($car);
-
 
         $this->set('demo2', $demo2);
         $this->set('demo3', $demo3);
         $this->set('demo4', $demo4);
     }
+    
 }

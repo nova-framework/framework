@@ -28,6 +28,11 @@ interface Engine
     public function getDriverCode();
 
     /**
+     * Get the current fetching Method
+     */
+    public function getFetchMethod();
+
+    /**
      * Get configuration for instance
      * @return array
      */
@@ -99,12 +104,11 @@ interface Engine
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
      * @param bool $transaction
-     * @param bool $multipleInserts Specify to execute multiple inserts.
      * @return bool|int
      *
      * @throws \Exception
      */
-    public function insert($table, $data, $transaction = false, $multipleInserts = false);
+    public function insert($table, $data, $transaction = false);
 
     /**
      * Execute insert query, will automatically build query for you.
@@ -117,7 +121,7 @@ interface Engine
      * @param bool $transaction
      * @return bool|int
      */
-    public function insertAll($table, $data, $transaction = false);
+    public function insertBatch($table, $data, $transaction = false);
 
     /**
      * Execute update query, will automatically build query for you.
@@ -125,24 +129,22 @@ interface Engine
      * @param string $table Table to execute the statement.
      * @param array $data The updated array, will map into an update statement.
      * @param array $where Use key->value like column->value for where mapping.
-     * @param int $limit Limit the update statement, not supported by every engine!
      * @return int|bool
      *
      * @throws \Exception
      */
-    public function update($table, $data, $where, $limit = 1);
+    public function update($table, $data, $where);
 
     /**
      * Execute Delete statement, this will automatically build the query for you.
      *
      * @param string $table Table to execute the statement.
      * @param array $where Use key->value like column->value for where mapping.
-     * @param int $limit Limit the update statement, not supported by every engine!
      * @return bool
      *
      * @throws \Exception
      */
-    public function delete($table, $where, $limit = 1);
+    public function delete($table, $where);
 
     /**
      * Truncate table

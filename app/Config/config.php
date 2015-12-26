@@ -97,7 +97,8 @@ Config::set('database', array(
             'username'      => 'root',
             'password'      => 'password',
             'fetch_method'  => \PDO::FETCH_OBJ, // Not required, default is OBJ.
-            'charset'       => 'utf8' // Not required, default and recommended is utf8.
+            'charset'       => 'utf8', // Not required, default and recommended is utf8.
+            'compress'      => false   // Changing to true will hugely improve the persormance on remote servers.
         )
     ),
     /** Extra connections can be added here, some examples: */

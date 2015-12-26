@@ -114,17 +114,17 @@ abstract class Manager
                 throw new \UnexpectedValueException('Fully qualified Class Name while a Module is specified');
             }
 
-            // A fully qualified className, with complete namespace.
-            $classPath = '\\';
+            // A fully qualified className.
+            $basePath = '\\';
         }
         else if($module !== null) {
-            $classPath = '\App\Modules\\'.$module.'\Services\Database\\';
+            $basePath = '\App\Modules\\'.$module.'\Services\Database\\';
         }
         else {
-            $classPath = '\App\Services\Database\\';
+            $basePath = '\App\Services\Database\\';
         }
 
-        $className = $classPath.$serviceName;
+        $className = $basePath.$serviceName;
 
         if (($engine !== null) && is_string($engine)) {
             $engine = self::getEngine($engine);

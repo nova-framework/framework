@@ -7,13 +7,17 @@ use Nova\Database\Service;
 
 class Car extends Service
 {
-    public function __construct() {
-        $this->table       = "car";
-        $this->primaryKeys = array("carid");
-        $this->fetchMethod = \PDO::FETCH_CLASS;
-        $this->fetchClass  = '\App\Modules\Demo\Models\Entities\Car';
-    }
+    protected $fetchMethod = \PDO::FETCH_CLASS;
+    protected $fetchClass  = '\App\Modules\Demo\Models\Entities\Car';
 
+    protected $table       = "car";
+    protected $primaryKeys = array("carid");
+
+
+    public function __construct()
+    {
+
+    }
 
     public function getAll()
     {

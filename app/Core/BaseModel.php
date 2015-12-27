@@ -136,9 +136,9 @@ class BaseModel extends Model
         $result = $this->db->insert($this->table_name, $data);
 
         $this->trigger('after_insert', array(
+            'method' => 'insert',
             'fields' => $data,
-            'result' => $result,
-            'method' => 'insert'
+            'result' => $result
         ));
 
         return $result;

@@ -46,12 +46,15 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\Database\Manager::getService
+     * @covers \Nova\Database\Engine
+     * @covers \Nova\Database\Engine\Base
      * @covers \Nova\Database\Service
      * @covers \App\Modules\Demo\Services\Database\Car
+     * @param string $linkName
      */
-    public function testBasicSelecting()
+    public function testBasicSelecting($linkName = 'default')
     {
-        $this->prepareService();
+        $this->prepareService($linkName);
 
         // Select all with our custom getAll function
         $all = $this->carservice->getAll();
@@ -59,5 +62,23 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThanOrEqual(2, $all);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $all[0]);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $all[1]);
+
+        // Select with id
+        $one = $this->carservice->read("SELECT * FROM " . DB_PREFIX . "car LIMIT 1;");
+        $this->assertEquals(1, count($one));
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $one[0]);
     }
+
+    /**
+     * @covers \Nova\Database\Manager::getService
+     * @covers \Nova\Database\Engine
+     * @covers \Nova\Database\Engine\Base
+     * @covers \Nova\Database\Service
+     * @covers \App\Modules\Demo\Services\Database\Car
+     */
+    public function testBasicSelectingSQLite()
+    {
+        $this->testBasicSelecting('sqlite');
+    }
+
 }

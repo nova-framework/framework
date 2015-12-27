@@ -19,8 +19,6 @@ use Nova\Core\Service as CoreService;
  */
 abstract class Service extends CoreService
 {
-    protected $fetchMethod = \PDO::FETCH_CLASS;
-
     protected $fetchClass = null;
 
     /** @var string Driver name, should be in the config as default. */
@@ -86,7 +84,7 @@ abstract class Service extends CoreService
             }
 
             // If only one Primary Key, we will set it in the entity.
-            if (count($this->primaryKeys) == 1 && $what->{$this->primaryKeys[0]} == null) {
+            if ((count($this->primaryKeys) == 1) && ($what->{$this->primaryKeys[0]} == null)) {
                 $entity[$idx]->{$this->primaryKeys[0]} = $result;
             }
 
@@ -118,7 +116,7 @@ abstract class Service extends CoreService
             throw new \Exception("No fetchClass is given while calling READ method");
         }
 
-        return $this->engine->selectAll($sql, $bindParams, $this->fetchMethod, $this->fetchClass);
+        return $this->engine->selectAll($sql, $bindParams, \PDO::FETCH_CLASS, $this->fetchClass);
     }
 
     /**
@@ -141,14 +139,14 @@ abstract class Service extends CoreService
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues);
+        $result = $this->engine->update(DB_PREFIX .$this->table, get_object_vars($entity), $primaryValues);
 
         if ($result === false) {
             return false;
         }
 
         // Primary Key, put it back into the entity.
-        if (count($this->primaryKeys) == 1 && $entity->{$this->primaryKeys[0]} == null) {
+        if ((count($this->primaryKeys) == 1) && ($entity->{$this->primaryKeys[0]} == null)) {
             $entity->{$this->primaryKeys[0]} = $result;
         }
 
@@ -173,6 +171,12 @@ abstract class Service extends CoreService
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        return $this->engine->delete(DB_PREFIX . $this->table, $primaryValues) !== false;
+        $result = $this->engine->delete(DB_PREFIX .$this->table, $primaryValues);
+
+        if ($result === false) {
+            return false;
+        }
+
+        return true;
     }
 }

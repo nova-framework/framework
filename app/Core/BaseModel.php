@@ -164,7 +164,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($fields = '*', $where = false, $limits = true)
+    public function select($fields = '*', $where = false, $limit = true)
     {
         $bindParams = array();
 
@@ -241,13 +241,13 @@ class BaseModel extends Model
 
         $fetchAll = true;
 
-        if(is_array($limits) && (count($limits) == 2)) {
-            $limitDetails = implode(',', $limits);
+        if(is_array($limit) && (count($limit) == 2)) {
+            $limitDetails = implode(',', $limit);
         }
-        else if(is_numeric($limits) && ($limits > 0)) {
-            $limitDetails = '0, ' .$limits;
+        else if(is_numeric($limit) && ($limit > 0)) {
+            $limitDetails = '0, ' .$limit;
         }
-        else if($limits !== true) {
+        else if($limit !== false) {
             $fetchAll = false;
         }
 

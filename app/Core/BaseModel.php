@@ -93,6 +93,11 @@ class BaseModel extends Model
     protected $temp_return_type = null;
 
     /**
+     * The select limits.
+     */
+    protected $temp_select_limit = null;
+
+    /**
      * Protected, non-modifiable attributes
      */
     protected $protected_attributes = array();
@@ -164,7 +169,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($fields = '*', $where = false, $limit = true)
+    public function select($fields = '*', $where = false, $fetchAll = false)
     {
         $bindParams = array();
 
@@ -239,16 +244,15 @@ class BaseModel extends Model
         // Prepare the LIMIT details.
         $limitDetails = '';
 
-        $fetchAll = true;
+        if($fetchAll) {
+            $limit = $this->temp_select_limit;
 
-        if(is_array($limit) && (count($limit) == 2)) {
-            $limitDetails = implode(',', $limit);
-        }
-        else if(is_numeric($limit) && ($limit > 0)) {
-            $limitDetails = '0, ' .$limit;
-        }
-        else if($limit !== false) {
-            $fetchAll = false;
+            if(is_array($limit) && (count($limit) == 2)) {
+                $limitDetails = implode(',', $limit);
+            }
+            else if(is_numeric($limit) && ($limit > 0)) {
+                $limitDetails = '0, ' .$limit;
+            }
         }
 
         if(! empty($limitDetails)) {
@@ -276,6 +280,9 @@ class BaseModel extends Model
 
         // Make sure our temp return type is correct.
         $this->temp_return_type = $this->return_type;
+
+        // Make sure our temp limit is correct.
+        $this->temp_select_limit = null;
 
         return $result;
     }
@@ -353,6 +360,20 @@ class BaseModel extends Model
         return $this;
     }
 
+    public function limit()
+    {
+        $params = func_get_args();
+
+        if(count($params) == 1) {
+            $this->temp_select_limit = $params[0];
+        }
+        else {
+            $this->temp_select_limit = array($params[0], $params[1]);
+        }
+
+        return $this;
+    }
+
     /**
      * Temporarily sets our return type to an array.
      */
@@ -394,15 +415,17 @@ class BaseModel extends Model
      */
     public function created_on($row)
     {
-        if (empty($row['fields'])) {
+        if (! is_array($row) || empty($row['fields'])) {
             return null;
         }
 
         $row = $row['fields'];
 
         // Created_on
-        if (! array_key_exists($this->created_field, $row)) {
-            $row[$this->created_field] = $this->set_date();
+        $field =& $this->created_field;
+
+        if (is_array($row) && ! array_key_exists($field, $row)) {
+            $row[$field] = $this->set_date();
         }
 
         return $row;
@@ -418,14 +441,17 @@ class BaseModel extends Model
      */
     public function modified_on($row)
     {
-        if (empty($row['fields'])) {
+        if (! is_array($row) || empty($row['fields'])) {
             return null;
         }
 
         $row = $row['fields'];
 
-        if (is_array($row) && ! array_key_exists($this->modified_field, $row)) {
-            $row[$this->modified_field] = $this->set_date();
+        // Modified_on
+        $field =& $this->modified_field;
+
+        if (is_array($row) && ! array_key_exists($field, $row)) {
+            $row[$field] = $this->set_date();
         }
 
         return $row;

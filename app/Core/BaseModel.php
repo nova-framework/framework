@@ -247,16 +247,16 @@ class BaseModel extends Model
         if($fetchAll) {
             $limit = $this->temp_select_limit;
 
-            if(is_array($limit) && (count($limit) == 2)) {
-                $limitDetails = implode(',', $limit);
-            }
-            else if(is_numeric($limit) && ($limit > 0)) {
+            if(is_numeric($limit)) {
                 $limitDetails = '0, ' .$limit;
             }
-        }
+            else if(is_array($limit)) {
+                $limitDetails = implode(',', $limit);
+            }
 
-        if(! empty($limitDetails)) {
-            $limitDetails = 'LIMIT ' .$limitDetails;
+            if(! empty($limitDetails)) {
+                $limitDetails = 'LIMIT ' .$limitDetails;
+            }
         }
 
         // Prepare the SQL Query

@@ -18,4 +18,9 @@ namespace Nova\Core;
 abstract class Service
 {
 
+    public function __construct()
+    {
+
+    }
+
 }

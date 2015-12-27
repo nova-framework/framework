@@ -10,12 +10,14 @@
 namespace Nova\Database;
 
 use Nova\Database\Engine;
+use Nova\Core\Service as CoreService;
+
 
 /**
  * Class DatabaseService.
  * @package Core\Database
  */
-abstract class Service
+abstract class Service extends CoreService
 {
     protected $fetchMethod = \PDO::FETCH_OBJ;
 
@@ -32,6 +34,15 @@ abstract class Service
 
     /** @var string[]|array Primary keys. */
     protected $primaryKeys;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
 
     /**

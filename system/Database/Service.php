@@ -19,7 +19,7 @@ use Nova\Core\Service as CoreService;
  */
 abstract class Service extends CoreService
 {
-    protected $fetchMethod = \PDO::FETCH_OBJ;
+    protected $fetchMethod = \PDO::FETCH_CLASS;
 
     protected $fetchClass = null;
 

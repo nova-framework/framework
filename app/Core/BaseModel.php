@@ -70,13 +70,6 @@ class BaseModel extends Model
     protected $modified_field = 'modified_on';
 
     /**
-     * Support for soft_deletes.
-     */
-    protected $soft_deletes      = false;
-    protected $soft_delete_key   = 'deleted';
-    protected $temp_with_deleted = false;
-
-    /**
      * Various callbacks available to the Class.
      * They are simple lists of method names (methods will be ran on $this).
      */
@@ -90,6 +83,14 @@ class BaseModel extends Model
     protected $after_delete  = array();
 
     protected $callback_parameters = array();
+
+    /**
+     * By default, we return items as objects. You can change this for the entire class by setting this
+     * value to 'array' instead of 'object'.
+     * Alternatively, you can do it on a per-instance basis using the 'as_array()' and 'as_object()' methods.
+     */
+    protected $return_type = 'object';
+    protected $temp_return_type = null;
 
     /**
      * Protected, non-modifiable attributes
@@ -120,6 +121,161 @@ class BaseModel extends Model
         if ($this->set_modified === true) {
             array_unshift($this->before_update, 'modified_on');
         }
+
+        // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
+    }
+
+    public function insert($data)
+    {
+        $data = $this->trigger('before_insert', array(
+            'method' =>'insert',
+            'fields' => $data
+        ));
+
+        $result = $this->db->insert($this->table_name, $data);
+
+        $this->trigger('after_insert', array(
+            'fields' => $data,
+            'result' => $result,
+            'method' => 'insert'
+        ));
+
+        return $result;
+    }
+
+    public function update($data, $where)
+    {
+        $data = $this->trigger('before_update', array(
+            'method' =>'update',
+            'where'  => $where,
+            'fields' => $data
+        ));
+
+        $result = $this->db->update($this->table_name, $data, $where);
+
+        $this->trigger('after_update', array(
+            'method' => 'update'
+            'where'  => $where,
+            'fields' => $data,
+            'result' => $result,
+        ));
+
+        return $result;
+    }
+
+    public function select($sql, $bindParams = array(), $fetchAll = false)
+    {
+        $return_type = $this->temp_return_type ? $this->temp_return_type : $this->return_type;
+
+        // Prepare the parameters.
+        $class = null;
+
+        if($return_type == 'array') {
+            $method = \PDO::FETCH_ASSOC;
+        }
+        else if($this->temp_return_type == 'object') {
+            $method = \PDO::FETCH_OBJ;
+        }
+        else {
+            $method = \PDO::FETCH_CLASS;
+
+            $class = $return_type;
+        }
+
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $method, $class);
+
+        return $result;
+    }
+
+    public function delete($where)
+    {
+        $data = $this->trigger('before_delete', array(
+            'method' =>'delete',
+            'where'  => $where
+        ));
+
+        $result = $this->db->delete($this->table_name, $where);
+
+        $this->trigger('after_delete', array(
+            'method' => 'delete'
+            'where'  => $where,
+            'result' => $result,
+        ));
+
+        return $result;
+    }
+
+    /**
+     * Getter for the table name.
+     *
+     * @return string The name of the table used by this class.
+     */
+    public function table()
+    {
+        return $this->table_name;
+    }
+
+    /**
+     * Checks whether a field/value pair exists within the table.
+     *
+     * @param string $field The field to search for.
+     * @param string $value The value to match $field against.
+     *
+     * @return bool TRUE/FALSE
+     */
+    public function is_unique($field, $value)
+    {
+        $sql = "SELECT $field FROM " .DB_PREFIX .$this->table_name ." WHERE $field = :$field";
+
+        $data = $this->db->selectAll($sql, array($field => $value));
+
+        if (is_array($data) && (count($data) == 0)) {
+            return true;
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds a field to the protected_attributes array.
+     *
+     * @param $field
+     *
+     * @return mixed
+     */
+    public function protect($field)
+    {
+        $this->protected_attributes[] = $field;
+
+        return $this;
+    }
+
+    /**
+     * Temporarily sets our return type to an array.
+     */
+    public function as_array()
+    {
+        $this->temp_return_type = 'array';
+
+        return $this;
+    }
+
+    /**
+     * Temporarily sets our return type to an object.
+     *
+     * If $class is provided, the rows will be returned as objects that
+     * are instances of that class. $class MUST be an fully qualified
+     * class name, meaning that it must include the namespace, if applicable.
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function as_object($class = null)
+    {
+        $this->temp_return_type = ! empty($class) ? $class : 'object';
+
+        return $this;
     }
 
     //--------------------------------------------------------------------

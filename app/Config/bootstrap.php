@@ -23,10 +23,18 @@ $configDir = dirname(__FILE__) .DS;
 ob_start();
 
 /**
- * Load the application wide Configuration.
+ * Load the application wide Constants.
  */
 require $configDir .'constants.php';
-require $configDir .'functions.php';
+
+/**
+ * Load the application wide functions.
+ */
+require SYSPATH .'functions.php';
+
+/**
+ * Load the application wide Configuration.
+ */
 require $configDir .'config.php';
 
 /**

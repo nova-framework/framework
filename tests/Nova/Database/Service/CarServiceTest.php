@@ -42,4 +42,22 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
         // Test SQLite Link
         $this->prepareService('sqlite');
     }
+
+
+    /**
+     * @covers \Nova\Database\Manager::getService
+     * @covers \Nova\Database\Service
+     * @covers \App\Modules\Demo\Services\Database\Car
+     */
+    public function testBasicSelecting()
+    {
+        $this->prepareService();
+
+        // Select all with our custom getAll function
+        $all = $this->carservice->getAll();
+
+        $this->assertGreaterThanOrEqual(2, $all);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $all[0]);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $all[1]);
+    }
 }

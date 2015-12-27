@@ -164,17 +164,17 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($fields = '*', $where = false, $limits = true, $returnType = 'array')
+    public function select($fields = '*', $where = false, $limits = true)
     {
         $bindParams = array();
 
         // Prepare the parameters.
         $className = null;
 
-        if($returnType == 'array') {
+        if($this->temp_return_type == 'array') {
             $fetchMethod = \PDO::FETCH_ASSOC;
         }
-        else if($returnType == 'object') {
+        else if($this->temp_return_type == 'object') {
             $fetchMethod = \PDO::FETCH_OBJ;
         }
         else {
@@ -273,6 +273,9 @@ class BaseModel extends Model
             'fields' => $fields,
             'result' => $result
         ));
+
+        // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
 
         return $result;
     }

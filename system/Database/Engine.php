@@ -165,5 +165,5 @@ interface Engine
      *
      * @throws \Exception
      */
-    public function rawPrepare($sql, $bind = array(), $method = null, $class = null);
+    public function rawPrepare($sql, $bindParams = array(), $method = null, $class = null);
 }

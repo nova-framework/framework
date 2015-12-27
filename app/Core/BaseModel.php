@@ -206,6 +206,11 @@ class BaseModel extends Model
         return $result;
     }
 
+    public function query($sql)
+    {
+        return $this->db->rawQuery($sql);
+    }
+
     /**
      * Getter for the table name.
      *
@@ -436,25 +441,23 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Provide direct access to any of the Database Engine instance methods
-     * BUT make it look like it's part of the Class; purely for convenience.
+     * Magic method to capture calls to undefined class methods.
+     * In this case we are attempting to convert camel case formatted methods into underscore formatted methods.
      *
-     * @param $name
-     * @param $params
+     * This allows us to call Model methods using camel case and remain backwards compatible.
+     *
+     * @param  string   $name
+     * @param  array    $params
      */
     public function __call($name, $params = null)
     {
         $method = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
 
-        if (method_exists($this, $method)) {
-            return call_user_func_array(array($this, $method), $params);
-        }
-
-        if (! method_exists($this->db, $name)) {
+        if (! method_exists($this, $method)) {
             throw new \BadMethodCallException("Method $name() does not exist in class " . get_class($this));
         }
 
-        return call_user_func_array(array($this->db, $name), $params);
+        return call_user_func_array(array($this, $method), $params);
     }
 
 }

@@ -245,9 +245,9 @@ class BaseModel extends Model
             $limitDetails = implode(',', $limits);
         }
         else if(is_numeric($limits)) {
-            $limitDetails = $limits;
+            $limitDetails = '0, ' .$limits;
         }
-        else if($limits !== false) {
+        else if($limits === true) {
             $fetchAll = false;
         }
 

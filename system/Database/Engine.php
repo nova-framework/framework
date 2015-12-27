@@ -28,9 +28,9 @@ interface Engine
     public function getDriverCode();
 
     /**
-     * Get the current fetching Method
+     * Set/Get the current fetching Method
      */
-    public function getFetchMethod();
+    public function fetchMethod();
 
     /**
      * Get configuration for instance

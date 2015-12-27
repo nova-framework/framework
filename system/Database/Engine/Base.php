@@ -70,11 +70,15 @@ abstract class Base extends \PDO implements Engine
     abstract public function getDriverCode();
 
     /**
-     * Get the current fetching Method
+     * Set/Get the current fetching Method
      */
-    public function getFetchMethod()
+    public function fetchMethod($method = null)
     {
-        return $this->method;
+        if($method === null) {
+            return $this->method;
+        }
+
+        $this->method = $method;
     }
 
     /**

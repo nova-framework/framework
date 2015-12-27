@@ -7,7 +7,6 @@ use Nova\Database\Service;
 
 class Car extends Service
 {
-    protected $fetchMethod = \PDO::FETCH_CLASS;
     protected $fetchClass  = '\App\Modules\Demo\Models\Entities\Car';
 
     protected $table       = "car";

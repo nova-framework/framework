@@ -244,10 +244,10 @@ class BaseModel extends Model
         if(is_array($limits) && (count($limits) == 2)) {
             $limitDetails = implode(',', $limits);
         }
-        else if(is_numeric($limits)) {
+        else if(is_numeric($limits) && ($limits > 0)) {
             $limitDetails = '0, ' .$limits;
         }
-        else if($limits === true) {
+        else if($limits !== true) {
             $fetchAll = false;
         }
 

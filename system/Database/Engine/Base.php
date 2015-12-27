@@ -448,6 +448,8 @@ abstract class Base extends \PDO implements Engine
         ksort($where);
 
         // Where :bind for auto binding
+        $bindParams = array();
+
         $whereDetails = '';
 
         $idx = 0;
@@ -471,6 +473,8 @@ abstract class Base extends \PDO implements Engine
 
             $whereDetails .= "$key $operator :where_$key";
 
+            $bindParams[$key] = $value;
+
             $idx++;
         }
 
@@ -487,7 +491,7 @@ abstract class Base extends \PDO implements Engine
         }
 
         // Bind values
-        foreach ($where as $key => $value) {
+        foreach ($bindParams as $key => $value) {
             if (is_int($value)) {
                 $stmt->bindValue(":where_$key", $value, \PDO::PARAM_INT);
             } else {
@@ -517,10 +521,9 @@ abstract class Base extends \PDO implements Engine
      */
     public function delete($table, $where)
     {
-        // Sort in where keys.
-        ksort($where);
+        $bindParams = array();
 
-        // Bind the where details.
+        // Prepare the WHERE details.
         $whereDetails = '';
 
         if(is_array($where)) {
@@ -547,6 +550,9 @@ abstract class Base extends \PDO implements Engine
 
                 $whereDetails .= "$key $operator :$key";
 
+                //
+                $bindParams[$key] = $value;
+
                 $idx++;
             }
         }
@@ -558,13 +564,11 @@ abstract class Base extends \PDO implements Engine
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
         // Bind parameters.
-        if(is_array($where)) {
-            foreach ($where as $key => $value) {
-                if (is_int($value)) {
-                    $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue(":$key", $value);
-                }
+        foreach ($bindParams as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":$key", $value);
             }
         }
 
@@ -585,15 +589,12 @@ abstract class Base extends \PDO implements Engine
      *
      * @param string $sql Query
      * @param array $bindParams optional binding values
-     * @param int|null $method custom method
-     * @param string|null $class class fetch, the class, full class with namespace.
      * @return \PDOStatement|mixed
      *
      * @throws \Exception
      */
-    public function rawPrepare($sql, $bindParams = array(), $method = null, $class = null)
+    public function rawPrepare($sql, $bindParams = array())
     {
-
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 

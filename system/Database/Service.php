@@ -21,9 +21,6 @@ abstract class Service extends CoreService
 {
     protected $fetchClass = null;
 
-    /** @var string Driver name, should be in the config as default. */
-    protected $driver;
-
     /** @var Engine database engine we will use. */
     protected $engine;
 
@@ -46,9 +43,13 @@ abstract class Service extends CoreService
      * Set engine for this service.
      * @param Engine $engine
      */
-    public function setEngine($engine)
+    public function engine($engine = null)
     {
-        if (!$engine instanceof Engine) {
+        if($engine === null) {
+            return $this->engine;
+        }
+
+        if (! $engine instanceof Engine) {
             throw new \UnexpectedValueException("Engine should be an instance of one of the Engines!");
         }
 

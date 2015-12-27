@@ -63,17 +63,18 @@ abstract class Service
         }
 
         // Loop and insert
-        foreach($entity as $idx => $entit)
+        foreach($entity as $idx => $what)
         {
             // Insert
-            $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($entit));
+            $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($what));
+
             if ($result === false) {
                 // On error, return inmidiate.
                 return false;
             }
 
             // If only one Primary Key, we will set it in the entity.
-            if (count($this->primaryKeys) == 1 && $entit->{$this->primaryKeys[0]} == null) {
+            if (count($this->primaryKeys) == 1 && $what->{$this->primaryKeys[0]} == null) {
                 $entity[$idx]->{$this->primaryKeys[0]} = $result;
             }
 

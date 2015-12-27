@@ -191,7 +191,7 @@ abstract class Base extends \PDO implements Engine
             // Continue with fetching all records.
             if ($method === \PDO::FETCH_CLASS) {
                 if (!$class) {
-                    throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
+                    throw new \Exception("No Class is given while using the PDO::FETCH_CLASS method.");
                 }
 
                 // Fetch in class
@@ -211,7 +211,7 @@ abstract class Base extends \PDO implements Engine
         // Continue with fetching one record.
         if ($method === \PDO::FETCH_CLASS) {
             if (!$class) {
-                throw new \Exception("No class is given but you are using the PDO::FETCH_CLASS method!");
+                throw new \Exception("No Class is given while using the PDO::FETCH_CLASS method.");
             }
 
             // Fetch in class

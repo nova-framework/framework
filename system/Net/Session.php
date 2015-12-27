@@ -25,10 +25,11 @@ class Session
     /**
      * if session has not started, start sessions
      */
-    public static function init()
+    public static function initialize()
     {
         if (self::$sessionStarted == false) {
             session_start();
+
             self::$sessionStarted = true;
         }
     }

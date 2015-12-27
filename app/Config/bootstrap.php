@@ -22,41 +22,53 @@ $configDir = dirname(__FILE__) .DS;
  */
 ob_start();
 
+/**
+ * Load the application wide Constants.
+ */
 require $configDir .'constants.php';
-require $configDir .'functions.php';
+
+/**
+ * Load the application wide functions.
+ */
+require SYSPATH .'functions.php';
+
+/**
+ * Load the application wide Configuration.
+ */
 require $configDir .'config.php';
 
 /**
  * Turn on custom error handling.
  */
-
 Logger::initialize();
 
-
+/**
+ * Set the Framework Exception and Error Handlers
+ */
 set_exception_handler('Nova\Logger::ExceptionHandler');
 set_error_handler('Nova\Logger::ErrorHandler');
 
 /**
- * Set timezone.
+ * Set the Timezone.
  */
 date_default_timezone_set(Config::get('timezone'));
 
 /**
- * Start sessions.
+ * Start the Sessions.
  */
-Session::init();
+Session::initialize();
 
-/** Get the Router instance. */
+/** Get the Router instance */
 $router = Router::getInstance();
 
-/** load routes */
-require $configDir .'routes.php';
-
-/** bootstrap the active modules (and their associated routes) */
+/** Bootstrap the active Modules */
 Modules::bootstrap();
 
-/** initialize the Events */
+/** Initialize the Events Management */
 Events::initialize();
 
-/** Execute matched routes. */
+/** Load the application wide Routes */
+require $configDir .'routes.php';
+
+/** Execute the Routes matching. */
 $router->dispatch();

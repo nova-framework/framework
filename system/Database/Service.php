@@ -104,6 +104,10 @@ abstract class Service
      */
     public function read($sql, $bindParams = array())
     {
+        if ($this->fetchClass === null) {
+            throw new \Exception("No fetchClass is given while calling READ method");
+        }
+
         return $this->engine->selectAll($sql, $bindParams, $this->fetchMethod, $this->fetchClass);
     }
 

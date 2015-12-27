@@ -3,8 +3,9 @@
  * MySQL Engine.
  *
  * @author Tom Valk - tomvalk@lt-box.info
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
- * @date December 19th, 2015
+ * @date December 27th, 2015
  */
 
 namespace Nova\Database\Engine;
@@ -22,7 +23,7 @@ abstract class Base extends \PDO implements Engine
     protected $config;
 
     /** @var int Counting how much queries have been executed in total. */
-    protected $queryCount;
+    protected $queryCount = 0;
 
     /**
      * MySQLEngine constructor.
@@ -42,9 +43,6 @@ abstract class Base extends \PDO implements Engine
         if (isset($config['fetch_method'])) {
             $this->method = $config['fetch_method'];
         }
-
-        // Reset the query counter
-        $this->queryCount = 0;
 
         // Store the config in class variable.
         $this->config = $config;
@@ -72,18 +70,22 @@ abstract class Base extends \PDO implements Engine
     abstract public function getDriverCode();
 
     /**
-     * Get the current fetching Method
+     * Set/Get the current fetching Method
      */
-    public function getFetchMethod()
+    public function fetchMethod($method = null)
     {
-        return $this->method;
+        if($method === null) {
+            return $this->method;
+        }
+
+        $this->method = $method;
     }
 
     /**
      * Get configuration for instance
      * @return array
      */
-    public function getConfiguration()
+    public function getOptions()
     {
         return $this->config;
     }
@@ -92,7 +94,7 @@ abstract class Base extends \PDO implements Engine
      * Get native connection. Could be \PDO
      * @return \PDO
      */
-    public function getConnection()
+    public function getLink()
     {
         return $this;
     }
@@ -168,9 +170,9 @@ abstract class Base extends \PDO implements Engine
         // Bind the key and values (only if given).
         foreach ($bindParams as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
             } else {
-                $stmt->bindValue("$key", $value);
+                $stmt->bindValue(":$key", $value);
             }
         }
 
@@ -292,7 +294,11 @@ abstract class Base extends \PDO implements Engine
         $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 
         foreach ($data as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+            if (is_int($value)) {
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":$key", $value);
+            }
         }
 
         // Execute
@@ -338,7 +344,74 @@ abstract class Base extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    abstract public function insertBatch($table, $data, $transaction = false);
+    public function insertBatch($table, $data, $transaction = false)
+    {
+        // Check for valid data.
+        if (!is_array($data)) {
+            throw new \Exception("Data to insert must be an array of column -> value.");
+        }
+
+        // Transaction?
+        $status = false;
+
+        if ($transaction) {
+            $status = $this->beginTransaction();
+        }
+
+        // Holding status
+        $failure = false;
+
+        $ids = array();
+
+        // Loop every record to insert
+        foreach($data as $record) {
+            ksort($record);
+
+            $fieldNames = implode(',', array_keys($record));
+            $fieldValues = ':'.implode(', :', array_keys($record));
+
+            $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
+
+            foreach ($record as $key => $value) {
+                if (is_int($value)) {
+                    $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+                } else {
+                    $stmt->bindValue(":$key", $value);
+                }
+            }
+
+            // Execute
+            $this->queryCount++;
+
+            if (!$stmt->execute()) {
+                $failure = true;
+
+                // We need to exit foreach, to inform about the error, or rollback.
+                break 1;
+            }
+
+            // If no error, capture the last inserted id
+            $ids[] = $this->lastInsertId();
+        }
+
+        // Commit when in transaction
+        if (! $failure && $transaction && $status) {
+            $failure = ! $this->commit();
+        }
+
+        // Check for failures
+        if ($failure) {
+            // Ok, rollback when using transactions.
+            if ($transaction) {
+                $this->rollBack();
+            }
+
+            // False on error.
+            return false;
+        }
+
+        return $ids;
+    }
 
     /**
      * Execute update query, will automatically build query for you.
@@ -356,40 +429,67 @@ abstract class Base extends \PDO implements Engine
         ksort($data);
 
         // Column :bind for auto binding.
-        $fieldDetails = null;
+        $fieldDetails = '';
 
-        foreach ($data as $key => $value) {
-            $fieldDetails .= "$key = :field_$key,";
-        }
-
-        $fieldDetails = rtrim($fieldDetails, ',');
-
-        // Where :bind for auto binding
-        $whereDetails = null;
         $idx = 0;
 
-        foreach ($where as $key => $value) {
-            if ($idx == 0) {
-                $whereDetails .= "$key = :where_$key";
-            } else {
-                $whereDetails .= " AND $key = :where_$key";
+        foreach ($data as $key => $value) {
+            if($idx > 0) {
+                $fieldDetails .= ', ';
             }
+
+            $fieldDetails .= "$key = :field_$key";
+
             $idx++;
         }
 
-        $whereDetails = ltrim($whereDetails, ' AND ');
+        // Sort in where keys.
+        ksort($where);
+
+        // Where :bind for auto binding
+        $whereDetails = '';
+
+        $idx = 0;
+
+        foreach ($where as $key => $value) {
+            if($idx > 0) {
+                $whereDetails .= ' AND ';
+            }
+
+            if(strpos($key, ' ') > 0) {
+                $segments = explode(' ', $key);
+
+                $key      = $segments[0];
+                $operator = $segments[1];
+            }
+            else {
+                $operator = '=';
+            }
+
+            $whereDetails .= "$key $operator :where_$key";
+
+            $idx++;
+        }
 
         // Prepare statement.
         $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
         // Bind fields
         foreach ($data as $key => $value) {
-            $stmt->bindValue(":field_$key", $value);
+            if (is_int($value)) {
+                $stmt->bindValue(":field_$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":field_$key", $value);
+            }
         }
 
         // Bind values
         foreach ($where as $key => $value) {
-            $stmt->bindValue(":where_$key", $value);
+            if (is_int($value)) {
+                $stmt->bindValue(":where_$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":where_$key", $value);
+            }
         }
 
         // Execute
@@ -407,7 +507,7 @@ abstract class Base extends \PDO implements Engine
      * Execute Delete statement, this will automatically build the query for you.
      *
      * @param string $table Table to execute the statement.
-     * @param array $where Use key->value like column->value for where mapping.
+     * @param array|string $where Use a string or key->value like column->value for where mapping.
      * @return bool|int Row Count, number of deleted rows, or false on failure.
      *
      * @throws \Exception
@@ -418,26 +518,49 @@ abstract class Base extends \PDO implements Engine
         ksort($where);
 
         // Bind the where details.
-        $whereDetails = null;
-        $idx = 0;
+        $whereDetails = '';
 
-        foreach ($where as $key => $value) {
-            if ($idx == 0) {
-                $whereDetails .= "$key = :$key";
-            } else {
-                $whereDetails .= " AND $key = :$key";
+        if(is_array($where)) {
+            ksort($where);
+
+            $idx = 0;
+
+            foreach ($where as $key => $value) {
+                if($idx > 0) {
+                    $whereDetails .= ' AND ';
+                }
+
+                if(strpos($key, ' ') > 0) {
+                    $segments = explode(' ', $key);
+
+                    $key      = $segments[0];
+                    $operator = $segments[1];
+                }
+                else {
+                    $operator = '=';
+                }
+
+                $whereDetails .= "$key $operator :$key";
+
+                $idx++;
             }
-            $idx++;
         }
-
-        $whereDetails = ltrim($whereDetails, ' AND ');
+        else if(is_string($where)) {
+            $whereDetails = $where;
+        }
 
         // Prepare statement
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
-        // Bind
-        foreach ($where as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+        // Bind parameters.
+        if(is_array($where)) {
+            foreach ($where as $key => $value) {
+                if (is_int($value)) {
+                    $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+                } else {
+                    $stmt->bindValue(":$key", $value);
+                }
+            }
         }
 
         // Execute and return if failure.
@@ -456,25 +579,25 @@ abstract class Base extends \PDO implements Engine
      * Optional bind is available.
      *
      * @param string $sql Query
-     * @param array $bind optional binding values
+     * @param array $bindParams optional binding values
      * @param int|null $method custom method
      * @param string|null $class class fetch, the class, full class with namespace.
      * @return \PDOStatement|mixed
      *
      * @throws \Exception
      */
-    public function rawPrepare($sql, $bind = array(), $method = null, $class = null)
+    public function rawPrepare($sql, $bindParams = array(), $method = null, $class = null)
     {
 
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
-        foreach ($bind as $key => $value) {
+        foreach ($bindParams as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
             } else {
-                $stmt->bindValue("$key", $value);
+                $stmt->bindValue(":$key", $value);
             }
         }
 

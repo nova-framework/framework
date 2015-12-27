@@ -30,19 +30,19 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Manager::getEngine
      * @covers \Nova\Database\Engine\MySQL::__construct
      * @covers \Nova\Database\Engine\MySQL::getDriverName
-     * @covers \Nova\Database\Engine\MySQL::getConfiguration
-     * @covers \Nova\Database\Engine\MySQL::getConnection
+     * @covers \Nova\Database\Engine\MySQL::getOptions
+     * @covers \Nova\Database\Engine\MySQL::getLink
      * @covers \Nova\Database\Engine\MySQL::getDriverCode
      */
     public function testEngineBasics()
     {
         $this->prepareEngine();
 
-        $this->assertInstanceOf('\PDO', $this->engine->getConnection());
+        $this->assertInstanceOf('\PDO', $this->engine->getLink());
 
         $this->assertEquals('MySQL Driver', $this->engine->getDriverName());
         $this->assertEquals(\Nova\Database\Manager::DRIVER_MYSQL, $this->engine->getDriverCode());
-        $this->assertEquals(\Nova\Config::get('database')['default']['config'], $this->engine->getConfiguration());
+        $this->assertEquals(\Nova\Config::get('database')['default']['config'], $this->engine->getOptions());
 
         $this->assertGreaterThanOrEqual(0, $this->engine->getTotalQueries());
     }
@@ -109,7 +109,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Engine\MySQL::__construct
      * @covers \Nova\Database\Engine\MySQL::selectAll
      * @covers \Nova\Database\Engine\MySQL::insert
-     * @covers \Nova\Database\Engine\MySQL::insertAll
+     * @covers \Nova\Database\Engine\MySQL::insertBatch
      * @covers \Nova\Database\Engine\MySQL::rawQuery
      * @covers \Nova\Database\Engine\MySQL::commit
      */
@@ -140,7 +140,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_3', 'costs' => 38000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_4', 'costs' => 48000)
         );
-        $insert_2 = $this->engine->insertAll(DB_PREFIX . 'car', $data_2, false);
+        $insert_2 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_2, false);
 
         $this->assertEquals(3, count($insert_2));
         foreach($insert_2 as $key => $value) {
@@ -154,7 +154,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_6', 'costs' => 31000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_7', 'costs' => 41000)
         );
-        $insert_3 = $this->engine->insertAll(DB_PREFIX . 'car', $data_3, true);
+        $insert_3 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_3, true);
 
         $this->assertEquals(3, count($insert_3));
         foreach($insert_3 as $key => $value) {
@@ -170,7 +170,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         );
 
         try {
-            $this->engine->insertAll(DB_PREFIX . 'car', $data_4, true);
+            $this->engine->insertBatch(DB_PREFIX . 'car', $data_4, true);
             $this->assertFalse(true, 'Inserting error data should give exceptions!');
         }catch(\Exception $e) {
             $this->assertContains("null", $e->getMessage());
@@ -265,7 +265,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
         // Check if we still can find the inserted records
         $sql = "SELECT * FROM " . DB_PREFIX . "car WHERE carid = :carid1 OR carid = :carid2 OR carid = :carid3;";
-        $all = $this->engine->selectAll($sql, array(':carid1' => $id_1,':carid2' => $id_2,':carid3' => $id_3));
+        $all = $this->engine->selectAll($sql, array('carid1' => $id_1,'carid2' => $id_2,'carid3' => $id_3));
 
         // Should be empty => false.
         $this->assertFalse($all);

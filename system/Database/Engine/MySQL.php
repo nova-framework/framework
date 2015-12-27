@@ -3,8 +3,9 @@
  * MySQL Engine.
  *
  * @author Tom Valk - tomvalk@lt-box.info
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
- * @date December 19th, 2015
+ * @date December 27th, 2015
  */
 
 namespace Nova\Database\Engine;
@@ -63,7 +64,7 @@ class MySQL extends BaseEngine
      */
     public function getDriverName()
     {
-        return "MySQL Driver";
+        return __d('system', 'MySQL Driver');
     }
 
     /**
@@ -73,71 +74,6 @@ class MySQL extends BaseEngine
     public function getDriverCode()
     {
         return Manager::DRIVER_MYSQL;
-    }
-
-    public function insertBatch($table, $data, $transaction = false)
-    {
-        // Check for valid data.
-        if (!is_array($data)) {
-            throw new \Exception("Data to insert must be an array of column -> value.");
-        }
-
-        // Transaction?
-        $status = false;
-
-        if ($transaction) {
-            $status = $this->beginTransaction();
-        }
-
-        // Holding status
-        $failure = false;
-
-        $ids = array();
-
-        // Loop every record to insert
-        foreach($data as $record) {
-            ksort($record);
-
-            $fieldNames = implode(',', array_keys($record));
-            $fieldValues = ':'.implode(', :', array_keys($record));
-
-            $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
-
-            foreach ($record as $key => $value) {
-                $stmt->bindValue(":$key", $value);
-            }
-
-            // Execute
-            $this->queryCount++;
-
-            if (!$stmt->execute()) {
-                $failure = true;
-
-                // We need to exit foreach, to inform about the error, or rollback.
-                break 1;
-            }
-
-            // If no error, capture the last inserted id
-            $ids[] = $this->lastInsertId();
-        }
-
-        // Commit when in transaction
-        if (! $failure && $transaction && $status) {
-            $failure = ! $this->commit();
-        }
-
-        // Check for failures
-        if ($failure) {
-            // Ok, rollback when using transactions.
-            if ($transaction) {
-                $this->rollBack();
-            }
-
-            // False on error.
-            return false;
-        }
-
-        return $ids;
     }
 
     /**

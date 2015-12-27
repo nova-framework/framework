@@ -28,21 +28,21 @@ interface Engine
     public function getDriverCode();
 
     /**
-     * Get the current fetching Method
+     * Set/Get the current fetching Method
      */
-    public function getFetchMethod();
+    public function fetchMethod();
 
     /**
      * Get configuration for instance
      * @return array
      */
-    public function getConfiguration();
+    public function getOptions();
 
     /**
      * Get native connection. Could be \PDO
      * @return mixed|\PDO
      */
-    public function getConnection();
+    public function getLink();
 
     /**
      * Get total executed queries.
@@ -139,7 +139,7 @@ interface Engine
      * Execute Delete statement, this will automatically build the query for you.
      *
      * @param string $table Table to execute the statement.
-     * @param array $where Use key->value like column->value for where mapping.
+     * @param array|string $where Use a string or key->value like column->value for where mapping.
      * @return bool
      *
      * @throws \Exception
@@ -165,5 +165,5 @@ interface Engine
      *
      * @throws \Exception
      */
-    public function rawPrepare($sql, $bind = array(), $method = null, $class = null);
+    public function rawPrepare($sql, $bindParams = array(), $method = null, $class = null);
 }

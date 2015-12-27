@@ -3,8 +3,9 @@
  * SQLite Engine.
  *
  * @author Tom Valk - tomvalk@lt-box.info
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
- * @date December 19th, 2015
+ * @date December 27th, 2015
  */
 
 namespace Nova\Database\Engine;
@@ -42,7 +43,7 @@ class SQLite extends BaseEngine
      */
     public function getDriverName()
     {
-        return "SQLite Driver";
+        return __d('system', 'SQLite Driver');
     }
 
     /**
@@ -52,11 +53,6 @@ class SQLite extends BaseEngine
     public function getDriverCode()
     {
         return Manager::DRIVER_SQLITE;
-    }
-
-    public function insertBatch($table, $data, $transaction = false)
-    {
-        throw new \BadMethodCallException('Multiple Inserts are unsupported on SQLite Engine');
     }
 
     /**

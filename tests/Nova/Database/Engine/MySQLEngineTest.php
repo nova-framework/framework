@@ -23,6 +23,9 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
     private function prepareEngine()
     {
         $this->engine = \Nova\Database\Manager::getEngine();
+
+        $this->engine->fetchMethod(\PDO::FETCH_OBJ);
+
         $this->assertInstanceOf('\Nova\Database\Engine\MySQL', $this->engine);
     }
 

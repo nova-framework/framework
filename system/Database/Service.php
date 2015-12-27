@@ -39,7 +39,11 @@ abstract class Service
         if (!$engine instanceof Engine) {
             throw new \UnexpectedValueException("Engine should be an instance of one of the Engines!");
         }
+
         $this->engine = $engine;
+
+        // To ensure the using of fetching objects.
+        $this->engine->fetchMethod(\PDO::FETCH_OBJ);
     }
 
     /**

@@ -17,7 +17,7 @@ use Nova\Database\Manager;
 abstract class Base extends \PDO implements Engine
 {
     /** @var int PDO Fetch method. */
-    protected $method = \PDO::FETCH_OBJ;
+    protected $method = \PDO::FETCH_ASSOC;
 
     /** @var array Config from the user's app config. */
     protected $config;
@@ -55,6 +55,7 @@ abstract class Base extends \PDO implements Engine
         parent::__construct($dsn, $username, $password, $options);
 
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, $this->method);
     }
 
     /**
@@ -456,7 +457,9 @@ abstract class Base extends \PDO implements Engine
                 $whereDetails .= ' AND ';
             }
 
-            if(strpos($key, ' ') > 0) {
+            if(strpos($key, ' ') !== false) {
+                $key = preg_replace('/\s+/', ' ', trim($key));
+
                 $segments = explode(' ', $key);
 
                 $key      = $segments[0];
@@ -530,7 +533,9 @@ abstract class Base extends \PDO implements Engine
                     $whereDetails .= ' AND ';
                 }
 
-                if(strpos($key, ' ') > 0) {
+                if(strpos($key, ' ') !== false) {
+                    $key = preg_replace('/\s+/', ' ', trim($key));
+
                     $segments = explode(' ', $key);
 
                     $key      = $segments[0];

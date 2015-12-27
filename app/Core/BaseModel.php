@@ -164,7 +164,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($where, $fields = null, $limits = false, $fetchAll = false, $returnType = 'array')
+    public function select($fields = '*', $where = false, $limits = false, $fetchAll = false, $returnType = 'array')
     {
         $bindParams = array();
 
@@ -182,6 +182,9 @@ class BaseModel extends Model
 
             $className = $returnType;
         }
+
+        // Prepare the TABLE details.
+        $table = DB_PREFIX .$this->table_name;
 
         // Prepare the WHAT details.
         $fieldDetails = '*';
@@ -229,6 +232,10 @@ class BaseModel extends Model
             $whereDetails = $where;
         }
 
+        if(! empty($whereDetails)) {
+            $whereDetails = 'WHERE ' .$whereDetails;
+        }
+
         // Prepare the LIMIT details.
         $limitDetails = '';
 
@@ -240,11 +247,11 @@ class BaseModel extends Model
         }
 
         if(! empty($limitDetails)) {
-            $limitDetails = "LIMIT " .$limitDetails;
+            $limitDetails = 'LIMIT ' .$limitDetails;
         }
 
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .DB_PREFIX .$this->table_name ." WHERE $whereDetails $limitDetails;";
+        $sql = "SELECT $fieldDetails FROM $table $whereDetails $limitDetails ;";
 
         //
         $data = $this->trigger('before_select', array(

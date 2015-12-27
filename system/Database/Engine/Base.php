@@ -290,7 +290,11 @@ abstract class Base extends \PDO implements Engine
         $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 
         foreach ($data as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+            if (is_int($value)) {
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":$key", $value);
+            }
         }
 
         // Execute
@@ -365,7 +369,11 @@ abstract class Base extends \PDO implements Engine
             $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 
             foreach ($record as $key => $value) {
-                $stmt->bindValue(":$key", $value);
+                if (is_int($value)) {
+                    $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+                } else {
+                    $stmt->bindValue(":$key", $value);
+                }
             }
 
             // Execute
@@ -464,12 +472,20 @@ abstract class Base extends \PDO implements Engine
 
         // Bind fields
         foreach ($data as $key => $value) {
-            $stmt->bindValue(":field_$key", $value);
+            if (is_int($value)) {
+                $stmt->bindValue(":field_$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":field_$key", $value);
+            }
         }
 
         // Bind values
         foreach ($where as $key => $value) {
-            $stmt->bindValue(":where_$key", $value);
+            if (is_int($value)) {
+                $stmt->bindValue(":where_$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":where_$key", $value);
+            }
         }
 
         // Execute
@@ -535,7 +551,11 @@ abstract class Base extends \PDO implements Engine
         // Bind parameters.
         if(is_array($where)) {
             foreach ($where as $key => $value) {
-                $stmt->bindValue(":$key", $value);
+                if (is_int($value)) {
+                    $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+                } else {
+                    $stmt->bindValue(":$key", $value);
+                }
             }
         }
 

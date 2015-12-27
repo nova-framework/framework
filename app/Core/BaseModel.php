@@ -180,7 +180,7 @@ class BaseModel extends Model
         else {
             $fetchMethod = \PDO::FETCH_CLASS;
 
-            $className = $returnType;
+            $className = $this->temp_return_type;
         }
 
         // Prepare the TABLE details.

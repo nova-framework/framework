@@ -5,7 +5,7 @@ if (! defined('PHPUNIT_RUNNING')) { exit(); }
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 // Require composer autoload!
-require_once dirname(__FILE__) . DS . 'vendor' . DS . 'autoload.php';
+require_once dirname(__FILE__) .DS .'vendor' .DS .'autoload.php';
 
 /** Define the absolute paths for configured directories (changed for tests) */
 define('BASEPATH', realpath(__DIR__).DS);
@@ -24,9 +24,12 @@ use Nova\Config;
 /**
  * CUSTOMIZED CONFIG BOOTSTRAP
  */
-$configDir = dirname(__FILE__) . DS . 'app' . DS . 'Config' . DS;
+$configDir = dirname(__FILE__) .DS .'app' .DS .'Config' .DS;
+
 require_once $configDir.'constants.php';
-require_once $configDir.'functions.php';
+
+require_once SYSPATH.'functions.php';
+
 require_once $configDir.'config.php';
 
 

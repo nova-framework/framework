@@ -49,14 +49,14 @@ Session::initialize();
 /** Get the Router instance. */
 $router = Router::getInstance();
 
-/** load routes */
-require $configDir .'routes.php';
-
 /** bootstrap the active modules (and their associated routes) */
 Modules::bootstrap();
 
 /** initialize the Events */
 Events::initialize();
+
+/** load routes */
+require $configDir .'routes.php';
 
 /** Execute matched routes. */
 $router->dispatch();

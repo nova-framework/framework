@@ -41,9 +41,8 @@ abstract class Service extends CoreService
      */
     public function __construct()
     {
-        parent::__construct();
-    }
 
+    }
 
     /**
      * Set engine for this service.

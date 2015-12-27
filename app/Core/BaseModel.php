@@ -247,7 +247,7 @@ class BaseModel extends Model
         else if(is_numeric($limits)) {
             $limitDetails = $limits;
         }
-        else if($limits != false) {
+        else if($limits !== false) {
             $fetchAll = false;
         }
 

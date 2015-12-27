@@ -135,7 +135,7 @@ class BaseModel extends Model
 
         $result = $this->db->insert($this->table_name, $data);
 
-        $this->trigger('after_insert', array(
+        $result = $this->trigger('after_insert', array(
             'method' => 'insert',
             'fields' => $data,
             'result' => $result
@@ -154,7 +154,7 @@ class BaseModel extends Model
 
         $result = $this->db->update($this->table_name, $data, $where);
 
-        $this->trigger('after_update', array(
+        $result = $this->trigger('after_update', array(
             'method' => 'update'
             'where'  => $where,
             'fields' => $data,
@@ -267,7 +267,7 @@ class BaseModel extends Model
 
         $result = $this->db->select($sql, $bindParams, $fetchAll, $fetchMethod, $className);
 
-        $this->trigger('after_select', array(
+        $result = $this->trigger('after_select', array(
             'method' => 'select'
             'where'  => $where,
             'fields' => $fields,
@@ -279,14 +279,14 @@ class BaseModel extends Model
 
     public function delete($where)
     {
-        $data = $this->trigger('before_delete', array(
+        $where = $this->trigger('before_delete', array(
             'method' =>'delete',
             'where'  => $where
         ));
 
         $result = $this->db->delete($this->table_name, $where);
 
-        $this->trigger('after_delete', array(
+        $result = $this->trigger('after_delete', array(
             'method' => 'delete'
             'where'  => $where,
             'result' => $result,

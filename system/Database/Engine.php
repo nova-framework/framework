@@ -36,13 +36,13 @@ interface Engine
      * Get configuration for instance
      * @return array
      */
-    public function getConfiguration();
+    public function getOptions();
 
     /**
      * Get native connection. Could be \PDO
      * @return mixed|\PDO
      */
-    public function getConnection();
+    public function getLink();
 
     /**
      * Get total executed queries.

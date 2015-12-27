@@ -30,19 +30,19 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Manager::getEngine
      * @covers \Nova\Database\Engine\SQLite::__construct
      * @covers \Nova\Database\Engine\SQLite::getDriverName
-     * @covers \Nova\Database\Engine\SQLite::getConfiguration
-     * @covers \Nova\Database\Engine\SQLite::getConnection
+     * @covers \Nova\Database\Engine\SQLite::getOptions
+     * @covers \Nova\Database\Engine\SQLite::getLink
      * @covers \Nova\Database\Engine\SQLite::getDriverCode
      */
     public function testEngineBasics()
     {
         $this->prepareEngine();
 
-        $this->assertInstanceOf('\PDO', $this->engine->getConnection());
+        $this->assertInstanceOf('\PDO', $this->engine->getLink());
 
         $this->assertEquals('SQLite Driver', $this->engine->getDriverName());
         $this->assertEquals(\Nova\Database\Manager::DRIVER_SQLITE, $this->engine->getDriverCode());
-        $this->assertEquals(\Nova\Config::get('database')['sqlite']['config'], $this->engine->getConfiguration());
+        $this->assertEquals(\Nova\Config::get('database')['sqlite']['config'], $this->engine->getOptions());
 
         $this->assertGreaterThanOrEqual(0, $this->engine->getTotalQueries());
     }

@@ -30,19 +30,19 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Manager::getEngine
      * @covers \Nova\Database\Engine\MySQL::__construct
      * @covers \Nova\Database\Engine\MySQL::getDriverName
-     * @covers \Nova\Database\Engine\MySQL::getConfiguration
-     * @covers \Nova\Database\Engine\MySQL::getConnection
+     * @covers \Nova\Database\Engine\MySQL::getOptions
+     * @covers \Nova\Database\Engine\MySQL::getLink
      * @covers \Nova\Database\Engine\MySQL::getDriverCode
      */
     public function testEngineBasics()
     {
         $this->prepareEngine();
 
-        $this->assertInstanceOf('\PDO', $this->engine->getConnection());
+        $this->assertInstanceOf('\PDO', $this->engine->getLink());
 
         $this->assertEquals('MySQL Driver', $this->engine->getDriverName());
         $this->assertEquals(\Nova\Database\Manager::DRIVER_MYSQL, $this->engine->getDriverCode());
-        $this->assertEquals(\Nova\Config::get('database')['default']['config'], $this->engine->getConfiguration());
+        $this->assertEquals(\Nova\Config::get('database')['default']['config'], $this->engine->getOptions());
 
         $this->assertGreaterThanOrEqual(0, $this->engine->getTotalQueries());
     }

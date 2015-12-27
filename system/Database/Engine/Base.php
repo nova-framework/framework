@@ -81,7 +81,7 @@ abstract class Base extends \PDO implements Engine
      * Get configuration for instance
      * @return array
      */
-    public function getConfiguration()
+    public function getOptions()
     {
         return $this->config;
     }
@@ -90,7 +90,7 @@ abstract class Base extends \PDO implements Engine
      * Get native connection. Could be \PDO
      * @return \PDO
      */
-    public function getConnection()
+    public function getLink()
     {
         return $this;
     }

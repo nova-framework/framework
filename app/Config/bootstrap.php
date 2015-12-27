@@ -14,61 +14,46 @@ use Nova\Net\Router;
 use Nova\Config;
 use Nova\Logger;
 
-// The current configuration files directory.
+
+/** Prepare the current directory for configuration files. */
 $configDir = dirname(__FILE__) .DS;
 
-/**
- * Turn on output buffering.
- */
+/** Turn on output buffering. */
 ob_start();
 
-/**
- * Load the application Constants.
- */
+/** Load the application Constants. */
 require $configDir .'constants.php';
 
-/**
- * Load the application wide functions.
- */
+/** Load the System's helper functions. */
 require SYSPATH .'functions.php';
 
-/**
- * Load the application Configuration.
- */
+/** Load the application Configuration. */
 require $configDir .'config.php';
 
-/**
- * Turn on custom error handling.
- */
+/** Set the current Timezone. */
+date_default_timezone_set(Config::get('timezone'));
+
+/** Initialize the Logger. */
 Logger::initialize();
 
-/**
- * Set the Framework Exception and Error Handlers
- */
+/** Set the Framework Exception and Error Handlers. */
 set_exception_handler('Nova\Logger::ExceptionHandler');
 set_error_handler('Nova\Logger::ErrorHandler');
 
-/**
- * Set the Timezone.
- */
-date_default_timezone_set(Config::get('timezone'));
-
-/**
- * Start the Sessions.
- */
-Session::initialize();
-
-/** Get the Router instance */
+/** Get the curent Router instance. */
 $router = Router::getInstance();
 
-/** Bootstrap the active Modules */
+/** Bootstrap the active Modules. */
 Modules::bootstrap();
 
-/** Initialize the Events Management */
+/** Initialize the Events Management. */
 Events::initialize();
 
-/** Load the application wide Routes */
+/** Initialize the Sessions. */
+Session::initialize();
+
+/** Load the application wide Routes. */
 require $configDir .'routes.php';
 
-/** Execute the Routes matching. */
+/** Execute the Request dispatching by Router. */
 $router->dispatch();

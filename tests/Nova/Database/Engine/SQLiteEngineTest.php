@@ -23,6 +23,9 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
     private function prepareEngine()
     {
         $this->engine = \Nova\Database\Manager::getEngine('sqlite');
+
+        $this->engine->fetchMethod(\PDO::FETCH_OBJ);
+
         $this->assertInstanceOf('\Nova\Database\Engine\SQLite', $this->engine);
     }
 

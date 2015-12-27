@@ -17,6 +17,8 @@ use Nova\Database\Engine;
  */
 abstract class Service
 {
+    private $fetchMethod = \PDO::FETCH_OBJ;
+
     /** @var string Driver name, should be in the config as default. */
     protected $driver;
 
@@ -41,9 +43,6 @@ abstract class Service
         }
 
         $this->engine = $engine;
-
-        // To ensure the using of fetching objects.
-        $this->engine->fetchMethod(\PDO::FETCH_OBJ);
     }
 
     /**

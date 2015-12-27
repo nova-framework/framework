@@ -174,7 +174,7 @@ class BaseModel extends Model
         if($returnType == 'array') {
             $fetchMethod = \PDO::FETCH_ASSOC;
         }
-        else if($this->temp_return_type == 'object') {
+        else if($returnType == 'object') {
             $fetchMethod = \PDO::FETCH_OBJ;
         }
         else {

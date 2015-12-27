@@ -457,7 +457,9 @@ abstract class Base extends \PDO implements Engine
                 $whereDetails .= ' AND ';
             }
 
-            if(strpos($key, ' ') > 0) {
+            if(strpos($key, ' ') !== false) {
+                $key = preg_replace('/\s+/', ' ', trim($key));
+
                 $segments = explode(' ', $key);
 
                 $key      = $segments[0];
@@ -531,7 +533,9 @@ abstract class Base extends \PDO implements Engine
                     $whereDetails .= ' AND ';
                 }
 
-                if(strpos($key, ' ') > 0) {
+                if(strpos($key, ' ') !== false) {
+                    $key = preg_replace('/\s+/', ' ', trim($key));
+
                     $segments = explode(' ', $key);
 
                     $key      = $segments[0];

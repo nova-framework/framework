@@ -44,7 +44,7 @@ date_default_timezone_set(Config::get('timezone'));
 /**
  * Start sessions.
  */
-Session::init();
+Session::initialize();
 
 /** Get the Router instance. */
 $router = Router::getInstance();

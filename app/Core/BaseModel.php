@@ -77,8 +77,8 @@ class BaseModel extends Model
     protected $after_insert  = array();
     protected $before_update = array();
     protected $after_update  = array();
-    protected $before_find   = array();
-    protected $after_find    = array();
+    protected $before_select = array();
+    protected $after_select  = array();
     protected $before_delete = array();
     protected $after_delete  = array();
 
@@ -164,7 +164,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($sql, $bindParams = array(), $fetchAll = false)
+    public function select($where, $fields = null, $fetchAll = false, $limits = false)
     {
         $return_type = $this->temp_return_type ? $this->temp_return_type : $this->return_type;
 
@@ -183,7 +183,86 @@ class BaseModel extends Model
             $class = $return_type;
         }
 
+        // Prepare the WHAT details.
+        $fieldDetails = '*';
+
+        if(is_array($fields)) {
+            $fieldDetails = implode(', ', $fields);
+        }
+        else if(is_string($fields)) {
+            $fieldDetails = $fields;
+        }
+
+        // Prepare the WHERE details.
+        $bindParams = array();
+
+        $whereDetails = '';
+
+        if(is_array($where)) {
+            ksort($where);
+
+            $idx = 0;
+
+            foreach ($where as $key => $value) {
+                if($idx > 0) {
+                    $whereDetails .= ' AND ';
+                }
+
+                if(strpos($key, ' ') !== false) {
+                    $key = preg_replace('/\s+/', ' ', trim($key));
+
+                    $segments = explode(' ', $key);
+
+                    $key      = $segments[0];
+                    $operator = $segments[1];
+                }
+                else {
+                    $operator = '=';
+                }
+
+                $whereDetails .= "$key $operator :$key";
+
+                $bindParams[$key] = $value;
+
+                $idx++;
+            }
+        }
+        else if(is_string($where)) {
+            $whereDetails = $where;
+        }
+
+        // Prepare the LIMIT details.
+        $limitDetails = '';
+
+        if(is_array($limits) && (count($limits) == 2)) {
+            $limitDetails = implode(',', $limits);
+        }
+        else if(is_numeric($limits)) {
+            $limitDetails = $limits;
+        }
+
+        if(! empty($limitDetails)) {
+            $limitDetails = "LIMIT " .$limitDetails;
+        }
+
+        // Prepare the SQL Query
+        $sql = "SELECT $fieldDetails FROM " .DB_PREFIX .$this->table_name ." WHERE $whereDetails $limitDetails;";
+
+        //
+        $data = $this->trigger('before_select', array(
+            'method' =>'select',
+            'where'  => $where,
+            'fields' => $fields
+        ));
+
         $result = $this->db->select($sql, $bindParams, $fetchAll, $method, $class);
+
+        $this->trigger('after_select', array(
+            'method' => 'select'
+            'where'  => $where,
+            'fields' => $fields,
+            'result' => $result
+        ));
 
         return $result;
     }

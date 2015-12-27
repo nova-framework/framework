@@ -17,6 +17,8 @@ use Nova\Database\Engine;
  */
 abstract class Service
 {
+    private $fetchMethod = \PDO::FETCH_OBJ;
+
     /** @var string Driver name, should be in the config as default. */
     protected $driver;
 
@@ -41,9 +43,6 @@ abstract class Service
         }
 
         $this->engine = $engine;
-
-        // To ensure the using of fetching objects.
-        $this->engine->fetchMethod(\PDO::FETCH_OBJ);
     }
 
     /**
@@ -64,17 +63,18 @@ abstract class Service
         }
 
         // Loop and insert
-        foreach($entity as $idx => $entit)
+        foreach($entity as $idx => $what)
         {
             // Insert
-            $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($entit));
+            $result = $this->engine->insert(DB_PREFIX . $this->table, get_object_vars($what));
+
             if ($result === false) {
                 // On error, return inmidiate.
                 return false;
             }
 
             // If only one Primary Key, we will set it in the entity.
-            if (count($this->primaryKeys) == 1 && $entit->{$this->primaryKeys[0]} == null) {
+            if (count($this->primaryKeys) == 1 && $what->{$this->primaryKeys[0]} == null) {
                 $entity[$idx]->{$this->primaryKeys[0]} = $result;
             }
 
@@ -117,7 +117,7 @@ abstract class Service
      * @return false|Entity
      * @throws \Exception
      */
-    public function update($entity, $limit = 1)
+    public function update($entity)
     {
         $primaryValues = array();
 
@@ -125,7 +125,8 @@ abstract class Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues, $limit);
+        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues);
+
         if ($result === false) {
             return false;
         }
@@ -148,7 +149,7 @@ abstract class Service
      * @return boolean successful delete?
      * @throws \Exception
      */
-    public function delete($entity, $limit = 1)
+    public function delete($entity)
     {
         $primaryValues = array();
 
@@ -156,6 +157,6 @@ abstract class Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        return $this->engine->delete(DB_PREFIX . $this->table, $primaryValues, $limit) !== false;
+        return $this->engine->delete(DB_PREFIX . $this->table, $primaryValues) !== false;
     }
 }

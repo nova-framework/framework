@@ -86,7 +86,7 @@ class BaseModel extends Model
 
     /**
      * By default, we return items as objects. You can change this for the entire class by setting this
-     * value to 'array' instead of 'object'.
+     * value to 'array' instead of 'object', or you can specify a qualified Class name for the returned object.
      * Alternatively, you can do it on a per-instance basis using the 'as_array()' and 'as_object()' methods.
      */
     protected $return_type = 'object';
@@ -164,23 +164,23 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($where, $fields = null, $fetchAll = false, $limits = false)
+    public function select($where, $fields = null, $limits = false, $fetchAll = false, $returnType = 'array')
     {
-        $return_type = $this->temp_return_type ? $this->temp_return_type : $this->return_type;
+        $bindParams = array();
 
         // Prepare the parameters.
-        $class = null;
+        $className = null;
 
-        if($return_type == 'array') {
-            $method = \PDO::FETCH_ASSOC;
+        if($returnType == 'array') {
+            $fetchMethod = \PDO::FETCH_ASSOC;
         }
         else if($this->temp_return_type == 'object') {
-            $method = \PDO::FETCH_OBJ;
+            $fetchMethod = \PDO::FETCH_OBJ;
         }
         else {
-            $method = \PDO::FETCH_CLASS;
+            $fetchMethod = \PDO::FETCH_CLASS;
 
-            $class = $return_type;
+            $className = $returnType;
         }
 
         // Prepare the WHAT details.
@@ -194,8 +194,6 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $bindParams = array();
-
         $whereDetails = '';
 
         if(is_array($where)) {
@@ -255,7 +253,7 @@ class BaseModel extends Model
             'fields' => $fields
         ));
 
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $method, $class);
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $fetchMethod, $className);
 
         $this->trigger('after_select', array(
             'method' => 'select'
@@ -288,6 +286,11 @@ class BaseModel extends Model
     public function query($sql)
     {
         return $this->db->rawQuery($sql);
+    }
+
+    public function prepare($sql, $bindParams = array())
+    {
+        return $this->db->rawPrepare($sql, $bindParams);
     }
 
     /**

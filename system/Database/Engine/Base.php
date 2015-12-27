@@ -589,15 +589,12 @@ abstract class Base extends \PDO implements Engine
      *
      * @param string $sql Query
      * @param array $bindParams optional binding values
-     * @param int|null $method custom method
-     * @param string|null $class class fetch, the class, full class with namespace.
      * @return \PDOStatement|mixed
      *
      * @throws \Exception
      */
-    public function rawPrepare($sql, $bindParams = array(), $method = null, $class = null)
+    public function rawPrepare($sql, $bindParams = array())
     {
-
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 

@@ -69,7 +69,7 @@ abstract class Manager
         $engine = new $className($options['config']);
 
         // If no success
-        if (!$engine instanceof Engine) {
+        if (! $engine instanceof Engine) {
             throw new \Exception("Driver creation failed! Check your extended logs for errors.");
         }
 
@@ -155,5 +155,5 @@ abstract class Manager
 
         return $service;
     }
-    
+
 }

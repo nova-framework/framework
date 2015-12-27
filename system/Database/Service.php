@@ -57,6 +57,22 @@ abstract class Service extends CoreService
     }
 
     /**
+     * Get database table for this service.
+     */
+    public function table()
+    {
+        return $this->table;
+    }
+
+    /**
+     * Get Entity className (fetchClass) for this service.
+     */
+    public function entity()
+    {
+        return $this->fetchClass;
+    }
+
+    /**
      * Create the entity (or entities) in the database. Will try to insert it into the database
      * Can throw Exceptions on failure or return false.
      *
@@ -69,7 +85,7 @@ abstract class Service extends CoreService
     public function create($entity)
     {
         // If it isn't already an array, make it an array, to keep code simple.
-        if (!is_array($entity)) {
+        if (! is_array($entity)) {
             $entity = array($entity);
         }
 

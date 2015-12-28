@@ -144,7 +144,7 @@ class BaseModel extends Model
         $this->trigger('before_find', array('id' => $id, 'method' => 'find'));
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table_name ." WHERE " .$this->primary_key ." = :param";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." = :param";
 
         $result = $this->db->select($sql, array('param' => $id), true, $this->temp_return_type);
 
@@ -187,7 +187,7 @@ class BaseModel extends Model
         $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table_name ." $whereDetails";
+        $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
 
         //
         $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));
@@ -218,7 +218,7 @@ class BaseModel extends Model
         }
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table_name ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
 
         //
         $result = $this->db->select($sql, array(), true, $this->temp_return_type);
@@ -267,7 +267,7 @@ class BaseModel extends Model
         $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table_name ." $whereDetails";
+        $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
 
         //
         $this->trigger('before_find', array('method' => 'find_all', 'fields' => $where));
@@ -290,7 +290,7 @@ class BaseModel extends Model
     {
         $data = $this->trigger('before_insert', array('method' =>'insert', 'fields' => $data));
 
-        $result = $this->db->insert($this->table_name, $data);
+        $result = $this->db->insert($this->table(), $data);
 
         $result = $this->trigger('after_insert', array(
             'method' => 'insert',
@@ -305,7 +305,7 @@ class BaseModel extends Model
     {
         $data = $this->trigger('before_update', array('method' =>'update', 'where'  => $where, 'fields' => $data));
 
-        $result = $this->db->update($this->table_name, $data, $where);
+        $result = $this->db->update($this->table(), $data, $where);
 
         $result = $this->trigger('after_update', array(
             'method' => 'update'
@@ -351,7 +351,7 @@ class BaseModel extends Model
         }
 
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .$this->table_name ." $whereDetails $limitDetails ";
+        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails $limitDetails ";
 
         //
         $this->trigger('before_select', array('method' => 'select', 'where' => $where, 'fields' => $fields));
@@ -405,7 +405,7 @@ class BaseModel extends Model
     {
         $this->trigger('before_delete', array('method' =>'delete', 'where' => $where));
 
-        $result = $this->db->delete($this->table_name, $where);
+        $result = $this->db->delete($this->table(), $where);
 
         $result = $this->trigger('after_delete', array(
             'method' => 'delete'
@@ -446,7 +446,7 @@ class BaseModel extends Model
      */
     public function is_unique($field, $value)
     {
-        $sql = "SELECT $field FROM " .$this->table_name ." WHERE $field = :$field";
+        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :$field";
 
         $data = $this->db->selectAll($sql, array($field => $value));
 

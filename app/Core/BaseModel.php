@@ -165,12 +165,22 @@ class BaseModel extends Model
      *
      * @return object
      */
-    public function find_by($where)
+    public function find_by()
     {
-        if(! is_array($where)) {
-            throw new \UnexpectedValueException('Parameter should be an Array');
+        // Prepare the parameters.
+        $params = func_get_args();
+
+        if(empty($params)) {
+            throw new \UnexpectedValueException('The method must have parameters');
         }
 
+        if (count($params) == 1) {
+            $where = array($params[0] => '');
+        } else {
+            $where = array($params[0] => $params[1]);
+        }
+
+        //
         $bindParams = array();
 
         // Get the TABLE name.
@@ -243,8 +253,22 @@ class BaseModel extends Model
      *
      * @return object or FALSE
      */
-    public function find_all($where = array())
+    public function find_all()
     {
+        // Prepare the parameters.
+        $params = func_get_args();
+
+        if(empty($params)) {
+            $where = array();
+        }
+        else if (count($params) == 1) {
+            $where = array($params[0] => '');
+        }
+        else {
+            $where = array($params[0] => $params[1]);
+        }
+
+        //
         if(! is_array($where)) {
             throw new \UnexpectedValueException('Parameter should be an Array');
         }
@@ -654,11 +678,20 @@ class BaseModel extends Model
 
         ksort($where);
 
-        $idx = 0;
+        $idx = -1;
 
         foreach ($where as $key => $value) {
+            $idx++;
+
             if($idx > 0) {
                 $whereDetails .= ' AND ';
+            }
+
+            if(empty($value)) {
+                // A string based condition; simplify its white spaces and use it directly.
+                $result .= preg_replace('/\s+/', ' ', trim($key));
+
+                continue;
             }
 
             if(strpos($key, ' ') !== false) {
@@ -676,8 +709,6 @@ class BaseModel extends Model
             $result .= "$key $operator :$key";
 
             $bindParams[$key] = $value;
-
-            $idx++;
         }
 
         if(! empty($result)) {

@@ -245,6 +245,10 @@ class BaseModel extends Model
      */
     public function find_all($where = array())
     {
+        if(! is_array($where)) {
+            throw new \UnexpectedValueException('Parameter should be an Array');
+        }
+
         // Get the TABLE name.
         $table = $this->table_name;
 

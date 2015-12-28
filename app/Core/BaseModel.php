@@ -93,13 +93,6 @@ class BaseModel extends Model
     protected $temp_return_type = null;
 
     /**
-     * The select LIMIT and WHERE arrays.
-     */
-    protected $temp_select_limit = null;
-
-    protected $temp_select_where = array();
-
-    /**
      * Protected, non-modifiable attributes
      */
     protected $protected_attributes = array();
@@ -171,7 +164,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($fields = '*', $where = false, $fetchAll = false)
+    public function select($fields = '*', $where = array(), $fetchAll = false, $limit = false)
     {
         $bindParams = array();
 
@@ -191,46 +184,42 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $whereDetails = '';
 
-        if(! empty($this->temp_select_where)) {
-            ksort($this->temp_select_where);
+        ksort($this->temp_select_where);
 
-            $idx = 0;
+        $idx = 0;
 
-            foreach ($this->temp_select_where as $key => $value) {
-                if($idx > 0) {
-                    $whereDetails .= ' AND ';
-                }
-
-                if(strpos($key, ' ') !== false) {
-                    $key = preg_replace('/\s+/', ' ', trim($key));
-
-                    $segments = explode(' ', $key);
-
-                    $key      = $segments[0];
-                    $operator = $segments[1];
-                }
-                else {
-                    $operator = '=';
-                }
-
-                $whereDetails .= "$key $operator :$key";
-
-                $bindParams[$key] = $value;
-
-                $idx++;
+        foreach ($where as $key => $value) {
+            if($idx > 0) {
+                $whereDetails .= ' AND ';
             }
 
-            if(! empty($whereDetails)) {
-                $whereDetails = 'WHERE ' .$whereDetails;
+            if(strpos($key, ' ') !== false) {
+                $key = preg_replace('/\s+/', ' ', trim($key));
+
+                $segments = explode(' ', $key);
+
+                $key      = $segments[0];
+                $operator = $segments[1];
             }
+            else {
+                $operator = '=';
+            }
+
+            $whereDetails .= "$key $operator :$key";
+
+            $bindParams[$key] = $value;
+
+            $idx++;
+        }
+
+        if(! empty($whereDetails)) {
+            $whereDetails = 'WHERE ' .$whereDetails;
         }
 
         // Prepare the LIMIT details.
         $limitDetails = '';
 
         if($fetchAll) {
-            $limit = $this->temp_select_limit;
-
             if(is_numeric($limit)) {
                 $limitDetails = '0, ' .$limit;
             }
@@ -265,12 +254,6 @@ class BaseModel extends Model
         // Make sure our temp return type is correct.
         $this->temp_return_type = $this->return_type;
 
-        // Make sure our temp where is correct.
-        $this->temp_select_where = array();
-
-        // Make sure our temp limit is correct.
-        $this->temp_select_limit = null;
-
         return $result;
     }
 
@@ -284,9 +267,9 @@ class BaseModel extends Model
      * @return object|array|null|false
      * @throws \Exception
      */
-    public function selectOne($sql, $bindParams = array())
+    public function selectOne($sql, $bindParams = array(), $limit = false)
     {
-        return $this->select($sql, $bindParams, false);
+        return $this->select($sql, $bindParams, false, $limit);
     }
 
     /**
@@ -299,9 +282,9 @@ class BaseModel extends Model
      * @return array|null|false
      * @throws \Exception
      */
-    public function selectAll($sql, $bindParams = array())
+    public function selectAll($sql, $bindParams = array(), $limit = false)
     {
-        return $this->select($sql, $bindParams, true);
+        return $this->select($sql, $bindParams, true, $limit);
     }
 
     public function delete($where)
@@ -373,27 +356,6 @@ class BaseModel extends Model
     public function protect($field)
     {
         $this->protected_attributes[] = $field;
-
-        return $this;
-    }
-
-    public function where($field, $value)
-    {
-         array_push($this->temp_select_where, $field, $value);
-
-         return $this;
-    }
-
-    public function limit()
-    {
-        $params = func_get_args();
-
-        if(count($params) == 1) {
-            $this->temp_select_limit = $params[0];
-        }
-        else {
-            $this->temp_select_limit = array($params[0], $params[1]);
-        }
 
         return $this;
     }

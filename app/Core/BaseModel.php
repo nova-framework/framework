@@ -334,7 +334,7 @@ class BaseModel extends Model
      * @return object|array|null|false
      * @throws \Exception
      */
-    public function selectOne($sql, $bindParams = array(), $limit = false)
+    public function select_one($sql, $bindParams = array(), $limit = false)
     {
         return $this->select($sql, $bindParams, false, $limit);
     }
@@ -349,7 +349,7 @@ class BaseModel extends Model
      * @return array|null|false
      * @throws \Exception
      */
-    public function selectAll($sql, $bindParams = array(), $limit = false)
+    public function select_all($sql, $bindParams = array(), $limit = false)
     {
         return $this->select($sql, $bindParams, true, $limit);
     }

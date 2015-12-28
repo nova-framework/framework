@@ -95,6 +95,11 @@ class BaseModel extends Model
     protected $temp_return_type = null;
 
     /**
+     * Temporary where attributes.
+     */
+    protected $temp_select_where = array();
+
+    /**
      * Protected, non-modifiable attributes
      */
     protected $protected_attributes = array();
@@ -165,26 +170,15 @@ class BaseModel extends Model
      */
     public function find_by()
     {
+        $bindParams = array();
+
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        if(! empty($params)) {
-            $field = $params[0];
-
-            $value = isset($params[1]) ? $params[1] : '';
-
-            // Prepare the WHERE
-            $where = array($field => $value);
-        }
-        else {
-            throw new \UnexpectedValueException('Method called without parameters');
-        }
-
-        //
-        $bindParams = array();
+        $this->set_where($params);
 
         // Prepare the WHERE details.
-        $whereDetails = $this->whereDetails($where, $bindParams);
+        $whereDetails = $this->whereDetails($this->temp_select_where, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
@@ -201,6 +195,9 @@ class BaseModel extends Model
         // Make sure our temp return type is correct.
         $this->temp_return_type = $this->return_type;
 
+        // Reset our select WHEREs
+        $this->temp_select_where = array();
+        
         return $result;
     }
 
@@ -238,19 +235,9 @@ class BaseModel extends Model
     {
         $params = func_get_args();
 
-        if(! empty($params)) {
-            $field = $params[0];
+        $this->set_where($params);
 
-            $value = isset($params[1]) ? $params[1] : '';
-
-            // Prepare the WHERE
-            $where = array($field => $value);
-        }
-        else {
-            throw new \UnexpectedValueException('Method called without parameters');
-        }
-
-        return $this->find_all($where);
+        return $this->find_all();
     }
 
     /**
@@ -259,12 +246,12 @@ class BaseModel extends Model
      *
      * @return object or FALSE
      */
-    public function find_all($where = array())
+    public function find_all()
     {
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereDetails = $this->whereDetails($where, $bindParams);
+        $whereDetails = $this->whereDetails($this->temp_select_where, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
@@ -282,6 +269,9 @@ class BaseModel extends Model
 
         // Reset our return type
         $this->temp_return_type = $this->return_type;
+
+        // Reset our select WHEREs
+        $this->temp_select_where = array();
 
         return $result;
     }
@@ -414,6 +404,11 @@ class BaseModel extends Model
         ));
 
         return $result;
+    }
+
+    public where($field, $value = '')
+    {
+        array_push($this->temp_select_where, $field, $value);
     }
 
     public function query($sql)
@@ -654,6 +649,18 @@ class BaseModel extends Model
                 return date('Y-m-d', $curr_date);
                 break;
         }
+    }
+
+    protected function set_where($params)
+    {
+        if(empty($params)) {
+            throw new \UnexpectedValueException('Parameters can not be empty');
+        }
+
+        $value = isset($params[1]) ? $params[1] : '';
+
+        // Set the WHERE
+        $this->where($params[0], $value);
     }
 
     protected function whereDetails(array $where, &$bindParams = array())

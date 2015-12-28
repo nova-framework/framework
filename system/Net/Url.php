@@ -165,7 +165,7 @@ class Url
     {
         $segments = self::segments();
 
-        return getSegment($segments, $id);
+        return self::getSegment($segments, $id);
     }
 
     /**

@@ -480,8 +480,6 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE parameters.
-        $where = array();
-
         if(is_array($params[0])) {
             $where = $params[0];
         }
@@ -652,16 +650,81 @@ class BaseModel extends Model
         return $this->select($sql, $bindParams, true, $limit);
     }
 
-    public function delete($where)
+    /**
+     * Deletes a row by it's primary key value.
+     *
+     * @param  mixed $id The primary key value of the row to delete.
+     * @return bool
+     */
+    public function delete($id)
     {
-        $this->trigger('before_delete', array('method' =>'delete', 'where' => $where));
+        if(! is_integer($id)) {
+            throw new \UnexpectedValueException('Parameter should be an Integer');
+        }
+
+        $where($this->primary_key => $id);
+
+        //
+        $this->trigger('before_delete', array('id' => $id, 'method' => 'delete'));
 
         $result = $this->db->delete($this->table(), $where);
 
-        $result = $this->trigger('after_delete', array(
-            'method' => 'delete'
-            'where'  => $where,
-            'result' => $result,
+        $this->trigger('after_delete', array(
+            'id' => $id,
+            'method' => 'delete',
+            'result' => $result
+        ));
+
+        return $result;
+    }
+
+    public function delete_by()
+    {
+        $params = func_get_args();
+
+        if(empty($params)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        // Prepare the WHERE parameters.
+        if(is_array($params[0])) {
+            $where = $params[0];
+        }
+        else {
+            $value = isset($params[1]) ? $params[1] : '';
+
+            $where = array($params[0] => $value);
+        }
+
+        //
+        $where = $this->trigger('before_delete', array('method' => 'delete_by', 'fields' => $where));
+
+        $result = $this->db->delete($this->table(), $where);
+
+        $this->trigger('after_delete', array(
+            'method' => 'delete_by',
+            'fields' => $where,
+            'result' => $result
+        ));
+
+        return $result;
+    }
+
+    public function delete_many($ids)
+    {
+        if (! is_array($ids) || (count($ids) == 0)) return NULL;
+
+        $ids = $this->trigger('before_delete', array('ids' => $ids, 'method' => 'delete_many'));
+
+        //
+        $where = $this->primary_key ." IN (".implode(',', $ids) .")";
+
+        $result = $this->db->delete($this->table(), $where);
+
+        $this->trigger('after_delete', array(
+            'ids' => $ids,
+            'method' => 'delete_many',
+            'result' => $result
         ));
 
         return $result;

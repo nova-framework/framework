@@ -167,17 +167,19 @@ class BaseModel extends Model
      */
     public function find_by()
     {
-        // Prepare the parameters.
+        // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        if(empty($params)) {
-            throw new \UnexpectedValueException('Method called without parameters');
-        }
+        if(! empty($params)) {
+            $field = $params[0];
 
-        if (count($params) == 1) {
-            $where = array($params[0] => '');
-        } else {
-            $where = array($params[0] => $params[1]);
+            $value = isset($params[1]) ? $params[1] : '';
+
+            // Prepare the WHERE
+            $where = array($field => $value);
+        }
+        else {
+            throw new \UnexpectedValueException('Method called without parameters');
         }
 
         //
@@ -244,14 +246,16 @@ class BaseModel extends Model
     {
         $params = func_get_args();
 
-        if(empty($params)) {
-            $where = array();
-        }
-        else if (count($params) == 1) {
-            $where = array($params[0] => '');
+        if(! empty($params)) {
+            $field = $params[0];
+
+            $value = isset($params[1]) ? $params[1] : '';
+
+            // Prepare the WHERE
+            $where = array($field => $value);
         }
         else {
-            $where = array($params[0] => $params[1]);
+            throw new \UnexpectedValueException('Method called without parameters');
         }
 
         return $this->find_all($where);

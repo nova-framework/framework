@@ -277,10 +277,7 @@ class BaseModel extends Model
 
     public function insert($data)
     {
-        $data = $this->trigger('before_insert', array(
-            'method' =>'insert',
-            'fields' => $data
-        ));
+        $data = $this->trigger('before_insert', array('method' =>'insert', 'fields' => $data));
 
         $result = $this->db->insert($this->table_name, $data);
 
@@ -295,11 +292,7 @@ class BaseModel extends Model
 
     public function update($data, $where)
     {
-        $data = $this->trigger('before_update', array(
-            'method' =>'update',
-            'where'  => $where,
-            'fields' => $data
-        ));
+        $data = $this->trigger('before_update', array('method' =>'update', 'where'  => $where, 'fields' => $data));
 
         $result = $this->db->update($this->table_name, $data, $where);
 
@@ -353,7 +346,7 @@ class BaseModel extends Model
         $sql = "SELECT $fieldDetails FROM $table $whereDetails $limitDetails ";
 
         //
-        $this->trigger('before_select', array('method' => 'select','where' => $where, 'fields' => $fields));
+        $this->trigger('before_select', array('method' => 'select', 'where' => $where, 'fields' => $fields));
 
         $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
 

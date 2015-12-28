@@ -360,11 +360,9 @@ class BaseModel extends Model
      */
     public function update($id, $data)
     {
-        $where = array($this->primary_key => $id);
-
         $data = $this->trigger('before_update', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, $where);
+        $result = $this->db->update($this->table(), $data, array($this->primary_key => $id));
 
         $result = $this->trigger('after_update', array(
             'id'     => $id,
@@ -391,21 +389,21 @@ class BaseModel extends Model
      * );
      *
      * The $where_key should be the name of the column to match the record on.
-     * If $where_key == 'title', then each record would be matched on that
+     * If $whereKey == 'title', then each record would be matched on that
      * 'title' value of the array. This does mean that the array key needs
      * to be provided with each row's data.
      *
      * @param  array $data An associate array of row data to update.
-     * @param  string $where_key The column name to match on.
+     * @param  string $whereKey The column name to match on.
      * @return bool
      */
-    public function update_batch($data, $where)
+    public function update_batch($data, $whereKey)
     {
         foreach ($data as &$row) {
             $row = $this->trigger('before_update', array('method' => 'update_batch', 'fields' => $row));
         }
 
-        $result = $this->db->updateBatch($this->table(), $data, $where);
+        $result = $this->db->updateBatch($this->table(), $data, $whereKey);
 
         foreach ($data as &$row) {
             $this->trigger('after_update', array('fields' => $data, 'result' => $result, 'method' => 'update_batch'));
@@ -448,6 +446,58 @@ class BaseModel extends Model
             'fields' => $data,
             'result' => $result,
             'method' => 'update_many'
+        ));
+
+        return $result;
+    }
+
+    /**
+     * Update records in the database using a standard WHERE clause.
+     *
+     * Your last parameter should be the $data array with values to update
+     * on the rows. Any additional parameters should be provided to make up
+     * a typical WHERE clause. This could be a single array, or a column name
+     * and a value.
+     *
+     * $data = array('deleted_by' => 1);
+     * $wheres = array('user_id' => 15);
+     *
+     * $this->update_by($wheres, $data);
+     * $this->update_by('user_id', 15, $data);
+     *
+     * @param array $data An array of data pairs to update
+     * @param one or more WHERE-acceptable entries.
+     * @return bool
+     */
+    public function update_by()
+    {
+        $params = func_get_args();
+
+        $data = array_pop($params);
+
+        if(empty($params) || empty($data)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        // Prepare the WHERE parameters.
+        $where = array();
+
+        if(is_array($params[0])) {
+            $where = $params[0];
+        }
+        else {
+            $where = array($params[0] => isset($params[1]) ? $params[1] : '');
+        }
+
+        //
+        $data = $this->trigger('before_update', array('method' => 'update_by', 'fields' => $data));
+
+        $result = $this->db->update($this->table(), $data, $where);
+
+        $this->trigger('after_update', array(
+            'method' => 'update_by',
+            'fields' => $data,
+            'result' => $result
         ));
 
         return $result;
@@ -812,10 +862,12 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameters can not be empty');
         }
 
-        $value = isset($params[1]) ? $params[1] : '';
-
-        // Set the WHERE
-        $this->where($params[0], $value);
+        if(is_array($params[0])) {
+            $this->tmp_select_where = array_merge($this->tmp_select_where, $params[0]);
+        }
+        else {
+            array_push($this->temp_select_where, $params[0], isset($params[1]) ? $params[1] : '');
+        }
     }
 
     protected function where_details(array $where, &$bindParams = array())

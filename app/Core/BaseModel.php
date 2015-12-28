@@ -174,14 +174,11 @@ class BaseModel extends Model
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." = :param";
 
-        $result = $this->db->select($sql, array('param' => $id), true, $this->temp_return_type);
+        $result = $this->select($sql, array('param' => $id));
 
-        if ( ! empty($result)) {
+        if (! empty($result)) {
             $result = $this->trigger('after_find', array('id' => $id, 'method' => 'find', 'fields' => $result));
         }
-
-        // Reset our return type
-        $this->temp_return_type = $this->return_type;
 
         return $result;
     }
@@ -209,20 +206,14 @@ class BaseModel extends Model
         //
         $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));
 
-        $result = $this->db->select($sql, $bindParams, false, $this->temp_return_type);
+        $result = $this->select($sql, $bindParams);
 
-        if ( ! empty($result)) {
+        if (! empty($result)) {
             $result = $this->trigger('after_find', array('method' => 'find_by', 'fields' => $result));
         }
 
-        // Make sure our temp return type is correct.
-        $this->temp_return_type = $this->return_type;
-
         // Reset our select WHEREs
         $this->temp_select_where = array();
-
-        // Reset our select LIMITs
-        $this->temp_select_where = null;
 
         return $result;
     }
@@ -244,12 +235,7 @@ class BaseModel extends Model
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
 
         //
-        $result = $this->db->select($sql, array(), true, $this->temp_return_type);
-
-        // Make sure our temp return type is correct.
-        $this->temp_return_type = $this->return_type;
-
-        return $result;
+        return $this->select($sql, array(), true);
     }
 
     /**
@@ -279,13 +265,16 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
 
+        // Prepare the LIMIT details.
+        $limitDetails = $this->limit_details($this->temp_select_limit);
+
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
+        $sql = "SELECT * FROM " .$this->table() ." $whereDetails $limitDetails";
 
         //
         $this->trigger('before_find', array('method' => 'find_all', 'fields' => $where));
 
-        $result = $this->db->select($sql, $bindParams, true, $this->temp_return_type);
+        $result = $this->select($sql, $bindParams, true);
 
         if (is_array($result)) {
             foreach ($result as $key => &$row) {
@@ -293,14 +282,11 @@ class BaseModel extends Model
             }
         }
 
-        // Reset our return type
-        $this->temp_return_type = $this->return_type;
-
         // Reset our select WHEREs
         $this->temp_select_where = array();
 
         // Reset our select LIMITs
-        $this->temp_select_where = null;
+        $this->temp_select_limit = null;
 
         return $result;
     }
@@ -525,8 +511,7 @@ class BaseModel extends Model
     }
 
     /**
-     * Increments the value of field for a given row, selected by the
-     * primary key for the table.
+     * Increments the value of field for a given row, selected by the primary key for the table.
      *
      * @param $id
      * @param $field
@@ -535,38 +520,122 @@ class BaseModel extends Model
      */
     public function increment($id, $field, $value = 1)
     {
-        $value = (int) abs($value);
+        $value = (int)abs($value);
 
-        return $this->db->update(
-            $this->table(),
-            array($field => "{$field}+{$value}"),
-            array($this->primary_key => $id)
-        );
+        //
+        $data = array($field => "{$field}+{$value}");
+
+        $where = array($this->primary_key => $id);
+
+        return $this->db->update($this->table(), $data, $where);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Increments the value of field for a given row, selected by the
-     * primary key for the table.
+     * Increments the value of field for a given row, selected by the primary key for the table.
      *
      * @param $id
      * @param $field
      * @param int $value
      * @return mixed
      */
-    public function decrement($id, $field, $value=1)
+    public function decrement($id, $field, $value = 1)
     {
         $value = (int)abs($value);
 
-        return $this->db->update(
-            $this->table(),
-            array($field => "{$field}+{$value}"),
-            array($this->primary_key => $id)
-        );
+        //
+        $data = array($field => "{$field}-{$value}");
+
+        $where = array($this->primary_key => $id);
+
+        return $this->db->update($this->table(), $data, $where);
     }
 
-    public function select($fields = '*', $where = array(), $fetchAll = false, $limit = false)
+    /**
+     * Execute Select Query, bind values into the $sql query. And give optional method and class for fetch result
+     * The result MUST be an array!
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $bindParams = array(), $fetchAll = false)
+    {
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
+
+        // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
+
+        return $result;
+    }
+
+    /**
+     * Fetch first one record, optionally with WHEREs.
+     *
+     * @return array|null|false
+     * @throws \Exception
+     */
+    public function select_by()
+    {
+        $bindParams = array();
+
+        //
+        $params = func_get_args();
+
+        $fields = array_pop($params);
+
+        if(empty($params) && empty($fields)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        // Prepare the WHERE parameters.
+        if(is_array($params[0])) {
+            $where = $params[0];
+        }
+        else {
+            $value = isset($params[1]) ? $params[1] : '';
+
+            $where = array($params[0] => $value);
+        }
+
+        // Prepare the FIELDS details.
+        $fieldDetails = '*';
+
+        if(is_array($fields)) {
+            $fieldDetails = implode(', ', $fields);
+        }
+        else if(is_string($fields)) {
+            $fieldDetails = $fields;
+        }
+
+        // Prepare the WHERE details.
+        $whereDetails = $this->where_details($where, $bindParams);
+
+        // Prepare the SQL Query
+        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails";
+
+        //
+        $this->trigger('before_select', array('method' => 'select_one', 'fields' => $fields));
+
+        $result = $this->select($sql, $bindParams);
+
+        if (! empty($result)) {
+            $result = $this->trigger('after_select', array('method' => 'select_one', 'fields' => $result));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Fetch all records, optionally with WHEREs and LIMITs.
+     *
+     * @param string $fields
+     * @return array|null|false
+     * @throws \Exception
+     */
+    public function select_all($fields = '*')
     {
         $bindParams = array();
 
@@ -581,73 +650,32 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereDetails = $this->where_details($where, $bindParams);
+        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
 
         // Prepare the LIMIT details.
-        $limitDetails = '';
+        $limitDetails = $this->limit_details($this->temp_select_limit);
 
-        if($fetchAll) {
-            if(is_numeric($limit)) {
-                $limitDetails = '0, ' .$limit;
-            }
-            else if(is_array($limit)) {
-                $limitDetails = implode(', ', $limit);
-            }
+        // Prepare the SQL Query
+        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails $limitDetails";
 
-            if(! empty($limitDetails)) {
-                $limitDetails = 'LIMIT ' .$limitDetails;
+        //
+        $this->trigger('before_select', array('method' => 'select_all', 'fields' => $fields));
+
+        $result = $this->select($sql, $bindParams, true);
+
+        if (is_array($result)) {
+            foreach ($result as $key => &$row) {
+                $row = $this->trigger('after_select', array('method' => 'select_all', 'fields' => $row));
             }
         }
 
-        // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails $limitDetails ";
+        // Reset our select WHEREs
+        $this->temp_select_where = array();
 
-        //
-        $this->trigger('before_select', array('method' => 'select', 'where' => $where, 'fields' => $fields));
-
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
-
-        $result = $this->trigger('after_select', array(
-            'method' => 'select'
-            'where'  => $where,
-            'fields' => $fields,
-            'result' => $result
-        ));
-
-        // Make sure our temp return type is correct.
-        $this->temp_return_type = $this->return_type;
+        // Reset our select LIMITs
+        $this->temp_select_limit = null;
 
         return $result;
-    }
-
-    /**
-     * Convenience method for fetching one record.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param null $method Customized method for fetching, null for engine default or config default.
-     * @param null $class Class for fetching into classes.
-     * @return object|array|null|false
-     * @throws \Exception
-     */
-    public function select_one($sql, $bindParams = array(), $limit = false)
-    {
-        return $this->select($sql, $bindParams, false, $limit);
-    }
-
-    /**
-     * Convenience method for fetching all records.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param null $method Customized method for fetching, null for engine default or config default.
-     * @param null $class Class for fetching into classes.
-     * @return array|null|false
-     * @throws \Exception
-     */
-    public function select_all($sql, $bindParams = array(), $limit = false)
-    {
-        return $this->select($sql, $bindParams, true, $limit);
     }
 
     /**

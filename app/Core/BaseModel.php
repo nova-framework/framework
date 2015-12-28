@@ -180,7 +180,7 @@ class BaseModel extends Model
         $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM $table $whereDetails;";
+        $sql = "SELECT * FROM $table $whereDetails";
 
         //
         $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));
@@ -214,12 +214,58 @@ class BaseModel extends Model
         $table = DB_PREFIX .$this->table_name;
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." IN (".implode(',', $values) .");";
+        $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
 
         //
         $result = $this->db->select($sql, array(), true, $this->temp_return_type);
 
         // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
+
+        return $result;
+    }
+
+    /**
+     * Retrieves a number of items based on an arbitrary WHERE call.
+     *
+     * @return object or FALSE
+     */
+    public function find_many_by()
+    {
+        $where = func_get_args();
+
+        return $this->find_all($where);
+    }
+
+    /**
+     * Fetch all of the records in the table.
+     * Can be used with scoped calls to restrict the results.
+     *
+     * @return object or FALSE
+     */
+    public function find_all($where = array())
+    {
+        // Prepare the TABLE details.
+        $table = DB_PREFIX .$this->table_name;
+
+        // Prepare the WHERE details.
+        $whereDetails = $this->whereDetails($where, $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM $table $whereDetails";
+
+        //
+        $this->trigger('before_find', array('method' => 'find_all', 'fields' => $where));
+
+        $result = $this->db->select($sql, $bindParams, true, $this->temp_return_type);
+
+        if (is_array($result)) {
+            foreach ($result as $key => &$row) {
+                $row = $this->trigger('after_find', array('method' => 'find_all', 'fields' => $row));
+            }
+        }
+
+        // Reset our return type
         $this->temp_return_type = $this->return_type;
 
         return $result;
@@ -300,7 +346,7 @@ class BaseModel extends Model
         }
 
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM $table $whereDetails $limitDetails ;";
+        $sql = "SELECT $fieldDetails FROM $table $whereDetails $limitDetails ";
 
         //
         $data = $this->trigger('before_select', array(

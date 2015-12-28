@@ -448,6 +448,8 @@ abstract class Base extends \PDO implements Engine
      */
     public function update($table, $data, $where)
     {
+        $bindParams = array();
+
         // Sort on key
         ksort($data);
 
@@ -466,38 +468,49 @@ abstract class Base extends \PDO implements Engine
             $idx++;
         }
 
+
         // Sort in where keys.
         ksort($where);
 
         // Where :bind for auto binding
-        $bindParams = array();
-
         $whereDetails = '';
 
-        $idx = 0;
+        if(is_array($where)) {
+            $idx = 0;
 
-        foreach ($where as $key => $value) {
-            if($idx > 0) {
-                $whereDetails .= ' AND ';
+            foreach ($where as $key => $value) {
+                if($idx > 0) {
+                    $whereDetails .= ' AND ';
+                }
+
+                $idx++;
+
+                if(empty($value)) {
+                    // A string based condition; simplify its white spaces and use it directly.
+                    $whereDetails .= preg_replace('/\s+/', ' ', trim($key));
+
+                    continue;
+                }
+
+                if(strpos($key, ' ') !== false) {
+                    $key = preg_replace('/\s+/', ' ', trim($key));
+
+                    $segments = explode(' ', $key);
+
+                    $key      = $segments[0];
+                    $operator = $segments[1];
+                }
+                else {
+                    $operator = '=';
+                }
+
+                $whereDetails .= "$key $operator :where_$key";
+
+                $bindParams[$key] = $value;
             }
-
-            if(strpos($key, ' ') !== false) {
-                $key = preg_replace('/\s+/', ' ', trim($key));
-
-                $segments = explode(' ', $key);
-
-                $key      = $segments[0];
-                $operator = $segments[1];
-            }
-            else {
-                $operator = '=';
-            }
-
-            $whereDetails .= "$key $operator :where_$key";
-
-            $bindParams[$key] = $value;
-
-            $idx++;
+        }
+        else if(is_string($where)) {
+            $whereDetails = $where;
         }
 
         // Prepare statement.

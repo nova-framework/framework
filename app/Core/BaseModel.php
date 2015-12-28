@@ -367,10 +367,87 @@ class BaseModel extends Model
         $result = $this->db->update($this->table(), $data, $where);
 
         $result = $this->trigger('after_update', array(
-            'id' => $id, 
+            'id'     => $id,
             'method' => 'update'
             'fields' => $data,
             'result' => $result,
+        ));
+
+        return $result;
+    }
+
+    /**
+     * Updates multiple records in the database at once.
+     *
+     * $data = array(
+     *     array(
+     *         'title'  => 'My title',
+     *         'body'   => 'body 1'
+     *     ),
+     *     array(
+     *         'title'  => 'Another Title',
+     *         'body'   => 'body 2'
+     *     )
+     * );
+     *
+     * The $where_key should be the name of the column to match the record on.
+     * If $where_key == 'title', then each record would be matched on that
+     * 'title' value of the array. This does mean that the array key needs
+     * to be provided with each row's data.
+     *
+     * @param  array $data An associate array of row data to update.
+     * @param  string $where_key The column name to match on.
+     * @return bool
+     */
+    public function update_batch($data, $where)
+    {
+        foreach ($data as &$row) {
+            $row = $this->trigger('before_update', array('method' => 'update_batch', 'fields' => $row));
+        }
+
+        $result = $this->db->updateBatch($this->table(), $data, $where);
+
+        foreach ($data as &$row) {
+            $this->trigger('after_update', array('fields' => $data, 'result' => $result, 'method' => 'update_batch'));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Updates many records by an array of ids.
+     *
+     * While update_batch() allows modifying multiple, arbitrary rows of data
+     * on each row, update_many() sets the same values for each row.
+     *
+     * $ids = array(1, 2, 3, 5, 12);
+     * $data = array(
+     *     'deleted_by' => 1
+     * );
+     *
+     * $this->model->update_many($ids, $data);
+     *
+     * @param  array $ids An array of primary_key values to update.
+     * @param  array $data An array of value pairs to modify in each row.
+     * @return bool
+     */
+    public function update_many($ids, $data)
+    {
+        if (! is_array($ids) || (count($ids) == 0)) return NULL;
+
+        $data = $this->trigger('before_update', array('ids' => $ids, 'method' => 'update_many', 'fields' => $data));
+
+        // Prepare the custom WHERE.
+        $where = $this->primary_key ." IN (".implode(',', $values) .")";
+
+        //
+        $result = $this->db->update($this->table(), $data, $where);
+
+        $this->trigger('after_update', array(
+            'ids'    => $ids,
+            'fields' => $data,
+            'result' => $result,
+            'method' => 'update_many'
         ));
 
         return $result;
@@ -747,14 +824,14 @@ class BaseModel extends Model
 
         ksort($where);
 
-        $idx = -1;
+        $idx = 0;
 
         foreach ($where as $key => $value) {
-            $idx++;
-
             if($idx > 0) {
                 $whereDetails .= ' AND ';
             }
+
+            $idx++;
 
             if(empty($value)) {
                 // A string based condition; simplify its white spaces and use it directly.

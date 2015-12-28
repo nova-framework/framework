@@ -40,7 +40,7 @@ abstract class Base extends \PDO implements Engine
         }
 
         // Will set the default method when provided in the config.
-        if (isset($config['fetch_method'])) {
+        if (isset($config['return_type'])) {
             $this->returnType = $config['return_type'];
         }
 

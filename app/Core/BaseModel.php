@@ -174,7 +174,7 @@ class BaseModel extends Model
         //
         $this->trigger('before_find', ['method' => 'find_by', 'fields' => $where]);
 
-        $result = $this->db->select($sql, array(), true, $this->temp_return_type);
+        $result = $this->db->select($sql, $bindParams, false, $this->temp_return_type);
 
         if ( ! empty($result)) {
             $result = $this->trigger('after_find', array('method' => 'find_by', 'fields' => $result));

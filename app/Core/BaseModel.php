@@ -140,8 +140,8 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Integer');
         }
 
-        // Prepare the TABLE details.
-        $table = DB_PREFIX .$this->table_name;
+        // Get the TABLE name.
+        $table = $this->table_name;
 
         //
         $this->trigger('before_find', array('id' => $id, 'method' => 'find'));
@@ -173,8 +173,8 @@ class BaseModel extends Model
 
         $bindParams = array();
 
-        // Prepare the TABLE details.
-        $table = DB_PREFIX .$this->table_name;
+        // Get the TABLE name.
+        $table = $this->table_name;
 
         // Prepare the WHERE details.
         $whereDetails = $this->whereDetails($where, $bindParams);
@@ -210,8 +210,8 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Array');
         }
 
-        // Prepare the TABLE details.
-        $table = DB_PREFIX .$this->table_name;
+        // Get the TABLE name.
+        $table = $this->table_name;
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
@@ -245,8 +245,8 @@ class BaseModel extends Model
      */
     public function find_all($where = array())
     {
-        // Prepare the TABLE details.
-        $table = DB_PREFIX .$this->table_name;
+        // Get the TABLE name.
+        $table = $this->table_name;
 
         // Prepare the WHERE details.
         $whereDetails = $this->whereDetails($where, $bindParams);
@@ -313,8 +313,8 @@ class BaseModel extends Model
     {
         $bindParams = array();
 
-        // Prepare the TABLE details.
-        $table = DB_PREFIX .$this->table_name;
+        // Get the TABLE name.
+        $table = $this->table_name;
 
         // Prepare the WHAT details.
         $fieldDetails = '*';
@@ -448,7 +448,7 @@ class BaseModel extends Model
      */
     public function is_unique($field, $value)
     {
-        $sql = "SELECT $field FROM " .DB_PREFIX .$this->table_name ." WHERE $field = :$field";
+        $sql = "SELECT $field FROM " .$this->table_name ." WHERE $field = :$field";
 
         $data = $this->db->selectAll($sql, array($field => $value));
 

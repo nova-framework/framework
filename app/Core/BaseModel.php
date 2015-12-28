@@ -353,11 +353,7 @@ class BaseModel extends Model
         $sql = "SELECT $fieldDetails FROM $table $whereDetails $limitDetails ";
 
         //
-        $data = $this->trigger('before_select', array(
-            'method' =>'select',
-            'where'  => $where,
-            'fields' => $fields
-        ));
+        $this->trigger('before_select', array('method' => 'select','where' => $where, 'fields' => $fields));
 
         $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
 
@@ -406,10 +402,7 @@ class BaseModel extends Model
 
     public function delete($where)
     {
-        $where = $this->trigger('before_delete', array(
-            'method' =>'delete',
-            'where'  => $where
-        ));
+        $this->trigger('before_delete', array('method' =>'delete', 'where' => $where));
 
         $result = $this->db->delete($this->table_name, $where);
 

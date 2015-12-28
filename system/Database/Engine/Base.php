@@ -51,7 +51,7 @@ abstract class Base extends \PDO implements Engine
             $fetchMethod = \PDO::FETCH_OBJ;
         }
         else {
-            $classPath = str_replace('\\', '/', $this->returnType);
+            $classPath = str_replace('\\', '/', ltrim($this->returnType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
                 throw new \Exception("No valid Entity is given.");
@@ -185,10 +185,10 @@ abstract class Base extends \PDO implements Engine
             $fetchMethod = \PDO::FETCH_OBJ;
         }
         else {
-            $classPath = str_replace('\\', '/', $returnType);
+            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity is given.");
+                throw new \Exception("No valid Entity is given: ".$classPath);
             }
 
             $className = $returnType;

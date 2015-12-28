@@ -88,6 +88,7 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Engine
      * @covers \Nova\Database\Engine\Base
      * @covers \Nova\Database\Service
+     * @covers \Nova\Database\Service::create
      * @covers \App\Modules\Demo\Services\Database\Car
      * @param string $linkName
      */
@@ -142,11 +143,82 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Engine
      * @covers \Nova\Database\Engine\Base
      * @covers \Nova\Database\Service
+     * @covers \Nova\Database\Service::create
      * @covers \App\Modules\Demo\Services\Database\Car
      */
     public function testBasicInsertingSQLite()
     {
         $this->testBasicInserting('sqlite');
+    }
+
+
+
+    /**
+     * @covers \Nova\Database\Manager::getService
+     * @covers \Nova\Database\Engine
+     * @covers \Nova\Database\Engine\Base
+     * @covers \Nova\Database\Service
+     * @covers \Nova\Database\Service::update
+     * @covers \App\Modules\Demo\Services\Database\Car
+     * @param string $linkName
+     */
+    public function testBasicUpdating($linkName = 'default')
+    {
+        $this->prepareService($linkName);
+
+        // Prepare by inserting a car
+        // Make new car
+        $car = new \App\Modules\Demo\Models\Entities\Car();
+        $car->make = 'Nova Cars';
+        $car->model = 'FrameworkCar_Service_1';
+        $car->costs = 15000;
+
+        // Insert
+        /** @var \App\Modules\Demo\Models\Entities\Car $car */
+        $car = $this->carservice->create($car);
+
+        $this->assertNotNull($car);
+        $this->assertNotFalse($car);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
+
+
+
+        // Update tests
+        $car->costs = 20000;
+        $car->model = "FrameworkCar_Service_Updated";
+
+        // Update
+        $status = $this->carservice->update($car);
+
+        $this->assertNotNull($status);
+        $this->assertNotFalse($status);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $status);
+
+
+        // Select it again
+        $one = $this->carservice->read("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE 'FrameworkCar_Service_Updated';");
+
+        $this->assertEquals(1, count($one));
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $one[0]);
+
+
+
+        $this->cleanup($linkName);
+    }
+
+
+
+    /**
+     * @covers \Nova\Database\Manager::getService
+     * @covers \Nova\Database\Engine
+     * @covers \Nova\Database\Engine\Base
+     * @covers \Nova\Database\Service
+     * @covers \Nova\Database\Service::update
+     * @covers \App\Modules\Demo\Services\Database\Car
+     */
+    public function testBasicUpdatingSQLite()
+    {
+        $this->testBasicUpdating('sqlite');
     }
 
 

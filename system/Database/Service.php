@@ -144,7 +144,6 @@ abstract class Service extends CoreService
      * For safety it will default limit on 1 row only, you can override it but be warned on this!
      *
      * @param $entity Entity
-     * @param $limit int Limit of changes, may not be effective on every driver! Default 1.
      * @return false|Entity
      * @throws \Exception
      */

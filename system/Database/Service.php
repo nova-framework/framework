@@ -79,7 +79,7 @@ abstract class Service extends CoreService
      * On success it will return the entity including the (optional) inserted ID (primary key, when only one)
      *
      * @param $entity Entity|Entity[] One or multiple entit(y|ies) to create in the database
-     * @return false|Entity
+     * @return false|Entity|Entity[]
      * @throws \Exception
      */
     public function create($entity)

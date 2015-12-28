@@ -144,11 +144,11 @@ class BaseModel extends Model
         $table = DB_PREFIX .$this->table_name;
 
         //
-        $this->trigger('before_find', ['id' => $id, 'method' => 'find']);
+        $this->trigger('before_find', array('id' => $id, 'method' => 'find'));
 
         $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." = :param";
 
-        $result = $this->db->select($sql, array(), true, $this->temp_return_type);
+        $result = $this->db->select($sql, array('param' => $id), true, $this->temp_return_type);
 
         if ( ! empty($result)) {
             $result = $this->trigger('after_find', array('id' => $id, 'method' => 'find', 'fields' => $result));
@@ -180,7 +180,7 @@ class BaseModel extends Model
         $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM $table WHERE $whereDetails;";
+        $sql = "SELECT * FROM $table $whereDetails;";
 
         //
         $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));

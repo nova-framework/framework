@@ -344,22 +344,31 @@ class BaseModel extends Model
     {
         $data['batch'] = true;
 
-        $data = $this->trigger('before_insert', ['method' => 'insert_batch', 'fields' => $data] );
+        $data = $this->trigger('before_insert', array('method' => 'insert_batch', 'fields' => $data);
 
         unset($data['batch']);
 
         return $this->db->insertBatch($this->table_name, $data);
     }
 
-    public function update($data, $where)
+    /**
+     * Updates an existing record in the database.
+     *
+     * @param  mixed $id The primary_key value of the record to update.
+     * @param  array $data An array of value pairs to update in the record.
+     * @return bool
+     */
+    public function update($id, $data)
     {
-        $data = $this->trigger('before_update', array('method' =>'update', 'where'  => $where, 'fields' => $data));
+        $where = array($this->primary_key => $id);
+
+        $data = $this->trigger('before_update', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
         $result = $this->db->update($this->table(), $data, $where);
 
         $result = $this->trigger('after_update', array(
+            'id' => $id, 
             'method' => 'update'
-            'where'  => $where,
             'fields' => $data,
             'result' => $result,
         ));

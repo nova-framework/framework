@@ -95,9 +95,14 @@ class BaseModel extends Model
     protected $temp_return_type = null;
 
     /**
-     * Temporary where attributes.
+     * Temporary select's WHERE attributes.
      */
     protected $temp_select_where = array();
+
+    /**
+     * Temporary select's LIMIT attributes.
+     */
+    protected $temp_select_limit = null;
 
     /**
      * Protected, non-modifiable attributes
@@ -197,7 +202,7 @@ class BaseModel extends Model
 
         // Reset our select WHEREs
         $this->temp_select_where = array();
-        
+
         return $result;
     }
 
@@ -406,11 +411,6 @@ class BaseModel extends Model
         return $result;
     }
 
-    public where($field, $value = '')
-    {
-        array_push($this->temp_select_where, $field, $value);
-    }
-
     public function query($sql)
     {
         return $this->db->rawQuery($sql);
@@ -489,6 +489,13 @@ class BaseModel extends Model
     public function as_object($class = null)
     {
         $this->temp_return_type = ! empty($class) ? $class : 'object';
+
+        return $this;
+    }
+
+    public where($field, $value = '')
+    {
+        array_push($this->temp_select_where, $field, $value);
 
         return $this;
     }

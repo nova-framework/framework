@@ -183,7 +183,7 @@ class BaseModel extends Model
         $sql = "SELECT * FROM $table WHERE $whereDetails;";
 
         //
-        $this->trigger('before_find', ['method' => 'find_by', 'fields' => $where]);
+        $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));
 
         $result = $this->db->select($sql, $bindParams, false, $this->temp_return_type);
 

@@ -486,7 +486,9 @@ class BaseModel extends Model
             $where = $params[0];
         }
         else {
-            $where = array($params[0] => isset($params[1]) ? $params[1] : '');
+            $value = isset($params[1]) ? $params[1] : '';
+
+            $where = array($params[0] => $value);
         }
 
         //
@@ -501,6 +503,69 @@ class BaseModel extends Model
         ));
 
         return $result;
+    }
+
+    /**
+     * Updates all records and sets the value pairs passed in the array.
+     *
+     * @param  array $data An array of value pairs with the data to change.
+     * @return bool
+     */
+    public function update_all($data)
+    {
+        $data = $this->trigger('before_update', array('method' => 'update_all', 'fields' => $data));
+
+        $result = $this->db->update($this->table(), $data, '1');
+
+        $this->trigger('after_update', array(
+            'method' => 'update_all',
+            'fields' => $data,
+            'result' => $result
+        ));
+
+        return $result;
+    }
+
+    /**
+     * Increments the value of field for a given row, selected by the
+     * primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function increment($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        return $this->db->update(
+            $this->table(),
+            array($field => "{$field}+{$value}"),
+            array($this->primary_key => $id)
+        );
+    }
+
+    //--------------------------------------------------------------------
+
+    /**
+     * Increments the value of field for a given row, selected by the
+     * primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function decrement($id, $field, $value=1)
+    {
+        $value = (int)abs($value);
+
+        return $this->db->update(
+            $this->table(),
+            array($field => "{$field}+{$value}"),
+            array($this->primary_key => $id)
+        );
     }
 
     public function select($fields = '*', $where = array(), $fetchAll = false, $limit = false)

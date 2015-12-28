@@ -93,9 +93,11 @@ class BaseModel extends Model
     protected $temp_return_type = null;
 
     /**
-     * The select limits.
+     * The select LIMIT and WHERE arrays.
      */
     protected $temp_select_limit = null;
+
+    protected $temp_select_where = array();
 
     /**
      * Protected, non-modifiable attributes
@@ -204,12 +206,12 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $whereDetails = '';
 
-        if(is_array($where)) {
-            ksort($where);
+        if(! empty($this->temp_select_where)) {
+            ksort($this->temp_select_where);
 
             $idx = 0;
 
-            foreach ($where as $key => $value) {
+            foreach ($this->temp_select_where as $key => $value) {
                 if($idx > 0) {
                     $whereDetails .= ' AND ';
                 }
@@ -232,13 +234,10 @@ class BaseModel extends Model
 
                 $idx++;
             }
-        }
-        else if(is_string($where)) {
-            $whereDetails = $where;
-        }
 
-        if(! empty($whereDetails)) {
-            $whereDetails = 'WHERE ' .$whereDetails;
+            if(! empty($whereDetails)) {
+                $whereDetails = 'WHERE ' .$whereDetails;
+            }
         }
 
         // Prepare the LIMIT details.
@@ -251,7 +250,7 @@ class BaseModel extends Model
                 $limitDetails = '0, ' .$limit;
             }
             else if(is_array($limit)) {
-                $limitDetails = implode(',', $limit);
+                $limitDetails = implode(', ', $limit);
             }
 
             if(! empty($limitDetails)) {
@@ -280,6 +279,9 @@ class BaseModel extends Model
 
         // Make sure our temp return type is correct.
         $this->temp_return_type = $this->return_type;
+
+        // Make sure our temp where is correct.
+        $this->temp_select_where = array();
 
         // Make sure our temp limit is correct.
         $this->temp_select_limit = null;
@@ -358,6 +360,13 @@ class BaseModel extends Model
         $this->protected_attributes[] = $field;
 
         return $this;
+    }
+
+    public function where($field, $value)
+    {
+         array_push($this->temp_select_where, $field, $value);
+
+         return $this;
     }
 
     public function limit()

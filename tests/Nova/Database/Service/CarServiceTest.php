@@ -44,6 +44,39 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
         $this->prepareService('sqlite');
     }
 
+    /**
+     * @covers \Nova\Database\Service::table
+     * @covers \Nova\Database\Service::entity
+     * @covers \Nova\Database\Service::engine
+     */
+    public function testBasics()
+    {
+        $this->prepareService();
+
+        $table = $this->carservice->table();
+        $entity = $this->carservice->entity();
+        $engine = $this->carservice->engine();
+
+        $this->assertEquals('car', $table);
+        $this->assertEquals('\App\Modules\Demo\Models\Entities\Car', $entity);
+        $this->assertInstanceOf('\Nova\Database\Engine\MySQL', $engine);
+
+        // Set engine
+        $this->carservice->engine(Manager::getEngine('sqlite'));
+
+        $engine = $this->carservice->engine();
+        $this->assertInstanceOf('\Nova\Database\Engine\SQLite', $engine);
+
+
+        // Set incorrect engine, catch the exception, it should throw one.
+        try {
+            $this->carservice->engine("test incorrect type");
+            $this->assertTrue(false);
+        } catch(\UnexpectedValueException $uve) {
+            $this->assertTrue(true);
+        }
+    }
+
 
     /**
      * @covers \Nova\Database\Manager::getService

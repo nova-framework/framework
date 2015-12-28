@@ -105,4 +105,34 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected_1, $output_1);
         $this->assertEquals($expected_2, $output_2);
     }
+
+
+
+    /**
+     * @covers \Nova\Net\Url::relativeTemplatePath
+     * @covers \Nova\Net\Url::templatePath
+     */
+    public function testTemplatePaths()
+    {
+        $expected_1 = "/templates/default/assets/";
+        $output_1 = \Nova\Net\Url::templatePath();
+
+        $this->assertEquals($expected_1, $output_1);
+
+        $expected_2 = "/templates/MyTestTemplate/assets/";
+        $output_2 = \Nova\Net\Url::templatePath('MyTestTemplate');
+
+        $this->assertEquals($expected_2, $output_2);
+
+
+        $expected_3 = "templates/default/assets/";
+        $output_3 = \Nova\Net\Url::relativeTemplatePath();
+
+        $this->assertEquals($expected_3, $output_3);
+
+        $expected_4 = "templates/MyTestTemplate/assets/";
+        $output_4 = \Nova\Net\Url::relativeTemplatePath('MyTestTemplate');
+
+        $this->assertEquals($expected_4, $output_4);
+    }
 }

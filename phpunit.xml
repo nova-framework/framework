@@ -24,7 +24,6 @@
                 <file>./system/Net/Cookie.php</file>
                 <file>./system/Net/Session.php</file>
                 <file>./system/Net/Response.php</file>
-                <file>./system/Database/Builder.php</file>
                 <file>./system/Database/Entity.php</file>
             </exclude>
         </whitelist>

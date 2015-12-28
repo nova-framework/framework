@@ -41,7 +41,8 @@ abstract class Service extends CoreService
 
     /**
      * Set engine for this service.
-     * @param Engine $engine
+     * @param Engine|null $engine
+     * @return Engine|null
      */
     public function engine($engine = null)
     {
@@ -175,7 +176,6 @@ abstract class Service extends CoreService
      * For safety it will limit on 1 row only by default, you can disable by giving null into the limit.
      *
      * @param $entity Entity
-     * @param $limit int|null Limit of changes, may not be effective on every driver! Default 1. Null for infinity.
      * @return boolean successful delete?
      * @throws \Exception
      */

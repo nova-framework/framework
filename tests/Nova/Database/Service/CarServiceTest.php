@@ -224,6 +224,62 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
 
 
 
+
+    /**
+     * @covers \Nova\Database\Manager::getService
+     * @covers \Nova\Database\Engine
+     * @covers \Nova\Database\Engine\Base
+     * @covers \Nova\Database\Service
+     * @covers \Nova\Database\Service::delete
+     * @covers \App\Modules\Demo\Services\Database\Car
+     * @param string $linkName
+     */
+    public function testBasicDeleting($linkName = 'default')
+    {
+        $this->prepareService($linkName);
+
+        // Prepare by inserting a car
+        // Make new car
+        $car = new \App\Modules\Demo\Models\Entities\Car();
+        $car->make = 'Nova Cars';
+        $car->model = 'FrameworkCar_Service_Delete_1';
+        $car->costs = 15000;
+
+        // Insert
+        /** @var \App\Modules\Demo\Models\Entities\Car $car */
+        $car = $this->carservice->create($car);
+
+        $this->assertNotNull($car);
+        $this->assertNotFalse($car);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
+
+
+        // Delete tests
+        $status = $this->carservice->delete($car);
+
+        $this->assertTrue($status);
+
+        $this->cleanup($linkName);
+    }
+
+
+
+
+    /**
+     * @covers \Nova\Database\Manager::getService
+     * @covers \Nova\Database\Engine
+     * @covers \Nova\Database\Engine\Base
+     * @covers \Nova\Database\Service
+     * @covers \Nova\Database\Service::delete
+     * @covers \App\Modules\Demo\Services\Database\Car
+     */
+    public function testBasicDeletingSQLite()
+    {
+        $this->testBasicDeleting('sqlite');
+    }
+
+
+
     private function cleanup($linkName)
     {
         $engine = Manager::getEngine($linkName);

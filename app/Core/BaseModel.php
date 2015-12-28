@@ -360,11 +360,9 @@ class BaseModel extends Model
      */
     public function update($id, $data)
     {
-        $where = array($this->primary_key => $id);
-
         $data = $this->trigger('before_update', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, $where);
+        $result = $this->db->update($this->table(), $data, array($this->primary_key => $id));
 
         $result = $this->trigger('after_update', array(
             'id'     => $id,
@@ -391,21 +389,21 @@ class BaseModel extends Model
      * );
      *
      * The $where_key should be the name of the column to match the record on.
-     * If $where_key == 'title', then each record would be matched on that
+     * If $whereKey == 'title', then each record would be matched on that
      * 'title' value of the array. This does mean that the array key needs
      * to be provided with each row's data.
      *
      * @param  array $data An associate array of row data to update.
-     * @param  string $where_key The column name to match on.
+     * @param  string $whereKey The column name to match on.
      * @return bool
      */
-    public function update_batch($data, $where)
+    public function update_batch($data, $whereKey)
     {
         foreach ($data as &$row) {
             $row = $this->trigger('before_update', array('method' => 'update_batch', 'fields' => $row));
         }
 
-        $result = $this->db->updateBatch($this->table(), $data, $where);
+        $result = $this->db->updateBatch($this->table(), $data, $whereKey);
 
         foreach ($data as &$row) {
             $this->trigger('after_update', array('fields' => $data, 'result' => $result, 'method' => 'update_batch'));
@@ -451,6 +449,121 @@ class BaseModel extends Model
         ));
 
         return $result;
+    }
+
+    /**
+     * Update records in the database using a standard WHERE clause.
+     *
+     * Your last parameter should be the $data array with values to update
+     * on the rows. Any additional parameters should be provided to make up
+     * a typical WHERE clause. This could be a single array, or a column name
+     * and a value.
+     *
+     * $data = array('deleted_by' => 1);
+     * $wheres = array('user_id' => 15);
+     *
+     * $this->update_by($wheres, $data);
+     * $this->update_by('user_id', 15, $data);
+     *
+     * @param array $data An array of data pairs to update
+     * @param one or more WHERE-acceptable entries.
+     * @return bool
+     */
+    public function update_by()
+    {
+        $params = func_get_args();
+
+        $data = array_pop($params);
+
+        if(empty($params) || empty($data)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        // Prepare the WHERE parameters.
+        if(is_array($params[0])) {
+            $where = $params[0];
+        }
+        else {
+            $value = isset($params[1]) ? $params[1] : '';
+
+            $where = array($params[0] => $value);
+        }
+
+        //
+        $data = $this->trigger('before_update', array('method' => 'update_by', 'fields' => $data));
+
+        $result = $this->db->update($this->table(), $data, $where);
+
+        $this->trigger('after_update', array(
+            'method' => 'update_by',
+            'fields' => $data,
+            'result' => $result
+        ));
+
+        return $result;
+    }
+
+    /**
+     * Updates all records and sets the value pairs passed in the array.
+     *
+     * @param  array $data An array of value pairs with the data to change.
+     * @return bool
+     */
+    public function update_all($data)
+    {
+        $data = $this->trigger('before_update', array('method' => 'update_all', 'fields' => $data));
+
+        $result = $this->db->update($this->table(), $data, '1');
+
+        $this->trigger('after_update', array(
+            'method' => 'update_all',
+            'fields' => $data,
+            'result' => $result
+        ));
+
+        return $result;
+    }
+
+    /**
+     * Increments the value of field for a given row, selected by the
+     * primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function increment($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        return $this->db->update(
+            $this->table(),
+            array($field => "{$field}+{$value}"),
+            array($this->primary_key => $id)
+        );
+    }
+
+    //--------------------------------------------------------------------
+
+    /**
+     * Increments the value of field for a given row, selected by the
+     * primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function decrement($id, $field, $value=1)
+    {
+        $value = (int)abs($value);
+
+        return $this->db->update(
+            $this->table(),
+            array($field => "{$field}+{$value}"),
+            array($this->primary_key => $id)
+        );
     }
 
     public function select($fields = '*', $where = array(), $fetchAll = false, $limit = false)
@@ -537,16 +650,81 @@ class BaseModel extends Model
         return $this->select($sql, $bindParams, true, $limit);
     }
 
-    public function delete($where)
+    /**
+     * Deletes a row by it's primary key value.
+     *
+     * @param  mixed $id The primary key value of the row to delete.
+     * @return bool
+     */
+    public function delete($id)
     {
-        $this->trigger('before_delete', array('method' =>'delete', 'where' => $where));
+        if(! is_integer($id)) {
+            throw new \UnexpectedValueException('Parameter should be an Integer');
+        }
+
+        $where($this->primary_key => $id);
+
+        //
+        $this->trigger('before_delete', array('id' => $id, 'method' => 'delete'));
 
         $result = $this->db->delete($this->table(), $where);
 
-        $result = $this->trigger('after_delete', array(
-            'method' => 'delete'
-            'where'  => $where,
-            'result' => $result,
+        $this->trigger('after_delete', array(
+            'id' => $id,
+            'method' => 'delete',
+            'result' => $result
+        ));
+
+        return $result;
+    }
+
+    public function delete_by()
+    {
+        $params = func_get_args();
+
+        if(empty($params)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        // Prepare the WHERE parameters.
+        if(is_array($params[0])) {
+            $where = $params[0];
+        }
+        else {
+            $value = isset($params[1]) ? $params[1] : '';
+
+            $where = array($params[0] => $value);
+        }
+
+        //
+        $where = $this->trigger('before_delete', array('method' => 'delete_by', 'fields' => $where));
+
+        $result = $this->db->delete($this->table(), $where);
+
+        $this->trigger('after_delete', array(
+            'method' => 'delete_by',
+            'fields' => $where,
+            'result' => $result
+        ));
+
+        return $result;
+    }
+
+    public function delete_many($ids)
+    {
+        if (! is_array($ids) || (count($ids) == 0)) return NULL;
+
+        $ids = $this->trigger('before_delete', array('ids' => $ids, 'method' => 'delete_many'));
+
+        //
+        $where = $this->primary_key ." IN (".implode(',', $ids) .")";
+
+        $result = $this->db->delete($this->table(), $where);
+
+        $this->trigger('after_delete', array(
+            'ids' => $ids,
+            'method' => 'delete_many',
+            'result' => $result
         ));
 
         return $result;
@@ -812,10 +990,12 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameters can not be empty');
         }
 
-        $value = isset($params[1]) ? $params[1] : '';
-
-        // Set the WHERE
-        $this->where($params[0], $value);
+        if(is_array($params[0])) {
+            $this->tmp_select_where = array_merge($this->tmp_select_where, $params[0]);
+        }
+        else {
+            array_push($this->temp_select_where, $params[0], isset($params[1]) ? $params[1] : '');
+        }
     }
 
     protected function where_details(array $where, &$bindParams = array())

@@ -16,8 +16,8 @@ use Nova\Database\Manager;
 
 abstract class Base extends \PDO implements Engine
 {
-    /** @var int PDO Fetch method. */
-    protected $method = \PDO::FETCH_ASSOC;
+    /** @var string Return type. */
+    protected $returnType = 'array';
 
     /** @var array Config from the user's app config. */
     protected $config;
@@ -40,8 +40,24 @@ abstract class Base extends \PDO implements Engine
         }
 
         // Will set the default method when provided in the config.
-        if (isset($config['fetch_method'])) {
-            $this->method = $config['fetch_method'];
+        if (isset($config['return_type'])) {
+            $this->returnType = $config['return_type'];
+        }
+
+        if($this->returnType == 'array') {
+            $fetchMethod = \PDO::FETCH_ASSOC;
+        }
+        else if($this->returnType == 'object') {
+            $fetchMethod = \PDO::FETCH_OBJ;
+        }
+        else {
+            $classPath = str_replace('\\', '/', $this->returnType);
+
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                throw new \Exception("No valid Entity is given.");
+            }
+
+            $fetchMethod = \PDO::FETCH_CLASS;
         }
 
         // Store the config in class variable.
@@ -55,7 +71,7 @@ abstract class Base extends \PDO implements Engine
         parent::__construct($dsn, $username, $password, $options);
 
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, $this->method);
+        $this->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, $fetchMethod);
     }
 
     /**
@@ -71,15 +87,15 @@ abstract class Base extends \PDO implements Engine
     abstract public function getDriverCode();
 
     /**
-     * Set/Get the current fetching Method
+     * Set/Get the fetching return type.
      */
-    public function fetchMethod($method = null)
+    public function returnType($type = null)
     {
-        if($method === null) {
-            return $this->method;
+        if($type === null) {
+            return $this->returnType;
         }
 
-        $this->method = $method;
+        $this->returnType = $type;
     }
 
     /**
@@ -111,12 +127,8 @@ abstract class Base extends \PDO implements Engine
      */
     public function raw($sql, $fetch = false)
     {
-        $method = $this->method;
-
-        if ($this->method === \PDO::FETCH_CLASS) {
-            // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
-            $method = \PDO::FETCH_OBJ;
-        }
+        // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
+        $method = ($this->returnType == 'array') ? \PDO::FETCH_ASSOC : \PDO::FETCH_OBJ;
 
         $this->queryCount++;
 
@@ -132,7 +144,7 @@ abstract class Base extends \PDO implements Engine
     public function rawQuery($sql)
     {
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
-        $method = ($this->method !== \PDO::FETCH_CLASS) ? $this->method : \PDO::FETCH_OBJ;
+        $method = ($this->returnType == 'array') ? \PDO::FETCH_ASSOC : \PDO::FETCH_OBJ;
 
         $this->queryCount++;
 
@@ -153,16 +165,35 @@ abstract class Base extends \PDO implements Engine
      *
      * @throws \Exception
      */
-    public function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null)
+    public function select($sql, $bindParams = array(), $fetchAll = false, $returnType = null)
     {
         // Append select if it isn't appended.
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
             $sql = "SELECT " . $sql;
         }
 
-        // What method? Use default if no method is given my the call.
-        if ($method === null) {
-            $method = $this->method;
+        // What return type? Use default if no return type is given in the call.
+        $returnType = $returnType ? $returnType : $this->returnType;
+
+        // Prepare the parameters.
+        $className = null;
+
+        if($returnType == 'array') {
+            $fetchMethod = \PDO::FETCH_ASSOC;
+        }
+        else if($returnType == 'object') {
+            $fetchMethod = \PDO::FETCH_OBJ;
+        }
+        else {
+            $classPath = str_replace('\\', '/', $returnType);
+
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                throw new \Exception("No valid Entity is given.");
+            }
+
+            $className = $returnType;
+
+            $fetchMethod = \PDO::FETCH_CLASS;
         }
 
         // Prepare and get statement from PDO.
@@ -189,16 +220,12 @@ abstract class Base extends \PDO implements Engine
 
         if($fetchAll) {
             // Continue with fetching all records.
-            if ($method === \PDO::FETCH_CLASS) {
-                if (!$class) {
-                    throw new \Exception("No Class is given while using the PDO::FETCH_CLASS method.");
-                }
-
+            if ($fetchMethod === \PDO::FETCH_CLASS) {
                 // Fetch in class
-                $result = $stmt->fetchAll($method, $class);
+                $result = $stmt->fetchAll($fetchMethod, $className);
             }
             else {
-                $result = $stmt->fetchAll($method);
+                $result = $stmt->fetchAll($fetchMethod);
             }
 
             if (is_array($result) && count($result) > 0) {
@@ -209,16 +236,12 @@ abstract class Base extends \PDO implements Engine
         }
 
         // Continue with fetching one record.
-        if ($method === \PDO::FETCH_CLASS) {
-            if (!$class) {
-                throw new \Exception("No Class is given while using the PDO::FETCH_CLASS method.");
-            }
-
+        if ($fetchMethod === \PDO::FETCH_CLASS) {
             // Fetch in class
-            return $stmt->fetch($method, $class);
+            return $stmt->fetch($fetchMethod, $className);
         }
         else {
-            return $stmt->fetch($method);
+            return $stmt->fetch($fetchMethod);
         }
     }
 
@@ -232,9 +255,9 @@ abstract class Base extends \PDO implements Engine
      * @return object|array|null|false
      * @throws \Exception
      */
-    public function selectOne($sql, $bindParams = array(), $method = null, $class = null)
+    public function selectOne($sql, $bindParams = array(), $returnType = null)
     {
-        return $this->select($sql, $bindParams, false, $method, $class);
+        return $this->select($sql, $bindParams, false, $returnType);
     }
 
     /**
@@ -247,9 +270,9 @@ abstract class Base extends \PDO implements Engine
      * @return array|null|false
      * @throws \Exception
      */
-    public function selectAll($sql, $bindParams = array(), $method = null, $class = null)
+    public function selectAll($sql, $bindParams = array(), $returnType = null)
     {
-        return $this->select($sql, $bindParams, true, $method, $class);
+        return $this->select($sql, $bindParams, true, $returnType);
     }
 
     /**

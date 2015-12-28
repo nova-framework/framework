@@ -73,6 +73,8 @@ class BaseModel extends Model
      * Various callbacks available to the Class.
      * They are simple lists of method names (methods will be ran on $this).
      */
+    protected $before_find   = array();
+    protected $after_find    = array();
     protected $before_insert = array();
     protected $after_insert  = array();
     protected $before_update = array();
@@ -93,7 +95,12 @@ class BaseModel extends Model
     protected $temp_return_type = null;
 
     /**
-     * The select limits.
+     * Temporary select's WHERE attributes.
+     */
+    protected $temp_select_where = array();
+
+    /**
+     * Temporary select's LIMIT attributes.
      */
     protected $temp_select_limit = null;
 
@@ -131,14 +138,178 @@ class BaseModel extends Model
         $this->temp_return_type = $this->return_type;
     }
 
+    //--------------------------------------------------------------------
+    // CRUD Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * A simple way to grab the first result of a search only.
+     */
+    public function first()
+    {
+        $result = $this->limit(1, 0)->find_all();
+
+        if (is_array($result) && count($result)) {
+            return $result[0];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Finds a single record based on it's primary key.
+     *
+     * @param  mixed $id The primary_key value of the object to retrieve.
+     * @return object
+     */
+    public function find($id)
+    {
+        if(! is_integer($id)) {
+            throw new \UnexpectedValueException('Parameter should be an Integer');
+        }
+
+        //
+        $this->trigger('before_find', array('id' => $id, 'method' => 'find'));
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." = :param";
+
+        $result = $this->db->select($sql, array('param' => $id), true, $this->temp_return_type);
+
+        if ( ! empty($result)) {
+            $result = $this->trigger('after_find', array('id' => $id, 'method' => 'find', 'fields' => $result));
+        }
+
+        // Reset our return type
+        $this->temp_return_type = $this->return_type;
+
+        return $result;
+    }
+
+    /**
+     * Fetch a single record based on an arbitrary WHERE call.
+     *
+     * @return object
+     */
+    public function find_by()
+    {
+        $bindParams = array();
+
+        // Prepare the WHERE parameters.
+        $params = func_get_args();
+
+        $this->set_where($params);
+
+        // Prepare the WHERE details.
+        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
+
+        //
+        $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));
+
+        $result = $this->db->select($sql, $bindParams, false, $this->temp_return_type);
+
+        if ( ! empty($result)) {
+            $result = $this->trigger('after_find', array('method' => 'find_by', 'fields' => $result));
+        }
+
+        // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
+
+        // Reset our select WHEREs
+        $this->temp_select_where = array();
+
+        // Reset our select LIMITs
+        $this->temp_select_where = null;
+
+        return $result;
+    }
+
+    /**
+     * Retrieves a number of items based on an array of primary_values passed in.
+     *
+     * @param  array $values An array of primary key values to find.
+     *
+     * @return object or FALSE
+     */
+    public function find_many($values)
+    {
+        if(! is_array($values)) {
+            throw new \UnexpectedValueException('Parameter should be an Array');
+        }
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
+
+        //
+        $result = $this->db->select($sql, array(), true, $this->temp_return_type);
+
+        // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
+
+        return $result;
+    }
+
+    /**
+     * Retrieves a number of items based on an arbitrary WHERE call.
+     *
+     * @return object or FALSE
+     */
+    public function find_many_by()
+    {
+        $params = func_get_args();
+
+        $this->set_where($params);
+
+        return $this->find_all();
+    }
+
+    /**
+     * Fetch all of the records in the table.
+     * Can be used with scoped calls to restrict the results.
+     *
+     * @return object or FALSE
+     */
+    public function find_all()
+    {
+        $bindParams = array();
+
+        // Prepare the WHERE details.
+        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
+
+        //
+        $this->trigger('before_find', array('method' => 'find_all', 'fields' => $where));
+
+        $result = $this->db->select($sql, $bindParams, true, $this->temp_return_type);
+
+        if (is_array($result)) {
+            foreach ($result as $key => &$row) {
+                $row = $this->trigger('after_find', array('method' => 'find_all', 'fields' => $row));
+            }
+        }
+
+        // Reset our return type
+        $this->temp_return_type = $this->return_type;
+
+        // Reset our select WHEREs
+        $this->temp_select_where = array();
+
+        // Reset our select LIMITs
+        $this->temp_select_where = null;
+
+        return $result;
+    }
+
     public function insert($data)
     {
-        $data = $this->trigger('before_insert', array(
-            'method' =>'insert',
-            'fields' => $data
-        ));
+        $data = $this->trigger('before_insert', array('method' =>'insert', 'fields' => $data));
 
-        $result = $this->db->insert($this->table_name, $data);
+        $result = $this->db->insert($this->table(), $data);
 
         $result = $this->trigger('after_insert', array(
             'method' => 'insert',
@@ -151,13 +322,9 @@ class BaseModel extends Model
 
     public function update($data, $where)
     {
-        $data = $this->trigger('before_update', array(
-            'method' =>'update',
-            'where'  => $where,
-            'fields' => $data
-        ));
+        $data = $this->trigger('before_update', array('method' =>'update', 'where'  => $where, 'fields' => $data));
 
-        $result = $this->db->update($this->table_name, $data, $where);
+        $result = $this->db->update($this->table(), $data, $where);
 
         $result = $this->trigger('after_update', array(
             'method' => 'update'
@@ -169,27 +336,9 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function select($fields = '*', $where = false, $fetchAll = false)
+    public function select($fields = '*', $where = array(), $fetchAll = false, $limit = false)
     {
         $bindParams = array();
-
-        // Prepare the parameters.
-        $className = null;
-
-        if($this->temp_return_type == 'array') {
-            $fetchMethod = \PDO::FETCH_ASSOC;
-        }
-        else if($this->temp_return_type == 'object') {
-            $fetchMethod = \PDO::FETCH_OBJ;
-        }
-        else {
-            $fetchMethod = \PDO::FETCH_CLASS;
-
-            $className = $this->temp_return_type;
-        }
-
-        // Prepare the TABLE details.
-        $table = DB_PREFIX .$this->table_name;
 
         // Prepare the WHAT details.
         $fieldDetails = '*';
@@ -202,56 +351,17 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereDetails = '';
-
-        if(is_array($where)) {
-            ksort($where);
-
-            $idx = 0;
-
-            foreach ($where as $key => $value) {
-                if($idx > 0) {
-                    $whereDetails .= ' AND ';
-                }
-
-                if(strpos($key, ' ') !== false) {
-                    $key = preg_replace('/\s+/', ' ', trim($key));
-
-                    $segments = explode(' ', $key);
-
-                    $key      = $segments[0];
-                    $operator = $segments[1];
-                }
-                else {
-                    $operator = '=';
-                }
-
-                $whereDetails .= "$key $operator :$key";
-
-                $bindParams[$key] = $value;
-
-                $idx++;
-            }
-        }
-        else if(is_string($where)) {
-            $whereDetails = $where;
-        }
-
-        if(! empty($whereDetails)) {
-            $whereDetails = 'WHERE ' .$whereDetails;
-        }
+        $whereDetails = $this->where_details($where, $bindParams);
 
         // Prepare the LIMIT details.
         $limitDetails = '';
 
         if($fetchAll) {
-            $limit = $this->temp_select_limit;
-
             if(is_numeric($limit)) {
                 $limitDetails = '0, ' .$limit;
             }
             else if(is_array($limit)) {
-                $limitDetails = implode(',', $limit);
+                $limitDetails = implode(', ', $limit);
             }
 
             if(! empty($limitDetails)) {
@@ -260,16 +370,12 @@ class BaseModel extends Model
         }
 
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM $table $whereDetails $limitDetails ;";
+        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails $limitDetails ";
 
         //
-        $data = $this->trigger('before_select', array(
-            'method' =>'select',
-            'where'  => $where,
-            'fields' => $fields
-        ));
+        $this->trigger('before_select', array('method' => 'select', 'where' => $where, 'fields' => $fields));
 
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $fetchMethod, $className);
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
 
         $result = $this->trigger('after_select', array(
             'method' => 'select'
@@ -281,20 +387,44 @@ class BaseModel extends Model
         // Make sure our temp return type is correct.
         $this->temp_return_type = $this->return_type;
 
-        // Make sure our temp limit is correct.
-        $this->temp_select_limit = null;
-
         return $result;
+    }
+
+    /**
+     * Convenience method for fetching one record.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return object|array|null|false
+     * @throws \Exception
+     */
+    public function select_one($sql, $bindParams = array(), $limit = false)
+    {
+        return $this->select($sql, $bindParams, false, $limit);
+    }
+
+    /**
+     * Convenience method for fetching all records.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null|false
+     * @throws \Exception
+     */
+    public function select_all($sql, $bindParams = array(), $limit = false)
+    {
+        return $this->select($sql, $bindParams, true, $limit);
     }
 
     public function delete($where)
     {
-        $where = $this->trigger('before_delete', array(
-            'method' =>'delete',
-            'where'  => $where
-        ));
+        $this->trigger('before_delete', array('method' =>'delete', 'where' => $where));
 
-        $result = $this->db->delete($this->table_name, $where);
+        $result = $this->db->delete($this->table(), $where);
 
         $result = $this->trigger('after_delete', array(
             'method' => 'delete'
@@ -335,7 +465,7 @@ class BaseModel extends Model
      */
     public function is_unique($field, $value)
     {
-        $sql = "SELECT $field FROM " .DB_PREFIX .$this->table_name ." WHERE $field = :$field";
+        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :$field";
 
         $data = $this->db->selectAll($sql, array($field => $value));
 
@@ -356,20 +486,6 @@ class BaseModel extends Model
     public function protect($field)
     {
         $this->protected_attributes[] = $field;
-
-        return $this;
-    }
-
-    public function limit()
-    {
-        $params = func_get_args();
-
-        if(count($params) == 1) {
-            $this->temp_select_limit = $params[0];
-        }
-        else {
-            $this->temp_select_limit = array($params[0], $params[1]);
-        }
 
         return $this;
     }
@@ -397,6 +513,20 @@ class BaseModel extends Model
     public function as_object($class = null)
     {
         $this->temp_return_type = ! empty($class) ? $class : 'object';
+
+        return $this;
+    }
+
+    public where($field, $value = '')
+    {
+        array_push($this->temp_select_where, $field, $value);
+
+        return $this;
+    }
+
+    public limit($limit, $start = 0)
+    {
+        $this->temp_select_limit = array($start => $limit);
 
         return $this;
     }
@@ -557,6 +687,82 @@ class BaseModel extends Model
                 return date('Y-m-d', $curr_date);
                 break;
         }
+    }
+
+    protected function set_where($params)
+    {
+        if(empty($params)) {
+            throw new \UnexpectedValueException('Parameters can not be empty');
+        }
+
+        $value = isset($params[1]) ? $params[1] : '';
+
+        // Set the WHERE
+        $this->where($params[0], $value);
+    }
+
+    protected function whereDetails(array $where, &$bindParams = array())
+    {
+        $result = '';
+
+        ksort($where);
+
+        $idx = -1;
+
+        foreach ($where as $key => $value) {
+            $idx++;
+
+            if($idx > 0) {
+                $whereDetails .= ' AND ';
+            }
+
+            if(empty($value)) {
+                // A string based condition; simplify its white spaces and use it directly.
+                $result .= preg_replace('/\s+/', ' ', trim($key));
+
+                continue;
+            }
+
+            if(strpos($key, ' ') !== false) {
+                $key = preg_replace('/\s+/', ' ', trim($key));
+
+                $segments = explode(' ', $key);
+
+                $key      = $segments[0];
+                $operator = $segments[1];
+            }
+            else {
+                $operator = '=';
+            }
+
+            $result .= "$key $operator :$key";
+
+            $bindParams[$key] = $value;
+        }
+
+        if(! empty($result)) {
+            $result = 'WHERE ' .$result;
+        }
+
+        return $result;
+    }
+
+    protected function limit_details($limits)
+    {
+        $result = '';
+
+        if(is_numeric($limits)) {
+            $result = '0, ' .$limits;
+        }
+        else if(is_array($limits)) {
+            $result = implode(', ', $limits);
+        }
+
+        if(! empty($result)) {
+            $result = 'LIMIT ' .$result;
+        }
+
+        return $result;
     }
 
     //--------------------------------------------------------------------

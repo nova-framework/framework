@@ -28,9 +28,9 @@ interface Engine
     public function getDriverCode();
 
     /**
-     * Set/Get the current fetching Method
+     * Set/Get the fetching return type.
      */
-    public function fetchMethod();
+    public function returnType();
 
     /**
      * Get configuration for instance
@@ -63,6 +63,7 @@ interface Engine
      * @return mixed
      */
     public function raw($sql, $fetch = false);
+    
     public function rawQuery($sql);
 
 
@@ -79,7 +80,7 @@ interface Engine
      *
      * @throws \Exception
      */
-    public function select($sql, $bindParams = array(), $fetchAll = false, $method = null, $class = null);
+    public function select($sql, $bindParams = array(), $fetchAll = false, $returnType = null);
 
     /**
      * Convenience methods for selecting records.
@@ -92,8 +93,8 @@ interface Engine
      *
      * @throws \Exception
      */
-    public function selectOne($sql, $bindParams = array(), $method = null, $class = null);
-    public function selectAll($sql, $bindParams = array(), $method = null, $class = null);
+    public function selectOne($sql, $bindParams = array(), $returnType = null);
+    public function selectAll($sql, $bindParams = array(), $returnType = null);
 
     /**
      * Execute insert query, will automatically build query for you.

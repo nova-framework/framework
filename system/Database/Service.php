@@ -133,7 +133,7 @@ abstract class Service extends CoreService
             throw new \Exception("No fetchClass is given while calling READ method");
         }
 
-        return $this->engine->selectAll($sql, $bindParams, \PDO::FETCH_CLASS, $this->fetchClass);
+        return $this->engine->selectAll($sql, $bindParams, $this->fetchClass);
     }
 
     /**

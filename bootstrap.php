@@ -40,20 +40,20 @@ Config::set('database', array(
     'default' => array(
         'engine' => 'mysql',
         'config' => array(
-            'host'          => 'localhost',
-            'port'          => 3306, // Not required, default is 3306
-            'database'      => 'testdb1',
-            'username'      => 'root',
-            'password'      => '',
-            'fetch_method'  => \PDO::FETCH_OBJ, // Not required, default is OBJ.
-            'charset'       => 'utf8' // Not required, default and recommended is utf8.
+            'host'        => 'localhost',
+            'port'        => 3306,     // Not required, default is 3306
+            'database'    => 'testdb1',
+            'username'    => 'root',
+            'password'    => '',
+            'return_type' => 'object', // Not required, default is 'array'.
+            'charset'     => 'utf8'    // Not required, default and recommended is utf8.
         )
     ),
     'sqlite' => array(
         'engine' => 'sqlite',
         'config' => array(
-            'file'          => 'test.sqlite',
-            'fetch_method'  => \PDO::FETCH_OBJ // Not required, default is OBJ.
+            'file'        => 'test.sqlite',
+            'return_type' => 'object' // Not required, default is 'array'.
         )
     )
 ));

@@ -14,12 +14,19 @@ namespace Nova\Tests\Database\Engine;
  * @package Nova\Tests\Database\Engine
  *
  * @coversDefaultClass \Nova\Database\Engine\MySQL
+ * @cover \Nova\Database\Engine\Base
+ * @cover \Nova\Database\Engine\MySQL
  */
 class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Nova\Database\Engine\MySQL */
     private $engine;
 
+    /**
+     * @cover \Nova\Database\Engine
+     * @cover \Nova\Database\Engine\Base
+     * @cover \Nova\Database\Engine\MySQL
+     */
     private function prepareEngine()
     {
         $this->engine = \Nova\Database\Manager::getEngine();
@@ -31,11 +38,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\Database\Manager::getEngine
-     * @covers \Nova\Database\Engine\MySQL::__construct
-     * @covers \Nova\Database\Engine\MySQL::getDriverName
-     * @covers \Nova\Database\Engine\MySQL::getOptions
-     * @covers \Nova\Database\Engine\MySQL::getLink
-     * @covers \Nova\Database\Engine\MySQL::getDriverCode
+     * @covers \Nova\Database\Engine\MySQL
      */
     public function testEngineBasics()
     {
@@ -52,7 +55,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\Database\Manager::getEngine
-     * @covers \Nova\Database\Engine\MySQL::__construct
+     * @covers \Nova\Database\Engine\MySQL
      * @covers \Nova\Database\Engine\MySQL::select
      * @covers \Nova\Database\Engine\MySQL::selectOne
      * @covers \Nova\Database\Engine\MySQL::selectAll
@@ -109,7 +112,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\Database\Manager::getEngine
-     * @covers \Nova\Database\Engine\MySQL::__construct
+     * @covers \Nova\Database\Engine\MySQL
      * @covers \Nova\Database\Engine\MySQL::selectAll
      * @covers \Nova\Database\Engine\MySQL::insert
      * @covers \Nova\Database\Engine\MySQL::insertBatch
@@ -192,7 +195,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\Database\Manager::getEngine
-     * @covers \Nova\Database\Engine\MySQL::__construct
+     * @covers \Nova\Database\Engine\MySQL
      * @covers \Nova\Database\Engine\MySQL::selectOne
      * @covers \Nova\Database\Engine\MySQL::insert
      * @covers \Nova\Database\Engine\MySQL::update
@@ -234,7 +237,7 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\Database\Manager::getEngine
-     * @covers \Nova\Database\Engine\MySQL::__construct
+     * @covers \Nova\Database\Engine\MySQL
      * @covers \Nova\Database\Engine\MySQL::insert
      * @covers \Nova\Database\Engine\MySQL::selectAll
      * @covers \Nova\Database\Engine\MySQL::delete

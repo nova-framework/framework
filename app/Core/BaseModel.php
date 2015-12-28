@@ -138,6 +138,24 @@ class BaseModel extends Model
         $this->temp_return_type = $this->return_type;
     }
 
+    //--------------------------------------------------------------------
+    // CRUD Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * A simple way to grab the first result of a search only.
+     */
+    public function first()
+    {
+        $result = $this->limit(1, 0)->find_all();
+
+        if (is_array($result) && count($result)) {
+            return $result[0];
+        }
+
+        return $result;
+    }
+
     /**
      * Finds a single record based on it's primary key.
      *
@@ -183,7 +201,7 @@ class BaseModel extends Model
         $this->set_where($params);
 
         // Prepare the WHERE details.
-        $whereDetails = $this->whereDetails($this->temp_select_where, $bindParams);
+        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
@@ -202,6 +220,9 @@ class BaseModel extends Model
 
         // Reset our select WHEREs
         $this->temp_select_where = array();
+
+        // Reset our select LIMITs
+        $this->temp_select_where = null;
 
         return $result;
     }
@@ -256,7 +277,7 @@ class BaseModel extends Model
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereDetails = $this->whereDetails($this->temp_select_where, $bindParams);
+        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
@@ -277,6 +298,9 @@ class BaseModel extends Model
 
         // Reset our select WHEREs
         $this->temp_select_where = array();
+
+        // Reset our select LIMITs
+        $this->temp_select_where = null;
 
         return $result;
     }
@@ -327,7 +351,7 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereDetails = $this->whereDetails($where, $bindParams);
+        $whereDetails = $this->where_details($where, $bindParams);
 
         // Prepare the LIMIT details.
         $limitDetails = '';
@@ -496,6 +520,13 @@ class BaseModel extends Model
     public where($field, $value = '')
     {
         array_push($this->temp_select_where, $field, $value);
+
+        return $this;
+    }
+
+    public limit($limit, $start = 0)
+    {
+        $this->temp_select_limit = array($start => $limit);
 
         return $this;
     }
@@ -711,6 +742,24 @@ class BaseModel extends Model
 
         if(! empty($result)) {
             $result = 'WHERE ' .$result;
+        }
+
+        return $result;
+    }
+
+    protected function limit_details($limits)
+    {
+        $result = '';
+
+        if(is_numeric($limits)) {
+            $result = '0, ' .$limits;
+        }
+        else if(is_array($limits)) {
+            $result = implode(', ', $limits);
+        }
+
+        if(! empty($result)) {
+            $result = 'LIMIT ' .$result;
         }
 
         return $result;

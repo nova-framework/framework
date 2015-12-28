@@ -51,10 +51,10 @@ abstract class Base extends \PDO implements Engine
             $fetchMethod = \PDO::FETCH_OBJ;
         }
         else {
-            $classPath = str_replace('\\', '/', $this->returnType);
+            $classPath = str_replace('\\', '/', ltrim($this->returnType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity is given.");
+                throw new \Exception("No valid Entity is given: " .$this->returnType);
             }
 
             $fetchMethod = \PDO::FETCH_CLASS;
@@ -159,8 +159,7 @@ abstract class Base extends \PDO implements Engine
      * @param string $sql
      * @param array $bindParams
      * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @param null $method Customized method for fetching, null for engine default or config default.
-     * @param null $class Class for fetching into classes.
+     * @param null $returnType Customized method for fetching, null for engine default or config default.
      * @return array|null
      *
      * @throws \Exception
@@ -185,10 +184,10 @@ abstract class Base extends \PDO implements Engine
             $fetchMethod = \PDO::FETCH_OBJ;
         }
         else {
-            $classPath = str_replace('\\', '/', $returnType);
+            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity is given.");
+                throw new \Exception("No valid Entity is given: " .$returnType);
             }
 
             $className = $returnType;
@@ -449,6 +448,8 @@ abstract class Base extends \PDO implements Engine
      */
     public function update($table, $data, $where)
     {
+        $bindParams = array();
+
         // Sort on key
         ksort($data);
 
@@ -467,38 +468,49 @@ abstract class Base extends \PDO implements Engine
             $idx++;
         }
 
+
         // Sort in where keys.
         ksort($where);
 
         // Where :bind for auto binding
-        $bindParams = array();
-
         $whereDetails = '';
 
-        $idx = 0;
+        if(is_array($where)) {
+            $idx = 0;
 
-        foreach ($where as $key => $value) {
-            if($idx > 0) {
-                $whereDetails .= ' AND ';
+            foreach ($where as $key => $value) {
+                if($idx > 0) {
+                    $whereDetails .= ' AND ';
+                }
+
+                $idx++;
+
+                if(empty($value)) {
+                    // A string based condition; simplify its white spaces and use it directly.
+                    $whereDetails .= preg_replace('/\s+/', ' ', trim($key));
+
+                    continue;
+                }
+
+                if(strpos($key, ' ') !== false) {
+                    $key = preg_replace('/\s+/', ' ', trim($key));
+
+                    $segments = explode(' ', $key);
+
+                    $key      = $segments[0];
+                    $operator = $segments[1];
+                }
+                else {
+                    $operator = '=';
+                }
+
+                $whereDetails .= "$key $operator :where_$key";
+
+                $bindParams[$key] = $value;
             }
-
-            if(strpos($key, ' ') !== false) {
-                $key = preg_replace('/\s+/', ' ', trim($key));
-
-                $segments = explode(' ', $key);
-
-                $key      = $segments[0];
-                $operator = $segments[1];
-            }
-            else {
-                $operator = '=';
-            }
-
-            $whereDetails .= "$key $operator :where_$key";
-
-            $bindParams[$key] = $value;
-
-            $idx++;
+        }
+        else if(is_string($where)) {
+            $whereDetails = $where;
         }
 
         // Prepare statement.

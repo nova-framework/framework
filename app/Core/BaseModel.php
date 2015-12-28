@@ -274,6 +274,36 @@ class BaseModel extends Model
         return $result;
     }
 
+    /**
+     * Convenience method for fetching one record.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return object|array|null|false
+     * @throws \Exception
+     */
+    public function selectOne($sql, $bindParams = array())
+    {
+        return $this->select($sql, $bindParams, false);
+    }
+
+    /**
+     * Convenience method for fetching all records.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $class Class for fetching into classes.
+     * @return array|null|false
+     * @throws \Exception
+     */
+    public function selectAll($sql, $bindParams = array())
+    {
+        return $this->select($sql, $bindParams, true);
+    }
+
     public function delete($where)
     {
         $where = $this->trigger('before_delete', array(

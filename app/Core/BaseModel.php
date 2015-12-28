@@ -230,7 +230,7 @@ class BaseModel extends Model
      *
      * @return object or FALSE
      */
-    public function find_many_by($where)
+    public function find_many_by()
     {
         $where = func_get_args();
 

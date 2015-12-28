@@ -16,8 +16,8 @@ use Nova\Database\Engine\MySQL;
  * @package Nova\Tests\Database\Engine
  *
  * @coversDefaultClass \Nova\Database\Engine\MySQL
- * @cover \Nova\Database\Engine\Base
- * @cover \Nova\Database\Engine\MySQL
+ * @covers \Nova\Database\Engine\Base
+ * @covers \Nova\Database\Engine\MySQL
  */
 class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,9 +25,10 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
     private $engine;
 
     /**
-     * @cover \Nova\Database\Engine
-     * @cover \Nova\Database\Engine\Base
-     * @cover \Nova\Database\Engine\MySQL
+     * @covers \Nova\Database\Engine
+     * @covers \Nova\Database\Engine\Base
+     * @covers \Nova\Database\Engine\Base::__construct
+     * @covers \Nova\Database\Engine\MySQL
      */
     private function prepareEngine()
     {
@@ -40,6 +41,8 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\Database\Manager::getEngine
+     * @covers \Nova\Database\Engine\Base::__construct
+     * @covers \Nova\Database\Engine\MySQL::__construct
      * @covers \Nova\Database\Engine\MySQL
      */
     public function testEngineBasics()

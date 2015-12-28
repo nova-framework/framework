@@ -309,8 +309,6 @@ abstract class Base extends \PDO implements Engine
         // Holding status
         $failure = false;
 
-        $ids = array();
-
         // Prepare the parameters.
         ksort($data);
 

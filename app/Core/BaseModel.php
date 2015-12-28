@@ -175,21 +175,6 @@ class BaseModel extends Model
     {
         $bindParams = array();
 
-        // Prepare the parameters.
-        $className = null;
-
-        if($this->temp_return_type == 'array') {
-            $fetchMethod = \PDO::FETCH_ASSOC;
-        }
-        else if($this->temp_return_type == 'object') {
-            $fetchMethod = \PDO::FETCH_OBJ;
-        }
-        else {
-            $fetchMethod = \PDO::FETCH_CLASS;
-
-            $className = $this->temp_return_type;
-        }
-
         // Prepare the TABLE details.
         $table = DB_PREFIX .$this->table_name;
 
@@ -268,7 +253,7 @@ class BaseModel extends Model
             'fields' => $fields
         ));
 
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $fetchMethod, $className);
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
 
         $result = $this->trigger('after_select', array(
             'method' => 'select'

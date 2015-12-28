@@ -136,9 +136,17 @@ class BaseModel extends Model
      */
     public function find($id)
     {
+        if(! is_integer($id)) {
+            throw new \UnexpectedValueException('Parameter should be an Integer');
+        }
+
+        // Prepare the TABLE details.
+        $table = DB_PREFIX .$this->table_name;
+
+        //
         $this->trigger('before_find', ['id' => $id, 'method' => 'find']);
 
-        $sql = "SELECT * FROM " .DB_PREFIX .$this->table_name ." WHERE " .$this->primary_key ." = :param";
+        $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." = :param";
 
         $result = $this->db->select($sql, array(), true, $this->temp_return_type);
 
@@ -165,11 +173,14 @@ class BaseModel extends Model
 
         $bindParams = array();
 
+        // Prepare the TABLE details.
+        $table = DB_PREFIX .$this->table_name;
+
         // Prepare the WHERE details.
         $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .DB_PREFIX .$this->table_name ." WHERE $whereDetails;";
+        $sql = "SELECT * FROM $table WHERE $whereDetails;";
 
         //
         $this->trigger('before_find', ['method' => 'find_by', 'fields' => $where]);
@@ -199,8 +210,11 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Array');
         }
 
+        // Prepare the TABLE details.
+        $table = DB_PREFIX .$this->table_name;
+
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .DB_PREFIX .$this->table_name ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .");";
+        $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." IN (".implode(',', $values) .");";
 
         //
         $result = $this->db->select($sql, array(), true, $this->temp_return_type);
@@ -267,39 +281,7 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereDetails = '';
-
-        ksort($where);
-
-        $idx = 0;
-
-        foreach ($where as $key => $value) {
-            if($idx > 0) {
-                $whereDetails .= ' AND ';
-            }
-
-            if(strpos($key, ' ') !== false) {
-                $key = preg_replace('/\s+/', ' ', trim($key));
-
-                $segments = explode(' ', $key);
-
-                $key      = $segments[0];
-                $operator = $segments[1];
-            }
-            else {
-                $operator = '=';
-            }
-
-            $whereDetails .= "$key $operator :$key";
-
-            $bindParams[$key] = $value;
-
-            $idx++;
-        }
-
-        if(! empty($whereDetails)) {
-            $whereDetails = 'WHERE ' .$whereDetails;
-        }
+        $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the LIMIT details.
         $limitDetails = '';

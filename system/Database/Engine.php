@@ -45,6 +45,13 @@ interface Engine
     public function getLink();
 
     /**
+     * Get the Last Insert ID.
+     *
+     * @return int
+     */
+    public function lastInsertID();
+
+    /**
      * Get total executed queries.
      *
      * @return int
@@ -63,7 +70,7 @@ interface Engine
      * @return mixed
      */
     public function raw($sql, $fetch = false);
-    
+
     public function rawQuery($sql);
 
 

@@ -140,13 +140,11 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Integer');
         }
 
-        // Get the TABLE name.
-        $table = $this->table_name;
-
         //
         $this->trigger('before_find', array('id' => $id, 'method' => 'find'));
 
-        $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." = :param";
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table_name ." WHERE " .$this->primary_key ." = :param";
 
         $result = $this->db->select($sql, array('param' => $id), true, $this->temp_return_type);
 
@@ -185,14 +183,11 @@ class BaseModel extends Model
         //
         $bindParams = array();
 
-        // Get the TABLE name.
-        $table = $this->table_name;
-
         // Prepare the WHERE details.
         $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM $table $whereDetails";
+        $sql = "SELECT * FROM " .$this->table_name ." $whereDetails";
 
         //
         $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));
@@ -222,11 +217,8 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Array');
         }
 
-        // Get the TABLE name.
-        $table = $this->table_name;
-
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM $table WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
+        $sql = "SELECT * FROM " .$this->table_name ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
 
         //
         $result = $this->db->select($sql, array(), true, $this->temp_return_type);
@@ -271,14 +263,11 @@ class BaseModel extends Model
     {
         $bindParams = array();
 
-        // Get the TABLE name.
-        $table = $this->table_name;
-
         // Prepare the WHERE details.
         $whereDetails = $this->whereDetails($where, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM $table $whereDetails";
+        $sql = "SELECT * FROM " .$this->table_name ." $whereDetails";
 
         //
         $this->trigger('before_find', array('method' => 'find_all', 'fields' => $where));
@@ -332,9 +321,6 @@ class BaseModel extends Model
     {
         $bindParams = array();
 
-        // Get the TABLE name.
-        $table = $this->table_name;
-
         // Prepare the WHAT details.
         $fieldDetails = '*';
 
@@ -365,7 +351,7 @@ class BaseModel extends Model
         }
 
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM $table $whereDetails $limitDetails ";
+        $sql = "SELECT $fieldDetails FROM " .$this->table_name ." $whereDetails $limitDetails ";
 
         //
         $this->trigger('before_select', array('method' => 'select', 'where' => $where, 'fields' => $fields));

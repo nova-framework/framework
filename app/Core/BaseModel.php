@@ -73,6 +73,8 @@ class BaseModel extends Model
      * Various callbacks available to the Class.
      * They are simple lists of method names (methods will be ran on $this).
      */
+    protected $before_find   = array();
+    protected $after_find    = array();
     protected $before_insert = array();
     protected $after_insert  = array();
     protected $before_update = array();
@@ -134,7 +136,79 @@ class BaseModel extends Model
      */
     public function find($id)
     {
-        return $this->select('*', array($this->primary_key => $id), false);
+        $this->trigger('before_find', ['id' => $id, 'method' => 'find']);
+
+        $sql = "SELECT * FROM " .DB_PREFIX .$this->table_name ." WHERE " .$this->primary_key ." = :param";
+
+        $result = $this->db->select($sql, array(), true, $this->temp_return_type);
+
+        if ( ! empty($result)) {
+            $result = $this->trigger('after_find', array('id' => $id, 'method' => 'find', 'fields' => $result));
+        }
+
+        // Reset our return type
+        $this->temp_return_type = $this->return_type;
+
+        return $result;
+    }
+
+    /**
+     * Fetch a single record based on an arbitrary WHERE call.
+     *
+     * @return object
+     */
+    public function find_by($where)
+    {
+        if(! is_array($where)) {
+            throw new \UnexpectedValueException('Parameter should be an Array');
+        }
+
+        $bindParams = array();
+
+        // Prepare the WHERE details.
+        $whereDetails = $this->whereDetails($where, $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .DB_PREFIX .$this->table_name ." WHERE $whereDetails;";
+
+        //
+        $this->trigger('before_find', ['method' => 'find_by', 'fields' => $where]);
+
+        $result = $this->db->select($sql, array(), true, $this->temp_return_type);
+
+        if ( ! empty($result)) {
+            $result = $this->trigger('after_find', array('method' => 'find_by', 'fields' => $result));
+        }
+
+        // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
+
+        return $result;
+    }
+
+    /**
+     * Retrieves a number of items based on an array of primary_values passed in.
+     *
+     * @param  array $values An array of primary key values to find.
+     *
+     * @return object or FALSE
+     */
+    public function find_many($values)
+    {
+        if(! is_array($values)) {
+            throw new \UnexpectedValueException('Parameter should be an Array');
+        }
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .DB_PREFIX .$this->table_name ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .");";
+
+        //
+        $result = $this->db->select($sql, array(), true, $this->temp_return_type);
+
+        // Make sure our temp return type is correct.
+        $this->temp_return_type = $this->return_type;
+
+        return $result;
     }
 
     public function insert($data)
@@ -195,7 +269,7 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $whereDetails = '';
 
-        ksort($this->temp_select_where);
+        ksort($where);
 
         $idx = 0;
 
@@ -554,6 +628,45 @@ class BaseModel extends Model
                 return date('Y-m-d', $curr_date);
                 break;
         }
+    }
+
+    protected function whereDetails(array $where, &$bindParams = array())
+    {
+        $result = '';
+
+        ksort($where);
+
+        $idx = 0;
+
+        foreach ($where as $key => $value) {
+            if($idx > 0) {
+                $whereDetails .= ' AND ';
+            }
+
+            if(strpos($key, ' ') !== false) {
+                $key = preg_replace('/\s+/', ' ', trim($key));
+
+                $segments = explode(' ', $key);
+
+                $key      = $segments[0];
+                $operator = $segments[1];
+            }
+            else {
+                $operator = '=';
+            }
+
+            $result .= "$key $operator :$key";
+
+            $bindParams[$key] = $value;
+
+            $idx++;
+        }
+
+        if(! empty($result)) {
+            $result = 'WHERE ' .$result;
+        }
+
+        return $result;
     }
 
     //--------------------------------------------------------------------

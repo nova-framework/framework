@@ -126,6 +126,17 @@ class BaseModel extends Model
         $this->temp_return_type = $this->return_type;
     }
 
+    /**
+     * Finds a single record based on it's primary key.
+     *
+     * @param  mixed $id The primary_key value of the object to retrieve.
+     * @return object
+     */
+    public function find($id)
+    {
+        return $this->select('*', array($this->primary_key => $id), false);
+    }
+
     public function insert($data)
     {
         $data = $this->trigger('before_insert', array(

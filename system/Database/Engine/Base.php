@@ -53,7 +53,7 @@ abstract class Base extends \PDO implements Engine
         else {
             $classPath = str_replace('\\', '/', $this->returnType);
 
-            if(preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
                 throw new \Exception("No valid Entity is given.");
             }
 
@@ -187,7 +187,7 @@ abstract class Base extends \PDO implements Engine
         else {
             $classPath = str_replace('\\', '/', $returnType);
 
-            if(preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
                 throw new \Exception("No valid Entity is given.");
             }
 

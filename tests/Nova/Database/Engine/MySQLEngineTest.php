@@ -8,6 +8,8 @@
  */
 
 namespace Nova\Tests\Database\Engine;
+use Nova\Config;
+use Nova\Database\Engine\MySQL;
 
 /**
  * Class MySQLEngineTest
@@ -43,6 +45,19 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
     public function testEngineBasics()
     {
         $this->prepareEngine();
+
+        // Make new instance from here (not usual, but to test the connection!)
+        $mysql = new MySQL(Config::get('database')['default']['config']);
+        $this->assertInstanceOf('\Nova\Database\Engine\MySQL', $mysql);
+        $this->assertInstanceOf('\PDO', $mysql->getLink());
+
+        // Fail with no config
+        try {
+            $mysql = new MySQL(null);
+            $this->assertTrue(false);
+        }catch(\Exception $e) {
+            $this->assertTrue(true);
+        }
 
         $this->assertInstanceOf('\PDO', $this->engine->getLink());
 

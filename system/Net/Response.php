@@ -70,7 +70,7 @@ class Response
      * Redirect to chosen URL.
      *
      * @param  string  $url      the URL to redirect to
-     * @param  boolean $fullpath if true use only url in redirect instead of using site_url()
+     * @param  boolean $fullPath if true use only url in redirect instead of using site_url()
      */
     public static function redirect($url = null, $fullPath = false)
     {

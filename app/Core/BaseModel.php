@@ -171,7 +171,7 @@ class BaseModel extends Model
         $params = func_get_args();
 
         if(empty($params)) {
-            throw new \UnexpectedValueException('The method must have parameters');
+            throw new \UnexpectedValueException('Method called without parameters');
         }
 
         if (count($params) == 1) {
@@ -242,20 +242,6 @@ class BaseModel extends Model
      */
     public function find_many_by()
     {
-        $where = func_get_args();
-
-        return $this->find_all($where);
-    }
-
-    /**
-     * Fetch all of the records in the table.
-     * Can be used with scoped calls to restrict the results.
-     *
-     * @return object or FALSE
-     */
-    public function find_all()
-    {
-        // Prepare the parameters.
         $params = func_get_args();
 
         if(empty($params)) {
@@ -268,7 +254,17 @@ class BaseModel extends Model
             $where = array($params[0] => $params[1]);
         }
 
-        //
+        return $this->find_all($where);
+    }
+
+    /**
+     * Fetch all of the records in the table.
+     * Can be used with scoped calls to restrict the results.
+     *
+     * @return object or FALSE
+     */
+    public function find_all($where = array())
+    {
         if(! is_array($where)) {
             throw new \UnexpectedValueException('Parameter should be an Array');
         }

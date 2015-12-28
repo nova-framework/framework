@@ -305,19 +305,50 @@ class BaseModel extends Model
         return $result;
     }
 
+    /**
+     * Inserts data into the database.
+     *
+     * @param  array $data An array of key/value pairs to insert to database.
+     * @return mixed       The primary_key value of the inserted record, or FALSE.
+     */
     public function insert($data)
     {
-        $data = $this->trigger('before_insert', array('method' =>'insert', 'fields' => $data));
+        $data = $this->trigger('before_insert', array('method' => 'insert', 'fields' => $data));
 
         $result = $this->db->insert($this->table(), $data);
 
-        $result = $this->trigger('after_insert', array(
-            'method' => 'insert',
-            'fields' => $data,
-            'result' => $result
-        ));
+        if($result !== false) {
+            $this->trigger('after_insert', ['id' => $result, 'fields' => $data, 'method' => 'insert']);
+        }
 
-        return $result;
+        return false;
+    }
+
+    /**
+     * Inserts multiple rows into the database at once. Takes an associative
+     * array of value pairs.
+     *
+     * $data = array(
+     *     array(
+     *         'title' => 'My title'
+     *     ),
+     *     array(
+     *         'title'  => 'My Other Title'
+     *     )
+     * );
+     *
+     * @param  array $data An associate array of rows to insert
+     * @return bool
+     */
+    public function insert_batch($data)
+    {
+        $data['batch'] = true;
+
+        $data = $this->trigger('before_insert', ['method' => 'insert_batch', 'fields' => $data] );
+
+        unset($data['batch']);
+
+        return $this->db->insertBatch($this->table_name, $data);
     }
 
     public function update($data, $where)
@@ -701,7 +732,7 @@ class BaseModel extends Model
         $this->where($params[0], $value);
     }
 
-    protected function whereDetails(array $where, &$bindParams = array())
+    protected function where_details(array $where, &$bindParams = array())
     {
         $result = '';
 

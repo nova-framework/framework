@@ -81,8 +81,7 @@ interface Engine
      * @param string $sql
      * @param array $bindParams
      * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @param null $method Customized method for fetching, null for engine default or config default.
-     * @param null $class Class for fetching into classes.
+     * @param null $returnType Customized method for fetching, null for engine default or config default.
      * @return array|null
      *
      * @throws \Exception
@@ -94,7 +93,7 @@ interface Engine
      *
      * @param string $sql
      * @param array $bindParams
-     * @param null $method Customized method for fetching, null for engine default or config default.
+     * @param null $returnType Customized method for fetching, null for engine default or config default.
      * @param null $class Class for fetching into classes.
      * @return array|null
      *

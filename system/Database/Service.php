@@ -10,17 +10,16 @@
 namespace Nova\Database;
 
 use Nova\Database\Engine;
+use Nova\Core\Service as CoreService;
+
 
 /**
  * Class DatabaseService.
  * @package Core\Database
  */
-abstract class Service
+abstract class Service extends CoreService
 {
-    private $fetchMethod = \PDO::FETCH_OBJ;
-
-    /** @var string Driver name, should be in the config as default. */
-    protected $driver;
+    protected $fetchClass = null;
 
     /** @var Engine database engine we will use. */
     protected $engine;
@@ -33,16 +32,44 @@ abstract class Service
 
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+
+    }
+
+    /**
      * Set engine for this service.
      * @param Engine $engine
      */
-    public function setEngine($engine)
+    public function engine($engine = null)
     {
-        if (!$engine instanceof Engine) {
+        if($engine === null) {
+            return $this->engine;
+        }
+
+        if (! $engine instanceof Engine) {
             throw new \UnexpectedValueException("Engine should be an instance of one of the Engines!");
         }
 
         $this->engine = $engine;
+    }
+
+    /**
+     * Get database table for this service.
+     */
+    public function table()
+    {
+        return $this->table;
+    }
+
+    /**
+     * Get Entity className (fetchClass) for this service.
+     */
+    public function entity()
+    {
+        return $this->fetchClass;
     }
 
     /**
@@ -58,7 +85,7 @@ abstract class Service
     public function create($entity)
     {
         // If it isn't already an array, make it an array, to keep code simple.
-        if (!is_array($entity)) {
+        if (! is_array($entity)) {
             $entity = array($entity);
         }
 
@@ -74,7 +101,7 @@ abstract class Service
             }
 
             // If only one Primary Key, we will set it in the entity.
-            if (count($this->primaryKeys) == 1 && $what->{$this->primaryKeys[0]} == null) {
+            if ((count($this->primaryKeys) == 1) && ($what->{$this->primaryKeys[0]} == null)) {
                 $entity[$idx]->{$this->primaryKeys[0]} = $result;
             }
 
@@ -102,7 +129,11 @@ abstract class Service
      */
     public function read($sql, $bindParams = array())
     {
-        return $this->engine->selectAll($sql, $bindParams, $this->fetchMethod, $this->fetchClass);
+        if ($this->fetchClass === null) {
+            throw new \Exception("No fetchClass is given while calling READ method");
+        }
+
+        return $this->engine->selectAll($sql, $bindParams, $this->fetchClass);
     }
 
     /**
@@ -125,14 +156,14 @@ abstract class Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        $result = $this->engine->update(DB_PREFIX . $this->table, get_object_vars($entity), $primaryValues);
+        $result = $this->engine->update(DB_PREFIX .$this->table, get_object_vars($entity), $primaryValues);
 
         if ($result === false) {
             return false;
         }
 
         // Primary Key, put it back into the entity.
-        if (count($this->primaryKeys) == 1 && $entity->{$this->primaryKeys[0]} == null) {
+        if ((count($this->primaryKeys) == 1) && ($entity->{$this->primaryKeys[0]} == null)) {
             $entity->{$this->primaryKeys[0]} = $result;
         }
 
@@ -157,6 +188,12 @@ abstract class Service
             $primaryValues[$pk] = $entity->{$pk};
         }
 
-        return $this->engine->delete(DB_PREFIX . $this->table, $primaryValues) !== false;
+        $result = $this->engine->delete(DB_PREFIX .$this->table, $primaryValues);
+
+        if ($result === false) {
+            return false;
+        }
+
+        return true;
     }
 }

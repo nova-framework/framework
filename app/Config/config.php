@@ -91,22 +91,22 @@ Config::set('database', array(
     'default' => array(
         'engine' => 'mysql',
         'config' => array(
-            'host'          => 'localhost',
-            'port'          => 3306, // Not required, default is 3306
-            'database'      => 'dbname',
-            'username'      => 'root',
-            'password'      => 'password',
-            'fetch_method'  => \PDO::FETCH_ASSOC, // Not required, default is FETCH_ASSOC.
-            'charset'       => 'utf8', // Not required, default and recommended is utf8.
-            'compress'      => false   // Changing to true will hugely improve the persormance on remote servers.
+            'host'        => 'localhost',
+            'port'        => 3306, // Not required, default is 3306
+            'database'    => 'dbname',
+            'username'    => 'root',
+            'password'    => 'password',
+            'return_type' => 'array', // Not required, default is 'array'.
+            'charset'     => 'utf8',  // Not required, default and recommended is utf8.
+            'compress'    => false    // Changing to true will hugely improve the persormance on remote servers.
         )
     ),
     /** Extra connections can be added here, some examples: */
     'sqlite' => array(
         'engine' => 'sqlite',
         'config' => array(
-            'file'          => 'database.sqlite',
-            'fetch_method'  => \PDO::FETCH_OBJ // Not required, default is OBJ.
+            'file'         => 'database.sqlite',
+            'return_type'  => 'object' // Not required, default is 'array'.
         )
     )
 

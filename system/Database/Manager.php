@@ -69,7 +69,7 @@ abstract class Manager
         $engine = new $className($options['config']);
 
         // If no success
-        if (!$engine instanceof Engine) {
+        if (! $engine instanceof Engine) {
             throw new \Exception("Driver creation failed! Check your extended logs for errors.");
         }
 
@@ -131,9 +131,11 @@ abstract class Manager
         }
 
         if (isset(static::$serviceInstances[$className])) {
-            static::$serviceInstances[$className]->setEngine($engine);
+            $service =& static::$serviceInstances[$className];
 
-            return static::$serviceInstances[$className];
+            $service->engine($engine);
+
+            return $service;
         }
 
         if (! class_exists($className)) {
@@ -147,10 +149,11 @@ abstract class Manager
             throw new \Exception("Invalid Service called: ".$className);
         }
 
-        $service->setEngine($engine);
+        $service->engine($engine);
 
         static::$serviceInstances[$className] = $service;
 
         return $service;
     }
+
 }

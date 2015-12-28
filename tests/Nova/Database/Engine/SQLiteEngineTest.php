@@ -24,7 +24,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
     {
         $this->engine = \Nova\Database\Manager::getEngine('sqlite');
 
-        $this->engine->fetchMethod(\PDO::FETCH_OBJ);
+        $this->engine->returnType('object');
 
         $this->assertInstanceOf('\Nova\Database\Engine\SQLite', $this->engine);
     }
@@ -64,7 +64,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
         // === Select All, No WHERE.
 
         // First, we will get ALL our cars, we will use the selectAll
-        $all = $this->engine->selectAll("SELECT * FROM " . DB_PREFIX . "car");
+        $all = $this->engine->selectAll("SELECT * FROM " .DB_PREFIX ."car");
 
         $this->assertGreaterThanOrEqual(2, count($all), "Select should return array of 2 or more");
 
@@ -76,7 +76,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 
 
         // === Select One, Only get the Model S
-        $model_s = $this->engine->selectOne("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE 'Model S';");
+        $model_s = $this->engine->selectOne("SELECT * FROM " .DB_PREFIX ."car WHERE model LIKE 'Model S';");
 
         $this->assertNotNull($model_s);
         $this->assertObjectHasAttribute('carid', $model_s);
@@ -89,7 +89,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 
 
         // === Select All, Fetch With ASSOC
-        $all_assoc = $this->engine->selectAll("SELECT * FROM " . DB_PREFIX . "car", array(), \PDO::FETCH_ASSOC);
+        $all_assoc = $this->engine->selectAll("SELECT * FROM " .DB_PREFIX ."car", array(), 'array');
 
         $this->assertGreaterThanOrEqual(2, count($all_assoc), "Select should return array of 2 or more");
 
@@ -102,7 +102,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 
 
         // === Select One, But this doesn't exists.
-        $notthere = $this->engine->selectOne("SELECT * FROM " . DB_PREFIX . "car WHERE make LIKE 'Renault';");
+        $notthere = $this->engine->selectOne("SELECT * FROM " .DB_PREFIX ."car WHERE make LIKE 'Renault';");
 
         $this->assertFalse($notthere);
     }
@@ -123,7 +123,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 
         // === Single insert
         $data_1 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_1', 'costs' => 18000);
-        $insert_1 = $this->engine->insert(DB_PREFIX . 'car', $data_1);
+        $insert_1 = $this->engine->insert(DB_PREFIX .'car', $data_1);
 
         $this->assertNotFalse($insert_1);
         $this->assertGreaterThan(2, $insert_1);
@@ -144,7 +144,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_3', 'costs' => 38000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_4', 'costs' => 48000)
         );
-        $insert_2 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_2, false);
+        $insert_2 = $this->engine->insertBatch(DB_PREFIX .'car', $data_2, false);
 
         $this->assertEquals(3, count($insert_2));
         foreach($insert_2 as $key => $value) {
@@ -158,7 +158,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_6', 'costs' => 31000),
             array('make' => 'Nova Cars', 'model' => 'FrameworkCar_7', 'costs' => 41000)
         );
-        $insert_3 = $this->engine->insertBatch(DB_PREFIX . 'car', $data_3, true);
+        $insert_3 = $this->engine->insertBatch(DB_PREFIX .'car', $data_3, true);
 
         $this->assertEquals(3, count($insert_3));
         foreach($insert_3 as $key => $value) {
@@ -174,20 +174,20 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
         );
 
         try {
-            $this->engine->insertBatch(DB_PREFIX . 'car', $data_4, true);
+            $this->engine->insertBatch(DB_PREFIX .'car', $data_4, true);
             $this->assertFalse(true, 'Inserting error data should give exceptions!');
         }catch(\Exception $e) {
             $this->assertContains("NULL", $e->getMessage());
         }
 
         // Check if the other one is still inserted!
-        $wronginserted = $this->engine->selectAll("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE 'FrameworkCar_9';");
+        $wronginserted = $this->engine->selectAll("SELECT * FROM " .DB_PREFIX ."car WHERE model LIKE 'FrameworkCar_9';");
 
         // Should be false!
         $this->assertFalse($wronginserted, 'Transaction inserts should rollback after detecting errors!');
 
         // Cleanup all our test cars
-        $this->engine->rawQuery("DELETE FROM " . DB_PREFIX . "car WHERE make LIKE 'Nova Cars';");
+        $this->engine->rawQuery("DELETE FROM " .DB_PREFIX ."car WHERE make LIKE 'Nova Cars';");
         $this->engine->commit();
     }
 
@@ -206,18 +206,18 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 
         // === Will add our test car fist, We will edit this one a few times
         $data = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Update_1', 'costs' => 18000);
-        $id = $this->engine->insert(DB_PREFIX . 'car', $data);
+        $id = $this->engine->insert(DB_PREFIX .'car', $data);
 
         $this->assertGreaterThanOrEqual(2, $id);
 
         // === Basic simple update
         $data_update_1 = array('costs' => 20000);
-        $update_1 = $this->engine->update(DB_PREFIX . 'car', $data_update_1, array('carid' => $id));
+        $update_1 = $this->engine->update(DB_PREFIX .'car', $data_update_1, array('carid' => $id));
 
         $this->assertNotFalse($update_1);
 
         // Test if it's changed
-        $result_1 = $this->engine->selectOne("SELECT * FROM " . DB_PREFIX . "car WHERE carid = :carid", array('carid' => $id));
+        $result_1 = $this->engine->selectOne("SELECT * FROM " .DB_PREFIX ."car WHERE carid = :carid", array('carid' => $id));
 
         $this->assertNotNull($result_1);
         $this->assertObjectHasAttribute('carid', $result_1);
@@ -228,7 +228,7 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(20000, $result_1->costs);
 
         // Cleanup
-        $this->engine->rawQuery("DELETE FROM " . DB_PREFIX . "car WHERE make LIKE 'Nova Cars';");
+        $this->engine->rawQuery("DELETE FROM " .DB_PREFIX ."car WHERE make LIKE 'Nova Cars';");
     }
 
 
@@ -245,29 +245,29 @@ class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 
         // === Basic test by inserting and deleting several records
         $data_1 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Delete_1', 'costs' => 18000);
-        $id_1 = $this->engine->insert(DB_PREFIX . 'car', $data_1);
+        $id_1 = $this->engine->insert(DB_PREFIX .'car', $data_1);
 
         $data_2 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Delete_2', 'costs' => 18000);
-        $id_2 = $this->engine->insert(DB_PREFIX . 'car', $data_2);
+        $id_2 = $this->engine->insert(DB_PREFIX .'car', $data_2);
 
         $data_3 = array('make' => 'Nova Cars', 'model' => 'FrameworkCar_Delete_3', 'costs' => 99999);
-        $id_3 = $this->engine->insert(DB_PREFIX . 'car', $data_3);
+        $id_3 = $this->engine->insert(DB_PREFIX .'car', $data_3);
 
         $this->assertGreaterThanOrEqual(2, $id_1);
         $this->assertGreaterThanOrEqual(2, $id_2);
         $this->assertGreaterThanOrEqual(2, $id_3);
 
         // Delete all 3 with several styles
-        $delete_1 = $this->engine->delete(DB_PREFIX . 'car', array('carid' => $id_1));
-        $delete_2 = $this->engine->delete(DB_PREFIX . 'car', array('model' => 'FrameworkCar_Delete_2'));
-        $delete_3 = $this->engine->delete(DB_PREFIX . 'car', array('costs' => 99999));
+        $delete_1 = $this->engine->delete(DB_PREFIX .'car', array('carid' => $id_1));
+        $delete_2 = $this->engine->delete(DB_PREFIX .'car', array('model' => 'FrameworkCar_Delete_2'));
+        $delete_3 = $this->engine->delete(DB_PREFIX .'car', array('costs' => 99999));
 
         $this->assertNotFalse($delete_1);
         $this->assertNotFalse($delete_2);
         $this->assertNotFalse($delete_3);
 
         // Check if we still can find the inserted records
-        $sql = "SELECT * FROM " . DB_PREFIX . "car WHERE carid = :carid1 OR carid = :carid2 OR carid = :carid3;";
+        $sql = "SELECT * FROM " .DB_PREFIX ."car WHERE carid = :carid1 OR carid = :carid2 OR carid = :carid3;";
         $all = $this->engine->selectAll($sql, array('carid1' => $id_1,'carid2' => $id_2,'carid3' => $id_3));
 
         // Should be empty => false.

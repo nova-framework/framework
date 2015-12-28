@@ -269,6 +269,8 @@ class BaseModel extends Model
      */
     public function find_all($where = array())
     {
+        $bindParams = array();
+
         // Get the TABLE name.
         $table = $this->table_name;
 

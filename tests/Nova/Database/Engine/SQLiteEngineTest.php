@@ -14,6 +14,9 @@ namespace Nova\Tests\Database\Engine;
  * @package Nova\Tests\Database\Engine
  *
  * @coversDefaultClass \Nova\Database\Engine\SQLite
+ *
+ * @covers \Nova\Database\Engine\Base
+ * @covers \Nova\Database\Engine\SQLite
  */
 class SQLiteEngineTest extends \PHPUnit_Framework_TestCase
 {

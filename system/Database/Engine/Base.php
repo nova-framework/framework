@@ -29,9 +29,11 @@ abstract class Base extends \PDO implements Engine
      * MySQLEngine constructor.
      * Please use the Factory to maintain instances of the drivers.
      *
+     * @param $dsn
      * @param $config array
      *
-     * @throws \PDOException
+     * @param array $options
+     * @throws \Exception
      */
     public function __construct($dsn, $config = array(), $options = array()) {
         // Check for valid Config.
@@ -305,8 +307,6 @@ abstract class Base extends \PDO implements Engine
 
         // Holding status
         $failure = false;
-
-        $ids = array();
 
         // Prepare the parameters.
         ksort($data);

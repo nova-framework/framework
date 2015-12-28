@@ -41,7 +41,8 @@ abstract class Service extends CoreService
 
     /**
      * Set engine for this service.
-     * @param Engine $engine
+     * @param Engine|null $engine
+     * @return Engine|null
      */
     public function engine($engine = null)
     {
@@ -79,7 +80,7 @@ abstract class Service extends CoreService
      * On success it will return the entity including the (optional) inserted ID (primary key, when only one)
      *
      * @param $entity Entity|Entity[] One or multiple entit(y|ies) to create in the database
-     * @return false|Entity
+     * @return false|Entity|Entity[]
      * @throws \Exception
      */
     public function create($entity)
@@ -144,7 +145,6 @@ abstract class Service extends CoreService
      * For safety it will default limit on 1 row only, you can override it but be warned on this!
      *
      * @param $entity Entity
-     * @param $limit int Limit of changes, may not be effective on every driver! Default 1.
      * @return false|Entity
      * @throws \Exception
      */
@@ -176,7 +176,6 @@ abstract class Service extends CoreService
      * For safety it will limit on 1 row only by default, you can disable by giving null into the limit.
      *
      * @param $entity Entity
-     * @param $limit int|null Limit of changes, may not be effective on every driver! Default 1. Null for infinity.
      * @return boolean successful delete?
      * @throws \Exception
      */

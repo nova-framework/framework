@@ -102,8 +102,6 @@ class MySQL extends BaseEngine
             throw new \UnexpectedValueException('Parameter should be not empty');
         }
 
-        $this->queryCount++;
-
         // Find all Column names
         $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
 

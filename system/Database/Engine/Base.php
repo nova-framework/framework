@@ -588,8 +588,7 @@ abstract class Base extends \PDO implements Engine
             }
 
             // Bind parameters
-            $bindParams = array();
-            $bindParams[$where] = $record[$where];
+            $whereValue = $record[$where];
 
             // Sort on key
             ksort($record);
@@ -621,10 +620,10 @@ abstract class Base extends \PDO implements Engine
             }
 
             // Bind where
-            if (is_int($bindParams)) {
-                $stmt->bindValue(":where_$where", $bindParams, \PDO::PARAM_INT);
+            if (is_int($whereValue)) {
+                $stmt->bindValue(":where_$where", $whereValue, \PDO::PARAM_INT);
             } else {
-                $stmt->bindValue(":where_$where", $bindParams);
+                $stmt->bindValue(":where_$where", $whereValue);
             }
 
             // Execute

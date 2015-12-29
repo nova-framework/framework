@@ -814,9 +814,9 @@ class BaseModel extends Model
      */
     public function isUnique($field, $value)
     {
-        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :$field";
+        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :value";
 
-        $data = $this->select($sql, array($field => $value), true);
+        $data = $this->select($sql, array('value' => $value), true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -911,8 +911,8 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Sets the created_on date for the object based on the
-     * current date/time and dateFormat. Will not overwrite existing.
+     * Sets the created_on date for the object based on the current date/time and dateFormat.
+     * Will not overwrite an existing field.
      *
      * @param array $row The array of data to be inserted
      *
@@ -926,19 +926,18 @@ class BaseModel extends Model
 
         $row = $row['fields'];
 
-        // Created_on
-        $field =& $this->createdField;
+        // created_on
 
-        if (is_array($row) && ! array_key_exists($field, $row)) {
-            $row[$field] = $this->date();
+        if (is_array($row) && ! array_key_exists($this->createdField, $row)) {
+            $row[$this->createdField] = $this->date();
         }
 
         return $row;
     }
 
     /**
-     * Sets the modified_on date for the object based on the
-     * current date/time and dateFormat. Will not overwrite existing.
+     * Sets the modified_on date for the object based on the current date/time and dateFormat.
+     * Will not overwrite an existing field.
      *
      * @param array $row The array of data to be inserted
      *
@@ -952,11 +951,10 @@ class BaseModel extends Model
 
         $row = $row['fields'];
 
-        // Modified_on
-        $field =& $this->modifiedField;
+        // modified_on
 
-        if (is_array($row) && ! array_key_exists($field, $row)) {
-            $row[$field] = $this->date();
+        if (is_array($row) && ! array_key_exists($this->modifiedField, $row)) {
+            $row[$this->modifiedField] = $this->date();
         }
 
         return $row;
@@ -967,19 +965,19 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Protect attributes by removing them from $row array. Useful for
-     * removing id, or submit buttons names if you simply throw your $_POST
-     * array at your model. :)
+     * Protect attributes by removing them from $row array.
+     * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
      *
      * @param object /array $row The value pair item to remove.
      */
     public function protectFields($row)
     {
-        foreach ($this->protectedFields as $attr) {
+        foreach ($this->protectedFields as $field) {
             if (is_object($row)) {
-                unset($row->$attr);
-            } else {
-                unset($row[$attr]);
+                unset($row->$field);
+            }
+            else {
+                unset($row[$field]);
             }
         }
 

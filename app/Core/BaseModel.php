@@ -238,7 +238,7 @@ class BaseModel extends Model
         }
 
         // Prepare the ORDER details.
-        $orderStr = $this->getSelectOrder();
+        $orderStr = $this->parseOrder();
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
@@ -280,10 +280,10 @@ class BaseModel extends Model
         $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
 
         // Prepare the LIMIT details.
-        $limitStr = $this->getSelectLimit();
+        $limitStr = $this->parseLimit();
 
         // Prepare the ORDER details.
-        $orderStr = $this->getSelectOrder();
+        $orderStr = $this->parseOrder();
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr $limitStr $orderStr";
@@ -673,10 +673,10 @@ class BaseModel extends Model
         $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
 
         // Prepare the LIMIT details.
-        $limitStr = $this->getSelectLimit();
+        $limitStr = $this->parseLimit();
 
         // Prepare the ORDER details.
-        $orderStr = $this->getSelectOrder();
+        $orderStr = $this->parseOrder();
 
         // Prepare the SQL Query
         $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereStr $limitStr $orderStr";
@@ -1120,7 +1120,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function getSelectLimit()
+    protected function parseLimit()
     {
         $result = '';
 
@@ -1142,7 +1142,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function getSelectOrder()
+    protected function parseOrder()
     {
         $order =& $this->tempOrder;
 

@@ -325,7 +325,7 @@ class BaseModel extends Model
     {
         $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
 
-        $result = $this->db->insert($this->table(), $data);
+        $result = $this->db->insert($this->table(), $this->prepareData($data));
 
         if($result !== false) {
             $this->trigger('afterInsert', ['id' => $result, 'fields' => $data, 'method' => 'insert']);
@@ -371,7 +371,7 @@ class BaseModel extends Model
     {
         $data = $this->trigger('beforeUpdate', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, array($this->primaryKey => $id));
+        $result = $this->db->update($this->table(), $this->prepareData($data), array($this->primaryKey => $id));
 
         $result = $this->trigger('afterUpdate', array(
             'id'     => $id,
@@ -500,7 +500,7 @@ class BaseModel extends Model
         //
         $data = $this->trigger('beforeUpdate', array('method' => 'updateBy', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, $where);
+        $result = $this->db->update($this->table(), $this->prepareData($data), $where);
 
         $this->trigger('afterUpdate', array(
             'method' => 'updateBy',
@@ -521,7 +521,7 @@ class BaseModel extends Model
     {
         $data = $this->trigger('beforeUpdate', array('method' => 'updateAll', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, true);
+        $result = $this->db->update($this->table(), $this->prepareData($data), true);
 
         $this->trigger('afterUpdate', array(
             'method' => 'updateAll',

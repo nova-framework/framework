@@ -84,7 +84,7 @@ class BaseModel extends Model
     protected $beforeDelete = array();
     protected $afterDelete  = array();
 
-    protected $callbackParameters = array();
+    protected $callbackParams = array();
 
     /**
      * By default, we return items as objects. You can change this for the entire class by setting this
@@ -1009,7 +1009,7 @@ class BaseModel extends Model
             if (strpos($method, '(') !== false) {
                 preg_match('/([a-zA-Z0-9\_\-]+)(\(([a-zA-Z0-9\_\-\., ]+)\))?/', $method, $matches);
 
-                $this->callbackParameters = explode(',', $matches[3]);
+                $this->callbackParams = explode(',', $matches[3]);
             }
 
             $data = call_user_func_array(array($this, $method), array($data));

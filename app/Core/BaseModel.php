@@ -393,7 +393,7 @@ class BaseModel extends Model
      *     )
      * );
      *
-     * The $where_key should be the name of the column to match the record on.
+     * The $whereKey should be the name of the column to match the record on.
      * If $whereKey == 'title', then each record would be matched on that 'title' value of the array.
      * This does mean that the array key needs to be provided with each row's data.
      *

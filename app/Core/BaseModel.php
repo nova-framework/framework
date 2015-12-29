@@ -930,7 +930,7 @@ class BaseModel extends Model
         $field =& $this->createdField;
 
         if (is_array($row) && ! array_key_exists($field, $row)) {
-            $row[$field] = $this->setDate();
+            $row[$field] = $this->date();
         }
 
         return $row;
@@ -956,7 +956,7 @@ class BaseModel extends Model
         $field =& $this->modifiedField;
 
         if (is_array($row) && ! array_key_exists($field, $row)) {
-            $row[$field] = $this->setDate();
+            $row[$field] = $this->date();
         }
 
         return $row;
@@ -1043,7 +1043,7 @@ class BaseModel extends Model
      *
      * @return int|null|string The current/user time converted to the proper format.
      */
-    protected function setDate($userDate = NULL)
+    protected function date($userDate = NULL)
     {
         $curr_date = ! empty($userDate) ? $userDate : time();
 

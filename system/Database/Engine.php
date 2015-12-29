@@ -141,6 +141,35 @@ interface Engine
      * @throws \Exception
      */
     public function update($table, $data, $where);
+    
+    /**
+     * Updates multiple records in the database at once.
+     *
+     * $data = array(
+     *     array(
+     *         'title'  => 'My title',
+     *         'body'   => 'body 1'
+     *     ),
+     *     array(
+     *         'title'  => 'Another Title',
+     *         'body'   => 'body 2'
+     *     )
+     * );
+     *
+     * The $where_key should be the name of the column to match the record on.
+     * If $where_key == 'title', then each record would be matched on that
+     * 'title' value of the array. This does mean that the array key needs
+     * to be provided with each row's data.
+     *
+     * @param  string $table The Table name.
+     * @param  array $data An associate array of row data to update.
+     * @param  string $where The column name to match on.
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    public function updateBatch($table, $data, $where);
 
     /**
      * Execute Delete statement, this will automatically build the query for you.
@@ -165,7 +194,7 @@ interface Engine
      * Optional bind is available.
      *
      * @param string $sql Query
-     * @param array $bind optional binding values
+     * @param array $bindParams optional binding values
      * @return \PDOStatement|mixed
      *
      * @throws \Exception

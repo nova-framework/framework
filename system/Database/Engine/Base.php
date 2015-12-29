@@ -545,6 +545,100 @@ abstract class Base extends \PDO implements Engine
         return $stmt->rowCount();
     }
 
+
+    /**
+     * Updates multiple records in the database at once.
+     *
+     * $data = array(
+     *     array(
+     *         'title'  => 'My title',
+     *         'body'   => 'body 1'
+     *     ),
+     *     array(
+     *         'title'  => 'Another Title',
+     *         'body'   => 'body 2'
+     *     )
+     * );
+     *
+     * The $where_key should be the name of the column to match the record on.
+     * If $where_key == 'title', then each record would be matched on that
+     * 'title' value of the array. This does mean that the array key needs
+     * to be provided with each row's data.
+     *
+     * @param  string $table The Table name.
+     * @param  array $data An associate array of row data to update.
+     * @param  string $where The column name to match on.
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    public function updateBatch($table, $data, $where)
+    {
+        // Check for valid data
+        if (!is_array($data)) {
+            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
+        }
+
+        foreach($data as $record) {
+
+            if (!is_array($record)) {
+                throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
+
+            }
+
+            // Bind parameters
+            $whereValue = $record[$where];
+
+            // Sort on key
+            ksort($record);
+
+            // Column (bind for auto binding).
+            $fieldDetails = '';
+            $idx = 0;
+
+            foreach ($record as $key => $value) {
+                if($idx > 0) {
+                    $fieldDetails .= ', ';
+                }
+
+                $fieldDetails .= "$key = :field_$key";
+
+                $idx++;
+            }
+
+            // Prepare statement.
+            $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $where = :where_$where");
+
+            // Bind fields
+            foreach ($record as $key => $value) {
+                if (is_int($value)) {
+                    $stmt->bindValue(":field_$key", $value, \PDO::PARAM_INT);
+                } else {
+                    $stmt->bindValue(":field_$key", $value);
+                }
+            }
+
+            // Bind where
+            if (is_int($whereValue)) {
+                $stmt->bindValue(":where_$where", $whereValue, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":where_$where", $whereValue);
+            }
+
+            // Execute
+            $this->queryCount++;
+
+            // Directly stop at error.
+            if (!$stmt->execute()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     /**
      * Execute Delete statement, this will automatically build the query for you.
      *

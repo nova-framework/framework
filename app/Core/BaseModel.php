@@ -100,9 +100,14 @@ class BaseModel extends Model
     protected $temp_select_where = array();
 
     /**
-     * Temporary select's LIMIT attributes.
+     * Temporary select's LIMIT attribute.
      */
     protected $temp_select_limit = null;
+
+    /**
+     * Temporary select's ORDER attribute.
+     */
+    protected $temp_select_order = null;
 
     /**
      * Protected, non-modifiable attributes
@@ -231,11 +236,19 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Array');
         }
 
+        // Prepare the ORDER details.
+        $orderDetails = $this->order_details($this->temp_select_order);
+
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .")";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .") $orderDetails";
 
         //
-        return $this->select($sql, array(), true);
+        $result = $this->select($sql, array(), true);
+
+        // Reset our select ORDER
+        $this->temp_select_order = null;
+
+        return $result;
     }
 
     /**
@@ -268,8 +281,11 @@ class BaseModel extends Model
         // Prepare the LIMIT details.
         $limitDetails = $this->limit_details($this->temp_select_limit);
 
+        // Prepare the ORDER details.
+        $orderDetails = $this->order_details($this->temp_select_order);
+
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereDetails $limitDetails";
+        $sql = "SELECT * FROM " .$this->table() ." $whereDetails $limitDetails $orderDetails";
 
         //
         $this->trigger('before_find', array('method' => 'find_all', 'fields' => $where));
@@ -285,8 +301,11 @@ class BaseModel extends Model
         // Reset our select WHEREs
         $this->temp_select_where = array();
 
-        // Reset our select LIMITs
+        // Reset our select LIMIT
         $this->temp_select_limit = null;
+
+        // Reset our select ORDER
+        $this->temp_select_order = null;
 
         return $result;
     }
@@ -563,6 +582,9 @@ class BaseModel extends Model
      */
     public function select($sql, $bindParams = array(), $fetchAll = false)
     {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
         $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
 
         // Make sure our temp return type is correct.
@@ -655,8 +677,11 @@ class BaseModel extends Model
         // Prepare the LIMIT details.
         $limitDetails = $this->limit_details($this->temp_select_limit);
 
+        // Prepare the ORDER details.
+        $orderDetails = $this->order_details($this->temp_select_order);
+
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails $limitDetails";
+        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails $limitDetails $orderDetails";
 
         //
         $this->trigger('before_select', array('method' => 'select_all', 'fields' => $fields));
@@ -672,8 +697,11 @@ class BaseModel extends Model
         // Reset our select WHEREs
         $this->temp_select_where = array();
 
-        // Reset our select LIMITs
+        // Reset our select LIMIT
         $this->temp_select_limit = null;
+
+        // Reset our select LIMIT
+        $this->temp_select_order = null;
 
         return $result;
     }
@@ -833,23 +861,49 @@ class BaseModel extends Model
      * @param string $class
      * @return $this
      */
-    public function as_object($class = null)
+    public function as_object($className = null)
     {
-        $this->temp_return_type = ! empty($class) ? $class : 'object';
+        $this->temp_return_type = ! empty($className) ? $className : 'object';
 
         return $this;
     }
 
-    public where($field, $value = '')
+    public function where($field, $value = '')
     {
         array_push($this->temp_select_where, $field, $value);
 
         return $this;
     }
 
-    public limit($limit, $start = 0)
+    public function limit($limit, $start = 0)
     {
         $this->temp_select_limit = array($start => $limit);
+
+        return $this;
+    }
+
+    public function order($sense = 'ASC')
+    {
+        $sense = strtoupper($sense);
+
+        if(($sense != 'ASC') && ($sense != 'DESC')) {
+            throw new \UnexpectedValueException('Invalid parameter');
+        }
+
+        $this->temp_select_order = array($this->primary_key => $sense);
+
+        return $this;
+    }
+
+    public function order_by($field, $sense = 'ASC')
+    {
+        $sense = strtoupper($sense);
+
+        if(empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        $this->temp_select_order = array($field => $sense);
 
         return $this;
     }
@@ -1072,19 +1126,34 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function limit_details($limits)
+    protected function limit_details($select_limit)
     {
         $result = '';
 
-        if(is_numeric($limits)) {
-            $result = '0, ' .$limits;
+        if(is_numeric($select_limit)) {
+            $result = '0, ' .$select_limit;
         }
-        else if(is_array($limits)) {
-            $result = implode(', ', $limits);
+        else if(is_array($select_limit) && ! empty($select_limit)) {
+            list($key, $value) = each($select_limit);
+
+            $result = $key .' ' .$value;
         }
 
         if(! empty($result)) {
             $result = 'LIMIT ' .$result;
+        }
+
+        return $result;
+    }
+
+    protected function limit_details($select_order)
+    {
+        $result = '';
+
+        if(is_array($select_order) && ! empty($select_order)) {
+            list($key, $value) = each($select_order);
+
+            $result = 'LIMIT ' .$key .' ' .$value;
         }
 
         return $result;

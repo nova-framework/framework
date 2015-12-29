@@ -79,8 +79,6 @@ class BaseModel extends Model
     protected $afterInsert  = array();
     protected $beforeUpdate = array();
     protected $afterUpdate  = array();
-    protected $beforeSelect = array();
-    protected $afterSelect  = array();
     protected $beforeDelete = array();
     protected $afterDelete  = array();
 
@@ -569,142 +567,6 @@ class BaseModel extends Model
     }
 
     /**
-     * Execute Select Query, binding values into the $sql Query.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @return array|null
-     *
-     * @throws \Exception
-     */
-    public function select($sql, $bindParams = array(), $fetchAll = false)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
-
-        // Make sure our temp return type is correct.
-        $this->tempReturnType = $this->returnType;
-
-        return $result;
-    }
-
-    /**
-     * Fetch first one record, optionally with WHEREs.
-     *
-     * @return array|null|false
-     * @throws \Exception
-     */
-    public function selectBy()
-    {
-        $bindParams = array();
-
-        //
-        $params = func_get_args();
-
-        $fields = array_pop($params);
-
-        if(empty($params) && empty($fields)) {
-            throw new \UnexpectedValueException('Invalid parameters');
-        }
-
-        // Prepare the WHERE parameters.
-        if(is_array($params[0])) {
-            $where = $params[0];
-        }
-        else {
-            $value = isset($params[1]) ? $params[1] : '';
-
-            $where = array($params[0] => $value);
-        }
-
-        // Prepare the FIELDS details.
-        $fieldDetails = '*';
-
-        if(is_array($fields)) {
-            $fieldDetails = implode(', ', $fields);
-        }
-        else if(is_string($fields)) {
-            $fieldDetails = $fields;
-        }
-
-        // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($where, $bindParams);
-
-        // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereStr";
-
-        //
-        $this->trigger('beforeSelect', array('method' => 'select_one', 'fields' => $fields));
-
-        $result = $this->select($sql, $bindParams);
-
-        if (! empty($result)) {
-            $result = $this->trigger('afterSelect', array('method' => 'select_one', 'fields' => $result));
-        }
-
-        return $result;
-    }
-
-    /**
-     * Fetch all records, optionally with WHEREs, LIMIT and ORDER.
-     *
-     * @param string $fields
-     * @return array|null|false
-     * @throws \Exception
-     */
-    public function selectAll($fields = '*')
-    {
-        $bindParams = array();
-
-        // Prepare the WHAT details.
-        $fieldDetails = '*';
-
-        if(is_array($fields)) {
-            $fieldDetails = implode(', ', $fields);
-        }
-        else if(is_string($fields)) {
-            $fieldDetails = $fields;
-        }
-
-        // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
-
-        // Prepare the LIMIT details.
-        $limitStr = $this->parseLimit();
-
-        // Prepare the ORDER details.
-        $orderStr = $this->parseOrder();
-
-        // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereStr $limitStr $orderStr";
-
-        //
-        $this->trigger('beforeSelect', array('method' => 'selectAll', 'fields' => $fields));
-
-        $result = $this->select($sql, $bindParams, true);
-
-        if (is_array($result)) {
-            foreach ($result as $key => &$row) {
-                $row = $this->trigger('afterSelect', array('method' => 'selectAll', 'fields' => $row));
-            }
-        }
-
-        // Reset our select WHEREs
-        $this->tempWhere = array();
-
-        // Reset our select LIMIT
-        $this->tempLimit = null;
-
-        // Reset our select LIMIT
-        $this->tempOrder = null;
-
-        return $result;
-    }
-
-    /**
      * Deletes a row by it's primary key value.
      *
      * @param  mixed $id The primary key value of the row to delete.
@@ -780,6 +642,29 @@ class BaseModel extends Model
             'method' => 'deleteMany',
             'result' => $result
         ));
+
+        return $result;
+    }
+
+    /**
+     * Execute Select Query, binding values into the $sql Query.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $bindParams = array(), $fetchAll = false)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
 
         return $result;
     }

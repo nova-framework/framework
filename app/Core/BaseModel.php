@@ -159,7 +159,7 @@ class BaseModel extends Model
     {
         $result = $this->limit(1, 0)->findAll();
 
-        if (is_array($result) && count($result)) {
+        if (is_array($result) && (count($result) > 0)) {
             return $result[0];
         }
 
@@ -956,8 +956,7 @@ class BaseModel extends Model
      */
     public function trigger($event, $data = false)
     {
-        if (! isset($this->$event) || ! is_array($this->$event))
-        {
+        if (! isset($this->$event) || ! is_array($this->$event)) {
             if (isset($data['fields'])) {
                 return $data['fields'];
             }

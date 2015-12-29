@@ -563,37 +563,38 @@ abstract class Base extends \PDO implements Engine
      *     )
      * );
      *
-     * The $where_key should be the name of the column to match the record on.
-     * If $where_key == 'title', then each record would be matched on that
+     * The $whereKey should be the name of the column to match the record on.
+     * If $whereKey == 'title', then each record would be matched on that
      * 'title' value of the array. This does mean that the array key needs
      * to be provided with each row's data.
      *
      * @param  string $table The Table name.
      * @param  array $data An associate array of row data to update.
-     * @param  string $where The column name to match on.
+     * @param  string $whereKey The column name to match on.
      *
      * @return bool
      *
      * @throws \Exception
      */
-    public function updateBatch($table, $data, $where)
+    public function updateBatch($table, $data, $whereKey)
     {
         // Check for valid data
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
         }
 
         foreach($data as $record) {
-            if (!is_array($record)) {
-                throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
-
+            if (is_array($record)) {
+                continue;
             }
+
+            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
         }
 
         // Perform the batch update.
         foreach($data as $record) {
             // Bind parameters
-            $whereValue = $record[$where];
+            $whereValue = $record[$whereKey];
 
             // Sort on key
             ksort($record);
@@ -613,7 +614,7 @@ abstract class Base extends \PDO implements Engine
             }
 
             // Prepare statement.
-            $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $where = :where_$where");
+            $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereKey = :where_$whereKey");
 
             // Bind fields
             foreach ($record as $key => $value) {
@@ -624,11 +625,11 @@ abstract class Base extends \PDO implements Engine
                 }
             }
 
-            // Bind where
+            // Bind whereKey
             if (is_int($whereValue)) {
-                $stmt->bindValue(":where_$where", $whereValue, \PDO::PARAM_INT);
+                $stmt->bindValue(":where_$whereKey", $whereValue, \PDO::PARAM_INT);
             } else {
-                $stmt->bindValue(":where_$where", $whereValue);
+                $stmt->bindValue(":where_$whereKey", $whereValue);
             }
 
             // Execute

@@ -156,20 +156,20 @@ interface Engine
      *     )
      * );
      *
-     * The $where_key should be the name of the column to match the record on.
-     * If $where_key == 'title', then each record would be matched on that
+     * The $whereKey should be the name of the column to match the record on.
+     * If $whereKey == 'title', then each record would be matched on that
      * 'title' value of the array. This does mean that the array key needs
      * to be provided with each row's data.
      *
      * @param  string $table The Table name.
      * @param  array $data An associate array of row data to update.
-     * @param  string $where The column name to match on.
+     * @param  string $whereKey The column name to match on.
      *
      * @return bool
      *
      * @throws \Exception
      */
-    public function updateBatch($table, $data, $where);
+    public function updateBatch($table, $data, $whereKey);
 
     /**
      * Execute Delete statement, this will automatically build the query for you.

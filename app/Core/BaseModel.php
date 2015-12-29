@@ -204,7 +204,7 @@ class BaseModel extends Model
         $this->setWhere($params);
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($this->tempSelectWhere, $bindParams);
+        $whereStr = $this->parseWheres($this->tempSelectWhere, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr";
@@ -277,7 +277,7 @@ class BaseModel extends Model
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($this->tempSelectWhere, $bindParams);
+        $whereStr = $this->parseWheres($this->tempSelectWhere, $bindParams);
 
         // Prepare the LIMIT details.
         $limitStr = $this->getSelectLimit();
@@ -631,7 +631,7 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($where, $bindParams);
+        $whereStr = $this->parseWheres($where, $bindParams);
 
         // Prepare the SQL Query
         $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereStr";
@@ -670,7 +670,7 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($this->tempSelectWhere, $bindParams);
+        $whereStr = $this->parseWheres($this->tempSelectWhere, $bindParams);
 
         // Prepare the LIMIT details.
         $limitStr = $this->getSelectLimit();
@@ -1076,7 +1076,7 @@ class BaseModel extends Model
         }
     }
 
-    protected function parseSelectWheres(array $where, &$bindParams = array())
+    protected function parseWheres(array $where, &$bindParams = array())
     {
         $result = '';
 

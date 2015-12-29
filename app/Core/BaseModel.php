@@ -1085,15 +1085,15 @@ class BaseModel extends Model
     {
         $result = '';
 
-        $limit =& $this->tempLimit;
+        $limits =& $this->tempLimit;
 
-        if(is_numeric($limit)) {
-            $result = '0, ' .$limit;
+        if(is_numeric($limits)) {
+            $result = '0, ' .$limits;
         }
-        else if(is_array($limit) && ! empty($limit)) {
-            list($key, $value) = each($limit);
+        else if(is_array($limits) && ! empty($limits)) {
+            list($offset, $limit) = each($limits);
 
-            $result = $key .' ' .$value;
+            $result = $offset .', ' .$limit;
         }
 
         if(! empty($result)) {
@@ -1108,9 +1108,9 @@ class BaseModel extends Model
         $order =& $this->tempOrder;
 
         if(is_array($order) && ! empty($order)) {
-            list($key, $value) = each($order);
+            list($key, $sense) = each($order);
 
-            $result = 'LIMIT ' .$key .', ' .$value;
+            $result = 'ORDER ' .$key .' ' .$sense;
         }
         else {
             $result = '';

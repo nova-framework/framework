@@ -98,17 +98,17 @@ class BaseModel extends Model
     /**
      * Temporary select's WHERE attributes.
      */
-    protected $tempSelectWhere = array();
+    protected $tempWhere = array();
 
     /**
      * Temporary select's LIMIT attribute.
      */
-    protected $tempSelectLimit = null;
+    protected $tempLimit = null;
 
     /**
      * Temporary select's ORDER attribute.
      */
-    protected $tempSelectOrder = null;
+    protected $tempOrder = null;
 
     /**
      * Protected, non-modifiable attributes
@@ -204,7 +204,7 @@ class BaseModel extends Model
         $this->setWhere($params);
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempSelectWhere, $bindParams);
+        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr";
@@ -219,7 +219,7 @@ class BaseModel extends Model
         }
 
         // Reset our select WHEREs
-        $this->tempSelectWhere = array();
+        $this->tempWhere = array();
 
         return $result;
     }
@@ -247,7 +247,7 @@ class BaseModel extends Model
         $result = $this->select($sql, array(), true);
 
         // Reset our select ORDER
-        $this->tempSelectOrder = null;
+        $this->tempOrder = null;
 
         return $result;
     }
@@ -277,7 +277,7 @@ class BaseModel extends Model
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempSelectWhere, $bindParams);
+        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
 
         // Prepare the LIMIT details.
         $limitStr = $this->getSelectLimit();
@@ -300,13 +300,13 @@ class BaseModel extends Model
         }
 
         // Reset our select WHEREs
-        $this->tempSelectWhere = array();
+        $this->tempWhere = array();
 
         // Reset our select LIMIT
-        $this->tempSelectLimit = null;
+        $this->tempLimit = null;
 
         // Reset our select ORDER
-        $this->tempSelectOrder = null;
+        $this->tempOrder = null;
 
         return $result;
     }
@@ -670,7 +670,7 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempSelectWhere, $bindParams);
+        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
 
         // Prepare the LIMIT details.
         $limitStr = $this->getSelectLimit();
@@ -693,13 +693,13 @@ class BaseModel extends Model
         }
 
         // Reset our select WHEREs
-        $this->tempSelectWhere = array();
+        $this->tempWhere = array();
 
         // Reset our select LIMIT
-        $this->tempSelectLimit = null;
+        $this->tempLimit = null;
 
         // Reset our select LIMIT
-        $this->tempSelectOrder = null;
+        $this->tempOrder = null;
 
         return $result;
     }
@@ -868,14 +868,14 @@ class BaseModel extends Model
 
     public function where($field, $value = '')
     {
-        array_push($this->tempSelectWhere, $field, $value);
+        array_push($this->tempWhere, $field, $value);
 
         return $this;
     }
 
     public function limit($limit, $start = 0)
     {
-        $this->tempSelectLimit = array($start => $limit);
+        $this->tempLimit = array($start => $limit);
 
         return $this;
     }
@@ -888,7 +888,7 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Invalid parameter');
         }
 
-        $this->tempSelectOrder = array($this->primaryKey => $sense);
+        $this->tempOrder = array($this->primaryKey => $sense);
 
         return $this;
     }
@@ -901,7 +901,7 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
-        $this->tempSelectOrder = array($field => $sense);
+        $this->tempOrder = array($field => $sense);
 
         return $this;
     }
@@ -1069,10 +1069,10 @@ class BaseModel extends Model
         }
 
         if(is_array($params[0])) {
-            $this->tempSelectWhere = array_merge($this->tempSelectWhere, $params[0]);
+            $this->tempWhere = array_merge($this->tempWhere, $params[0]);
         }
         else {
-            array_push($this->tempSelectWhere, $params[0], isset($params[1]) ? $params[1] : '');
+            array_push($this->tempWhere, $params[0], isset($params[1]) ? $params[1] : '');
         }
     }
 
@@ -1126,7 +1126,7 @@ class BaseModel extends Model
     {
         $result = '';
 
-        $limit =& $this->tempSelectLimit;
+        $limit =& $this->tempLimit;
 
         if(is_numeric($limit)) {
             $result = '0, ' .$limit;
@@ -1146,7 +1146,7 @@ class BaseModel extends Model
 
     protected function getSelectOrder()
     {
-        $order =& $this->tempSelectOrder;
+        $order =& $this->tempOrder;
 
         if(is_array($order) && ! empty($order)) {
             list($key, $value) = each($order);

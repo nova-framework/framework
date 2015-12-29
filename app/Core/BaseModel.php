@@ -19,7 +19,7 @@ class BaseModel extends Model
      *
      * @var string;
      */
-    protected $tableName;
+    protected $table;
 
     /**
      * The model's default primary key.
@@ -801,7 +801,7 @@ class BaseModel extends Model
      */
     public function table()
     {
-        return $this->tableName;
+        return $this->table;
     }
 
     /**

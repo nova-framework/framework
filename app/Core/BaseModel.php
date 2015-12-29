@@ -690,6 +690,9 @@ class BaseModel extends Model
 
     public function prepare($sql, $bindParams = array())
     {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
         return $this->db->rawPrepare($sql, $bindParams);
     }
 

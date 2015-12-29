@@ -19,14 +19,14 @@ class BaseModel extends Model
      *
      * @var string;
      */
-    protected $table_name;
+    protected $tableName;
 
     /**
      * The model's default primary key.
      *
      * @var string
      */
-    protected $primary_key = 'id';
+    protected $primaryKey = 'id';
 
     /**
      * The type of date/time field used for created_on and modified_on fields.
@@ -35,7 +35,7 @@ class BaseModel extends Model
      * @var string
      * @access protected
      */
-    protected $date_format = 'datetime';
+    protected $dateFormat = 'datetime';
 
     /**
      * Whether or not to auto-fill a 'created_on' field on inserts.
@@ -43,7 +43,7 @@ class BaseModel extends Model
      * @var boolean
      * @access protected
      */
-    protected $set_created = true;
+    protected $setCreated = true;
 
     /**
      * Field name to use to the created time column in the DB table.
@@ -51,7 +51,7 @@ class BaseModel extends Model
      * @var string
      * @access protected
      */
-    protected $created_field = 'created_on';
+    protected $createdField = 'created_on';
 
     /**
      * Whether or not to auto-fill a 'modified_on' field on updates.
@@ -59,7 +59,7 @@ class BaseModel extends Model
      * @var boolean
      * @access protected
      */
-    protected $set_modified = true;
+    protected $setModified = true;
 
     /**
      * Field name to use to the modified time column in the DB table.
@@ -67,52 +67,53 @@ class BaseModel extends Model
      * @var string
      * @access protected
      */
-    protected $modified_field = 'modified_on';
+    protected $modifiedField = 'modified_on';
 
     /**
      * Various callbacks available to the Class.
      * They are simple lists of method names (methods will be ran on $this).
      */
-    protected $before_find   = array();
-    protected $after_find    = array();
-    protected $before_insert = array();
-    protected $after_insert  = array();
-    protected $before_update = array();
-    protected $after_update  = array();
-    protected $before_select = array();
-    protected $after_select  = array();
-    protected $before_delete = array();
-    protected $after_delete  = array();
+    protected $beforeFind   = array();
+    protected $afterFind    = array();
+    protected $beforeInsert = array();
+    protected $afterInsert  = array();
+    protected $beforeUpdate = array();
+    protected $afterUpdate  = array();
+    protected $beforeSelect = array();
+    protected $afterSelect  = array();
+    protected $beforeDelete = array();
+    protected $afterDelete  = array();
 
-    protected $callback_parameters = array();
+    protected $callbackParameters = array();
 
     /**
      * By default, we return items as objects. You can change this for the entire class by setting this
      * value to 'array' instead of 'object', or you can specify a qualified Class name for the returned object.
      * Alternatively, you can do it on a per-instance basis using the 'as_array()' and 'as_object()' methods.
      */
-    protected $return_type = 'object';
-    protected $temp_return_type = null;
+    protected $returnType = 'object';
+
+    protected $tempReturnType = null;
 
     /**
      * Temporary select's WHERE attributes.
      */
-    protected $temp_select_where = array();
+    protected $tempSelectWhere = array();
 
     /**
      * Temporary select's LIMIT attribute.
      */
-    protected $temp_select_limit = null;
+    protected $tempSelectLimit = null;
 
     /**
      * Temporary select's ORDER attribute.
      */
-    protected $temp_select_order = null;
+    protected $tempSelectOrder = null;
 
     /**
      * Protected, non-modifiable attributes
      */
-    protected $protected_attributes = array();
+    protected $protectedFields = array();
 
 
     //--------------------------------------------------------------------
@@ -125,22 +126,22 @@ class BaseModel extends Model
         parent __construct($linkName);
 
         // Always protect our attributes
-        array_unshift($this->before_insert, 'protect_attributes');
-        array_unshift($this->before_update, 'protect_attributes');
+        array_unshift($this->beforeInsert, 'protectFields');
+        array_unshift($this->beforeUpdate, 'protectFields');
 
         //
         // Check our auto-set features and make sure they are part of our Observer System.
 
-        if ($this->set_created === true) {
-            array_unshift($this->before_insert, 'created_on');
+        if ($this->setCreated === true) {
+            array_unshift($this->beforeInsert, 'createdOn');
         }
 
-        if ($this->set_modified === true) {
-            array_unshift($this->before_update, 'modified_on');
+        if ($this->setModified === true) {
+            array_unshift($this->beforeUpdate, 'modifiedOn');
         }
 
         // Make sure our temp return type is correct.
-        $this->temp_return_type = $this->return_type;
+        $this->tempReturnType = $this->returnType;
     }
 
     //--------------------------------------------------------------------
@@ -152,7 +153,7 @@ class BaseModel extends Model
      */
     public function first()
     {
-        $result = $this->limit(1, 0)->find_all();
+        $result = $this->limit(1, 0)->findAll();
 
         if (is_array($result) && count($result)) {
             return $result[0];
@@ -164,7 +165,7 @@ class BaseModel extends Model
     /**
      * Finds a single record based on it's primary key.
      *
-     * @param  mixed $id The primary_key value of the object to retrieve.
+     * @param  mixed $id The primaryKey value of the object to retrieve.
      * @return object
      */
     public function find($id)
@@ -174,15 +175,15 @@ class BaseModel extends Model
         }
 
         //
-        $this->trigger('before_find', array('id' => $id, 'method' => 'find'));
+        $this->trigger('beforeFind', array('id' => $id, 'method' => 'find'));
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." = :param";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
-        $result = $this->select($sql, array('param' => $id));
+        $result = $this->select($sql, array('value' => $id));
 
         if (! empty($result)) {
-            $result = $this->trigger('after_find', array('id' => $id, 'method' => 'find', 'fields' => $result));
+            $result = $this->trigger('afterFind', array('id' => $id, 'method' => 'find', 'fields' => $result));
         }
 
         return $result;
@@ -193,32 +194,32 @@ class BaseModel extends Model
      *
      * @return object
      */
-    public function find_by()
+    public function findBy()
     {
         $bindParams = array();
 
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        $this->set_where($params);
+        $this->setWhere($params);
 
         // Prepare the WHERE details.
-        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempSelectWhere, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereDetails";
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr";
 
         //
-        $this->trigger('before_find', array('method' => 'find_by', 'fields' => $where));
+        $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
 
         $result = $this->select($sql, $bindParams);
 
         if (! empty($result)) {
-            $result = $this->trigger('after_find', array('method' => 'find_by', 'fields' => $result));
+            $result = $this->trigger('afterFind', array('method' => 'findBy', 'fields' => $result));
         }
 
         // Reset our select WHEREs
-        $this->temp_select_where = array();
+        $this->tempSelectWhere = array();
 
         return $result;
     }
@@ -230,23 +231,23 @@ class BaseModel extends Model
      *
      * @return object or FALSE
      */
-    public function find_many($values)
+    public function findMany($values)
     {
         if(! is_array($values)) {
             throw new \UnexpectedValueException('Parameter should be an Array');
         }
 
         // Prepare the ORDER details.
-        $orderDetails = $this->order_details($this->temp_select_order);
+        $orderStr = $this->getSelectOrder();
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primary_key ." IN (".implode(',', $values) .") $orderDetails";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
 
         //
         $result = $this->select($sql, array(), true);
 
         // Reset our select ORDER
-        $this->temp_select_order = null;
+        $this->tempSelectOrder = null;
 
         return $result;
     }
@@ -256,13 +257,13 @@ class BaseModel extends Model
      *
      * @return object or FALSE
      */
-    public function find_many_by()
+    public function findManyBy()
     {
         $params = func_get_args();
 
-        $this->set_where($params);
+        $this->setWhere($params);
 
-        return $this->find_all();
+        return $this->findAll();
     }
 
     /**
@@ -271,41 +272,41 @@ class BaseModel extends Model
      *
      * @return object or FALSE
      */
-    public function find_all()
+    public function findAll()
     {
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempSelectWhere, $bindParams);
 
         // Prepare the LIMIT details.
-        $limitDetails = $this->limit_details($this->temp_select_limit);
+        $limitStr = $this->getSelectLimit();
 
         // Prepare the ORDER details.
-        $orderDetails = $this->order_details($this->temp_select_order);
+        $orderStr = $this->getSelectOrder();
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereDetails $limitDetails $orderDetails";
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr $limitStr $orderStr";
 
         //
-        $this->trigger('before_find', array('method' => 'find_all', 'fields' => $where));
+        $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
 
         $result = $this->select($sql, $bindParams, true);
 
         if (is_array($result)) {
             foreach ($result as $key => &$row) {
-                $row = $this->trigger('after_find', array('method' => 'find_all', 'fields' => $row));
+                $row = $this->trigger('afterFind', array('method' => 'findAll', 'fields' => $row));
             }
         }
 
         // Reset our select WHEREs
-        $this->temp_select_where = array();
+        $this->tempSelectWhere = array();
 
         // Reset our select LIMIT
-        $this->temp_select_limit = null;
+        $this->tempSelectLimit = null;
 
         // Reset our select ORDER
-        $this->temp_select_order = null;
+        $this->tempSelectOrder = null;
 
         return $result;
     }
@@ -314,24 +315,23 @@ class BaseModel extends Model
      * Inserts data into the database.
      *
      * @param  array $data An array of key/value pairs to insert to database.
-     * @return mixed       The primary_key value of the inserted record, or FALSE.
+     * @return mixed       The primaryKey value of the inserted record, or FALSE.
      */
     public function insert($data)
     {
-        $data = $this->trigger('before_insert', array('method' => 'insert', 'fields' => $data));
+        $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
 
         $result = $this->db->insert($this->table(), $data);
 
         if($result !== false) {
-            $this->trigger('after_insert', ['id' => $result, 'fields' => $data, 'method' => 'insert']);
+            $this->trigger('afterInsert', ['id' => $result, 'fields' => $data, 'method' => 'insert']);
         }
 
         return false;
     }
 
     /**
-     * Inserts multiple rows into the database at once. Takes an associative
-     * array of value pairs.
+     * Inserts multiple rows into the database at once. Takes an associative array of value pairs.
      *
      * $data = array(
      *     array(
@@ -345,31 +345,31 @@ class BaseModel extends Model
      * @param  array $data An associate array of rows to insert
      * @return bool
      */
-    public function insert_batch($data)
+    public function insertBatch($data)
     {
         $data['batch'] = true;
 
-        $data = $this->trigger('before_insert', array('method' => 'insert_batch', 'fields' => $data);
+        $data = $this->trigger('beforeInsert', array('method' => 'insertBatch', 'fields' => $data);
 
         unset($data['batch']);
 
-        return $this->db->insertBatch($this->table_name, $data);
+        return $this->db->insertBatch($this->table(), $data);
     }
 
     /**
      * Updates an existing record in the database.
      *
-     * @param  mixed $id The primary_key value of the record to update.
+     * @param  mixed $id The primaryKey value of the record to update.
      * @param  array $data An array of value pairs to update in the record.
      * @return bool
      */
     public function update($id, $data)
     {
-        $data = $this->trigger('before_update', array('id' => $id, 'method' =>'update', 'fields' => $data));
+        $data = $this->trigger('beforeUpdate', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, array($this->primary_key => $id));
+        $result = $this->db->update($this->table(), $data, array($this->primaryKey => $id));
 
-        $result = $this->trigger('after_update', array(
+        $result = $this->trigger('afterUpdate', array(
             'id'     => $id,
             'method' => 'update'
             'fields' => $data,
@@ -394,24 +394,23 @@ class BaseModel extends Model
      * );
      *
      * The $where_key should be the name of the column to match the record on.
-     * If $whereKey == 'title', then each record would be matched on that
-     * 'title' value of the array. This does mean that the array key needs
-     * to be provided with each row's data.
+     * If $whereKey == 'title', then each record would be matched on that 'title' value of the array.
+     * This does mean that the array key needs to be provided with each row's data.
      *
      * @param  array $data An associate array of row data to update.
      * @param  string $whereKey The column name to match on.
      * @return bool
      */
-    public function update_batch($data, $whereKey)
+    public function updateBatch($data, $whereKey)
     {
         foreach ($data as &$row) {
-            $row = $this->trigger('before_update', array('method' => 'update_batch', 'fields' => $row));
+            $row = $this->trigger('beforeUpdate', array('method' => 'updateBatch', 'fields' => $row));
         }
 
         $result = $this->db->updateBatch($this->table(), $data, $whereKey);
 
         foreach ($data as &$row) {
-            $this->trigger('after_update', array('fields' => $data, 'result' => $result, 'method' => 'update_batch'));
+            $this->trigger('afterUpdate', array('fields' => $data, 'result' => $result, 'method' => 'updateBatch'));
         }
 
         return $result;
@@ -420,37 +419,38 @@ class BaseModel extends Model
     /**
      * Updates many records by an array of ids.
      *
-     * While update_batch() allows modifying multiple, arbitrary rows of data
-     * on each row, update_many() sets the same values for each row.
+     * While updateBatch() allows modifying multiple, arbitrary rows of data
+     * on each row, updateMany() sets the same values for each row.
      *
      * $ids = array(1, 2, 3, 5, 12);
+     *
      * $data = array(
-     *     'deleted_by' => 1
+     *     'deletedBy' => 1
      * );
      *
-     * $this->model->update_many($ids, $data);
+     * $this->model->updateMany($ids, $data);
      *
-     * @param  array $ids An array of primary_key values to update.
+     * @param  array $ids An array of primaryKey values to update.
      * @param  array $data An array of value pairs to modify in each row.
      * @return bool
      */
-    public function update_many($ids, $data)
+    public function updateMany($ids, $data)
     {
         if (! is_array($ids) || (count($ids) == 0)) return NULL;
 
-        $data = $this->trigger('before_update', array('ids' => $ids, 'method' => 'update_many', 'fields' => $data));
+        $data = $this->trigger('beforeUpdate', array('ids' => $ids, 'method' => 'updateMany', 'fields' => $data));
 
         // Prepare the custom WHERE.
-        $where = $this->primary_key ." IN (".implode(',', $values) .")";
+        $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
 
         //
         $result = $this->db->update($this->table(), $data, $where);
 
-        $this->trigger('after_update', array(
+        $this->trigger('afterUpdate', array(
             'ids'    => $ids,
             'fields' => $data,
             'result' => $result,
-            'method' => 'update_many'
+            'method' => 'updateMany'
         ));
 
         return $result;
@@ -459,22 +459,21 @@ class BaseModel extends Model
     /**
      * Update records in the database using a standard WHERE clause.
      *
-     * Your last parameter should be the $data array with values to update
-     * on the rows. Any additional parameters should be provided to make up
-     * a typical WHERE clause. This could be a single array, or a column name
-     * and a value.
+     * Your last parameter should be the $data array with values to update on the rows.
+     * Any additional parameters should be provided to make up a typical WHERE clause.
+     * This could be a single array, or a column name and a value.
      *
      * $data = array('deleted_by' => 1);
      * $wheres = array('user_id' => 15);
      *
-     * $this->update_by($wheres, $data);
-     * $this->update_by('user_id', 15, $data);
+     * $this->updateBy($wheres, $data);
+     * $this->updateBy('user_id', 15, $data);
      *
      * @param array $data An array of data pairs to update
      * @param one or more WHERE-acceptable entries.
      * @return bool
      */
-    public function update_by()
+    public function updateBy()
     {
         $params = func_get_args();
 
@@ -495,12 +494,12 @@ class BaseModel extends Model
         }
 
         //
-        $data = $this->trigger('before_update', array('method' => 'update_by', 'fields' => $data));
+        $data = $this->trigger('beforeUpdate', array('method' => 'updateBy', 'fields' => $data));
 
         $result = $this->db->update($this->table(), $data, $where);
 
-        $this->trigger('after_update', array(
-            'method' => 'update_by',
+        $this->trigger('afterUpdate', array(
+            'method' => 'updateBy',
             'fields' => $data,
             'result' => $result
         ));
@@ -514,14 +513,14 @@ class BaseModel extends Model
      * @param  array $data An array of value pairs with the data to change.
      * @return bool
      */
-    public function update_all($data)
+    public function updateAll($data)
     {
-        $data = $this->trigger('before_update', array('method' => 'update_all', 'fields' => $data));
+        $data = $this->trigger('beforeUpdate', array('method' => 'updateAll', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, '1');
+        $result = $this->db->update($this->table(), $data, true);
 
-        $this->trigger('after_update', array(
-            'method' => 'update_all',
+        $this->trigger('afterUpdate', array(
+            'method' => 'updateAll',
             'fields' => $data,
             'result' => $result
         ));
@@ -539,12 +538,12 @@ class BaseModel extends Model
      */
     public function increment($id, $field, $value = 1)
     {
-        $value = (int)abs($value);
+        $value = (int) abs($value);
 
         //
         $data = array($field => "{$field}+{$value}");
 
-        $where = array($this->primary_key => $id);
+        $where = array($this->primaryKey => $id);
 
         return $this->db->update($this->table(), $data, $where);
     }
@@ -559,19 +558,18 @@ class BaseModel extends Model
      */
     public function decrement($id, $field, $value = 1)
     {
-        $value = (int)abs($value);
+        $value = (int) abs($value);
 
         //
         $data = array($field => "{$field}-{$value}");
 
-        $where = array($this->primary_key => $id);
+        $where = array($this->primaryKey => $id);
 
         return $this->db->update($this->table(), $data, $where);
     }
 
     /**
-     * Execute Select Query, bind values into the $sql query. And give optional method and class for fetch result
-     * The result MUST be an array!
+     * Execute Select Query, binding values into the $sql Query.
      *
      * @param string $sql
      * @param array $bindParams
@@ -585,10 +583,10 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->temp_return_type);
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
 
         // Make sure our temp return type is correct.
-        $this->temp_return_type = $this->return_type;
+        $this->tempReturnType = $this->returnType;
 
         return $result;
     }
@@ -599,7 +597,7 @@ class BaseModel extends Model
      * @return array|null|false
      * @throws \Exception
      */
-    public function select_by()
+    public function selectBy()
     {
         $bindParams = array();
 
@@ -633,31 +631,31 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereDetails = $this->where_details($where, $bindParams);
+        $whereStr = $this->parseSelectWheres($where, $bindParams);
 
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails";
+        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereStr";
 
         //
-        $this->trigger('before_select', array('method' => 'select_one', 'fields' => $fields));
+        $this->trigger('beforeSelect', array('method' => 'select_one', 'fields' => $fields));
 
         $result = $this->select($sql, $bindParams);
 
         if (! empty($result)) {
-            $result = $this->trigger('after_select', array('method' => 'select_one', 'fields' => $result));
+            $result = $this->trigger('afterSelect', array('method' => 'select_one', 'fields' => $result));
         }
 
         return $result;
     }
 
     /**
-     * Fetch all records, optionally with WHEREs and LIMITs.
+     * Fetch all records, optionally with WHEREs, LIMIT and ORDER.
      *
      * @param string $fields
      * @return array|null|false
      * @throws \Exception
      */
-    public function select_all($fields = '*')
+    public function selectAll($fields = '*')
     {
         $bindParams = array();
 
@@ -672,36 +670,36 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE details.
-        $whereDetails = $this->where_details($this->temp_select_where, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempSelectWhere, $bindParams);
 
         // Prepare the LIMIT details.
-        $limitDetails = $this->limit_details($this->temp_select_limit);
+        $limitStr = $this->getSelectLimit();
 
         // Prepare the ORDER details.
-        $orderDetails = $this->order_details($this->temp_select_order);
+        $orderStr = $this->getSelectOrder();
 
         // Prepare the SQL Query
-        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereDetails $limitDetails $orderDetails";
+        $sql = "SELECT $fieldDetails FROM " .$this->table() ." $whereStr $limitStr $orderStr";
 
         //
-        $this->trigger('before_select', array('method' => 'select_all', 'fields' => $fields));
+        $this->trigger('beforeSelect', array('method' => 'selectAll', 'fields' => $fields));
 
         $result = $this->select($sql, $bindParams, true);
 
         if (is_array($result)) {
             foreach ($result as $key => &$row) {
-                $row = $this->trigger('after_select', array('method' => 'select_all', 'fields' => $row));
+                $row = $this->trigger('afterSelect', array('method' => 'selectAll', 'fields' => $row));
             }
         }
 
         // Reset our select WHEREs
-        $this->temp_select_where = array();
+        $this->tempSelectWhere = array();
 
         // Reset our select LIMIT
-        $this->temp_select_limit = null;
+        $this->tempSelectLimit = null;
 
         // Reset our select LIMIT
-        $this->temp_select_order = null;
+        $this->tempSelectOrder = null;
 
         return $result;
     }
@@ -718,14 +716,14 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Integer');
         }
 
-        $where($this->primary_key => $id);
+        $where($this->primaryKey => $id);
 
         //
-        $this->trigger('before_delete', array('id' => $id, 'method' => 'delete'));
+        $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
 
         $result = $this->db->delete($this->table(), $where);
 
-        $this->trigger('after_delete', array(
+        $this->trigger('afterDelete', array(
             'id' => $id,
             'method' => 'delete',
             'result' => $result
@@ -734,7 +732,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function delete_by()
+    public function deleteBy()
     {
         $params = func_get_args();
 
@@ -753,12 +751,12 @@ class BaseModel extends Model
         }
 
         //
-        $where = $this->trigger('before_delete', array('method' => 'delete_by', 'fields' => $where));
+        $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));
 
         $result = $this->db->delete($this->table(), $where);
 
-        $this->trigger('after_delete', array(
-            'method' => 'delete_by',
+        $this->trigger('afterDelete', array(
+            'method' => 'deleteBy',
             'fields' => $where,
             'result' => $result
         ));
@@ -766,20 +764,20 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function delete_many($ids)
+    public function deleteMany($ids)
     {
         if (! is_array($ids) || (count($ids) == 0)) return NULL;
 
-        $ids = $this->trigger('before_delete', array('ids' => $ids, 'method' => 'delete_many'));
+        $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
         //
-        $where = $this->primary_key ." IN (".implode(',', $ids) .")";
+        $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
 
         $result = $this->db->delete($this->table(), $where);
 
-        $this->trigger('after_delete', array(
+        $this->trigger('afterDelete', array(
             'ids' => $ids,
-            'method' => 'delete_many',
+            'method' => 'deleteMany',
             'result' => $result
         ));
 
@@ -803,7 +801,7 @@ class BaseModel extends Model
      */
     public function table()
     {
-        return $this->table_name;
+        return $this->tableName;
     }
 
     /**
@@ -814,7 +812,7 @@ class BaseModel extends Model
      *
      * @return bool TRUE/FALSE
      */
-    public function is_unique($field, $value)
+    public function isUnique($field, $value)
     {
         $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :$field";
 
@@ -828,7 +826,7 @@ class BaseModel extends Model
     }
 
     /**
-     * Adds a field to the protected_attributes array.
+     * Adds a field to the protectedFields array.
      *
      * @param $field
      *
@@ -836,7 +834,7 @@ class BaseModel extends Model
      */
     public function protect($field)
     {
-        $this->protected_attributes[] = $field;
+        $this->protectedFields[] = $field;
 
         return $this;
     }
@@ -844,9 +842,9 @@ class BaseModel extends Model
     /**
      * Temporarily sets our return type to an array.
      */
-    public function as_array()
+    public function asArray()
     {
-        $this->temp_return_type = 'array';
+        $this->tempReturnType = 'array';
 
         return $this;
     }
@@ -861,23 +859,23 @@ class BaseModel extends Model
      * @param string $class
      * @return $this
      */
-    public function as_object($className = null)
+    public function asObject($className = null)
     {
-        $this->temp_return_type = ! empty($className) ? $className : 'object';
+        $this->tempReturnType = ! empty($className) ? $className : 'object';
 
         return $this;
     }
 
     public function where($field, $value = '')
     {
-        array_push($this->temp_select_where, $field, $value);
+        array_push($this->tempSelectWhere, $field, $value);
 
         return $this;
     }
 
     public function limit($limit, $start = 0)
     {
-        $this->temp_select_limit = array($start => $limit);
+        $this->tempSelectLimit = array($start => $limit);
 
         return $this;
     }
@@ -890,12 +888,12 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Invalid parameter');
         }
 
-        $this->temp_select_order = array($this->primary_key => $sense);
+        $this->tempSelectOrder = array($this->primaryKey => $sense);
 
         return $this;
     }
 
-    public function order_by($field, $sense = 'ASC')
+    public function orderBy($field, $sense = 'ASC')
     {
         $sense = strtoupper($sense);
 
@@ -903,7 +901,7 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
-        $this->temp_select_order = array($field => $sense);
+        $this->tempSelectOrder = array($field => $sense);
 
         return $this;
     }
@@ -913,14 +911,14 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Sets the created on date for the object based on the
-     * current date/time and date_format. Will not overwrite existing.
+     * Sets the created_on date for the object based on the
+     * current date/time and dateFormat. Will not overwrite existing.
      *
      * @param array $row The array of data to be inserted
      *
      * @return array
      */
-    public function created_on($row)
+    public function createdOn($row)
     {
         if (! is_array($row) || empty($row['fields'])) {
             return null;
@@ -929,10 +927,10 @@ class BaseModel extends Model
         $row = $row['fields'];
 
         // Created_on
-        $field =& $this->created_field;
+        $field =& $this->createdField;
 
         if (is_array($row) && ! array_key_exists($field, $row)) {
-            $row[$field] = $this->set_date();
+            $row[$field] = $this->setDate();
         }
 
         return $row;
@@ -940,13 +938,13 @@ class BaseModel extends Model
 
     /**
      * Sets the modified_on date for the object based on the
-     * current date/time and date_format. Will not overwrite existing.
+     * current date/time and dateFormat. Will not overwrite existing.
      *
      * @param array $row The array of data to be inserted
      *
      * @return array
      */
-    public function modified_on($row)
+    public function modifiedOn($row)
     {
         if (! is_array($row) || empty($row['fields'])) {
             return null;
@@ -955,10 +953,10 @@ class BaseModel extends Model
         $row = $row['fields'];
 
         // Modified_on
-        $field =& $this->modified_field;
+        $field =& $this->modifiedField;
 
         if (is_array($row) && ! array_key_exists($field, $row)) {
-            $row[$field] = $this->set_date();
+            $row[$field] = $this->setDate();
         }
 
         return $row;
@@ -975,9 +973,9 @@ class BaseModel extends Model
      *
      * @param object /array $row The value pair item to remove.
      */
-    public function protect_attributes($row)
+    public function protectFields($row)
     {
-        foreach ($this->protected_attributes as $attr) {
+        foreach ($this->protectedFields as $attr) {
             if (is_object($row)) {
                 unset($row->$attr);
             } else {
@@ -1011,7 +1009,7 @@ class BaseModel extends Model
             if (strpos($method, '(') !== false) {
                 preg_match('/([a-zA-Z0-9\_\-]+)(\(([a-zA-Z0-9\_\-\., ]+)\))?/', $method, $matches);
 
-                $this->callback_parameters = explode(',', $matches[3]);
+                $this->callbackParameters = explode(',', $matches[3]);
             }
 
             $data = call_user_func_array(array($this, $method), array($data));
@@ -1031,10 +1029,8 @@ class BaseModel extends Model
     }
 
     /**
-     * A utility function to allow child models to use the type of
-     * date/time format that they prefer. This is primarily used for
-     * setting created_on and modified_on values, but can be used by
-     * inheriting classes.
+     * A utility function to allow child models to use the type of date/time format that they prefer.
+     * This is primarily used for setting created_on and modified_on values, but can be used by inheriting classes.
      *
      * The available time formats are:
      * * 'int'      - Stores the date as an integer timestamp.
@@ -1047,11 +1043,11 @@ class BaseModel extends Model
      *
      * @return int|null|string The current/user time converted to the proper format.
      */
-    protected function set_date($user_date = NULL)
+    protected function setDate($user_date = NULL)
     {
         $curr_date = ! empty($user_date) ? $user_date : time();
 
-        switch ($this->date_format) {
+        switch ($this->dateFormat) {
             case 'int':
                 return $curr_date;
                 break;
@@ -1066,21 +1062,21 @@ class BaseModel extends Model
         }
     }
 
-    protected function set_where($params)
+    protected function setWhere($params)
     {
         if(empty($params)) {
             throw new \UnexpectedValueException('Parameters can not be empty');
         }
 
         if(is_array($params[0])) {
-            $this->tmp_select_where = array_merge($this->tmp_select_where, $params[0]);
+            $this->tempSelectWhere = array_merge($this->tempSelectWhere, $params[0]);
         }
         else {
-            array_push($this->temp_select_where, $params[0], isset($params[1]) ? $params[1] : '');
+            array_push($this->tempSelectWhere, $params[0], isset($params[1]) ? $params[1] : '');
         }
     }
 
-    protected function where_details(array $where, &$bindParams = array())
+    protected function parseSelectWheres(array $where, &$bindParams = array())
     {
         $result = '';
 
@@ -1090,7 +1086,7 @@ class BaseModel extends Model
 
         foreach ($where as $key => $value) {
             if($idx > 0) {
-                $whereDetails .= ' AND ';
+                $whereStr .= ' AND ';
             }
 
             $idx++;
@@ -1126,15 +1122,17 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function limit_details($select_limit)
+    protected function getSelectLimit()
     {
         $result = '';
 
-        if(is_numeric($select_limit)) {
-            $result = '0, ' .$select_limit;
+        $limit =& $this->tempSelectLimit;
+
+        if(is_numeric($limit)) {
+            $result = '0, ' .$limit;
         }
-        else if(is_array($select_limit) && ! empty($select_limit)) {
-            list($key, $value) = each($select_limit);
+        else if(is_array($limit) && ! empty($limit)) {
+            list($key, $value) = each($limit);
 
             $result = $key .' ' .$value;
         }
@@ -1146,41 +1144,20 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function limit_details($select_order)
+    protected function getSelectOrder()
     {
-        $result = '';
+        $order =& $this->tempSelectOrder;
 
-        if(is_array($select_order) && ! empty($select_order)) {
-            list($key, $value) = each($select_order);
+        if(is_array($order) && ! empty($order)) {
+            list($key, $value) = each($order);
 
             $result = 'LIMIT ' .$key .' ' .$value;
         }
-
-        return $result;
-    }
-
-    //--------------------------------------------------------------------
-    // Magic Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Magic method to capture calls to undefined class methods.
-     * In this case we are attempting to convert camel case formatted methods into underscore formatted methods.
-     *
-     * This allows us to call Model methods using camel case and remain backwards compatible.
-     *
-     * @param  string   $name
-     * @param  array    $params
-     */
-    public function __call($name, $params = null)
-    {
-        $method = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
-
-        if (! method_exists($this, $method)) {
-            throw new \BadMethodCallException("Method $name() does not exist in class " . get_class($this));
+        else {
+            $result = '';
         }
 
-        return call_user_func_array(array($this, $method), $params);
+        return $result;
     }
 
 }

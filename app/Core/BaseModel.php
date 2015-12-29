@@ -113,6 +113,12 @@ class BaseModel extends Model
      */
     protected $protectedFields = array();
 
+    /**
+     * @var Array Columns for the Model's database fields
+     *
+     * This can be set to avoid a database call if using $this->prepareData()
+     */
+    protected $fields = array();
 
     //--------------------------------------------------------------------
 
@@ -202,7 +208,7 @@ class BaseModel extends Model
         $this->setWhere($params);
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempWhere, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr";
@@ -236,7 +242,7 @@ class BaseModel extends Model
         }
 
         // Prepare the ORDER details.
-        $orderStr = $this->parseOrder();
+        $orderStr = $this->parseSelectOrder();
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
@@ -275,13 +281,13 @@ class BaseModel extends Model
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempWhere, $bindParams);
 
         // Prepare the LIMIT details.
-        $limitStr = $this->parseLimit();
+        $limitStr = $this->parseSelectLimit();
 
         // Prepare the ORDER details.
-        $orderStr = $this->parseOrder();
+        $orderStr = $this->parseSelectOrder();
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr $limitStr $orderStr";
@@ -870,6 +876,66 @@ class BaseModel extends Model
     }
 
     /**
+     * Extracts the Model's fields (except the key and those handled by Observers) from the $postData
+     * and returns an array of name => value pairs
+     *
+     * @param Array $postData Usually the POST data, when called from the Controller
+     *
+     * @return Array An array of name => value pairs containing the data for the Model's fields
+     */
+    public function prepareData($postData)
+    {
+        if (empty($postData)) {
+            return array();
+        }
+
+        $data = array();
+
+        $skippedFields = array();
+
+        // Though the model doesn't support multiple keys well, $this->key could be an array or a string...
+        $skippedFields = array_merge($skippedFields, (array) $this->primaryKey);
+
+        // Remove any protected attributes
+        $skippedFields = array_merge($skippedFields, $this->protectedFields);
+
+        $fields = $this->tableFields();
+
+        // If the field is the primary key, one of the created/modified/deleted fields,
+        // or has not been set in the $postData, skip it
+        foreach ($postData as $field => $value) {
+            if (in_array($field, $skippedFields) || ! in_array($field, $fields)) {
+                continue;
+            }
+
+            $data[$field] = $value;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get the field names for this model's table.
+     *
+     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
+     * the field list from $this->db->listFields($this->table());
+     *
+     * @return array    Returns the database fields for this model
+     */
+    public function tableFields()
+    {
+        if (empty($this->fields)) {
+            $this->fields = $this->db->listFields($this->table());
+        }
+
+        if (empty($this->fields)) {
+            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
+        }
+
+        return $this->fields;
+    }
+
+    /**
      * Triggers a model-specific event and call each of it's Observers.
      *
      * @param string $event The name of the event to trigger
@@ -959,7 +1025,7 @@ class BaseModel extends Model
         }
     }
 
-    protected function parseWheres(array $where, &$bindParams = array())
+    protected function parseSelectWheres(array $where, &$bindParams = array())
     {
         $result = '';
 
@@ -1005,7 +1071,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function parseLimit()
+    protected function parseSelectLimit()
     {
         $result = '';
 
@@ -1027,7 +1093,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function parseOrder()
+    protected function parseSelectOrder()
     {
         $order =& $this->tempOrder;
 

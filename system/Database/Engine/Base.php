@@ -581,12 +581,14 @@ abstract class Base extends \PDO implements Engine
         }
 
         foreach($data as $record) {
-
             if (!is_array($record)) {
                 throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
 
             }
+        }
 
+        // Perform the batch update.
+        foreach($data as $record) {
             // Bind parameters
             $whereValue = $record[$where];
 
@@ -747,6 +749,14 @@ abstract class Base extends \PDO implements Engine
      * @return int number of rows affected
      */
     abstract public function truncate($table);
+
+    /**
+     * Get the field names for the specified Database Table.
+     *
+     * @param  string $table table name
+     * @return array  Returns the Database Table fields
+     */
+    abstract public function listFields($table);
 
     /**
      * Get total executed queries.

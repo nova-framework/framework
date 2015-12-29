@@ -88,4 +88,32 @@ class MySQL extends BaseEngine
         return $this->exec("TRUNCATE TABLE $table");
     }
 
+    /**
+     * Get the field names for the specified Database Table.
+     *
+     * @param  string $table table name
+     * @return array  Returns the Database Table fields
+     */
+    public function listFields($table)
+    {
+        $columns = array();
+
+        if (empty($table)) {
+            throw new \UnexpectedValueException('Parameter should be not empty');
+        }
+
+        $this->queryCount++;
+
+        // Find all Column names
+        $result = $this->query("SHOW COLUMNS FROM $table", \PDO::FETCH_ASSOC);
+
+        if($result !== false) {
+            foreach ($result as $row) {
+                // Get the column name from the results
+                $columns[] = $row['Field'];
+            }
+        }
+
+        return $columns;
+    }
 }

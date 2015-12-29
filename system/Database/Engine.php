@@ -141,7 +141,7 @@ interface Engine
      * @throws \Exception
      */
     public function update($table, $data, $where);
-    
+
     /**
      * Updates multiple records in the database at once.
      *
@@ -200,4 +200,13 @@ interface Engine
      * @throws \Exception
      */
     public function rawPrepare($sql, $bindParams = array());
+
+    /**
+     * Get the field names for the specified Database Table.
+     *
+     * @param  string $table table name
+     * @return array  Returns the Database Table fields
+     */
+    public function listFields($table);
+
 }

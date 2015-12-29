@@ -194,7 +194,7 @@ interface Engine
      * Optional bind is available.
      *
      * @param string $sql Query
-     * @param array $bind optional binding values
+     * @param array $bindParams optional binding values
      * @return \PDOStatement|mixed
      *
      * @throws \Exception

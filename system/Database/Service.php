@@ -170,6 +170,39 @@ abstract class Service extends CoreService
         return $entity;
     }
 
+
+    /**
+     * Update multiple entities with the primary keys as where clause.
+     * Doesn't work with multiple primary keys!
+     *
+     * @param Entity[] $entities Array with entities.
+     * @return bool
+     * @throws \Exception
+     */
+    public function updateBatch($entities)
+    {
+        if (count($this->primaryKeys) > 1) {
+            throw new \Exception("Can't batch update entity with multiple primary keys! Use the single update instead!");
+        }
+        if (! is_array($entities)){
+            throw new \UnexpectedValueException('$entities parameter needs to be an array with entities!');
+        }
+
+        // Object to array
+        $data = array();
+
+        foreach($entities as $entity) {
+            if (!$entity instanceof \Nova\Database\Entity) {
+                throw new \UnexpectedValueException('$entities parameter needs to be an array with entities! Currently the values of the array are no entities!');
+            }
+
+            $data[] = get_object_vars($entity);
+        }
+
+        // Execute the batch update
+        return $this->engine->updateBatch(DB_PREFIX . $this->table, $data, $this->primaryKeys[0]);
+    }
+
     /**
      * Delete an entity from the database. Can also handle multiple entities with an array given in the $entity parameter
      *

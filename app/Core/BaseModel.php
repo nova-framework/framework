@@ -121,9 +121,9 @@ class BaseModel extends Model
     /**
      * Constructor
      */
-    public function __construct($linkName = 'default')
+    public function __construct()
     {
-        parent __construct($linkName);
+        parent __construct();
 
         // Always protect our attributes
         array_unshift($this->beforeInsert, 'protectFields');

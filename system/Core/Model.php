@@ -29,10 +29,10 @@ abstract class Model
      *
      * @param string $linkName Custom connection name, default is 'default'
      */
-    public function __construct($linkName = 'default')
+    public function __construct()
     {
         /** connect to Database Engine here. */
-        $this->db = Manager::getEngine($linkName);
+        $this->db = Manager::getEngine();
     }
 
 }

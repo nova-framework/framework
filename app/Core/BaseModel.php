@@ -876,6 +876,27 @@ class BaseModel extends Model
     }
 
     /**
+     * Get the field names for this Model's table.
+     *
+     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
+     * the field list from $this->db->listFields($this->table());
+     *
+     * @return array    Returns the database fields for this Model
+     */
+    public function tableFields()
+    {
+        if (empty($this->fields)) {
+            $this->fields = $this->db->listFields($this->table());
+        }
+
+        if (empty($this->fields)) {
+            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
+        }
+
+        return $this->fields;
+    }
+
+    /**
      * Extracts the Model's fields (except the key and those handled by Observers) from the $postData
      * and returns an array of name => value pairs
      *
@@ -912,27 +933,6 @@ class BaseModel extends Model
         }
 
         return $data;
-    }
-
-    /**
-     * Get the field names for this model's table.
-     *
-     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
-     * the field list from $this->db->listFields($this->table());
-     *
-     * @return array    Returns the database fields for this model
-     */
-    public function tableFields()
-    {
-        if (empty($this->fields)) {
-            $this->fields = $this->db->listFields($this->table());
-        }
-
-        if (empty($this->fields)) {
-            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
-        }
-
-        return $this->fields;
     }
 
     /**

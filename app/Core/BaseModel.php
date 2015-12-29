@@ -690,27 +690,6 @@ class BaseModel extends Model
     }
 
     /**
-     * Checks whether a field/value pair exists within the table.
-     *
-     * @param string $field The field to search for.
-     * @param string $value The value to match $field against.
-     *
-     * @return bool TRUE/FALSE
-     */
-    public function isUnique($field, $value)
-    {
-        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :value";
-
-        $data = $this->select($sql, array('value' => $value), true);
-
-        if (is_array($data) && (count($data) == 0)) {
-            return true;
-        }
-
-        return true;
-    }
-
-    /**
      * Adds a field to the protectedFields array.
      *
      * @param $field
@@ -791,6 +770,27 @@ class BaseModel extends Model
         return $this;
     }
 
+    /**
+     * Checks whether a field/value pair exists within the table.
+     *
+     * @param string $field The field to search for.
+     * @param string $value The value to match $field against.
+     *
+     * @return bool TRUE/FALSE
+     */
+    public function isUnique($field, $value)
+    {
+        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :value";
+
+        $data = $this->select($sql, array('value' => $value), true);
+
+        if (is_array($data) && (count($data) == 0)) {
+            return true;
+        }
+
+        return true;
+    }
+    
     //--------------------------------------------------------------------
     // Observers
     //--------------------------------------------------------------------

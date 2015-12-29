@@ -43,7 +43,7 @@ class BaseModel extends Model
      * @var boolean
      * @access protected
      */
-    protected $setCreated = true;
+    protected $autoCreated = true;
 
     /**
      * Field name to use to the created time column in the DB table.
@@ -59,7 +59,7 @@ class BaseModel extends Model
      * @var boolean
      * @access protected
      */
-    protected $setModified = true;
+    protected $autoModified = true;
 
     /**
      * Field name to use to the modified time column in the DB table.
@@ -132,11 +132,11 @@ class BaseModel extends Model
         //
         // Check our auto-set features and make sure they are part of our Observer System.
 
-        if ($this->setCreated === true) {
+        if ($this->autoCreated === true) {
             array_unshift($this->beforeInsert, 'createdOn');
         }
 
-        if ($this->setModified === true) {
+        if ($this->autoModified === true) {
             array_unshift($this->beforeUpdate, 'modifiedOn');
         }
 
@@ -797,11 +797,11 @@ class BaseModel extends Model
     /**
      * Getter for the table name.
      *
-     * @return string The name of the table used by this class.
+     * @return string The name of the table used by this class (including the DB_PREFIX).
      */
     public function table()
     {
-        return $this->table;
+        return DB_PREFIX .$this->table;
     }
 
     /**

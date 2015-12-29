@@ -527,46 +527,6 @@ class BaseModel extends Model
     }
 
     /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
-     *
-     * @param $id
-     * @param $field
-     * @param int $value
-     * @return mixed
-     */
-    public function increment($id, $field, $value = 1)
-    {
-        $value = (int) abs($value);
-
-        //
-        $data = array($field => "{$field}+{$value}");
-
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
-    }
-
-    /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
-     *
-     * @param $id
-     * @param $field
-     * @param int $value
-     * @return mixed
-     */
-    public function decrement($id, $field, $value = 1)
-    {
-        $value = (int) abs($value);
-
-        //
-        $data = array($field => "{$field}-{$value}");
-
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
-    }
-
-    /**
      * Deletes a row by it's primary key value.
      *
      * @param  mixed $id The primary key value of the row to delete.
@@ -644,6 +604,46 @@ class BaseModel extends Model
         ));
 
         return $result;
+    }
+
+    /**
+     * Increments the value of field for a given row, selected by the primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function increment($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        //
+        $data = array($field => "{$field}+{$value}");
+
+        $where = array($this->primaryKey => $id);
+
+        return $this->db->update($this->table(), $data, $where);
+    }
+
+    /**
+     * Increments the value of field for a given row, selected by the primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function decrement($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        //
+        $data = array($field => "{$field}-{$value}");
+
+        $where = array($this->primaryKey => $id);
+
+        return $this->db->update($this->table(), $data, $where);
     }
 
     /**
@@ -790,7 +790,7 @@ class BaseModel extends Model
 
         return true;
     }
-    
+
     //--------------------------------------------------------------------
     // Observers
     //--------------------------------------------------------------------

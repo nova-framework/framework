@@ -533,6 +533,46 @@ class BaseModel extends Model
     }
 
     /**
+     * Increments the value of field for a given row, selected by the primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function increment($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        //
+        $data = array($field => "{$field}+{$value}");
+
+        $where = array($this->primaryKey => $id);
+
+        return $this->db->update($this->table(), $data, $where);
+    }
+
+    /**
+     * Increments the value of field for a given row, selected by the primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function decrement($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        //
+        $data = array($field => "{$field}-{$value}");
+
+        $where = array($this->primaryKey => $id);
+
+        return $this->db->update($this->table(), $data, $where);
+    }
+    
+    /**
      * Deletes a row by it's primary key value.
      *
      * @param  mixed $id The primary key value of the row to delete.
@@ -610,90 +650,6 @@ class BaseModel extends Model
         ));
 
         return $result;
-    }
-
-    /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
-     *
-     * @param $id
-     * @param $field
-     * @param int $value
-     * @return mixed
-     */
-    public function increment($id, $field, $value = 1)
-    {
-        $value = (int) abs($value);
-
-        //
-        $data = array($field => "{$field}+{$value}");
-
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
-    }
-
-    /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
-     *
-     * @param $id
-     * @param $field
-     * @param int $value
-     * @return mixed
-     */
-    public function decrement($id, $field, $value = 1)
-    {
-        $value = (int) abs($value);
-
-        //
-        $data = array($field => "{$field}-{$value}");
-
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
-    }
-
-    /**
-     * Execute Select Query, binding values into the $sql Query.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @return array|null
-     *
-     * @throws \Exception
-     */
-    public function select($sql, $bindParams = array(), $fetchAll = false)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
-
-        // Make sure our temp return type is correct.
-        $this->tempReturnType = $this->returnType;
-
-        return $result;
-    }
-
-    public function query($sql)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        $result = $this->db->rawQuery($sql, $this->tempReturnType);
-
-        // Make sure our temp return type is correct.
-        $this->tempReturnType = $this->returnType;
-
-        return $result;
-    }
-
-    public function prepare($sql, $bindParams = array())
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        return $this->db->rawPrepare($sql, $bindParams);
     }
 
     /**
@@ -806,6 +762,51 @@ class BaseModel extends Model
         }
 
         return true;
+    }
+
+
+    /**
+     * Execute Select Query, binding values into the $sql Query.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $bindParams = array(), $fetchAll = false)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
+
+        return $result;
+    }
+
+    public function query($sql)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        $result = $this->db->rawQuery($sql, $this->tempReturnType);
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
+
+        return $result;
+    }
+
+    public function prepare($sql, $bindParams = array())
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        return $this->db->rawPrepare($sql, $bindParams);
     }
 
     //--------------------------------------------------------------------

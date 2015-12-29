@@ -790,7 +790,7 @@ class BaseModel extends Model
     {
         $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :$field";
 
-        $data = $this->db->selectAll($sql, array($field => $value));
+        $data = $this->select($sql, array($field => $value), true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;

@@ -211,7 +211,7 @@ class BaseModel extends Model
         $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr";
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 0, 1";
 
         //
         $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
@@ -1110,7 +1110,7 @@ class BaseModel extends Model
         if(is_array($order) && ! empty($order)) {
             list($key, $value) = each($order);
 
-            $result = 'LIMIT ' .$key .' ' .$value;
+            $result = 'LIMIT ' .$key .', ' .$value;
         }
         else {
             $result = '';

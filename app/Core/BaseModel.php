@@ -328,7 +328,7 @@ class BaseModel extends Model
         $result = $this->db->insert($this->table(), $this->prepareData($data));
 
         if($result !== false) {
-            $this->trigger('afterInsert', ['id' => $result, 'fields' => $data, 'method' => 'insert']);
+            $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
         }
 
         return false;
@@ -742,7 +742,7 @@ class BaseModel extends Model
      */
     public function asObject($className = null)
     {
-        $this->tempReturnType = ! empty($className) ? $className : 'object';
+        $this->tempReturnType = $className ? $className : 'object';
 
         return $this;
     }

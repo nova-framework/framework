@@ -96,7 +96,7 @@ class BaseModel extends Model
     /**
      * Temporary select's WHERE attributes.
      */
-    protected $tempWhere = array();
+    protected $tempWheres = array();
 
     /**
      * Temporary select's LIMIT attribute.
@@ -208,7 +208,7 @@ class BaseModel extends Model
         $this->setWhere($params);
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($this->tempWhere, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr";
@@ -223,7 +223,7 @@ class BaseModel extends Model
         }
 
         // Reset our select WHEREs
-        $this->tempWhere = array();
+        $this->tempWheres = array();
 
         return $result;
     }
@@ -281,7 +281,7 @@ class BaseModel extends Model
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($this->tempWhere, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
 
         // Prepare the LIMIT details.
         $limitStr = $this->parseSelectLimit();
@@ -304,7 +304,7 @@ class BaseModel extends Model
         }
 
         // Reset our select WHEREs
-        $this->tempWhere = array();
+        $this->tempWheres = array();
 
         // Reset our select LIMIT
         $this->tempLimit = null;
@@ -738,7 +738,7 @@ class BaseModel extends Model
 
     public function where($field, $value = '')
     {
-        array_push($this->tempWhere, $field, $value);
+        array_push($this->tempWheres, $field, $value);
 
         return $this;
     }
@@ -1018,10 +1018,10 @@ class BaseModel extends Model
         }
 
         if(is_array($params[0])) {
-            $this->tempWhere = array_merge($this->tempWhere, $params[0]);
+            $this->tempWheres = array_merge($this->tempWheres, $params[0]);
         }
         else {
-            array_push($this->tempWhere, $params[0], isset($params[1]) ? $params[1] : '');
+            array_push($this->tempWheres, $params[0], isset($params[1]) ? $params[1] : '');
         }
     }
 

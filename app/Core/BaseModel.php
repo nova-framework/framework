@@ -1037,15 +1037,15 @@ class BaseModel extends Model
      * * 'datetime' - Stores the date and time in the SQL datetime format.
      * * 'date'     - Stores teh date (only) in the SQL date format.
      *
-     * @param mixed $user_date An optional PHP timestamp to be converted.
+     * @param mixed $userDate An optional PHP timestamp to be converted.
      *
      * @access protected
      *
      * @return int|null|string The current/user time converted to the proper format.
      */
-    protected function setDate($user_date = NULL)
+    protected function setDate($userDate = NULL)
     {
-        $curr_date = ! empty($user_date) ? $user_date : time();
+        $curr_date = ! empty($userDate) ? $userDate : time();
 
         switch ($this->dateFormat) {
             case 'int':

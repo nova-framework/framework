@@ -677,6 +677,9 @@ class BaseModel extends Model
 
     public function query($sql)
     {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
         $result = $this->db->rawQuery($sql, $this->tempReturnType);
 
         // Make sure our temp return type is correct.

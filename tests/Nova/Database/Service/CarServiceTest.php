@@ -192,6 +192,7 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Engine\Base
      * @covers \Nova\Database\Service
      * @covers \Nova\Database\Service::update
+     * @covers \Nova\Database\Service::updateBatch
      * @covers \App\Modules\Demo\Services\Database\Car
      * @param string $linkName
      */
@@ -213,6 +214,33 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($car);
         $this->assertNotFalse($car);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
+
+        // More inserts
+        $car1 = new \App\Modules\Demo\Models\Entities\Car();
+        $car1->make = 'Nova Cars';
+        $car1->model = 'FrameworkCar_Service_2';
+        $car1->costs = 15000;
+
+        // Insert
+        /** @var \App\Modules\Demo\Models\Entities\Car $car */
+        $car1 = $this->carservice->create($car1);
+
+        $this->assertNotNull($car1);
+        $this->assertNotFalse($car1);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car1);
+
+        $car2 = new \App\Modules\Demo\Models\Entities\Car();
+        $car2->make = 'Nova Cars';
+        $car2->model = 'FrameworkCar_Service_3';
+        $car2->costs = 15000;
+
+        // Insert
+        /** @var \App\Modules\Demo\Models\Entities\Car $car */
+        $car2 = $this->carservice->create($car2);
+
+        $this->assertNotNull($car2);
+        $this->assertNotFalse($car2);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car2);
 
 
 
@@ -236,6 +264,24 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
 
 
 
+        // Update Batch
+        $car1->model = "FrameworkCar_Service_Update_Done_1";
+        $car2->model = "FrameworkCar_Service_Update_Done_2";
+        $status = $this->carservice->updateBatch(array($car1, $car2));
+
+        $this->assertTrue($status);
+
+        // Select it
+        $all = $this->carservice->read("SELECT * FROM " . DB_PREFIX . "car WHERE model LIKE 'FrameworkCar_Service_Update_Done%' ORDER BY model ASC;");
+        $this->assertEquals(2, count($all));
+
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $all[0]);
+        $this->assertEquals('FrameworkCar_Service_Update_Done_1', $all[0]->model);
+
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $all[1]);
+        $this->assertEquals('FrameworkCar_Service_Update_Done_2', $all[1]->model);
+
+        // Cleanup
         $this->cleanup($linkName);
     }
 
@@ -247,6 +293,7 @@ class CarServiceTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\Database\Engine\Base
      * @covers \Nova\Database\Service
      * @covers \Nova\Database\Service::update
+     * @covers \Nova\Database\Service::updateBatch
      * @covers \App\Modules\Demo\Services\Database\Car
      */
     public function testBasicUpdatingSQLite()

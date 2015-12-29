@@ -71,7 +71,7 @@ interface Engine
      */
     public function raw($sql, $fetch = false);
 
-    public function rawQuery($sql);
+    public function rawQuery($sql, $returnType = null);
 
 
     /**

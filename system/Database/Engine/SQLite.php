@@ -79,10 +79,8 @@ class SQLite extends BaseEngine
             throw new \UnexpectedValueException('Parameter should be not empty');
         }
 
-        $this->queryCount++;
-
         // Find all Column names
-        $result = $this->query("PRAGMA table_info($table)", \PDO::FETCH_ASSOC);
+        $result = $this->rawQuery("PRAGMA table_info($table)", 'array');
 
         if($result !== false) {
             foreach ($result as $row) {

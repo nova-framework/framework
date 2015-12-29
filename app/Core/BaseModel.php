@@ -677,7 +677,12 @@ class BaseModel extends Model
 
     public function query($sql)
     {
-        return $this->db->rawQuery($sql);
+        $result = $this->db->rawQuery($sql, $this->tempReturnType);
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
+
+        return $result;
     }
 
     public function prepare($sql, $bindParams = array())

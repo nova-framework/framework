@@ -105,7 +105,7 @@ class MySQL extends BaseEngine
         $this->queryCount++;
 
         // Find all Column names
-        $result = $this->query("SHOW COLUMNS FROM $table", \PDO::FETCH_ASSOC);
+        $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
 
         if($result !== false) {
             foreach ($result as $row) {

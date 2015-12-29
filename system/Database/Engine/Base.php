@@ -143,10 +143,13 @@ abstract class Base extends \PDO implements Engine
         return $statement->fetchAll();
     }
 
-    public function rawQuery($sql)
+    public function rawQuery($sql, $returnType = null)
     {
+        // What return type? Use default if no return type is given in the call.
+        $returnType = $returnType ? $returnType : $this->returnType;
+
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
-        $method = ($this->returnType == 'array') ? \PDO::FETCH_ASSOC : \PDO::FETCH_OBJ;
+        $method = ($returnType == 'array') ? \PDO::FETCH_ASSOC : \PDO::FETCH_OBJ;
 
         $this->queryCount++;
 

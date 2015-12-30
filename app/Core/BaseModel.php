@@ -220,6 +220,9 @@ class BaseModel extends Model
             $result = $this->trigger('afterFind', array('id' => $id, 'method' => 'find', 'fields' => $result));
         }
 
+        // Reset the Model State.
+        $this->resetState();
+
         return $result;
     }
 
@@ -357,6 +360,9 @@ class BaseModel extends Model
             $data = $this->validate($data, 'insert', $skipValidation);
         }
 
+        //
+        $result = false;
+
         // Will be false if it didn't validate.
         if ($data !== false) {
             $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
@@ -365,12 +371,13 @@ class BaseModel extends Model
 
             if($result !== false) {
                 $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
-
-                return $result;
             }
         }
 
-        return false;
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
     }
 
     /**
@@ -414,18 +421,22 @@ class BaseModel extends Model
             $data = $this->validate($data, 'insert', $skipValidation);
         }
 
+        //
+        $result = false;
+
         // Will be false if it didn't validate.
         if ($data !== false) {
             $result = $this->db->replace($this->table(), $this->prepareData($data));
 
             if($result !== false) {
-                $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method'=>'replace'));
-
-                return $result;
+                $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
             }
         }
 
-        return false;
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
     }
 
     /**
@@ -440,8 +451,11 @@ class BaseModel extends Model
         $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
         if ($skipValidation === false) {
-            $data = $this->validate($data);
+            $data = $this->validate($data, 'update', $skipValidation);
         }
+
+        //
+        $result = false;
 
         // Will be false if it didn't validate.
         if ($data !== false) {
@@ -449,13 +463,11 @@ class BaseModel extends Model
 
             $result = $this->db->update($this->table(), $this->prepareData($data), array($this->primaryKey => $id));
 
-            $result = $this->trigger('afterUpdate', array(
-                'id'     => $id,
-                'method' => 'update',
-                'fields' => $data,
-                'result' => $result,
-            ));
+            $result = $this->trigger('afterUpdate', array('id' => $id, 'method' => 'update', 'fields' => $data, 'result' => $result));
         }
+
+        // Reset the Model State.
+        $this->resetState();
 
         return $result;
     }
@@ -494,6 +506,9 @@ class BaseModel extends Model
             $this->trigger('afterUpdate', array('fields' => $data, 'result' => $result, 'method' => 'updateBatch'));
         }
 
+        // Reset the Model State.
+        $this->resetState();
+
         return $result;
     }
 
@@ -525,6 +540,9 @@ class BaseModel extends Model
             $data = $this->validate($data, 'update', $skipValidation);
         }
 
+        //
+        $result = false;
+
         $data = $this->trigger('beforeUpdate', array('ids' => $ids, 'method' => 'updateMany', 'fields' => $data));
 
         // Will be false if it didn't validate.
@@ -535,17 +553,13 @@ class BaseModel extends Model
             //
             $result = $this->db->update($this->table(), $data, $where);
 
-            $this->trigger('afterUpdate', array(
-                'ids'    => $ids,
-                'fields' => $data,
-                'result' => $result,
-                'method' => 'updateMany'
-            ));
-
-            return $result;
+            $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
         }
 
-        return false;
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
     }
 
     /**
@@ -579,25 +593,21 @@ class BaseModel extends Model
         $this->setWhere($params);
 
         //
+        $result = false;
+
         $data = $this->trigger('beforeUpdate', array('method' => 'updateBy', 'fields' => $data));
 
         // Will be false if it didn't validate.
         if (($data = $this->validate($data)) !== false) {
             $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
 
-            $this->trigger('afterUpdate', array(
-                'method' => 'updateBy',
-                'fields' => $data,
-                'result' => $result
-            ));
-
-            // Reset the Model State.
-            $this->resetState();
-
-            return $result;
+            $this->trigger('afterUpdate', array('method' => 'updateBy', 'fields' => $data, 'result' => $result));
         }
 
-        return false;
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
     }
 
     /**
@@ -613,23 +623,23 @@ class BaseModel extends Model
         $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
         if ($skipValidation === false) {
-            $data = $this->validate($data);
+            $data = $this->validate($data, 'update', $skipValidation);
         }
+
+        //
+        $result = false;
 
         // Will be false if it didn't validate.
         if ($data !== false) {
             $result = $this->db->update($this->table(), $this->prepareData($data), true);
 
-            $this->trigger('afterUpdate', array(
-                'method' => 'updateAll',
-                'fields' => $data,
-                'result' => $result
-            ));
-
-            return $result;
+            $this->trigger('afterUpdate', array('method' => 'updateAll', 'fields' => $data, 'result' => $result));
         }
 
-        return false;
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
     }
 
     /**
@@ -691,11 +701,7 @@ class BaseModel extends Model
 
         $result = $this->db->delete($this->table(), $where);
 
-        $this->trigger('afterDelete', array(
-            'id' => $id,
-            'method' => 'delete',
-            'result' => $result
-        ));
+        $this->trigger('afterDelete', array('id' => $id, 'method' => 'delete', 'result' => $result));
 
         return $result;
     }
@@ -718,11 +724,7 @@ class BaseModel extends Model
 
         $result = $this->db->delete($this->table(), $where);
 
-        $this->trigger('afterDelete', array(
-            'method' => 'deleteBy',
-            'fields' => $where,
-            'result' => $result
-        ));
+        $this->trigger('afterDelete', array('method' => 'deleteBy', 'fields' => $where, 'result' => $result));
 
         // Reset the Model State.
         $this->resetState();
@@ -741,11 +743,7 @@ class BaseModel extends Model
 
         $result = $this->db->delete($this->table(), $where);
 
-        $this->trigger('afterDelete', array(
-            'ids' => $ids,
-            'method' => 'deleteMany',
-            'result' => $result
-        ));
+        $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));
 
         return $result;
     }

@@ -30,7 +30,6 @@ Config::set('profiler', array(
  */
 Config::set('routing', array(
     'patterns' => array(
-        // Who really need those niche patterns, can uncomment them... ;)
         //':hex'    => '[[:xdigit:]]+',
         //':uuidV4' => '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
     ),

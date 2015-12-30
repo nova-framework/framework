@@ -360,7 +360,7 @@ class BaseModel extends Model
         return $this->db->insertBatch($this->table(), $data);
     }
 
-/**
+    /**
      * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to
      * determine which row to replace.
      *
@@ -712,6 +712,10 @@ class BaseModel extends Model
 
         //
         $params = func_get_args();
+
+        if(empty($params)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
 
         $this->setWhere($params);
 

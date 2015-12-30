@@ -667,29 +667,9 @@ class BaseModel extends Model
         return $result;
     }
 
-    /**
-     * Getter for the table name.
-     *
-     * @return string The name of the table used by this class (including the DB_PREFIX).
-     */
-    public function table()
-    {
-        return DB_PREFIX .$this->table;
-    }
-
-    /**
-     * Adds a field to the protectedFields array.
-     *
-     * @param $field
-     *
-     * @return mixed
-     */
-    public function protect($field)
-    {
-        $this->protectedFields[] = $field;
-
-        return $this;
-    }
+    //--------------------------------------------------------------------
+    // Scope Methods
+    //--------------------------------------------------------------------
 
     /**
      * Temporarily sets our return type to an array.
@@ -716,6 +696,63 @@ class BaseModel extends Model
         $this->tempReturnType = $className ? $className : 'object';
 
         return $this;
+    }
+
+    //--------------------------------------------------------------------
+    // Utility Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Counts number of rows modified by an arbitrary WHERE call.
+     * @return INT
+     */
+    public function countBy()
+    {
+        $bindParams = array();
+
+        //
+        $params = func_get_args();
+
+        $this->setWhere($params);
+
+        // Prepare the WHERE details.
+        $whereStr = $this->parseWheres($this->wheres(), $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
+
+        $result = $this->asArray()->select($sql, $bindParams);
+
+        if($result !== false) {
+            $count = $result['count'];
+        }
+        else {
+            $count = 0;
+        }
+
+        // Reset the Model State.
+        $this->resetState();
+
+        return $count;
+    }
+
+    /**
+     * Counts total number of records, disregarding any previous conditions.
+     *
+     * @return int
+     */
+    public function countAll()
+    {
+        // Prepare the SQL Query.
+        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table();
+
+        $result = $this->asArray()->select($sql);
+
+        if(is_array($result)) {
+            return $result['count'];
+        }
+
+        return 0;
     }
 
     public function where($field, $value = '')
@@ -779,6 +816,29 @@ class BaseModel extends Model
         return true;
     }
 
+    /**
+     * Getter for the table name.
+     *
+     * @return string The name of the table used by this class (including the DB_PREFIX).
+     */
+    public function table()
+    {
+        return DB_PREFIX .$this->table;
+    }
+
+    /**
+     * Adds a field to the protectedFields array.
+     *
+     * @param $field
+     *
+     * @return mixed
+     */
+    public function protect($field)
+    {
+        $this->protectedFields[] = $field;
+
+        return $this;
+    }
 
     /**
      * Execute Select Query, binding values into the $sql Query.

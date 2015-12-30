@@ -9,6 +9,8 @@
 
 namespace Nova\Helpers;
 
+use Nova\Core\Model;
+
 use GUMP;
 
 
@@ -18,8 +20,10 @@ class Validator extends GUMP {
 
     protected $current_data = array();
 
+    protected $model = null;
 
-    public function __construct($data = array())
+
+    public function __construct($rules = array())
     {
         // The Error messages
         self::$messages = array(
@@ -56,38 +60,17 @@ class Validator extends GUMP {
         );
 
         //
-        if(empty($data)) {
-            return;
-        }
-
-        $validation_rules = array();
-        $filter_rules = array();
-
-        foreach($data as $field => $config) {
-            if(array_key_exists('label', $config)) {
-                self::$fields[$field] = $config['label'];
-            }
-
-            if(array_key_exists('rules', $config)) {
-                $validation_rules[$field] = $config['rules'];
-            }
-
-            if(array_key_exists('filter', $config)) {
-                $filter_rules[$field] = $config['filter'];
-            }
-        }
-
-        if(! empty($validation_rules)) {
-            $this->validation_rules($validation_rules);
-        }
-
-        if(! empty($filter_rules)) {
-            $this->filter_rules($filter_rules);
+        if(! empty($rules)) {
+            $this->setRules($rules);
         }
     }
 
-    public function run(array $data, $check_fields = false)
+    public function run(array $data, $model = null, $check_fields = false)
     {
+        if($model instanceof Model) {
+            $this->model = $model;
+        }
+
         $data = $this->filter($data, $this->filter_rules());
 
         $validated = $this->validate($data, $this->validation_rules());
@@ -173,6 +156,39 @@ class Validator extends GUMP {
         }
 
         return $data;
+    }
+
+
+    public function setRules(array $rules)
+    {
+        if(empty($rules)) {
+            return;
+        }
+
+        $validation_rules = array();
+        $filter_rules = array();
+
+        foreach($rules as $field => $config) {
+            if(array_key_exists('label', $config)) {
+                self::$fields[$field] = $config['label'];
+            }
+
+            if(array_key_exists('rules', $config)) {
+                $validation_rules[$field] = $config['rules'];
+            }
+
+            if(array_key_exists('filter', $config)) {
+                $filter_rules[$field] = $config['filter'];
+            }
+        }
+
+        if(! empty($validation_rules)) {
+            $this->validation_rules($validation_rules);
+        }
+
+        if(! empty($filter_rules)) {
+            $this->filter_rules($filter_rules);
+        }
     }
 
     public function getData($allFields = false)

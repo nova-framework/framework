@@ -10,6 +10,7 @@
 namespace App\Core;
 
 use Nova\Core\Model;
+use Nova\Helpers\Validator;
 
 
 class BaseModel extends Model
@@ -114,6 +115,27 @@ class BaseModel extends Model
     protected $protectedFields = array();
 
     /**
+     * An array of validation rules.
+     * This needs to be the same format as validation rules passed to the Validator helper.
+     */
+    protected $rules = array();
+
+    /**
+     * Optionally skip the validation.
+     * Used in conjunction with skipValidation() to skip data validation for any future calls.
+     */
+    protected $skipValidation = false;
+
+    /**
+     * An array of extra rules to add to validation rules during inserts only.
+     * Often used for adding 'required' rules to fields on insert, but not updates.
+     *
+     *   array( 'username' => 'required|strip_tags' );
+     * @var array
+     */
+    protected $insertRules = array();
+
+    /**
      * @var Array Columns for the Model's database fields
      *
      * This can be set to avoid a database call if using $this->prepareData()
@@ -125,7 +147,7 @@ class BaseModel extends Model
     /**
      * Constructor
      */
-    public function __construct($engine = 'default')
+    public function __construct($engine = 'default', $validator = null)
     {
         parent::__construct($engine);
 
@@ -142,6 +164,14 @@ class BaseModel extends Model
 
         if ($this->autoModified === true) {
             array_unshift($this->beforeUpdate, 'modifiedOn');
+        }
+
+        // Do we have a form_validation library?
+        if (! is_null($validator)) {
+            $this->validator = $validator;
+        }
+        else {
+            $this->validator = new Validator();
         }
 
         // Make sure our temp return type is correct.
@@ -886,6 +916,52 @@ class BaseModel extends Model
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
         return $this->db->rawPrepare($sql, $bindParams);
+    }
+
+    //--------------------------------------------------------------------
+    // Validation
+    //--------------------------------------------------------------------
+
+    /**
+     * Validates the data passed into it based upon the Validator Rules setup in the $this->rules property.
+     *
+     * If $type == 'insert', any additional rules in the class var $insert_validate_rules
+     * for that field will be added to the rules.
+     *
+     * @param  array $data An array of Validation Rules
+     * @param  string $type Either 'update' or 'insert'.
+     *
+     * @return array/bool       The original data or FALSE
+     */
+    public function validate($data, $type = 'update', $skipValidation = null)
+    {
+        $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
+
+        if ($skipValidation) {
+            return $data;
+        }
+
+        if (! empty($this->rules) && is_array($this->rules)) {
+            // Any insert additions?
+            if (($type == 'insert') && ! empty($this->insertRules) && is_array($this->insertRules)) {
+                foreach ($this->rules as $field => &$row) {
+                    if (isset($this->insertRules[$field])) {
+                        $row['rules'] .= '|' .$this->insertRules[$field];
+                    }
+                }
+            }
+
+            $this->validator->setRules($this->rules);
+
+            return $this->validator->run($data, $this);
+        }
+
+        return $data;
+    }
+
+    public function validation()
+    {
+        return $this->validator;
     }
 
     //--------------------------------------------------------------------

@@ -53,7 +53,7 @@ class Models extends BaseController
      */
     public function index()
     {
-        $message = '<h3>' .__d('demo', 'CRUD Tests') .'</h3><br>';
+        $message = '';
 
         //
         $members = $this->model->limit(2, 0)->findAll();
@@ -102,6 +102,11 @@ class Models extends BaseController
         $result = $this->model->find(1);
 
         $message .= '<h4>$this->model->find(1)</h4><pre>'.var_export($result, true).'</pre>';
+
+        //
+        $members5 = $this->model->orderBy('username', 'desc')->findMany(array(1, 3));
+
+        $message .= '<h4>$this->model->orderBy(\'username\', \'desc\')->findMany(array(1, 3));</h4><pre>'.var_export($members5, true).'</pre>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'BaseModel Demo'));

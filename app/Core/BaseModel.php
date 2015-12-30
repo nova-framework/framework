@@ -490,25 +490,21 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE parameters.
-        if(is_array($params[0])) {
-            $where = $params[0];
-        }
-        else {
-            $value = isset($params[1]) ? $params[1] : '';
-
-            $where = array($params[0] => $value);
-        }
+        $this->setWhere($params);
 
         //
         $data = $this->trigger('beforeUpdate', array('method' => 'updateBy', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $this->prepareData($data), $where);
+        $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
 
         $this->trigger('afterUpdate', array(
             'method' => 'updateBy',
             'fields' => $data,
             'result' => $result
         ));
+
+        // Reset our select WHEREs
+        $this->tempWheres = array();
 
         return $result;
     }
@@ -1040,6 +1036,11 @@ class BaseModel extends Model
 
             $this->tempWheres[$key] = $value;
         }
+    }
+
+    protected function wheres()
+    {
+        return $this->tempWheres;
     }
 
     protected function parseSelectWheres(array $where, &$bindParams = array())

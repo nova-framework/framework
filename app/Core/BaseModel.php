@@ -99,14 +99,14 @@ class BaseModel extends Model
     protected $tempWheres = array();
 
     /**
-     * Temporary select's LIMIT attribute.
-     */
-    protected $tempLimit = null;
-
-    /**
      * Temporary select's ORDER attribute.
      */
     protected $tempOrder = null;
+
+    /**
+     * Temporary select's LIMIT attribute.
+     */
+    protected $tempLimit = null;
 
     /**
      * Protected, non-modifiable attributes
@@ -211,7 +211,7 @@ class BaseModel extends Model
         $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 0, 1";
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 1";
 
         //
         $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
@@ -283,14 +283,14 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
 
-        // Prepare the LIMIT details.
-        $limitStr = $this->parseSelectLimit();
-
         // Prepare the ORDER details.
         $orderStr = $this->parseSelectOrder();
 
+        // Prepare the LIMIT details.
+        $limitStr = $this->parseSelectLimit();
+
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr $limitStr $orderStr";
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr $orderStr $limitStr";
 
         //
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
@@ -306,11 +306,11 @@ class BaseModel extends Model
         // Reset our select WHEREs
         $this->tempWheres = array();
 
-        // Reset our select LIMIT
-        $this->tempLimit = null;
-
         // Reset our select ORDER
         $this->tempOrder = null;
+
+        // Reset our select LIMIT
+        $this->tempLimit = null;
 
         return $result;
     }
@@ -1034,7 +1034,11 @@ class BaseModel extends Model
             $this->tempWheres = array_merge($this->tempWheres, $params[0]);
         }
         else {
-            array_push($this->tempWheres, $params[0], isset($params[1]) ? $params[1] : '');
+            $key = $params[0];
+
+            $value = isset($params[1]) ? $params[1] : '';
+
+            $this->tempWheres[$key] = $value;
         }
     }
 
@@ -1113,7 +1117,7 @@ class BaseModel extends Model
         if(is_array($order) && ! empty($order)) {
             list($key, $sense) = each($order);
 
-            $result = 'ORDER ' .$key .' ' .$sense;
+            $result = 'ORDER BY ' .$key .' ' .$sense;
         }
         else {
             $result = '';

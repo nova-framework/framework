@@ -80,7 +80,7 @@ class Models extends BaseController
         //
         $members2 = $this->model->findAll();
 
-        $message .= '<h4>$this->model->findAll()</h4>';
+        $message .= '<h4>$this->model->findAll();</h4>';
         $message .= '<pre>'.var_export($members2, true).'</pre><br>';
 
         //

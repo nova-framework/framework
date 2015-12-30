@@ -281,8 +281,6 @@ abstract class Base extends \PDO implements Engine
 
     /**
      * Execute insert query, will automatically build query for you.
-     * You can also give an array as $data, this will try to insert each entry in the array.
-     * Not all engine's support this! Check the manual!
      *
      * @param string $table Table to execute the insert.
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
@@ -437,6 +435,81 @@ abstract class Base extends \PDO implements Engine
         }
 
         return $ids;
+    }
+
+    /**
+     * Execute replace query, will automatically build query for you.
+     *
+     * @param string $table Table to execute the replace.
+     * @param array $data Represents the Record data
+     * @param bool $transaction Use PDO Transaction. If one replace will fail we will rollback immediately. Default false.
+     * @return int|bool|array Could be false on error, or one single ID replaced.
+     *
+     * @throws \Exception
+     */
+    public function replace($table, $data, $transaction = false)
+    {
+        $insertId = 0;
+
+        // Check for valid data.
+        if (! is_array($data)) {
+            throw new \Exception("Data to insert must be an array of column -> value.");
+        }
+
+        // Transaction?
+        $status = false;
+
+        if ($transaction) {
+            $status = $this->beginTransaction();
+        }
+
+        // Holding status
+        $failure = false;
+
+        // Prepare the parameters.
+        ksort($data);
+
+        $fieldNames = implode(',', array_keys($data));
+        $fieldValues = ':'.implode(', :', array_keys($data));
+
+        $stmt = $this->prepare("REPLACE INTO $table ($fieldNames) VALUES ($fieldValues)");
+
+        foreach ($data as $key => $value) {
+            if (is_int($value)) {
+                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            } else {
+                $stmt->bindValue(":$key", $value);
+            }
+        }
+
+        // Execute
+        $this->queryCount++;
+
+        if (! $stmt->execute()) {
+            $failure = true;
+        }
+        else {
+            // If no error, capture the last inserted id
+            $insertId = $this->lastInsertId();
+        }
+
+        // Commit when in transaction
+        if (! $failure && $transaction && $status) {
+            $failure = ! $this->commit();
+        }
+
+        // Check for failures
+        if ($failure) {
+            // Ok, rollback when using transactions.
+            if ($transaction) {
+                $this->rollBack();
+            }
+
+            // False on error.
+            return false;
+        }
+
+        return $insertId;
     }
 
     /**

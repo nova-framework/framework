@@ -328,7 +328,7 @@ class BaseModel extends Model
         if($result !== false) {
             $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
 
-            return true;
+            return $result;
         }
 
         return false;
@@ -358,6 +358,27 @@ class BaseModel extends Model
         unset($data['batch']);
 
         return $this->db->insertBatch($this->table(), $data);
+    }
+
+/**
+     * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to
+     * determine which row to replace.
+     *
+     * @param $data
+     * @return bool
+     */
+    public function replace($data)
+    {
+        $result = $this->db->replace($this->table(), $this->prepareData($data));
+
+        if($result !== false) {
+            $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method'=>'replace'));
+
+            return $result;
+        }
+
+        return FALSE;
+
     }
 
     /**

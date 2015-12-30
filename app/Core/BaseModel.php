@@ -127,7 +127,7 @@ class BaseModel extends Model
      */
     public function __construct()
     {
-        parent __construct();
+        parent::__construct();
 
         // Always protect our attributes
         array_unshift($this->beforeInsert, 'protectFields');
@@ -353,7 +353,7 @@ class BaseModel extends Model
     {
         $data['batch'] = true;
 
-        $data = $this->trigger('beforeInsert', array('method' => 'insertBatch', 'fields' => $data);
+        $data = $this->trigger('beforeInsert', array('method' => 'insertBatch', 'fields' => $data));
 
         unset($data['batch']);
 
@@ -375,7 +375,7 @@ class BaseModel extends Model
 
         $result = $this->trigger('afterUpdate', array(
             'id'     => $id,
-            'method' => 'update'
+            'method' => 'update',
             'fields' => $data,
             'result' => $result,
         ));
@@ -571,7 +571,7 @@ class BaseModel extends Model
 
         return $this->db->update($this->table(), $data, $where);
     }
-    
+
     /**
      * Deletes a row by it's primary key value.
      *
@@ -584,7 +584,7 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Integer');
         }
 
-        $where($this->primaryKey => $id);
+        $where = array($this->primaryKey => $id);
 
         //
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));

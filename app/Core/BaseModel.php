@@ -626,6 +626,9 @@ class BaseModel extends Model
             'result' => $result
         ));
 
+        // Reset our select WHEREs
+        $this->tempWheres = array();
+
         return $result;
     }
 

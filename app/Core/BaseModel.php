@@ -515,13 +515,13 @@ class BaseModel extends Model
     /**
      * Updates many records by an array of ids.
      *
-     * While updateBatch() allows modifying multiple, arbitrary rows of data
-     * on each row, updateMany() sets the same values for each row.
+     * While updateBatch() allows modifying multiple, arbitrary rows of data on each row,
+     * updateMany() sets the same values for each row.
      *
      * $ids = array(1, 2, 3, 5, 12);
      *
      * $data = array(
-     *     'deletedBy' => 1
+     *     'deleted_by' => 1
      * );
      *
      * $this->model->updateMany($ids, $data);

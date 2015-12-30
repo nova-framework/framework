@@ -707,7 +707,7 @@ class BaseModel extends Model
 
     public function where($field, $value = '')
     {
-        array_push($this->tempWheres, $field, $value);
+        $this->tempWheres[$field] = $value;
 
         return $this;
     }

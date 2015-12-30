@@ -582,7 +582,7 @@ class BaseModel extends Model
         $data = $this->trigger('beforeUpdate', array('method' => 'updateBy', 'fields' => $data));
 
         // Will be false if it didn't validate.
-        if ($this->validate($data) !== false) {
+        if (($data = $this->validate($data)) !== false) {
             $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
 
             $this->trigger('afterUpdate', array(

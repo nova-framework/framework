@@ -210,7 +210,7 @@ class BaseModel extends Model
         $where = $this->wheres();
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($where, $bindParams);
+        $whereStr = $this->parseWheres($where, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 1";
@@ -285,7 +285,7 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $where = $this->wheres();
 
-        $whereStr = $this->parseSelectWheres($where, $bindParams);
+        $whereStr = $this->parseWheres($where, $bindParams);
 
         // Prepare the ORDER details.
         $orderStr = $this->parseSelectOrder();
@@ -1051,7 +1051,7 @@ class BaseModel extends Model
         return $this->tempWheres;
     }
 
-    protected function parseSelectWheres(array $where, &$bindParams = array())
+    protected function parseWheres(array $where, &$bindParams = array())
     {
         $result = '';
 

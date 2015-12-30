@@ -58,7 +58,7 @@ class Models extends BaseController
         //
         $members = $this->model->limit(2, 0)->findAll();
 
-        $message .= '<h4>$this->model->limit(2, 0)->findAll()</h4><pre>'.var_export($members, true).'</pre>';
+        $message .= '<h4>$this->model->limit(2, 0)->findAll();</h4><pre>'.var_export($members, true).'</pre>';
 
         //
         $userInfo = array(
@@ -71,7 +71,7 @@ class Models extends BaseController
 
         $retval = $this->model->insert($userInfo);
 
-        $message .= '<h4>$this->model->insert($userInfo)</h4><pre>'.var_export($retval, true).'</pre>';
+        $message .= '<h4>$this->model->insert($userInfo);</h4><pre>'.var_export($retval, true).'</pre>';
 
         //
         $members2 = $this->model->findAll();
@@ -91,12 +91,12 @@ class Models extends BaseController
         //
         $members4 = $this->model->orderBy('username', 'desc')->limit(2, 0)->findAll();
 
-        $message .= '<h4>$this->model->orderBy(\'username\', \'desc\')->limit(2, 0)->findAll()</h4><pre>'.var_export($members4, true).'</pre>';
+        $message .= '<h4>$this->model->orderBy(\'username\', \'desc\')->limit(2, 0)->findAll();</h4><pre>'.var_export($members4, true).'</pre>';
 
         //
         $result = $this->model->findBy('username', 'marcus');
 
-        $message .= '<h4>$this->model->findBy(\'username\', \'marcus\')</h4><pre>'.var_export($result, true).'</pre>';
+        $message .= '<h4>$this->model->findBy(\'username\', \'marcus\');</h4><pre>'.var_export($result, true).'</pre>';
 
         //
         $result = $this->model->find(1);

@@ -46,10 +46,11 @@ class MySQL extends BaseEngine
         }
 
         // Prepare the PDO's options.
-        $options = array();
-
         if (isset($config['compress']) && ($config['compress'] === true)) {
-            array_push($options, \PDO::MYSQL_ATTR_COMPRESS, true);
+            $options = array(\PDO::MYSQL_ATTR_COMPRESS => true);
+        }
+        else {
+            $options = array();
         }
 
         // Prepare the PDO's DSN
@@ -88,4 +89,30 @@ class MySQL extends BaseEngine
         return $this->exec("TRUNCATE TABLE $table");
     }
 
+    /**
+     * Get the field names for the specified Database Table.
+     *
+     * @param  string $table table name
+     * @return array  Returns the Database Table fields
+     */
+    public function listFields($table)
+    {
+        $columns = array();
+
+        if (empty($table)) {
+            throw new \UnexpectedValueException('Parameter should be not empty');
+        }
+
+        // Find all Column names
+        $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
+
+        if($result !== false) {
+            foreach ($result as $row) {
+                // Get the column name from the results
+                $columns[] = $row['Field'];
+            }
+        }
+
+        return $columns;
+    }
 }

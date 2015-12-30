@@ -26,11 +26,11 @@ use Nova\Config;
  */
 $configDir = dirname(__FILE__) .DS .'app' .DS .'Config' .DS;
 
-require_once $configDir.'constants.php';
+require_once $configDir.'constants.example.php';
 
 require_once SYSPATH.'functions.php';
 
-require_once $configDir.'config.php';
+require_once $configDir.'config.example.php';
 
 
 /**

@@ -96,12 +96,7 @@ class BaseModel extends Model
     /**
      * Temporary select's WHERE attributes.
      */
-    protected $tempWhere = array();
-
-    /**
-     * Temporary select's LIMIT attribute.
-     */
-    protected $tempLimit = null;
+    protected $tempWheres = array();
 
     /**
      * Temporary select's ORDER attribute.
@@ -109,19 +104,30 @@ class BaseModel extends Model
     protected $tempOrder = null;
 
     /**
+     * Temporary select's LIMIT attribute.
+     */
+    protected $tempLimit = null;
+
+    /**
      * Protected, non-modifiable attributes
      */
     protected $protectedFields = array();
 
+    /**
+     * @var Array Columns for the Model's database fields
+     *
+     * This can be set to avoid a database call if using $this->prepareData()
+     */
+    protected $fields = array();
 
     //--------------------------------------------------------------------
 
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($engine = 'default')
     {
-        parent __construct();
+        parent::__construct($engine);
 
         // Always protect our attributes
         array_unshift($this->beforeInsert, 'protectFields');
@@ -153,7 +159,7 @@ class BaseModel extends Model
     {
         $result = $this->limit(1, 0)->findAll();
 
-        if (is_array($result) && count($result)) {
+        if (is_array($result) && (count($result) > 0)) {
             return $result[0];
         }
 
@@ -202,10 +208,10 @@ class BaseModel extends Model
         $this->setWhere($params);
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
+        $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr";
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 1";
 
         //
         $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
@@ -217,7 +223,7 @@ class BaseModel extends Model
         }
 
         // Reset our select WHEREs
-        $this->tempWhere = array();
+        $this->tempWheres = array();
 
         return $result;
     }
@@ -236,7 +242,7 @@ class BaseModel extends Model
         }
 
         // Prepare the ORDER details.
-        $orderStr = $this->parseOrder();
+        $orderStr = $this->parseSelectOrder();
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
@@ -275,16 +281,16 @@ class BaseModel extends Model
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->tempWhere, $bindParams);
-
-        // Prepare the LIMIT details.
-        $limitStr = $this->parseLimit();
+        $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
 
         // Prepare the ORDER details.
-        $orderStr = $this->parseOrder();
+        $orderStr = $this->parseSelectOrder();
+
+        // Prepare the LIMIT details.
+        $limitStr = $this->parseSelectLimit();
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr $limitStr $orderStr";
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr $orderStr $limitStr";
 
         //
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
@@ -298,13 +304,13 @@ class BaseModel extends Model
         }
 
         // Reset our select WHEREs
-        $this->tempWhere = array();
-
-        // Reset our select LIMIT
-        $this->tempLimit = null;
+        $this->tempWheres = array();
 
         // Reset our select ORDER
         $this->tempOrder = null;
+
+        // Reset our select LIMIT
+        $this->tempLimit = null;
 
         return $result;
     }
@@ -319,10 +325,12 @@ class BaseModel extends Model
     {
         $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
 
-        $result = $this->db->insert($this->table(), $data);
+        $result = $this->db->insert($this->table(), $this->prepareData($data));
 
         if($result !== false) {
-            $this->trigger('afterInsert', ['id' => $result, 'fields' => $data, 'method' => 'insert']);
+            $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
+
+            return true;
         }
 
         return false;
@@ -347,7 +355,7 @@ class BaseModel extends Model
     {
         $data['batch'] = true;
 
-        $data = $this->trigger('beforeInsert', array('method' => 'insertBatch', 'fields' => $data);
+        $data = $this->trigger('beforeInsert', array('method' => 'insertBatch', 'fields' => $data));
 
         unset($data['batch']);
 
@@ -365,11 +373,11 @@ class BaseModel extends Model
     {
         $data = $this->trigger('beforeUpdate', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, array($this->primaryKey => $id));
+        $result = $this->db->update($this->table(), $this->prepareData($data), array($this->primaryKey => $id));
 
         $result = $this->trigger('afterUpdate', array(
             'id'     => $id,
-            'method' => 'update'
+            'method' => 'update',
             'fields' => $data,
             'result' => $result,
         ));
@@ -482,25 +490,21 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE parameters.
-        if(is_array($params[0])) {
-            $where = $params[0];
-        }
-        else {
-            $value = isset($params[1]) ? $params[1] : '';
-
-            $where = array($params[0] => $value);
-        }
+        $this->setWhere($params);
 
         //
         $data = $this->trigger('beforeUpdate', array('method' => 'updateBy', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, $where);
+        $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
 
         $this->trigger('afterUpdate', array(
             'method' => 'updateBy',
             'fields' => $data,
             'result' => $result
         ));
+
+        // Reset our select WHEREs
+        $this->tempWheres = array();
 
         return $result;
     }
@@ -515,7 +519,7 @@ class BaseModel extends Model
     {
         $data = $this->trigger('beforeUpdate', array('method' => 'updateAll', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $data, true);
+        $result = $this->db->update($this->table(), $this->prepareData($data), true);
 
         $this->trigger('afterUpdate', array(
             'method' => 'updateAll',
@@ -524,6 +528,46 @@ class BaseModel extends Model
         ));
 
         return $result;
+    }
+
+    /**
+     * Increments the value of field for a given row, selected by the primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function increment($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        //
+        $data = array($field => "{$field}+{$value}");
+
+        $where = array($this->primaryKey => $id);
+
+        return $this->db->update($this->table(), $data, $where);
+    }
+
+    /**
+     * Increments the value of field for a given row, selected by the primary key for the table.
+     *
+     * @param $id
+     * @param $field
+     * @param int $value
+     * @return mixed
+     */
+    public function decrement($id, $field, $value = 1)
+    {
+        $value = (int) abs($value);
+
+        //
+        $data = array($field => "{$field}-{$value}");
+
+        $where = array($this->primaryKey => $id);
+
+        return $this->db->update($this->table(), $data, $where);
     }
 
     /**
@@ -538,7 +582,7 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Integer');
         }
 
-        $where($this->primaryKey => $id);
+        $where = array($this->primaryKey => $id);
 
         //
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
@@ -607,79 +651,6 @@ class BaseModel extends Model
     }
 
     /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
-     *
-     * @param $id
-     * @param $field
-     * @param int $value
-     * @return mixed
-     */
-    public function increment($id, $field, $value = 1)
-    {
-        $value = (int) abs($value);
-
-        //
-        $data = array($field => "{$field}+{$value}");
-
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
-    }
-
-    /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
-     *
-     * @param $id
-     * @param $field
-     * @param int $value
-     * @return mixed
-     */
-    public function decrement($id, $field, $value = 1)
-    {
-        $value = (int) abs($value);
-
-        //
-        $data = array($field => "{$field}-{$value}");
-
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
-    }
-
-    /**
-     * Execute Select Query, binding values into the $sql Query.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @return array|null
-     *
-     * @throws \Exception
-     */
-    public function select($sql, $bindParams = array(), $fetchAll = false)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
-
-        // Make sure our temp return type is correct.
-        $this->tempReturnType = $this->returnType;
-
-        return $result;
-    }
-
-    public function query($sql)
-    {
-        return $this->db->rawQuery($sql);
-    }
-
-    public function prepare($sql, $bindParams = array())
-    {
-        return $this->db->rawPrepare($sql, $bindParams);
-    }
-
-    /**
      * Getter for the table name.
      *
      * @return string The name of the table used by this class (including the DB_PREFIX).
@@ -725,14 +696,14 @@ class BaseModel extends Model
      */
     public function asObject($className = null)
     {
-        $this->tempReturnType = ! empty($className) ? $className : 'object';
+        $this->tempReturnType = $className ? $className : 'object';
 
         return $this;
     }
 
     public function where($field, $value = '')
     {
-        array_push($this->tempWhere, $field, $value);
+        $this->tempWheres[$field] = $value;
 
         return $this;
     }
@@ -789,6 +760,51 @@ class BaseModel extends Model
         }
 
         return true;
+    }
+
+
+    /**
+     * Execute Select Query, binding values into the $sql Query.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $bindParams = array(), $fetchAll = false)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
+
+        return $result;
+    }
+
+    public function query($sql)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        $result = $this->db->rawQuery($sql, $this->tempReturnType);
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
+
+        return $result;
+    }
+
+    public function prepare($sql, $bindParams = array())
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        return $this->db->rawPrepare($sql, $bindParams);
     }
 
     //--------------------------------------------------------------------
@@ -870,6 +886,66 @@ class BaseModel extends Model
     }
 
     /**
+     * Get the field names for this Model's table.
+     *
+     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
+     * the field list from $this->db->listFields($this->table());
+     *
+     * @return array    Returns the database fields for this Model
+     */
+    public function tableFields()
+    {
+        if (empty($this->fields)) {
+            $this->fields = $this->db->listFields($this->table());
+        }
+
+        if (empty($this->fields)) {
+            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
+        }
+
+        return $this->fields;
+    }
+
+    /**
+     * Extracts the Model's fields (except the key and those handled by Observers) from the $postData
+     * and returns an array of name => value pairs
+     *
+     * @param Array $postData Usually the POST data, when called from the Controller
+     *
+     * @return Array An array of name => value pairs containing the data for the Model's fields
+     */
+    public function prepareData($postData)
+    {
+        if (empty($postData)) {
+            return array();
+        }
+
+        $data = array();
+
+        $skippedFields = array();
+
+        // Though the model doesn't support multiple keys well, $this->key could be an array or a string...
+        $skippedFields = array_merge($skippedFields, (array) $this->primaryKey);
+
+        // Remove any protected attributes
+        $skippedFields = array_merge($skippedFields, $this->protectedFields);
+
+        $fields = $this->tableFields();
+
+        // If the field is the primary key, one of the created/modified/deleted fields,
+        // or has not been set in the $postData, skip it
+        foreach ($postData as $field => $value) {
+            if (in_array($field, $skippedFields) || ! in_array($field, $fields)) {
+                continue;
+            }
+
+            $data[$field] = $value;
+        }
+
+        return $data;
+    }
+
+    /**
      * Triggers a model-specific event and call each of it's Observers.
      *
      * @param string $event The name of the event to trigger
@@ -879,8 +955,7 @@ class BaseModel extends Model
      */
     public function trigger($event, $data = false)
     {
-        if (! isset($this->$event) || ! is_array($this->$event))
-        {
+        if (! isset($this->$event) || ! is_array($this->$event)) {
             if (isset($data['fields'])) {
                 return $data['fields'];
             }
@@ -952,14 +1027,23 @@ class BaseModel extends Model
         }
 
         if(is_array($params[0])) {
-            $this->tempWhere = array_merge($this->tempWhere, $params[0]);
+            $this->tempWheres = array_merge($this->tempWheres, $params[0]);
         }
         else {
-            array_push($this->tempWhere, $params[0], isset($params[1]) ? $params[1] : '');
+            $key = $params[0];
+
+            $value = isset($params[1]) ? $params[1] : '';
+
+            $this->tempWheres[$key] = $value;
         }
     }
 
-    protected function parseWheres(array $where, &$bindParams = array())
+    protected function wheres()
+    {
+        return $this->tempWheres;
+    }
+
+    protected function parseSelectWheres(array $where, &$bindParams = array())
     {
         $result = '';
 
@@ -1005,19 +1089,19 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function parseLimit()
+    protected function parseSelectLimit()
     {
         $result = '';
 
-        $limit =& $this->tempLimit;
+        $limits =& $this->tempLimit;
 
-        if(is_numeric($limit)) {
-            $result = '0, ' .$limit;
+        if(is_numeric($limits)) {
+            $result = '0, ' .$limits;
         }
-        else if(is_array($limit) && ! empty($limit)) {
-            list($key, $value) = each($limit);
+        else if(is_array($limits) && ! empty($limits)) {
+            list($offset, $limit) = each($limits);
 
-            $result = $key .' ' .$value;
+            $result = $offset .', ' .$limit;
         }
 
         if(! empty($result)) {
@@ -1027,14 +1111,14 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function parseOrder()
+    protected function parseSelectOrder()
     {
         $order =& $this->tempOrder;
 
         if(is_array($order) && ! empty($order)) {
-            list($key, $value) = each($order);
+            list($key, $sense) = each($order);
 
-            $result = 'LIMIT ' .$key .' ' .$value;
+            $result = 'ORDER BY ' .$key .' ' .$sense;
         }
         else {
             $result = '';

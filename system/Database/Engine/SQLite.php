@@ -65,4 +65,31 @@ class SQLite extends BaseEngine
         throw new \BadMethodCallException('TRUNCATE called on SQLite Engine');
     }
 
+    /**
+     * Get the field names for the specified Database Table.
+     *
+     * @param  string $table table name
+     * @return array  Returns the Database Table fields
+     */
+    public function listFields($table)
+    {
+        $columns = array();
+
+        if (empty($table)) {
+            throw new \UnexpectedValueException('Parameter should be not empty');
+        }
+
+        // Find all Column names
+        $result = $this->rawQuery("PRAGMA table_info($table)", 'array');
+
+        if($result !== false) {
+            foreach ($result as $row) {
+                // Get the column name from the results
+                $columns[] = $row['name'];
+            }
+        }
+
+        return $columns;
+    }
+
 }

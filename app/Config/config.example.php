@@ -30,7 +30,6 @@ Config::set('profiler', array(
  */
 Config::set('routing', array(
     'patterns' => array(
-        // Who really need those niche patterns, can uncomment them... ;)
         //':hex'    => '[[:xdigit:]]+',
         //':uuidV4' => '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
     ),
@@ -92,13 +91,13 @@ Config::set('database', array(
         'engine' => 'mysql',
         'config' => array(
             'host'        => 'localhost',
-            'port'        => 3306, // Not required, default is 3306
+            'port'        => 3306,        // Not required, default is 3306
             'database'    => 'dbname',
             'username'    => 'root',
             'password'    => 'password',
-            'return_type' => 'array', // Not required, default is 'array'.
-            'charset'     => 'utf8',  // Not required, default and recommended is utf8.
-            'compress'    => false    // Changing to true will hugely improve the persormance on remote servers.
+            'return_type' => 'array',     // Not required, default is 'array'.
+            'charset'     => 'utf8',      // Not required, default and recommended is utf8.
+            'compress'    => false        // Changing to true will hugely improve the persormance on remote servers.
         )
     ),
     /** Extra connections can be added here, some examples: */

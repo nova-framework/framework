@@ -115,16 +115,16 @@ class BaseModel extends Model
     protected $protectedFields = array();
 
     /**
-     * An array of validation rules.
-     * This needs to be the same format as validation rules passed to the Validator helper.
-     */
-    protected $rules = array();
-
-    /**
      * Optionally skip the validation.
      * Used in conjunction with skipValidation() to skip data validation for any future calls.
      */
     protected $skipValidation = false;
+
+    /**
+     * An array of validation rules.
+     * This needs to be the same format as validation rules passed to the Validator helper.
+     */
+    protected $updateRules = array();
 
     /**
      * An array of extra rules to add to validation rules during inserts only.
@@ -349,16 +349,25 @@ class BaseModel extends Model
      * @param  array $data An array of key/value pairs to insert to database.
      * @return mixed       The primaryKey value of the inserted record, or FALSE.
      */
-    public function insert($data)
+    public function insert($data, $skipValidation = null)
     {
-        $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
+        $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
-        $result = $this->db->insert($this->table(), $this->prepareData($data));
+        if ($skipValidation === false) {
+            $data = $this->validate($data, 'insert', $skipValidation);
+        }
 
-        if($result !== false) {
-            $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
+        // Will be false if it didn't validate.
+        if ($data !== false) {
+            $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
 
-            return $result;
+            $result = $this->db->insert($this->table(), $this->prepareData($data));
+
+            if($result !== false) {
+                $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
+
+                return $result;
+            }
         }
 
         return false;
@@ -397,18 +406,26 @@ class BaseModel extends Model
      * @param $data
      * @return bool
      */
-    public function replace($data)
+    public function replace($data, $skipValidation = null)
     {
-        $result = $this->db->replace($this->table(), $this->prepareData($data));
+        $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
-        if($result !== false) {
-            $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method'=>'replace'));
-
-            return $result;
+        if ($skipValidation === false) {
+            $data = $this->validate($data, 'insert', $skipValidation);
         }
 
-        return FALSE;
+        // Will be false if it didn't validate.
+        if ($data !== false) {
+            $result = $this->db->replace($this->table(), $this->prepareData($data));
 
+            if($result !== false) {
+                $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method'=>'replace'));
+
+                return $result;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -418,18 +435,27 @@ class BaseModel extends Model
      * @param  array $data An array of value pairs to update in the record.
      * @return bool
      */
-    public function update($id, $data)
+    public function update($id, $data, $skipValidation = null)
     {
-        $data = $this->trigger('beforeUpdate', array('id' => $id, 'method' =>'update', 'fields' => $data));
+        $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
-        $result = $this->db->update($this->table(), $this->prepareData($data), array($this->primaryKey => $id));
+        if ($skipValidation === false) {
+            $data = $this->validate($data);
+        }
 
-        $result = $this->trigger('afterUpdate', array(
-            'id'     => $id,
-            'method' => 'update',
-            'fields' => $data,
-            'result' => $result,
-        ));
+        // Will be false if it didn't validate.
+        if ($data !== false) {
+            $data = $this->trigger('beforeUpdate', array('id' => $id, 'method' =>'update', 'fields' => $data));
+
+            $result = $this->db->update($this->table(), $this->prepareData($data), array($this->primaryKey => $id));
+
+            $result = $this->trigger('afterUpdate', array(
+                'id'     => $id,
+                'method' => 'update',
+                'fields' => $data,
+                'result' => $result,
+            ));
+        }
 
         return $result;
     }
@@ -489,26 +515,37 @@ class BaseModel extends Model
      * @param  array $data An array of value pairs to modify in each row.
      * @return bool
      */
-    public function updateMany($ids, $data)
+    public function updateMany($ids, $data, $skipValidation = null)
     {
         if (! is_array($ids) || (count($ids) == 0)) return NULL;
 
+        $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
+
+        if ($skipValidation === false) {
+            $data = $this->validate($data, 'update', $skipValidation);
+        }
+
         $data = $this->trigger('beforeUpdate', array('ids' => $ids, 'method' => 'updateMany', 'fields' => $data));
 
-        // Prepare the custom WHERE.
-        $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
+        // Will be false if it didn't validate.
+        if ($data !== false) {
+            // Prepare the custom WHERE.
+            $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
 
-        //
-        $result = $this->db->update($this->table(), $data, $where);
+            //
+            $result = $this->db->update($this->table(), $data, $where);
 
-        $this->trigger('afterUpdate', array(
-            'ids'    => $ids,
-            'fields' => $data,
-            'result' => $result,
-            'method' => 'updateMany'
-        ));
+            $this->trigger('afterUpdate', array(
+                'ids'    => $ids,
+                'fields' => $data,
+                'result' => $result,
+                'method' => 'updateMany'
+            ));
 
-        return $result;
+            return $result;
+        }
+
+        return false;
     }
 
     /**
@@ -544,18 +581,23 @@ class BaseModel extends Model
         //
         $data = $this->trigger('beforeUpdate', array('method' => 'updateBy', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
+        // Will be false if it didn't validate.
+        if ($this->validate($data) !== false) {
+            $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
 
-        $this->trigger('afterUpdate', array(
-            'method' => 'updateBy',
-            'fields' => $data,
-            'result' => $result
-        ));
+            $this->trigger('afterUpdate', array(
+                'method' => 'updateBy',
+                'fields' => $data,
+                'result' => $result
+            ));
 
-        // Reset the Model State.
-        $this->resetState();
+            // Reset the Model State.
+            $this->resetState();
 
-        return $result;
+            return $result;
+        }
+
+        return false;
     }
 
     /**
@@ -564,19 +606,30 @@ class BaseModel extends Model
      * @param  array $data An array of value pairs with the data to change.
      * @return bool
      */
-    public function updateAll($data)
+    public function updateAll($data, $skipValidation = null)
     {
         $data = $this->trigger('beforeUpdate', array('method' => 'updateAll', 'fields' => $data));
 
-        $result = $this->db->update($this->table(), $this->prepareData($data), true);
+        $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
-        $this->trigger('afterUpdate', array(
-            'method' => 'updateAll',
-            'fields' => $data,
-            'result' => $result
-        ));
+        if ($skipValidation === false) {
+            $data = $this->validate($data);
+        }
 
-        return $result;
+        // Will be false if it didn't validate.
+        if ($data !== false) {
+            $result = $this->db->update($this->table(), $this->prepareData($data), true);
+
+            $this->trigger('afterUpdate', array(
+                'method' => 'updateAll',
+                'fields' => $data,
+                'result' => $result
+            ));
+
+            return $result;
+        }
+
+        return false;
     }
 
     /**
@@ -923,7 +976,7 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Validates the data passed into it based upon the Validator Rules setup in the $this->rules property.
+     * Validates the data passed into it based upon the Validator Rules setup in the $this->updateRules property.
      *
      * If $type == 'insert', any additional rules in the class var $insert_validate_rules
      * for that field will be added to the rules.
@@ -941,17 +994,17 @@ class BaseModel extends Model
             return $data;
         }
 
-        if (! empty($this->rules) && is_array($this->rules)) {
+        if (! empty($this->updateRules) && is_array($this->updateRules)) {
             // Any insert additions?
             if (($type == 'insert') && ! empty($this->insertRules) && is_array($this->insertRules)) {
-                foreach ($this->rules as $field => &$row) {
+                foreach ($this->updateRules as $field => &$row) {
                     if (isset($this->insertRules[$field])) {
                         $row['rules'] .= '|' .$this->insertRules[$field];
                     }
                 }
             }
 
-            $this->validator->setRules($this->rules);
+            $this->validator->setRules($this->updateRules);
 
             return $this->validator->run($data, $this);
         }

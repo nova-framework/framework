@@ -46,10 +46,11 @@ class MySQL extends BaseEngine
         }
 
         // Prepare the PDO's options.
-        $options = array();
-
         if (isset($config['compress']) && ($config['compress'] === true)) {
             $options = array(\PDO::MYSQL_ATTR_COMPRESS => true);
+        }
+        else {
+            $options = array();
         }
 
         // Prepare the PDO's DSN

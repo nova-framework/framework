@@ -207,8 +207,10 @@ class BaseModel extends Model
 
         $this->setWhere($params);
 
+        $where = $this->wheres();
+
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
+        $whereStr = $this->parseSelectWheres($where, $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 1";
@@ -607,14 +609,9 @@ class BaseModel extends Model
         }
 
         // Prepare the WHERE parameters.
-        if(is_array($params[0])) {
-            $where = $params[0];
-        }
-        else {
-            $value = isset($params[1]) ? $params[1] : '';
+        $this->setWhere($params);
 
-            $where = array($params[0] => $value);
-        }
+        $where = $this->wheres();
 
         //
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));

@@ -748,7 +748,7 @@ class BaseModel extends Model
 
         $result = $this->asArray()->select($sql);
 
-        if(is_array($result)) {
+        if($result !== false) {
             return $result['count'];
         }
 

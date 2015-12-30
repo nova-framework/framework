@@ -3,6 +3,8 @@
 .DS_Store
 vendor
 composer.lock
+app/Config/config.php
+app/Config/constants.php
 
 # Test specific
 tmp/test/*

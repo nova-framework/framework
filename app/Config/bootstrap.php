@@ -18,6 +18,11 @@ use Nova\Logger;
 /** Prepare the current directory for configuration files. */
 $configDir = dirname(__FILE__) .DS;
 
+/** Check for valid configuration files. */
+if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'constants.php')) {
+    die('No config.php or constants.php found, configure and rename *.example.php in ' .str_replace(BASEPATH, '', APPPAPTH) .'Config.');
+}
+
 /** Turn on output buffering. */
 ob_start();
 

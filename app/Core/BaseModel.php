@@ -283,7 +283,9 @@ class BaseModel extends Model
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = $this->parseSelectWheres($this->tempWheres, $bindParams);
+        $where = $this->wheres();
+
+        $whereStr = $this->parseSelectWheres($where, $bindParams);
 
         // Prepare the ORDER details.
         $orderStr = $this->parseSelectOrder();

@@ -329,6 +329,8 @@ class BaseModel extends Model
 
         if($result !== false) {
             $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
+
+            return true;
         }
 
         return false;

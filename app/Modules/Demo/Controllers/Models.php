@@ -56,6 +56,12 @@ class Models extends BaseController
         $message = '';
 
         //
+        $result = $this->model->countBy('username !=', 'admin');
+
+        $message .= '<h4>$this->model->countBy(\'username !=\', \'admin\');</h4>';
+        $message .= '<pre>'.var_export($result, true).'</pre><br>';
+
+        //
         $members = $this->model->limit(2, 0)->findAll();
 
         $message .= '<h4>$this->model->limit(2, 0)->findAll();</h4>';

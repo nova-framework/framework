@@ -224,8 +224,8 @@ class BaseModel extends Model
             $result = $this->trigger('afterFind', array('method' => 'findBy', 'fields' => $result));
         }
 
-        // Reset our select WHEREs
-        $this->tempWheres = array();
+        // Reset the Model State.
+        $this->resetState();
 
         return $result;
     }
@@ -252,8 +252,8 @@ class BaseModel extends Model
         //
         $result = $this->select($sql, array(), true);
 
-        // Reset our select ORDER
-        $this->tempOrder = null;
+        // Reset the Model State.
+        $this->resetState();
 
         return $result;
     }
@@ -307,14 +307,8 @@ class BaseModel extends Model
             }
         }
 
-        // Reset our select WHEREs
-        $this->tempWheres = array();
-
-        // Reset our select ORDER
-        $this->tempOrder = null;
-
-        // Reset our select LIMIT
-        $this->tempLimit = null;
+        // Reset the Model State.
+        $this->resetState();
 
         return $result;
     }
@@ -507,8 +501,8 @@ class BaseModel extends Model
             'result' => $result
         ));
 
-        // Reset our select WHEREs
-        $this->tempWheres = array();
+        // Reset the Model State.
+        $this->resetState();
 
         return $result;
     }
@@ -626,8 +620,8 @@ class BaseModel extends Model
             'result' => $result
         ));
 
-        // Reset our select WHEREs
-        $this->tempWheres = array();
+        // Reset the Model State.
+        $this->resetState();
 
         return $result;
     }
@@ -1020,6 +1014,18 @@ class BaseModel extends Model
                 return date('Y-m-d', $curr_date);
                 break;
         }
+    }
+
+    protected function resetState()
+    {
+        // Reset our select WHEREs
+        $this->tempWheres = array();
+
+        // Reset our select ORDER
+        $this->tempOrder = null;
+
+        // Reset our select LIMIT
+        $this->tempLimit = null;
     }
 
     protected function setWhere($params)

@@ -118,6 +118,18 @@ interface Engine
     public function insert($table, $data, $transaction = false);
 
     /**
+     * Execute replace query, will automatically build query for you.
+     *
+     * @param string $table Table to execute the insert.
+     * @param array $data Represents the Record data.
+     * @param bool $transaction
+     * @return bool|int
+     *
+     * @throws \Exception
+     */
+    public function replace($table, $data, $transaction = false);
+
+    /**
      * Execute insert query, will automatically build query for you.
      * You can also give an array as $data, this will try to insert each entry in the array.
      * Not all engine's support this! Check the manual!

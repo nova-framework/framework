@@ -48,7 +48,7 @@ Config::set('demos_menu', array(
         'icon'      => 'fa fa-gears',
     ),
     'models' => array(
-        'name'      => __d('demo', 'BaseModel'),
+        'name'      => __d('demo', 'Base Model'),
         'url'       => site_url('demos/models'),
         'icon'      => 'fa fa-gears',
     ),

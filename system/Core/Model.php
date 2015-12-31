@@ -29,10 +29,18 @@ abstract class Model
      *
      * @param string $linkName Custom connection name, default is 'default'
      */
-    public function __construct($engine = 'default')
+    public function __construct($engine = null)
     {
-        /** connect to Database Engine here. */
-        $this->db = Manager::getEngine($engine);
+        if(($engine === null) || is_string($engine)) {
+            $engine = ! empty($engine) ? $engine : 'default';
+
+            // Connect to Database Engine.
+            $this->db = Manager::getEngine($engine);
+        }
+        else if(is_object($engine)) {
+            // Set the given Database Engine.
+            $this->db = $engine;
+        }
     }
 
 }

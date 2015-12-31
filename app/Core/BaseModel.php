@@ -152,11 +152,11 @@ class BaseModel extends Model
     /**
      * Constructor
      */
-    public function __construct($engine = 'default', $validator = null)
+    public function __construct($engine = null, $validator = null)
     {
         parent::__construct($engine);
 
-        // Always protect our attributes
+        // Always protect our fields
         array_unshift($this->beforeInsert, 'protectFields');
         array_unshift($this->beforeUpdate, 'protectFields');
 

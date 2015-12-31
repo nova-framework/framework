@@ -928,6 +928,47 @@ class BaseModel extends Model
     }
 
     /**
+     * Protect attributes by removing them from $row array.
+     * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
+     *
+     * @param object /array $row The value pair item to remove.
+     */
+    public function protectFields($row)
+    {
+        foreach ($this->protectedFields as $field) {
+            if (is_object($row)) {
+                unset($row->$field);
+            }
+            else {
+                unset($row[$field]);
+            }
+        }
+
+        return $row;
+    }
+
+    /**
+     * Get the field names for this Model's table.
+     *
+     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
+     * the field list from $this->db->listFields($this->table());
+     *
+     * @return array    Returns the database fields for this Model
+     */
+    public function tableFields()
+    {
+        if (empty($this->fields)) {
+            $this->fields = $this->db->listFields($this->table());
+        }
+
+        if (empty($this->fields)) {
+            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
+        }
+
+        return $this->fields;
+    }
+
+    /**
      * Execute Select Query, binding values into the $sql Query.
      *
      * @param string $sql
@@ -1074,47 +1115,6 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
     // Internal Methods
     //--------------------------------------------------------------------
-
-    /**
-     * Protect attributes by removing them from $row array.
-     * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
-     *
-     * @param object /array $row The value pair item to remove.
-     */
-    public function protectFields($row)
-    {
-        foreach ($this->protectedFields as $field) {
-            if (is_object($row)) {
-                unset($row->$field);
-            }
-            else {
-                unset($row[$field]);
-            }
-        }
-
-        return $row;
-    }
-
-    /**
-     * Get the field names for this Model's table.
-     *
-     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
-     * the field list from $this->db->listFields($this->table());
-     *
-     * @return array    Returns the database fields for this Model
-     */
-    public function tableFields()
-    {
-        if (empty($this->fields)) {
-            $this->fields = $this->db->listFields($this->table());
-        }
-
-        if (empty($this->fields)) {
-            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
-        }
-
-        return $this->fields;
-    }
 
     /**
      * Extracts the Model's fields (except the key and those handled by Observers) from the $postData

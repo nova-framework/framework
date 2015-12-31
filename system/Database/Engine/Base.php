@@ -286,16 +286,24 @@ abstract class Base extends \PDO implements Engine
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
      * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
+     * @param string $mode Represents the insertion Mode, must be 'insert' or 'replace'
      * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
      *
      * @throws \Exception
      */
-    public function insert($table, $data, $transaction = false)
+    public function insert($table, $data, $transaction = false, $mode = 'insert')
     {
         $insertId = 0;
 
+        if(($mode != 'insert') && ($mode != 'replace')) {
+            throw new \Exception("Mode must be 'insert' or 'replace'");
+        }
+        else {
+            $mode = strtoupper($mode);
+        }
+
         // Check for valid data.
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             throw new \Exception("Data to insert must be an array of column -> value.");
         }
 
@@ -315,7 +323,7 @@ abstract class Base extends \PDO implements Engine
         $fieldNames = implode(',', array_keys($data));
         $fieldValues = ':'.implode(', :', array_keys($data));
 
-        $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
+        $stmt = $this->prepare("$mode INTO $table ($fieldNames) VALUES ($fieldValues)");
 
         foreach ($data as $key => $value) {
             if (is_int($value)) {
@@ -449,67 +457,7 @@ abstract class Base extends \PDO implements Engine
      */
     public function replace($table, $data, $transaction = false)
     {
-        $insertId = 0;
-
-        // Check for valid data.
-        if (! is_array($data)) {
-            throw new \Exception("Data to insert must be an array of column -> value.");
-        }
-
-        // Transaction?
-        $status = false;
-
-        if ($transaction) {
-            $status = $this->beginTransaction();
-        }
-
-        // Holding status
-        $failure = false;
-
-        // Prepare the parameters.
-        ksort($data);
-
-        $fieldNames = implode(',', array_keys($data));
-        $fieldValues = ':'.implode(', :', array_keys($data));
-
-        $stmt = $this->prepare("REPLACE INTO $table ($fieldNames) VALUES ($fieldValues)");
-
-        foreach ($data as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":$key", $value);
-            }
-        }
-
-        // Execute
-        $this->queryCount++;
-
-        if (! $stmt->execute()) {
-            $failure = true;
-        }
-        else {
-            // If no error, capture the last inserted id
-            $insertId = $this->lastInsertId();
-        }
-
-        // Commit when in transaction
-        if (! $failure && $transaction && $status) {
-            $failure = ! $this->commit();
-        }
-
-        // Check for failures
-        if ($failure) {
-            // Ok, rollback when using transactions.
-            if ($transaction) {
-                $this->rollBack();
-            }
-
-            // False on error.
-            return false;
-        }
-
-        return $insertId;
+        return $this->insert($table, $data, $transaction, 'replace');
     }
 
     /**

@@ -59,23 +59,24 @@ class Validator extends GUMP {
             'validate_min_age'             => __d('system', 'The :field field needs to have an age greater than or equal to :param.'),
         );
 
-        //
-        if(! empty($rules)) {
-            $this->setRules($rules);
-        }
+        // Set the Validation Rules.
+        $this->setRules($rules);
     }
 
-    public function run(array $data, $model = null, $check_fields = false)
+    public function run(array $data, $model = null, $checkFields = false)
     {
         if($model instanceof Model) {
             $this->model = $model;
+        }
+        else {
+            $this->model = null;
         }
 
         $data = $this->filter($data, $this->filter_rules());
 
         $validated = $this->validate($data, $this->validation_rules());
 
-        if ($check_fields === true) {
+        if ($checkFields === true) {
             $this->check_fields($data);
         }
 
@@ -158,6 +159,55 @@ class Validator extends GUMP {
         return $data;
     }
 
+    public function data($allFields = false)
+    {
+        if($allFields) {
+            return $this->current_data;
+        }
+
+        //
+        $return = array();
+
+        $fields = array_keys($this->validation_rules());
+
+        foreach($fields as $field) {
+            if(! str_starts_with($field, 'confirm_') && array_key_exists($field, $this->current_data)) {
+                $return[$field] = $this->current_data[$field];
+            }
+        }
+
+        return $return;
+    }
+
+    public function errors()
+    {
+        if(empty($this->errors)) {
+            return null;
+        }
+
+        $errors = array();
+
+        foreach($this->errors as $index => $error) {
+            $errors[] = $error['message'];
+        }
+
+        return '<div>'.implode('</div><div>', $errors).'</div>';
+    }
+
+    public function xssClean(array $data)
+    {
+        $retval = array();
+
+        $fields = array_keys($this->validation_rules);
+
+        foreach($fields as $field) {
+            if(array_key_exists($field, $data)) {
+                $retval[$field] = filter_var($data[$field], FILTER_SANITIZE_STRING);
+            }
+        }
+
+        return $retval;
+    }
 
     public function setRules(array $rules)
     {
@@ -189,56 +239,6 @@ class Validator extends GUMP {
         if(! empty($filter_rules)) {
             $this->filter_rules($filter_rules);
         }
-    }
-
-    public function getData($allFields = false)
-    {
-        if($allFields) {
-            return $this->current_data;
-        }
-
-        //
-        $return = array();
-
-        $fields = array_keys($this->validation_rules());
-
-        foreach($fields as $field) {
-            if(! str_starts_with($field, 'confirm_') && array_key_exists($field, $this->current_data)) {
-                $return[$field] = $this->current_data[$field];
-            }
-        }
-
-        return $return;
-    }
-
-    public function getErrors()
-    {
-        if(empty($this->errors)) {
-            return null;
-        }
-
-        $errors = array();
-
-        foreach($this->errors as $index => $error) {
-            $errors[] = $error['message'];
-        }
-
-        return '<div>'.implode('</div><div>', $errors).'</div>';
-    }
-
-    public function xssClean(array $data)
-    {
-        $retval = array();
-
-        $fields = array_keys($this->validation_rules);
-
-        foreach($fields as $field) {
-            if(array_key_exists($field, $data)) {
-                $retval[$field] = filter_var($data[$field], FILTER_SANITIZE_STRING);
-            }
-        }
-
-        return $retval;
     }
 
     public function setMessages(array $messages)

@@ -102,17 +102,22 @@ class BaseModel extends Model
     /**
      * Temporary select's ORDER attribute.
      */
-    protected $tempOrder = null;
+    protected $tempSelectOrder = null;
 
     /**
      * Temporary select's LIMIT attribute.
      */
-    protected $tempLimit = null;
+    protected $tempSelectLimit = null;
 
     /**
      * Protected, non-modifiable attributes
      */
     protected $protectedFields = array();
+
+    /**
+     * The Validator instance.
+     */
+    protected $validator = null;
 
     /**
      * Optionally skip the validation.
@@ -130,10 +135,10 @@ class BaseModel extends Model
      * An array of extra rules to add to validation rules during inserts only.
      * Often used for adding 'required' rules to fields on insert, but not updates.
      *
-     *   array( 'username' => 'required|strip_tags' );
+     *   array( 'username' => 'required' );
      * @var array
      */
-    protected $insertValidateRules = array();
+    protected $validateInsertRules = array();
 
     /**
      * @var Array Columns for the Model's database fields
@@ -166,8 +171,8 @@ class BaseModel extends Model
             array_unshift($this->beforeUpdate, 'modifiedOn');
         }
 
-        // Do we have a form_validation library?
-        if (! is_null($validator)) {
+        // Do we have a Validator instance?
+        if ($validator instanceof Validator) {
             $this->validator = $validator;
         }
         else {
@@ -849,22 +854,14 @@ class BaseModel extends Model
 
     public function limit($limit, $start = 0)
     {
-        $this->tempLimit = array($start => $limit);
+        $this->tempSelectLimit = array($start => $limit);
 
         return $this;
     }
 
     public function order($sense = 'ASC')
     {
-        $sense = strtoupper($sense);
-
-        if(($sense != 'ASC') && ($sense != 'DESC')) {
-            throw new \UnexpectedValueException('Invalid parameter');
-        }
-
-        $this->tempOrder = array($this->primaryKey => $sense);
-
-        return $this;
+        return $this->orderBy($this->primaryKey, $sense);
     }
 
     public function orderBy($field, $sense = 'ASC')
@@ -875,7 +872,7 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
-        $this->tempOrder = array($field => $sense);
+        $this->tempSelectOrder = array($field => $sense);
 
         return $this;
     }
@@ -994,10 +991,10 @@ class BaseModel extends Model
 
         if (! empty($this->validateRules) && is_array($this->validateRules)) {
             // Any insert additions?
-            if (($type == 'insert') && is_array($this->insertValidateRules)) {
+            if (($type == 'insert') && is_array($this->validateInsertRules)) {
                 foreach ($this->validateRules as $field => &$row) {
-                    if (isset($this->insertValidateRules[$field])) {
-                        $row['rules'] .= '|' .$this->insertValidateRules[$field];
+                    if (isset($this->validateInsertRules[$field])) {
+                        $row['rules'] .= '|' .$this->validateInsertRules[$field];
                     }
                 }
             }
@@ -1234,10 +1231,10 @@ class BaseModel extends Model
         $this->tempWheres = array();
 
         // Reset our select ORDER
-        $this->tempOrder = null;
+        $this->tempSelectOrder = null;
 
         // Reset our select LIMIT
-        $this->tempLimit = null;
+        $this->tempSelectLimit = null;
     }
 
     protected function setWhere($params)
@@ -1313,7 +1310,7 @@ class BaseModel extends Model
     {
         $result = '';
 
-        $limits =& $this->tempLimit;
+        $limits =& $this->tempSelectLimit;
 
         if(is_numeric($limits)) {
             $result = '0, ' .$limits;
@@ -1333,7 +1330,7 @@ class BaseModel extends Model
 
     protected function parseSelectOrder()
     {
-        $order =& $this->tempOrder;
+        $order =& $this->tempSelectOrder;
 
         if(is_array($order) && ! empty($order)) {
             list($key, $sense) = each($order);

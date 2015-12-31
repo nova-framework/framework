@@ -779,7 +779,7 @@ class BaseModel extends Model
      */
     public function asObject($className = null)
     {
-        $this->tempReturnType = $className ? $className : 'object';
+        $this->tempReturnType = ! is_null($className) ? $className : 'object';
 
         return $this;
     }

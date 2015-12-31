@@ -893,18 +893,18 @@ class BaseModel extends Model
      */
     public function isUnique($field, $value, $ignore = null)
     {
-        $where = array("where_$field" => $value);
+        $bindParams = array("where_$field" => $value);
 
         //
-        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :where_$field";
+        $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
 
         if($ignore !== null) {
             $sql .= " AND " .$this->primaryKey ." != :where_ignore";
 
-            $where['where_ignore'] = $ignore;
+            $bindParams['where_ignore'] = $ignore;
         }
 
-        $data = $this->select($sql, $where, true);
+        $data = $this->select($sql, $bindParams, true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;

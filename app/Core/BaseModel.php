@@ -887,14 +887,24 @@ class BaseModel extends Model
      *
      * @param string $field The field to search for.
      * @param string $value The value to match $field against.
+     * @param string $ignore Optionally, the ignored primaryKey.
      *
      * @return bool TRUE/FALSE
      */
-    public function isUnique($field, $value)
+    public function isUnique($field, $value, $ignore = null)
     {
-        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :where_$field";
+        $bindParams = array("where_$field" => $value);
 
-        $data = $this->select($sql, array("where_$field" => $value), true);
+        //
+        $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
+
+        if($ignore !== null) {
+            $sql .= " AND " .$this->primaryKey ." != :where_ignore";
+
+            $bindParams['where_ignore'] = $ignore;
+        }
+
+        $data = $this->select($sql, $bindParams, true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;

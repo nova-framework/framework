@@ -102,17 +102,22 @@ class BaseModel extends Model
     /**
      * Temporary select's ORDER attribute.
      */
-    protected $tempOrder = null;
+    protected $tempSelectOrder = null;
 
     /**
      * Temporary select's LIMIT attribute.
      */
-    protected $tempLimit = null;
+    protected $tempSelectLimit = null;
 
     /**
      * Protected, non-modifiable attributes
      */
     protected $protectedFields = array();
+
+    /**
+     * The Validator instance.
+     */
+    protected $validator = null;
 
     /**
      * Optionally skip the validation.
@@ -124,16 +129,16 @@ class BaseModel extends Model
      * An array of validation rules.
      * This needs to be the same format as validation rules passed to the Validator helper.
      */
-    protected $updateRules = array();
+    protected $validateRules = array();
 
     /**
      * An array of extra rules to add to validation rules during inserts only.
      * Often used for adding 'required' rules to fields on insert, but not updates.
      *
-     *   array( 'username' => 'required|strip_tags' );
+     *   array( 'username' => 'required' );
      * @var array
      */
-    protected $insertRules = array();
+    protected $validateInsertRules = array();
 
     /**
      * @var Array Columns for the Model's database fields
@@ -166,8 +171,8 @@ class BaseModel extends Model
             array_unshift($this->beforeUpdate, 'modifiedOn');
         }
 
-        // Do we have a form_validation library?
-        if (! is_null($validator)) {
+        // Do we have a Validator instance?
+        if ($validator instanceof Validator) {
             $this->validator = $validator;
         }
         else {
@@ -515,13 +520,13 @@ class BaseModel extends Model
     /**
      * Updates many records by an array of ids.
      *
-     * While updateBatch() allows modifying multiple, arbitrary rows of data
-     * on each row, updateMany() sets the same values for each row.
+     * While updateBatch() allows modifying multiple, arbitrary rows of data on each row,
+     * updateMany() sets the same values for each row.
      *
      * $ids = array(1, 2, 3, 5, 12);
      *
      * $data = array(
-     *     'deletedBy' => 1
+     *     'deleted_by' => 1
      * );
      *
      * $this->model->updateMany($ids, $data);
@@ -748,41 +753,6 @@ class BaseModel extends Model
         return $result;
     }
 
-    //--------------------------------------------------------------------
-    // Scope Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Temporarily sets our return type to an array.
-     */
-    public function asArray()
-    {
-        $this->tempReturnType = 'array';
-
-        return $this;
-    }
-
-    /**
-     * Temporarily sets our return type to an object.
-     *
-     * If $class is provided, the rows will be returned as objects that
-     * are instances of that class. $class MUST be an fully qualified
-     * class name, meaning that it must include the namespace, if applicable.
-     *
-     * @param string $class
-     * @return $this
-     */
-    public function asObject($className = null)
-    {
-        $this->tempReturnType = $className ? $className : 'object';
-
-        return $this;
-    }
-
-    //--------------------------------------------------------------------
-    // Utility Methods
-    //--------------------------------------------------------------------
-
     /**
      * Counts number of rows modified by an arbitrary WHERE call.
      * @return INT
@@ -840,6 +810,46 @@ class BaseModel extends Model
         return 0;
     }
 
+    //--------------------------------------------------------------------
+    // Scope Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Temporarily sets our return type to an array.
+     */
+    public function asArray()
+    {
+        $this->tempReturnType = 'array';
+
+        return $this;
+    }
+
+    /**
+     * Temporarily sets our return type to an object.
+     *
+     * If $class is provided, the rows will be returned as objects that
+     * are instances of that class. $class MUST be an fully qualified
+     * class name, meaning that it must include the namespace, if applicable.
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function asObject($className = null)
+    {
+        if($className !== null) {
+            $this->tempReturnType = $className;
+        }
+        else {
+            $this->tempReturnType = 'object';
+        }
+
+        return $this;
+    }
+
+    //--------------------------------------------------------------------
+    // Utility Methods
+    //--------------------------------------------------------------------
+
     public function where($field, $value = '')
     {
         $this->tempWheres[$field] = $value;
@@ -849,22 +859,14 @@ class BaseModel extends Model
 
     public function limit($limit, $start = 0)
     {
-        $this->tempLimit = array($start => $limit);
+        $this->tempSelectLimit = array($start => $limit);
 
         return $this;
     }
 
     public function order($sense = 'ASC')
     {
-        $sense = strtoupper($sense);
-
-        if(($sense != 'ASC') && ($sense != 'DESC')) {
-            throw new \UnexpectedValueException('Invalid parameter');
-        }
-
-        $this->tempOrder = array($this->primaryKey => $sense);
-
-        return $this;
+        return $this->orderBy($this->primaryKey, $sense);
     }
 
     public function orderBy($field, $sense = 'ASC')
@@ -875,7 +877,7 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
-        $this->tempOrder = array($field => $sense);
+        $this->tempSelectOrder = array($field => $sense);
 
         return $this;
     }
@@ -890,9 +892,9 @@ class BaseModel extends Model
      */
     public function isUnique($field, $value)
     {
-        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :value";
+        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :where_$field";
 
-        $data = $this->select($sql, array('value' => $value), true);
+        $data = $this->select($sql, array("where_$field" => $value), true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -906,8 +908,13 @@ class BaseModel extends Model
      *
      * @return string The name of the table used by this class (including the DB_PREFIX).
      */
-    public function table()
+    public function table($table = null)
     {
+        if($table !== null) {
+            // A custom Table Name is wanted.
+            return DB_PREFIX .$table;
+        }
+
         return DB_PREFIX .$this->table;
     }
 
@@ -923,6 +930,47 @@ class BaseModel extends Model
         $this->protectedFields[] = $field;
 
         return $this;
+    }
+
+    /**
+     * Protect attributes by removing them from $row array.
+     * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
+     *
+     * @param object /array $row The value pair item to remove.
+     */
+    public function protectFields($row)
+    {
+        foreach ($this->protectedFields as $field) {
+            if (is_object($row)) {
+                unset($row->$field);
+            }
+            else {
+                unset($row[$field]);
+            }
+        }
+
+        return $row;
+    }
+
+    /**
+     * Get the field names for this Model's table.
+     *
+     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
+     * the field list from $this->db->listFields($this->table());
+     *
+     * @return array    Returns the database fields for this Model
+     */
+    public function tableFields()
+    {
+        if (empty($this->fields)) {
+            $this->fields = $this->db->listFields($this->table());
+        }
+
+        if (empty($this->fields)) {
+            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
+        }
+
+        return $this->fields;
     }
 
     /**
@@ -974,7 +1022,7 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Validates the data passed into it based upon the Validator Rules setup in the $this->updateRules property.
+     * Validates the data passed into it based upon the Validator Rules setup in the $this->validateRules property.
      *
      * If $type == 'insert', any additional rules in the class var $insert_validate_rules
      * for that field will be added to the rules.
@@ -992,17 +1040,17 @@ class BaseModel extends Model
             return $data;
         }
 
-        if (! empty($this->updateRules) && is_array($this->updateRules)) {
+        if (! empty($this->validateRules) && is_array($this->validateRules)) {
             // Any insert additions?
-            if (($type == 'insert') && ! empty($this->insertRules) && is_array($this->insertRules)) {
-                foreach ($this->updateRules as $field => &$row) {
-                    if (isset($this->insertRules[$field])) {
-                        $row['rules'] .= '|' .$this->insertRules[$field];
+            if (($type == 'insert') && is_array($this->validateInsertRules)) {
+                foreach ($this->validateRules as $field => &$row) {
+                    if (isset($this->validateInsertRules[$field])) {
+                        $row['rules'] .= '|' .$this->validateInsertRules[$field];
                     }
                 }
             }
 
-            $this->validator->setRules($this->updateRules);
+            $this->validator->setRules($this->validateRules);
 
             return $this->validator->run($data, $this);
         }
@@ -1072,47 +1120,6 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
     // Internal Methods
     //--------------------------------------------------------------------
-
-    /**
-     * Protect attributes by removing them from $row array.
-     * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
-     *
-     * @param object /array $row The value pair item to remove.
-     */
-    public function protectFields($row)
-    {
-        foreach ($this->protectedFields as $field) {
-            if (is_object($row)) {
-                unset($row->$field);
-            }
-            else {
-                unset($row[$field]);
-            }
-        }
-
-        return $row;
-    }
-
-    /**
-     * Get the field names for this Model's table.
-     *
-     * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
-     * the field list from $this->db->listFields($this->table());
-     *
-     * @return array    Returns the database fields for this Model
-     */
-    public function tableFields()
-    {
-        if (empty($this->fields)) {
-            $this->fields = $this->db->listFields($this->table());
-        }
-
-        if (empty($this->fields)) {
-            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
-        }
-
-        return $this->fields;
-    }
 
     /**
      * Extracts the Model's fields (except the key and those handled by Observers) from the $postData
@@ -1234,10 +1241,10 @@ class BaseModel extends Model
         $this->tempWheres = array();
 
         // Reset our select ORDER
-        $this->tempOrder = null;
+        $this->tempSelectOrder = null;
 
         // Reset our select LIMIT
-        $this->tempLimit = null;
+        $this->tempSelectLimit = null;
     }
 
     protected function setWhere($params)
@@ -1313,7 +1320,7 @@ class BaseModel extends Model
     {
         $result = '';
 
-        $limits =& $this->tempLimit;
+        $limits =& $this->tempSelectLimit;
 
         if(is_numeric($limits)) {
             $result = '0, ' .$limits;
@@ -1333,7 +1340,7 @@ class BaseModel extends Model
 
     protected function parseSelectOrder()
     {
-        $order =& $this->tempOrder;
+        $order =& $this->tempSelectOrder;
 
         if(is_array($order) && ! empty($order)) {
             list($key, $sense) = each($order);

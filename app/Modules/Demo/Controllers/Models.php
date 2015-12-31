@@ -125,7 +125,7 @@ class Models extends BaseController
         $message .= '<pre>'.var_export($members5, true).'</pre><br>';
 
         // Setup the View variables.
-        $this->title(__d('demo', 'BaseModel Demo'));
+        $this->title(__d('demo', 'Base Model Demo'));
 
         $this->set('message', $message);
     }

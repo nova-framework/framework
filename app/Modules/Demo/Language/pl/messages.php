@@ -1,6 +1,8 @@
 <?php
 
 return array (
+  'Base Model' => '',
+  'Base Model Demo' => '',
   'Classic Controller' => '',
   'Controllers' => '',
   'Dashboard' => '',

@@ -908,8 +908,13 @@ class BaseModel extends Model
      *
      * @return string The name of the table used by this class (including the DB_PREFIX).
      */
-    public function table()
+    public function table($table = null)
     {
+        if($table !== null) {
+            // A custom Table Name is wanted.
+            return DB_PREFIX .$table;
+        }
+
         return DB_PREFIX .$this->table;
     }
 

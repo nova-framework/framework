@@ -753,46 +753,6 @@ class BaseModel extends Model
         return $result;
     }
 
-    //--------------------------------------------------------------------
-    // Scope Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Temporarily sets our return type to an array.
-     */
-    public function asArray()
-    {
-        $this->tempReturnType = 'array';
-
-        return $this;
-    }
-
-    /**
-     * Temporarily sets our return type to an object.
-     *
-     * If $class is provided, the rows will be returned as objects that
-     * are instances of that class. $class MUST be an fully qualified
-     * class name, meaning that it must include the namespace, if applicable.
-     *
-     * @param string $class
-     * @return $this
-     */
-    public function asObject($className = null)
-    {
-        if($className !== null) {
-            $this->tempReturnType = $className;
-        }
-        else {
-            $this->tempReturnType = 'object';
-        }
-
-        return $this;
-    }
-
-    //--------------------------------------------------------------------
-    // Utility Methods
-    //--------------------------------------------------------------------
-
     /**
      * Counts number of rows modified by an arbitrary WHERE call.
      * @return INT
@@ -849,6 +809,46 @@ class BaseModel extends Model
 
         return 0;
     }
+
+    //--------------------------------------------------------------------
+    // Scope Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Temporarily sets our return type to an array.
+     */
+    public function asArray()
+    {
+        $this->tempReturnType = 'array';
+
+        return $this;
+    }
+
+    /**
+     * Temporarily sets our return type to an object.
+     *
+     * If $class is provided, the rows will be returned as objects that
+     * are instances of that class. $class MUST be an fully qualified
+     * class name, meaning that it must include the namespace, if applicable.
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function asObject($className = null)
+    {
+        if($className !== null) {
+            $this->tempReturnType = $className;
+        }
+        else {
+            $this->tempReturnType = 'object';
+        }
+
+        return $this;
+    }
+
+    //--------------------------------------------------------------------
+    // Utility Methods
+    //--------------------------------------------------------------------
 
     public function where($field, $value = '')
     {

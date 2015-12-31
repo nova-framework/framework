@@ -887,7 +887,7 @@ class BaseModel extends Model
      *
      * @param string $field The field to search for.
      * @param string $value The value to match $field against.
-     * @param string $ignore .
+     * @param string $ignore Optionally, the ignored primaryKey.
      *
      * @return bool TRUE/FALSE
      */

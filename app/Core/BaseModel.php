@@ -124,7 +124,7 @@ class BaseModel extends Model
      * An array of validation rules.
      * This needs to be the same format as validation rules passed to the Validator helper.
      */
-    protected $updateRules = array();
+    protected $validateRules = array();
 
     /**
      * An array of extra rules to add to validation rules during inserts only.
@@ -133,7 +133,7 @@ class BaseModel extends Model
      *   array( 'username' => 'required|strip_tags' );
      * @var array
      */
-    protected $insertRules = array();
+    protected $insertValidateRules = array();
 
     /**
      * @var Array Columns for the Model's database fields
@@ -890,9 +890,9 @@ class BaseModel extends Model
      */
     public function isUnique($field, $value)
     {
-        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :value";
+        $sql = "SELECT $field FROM " .$this->table() ." WHERE $field = :where_$field";
 
-        $data = $this->select($sql, array('value' => $value), true);
+        $data = $this->select($sql, array("where_$field" => $value), true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -974,7 +974,7 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Validates the data passed into it based upon the Validator Rules setup in the $this->updateRules property.
+     * Validates the data passed into it based upon the Validator Rules setup in the $this->validateRules property.
      *
      * If $type == 'insert', any additional rules in the class var $insert_validate_rules
      * for that field will be added to the rules.
@@ -992,17 +992,17 @@ class BaseModel extends Model
             return $data;
         }
 
-        if (! empty($this->updateRules) && is_array($this->updateRules)) {
+        if (! empty($this->validateRules) && is_array($this->validateRules)) {
             // Any insert additions?
-            if (($type == 'insert') && ! empty($this->insertRules) && is_array($this->insertRules)) {
-                foreach ($this->updateRules as $field => &$row) {
-                    if (isset($this->insertRules[$field])) {
-                        $row['rules'] .= '|' .$this->insertRules[$field];
+            if (($type == 'insert') && is_array($this->insertValidateRules)) {
+                foreach ($this->validateRules as $field => &$row) {
+                    if (isset($this->insertValidateRules[$field])) {
+                        $row['rules'] .= '|' .$this->insertValidateRules[$field];
                     }
                 }
             }
 
-            $this->validator->setRules($this->updateRules);
+            $this->validator->setRules($this->validateRules);
 
             return $this->validator->run($data, $this);
         }

@@ -296,7 +296,7 @@ abstract class Base extends \PDO implements Engine
         $insertId = 0;
 
         if(($mode != 'insert') && ($mode != 'replace')) {
-            throw new \Exception("Mode must be 'insert' or 'replace'");
+            throw new \Exception("Insert Mode must be 'insert' or 'replace'");
         }
         else {
             $mode = strtoupper($mode);

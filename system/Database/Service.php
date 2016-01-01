@@ -173,7 +173,6 @@ abstract class Service extends CoreService
 
     /**
      * Update multiple entities with the primary keys as where clause.
-     * Doesn't work with multiple primary keys!
      *
      * @param Entity[] $entities Array with entities.
      * @return bool
@@ -181,9 +180,6 @@ abstract class Service extends CoreService
      */
     public function updateBatch($entities)
     {
-        if (count($this->primaryKeys) > 1) {
-            throw new \Exception("Can't batch update entity with multiple primary keys! Use the single update instead!");
-        }
         if (! is_array($entities)){
             throw new \UnexpectedValueException('$entities parameter needs to be an array with entities!');
         }
@@ -200,7 +196,7 @@ abstract class Service extends CoreService
         }
 
         // Execute the batch update
-        return $this->engine->updateBatch(DB_PREFIX . $this->table, $data, $this->primaryKeys[0]);
+        return $this->engine->updateBatch(DB_PREFIX . $this->table, $data, $this->primaryKeys);
     }
 
     /**

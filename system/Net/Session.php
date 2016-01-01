@@ -12,6 +12,8 @@ namespace Nova\Net;
 
 /**
  * Prefix sessions with useful methods.
+ *
+ * @codeCoverageIgnore
  */
 class Session
 {

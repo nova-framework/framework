@@ -56,7 +56,11 @@ class Router
     private $config;
 
 
-    // Constructor
+    /**
+     * Router constructor.
+     *
+     * @codeCoverageIgnore
+     */
     public function __construct()
     {
         self::$instance =& $this;
@@ -103,6 +107,10 @@ class Router
         $router->callback($callback);
     }
 
+    /**
+     * Register catchAll route
+     * @param $callback
+     */
     public static function catchAll($callback)
     {
         $router =& self::getInstance();

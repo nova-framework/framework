@@ -21,6 +21,7 @@ class Url
     /**
      * Redirect to chosen url.
      *
+     * @codeCoverageIgnore
      * @param  string  $url      the url to redirect to
      * @param  boolean $fullpath if true use only url in redirect instead of using DIR
      */
@@ -138,6 +139,8 @@ class Url
 
     /**
      * Go to the previous url.
+     *
+     * @codeCoverageIgnore
      */
     public static function previous()
     {

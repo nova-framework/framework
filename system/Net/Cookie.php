@@ -8,7 +8,11 @@
 
 namespace Nova\Net;
 
-
+/**
+ * Class Cookie
+ * @package Nova\Net
+ * @codeCoverageIgnore
+ */
 class Cookie
 {
     const FourYears = 126144000;

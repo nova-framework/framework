@@ -261,15 +261,17 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         $data = array(
             array(
                 'carid' => $id_2,
-                'model' => 'FrameworkCar_Update_Done_2'
+                'model' => 'FrameworkCar_Update_Done_2',
+                'costs' => 18000
             ),
             array(
                 'carid' => $id_3,
-                'model' => 'FrameworkCar_Update_Done_3'
+                'model' => 'FrameworkCar_Update_Done_3',
+                'costs' => 18000
             )
         );
 
-        $status = $this->engine->updateBatch(DB_PREFIX . 'car', $data, 'carid');
+        $status = $this->engine->updateBatch(DB_PREFIX . 'car', $data, array('carid', 'costs'));
 
         $this->assertTrue($status);
 
@@ -324,5 +326,57 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
         // Should be empty => false.
         $this->assertFalse($all);
+    }
+
+
+    /**
+     * @covers \Nova\Database\Engine\Base::rawPrepare
+     */
+    public function testRawPrepare()
+    {
+        $this->prepareEngine();
+
+        $statement = $this->engine->rawPrepare("SELECT * FROM " . DB_PREFIX . "car WHERE make = :make", array(':make' => 'Tesla'));
+
+        $this->assertInstanceOf('\PDOStatement', $statement);
+
+        $execute = $statement->execute();
+
+        $this->assertTrue($execute);
+
+        $all = $statement->fetchAll(\PDO::FETCH_OBJ);
+
+        $this->assertEquals(1, count($all));
+    }
+
+
+
+    /**
+     * @covers \Nova\Database\Engine\MySQL::listFields
+     */
+    public function testListFields()
+    {
+        $this->prepareEngine();
+
+        $fields = $this->engine->listFields(DB_PREFIX . 'car');
+
+        $this->assertEquals(array(
+            'carid', 'make', 'model', 'costs'
+        ), $fields);
+    }
+
+
+    /**
+     * @covers \Nova\Database\Engine\Base::escape
+     */
+    public function testEscape()
+    {
+        $this->prepareEngine();
+
+        $input = "'stringt'\"toTetst%&^$";
+        $result = $this->engine->escape($input);
+
+        $this->assertNotFalse($result);
+        $this->assertGreaterThanOrEqual(strlen($input), strlen($result));
     }
 }

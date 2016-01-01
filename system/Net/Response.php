@@ -9,7 +9,12 @@
 
 namespace Nova\Net;
 
-
+/**
+ * Class Response
+ *
+ * @codeCoverageIgnore
+ * @package Nova\Net
+ */
 class Response
 {
     /**

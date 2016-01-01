@@ -60,7 +60,7 @@ abstract class Base extends \PDO implements Engine
             }
 
             if(! class_exists($this->returnType)) {
-                throw new \Exception("No valid Entity Class is given: " .$$this->returnType);
+                throw new \Exception("No valid Entity Class is given: " .$this->returnType);
             }
 
             $fetchMethod = \PDO::FETCH_CLASS;

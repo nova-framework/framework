@@ -776,10 +776,14 @@ abstract class Base extends \PDO implements Engine
 
         // Bind the key and values (only if given).
         foreach ($bindParams as $key => $value) {
+            if (substr($key, 0, 1) !== ':') {
+                $key = ':' . $key;
+            }
+
             if (is_int($value)) {
-                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
             } else {
-                $stmt->bindValue(":$key", $value);
+                $stmt->bindValue("$key", $value);
             }
         }
 

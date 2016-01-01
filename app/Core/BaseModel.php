@@ -806,7 +806,7 @@ class BaseModel extends Model
 
     public function limit($limit, $start = 0)
     {
-        if(is_integer($limit) || is_integer($start)) {
+        if(! is_integer($limit) || ! is_integer($start)) {
             throw new \UnexpectedValueException('Invalid parameters');
         }
 

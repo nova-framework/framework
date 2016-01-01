@@ -753,6 +753,90 @@ class BaseModel extends Model
         return $result;
     }
 
+    //--------------------------------------------------------------------
+    // Scope Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Temporarily sets our return type to an array.
+     */
+    public function asArray()
+    {
+        $this->tempReturnType = 'array';
+
+        return $this;
+    }
+
+    /**
+     * Temporarily sets our return type to an object.
+     *
+     * If $class is provided, the rows will be returned as objects that
+     * are instances of that class. $class MUST be an fully qualified
+     * class name, meaning that it must include the namespace, if applicable.
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function asObject($className = null)
+    {
+        if($className !== null) {
+            $this->tempReturnType = $className;
+        }
+        else {
+            $this->tempReturnType = 'object';
+        }
+
+        return $this;
+    }
+
+    //--------------------------------------------------------------------
+    // Query Building Methods
+    //--------------------------------------------------------------------
+
+    public function where($field, $value = '')
+    {
+        if(empty($field)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        $this->tempWheres[$field] = $value;
+
+        return $this;
+    }
+
+    public function limit($limit, $start = 0)
+    {
+        if(is_integer($limit) || is_integer($start)) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        $this->tempSelectLimit = array($start => $limit);
+
+        return $this;
+    }
+
+    public function order($sense = 'ASC')
+    {
+        return $this->orderBy($this->primaryKey, $sense);
+    }
+
+    public function orderBy($field, $sense = 'ASC')
+    {
+        $sense = strtoupper($sense);
+
+        if(empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
+            throw new \UnexpectedValueException('Invalid parameters');
+        }
+
+        $this->tempSelectOrder = array($field => $sense);
+
+        return $this;
+    }
+
+    //--------------------------------------------------------------------
+    // Utility Methods
+    //--------------------------------------------------------------------
+
     /**
      * Counts number of rows modified by an arbitrary WHERE call.
      * @return INT
@@ -810,78 +894,6 @@ class BaseModel extends Model
         return 0;
     }
 
-    //--------------------------------------------------------------------
-    // Scope Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Temporarily sets our return type to an array.
-     */
-    public function asArray()
-    {
-        $this->tempReturnType = 'array';
-
-        return $this;
-    }
-
-    /**
-     * Temporarily sets our return type to an object.
-     *
-     * If $class is provided, the rows will be returned as objects that
-     * are instances of that class. $class MUST be an fully qualified
-     * class name, meaning that it must include the namespace, if applicable.
-     *
-     * @param string $class
-     * @return $this
-     */
-    public function asObject($className = null)
-    {
-        if($className !== null) {
-            $this->tempReturnType = $className;
-        }
-        else {
-            $this->tempReturnType = 'object';
-        }
-
-        return $this;
-    }
-
-    //--------------------------------------------------------------------
-    // Utility Methods
-    //--------------------------------------------------------------------
-
-    public function where($field, $value = '')
-    {
-        $this->tempWheres[$field] = $value;
-
-        return $this;
-    }
-
-    public function limit($limit, $start = 0)
-    {
-        $this->tempSelectLimit = array($start => $limit);
-
-        return $this;
-    }
-
-    public function order($sense = 'ASC')
-    {
-        return $this->orderBy($this->primaryKey, $sense);
-    }
-
-    public function orderBy($field, $sense = 'ASC')
-    {
-        $sense = strtoupper($sense);
-
-        if(empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
-            throw new \UnexpectedValueException('Invalid parameters');
-        }
-
-        $this->tempSelectOrder = array($field => $sense);
-
-        return $this;
-    }
-
     /**
      * Checks whether a field/value pair exists within the table.
      *
@@ -937,6 +949,10 @@ class BaseModel extends Model
      */
     public function protect($field)
     {
+        if(empty($field)) {
+            throw new \UnexpectedValueException('Invalid parameter');
+        }
+
         $this->protectedFields[] = $field;
 
         return $this;
@@ -948,14 +964,16 @@ class BaseModel extends Model
      *
      * @param object /array $row The value pair item to remove.
      */
-    public function protectFields($row)
+    public function protectFields(array $row)
     {
-        foreach ($this->protectedFields as $field) {
-            if (is_object($row)) {
-                unset($row->$field);
-            }
-            else {
-                unset($row[$field]);
+        if(! empty($row)) {
+            foreach ($this->protectedFields as $field) {
+                if (is_object($row)) {
+                    unset($row->$field);
+                }
+                else {
+                    unset($row[$field]);
+                }
             }
         }
 

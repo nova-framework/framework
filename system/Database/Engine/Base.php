@@ -792,6 +792,23 @@ abstract class Base extends \PDO implements Engine
         return $stmt;
     }
 
+
+    /**
+     * Quote escape a string for using in a query.
+     *
+     * WARNING: You can better prepare a query and bind values in that way.
+     * This method could not be always safe.
+     *
+     * @param $string String to be escaped
+     * @param int $parameter_type Optional parameter type.
+     *
+     * @return string|false Quoted string or false on failure.
+     */
+    public function escape($string, $parameter_type = \PDO::PARAM_STR)
+    {
+        return parent::quote($string, $parameter_type);
+    }
+
     /**
      * Truncate table
      * @param  string $table table name

@@ -364,4 +364,19 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
             'carid', 'make', 'model', 'costs'
         ), $fields);
     }
+
+
+    /**
+     * @covers \Nova\Database\Engine\Base::escape
+     */
+    public function testEscape()
+    {
+        $this->prepareEngine();
+
+        $input = "'stringt'\"toTetst%&^$";
+        $result = $this->engine->escape($input);
+
+        $this->assertNotFalse($result);
+        $this->assertGreaterThanOrEqual(strlen($input), strlen($result));
+    }
 }

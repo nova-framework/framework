@@ -379,7 +379,7 @@ abstract class Base extends \PDO implements Engine
     public function insertBatch($table, $data, $transaction = false)
     {
         // Check for valid data.
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             throw new \Exception("Data to insert must be an array of column -> value.");
         }
 
@@ -415,7 +415,7 @@ abstract class Base extends \PDO implements Engine
             // Execute
             $this->queryCount++;
 
-            if (!$stmt->execute()) {
+            if (! $stmt->execute()) {
                 $failure = true;
 
                 // We need to exit foreach, to inform about the error, or rollback.
@@ -434,7 +434,7 @@ abstract class Base extends \PDO implements Engine
         // Check for failures
         if ($failure) {
             // Ok, rollback when using transactions.
-            if ($transaction) {
+            if ($transaction && $status) {
                 $this->rollBack();
             }
 

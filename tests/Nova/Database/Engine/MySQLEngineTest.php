@@ -261,15 +261,17 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         $data = array(
             array(
                 'carid' => $id_2,
-                'model' => 'FrameworkCar_Update_Done_2'
+                'model' => 'FrameworkCar_Update_Done_2',
+                'costs' => 18000
             ),
             array(
                 'carid' => $id_3,
-                'model' => 'FrameworkCar_Update_Done_3'
+                'model' => 'FrameworkCar_Update_Done_3',
+                'costs' => 18000
             )
         );
 
-        $status = $this->engine->updateBatch(DB_PREFIX . 'car', $data, 'carid');
+        $status = $this->engine->updateBatch(DB_PREFIX . 'car', $data, array('carid', 'costs'));
 
         $this->assertTrue($status);
 

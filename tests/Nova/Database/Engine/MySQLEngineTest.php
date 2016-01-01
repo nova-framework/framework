@@ -348,4 +348,20 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, count($all));
     }
+
+
+
+    /**
+     * @covers \Nova\Database\Engine\MySQL::listFields
+     */
+    public function testListFields()
+    {
+        $this->prepareEngine();
+
+        $fields = $this->engine->listFields(DB_PREFIX . 'car');
+
+        $this->assertEquals(array(
+            'carid', 'make', 'model', 'costs'
+        ), $fields);
+    }
 }

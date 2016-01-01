@@ -327,4 +327,25 @@ class MySQLEngineTest extends \PHPUnit_Framework_TestCase
         // Should be empty => false.
         $this->assertFalse($all);
     }
+
+
+    /**
+     * @covers \Nova\Database\Engine\Base::rawPrepare
+     */
+    public function testRawPrepare()
+    {
+        $this->prepareEngine();
+
+        $statement = $this->engine->rawPrepare("SELECT * FROM " . DB_PREFIX . "car WHERE make = :make", array(':make' => 'Tesla'));
+
+        $this->assertInstanceOf('\PDOStatement', $statement);
+
+        $execute = $statement->execute();
+
+        $this->assertTrue($execute);
+
+        $all = $statement->fetchAll(\PDO::FETCH_OBJ);
+
+        $this->assertEquals(1, count($all));
+    }
 }

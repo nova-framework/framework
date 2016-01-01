@@ -380,7 +380,15 @@ abstract class Base extends \PDO implements Engine
     {
         // Check for valid data.
         if (! is_array($data)) {
-            throw new \Exception("Data to insert must be an array of column -> value.");
+            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
+        }
+
+        foreach($data as $record) {
+            if (is_array($record)) {
+                continue;
+            }
+
+            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
         }
 
         // Transaction?
@@ -446,7 +454,7 @@ abstract class Base extends \PDO implements Engine
     }
 
     /**
-     * Execute replace query, will automatically build query for you.
+     * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to determine which row to replace.
      *
      * @param string $table Table to execute the replace.
      * @param array $data Represents the Record data
@@ -604,7 +612,7 @@ abstract class Base extends \PDO implements Engine
     {
         // Check for valid data
         if (! is_array($data)) {
-            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
+            throw new \Exception("Data to update must be an array of records (array of array with column -> value).");
         }
 
         foreach($data as $record) {
@@ -612,7 +620,7 @@ abstract class Base extends \PDO implements Engine
                 continue;
             }
 
-            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
+            throw new \Exception("Data to update must be an array of records (array of array with column -> value).");
         }
 
         // Always make an array for the where keys.

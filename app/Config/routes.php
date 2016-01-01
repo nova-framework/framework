@@ -17,9 +17,6 @@ Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('admin/(:any)(/(:all))', 'App\Controllers\Demo@test');
 
-// All the un-matched Requests will be routed there.
-Router::catchAll('App\Controllers\Demo@catchAll');
-
 /*
 // Classic Routing
 Router::any('', 'welcome/index');
@@ -28,6 +25,9 @@ Router::any('admin/(:any)/(:all)', 'demo/test/$1/$2');
 Router::any('(:all)', 'demo/catchall/$1');
 */
 /** End static routes */
+
+// All the un-matched Requests will be routed there.
+Router::catchAll('App\Controllers\Demo@catchAll');
 
 /** If no Route found and no Catch-All Route defined. */
 Router::error('\App\Controllers\Error@error404');

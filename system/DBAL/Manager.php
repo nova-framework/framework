@@ -56,12 +56,10 @@ class Manager
             throw new \Exception("No valid Wrapper Class is given: " .$wrapperClass);
         }
 
-        $linkParams = $options['config'];
-
         // Will set the default fetchMode and fetchClass when provided in the config.
 
-        if (isset($linkParams['return_type'])) {
-            $returnType = $linkParams['return_type'];
+        if (isset($options['return_type'])) {
+            $returnType = $options['return_type'];
         }
         else {
             $returnType = 'array';
@@ -91,6 +89,8 @@ class Manager
 
             $fetchMode = PDO::FETCH_CLASS;
         }
+
+        $linkParams = $options['config'];
 
         //
         $linkParams['driver'] = $driver;

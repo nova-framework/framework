@@ -47,6 +47,11 @@ Config::set('demos_menu', array(
         'url'       => site_url('demos/events'),
         'icon'      => 'fa fa-gears',
     ),
+    'dbal' => array(
+        'name'      => __d('demo', 'DBAL'),
+        'url'       => site_url('demos/doctrine'),
+        'icon'      => 'fa fa-gears',
+    ),
     'models' => array(
         'name'      => __d('demo', 'Base Model'),
         'url'       => site_url('demos/models'),

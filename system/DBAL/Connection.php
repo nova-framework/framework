@@ -14,7 +14,7 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Connection as BaseConnection;
-
+use PDO;
 
 class Connection extends BaseConnection
 {
@@ -42,10 +42,10 @@ class Connection extends BaseConnection
         $className = null;
 
         if($fetchType == 'array') {
-            $fetchMode = \PDO::FETCH_ASSOC;
+            $fetchMode = PDO::FETCH_ASSOC;
         }
         else if($fetchType == 'object') {
-            $fetchMode = \PDO::FETCH_OBJ;
+            $fetchMode = PDO::FETCH_OBJ;
         }
         else {
             $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
@@ -60,7 +60,7 @@ class Connection extends BaseConnection
 
             $className = $fetchType;
 
-            $fetchMode = \PDO::FETCH_CLASS;
+            $fetchMode = PDO::FETCH_CLASS;
         }
 
         // Prepare the types.

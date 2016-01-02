@@ -12,6 +12,7 @@ namespace Nova\DBAL;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Configuration;
 use Nova\Config;
+use PDO;
 
 
 class Manager
@@ -57,6 +58,37 @@ class Manager
 
         $linkParams = $options['config'];
 
+        // Will set the default method when provided in the config.
+        if (isset($linkParams['return_type'])) {
+            $returnType = $linkParams['return_type'];
+        }
+        else {
+            $returnType = null;
+        }
+
+        if($returnType == 'array') {
+            $fetchMode = PDO::FETCH_ASSOC;
+        }
+        else if($returnType == 'object') {
+            $fetchMode = PDO::FETCH_OBJ;
+        }
+        else if($returnType !== null) {
+            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                throw new \Exception("No valid Entity Name is given: " .$returnType);
+            }
+
+            if(! class_exists($returnType)) {
+                throw new \Exception("No valid Entity Class is given: " .$returnType);
+            }
+
+            $fetchMode = PDO::FETCH_CLASS;
+        }
+        else {
+            $fetchMode = null;
+        }
+
         //
         $linkParams['driver'] = $driver;
 
@@ -66,6 +98,8 @@ class Manager
         $linkConfig = new Configuration();
 
         $connection = DriverManager::getConnection($linkParams, $linkConfig);
+
+        $connection->setFetchMode($fetchMode);
 
         // Save instance
         static::$instances[$linkName] = $connection;

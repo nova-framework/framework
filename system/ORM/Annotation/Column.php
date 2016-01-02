@@ -16,11 +16,19 @@ use Doctrine\Common\Annotations\Annotation;
  * @package Nova\ORM\Annotation
  *
  * @Annotation
- * @Annotation\Target("class")
+ * @Annotation\Target("PROPERTY")
  */
 class Column extends Annotation
 {
+    /**
+     * @var string
+     * @Annotation\Required
+     */
     public $name;
+
+    /** @var string */
     public $type;
+
+    /** @var string */
     public $default;
 }

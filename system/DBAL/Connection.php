@@ -64,7 +64,7 @@ class Connection extends BaseConnection
             }
         }
 
-        // Prepare the types.
+        // Prepare the parameter Types.
         if(empty($paramTypes)) {
             foreach ($params as $key => $value) {
                 if (is_integer($value)) {
@@ -92,7 +92,7 @@ class Connection extends BaseConnection
         return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_OBJ);
     }
 
-    public function fetchClass($statement, array $params = array(), array $types = array(), $className = null)
+    public function fetchClass($statement, array $params = array(), $className = null, array $paramTypes = array())
     {
         if((($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
             $className = ($className !== null) ? $className : $this->defaultFetchType;
@@ -111,7 +111,19 @@ class Connection extends BaseConnection
             throw new \Exception("No valid Entity Class is given: " .$className);
         }
 
-        return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_CLASS, $className);
+        // Prepare the parameter Types.
+        if(empty($paramTypes)) {
+            foreach ($params as $key => $value) {
+                if (is_integer($value)) {
+                    $paramTypes[] = PDO::PARAM_INT;
+                }
+                else {
+                    $paramTypes[] = PDO::PARAM_STR;
+                }
+            }
+        }
+
+        return $this->executeQuery($statement, $params, $paramTypes)->fetch(PDO::FETCH_CLASS, $className);
     }
 
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)

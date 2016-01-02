@@ -26,6 +26,10 @@ abstract class Entity
 
     public function __construct()
     {
+        // Reset the state
         $this->_state = 0;
+
+        // Let the entity be indexed, the annotations will be read into the Structure cache.
+        Structure::indexEntity($this);
     }
 }

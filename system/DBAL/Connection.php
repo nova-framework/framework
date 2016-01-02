@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection as BaseConnection;
 
 class Connection extends BaseConnection
 {
-    protected $defaultFetchClass = null;
+    protected $defaultFetchType = null;
 
     protected $queryCounter = 0;
 
@@ -28,9 +28,9 @@ class Connection extends BaseConnection
         parent::__construct($params, $driver, $config, $eventManager);
     }
 
-    public function setFetchClass($fetchClass)
+    public function setFetchType($fetchType)
     {
-        $this->defaultFetchClass = $fetchClass;
+        $this->defaultFetchType = $fetchType;
     }
 
     public function select($sql, array $params = array(), $types = array(), $fetchAll = false)

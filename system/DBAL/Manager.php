@@ -107,12 +107,9 @@ class Manager
         // Get a Connection instance
         $connection = DriverManager::getConnection($linkParams, $linkConfig);
 
-        // Set the (default) FetchMode and FetchClass
+        // Set the (default) FetchMode and FetchType
         $connection->setFetchMode($fetchMode);
-
-        if($fetchClass !== null) {
-            $connection->setFetchClass($fetchClass);
-        }
+        $connection->setFetchType($returnType);
 
         // Save instance
         static::$instances[$linkName] = $connection;

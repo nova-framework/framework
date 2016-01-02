@@ -48,19 +48,20 @@ class Connection extends BaseConnection
             $fetchMode = PDO::FETCH_OBJ;
         }
         else {
+            $fetchMode = PDO::FETCH_CLASS;
+
+            // Check and setup the fetchClass.
+            $className = $fetchType;
+
             $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
                 throw new \Exception("No valid Entity Name is given: " .$fetchType);
             }
 
-            if(! class_exists($fetchType)) {
-                throw new \Exception("No valid Entity Class is given: " .$fetchType);
+            if(! class_exists($className)) {
+                throw new \Exception("No valid Entity Class is given: " .$className);
             }
-
-            $className = $fetchType;
-
-            $fetchMode = PDO::FETCH_CLASS;
         }
 
         // Prepare the types.

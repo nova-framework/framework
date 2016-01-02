@@ -54,18 +54,13 @@ class Manager
             throw new \Exception("No valid Wrapper Class is given: " .$wrapperClass);
         }
 
-        $config = $options['config'];
+        $linkParams = $options['config'];
 
         //
-        $linkParams = array(
-            'dbname'       => $config['database'],
-            'user'         => $config['username'],
-            'password'     => $config['password'],
-            'host'         => $config['host'],
-            'driver'       => $driver,
-            'wrapperClass' => $wrapperClass
-        );
+        $linkParams['driver']       = $driver;
+        $linkParams['wrapperClass'] = $wrapperClass;
 
+        // Get the Configuration instance
         $linkConfig = new Configuration();
 
         $link = DriverManager::getConnection($linkParams, $linkConfig);

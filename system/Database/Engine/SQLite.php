@@ -32,7 +32,7 @@ class SQLite extends BaseEngine
         }
 
         // Prepare the PDO's DSN
-        $dsn = "sqlite:" .BASEPATH .'storage' .DS .'persistent' .DS .$config['file'];
+        $dsn = "sqlite:" .$config['path'];
 
         parent::__construct($dsn, $config);
     }

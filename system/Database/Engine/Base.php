@@ -70,7 +70,7 @@ abstract class Base extends \PDO implements Engine
         $this->config = $config;
 
         //
-        $username = isset($config['username']) ? $config['username'] : '';
+        $username = isset($config['user']) ? $config['user'] : '';
         $password = isset($config['password']) ? $config['password'] : '';
 
         // Call the PDO constructor.

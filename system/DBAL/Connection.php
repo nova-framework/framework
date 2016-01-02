@@ -9,6 +9,9 @@
 
 namespace Nova\DBAL;
 
+use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Connection as BaseConnection;
 
@@ -17,6 +20,11 @@ class Connection extends BaseConnection
 {
     protected $queryCounter = 0;
 
+
+    public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null)
+    {
+        parent::__construct($params, $driver, $config, $eventManager);
+    }
 
     public function select($sql, array $params = array(), $types = array(), $fetchAll = false)
     {
@@ -28,7 +36,6 @@ class Connection extends BaseConnection
 
         return $statement->fetch();
     }
-
 
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
     {

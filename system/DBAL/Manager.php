@@ -86,7 +86,8 @@ class Manager
             $fetchMode = PDO::FETCH_CLASS;
         }
         else {
-            $fetchMode = null;
+            // By default we use this FetchMode.
+            $fetchMode = PDO::FETCH_ASSOC;
         }
 
         //
@@ -97,8 +98,10 @@ class Manager
         // Get the Configuration instance
         $linkConfig = new Configuration();
 
+        // Get a Connection instance
         $connection = DriverManager::getConnection($linkParams, $linkConfig);
 
+        // Set the (default) FetchMode
         $connection->setFetchMode($fetchMode);
 
         // Save instance

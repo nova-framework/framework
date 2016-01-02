@@ -9,6 +9,7 @@
 
 namespace Nova\DBAL;
 
+use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Connection as BaseConnection;
 
 
@@ -17,7 +18,7 @@ class Connection extends BaseConnection
     protected $queryCounter = 0;
 
 
-    public function select($query, array $params = array(), $types = array(), $fetchAll = false)
+    public function select($sql, array $params = array(), $types = array(), $fetchAll = false)
     {
         $statement = $this->executeQuery($sql, $params, $types);
 

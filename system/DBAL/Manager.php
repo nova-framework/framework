@@ -17,7 +17,7 @@ use Nova\Config;
 class Manager
 {
     /** @var Connection[] connection instances */
-    private static $nstances = array();
+    private static $instances = array();
 
 
     public static function getConnection($linkName = 'default')

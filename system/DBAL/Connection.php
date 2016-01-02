@@ -36,7 +36,7 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($sql, array $params = array(), $fetchAll = false, $fetchType = null, $paramTypes = array())
+    public function select($sql, array $params = array(), $paramTypes = array(), $fetchAll = false, $fetchType = null)
     {
         // What fetch type? Use default if no return type is given in the call.
         $fetchType = ($fetchType !== null) ? $fetchType : $this->defaltFetchType;
@@ -95,7 +95,7 @@ class Connection extends BaseConnection
         return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_OBJ);
     }
 
-    public function fetchClass($statement, array $params = array(), $className = null, array $paramTypes = array())
+    public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $className = null)
     {
         if((($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
             $className = ($className !== null) ? $className : $this->defaultFetchType;
@@ -104,29 +104,7 @@ class Connection extends BaseConnection
             throw new \Exception("No valid Entity Class is given");
         }
 
-        $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
-
-        if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-            throw new \Exception("No valid Entity Name is given: " .$className);
-        }
-
-        if(! class_exists($className)) {
-            throw new \Exception("No valid Entity Class is given: " .$className);
-        }
-
-        // Prepare the parameter Types.
-        if(empty($paramTypes)) {
-            foreach ($params as $key => $value) {
-                if (is_integer($value)) {
-                    $paramTypes[] = PDO::PARAM_INT;
-                }
-                else {
-                    $paramTypes[] = PDO::PARAM_STR;
-                }
-            }
-        }
-
-        return $this->executeQuery($statement, $params, $paramTypes)->fetch(PDO::FETCH_CLASS, $className);
+        return $this->select($sql, $params, $paramTypes, $fetchAll = false, $className);
     }
 
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)

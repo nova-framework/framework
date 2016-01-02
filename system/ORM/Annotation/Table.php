@@ -7,7 +7,7 @@
  * @date January 2nd, 2016
  */
 
-namespace ORM\Annotation;
+namespace Nova\ORM\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 

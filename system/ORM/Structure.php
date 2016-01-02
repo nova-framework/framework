@@ -9,6 +9,10 @@
 
 namespace Nova\ORM;
 
+use Doctrine\Common\Annotations\AnnotationException;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Nova\ORM\Annotation\Table;
+
 /**
  * Structure helper, will read and cache table and column structures by reading the Annotations.
  *
@@ -16,8 +20,36 @@ namespace Nova\ORM;
  */
 abstract class Structure
 {
+    /** @var array */
+    private static $columns = array();
+
+    /** @var array */
     private static $tables = array();
 
-    private static $columns = array();
-    
+    /**
+     * Analyse entity and save table and column data for caching
+     *
+     * @param $instance Entity
+     * @throws \Exception
+     */
+    public static function indexEntity($instance)
+    {
+        $reader = new AnnotationReader();
+        $reflectionClass = new \ReflectionClass($instance);
+        $className = $reflectionClass->getName();
+
+        if (isset(self::$columns[$className], self::$tables[$className])) {
+            // Already indexed!
+            return;
+        }
+
+        /** @var Table $tableAnnotation */
+        $tableAnnotation = $reader->getClassAnnotation($reflectionClass, "\\Nova\\ORM\\Annotation\\Table");
+        if (! $tableAnnotation) {
+            throw new AnnotationException("Table Annotation is not setup in your Entity!");
+        }
+
+        // Save table information
+        self::$tables[$className] = $tableAnnotation;
+    }
 }

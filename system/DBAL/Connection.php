@@ -56,7 +56,7 @@ class Connection extends BaseConnection
             $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$fetchType);
+                throw new \Exception("No valid Entity Name is given: " .$className);
             }
 
             if(! class_exists($className)) {
@@ -85,6 +85,33 @@ class Connection extends BaseConnection
         }
 
         return $statement->fetch($fetchMode, $className);
+    }
+
+    public function fetchObject($statement, array $params = array(), array $types = array())
+    {
+        return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function fetchClass($statement, array $params = array(), array $types = array(), $className = null)
+    {
+        if((($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
+            $className = ($className !== null) ? $className : $this->defaultFetchType;
+        }
+        else if($className === null) {
+            throw new \Exception("No valid Entity Class is given");
+        }
+
+        $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
+
+        if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+            throw new \Exception("No valid Entity Name is given: " .$className);
+        }
+
+        if(! class_exists($className)) {
+            throw new \Exception("No valid Entity Class is given: " .$className);
+        }
+
+        return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_CLASS, $className);
     }
 
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)

@@ -42,7 +42,7 @@ Config::set('database', array(
         'config' => array(
             'host'        => 'localhost',
             'port'        => 3306,     // Not required, default is 3306
-            'database'    => 'testdb1',
+            'dbname'      => 'testdb1',
             'user'        => 'root',
             'password'    => '',
             'charset'     => 'utf8',   // Not required, default and recommended is utf8.

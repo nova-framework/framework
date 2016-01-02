@@ -15,6 +15,7 @@
     "require": {
         "php": ">=5.5.0",
         "doctrine/inflector": "1.0.*",
+        "doctrine/dbal": "2.5.*",
         "phpmailer/phpmailer": "5.2.*",
         "wixel/gump": "dev-master"
     },
@@ -35,7 +36,7 @@
         }
     },
     "minimum-stability": "dev",
-
+    "prefer-stable": true,
     "archive": {
         "exclude": ["!vendor", "tests", "*phpunit.xml", ".travis.yml", "composer.phar"]
     }

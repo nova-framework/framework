@@ -60,6 +60,18 @@ class Connection extends BaseConnection
             $fetchMode = \PDO::FETCH_CLASS;
         }
 
+        // Prepare the types.
+        if(empty($types)) {
+            foreach ($params as $key => $value) {
+                if (is_integer($value)) {
+                    $types[] = PDO::PARAM_INT;
+                }
+                else {
+                    $types[] = PDO::PARAM_STR;
+                }
+            }
+        }
+
         $statement = $this->executeQuery($sql, $params, $types);
 
         if($fetchAll) {

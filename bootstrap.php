@@ -45,8 +45,8 @@ Config::set('database', array(
             'database'    => 'testdb1',
             'user'        => 'root',
             'password'    => '',
-            'return_type' => 'object', // Not required, default is 'array'.
-            'charset'     => 'utf8'    // Not required, default and recommended is utf8.
+            'charset'     => 'utf8',   // Not required, default and recommended is utf8.
+            'return_type' => 'object'  // Not required, default is 'array'.
         )
     ),
     'sqlite' => array(

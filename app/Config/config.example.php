@@ -96,8 +96,8 @@ Config::set('database', array(
             'database'    => 'dbname',
             'user'        => 'root',
             'password'    => 'password',
-            'return_type' => 'array',     // Not required, default is 'array'.
             'charset'     => 'utf8',      // Not required, default and recommended is utf8.
+            'return_type' => 'array',     // Not required, default is 'array'.
             'compress'    => false        // Changing to true will hugely improve the persormance on remote servers.
         )
     ),

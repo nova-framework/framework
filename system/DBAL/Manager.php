@@ -64,7 +64,7 @@ class Manager
             $returnType = $linkParams['return_type'];
         }
         else {
-            $returnType = null;
+            $returnType = 'array';
         }
 
         //
@@ -76,7 +76,7 @@ class Manager
         else if($returnType == 'object') {
             $fetchMode = PDO::FETCH_OBJ;
         }
-        else if($returnType !== null) {
+        else {
             $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
@@ -90,10 +90,6 @@ class Manager
             $fetchClass = $returnType;
 
             $fetchMode = PDO::FETCH_CLASS;
-        }
-        else {
-            // By default we use this FetchMode.
-            $fetchMode = PDO::FETCH_ASSOC;
         }
 
         //

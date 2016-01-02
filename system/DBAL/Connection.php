@@ -18,7 +18,7 @@ use Doctrine\DBAL\Connection as BaseConnection;
 
 class Connection extends BaseConnection
 {
-    protected $defaultFetchType = null;
+    protected $defaultFetchType = 'array';
 
     protected $queryCounter = 0;
 
@@ -33,15 +33,40 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($sql, array $params = array(), $types = array(), $fetchAll = false)
+    public function select($sql, array $params = array(), $types = array(), $fetchAll = false, $returnType = null)
     {
+        // Prepare the parameters.
+        $className = null;
+
+        if($returnType == 'array') {
+            $fetchMode = \PDO::FETCH_ASSOC;
+        }
+        else if($returnType == 'object') {
+            $fetchMode = \PDO::FETCH_OBJ;
+        }
+        else {
+            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                throw new \Exception("No valid Entity Name is given: " .$returnType);
+            }
+
+            if(! class_exists($returnType)) {
+                throw new \Exception("No valid Entity Class is given: " .$returnType);
+            }
+
+            $className = $returnType;
+
+            $fetchMode = \PDO::FETCH_CLASS;
+        }
+
         $statement = $this->executeQuery($sql, $params, $types);
 
         if($fetchAll) {
-            return $statement->fetchAll();
+            return $statement->fetchAll($fetchMode, $className);
         }
 
-        return $statement->fetch();
+        return $statement->fetch($fetchMode, $className);
     }
 
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)

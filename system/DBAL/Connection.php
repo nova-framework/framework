@@ -33,46 +33,49 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($sql, array $params = array(), $fetchAll = false, $returnType = null, $types = array())
+    public function select($sql, array $params = array(), $fetchAll = false, $fetchType = null, $paramTypes = array())
     {
         // Prepare the parameters.
+        // What return type? Use default if no return type is given in the call.
+        $fetchType = ($fetchType !== null) ? $fetchType : $this->defaltFetchType;
+
         $className = null;
 
-        if($returnType == 'array') {
+        if($fetchType == 'array') {
             $fetchMode = \PDO::FETCH_ASSOC;
         }
-        else if($returnType == 'object') {
+        else if($fetchType == 'object') {
             $fetchMode = \PDO::FETCH_OBJ;
         }
         else {
-            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+            $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$returnType);
+                throw new \Exception("No valid Entity Name is given: " .$fetchType);
             }
 
-            if(! class_exists($returnType)) {
-                throw new \Exception("No valid Entity Class is given: " .$returnType);
+            if(! class_exists($fetchType)) {
+                throw new \Exception("No valid Entity Class is given: " .$fetchType);
             }
 
-            $className = $returnType;
+            $className = $fetchType;
 
             $fetchMode = \PDO::FETCH_CLASS;
         }
 
         // Prepare the types.
-        if(empty($types)) {
+        if(empty($paramTypes)) {
             foreach ($params as $key => $value) {
                 if (is_integer($value)) {
-                    $types[] = PDO::PARAM_INT;
+                    $paramTypes[] = PDO::PARAM_INT;
                 }
                 else {
-                    $types[] = PDO::PARAM_STR;
+                    $paramTypes[] = PDO::PARAM_STR;
                 }
             }
         }
 
-        $statement = $this->executeQuery($sql, $params, $types);
+        $statement = $this->executeQuery($sql, $params, $paramTypes);
 
         if($fetchAll) {
             return $statement->fetchAll($fetchMode, $className);

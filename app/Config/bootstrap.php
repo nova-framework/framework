@@ -7,6 +7,7 @@
  * @date December 15th, 2015
  */
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Nova\Modules\Manager as Modules;
 use Nova\Events\Manager as Events;
 use Nova\Net\Session;
@@ -59,6 +60,11 @@ Session::initialize();
 
 /** Load the application wide Routes. */
 require $configDir .'routes.php';
+
+/** Register Annotation Namespace */
+$annotationPath = SYSPATH . "ORM" . DS . "Annotation" . DS;
+AnnotationRegistry::registerFile($annotationPath . 'Table.php');
+AnnotationRegistry::registerFile($annotationPath . 'Column.php');
 
 /** Execute the Request dispatching by Router. */
 $router->dispatch();

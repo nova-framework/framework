@@ -16,6 +16,8 @@ use Nova\Database\Manager;
  * @package Nova\Tests\Database\Service
  * @coversDefaultClass \Nova\Database\Service
  * @covers \Nova\Database\Manager::getService
+ *
+ * @requires extension nonexistingone
  */
 class CarServiceTest extends \PHPUnit_Framework_TestCase
 {

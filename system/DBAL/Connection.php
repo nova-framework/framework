@@ -4,7 +4,7 @@
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
- * @date December 2th, 2016
+ * @date January 2th, 2016
  */
 
 namespace Nova\DBAL;

@@ -124,6 +124,25 @@ class Doctrine extends BaseController
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
+        $userInfo = array(
+            'email' => 'modified@novaframwork.dev'
+        );
+
+        $message .= '<b>$userInfo</b>';
+        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+
+        $retval = $this->db->update(DB_PREFIX ."members", $userInfo, array('username' => 'virgil'));
+
+        $message .= '<b>$this->db->update(DB_PREFIX ."members", $userInfo, array(\'username\' => \'virgil\'));</b>';
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");
+
+        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");</b>';
+        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        
+        //
         $retval = $this->db->delete(DB_PREFIX ."members", array('username' => 'virgil'));
 
         $message .= '<b>$this->db->delete(DB_PREFIX ."members", array(\'username\' => \'virgil\'));</b>';

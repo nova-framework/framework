@@ -15,6 +15,7 @@
     "require": {
         "php": ">=5.5.0",
         "doctrine/inflector": "1.0.*",
+        "doctrine/dbal": "v2.5.x",
         "phpmailer/phpmailer": "5.2.*",
         "wixel/gump": "dev-master"
     },

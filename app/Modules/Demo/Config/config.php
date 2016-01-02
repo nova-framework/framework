@@ -49,7 +49,7 @@ Config::set('demos_menu', array(
     ),
     'dbal' => array(
         'name'      => __d('demo', 'DBAL'),
-        'url'       => site_url('demos/doctrine'),
+        'url'       => site_url('demos/dbal'),
         'icon'      => 'fa fa-gears',
     ),
     'models' => array(

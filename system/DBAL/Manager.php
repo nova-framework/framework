@@ -19,7 +19,7 @@ class Manager
     private static $nstances = array();
 
 
-    public static function getLink($linkName = 'default')
+    public static function getConnection($linkName = 'default')
     {
         $config = Config::get('database');
 
@@ -57,19 +57,20 @@ class Manager
         $linkParams = $options['config'];
 
         //
-        $linkParams['driver']       = $driver;
+        $linkParams['driver'] = $driver;
+
         $linkParams['wrapperClass'] = $wrapperClass;
 
         // Get the Configuration instance
         $linkConfig = new Configuration();
 
-        $link = DriverManager::getConnection($linkParams, $linkConfig);
+        $connection = DriverManager::getConnection($linkParams, $linkConfig);
 
         // Save instance
-        static::$instances[$linkName] = $link;
+        static::$instances[$linkName] = $connection;
 
         // Return instance
-        return $link;
+        return $connection;
     }
 
 }

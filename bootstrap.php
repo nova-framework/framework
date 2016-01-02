@@ -43,7 +43,7 @@ Config::set('database', array(
             'host'        => 'localhost',
             'port'        => 3306,     // Not required, default is 3306
             'database'    => 'testdb1',
-            'username'    => 'root',
+            'user'        => 'root',
             'password'    => '',
             'return_type' => 'object', // Not required, default is 'array'.
             'charset'     => 'utf8'    // Not required, default and recommended is utf8.
@@ -52,7 +52,7 @@ Config::set('database', array(
     'sqlite' => array(
         'engine' => 'sqlite',
         'config' => array(
-            'file'        => 'test.sqlite',
+            'path'        => BASEPATH .'storage/persistent/test.sqlite',
             'return_type' => 'object' // Not required, default is 'array'.
         )
     )

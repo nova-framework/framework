@@ -16,13 +16,16 @@ use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Connection as BaseConnection;
 use PDO;
 
+
 class Connection extends BaseConnection
 {
     protected $defaultFetchType = 'array';
 
     protected $queryCounter = 0;
 
-
+    /**
+     * Constructor
+     */
     public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null)
     {
         parent::__construct($params, $driver, $config, $eventManager);
@@ -35,10 +38,10 @@ class Connection extends BaseConnection
 
     public function select($sql, array $params = array(), $fetchAll = false, $fetchType = null, $paramTypes = array())
     {
-        // Prepare the parameters.
-        // What return type? Use default if no return type is given in the call.
+        // What fetch type? Use default if no return type is given in the call.
         $fetchType = ($fetchType !== null) ? $fetchType : $this->defaltFetchType;
 
+        // Prepare the parameters.
         $className = null;
 
         if($fetchType == 'array') {

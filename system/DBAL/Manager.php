@@ -58,13 +58,17 @@ class Manager
 
         $linkParams = $options['config'];
 
-        // Will set the default method when provided in the config.
+        // Will set the default fetchMode and fetchClass when provided in the config.
+
         if (isset($linkParams['return_type'])) {
             $returnType = $linkParams['return_type'];
         }
         else {
             $returnType = null;
         }
+
+        //
+        $fetchClass = null;
 
         if($returnType == 'array') {
             $fetchMode = PDO::FETCH_ASSOC;
@@ -82,6 +86,8 @@ class Manager
             if(! class_exists($returnType)) {
                 throw new \Exception("No valid Entity Class is given: " .$returnType);
             }
+
+            $fetchClass = $returnType;
 
             $fetchMode = PDO::FETCH_CLASS;
         }
@@ -101,8 +107,12 @@ class Manager
         // Get a Connection instance
         $connection = DriverManager::getConnection($linkParams, $linkConfig);
 
-        // Set the (default) FetchMode
+        // Set the (default) FetchMode and FetchClass
         $connection->setFetchMode($fetchMode);
+
+        if($fetchClass !== null) {
+            $connection->setFetchClass($fetchClass);
+        }
 
         // Save instance
         static::$instances[$linkName] = $connection;

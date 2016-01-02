@@ -13,7 +13,7 @@ use Doctrine\Common\Annotations\Annotation;
 
 /**
  * Class Table
- * @package ORM\Annotation
+ * @package Nova\ORM\Annotation
  *
  * @Annotation
  * @Annotation\Target("class")
@@ -21,5 +21,5 @@ use Doctrine\Common\Annotations\Annotation;
 class Table extends Annotation
 {
     public $name;
-    public $prefix;
+    public $prefix = DB_PREFIX;
 }

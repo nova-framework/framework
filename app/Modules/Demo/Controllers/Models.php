@@ -58,13 +58,13 @@ class Models extends BaseController
         //
         $result = $this->model->countBy('username !=', 'admin');
 
-        $message .= '<h4>$this->model->countBy(\'username !=\', \'admin\');</h4>';
+        $message .= '<b>$this->model->countBy(\'username !=\', \'admin\');</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
         $members = $this->model->limit(2, 0)->findAll();
 
-        $message .= '<h4>$this->model->limit(2, 0)->findAll();</h4>';
+        $message .= '<b>$this->model->limit(2, 0)->findAll();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -74,54 +74,54 @@ class Models extends BaseController
             'email'    => 'virgil@novaframwork.dev'
         );
 
-        $message .= '<h4>$userInfo</h4>';
+        $message .= '<b>$userInfo</b>';
         $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
 
         //
         $retval = $this->model->insert($userInfo);
 
-        $message .= '<h4>$this->model->insert($userInfo);</h4>';
+        $message .= '<b>$this->model->insert($userInfo);</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
         $members2 = $this->model->findAll();
 
-        $message .= '<h4>$this->model->findAll();</h4>';
+        $message .= '<b>$this->model->findAll();</b>';
         $message .= '<pre>'.var_export($members2, true).'</pre><br>';
 
         //
         $retval = $this->model->deleteBy('username', 'virgil');
 
-        $message .= '<h4>$this->model->deleteBy(\'username\', \'virgil\');</h4>';
+        $message .= '<b>$this->model->deleteBy(\'username\', \'virgil\');</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
         $members3 = $this->model->order('desc')->findAll();
 
-        $message .= '<h4>$this->model->order(\'desc\')->findAll();</h4>';
+        $message .= '<b>$this->model->order(\'desc\')->findAll();</b>';
         $message .= '<pre>'.var_export($members3, true).'</pre><br>';
 
         //
         $members4 = $this->model->orderBy('username', 'desc')->limit(2, 0)->findAll();
 
-        $message .= '<h4>$this->model->orderBy(\'username\', \'desc\')->limit(2, 0)->findAll();</h4>';
+        $message .= '<b>$this->model->orderBy(\'username\', \'desc\')->limit(2, 0)->findAll();</b>';
         $message .= '<pre>'.var_export($members4, true).'</pre><br>';
 
         //
         $result = $this->model->findBy('username', 'marcus');
 
-        $message .= '<h4>$this->model->findBy(\'username\', \'marcus\');</h4>';
+        $message .= '<b>$this->model->findBy(\'username\', \'marcus\');</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
         $result = $this->model->find(3);
 
-        $message .= '<h4>$this->model->find(3);</h4><pre>'.var_export($result, true).'</pre><br>';
+        $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
 
         //
         $members5 = $this->model->orderBy('username', 'desc')->findMany(array(1, 3));
 
-        $message .= '<h4>$this->model->orderBy(\'username\', \'desc\')->findMany(array(1, 3));</h4>';
+        $message .= '<b>$this->model->orderBy(\'username\', \'desc\')->findMany(array(1, 3));</b>';
         $message .= '<pre>'.var_export($members5, true).'</pre><br>';
 
         // Setup the View variables.

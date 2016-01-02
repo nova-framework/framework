@@ -16,9 +16,32 @@ class Connection extends BaseConnection
 {
     protected $queryCounter = 0;
 
-    // TBD
+
+    public function select($query, array $params = array(), $types = array(), $fetchAll = false)
+    {
+        $statement = $this->executeQuery($sql, $params, $types);
+
+        if($fetchAll) {
+            return $statement->fetchAll();
+        }
+
+        return $statement->fetch();
+    }
 
 
+    public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
+    {
+        $this->queryCounter++;
+
+        return parent::executeQuery($query, $params, $types, $qcp);
+    }
+
+    public function executeUpdate($query, array $params = array(), array $types = array())
+    {
+        $this->queryCounter++;
+
+        return parent::executeUpdate($query, $params, $types);
+    }
 
     public function queryCounter()
     {

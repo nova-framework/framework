@@ -13,6 +13,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Configuration;
 use Nova\Config;
 
+
 class Manager
 {
     /** @var Connection[] connection instances */

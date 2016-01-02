@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Entity.
+ * Abstract ORM Entity.
  *
  * @author Tom Valk - tomvalk@lt-box.info
  * @version 3.0
@@ -11,9 +11,21 @@ namespace Nova\ORM;
 
 /**
  * Class Entity, can be extended with your database entities
- * @package Core\Database
  */
 abstract class Entity
 {
+    /**
+     * Hold the state of the current Entity. Will be used to determinate if INSERT or UPDATE is needed
+     *
+     *  0 - Unsaved
+     *  1 - Fetched, already in database
+     *
+     * @var int
+     */
+    private $_state = 0;
 
+    public function __construct()
+    {
+        $this->_state = 0;
+    }
 }

@@ -35,16 +35,16 @@ class Manager
         $options = $config[$linkName];
 
         // Will set the driver when provided in the config.
-        if (isset($config['driver'])) {
-            $driver = $config['driver'];
+        if (isset($options['driver'])) {
+            $driver = $options['driver'];
         }
         else {
             $driver = 'pdo_mysql';
         }
 
         // Will set the wrapperClass when provided in the config.
-        if (isset($config['wrapperClass'])) {
-            $wrapperClass = $config['wrapperClass'];
+        if (isset($options['wrapperClass'])) {
+            $wrapperClass = $options['wrapperClass'];
         }
         else {
             $wrapperClass = '\Nova\DBAL\Connection';
@@ -54,12 +54,14 @@ class Manager
             throw new \Exception("No valid Wrapper Class is given: " .$wrapperClass);
         }
 
+        $config = $options['config'];
+
         //
         $linkParams = array(
-            'dbname'       => $options['database'],
-            'user'         => $options['username'],
-            'password'     => $options['password'],
-            'host'         => $options['host'],
+            'dbname'       => $config['database'],
+            'user'         => $config['username'],
+            'password'     => $config['password'],
+            'host'         => $config['host'],
             'driver'       => $driver,
             'wrapperClass' => $wrapperClass
         );

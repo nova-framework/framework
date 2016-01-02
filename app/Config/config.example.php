@@ -89,6 +89,7 @@ Config::set('emailer', array(
 Config::set('database', array(
     'default' => array(
         'engine' => 'mysql',
+        'driver'  => 'pdo_mysql',
         'config' => array(
             'host'        => 'localhost',
             'port'        => 3306,        // Not required, default is 3306
@@ -103,6 +104,7 @@ Config::set('database', array(
     /** Extra connections can be added here, some examples: */
     'sqlite' => array(
         'engine' => 'sqlite',
+        'driver'  => 'pdo_sqlite',
         'config' => array(
             'file'         => 'database.sqlite',
             'return_type'  => 'object' // Not required, default is 'array'.

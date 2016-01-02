@@ -76,8 +76,10 @@ class Connection extends BaseConnection
             }
         }
 
+        // Execute the current Query.
         $statement = $this->executeQuery($sql, $params, $paramTypes);
 
+        // Fetch and return the result.
         if($fetchAll) {
             return $statement->fetchAll($fetchMode, $className);
         }
@@ -99,7 +101,7 @@ class Connection extends BaseConnection
         return parent::executeUpdate($query, $params, $types);
     }
 
-    public function queryCounter()
+    public function getQueryCounter()
     {
         return $this->queryCounter;
     }

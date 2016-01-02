@@ -9,17 +9,17 @@
 
 namespace Nova\DBAL;
 
-use Doctrine\DBAL\Connection as DoctrineConnection;
+use Doctrine\DBAL\Connection as BaseConnection;
 
 
-class Connection extends DoctrineConnection
+class Connection extends BaseConnection
 {
     protected $queryCounter = 0;
 
     // TBD
 
 
-    
+
     public function queryCounter()
     {
         return $this->queryCounter;

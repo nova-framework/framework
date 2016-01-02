@@ -16,4 +16,9 @@ use Doctrine\DBAL\DriverManager;
 class Manager
 {
 
+    public static function getConnection()
+    {
+        return null;
+    }
+
 }

@@ -33,7 +33,7 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($sql, array $params = array(), $types = array(), $fetchAll = false, $returnType = null)
+    public function select($sql, array $params = array(), $fetchAll = false, $returnType = null, $types = array())
     {
         // Prepare the parameters.
         $className = null;

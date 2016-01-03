@@ -8,7 +8,7 @@ defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 require_once dirname(__FILE__) .DS .'vendor' .DS .'autoload.php';
 
 /** Define the absolute paths for configured directories (changed for tests) */
-define('BASEPATH', realpath(__DIR__).DS);
+define('BASEPATH', realpath(dirname(__DIR__)).DS);
 // The Application paths.
 define('WEBPATH', BASEPATH.'public'.DS);
 define('APPPATH', BASEPATH.'app'.DS);

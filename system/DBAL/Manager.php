@@ -25,7 +25,7 @@ class Manager
     {
         $config = Config::get('database');
 
-        if (!isset($config[$linkName])) {
+        if (! isset($config[$linkName])) {
             throw new \Exception("Connection name '".$linkName."' is not defined in your configuration!");
         }
 
@@ -45,8 +45,8 @@ class Manager
         }
 
         // Will set the wrapperClass when provided in the config.
-        if (isset($options['wrapperClass'])) {
-            $wrapperClass = $options['wrapperClass'];
+        if (isset($options['wrapper_class'])) {
+            $wrapperClass = $options['wrapper_class'];
         }
         else {
             $wrapperClass = '\Nova\DBAL\Connection';
@@ -56,38 +56,37 @@ class Manager
             throw new \Exception("No valid Wrapper Class is given: " .$wrapperClass);
         }
 
-        // Will set the default fetchMode and fetchClass when provided in the config.
+        // Will set the default fetchMode and fetchType when provided in the config.
 
         if (isset($options['return_type'])) {
-            $returnType = $options['return_type'];
+            $fetchType = $options['return_type'];
         }
         else {
-            $returnType = 'array';
+            $fetchType = 'array';
         }
 
-        //
-        $fetchClass = null;
-
-        if($returnType == 'array') {
+        // Prepare the FetchMode and check the FetchType
+        if($fetchType == 'array') {
             $fetchMode = PDO::FETCH_ASSOC;
         }
-        else if($returnType == 'object') {
+        else if($fetchType == 'object') {
             $fetchMode = PDO::FETCH_OBJ;
         }
         else {
-            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+            $fetchMode = PDO::FETCH_CLASS;
+
+            // Check for a valid Entity on given className.
+            $className = $fetchType;
+
+            $classPath = str_replace('\\', '/', ltrim($className, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$returnType);
+                throw new \Exception("No valid Entity Name is given: " .$className);
             }
 
-            if(! class_exists($returnType)) {
-                throw new \Exception("No valid Entity Class is given: " .$returnType);
+            if(! class_exists($className)) {
+                throw new \Exception("No valid Entity Class is given: " .$className);
             }
-
-            $fetchClass = $returnType;
-
-            $fetchMode = PDO::FETCH_CLASS;
         }
 
         $linkParams = $options['config'];
@@ -105,7 +104,7 @@ class Manager
 
         // Set the (default) FetchMode and FetchType
         $connection->setFetchMode($fetchMode);
-        $connection->setFetchType($returnType);
+        $connection->setFetchType($fetchType);
 
         // Save instance
         static::$instances[$linkName] = $connection;

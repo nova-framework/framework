@@ -24,7 +24,7 @@ use Nova\Config;
 /**
  * CUSTOMIZED CONFIG BOOTSTRAP
  */
-$configDir = dirname(__FILE__) .DS .'app' .DS .'Config' .DS;
+$configDir = BASEPATH .'app' .DS .'Config' .DS;
 
 require_once $configDir.'constants.example.php';
 

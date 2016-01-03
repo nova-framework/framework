@@ -20,7 +20,7 @@ $configDir = dirname(__FILE__) .DS;
 
 /** Check for valid configuration files. */
 if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'constants.php')) {
-    die('No config.php or constants.php found, configure and rename *.example.php in ' .str_replace(BASEPATH, '', APPPAPTH) .'Config.');
+    die('No config.php or constants.php found, configure and rename *.example.php in ' .str_replace(BASEPATH, '', APPPATH) .'Config.');
 }
 
 /** Turn on output buffering. */

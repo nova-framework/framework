@@ -4,7 +4,7 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          stopOnFailure="false"
-         bootstrap="./bootstrap.php">
+         bootstrap="./tests/bootstrap.php">
 
     <php>
         <const name="PHPUNIT_RUNNING" value="true"/>

@@ -5,7 +5,7 @@ if (! defined('PHPUNIT_RUNNING')) { exit(); }
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 // Require composer autoload!
-require_once dirname(__FILE__) .DS .'vendor' .DS .'autoload.php';
+require_once dirname(__DIR__) .DS .'vendor' .DS .'autoload.php';
 
 /** Define the absolute paths for configured directories (changed for tests) */
 define('BASEPATH', realpath(dirname(__DIR__)).DS);

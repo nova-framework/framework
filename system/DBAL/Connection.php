@@ -36,7 +36,7 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($sql, array $params = array(), $paramTypes = array(), $fetchAll = false, $fetchType = null)
+    public function select($sql, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
     {
         // What fetch type? Use default if no return type is given in the call.
         $fetchType = ($fetchType !== null) ? $fetchType : $this->defaultFetchType;
@@ -88,6 +88,11 @@ class Connection extends BaseConnection
         }
 
         return $statement->fetch($fetchMode, $className);
+    }
+
+    public function selectAll($sql, array $params = array(), $paramTypes = array(), $fetchType = null)
+    {
+        return $this->select($sql, $params, $paramTypes, $fetchType, true);
     }
 
     public function fetchObject($statement, array $params = array(), array $types = array())

@@ -55,27 +55,27 @@ class Doctrine extends BaseController
         $message = '';
 
         //
-        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), true, 'object');
+        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), 'object');
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), true, \'object\');</b>';
+        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), \'object\');</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), true, 'array');
+        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array('username' => 'marcus'));
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), true, \'array\');</b>';
+        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array(\'username\' => \'marcus\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'), array(\PDO::PARAM_STR), false, 'object');
+        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'), array(), 'object');
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'), array(\PDO::PARAM_STR), false, \'object\');</b>';
+        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'), array(), \'object\');</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'), array(\PDO::PARAM_STR), false, 'array');
+        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'));
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'), array(\PDO::PARAM_STR), false, \'array\');</b>';
+        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -141,7 +141,7 @@ class Doctrine extends BaseController
 
         $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
-        
+
         //
         $retval = $this->db->delete(DB_PREFIX ."members", array('username' => 'virgil'));
 

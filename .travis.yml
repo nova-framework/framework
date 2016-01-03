@@ -23,7 +23,7 @@ install: composer install --dev
 
 script:
   - mkdir -p build/logs
-  - php vendor/bin/phpunit -c phpunit.xml
+  - php vendor/bin/phpunit -c tests/phpunit.xml
 
 after_success:
   - travis_retry php vendor/bin/coveralls -v

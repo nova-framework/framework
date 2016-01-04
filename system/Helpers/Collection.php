@@ -9,10 +9,10 @@
  
 namespace Nova\Helpers;
 
-use Doctrine\Common\Collections\Collection as BaseCollection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
-class Collection extends BaseCollection
+class Collection extends ArrayCollection
 {
 
 }

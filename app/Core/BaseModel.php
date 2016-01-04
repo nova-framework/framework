@@ -1076,41 +1076,39 @@ class BaseModel extends Model
         }
 
         if (! empty($this->validateRules) && is_array($this->validateRules)) {
+            $inputFilter =& $this->inputFilter;
+
+            $inputFilter->setRules($this->validateRules);
+
             // Any insert additions?
             if (($type == 'insert') && is_array($this->validateInsertRules)) {
-                foreach ($this->validateRules as $field => &$row) {
+                $validator = $inputFilter->getValidator();
+
+                foreach ($this->validateRules as $field => $row) {
                     if (isset($this->validateInsertRules[$field])) {
-                        $row['rules'] .= '|' .$this->validateInsertRules[$field];
+                        $validator->add($field, $this->validateInsertRules[$field]);
                     }
                 }
             }
 
-            //
-            $filter =& $this->inputFilter;
+            // Populate the InputFilter instance with given Data.
+            $inputFilter->populate($data);
 
-            $filter->setRules($this->validateRules);
-
-            $filter->populate($data);
-
-            if(! $filter->isValid()) {
-                // Something gone wrong. Store the current Filter's Error Messages.
-                $this->errors = $filter->getErrors();
+            // Execute the Data Validation.
+            if(! $inputFilter->isValid()) {
+                // Something was wrong; store the current Filter's Error Messages and return false.
+                $this->errors = $inputFilter->getErrors();
 
                 return false;
             }
 
-            // A valid Data! Clear the Error Messages and return the processed Values.
+            // Valid Data given; clear the Error Messages and return the Filtered Values.
             $this->errors = array();
 
-            return $filter->getValues();
+            return $inputFilter->getValues();
         }
 
         return $data;
-    }
-
-    public function validation()
-    {
-        return $this->validator;
     }
 
     //--------------------------------------------------------------------

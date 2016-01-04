@@ -34,4 +34,22 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         var_dump($car);
     }
+
+
+    public function testSave()
+    {
+        $car = new Car();
+
+        $car->make = 'Nova Cars';
+        $car->model = 'Framework_ORM_Test_1';
+        $car->costs = 50000;
+
+        $insert = $car->save();
+
+
+        $car->costs = 55000;
+        $update = $car->save();
+
+        var_dump($update);
+    }
 }

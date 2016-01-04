@@ -16,7 +16,7 @@ class Car extends Entity
 {
     /**
      * @var int
-     * @Column(name="carid")
+     * @Column(name="carid", primary=true)
      */
     public $carid;
     public $make;

@@ -106,4 +106,43 @@ abstract class Structure
 
         return false;
     }
+
+
+    /**
+     * Get primary key columns for table.
+     * @param string|Entity $table Entity or tablename
+     * @return bool|Column[]
+     */
+    public static function getTablePrimaryKeys($table)
+    {
+        if ($table instanceof Entity) {
+            $reflectionClass = new \ReflectionClass($table);
+            $className = $reflectionClass->getName();
+
+            // Get table name from entity
+            if (! isset(self::$tables[$className])) {
+                return false;
+            }
+
+            $table = self::$tables[$className]->name;
+        }
+
+        if (!is_string($table)) {
+            throw new \UnexpectedValueException("Table parameter should be a name of the table, or an instance of the Entity!");
+        }
+
+        if (! isset(self::$columns[$table])) {
+            return false;
+        }
+
+        // Check for all primary keys
+        $primaryKeys = array();
+        foreach(self::$columns[$table] as $column) {
+            if ($column->primary) {
+                $primaryKeys[] = $column;
+            }
+        }
+
+        return $primaryKeys;
+    }
 }

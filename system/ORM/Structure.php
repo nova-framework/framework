@@ -64,9 +64,11 @@ abstract class Structure
             /** @var Column $columnAnnotation */
             $columnAnnotation = $reader->getPropertyAnnotation($prop, "\\Nova\\ORM\\Annotation\\Column");
 
-            // Add to columns
-            if (! isset(self::$columns[$tableAnnotation->name][$columnAnnotation->name])) {
-                self::$columns[$tableAnnotation->name][$columnAnnotation->name] = $columnAnnotation;
+            if ($columnAnnotation instanceof Column) {
+                // Add to columns
+                if (! isset(self::$columns[$tableAnnotation->name][$columnAnnotation->name])) {
+                    self::$columns[$tableAnnotation->name][$columnAnnotation->name] = $columnAnnotation;
+                }
             }
         }
     }

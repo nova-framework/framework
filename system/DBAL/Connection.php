@@ -109,7 +109,7 @@ class Connection extends BaseConnection
             throw new \Exception("No valid Entity Class is given");
         }
 
-        return $this->select($sql, $params, $paramTypes, false, $className);
+        return $this->select($statement, $params, $paramTypes, false, $className);
     }
 
     public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)

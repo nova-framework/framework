@@ -13,6 +13,7 @@ use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Nova\ORM\Annotation\Column;
 use Nova\ORM\Annotation\Table;
+use Nova\ORM\Entity;
 
 /**
  * Structure helper, will read and cache table and column structures by reading the Annotations.
@@ -24,7 +25,7 @@ abstract class Structure
     /** @var array */
     private static $columns = array();
 
-    /** @var array */
+    /** @var Table[] */
     private static $tables = array();
 
     /**
@@ -68,5 +69,36 @@ abstract class Structure
                 self::$columns[$tableAnnotation->name][$columnAnnotation->name] = $columnAnnotation;
             }
         }
+    }
+
+
+    /**
+     * Get table columns from entity or table name.
+     * @param string|Entity $table Entity or tablename
+     * @return bool|Column[]
+     */
+    public static function getTableColumns($table)
+    {
+        if ($table instanceof Entity) {
+            $reflectionClass = new \ReflectionClass($table);
+            $className = $reflectionClass->getName();
+
+            // Get table name from entity
+            if (! isset(self::$tables[$className])) {
+                return false;
+            }
+
+            $table = self::$tables[$className]->name;
+        }
+
+        if (!is_string($table)) {
+            throw new \UnexpectedValueException("Table parameter should be a name of the table, or an instance of the Entity!");
+        }
+
+        if (isset(self::$columns[$table])) {
+            return self::$columns[$table];
+        }
+
+        return false;
     }
 }

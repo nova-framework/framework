@@ -10,7 +10,7 @@
 namespace App\Core;
 
 use Nova\Core\Model;
-use Nova\Helpers\Validator;
+use Nova\Input\Filter as InputFilter;
 
 
 class BaseModel extends Model
@@ -115,9 +115,9 @@ class BaseModel extends Model
     protected $protectedFields = array();
 
     /**
-     * The Validator instance.
+     * The InputFilter instance.
      */
-    protected $validator = null;
+    protected $inputFilter = null;
 
     /**
      * Optionally skip the validation.
@@ -127,7 +127,7 @@ class BaseModel extends Model
 
     /**
      * An array of validation rules.
-     * This needs to be the same format as validation rules passed to the Validator helper.
+     * This needs to be the same format as validation rules passed to the Validator.
      */
     protected $validateRules = array();
 
@@ -141,6 +141,13 @@ class BaseModel extends Model
     protected $validateInsertRules = array();
 
     /**
+     * The InputFilter's Error Messages will be stored there, while executing validation.
+     *
+     * @var array
+     */
+    protected $errors = array();
+
+    /**
      * @var Array Columns for the Model's database fields
      *
      * This can be set to avoid a database call if using $this->prepareData()
@@ -152,7 +159,7 @@ class BaseModel extends Model
     /**
      * Constructor
      */
-    public function __construct($engine = null, $validator = null)
+    public function __construct($engine = null, $inputFilter = null)
     {
         parent::__construct($engine);
 
@@ -172,11 +179,11 @@ class BaseModel extends Model
         }
 
         // Do we have a Validator instance?
-        if ($validator instanceof Validator) {
-            $this->validator = $validator;
+        if ($inputFilter instanceof InputFilter) {
+            $this->inputFilter = $inputFilter;
         }
         else {
-            $this->validator = new Validator();
+            $this->inputFilter = new InputFilter();
         }
 
         // Make sure our temp return type is correct.
@@ -1078,9 +1085,24 @@ class BaseModel extends Model
                 }
             }
 
-            $this->validator->setRules($this->validateRules);
+            //
+            $filter =& $this->inputFilter;
 
-            return $this->validator->run($data, $this);
+            $filter->setRules($this->validateRules);
+
+            $filter->populate($data);
+
+            if(! $filter->isValid()) {
+                // Something gone wrong. Store the current Filter's Error Messages.
+                $this->errors = $filter->getErrors();
+
+                return false;
+            }
+
+            // A valid Data! Clear the Error Messages and return the processed Values.
+            $this->errors = array();
+
+            return $filter->getValues();
         }
 
         return $data;

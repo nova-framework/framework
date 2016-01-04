@@ -36,7 +36,7 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($sql, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
+    public function select($query, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
     {
         // What fetch type? Use default if no return type is given in the call.
         $fetchType = ($fetchType !== null) ? $fetchType : $this->defaultFetchType;
@@ -80,7 +80,7 @@ class Connection extends BaseConnection
         }
 
         // Execute the current Query.
-        $statement = $this->executeQuery($sql, $params, $paramTypes);
+        $statement = $this->executeQuery($query, $params, $paramTypes);
 
         // Fetch and return the result.
         if($fetchAll) {
@@ -96,9 +96,14 @@ class Connection extends BaseConnection
         return $statement->fetch($fetchMode);
     }
 
-    public function selectAll($sql, array $params = array(), $paramTypes = array(), $fetchType = null)
+    public function selectOne($query, array $params = array(), $paramTypes = array(), $fetchType = null)
     {
-        return $this->select($sql, $params, $paramTypes, $fetchType, true);
+        return $this->select($query, $params, $paramTypes, $fetchType, false);
+    }
+
+    public function selectAll($query, array $params = array(), $paramTypes = array(), $fetchType = null)
+    {
+        return $this->select($query, $params, $paramTypes, $fetchType, true);
     }
 
     public function fetchObject($statement, array $params = array(), array $types = array())

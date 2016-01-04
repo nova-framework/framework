@@ -9,7 +9,7 @@
 
 namespace Nova\Net\Filtration\Filter;
 
-use Sirius\Filtration\AbstractFilter as AbstractBaseFilter;
+use Sirius\Filtration\Filter\AbstractFilter as AbstractBaseFilter;
 
 
 class AbstractFilter extends AbstractBaseFilter

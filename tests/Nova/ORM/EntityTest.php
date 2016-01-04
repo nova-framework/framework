@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Entity Tests
+ *
+ * @author Tom Valk - tomvalk@lt-box.info
+ * @version 3.0
+ * @date January 4th, 2016
+ */
 
 namespace Nova\ORM;
 

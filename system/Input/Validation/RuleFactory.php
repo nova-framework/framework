@@ -7,11 +7,11 @@
  * @date January 04th, 2016
  */
 
-namespace Nova\Validation;
+namespace Nova\Input\Validation;
 
-use Sirius\Validation\Helper as BaseHelper;
+use Sirius\Validation\RuleFactory as BaseRuleFactory;
 
 
-class Helper extends BaseHelper
+class RuleFactory extends BaseRuleFactory
 {
 }

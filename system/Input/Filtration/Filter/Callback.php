@@ -7,7 +7,7 @@
  * @date January 04th, 2016
  */
 
-namespace Nova\Net\Filtration\Filter;
+namespace Nova\Input\Filtration\Filter;
 
 use Sirius\Filtration\Filter\Callback as BaseCallback;
 

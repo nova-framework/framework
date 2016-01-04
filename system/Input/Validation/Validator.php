@@ -7,7 +7,7 @@
  * @date January 04th, 2016
  */
 
-namespace Nova\Validation;
+namespace Nova\Input\Validation;
 
 use Sirius\Validation\Validator as BaseValidator;
 

@@ -36,10 +36,10 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($sql, array $params = array(), $paramTypes = array(), $fetchAll = false, $fetchType = null)
+    public function select($sql, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
     {
         // What fetch type? Use default if no return type is given in the call.
-        $fetchType = ($fetchType !== null) ? $fetchType : $this->defaltFetchType;
+        $fetchType = ($fetchType !== null) ? $fetchType : $this->defaultFetchType;
 
         // Prepare the parameters.
         $className = null;
@@ -90,6 +90,11 @@ class Connection extends BaseConnection
         return $statement->fetch($fetchMode, $className);
     }
 
+    public function selectAll($sql, array $params = array(), $paramTypes = array(), $fetchType = null)
+    {
+        return $this->select($sql, $params, $paramTypes, $fetchType, true);
+    }
+
     public function fetchObject($statement, array $params = array(), array $types = array())
     {
         return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_OBJ);
@@ -97,7 +102,7 @@ class Connection extends BaseConnection
 
     public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $className = null)
     {
-        if((($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
+        if (($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
             $className = ($className !== null) ? $className : $this->defaultFetchType;
         }
         else if($className === null) {

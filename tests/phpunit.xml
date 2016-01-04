@@ -12,25 +12,25 @@
 
     <testsuites>
         <testsuite name="Nova Framework">
-            <directory>./tests/Nova</directory>
+            <directory>./Nova</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./system/Net</directory>
-            <directory suffix=".php">./system/Database</directory>
+            <directory suffix=".php">../system/Net</directory>
+            <directory suffix=".php">../system/Database</directory>
             <exclude>
-                <file>./system/Net/Cookie.php</file>
-                <file>./system/Net/Session.php</file>
-                <file>./system/Net/Response.php</file>
-                <file>./system/Database/Entity.php</file>
+                <file>../system/Net/Cookie.php</file>
+                <file>../system/Net/Session.php</file>
+                <file>../system/Net/Response.php</file>
+                <file>../system/Database/Entity.php</file>
             </exclude>
         </whitelist>
     </filter>
 
     <logging>
-        <log type="coverage-clover" target="tmp/test/coverage.xml" />
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
+        <log type="coverage-clover" target="test/coverage.xml" />
+        <log type="coverage-clover" target="../build/logs/clover.xml"/>
     </logging>
 </phpunit>

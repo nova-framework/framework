@@ -5,10 +5,10 @@ if (! defined('PHPUNIT_RUNNING')) { exit(); }
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 // Require composer autoload!
-require_once dirname(__FILE__) .DS .'vendor' .DS .'autoload.php';
+require_once dirname(__DIR__) .DS .'vendor' .DS .'autoload.php';
 
 /** Define the absolute paths for configured directories (changed for tests) */
-define('BASEPATH', realpath(__DIR__).DS);
+define('BASEPATH', realpath(dirname(__DIR__)).DS);
 // The Application paths.
 define('WEBPATH', BASEPATH.'public'.DS);
 define('APPPATH', BASEPATH.'app'.DS);
@@ -25,11 +25,11 @@ use Nova\Config;
 /**
  * CUSTOMIZED CONFIG BOOTSTRAP
  */
-$configDir = dirname(__FILE__) .DS .'app' .DS .'Config' .DS;
+$configDir = BASEPATH .'app' .DS .'Config' .DS;
 
 require_once $configDir.'constants.example.php';
 
-require_once SYSPATH.'functions.php';
+require_once SYSPATH. 'Config' .DS .'functions.php';
 
 require_once $configDir.'config.example.php';
 
@@ -43,7 +43,7 @@ Config::set('database', array(
         'config' => array(
             'host'        => 'localhost',
             'port'        => 3306,     // Not required, default is 3306
-            'database'    => 'testdb1',
+            'dbname'      => 'testdb1',
             'user'        => 'root',
             'password'    => '',
             'charset'     => 'utf8',   // Not required, default and recommended is utf8.

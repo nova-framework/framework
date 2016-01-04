@@ -54,7 +54,7 @@ class MySQL extends BaseEngine
         }
 
         // Prepare the PDO's DSN
-        $dsn = "mysql:host=" .$config['host'] .";port=" .$config['port'] .";dbname=" .$config['database'] .$charsetStr;
+        $dsn = "mysql:host=" .$config['host'] .";port=" .$config['port'] .";dbname=" .$config['dbname'] .$charsetStr;
 
         parent::__construct($dsn, $config, $options);
     }

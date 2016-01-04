@@ -17,11 +17,11 @@ use Nova\Logger;
 
 
 /** Prepare the current directory for configuration files. */
-$configDir = dirname(__FILE__) .DS;
+$configDir = APPPATH .'Config' .DS;
 
 /** Check for valid configuration files. */
 if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'constants.php')) {
-    die('No config.php or constants.php found, configure and rename *.example.php in ' .str_replace(BASEPATH, '', APPPAPTH) .'Config.');
+    die('No config.php or constants.php found, configure and rename *.example.php in ' .$configDir);
 }
 
 /** Turn on output buffering. */
@@ -31,7 +31,7 @@ ob_start();
 require $configDir .'constants.php';
 
 /** Load the System's helper functions. */
-require SYSPATH .'functions.php';
+require dirname(__FILE__) .DS .'functions.php';
 
 /** Load the application Configuration. */
 require $configDir .'config.php';

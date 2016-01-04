@@ -28,7 +28,7 @@ abstract class Entity
      *
      * @var int
      */
-    private $_state = 0;
+    public $_state = 1;
 
     /**
      * Link name for using in this entity
@@ -90,6 +90,7 @@ abstract class Entity
     public function __construct()
     {
         self::discoverEntity();
+        $this->_state = 0;
     }
 
 
@@ -132,7 +133,7 @@ abstract class Entity
      *
      * @throws \Exception
      */
-    public static function get($id)
+    public static function find($id)
     {
         $primaryKeys = Structure::getTablePrimaryKeys(self::$_table->name);
 
@@ -164,7 +165,11 @@ abstract class Entity
             }
         }
 
-        return self::getLink()->fetchClass("SELECT * FROM " . self::$_table->prefix . self::$_table->name . " WHERE $where", $params, array(), get_called_class());
+        /** @var Entity $result */
+        $result = self::getLink()->fetchClass("SELECT * FROM " . self::$_table->prefix . self::$_table->name . " WHERE $where", $params, array(), get_called_class());
+        $result->_state = 1;
+
+        return $result;
     }
 
 

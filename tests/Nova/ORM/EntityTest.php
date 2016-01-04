@@ -30,12 +30,12 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\ORM\Entity
-     * @covers \Nova\ORM\Entity::get
+     * @covers \Nova\ORM\Entity::find
      * @throws \Exception
      */
     public function testGetEntity()
     {
-        $car = Car::get(1);
+        $car = Car::find(1);
 
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
     }
@@ -90,7 +90,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         // Delete
         $car->delete();
 
-        $car = Car::get($carid);
+        $car = Car::find($carid);
 
         $this->assertFalse($car);
     }

@@ -87,7 +87,14 @@ class Connection extends BaseConnection
             return $statement->fetchAll($fetchMode, $className);
         }
 
-        return $statement->fetch($fetchMode, $className);
+        if(($fetchMode == PDO::FETCH_CLASS) && ($className !== null)) {
+            $statement->setFetchMode($fetchMode, $className);
+        }
+        else {
+            $statement->setFetchMode($fetchMode);
+        }
+
+        return $statement->fetch();
     }
 
     public function selectAll($sql, array $params = array(), $paramTypes = array(), $fetchType = null)

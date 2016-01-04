@@ -167,7 +167,10 @@ abstract class Entity
 
         /** @var Entity $result */
         $result = self::getLink()->fetchClass("SELECT * FROM " . self::$_table->prefix . self::$_table->name . " WHERE $where", $params, array(), get_called_class());
-        $result->_state = 1;
+
+        if($result instanceof Entity) {
+            $result->_state = 1;
+        }
 
         return $result;
     }

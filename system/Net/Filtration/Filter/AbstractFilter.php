@@ -12,6 +12,6 @@ namespace Nova\Net\Filtration\Filter;
 use Sirius\Filtration\Filter\AbstractFilter as AbstractBaseFilter;
 
 
-class AbstractFilter extends AbstractBaseFilter
+abstract class AbstractFilter extends AbstractBaseFilter
 {
 }

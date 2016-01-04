@@ -152,24 +152,19 @@ abstract class Entity
             $id = array($primaryKeys[0]->name => $id);
         }
 
-        // Make query
-        $query = self::getQueryBuilder();
 
-        // Where
-        $where = $query->expr()->andX();
-
+        $where = "";
+        $params = array();
         foreach($id as $key => $value) {
-            $where->add($query->expr()->eq($key, $query->createPositionalParameter($value)));
+            $where .= "$key = ?";
+            $params[] = $value;
+
+            if (count($params) !== count($id)) {
+                $where .= " AND ";
+            }
         }
 
-        // Execute
-        $query->select('*')->from(self::$_table->prefix . self::$_table->name)->where($where)->setMaxResults(1);
-
-        $statement = $query->execute();
-
-        $statement->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-
-        return $statement->fetch();
+        return self::getLink()->fetchClass("SELECT * FROM " . self::$_table->prefix . self::$_table->name . " WHERE $where", $params, array(), get_called_class());
     }
 
 

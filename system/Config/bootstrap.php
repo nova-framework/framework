@@ -65,6 +65,7 @@ require $configDir .'routes.php';
 $annotationPath = SYSPATH . "ORM" . DS . "Annotation" . DS;
 AnnotationRegistry::registerFile($annotationPath . 'Table.php');
 AnnotationRegistry::registerFile($annotationPath . 'Column.php');
+AnnotationRegistry::registerFile($annotationPath . 'Relation.php');
 
 /** Execute the Request dispatching by Router. */
 $router->dispatch();

@@ -174,7 +174,7 @@ abstract class Entity
      * @param bool $types Get types of columns. Default false.
      * @return array
      */
-    public function getColumnArray($types = false)
+    public function getColumns($types = false)
     {
         $columns = Structure::getTableColumns($this);
 
@@ -197,7 +197,7 @@ abstract class Entity
      * @return array
      * @throws \Exception
      */
-    public function getPrimaryArray($types = false)
+    public function getPrimaryKeys($types = false)
     {
         $primaryKeys = Structure::getTablePrimaryKeys(self::$_table->name);
 
@@ -231,7 +231,7 @@ abstract class Entity
     {
         if ($this->_state == 0) {
             // Insert
-            $result = $this->getLink()->insert(self::$_table->prefix . self::$_table->name, $this->getColumnArray(), $this->getColumnArray(true));
+            $result = $this->getLink()->insert(self::$_table->prefix . self::$_table->name, $this->getColumns(), $this->getColumns(true));
 
             // Primary Key
             $this->_id = $this->getLink()->lastInsertId();
@@ -248,8 +248,8 @@ abstract class Entity
             $this->_state = 1;
         } else {
             // Update
-            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumnArray(), $this->getPrimaryArray(),
-                array_merge($this->getColumnArray(true), $this->getPrimaryArray(true)));
+            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumns(), $this->getPrimaryKeys(),
+                array_merge($this->getColumns(true), $this->getPrimaryKeys(true)));
         }
 
         return $result;
@@ -270,6 +270,6 @@ abstract class Entity
             return false;
         }
 
-        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryArray(), $this->getPrimaryArray(true));
+        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryKeys(), $this->getPrimaryKeys(true));
     }
 }

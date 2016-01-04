@@ -30,4 +30,10 @@ class Table extends Annotation
      * @var string
      */
     public $prefix = DB_PREFIX;
+
+    /**
+     * Link Name, default is default.
+     * @var string
+     */
+    public $link = 'default';
 }

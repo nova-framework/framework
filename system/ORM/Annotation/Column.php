@@ -48,6 +48,12 @@ class Column extends Annotation
     public $null = false;
 
 
+
+
+
+
+
+
     /**
      * Property Field in the Entity class
      *

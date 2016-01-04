@@ -66,6 +66,10 @@ abstract class Structure
             $columnAnnotation = $reader->getPropertyAnnotation($prop, "\\Nova\\ORM\\Annotation\\Column");
 
             if ($columnAnnotation instanceof Column) {
+
+                // Set field name
+                $columnAnnotation->setPropertyField($prop->getName());
+
                 // Add to columns
                 if (! isset(self::$columns[$tableAnnotation->name][$columnAnnotation->name])) {
                     self::$columns[$tableAnnotation->name][$columnAnnotation->name] = $columnAnnotation;

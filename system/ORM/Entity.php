@@ -9,6 +9,10 @@
 
 namespace Nova\ORM;
 
+use Doctrine\DBAL\Query\QueryBuilder;
+use Nova\DBAL\Connection;
+use Nova\DBAL\Manager as DBALManager;
+
 /**
  * Class Entity, can be extended with your database entities
  */
@@ -24,12 +28,93 @@ abstract class Entity
      */
     private $_state = 0;
 
-    public function __construct()
-    {
-        // Reset the state
-        $this->_state = 0;
+    /**
+     * Link name for using in this entity
+     *
+     * @var string
+     */
+    private static $_linkName = 'default';
 
-        // Let the entity be indexed, the annotations will be read into the Structure cache.
-        Structure::indexEntity($this);
+    /**
+     * Link instance (DBAL instance) used for this entity.
+     *
+     * @var null|Connection
+     */
+    private static $_link = null;
+
+    /**
+     * Indexed table annotation data
+     *
+     * @var Annotation\Table|null
+     */
+    private static $_table = null;
+
+    /**
+     * Will be called each time a static call is made, to check if the entity is indexed
+     *
+     * @param $method
+     * @param $parameters
+     */
+    public static function __callStatic($method, $parameters){
+        echo __CLASS__ . "::" . $method;
+        if (method_exists(__CLASS__, $method)) {
+            self::discoverEntity();
+            forward_static_call_array(array(__CLASS__,$method),$parameters);
+        }
+    }
+
+    /**
+     * Index entity if needed.
+     *
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    private static function discoverEntity()
+    {
+        if (!self::$_table) {
+            // Index entity.
+            self::$_table = Structure::indexEntity(self::class);
+            self::$_linkName = self::$_table->link;
+        }
+        self::$_link = null;
+        self::$_linkName = "";
+    }
+
+    /**
+     * Get Link instance
+     *
+     * @return Connection
+     */
+    private static function getLink()
+    {
+        if (self::$_link == null) {
+            self::$_link = DBALManager::getConnection(self::$_linkName);
+
+            $class = new \ReflectionClass(self::class);
+            self::$_link->setFetchType($class->getName());
+        }
+        return self::$_link;
+    }
+
+
+    /**
+     * Query Builder for finding
+     *
+     * @return QueryBuilder
+     */
+    public static function find()
+    {
+        self::getLink()->createQueryBuilder();
+    }
+
+
+    /**
+     * Get from database with primary key value.
+     * @param string|int $id Primary key value
+     *
+     * @return Entity
+     */
+    public static function get($id)
+    {
+        
     }
 }

@@ -16,10 +16,25 @@ class Car extends Entity
 {
     /**
      * @var int
-     * @Column(name="carid", primary=true)
+     * @Column(name="carid", primary=true, type="int")
      */
     public $carid;
+
+    /**
+     * @var string
+     * @Column(name="make", type="string")
+     */
     public $make;
+
+    /**
+     * @var string
+     * @Column(name="model", type="string")
+     */
     public $model;
+
+    /**
+     * @var double
+     * @Column(name="costs", type="double")
+     */
     public $costs;
 }

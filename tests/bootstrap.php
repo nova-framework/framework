@@ -52,6 +52,7 @@ Config::set('database', array(
     ),
     'sqlite' => array(
         'engine' => 'sqlite',
+        'driver'  => 'pdo_sqlite',
         'config' => array(
             'path'        => BASEPATH .'storage/persistent/test.sqlite',
             'return_type' => 'object' // Not required, default is 'array'.

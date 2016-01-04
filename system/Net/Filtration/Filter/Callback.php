@@ -7,9 +7,9 @@
  * @date January 04th, 2016
  */
 
-namespace Nova\Validation\Rule;
+namespace Nova\Net\Filtration\Filter;
 
-use Sirius\Validation\Rule\Callback as BaseCallback;
+use Sirius\Filtration\Filter\Callback as BaseCallback;
 
 
 class Callback extends BaseCallback

@@ -128,7 +128,7 @@ abstract class Entity
      *
      * @param string|int|array $id Primary key value(s). If there are multiple primary keys, give an array with
      * all the values!
-     * @return Entity
+     * @return Entity|false
      *
      * @throws \Exception
      */
@@ -240,5 +240,23 @@ abstract class Entity
         }
 
         return $result;
+    }
+
+
+    /**
+     * Delete from database
+     *
+     * @return bool|int False if the current entity isn't saved, integer with affected rows when successfully deleted.
+     *
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        if ($this->_state !== 1) {
+            return false;
+        }
+
+        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryArray());
     }
 }

@@ -32,8 +32,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car = Car::get(1);
 
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
-
-        var_dump($car);
     }
 
 
@@ -63,6 +61,32 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Check if the pk is still the same
         $this->assertEquals($carid, $car->carid);
+    }
+
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::delete
+     */
+    public function testDelete()
+    {
+        $car = new Car();
+
+        // Insert
+        $car->make = 'Nova Cars';
+        $car->model = 'Framework_ORM_Test_1';
+        $car->costs = 50000;
+
+        $car->save();
+
+        $this->assertGreaterThan(2, $car->carid);
+        $carid = $car->carid;
+
+        // Delete
+        $car->delete();
+
+        $car = Car::get($carid);
+
+        $this->assertFalse($car);
     }
 
 

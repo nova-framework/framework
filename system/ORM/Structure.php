@@ -32,6 +32,7 @@ abstract class Structure
      * Analyse entity and save table and column data for caching
      *
      * @param $instance Entity
+     * @return Table
      * @throws \Exception
      */
     public static function indexEntity($instance)
@@ -42,7 +43,7 @@ abstract class Structure
 
         if (isset(self::$columns[$className], self::$tables[$className])) {
             // Already indexed!
-            return;
+            return self::$tables[$className];
         }
 
         /** @var Table $tableAnnotation */
@@ -71,6 +72,8 @@ abstract class Structure
                 }
             }
         }
+
+        return $tableAnnotation;
     }
 
 

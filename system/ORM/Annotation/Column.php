@@ -26,10 +26,15 @@ class Column extends Annotation
      */
     public $name;
 
-    /** @var string */
-    public $type;
+    /**
+     * @var string
+     * @Enum({"string", "int", "float", "double", "text"})
+     */
+    public $type = "string";
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $default;
 
     /** @var bool */

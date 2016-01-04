@@ -10,13 +10,13 @@ use Nova\ORM\Entity;
  * Class Car
  * @package App\Modules\Demo\Models\Entities
  *
- * @Table(name="car")
+ * @Table(name="car", link="default")
  */
 class Car extends Entity
 {
     /**
      * @var int
-     * @Column(name="carid", primary=true, type="int")
+     * @Column(name="carid", primary=true, type="int", autoIncredimental=true)
      */
     public $carid;
 

@@ -47,11 +47,10 @@ class Column extends Annotation
      */
     public $null = false;
 
-
-
-
-
-
+    /**
+     * @var bool
+     */
+    public $autoIncredimental = false;
 
 
     /**

@@ -66,5 +66,5 @@ if (defined('ENVIRONMENT')) {
 
 }
 
-/** initiate config */
+/** Initiate the Framework Bootstrap  */
 require SYSPATH .'Config' .DS .'bootstrap.php';

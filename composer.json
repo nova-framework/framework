@@ -19,8 +19,9 @@
         "doctrine/dbal": "2.5.*",
         "phpmailer/phpmailer": "5.2.*",
         "wixel/gump": "dev-master",
-        "siriusphp/validation": "~1.2",
-        "siriusphp/filtration": "~1.2"
+        "siriusphp/validation": "~2.0",
+        "siriusphp/filtration": "~1.2",
+        "siriusphp/input": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "5.1.3",

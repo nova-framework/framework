@@ -182,4 +182,29 @@ abstract class Entity
 
         return $data;
     }
+
+    /**
+     * Get Primary Key data array
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getPrimaryArray()
+    {
+        $primaryKeys = Structure::getTablePrimaryKeys(self::$_table->name);
+
+        if ($primaryKeys === false) {
+            throw new \Exception("Primary Keys can't be detected!");
+        }
+
+        $data = array();
+        foreach($primaryKeys as $column) {
+            $data[$column->name] = $this->{$column->getPropertyField()};
+        }
+
+        return $data;
+    }
+
+
+
 }

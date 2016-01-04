@@ -72,12 +72,19 @@ abstract class Entity
     {
         if (!self::$_table) {
             // Index entity.
-            self::$_table = Structure::indexEntity(self::class);
+            self::$_table = Structure::indexEntity(get_called_class());
             self::$_linkName = self::$_table->link;
         }
         self::$_link = null;
         self::$_linkName = "";
     }
+
+
+    public function __construct()
+    {
+        self::discoverEntity();
+    }
+
 
     /**
      * Get Link instance
@@ -87,10 +94,12 @@ abstract class Entity
     private static function getLink()
     {
         if (self::$_link == null) {
-            self::$_link = DBALManager::getConnection(self::$_linkName);
 
-            $class = new \ReflectionClass(self::class);
-            self::$_link->setFetchType($class->getName());
+            if (self::$_linkName == '') {
+                self::$_linkName = 'default';
+            }
+
+            self::$_link = DBALManager::getConnection(self::$_linkName);
         }
         return self::$_link;
     }
@@ -103,18 +112,56 @@ abstract class Entity
      */
     public static function find()
     {
-        self::getLink()->createQueryBuilder();
+        return self::getLink()->createQueryBuilder();
     }
 
 
     /**
      * Get from database with primary key value.
-     * @param string|int $id Primary key value
      *
+     * @param string|int|array $id Primary key value(s). If there are multiple primary keys, give an array with
+     * all the values!
      * @return Entity
+     *
+     * @throws \Exception
      */
     public static function get($id)
     {
-        
+        $primaryKeys = Structure::getTablePrimaryKeys(self::$_table->name);
+
+        if ($primaryKeys === false) {
+            throw new \Exception("Primary Keys can't be detected!");
+        }
+
+        if (! is_array($id) && count($primaryKeys) > 1) {
+            throw new \UnexpectedValueException("ID parameter should be an array with primary key -> values. The current entity has multiple primary keys!");
+        }
+
+        if (is_array($id) && count($primaryKeys) !== count($id)) {
+            throw new \OutOfBoundsException("The ID array should contain all primary keys defined in your entity.");
+        }
+
+        if (! is_array($id)) {
+            $id = array($primaryKeys[0]->name => $id);
+        }
+
+        // Make query
+        $query = self::find();
+
+        // Where
+        $where = $query->expr()->andX();
+
+        foreach($id as $key => $value) {
+            $where->add($query->expr()->eq($key, $query->createPositionalParameter($value)));
+        }
+
+        // Execute
+        $query->select('*')->from(self::$_table->prefix . self::$_table->name)->where($where)->setMaxResults(1);
+
+        $statement = $query->execute();
+
+        $statement->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+
+        return $statement->fetch();
     }
 }

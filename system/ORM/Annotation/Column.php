@@ -37,6 +37,13 @@ class Column extends Annotation
      */
     public $default;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     public $primary = false;
+
+    /**
+     * @var bool
+     */
+    public $null = false;
 }

@@ -36,20 +36,31 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::save
+     */
     public function testSave()
     {
         $car = new Car();
 
+        // Insert
         $car->make = 'Nova Cars';
         $car->model = 'Framework_ORM_Test_1';
         $car->costs = 50000;
 
         $insert = $car->save();
 
+        // Check if primary key is filled in
+        $carid = $car->carid;
+        $this->assertGreaterThan(2, $carid);
 
+
+        // Update
         $car->costs = 55000;
         $update = $car->save();
 
-        var_dump($update);
+        // Check if the pk is still the same
+        $this->assertEquals($carid, $car->carid);
     }
 }

@@ -46,4 +46,32 @@ class Column extends Annotation
      * @var bool
      */
     public $null = false;
+
+
+    /**
+     * Property Field in the Entity class
+     *
+     * @var string
+     */
+    private $propertyField = "";
+
+    /**
+     * Get property field in Entity Class
+     *
+     * @return string
+     */
+    public function getPropertyField()
+    {
+        return $this->propertyField;
+    }
+
+    /**
+     * Set property field name in Entity class
+     *
+     * @param string $propertyField
+     */
+    public function setPropertyField($propertyField)
+    {
+        $this->propertyField = $propertyField;
+    }
 }

@@ -10,6 +10,7 @@
 namespace Nova\ORM\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
+use PDO;
 
 /**
  * Class Column
@@ -78,5 +79,24 @@ class Column extends Annotation
     public function setPropertyField($propertyField)
     {
         $this->propertyField = $propertyField;
+    }
+
+    /**
+     * Get PDO Type Integers from our ORM Type enumeration
+     *
+     * @return int PDO Integer from PDO::PARAM_*
+     */
+    public function getPdoType()
+    {
+        switch($this->type){
+            case 'string':
+                return PDO::PARAM_STR;
+            case 'int':
+                return PDO::PARAM_INT;
+            case 'double' || 'float' || 'text':
+                return PDO::PARAM_STR;
+            default:
+                return PDO::PARAM_STR;
+        }
     }
 }

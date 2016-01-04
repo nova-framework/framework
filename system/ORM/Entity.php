@@ -181,7 +181,7 @@ abstract class Entity
         $data = array();
         foreach($columns as $column) {
             if ($types) {
-                $data[$column->name] = $column->type;
+                $data[$column->name] = $column->getPdoType();
             } else {
                 $data[$column->name] = $this->{$column->getPropertyField()};
             }
@@ -208,7 +208,7 @@ abstract class Entity
         $data = array();
         foreach($primaryKeys as $column) {
             if ($types) {
-                $data[$column->name] = $column->type;
+                $data[$column->name] = $column->getPdoType();
             } else {
                 $data[$column->name] = $this->{$column->getPropertyField()};
             }

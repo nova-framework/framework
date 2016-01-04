@@ -171,27 +171,33 @@ abstract class Entity
     /**
      * Get Entity properties as assoc array. useful for insert, update or just debugging.
      *
+     * @param bool $types Get types of columns. Default false.
      * @return array
      */
-    public function getColumnArray()
+    public function getColumnArray($types = false)
     {
         $columns = Structure::getTableColumns($this);
 
         $data = array();
         foreach($columns as $column) {
-            $data[$column->name] = $this->{$column->getPropertyField()};
+            if ($types) {
+                $data[$column->name] = $column->type;
+            } else {
+                $data[$column->name] = $this->{$column->getPropertyField()};
+            }
         }
 
         return $data;
     }
 
     /**
-     * Get Primary Key data array
+     * Get Primary Key data array or type array
      *
+     * @param bool $types Get types of primary columns. Default false.
      * @return array
      * @throws \Exception
      */
-    public function getPrimaryArray()
+    public function getPrimaryArray($types = false)
     {
         $primaryKeys = Structure::getTablePrimaryKeys(self::$_table->name);
 
@@ -201,7 +207,11 @@ abstract class Entity
 
         $data = array();
         foreach($primaryKeys as $column) {
-            $data[$column->name] = $this->{$column->getPropertyField()};
+            if ($types) {
+                $data[$column->name] = $column->type;
+            } else {
+                $data[$column->name] = $this->{$column->getPropertyField()};
+            }
         }
 
         return $data;

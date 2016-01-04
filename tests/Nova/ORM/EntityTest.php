@@ -15,4 +15,14 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(4, count($cols));
     }
+
+
+    public function testGetEntity()
+    {
+        $car = Car::get(1);
+
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
+
+        var_dump($car);
+    }
 }

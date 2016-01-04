@@ -31,7 +31,7 @@ abstract class Structure
     /**
      * Analyse entity and save table and column data for caching
      *
-     * @param Entity $instance
+     * @param Entity|string $instance
      * @return Table
      * @throws \Exception
      */

@@ -4,6 +4,7 @@
 namespace Nova\ORM;
 
 use App\Modules\Demo\Models\Entities\Car;
+use Nova\DBAL\Manager;
 
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,5 +63,15 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Check if the pk is still the same
         $this->assertEquals($carid, $car->carid);
+    }
+
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        // CleanUp
+        $connection = Manager::getConnection();
+        $connection->delete(DB_PREFIX . 'car', array('make' => 'Nova Cars'));
     }
 }

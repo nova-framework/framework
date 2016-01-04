@@ -11,7 +11,17 @@ namespace Nova\Input\Filtration;
 
 use Sirius\Filtration\Filtrator as BaseFiltrator;
 
+use Nova\Input\Validation\FilterFactory;
+
 
 class Filtrator extends BaseFiltrator
 {
+    public function __construct(FilterFactory $filterFactory = null)
+    {
+        if ($filterFactory === null) {
+            $filterFactory = new FilterFactory();
+        }
+
+        parent::__construct($filterFactory);
+    }
 }

@@ -13,6 +13,8 @@ use Sirius\Input\InputFilter;
 use Sirius\Validation\ValidatorInterface;
 use Sirius\Filtration\FiltratorInterface;
 
+use Nova\Input\Filtration\Filtrator;
+use Nova\Input\Validation\Validator;
 use Nova\Input\Element\Factory as ElementFactory;
 
 
@@ -21,6 +23,18 @@ class Filter extends InputFilter
 
     public function __construct(ElementFactory $elementFactory = null, ValidatorInterface $validator = null, FiltratorInterface $filtrator = null)
     {
+        if($elementFactory === null) {
+            $elementFactory = new ElementFactory();
+        }
+
+        if($validator === null) {
+            $validator = new Validator();
+        }
+
+        if($filtrator === null) {
+            $filtrator = new Filtrator();
+        }
+
         parent::__construct($elementFactory, $validator, $filtrator);
     }
 

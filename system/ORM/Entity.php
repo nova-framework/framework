@@ -164,4 +164,22 @@ abstract class Entity
 
         return $statement->fetch();
     }
+
+
+    /**
+     * Get Entity properties as assoc array. useful for insert, update or just debugging.
+     *
+     * @return array
+     */
+    public function getColumnArray()
+    {
+        $columns = Structure::getTableColumns($this);
+
+        $data = array();
+        foreach($columns as $column) {
+            $data[$column->name] = $this->{$column->getPropertyField()};
+        }
+
+        return $data;
+    }
 }

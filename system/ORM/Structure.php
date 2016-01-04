@@ -11,6 +11,7 @@ namespace Nova\ORM;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Nova\ORM\Annotation\Column;
 use Nova\ORM\Annotation\Table;
 
 /**
@@ -51,5 +52,21 @@ abstract class Structure
 
         // Save table information
         self::$tables[$className] = $tableAnnotation;
+
+        // Make column array
+        self::$columns[$tableAnnotation->name] = array();
+
+        // Get properties and loop.
+        $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
+
+        foreach($properties as $prop) {
+            /** @var Column $columnAnnotation */
+            $columnAnnotation = $reader->getPropertyAnnotation($prop, "\\Nova\\ORM\\Annotation\\Column");
+
+            // Add to columns
+            if (! isset(self::$columns[$tableAnnotation->name][$columnAnnotation->name])) {
+                self::$columns[$tableAnnotation->name][$columnAnnotation->name] = $columnAnnotation;
+            }
+        }
     }
 }

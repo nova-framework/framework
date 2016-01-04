@@ -219,6 +219,8 @@ abstract class Entity
 
 
 
+
+
     /**
      * Insert or update the entity in the database
      *
@@ -229,7 +231,7 @@ abstract class Entity
     {
         if ($this->_state == 0) {
             // Insert
-            $result = $this->getLink()->insert(self::$_table->prefix . self::$_table->name, $this->getColumnArray());
+            $result = $this->getLink()->insert(self::$_table->prefix . self::$_table->name, $this->getColumnArray(), $this->getColumnArray(true));
 
             // Primary Key
             $this->_id = $this->getLink()->lastInsertId();
@@ -246,7 +248,8 @@ abstract class Entity
             $this->_state = 1;
         } else {
             // Update
-            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumnArray(), $this->getPrimaryArray());
+            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumnArray(), $this->getPrimaryArray(),
+                array_merge($this->getColumnArray(true), $this->getPrimaryArray(true)));
         }
 
         return $result;
@@ -267,6 +270,6 @@ abstract class Entity
             return false;
         }
 
-        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryArray());
+        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryArray(), $this->getPrimaryArray(true));
     }
 }

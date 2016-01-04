@@ -12,6 +12,8 @@ namespace Nova\ORM;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Nova\DBAL\Connection;
 use Nova\DBAL\Manager as DBALManager;
+use Nova\ORM\Annotation\Column;
+use \PDO;
 
 /**
  * Class Entity, can be extended with your database entities
@@ -48,6 +50,11 @@ abstract class Entity
      * @var Annotation\Table|null
      */
     private static $_table = null;
+
+    /**
+     * Binding Primary Key
+     */
+    private $_id = null;
 
     /**
      * Will be called each time a static call is made, to check if the entity is indexed
@@ -110,7 +117,7 @@ abstract class Entity
      *
      * @return QueryBuilder
      */
-    public static function find()
+    public static function getQueryBuilder()
     {
         return self::getLink()->createQueryBuilder();
     }
@@ -146,7 +153,7 @@ abstract class Entity
         }
 
         // Make query
-        $query = self::find();
+        $query = self::getQueryBuilder();
 
         // Where
         $where = $query->expr()->andX();
@@ -160,7 +167,7 @@ abstract class Entity
 
         $statement = $query->execute();
 
-        $statement->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        $statement->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
         return $statement->fetch();
     }
@@ -207,4 +214,36 @@ abstract class Entity
 
 
 
+    /**
+     * Insert or update the entity in the database
+     *
+     * @return int Affected rows
+     * @throws \Exception Throws exceptions on error.
+     */
+    public function save()
+    {
+        if ($this->_state == 0) {
+            // Insert
+            $result = $this->getLink()->insert(self::$_table->prefix . self::$_table->name, $this->getColumnArray());
+
+            // Primary Key
+            $this->_id = $this->getLink()->lastInsertId();
+
+            /** @var Column[] $primaryKeys */
+            $primaryKeys = Structure::getTablePrimaryKeys($this);
+
+            foreach($primaryKeys as $primaryKey) {
+                if ($primaryKey->autoIncredimental) {
+                    $this->{$primaryKey->getPropertyField()} = $this->_id;
+                }
+            }
+
+            $this->_state = 1;
+        } else {
+            // Update
+            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumnArray(), $this->getPrimaryArray());
+        }
+
+        return $result;
+    }
 }

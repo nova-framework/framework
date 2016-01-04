@@ -19,12 +19,12 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../system/Net</directory>
-            <directory suffix=".php">../system/Database</directory>
+            <directory suffix=".php">../system/DBAL</directory>
+            <directory suffix=".php">../system/ORM</directory>
             <exclude>
                 <file>../system/Net/Cookie.php</file>
                 <file>../system/Net/Session.php</file>
                 <file>../system/Net/Response.php</file>
-                <file>../system/Database/Entity.php</file>
             </exclude>
         </whitelist>
     </filter>

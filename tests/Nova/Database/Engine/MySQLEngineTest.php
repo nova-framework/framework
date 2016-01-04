@@ -18,6 +18,8 @@ use Nova\Database\Engine\MySQL;
  * @coversDefaultClass \Nova\Database\Engine\MySQL
  * @covers \Nova\Database\Engine\Base
  * @covers \Nova\Database\Engine\MySQL
+ *
+ * @requires extension nonexistingone
  */
 class MySQLEngineTest extends \PHPUnit_Framework_TestCase
 {

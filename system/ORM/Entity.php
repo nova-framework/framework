@@ -140,6 +140,113 @@ abstract class Entity
         return $data;
     }
 
+    /**
+     * Prepare the where, return an array with the following details:
+     *  'where' => 'SQL Where Clause'
+     *  'bindValues' => array with values for binding.
+     *  'bindTypes' => array with types for binding.
+     *
+     * @param array $criteria Should be either
+     * 'column' => 'value'
+     *          or:
+     * 'column' => array('LIKE' => 'value')
+     * 'column' => array('=' => 'value')
+     * 'column' => array('>=' => 'value')
+     * 'column' => array('<=' => 'value')
+     * 'column' => array('>' => 'value')
+     * 'column' => array('<' => 'value')
+     * 'column' => array('IN' => array('value', 'value'))
+     *
+     * @return array Where and bind result
+     *
+     * @throws \Exception Exceptions on error in the where criteria
+     */
+    private static function _prepareWhere(array $criteria)
+    {
+        // Check parameter
+        if (! is_array($criteria)) {
+            return false;
+        }
+
+        // Prepare returning result
+        $result = array(
+            'where' => '',
+            'bindValues' => array(),
+            'bindTypes' => array()
+        );
+
+        // First we will loop through the criteria and prepare the where clause
+        $where = " ";
+        $bindValues = array();
+        $bindTypes = array();
+
+        $idx = 0;
+        foreach ($criteria as $column => $value) {
+            // Check for operators
+            if (is_array($value)) {
+                // Will contain [operator] => value
+                $operator = array_keys($value);
+
+                // Few checks
+                if (count($operator) !== 1) {
+                    throw new \Exception("The operator => value should contain only one operator, " . count($operator) . " operators given for column " . $column);
+                }
+                if (is_array($value) && $operator !== 'IN') {
+                    throw new \Exception("Value is an array in the criteria of column " . $column . ". Only IN operator allows arrays given as criteria value!");
+                }
+                if ($operator == 'IN' && ! is_array($value)) {
+                    throw new \Exception("Value should be an array of values criteria of column " . $column . ". Because you are using the IN operator!");
+                }
+
+                // Adding basic where
+                $where .= "$column $operator ";
+
+                // The IN magic:
+                if ($operator == 'IN' && is_array($value)) {
+                    $where .= "(";
+
+                    $subIdx = 0;
+
+                    foreach($value as $item => $subValue) {
+                        $where .= "?";
+                        if ($subIdx < count($value)) {
+                            $where .= ",";
+                        }
+
+                        $bindValues[] = $subValue;
+                        $bindTypes[] = is_int($subValue) ? PDO::PARAM_INT : PDO::PARAM_STR;
+
+                        $subIdx++;
+                    }
+                    $where .= ")";
+                } else {
+                    // None IN, just single where clause item.
+                    $where .= "$column $operator ?";
+                    $bindValues[] = $value;
+                    $bindTypes[] = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+                }
+
+
+            }
+
+            // If not the end of the criteria, then add AND to it.
+            if ($idx < count($criteria)) {
+                $where .= " AND ";
+            }
+
+
+            $idx++;
+        }
+
+        $result['where'] = $where;
+        $result['bindValues'] = $bindValues;
+        $result['bindTypes'] = $bindTypes;
+
+        return $result;
+    }
+
+
+
 
 
     /**

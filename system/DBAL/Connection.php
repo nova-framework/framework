@@ -140,6 +140,38 @@ class Connection extends BaseConnection
         return $this->select($statement, $params, $paramTypes, $className);
     }
 
+    /**
+     * Replaces a table row with specified data.
+     *
+     * Table expression and columns are not escaped and are not safe for user-input.
+     *
+     * @param string $table The expression of the table to insert data into, quoted or unquoted.
+     * @param array  $data  An associative array containing column-value pairs.
+     * @param array  $types Types of the inserted data.
+     *
+     * @return integer The number of affected rows.
+     */
+    public function replace($table, array $data, array $types = array())
+    {
+        $this->connect();
+
+        if (empty($data)) {
+            return $this->executeUpdate('REPLACE INTO ' . $table . ' ()' . ' VALUES ()');
+        }
+
+        return $this->executeUpdate(
+            'REPLACE INTO ' . $table . ' (' . implode(', ', array_keys($data)) . ')' .
+            ' VALUES (' . implode(', ', array_fill(0, count($data), '?')) . ')',
+            array_values($data),
+            is_string(key($types)) ? $this->extractTypeValues($data, $types) : $types
+        );
+    }
+
+    /**
+     * Get total executed Queries.
+     *
+     * @return int
+     */
     public function getQueryCounter()
     {
         $logger = $this->getConfiguration()->getLogger();

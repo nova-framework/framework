@@ -117,13 +117,11 @@ class Manager
 
     public static function clearConnections()
     {
-        foreach(static::$instances as &$instance) {
+        foreach(static::$instances as $instance) {
             $instance->close();
-
-            unset($instance);
         }
 
         static::$instances = array();
     }
-    
+
 }

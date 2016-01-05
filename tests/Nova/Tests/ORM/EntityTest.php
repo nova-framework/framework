@@ -7,20 +7,20 @@
  * @date January 4th, 2016
  */
 
-namespace Nova\ORM;
+namespace Nova\Tests\ORM;
 
 use App\Modules\Demo\Models\Entities\Car;
 use Nova\DBAL\Manager;
+use Nova\ORM\Structure;
+use Nova\Tests\Utils;
 
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * @covers \Nova\ORM\Entity
-     *
-     * @param string $linkName
      */
-    public function testBasic($linkName = 'default')
+    public function executeTestBasic()
     {
         $car = new Car();
 
@@ -32,42 +32,53 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Nova\ORM\Entity
      */
-    public function testBasicSqlite()
+    public function testBasic()
     {
-        $this->testBasic('sqlite');
+        Utils::switchDatabase('sqlite');
+        $this->executeTestBasic();
+
+        Utils::switchDatabase('mysql');
+        $this->executeTestBasic();
     }
+
+
 
 
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::find
      * @throws \Exception
-     * @param string $linkName
      */
-    public function testGetEntity($linkName = null)
+    public function executeTestGetEntity()
     {
-        $car = Car::find(1, $linkName);
+        $car = Car::find(1);
 
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
     }
 
     /**
- * @covers \Nova\ORM\Entity
- * @covers \Nova\ORM\Entity::find
- */
-    public function testGetEntitySqlite()
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::find
+     */
+    public function testGetEntity()
     {
-        $this->testGetEntity('sqlite');
+        Utils::switchDatabase('sqlite');
+        $this->executeTestGetEntity();
+
+        Utils::switchDatabase('mysql');
+        $this->executeTestGetEntity();
     }
+
+
+
 
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::save
      * @covers \Nova\ORM\Entity::find
      * @throws \Exception
-     * @param string $linkName
      */
-    public function testBasicFinding($linkName = null)
+    public function executeTestBasicFinding()
     {
         $car = new Car();
 
@@ -76,7 +87,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car->model = 'Framework_ORM_Test_Search_1';
         $car->costs = 50000;
 
-        $insert = $car->save($linkName);
+        $insert = $car->save();
         $this->assertEquals(1, $insert);
 
         $car2 = new Car();
@@ -86,13 +97,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car2->model = 'Framework_ORM_Test_Search_2';
         $car2->costs = 50000;
 
-        $insert = $car2->save($linkName);
+        $insert = $car2->save();
         $this->assertEquals(1, $insert);
 
 
 
         // Search single
-        $searched = Car::find($car->carid, $linkName);
+        $searched = Car::find($car->carid);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
 
         //$searched = Car::find(array('model' => 'Framework_ORM_Test_Search_1'), $linkName);
@@ -108,18 +119,23 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\ORM\Entity::find
      * @throws \Exception
      */
-    public function testBasicFindingSqlite()
+    public function testBasicFinding()
     {
-        $this->testBasicFinding('sqlite');
+        Utils::switchDatabase('sqlite');
+        $this->executeTestBasicFinding();
+
+        Utils::switchDatabase('mysql');
+        $this->executeTestBasicFinding();
     }
+
+
 
 
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::save
-     * @param string $linkName
      */
-    public function testSave($linkName = null)
+    public function executeTestSave()
     {
         $car = new Car();
 
@@ -128,7 +144,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car->model = 'Framework_ORM_Test_1';
         $car->costs = 50000;
 
-        $insert = $car->save($linkName);
+        $insert = $car->save();
 
         // Check if primary key is filled in
         $carid = $car->carid;
@@ -137,29 +153,33 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Update
         $car->costs = 55000;
-        $update = $car->save($linkName);
+        $update = $car->save();
 
         // Check if the pk is still the same
         $this->assertEquals($carid, $car->carid);
     }
 
-
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::save
      */
-    public function testSaveSqlite()
+    public function testSave()
     {
-        $this->testSave('sqlite');
+        Utils::switchDatabase('sqlite');
+        $this->executeTestSave();
+
+        Utils::switchDatabase('mysql');
+        $this->executeTestSave();
     }
+
+
 
 
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::delete
-     * @param string $linkName
      */
-    public function testDelete($linkName = null)
+    public function executeTestDelete()
     {
         $car = new Car();
 
@@ -168,15 +188,15 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car->model = 'Framework_ORM_Test_1';
         $car->costs = 50000;
 
-        $car->save($linkName);
+        $car->save();
 
         $this->assertGreaterThan(2, $car->carid);
         $carid = $car->carid;
 
         // Delete
-        $car->delete($linkName);
+        $car->delete();
 
-        $car = Car::find($carid, $linkName);
+        $car = Car::find($carid);
 
         $this->assertFalse($car);
     }
@@ -187,8 +207,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteSqlite()
     {
-        $this->testDelete('sqlite');
+        Utils::switchDatabase('sqlite');
+        $this->executeTestDelete();
+
+        Utils::switchDatabase('mysql');
+        $this->executeTestDelete();
     }
+
 
 
     /**
@@ -202,11 +227,12 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
 
         // CleanUp
-        $connection = Manager::getConnection('default');
+        Utils::switchDatabase('sqlite');
+        $connection = Manager::getConnection();
         $connection->delete(DB_PREFIX . 'car', array('make' => 'Nova Cars'));
 
-        // CleanUp
-        $connection = Manager::getConnection('sqlite');
+        Utils::switchDatabase('mysql');
+        $connection = Manager::getConnection();
         $connection->delete(DB_PREFIX . 'car', array('make' => 'Nova Cars'));
     }
 }

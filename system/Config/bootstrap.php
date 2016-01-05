@@ -7,7 +7,8 @@
  * @date December 15th, 2015
  */
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\AnnotationRegistry as Annotations;
+
 use Nova\Modules\Manager as Modules;
 use Nova\Events\Manager as Events;
 use Nova\Net\Session;
@@ -46,8 +47,11 @@ Logger::initialize();
 set_exception_handler('Nova\Logger::ExceptionHandler');
 set_error_handler('Nova\Logger::ErrorHandler');
 
-/** Get the curent Router instance. */
+/** Get the current Router instance. */
 $router = Router::getInstance();
+
+/** Load the application wide Routes. */
+require $configDir .'routes.php';
 
 /** Bootstrap the active Modules. */
 Modules::bootstrap();
@@ -58,13 +62,11 @@ Events::initialize();
 /** Initialize the Sessions. */
 Session::initialize();
 
-/** Load the application wide Routes. */
-require $configDir .'routes.php';
-
 /** Register Annotation Namespace */
-$annotationPath = SYSPATH . "ORM" . DS . "Annotation" . DS;
-AnnotationRegistry::registerFile($annotationPath . 'Table.php');
-AnnotationRegistry::registerFile($annotationPath . 'Column.php');
+$annotationPath = SYSPATH .'ORM' .DS .'Annotation' .DS;
+
+Annotations::registerFile($annotationPath .'Table.php');
+Annotations::registerFile($annotationPath .'Column.php');
 
 /** Execute the Request dispatching by Router. */
 $router->dispatch();

@@ -686,9 +686,13 @@ class BaseModel extends Model
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
         //
-        $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
+        $sql = "DELETE FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:ids)";
 
-        $result = $this->db->delete($this->table(), $where);
+        $result = $this->db->executeUpdate(
+            $sql,
+            array('ids' => $ids),
+            array('ids' => Connection::PARAM_INT_ARRAY)
+        );
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));
 

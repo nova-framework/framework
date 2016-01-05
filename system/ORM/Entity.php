@@ -52,7 +52,7 @@ abstract class Entity
     private static $_table = null;
 
     /**
-     * Binding Primary Key
+     * Primary Key reference or value
      */
     private $_id = null;
 
@@ -63,7 +63,6 @@ abstract class Entity
      * @param $parameters
      */
     public static function __callStatic($method, $parameters){
-        echo __CLASS__ . "::" . $method;
         if (method_exists(__CLASS__, $method)) {
             self::discoverEntity();
             forward_static_call_array(array(__CLASS__,$method),$parameters);
@@ -127,30 +126,21 @@ abstract class Entity
     /**
      * Get from database with primary key value.
      *
-     * @param string|int|array $id Primary key value(s). If there are multiple primary keys, give an array with
-     * all the values!
+     * @param string|int|array $id Primary key value or key=>value array for condition.
      * @return Entity|false
      *
      * @throws \Exception
      */
     public static function find($id)
     {
-        $primaryKeys = Structure::getTablePrimaryKeys(self::$_table->name);
+        $primaryKey = Structure::getTablePrimaryKey(self::$_table->name);
 
-        if ($primaryKeys === false) {
-            throw new \Exception("Primary Keys can't be detected!");
-        }
-
-        if (! is_array($id) && count($primaryKeys) > 1) {
-            throw new \UnexpectedValueException("ID parameter should be an array with primary key -> values. The current entity has multiple primary keys!");
-        }
-
-        if (is_array($id) && count($primaryKeys) !== count($id)) {
-            throw new \OutOfBoundsException("The ID array should contain all primary keys defined in your entity.");
+        if ($primaryKey === false) {
+            throw new \Exception("Primary Key can't be detected!");
         }
 
         if (! is_array($id)) {
-            $id = array($primaryKeys[0]->name => $id);
+            $id = array($primaryKey->name => $id);
         }
 
 
@@ -205,21 +195,19 @@ abstract class Entity
      * @return array
      * @throws \Exception
      */
-    public function getPrimaryKeys($types = false)
+    public function getPrimaryKey($types = false)
     {
-        $primaryKeys = Structure::getTablePrimaryKeys(self::$_table->name);
+        $primaryKey = Structure::getTablePrimaryKey(self::$_table->name);
 
-        if ($primaryKeys === false) {
+        if ($primaryKey === false) {
             throw new \Exception("Primary Keys can't be detected!");
         }
 
         $data = array();
-        foreach($primaryKeys as $column) {
-            if ($types) {
-                $data[$column->name] = $column->getPdoType();
-            } else {
-                $data[$column->name] = $this->{$column->getPropertyField()};
-            }
+        if ($types) {
+            $data[$primaryKey->name] = $primaryKey->getPdoType();
+        } else {
+            $data[$primaryKey->name] = $this->{$primaryKey->getPropertyField()};
         }
 
         return $data;
@@ -244,20 +232,18 @@ abstract class Entity
             // Primary Key
             $this->_id = $this->getLink()->lastInsertId();
 
-            /** @var Column[] $primaryKeys */
-            $primaryKeys = Structure::getTablePrimaryKeys($this);
+            /** @var Column $primaryKey */
+            $primaryKey = Structure::getTablePrimaryKey($this);
 
-            foreach($primaryKeys as $primaryKey) {
-                if ($primaryKey->autoIncredimental) {
-                    $this->{$primaryKey->getPropertyField()} = $this->_id;
-                }
+            if ($primaryKey->autoIncrement) {
+                $this->{$primaryKey->getPropertyField()} = $this->_id;
             }
 
             $this->_state = 1;
         } else {
             // Update
-            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumns(), $this->getPrimaryKeys(),
-                array_merge($this->getColumns(true), $this->getPrimaryKeys(true)));
+            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumns(), $this->getPrimaryKey(),
+                array_merge($this->getColumns(true), $this->getPrimaryKey(true)));
         }
 
         return $result;
@@ -278,6 +264,6 @@ abstract class Entity
             return false;
         }
 
-        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryKeys(), $this->getPrimaryKeys(true));
+        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryKey(), $this->getPrimaryKey(true));
     }
 }

@@ -51,7 +51,7 @@ class Column extends Annotation
     /**
      * @var bool
      */
-    public $autoIncredimental = false;
+    public $autoIncrement = false;
 
 
     /**

@@ -718,7 +718,7 @@ class BaseModel extends Model
         $result = $this->db->executeUpdate(
             $sql,
             array($ids),
-            array(Connection::PARAM_INT_ARRAY),
+            array(Connection::PARAM_INT_ARRAY)
         );
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));

@@ -157,14 +157,17 @@ abstract class Entity
      * 'column' => array('<' => 'value')
      * 'column' => array('IN' => array('value', 'value'))
      *
+     * @param string|null $singleOperator Operator when doing a single criteria inline
+     * @param string|null $singleValue Single or array value(s) when doing a single criteria inline
+     *
      * @return array Where and bind result
      *
      * @throws \Exception Exceptions on error in the where criteria
      */
-    private static function _prepareWhere(array $criteria)
+    private static function _prepareWhere($criteria, $singleOperator = null, $singleValue = null)
     {
         // Check parameter
-        if (! is_array($criteria)) {
+        if (! is_array($criteria) && ($singleOperator == null || $singleValue == null)) {
             return false;
         }
 
@@ -174,6 +177,11 @@ abstract class Entity
             'bindValues' => array(),
             'bindTypes' => array()
         );
+
+        // Map a single criteria to the normal array criteria.
+        if (is_string($criteria) && $singleOperator !== null && $singleValue !== null) {
+            $criteria = array($criteria => array($singleOperator => $singleValue));
+        }
 
         // First we will loop through the criteria and prepare the where clause
         $where = "";
@@ -295,18 +303,24 @@ abstract class Entity
      * You could also use one of the custom comparators, like:
      *  - column => ['=' => value], column => ['<' => value], column => ['LIKE' => value] or column => ['>=' => value]
      *
+     * When using a single criteria you could use this parameter as the column and the other 2 parameters as operator and value
+     *
+     *
+     * @param null|string $operator Operator to use when having a single criteria
+     * @param null|string $value Value (or multiple when using IN as a operator) to have a single criteria.
+     *
      * @return Entity|Entity<T> Single entity
      * @throw \Exception Exceptions when having errors while preparing, fetching, connecting or parsing.
      */
-    public static function findBy(array $criteria)
+    public static function findBy($criteria, $operator = null, $value = null)
     {
-        if (! is_array($criteria))
+        if (! is_array($criteria) && ($operator == null || $value == null))
         {
             throw new \UnexpectedValueException("Criteria should be an array!");
         }
 
         // Prepare where statement
-        $preparedWhere = self::_prepareWhere($criteria);
+        $preparedWhere = self::_prepareWhere($criteria, $operator, $value);
 
         $where = $preparedWhere['where'];
 

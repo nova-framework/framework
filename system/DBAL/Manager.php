@@ -97,8 +97,8 @@ class Manager
 
     public static function clearConnections()
     {
-        foreach(static::$instances as $instance) {
-            $instance->close();
+        foreach(static::$instances as $name => $connection) {
+            $connection->close();
         }
 
         static::$instances = array();

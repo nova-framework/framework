@@ -40,6 +40,7 @@ require_once $configDir.'config.example.php';
 Config::set('database', array(
     'default' => array(
         'engine' => 'mysql',
+        'driver' => 'pdo_mysql',
         'config' => array(
             'host'        => 'localhost',
             'port'        => 3306,     // Not required, default is 3306
@@ -54,7 +55,7 @@ Config::set('database', array(
         'engine' => 'sqlite',
         'driver'  => 'pdo_sqlite',
         'config' => array(
-            'path'        => BASEPATH .'storage/persistent/test.sqlite',
+            'path'        => BASEPATH .'storage'.DS.'persistent'.DS.'test.sqlite',
             'return_type' => 'object' // Not required, default is 'array'.
         )
     )

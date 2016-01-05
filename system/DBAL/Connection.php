@@ -47,7 +47,7 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public static function getFetchMode($fetchType, &$fetchClass) {
+    public static function getFetchMode($fetchType, &$fetchClass = null) {
         // Prepare the parameters.
         $className = null;
 

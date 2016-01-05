@@ -10,7 +10,9 @@
 namespace Nova\Helpers;
 
 
-use Nova\Database\Manager;
+use Nova\DBAL\Manager as Database;
+use Nova\DBAL\Connection;
+
 use Nova\Config;
 
 class Profiler
@@ -28,9 +30,9 @@ class Profiler
         $memory_usage = Number::humanSize(memory_get_usage());
 
         if($options['with_queries'] == true) {
-            $engine = Manager::getEngine();
+            $connection = Database::getConnection();
 
-            $total_queries = $engine->getTotalQueries();
+            $total_queries = $connection->getTotalQueries();
 
             $queries_str = ($total_queries == 1) ? __d('system', 'query') : __d('system', 'queries');
         }

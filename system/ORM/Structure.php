@@ -22,11 +22,14 @@ use Nova\ORM\Entity;
  */
 abstract class Structure
 {
-    /** @var array */
+    /** @var array<string, Column[]> */
     private static $columns = array();
 
     /** @var Table[] */
     private static $tables = array();
+
+    /** @var array<string, Column> */
+    private static $primaryKey = array();
 
     /**
      * Analyse entity and save table and column data for caching
@@ -74,6 +77,11 @@ abstract class Structure
                 if (! isset(self::$columns[$tableAnnotation->name][$columnAnnotation->name])) {
                     self::$columns[$tableAnnotation->name][$columnAnnotation->name] = $columnAnnotation;
                 }
+
+                // Add if primary to the pk array.
+                if ($columnAnnotation->primary) {
+                    self::$primaryKey[$tableAnnotation->name] = $columnAnnotation;
+                }
             }
         }
 
@@ -113,11 +121,11 @@ abstract class Structure
 
 
     /**
-     * Get primary key columns for table.
-     * @param string|Entity $table Entity or tablename
-     * @return bool|Column[]
+     * Get primary key column for table
+     * @param string|Entity $table Entity or table name
+     * @return false|Column
      */
-    public static function getTablePrimaryKeys($table)
+    public static function getTablePrimaryKey($table)
     {
         if ($table instanceof Entity) {
             $reflectionClass = new \ReflectionClass($table);
@@ -135,18 +143,10 @@ abstract class Structure
             throw new \UnexpectedValueException("Table parameter should be a name of the table, or an instance of the Entity!");
         }
 
-        if (! isset(self::$columns[$table])) {
+        if (! isset(self::$primaryKey[$table])) {
             return false;
         }
 
-        // Check for all primary keys
-        $primaryKeys = array();
-        foreach(self::$columns[$table] as $column) {
-            if ($column->primary) {
-                $primaryKeys[] = $column;
-            }
-        }
-
-        return $primaryKeys;
+        return self::$primaryKey[$table];
     }
 }

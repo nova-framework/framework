@@ -180,9 +180,9 @@ class Connection extends BaseConnection
      *
      * @return int
      */
-    public function getQueryCounter()
+    public function getTotalQueries()
     {
-        $logger = $this->getConfiguration()->getLogger();
+        $logger = $this->getConfiguration()->getSQLLogger();
 
         if(! $logger instanceof QueryCounter) {
             // We can't get the number of queries.

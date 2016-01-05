@@ -115,4 +115,15 @@ class Manager
         return $connection;
     }
 
+    public static function clearConnections()
+    {
+        foreach(static::$instances as &$instance) {
+            $instance->close();
+
+            unset($instance);
+        }
+
+        static::$instances = array();
+    }
+    
 }

@@ -47,11 +47,7 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($query, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
-    {
-        // What fetch type? Use default if no return type is given in the call.
-        $fetchType = ($fetchType !== null) ? $fetchType : $this->defaultFetchType;
-
+    public static function getFetchMode($fetchType, &$fetchClass) {
         // Prepare the parameters.
         $className = null;
 
@@ -64,19 +60,32 @@ class Connection extends BaseConnection
         else {
             $fetchMode = PDO::FETCH_CLASS;
 
-            // Check and setup the fetchClass.
-            $className = $fetchType;
-
+            // Check and setup the className.
             $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$className);
+                throw new \Exception("No valid Entity Name is given: " .$fetchType);
             }
 
-            if(! class_exists($className)) {
-                throw new \Exception("No valid Entity Class is given: " .$className);
+            if(! class_exists($fetchType)) {
+                throw new \Exception("No valid Entity Class is given: " .$fetchType);
             }
+
+            $fetchClass = $fetchType;
         }
+
+        return $fetchMode;
+    }
+
+    public function select($query, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
+    {
+        // What fetch type? Use default if no return type is given in the call.
+        $fetchType = ($fetchType !== null) ? $fetchType : $this->defaultFetchType;
+
+        // Prepare the parameters.
+        $className = null;
+
+        $fetchMode = self::getFetchMode($fetchType, $className);
 
         // Prepare the parameter Types.
         if(empty($paramTypes)) {

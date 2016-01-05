@@ -12,6 +12,7 @@ namespace Nova\DBAL;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Configuration;
 
+use Nova\DBAL\Connection;
 use Nova\Config;
 
 use PDO;
@@ -68,32 +69,11 @@ class Manager
         }
 
         // Prepare the FetchMode and check the FetchType
-        if($fetchType == 'array') {
-            $fetchMode = PDO::FETCH_ASSOC;
-        }
-        else if($fetchType == 'object') {
-            $fetchMode = PDO::FETCH_OBJ;
-        }
-        else {
-            $fetchMode = PDO::FETCH_CLASS;
+        $fetchMode = Connection::getFetchMode($fetchType);
 
-            // Check for a valid Entity on given className.
-            $className = $fetchType;
-
-            $classPath = str_replace('\\', '/', ltrim($className, '\\'));
-
-            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$className);
-            }
-
-            if(! class_exists($className)) {
-                throw new \Exception("No valid Entity Class is given: " .$className);
-            }
-        }
-
+        // Prepare the Connection parameters.
         $linkParams = $options['config'];
 
-        //
         $linkParams['driver'] = $driver;
 
         $linkParams['wrapperClass'] = $wrapperClass;
@@ -113,6 +93,15 @@ class Manager
 
         // Return instance
         return $connection;
+    }
+
+    public static function clearConnections()
+    {
+        foreach(static::$instances as $name => $connection) {
+            $connection->close();
+        }
+
+        static::$instances = array();
     }
 
 }

@@ -13,6 +13,8 @@ use Nova\Core\Model;
 use Nova\DBAL\Connection;
 use Nova\Input\Filter as InputFilter;
 
+use PDO;
+
 
 class BaseModel extends Model
 {
@@ -293,12 +295,12 @@ class BaseModel extends Model
         $orderStr = $this->parseSelectOrder();
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (?) $orderStr";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:values) $orderStr";
 
         $result = $this->db->select(
             $sql,
-            array($values),
-            array(Connection::PARAM_INT_ARRAY),
+            array('values' => $values),
+            array('values' => Connection::PARAM_INT_ARRAY),
             $this->tempReturnType,
             true
         );
@@ -421,7 +423,18 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            $result = $this->db->replace($this->table(), $this->prepareData($data));
+            $paramTypes[] = array();
+
+            foreach ($params as $key => $value) {
+                if (is_integer($value)) {
+                    $paramTypes[$key] = PDO::PARAM_INT;
+                }
+                else {
+                    $paramTypes[$key] = PDO::PARAM_STR;
+                }
+            }
+
+            $result = $this->db->replace($this->table(), $this->prepareData($data), $paramTypes);
 
             if($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
@@ -496,39 +509,43 @@ class BaseModel extends Model
         }
 
         //
-        $result = false;
-
         $data = $this->trigger('beforeUpdate', array('ids' => $ids, 'method' => 'updateMany', 'fields' => $data));
 
         // Will be false if it didn't validate.
-        if ($data !== false) {
-            $set = array();
+        if ($data === false) {
+            // Reset the Model State.
+            $this->resetState();
 
-            $paramTypes = array();
-
-            foreach ($data as $columnName => $value) {
-                $set[] = $columnName .' = :' .$columnName;
-
-                if (is_integer($value)) {
-                    $paramTypes[$columnName] = PDO::PARAM_INT;
-                }
-                else {
-                    $paramTypes[$columnName] = PDO::PARAM_STR;
-                }
-            }
-
-            // Prepare the parameters.
-            $params = array_merge($data, array('ids' => $ids));
-
-            $paramTypes['ids'] = Connection::PARAM_INT_ARRAY;
-
-            // Prepare the SQL Statement.
-            $sql = "UPDATE " .$this->table() ." SET " . implode(', ', $set) ." WHERE " .$this->primaryKey ." IN (:ids)";
-
-            $result = $this->db->executeUpdate($sql, $params, $paramTypes);
-
-            $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
+            return false;
         }
+
+        // Prepare the SET command and parameter types.
+        $set = array();
+
+        $paramTypes = array();
+
+        foreach ($data as $columnName => $value) {
+            $set[] = $columnName .' = :' .$columnName;
+
+            if (is_integer($value)) {
+                $paramTypes[$columnName] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$columnName] = PDO::PARAM_STR;
+            }
+        }
+
+        // Prepare the parameters.
+        $params = array_merge($data, array('ids' => $ids));
+
+        $paramTypes['ids'] = Connection::PARAM_INT_ARRAY;
+
+        // Prepare the SQL Statement.
+        $sql = "UPDATE " .$this->table() ." SET " . implode(', ', $set) ." WHERE " .$this->primaryKey ." IN (:ids)";
+
+        $result = $this->db->executeUpdate($sql, $params, $paramTypes);
+
+        $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
 
         // Reset the Model State.
         $this->resetState();
@@ -713,12 +730,12 @@ class BaseModel extends Model
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
         //
-        $sql = "DELETE FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (?)";
+        $sql = "DELETE FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:values)";
 
         $result = $this->db->executeUpdate(
             $sql,
-            array($ids),
-            array(Connection::PARAM_INT_ARRAY)
+            array('values' => $ids),
+            array('values' => Connection::PARAM_INT_ARRAY)
         );
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));
@@ -990,12 +1007,24 @@ class BaseModel extends Model
      *
      * @throws \Exception
      */
-    public function select($sql, $bindParams = array(), $fetchAll = false)
+    public function select($sql, $params = array(), $fetchAll = false)
     {
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->select($sql, $bindParams, array(), $this->tempReturnType, $fetchAll);
+        //
+        $paramTypes = array();
+
+        foreach ($params as $key => $value) {
+            if (is_integer($value)) {
+                $paramTypes[$key] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        $result = $this->db->select($sql, $params, $paramTypes, $this->tempReturnType, $fetchAll);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
@@ -1008,12 +1037,21 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->query($sql, $this->tempReturnType);
+        // Prepare the parameters.
+        $className = null;
+
+        $fetchMode = Connection::getFetchMode($this->tempReturnType, $className);
+
+        // Get the Query's Statement.
+        $statement = $this->db->query($sql);
+
+        // Set the Statement's Fetch Mode
+        $statement->setFetchMode($fetchMode, $className);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
 
-        return $result;
+        return $statement;
     }
 
     public function prepare($sql, $bindParams = array())
@@ -1021,7 +1059,26 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        return $this->db->prepare($sql, $bindParams);
+        // Prepare the parameters.
+        $className = null;
+
+        $fetchMode = Connection::getFetchMode($this->tempReturnType, $className);
+
+        // Prepare the Statement.
+        $statement = $this->db->prepare($sql);
+
+        foreach($bindParams as $key => $value) {
+            if (is_integer($value)) {
+                $statement->bindValue($key, $value, PDO::PARAM_INT);
+            } else {
+                $statement->bindValue($key, $value, PDO::PARAM_STR);
+            }
+        }
+
+        // Set the Statement's Fetch Mode
+        $statement->setFetchMode($fetchMode, $className);
+
+        return $statement;
     }
 
     //--------------------------------------------------------------------

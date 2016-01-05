@@ -47,11 +47,7 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public function select($query, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
-    {
-        // What fetch type? Use default if no return type is given in the call.
-        $fetchType = ($fetchType !== null) ? $fetchType : $this->defaultFetchType;
-
+    public static function getFetchMode($fetchType, &$fetchClass = null) {
         // Prepare the parameters.
         $className = null;
 
@@ -64,28 +60,41 @@ class Connection extends BaseConnection
         else {
             $fetchMode = PDO::FETCH_CLASS;
 
-            // Check and setup the fetchClass.
-            $className = $fetchType;
-
+            // Check and setup the className.
             $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$className);
+                throw new \Exception("No valid Entity Name is given: " .$fetchType);
             }
 
-            if(! class_exists($className)) {
-                throw new \Exception("No valid Entity Class is given: " .$className);
+            if(! class_exists($fetchType)) {
+                throw new \Exception("No valid Entity Class is given: " .$fetchType);
             }
+
+            $fetchClass = $fetchType;
         }
+
+        return $fetchMode;
+    }
+
+    public function select($query, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
+    {
+        // What fetch type? Use default if no return type is given in the call.
+        $fetchType = ($fetchType !== null) ? $fetchType : $this->defaultFetchType;
+
+        // Prepare the parameters.
+        $className = null;
+
+        $fetchMode = self::getFetchMode($fetchType, $className);
 
         // Prepare the parameter Types.
         if(empty($paramTypes)) {
             foreach ($params as $key => $value) {
                 if (is_integer($value)) {
-                    $paramTypes[] = PDO::PARAM_INT;
+                    $paramTypes[$key] = PDO::PARAM_INT;
                 }
                 else {
-                    $paramTypes[] = PDO::PARAM_STR;
+                    $paramTypes[$key] = PDO::PARAM_STR;
                 }
             }
         }
@@ -131,6 +140,38 @@ class Connection extends BaseConnection
         return $this->select($statement, $params, $paramTypes, $className);
     }
 
+    /**
+     * Replaces a table row with specified data.
+     *
+     * Table expression and columns are not escaped and are not safe for user-input.
+     *
+     * @param string $table The expression of the table to insert data into, quoted or unquoted.
+     * @param array  $data  An associative array containing column-value pairs.
+     * @param array  $types Types of the inserted data.
+     *
+     * @return integer The number of affected rows.
+     */
+    public function replace($table, array $data, array $types = array())
+    {
+        $this->connect();
+
+        if (empty($data)) {
+            return $this->executeUpdate('REPLACE INTO ' . $table . ' ()' . ' VALUES ()');
+        }
+
+        return $this->executeUpdate(
+            'REPLACE INTO ' . $table . ' (' . implode(', ', array_keys($data)) . ')' .
+            ' VALUES (' . implode(', ', array_fill(0, count($data), '?')) . ')',
+            array_values($data),
+            is_string(key($types)) ? $this->extractTypeValues($data, $types) : $types
+        );
+    }
+
+    /**
+     * Get total executed Queries.
+     *
+     * @return int
+     */
     public function getQueryCounter()
     {
         $logger = $this->getConfiguration()->getLogger();

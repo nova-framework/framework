@@ -36,7 +36,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Nova\\Tests\\": "tests/Nova"
+            "Nova\\Tests\\": "tests/Nova/Tests"
         }
     },
     "minimum-stability": "dev",

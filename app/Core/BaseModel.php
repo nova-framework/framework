@@ -293,12 +293,12 @@ class BaseModel extends Model
         $orderStr = $this->parseSelectOrder();
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:ids) $orderStr";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (?) $orderStr";
 
-        $statement = $this->db->select(
+        $result = $this->db->select(
             $sql,
-            array('ids' => $ids),
-            array('ids' => Connection::PARAM_INT_ARRAY),
+            array($values),
+            array(Connection::PARAM_INT_ARRAY),
             $this->tempReturnType,
             true
         );
@@ -713,12 +713,12 @@ class BaseModel extends Model
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
         //
-        $sql = "DELETE FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:ids)";
+        $sql = "DELETE FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (?)";
 
         $result = $this->db->executeUpdate(
             $sql,
-            array('ids' => $ids),
-            array('ids' => Connection::PARAM_INT_ARRAY)
+            array($ids),
+            array(Connection::PARAM_INT_ARRAY),
         );
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));

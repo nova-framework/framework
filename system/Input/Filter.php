@@ -38,13 +38,8 @@ class Filter extends InputFilter
         parent::__construct($elementFactory, $validator, $filtrator);
     }
 
-    public function setRules($rules)
+    public function setRules(array $rules)
     {
-        // Check for valid data.
-        if (! is_array($rules)) {
-            throw new \Exception("Rules parameter must be an Array.");
-        }
-
         // Firstly, clear all Elements.
         $this->elements = array();
 

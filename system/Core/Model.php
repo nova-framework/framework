@@ -10,7 +10,8 @@
 
 namespace Nova\Core;
 
-use Nova\Database\Manager;
+use Nova\DBAL\Connection;
+use Nova\DBAL\Manager as Database;
 
 /**
  * Base model class all other models will extend from this base.
@@ -25,21 +26,21 @@ abstract class Model
     protected $db;
 
     /**
-     * Create a new instance of the database helper.
+     * Setup the instance of DBAL Connection.
      *
-     * @param string $linkName Custom connection name, default is 'default'
+     * @param string $connection Connection name or DBAL Connection instance, default is string 'default'
      */
-    public function __construct($engine = null)
+    public function __construct($connection = null)
     {
-        if(($engine === null) || is_string($engine)) {
-            $engine = ! empty($engine) ? $engine : 'default';
-
-            // Connect to Database Engine.
-            $this->db = Manager::getEngine($engine);
+        if($connection instanceof Connection) {
+            // Set the given Database Connection.
+            $this->db = $connection;
         }
-        else if(is_object($engine)) {
-            // Set the given Database Engine.
-            $this->db = $engine;
+        else {
+            $connection = ($connection !== null) ? $connection : 'default';
+
+            // Setup the DBAL Connection.
+            $this->db = Database::getConnection($connection);
         }
     }
 

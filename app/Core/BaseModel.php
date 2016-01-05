@@ -10,6 +10,7 @@
 namespace App\Core;
 
 use Nova\Core\Model;
+use Nova\DBAL\Connection;
 use Nova\Input\Filter as InputFilter;
 
 
@@ -292,10 +293,18 @@ class BaseModel extends Model
         $orderStr = $this->parseSelectOrder();
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:ids) $orderStr";
 
-        //
-        $result = $this->select($sql, array(), true);
+        $statement = $this->db->select(
+            $sql,
+            array('ids' => $ids),
+            array('ids' => Connection::PARAM_INT_ARRAY),
+            $this->tempReturnType,
+            true
+        );
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
 
         // Reset the Model State.
         $this->resetState();
@@ -393,32 +402,6 @@ class BaseModel extends Model
     }
 
     /**
-     * Inserts multiple rows into the database at once. Takes an associative array of value pairs.
-     *
-     * $data = array(
-     *     array(
-     *         'title' => 'My title'
-     *     ),
-     *     array(
-     *         'title'  => 'My Other Title'
-     *     )
-     * );
-     *
-     * @param  array $data An associate array of rows to insert
-     * @return bool
-     */
-    public function insertBatch($data)
-    {
-        $data['batch'] = true;
-
-        $data = $this->trigger('beforeInsert', array('method' => 'insertBatch', 'fields' => $data));
-
-        unset($data['batch']);
-
-        return $this->db->insertBatch($this->table(), $data);
-    }
-
-    /**
      * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to
      * determine which row to replace.
      *
@@ -485,46 +468,6 @@ class BaseModel extends Model
     }
 
     /**
-     * Updates multiple records in the database at once.
-     *
-     * $data = array(
-     *     array(
-     *         'title'  => 'My title',
-     *         'body'   => 'body 1'
-     *     ),
-     *     array(
-     *         'title'  => 'Another Title',
-     *         'body'   => 'body 2'
-     *     )
-     * );
-     *
-     * The $whereKey should be the name of the column to match the record on.
-     * If $whereKey == 'title', then each record would be matched on that 'title' value of the array.
-     * This does mean that the array key needs to be provided with each row's data.
-     *
-     * @param  array $data An associate array of row data to update.
-     * @param  string $whereKey The column name to match on.
-     * @return bool
-     */
-    public function updateBatch($data, $whereKey)
-    {
-        foreach ($data as &$row) {
-            $row = $this->trigger('beforeUpdate', array('method' => 'updateBatch', 'fields' => $row));
-        }
-
-        $result = $this->db->updateBatch($this->table(), $data, $whereKey);
-
-        foreach ($data as &$row) {
-            $this->trigger('afterUpdate', array('fields' => $data, 'result' => $result, 'method' => 'updateBatch'));
-        }
-
-        // Reset the Model State.
-        $this->resetState();
-
-        return $result;
-    }
-
-    /**
      * Updates many records by an array of ids.
      *
      * While updateBatch() allows modifying multiple, arbitrary rows of data on each row,
@@ -559,11 +502,30 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            // Prepare the custom WHERE.
-            $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
+            $set = array();
 
-            //
-            $result = $this->db->update($this->table(), $data, $where);
+            $paramTypes = array();
+
+            foreach ($data as $columnName => $value) {
+                $set[] = $columnName .' = :' .$columnName;
+
+                if (is_integer($value)) {
+                    $paramTypes[$columnName] = PDO::PARAM_INT;
+                }
+                else {
+                    $paramTypes[$columnName] = PDO::PARAM_STR;
+                }
+            }
+
+            // Prepare the parameters.
+            $params = array_merge($data, array('ids' => $ids));
+
+            $paramTypes['ids'] = Connection::PARAM_INT_ARRAY;
+
+            // Prepare the SQL Statement.
+            $sql = "UPDATE " .$this->table() ." SET " . implode(', ', $set) ." WHERE " .$this->primaryKey ." IN (:ids)";
+
+            $result = $this->db->executeUpdate($sql, $params, $paramTypes);
 
             $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
         }
@@ -751,9 +713,13 @@ class BaseModel extends Model
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
         //
-        $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
+        $sql = "DELETE FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:ids)";
 
-        $result = $this->db->delete($this->table(), $where);
+        $result = $this->db->executeUpdate(
+            $sql,
+            array('ids' => $ids),
+            array('ids' => Connection::PARAM_INT_ARRAY)
+        );
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));
 
@@ -998,7 +964,13 @@ class BaseModel extends Model
     public function tableFields()
     {
         if (empty($this->fields)) {
-            $this->fields = $this->db->listFields($this->table());
+            $schemaManager = $this->db->getSchemaManager();
+
+            $columns = $schemaManager->listTableColumns($this->table());
+
+            foreach ($columns as $column) {
+                $this->fields[] = $column->getName();
+            }
         }
 
         if (empty($this->fields)) {
@@ -1023,7 +995,7 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
+        $result = $this->db->select($sql, $bindParams, array(), $this->tempReturnType, $fetchAll);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
@@ -1036,7 +1008,7 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->rawQuery($sql, $this->tempReturnType);
+        $result = $this->db->query($sql, $this->tempReturnType);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
@@ -1049,7 +1021,7 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        return $this->db->rawPrepare($sql, $bindParams);
+        return $this->db->prepare($sql, $bindParams);
     }
 
     //--------------------------------------------------------------------

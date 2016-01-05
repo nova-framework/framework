@@ -14,6 +14,9 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Connection as BaseConnection;
+
+use Nova\DBAL\Logging\QueryCounter;
+
 use PDO;
 
 
@@ -28,6 +31,14 @@ class Connection extends BaseConnection
      */
     public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null)
     {
+        if($config !== null) {
+            // Setup our favorite Logger.
+            $logger = new QueryCounter();
+
+            $config->setSQLLogger($logger);
+        }
+
+        // Execute the parent Contructor.
         parent::__construct($params, $driver, $config, $eventManager);
     }
 
@@ -82,18 +93,15 @@ class Connection extends BaseConnection
         // Execute the current Query.
         $statement = $this->executeQuery($query, $params, $paramTypes);
 
+        // Set the Statement's Fetch Mode
+        $statement->setFetchMode($fetchMode, $className);
+
         // Fetch and return the result.
         if($fetchAll) {
-            return $statement->fetchAll($fetchMode, $className);
+            return $statement->fetchAll();
         }
 
-        if(($fetchMode == PDO::FETCH_CLASS) && ($className !== null)) {
-            $statement->setFetchMode($fetchMode, $className);
-
-            return $statement->fetch();
-        }
-
-        return $statement->fetch($fetchMode);
+        return $statement->fetch();
     }
 
     public function selectOne($query, array $params = array(), $paramTypes = array(), $fetchType = null)
@@ -123,23 +131,16 @@ class Connection extends BaseConnection
         return $this->select($statement, $params, $paramTypes, $className);
     }
 
-    public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
-    {
-        $this->queryCounter++;
-
-        return parent::executeQuery($query, $params, $types, $qcp);
-    }
-
-    public function executeUpdate($query, array $params = array(), array $types = array())
-    {
-        $this->queryCounter++;
-
-        return parent::executeUpdate($query, $params, $types);
-    }
-
     public function getQueryCounter()
     {
-        return $this->queryCounter;
+        $logger = $this->getConfiguration()->getLogger();
+
+        if(! $logger instanceof QueryCounter) {
+            // We can't get the number of queries.
+            return 0;
+        }
+
+        return $logger->getNumQueries();
     }
 
 }

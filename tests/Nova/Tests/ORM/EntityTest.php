@@ -76,6 +76,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::save
      * @covers \Nova\ORM\Entity::find
+     * @covers \Nova\ORM\Entity::findBy
      * @throws \Exception
      */
     public function executeTestBasicFinding()
@@ -106,10 +107,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $searched = Car::find($car->carid);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
 
-        //$searched = Car::find(array('model' => 'Framework_ORM_Test_Search_1'), $linkName);
-        //$this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
+        $searched = Car::findBy(array('model' => 'Framework_ORM_Test_Search_1'));
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
 
-        //$searched = Car::find(array('model' => 'Framework_ORM_Test_Search_1', 'costs' => 50000), $linkName);
+        //$searched = Car::findBy(array('model' => 'Framework_ORM_Test_Search_1', 'costs' => 50000));
         //$this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
     }
 

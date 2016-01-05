@@ -111,6 +111,31 @@ abstract class Entity
         return self::$_link;
     }
 
+    /**
+     * Set customized link name or instance
+     *
+     * @param string|null|Connection $link
+     *
+     * @return bool Successful or not
+     */
+    public static function setLink($link = null)
+    {
+        if ($link instanceof Connection) {
+            self::$_link = $link;
+            return true;
+        }
+
+        $linkInstance = DBALManager::getConnection($link);
+
+        if ($linkInstance instanceof Connection) {
+            self::$_link = $linkInstance;
+            self::$_linkName = $link;
+            return true;
+        }
+
+        return false;
+    }
+
 
     /**
      * Query Builder for finding

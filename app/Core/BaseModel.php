@@ -1029,7 +1029,7 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
+        $result = $this->db->select($sql, $bindParams, array(), $this->tempReturnType, $fetchAll);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
@@ -1042,7 +1042,7 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->rawQuery($sql, $this->tempReturnType);
+        $result = $this->db->query($sql, $this->tempReturnType);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
@@ -1055,7 +1055,7 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        return $this->db->rawPrepare($sql, $bindParams);
+        return $this->db->prepare($sql, $bindParams);
     }
 
     //--------------------------------------------------------------------

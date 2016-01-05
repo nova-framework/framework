@@ -423,16 +423,7 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            $paramTypes[] = array();
-
-            foreach ($params as $key => $value) {
-                if (is_integer($value)) {
-                    $paramTypes[$key] = PDO::PARAM_INT;
-                }
-                else {
-                    $paramTypes[$key] = PDO::PARAM_STR;
-                }
-            }
+            $paramTypes = getParamTypes($data);
 
             $result = $this->db->replace($this->table(), $this->prepareData($data), $paramTypes);
 
@@ -652,16 +643,7 @@ class BaseModel extends Model
         );
 
         // Prepare the parameter Types.
-        $paramsTypes = array();
-
-        foreach ($params as $key => $value) {
-            if (is_integer($value)) {
-                $paramTypes[$key] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$key] = PDO::PARAM_STR;
-            }
-        }
+        $paramsTypes = getParamTypes($params);
 
         // Prepare the SQL Query.
         $sql = "UPDATE " .$this->table() ." SET $field = :field_$field WHERE " .$this->primaryKey ." = :where_field";
@@ -688,16 +670,7 @@ class BaseModel extends Model
         );
 
         // Prepare the parameter Types.
-        $paramsTypes = array();
-
-        foreach ($params as $key => $value) {
-            if (is_integer($value)) {
-                $paramTypes[$key] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$key] = PDO::PARAM_STR;
-            }
-        }
+        $paramsTypes = getParamTypes($params);
 
         // Prepare the SQL Query.
         $sql = "UPDATE " .$this->table() ." SET $field = :field_$field WHERE " .$this->primaryKey ." = :where_field";
@@ -721,14 +694,7 @@ class BaseModel extends Model
         $params = array($this->primaryKey => $id);
 
         // Prepare the parameter Types.
-        $paramsTypes = array();
-
-        if (is_integer($id)) {
-            $paramTypes[$this->primaryKey] = PDO::PARAM_INT;
-        }
-        else {
-            $paramTypes[$this->primaryKey] = PDO::PARAM_STR;
-        }
+        $paramsTypes = getParamTypes($params);
 
         //
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
@@ -762,16 +728,7 @@ class BaseModel extends Model
         $whereStr = $this->parseWheres($where, $bindParams);
 
         // Prepare the parameter Types.
-        $paramTypes[] = array();
-
-        foreach ($bindParams as $key => $value) {
-            if (is_integer($value)) {
-                $paramTypes[$key] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$key] = PDO::PARAM_STR;
-            }
-        }
+        $paramTypes = getParamTypes($bindParams);
 
         // Prepare the SQL Query.
         $sql = "DELETE FROM " .$this->table() ." $whereStr";
@@ -910,10 +867,13 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $whereStr = $this->parseWheres($this->wheres(), $bindParams);
 
+        // Prepare the parameter Types.
+        $paramTypes = getParamTypes($bindParams);
+
         // Prepare the SQL Query.
         $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
 
-        $result = $this->asArray()->select($sql, $bindParams);
+        $result = $this->asArray()->select($sql, $bindParams, $paramTypes);
 
         if($result !== false) {
             $count = $result['count'];
@@ -969,7 +929,10 @@ class BaseModel extends Model
             $bindParams['where_ignore'] = $ignore;
         }
 
-        $data = $this->select($sql, $bindParams, true);
+        // Prepare the parameter Types.
+        $paramTypes = getParamTypes($bindParams);
+
+        $data = $this->select($sql, $bindParams, $paramTypes, true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -1075,17 +1038,8 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        //
-        $paramTypes = array();
-
-        foreach ($params as $key => $value) {
-            if (is_integer($value)) {
-                $paramTypes[$key] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$key] = PDO::PARAM_STR;
-            }
-        }
+        // Prepare the parameter Types.
+        $paramTypes = getParamTypes($params);
 
         $result = $this->db->select($sql, $params, $paramTypes, $this->tempReturnType, $fetchAll);
 
@@ -1495,4 +1449,20 @@ class BaseModel extends Model
         return $result;
     }
 
+    protected function getParamTypes($params)
+    {
+        $result[] = array();
+
+        foreach ($params as $key => $value) {
+            if (is_integer($value)) {
+                $result[$key] = PDO::PARAM_INT;
+            }
+            else {
+                $result[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        return $result;
+    }
+    
 }

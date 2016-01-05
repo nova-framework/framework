@@ -31,27 +31,6 @@ abstract class Entity
     public $_state = 1;
 
     /**
-     * Link name for using in this entity
-     *
-     * @var string
-     */
-    private static $_linkName = 'default';
-
-    /**
-     * Link instance (DBAL instance) used for this entity.
-     *
-     * @var null|Connection
-     */
-    private static $_link = null;
-
-    /**
-     * Indexed table annotation data
-     *
-     * @var Annotation\Table|null
-     */
-    private static $_table = null;
-
-    /**
      * Primary Key reference or value
      */
     private $_id = null;
@@ -76,19 +55,13 @@ abstract class Entity
      */
     private static function discoverEntity()
     {
-        if (!self::$_table) {
-            // Index entity.
-            self::$_table = Structure::indexEntity(get_called_class());
-            self::$_linkName = self::$_table->link;
-        }
-        self::$_link = null;
-        self::$_linkName = "";
+        Structure::indexEntity(static::class);
     }
 
 
     public function __construct()
     {
-        self::discoverEntity();
+        static::discoverEntity();
         $this->_state = 0;
     }
 
@@ -96,92 +69,51 @@ abstract class Entity
     /**
      * Get Link instance
      *
+     * @param string $linkName Custom link
      * @return Connection
      */
-    private static function getLink()
+    private static function getLink($linkName = null)
     {
-        if (self::$_link == null) {
-
-            if (self::$_linkName == '') {
-                self::$_linkName = 'default';
-            }
-
-            self::$_link = DBALManager::getConnection(self::$_linkName);
+        if (! $linkName) {
+            $linkName = Structure::getTable(static::class)->link;
         }
-        return self::$_link;
-    }
-
-    /**
-     * Set customized link name or instance
-     *
-     * @param string|null|Connection $link
-     *
-     * @return bool Successful or not
-     */
-    public static function setLink($link = null)
-    {
-        if ($link instanceof Connection) {
-            self::$_link = $link;
-            return true;
-        }
-
-        $linkInstance = DBALManager::getConnection($link);
-
-        if ($linkInstance instanceof Connection) {
-            self::$_link = $linkInstance;
-            self::$_linkName = $link;
-            return true;
-        }
-
-        return false;
+        return DBALManager::getConnection($linkName);
     }
 
 
     /**
      * Query Builder for finding
      *
+     * @param string|null $linkName Custom link name
      * @return QueryBuilder
      */
-    public static function getQueryBuilder()
+    public static function getQueryBuilder($linkName = null)
     {
-        return self::getLink()->createQueryBuilder();
+        return self::getLink($linkName)->createQueryBuilder();
     }
 
 
     /**
      * Get from database with primary key value.
      *
-     * @param string|int|array $id Primary key value or key=>value array for condition.
+     * @param string|int $id Primary key value
+     * @param string|null $linkName Custom link name
      * @return Entity|false
      *
      * @throws \Exception
      */
-    public static function find($id)
+    public static function find($id, $linkName = null)
     {
-        $primaryKey = Structure::getTablePrimaryKey(self::$_table->name);
+        $primaryKey = Structure::getTablePrimaryKey(static::class);
 
         if ($primaryKey === false) {
             throw new \Exception("Primary Key can't be detected!");
         }
-
-        if (! is_array($id)) {
-            $id = array($primaryKey->name => $id);
-        }
-
-
-        $where = "";
-        $params = array();
-        foreach($id as $key => $value) {
-            $where .= "$key = ?";
-            $params[] = $value;
-
-            if (count($params) !== count($id)) {
-                $where .= " AND ";
-            }
-        }
+        // Only get column name
+        $primaryKey = $primaryKey->name;
 
         /** @var Entity $result */
-        $result = self::getLink()->fetchClass("SELECT * FROM " . self::$_table->prefix . self::$_table->name . " WHERE $where", $params, array(), get_called_class());
+        $result = self::getLink($linkName)->fetchClass("SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $primaryKey = :pkvalue", array(':pkvalue' => $id), array(), static::class);
 
         if($result instanceof Entity) {
             $result->_state = 1;
@@ -222,7 +154,7 @@ abstract class Entity
      */
     public function getPrimaryKey($types = false)
     {
-        $primaryKey = Structure::getTablePrimaryKey(self::$_table->name);
+        $primaryKey = Structure::getTablePrimaryKey(static::class);
 
         if ($primaryKey === false) {
             throw new \Exception("Primary Keys can't be detected!");
@@ -245,17 +177,18 @@ abstract class Entity
     /**
      * Insert or update the entity in the database
      *
+     * @param string|null $linkName Custom link name
      * @return int Affected rows
      * @throws \Exception Throws exceptions on error.
      */
-    public function save()
+    public function save($linkName = null)
     {
         if ($this->_state == 0) {
             // Insert
-            $result = $this->getLink()->insert(self::$_table->prefix . self::$_table->name, $this->getColumns(), $this->getColumns(true));
+            $result = static::getLink($linkName)->insert(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getColumns(true));
 
             // Primary Key
-            $this->_id = $this->getLink()->lastInsertId();
+            $this->_id = static::getLink($linkName)->lastInsertId();
 
             /** @var Column $primaryKey */
             $primaryKey = Structure::getTablePrimaryKey($this);
@@ -267,7 +200,7 @@ abstract class Entity
             $this->_state = 1;
         } else {
             // Update
-            $result = $this->getLink()->update(self::$_table->prefix . self::$_table->name, $this->getColumns(), $this->getPrimaryKey(),
+            $result = static::getLink($linkName)->update(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getPrimaryKey(),
                 array_merge($this->getColumns(true), $this->getPrimaryKey(true)));
         }
 
@@ -278,17 +211,17 @@ abstract class Entity
     /**
      * Delete from database
      *
+     * @param string|null $linkName Custom link name
      * @return bool|int False if the current entity isn't saved, integer with affected rows when successfully deleted.
-     *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      * @throws \Exception
      */
-    public function delete()
+    public function delete($linkName = null)
     {
         if ($this->_state !== 1) {
             return false;
         }
 
-        return $this->getLink()->delete(self::$_table->prefix . self::$_table->name, $this->getPrimaryKey(), $this->getPrimaryKey(true));
+        return static::getLink($linkName)->delete(Structure::getTable($this)->getFullTableName(), $this->getPrimaryKey(), $this->getPrimaryKey(true));
     }
 }

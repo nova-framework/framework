@@ -17,8 +17,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Nova\ORM\Entity
+     *
+     * @param string $linkName
      */
-    public function testBasic()
+    public function testBasic($linkName = 'default')
     {
         $car = new Car();
 
@@ -27,17 +29,35 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, count($cols));
     }
 
+    /**
+     * @covers \Nova\ORM\Entity
+     */
+    public function testBasicSqlite()
+    {
+        $this->testBasic('sqlite');
+    }
+
 
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::find
      * @throws \Exception
+     * @param string $linkName
      */
-    public function testGetEntity()
+    public function testGetEntity($linkName = null)
     {
-        $car = Car::find(1);
+        $car = Car::find(1, $linkName);
 
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
+    }
+
+    /**
+ * @covers \Nova\ORM\Entity
+ * @covers \Nova\ORM\Entity::find
+ */
+    public function testGetEntitySqlite()
+    {
+        $this->testGetEntity('sqlite');
     }
 
     /**
@@ -45,8 +65,9 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\ORM\Entity::save
      * @covers \Nova\ORM\Entity::find
      * @throws \Exception
+     * @param string $linkName
      */
-    public function testBasicFinding()
+    public function testBasicFinding($linkName = null)
     {
         $car = new Car();
 
@@ -55,7 +76,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car->model = 'Framework_ORM_Test_Search_1';
         $car->costs = 50000;
 
-        $insert = $car->save();
+        $insert = $car->save($linkName);
         $this->assertEquals(1, $insert);
 
         $car2 = new Car();
@@ -65,28 +86,40 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car2->model = 'Framework_ORM_Test_Search_2';
         $car2->costs = 50000;
 
-        $insert = $car2->save();
+        $insert = $car2->save($linkName);
         $this->assertEquals(1, $insert);
 
 
 
         // Search single
-        $searched = Car::find($car->carid);
+        $searched = Car::find($car->carid, $linkName);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
 
-        $searched = Car::find(array('model' => 'Framework_ORM_Test_Search_1'));
-        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
+        //$searched = Car::find(array('model' => 'Framework_ORM_Test_Search_1'), $linkName);
+        //$this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
 
-        $searched = Car::find(array('model' => 'Framework_ORM_Test_Search_1', 'costs' => 50000));
-        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
+        //$searched = Car::find(array('model' => 'Framework_ORM_Test_Search_1', 'costs' => 50000), $linkName);
+        //$this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
+    }
+
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::save
+     * @covers \Nova\ORM\Entity::find
+     * @throws \Exception
+     */
+    public function testBasicFindingSqlite()
+    {
+        $this->testBasicFinding('sqlite');
     }
 
 
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::save
+     * @param string $linkName
      */
-    public function testSave()
+    public function testSave($linkName = null)
     {
         $car = new Car();
 
@@ -95,7 +128,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car->model = 'Framework_ORM_Test_1';
         $car->costs = 50000;
 
-        $insert = $car->save();
+        $insert = $car->save($linkName);
 
         // Check if primary key is filled in
         $carid = $car->carid;
@@ -104,17 +137,29 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Update
         $car->costs = 55000;
-        $update = $car->save();
+        $update = $car->save($linkName);
 
         // Check if the pk is still the same
         $this->assertEquals($carid, $car->carid);
     }
 
+
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::save
+     */
+    public function testSaveSqlite()
+    {
+        $this->testSave('sqlite');
+    }
+
+
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::delete
+     * @param string $linkName
      */
-    public function testDelete()
+    public function testDelete($linkName = null)
     {
         $car = new Car();
 
@@ -123,26 +168,45 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car->model = 'Framework_ORM_Test_1';
         $car->costs = 50000;
 
-        $car->save();
+        $car->save($linkName);
 
         $this->assertGreaterThan(2, $car->carid);
         $carid = $car->carid;
 
         // Delete
-        $car->delete();
+        $car->delete($linkName);
 
-        $car = Car::find($carid);
+        $car = Car::find($carid, $linkName);
 
         $this->assertFalse($car);
     }
 
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::delete
+     */
+    public function testDeleteSqlite()
+    {
+        $this->testDelete('sqlite');
+    }
 
+
+    /**
+     * Cleanup
+     *
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Exception
+     */
     public function tearDown()
     {
         parent::tearDown();
 
         // CleanUp
-        $connection = Manager::getConnection();
+        $connection = Manager::getConnection('default');
+        $connection->delete(DB_PREFIX . 'car', array('make' => 'Nova Cars'));
+
+        // CleanUp
+        $connection = Manager::getConnection('sqlite');
         $connection->delete(DB_PREFIX . 'car', array('make' => 'Nova Cars'));
     }
 }

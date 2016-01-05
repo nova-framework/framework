@@ -25,7 +25,7 @@ abstract class Structure
     /** @var array<string, Column[]> */
     private static $columns = array();
 
-    /** @var Table[] */
+    /** @var array<string, Table> */
     private static $tables = array();
 
     /** @var array<string, Column> */
@@ -55,11 +55,13 @@ abstract class Structure
             throw new AnnotationException("Table Annotation is not setup in your Entity!");
         }
 
+        $tableAnnotation->setClassName($className);
+
         // Save table information
         self::$tables[$className] = $tableAnnotation;
 
         // Make column array
-        self::$columns[$tableAnnotation->name] = array();
+        self::$columns[$className] = array();
 
         // Get properties and loop.
         $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
@@ -74,13 +76,13 @@ abstract class Structure
                 $columnAnnotation->setPropertyField($prop->getName());
 
                 // Add to columns
-                if (! isset(self::$columns[$tableAnnotation->name][$columnAnnotation->name])) {
-                    self::$columns[$tableAnnotation->name][$columnAnnotation->name] = $columnAnnotation;
+                if (! isset(self::$columns[$className][$columnAnnotation->name])) {
+                    self::$columns[$className][$columnAnnotation->name] = $columnAnnotation;
                 }
 
                 // Add if primary to the pk array.
                 if ($columnAnnotation->primary) {
-                    self::$primaryKey[$tableAnnotation->name] = $columnAnnotation;
+                    self::$primaryKey[$className] = $columnAnnotation;
                 }
             }
         }
@@ -99,24 +101,15 @@ abstract class Structure
         if ($table instanceof Entity) {
             $reflectionClass = new \ReflectionClass($table);
             $className = $reflectionClass->getName();
-
-            // Get table name from entity
-            if (! isset(self::$tables[$className])) {
-                return false;
-            }
-
-            $table = self::$tables[$className]->name;
+        } else {
+            $className = $table;
         }
 
-        if (!is_string($table)) {
-            throw new \UnexpectedValueException("Table parameter should be a name of the table, or an instance of the Entity!");
+        if (! isset(self::$tables[$className]) || ! isset(self::$columns[$className])) {
+            throw new \UnexpectedValueException("Table isn't in our structure index!");
         }
 
-        if (isset(self::$columns[$table])) {
-            return self::$columns[$table];
-        }
-
-        return false;
+        return self::$columns[$className];
     }
 
 
@@ -130,23 +123,33 @@ abstract class Structure
         if ($table instanceof Entity) {
             $reflectionClass = new \ReflectionClass($table);
             $className = $reflectionClass->getName();
-
-            // Get table name from entity
-            if (! isset(self::$tables[$className])) {
-                return false;
-            }
-
-            $table = self::$tables[$className]->name;
+        } else {
+            $className = $table;
         }
 
-        if (!is_string($table)) {
-            throw new \UnexpectedValueException("Table parameter should be a name of the table, or an instance of the Entity!");
+        if (! isset(self::$tables[$className]) || ! isset(self::$primaryKey[$className])) {
+            throw new \UnexpectedValueException("Table name or instance isn't in our structure index!");
         }
 
-        if (! isset(self::$primaryKey[$table])) {
-            return false;
+        return self::$primaryKey[$className];
+    }
+
+    /**
+     * Get table of current Entity class name (full class name)
+     * @param string|Entity $class Class name or instance
+     * @return Table|null
+     */
+    public static function getTable($class)
+    {
+        if ($class instanceof Entity) {
+            $reflectionClass = new \ReflectionClass($class);
+            $className = $reflectionClass->getName();
+        } else {
+            $className = $class;
         }
 
-        return self::$primaryKey[$table];
+        if (isset(self::$tables[$className])) {
+            return self::$tables[$className];
+        }
     }
 }

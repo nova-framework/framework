@@ -882,13 +882,10 @@ class BaseModel extends Model
         // Prepare the WHERE details.
         $whereStr = $this->parseWheres($this->wheres(), $bindParams);
 
-        // Prepare the parameter Types.
-        $paramTypes = self::getParamTypes($bindParams);
-
         // Prepare the SQL Query.
         $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
 
-        $result = $this->asArray()->select($sql, $bindParams, $paramTypes);
+        $result = $this->asArray()->select($sql, $bindParams);
 
         if($result !== false) {
             $count = $result['count'];

@@ -423,7 +423,7 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            $paramTypes = getParamTypes($data);
+            $paramTypes = self::getParamTypes($data);
 
             $result = $this->db->replace($this->table(), $this->prepareData($data), $paramTypes);
 
@@ -728,7 +728,7 @@ class BaseModel extends Model
         $whereStr = $this->parseWheres($where, $bindParams);
 
         // Prepare the parameter Types.
-        $paramTypes = getParamTypes($bindParams);
+        $paramTypes = self::getParamTypes($bindParams);
 
         // Prepare the SQL Query.
         $sql = "DELETE FROM " .$this->table() ." $whereStr";
@@ -868,7 +868,7 @@ class BaseModel extends Model
         $whereStr = $this->parseWheres($this->wheres(), $bindParams);
 
         // Prepare the parameter Types.
-        $paramTypes = getParamTypes($bindParams);
+        $paramTypes = self::getParamTypes($bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
@@ -930,7 +930,7 @@ class BaseModel extends Model
         }
 
         // Prepare the parameter Types.
-        $paramTypes = getParamTypes($bindParams);
+        $paramTypes = self::getParamTypes($bindParams);
 
         $data = $this->select($sql, $bindParams, $paramTypes, true);
 
@@ -1039,7 +1039,7 @@ class BaseModel extends Model
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
         // Prepare the parameter Types.
-        $paramTypes = getParamTypes($params);
+        $paramTypes = self::getParamTypes($params);
 
         $result = $this->db->select($sql, $params, $paramTypes, $this->tempReturnType, $fetchAll);
 
@@ -1449,7 +1449,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected function getParamTypes($params)
+    protected static function getParamTypes($params)
     {
         $result[] = array();
 
@@ -1464,5 +1464,5 @@ class BaseModel extends Model
 
         return $result;
     }
-    
+
 }

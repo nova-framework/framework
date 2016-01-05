@@ -212,7 +212,7 @@ class RuleFactory extends BaseRuleFactory
 
         // Refresh the Error Messages using the translated ones.
         foreach($defaultMessages as $label => $row) {
-            $this->setErrorMessages($label, $row['default_message'], $row['labeled_message']);
+            $this->setMessages($label, $row['default_message'], $row['labeled_message']);
         }
     }
 }

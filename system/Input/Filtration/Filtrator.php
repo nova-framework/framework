@@ -11,7 +11,7 @@ namespace Nova\Input\Filtration;
 
 use Sirius\Filtration\Filtrator as BaseFiltrator;
 
-use Nova\Input\Validation\FilterFactory;
+use Nova\Input\Filtration\FilterFactory;
 
 
 class Filtrator extends BaseFiltrator

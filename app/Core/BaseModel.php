@@ -998,7 +998,13 @@ class BaseModel extends Model
     public function tableFields()
     {
         if (empty($this->fields)) {
-            $this->fields = $this->db->listFields($this->table());
+            $schemaManager = $this->db->getSchemaManager();
+
+            $columns = $schemaManager->listTableColumns($this->table());
+
+            foreach ($columns as $column) {
+                $this->fields[] = $column->getName();
+            }
         }
 
         if (empty($this->fields)) {

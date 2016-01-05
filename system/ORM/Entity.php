@@ -40,6 +40,8 @@ abstract class Entity
      *
      * @param $method
      * @param $parameters
+     *
+     * @codeCoverageIgnore
      */
     public static function __callStatic($method, $parameters){
         if (method_exists(__CLASS__, $method)) {
@@ -81,41 +83,13 @@ abstract class Entity
      * Query Builder for finding
      *
      * @return QueryBuilder
+     *
+     * @codeCoverageIgnore
      */
     public static function getQueryBuilder()
     {
         return self::getLink()->createQueryBuilder();
     }
-
-
-    /**
-     * Get from database with primary key value.
-     *
-     * @param string|int $id Primary key value
-     * @return Entity|false
-     *
-     * @throws \Exception
-     */
-    public static function find($id)
-    {
-        $primaryKey = Structure::getTablePrimaryKey(static::class);
-
-        if ($primaryKey === false) {
-            throw new \Exception("Primary Key can't be detected!");
-        }
-        // Only get column name
-        $primaryKey = $primaryKey->name;
-
-        /** @var Entity $result */
-        $result = self::getLink()->fetchClass("SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $primaryKey = :pkvalue", array(':pkvalue' => $id), array(), static::class);
-
-        if($result instanceof Entity) {
-            $result->_state = 1;
-        }
-
-        return $result;
-    }
-
 
     /**
      * Get Entity properties as assoc array. useful for insert, update or just debugging.
@@ -166,6 +140,33 @@ abstract class Entity
 
 
 
+    /**
+     * Get from database with primary key value.
+     *
+     * @param string|int $id Primary key value
+     * @return Entity|false
+     *
+     * @throws \Exception
+     */
+    public static function find($id)
+    {
+        $primaryKey = Structure::getTablePrimaryKey(static::class);
+
+        if ($primaryKey === false) {
+            throw new \Exception("Primary Key can't be detected!");
+        }
+        // Only get column name
+        $primaryKey = $primaryKey->name;
+
+        /** @var Entity $result */
+        $result = self::getLink()->fetchClass("SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $primaryKey = :pkvalue", array(':pkvalue' => $id), array(), static::class);
+
+        if($result instanceof Entity) {
+            $result->_state = 1;
+        }
+
+        return $result;
+    }
 
 
     /**

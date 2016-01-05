@@ -135,11 +135,12 @@ class Connection extends BaseConnection
     {
         $logger = $this->getConfiguration()->getLogger();
 
-        if($logger instanceof QueryCounter) {
-            return $logger->getNumQueries();
+        if(! $logger instanceof QueryCounter) {
+            // We can't get the number of queries.
+            return 0;
         }
 
-        return 0;
+        return $logger->getNumQueries();
     }
 
 }

@@ -16,6 +16,14 @@ class QueryCounter implements SQLLogger
 {
     private $queryCounter = 0;
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct()
+    {
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -91,10 +91,10 @@ class Connection extends BaseConnection
         if(empty($paramTypes)) {
             foreach ($params as $key => $value) {
                 if (is_integer($value)) {
-                    $paramTypes[] = PDO::PARAM_INT;
+                    $paramTypes[$key] = PDO::PARAM_INT;
                 }
                 else {
-                    $paramTypes[] = PDO::PARAM_STR;
+                    $paramTypes[$key] = PDO::PARAM_STR;
                 }
             }
         }

@@ -36,4 +36,38 @@ class Table extends Annotation
      * @var string
      */
     public $link = 'default';
+
+
+    /**
+     * Class Name of entity
+     * @var null|string
+     */
+    private $className = null;
+
+    /**
+     * Get full table name
+     * @return string
+     */
+    public function getFullTableName()
+    {
+        return $this->prefix . $this->name;
+    }
+
+    /**
+     * Set class name, will be used by our structure indexer
+     * @param $className
+     */
+    public function setClassName($className)
+    {
+        $this->className = $className;
+    }
+
+    /**
+     * Get the entity class, used with this table.
+     * @return null|string
+     */
+    public function getClassName()
+    {
+        return $this->className;
+    }
 }

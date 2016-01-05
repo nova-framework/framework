@@ -1078,6 +1078,7 @@ class BaseModel extends Model
         if (! empty($this->validateRules) && is_array($this->validateRules)) {
             $inputFilter =& $this->inputFilter;
 
+            // Set the Input Filter Rules for Validation and Filtering.
             $inputFilter->setRules($this->validateRules);
 
             // Any insert additions?

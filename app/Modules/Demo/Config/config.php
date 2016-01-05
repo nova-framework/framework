@@ -57,6 +57,7 @@ Config::set('demos_menu', array(
         'url'       => site_url('demos/models'),
         'icon'      => 'fa fa-gears',
     ),
+    /*
     'database' => array(
         'name'      => __d('demo', 'Database'),
         'icon'      => 'fa fa-server',
@@ -88,6 +89,7 @@ Config::set('demos_menu', array(
             ),
         ),
     ),
+    */
 ));
 
 /**

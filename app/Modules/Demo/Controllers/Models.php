@@ -119,7 +119,7 @@ class Models extends BaseController
         $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $members5 = $this->model->orderBy('username', 'desc')->findMany(array(1, 3));
+        //$members5 = $this->model->orderBy('username', 'desc')->findMany(array(1, 3));
 
         $message .= '<b>$this->model->orderBy(\'username\', \'desc\')->findMany(array(1, 3));</b>';
         $message .= '<pre>'.var_export($members5, true).'</pre><br>';

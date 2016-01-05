@@ -646,11 +646,27 @@ class BaseModel extends Model
         $value = (int) abs($value);
 
         //
-        $data = array($field => "{$field}+{$value}");
+        $params = array(
+            "field_$field" => "{$field}+{$value}",
+            'where_field' => $id
+        );
 
-        $where = array($this->primaryKey => $id);
+        // Prepare the parameter Types.
+        $paramsTypes = array();
 
-        return $this->db->update($this->table(), $data, $where);
+        foreach ($params as $key => $value) {
+            if (is_integer($value)) {
+                $paramTypes[$key] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        // Prepare the SQL Query.
+        $sql = "UPDATE " .$this->table() ." SET $field = :field_$field WHERE " .$this->primaryKey ." = :where_field";
+
+        return $this->db->executeUpdate($sql, $params, $paramTypes);
     }
 
     /**
@@ -666,11 +682,27 @@ class BaseModel extends Model
         $value = (int) abs($value);
 
         //
-        $data = array($field => "{$field}-{$value}");
+        $params = array(
+            "field_$field" => "{$field}-{$value}",
+            'where_field' => $id
+        );
 
-        $where = array($this->primaryKey => $id);
+        // Prepare the parameter Types.
+        $paramsTypes = array();
 
-        return $this->db->update($this->table(), $data, $where);
+        foreach ($params as $key => $value) {
+            if (is_integer($value)) {
+                $paramTypes[$key] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        // Prepare the SQL Query.
+        $sql = "UPDATE " .$this->table() ." SET $field = :field_$field WHERE " .$this->primaryKey ." = :where_field";
+
+        return $this->db->executeUpdate($sql, $params, $paramTypes);
     }
 
     /**
@@ -685,12 +717,23 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Parameter should be an Integer');
         }
 
-        $where = array($this->primaryKey => $id);
+        // Prepare the Parameters.
+        $params = array($this->primaryKey => $id);
+
+        // Prepare the parameter Types.
+        $paramsTypes = array();
+
+        if (is_integer($id)) {
+            $paramTypes[$this->primaryKey] = PDO::PARAM_INT;
+        }
+        else {
+            $paramTypes[$this->primaryKey] = PDO::PARAM_STR;
+        }
 
         //
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
 
-        $result = $this->db->delete($this->table(), $where);
+        $result = $this->db->delete($this->table(), $params, $paramTypes);
 
         $this->trigger('afterDelete', array('id' => $id, 'method' => 'delete', 'result' => $result));
 
@@ -699,6 +742,9 @@ class BaseModel extends Model
 
     public function deleteBy()
     {
+        $bindParams = array();
+
+        //
         $params = func_get_args();
 
         if(empty($params)) {
@@ -713,7 +759,24 @@ class BaseModel extends Model
         //
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));
 
-        $result = $this->db->delete($this->table(), $where);
+        $whereStr = $this->parseWheres($where, $bindParams);
+
+        // Prepare the parameter Types.
+        $paramTypes[] = array();
+
+        foreach ($bindParams as $key => $value) {
+            if (is_integer($value)) {
+                $paramTypes[$key] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        // Prepare the SQL Query.
+        $sql = "DELETE FROM " .$this->table() ." $whereStr";
+
+        $result = $this->db->executeUpdate($sql, $bindParams, $paramTypes);
 
         $this->trigger('afterDelete', array('method' => 'deleteBy', 'fields' => $where, 'result' => $result));
 

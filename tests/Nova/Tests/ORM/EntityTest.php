@@ -107,11 +107,11 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $searched = Car::find($car->carid);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
 
-        $searched = Car::findBy(array('model' => 'Framework_ORM_Test_Search_1'));
+        $searched = Car::findBy('model', '=', 'Framework_ORM_Test_Search_1');
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
 
-        //$searched = Car::findBy(array('model' => 'Framework_ORM_Test_Search_1', 'costs' => 50000));
-        //$this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
+        $searched = Car::findBy(array('model' => 'Framework_ORM_Test_Search_1', 'costs' => array('=' => 50000)));
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
     }
 
     /**

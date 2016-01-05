@@ -423,7 +423,18 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            $result = $this->db->replace($this->table(), $this->prepareData($data));
+            $paramTypes[] = array();
+
+            foreach ($params as $key => $value) {
+                if (is_integer($value)) {
+                    $paramTypes[$key] = PDO::PARAM_INT;
+                }
+                else {
+                    $paramTypes[$key] = PDO::PARAM_STR;
+                }
+            }
+
+            $result = $this->db->replace($this->table(), $this->prepareData($data), $paramTypes);
 
             if($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
@@ -1006,10 +1017,10 @@ class BaseModel extends Model
 
         foreach ($params as $key => $value) {
             if (is_integer($value)) {
-                $paramTypes[] = PDO::PARAM_INT;
+                $paramTypes[$key] = PDO::PARAM_INT;
             }
             else {
-                $paramTypes[] = PDO::PARAM_STR;
+                $paramTypes[$key] = PDO::PARAM_STR;
             }
         }
 

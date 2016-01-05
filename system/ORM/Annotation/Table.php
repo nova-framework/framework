@@ -31,12 +31,6 @@ class Table extends Annotation
      */
     public $prefix = DB_PREFIX;
 
-    /**
-     * Link Name, default is default.
-     * @var string
-     */
-    public $link = 'default';
-
 
     /**
      * Class Name of entity

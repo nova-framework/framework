@@ -69,27 +69,22 @@ abstract class Entity
     /**
      * Get Link instance
      *
-     * @param string $linkName Custom link
      * @return Connection
      */
-    private static function getLink($linkName = null)
+    private static function getLink()
     {
-        if (! $linkName) {
-            $linkName = Structure::getTable(static::class)->link;
-        }
-        return DBALManager::getConnection($linkName);
+        return DBALManager::getConnection();
     }
 
 
     /**
      * Query Builder for finding
      *
-     * @param string|null $linkName Custom link name
      * @return QueryBuilder
      */
-    public static function getQueryBuilder($linkName = null)
+    public static function getQueryBuilder()
     {
-        return self::getLink($linkName)->createQueryBuilder();
+        return self::getLink()->createQueryBuilder();
     }
 
 
@@ -97,12 +92,11 @@ abstract class Entity
      * Get from database with primary key value.
      *
      * @param string|int $id Primary key value
-     * @param string|null $linkName Custom link name
      * @return Entity|false
      *
      * @throws \Exception
      */
-    public static function find($id, $linkName = null)
+    public static function find($id)
     {
         $primaryKey = Structure::getTablePrimaryKey(static::class);
 
@@ -113,7 +107,7 @@ abstract class Entity
         $primaryKey = $primaryKey->name;
 
         /** @var Entity $result */
-        $result = self::getLink($linkName)->fetchClass("SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $primaryKey = :pkvalue", array(':pkvalue' => $id), array(), static::class);
+        $result = self::getLink()->fetchClass("SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $primaryKey = :pkvalue", array(':pkvalue' => $id), array(), static::class);
 
         if($result instanceof Entity) {
             $result->_state = 1;
@@ -177,18 +171,17 @@ abstract class Entity
     /**
      * Insert or update the entity in the database
      *
-     * @param string|null $linkName Custom link name
      * @return int Affected rows
      * @throws \Exception Throws exceptions on error.
      */
-    public function save($linkName = null)
+    public function save()
     {
         if ($this->_state == 0) {
             // Insert
-            $result = static::getLink($linkName)->insert(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getColumns(true));
+            $result = static::getLink()->insert(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getColumns(true));
 
             // Primary Key
-            $this->_id = static::getLink($linkName)->lastInsertId();
+            $this->_id = static::getLink()->lastInsertId();
 
             /** @var Column $primaryKey */
             $primaryKey = Structure::getTablePrimaryKey($this);
@@ -200,7 +193,7 @@ abstract class Entity
             $this->_state = 1;
         } else {
             // Update
-            $result = static::getLink($linkName)->update(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getPrimaryKey(),
+            $result = static::getLink()->update(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getPrimaryKey(),
                 array_merge($this->getColumns(true), $this->getPrimaryKey(true)));
         }
 
@@ -211,17 +204,16 @@ abstract class Entity
     /**
      * Delete from database
      *
-     * @param string|null $linkName Custom link name
      * @return bool|int False if the current entity isn't saved, integer with affected rows when successfully deleted.
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      * @throws \Exception
      */
-    public function delete($linkName = null)
+    public function delete()
     {
         if ($this->_state !== 1) {
             return false;
         }
 
-        return static::getLink($linkName)->delete(Structure::getTable($this)->getFullTableName(), $this->getPrimaryKey(), $this->getPrimaryKey(true));
+        return static::getLink()->delete(Structure::getTable($this)->getFullTableName(), $this->getPrimaryKey(), $this->getPrimaryKey(true));
     }
 }

@@ -293,10 +293,18 @@ class BaseModel extends Model
         $orderStr = $this->parseSelectOrder();
 
         // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:ids) $orderStr";
 
-        //
-        $result = $this->select($sql, array(), true);
+        $statement = $this->db->select(
+            $sql,
+            array('ids' => $ids),
+            array('ids' => Connection::PARAM_INT_ARRAY),
+            $this->tempReturnType,
+            true
+        );
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
 
         // Reset the Model State.
         $this->resetState();
@@ -494,11 +502,30 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            // Prepare the custom WHERE.
-            $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
+            $set = array();
 
-            //
-            $result = $this->db->update($this->table(), $data, $where);
+            $paramTypes = array();
+
+            foreach ($data as $columnName => $value) {
+                $set[] = $columnName .' = :' .$columnName;
+
+                if (is_integer($value)) {
+                    $paramTypes[$columnName] = PDO::PARAM_INT;
+                }
+                else {
+                    $paramTypes[$columnName] = PDO::PARAM_STR;
+                }
+            }
+
+            // Prepare the parameters.
+            $params = array_merge($data, array('ids' => $ids));
+
+            $paramTypes['ids'] = Connection::PARAM_INT_ARRAY;
+
+            // Prepare the SQL Statement.
+            $sql = "UPDATE " .$this->table() ." SET " . implode(', ', $set) ." WHERE " .$this->primaryKey ." IN (:ids)";
+
+            $result = $this->db->executeUpdate($sql, $params, $paramTypes);
 
             $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
         }

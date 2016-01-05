@@ -10,7 +10,7 @@ use Nova\ORM\Entity;
  * Class Car
  * @package App\Modules\Demo\Models\Entities
  *
- * @Table(name="car", link="default")
+ * @Table(name="car")
  */
 class Car extends Entity
 {

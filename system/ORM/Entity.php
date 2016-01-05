@@ -278,9 +278,11 @@ abstract class Entity
 
         if($result instanceof Entity) {
             $result->_state = 1;
+
+            return $result;
         }
 
-        return $result;
+        return false;
     }
 
 
@@ -306,7 +308,18 @@ abstract class Entity
         // Prepare where statement
         $preparedWhere = self::_prepareWhere($criteria);
 
-        var_dump($preparedWhere);
+        $where = $preparedWhere['where'];
+
+        $sql = "SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $where";
+        $result = self::getLink()->fetchClass($sql, $preparedWhere['bindValues'], $preparedWhere['bindTypes'], static::class);
+
+        if($result instanceof Entity) {
+            $result->_state = 1;
+
+            return $result;
+        }
+
+        return false;
     }
 
 

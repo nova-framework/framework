@@ -510,6 +510,9 @@ class BaseModel extends Model
             return false;
         }
 
+        //
+        $this->db->connect();
+
         // Prepare the SET command and parameter types.
         $set = array();
 
@@ -637,6 +640,9 @@ class BaseModel extends Model
         $value = (int) abs($value);
 
         //
+        $this->db->connect();
+
+        //
         $params = array(
             "field_$field" => "{$field}+{$value}",
             'where_field' => $id
@@ -662,6 +668,9 @@ class BaseModel extends Model
     public function decrement($id, $field, $value = 1)
     {
         $value = (int) abs($value);
+
+        //
+        $this->db->connect();
 
         //
         $params = array(
@@ -717,6 +726,9 @@ class BaseModel extends Model
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
+        //
+        $this->db->connect();
+
         // Prepare the WHERE parameters.
         $this->setWhere($params);
 
@@ -746,6 +758,9 @@ class BaseModel extends Model
     public function deleteMany($ids)
     {
         if (! is_array($ids) || (count($ids) == 0)) return NULL;
+
+        //
+        $this->db->connect();
 
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 

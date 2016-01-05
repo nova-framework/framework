@@ -17,6 +17,8 @@ use \PDO;
 
 /**
  * Class Entity, can be extended with your database entities
+ *
+ * @template <T> Entity generics, type of the entity itself.
  */
 abstract class Entity
 {
@@ -141,7 +143,7 @@ abstract class Entity
 
 
     /**
-     * Get from database with primary key value.
+     * Find entity by searching for the exact ID key.
      *
      * @param string|int $id Primary key value
      * @return Entity|false
@@ -166,6 +168,30 @@ abstract class Entity
         }
 
         return $result;
+    }
+
+
+    /**
+     * Find a single entity in database by searching for the given criteria.
+     *
+     * This will make a query and execute it, return an unique entity with entities or false/Exception on error
+     *
+     * @param array $criteria Array of key=>value where the key is the column name and the value is the required value
+     * You could also use one of the custom comparators, like:
+     *  - column => ['=' => value], column => ['<' => value], column => ['LIKE' => value] or column => ['>=' => value]
+     *
+     * @return Entity|Entity<T> Single entity
+     * @throw \Exception Exceptions when having errors while preparing, fetching, connecting or parsing.
+     */
+    public static function findBy(array $criteria)
+    {
+        if (! is_array($criteria))
+        {
+            throw new \UnexpectedValueException("Criteria should be an array!");
+        }
+
+        // Prepare where statement
+        //self::_prepareWhere($criteria);
     }
 
 

@@ -99,6 +99,9 @@ class Connection extends BaseConnection
             }
         }
 
+        //
+        $this->connect();
+
         // Execute the current Query.
         $statement = $this->executeQuery($query, $params, $paramTypes);
 
@@ -125,6 +128,8 @@ class Connection extends BaseConnection
 
     public function fetchObject($statement, array $params = array(), array $types = array())
     {
+        $this->connect();
+
         return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_OBJ);
     }
 
@@ -136,6 +141,9 @@ class Connection extends BaseConnection
         else if($className === null) {
             throw new \Exception("No valid Entity Class is given");
         }
+
+        //
+        $this->connect();
 
         return $this->select($statement, $params, $paramTypes, $className);
     }
@@ -172,9 +180,9 @@ class Connection extends BaseConnection
      *
      * @return int
      */
-    public function getQueryCounter()
+    public function getTotalQueries()
     {
-        $logger = $this->getConfiguration()->getLogger();
+        $logger = $this->getConfiguration()->getSQLLogger();
 
         if(! $logger instanceof QueryCounter) {
             // We can't get the number of queries.

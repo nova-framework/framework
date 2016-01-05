@@ -10,8 +10,8 @@
 
 namespace Nova\Helpers;
 
-use Nova\Database\Engine\MySQL;
-use Nova\Database\Manager;
+use Nova\DBAL\Manager as Database;
+use Nova\DBAL\Connection;
 
 /**
  * Extending PDO to use custom methods.
@@ -30,13 +30,11 @@ class Database
      */
     public static function get($group = false)
     {
-        // Make the engine with the factory
-        $engine = Manager::getEngine();
-
-        if ($engine instanceof MySQL) {
-            return $engine;
+        if($group !== false)
+            throw new \Exception("Trying to select the DBAL Configuration from Legacy Database");
         }
 
-        throw new \Exception("Default config database is not MySQL! Use the new engines.");
+        // Return the Default Connection from DBAL.
+        return Database::getConnection();
     }
 }

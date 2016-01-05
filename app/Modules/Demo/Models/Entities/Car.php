@@ -16,7 +16,7 @@ class Car extends Entity
 {
     /**
      * @var int
-     * @Column(name="carid", primary=true, type="int", autoIncredimental=true)
+     * @Column(name="carid", primary=true, type="int", autoIncrement=true)
      */
     public $carid;
 

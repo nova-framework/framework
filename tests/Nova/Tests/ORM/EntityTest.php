@@ -260,6 +260,66 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 
     /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::query
+     * @covers \Nova\ORM\Entity::save
+     * @covers \Nova\ORM\Query
+     * @covers \Nova\ORM\Query::all
+     * @covers \Nova\ORM\Query::limit
+     * @covers \Nova\ORM\Query::offset
+     */
+    public function executeTestLimit()
+    {
+        // Creating 20 cars
+        for ($i = 0; $i < 20; $i++) {
+            $car = new Car();
+            $car->make = 'Nova Cars';
+            $car->model = 'Framework_ORM_Test_Limit_' . $i;
+            $car->costs = 9900;
+
+            $result = $car->save();
+            $this->assertEquals(1, $result);
+        }
+
+        $all = Car::find()->all();
+        $this->assertGreaterThanOrEqual(22, count($all));
+
+        // Limit test
+        $first = Car::find()->limit(10)->all();
+        $this->assertEquals(10, count($first));
+
+
+        $second = Car::find()->limit(10)->offset(10)->all();
+        $this->assertEquals(10, count($second));
+
+        // No duplicates allowed, should be 2 arrays with exactly different carid values!
+        foreach ($first as $entityHere) {
+            foreach ($second as $entityThere) {
+                $this->assertNotEquals($entityHere->carid, $entityThere->carid);
+            }
+        }
+    }
+
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::query
+     * @covers \Nova\ORM\Query
+     * @covers \Nova\ORM\Query::all
+     * @covers \Nova\ORM\Query::limit
+     * @covers \Nova\ORM\Query::offset
+     */
+    public function testLimit()
+    {
+        Utils::switchDatabase('sqlite');
+        $this->executeTestLimit();
+
+        Utils::switchDatabase('mysql');
+        $this->executeTestLimit();
+    }
+
+
+
+    /**
      * Cleanup
      *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException

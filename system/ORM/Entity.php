@@ -260,7 +260,47 @@ abstract class Entity
     }
 
 
+    /**
+     * Find multiple entities by searching on the primary key values given
+     *
+     * @param array $ids Array of primary key values possible to return
+     * @return array<T>|Entity[]|false Array of entities or false on not found.
+     * @throws \Exception Exceptions are thrown when errors occur.
+     */
+    public static function findMany($ids)
+    {
+        if (! is_array($ids)) {
+            throw new \UnexpectedValueException("IDs should be an array if primary key values!");
+        }
 
+        $primaryKey = Structure::getTablePrimaryKey(static::class);
+        if ($primaryKey === false) {
+            throw new \Exception("Primary Key can't be detected!");
+        }
+        // Only get column name for the primary key
+        $primaryKey = $primaryKey->name;
+
+        // Prepare the where
+        $where = self::prepareWhere(array($primaryKey => array('IN' => $ids)));
+
+        // Execute the select, fetch back classes
+        $sql = "SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE " . $where['where'];
+
+        /** @var Entity[] $results */
+        $results = static::getLink()->selectAll($sql, $where['bindValues'], $where['bindTypes'], static::class);
+
+        if (!$results) {
+            return false;
+        }
+
+        // Loop through to set the state
+        for ($i = 0; $i < count($results); $i++) {
+            $results[$i]->_state = 1;
+        }
+
+        // Return results
+        return $results;
+    }
 
 
     /**
@@ -273,16 +313,13 @@ abstract class Entity
      */
     public static function find($id)
     {
-        $primaryKey = Structure::getTablePrimaryKey(static::class);
+        $many = static::findMany(array($id));
 
-        if ($primaryKey === false) {
-            throw new \Exception("Primary Key can't be detected!");
+        if (count($many) <> 1) {
+            return false;
         }
-        // Only get column name
-        $primaryKey = $primaryKey->name;
 
-        /** @var Entity $result */
-        $result = self::getLink()->fetchClass("SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $primaryKey = :pkvalue", array(':pkvalue' => $id), array(), static::class);
+        $result = $many[0];
 
         if($result instanceof Entity) {
             $result->_state = 1;

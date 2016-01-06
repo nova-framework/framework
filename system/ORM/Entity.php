@@ -179,15 +179,19 @@ abstract class Entity
 
 
     /**
-     * Find entity by searching for the exact ID key.
+     * Find entity by searching for the exact ID key. Or create Query and return query.
      *
-     * @param string|int $id Primary key value
-     * @return Entity|false
+     * @param string|int|null $id Primary key value, Ignore for query building.
+     * @return Entity|Query|false
      *
      * @throws \Exception
      */
-    public static function find($id)
+    public static function find($id = null)
     {
+        if ($id === null) {
+            return static::query();
+        }
+
         $many = static::findMany(array($id));
 
         if (count($many) <> 1) {

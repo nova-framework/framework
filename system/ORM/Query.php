@@ -292,7 +292,9 @@ class Query
 
         $this->buildWhere();
         // Add where to query
-        $this->query .= " WHERE " . $this->whereClause;
+        if ($this->whereClause !== "") {
+            $this->query .= " WHERE " . $this->whereClause;
+        }
 
 
         // Order by

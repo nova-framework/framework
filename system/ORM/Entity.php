@@ -259,6 +259,16 @@ abstract class Entity
         return $result;
     }
 
+    /**
+     * Start a query
+     * @return Query
+     */
+    public static function query()
+    {
+        return new Query(static::class);
+    }
+
+
 
     /**
      * Find multiple entities by searching on the primary key values given
@@ -372,7 +382,6 @@ abstract class Entity
 
         return false;
     }
-
 
     /**
      * Insert or update the entity in the database

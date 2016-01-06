@@ -24,6 +24,15 @@ class Manager
     private static $instances = array();
 
 
+    /**
+     * Get connection instance
+     *
+     * @param string $linkName Optional custom link name
+     * @return Connection Connection instance
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Exception
+     */
     public static function getConnection($linkName = 'default')
     {
         $config = Config::get('database');
@@ -82,6 +91,7 @@ class Manager
         $linkConfig = new Configuration();
 
         // Get a Connection instance
+        /** @var Connection $connection */
         $connection = DriverManager::getConnection($linkParams, $linkConfig);
 
         // Set the (default) FetchMode and FetchType

@@ -47,12 +47,16 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::find
+     * @covers \Nova\ORM\Entity::findMany
+     * @covers \Nova\ORM\Query
      * @throws \Exception
      */
     public function executeTestGetEntity()
     {
         $car = Car::find(1);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
 
+        $car = Car::find(2);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
     }
 
@@ -77,6 +81,14 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\ORM\Entity::save
      * @covers \Nova\ORM\Entity::find
      * @covers \Nova\ORM\Entity::findBy
+     * @covers \Nova\ORM\Entity::findMany
+     * @covers \Nova\ORM\Entity::query
+     * @covers \Nova\ORM\Query::where
+     * @covers \Nova\ORM\Query::limit
+     * @covers \Nova\ORM\Query::order
+     * @covers \Nova\ORM\Query::all
+     * @covers \Nova\ORM\Query::one
+     * @covers \Nova\ORM\Query
      * @throws \Exception
      */
     public function executeTestBasicFinding()
@@ -112,12 +124,42 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $searched = Car::findBy(array('model' => 'Framework_ORM_Test_Search_1', 'costs' => array('=' => 50000)));
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched);
-    }
 
+        // Search multiple pk's
+        $searched = Car::findMany(array($car->carid, $car2->carid));
+        $this->assertEquals(2, count($searched));
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched[0]);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched[1]);
+
+
+
+        // Query
+        $query = Car::query();
+        $one = $query->where('carid', 1)->one();
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $one);
+
+        $query = Car::query();
+        $all = $query->where('carid', 'IN', array(1, 2))->limit(2)->order('make')->all();
+
+        $this->assertEquals(2, count($all));
+
+        // First one should be the BMW, second Tesla
+        $this->assertEquals("BMW", $all[0]->make);
+        $this->assertEquals("Tesla", $all[1]->make);
+    }
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::save
      * @covers \Nova\ORM\Entity::find
+     * @covers \Nova\ORM\Entity::findBy
+     * @covers \Nova\ORM\Entity::findMany
+     * @covers \Nova\ORM\Entity::query
+     * @covers \Nova\ORM\Query::where
+     * @covers \Nova\ORM\Query::limit
+     * @covers \Nova\ORM\Query::order
+     * @covers \Nova\ORM\Query::all
+     * @covers \Nova\ORM\Query::one
+     * @covers \Nova\ORM\Query
      * @throws \Exception
      */
     public function testBasicFinding()
@@ -213,6 +255,66 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         Utils::switchDatabase('mysql');
         $this->executeTestDelete();
+    }
+
+
+
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::query
+     * @covers \Nova\ORM\Entity::save
+     * @covers \Nova\ORM\Query
+     * @covers \Nova\ORM\Query::all
+     * @covers \Nova\ORM\Query::limit
+     * @covers \Nova\ORM\Query::offset
+     */
+    public function executeTestLimit()
+    {
+        // Creating 20 cars
+        for ($i = 0; $i < 20; $i++) {
+            $car = new Car();
+            $car->make = 'Nova Cars';
+            $car->model = 'Framework_ORM_Test_Limit_' . $i;
+            $car->costs = 9900;
+
+            $result = $car->save();
+            $this->assertEquals(1, $result);
+        }
+
+        $all = Car::find()->all();
+        $this->assertGreaterThanOrEqual(22, count($all));
+
+        // Limit test
+        $first = Car::find()->limit(10)->all();
+        $this->assertEquals(10, count($first));
+
+
+        $second = Car::find()->limit(10)->offset(10)->all();
+        $this->assertEquals(10, count($second));
+
+        // No duplicates allowed, should be 2 arrays with exactly different carid values!
+        foreach ($first as $entityHere) {
+            foreach ($second as $entityThere) {
+                $this->assertNotEquals($entityHere->carid, $entityThere->carid);
+            }
+        }
+    }
+
+    /**
+     * @covers \Nova\ORM\Entity
+     * @covers \Nova\ORM\Entity::query
+     * @covers \Nova\ORM\Query
+     * @covers \Nova\ORM\Query::all
+     * @covers \Nova\ORM\Query::limit
+     * @covers \Nova\ORM\Query::offset
+     */
+    public function testLimit()
+    {
+        Utils::switchDatabase('sqlite');
+        $this->executeTestLimit();
+
+        Utils::switchDatabase('mysql');
+        $this->executeTestLimit();
     }
 
 

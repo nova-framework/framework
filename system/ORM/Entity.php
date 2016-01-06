@@ -140,156 +140,68 @@ abstract class Entity
         return $data;
     }
 
+
     /**
-     * Prepare the where, return an array with the following details:
-     *  'where' => 'SQL Where Clause'
-     *  'bindValues' => array with values for binding.
-     *  'bindTypes' => array with types for binding.
-     *
-     * @param array $criteria Should be either
-     * 'column' => 'value'
-     *          or:
-     * 'column' => array('LIKE' => 'value')
-     * 'column' => array('=' => 'value')
-     * 'column' => array('>=' => 'value')
-     * 'column' => array('<=' => 'value')
-     * 'column' => array('>' => 'value')
-     * 'column' => array('<' => 'value')
-     * 'column' => array('IN' => array('value', 'value'))
-     *
-     * @param string|null $singleOperator Operator when doing a single criteria inline
-     * @param string|null $singleValue Single or array value(s) when doing a single criteria inline
-     *
-     * @return array Where and bind result
-     *
-     * @throws \Exception Exceptions on error in the where criteria
+     * Start a query
+     * @return Query
      */
-    private static function _prepareWhere($criteria, $singleOperator = null, $singleValue = null)
+    public static function query()
     {
-        // Check parameter
-        if (! is_array($criteria) && ($singleOperator == null || $singleValue == null)) {
-            return false;
+        return new Query(static::class);
+    }
+
+    /**
+     * Find multiple entities by searching on the primary key values given
+     *
+     * @param array $ids Array of primary key values possible to return
+     * @return array<T>|Entity[]|false Array of entities or false on not found.
+     * @throws \Exception Exceptions are thrown when errors occur.
+     */
+    public static function findMany($ids)
+    {
+        if (! is_array($ids)) {
+            throw new \UnexpectedValueException("IDs should be an array if primary key values!");
         }
 
-        // Prepare returning result
-        $result = array(
-            'where' => '',
-            'bindValues' => array(),
-            'bindTypes' => array()
-        );
-
-        // Map a single criteria to the normal array criteria.
-        if (is_string($criteria) && $singleOperator !== null && $singleValue !== null) {
-            $criteria = array($criteria => array($singleOperator => $singleValue));
+        $primaryKey = Structure::getTablePrimaryKey(static::class);
+        if ($primaryKey === false) {
+            throw new \Exception("Primary Key can't be detected!");
         }
+        // Only get column name for the primary key
+        $primaryKey = $primaryKey->name;
 
-        // First we will loop through the criteria and prepare the where clause
-        $where = "";
-        $bindValues = array();
-        $bindTypes = array();
+        /** @var Entity[] $result */
+        $result = static::query()->where(array($primaryKey => array("IN" => $ids)))->all();
 
-        $idx = 0;
-        foreach ($criteria as $column => $value) {
-            // Check for operators, if no operator, add it explicit
-            if (!is_array($value)) {
-                $value = array('=' => $value);
-            }
-
-            // Will contain [operator] => value
-            $operator = array_keys($value);
-
-            // Few checks
-            if (count($operator) !== 1) {
-                throw new \Exception("The operator => value should contain only one operator, " . count($operator) . " operators given for column " . $column);
-            }
-
-            // Get the real operator and value
-            $operator = $operator[0];
-            $value = $value[$operator];
-
-            // More checks for value
-            if (is_array($value) && $operator !== 'IN') {
-                throw new \Exception("Value is an array in the criteria of column " . $column . ". Only IN operator allows arrays given as criteria value!");
-            }
-            if ($operator == 'IN' && !is_array($value)) {
-                throw new \Exception("Value should be an array of values criteria of column " . $column . ". Because you are using the IN operator!");
-            }
-
-            // Adding basic where
-            $where .= "$column ";
-
-            // The IN magic:
-            if ($operator == 'IN' && is_array($value)) {
-                $where .= " IN (";
-
-                $subIdx = 0;
-
-                foreach ($value as $item => $subValue) {
-                    $where .= "?";
-                    if (($subIdx + 1) !== count($value)) {
-                        $where .= ",";
-                    }
-
-                    $bindValues[] = $subValue;
-                    $bindTypes[] = is_int($subValue) ? PDO::PARAM_INT : PDO::PARAM_STR;
-
-                    $subIdx++;
-                }
-                $where .= ")";
-            } else {
-                // None IN, just single where clause item.
-                $where .= "$operator ?";
-                $bindValues[] = $value;
-                $bindTypes[] = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-
-            // If not the end of the criteria, then add AND to it.
-            if (($idx + 1) !== count($criteria)) {
-                $where .= " AND ";
-            }
-
-
-            $idx++;
-        }
-
-        $result['where'] = $where;
-        $result['bindValues'] = $bindValues;
-        $result['bindTypes'] = $bindTypes;
-
+        // Return results
         return $result;
     }
 
 
-
-
-
     /**
-     * Find entity by searching for the exact ID key.
+     * Find entity by searching for the exact ID key. Or create Query and return query.
      *
-     * @param string|int $id Primary key value
-     * @return Entity|false
+     * @param string|int|null $id Primary key value, Ignore for query building.
+     * @return Entity|Query|false
      *
      * @throws \Exception
      */
-    public static function find($id)
+    public static function find($id = null)
     {
-        $primaryKey = Structure::getTablePrimaryKey(static::class);
-
-        if ($primaryKey === false) {
-            throw new \Exception("Primary Key can't be detected!");
+        if ($id === null) {
+            return static::query();
         }
-        // Only get column name
-        $primaryKey = $primaryKey->name;
 
-        /** @var Entity $result */
-        $result = self::getLink()->fetchClass("SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $primaryKey = :pkvalue", array(':pkvalue' => $id), array(), static::class);
+        $many = static::findMany(array($id));
+
+        if (count($many) <> 1) {
+            return false;
+        }
+        $result = $many[0];
 
         if($result instanceof Entity) {
-            $result->_state = 1;
-
             return $result;
         }
-
         return false;
     }
 
@@ -314,28 +226,14 @@ abstract class Entity
      */
     public static function findBy($criteria, $operator = null, $value = null)
     {
-        if (! is_array($criteria) && ($operator == null || $value == null))
+        if (! is_array($criteria) && ($operator == null && $value == null))
         {
-            throw new \UnexpectedValueException("Criteria should be an array!");
+            throw new \UnexpectedValueException("Criteria should be an array! Or use the shorthand syntax");
         }
 
-        // Prepare where statement
-        $preparedWhere = self::_prepareWhere($criteria, $operator, $value);
-
-        $where = $preparedWhere['where'];
-
-        $sql = "SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $where";
-        $result = self::getLink()->fetchClass($sql, $preparedWhere['bindValues'], $preparedWhere['bindTypes'], static::class);
-
-        if($result instanceof Entity) {
-            $result->_state = 1;
-
-            return $result;
-        }
-
-        return false;
+        // Return result
+        return static::query()->where($criteria, $operator, $value)->one();
     }
-
 
     /**
      * Insert or update the entity in the database

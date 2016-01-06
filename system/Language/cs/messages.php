@@ -42,9 +42,7 @@ return array (
   'This the email address does not belong to a valid domain' => '',
   'queries' => '',
   'query' => '',
-  '{label} should not match the regular expression {pattern}' => '',
   '{label} can contain only letters' => '',
-  '{label} must have a ratio (width/height) of {ratio})' => '',
   '{label} does not belong to a valid domain' => '',
   '{label} does not have an acceptable extension ({file_extensions})' => '',
   '{label} does not match the regular expression {pattern}' => '',
@@ -68,6 +66,7 @@ return array (
   '{label} must be between {min} and {max} characters long' => '',
   '{label} must contain only letters and digits' => '',
   '{label} must contain only letters, digits, spaces, hyphens and underscores' => '',
+  '{label} must have a ratio (width/height) of {ratio})' => '',
   '{label} should be at least {min} pixels tall' => '',
   '{label} should be at least {min} pixels wide' => '',
   '{label} should be greater than {min}' => '',
@@ -78,4 +77,5 @@ return array (
   '{label} should have at least {min} characters' => '',
   '{label} should have less than {max} characters' => '',
   '{label} should not exceed {size}' => '',
+  '{label} should not match the regular expression {pattern}' => '',
 );

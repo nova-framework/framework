@@ -8,7 +8,9 @@
  */
 
 namespace Nova\ORM;
+
 use Nova\ORM\Annotation\Column;
+use PDO;
 
 /**
  * Class Query, Building a Query for finding entities.
@@ -33,7 +35,38 @@ class Query
     private $orderType = null;
 
 
-    // Error stack
+    /**
+     * The query that will be build.
+     *
+     * @var string
+     */
+    private $query = "";
+
+    /**
+     * The where part of the query
+     *
+     * @var string
+     */
+    private $whereClause = "";
+
+    /**
+     * The where part of the query, binding values
+     * @var array
+     */
+    private $whereBindValues = array();
+
+    /**
+     * The where part of the query, binding types
+     * @var array
+     */
+    private $whereBindTypes = array();
+
+
+
+    /**
+     * Error Exception
+     * @var null|\Exception|\Throwable
+     */
     private $lastException = null;
 
 
@@ -182,9 +215,6 @@ class Query
     }
 
 
-
-
-    
     public function all()
     {
 
@@ -198,6 +228,101 @@ class Query
 
 
 
+
+
+
+    private function buildQuery()
+    {
+        // Prepare with checking for exceptions, once there is, throw it!
+        if ($this->lastException !== null) {
+            throw $this->lastException;
+        }
+
+        // Prepare the query
+        $this->query = "SELECT * FROM " . Structure::getTable($this->entityClass)->getFullTableName();
+
+        $this->buildWhere();
+
+        // Doing the where clause
+        //$this->query .= " " . $this->whereClause;
+    }
+
+
+    /**
+     * Build Where clause, textual and binding parameters
+     */
+    private function buildWhere()
+    {
+        // Reset
+        $this->whereClause = "";
+        $this->whereBindValues = array();
+        $this->whereBindTypes = array();
+
+        // Check for empty where
+        if (count($this->where) == 0) {
+            return;
+        }
+
+        // Now we will loop through our where criteria's
+        $idx = 0;
+        $max = count($this->where);
+        foreach ($this->where as $id => $criteria) {
+            $column = $criteria['column'];
+            $operator = $criteria['operator'];
+            $value = $criteria['value'];
+
+            // Prepare where clause
+            $this->whereClause .= "$column ";
+
+            // Check our operator
+            if ($operator === "IN") {
+                // Prepare and loop
+                $this->whereClause .= "IN (";
+
+                $subIdx = 0;
+                $subMax = count($value);
+                foreach ($value as $subValue) {
+                    $this->addWhere($subValue);
+                    if (($subIdx+1) < $subMax) {
+                        $this->whereClause .= ",";
+                    }
+                    $subIdx++;
+                }
+                $this->whereClause .= ")";
+            } else {
+                // Will add a normal operator
+                $this->whereClause .= "$operator ";
+                $this->addWhere($value);
+            }
+
+            // Adding AND if not last
+            if (($idx + 1) < $max) {
+                $this->whereClause .= " AND ";
+            }
+            $idx++;
+        }
+    }
+
+
+    /**
+     * Add entry to our where clause. Will add a '?' to the clause and the value + type into our array
+     *
+     * @param mixed $value
+     */
+    private function addWhere($value)
+    {
+        $this->whereClause .= "?";
+        $this->whereBindValues[] = $value;
+        if (is_bool($value)) {
+            $this->whereBindTypes[] = PDO::PARAM_BOOL;
+        }elseif(is_int($value)) {
+            $this->whereBindTypes[] = PDO::PARAM_INT;
+        }elseif($value === null) {
+            $this->whereBindTypes[] = PDO::PARAM_NULL;
+        }else{
+            $this->whereBindTypes[] = PDO::PARAM_STR;
+        }
+    }
 
 
     /**

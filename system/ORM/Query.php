@@ -122,6 +122,23 @@ class Query
 
 
     /**
+     * Limit the result
+     *
+     * @param int $limit Give the number of limited entities returned.
+     * @return Query $this The current query stack.
+     */
+    public function limit($limit)
+    {
+        if (! is_int($limit) || $limit < 0) {
+            $this->lastException = new \UnexpectedValueException("Limit value should be an positive integer!", 0, $this->lastException);
+            return $this;
+        }
+        $this->limit = intval($limit);
+
+        return $this;
+    }
+
+    /**
      * Check if given operator is a valid operator.
      * @param string $operator
      * @return bool

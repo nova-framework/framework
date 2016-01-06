@@ -69,7 +69,7 @@ class RuleFactory extends BaseRuleFactory
                 'labeled_message' => __d('system', '{label} must be a valid email address')
             ),
             'emaildomain' => array(
-                'default_message' => __d('system', 'This the email address does not belong to a valid domain'),
+                'default_message' => __d('system', 'This email address does not belong to a valid domain'),
                 'labeled_message' => __d('system', '{label} does not belong to a valid domain')
             ),
             'equal' => array(

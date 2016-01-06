@@ -48,6 +48,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::find
      * @covers \Nova\ORM\Entity::findMany
+     * @covers \Nova\ORM\Query
      * @throws \Exception
      */
     public function executeTestGetEntity()

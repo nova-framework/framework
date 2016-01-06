@@ -40,4 +40,36 @@ class Query
 
         $this->entityClass = $class->getName();
     }
+
+
+    /**
+     * Check if given operator is a valid operator.
+     * @param string $operator
+     * @return bool
+     */
+    private function validOperator($operator)
+    {
+        $valid = array("=", "!=", "LIKE", ">", "<", ">=", "<=", "IN", "<>");
+        return in_array($operator, $valid, true);
+    }
+
+    /**
+     * Validate value for given operator
+     * @param mixed $value
+     * @param string $operator
+     * @return bool
+     */
+    private function validValue($value, $operator)
+    {
+        if (! $this->validOperator($operator)) {
+            return false;
+        }
+
+        if ($operator === "IN") {
+            // Valid should be an array!
+            return is_array($value);
+        }
+
+        return !is_array($value);
+    }
 }

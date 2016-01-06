@@ -41,8 +41,8 @@ class RuleFactory extends BaseRuleFactory
                 'labeled_message' => __d('system', '{label} should contain between {min} and {max} items')
             ),
             'arraymaxlength' => array(
-                'default_message' => __d('system', 'This input should contain less than {min} items'),
-                'labeled_message' => __d('system', '{label} should contain less than {min} items')
+                'default_message' => __d('system', 'This input should contain less than {max} items'),
+                'labeled_message' => __d('system', '{label} should contain less than {max} items')
             ),
             'arrayminlength' => array(
                 'default_message' => __d('system', 'This input should contain at least {min} items'),
@@ -122,7 +122,7 @@ class RuleFactory extends BaseRuleFactory
             ),
             'notregex' => array(
                 'default_message' => __d('system', 'This input should not match the regular expression {pattern}'),
-                'labeled_message' => __d('system', '{label} Tshould not match the regular expression {pattern}')
+                'labeled_message' => __d('system', '{label} should not match the regular expression {pattern}')
             ),
             'number' => array(
                 'default_message' => __d('system', 'This input must be a number'),
@@ -169,12 +169,12 @@ class RuleFactory extends BaseRuleFactory
                 'labeled_message' => __d('system', '{label} is not a valid image (only {image_types} are allowed)')
             ),
             'fileimageheight' => array(
-                'default_message' => __d('system', 'The file should be at least {min} pixels tall'),
+                'default_message' => __d('system', 'The image should be at least {min} pixels tall'),
                 'labeled_message' => __d('system', '{label} should be at least {min} pixels tall')
             ),
             'fileimageratio' => array(
-                'default_message' => __d('system', 'The image does must have a ratio (width/height) of {ratio})'),
-                'labeled_message' => __d('system', '{label} does must have a ratio (width/height) of {ratio})')
+                'default_message' => __d('system', 'The image must have a ratio (width/height) of {ratio})'),
+                'labeled_message' => __d('system', '{label} must have a ratio (width/height) of {ratio})')
             ),
             'fileimagewidth' => array(
                 'default_message' => __d('system', 'The image should be at least {min} pixels wide'),
@@ -193,12 +193,12 @@ class RuleFactory extends BaseRuleFactory
                 'labeled_message' => __d('system', '{label} is not a valid image (only {image_types} are allowed)')
             ),
             'uploadimageheight' => array(
-                'default_message' => __d('system', 'The file should be at least {min} pixels tall'),
+                'default_message' => __d('system', 'The image should be at least {min} pixels tall'),
                 'labeled_message' => __d('system', '{label} should be at least {min} pixels tall')
             ),
             'uploadimageratio' => array(
-                'default_message' => __d('system', 'The image does must have a ratio (width/height) of {ratio})'),
-                'labeled_message' => __d('system', '{label} does must have a ratio (width/height) of {ratio})')
+                'default_message' => __d('system', 'The image must have a ratio (width/height) of {ratio})'),
+                'labeled_message' => __d('system', '{label} must have a ratio (width/height) of {ratio})')
             ),
             'uploadimagewidth' => array(
                 'default_message' => __d('system', 'The image should be at least {min} pixels wide'),

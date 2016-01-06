@@ -164,7 +164,7 @@ abstract class Entity
      *
      * @throws \Exception Exceptions on error in the where criteria
      */
-    private static function _prepareWhere($criteria, $singleOperator = null, $singleValue = null)
+    private static function prepareWhere($criteria, $singleOperator = null, $singleValue = null)
     {
         // Check parameter
         if (! is_array($criteria) && ($singleOperator == null || $singleValue == null)) {
@@ -320,7 +320,7 @@ abstract class Entity
         }
 
         // Prepare where statement
-        $preparedWhere = self::_prepareWhere($criteria, $operator, $value);
+        $preparedWhere = self::prepareWhere($criteria, $operator, $value);
 
         $where = $preparedWhere['where'];
 

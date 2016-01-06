@@ -140,124 +140,6 @@ abstract class Entity
         return $data;
     }
 
-    /**
-     * Prepare the where, return an array with the following details:
-     *  'where' => 'SQL Where Clause'
-     *  'bindValues' => array with values for binding.
-     *  'bindTypes' => array with types for binding.
-     *
-     * @param array $criteria Should be either
-     * 'column' => 'value'
-     *          or:
-     * 'column' => array('LIKE' => 'value')
-     * 'column' => array('=' => 'value')
-     * 'column' => array('>=' => 'value')
-     * 'column' => array('<=' => 'value')
-     * 'column' => array('>' => 'value')
-     * 'column' => array('<' => 'value')
-     * 'column' => array('IN' => array('value', 'value'))
-     *
-     * @param string|null $singleOperator Operator when doing a single criteria inline
-     * @param string|null $singleValue Single or array value(s) when doing a single criteria inline
-     *
-     * @return array Where and bind result
-     *
-     * @throws \Exception Exceptions on error in the where criteria
-     */
-    private static function prepareWhere($criteria, $singleOperator = null, $singleValue = null)
-    {
-        // Check parameter
-        if (! is_array($criteria) && ($singleOperator == null || $singleValue == null)) {
-            return false;
-        }
-
-        // Prepare returning result
-        $result = array(
-            'where' => '',
-            'bindValues' => array(),
-            'bindTypes' => array()
-        );
-
-        // Map a single criteria to the normal array criteria.
-        if (is_string($criteria) && $singleOperator !== null && $singleValue !== null) {
-            $criteria = array($criteria => array($singleOperator => $singleValue));
-        }
-
-        // First we will loop through the criteria and prepare the where clause
-        $where = "";
-        $bindValues = array();
-        $bindTypes = array();
-
-        $idx = 0;
-        foreach ($criteria as $column => $value) {
-            // Check for operators, if no operator, add it explicit
-            if (!is_array($value)) {
-                $value = array('=' => $value);
-            }
-
-            // Will contain [operator] => value
-            $operator = array_keys($value);
-
-            // Few checks
-            if (count($operator) !== 1) {
-                throw new \Exception("The operator => value should contain only one operator, " . count($operator) . " operators given for column " . $column);
-            }
-
-            // Get the real operator and value
-            $operator = $operator[0];
-            $value = $value[$operator];
-
-            // More checks for value
-            if (is_array($value) && $operator !== 'IN') {
-                throw new \Exception("Value is an array in the criteria of column " . $column . ". Only IN operator allows arrays given as criteria value!");
-            }
-            if ($operator == 'IN' && !is_array($value)) {
-                throw new \Exception("Value should be an array of values criteria of column " . $column . ". Because you are using the IN operator!");
-            }
-
-            // Adding basic where
-            $where .= "$column ";
-
-            // The IN magic:
-            if ($operator == 'IN' && is_array($value)) {
-                $where .= " IN (";
-
-                $subIdx = 0;
-
-                foreach ($value as $item => $subValue) {
-                    $where .= "?";
-                    if (($subIdx + 1) !== count($value)) {
-                        $where .= ",";
-                    }
-
-                    $bindValues[] = $subValue;
-                    $bindTypes[] = is_int($subValue) ? PDO::PARAM_INT : PDO::PARAM_STR;
-
-                    $subIdx++;
-                }
-                $where .= ")";
-            } else {
-                // None IN, just single where clause item.
-                $where .= "$operator ?";
-                $bindValues[] = $value;
-                $bindTypes[] = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-
-            // If not the end of the criteria, then add AND to it.
-            if (($idx + 1) !== count($criteria)) {
-                $where .= " AND ";
-            }
-
-
-            $idx++;
-        }
-
-        $result['where'] = $where;
-        $result['bindValues'] = $bindValues;
-        $result['bindTypes'] = $bindTypes;
-
-        return $result;
-    }
 
     /**
      * Start a query
@@ -267,8 +149,6 @@ abstract class Entity
     {
         return new Query(static::class);
     }
-
-
 
     /**
      * Find multiple entities by searching on the primary key values given
@@ -290,26 +170,11 @@ abstract class Entity
         // Only get column name for the primary key
         $primaryKey = $primaryKey->name;
 
-        // Prepare the where
-        $where = self::prepareWhere(array($primaryKey => array('IN' => $ids)));
-
-        // Execute the select, fetch back classes
-        $sql = "SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE " . $where['where'];
-
-        /** @var Entity[] $results */
-        $results = static::getLink()->selectAll($sql, $where['bindValues'], $where['bindTypes'], static::class);
-
-        if (!$results) {
-            return false;
-        }
-
-        // Loop through to set the state
-        for ($i = 0; $i < count($results); $i++) {
-            $results[$i]->_state = 1;
-        }
+        /** @var Entity[] $result */
+        $result = static::query()->where(array($primaryKey => array("IN" => $ids)))->all();
 
         // Return results
-        return $results;
+        return $result;
     }
 
 
@@ -328,15 +193,11 @@ abstract class Entity
         if (count($many) <> 1) {
             return false;
         }
-
         $result = $many[0];
 
         if($result instanceof Entity) {
-            $result->_state = 1;
-
             return $result;
         }
-
         return false;
     }
 
@@ -361,26 +222,13 @@ abstract class Entity
      */
     public static function findBy($criteria, $operator = null, $value = null)
     {
-        if (! is_array($criteria) && ($operator == null || $value == null))
+        if (! is_array($criteria) && ($operator == null && $value == null))
         {
-            throw new \UnexpectedValueException("Criteria should be an array!");
+            throw new \UnexpectedValueException("Criteria should be an array! Or use the shorthand syntax");
         }
 
-        // Prepare where statement
-        $preparedWhere = self::prepareWhere($criteria, $operator, $value);
-
-        $where = $preparedWhere['where'];
-
-        $sql = "SELECT * FROM " . Structure::getTable(static::class)->getFullTableName() . " WHERE $where";
-        $result = self::getLink()->fetchClass($sql, $preparedWhere['bindValues'], $preparedWhere['bindTypes'], static::class);
-
-        if($result instanceof Entity) {
-            $result->_state = 1;
-
-            return $result;
-        }
-
-        return false;
+        // Return result
+        return static::query()->where($criteria, $operator, $value)->one();
     }
 
     /**

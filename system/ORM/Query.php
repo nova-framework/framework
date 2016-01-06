@@ -132,6 +132,7 @@ class Query
             // If using shorthand for = compare
             if (! is_array($compare)) {
                 $criteria[$column] = array('=' => $compare);
+                $compare = array('=' => $compare);
             }
 
             // Validate compare, validate column name

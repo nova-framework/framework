@@ -146,11 +146,19 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("BMW", $all[0]->make);
         $this->assertEquals("Tesla", $all[1]->make);
     }
-
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::save
      * @covers \Nova\ORM\Entity::find
+     * @covers \Nova\ORM\Entity::findBy
+     * @covers \Nova\ORM\Entity::findMany
+     * @covers \Nova\ORM\Entity::query
+     * @covers \Nova\ORM\Query::where
+     * @covers \Nova\ORM\Query::limit
+     * @covers \Nova\ORM\Query::order
+     * @covers \Nova\ORM\Query::all
+     * @covers \Nova\ORM\Query::one
+     * @covers \Nova\ORM\Query
      * @throws \Exception
      */
     public function testBasicFinding()

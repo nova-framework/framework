@@ -1,14 +1,14 @@
 <?php
 
 return array (
-  'Base Model' => '',
-  'Base Model Demo' => '',
-  'Classic Controller' => '',
-  'Controllers' => '',
+  'Base Model' => 'Basis Model',
+  'Base Model Demo' => 'Basis Model Demo',
+  'Classic Controller' => 'klassischer Controller',
+  'Controllers' => 'Controller',
   'DBAL' => '',
-  'Dashboard' => '',
-  'Database' => '',
-  'Database Abstraction Layer Demo' => '',
+  'Dashboard' => 'Übersicht',
+  'Database' => 'Datenbank',
+  'Database Abstraction Layer Demo' => 'Datenbankabstraktionsschicht (DBAL) Demo',
   'Engine MySQL' => '',
   'Engine SQLite' => '',
   'Events' => '',

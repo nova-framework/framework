@@ -24,7 +24,6 @@ class Connection extends BaseConnection
 {
     protected $defaultFetchType = 'array';
 
-    protected $queryCounter = 0;
 
     /**
      * Constructor
@@ -82,6 +81,28 @@ class Connection extends BaseConnection
         return $fetchMode;
     }
 
+    public static function getParamTypes(array $params)
+    {
+        $result = array();
+
+        foreach ($params as $key => $value) {
+            if (is_integer($value)) {
+                $result[$key] = PDO::PARAM_INT;
+            }
+            else if (is_bool($value)) {
+                $result[$key] = PDO::PARAM_BOOL;
+            }
+            else if($value === null) {
+                $result[$key] = PDO::PARAM_NULL;
+            }
+            else {
+                $result[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        return $result;
+    }
+
     public function select($query, array $params = array(), $paramTypes = array(), $fetchType = null, $fetchAll = false)
     {
         // What fetch type? Use default if no return type is given in the call.
@@ -93,16 +114,7 @@ class Connection extends BaseConnection
         $fetchMode = self::getFetchMode($fetchType, $className);
 
         // Prepare the parameter Types.
-        if(empty($paramTypes)) {
-            foreach ($params as $key => $value) {
-                if (is_integer($value)) {
-                    $paramTypes[$key] = PDO::PARAM_INT;
-                }
-                else {
-                    $paramTypes[$key] = PDO::PARAM_STR;
-                }
-            }
-        }
+        $paramTypes = ! empty($paramTypes) ? $paramTypes : self::getParamTypes($params);
 
         //
         $this->connect();

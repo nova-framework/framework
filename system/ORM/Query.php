@@ -25,8 +25,13 @@ class Query
 
     // Holding the query parts:
     private $where = array();
+
     private $limit = null;
     private $offset = null;
+
+    private $orderBy = null;
+    private $orderType = null;
+
 
     // Error stack
     private $lastException = null;
@@ -155,6 +160,46 @@ class Query
         return $this;
     }
 
+
+    /**
+     * Order by column value, Ascending or descending
+     * @param string $column Column name to order with.
+     * @param string $type Either ASC or DESC for the order type.
+     * @return Query $this The current query stack.
+     */
+    public function order($column, $type = 'ASC')
+    {
+        // First lets upper the type.
+        $type = strtoupper($type);
+
+        // Validate the column
+        if (isset($this->columnData[$column])) {
+            $this->orderBy = $column;
+            $this->orderType = $type;
+        }
+
+        return $this;
+    }
+
+
+
+
+    
+    public function all()
+    {
+
+    }
+
+    public function one()
+    {
+
+    }
+
+
+
+
+
+
     /**
      * Check if given operator is a valid operator.
      * @param string $operator
@@ -184,5 +229,15 @@ class Query
         }
 
         return !is_array($value);
+    }
+
+    /**
+     * Validate type of ordering columns
+     * @param string $type
+     * @return bool
+     */
+    private function validOrderType($type)
+    {
+        return strtolower($type) === 'asc' || strtolower($type) === 'desc';
     }
 }

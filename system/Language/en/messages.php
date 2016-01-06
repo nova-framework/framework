@@ -39,7 +39,7 @@ return array (
   'This input should have at least {min} characters' => '',
   'This input should have less than {max} characters' => '',
   'This input should not match the regular expression {pattern}' => '',
-  'This the email address does not belong to a valid domain' => '',
+  'The email address provided does not belong to a valid domain' => '',
   'queries' => '',
   'query' => '',
   '{label} can contain only letters' => '',

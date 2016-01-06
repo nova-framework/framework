@@ -214,19 +214,32 @@ class Query
     }
 
 
+    /**
+     * Execute Query and fetch all records as entities
+     *
+     * @return Entity[]|false Entities as successful result or false on not found.
+     * @throws \Exception|\Throwable
+     */
     public function all()
     {
         // Build query
         $this->buildQuery();
 
-        // Execute
-        $results = $this->executeFetch();
+        return $this->executeFetch();
     }
 
+    /**
+     * Execute Query and fetch a single record as entity. Will always be the first.
+     *
+     * @return Entity|false Entity as successful result or false on not found.
+     * @throws \Exception|\Throwable
+     */
     public function one()
     {
         // Build query
         $this->buildQuery();
+
+        return $this->executeFetch(false);
     }
 
 
@@ -236,11 +249,28 @@ class Query
      *
      * @param bool $all Fetch all records as array
      *
-     * @return array<Entity>|Entity
+     * @return Entity[]|Entity
      */
     private function executeFetch($all = true)
     {
-        return Manager::getConnection()->fetchClass($this->query, $this->whereBindValues, $this->whereBindTypes, $this->entityClass, $all);
+        /** @var Entity|Entity{} $object */
+        $object = Manager::getConnection()->fetchClass($this->query, $this->whereBindValues, $this->whereBindTypes, $this->entityClass, $all);
+
+        // If no result return false
+        if ($object === false || count($object) === 0) {
+            return false;
+        }
+
+        // Set the state for entities
+        if ($all) {
+            foreach ($object as $nr => $entity) { /** @var Entity $entity */
+                $entity->_state = 1;
+            }
+        }else{
+            $object->_state = 1;
+        }
+
+        return $object;
     }
 
     /**

@@ -11,6 +11,7 @@ namespace App\Core;
 
 use Nova\Core\Model;
 use Nova\DBAL\Connection;
+
 use Nova\Input\Filter as InputFilter;
 
 use PDO;
@@ -394,7 +395,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Get the parameter Types.
-            $paramTypes = self::getParamTypes($data);
+            $paramTypes = Connection::getParamTypes($data);
 
             // Execute the INSERT.
             $result = $this->db->insert($this->table(), $data, $paramTypes);
@@ -432,7 +433,7 @@ class BaseModel extends Model
         if ($data !== false) {
             $data = $this->prepareData($data);
 
-            $paramTypes = self::getParamTypes($data);
+            $paramTypes = Connection::getParamTypes($data);
 
             $result = $this->db->replace($this->table(), $data, $paramTypes);
 
@@ -473,7 +474,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Calculate the parameter Types.
-            $paramTypes = self::getParamTypes($data);
+            $paramTypes = Connection::getParamTypes($data);
 
             $paramTypes[$this->primaryKey] = is_integer($id) ? PDO::PARAM_INT : PDO::PARAM_STR;
 
@@ -601,7 +602,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Calculate the parameter Types.
-            $paramTypes = self::getParamTypes($data);
+            $paramTypes = Connection::getParamTypes($data);
 
             // Execute the UPDATE.
             $result = $this->db->update($this->table(), $data, $this->wheres(), $paramTypes);
@@ -640,7 +641,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Calculate the parameter Types.
-            $paramTypes = self::getParamTypes($data);
+            $paramTypes = Connection::getParamTypes($data);
 
             // Execute the UPDATE.
             $result = $this->db->update($this->table(), $data, array(1 => 1), $paramTypes);
@@ -767,7 +768,7 @@ class BaseModel extends Model
         $whereStr = $this->parseWheres($where, $bindParams);
 
         // Prepare the parameter Types.
-        $paramTypes = self::getParamTypes($bindParams);
+        $paramTypes = Connection::getParamTypes($bindParams);
 
         // Prepare the SQL Query.
         $sql = "DELETE FROM " .$this->table() ." $whereStr";
@@ -968,10 +969,7 @@ class BaseModel extends Model
             $bindParams['where_ignore'] = $ignore;
         }
 
-        // Prepare the parameter Types.
-        $paramTypes = self::getParamTypes($bindParams);
-
-        $data = $this->select($sql, $bindParams, $paramTypes, true);
+        $data = $this->select($sql, $bindParams, true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -1078,7 +1076,7 @@ class BaseModel extends Model
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
         // Prepare the parameter Types.
-        $paramTypes = self::getParamTypes($params);
+        $paramTypes = Connection::getParamTypes($params);
 
         $result = $this->db->select($sql, $params, $paramTypes, $this->tempReturnType, $fetchAll);
 
@@ -1483,28 +1481,6 @@ class BaseModel extends Model
         }
         else {
             $result = '';
-        }
-
-        return $result;
-    }
-
-    protected static function getParamTypes(array $params)
-    {
-        $result = array();
-
-        foreach ($params as $key => $value) {
-            if (is_integer($value)) {
-                $result[$key] = PDO::PARAM_INT;
-            }
-            else if (is_bool($value)) {
-                $result[$key] = PDO::PARAM_BOOL;
-            }
-            else if($value === null) {
-                $result[$key] = PDO::PARAM_NULL;
-            }
-            else {
-                $result[$key] = PDO::PARAM_STR;
-            }
         }
 
         return $result;

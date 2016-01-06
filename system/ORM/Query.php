@@ -139,6 +139,23 @@ class Query
     }
 
     /**
+     * Offset the results
+     *
+     * @param int $offset Give the number of offset applied to the results.
+     * @return Query $this The current query stack.
+     */
+    public function offset($offset)
+    {
+        if (! is_int($offset) || $offset < 0) {
+            $this->lastException = new \UnexpectedValueException("Offset value should be an positive integer!", 0, $this->lastException);
+            return $this;
+        }
+        $this->offset = intval($offset);
+
+        return $this;
+    }
+
+    /**
      * Check if given operator is a valid operator.
      * @param string $operator
      * @return bool

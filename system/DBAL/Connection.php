@@ -28,6 +28,11 @@ class Connection extends BaseConnection
 
     /**
      * Constructor
+     *
+     * @param array $params
+     * @param Driver $driver
+     * @param Configuration $config
+     * @param EventManager $eventManager
      */
     public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null)
     {
@@ -133,7 +138,20 @@ class Connection extends BaseConnection
         return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_OBJ);
     }
 
-    public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $className = null)
+    /**
+     * Fetch class
+     *
+     * @param string $statement
+     * @param array $params
+     * @param array $paramTypes
+     * @param null|string $className
+     * @param bool $fetchAll
+     *
+     * @return array|mixed
+     *
+     * @throws \Exception
+     */
+    public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $className = null, $fetchAll = false)
     {
         if (($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
             $className = ($className !== null) ? $className : $this->defaultFetchType;
@@ -142,10 +160,9 @@ class Connection extends BaseConnection
             throw new \Exception("No valid Entity Class is given");
         }
 
-        //
         $this->connect();
 
-        return $this->select($statement, $params, $paramTypes, $className);
+        return $this->select($statement, $params, $paramTypes, $className, $fetchAll);
     }
 
     /**

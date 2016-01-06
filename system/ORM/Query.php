@@ -9,6 +9,7 @@
 
 namespace Nova\ORM;
 
+use Nova\DBAL\Manager;
 use Nova\ORM\Annotation\Column;
 use PDO;
 
@@ -153,8 +154,6 @@ class Query
             }
             // Skip if not valid.
         }
-
-        var_dump($this->where);
         return $this;
     }
 
@@ -217,20 +216,38 @@ class Query
 
     public function all()
     {
+        // Build query
+        $this->buildQuery();
 
+        // Execute
+        $results = $this->executeFetch();
     }
 
     public function one()
     {
-
+        // Build query
+        $this->buildQuery();
     }
 
 
+    /**
+     * Execute Query and fetch Entity/Entities.
+     * This will postprocess the entities, and inject the state.
+     *
+     * @param bool $all Fetch all records as array
+     *
+     * @return array<Entity>|Entity
+     */
+    private function executeFetch($all = true)
+    {
+        return Manager::getConnection()->fetchClass($this->query, $this->whereBindValues, $this->whereBindTypes, $this->entityClass, $all);
+    }
 
-
-
-
-
+    /**
+     * Build Query.
+     *
+     * @throws \Exception|\Throwable
+     */
     private function buildQuery()
     {
         // Prepare with checking for exceptions, once there is, throw it!
@@ -241,10 +258,25 @@ class Query
         // Prepare the query
         $this->query = "SELECT * FROM " . Structure::getTable($this->entityClass)->getFullTableName();
 
-        $this->buildWhere();
 
-        // Doing the where clause
-        //$this->query .= " " . $this->whereClause;
+        $this->buildWhere();
+        // Add where to query
+        $this->query .= " WHERE " . $this->whereClause;
+
+
+        // Order by
+        if ($this->orderBy !== null) {
+            $this->query .= " ORDER BY $this->orderBy $this->orderType";
+        }
+
+        // Limit
+        if ($this->limit !== null) {
+            $this->query .= " LIMIT $this->limit";
+
+            if ($this->offset !== null) {
+                $this->query .= ",$this->offset";
+            }
+        }
     }
 
 

@@ -16,14 +16,14 @@ use Nova\ORM\Annotation\Column;
 use \PDO;
 
 /**
- * Class Entity, can be extended with your database entities
+ * Class Entity, can be extended with your database entities.
  *
  * @template <T> Entity generics, type of the entity itself.
  */
 abstract class Entity
 {
     /**
-     * Hold the state of the current Entity. Will be used to determinate if INSERT or UPDATE is needed
+     * Hold the state of the current Entity. Will be used to determinate if INSERT or UPDATE is needed.
      *
      *  0 - Unsaved
      *  1 - Fetched, already in database
@@ -38,7 +38,7 @@ abstract class Entity
     private $_id = null;
 
     /**
-     * Will be called each time a static call is made, to check if the entity is indexed
+     * Will be called each time a static call is made, to check if the entity is indexed.
      *
      * @param $method
      * @param $parameters
@@ -71,7 +71,7 @@ abstract class Entity
 
 
     /**
-     * Get Link instance
+     * Get Link instance.
      *
      * @return Connection
      */
@@ -82,7 +82,7 @@ abstract class Entity
 
 
     /**
-     * Query Builder for finding
+     * Query Builder for finding.
      *
      * @return QueryBuilder
      *
@@ -94,7 +94,7 @@ abstract class Entity
     }
 
     /**
-     * Get Entity properties as assoc array. useful for insert, update or just debugging.
+     * Get Entity properties as assoc array. Useful for insert, update or just debugging.
      *
      * @param bool $types Get types of columns. Default false.
      * @return array
@@ -116,7 +116,7 @@ abstract class Entity
     }
 
     /**
-     * Get Primary Key data array or type array
+     * Get Primary Key data array or type array.
      *
      * @param bool $types Get types of primary columns. Default false.
      * @return array
@@ -142,7 +142,8 @@ abstract class Entity
 
 
     /**
-     * Start a query
+     * Start a query.
+     *
      * @return Query
      */
     public static function query()
@@ -151,16 +152,16 @@ abstract class Entity
     }
 
     /**
-     * Find multiple entities by searching on the primary key values given
+     * Find multiple entities by searching on the primary key values given.
      *
-     * @param array $ids Array of primary key values possible to return
+     * @param array $ids Array of primary key values possible to return.
      * @return array<T>|Entity[]|false Array of entities or false on not found.
      * @throws \Exception Exceptions are thrown when errors occur.
      */
     public static function findMany($ids)
     {
         if (! is_array($ids)) {
-            throw new \UnexpectedValueException("IDs should be an array if primary key values!");
+            throw new \UnexpectedValueException("IDs should be an array of primary key values!");
         }
 
         $primaryKey = Structure::getTablePrimaryKey(static::class);
@@ -179,9 +180,9 @@ abstract class Entity
 
 
     /**
-     * Find entity by searching for the exact ID key. Or create Query and return query.
+     * Find entity by searching for the exact ID key. Or create query and return query.
      *
-     * @param string|int|null $id Primary key value, Ignore for query building.
+     * @param string|int|null $id Primary key value. Ignore for query building.
      * @return Entity|Query|false
      *
      * @throws \Exception
@@ -209,26 +210,25 @@ abstract class Entity
     /**
      * Find a single entity in database by searching for the given criteria.
      *
-     * This will make a query and execute it, return an unique entity with entities or false/Exception on error
+     * This will make a query and execute it, return an unique entity with entities or false/Exception on error.
      *
-     * @param array $criteria Array of key=>value where the key is the column name and the value is the required value
+     * @param array $criteria Array of key => value where the key is the column name and the value is the required value.
      * You could also use one of the custom comparators, like:
      *  - column => ['=' => value], column => ['<' => value], column => ['LIKE' => value] or column => ['>=' => value]
      *
-     * When using a single criteria you could use this parameter as the column and the other 2 parameters as operator and value
+     * When using a single criteria you could use this parameter as the column and the other 2 parameters as operator and value.
      *
-     *
-     * @param null|string $operator Operator to use when having a single criteria
+     * @param null|string $operator Operator to use when having a single criteria.
      * @param null|string $value Value (or multiple when using IN as a operator) to have a single criteria.
      *
-     * @return Entity|Entity<T> Single entity
+     * @return Entity|Entity<T> Single entity.
      * @throw \Exception Exceptions when having errors while preparing, fetching, connecting or parsing.
      */
     public static function findBy($criteria, $operator = null, $value = null)
     {
         if (! is_array($criteria) && ($operator == null && $value == null))
         {
-            throw new \UnexpectedValueException("Criteria should be an array! Or use the shorthand syntax");
+            throw new \UnexpectedValueException("Criteria should be an array! Or use the shorthand syntax.");
         }
 
         // Return result
@@ -236,9 +236,9 @@ abstract class Entity
     }
 
     /**
-     * Insert or update the entity in the database
+     * Insert or update the entity in the database.
      *
-     * @return int Affected rows
+     * @return int Affected rows.
      * @throws \Exception Throws exceptions on error.
      */
     public function save()
@@ -269,7 +269,7 @@ abstract class Entity
 
 
     /**
-     * Delete from database
+     * Delete from database.
      *
      * @return bool|int False if the current entity isn't saved, integer with affected rows when successfully deleted.
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException

@@ -47,12 +47,15 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Nova\ORM\Entity
      * @covers \Nova\ORM\Entity::find
+     * @covers \Nova\ORM\Entity::findMany
      * @throws \Exception
      */
     public function executeTestGetEntity()
     {
         $car = Car::find(1);
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
 
+        $car = Car::find(2);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $car);
     }
 
@@ -77,6 +80,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \Nova\ORM\Entity::save
      * @covers \Nova\ORM\Entity::find
      * @covers \Nova\ORM\Entity::findBy
+     * @covers \Nova\ORM\Entity::findMany
      * @throws \Exception
      */
     public function executeTestBasicFinding()

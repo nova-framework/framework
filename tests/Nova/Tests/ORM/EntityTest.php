@@ -122,6 +122,22 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($searched));
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched[0]);
         $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $searched[1]);
+
+
+
+        // Query
+        $query = Car::query();
+        $one = $query->where('carid', 1)->one();
+        $this->assertInstanceOf('\App\Modules\Demo\Models\Entities\Car', $one);
+
+        $query = Car::query();
+        $all = $query->where('carid', 'IN', array(1, 2))->limit(2)->order('make')->all();
+
+        $this->assertEquals(2, count($all));
+
+        // First one should be the BMW, second Tesla
+        $this->assertEquals("BMW", $all[0]->make);
+        $this->assertEquals("Tesla", $all[1]->make);
     }
 
     /**

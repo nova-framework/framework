@@ -390,7 +390,14 @@ class BaseModel extends Model
         if ($data !== false) {
             $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
 
-            $result = $this->db->insert($this->table(), $this->prepareData($data));
+            // Prepare the Data
+            $data = $this->prepareData($data);
+
+            // Get the parameter Types.
+            $paramTypes = self::getParamTypes($data);
+
+            // Execute the INSERT.
+            $result = $this->db->insert($this->table(), $data, $paramTypes);
 
             if($result !== false) {
                 $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
@@ -423,9 +430,11 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
+            $data = $this->prepareData($data);
+
             $paramTypes = self::getParamTypes($data);
 
-            $result = $this->db->replace($this->table(), $this->prepareData($data), $paramTypes);
+            $result = $this->db->replace($this->table(), $data, $paramTypes);
 
             if($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
@@ -460,7 +469,16 @@ class BaseModel extends Model
         if ($data !== false) {
             $data = $this->trigger('beforeUpdate', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
-            $result = $this->db->update($this->table(), $this->prepareData($data), array($this->primaryKey => $id));
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Calculate the parameter Types.
+            $paramTypes = self::getParamTypes($data);
+
+            $paramTypes[$this->primaryKey] = is_integer($id) ? PDO::PARAM_INT : PDO::PARAM_STR;
+
+            // Execute the UPDATE.
+            $result = $this->db->update($this->table(), $data, array($this->primaryKey => $id), $paramTypes);
 
             $result = $this->trigger('afterUpdate', array('id' => $id, 'method' => 'update', 'fields' => $data, 'result' => $result));
         }
@@ -513,29 +531,24 @@ class BaseModel extends Model
         //
         $this->db->connect();
 
-        // Prepare the SET command and parameter types.
-        $set = array();
+        // Prepare the SET command and parameter Types.
+        $setFields = array();
 
         $paramTypes = array();
 
-        foreach ($data as $columnName => $value) {
-            $set[] = $columnName .' = :' .$columnName;
+        foreach ($data as $field => $value) {
+            $setFields[] = $field .' = :' .$field;
 
-            if (is_integer($value)) {
-                $paramTypes[$columnName] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$columnName] = PDO::PARAM_STR;
-            }
+            $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
         // Prepare the parameters.
-        $params = array_merge($data, array('ids' => $ids));
+        $params['values'] = $ids;
 
-        $paramTypes['ids'] = Connection::PARAM_INT_ARRAY;
+        $paramTypes['values'] = Connection::PARAM_INT_ARRAY;
 
         // Prepare the SQL Statement.
-        $sql = "UPDATE " .$this->table() ." SET " . implode(', ', $set) ." WHERE " .$this->primaryKey ." IN (:ids)";
+        $sql = "UPDATE " .$this->table() ." SET " . implode(', ', $setFields) ." WHERE " .$this->primaryKey ." IN (:values)";
 
         $result = $this->db->executeUpdate($sql, $params, $paramTypes);
 
@@ -584,7 +597,14 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if (($data = $this->validate($data)) !== false) {
-            $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Calculate the parameter Types.
+            $paramTypes = self::getParamTypes($data);
+
+            // Execute the UPDATE.
+            $result = $this->db->update($this->table(), $data, $this->wheres(), $paramTypes);
 
             $this->trigger('afterUpdate', array('method' => 'updateBy', 'fields' => $data, 'result' => $result));
         }
@@ -616,7 +636,14 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            $result = $this->db->update($this->table(), $this->prepareData($data), true);
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Calculate the parameter Types.
+            $paramTypes = self::getParamTypes($data);
+
+            // Execute the UPDATE.
+            $result = $this->db->update($this->table(), $data, array(1 => 1), $paramTypes);
 
             $this->trigger('afterUpdate', array('method' => 'updateAll', 'fields' => $data, 'result' => $result));
         }
@@ -1461,13 +1488,19 @@ class BaseModel extends Model
         return $result;
     }
 
-    protected static function getParamTypes($params)
+    protected static function getParamTypes(array $params)
     {
-        $result[] = array();
+        $result = array();
 
         foreach ($params as $key => $value) {
             if (is_integer($value)) {
                 $result[$key] = PDO::PARAM_INT;
+            }
+            else if (is_bool($value)) {
+                $result[$key] = PDO::PARAM_BOOL;
+            }
+            else if($value === null) {
+                $result[$key] = PDO::PARAM_NULL;
             }
             else {
                 $result[$key] = PDO::PARAM_STR;

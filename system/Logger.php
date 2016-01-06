@@ -73,7 +73,7 @@ class Logger
         if (self::$display) {
             echo '<pre>'.self::$error.'</pre>';
         } else {
-            echo "<p>An error occured. The error has been reported.</p>";
+            echo "<p>An error occurred. The error has been reported.</p>";
             exit;
         }
 

@@ -80,6 +80,14 @@ class ClassicModel extends BaseController
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
+        $query = $this->model->buildQuery('select')
+            ->where('id', array(1, 3))
+            ->fetchAll();
+
+        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'id\', array(1, 3))->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
         $query = $this->model->asArray()->buildQuery('select')
             ->orderBy('id DESC')
             ->fetchAll();

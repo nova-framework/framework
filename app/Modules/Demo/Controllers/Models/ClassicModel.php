@@ -36,6 +36,8 @@ class ClassicModel extends BaseController
 
     protected function beforeFlight()
     {
+        $this->set('useClassicDb', true);
+
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }

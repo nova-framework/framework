@@ -72,6 +72,14 @@ class ClassicModel extends BaseController
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
+        $query = $this->model->buildQuery('select')
+            ->where('username != :username', array(':username' => 'admin'))
+            ->fetchAll();
+
+        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'username != :username\', array(\':username\' => \'admin\'))->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
         $query = $this->model->asArray()->buildQuery('select')
             ->orderBy('id DESC')
             ->fetchAll();

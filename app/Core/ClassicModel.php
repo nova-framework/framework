@@ -205,7 +205,7 @@ class ClassicModel
     // QueryBuilder Methods
     //--------------------------------------------------------------------
 
-    public function builder($method = null, $primaryKey = null)
+    public function queryBuilder($method = null, $primaryKey = null)
     {
         // Get the complete Table name.
         $table = $this->table();

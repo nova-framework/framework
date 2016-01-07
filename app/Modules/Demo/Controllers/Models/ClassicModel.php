@@ -56,23 +56,23 @@ class ClassicModel extends BaseController
         $message = '<h3>'.__d('demo', 'Integrated QueryBuilder').'</h3><br>';
 
         //
-        $query = $this->model->asArray()->builder('select')
+        $query = $this->model->asArray()->queryBuilder('select')
             ->where('username != ?', 'admin')
             ->orderBy('id DESC')
             ->limit(2)
             ->fetchAll();
 
-        $message .= '<b>$this->model->asArray()->builder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<b>$this->model->asArray()->queryBuilder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $query = $this->model->builder('select')
+        $query = $this->model->queryBuilder('select')
             ->where('username != ?', 'admin')
             ->orderBy('id DESC')
             ->limit(2)
             ->fetchAll();
 
-        $message .= '<b>$this->model->builder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<b>$this->model->queryBuilder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //

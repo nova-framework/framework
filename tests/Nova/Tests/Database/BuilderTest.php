@@ -26,7 +26,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimpleTable()
     {
-        $builder = new Builder(null, true);
+        $builder = new TableBuilder(null, true);
 
         $builder->setName('testtable');
         $builder->addField('name', 'varchar(255)', false);

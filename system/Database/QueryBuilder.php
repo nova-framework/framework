@@ -16,7 +16,7 @@ use \FluentStructure;
 use \PDO;
 
 
-class QueryBuilder extends FluentPDO;
+class QueryBuilder extends FluentPDO
 {
 
     function __construct(Connection $connection, FluentStructure $structure = null)

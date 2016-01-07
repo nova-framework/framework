@@ -55,6 +55,16 @@ class ClassicModel extends BaseController
         $message = '';
 
         //
+        $query = $this->model->fluent()
+            ->where('username != ?', 'admin')
+            ->orderBy('id DESC')
+            ->limit(5)
+            ->fetchAll();
+
+        $message .= '<b>$this->model->fluent()->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(5)->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
         $result = $this->model->countBy('username !=', 'admin');
 
         $message .= '<b>$this->model->countBy(\'username !=\', \'admin\');</b>';

@@ -200,6 +200,36 @@ class ClassicModel
     }
 
     //--------------------------------------------------------------------
+    // QueryBuilder Methods
+    //--------------------------------------------------------------------
+
+    public function fluent($method = 'select')
+    {
+        // Get the complete Table name.
+        $table = $this->table();
+
+        // Get a QueryBuilder instance;
+        $queryBuilder = $this->db->getQueryBuilder();
+
+        // Switch the methods.
+        if ($method == 'select') {
+            return $queryBuilder->from($table);
+        }
+        else if ($method == 'insert') {
+            return $queryBuilder->insertTo($table);
+        }
+        else if ($method == 'update') {
+            return $queryBuilder->update($table);
+        }
+        else if ($method == 'delete') {
+            return $queryBuilder->deleteFrom($table);
+        }
+
+        // No method? Return directly the QueryBuilder instance.
+        return $queryBuilder;
+    }
+
+    //--------------------------------------------------------------------
     // CRUD Methods
     //--------------------------------------------------------------------
 

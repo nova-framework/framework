@@ -237,6 +237,38 @@ abstract class Connection extends PDO
     }
 
     /**
+     * Fetch array
+     *
+     * @param string $statement
+     * @param array $params
+     * @param array $paramTypes
+     *
+     * @return array|mixed
+     *
+     * @throws \Exception
+     */
+    public function fetchArray($statement, array $params = array(), array $paramTypes = array())
+    {
+        return $this->select($statement, $params, false, 'array', $paramTypes);
+    }
+
+    /**
+     * Fetch object
+     *
+     * @param string $statement
+     * @param array $params
+     * @param array $paramTypes
+     *
+     * @return array|mixed
+     *
+     * @throws \Exception
+     */
+    public function fetchObject($statement, array $params = array(), array $paramTypes = array())
+    {
+        return $this->select($statement, $params, false, 'object', $paramTypes);
+    }
+
+    /**
      * Fetch class
      *
      * @param string $statement
@@ -259,6 +291,20 @@ abstract class Connection extends PDO
         }
 
         return $this->select($statement, $params, $fetchAll, $returnType, $paramTypes);
+    }
+
+    /**
+     * Prepares and executes an SQL query and returns the result as an associative array.
+     *
+     * @param string $sql    The SQL query.
+     * @param array  $params The query parameters.
+     * @param array  $types  The query parameter types.
+     *
+     * @return array
+     */
+    public function fetchAll($sql, array $params = array(), $paramTypes = array(), $returnType = null)
+    {
+        return $this->select($sql, $params, true, $returnType, $paramTypes);
     }
 
     /**

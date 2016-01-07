@@ -237,6 +237,38 @@ abstract class Connection extends PDO
     }
 
     /**
+     * Fetch array
+     *
+     * @param string $statement
+     * @param array $params
+     * @param array $paramTypes
+     *
+     * @return array|mixed
+     *
+     * @throws \Exception
+     */
+    public function fetchArray($statement, array $params = array(), array $paramTypes = array())
+    {
+        return $this->select($statement, $params, false, 'array', $paramTypes);
+    }
+
+    /**
+     * Fetch object
+     *
+     * @param string $statement
+     * @param array $params
+     * @param array $paramTypes
+     *
+     * @return array|mixed
+     *
+     * @throws \Exception
+     */
+    public function fetchObject($statement, array $params = array(), array $paramTypes = array())
+    {
+        return $this->select($statement, $params, false, 'object', $paramTypes);
+    }
+
+    /**
      * Fetch class
      *
      * @param string $statement

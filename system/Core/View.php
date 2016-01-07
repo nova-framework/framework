@@ -43,7 +43,7 @@ class View
         }
 
         if (! is_array($param)) {
-            throw new \UnexpectedValueException('Parameter should be an Array');
+            throw new \UnexpectedValueException(__d('system', 'Parameter should be an Array'));
         }
 
         $this->json = true;
@@ -54,7 +54,7 @@ class View
     {
         if (strpos($method, 'with') !== 0)
         {
-            throw new \BadMethodCallException('Invalid method called: View::'.$method);
+            throw new \BadMethodCallException(__d('system', 'Invalid method called: View::{0}', $method));
         }
 
         $varname = Inflector::tableize(substr($method, 4));
@@ -73,7 +73,7 @@ class View
         $filePath = self::viewPath($view);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
         return new View($filePath);
@@ -90,7 +90,7 @@ class View
         $filePath = self::layoutPath($layout);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
         Response::addHeader('Content-Type: text/html; charset=UTF-8');
@@ -109,7 +109,7 @@ class View
         $filePath = self::fragmentPath($fragment, $fromTemplate);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
         return new View($filePath);
@@ -123,7 +123,7 @@ class View
     public static function json($data)
     {
         if (! is_array($data)) {
-            throw new \UnexpectedValueException('Unexpected parameter');
+            throw new \UnexpectedValueException(__d('system', 'Unexpected parameter'));
         }
 
         Response::addHeader('Content-Type: application/json');
@@ -198,7 +198,7 @@ class View
         }
         else {
             if (! is_array($data)) {
-                throw new \UnexpectedValueException('Unexpected parameter');
+                throw new \UnexpectedValueException(__d('system', 'Unexpected parameter'));
             }
 
             $this->data = array_merge($this->data, $data);
@@ -215,7 +215,7 @@ class View
             return $this->with('content', $view->fetch());
         }
 
-        throw new \UnexpectedValueException('Unknown parameter');
+        throw new \UnexpectedValueException(__d('system', 'Unknown parameter'));
     }
 
     private static function viewPath($path)
@@ -306,7 +306,7 @@ class View
         $filePath = $basePath.str_replace('/', DS, $path).".php";
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
         if(is_array($data)) {
@@ -363,13 +363,13 @@ class View
             $basePath = $instance->viewsPath();
         }
         else {
-            throw new \UnexpectedValueException('Invalid Module requested: '.$module);
+            throw new \UnexpectedValueException(__d('system', 'Invalid Module requested: {0}', $module));
         }
 
         $filePath = $basePath.str_replace('/', DS, $path).".php";
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
         if(is_array($data)) {
@@ -418,7 +418,7 @@ class View
         $filePath = self::layoutPath($layout, $custom);
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
         if(is_array($data)) {
@@ -460,7 +460,7 @@ class View
         $filePath = $basePath.str_replace('/', DS, $path).".php";
 
         if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException('File not found: '.$filePath);
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
         if(is_array($data)) {

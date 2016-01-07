@@ -1,11 +1,11 @@
 <?php
 
 return array (
-  'Base Model' => 'Basis Model',
-  'Base Model Demo' => 'Basis Model Demo',
+  'Classic BaseModel' => '',
   'Classic Controller' => 'klassischer Controller',
   'Controllers' => 'Controller',
   'DBAL' => '',
+  'DBAL BaseModel' => '',
   'Dashboard' => 'Übersicht',
   'Database' => 'Datenbank',
   'Database Abstraction Layer Demo' => 'Datenbankabstraktionsschicht (DBAL) Demo',
@@ -19,6 +19,7 @@ Dieser Inhalt kann in <code>{0}</code> geändert werden.',
 This content can be changed in <code>{0}</code>' => 'Hallo und Willkommen im welcome-Controller! <br />
 Dieser Inhalt kann in <code>{0}</code> geändert werden.',
   'Home' => 'Home',
+  'Models' => '',
   'MySQL Export' => '',
   'Open subpage' => 'Subpage öffnen',
   'Service MySQL' => '',

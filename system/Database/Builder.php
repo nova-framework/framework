@@ -10,7 +10,7 @@
 
 namespace Nova\Database;
 
-use Nova\Database\Engine;
+use Nova\Database\Connection;
 use Nova\Database\Manager;
 use \PDO;
 
@@ -123,7 +123,7 @@ class Builder
     {
         // If database is not given, create new database instance.
         // database is in the same namespace, we don't need to specify namespace
-        $this->db = !$db ? Manager::getEngine() : $db;
+        $this->db = ($db === null) ? Manager::getConnection() : $db;
 
         if ($id === true) {
             $this->addField('id', 'INT(11)', false, self::AUTO_INCREMENT);

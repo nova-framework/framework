@@ -1,11 +1,11 @@
 <?php
 
 return array (
-  'Base Model' => '',
-  'Base Model Demo' => '',
+  'Classic BaseModel' => '',
   'Classic Controller' => '',
   'Controllers' => '',
   'DBAL' => '',
+  'DBAL BaseModel' => '',
   'Dashboard' => '',
   'Database' => '',
   'Database Abstraction Layer Demo' => '',
@@ -19,6 +19,7 @@ Tento obsah lze změnit v <code>{0}</code>',
 This content can be changed in <code>{0}</code>' => 'Dobrý den, vítá Vás úvodní kontroler! <br/>
 Tento obsah lze změnit v <code>{0}</code>',
   'Home' => 'Domů',
+  'Models' => '',
   'MySQL Export' => '',
   'Open subpage' => 'Otevřít podstránku',
   'Service MySQL' => '',

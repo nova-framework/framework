@@ -7,19 +7,18 @@
  * @date December 17th, 2015
  */
 
-namespace App\Modules\Demo\Controllers;
+namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
-use App\Core\BaseModel;
 use App\Modules\Demo\Core\BaseController;
 
-use App\Modules\Demo\Models\Members as MembersModel;
+use App\Modules\Demo\Models\ClassicMembers as MembersModel;
 
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class Models extends BaseController
+class ClassicModel extends BaseController
 {
     private $model;
 
@@ -146,7 +145,7 @@ class Models extends BaseController
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         // Setup the View variables.
-        $this->title(__d('demo', 'Base Model Demo'));
+        $this->title(__d('demo', 'Classic BaseModel'));
 
         $this->set('message', $message);
     }

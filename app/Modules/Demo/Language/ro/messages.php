@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'CRUD Support' => '',
   'Classic BaseModel' => '',
   'Classic Controller' => '',
   'Controllers' => '',
@@ -19,6 +20,7 @@ Acest conținut poate fi modificat în <code>{0}</code>',
 This content can be changed in <code>{0}</code>' => 'Bună, bun venit la controlerul <code>welcome</code>! <br/>
 Acest conținut poate fi modificat în <code>{0}</code>',
   'Home' => 'Acasă',
+  'Integrated QueryBuilder' => '',
   'Models' => '',
   'MySQL Export' => '',
   'Open subpage' => 'Deschide subpagina',

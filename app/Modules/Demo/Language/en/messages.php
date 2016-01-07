@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'CRUD Support' => '',
   'Classic BaseModel' => '',
   'Classic Controller' => '',
   'Controllers' => '',
@@ -17,6 +18,7 @@ This content can be changed in <code>{0}</code>' => '',
   'Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>' => '',
   'Home' => '',
+  'Integrated QueryBuilder' => '',
   'Models' => '',
   'MySQL Export' => '',
   'Open subpage' => '',

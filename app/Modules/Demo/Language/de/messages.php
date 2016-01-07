@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'CRUD Support' => '',
   'Classic BaseModel' => 'klassisches Basis Model',
   'Classic Controller' => 'klassischer Controller',
   'Controllers' => 'Controller',
@@ -19,6 +20,7 @@ Dieser Inhalt kann in <code>{0}</code> geändert werden.',
 This content can be changed in <code>{0}</code>' => 'Hallo und Willkommen im welcome-Controller! <br />
 Dieser Inhalt kann in <code>{0}</code> geändert werden.',
   'Home' => 'Home',
+  'Integrated QueryBuilder' => '',
   'Models' => 'Models',
   'MySQL Export' => 'MySQL Export',
   'Open subpage' => 'Subpage öffnen',

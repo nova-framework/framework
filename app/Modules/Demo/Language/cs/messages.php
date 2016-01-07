@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'CRUD Support' => '',
   'Classic BaseModel' => '',
   'Classic Controller' => '',
   'Controllers' => '',
@@ -19,6 +20,7 @@ Tento obsah lze změnit v <code>{0}</code>',
 This content can be changed in <code>{0}</code>' => 'Dobrý den, vítá Vás úvodní kontroler! <br/>
 Tento obsah lze změnit v <code>{0}</code>',
   'Home' => 'Domů',
+  'Integrated QueryBuilder' => '',
   'Models' => '',
   'MySQL Export' => '',
   'Open subpage' => 'Otevřít podstránku',

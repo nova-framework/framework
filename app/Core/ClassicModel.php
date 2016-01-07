@@ -12,6 +12,8 @@ namespace App\Core;
 use Nova\Database\Manager as Database;
 use Nova\Input\Filter as InputFilter;
 
+use \FluentStructure;
+use \PDO;
 
 class ClassicModel
 {
@@ -203,26 +205,30 @@ class ClassicModel
     // QueryBuilder Methods
     //--------------------------------------------------------------------
 
-    public function fluent($method = 'select')
+    public function fluent($method = 'select', $primaryKey = null)
     {
         // Get the complete Table name.
         $table = $this->table();
 
-        // Get a QueryBuilder instance;
-        $queryBuilder = $this->db->getQueryBuilder();
+        // Get a QueryBuilder instance.
+        $structure = new FluentStructure($this->primaryKey);
+
+        $queryBuilder = $this->db->getQueryBuilder($structure);
 
         // Switch the methods.
         if ($method == 'select') {
-            return $queryBuilder->from($table);
+            return $queryBuilder->from($table, $primaryKey = null);
         }
         else if ($method == 'insert') {
-            return $queryBuilder->insertTo($table);
+            $values = is_array($primaryKey) ? $primaryKey : array();
+
+            return $queryBuilder->insertTo($table, $values);
         }
         else if ($method == 'update') {
-            return $queryBuilder->update($table);
+            return $queryBuilder->update($table, $primaryKey = null);
         }
         else if ($method == 'delete') {
-            return $queryBuilder->deleteFrom($table);
+            return $queryBuilder->delete($table, $primaryKey = null);
         }
 
         // No method? Return directly the QueryBuilder instance.

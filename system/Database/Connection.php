@@ -13,6 +13,7 @@ namespace Nova\Database;
 use Nova\Database\Manager;
 use Nova\Database\QueryBuilder;
 
+use \FluentStructure;
 use \PDO;
 
 
@@ -108,9 +109,9 @@ abstract class Connection extends PDO
         return $this;
     }
 
-    public function getQueryBuilder()
+    public function getQueryBuilder(FluentStructure $structure = null)
     {
-        return new QueryBuilder($this);
+        return new QueryBuilder($this, $structure);
     }
 
     public static function getFetchMethod($returnType, &$fetchClass = null) {

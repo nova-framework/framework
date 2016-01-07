@@ -205,7 +205,7 @@ class ClassicModel
     // QueryBuilder Methods
     //--------------------------------------------------------------------
 
-    public function fluent($method = 'select', $primaryKey = null)
+    public function builder($method = null, $primaryKey = null)
     {
         // Get the complete Table name.
         $table = $this->table();
@@ -217,7 +217,36 @@ class ClassicModel
 
         // Switch the methods.
         if ($method == 'select') {
-            return $queryBuilder->from($table, $primaryKey = null);
+            $query = $queryBuilder->from($table, $primaryKey);
+
+            // Setup the fetch Method.
+            if ($this->tempReturnType == 'array') {
+                $query->asObject(false);
+            }
+            else if($this->tempReturnType == 'object') {
+                $query->asObject();
+            }
+            else  {
+                // Check and setup the className.
+                $className = $this->tempReturnType;
+
+                $classPath = str_replace('\\', '/', ltrim($className, '\\'));
+
+                if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                    throw new \Exception("No valid Entity Name is given: " .$className);
+                }
+
+                if(! class_exists($className)) {
+                    throw new \Exception("No valid Entity Class is given: " .$className);
+                }
+
+                $query->asObject($className);
+            }
+
+            // Make sure our temp return type is correct.
+            $this->tempReturnType = $this->returnType;
+
+            return $query;
         }
         else if ($method == 'insert') {
             $values = is_array($primaryKey) ? $primaryKey : array();
@@ -225,10 +254,10 @@ class ClassicModel
             return $queryBuilder->insertTo($table, $values);
         }
         else if ($method == 'update') {
-            return $queryBuilder->update($table, $primaryKey = null);
+            return $queryBuilder->update($table, $primaryKey);
         }
         else if ($method == 'delete') {
-            return $queryBuilder->delete($table, $primaryKey = null);
+            return $queryBuilder->delete($table, $primaryKey);
         }
 
         // No method? Return directly the QueryBuilder instance.

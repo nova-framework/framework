@@ -54,7 +54,7 @@ class Manager
         $manager = self::getInstance();
 
         if(empty($name)) {
-            throw new \UnexpectedValueException('The Event Name can not be empty');
+            throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
         $manager->attach($name, $callback, $priority);
@@ -81,7 +81,7 @@ class Manager
         $manager = self::getInstance();
 
         if(empty($where)) {
-            throw new \UnexpectedValueException('The Hook Name can not be empty');
+            throw new \UnexpectedValueException(__d('system', 'The Hook Name can not be empty'));
         }
 
         $name = self::$hookPath .$where;
@@ -109,7 +109,7 @@ class Manager
         $manager = self::getInstance();
 
         if (empty($where)) {
-            throw new \UnexpectedValueException('The Hook Name can not be empty');
+            throw new \UnexpectedValueException(__d('system', 'The Hook Name can not be empty'));
         }
 
         // Prepare the parameters.
@@ -145,7 +145,7 @@ class Manager
         $manager = self::getInstance();
 
         if(empty($name)) {
-            throw new \UnexpectedValueException('The Event Name can not be empty');
+            throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
         if(! $manager->exists($name)) {
@@ -163,20 +163,20 @@ class Manager
             }
             else if(is_string($result)) {
                 if(! is_string($data) && ! is_integer($data)) {
-                    throw new \UnexpectedValueException('Unsupported Data type while the Result is String');
+                    throw new \UnexpectedValueException(__d('system', 'Unsupported Data type while the Result is String'));
                 }
 
                 $result .= $data;
             }
             else if(is_bool($result)) {
                 if(! is_bool($data)) {
-                    throw new \UnexpectedValueException('Unsupported Data type while the Result is Boolean');
+                    throw new \UnexpectedValueException(__d('system', 'Unsupported Data type while the Result is Boolean'));
                 }
 
                 $result = $result ? $data : false;
             }
             else if(! is_null($result)) {
-                throw new \UnexpectedValueException('Unsupported Result type');
+                throw new \UnexpectedValueException(__d('system', 'Unsupported Result type'));
             }
         });
     }
@@ -219,7 +219,7 @@ class Manager
     public function attach($name, $callback, $priority = 0)
     {
         if(empty($name)) {
-            throw new \UnexpectedValueException('The Event Name can not be empty');
+            throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
         if(! array_key_exists($name, $this->events)) {
@@ -274,7 +274,7 @@ class Manager
     public function trigger($name, $params = array(), $callback = null)
     {
         if(empty($name)) {
-            throw new \UnexpectedValueException('The Event Name can not be empty');
+            throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
         // Create a new Event.
@@ -346,7 +346,7 @@ class Manager
 
         // Check first if the Class exists.
         if (!class_exists($className)) {
-            throw new \Exception("Class not found: $className");
+            throw new \Exception(__d('system', 'Class not found: {0}', $className));
         }
 
         // Initialize the Class.
@@ -354,7 +354,7 @@ class Manager
 
         // The called Method should be defined in the called Class, not in one of its parents.
         if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($object)))) {
-            throw new \Exception("Method not found: $className@$method");
+            throw new \Exception(__d('system', 'Method not found: {0}@{1}', $className, $method));
         }
 
         if($object instanceof Controller) {
@@ -374,7 +374,7 @@ class Manager
             return call_user_func($callback, $param);
         }
 
-        throw new \UnexpectedValueException('Unsupported Callback type');
+        throw new \UnexpectedValueException(__d('system', 'Unsupported Callback type'));
     }
 
     protected function sortListeners()

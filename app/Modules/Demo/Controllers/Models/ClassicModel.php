@@ -36,6 +36,8 @@ class ClassicModel extends BaseController
 
     protected function beforeFlight()
     {
+        $this->set('useClassicDb', true);
+
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
@@ -77,6 +79,14 @@ class ClassicModel extends BaseController
             ->fetchAll();
 
         $message .= '<b>$this->model->buildQuery(\'select\')->where(\'username != :username\', array(\':username\' => \'admin\'))->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery('select')
+            ->where('id', array(1, 3))
+            ->fetchAll();
+
+        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'id\', array(1, 3))->fetchAll();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //

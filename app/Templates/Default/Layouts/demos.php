@@ -124,9 +124,14 @@ $current_url = site_url($current_uri);
             </div>
             <div class="col-lg-8">
                 <p class="text-muted pull-right">
-                    <?php if(ENVIRONMENT == 'development') { ?>
-                    <small><?= Profiler::report(); ?></small>
-                    <?php } ?>
+                    <?php
+                    if(ENVIRONMENT == 'development') {
+                        $useClassicDb = isset($useClassicDb) ? $useClassicDb : false;
+                    ?>
+                    <small><?= Profiler::report($useClassicDb); ?></small>
+                    <?php
+                    }
+                    ?>
                 </p>
             </div>
         </div>

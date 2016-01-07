@@ -243,34 +243,35 @@ class ClassicModel
                 $classPath = str_replace('\\', '/', ltrim($className, '\\'));
 
                 if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                    throw new \Exception("No valid Entity Name is given: " .$className);
+                    throw new \Exception(__('No valid Entity Name is given: {0}', $className));
                 }
 
                 if(! class_exists($className)) {
-                    throw new \Exception("No valid Entity Class is given: " .$className);
+                    throw new \Exception(__('No valid Entity Class is given: {0}', $className));
                 }
 
                 $query->asObject($className);
             }
-
-            // Make sure our temp return type is correct.
-            $this->tempReturnType = $this->returnType;
-
-            return $query;
         }
         else if ($method == 'insert') {
             $values = is_array($primaryKey) ? $primaryKey : array();
 
-            return $queryBuilder->insertInto($table, $values);
+            $query = $queryBuilder->insertInto($table, $values);
         }
         else if ($method == 'update') {
-            return $queryBuilder->update($table, $primaryKey);
+            $query = $queryBuilder->update($table, $primaryKey);
         }
         else if ($method == 'delete') {
-            return $queryBuilder->delete($table, $primaryKey);
+            $query = $queryBuilder->delete($table, $primaryKey);
+        }
+        else {
+            throw new \Exception(__('No valid Query building Method given'));
         }
 
-        throw new \Exception("No valid Building Method given");
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
+
+        return $query;
     }
 
     //--------------------------------------------------------------------
@@ -301,7 +302,7 @@ class ClassicModel
     public function find($id)
     {
         if(! is_integer($id)) {
-            throw new \UnexpectedValueException('Parameter should be an Integer');
+            throw new \UnexpectedValueException(__('Parameter should be an Integer'));
         }
 
         //
@@ -369,7 +370,7 @@ class ClassicModel
     public function findMany($values)
     {
         if (! is_array($values)) {
-            throw new \UnexpectedValueException('Parameter should be an Array');
+            throw new \UnexpectedValueException(__('Parameter should be an Array'));
         }
 
         // Prepare the ORDER details.
@@ -689,7 +690,7 @@ class ClassicModel
         $data = array_pop($params);
 
         if (empty($params) || empty($data)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         // Prepare the WHERE parameters.
@@ -798,7 +799,7 @@ class ClassicModel
     public function delete($id)
     {
         if (! is_integer($id)) {
-            throw new \UnexpectedValueException('Parameter should be an Integer');
+            throw new \UnexpectedValueException(__('Parameter should be an Integer'));
         }
 
         $where = array($this->primaryKey => $id);
@@ -818,7 +819,7 @@ class ClassicModel
         $params = func_get_args();
 
         if (empty($params)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         // Prepare the WHERE parameters.
@@ -898,7 +899,7 @@ class ClassicModel
     public function where($field, $value = '')
     {
         if (empty($field)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->tempWheres[$field] = $value;
@@ -909,7 +910,7 @@ class ClassicModel
     public function limit($limit, $start = 0)
     {
         if (! is_integer($limit) || ! is_integer($start)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->tempSelectLimit = array($start => $limit);
@@ -927,7 +928,7 @@ class ClassicModel
         $sense = strtoupper($sense);
 
         if (empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->tempSelectOrder = array($field => $sense);
@@ -952,7 +953,7 @@ class ClassicModel
         $params = func_get_args();
 
         if (empty($params)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->setWhere($params);
@@ -1052,7 +1053,7 @@ class ClassicModel
     public function protect($field)
     {
         if (empty($field)) {
-            throw new \UnexpectedValueException('Invalid parameter');
+            throw new \UnexpectedValueException(__('Invalid parameter'));
         }
 
         $this->protectedFields[] = $field;
@@ -1096,7 +1097,7 @@ class ClassicModel
         }
 
         if (empty($this->fields)) {
-            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
+            throw new \UnexpectedValueException(__('Cannot initialize the Table Fields'));
         }
 
         return $this->fields;
@@ -1397,7 +1398,7 @@ class ClassicModel
     protected function setWhere($params)
     {
         if (empty($params)) {
-            throw new \UnexpectedValueException('Parameters can not be empty');
+            throw new \UnexpectedValueException(__('Parameter should be a not empty Array'));
         }
 
         if (is_array($params[0])) {

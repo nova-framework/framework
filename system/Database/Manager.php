@@ -38,7 +38,7 @@ abstract class Manager
         $config = Config::get('database');
 
         if (!isset($config[$linkName])) {
-            throw new \Exception("Connection name '".$linkName."' is not defined in your configuration!");
+            throw new \Exception(__d('system', 'Connection name \'{0}\' is not defined in your configuration!', $linkName));
         }
 
         $options = $config[$linkName];
@@ -50,7 +50,7 @@ abstract class Manager
             $driver = constant("static::DRIVER_" .str_replace('PDO_', '', $driverName));
         }
         else {
-            throw new \Exception("Driver not found, check your config.php");
+            throw new \Exception(__d('system', 'Driver not found, check your config.php'));
         }
 
         // Engine, when already have an instance, return it!
@@ -62,14 +62,14 @@ abstract class Manager
         $className = '\Nova\Database\Driver\\' . $driver;
 
         if (! class_exists($className)) {
-            throw new \Exception("Class not found: ".$className);
+            throw new \Exception(__d('system', 'Class not found: {0}', $className));
         }
 
         $connection = new $className($options['config']);
 
         // If no success
         if (! $connection instanceof Connection) {
-            throw new \Exception("Driver creation failed! Check your extended logs for errors.");
+            throw new \Exception(__d('system', 'Driver creation failed! Check your extended logs for errors.'));
         }
 
         // Save instance

@@ -10,15 +10,18 @@
 namespace Nova\Helpers;
 
 
-use Nova\DBAL\Manager as Database;
-use Nova\DBAL\Connection;
+use Nova\Database\Manager as ClassicDatabase;
+use Nova\Database\Connection as ClassicConnection;
+
+use Nova\DBAL\Manager as DoctrineDatabase;
+use Nova\DBAL\Connection as DoctrineConnection;
 
 use Nova\Config;
 
 class Profiler
 {
 
-    public static function report()
+    public static function report($useClassicDb = false)
     {
         $options = Config::get('profiler');
 
@@ -30,7 +33,12 @@ class Profiler
         $memory_usage = Number::humanSize(memory_get_usage());
 
         if($options['with_queries'] == true) {
-            $connection = Database::getConnection();
+            if($useClassicDb) {
+                $connection = ClassicDatabase::getConnection();
+            }
+            else {
+                $connection = DoctrineDatabase::getConnection();
+            }
 
             $total_queries = $connection->getTotalQueries();
 

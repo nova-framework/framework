@@ -68,11 +68,11 @@ class Connection extends BaseConnection
             $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$fetchType);
+                throw new \Exception(__d('system', 'No valid Entity Name is given: {0}', $fetchType));
             }
 
             if(! class_exists($fetchType)) {
-                throw new \Exception("No valid Entity Class is given: " .$fetchType);
+                throw new \Exception(__d('system', 'No valid Entity Class is given: {0}', $fetchType));
             }
 
             $fetchClass = $fetchType;
@@ -169,7 +169,7 @@ class Connection extends BaseConnection
             $className = ($className !== null) ? $className : $this->defaultFetchType;
         }
         else if($className === null) {
-            throw new \Exception("No valid Entity Class is given");
+            throw new \Exception(__d('system', 'No valid Entity Class is given'));
         }
 
         $this->connect();

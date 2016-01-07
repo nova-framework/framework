@@ -42,7 +42,7 @@ abstract class Connection extends PDO
     public function __construct($dsn, $config = array(), $options = array()) {
         // Check for valid Config.
         if (! is_array($config) || ! is_array($options)) {
-            throw new \UnexpectedValueException('Config and Options parameters should be Arrays');
+            throw new \UnexpectedValueException(__d('system', 'Config and Options parameters should be Arrays'));
         }
 
         // Will set the default method when provided in the config.
@@ -131,11 +131,11 @@ abstract class Connection extends PDO
             $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
 
             if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$returnType);
+                throw new \Exception(__d('system', 'No valid Entity Name is given: {0}', $returnType));
             }
 
             if(! class_exists($fetchType)) {
-                throw new \Exception("No valid Entity Class is given: " .$returnType);
+                throw new \Exception(__d('system', 'No valid Entity Class is given: {0}', $returnType));
             }
 
             $fetchClass = $returnType;
@@ -306,7 +306,7 @@ abstract class Connection extends PDO
         $insertId = 0;
 
         if(($mode != 'insert') && ($mode != 'replace')) {
-            throw new \Exception("Insert Mode must be 'insert' or 'replace'");
+            throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
         }
         else {
             $mode = strtoupper($mode);
@@ -314,7 +314,7 @@ abstract class Connection extends PDO
 
         // Check for valid data.
         if (! is_array($data)) {
-            throw new \Exception("Data to insert must be an array of column -> value.");
+            throw new \Exception(__d('system', 'Data to insert must be an array of column -> value.'));
         }
 
         // Transaction?
@@ -390,7 +390,7 @@ abstract class Connection extends PDO
     {
         // Check for valid data.
         if (! is_array($data)) {
-            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
+            throw new \Exception(__d('system', 'Data to insert must be an array of records (array of array with column -> value).'));
         }
 
         foreach($data as $record) {
@@ -398,7 +398,7 @@ abstract class Connection extends PDO
                 continue;
             }
 
-            throw new \Exception("Data to insert must be an array of records (array of array with column -> value).");
+            throw new \Exception(__d('system', 'Data to insert must be an array of records (array of array with column -> value).'));
         }
 
         // Transaction?
@@ -622,7 +622,7 @@ abstract class Connection extends PDO
     {
         // Check for valid data
         if (! is_array($data)) {
-            throw new \Exception("Data to update must be an array of records (array of array with column -> value).");
+            throw new \Exception(__d('system', 'Data to update must be an array of records (array of array with column -> value).'));
         }
 
         foreach($data as $record) {
@@ -630,7 +630,7 @@ abstract class Connection extends PDO
                 continue;
             }
 
-            throw new \Exception("Data to update must be an array of records (array of array with column -> value).");
+            throw new \Exception(__d('system', 'Data to update must be an array of records (array of array with column -> value).'));
         }
 
         // Always make an array for the where keys.

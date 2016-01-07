@@ -1,11 +1,11 @@
 <?php
 
 return array (
-  'Base Model' => '',
-  'Base Model Demo' => '',
+  'Classic BaseModel' => '',
   'Classic Controller' => '',
   'Controllers' => '',
   'DBAL' => '',
+  'DBAL BaseModel' => '',
   'Dashboard' => '',
   'Database' => '',
   'Database Abstraction Layer Demo' => '',
@@ -19,6 +19,7 @@ Tą treść możesz zmienić w pliku <code>{0}</code>',
 This content can be changed in <code>{0}</code>' => 'Cześć, witaj z kontrolera welcome! <br/>
 Tą treść możesz zmienić w pliku <code>{0}</code>',
   'Home' => 'Strona główna',
+  'Models' => '',
   'MySQL Export' => '',
   'Open subpage' => 'Otwórz podstronę',
   'Service MySQL' => '',

@@ -13,7 +13,7 @@ namespace Nova\Database;
 use Nova\Database\Manager;
 use Nova\Database\QueryBuilder;
 
-use PDO;
+use \PDO;
 
 
 abstract class Connection extends PDO

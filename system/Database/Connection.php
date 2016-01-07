@@ -144,6 +144,51 @@ abstract class Connection extends PDO
         return $fetchMethod;
     }
 
+    public static function getParamTypes(array $params)
+    {
+        $result = array();
+
+        foreach ($params as $key => $value) {
+            if (is_integer($value)) {
+                $result[$key] = PDO::PARAM_INT;
+            }
+            else if (is_bool($value)) {
+                $result[$key] = PDO::PARAM_BOOL;
+            }
+            else if($value === null) {
+                $result[$key] = PDO::PARAM_NULL;
+            }
+            else {
+                $result[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        return $result;
+    }
+
+    public function bindParams($statement, array $bindParams, $prefix = ':')
+    {
+        if(empty($bindParams)) {
+            return;
+        }
+
+        // Bind the key and values (only if given).
+        foreach ($bindParams as $key => $value) {
+            if (is_integer($value)) {
+                $statement->bindValue($prefix .$key, $value, PDO::PARAM_INT);
+            }
+            else if (is_bool($value)) {
+                $statement->bindValue($prefix .$key, $value, PDO::PARAM_BOOL);
+            }
+            else if($value === null) {
+                $statement->bindValue($prefix .$key, $value, PDO::PARAM_NULL);
+            }
+            else {
+                $statement->bindValue($prefix .$key, $value, PDO::PARAM_STR);
+            }
+        }
+    }
+
     /**
      * Basic execute statement. Only for queries with no binding parameters
      * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
@@ -214,13 +259,7 @@ abstract class Connection extends PDO
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
-        foreach ($bindParams as $key => $value) {
-            if (is_integer($value)) {
-                $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":$key", $value);
-            }
-        }
+        $this->bindParams($stmt, $bindParams);
 
         // Execute, we should capture the status of the result.
         $status = $stmt->execute();
@@ -335,13 +374,7 @@ abstract class Connection extends PDO
 
         $stmt = $this->prepare("$mode INTO $table ($fieldNames) VALUES ($fieldValues)");
 
-        foreach ($data as $key => $value) {
-            if (is_integer($value)) {
-                $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":$key", $value);
-            }
-        }
+        $this->bindParams($stmt, $data);
 
         // Execute
         $this->queryCount++;
@@ -422,13 +455,7 @@ abstract class Connection extends PDO
 
             $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 
-            foreach ($record as $key => $value) {
-                if (is_integer($value)) {
-                    $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue(":$key", $value);
-                }
-            }
+            $this->bindParams($stmt, $record);
 
             // Execute
             $this->queryCount++;
@@ -559,22 +586,10 @@ abstract class Connection extends PDO
         $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
         // Bind fields
-        foreach ($data as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue(":field_$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":field_$key", $value);
-            }
-        }
+        $this->bindParams($stmt, $data, ':field_');
 
         // Bind values
-        foreach ($bindParams as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue(":where_$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":where_$key", $value);
-            }
-        }
+        $this->bindParams($stmt, $bindParams, ':where_');
 
         // Execute
         $this->queryCount++;
@@ -672,24 +687,10 @@ abstract class Connection extends PDO
             $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
             // Bind fields
-            foreach ($record as $key => $value) {
-                if (is_integer($value)) {
-                    $stmt->bindValue(":field_$key", $value, PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue(":field_$key", $value);
-                }
-            }
+            $this->bindParams($stmt, $record, ':field_');
 
             // Bind where
-            foreach ($whereKeys as $key => $column) {
-                $value = $record[$column];
-
-                if (is_integer($value)) {
-                    $stmt->bindValue(":where_$key", $value, PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue(":where_$key", $value);
-                }
-            }
+            $this->bindParams($stmt, $record, ':where_');
 
             // Execute
             $this->queryCount++;
@@ -758,13 +759,7 @@ abstract class Connection extends PDO
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
         // Bind parameters.
-        foreach ($bindParams as $key => $value) {
-            if (is_integer($value)) {
-                $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":$key", $value);
-            }
-        }
+        $this->bindParams($stmt, $bindParams);
 
         // Execute and return if failure.
         $this->queryCount++;
@@ -793,17 +788,17 @@ abstract class Connection extends PDO
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
+        $data = array();
+
         foreach ($bindParams as $key => $value) {
             if (substr($key, 0, 1) !== ':') {
-                $key = ':' . $key;
+                $key = ':' .$key;
             }
 
-            if (is_integer($value)) {
-                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue("$key", $value);
-            }
+            $data[$key] = $value;
         }
+
+        $this->bindParams($stmt, $data, '');
 
         $this->queryCount++;
 

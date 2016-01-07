@@ -9,7 +9,7 @@
 
 namespace Nova\Tests\Database;
 
-use Nova\Database\Builder;
+use Nova\Database\TableBuilder;
 
 /**
  * Class BuilderTest

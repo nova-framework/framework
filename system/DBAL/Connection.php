@@ -92,7 +92,7 @@ class Connection extends BaseConnection
             else if (is_bool($value)) {
                 $result[$key] = PDO::PARAM_BOOL;
             }
-            else if($value === null) {
+            else if(is_null($value)) {
                 $result[$key] = PDO::PARAM_NULL;
             }
             else {

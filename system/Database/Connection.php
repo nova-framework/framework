@@ -51,7 +51,7 @@ abstract class Connection extends PDO
         }
 
         // Prepare the FetchMethod and check the returnType
-        $fetchMethod = Connection::getFetchMethod($this->returnType);
+        $fetchMethod = self::getFetchMethod($this->returnType);
 
         // Store the config in class variable.
         $this->config = $config;
@@ -155,7 +155,7 @@ abstract class Connection extends PDO
             else if (is_bool($value)) {
                 $result[$key] = PDO::PARAM_BOOL;
             }
-            else if($value === null) {
+            else if(is_null($value)) {
                 $result[$key] = PDO::PARAM_NULL;
             }
             else {
@@ -166,7 +166,7 @@ abstract class Connection extends PDO
         return $result;
     }
 
-    public function bindParams($statement, array $bindParams, $prefix = ':')
+    public function bindParams($statement, array $bindParams, $prefix = ':', array $paramTypes = array())
     {
         if(empty($bindParams)) {
             return;
@@ -174,13 +174,21 @@ abstract class Connection extends PDO
 
         // Bind the key and values (only if given).
         foreach ($bindParams as $key => $value) {
+            if(isset($paramTypes[$key])) {
+                $paramType = $paramTypes[$key];
+
+                $statement->bindValue($prefix .$key, $value, $paramType);
+
+                continue;
+            }
+
             if (is_integer($value)) {
                 $statement->bindValue($prefix .$key, $value, PDO::PARAM_INT);
             }
             else if (is_bool($value)) {
                 $statement->bindValue($prefix .$key, $value, PDO::PARAM_BOOL);
             }
-            else if($value === null) {
+            else if(is_null($value)) {
                 $statement->bindValue($prefix .$key, $value, PDO::PARAM_NULL);
             }
             else {
@@ -229,6 +237,31 @@ abstract class Connection extends PDO
     }
 
     /**
+     * Fetch class
+     *
+     * @param string $statement
+     * @param array $params
+     * @param array $paramTypes
+     * @param null|string $className
+     * @param bool $fetchAll
+     *
+     * @return array|mixed
+     *
+     * @throws \Exception
+     */
+    public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
+    {
+        if (($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
+            $returnType = ($returnType !== null) ? $returnType : $this->returnType;
+        }
+        else if($returnType === null) {
+            throw new \Exception(__d('system', 'No valid Entity Class is given'));
+        }
+
+        return $this->select($statement, $params, $fetchAll, $returnType, $paramTypes);
+    }
+
+    /**
      * Execute Select Query, bind values into the $sql query. And give optional method and class for fetch result
      * The result MUST be an array!
      *
@@ -240,7 +273,7 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function select($sql, $bindParams = array(), $fetchAll = false, $returnType = null)
+    public function select($sql, $bindParams = array(), $fetchAll = false, $returnType = null, array $paramTypes = array())
     {
         // Append select if it isn't appended.
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
@@ -253,13 +286,13 @@ abstract class Connection extends PDO
         // Prepare the FetchMethod and check the returnType
         $className = null;
 
-        $fetchMethod = Connection::getFetchMethod($returnType, $className);
+        $fetchMethod = self::getFetchMethod($returnType, $className);
 
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
-        $this->bindParams($stmt, $bindParams);
+        $this->bindParams($stmt, $bindParams, ':', $paramTypes);
 
         // Execute, we should capture the status of the result.
         $status = $stmt->execute();
@@ -267,7 +300,7 @@ abstract class Connection extends PDO
         $this->queryCount++;
 
         // If failed, return now, and don't continue with fetching.
-        if (!$status) {
+        if (! $status) {
             return false;
         }
 
@@ -764,7 +797,7 @@ abstract class Connection extends PDO
         // Execute and return if failure.
         $this->queryCount++;
 
-        if (!$stmt->execute()) {
+        if (! $stmt->execute()) {
             return false;
         }
 
@@ -817,9 +850,9 @@ abstract class Connection extends PDO
      *
      * @return string|false Quoted string or false on failure.
      */
-    public function escape($string, $parameter_type = PDO::PARAM_STR)
+    public function escape($string, $paramType = PDO::PARAM_STR)
     {
-        return parent::quote($string, $parameter_type);
+        return parent::quote($string, $paramType);
     }
 
     /**

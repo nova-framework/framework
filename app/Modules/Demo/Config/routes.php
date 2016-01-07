@@ -23,7 +23,10 @@ Router::any('demos/classic/subpage', 'App\Modules\Demo\Controllers\Classic@subPa
 Router::any('demos/dbal(/index)', 'App\Modules\Demo\Controllers\Doctrine@index');
 
 /** BaseModel Demo */
-Router::any('demos/models(/index)', 'App\Modules\Demo\Controllers\Models@index');
+Router::any('demos/models/base_model(/index)', 'App\Modules\Demo\Controllers\Models\BaseModel@index');
+
+/** ClassicModel Demo */
+Router::any('demos/models/classic_model(/index)', 'App\Modules\Demo\Controllers\Models\ClassicModel@index');
 
 /** Event & Event Listener demo */
 Router::any('demos/events', 'App\Modules\Demo\Controllers\Events@index');

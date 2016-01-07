@@ -11,21 +11,19 @@ namespace Nova\Database;
 
 
 use Nova\Config;
-use Nova\Database\Engine;
+use Nova\Database\Connection;
 use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
 
 
 abstract class Manager
 {
-    const DRIVER_MYSQL = "MySQL";
+    const DRIVER_MYSQL  = "MySQL";
     const DRIVER_SQLITE = "SQLite";
 
-    /** @var Engine[] engine instances */
-    private static $engineInstances = array();
+    /** @var Connection[] Connection instances */
+    private static $instances = array();
 
-    /** @var Service[] service instances */
-    private static $serviceInstances = array();
 
     /**
      * Get instance of the database engine you prefer.
@@ -35,7 +33,7 @@ abstract class Manager
      * @return Engine|\PDO|null
      * @throws \Exception
      */
-    public static function getEngine($linkName = 'default')
+    public static function getConnection($linkName = 'default')
     {
         $config = Config::get('database');
 
@@ -46,38 +44,39 @@ abstract class Manager
         $options = $config[$linkName];
 
         // Make the engine
-        $engineName = $options['engine'];
+        $driverName = strtoupper($options['driver']);
 
-        $driver = constant("static::DRIVER_" . strtoupper($engineName));
-
-        if ($driver === null) {
-            throw new \Exception("Driver not found, check your config.php, DB_TYPE");
+        if(strpos($driverName, 'PDO_') === 0) {
+            $driver = constant("static::DRIVER_" .str_replace('PDO_', '', $driverName));
+        }
+        else {
+            throw new \Exception("Driver not found, check your config.php");
         }
 
         // Engine, when already have an instance, return it!
-        if (isset(static::$engineInstances[$linkName])) {
-            return static::$engineInstances[$linkName];
+        if (isset(static::$instances[$linkName])) {
+            return static::$instances[$linkName];
         }
 
         // Make new instance, can throw exceptions!
-        $className = '\Nova\Database\Engine\\' . $driver;
+        $className = '\Nova\Database\Driver\\' . $driver;
 
         if (! class_exists($className)) {
             throw new \Exception("Class not found: ".$className);
         }
 
-        $engine = new $className($options['config']);
+        $connection = new $className($options['config']);
 
         // If no success
-        if (! $engine instanceof Engine) {
+        if (! $connection instanceof Connection) {
             throw new \Exception("Driver creation failed! Check your extended logs for errors.");
         }
 
         // Save instance
-        static::$engineInstances[$linkName] = $engine;
+        static::$instances[$linkName] = $connection;
 
         // Return instance
-        return $engine;
+        return $connection;
     }
 
 }

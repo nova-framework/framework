@@ -53,9 +53,20 @@ Config::set('demos_menu', array(
         'icon'      => 'fa fa-gears',
     ),
     'models' => array(
-        'name'      => __d('demo', 'Base Model'),
-        'url'       => site_url('demos/models'),
-        'icon'      => 'fa fa-gears',
+        'name'      => __d('demo', 'Models'),
+        'icon'      => 'fa fa-server',
+        'children'  => array(
+            'base_model' => array(
+                'name'      => __d('demo', 'DBAL BaseModel'),
+                'url'       => site_url('demos/models/base_model'),
+                'icon'      => 'fa fa-gears',
+            ),
+            'classic_model' => array(
+                'name'      => __d('demo', 'Classic BaseModel'),
+                'url'       => site_url('demos/models/classic_model'),
+                'icon'      => 'fa fa-gears',
+            ),
+        ),
     ),
     /*
     'database' => array(

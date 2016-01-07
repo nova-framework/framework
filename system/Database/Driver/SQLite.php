@@ -8,14 +8,13 @@
  * @date December 27th, 2015
  */
 
-namespace Nova\Database\Engine;
+namespace Nova\Database\Driver;
 
-use Nova\Database\Engine;
+use Nova\Database\Connection;
 use Nova\Database\Manager;
-use Nova\Database\Engine\Base as BaseEngine;
 
 
-class SQLite extends BaseEngine
+class SQLite extends Connection
 {
 
     /**

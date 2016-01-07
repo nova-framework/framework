@@ -8,13 +8,13 @@
  * @date December 27th, 2015
  */
 
-namespace Nova\Database\Engine;
+namespace Nova\Database;
 
-use Nova\Database\Engine;
 use Nova\Database\Manager;
+use Nova\Database\QueryBuilder;
 
 
-abstract class Base extends \PDO implements Engine
+abstract class Connection extends \PDO
 {
     /** @var string Return type. */
     protected $returnType = 'array';
@@ -24,6 +24,7 @@ abstract class Base extends \PDO implements Engine
 
     /** @var int Counting how much queries have been executed in total. */
     protected $queryCount = 0;
+
 
     /**
      * MySQLEngine constructor.
@@ -120,6 +121,11 @@ abstract class Base extends \PDO implements Engine
     public function getLink()
     {
         return $this;
+    }
+
+    public function getQueryBuilder()
+    {
+        return new QueryBuilder($this);
     }
 
     /**

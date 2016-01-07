@@ -22,7 +22,7 @@ class BuilderTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers \Nova\Database\Builder
+     * @covers \Nova\Database\TableBuilder
      */
     public function testSimpleTable()
     {

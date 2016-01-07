@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'CRUD Support' => '',
   'Classic BaseModel' => '',
   'Classic Controller' => '',
   'Controllers' => '',
@@ -19,6 +20,7 @@ This content can be changed in <code>{0}</code>' => 'Здраствуй, доб�
 This content can be changed in <code>{0}</code>' => 'Здраствуй, добро пожаловать в привствующий контролер! <br/>
 Содержимое этого файла может быть изменено в <code>app/views/welcome/welcome.php',
   'Home' => 'Домой',
+  'Integrated QueryBuilder' => '',
   'Models' => '',
   'MySQL Export' => '',
   'Open subpage' => 'Открыть подстраницу',

@@ -11,8 +11,9 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
-
 use App\Modules\Demo\Models\ClassicMembers as MembersModel;
+
+use \PDO;
 
 
 /**
@@ -52,7 +53,30 @@ class ClassicModel extends BaseController
      */
     public function index()
     {
-        $message = '';
+        $message = '<h3>'.__d('demo', 'Integrated QueryBuilder').'</h3><br>';
+
+        //
+        $query = $this->model->asArray()->queryBuilder('select')
+            ->where('username != ?', 'admin')
+            ->orderBy('id DESC')
+            ->limit(2)
+            ->fetchAll();
+
+        $message .= '<b>$this->model->asArray()->queryBuilder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $query = $this->model->queryBuilder('select')
+            ->where('username != ?', 'admin')
+            ->orderBy('id DESC')
+            ->limit(2)
+            ->fetchAll();
+
+        $message .= '<b>$this->model->queryBuilder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $message .= '<br><h3>'.__d('demo', 'CRUD Support').'</h3><br>';
 
         //
         $result = $this->model->countBy('username !=', 'admin');

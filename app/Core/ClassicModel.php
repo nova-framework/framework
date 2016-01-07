@@ -12,6 +12,8 @@ namespace App\Core;
 use Nova\Database\Manager as Database;
 use Nova\Input\Filter as InputFilter;
 
+use \FluentStructure;
+use \PDO;
 
 class ClassicModel
 {
@@ -197,6 +199,69 @@ class ClassicModel
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
+    }
+
+    //--------------------------------------------------------------------
+    // QueryBuilder Methods
+    //--------------------------------------------------------------------
+
+    public function queryBuilder($method = null, $primaryKey = null)
+    {
+        // Get the complete Table name.
+        $table = $this->table();
+
+        // Get a QueryBuilder instance.
+        $structure = new FluentStructure($this->primaryKey);
+
+        $queryBuilder = $this->db->getQueryBuilder($structure);
+
+        // Switch the methods.
+        if ($method == 'select') {
+            $query = $queryBuilder->from($table, $primaryKey);
+
+            // Setup the fetch Method.
+            if ($this->tempReturnType == 'array') {
+                $query->asObject(false);
+            }
+            else if($this->tempReturnType == 'object') {
+                $query->asObject();
+            }
+            else  {
+                // Check and setup the className.
+                $className = $this->tempReturnType;
+
+                $classPath = str_replace('\\', '/', ltrim($className, '\\'));
+
+                if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                    throw new \Exception("No valid Entity Name is given: " .$className);
+                }
+
+                if(! class_exists($className)) {
+                    throw new \Exception("No valid Entity Class is given: " .$className);
+                }
+
+                $query->asObject($className);
+            }
+
+            // Make sure our temp return type is correct.
+            $this->tempReturnType = $this->returnType;
+
+            return $query;
+        }
+        else if ($method == 'insert') {
+            $values = is_array($primaryKey) ? $primaryKey : array();
+
+            return $queryBuilder->insertTo($table, $values);
+        }
+        else if ($method == 'update') {
+            return $queryBuilder->update($table, $primaryKey);
+        }
+        else if ($method == 'delete') {
+            return $queryBuilder->delete($table, $primaryKey);
+        }
+
+        // No method? Return directly the QueryBuilder instance.
+        return $queryBuilder;
     }
 
     //--------------------------------------------------------------------

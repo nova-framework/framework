@@ -205,15 +205,21 @@ class ClassicModel
     // QueryBuilder Methods
     //--------------------------------------------------------------------
 
-    public function queryBuilder($method = null, $primaryKey = null)
+    public function queryBuilder()
+    {
+        // Get a QueryBuilder instance.
+        $structure = new FluentStructure($this->primaryKey);
+
+        return $this->db->getQueryBuilder($structure);
+    }
+
+    public function buildQuery($method, $primaryKey = null)
     {
         // Get the complete Table name.
         $table = $this->table();
 
         // Get a QueryBuilder instance.
-        $structure = new FluentStructure($this->primaryKey);
-
-        $queryBuilder = $this->db->getQueryBuilder($structure);
+        $queryBuilder = $this->queryBuilder();
 
         // Switch the methods.
         if ($method == 'select') {
@@ -251,7 +257,7 @@ class ClassicModel
         else if ($method == 'insert') {
             $values = is_array($primaryKey) ? $primaryKey : array();
 
-            return $queryBuilder->insertTo($table, $values);
+            return $queryBuilder->insertInto($table, $values);
         }
         else if ($method == 'update') {
             return $queryBuilder->update($table, $primaryKey);
@@ -260,8 +266,7 @@ class ClassicModel
             return $queryBuilder->delete($table, $primaryKey);
         }
 
-        // No method? Return directly the QueryBuilder instance.
-        return $queryBuilder;
+        throw new \Exception("No valid Building Method given");
     }
 
     //--------------------------------------------------------------------

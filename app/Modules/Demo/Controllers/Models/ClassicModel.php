@@ -53,30 +53,109 @@ class ClassicModel extends BaseController
      */
     public function index()
     {
-        $message = '<h3>'.__d('demo', 'Integrated QueryBuilder').'</h3><br>';
+        $message = '<h3><strong>'.__d('demo', 'Integrated QueryBuilder').'</strong></h3><br>';
 
         //
-        $query = $this->model->asArray()->queryBuilder('select')
-            ->where('username != ?', 'admin')
-            ->orderBy('id DESC')
-            ->limit(2)
-            ->fetchAll();
+        $query = $this->model->asArray()->buildQuery('select')
+            ->where('username', 'admin')
+            ->fetch();
 
-        $message .= '<b>$this->model->asArray()->queryBuilder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<b>$this->model->asArray()->buildQuery(\'select\')->where(\'username\', \'admin\')->fetch();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $query = $this->model->queryBuilder('select')
-            ->where('username != ?', 'admin')
-            ->orderBy('id DESC')
-            ->limit(2)
-            ->fetchAll();
+        $query = $this->model->buildQuery('select')
+            ->where('username = ?', 'admin')
+            ->fetch();
 
-        $message .= '<b>$this->model->queryBuilder(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'username = ?\', \'admin\')->fetch();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $message .= '<br><h3>'.__d('demo', 'CRUD Support').'</h3><br>';
+        $query = $this->model->asArray()->buildQuery('select')
+            ->orderBy('id DESC')
+            ->fetchAll();
+
+        $message .= '<b>$this->model->asArray()->buildQuery(\'select\')->orderBy(\'id DESC\')->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery('select')
+            ->where('username != ?', 'admin')
+            ->orderBy('id ASC')
+            ->limit(2)
+            ->fetchAll();
+
+        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $userInfo = array(
+            'username' => 'virgil',
+            'password' => 'test',
+            'email'    => 'virgil@novaframwork.dev'
+        );
+
+        $message .= '<b>$userInfo</b>';
+        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+
+        //
+        $retval = $this->model->buildQuery('insert')
+            ->values($this->model->prepareData($userInfo))
+            ->execute();
+
+        $message .= '<b>$this->model->buildQuery(\'insert\')->values($this->model->prepareData($userInfo))->execute();</b>';
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery('select')
+            ->fetchAll();
+
+        $message .= '<b>$this->model->buildQuery(\'select\')->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $userInfo = array(
+            'password' => 'testing',
+            'email' => 'modified@novaframwork.dev'
+        );
+
+        $message .= '<b>$userInfo</b>';
+        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+
+        //
+        $retval = $this->model->buildQuery('update')
+            ->where('username = ?', 'virgil')
+            ->set($this->model->prepareData($userInfo))
+            ->execute();
+
+        $message .= '<b>$this->model->buildQuery(\'update\')->where(\'username = ?\', \'virgil\')->set($this->model->prepareData($userInfo))->execute();</b>';
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery('select')
+            ->fetchAll();
+
+        $message .= '<b>$this->model->buildQuery(\'select\')->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $retval = $this->model->buildQuery('delete')
+            ->where('username = ?', 'virgil')
+            ->execute();
+
+        $message .= '<b>$this->model->buildQuery(\'delete\')->where(\'username = ?\', \'virgil\')->execute();</b>';
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery('select')
+            ->fetchAll();
+
+        $message .= '<b>$this->model->buildQuery(\'select\')->fetchAll();</b>';
+        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+
+        //
+        $message .= '<br><h3><strong>'.__d('demo', 'CRUD Support').'</strong></h3><br>';
 
         //
         $result = $this->model->countBy('username !=', 'admin');

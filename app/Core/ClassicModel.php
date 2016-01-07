@@ -34,6 +34,7 @@ class ClassicModel
      * Valid types are: 'int', 'datetime', 'date'
      *
      * @var string
+     *
      * @access protected
      */
     protected $dateFormat = 'datetime';
@@ -42,6 +43,7 @@ class ClassicModel
      * Whether or not to auto-fill a 'created_on' field on inserts.
      *
      * @var boolean
+     *
      * @access protected
      */
     protected $autoCreated = true;
@@ -50,6 +52,7 @@ class ClassicModel
      * Field name to use to the created time column in the DB table.
      *
      * @var string
+     *
      * @access protected
      */
     protected $createdField = 'created_on';
@@ -58,6 +61,7 @@ class ClassicModel
      * Whether or not to auto-fill a 'modified_on' field on updates.
      *
      * @var boolean
+     *
      * @access protected
      */
     protected $autoModified = true;
@@ -66,6 +70,7 @@ class ClassicModel
      * Field name to use to the modified time column in the DB table.
      *
      * @var string
+     *
      * @access protected
      */
     protected $modifiedField = 'modified_on';
@@ -110,7 +115,7 @@ class ClassicModel
     protected $tempSelectLimit = null;
 
     /**
-     * Protected, non-modifiable attributes
+     * Protected, non-modifiable attributes.
      */
     protected $protectedFields = array();
 
@@ -135,7 +140,8 @@ class ClassicModel
      * An array of extra rules to add to validation rules during inserts only.
      * Often used for adding 'required' rules to fields on insert, but not updates.
      *
-     *   array( 'username' => 'required' );
+     * array( 'username' => 'required' );
+     *
      * @var array
      */
     protected $validateInsertRules = array();
@@ -148,9 +154,9 @@ class ClassicModel
     protected $errors = array();
 
     /**
-     * @var Array Columns for the Model's database fields
+     * This can be set to avoid a database call if using $this->prepareData().
      *
-     * This can be set to avoid a database call if using $this->prepareData()
+     * @var Array Columns for the Model's database fields.
      */
     protected $fields = array();
 
@@ -161,11 +167,10 @@ class ClassicModel
      */
     public function __construct($connection = null, $inputFilter = null)
     {
-        if($connection instanceof Connection) {
+        if ($connection instanceof Connection) {
             // Set the given Database Connection.
             $this->db = $connection;
-        }
-        else {
+        } else {
             $linkName = ($connection !== null) ? $connection : 'default';
 
             // Setup the Database Connection.
@@ -190,8 +195,7 @@ class ClassicModel
         // Do we have a Validator instance?
         if ($inputFilter instanceof InputFilter) {
             $this->inputFilter = $inputFilter;
-        }
-        else {
+        } else {
             $this->inputFilter = new InputFilter();
         }
 
@@ -220,7 +224,8 @@ class ClassicModel
     /**
      * Finds a single record based on it's primary key.
      *
-     * @param  mixed $id The primaryKey value of the object to retrieve.
+     * @param mixed $id The primaryKey value of the object to retrieve.
+     *
      * @return object
      */
     public function find($id)
@@ -293,7 +298,7 @@ class ClassicModel
      */
     public function findMany($values)
     {
-        if(! is_array($values)) {
+        if (! is_array($values)) {
             throw new \UnexpectedValueException('Parameter should be an Array');
         }
 
@@ -370,8 +375,9 @@ class ClassicModel
     /**
      * Inserts data into the database.
      *
-     * @param  array $data An array of key/value pairs to insert to database.
-     * @return mixed       The primaryKey value of the inserted record, or FALSE.
+     * @param array $data An array of key/value pairs to insert to database.
+     *
+     * @return mixed The primaryKey value of the inserted record, or FALSE.
      */
     public function insert($data, $skipValidation = null)
     {
@@ -390,7 +396,7 @@ class ClassicModel
 
             $result = $this->db->insert($this->table(), $this->prepareData($data));
 
-            if($result !== false) {
+            if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
             }
         }
@@ -413,7 +419,8 @@ class ClassicModel
      *     )
      * );
      *
-     * @param  array $data An associate array of rows to insert
+     * @param array $data An associate array of rows to insert.
+     *
      * @return bool
      */
     public function insertBatch($data)
@@ -432,6 +439,7 @@ class ClassicModel
      * determine which row to replace.
      *
      * @param $data
+     *
      * @return bool
      */
     public function replace($data, $skipValidation = null)
@@ -449,7 +457,7 @@ class ClassicModel
         if ($data !== false) {
             $result = $this->db->replace($this->table(), $this->prepareData($data));
 
-            if($result !== false) {
+            if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
             }
         }
@@ -463,8 +471,9 @@ class ClassicModel
     /**
      * Updates an existing record in the database.
      *
-     * @param  mixed $id The primaryKey value of the record to update.
-     * @param  array $data An array of value pairs to update in the record.
+     * @param mixed $id   The primaryKey value of the record to update.
+     * @param array $data An array of value pairs to update in the record.
+     *
      * @return bool
      */
     public function update($id, $data, $skipValidation = null)
@@ -511,8 +520,9 @@ class ClassicModel
      * If $whereKey == 'title', then each record would be matched on that 'title' value of the array.
      * This does mean that the array key needs to be provided with each row's data.
      *
-     * @param  array $data An associate array of row data to update.
-     * @param  string $whereKey The column name to match on.
+     * @param array  $data     An associate array of row data to update.
+     * @param string $whereKey The column name to match on.
+     *
      * @return bool
      */
     public function updateBatch($data, $whereKey)
@@ -547,8 +557,9 @@ class ClassicModel
      *
      * $this->model->updateMany($ids, $data);
      *
-     * @param  array $ids An array of primaryKey values to update.
-     * @param  array $data An array of value pairs to modify in each row.
+     * @param array $ids  An array of primaryKey values to update.
+     * @param array $data An array of value pairs to modify in each row.
+     *
      * @return bool
      */
     public function updateMany($ids, $data, $skipValidation = null)
@@ -596,8 +607,9 @@ class ClassicModel
      * $this->updateBy($wheres, $data);
      * $this->updateBy('user_id', 15, $data);
      *
-     * @param array $data An array of data pairs to update
-     * @param one or more WHERE-acceptable entries.
+     * @param array $data An array of data pairs to update.
+     * @param             One or more WHERE-acceptable entries.
+     *
      * @return bool
      */
     public function updateBy()
@@ -606,7 +618,7 @@ class ClassicModel
 
         $data = array_pop($params);
 
-        if(empty($params) || empty($data)) {
+        if (empty($params) || empty($data)) {
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
@@ -634,7 +646,8 @@ class ClassicModel
     /**
      * Updates all records and sets the value pairs passed in the array.
      *
-     * @param  array $data An array of value pairs with the data to change.
+     * @param array $data An array of value pairs with the data to change.
+     *
      * @return bool
      */
     public function updateAll($data, $skipValidation = null)
@@ -666,9 +679,10 @@ class ClassicModel
     /**
      * Increments the value of field for a given row, selected by the primary key for the table.
      *
-     * @param $id
-     * @param $field
+     * @param     $id
+     * @param     $field
      * @param int $value
+     *
      * @return mixed
      */
     public function increment($id, $field, $value = 1)
@@ -684,11 +698,12 @@ class ClassicModel
     }
 
     /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
+     * Decrements the value of field for a given row, selected by the primary key for the table.
      *
-     * @param $id
-     * @param $field
+     * @param     $id
+     * @param     $field
      * @param int $value
+     *
      * @return mixed
      */
     public function decrement($id, $field, $value = 1)
@@ -706,12 +721,13 @@ class ClassicModel
     /**
      * Deletes a row by it's primary key value.
      *
-     * @param  mixed $id The primary key value of the row to delete.
+     * @param mixed $id The primary key value of the row to delete.
+     *
      * @return bool
      */
     public function delete($id)
     {
-        if(! is_integer($id)) {
+        if (! is_integer($id)) {
             throw new \UnexpectedValueException('Parameter should be an Integer');
         }
 
@@ -731,7 +747,7 @@ class ClassicModel
     {
         $params = func_get_args();
 
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
@@ -791,14 +807,14 @@ class ClassicModel
      * class name, meaning that it must include the namespace, if applicable.
      *
      * @param string $class
+     *
      * @return $this
      */
     public function asObject($className = null)
     {
-        if($className !== null) {
+        if ($className !== null) {
             $this->tempReturnType = $className;
-        }
-        else {
+        } else {
             $this->tempReturnType = 'object';
         }
 
@@ -811,7 +827,7 @@ class ClassicModel
 
     public function where($field, $value = '')
     {
-        if(empty($field)) {
+        if (empty($field)) {
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
@@ -822,7 +838,7 @@ class ClassicModel
 
     public function limit($limit, $start = 0)
     {
-        if(! is_integer($limit) || ! is_integer($start)) {
+        if (! is_integer($limit) || ! is_integer($start)) {
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
@@ -840,7 +856,7 @@ class ClassicModel
     {
         $sense = strtoupper($sense);
 
-        if(empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
+        if (empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
@@ -855,6 +871,7 @@ class ClassicModel
 
     /**
      * Counts number of rows modified by an arbitrary WHERE call.
+     *
      * @return INT
      */
     public function countBy()
@@ -864,7 +881,7 @@ class ClassicModel
         //
         $params = func_get_args();
 
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException('Invalid parameters');
         }
 
@@ -878,10 +895,9 @@ class ClassicModel
 
         $result = $this->asArray()->select($sql, $bindParams);
 
-        if($result !== false) {
+        if ($result !== false) {
             $count = $result['count'];
-        }
-        else {
+        } else {
             $count = 0;
         }
 
@@ -903,7 +919,7 @@ class ClassicModel
 
         $result = $this->asArray()->select($sql);
 
-        if($result !== false) {
+        if ($result !== false) {
             return $result['count'];
         }
 
@@ -913,8 +929,8 @@ class ClassicModel
     /**
      * Checks whether a field/value pair exists within the table.
      *
-     * @param string $field The field to search for.
-     * @param string $value The value to match $field against.
+     * @param string $field  The field to search for.
+     * @param string $value  The value to match $field against.
      * @param string $ignore Optionally, the ignored primaryKey.
      *
      * @return bool TRUE/FALSE
@@ -926,7 +942,7 @@ class ClassicModel
         //
         $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
 
-        if($ignore !== null) {
+        if ($ignore !== null) {
             $sql .= " AND " .$this->primaryKey ." != :where_ignore";
 
             $bindParams['where_ignore'] = $ignore;
@@ -948,7 +964,7 @@ class ClassicModel
      */
     public function table($table = null)
     {
-        if($table !== null) {
+        if ($table !== null) {
             // A custom Table Name is wanted.
             return DB_PREFIX .$table;
         }
@@ -965,7 +981,7 @@ class ClassicModel
      */
     public function protect($field)
     {
-        if(empty($field)) {
+        if (empty($field)) {
             throw new \UnexpectedValueException('Invalid parameter');
         }
 
@@ -978,16 +994,15 @@ class ClassicModel
      * Protect attributes by removing them from $row array.
      * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
      *
-     * @param object /array $row The value pair item to remove.
+     * @param object|array $row The value pair item to remove.
      */
     public function protectFields(array $row)
     {
-        if(! empty($row)) {
+        if (! empty($row)) {
             foreach ($this->protectedFields as $field) {
                 if (is_object($row)) {
                     unset($row->$field);
-                }
-                else {
+                } else {
                     unset($row[$field]);
                 }
             }
@@ -1000,9 +1015,9 @@ class ClassicModel
      * Get the field names for this Model's table.
      *
      * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
-     * the field list from $this->db->listFields($this->table());
+     * the field list from $this->db->listFields($this->table()).
      *
-     * @return array    Returns the database fields for this Model
+     * @return array Returns the database fields for this Model.
      */
     public function tableFields()
     {
@@ -1021,8 +1036,9 @@ class ClassicModel
      * Execute Select Query, binding values into the $sql Query.
      *
      * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @param array  $bindParams
+     * @param bool   $fetchAll   Ask the method to fetch all the records or not.
+     *
      * @return array|null
      *
      * @throws \Exception
@@ -1071,10 +1087,10 @@ class ClassicModel
      * If $type == 'insert', any additional rules in the class var $insert_validate_rules
      * for that field will be added to the rules.
      *
-     * @param  array $data An array of Validation Rules
-     * @param  string $type Either 'update' or 'insert'.
+     * @param array  $data An array of Validation Rules.
+     * @param string $type Either 'update' or 'insert'.
      *
-     * @return array/bool       The original data or FALSE
+     * @return array|bool The original data or FALSE.
      */
     public function validate($data, $type = 'update', $skipValidation = null)
     {
@@ -1105,7 +1121,7 @@ class ClassicModel
             $inputFilter->populate($data);
 
             // Execute the Data Validation.
-            if(! $inputFilter->isValid()) {
+            if (! $inputFilter->isValid()) {
                 // Something was wrong; store the current Filter's Error Messages and return false.
                 $this->errors = $inputFilter->getErrors();
 
@@ -1134,7 +1150,7 @@ class ClassicModel
      * Sets the created_on date for the object based on the current date/time and dateFormat.
      * Will not overwrite an existing field.
      *
-     * @param array $row The array of data to be inserted
+     * @param array $row The array of data to be inserted.
      *
      * @return array
      */
@@ -1159,7 +1175,7 @@ class ClassicModel
      * Sets the modified_on date for the object based on the current date/time and dateFormat.
      * Will not overwrite an existing field.
      *
-     * @param array $row The array of data to be inserted
+     * @param array $row The array of data to be inserted.
      *
      * @return array
      */
@@ -1186,11 +1202,11 @@ class ClassicModel
 
     /**
      * Extracts the Model's fields (except the key and those handled by Observers) from the $postData
-     * and returns an array of name => value pairs
+     * and returns an array of name => value pairs.
      *
-     * @param Array $postData Usually the POST data, when called from the Controller
+     * @param array $postData Usually the POST data, when called from the Controller.
      *
-     * @return Array An array of name => value pairs containing the data for the Model's fields
+     * @return array An array of name => value pairs containing the data for the Model's fields.
      */
     public function prepareData($postData)
     {
@@ -1211,7 +1227,7 @@ class ClassicModel
         $fields = $this->tableFields();
 
         // If the field is the primary key, one of the created/modified/deleted fields,
-        // or has not been set in the $postData, skip it
+        // or has not been set in the $postData, skip it.
         foreach ($postData as $field => $value) {
             if (in_array($field, $skippedFields) || ! in_array($field, $fields)) {
                 continue;
@@ -1226,8 +1242,8 @@ class ClassicModel
     /**
      * Triggers a model-specific event and call each of it's Observers.
      *
-     * @param string $event The name of the event to trigger
-     * @param mixed $data The data to be passed to the callback functions.
+     * @param string $event The name of the event to trigger.
+     * @param mixed  $data  The data to be passed to the callback functions.
      *
      * @return mixed
      */
@@ -1251,12 +1267,12 @@ class ClassicModel
             $data = call_user_func_array(array($this, $method), array($data));
         }
 
-        // In case no method called or method returned the entire data array, we typically just need the $fields
+        // In case no method called or method returned the entire data array, we typically just need the $fields.
         if (isset($data['fields'])) {
             return $data['fields'];
         }
 
-        // A few methods might need to return 'ids'
+        // A few methods might need to return 'ids'.
         if (isset($data['ids'])) {
             return $data['ids'];
         }
@@ -1271,7 +1287,7 @@ class ClassicModel
      * The available time formats are:
      * * 'int'      - Stores the date as an integer timestamp.
      * * 'datetime' - Stores the date and time in the SQL datetime format.
-     * * 'date'     - Stores teh date (only) in the SQL date format.
+     * * 'date'     - Stores the date (only) in the SQL date format.
      *
      * @param mixed $userDate An optional PHP timestamp to be converted.
      *
@@ -1287,11 +1303,9 @@ class ClassicModel
             case 'int':
                 return $curr_date;
                 break;
-
             case 'datetime':
                 return date('Y-m-d H:i:s', $curr_date);
                 break;
-
             case 'date':
                 return date('Y-m-d', $curr_date);
                 break;
@@ -1312,14 +1326,13 @@ class ClassicModel
 
     protected function setWhere($params)
     {
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException('Parameters can not be empty');
         }
 
-        if(is_array($params[0])) {
+        if (is_array($params[0])) {
             $this->tempWheres = array_merge($this->tempWheres, $params[0]);
-        }
-        else {
+        } else {
             $key = $params[0];
 
             $value = isset($params[1]) ? $params[1] : '';
@@ -1342,28 +1355,27 @@ class ClassicModel
         $idx = 0;
 
         foreach ($where as $key => $value) {
-            if($idx > 0) {
+            if ($idx > 0) {
                 $whereStr .= ' AND ';
             }
 
             $idx++;
 
-            if(empty($value)) {
+            if (empty($value)) {
                 // A string based condition; simplify its white spaces and use it directly.
                 $result .= preg_replace('/\s+/', ' ', trim($key));
 
                 continue;
             }
 
-            if(strpos($key, ' ') !== false) {
+            if (strpos($key, ' ') !== false) {
                 $key = preg_replace('/\s+/', ' ', trim($key));
 
                 $segments = explode(' ', $key);
 
                 $key      = $segments[0];
                 $operator = $segments[1];
-            }
-            else {
+            } else {
                 $operator = '=';
             }
 
@@ -1372,7 +1384,7 @@ class ClassicModel
             $bindParams[$key] = $value;
         }
 
-        if(! empty($result)) {
+        if (! empty($result)) {
             $result = 'WHERE ' .$result;
         }
 
@@ -1385,16 +1397,15 @@ class ClassicModel
 
         $limits =& $this->tempSelectLimit;
 
-        if(is_numeric($limits)) {
+        if (is_numeric($limits)) {
             $result = '0, ' .$limits;
-        }
-        else if(is_array($limits) && ! empty($limits)) {
+        } else if (is_array($limits) && ! empty($limits)) {
             list($offset, $limit) = each($limits);
 
             $result = $offset .', ' .$limit;
         }
 
-        if(! empty($result)) {
+        if (! empty($result)) {
             $result = 'LIMIT ' .$result;
         }
 
@@ -1405,16 +1416,14 @@ class ClassicModel
     {
         $order =& $this->tempSelectOrder;
 
-        if(is_array($order) && ! empty($order)) {
+        if (is_array($order) && ! empty($order)) {
             list($key, $sense) = each($order);
 
             $result = 'ORDER BY ' .$key .' ' .$sense;
-        }
-        else {
+        } else {
             $result = '';
         }
 
         return $result;
     }
-
 }

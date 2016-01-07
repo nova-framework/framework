@@ -221,7 +221,7 @@ class BaseModel extends Model
     public function find($id)
     {
         if(! is_integer($id)) {
-            throw new \UnexpectedValueException('Parameter should be an Integer');
+            throw new \UnexpectedValueException(__('Parameter should be an Integer'));
         }
 
         //
@@ -289,7 +289,7 @@ class BaseModel extends Model
     public function findMany($values)
     {
         if(! is_array($values)) {
-            throw new \UnexpectedValueException('Parameter should be an Array');
+            throw new \UnexpectedValueException(__('Parameter should be an Array'));
         }
 
         // Prepare the ORDER details.
@@ -585,7 +585,7 @@ class BaseModel extends Model
         $data = array_pop($params);
 
         if(empty($params) || empty($data)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         // Prepare the WHERE parameters.
@@ -724,7 +724,7 @@ class BaseModel extends Model
     public function delete($id)
     {
         if(! is_integer($id)) {
-            throw new \UnexpectedValueException('Parameter should be an Integer');
+            throw new \UnexpectedValueException(__('Parameter should be an Integer'));
         }
 
         // Prepare the Parameters.
@@ -751,7 +751,7 @@ class BaseModel extends Model
         $params = func_get_args();
 
         if(empty($params)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         //
@@ -849,7 +849,7 @@ class BaseModel extends Model
     public function where($field, $value = '')
     {
         if(empty($field)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->tempWheres[$field] = $value;
@@ -860,7 +860,7 @@ class BaseModel extends Model
     public function limit($limit, $start = 0)
     {
         if(! is_integer($limit) || ! is_integer($start)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->tempSelectLimit = array($start => $limit);
@@ -878,7 +878,7 @@ class BaseModel extends Model
         $sense = strtoupper($sense);
 
         if(empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->tempSelectOrder = array($field => $sense);
@@ -902,7 +902,7 @@ class BaseModel extends Model
         $params = func_get_args();
 
         if(empty($params)) {
-            throw new \UnexpectedValueException('Invalid parameters');
+            throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         $this->setWhere($params);
@@ -1003,7 +1003,7 @@ class BaseModel extends Model
     public function protect($field)
     {
         if(empty($field)) {
-            throw new \UnexpectedValueException('Invalid parameter');
+            throw new \UnexpectedValueException(__('Invalid parameter'));
         }
 
         $this->protectedFields[] = $field;
@@ -1054,7 +1054,7 @@ class BaseModel extends Model
         }
 
         if (empty($this->fields)) {
-            throw new \UnexpectedValueException('Cannot initialize the Table Fields');
+            throw new \UnexpectedValueException(__('Cannot initialize the Table Fields'));
         }
 
         return $this->fields;
@@ -1382,7 +1382,7 @@ class BaseModel extends Model
     protected function setWhere($params)
     {
         if(empty($params)) {
-            throw new \UnexpectedValueException('Parameters can not be empty');
+            throw new \UnexpectedValueException(__('Parameter should be a not empty Array'));
         }
 
         if(is_array($params[0])) {

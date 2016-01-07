@@ -1,8 +1,19 @@
 <?php
 
 return array (
+  'Class not found: {0}' => '',
+  'Config and Options parameters should be Arrays' => '',
+  'Connection name \'{0}\' is not defined in your configuration!' => '',
+  'Data to insert must be an array of column -> value.' => '',
+  'Data to insert must be an array of records (array of array with column -> value).' => '',
+  'Data to update must be an array of records (array of array with column -> value).' => '',
+  'Driver creation failed! Check your extended logs for errors.' => '',
+  'Driver not found, check your config.php' => '',
   'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => '',
+  'Insert Mode must be \'insert\' or \'replace\'' => '',
   'MySQL Driver' => '',
+  'No valid Entity Class is given: {0}' => '',
+  'No valid Entity Name is given: {0}' => '',
   'SQLite Driver' => '',
   'The file does not have an acceptable extension ({file_extensions})' => '',
   'The file is not a valid image (only {image_types} are allowed)' => '',

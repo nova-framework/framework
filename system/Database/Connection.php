@@ -144,6 +144,28 @@ abstract class Connection extends PDO
         return $fetchMethod;
     }
 
+    public static function getParamTypes(array $params)
+    {
+        $result = array();
+
+        foreach ($params as $key => $value) {
+            if (is_integer($value)) {
+                $result[$key] = PDO::PARAM_INT;
+            }
+            else if (is_bool($value)) {
+                $result[$key] = PDO::PARAM_BOOL;
+            }
+            else if($value === null) {
+                $result[$key] = PDO::PARAM_NULL;
+            }
+            else {
+                $result[$key] = PDO::PARAM_STR;
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Basic execute statement. Only for queries with no binding parameters
      * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
@@ -217,8 +239,15 @@ abstract class Connection extends PDO
         foreach ($bindParams as $key => $value) {
             if (is_integer($value)) {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":$key", $value);
+            }
+            else if (is_bool($value)) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_BOOL);
+            }
+            else if($value === null) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_NULL);
+            }
+            else {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
             }
         }
 
@@ -338,8 +367,15 @@ abstract class Connection extends PDO
         foreach ($data as $key => $value) {
             if (is_integer($value)) {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":$key", $value);
+            }
+            else if (is_bool($value)) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_BOOL);
+            }
+            else if($value === null) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_NULL);
+            }
+            else {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
             }
         }
 
@@ -425,8 +461,15 @@ abstract class Connection extends PDO
             foreach ($record as $key => $value) {
                 if (is_integer($value)) {
                     $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue(":$key", $value);
+                }
+                else if (is_bool($value)) {
+                    $stmt->bindValue(":$key", $value, PDO::PARAM_BOOL);
+                }
+                else if($value === null) {
+                    $stmt->bindValue(":$key", $value, PDO::PARAM_NULL);
+                }
+                else {
+                    $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
                 }
             }
 
@@ -560,19 +603,33 @@ abstract class Connection extends PDO
 
         // Bind fields
         foreach ($data as $key => $value) {
-            if (is_int($value)) {
+            if (is_integer($value)) {
                 $stmt->bindValue(":field_$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":field_$key", $value);
+            }
+            else if (is_bool($value)) {
+                $stmt->bindValue(":field_$key", $value, PDO::PARAM_BOOL);
+            }
+            else if($value === null) {
+                $stmt->bindValue(":field_$key", $value, PDO::PARAM_NULL);
+            }
+            else {
+                $stmt->bindValue(":field_$key", $value, PDO::PARAM_STR);
             }
         }
 
         // Bind values
         foreach ($bindParams as $key => $value) {
-            if (is_int($value)) {
+            if (is_integer($value)) {
                 $stmt->bindValue(":where_$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":where_$key", $value);
+            }
+            else if (is_bool($value)) {
+                $stmt->bindValue(":where_$key", $value, PDO::PARAM_BOOL);
+            }
+            else if($value === null) {
+                $stmt->bindValue(":where_$key", $value, PDO::PARAM_NULL);
+            }
+            else {
+                $stmt->bindValue(":where_$key", $value, PDO::PARAM_STR);
             }
         }
 
@@ -675,8 +732,15 @@ abstract class Connection extends PDO
             foreach ($record as $key => $value) {
                 if (is_integer($value)) {
                     $stmt->bindValue(":field_$key", $value, PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue(":field_$key", $value);
+                }
+                else if (is_bool($value)) {
+                    $stmt->bindValue(":field_$key", $value, PDO::PARAM_BOOL);
+                }
+                else if($value === null) {
+                    $stmt->bindValue(":field_$key", $value, PDO::PARAM_NULL);
+                }
+                else {
+                    $stmt->bindValue(":field_$key", $value, PDO::PARAM_STR);
                 }
             }
 
@@ -686,8 +750,15 @@ abstract class Connection extends PDO
 
                 if (is_integer($value)) {
                     $stmt->bindValue(":where_$key", $value, PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue(":where_$key", $value);
+                }
+                else if (is_bool($value)) {
+                    $stmt->bindValue(":where_$key", $value, PDO::PARAM_BOOL);
+                }
+                else if($value === null) {
+                    $stmt->bindValue(":where_$key", $value, PDO::PARAM_NULL);
+                }
+                else {
+                    $stmt->bindValue(":where_$key", $value, PDO::PARAM_STR);
                 }
             }
 
@@ -761,8 +832,15 @@ abstract class Connection extends PDO
         foreach ($bindParams as $key => $value) {
             if (is_integer($value)) {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue(":$key", $value);
+            }
+            else if (is_bool($value)) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_BOOL);
+            }
+            else if($value === null) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_NULL);
+            }
+            else {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
             }
         }
 
@@ -799,9 +877,16 @@ abstract class Connection extends PDO
             }
 
             if (is_integer($value)) {
-                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue("$key", $value);
+                $stmt->bindValue($key, $value, PDO::PARAM_INT);
+            }
+            else if (is_bool($value)) {
+                $stmt->bindValue($key, $value, PDO::PARAM_BOOL);
+            }
+            else if($value === null) {
+                $stmt->bindValue($key, $value, PDO::PARAM_NULL);
+            }
+            else {
+                $stmt->bindValue($key, $value, PDO::PARAM_STR);
             }
         }
 

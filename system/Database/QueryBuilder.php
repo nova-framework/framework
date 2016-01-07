@@ -11,9 +11,9 @@ namespace Nova\Database;
 
 use Nova\Database\Connection;
 
-use FluentPDO;
-use FluentStructure;
-use PDO;
+use \FluentPDO;
+use \FluentStructure;
+use \PDO;
 
 
 class QueryBuilder extends FluentPDO;
@@ -23,5 +23,5 @@ class QueryBuilder extends FluentPDO;
     {
         parent::__construct($connection, $structure);
     }
-    
+
 }

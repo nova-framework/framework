@@ -13,8 +13,10 @@ namespace Nova\Database;
 use Nova\Database\Manager;
 use Nova\Database\QueryBuilder;
 
+use \PDO;
 
-abstract class Connection extends \PDO
+
+abstract class Connection extends PDO
 {
     /** @var string Return type. */
     protected $returnType = 'array';
@@ -47,25 +49,8 @@ abstract class Connection extends \PDO
             $this->returnType = $config['return_type'];
         }
 
-        if($this->returnType == 'array') {
-            $fetchMethod = \PDO::FETCH_ASSOC;
-        }
-        else if($this->returnType == 'object') {
-            $fetchMethod = \PDO::FETCH_OBJ;
-        }
-        else {
-            $classPath = str_replace('\\', '/', ltrim($this->returnType, '\\'));
-
-            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$this->returnType);
-            }
-
-            if(! class_exists($this->returnType)) {
-                throw new \Exception("No valid Entity Class is given: " .$this->returnType);
-            }
-
-            $fetchMethod = \PDO::FETCH_CLASS;
-        }
+        // Prepare the FetchMethod and check the returnType
+        $fetchMethod = Connection::getFetchMethod($this->returnType);
 
         // Store the config in class variable.
         $this->config = $config;
@@ -77,8 +62,8 @@ abstract class Connection extends \PDO
         // Call the PDO constructor.
         parent::__construct($dsn, $username, $password, $options);
 
-        $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, $fetchMethod);
+        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $fetchMethod);
     }
 
     /**
@@ -115,8 +100,8 @@ abstract class Connection extends \PDO
     }
 
     /**
-     * Get native connection. Could be \PDO
-     * @return \PDO
+     * Get native connection. Could be PDO
+     * @return PDO
      */
     public function getLink()
     {
@@ -126,6 +111,36 @@ abstract class Connection extends \PDO
     public function getQueryBuilder()
     {
         return new QueryBuilder($this);
+    }
+
+    public static function getFetchMethod($returnType, &$fetchClass = null) {
+        // Prepare the parameters.
+        $className = null;
+
+        if($returnType == 'array') {
+            $fetchMethod = PDO::FETCH_ASSOC;
+        }
+        else if($returnType == 'object') {
+            $fetchMethod = PDO::FETCH_OBJ;
+        }
+        else {
+            $fetchMethod = PDO::FETCH_CLASS;
+
+            // Check and setup the className.
+            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                throw new \Exception("No valid Entity Name is given: " .$returnType);
+            }
+
+            if(! class_exists($fetchType)) {
+                throw new \Exception("No valid Entity Class is given: " .$returnType);
+            }
+
+            $fetchClass = $returnType;
+        }
+
+        return $fetchMethod;
     }
 
     /**
@@ -140,7 +155,7 @@ abstract class Connection extends \PDO
     public function raw($sql, $fetch = false)
     {
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
-        $method = ($this->returnType == 'array') ? \PDO::FETCH_ASSOC : \PDO::FETCH_OBJ;
+        $method = ($this->returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
 
         $this->queryCount++;
 
@@ -159,7 +174,7 @@ abstract class Connection extends \PDO
         $returnType = $returnType ? $returnType : $this->returnType;
 
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
-        $method = ($returnType == 'array') ? \PDO::FETCH_ASSOC : \PDO::FETCH_OBJ;
+        $method = ($returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
 
         $this->queryCount++;
 
@@ -189,38 +204,18 @@ abstract class Connection extends \PDO
         // What return type? Use default if no return type is given in the call.
         $returnType = $returnType ? $returnType : $this->returnType;
 
-        // Prepare the parameters.
+        // Prepare the FetchMethod and check the returnType
         $className = null;
 
-        if($returnType == 'array') {
-            $fetchMethod = \PDO::FETCH_ASSOC;
-        }
-        else if($returnType == 'object') {
-            $fetchMethod = \PDO::FETCH_OBJ;
-        }
-        else {
-            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
-
-            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                throw new \Exception("No valid Entity Name is given: " .$returnType);
-            }
-
-            if(! class_exists($returnType)) {
-                throw new \Exception("No valid Entity Class is given: " .$returnType);
-            }
-
-            $className = $returnType;
-
-            $fetchMethod = \PDO::FETCH_CLASS;
-        }
+        $fetchMethod = Connection::getFetchMethod($returnType, $className);
 
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
         foreach ($bindParams as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            if (is_integer($value)) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
             } else {
                 $stmt->bindValue(":$key", $value);
             }
@@ -238,7 +233,7 @@ abstract class Connection extends \PDO
 
         if($fetchAll) {
             // Continue with fetching all records.
-            if ($fetchMethod === \PDO::FETCH_CLASS) {
+            if ($fetchMethod === PDO::FETCH_CLASS) {
                 // Fetch in class
                 $result = $stmt->fetchAll($fetchMethod, $className);
             }
@@ -254,7 +249,7 @@ abstract class Connection extends \PDO
         }
 
         // Continue with fetching one record.
-        if ($fetchMethod === \PDO::FETCH_CLASS) {
+        if ($fetchMethod === PDO::FETCH_CLASS) {
             // Fetch in class
             return $stmt->fetch($fetchMethod, $className);
         }
@@ -340,8 +335,8 @@ abstract class Connection extends \PDO
         $stmt = $this->prepare("$mode INTO $table ($fieldNames) VALUES ($fieldValues)");
 
         foreach ($data as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            if (is_integer($value)) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
             } else {
                 $stmt->bindValue(":$key", $value);
             }
@@ -427,8 +422,8 @@ abstract class Connection extends \PDO
             $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 
             foreach ($record as $key => $value) {
-                if (is_int($value)) {
-                    $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+                if (is_integer($value)) {
+                    $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
                 } else {
                     $stmt->bindValue(":$key", $value);
                 }
@@ -565,7 +560,7 @@ abstract class Connection extends \PDO
         // Bind fields
         foreach ($data as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue(":field_$key", $value, \PDO::PARAM_INT);
+                $stmt->bindValue(":field_$key", $value, PDO::PARAM_INT);
             } else {
                 $stmt->bindValue(":field_$key", $value);
             }
@@ -574,7 +569,7 @@ abstract class Connection extends \PDO
         // Bind values
         foreach ($bindParams as $key => $value) {
             if (is_int($value)) {
-                $stmt->bindValue(":where_$key", $value, \PDO::PARAM_INT);
+                $stmt->bindValue(":where_$key", $value, PDO::PARAM_INT);
             } else {
                 $stmt->bindValue(":where_$key", $value);
             }
@@ -677,8 +672,8 @@ abstract class Connection extends \PDO
 
             // Bind fields
             foreach ($record as $key => $value) {
-                if (is_int($value)) {
-                    $stmt->bindValue(":field_$key", $value, \PDO::PARAM_INT);
+                if (is_integer($value)) {
+                    $stmt->bindValue(":field_$key", $value, PDO::PARAM_INT);
                 } else {
                     $stmt->bindValue(":field_$key", $value);
                 }
@@ -688,8 +683,8 @@ abstract class Connection extends \PDO
             foreach ($whereKeys as $key => $column) {
                 $value = $record[$column];
 
-                if (is_int($value)) {
-                    $stmt->bindValue(":where_$key", $value, \PDO::PARAM_INT);
+                if (is_integer($value)) {
+                    $stmt->bindValue(":where_$key", $value, PDO::PARAM_INT);
                 } else {
                     $stmt->bindValue(":where_$key", $value);
                 }
@@ -763,8 +758,8 @@ abstract class Connection extends \PDO
 
         // Bind parameters.
         foreach ($bindParams as $key => $value) {
-            if (is_int($value)) {
-                $stmt->bindValue(":$key", $value, \PDO::PARAM_INT);
+            if (is_integer($value)) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
             } else {
                 $stmt->bindValue(":$key", $value);
             }
@@ -787,7 +782,7 @@ abstract class Connection extends \PDO
      *
      * @param string $sql Query
      * @param array $bindParams optional binding values
-     * @return \PDOStatement|mixed
+     * @return PDOStatement|mixed
      *
      * @throws \Exception
      */
@@ -802,8 +797,8 @@ abstract class Connection extends \PDO
                 $key = ':' . $key;
             }
 
-            if (is_int($value)) {
-                $stmt->bindValue("$key", $value, \PDO::PARAM_INT);
+            if (is_integer($value)) {
+                $stmt->bindValue("$key", $value, PDO::PARAM_INT);
             } else {
                 $stmt->bindValue("$key", $value);
             }
@@ -826,7 +821,7 @@ abstract class Connection extends \PDO
      *
      * @return string|false Quoted string or false on failure.
      */
-    public function escape($string, $parameter_type = \PDO::PARAM_STR)
+    public function escape($string, $parameter_type = PDO::PARAM_STR)
     {
         return parent::quote($string, $parameter_type);
     }

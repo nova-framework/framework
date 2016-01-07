@@ -12,6 +12,7 @@ namespace Nova\Database;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager;
+
 use \PDO;
 
 /**
@@ -23,7 +24,7 @@ use \PDO;
  *
  * Example of usage:
  *
- * // After namespace: use \Nova\Database\Builder as TableBuilder;
+ * // After namespace: use \Nova\Database\TableBuilder;
  *
  * // Model or Controller method
  * $tableBuilder = new TableBuilder;
@@ -42,7 +43,7 @@ use \PDO;
  * @author volter9
  * @copyright volter9 ( c ) 2014
  */
-class Builder
+class TableBuilder
 {
     /**
      * @const int AUTO_INCREMENT    AUTO_INCREMENT flat

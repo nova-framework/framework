@@ -38,7 +38,7 @@ class Manager
         $config = Config::get('database');
 
         if (! isset($config[$linkName])) {
-            throw new \Exception("Connection name '".$linkName."' is not defined in your configuration!");
+            throw new \Exception(__d('system', 'Connection name \'{0}\' is not defined in your configuration!', $linkName));
         }
 
         // Connection, when already have an instance, return it!
@@ -65,7 +65,7 @@ class Manager
         }
 
         if(! class_exists($wrapperClass)) {
-            throw new \Exception("No valid Wrapper Class is given: " .$wrapperClass);
+            throw new \Exception(__d('system', 'No valid Wrapper Class is given: {0}', $wrapperClass));
         }
 
         // Will set the default fetchMode and fetchType when provided in the config.

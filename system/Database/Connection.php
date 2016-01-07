@@ -166,22 +166,21 @@ abstract class Connection extends PDO
         return $result;
     }
 
-    public function bindParams($statement, array $bindParams, $prefix = ':', array $paramTypes = array())
+    public function bindParams($statement, array $params, array $paramTypes = array(), $prefix = ':')
     {
-        if(empty($bindParams)) {
+        if(empty($params)) {
             return;
         }
 
         // Bind the key and values (only if given).
-        foreach ($bindParams as $key => $value) {
+        foreach ($params as $key => $value) {
             if(isset($paramTypes[$key])) {
-                $paramType = $paramTypes[$key];
-
-                $statement->bindValue($prefix .$key, $value, $paramType);
+                $statement->bindValue($prefix .$key, $value, $paramTypes[$key]);
 
                 continue;
             }
 
+            // No parameter Type found, we try our best of to guess it.
             if (is_integer($value)) {
                 $statement->bindValue($prefix .$key, $value, PDO::PARAM_INT);
             }
@@ -249,7 +248,7 @@ abstract class Connection extends PDO
      */
     public function fetchArray($statement, array $params = array(), array $paramTypes = array())
     {
-        return $this->select($statement, $params, false, 'array', $paramTypes);
+        return $this->select($statement, $params, $paramTypes, 'array');
     }
 
     /**
@@ -265,7 +264,7 @@ abstract class Connection extends PDO
      */
     public function fetchObject($statement, array $params = array(), array $paramTypes = array())
     {
-        return $this->select($statement, $params, false, 'object', $paramTypes);
+        return $this->select($statement, $params, $paramTypes, 'object');
     }
 
     /**
@@ -283,14 +282,14 @@ abstract class Connection extends PDO
      */
     public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
     {
-        if (($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
+        if (($this->returnType != 'array') && ($this->returnType != 'object')) {
             $returnType = ($returnType !== null) ? $returnType : $this->returnType;
         }
         else if($returnType === null) {
             throw new \Exception(__d('system', 'No valid Entity Class is given'));
         }
 
-        return $this->select($statement, $params, $fetchAll, $returnType, $paramTypes);
+        return $this->select($statement, $params, $paramTypes, $returnType, $fetchAll);
     }
 
     /**
@@ -304,7 +303,7 @@ abstract class Connection extends PDO
      */
     public function fetchAll($sql, array $params = array(), $paramTypes = array(), $returnType = null)
     {
-        return $this->select($sql, $params, true, $returnType, $paramTypes);
+        return $this->select($sql, $params, $paramTypes, $returnType, true);
     }
 
     /**
@@ -319,7 +318,7 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function select($sql, $bindParams = array(), $fetchAll = false, $returnType = null, array $paramTypes = array())
+    public function select($sql, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
     {
         // Append select if it isn't appended.
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
@@ -338,7 +337,7 @@ abstract class Connection extends PDO
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
-        $this->bindParams($stmt, $bindParams, ':', $paramTypes);
+        $this->bindParams($stmt, $params, $paramTypes, ':');
 
         // Execute, we should capture the status of the result.
         $status = $stmt->execute();
@@ -387,9 +386,9 @@ abstract class Connection extends PDO
      * @return object|array|null|false
      * @throws \Exception
      */
-    public function selectOne($sql, $bindParams = array(), $returnType = null)
+    public function selectOne($sql, array $params = array(), array $paramTypes = array(), $returnType = null)
     {
-        return $this->select($sql, $bindParams, false, $returnType);
+        return $this->select($sql, $params, $paramTypes, $returnType);
     }
 
     /**
@@ -402,9 +401,9 @@ abstract class Connection extends PDO
      * @return array|null|false
      * @throws \Exception
      */
-    public function selectAll($sql, $bindParams = array(), $returnType = null)
+    public function selectAll($sql, array $params = array(), array $paramTypes = array(), $returnType = null)
     {
-        return $this->select($sql, $bindParams, true, $returnType);
+        return $this->select($sql, $params, $paramTypes, $returnType, true);
     }
 
     /**
@@ -419,7 +418,7 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function insert($table, $data, $transaction = false, $mode = 'insert')
+    public function insert($table, array $data, array $paramTypes = array(), $transaction = false, $mode = 'insert')
     {
         $insertId = 0;
 
@@ -453,7 +452,7 @@ abstract class Connection extends PDO
 
         $stmt = $this->prepare("$mode INTO $table ($fieldNames) VALUES ($fieldValues)");
 
-        $this->bindParams($stmt, $data);
+        $this->bindParams($stmt, $data, $paramTypes);
 
         // Execute
         $this->queryCount++;
@@ -498,7 +497,7 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function insertBatch($table, $data, $transaction = false)
+    public function insertBatch($table, array $data, array $paramTypes = array(), $transaction = false)
     {
         // Check for valid data.
         if (! is_array($data)) {
@@ -534,7 +533,7 @@ abstract class Connection extends PDO
 
             $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 
-            $this->bindParams($stmt, $record);
+            $this->bindParams($stmt, $record, $paramTypes);
 
             // Execute
             $this->queryCount++;
@@ -579,9 +578,9 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function replace($table, $data, $transaction = false)
+    public function replace($table, array $params, array $paramTypes = array(), $transaction = false)
     {
-        return $this->insert($table, $data, $transaction, 'replace');
+        return $this->insert($table, $params, $paramTypes, $transaction, 'replace');
     }
 
     /**
@@ -594,10 +593,8 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function update($table, $data, $where)
+    public function update($table, array $data, $where, array $paramTypes = array())
     {
-        $bindParams = array();
-
         // Sort on key
         ksort($data);
 
@@ -621,6 +618,8 @@ abstract class Connection extends PDO
         ksort($where);
 
         // Where :bind for auto binding
+        $whereParams = array();
+
         $whereDetails = '';
 
         if(is_array($where)) {
@@ -654,7 +653,7 @@ abstract class Connection extends PDO
 
                 $whereDetails .= "$key $operator :where_$key";
 
-                $bindParams[$key] = $value;
+                $whereParams[$key] = $value;
             }
         }
         else if(is_string($where)) {
@@ -665,10 +664,10 @@ abstract class Connection extends PDO
         $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
         // Bind fields
-        $this->bindParams($stmt, $data, ':field_');
+        $this->bindParams($stmt, $data, $paramTypes, ':field_');
 
         // Bind values
-        $this->bindParams($stmt, $bindParams, ':where_');
+        $this->bindParams($stmt, $whereParams, $paramTypes, ':where_');
 
         // Execute
         $this->queryCount++;
@@ -712,7 +711,7 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function updateBatch($table, $data, $whereKey)
+    public function updateBatch($table, array $data, $whereKey, array $paramTypes = array())
     {
         // Check for valid data
         if (! is_array($data)) {
@@ -766,10 +765,10 @@ abstract class Connection extends PDO
             $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
             // Bind fields
-            $this->bindParams($stmt, $record, ':field_');
+            $this->bindParams($stmt, $record, $paramTypes, ':field_');
 
             // Bind where
-            $this->bindParams($stmt, $record, ':where_');
+            $this->bindParams($stmt, $whereKeys, $paramTypes, ':where_');
 
             // Execute
             $this->queryCount++;
@@ -793,7 +792,7 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function delete($table, $where)
+    public function delete($table, $where, array $paramTypes = array())
     {
         $bindParams = array();
 
@@ -838,7 +837,9 @@ abstract class Connection extends PDO
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
         // Bind parameters.
-        $this->bindParams($stmt, $bindParams);
+        if(! empty($bindParams)) {
+            $this->bindParams($stmt, $bindParams, $paramTypes);
+        }
 
         // Execute and return if failure.
         $this->queryCount++;
@@ -861,23 +862,26 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function rawPrepare($sql, $bindParams = array())
+    public function rawPrepare($sql, $params = array(), array $paramTypes = array())
     {
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
-        $data = array();
+        $bindParams = array();
 
-        foreach ($bindParams as $key => $value) {
+        foreach ($params as $key => $value) {
             if (substr($key, 0, 1) !== ':') {
                 $key = ':' .$key;
             }
 
-            $data[$key] = $value;
+            $bindParams[$key] = $value;
         }
 
-        $this->bindParams($stmt, $data, '');
+        // Bind parameters.
+        if(! empty($bindParams)) {
+            $this->bindParams($stmt, $bindParams, $paramTypes, '');
+        }
 
         $this->queryCount++;
 

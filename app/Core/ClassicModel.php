@@ -380,7 +380,7 @@ class ClassicModel
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
 
         //
-        $result = $this->select($sql, array(), true);
+        $result = $this->select($sql, array(), array(), true);
 
         // Reset the Model State.
         $this->resetState();
@@ -429,7 +429,7 @@ class ClassicModel
         //
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
 
-        $result = $this->select($sql, $bindParams, true);
+        $result = $this->select($sql, $bindParams, array(), true);
 
         if (is_array($result)) {
             foreach ($result as $key => &$row) {
@@ -1019,7 +1019,7 @@ class ClassicModel
             $bindParams['where_ignore'] = $ignore;
         }
 
-        $data = $this->select($sql, $bindParams, true);
+        $data = $this->select($sql, $bindParams, array(), true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -1114,12 +1114,12 @@ class ClassicModel
      *
      * @throws \Exception
      */
-    public function select($sql, $bindParams = array(), $fetchAll = false)
+    public function select($sql, $bindParams = array(), $paramTypes = array(), $fetchAll = false)
     {
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->select($sql, $bindParams, $fetchAll, $this->tempReturnType);
+        $result = $this->db->select($sql, $bindParams, $paramTypes, $this->tempReturnType, $fetchAll);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;

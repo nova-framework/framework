@@ -337,7 +337,7 @@ abstract class Connection extends PDO
         $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
-        $this->bindParams($stmt, $params, $paramTypes, ':');
+        $this->bindParams($stmt, $params, $paramTypes);
 
         // Execute, we should capture the status of the result.
         $status = $stmt->execute();

@@ -217,7 +217,7 @@ class ClassicModel
         return $this->db->getQueryBuilder($structure);
     }
 
-    public function buildQuery($method, $primaryKey = null)
+    public function buildQuery($method, $params = null)
     {
         // Get the complete Table name.
         $table = $this->table();
@@ -225,51 +225,53 @@ class ClassicModel
         // Get a QueryBuilder instance.
         $queryBuilder = $this->queryBuilder();
 
-        // Switch the methods.
+        // Firstly, we configure for the 'select' method.
         if ($method == 'select') {
-            $query = $queryBuilder->from($table, $primaryKey);
+            $query = $queryBuilder->from($table, $params);
 
             // Setup the fetch Method.
             if ($this->tempReturnType == 'array') {
-                $query->asObject(false);
+                $asObject = false;
             }
             else if($this->tempReturnType == 'object') {
-                $query->asObject();
+                $asObject = true;
             }
             else  {
-                // Check and setup the className.
-                $className = $this->tempReturnType;
+                $asObject = $this->tempReturnType;
 
-                $classPath = str_replace('\\', '/', ltrim($className, '\\'));
+                // Check the className.
+                $classPath = str_replace('\\', '/', ltrim($asObject, '\\'));
 
                 if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                    throw new \Exception(__('No valid Entity Name is given: {0}', $className));
+                    throw new \Exception(__('No valid Entity Name is given: {0}', $asObject));
                 }
 
-                if(! class_exists($className)) {
-                    throw new \Exception(__('No valid Entity Class is given: {0}', $className));
+                if(! class_exists($asObject)) {
+                    throw new \Exception(__('No valid Entity Class is given: {0}', $asObject));
                 }
-
-                $query->asObject($className);
             }
-        }
-        else if ($method == 'insert') {
-            $values = is_array($primaryKey) ? $primaryKey : array();
 
-            $query = $queryBuilder->insertInto($table, $values);
+            // Make sure our temp return type is correct.
+            $this->tempReturnType = $this->returnType;
+
+            return $query->asObject($asObject);
+        }
+
+        // Configure the other Query building methods.
+        if ($method == 'insert') {
+            $params = is_array($params) ? $params : array();
+
+            $query = $queryBuilder->insertInto($table, $params);
         }
         else if ($method == 'update') {
-            $query = $queryBuilder->update($table, $primaryKey);
+            $query = $queryBuilder->update($table, $params);
         }
         else if ($method == 'delete') {
-            $query = $queryBuilder->delete($table, $primaryKey);
+            $query = $queryBuilder->delete($table, $params);
         }
         else {
             throw new \Exception(__('No valid Query building Method given'));
         }
-
-        // Make sure our temp return type is correct.
-        $this->tempReturnType = $this->returnType;
 
         return $query;
     }
@@ -1073,7 +1075,8 @@ class ClassicModel
             foreach ($this->protectedFields as $field) {
                 if (is_object($row)) {
                     unset($row->$field);
-                } else {
+                }
+                else {
                     unset($row[$field]);
                 }
             }
@@ -1114,12 +1117,12 @@ class ClassicModel
      *
      * @throws \Exception
      */
-    public function select($sql, $bindParams = array(), $paramTypes = array(), $fetchAll = false)
+    public function select($sql, $params = array(), $paramTypes = array(), $fetchAll = false)
     {
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $result = $this->db->select($sql, $bindParams, $paramTypes, $this->tempReturnType, $fetchAll);
+        $result = $this->db->select($sql, $params, $paramTypes, $this->tempReturnType, $fetchAll);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
@@ -1140,12 +1143,12 @@ class ClassicModel
         return $result;
     }
 
-    public function prepare($sql, $bindParams = array())
+    public function prepare($sql, $params = array(), $paramTypes = array())
     {
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        return $this->db->rawPrepare($sql, $bindParams);
+        return $this->db->rawPrepare($sql, $params, $paramTypes);
     }
 
     //--------------------------------------------------------------------

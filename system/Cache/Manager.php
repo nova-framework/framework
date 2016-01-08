@@ -23,11 +23,9 @@ class Manager
     protected static $instances[] = array();
 
 
-    protected function __construct($storage = 'files', $config = array())
+    protected function __construct($storage = '')
     {
-        if(empty($config)) {
-            $config = Config::get('cache');
-        }
+        $config = Config::get('cache');
 
         $config['storage'] = $storage;
 
@@ -40,15 +38,13 @@ class Manager
         $this->cache = phpFastCache($storage, $config);
     }
 
-    public static function getCache($storage = 'files', $config = array())
+    public static function getCache($storage = 'files')
     {
-        $token = md5(json_encode($config) .$storage);
-
-        if(! isset(self::$instances[$token])) {
-            self::$instances[$token] = new self($storage, $config);
+        if(! isset(self::$instances[$storage])) {
+            self::$instances[$storage] = new self($storage);
         }
 
-        return self::$instances[$token];
+        return self::$instances[$storage];
     }
 
     /**

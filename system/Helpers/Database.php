@@ -94,7 +94,19 @@ class Database
             $returnType = 'array';
         }
 
-        return $this->db->select($sql, $array, array(), $returnType, true);
+        // Pre-process the $array to make the bindings compatible with \Nova\Database\Connection.
+        $where = array();
+
+        foreach($array as $field => $value) {
+            // Strip the ':' character i it exists in first position of $field.
+            if(substr($field, 0, 1) === ':') {
+                $field = substr($field, 1);
+            }
+
+            $where[$field] = $value;
+        }
+
+        return $this->db->select($sql, $where, array(), $returnType, true);
     }
 
     /**
@@ -144,7 +156,7 @@ class Database
     {
         return $this->db->truncate($table);
     }
-
+    
     /**
      * Provide direct access to any of \Nova\Database\Connection methods.
      *

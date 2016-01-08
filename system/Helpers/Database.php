@@ -11,7 +11,7 @@
 
 namespace Nova\Helpers;
 
-use Nova\Database\Manager as Database;
+use Nova\Database\Manager;
 use Nova\Database\Connection;
 
 /**
@@ -57,7 +57,7 @@ class Database
 
     protected __construct($linkName)
     {
-        $this->db = Database::getConnection($linkName);
+        $this->db = Manager::getConnection($linkName);
     }
 
     /**

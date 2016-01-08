@@ -1353,7 +1353,7 @@ class ClassicModel
         else if(count($params) == 2) {
             $operator = array_shift($params);
 
-            if(! in_array($operator, array("=", "!=", ">", "<", ">=", "<=", "<>"), true)) {
+            if(! in_array($operator, Connection::$whereOperators, true)) {
                 throw new \UnexpectedValueException(__('Second parameter is invalid'));
             }
 

@@ -14,12 +14,13 @@ use Nova\Database\Manager;
 use Nova\Database\QueryBuilder;
 
 use \FluentStructure;
+use \Closure;
 use \PDO;
 
 
 abstract class Connection extends PDO
 {
-    private static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>");
+    public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>");
 
     /** @var string Return type. */
     protected $returnType = 'array';
@@ -644,6 +645,36 @@ abstract class Connection extends PDO
     abstract public function truncate($table);
 
     /**
+     * Executes a function in a transaction.
+     *
+     * The function gets passed this Connection instance as an (optional) parameter.
+     *
+     * If an exception occurs during execution of the function or transaction commit,
+     * the transaction is rolled back and the exception re-thrown.
+     *
+     * @param \Closure $closure The function to execute transactionally.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function transactional(Closure $closure)
+    {
+        $this->beginTransaction();
+
+        try {
+            $closure($this);
+
+            $this->commit();
+        }
+        catch (Exception $e) {
+            $this->rollback();
+
+            throw $e;
+        }
+    }
+
+    /**
      * Get the columns names for the specified Database Table.
      *
      * @param  string $table table name
@@ -670,7 +701,7 @@ abstract class Connection extends PDO
 
         foreach ($where as $field => $value) {
             if($idx > 0) {
-                // Add the 'AND' keyword, because a condition will follow.
+                // Add the 'AND' keyword, because a new condition will follow.
                 $result .= ' AND ';
             }
             else {
@@ -680,38 +711,39 @@ abstract class Connection extends PDO
             // Simplify the white spaces on $field
             $field = preg_replace('/\s+/', ' ', trim($field));
 
-            if(($value !== null) && ! empty($value)) {
-                if(strpos($field, ' ') !== false) {
-                    $segments = explode(' ', $field);
-
-                    if((count($segments) != 3) || ($segments[2] != '?')) {
-                        throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-                    }
-
-                    $field    = $segments[0];
-                    $operator = $segments[1];
-
-                    if(! in_array($operator, self::$whereOperators, true)) {
-                        throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-                    }
-
-                    $result .= "$field $operator :where_$field";
-                }
-                else if (is_array($value)) {
-                    // We need something like: user_id IN (1, 2, 3)
-                    $result .= "$field IN (" . implode(', ', array_map(array($this, 'quote'), $value)) . ")";
-                }
-                else {
-                    $result .= "$field = :where_$field";
-                }
-
-                if(! is_array($value)) {
-                    $bindParams[$field] = $value;
-                }
-            }
-            else {
+            if(($value === null) || empty($value)) {
                 // A string based condition; use it directly.
                 $result .= $field;
+
+                continue;
+            }
+
+            if(strpos($field, ' ') !== false) {
+                $segments = explode(' ', $field);
+
+                if((count($segments) != 3) || ($segments[2] != '?')) {
+                    throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+                }
+
+                $field    = $segments[0];
+                $operator = $segments[1];
+
+                if(! in_array($operator, self::$whereOperators, true)) {
+                    throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+                }
+
+                $result .= "$field $operator :where_$field";
+            }
+            else if (is_array($value)) {
+                // We need something like: user_id IN (1, 2, 3)
+                $result .= "$field IN (" . implode(', ', array_map(array($this, 'quote'), $value)) . ")";
+            }
+            else {
+                $result .= "$field = :where_$field";
+            }
+
+            if(! is_array($value)) {
+                $bindParams[$field] = $value;
             }
         }
 

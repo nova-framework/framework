@@ -37,7 +37,7 @@ class Database
      */
     public static function get($linkName = false)
     {
-        if(is_array($linkName))
+        if(is_array($linkName)) {
             throw new \Exception(__d('system', 'Invalid Configuration on the Legacy Helper');
         }
 

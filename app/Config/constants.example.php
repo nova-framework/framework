@@ -49,3 +49,8 @@ define('SITE_TITLE', 'V3.0');
  * Optional set a site email address.
  */
 // define('SITE_EMAIL', 'email@domain.com');
+
+/**
+ * Set the Cache Path.
+ */
+define('CACHEPATH', BASEPATH .'storage' .DS .'cache');

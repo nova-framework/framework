@@ -106,13 +106,8 @@ class Database
 
             $where[$field] = $value;
 
-            // Prepare the compat entry into paramTypes.
-            if (is_integer($value)) {
-                $paramTypes[$field] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$field] = PDO::PARAM_STR;
-            }
+            // Prepare the old style entry into paramTypes.
+            $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
         return $this->db->select($sql, $where, $paramTypes, $returnType, true);
@@ -131,13 +126,8 @@ class Database
         $paramTypes = array();
 
         foreach($data as $field => $value) {
-             // Prepare the compat entry into paramTypes.
-            if (is_integer($value)) {
-                $paramTypes[$field] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$field] = PDO::PARAM_STR;
-            }
+            // Prepare the compat entry into paramTypes.
+            $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
         return $this->db->insert($table, $data, $paramTypes);
@@ -157,23 +147,13 @@ class Database
         $paramTypes = array();
 
         foreach($data as $field => $value) {
-             // Prepare the compat entry into paramTypes.
-            if (is_integer($value)) {
-                $paramTypes[$field] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$field] = PDO::PARAM_STR;
-            }
+            // Prepare the compat entry into paramTypes.
+            $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
         foreach($where as $field => $value) {
-             // Prepare the compat entry into paramTypes.
-            if (is_integer($value)) {
-                $paramTypes[$field] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$field] = PDO::PARAM_STR;
-            }
+            // Prepare the compat entry into paramTypes.
+            $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
         return $this->db->update($table, $data, $where, $paramTypes);
@@ -194,13 +174,8 @@ class Database
         $paramTypes = array();
 
         foreach($where as $field => $value) {
-             // Prepare the compat entry into paramTypes.
-            if (is_integer($value)) {
-                $paramTypes[$field] = PDO::PARAM_INT;
-            }
-            else {
-                $paramTypes[$field] = PDO::PARAM_STR;
-            }
+            // Prepare the compat entry into paramTypes.
+            $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
         return $this->db->delete($table, $where, $paramTypes);

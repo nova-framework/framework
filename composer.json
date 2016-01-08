@@ -12,6 +12,8 @@
             "role": "Developer"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=5.5.0",
         "doctrine/annotations": "1.2.*",
@@ -39,8 +41,6 @@
             "Nova\\Tests\\": "tests/Nova/Tests"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "archive": {
         "exclude": ["!vendor", "tests", "*phpunit.xml", ".travis.yml", "composer.phar"]
     }

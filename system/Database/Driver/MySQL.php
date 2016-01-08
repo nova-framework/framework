@@ -89,12 +89,12 @@ class MySQL extends Connection
     }
 
     /**
-     * Get the field names for the specified Database Table.
+     * Get the columns names for the specified Database Table.
      *
      * @param  string $table table name
      * @return array  Returns the Database Table fields
      */
-    public function listFields($table)
+    public function listColumns($table)
     {
         $columns = array();
 

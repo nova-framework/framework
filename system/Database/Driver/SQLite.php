@@ -70,7 +70,7 @@ class SQLite extends Connection
      * @param  string $table table name
      * @return array  Returns the Database Table fields
      */
-    public function listFields($table)
+    public function listColumns($table)
     {
         $columns = array();
 

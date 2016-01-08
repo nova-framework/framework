@@ -1,6 +1,6 @@
 <?php
 /**
- * BaseModel - Extended Base Class for all the Application Models.
+ * ClassicModel - Extended Base Class for all the Application Models.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -13,7 +13,9 @@ use Nova\Database\Manager as Database;
 use Nova\Input\Filter as InputFilter;
 
 use \FluentStructure;
+use \FluentPDO;
 use \PDO;
+
 
 class ClassicModel
 {
@@ -109,12 +111,17 @@ class ClassicModel
     /**
      * Temporary select's ORDER attribute.
      */
-    protected $tempSelectOrder = null;
+    protected $selectOrder = null;
 
     /**
      * Temporary select's LIMIT attribute.
      */
-    protected $tempSelectLimit = null;
+    protected $selectLimit = null;
+
+    /**
+     * Temporary select's OFFSET attribute.
+     */
+    protected $selectOffset = null;
 
     /**
      * Protected, non-modifiable attributes.
@@ -209,75 +216,76 @@ class ClassicModel
     // QueryBuilder Methods
     //--------------------------------------------------------------------
 
-    public function queryBuilder()
+    public function queryBuilder(FluentStructure $structure = null)
     {
-        // Get a QueryBuilder instance.
-        $structure = new FluentStructure($this->primaryKey);
+        if($structure === null) {
+            $structure = new FluentStructure($this->primaryKey);
+        }
 
+        // Get a QueryBuilder instance.
         return $this->db->getQueryBuilder($structure);
     }
 
-    public function buildQuery($method, $params = null)
+    public function buildQuery($method, $param = null)
     {
-        // Get the complete Table name.
-        $table = $this->table();
+        $returnType = $this->tempReturnType;
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
 
         // Get a QueryBuilder instance.
         $queryBuilder = $this->queryBuilder();
 
-        // Firstly, we configure for the 'select' method.
+        // First, check and configure for the 'select' Method.
         if ($method == 'select') {
-            $query = $queryBuilder->from($table, $params);
+            $query = $queryBuilder->from($this->table(), $param);
 
             // Setup the fetch Method.
-            if ($this->tempReturnType == 'array') {
-                $asObject = false;
+            if ($returnType == 'array') {
+                $object = false;
             }
-            else if($this->tempReturnType == 'object') {
-                $asObject = true;
+            else if($returnType == 'object') {
+                $object = true;
             }
             else  {
-                $asObject = $this->tempReturnType;
+                $object = $returnType;
 
-                // Check the className.
-                $classPath = str_replace('\\', '/', ltrim($asObject, '\\'));
+                // Check for a valid className.
+                $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
 
                 if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                    throw new \Exception(__('No valid Entity Name is given: {0}', $asObject));
+                    throw new \Exception(__('No valid Entity Name is given: {0}', $returnType));
                 }
 
-                if(! class_exists($asObject)) {
-                    throw new \Exception(__('No valid Entity Class is given: {0}', $asObject));
+                if(! class_exists($returnType)) {
+                    throw new \Exception(__('No valid Entity Class is given: {0}', $returnType));
                 }
             }
 
-            // Make sure our temp return type is correct.
-            $this->tempReturnType = $this->returnType;
-
-            return $query->asObject($asObject);
+            return $query->asObject($object);
         }
 
-        // Configure the other Query building methods.
+        // Then, configure the other Query building Methods.
         if ($method == 'insert') {
-            $params = is_array($params) ? $params : array();
+            $param = is_array($param) ? $param : array();
 
-            $query = $queryBuilder->insertInto($table, $params);
+            $query = $queryBuilder->insertInto($this->table(), $param);
         }
         else if ($method == 'update') {
-            $query = $queryBuilder->update($table, $params);
+            $query = $queryBuilder->update($this->table(), $param);
         }
         else if ($method == 'delete') {
-            $query = $queryBuilder->delete($table, $params);
+            $query = $queryBuilder->delete($this->table(), $param);
         }
         else {
-            throw new \Exception(__('No valid Query building Method given'));
+            throw new \Exception(__('No valid Method given for Query building'));
         }
 
         return $query;
     }
 
     //--------------------------------------------------------------------
-    // CRUD Methods
+    // CRUD Support Methods
     //--------------------------------------------------------------------
 
     /**
@@ -313,7 +321,8 @@ class ClassicModel
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
-        $result = $this->select($sql, array('value' => $id));
+        // Build and process the Query.
+        $result = $this->buildQuery('select')->where($this->primaryKey, $id)->fetch();
 
         if (! empty($result)) {
             $result = $this->trigger('afterFind', array('id' => $id, 'method' => 'find', 'fields' => $result));
@@ -337,20 +346,13 @@ class ClassicModel
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        $this->setWhere($params);
-
-        $where = $this->wheres();
-
-        // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($where, $bindParams);
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 1";
+        $where = $this->setWhere($params);
 
         //
         $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
 
-        $result = $this->select($sql, $bindParams);
+        // Build and process the Query.
+        $result = $this->buildQuery('select')->where($where)->fetch();
 
         if (! empty($result)) {
             $result = $this->trigger('afterFind', array('method' => 'findBy', 'fields' => $result));
@@ -371,18 +373,17 @@ class ClassicModel
      */
     public function findMany($values)
     {
-        if (! is_array($values)) {
-            throw new \UnexpectedValueException(__('Parameter should be an Array'));
+        if (! is_array($values) || empty($values)) {
+            throw new \UnexpectedValueException(__('Parameter should be a non empty Array'));
         }
 
-        // Prepare the ORDER details.
-        $orderStr = $this->parseSelectOrder();
+        // Build and process the Query.
+        $query = $this->buildQuery('select')->where($this->primaryKey, $values);
 
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (".implode(',', $values) .") $orderStr";
+        $query = ($this->selectOrder === null) ? $query : $query->orderBy($this->selectOrder);
 
-        //
-        $result = $this->select($sql, array(), array(), true);
+        // Fetch the result.
+        $result = $query->fetchAll();
 
         // Reset the Model State.
         $this->resetState();
@@ -417,21 +418,20 @@ class ClassicModel
         // Prepare the WHERE details.
         $where = $this->wheres();
 
-        $whereStr = $this->parseWheres($where, $bindParams);
-
-        // Prepare the ORDER details.
-        $orderStr = $this->parseSelectOrder();
-
-        // Prepare the LIMIT details.
-        $limitStr = $this->parseSelectLimit();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr $orderStr $limitStr";
-
         //
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
 
-        $result = $this->select($sql, $bindParams, array(), true);
+        // Build and process the Query.
+        $query = $this->buildQuery('select')->where($where);
+
+        $query = ($this->selectLimit === null)  ? $query : $query->limit($this->selectLimit);
+
+        $query = ($this->selectOffset === null) ? $query : $query->offset($this->selectOffset);
+
+        $query = ($this->selectOrder === null)  ? $query : $query->orderBy($this->selectOrder);
+
+        // Fetch the result.
+        $result = $query->fetchAll();
 
         if (is_array($result)) {
             foreach ($result as $key => &$row) {
@@ -467,7 +467,11 @@ class ClassicModel
         if ($data !== false) {
             $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
 
-            $result = $this->db->insert($this->table(), $this->prepareData($data));
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Execute the INSERT.
+            $result = $this->db->insert($this->table(), $data);
 
             if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
@@ -528,7 +532,11 @@ class ClassicModel
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            $result = $this->db->replace($this->table(), $this->prepareData($data));
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Execute the REPLACE.
+            $result = $this->db->replace($this->table(), $data);
 
             if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
@@ -564,7 +572,11 @@ class ClassicModel
         if ($data !== false) {
             $data = $this->trigger('beforeUpdate', array('id' => $id, 'method' =>'update', 'fields' => $data));
 
-            $result = $this->db->update($this->table(), $this->prepareData($data), array($this->primaryKey => $id));
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
 
             $result = $this->trigger('afterUpdate', array('id' => $id, 'method' => 'update', 'fields' => $data, 'result' => $result));
         }
@@ -652,11 +664,11 @@ class ClassicModel
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            // Prepare the custom WHERE.
-            $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
+            // Prepare the Data.
+            $data = $this->prepareData($data);
 
-            //
-            $result = $this->db->update($this->table(), $data, $where);
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->where($this->primaryKey, $ids)->execute();
 
             $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
         }
@@ -705,7 +717,11 @@ class ClassicModel
 
         // Will be false if it didn't validate.
         if (($data = $this->validate($data)) !== false) {
-            $result = $this->db->update($this->table(), $this->prepareData($data), $this->wheres());
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->where($this->wheres())->execute();
 
             $this->trigger('afterUpdate', array('method' => 'updateBy', 'fields' => $data, 'result' => $result));
         }
@@ -738,7 +754,11 @@ class ClassicModel
 
         // Will be false if it didn't validate.
         if ($data !== false) {
-            $result = $this->db->update($this->table(), $this->prepareData($data), true);
+            // Prepare the Data.
+            $data = $this->prepareData($data);
+
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->execute();
 
             $this->trigger('afterUpdate', array('method' => 'updateAll', 'fields' => $data, 'result' => $result));
         }
@@ -765,9 +785,8 @@ class ClassicModel
         //
         $data = array($field => "{$field}+{$value}");
 
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
+        // Build and process the Query.
+        return $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
     }
 
     /**
@@ -786,9 +805,8 @@ class ClassicModel
         //
         $data = array($field => "{$field}-{$value}");
 
-        $where = array($this->primaryKey => $id);
-
-        return $this->db->update($this->table(), $data, $where);
+        // Build and process the Query.
+        return $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
     }
 
     /**
@@ -804,12 +822,11 @@ class ClassicModel
             throw new \UnexpectedValueException(__('Parameter should be an Integer'));
         }
 
-        $where = array($this->primaryKey => $id);
-
         //
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
 
-        $result = $this->db->delete($this->table(), $where);
+        // Build and process the Query.
+        $result = $this->buildQuery('delete')->where($this->primaryKey, $id)->execute();
 
         $this->trigger('afterDelete', array('id' => $id, 'method' => 'delete', 'result' => $result));
 
@@ -825,14 +842,13 @@ class ClassicModel
         }
 
         // Prepare the WHERE parameters.
-        $this->setWhere($params);
-
-        $where = $this->wheres();
+        $where = $this->setWhere($params);
 
         //
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));
 
-        $result = $this->db->delete($this->table(), $where);
+        // Build and process the Query.
+        $result = $this->buildQuery('delete')->where($where)->execute();
 
         $this->trigger('afterDelete', array('method' => 'deleteBy', 'fields' => $where, 'result' => $result));
 
@@ -848,10 +864,8 @@ class ClassicModel
 
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
-        //
-        $where = $this->primaryKey ." IN (".implode(',', $ids) .")";
-
-        $result = $this->db->delete($this->table(), $where);
+        // Build and process the Query.
+        $result = $this->buildQuery('delete')->where($this->primaryKey, $ids)->execute();
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));
 
@@ -895,45 +909,70 @@ class ClassicModel
     }
 
     //--------------------------------------------------------------------
-    // Query Building Methods
+    // Built-in Query Building Methods
     //--------------------------------------------------------------------
 
-    public function where($field, $value = '')
-    {
-        if (empty($field)) {
-            throw new \UnexpectedValueException(__('Invalid parameters'));
-        }
+    /*
+        The FluentPDO based QueryBuilder accept the following WHERE styles:
 
-        $this->tempWheres[$field] = $value;
+        where("field", "x");                           // Translated to field = 'x'
+        where("field", null);                          // Translated to field IS NULL
+        where(null);                                   // Reset clause and remove all previous defined conditions.
+        where("field", array("x", "y"));               // Translated to field IN ('x', 'y')
+        where("field > ?", "x");                       // Bound by PDO
+        where("field > :name", array(':name' => 'x')); // Bound by PDO
+        where(array("field1" => "value1", ...));       // Translated to field1 = 'value1' AND ...
+
+        Then, to have a compatible WHERE method in the Model, we just need an array to keep the WHEREs and
+        to optionally process the array given as the first argument, otherwise literally storing the parameters.
+     */
+    public function where($condition, $value = null)
+    {
+        if($condition == null) {
+            // Remove all previous defined conditions from our own WHEREs array, too.
+            $this->tempWheres = array();
+        }
+        else if(is_array($condition)) {
+            // Is given an array of Conditions; merge them into our own WHEREs array.
+            $this->tempWheres = array_merge($this->tempWheres, $condition);
+        }
+        else {
+            // Store the condition and its value, with no further processing.
+            $this->tempWheres[$condition] = $value;
+        }
 
         return $this;
     }
 
-    public function limit($limit, $start = 0)
+    public function limit($limit)
     {
-        if (! is_integer($limit) || ! is_integer($start)) {
-            throw new \UnexpectedValueException(__('Invalid parameters'));
+        if (! is_integer($limit) || ($limit < 0)) {
+            throw new \UnexpectedValueException(__('Invalid parameter'));
         }
 
-        $this->tempSelectLimit = array($start => $limit);
+        $this->selectLimit  = $limit;
 
         return $this;
     }
 
-    public function order($sense = 'ASC')
+    public function offset($offset)
     {
-        return $this->orderBy($this->primaryKey, $sense);
-    }
-
-    public function orderBy($field, $sense = 'ASC')
-    {
-        $sense = strtoupper($sense);
-
-        if (empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
-            throw new \UnexpectedValueException(__('Invalid parameters'));
+        if (! is_integer($offset) || ($offset < 0)) {
+            throw new \UnexpectedValueException(__('Invalid parameter'));
         }
 
-        $this->tempSelectOrder = array($field => $sense);
+        $this->selectOffset = $offset;
+
+        return $this;
+    }
+
+    public function orderBy($order)
+    {
+        if (! is_string($order) || empty($order)) {
+            throw new \UnexpectedValueException(__('Invalid parameter'));
+        }
+
+        $this->selectOrder = $order;
 
         return $this;
     }
@@ -958,26 +997,10 @@ class ClassicModel
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
-        $this->setWhere($params);
+        $where = $this->setWhere($params);
 
-        // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->wheres(), $bindParams);
-
-        // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
-
-        $result = $this->asArray()->select($sql, $bindParams);
-
-        if ($result !== false) {
-            $count = $result['count'];
-        } else {
-            $count = 0;
-        }
-
-        // Reset the Model State.
-        $this->resetState();
-
-        return $count;
+        // Build and process the Query.
+        return $this->buildQuery('select')->select($this->primaryKey)->where($where)->count();
     }
 
     /**
@@ -987,16 +1010,8 @@ class ClassicModel
      */
     public function countAll()
     {
-        // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table();
-
-        $result = $this->asArray()->select($sql);
-
-        if ($result !== false) {
-            return $result['count'];
-        }
-
-        return 0;
+        // Build and process the Query.
+        return $this->buildQuery('select')->select($this->primaryKey)->count();
     }
 
     /**
@@ -1008,20 +1023,15 @@ class ClassicModel
      *
      * @return bool TRUE/FALSE
      */
-    public function isUnique($field, $value, $ignore = null)
+    public function isUnique($field, $value, $ignoreId = null)
     {
-        $bindParams = array("where_$field" => $value);
+        // Build and process the Query.
+        $query = $this->buildQuery('select')->where($field, $value);
 
-        //
-        $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
+        $query = ($ignoreId === null) ? $query : $query->where($this->primaryKey .' != ?', $ignoreId);
 
-        if ($ignore !== null) {
-            $sql .= " AND " .$this->primaryKey ." != :where_ignore";
+        $data = $query->fetchAll();
 
-            $bindParams['where_ignore'] = $ignore;
-        }
-
-        $data = $this->select($sql, $bindParams, array(), true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -1096,7 +1106,7 @@ class ClassicModel
     public function tableFields()
     {
         if (empty($this->fields)) {
-            $this->fields = $this->db->listFields($this->table());
+            $this->fields = $this->db->listColumns($this->table());
         }
 
         if (empty($this->fields)) {
@@ -1392,10 +1402,13 @@ class ClassicModel
         $this->tempWheres = array();
 
         // Reset our select ORDER
-        $this->tempSelectOrder = null;
+        $this->selectOrder = null;
 
         // Reset our select LIMIT
-        $this->tempSelectLimit = null;
+        $this->selectLimit = null;
+
+        // Reset our select OFFSET
+        $this->selectOffset = null;
     }
 
     protected function setWhere($params)
@@ -1404,100 +1417,27 @@ class ClassicModel
             throw new \UnexpectedValueException(__('Parameter should be a not empty Array'));
         }
 
-        if (is_array($params[0])) {
-            $this->tempWheres = array_merge($this->tempWheres, $params[0]);
-        } else {
-            $key = $params[0];
+        // Get the WHERE condition.
+        $condition = $params[0];
 
-            $value = isset($params[1]) ? $params[1] : '';
+        if (is_array($condition)) {
+            // Merge the WHERE conditions.
+            $this->tempWheres = array_merge($this->tempWheres, $condition);
 
-            $this->tempWheres[$key] = $value;
+            return $this->tempWheres;
         }
+
+        // Get the condition's Value, if any.
+        $value = isset($params[1]) ? $params[1] : null;
+
+        // Store the WHERE condition.
+        $this->tempWheres[$condition] = $value;
+
+        return $this->tempWheres;
     }
 
     protected function wheres()
     {
         return $this->tempWheres;
-    }
-
-    protected function parseWheres(array $where, &$bindParams = array())
-    {
-        $result = '';
-
-        ksort($where);
-
-        $idx = 0;
-
-        foreach ($where as $key => $value) {
-            if ($idx > 0) {
-                $whereStr .= ' AND ';
-            }
-
-            $idx++;
-
-            if (empty($value)) {
-                // A string based condition; simplify its white spaces and use it directly.
-                $result .= preg_replace('/\s+/', ' ', trim($key));
-
-                continue;
-            }
-
-            if (strpos($key, ' ') !== false) {
-                $key = preg_replace('/\s+/', ' ', trim($key));
-
-                $segments = explode(' ', $key);
-
-                $key      = $segments[0];
-                $operator = $segments[1];
-            } else {
-                $operator = '=';
-            }
-
-            $result .= "$key $operator :$key";
-
-            $bindParams[$key] = $value;
-        }
-
-        if (! empty($result)) {
-            $result = 'WHERE ' .$result;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectLimit()
-    {
-        $result = '';
-
-        $limits =& $this->tempSelectLimit;
-
-        if (is_numeric($limits)) {
-            $result = '0, ' .$limits;
-        } else if (is_array($limits) && ! empty($limits)) {
-            list($offset, $limit) = each($limits);
-
-            $result = $offset .', ' .$limit;
-        }
-
-        if (! empty($result)) {
-            $result = 'LIMIT ' .$result;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectOrder()
-    {
-        $order =& $this->tempSelectOrder;
-
-        if (is_array($order) && ! empty($order)) {
-            list($key, $sense) = each($order);
-
-            $result = 'ORDER BY ' .$key .' ' .$sense;
-        } else {
-            $result = '';
-        }
-
-        return $result;
     }
 }

@@ -913,12 +913,12 @@ abstract class Connection extends PDO
     abstract public function truncate($table);
 
     /**
-     * Get the field names for the specified Database Table.
+     * Get the columns names for the specified Database Table.
      *
      * @param  string $table table name
      * @return array  Returns the Database Table fields
      */
-    abstract public function listFields($table);
+    abstract public function listColumns($table);
 
     /**
      * Get total executed queries.

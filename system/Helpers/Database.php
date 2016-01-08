@@ -99,7 +99,7 @@ class Database
 
         foreach($array as $field => $value) {
             // Strip the ':' character i it exists in first position of $field.
-            if(substr($field, 0, 1) === ':') {
+            if(substr($field, 0, 1) == ':') {
                 $field = substr($field, 1);
             }
 
@@ -156,7 +156,7 @@ class Database
     {
         return $this->db->truncate($table);
     }
-    
+
     /**
      * Provide direct access to any of \Nova\Database\Connection methods.
      *

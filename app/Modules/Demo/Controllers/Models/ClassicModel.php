@@ -176,15 +176,15 @@ class ClassicModel extends BaseController
         $message .= '<br><h3><strong>'.__d('demo', 'CRUD Support').'</strong></h3><br>';
 
         //
-        $result = $this->model->countBy('username !=', 'admin');
+        $result = $this->model->countBy('username != ?', 'admin');
 
-        $message .= '<b>$this->model->countBy(\'username !=\', \'admin\');</b>';
+        $message .= '<b>$this->model->countBy(\'username != ?\', \'admin\');</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $members = $this->model->limit(2, 0)->findAll();
+        $members = $this->model->limit(2)->findAll();
 
-        $message .= '<b>$this->model->limit(2, 0)->findAll();</b>';
+        $message .= '<b>$this->model->limit(2)->findAll();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -237,15 +237,15 @@ class ClassicModel extends BaseController
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->model->order('desc')->findAll();
+        $members = $this->model->orderBy('username DESC')->findAll();
 
-        $message .= '<b>$this->model->order(\'desc\')->findAll();</b>';
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->findAll();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username', 'desc')->limit(2, 0)->findAll();
+        $members = $this->model->orderBy('username DESC')->limit(2)->offset(1)->findAll();
 
-        $message .= '<b>$this->model->orderBy(\'username\', \'desc\')->limit(2, 0)->findAll();</b>';
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->limit(2)->offset(1)->findAll();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -260,9 +260,9 @@ class ClassicModel extends BaseController
         $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username', 'desc')->findMany(array(1, 3));
+        $members = $this->model->orderBy('username DESC')->findMany(array(1, 3));
 
-        $message .= '<b>$this->model->orderBy(\'username\', \'desc\')->findMany(array(1, 3));</b>';
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->findMany(array(1, 3));</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         // Setup the View variables.

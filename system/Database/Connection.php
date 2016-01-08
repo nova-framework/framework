@@ -485,90 +485,6 @@ abstract class Connection extends PDO
     }
 
     /**
-     * Execute insert query, will automatically build query for you.
-     * You can also give an array as $data, this will try to insert each entry in the array.
-     * Not all engine's support this! Check the manual!
-     *
-     * @param string $table Table to execute the insert.
-     * @param array $data Represents one record, could also have multidimensional arrays inside to insert
-     *                    multiple rows in one call. The engine must support this! Check manual!
-     * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
-     * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
-     *
-     * @throws \Exception
-     */
-    public function insertBatch($table, array $data, array $paramTypes = array(), $transaction = false)
-    {
-        // Check for valid data.
-        if (! is_array($data)) {
-            throw new \Exception(__d('system', 'Data to insert must be an array of records (array of array with column -> value).'));
-        }
-
-        foreach($data as $record) {
-            if (is_array($record)) {
-                continue;
-            }
-
-            throw new \Exception(__d('system', 'Data to insert must be an array of records (array of array with column -> value).'));
-        }
-
-        // Transaction?
-        $status = false;
-
-        if ($transaction) {
-            $status = $this->beginTransaction();
-        }
-
-        // Holding status
-        $failure = false;
-
-        $ids = array();
-
-        // Loop every record to insert
-        foreach($data as $record) {
-            ksort($record);
-
-            $fieldNames = implode(',', array_keys($record));
-            $fieldValues = ':'.implode(', :', array_keys($record));
-
-            $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
-
-            $this->bindParams($stmt, $record, $paramTypes);
-
-            // Execute
-            $this->queryCount++;
-
-            if (! $stmt->execute()) {
-                $failure = true;
-
-                // We need to exit foreach, to inform about the error, or rollback.
-                break 1;
-            }
-
-            // If no error, capture the last inserted id
-            $ids[] = $this->lastInsertId();
-        }
-
-        // Commit when in transaction
-        if (! $failure && $transaction && $status) {
-            $failure = ! $this->commit();
-        }
-
-        // Check for failures
-        if ($failure) {
-            // Ok, rollback when using transactions.
-            if ($transaction && $status) {
-                $this->rollBack();
-            }
-
-            // False on error.
-            return false;
-        }
-
-        return $ids;
-    }
-
-    /**
      * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to determine which row to replace.
      *
      * @param string $table Table to execute the replace.
@@ -679,109 +595,6 @@ abstract class Connection extends PDO
         // Row count, affected rows
         return $stmt->rowCount();
     }
-
-
-    /**
-     * Updates multiple records in the database at once.
-     *
-     * $data = array(
-     *     array(
-     *         'title'  => 'My title',
-     *         'body'   => 'body 1'
-     *     ),
-     *     array(
-     *         'title'  => 'Another Title',
-     *         'body'   => 'body 2'
-     *     )
-     * );
-     *
-     * The $whereKey should be the name of the column to match the record on.
-     * If $whereKey == 'title', then each record would be matched on that
-     * 'title' value of the array. This does mean that the array key needs
-     * to be provided with each row's data.
-     *
-     * The $whereKey could also be an array with column names, this is usefull
-     * when having multiple primary keys in your table.
-     *
-     * @param  string $table The Table name.
-     * @param  array $data An associate array of row data to update.
-     * @param  string|array $whereKey The column name to match on.
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
-    public function updateBatch($table, array $data, $whereKey, array $paramTypes = array())
-    {
-        // Check for valid data
-        if (! is_array($data)) {
-            throw new \Exception(__d('system', 'Data to update must be an array of records (array of array with column -> value).'));
-        }
-
-        foreach($data as $record) {
-            if (is_array($record)) {
-                continue;
-            }
-
-            throw new \Exception(__d('system', 'Data to update must be an array of records (array of array with column -> value).'));
-        }
-
-        // Always make an array for the where keys.
-        $whereKeys = (is_array($whereKey) ? $whereKey : array($whereKey));
-
-        // Make the where statement
-        $whereDetails = '';
-        $idx = 0;
-
-        foreach ($whereKeys as $key => $value) {
-            if($idx > 0) {
-                $whereDetails .= ' AND ';
-            }
-            $whereDetails .= "$value = :where_$key";
-            $idx++;
-        }
-
-
-        // Perform the batch update per record
-        foreach($data as $record) {
-            // Sort on key
-            ksort($record);
-
-            // Column (bind for auto binding).
-            $fieldDetails = '';
-            $idx = 0;
-
-            foreach ($record as $key => $value) {
-                if($idx > 0) {
-                    $fieldDetails .= ', ';
-                }
-
-                $fieldDetails .= "$key = :field_$key";
-
-                $idx++;
-            }
-
-            // Prepare statement.
-            $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
-
-            // Bind fields
-            $this->bindParams($stmt, $record, $paramTypes, ':field_');
-
-            // Bind where
-            $this->bindParams($stmt, $whereKeys, $paramTypes, ':where_');
-
-            // Execute
-            $this->queryCount++;
-
-            // Directly stop at error.
-            if (!$stmt->execute()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 
     /**
      * Execute Delete statement, this will automatically build the query for you.
@@ -913,12 +726,12 @@ abstract class Connection extends PDO
     abstract public function truncate($table);
 
     /**
-     * Get the field names for the specified Database Table.
+     * Get the columns names for the specified Database Table.
      *
      * @param  string $table table name
      * @return array  Returns the Database Table fields
      */
-    abstract public function listFields($table);
+    abstract public function listColumns($table);
 
     /**
      * Get total executed queries.

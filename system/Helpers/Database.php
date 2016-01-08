@@ -1,6 +1,6 @@
 <?php
 /**
- * database Helper
+ * Database Helper
  *
  * @author David Carr - dave@daveismyname.com
  * @version 2.1
@@ -10,8 +10,8 @@
 
 namespace Nova\Helpers;
 
-use Nova\DBAL\Manager as Database;
-use Nova\DBAL\Connection;
+use Nova\Database\Manager as Database;
+use Nova\Database\Connection;
 
 /**
  * Extending PDO to use custom methods.
@@ -23,18 +23,23 @@ class Database
     /**
      * Static method get
      *
-     * @param mixed $group
-     * @return MySQL|null
-     * @deprecated use the engine factory!
+     * @param mixed $linkName
+     * @return \Nova\Database\Connection | null
+     * @deprecated use the \Nova\Database\Manager !
+     *
      * @throws \Exception
      */
-    public static function get($group = false)
+    public static function get($linkName = false)
     {
-        if($group !== false)
-            throw new \Exception("Trying to select the DBAL Configuration from Legacy Database");
+        if(is_array($linkName))
+            throw new \Exception(__d('system', 'Invalid Configuration on the Legacy Helper');
         }
 
-        // Return the Default Connection from DBAL.
-        return Database::getConnection();
+        // Adjust the linkName value, if case.
+        $linkName = $linkName ? $linkName : null;
+
+        // Return the Connection instance from Nova\Database\Manager.
+        return Database::getConnection($linkName);
     }
+
 }

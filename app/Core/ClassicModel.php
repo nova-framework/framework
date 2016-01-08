@@ -293,10 +293,10 @@ class ClassicModel
      */
     public function first()
     {
-        $result = $this->limit(1, 0)->findAll();
+        $result = $this->limit(1)->findAll();
 
         if (is_array($result) && (count($result) > 0)) {
-            return $result[0];
+            return array_shift($result);
         }
 
         return $result;
@@ -1327,16 +1327,14 @@ class ClassicModel
         $this->selectOffset = null;
     }
 
-    protected function setWhere($params)
+    protected function setWhere(array $params)
     {
         if (empty($params)) {
-            throw new \UnexpectedValueException(__('Parameter should be a non empty Array'));
+            $this->tempWheres;
         }
 
         // Get the WHERE condition.
         $condition = array_shift($params);
-
-        $numParams = count($params);
 
         if($condition == null) {
             // Remove all previous defined conditions from our own WHEREs array, too.

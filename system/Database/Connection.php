@@ -540,7 +540,7 @@ abstract class Connection extends PDO
         $this->bindParams($stmt, $data, $paramTypes, ':field_');
 
         // Bind values
-        $this->bindParams($stmt, $bindParams, $paramTypes, ':where_');
+        $this->bindParams($stmt, $bindParams, $paramTypes);
 
         // Execute
         $this->queryCount++;
@@ -573,7 +573,7 @@ abstract class Connection extends PDO
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
         // Bind parameters.
-        $this->bindParams($stmt, $bindParams, $paramTypes, ':where_');
+        $this->bindParams($stmt, $bindParams, $paramTypes);
 
         // Execute and return if failure.
         $this->queryCount++;
@@ -604,16 +604,16 @@ abstract class Connection extends PDO
         // Bind the key and values (only if given).
         $bindParams = array();
 
-        foreach ($params as $key => $value) {
-            if (substr($key, 0, 1) !== ':') {
-                $key = ':' .$key;
+        foreach ($params as $field => $value) {
+            if (substr($field, 0, 1) === ':') {
+                $field = substr($field, 1);
             }
 
-            $bindParams[$key] = $value;
+            $bindParams[$field] = $value;
         }
 
         // Bind parameters.
-        $this->bindParams($stmt, $bindParams, $paramTypes, '');
+        $this->bindParams($stmt, $bindParams, $paramTypes);
 
         $this->queryCount++;
 
@@ -711,7 +711,13 @@ abstract class Connection extends PDO
             // Simplify the white spaces on $field
             $field = preg_replace('/\s+/', ' ', trim($field));
 
-            if(($value === null) || empty($value)) {
+            if(is_null($value)) {
+                $result .= "$field is NULL";
+
+                continue;
+            }
+
+            if(is_string($value) && empty($value)) {
                 // A string based condition; use it directly.
                 $result .= $field;
 
@@ -721,30 +727,57 @@ abstract class Connection extends PDO
             if(strpos($field, ' ') !== false) {
                 $segments = explode(' ', $field);
 
-                if((count($segments) != 3) || ($segments[2] != '?')) {
+                if(count($segments) != 3) {
                     throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
                 }
 
-                $field    = $segments[0];
-                $operator = $segments[1];
+                $fieldName = $segments[0];
+                $operator  = $segments[1];
+                $bindName  = $segments[2];
 
                 if(! in_array($operator, self::$whereOperators, true)) {
                     throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
                 }
 
-                $result .= "$field $operator :where_$field";
+                if($bindName == '?') {
+                    $result .= "$fieldName $operator :$fieldName";
+
+                    $bindParams[$fieldName] = $value;
+                }
+                else {
+                    if((substr($bindName, 0, 1) !== ':') || ! is_array($value)) {
+                        throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+                    }
+
+                    $result .= "$fieldName $operator $bindName";
+
+                    // Extract the Value from the array.
+                    $value = $value[$bindName];
+
+                    // Remove first character, aka ':', from bindName.
+                    $bindName = substr($bindName, 1);
+
+                    $bindParams[$bindName] = $value;
+                }
+
+                continue;
             }
-            else if (is_array($value)) {
+
+            if (is_array($value)) {
                 // We need something like: user_id IN (1, 2, 3)
                 $result .= "$field IN (" . implode(', ', array_map(array($this, 'quote'), $value)) . ")";
             }
+            else if(is_string($value) && empty($value)) {
+                // A string based condition; use it directly.
+                $result .= $field;
+
+                continue;
+            }
             else {
-                $result .= "$field = :where_$field";
+                $result .= "$field = :$field";
             }
 
-            if(! is_array($value)) {
-                $bindParams[$field] = $value;
-            }
+            $bindParams[$field] = $value;
         }
 
         return $result;

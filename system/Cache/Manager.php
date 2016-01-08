@@ -48,7 +48,7 @@ class Manager
             self::$instances[$token] = new self($storage, $config);
         }
 
-        return self::$instance[$token];
+        return self::$instances[$token];
     }
 
     /**

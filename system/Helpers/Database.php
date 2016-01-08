@@ -3,7 +3,8 @@
  * Database Helper
  *
  * @author David Carr - dave@daveismyname.com
- * @version 2.1
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
  * @date June 27, 2014
  * @date updated Sept 19, 2015
  */
@@ -20,14 +21,19 @@ use Nova\Database\Connection;
  */
 class Database
 {
+    // The real Connection instance used.
+    protected $db = null;
+
+    /**
+     * @var array Array of saved databases for reusing
+     */
+    protected static $instances = array();
+
     /**
      * Static method get
      *
-     * @param mixed $linkName
-     * @return \Nova\Database\Connection | null
-     * @deprecated use the \Nova\Database\Manager !
-     *
-     * @throws \Exception
+     * @param  array $group
+     * @return \helpers\database
      */
     public static function get($linkName = false)
     {
@@ -36,10 +42,119 @@ class Database
         }
 
         // Adjust the linkName value, if case.
-        $linkName = $linkName ? $linkName : null;
+        $linkName = $linkName ? $linkName : 'default';
 
-        // Return the Connection instance from Nova\Database\Manager.
-        return Database::getConnection($linkName);
+        // Checking if the same
+        if (isset(self::$instances[$linkName])) {
+            return self::$instances[$linkName];
+        }
+
+        $instance = new Database($linkName);
+
+        // Setting Database into $instances to avoid duplication
+        self::$instances[$linkName] = $instance;
     }
 
+    protected __construct($linkName)
+    {
+        $this->db = Database::getConnection($linkName);
+    }
+
+    /**
+     * run raw sql queries
+     * @param  string $sql sql command
+     * @return return query
+     */
+    public function raw($sql)
+    {
+        return $this->db->rawQuery($sql);
+    }
+
+    /**
+     * method for selecting records from a database
+     * @param  string $sql       sql query
+     * @param  array  $array     named params
+     * @param  object $fetchMode
+     * @param  string $class     class name
+     * @return array            returns an array of records
+     */
+    public function select($sql, $array = array(), $fetchMode = PDO::FETCH_OBJ, $class = '')
+    {
+        if($fetchMode == PDO::FETCH_OBJ) {
+            $returnType = 'object';
+        }
+        else if($fetchMode == PDO::FETCH_CLASS) {
+            if(empty($class)) {
+                throw new \Exception(__d('system', 'No valid Class is given'));
+            }
+
+            $returnType = $class;
+        }
+        else {
+            $returnType = 'array';
+        }
+
+        return $this->db->select($sql, $array, array(), $returnType, true);
+    }
+
+    /**
+     * insert method
+     * @param  string $table table name
+     * @param  array $data  array of columns and values
+     */
+    public function insert($table, $data)
+    {
+        ksort($data);
+
+        return $this->db->insert($table, $data);
+    }
+
+    /**
+     * update method
+     * @param  string $table table name
+     * @param  array $data  array of columns and values
+     * @param  array $where array of columns and values
+     */
+    public function update($table, $data, $where)
+    {
+        ksort($data);
+
+        return $this->db->update($table, $data, $where);
+    }
+
+    /**
+     * Delete method
+     *
+     * @param  string $table table name
+     * @param  array $where array of columns and values
+     * @param  integer   $limit limit number of records
+     */
+    public function delete($table, $where, $limit = 1)
+    {
+        ksort($where);
+
+        return $this->db->delete($table, $where);
+    }
+
+    /**
+     * truncate table
+     * @param  string $table table name
+     */
+    public function truncate($table)
+    {
+        return $this->db->truncate($table);
+    }
+
+    /**
+     * Provide direct access to any of \Nova\Database\Connection methods.
+     *
+     * @param $name
+     * @param $params
+     */
+    public function __call($method, $params = null)
+    {
+        if (method_exists($this->db, $method)) {
+            return call_user_func_array(array($this->db, $method), $params);
+        }
+    }
 }

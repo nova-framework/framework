@@ -3,6 +3,7 @@
  * Engine Manager (Factory).
  *
  * @author Tom Valk - tomvalk@lt-box.info
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 19th, 2015
  */

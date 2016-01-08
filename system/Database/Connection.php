@@ -19,6 +19,8 @@ use \PDO;
 
 abstract class Connection extends PDO
 {
+    private static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>");
+
     /** @var string Return type. */
     protected $returnType = 'array';
 
@@ -232,7 +234,7 @@ abstract class Connection extends PDO
         $this->queryCount++;
 
         // We don't want to map in memory an entire Billion Records Table, so we return right on a Statement.
-        return $this->query($sql, $method);
+        return parent::query($sql, $method);
     }
 
     /**
@@ -445,8 +447,6 @@ abstract class Connection extends PDO
         $failure = false;
 
         // Prepare the parameters.
-        ksort($data);
-
         $fieldNames = implode(',', array_keys($data));
         $fieldValues = ':'.implode(', :', array_keys($data));
 
@@ -509,10 +509,9 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function update($table, array $data, $where, array $paramTypes = array())
+    public function update($table, array $data, array $where, array $paramTypes = array())
     {
-        // Sort on key
-        ksort($data);
+        $bindParams = array();
 
         // Column :bind for auto binding.
         $fieldDetails = '';
@@ -523,58 +522,15 @@ abstract class Connection extends PDO
             if($idx > 0) {
                 $fieldDetails .= ', ';
             }
+            else {
+                $idx++;
+            }
 
             $fieldDetails .= "$key = :field_$key";
-
-            $idx++;
         }
 
-
-        // Sort in where keys.
-        ksort($where);
-
-        // Where :bind for auto binding
-        $whereParams = array();
-
-        $whereDetails = '';
-
-        if(is_array($where)) {
-            $idx = 0;
-
-            foreach ($where as $key => $value) {
-                if($idx > 0) {
-                    $whereDetails .= ' AND ';
-                }
-
-                $idx++;
-
-                if(empty($value)) {
-                    // A string based condition; simplify its white spaces and use it directly.
-                    $whereDetails .= preg_replace('/\s+/', ' ', trim($key));
-
-                    continue;
-                }
-
-                if(strpos($key, ' ') !== false) {
-                    $key = preg_replace('/\s+/', ' ', trim($key));
-
-                    $segments = explode(' ', $key);
-
-                    $key      = $segments[0];
-                    $operator = $segments[1];
-                }
-                else {
-                    $operator = '=';
-                }
-
-                $whereDetails .= "$key $operator :where_$key";
-
-                $whereParams[$key] = $value;
-            }
-        }
-        else if(is_string($where)) {
-            $whereDetails = $where;
-        }
+        // Prepare the WHERE conditions.
+        $whereDetails = $this->parseWhereConditions($where, $bindParams);
 
         // Prepare statement.
         $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
@@ -583,7 +539,7 @@ abstract class Connection extends PDO
         $this->bindParams($stmt, $data, $paramTypes, ':field_');
 
         // Bind values
-        $this->bindParams($stmt, $whereParams, $paramTypes, ':where_');
+        $this->bindParams($stmt, $bindParams, $paramTypes, ':where_');
 
         // Execute
         $this->queryCount++;
@@ -605,54 +561,18 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function delete($table, $where, array $paramTypes = array())
+    public function delete($table, array $where, array $paramTypes = array())
     {
         $bindParams = array();
 
-        // Prepare the WHERE details.
-        $whereDetails = '';
-
-        if(is_array($where)) {
-            ksort($where);
-
-            $idx = 0;
-
-            foreach ($where as $key => $value) {
-                if($idx > 0) {
-                    $whereDetails .= ' AND ';
-                }
-
-                if(strpos($key, ' ') !== false) {
-                    $key = preg_replace('/\s+/', ' ', trim($key));
-
-                    $segments = explode(' ', $key);
-
-                    $key      = $segments[0];
-                    $operator = $segments[1];
-                }
-                else {
-                    $operator = '=';
-                }
-
-                $whereDetails .= "$key $operator :$key";
-
-                //
-                $bindParams[$key] = $value;
-
-                $idx++;
-            }
-        }
-        else if(is_string($where)) {
-            $whereDetails = $where;
-        }
+        // Prepare the WHERE conditions.
+        $whereDetails = $this->parseWhereConditions($where, $bindParams);
 
         // Prepare statement
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
         // Bind parameters.
-        if(! empty($bindParams)) {
-            $this->bindParams($stmt, $bindParams, $paramTypes);
-        }
+        $this->bindParams($stmt, $bindParams, $paramTypes, ':where_');
 
         // Execute and return if failure.
         $this->queryCount++;
@@ -692,9 +612,7 @@ abstract class Connection extends PDO
         }
 
         // Bind parameters.
-        if(! empty($bindParams)) {
-            $this->bindParams($stmt, $bindParams, $paramTypes, '');
-        }
+        $this->bindParams($stmt, $bindParams, $paramTypes, '');
 
         $this->queryCount++;
 
@@ -742,4 +660,62 @@ abstract class Connection extends PDO
     {
         return $this->queryCount;
     }
+
+    protected function parseWhereConditions(array $where, &$bindParams)
+    {
+        $result = '';
+
+        // Flag which say when we need to add an AND keyword.
+        $idx = 0;
+
+        foreach ($where as $field => $value) {
+            if($idx > 0) {
+                // Add the 'AND' keyword, because a condition will follow.
+                $result .= ' AND ';
+            }
+            else {
+                $idx++;
+            }
+
+            // Simplify the white spaces on $field
+            $field = preg_replace('/\s+/', ' ', trim($field));
+
+            if(($value !== null) && ! empty($value)) {
+                if(strpos($field, ' ') !== false) {
+                    $segments = explode(' ', $field);
+
+                    if((count($segments) != 3) || ($segments[2] != '?')) {
+                        throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+                    }
+
+                    $field    = $segments[0];
+                    $operator = $segments[1];
+
+                    if(! in_array($operator, self::$whereOperators, true)) {
+                        throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+                    }
+
+                    $result .= "$field $operator :where_$field";
+                }
+                else if (is_array($value)) {
+                    // We need something like: user_id IN (1, 2, 3)
+                    $result .= "$field IN (" . implode(', ', array_map(array($this, 'quote'), $value)) . ")";
+                }
+                else {
+                    $result .= "$field = :where_$field";
+                }
+
+                if(! is_array($value)) {
+                    $bindParams[$field] = $value;
+                }
+            }
+            else {
+                // A string based condition; use it directly.
+                $result .= $field;
+            }
+        }
+
+        return $result;
+    }
+
 }

@@ -55,7 +55,103 @@ class ClassicModel extends BaseController
      */
     public function index()
     {
-        $message = '<h3><strong>'.__d('demo', 'Integrated QueryBuilder').'</strong></h3><br>';
+        //
+        $message = '<h3><strong>'.__d('demo', 'CRUD Support').'</strong></h3><br>';
+
+        //
+        $result = $this->model->countBy('username != ?', 'admin');
+
+        $message .= '<b>$this->model->countBy(\'username != ?\', \'admin\');</b>';
+        $message .= '<pre>'.var_export($result, true).'</pre><br>';
+
+        //
+        $members = $this->model->limit(2)->findAll();
+
+        $message .= '<b>$this->model->limit(2)->findAll();</b>';
+        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+
+        //
+        $userInfo = array(
+            'username' => 'virgil',
+            'password' => 'test',
+            'email'    => 'virgil@novaframwork.dev'
+        );
+
+        $message .= '<b>$userInfo</b>';
+        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+
+        //
+        $retval = $this->model->insert($userInfo);
+
+        $message .= '<b>$this->model->insert($userInfo);</b>';
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $members = $this->model->findAll();
+
+        $message .= '<b>$this->model->findAll();</b>';
+        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+
+        //
+        $userInfo = array(
+            'password' => 'testing',
+            'email'    => 'modified@novaframwork.dev'
+        );
+
+        $message .= '<b>$userInfo</b>';
+        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+
+        //
+        $retval = $this->model->updateBy('username', 'virgil', $userInfo);
+
+        $message .= '<b>$this->model->updateBy(\'username\', \'virgil\', $userInfo);</b>';
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $members = $this->model->findAll();
+
+        $message .= '<b>$this->model->findAll();</b>';
+        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+
+        //
+        $retval = $this->model->deleteBy('username', 'virgil');
+
+        $message .= '<b>$this->model->deleteBy(\'username\', \'virgil\');</b>';
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $members = $this->model->orderBy('username DESC')->findAll();
+
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->findAll();</b>';
+        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+
+        //
+        $members = $this->model->orderBy('username DESC')->limit(2)->offset(1)->findAll();
+
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->limit(2)->offset(1)->findAll();</b>';
+        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+
+        //
+        $result = $this->model->findBy('username', 'marcus');
+
+        $message .= '<b>$this->model->findBy(\'username\', \'marcus\');</b>';
+        $message .= '<pre>'.var_export($result, true).'</pre><br>';
+
+        //
+        $result = $this->model->find(3);
+
+        $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
+
+        //
+        $members = $this->model->orderBy('username DESC')->findMany(array(1, 3));
+
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->findMany(array(1, 3));</b>';
+        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+
+        //
+        // QueryBuilder
+
+        $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Integrated QueryBuilder').'</strong></h3><br>';
 
         //
         $query = $this->model->asArray()->buildQuery('select')
@@ -171,99 +267,6 @@ class ClassicModel extends BaseController
 
         $message .= '<b>$this->model->buildQuery(\'select\')->fetchAll();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
-
-        //
-        $message .= '<br><h3><strong>'.__d('demo', 'CRUD Support').'</strong></h3><br>';
-
-        //
-        $result = $this->model->countBy('username != ?', 'admin');
-
-        $message .= '<b>$this->model->countBy(\'username != ?\', \'admin\');</b>';
-        $message .= '<pre>'.var_export($result, true).'</pre><br>';
-
-        //
-        $members = $this->model->limit(2)->findAll();
-
-        $message .= '<b>$this->model->limit(2)->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
-
-        //
-        $userInfo = array(
-            'username' => 'virgil',
-            'password' => 'test',
-            'email'    => 'virgil@novaframwork.dev'
-        );
-
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
-
-        //
-        $retval = $this->model->insert($userInfo);
-
-        $message .= '<b>$this->model->insert($userInfo);</b>';
-        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
-
-        //
-        $members = $this->model->findAll();
-
-        $message .= '<b>$this->model->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
-
-        //
-        $userInfo = array(
-            'password' => 'testing',
-            'email'    => 'modified@novaframwork.dev'
-        );
-
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
-
-        //
-        $retval = $this->model->updateBy('username', 'virgil', $userInfo);
-
-        $message .= '<b>$this->model->updateBy(\'username\', \'virgil\', $userInfo);</b>';
-        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
-
-        //
-        $members = $this->model->findAll();
-
-        $message .= '<b>$this->model->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
-
-        //
-        $retval = $this->model->deleteBy('username', 'virgil');
-
-        $message .= '<b>$this->model->deleteBy(\'username\', \'virgil\');</b>';
-        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
-
-        //
-        $members = $this->model->orderBy('username DESC')->findAll();
-
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
-
-        //
-        $members = $this->model->orderBy('username DESC')->limit(2)->offset(1)->findAll();
-
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->limit(2)->offset(1)->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
-
-        //
-        $result = $this->model->findBy('username', 'marcus');
-
-        $message .= '<b>$this->model->findBy(\'username\', \'marcus\');</b>';
-        $message .= '<pre>'.var_export($result, true).'</pre><br>';
-
-        //
-        $result = $this->model->find(3);
-
-        $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
-
-        //
-        $members = $this->model->orderBy('username DESC')->findMany(array(1, 3));
-
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->findMany(array(1, 3));</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'Classic BaseModel'));

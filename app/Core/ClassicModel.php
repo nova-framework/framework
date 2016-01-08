@@ -341,8 +341,6 @@ class ClassicModel
      */
     public function findBy()
     {
-        $bindParams = array();
-
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
@@ -413,8 +411,6 @@ class ClassicModel
      */
     public function findAll()
     {
-        $bindParams = array();
-
         // Prepare the WHERE details.
         $where = $this->wheres();
 
@@ -640,7 +636,7 @@ class ClassicModel
         }
 
         // Prepare the WHERE parameters.
-        $this->setWhere($params);
+        $where = $this->setWhere($params);
 
         //
         $result = false;
@@ -653,7 +649,7 @@ class ClassicModel
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $result = $this->buildQuery('update')->set($data)->where($this->wheres())->execute();
+            $result = $this->buildQuery('update')->set($data)->where($where)->execute();
 
             $this->trigger('afterUpdate', array('method' => 'updateBy', 'fields' => $data, 'result' => $result));
         }
@@ -860,18 +856,9 @@ class ClassicModel
      */
     public function where($condition, $value = null)
     {
-        if($condition == null) {
-            // Remove all previous defined conditions from our own WHEREs array, too.
-            $this->tempWheres = array();
-        }
-        else if(is_array($condition)) {
-            // Is given an array of Conditions; merge them into our own WHEREs array.
-            $this->tempWheres = array_merge($this->tempWheres, $condition);
-        }
-        else {
-            // Store the condition and its value, with no further processing.
-            $this->tempWheres[$condition] = $value;
-        }
+        $params = func_get_args();
+
+        $this->setWhere($params);
 
         return $this;
     }
@@ -920,9 +907,6 @@ class ClassicModel
      */
     public function countBy()
     {
-        $bindParams = array();
-
-        //
         $params = func_get_args();
 
         if (empty($params)) {
@@ -943,7 +927,7 @@ class ClassicModel
     public function countAll()
     {
         // Build and process the Query.
-        return $this->buildQuery('select')->select($this->primaryKey)->count();
+        return $this->buildQuery('select')->select($this->primaryKey)->where($this->wheres())->count();
     }
 
     /**
@@ -1052,7 +1036,7 @@ class ClassicModel
      * Execute Select Query, binding values into the $sql Query.
      *
      * @param string $sql
-     * @param array  $bindParams
+     * @param array  $params
      * @param bool   $fetchAll   Ask the method to fetch all the records or not.
      *
      * @return array|null
@@ -1346,24 +1330,41 @@ class ClassicModel
     protected function setWhere($params)
     {
         if (empty($params)) {
-            throw new \UnexpectedValueException(__('Parameter should be a not empty Array'));
+            throw new \UnexpectedValueException(__('Parameter should be a non empty Array'));
         }
 
         // Get the WHERE condition.
-        $condition = $params[0];
+        $condition = array_shift($params);
 
-        if (is_array($condition)) {
-            // Merge the WHERE conditions.
-            $this->tempWheres = array_merge($this->tempWheres, $condition);
+        $numParams = count($params);
 
-            return $this->tempWheres;
+        if($condition == null) {
+            // Remove all previous defined conditions from our own WHEREs array, too.
+            $this->tempWheres = array();
         }
+        else if(is_array($condition)) {
+            // Is given an array of Conditions; merge them into our own WHEREs array.
+            $this->tempWheres = array_merge($this->tempWheres, $condition);
+        }
+        else if(count($params) == 1) {
+            // Store the condition and its value.
+            $this->tempWheres[$condition] = array_shift($params);
+        }
+        else if(count($params) == 2) {
+            $operator = array_shift($params);
 
-        // Get the condition's Value, if any.
-        $value = isset($params[1]) ? $params[1] : null;
+            if(! in_array($operator, array("=", "!=", ">", "<", ">=", "<=", "<>"), true)) {
+                throw new \UnexpectedValueException(__('Second parameter is invalid'));
+            }
 
-        // Store the WHERE condition.
-        $this->tempWheres[$condition] = $value;
+            $condition = sprintf('%s $s ?', $condition, $operator);
+
+            // Store the composed condition and its value.
+            $this->tempWheres[$condition] = array_shift($params);
+        }
+        else {
+            throw new \UnexpectedValueException(__('Invalid number of parameters'));
+        }
 
         return $this->tempWheres;
     }
@@ -1372,4 +1373,5 @@ class ClassicModel
     {
         return $this->tempWheres;
     }
+
 }

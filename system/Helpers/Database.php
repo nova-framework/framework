@@ -94,7 +94,28 @@ class Database
             $returnType = 'array';
         }
 
-        return $this->db->select($sql, $array, array(), $returnType, true);
+        // Pre-process the $array to simulate the make the old Helper behavior.
+        $where = array();
+        $paramTypes = array();
+
+        foreach($array as $field => $value) {
+            // Strip the character ':', if it exists in the first position of $field.
+            if(substr($field, 0, 1) == ':') {
+                $field = substr($field, 1);
+            }
+
+            $where[$field] = $value;
+
+            // Prepare the compat entry into paramTypes.
+            if (is_integer($value)) {
+                $paramTypes[$field] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$field] = PDO::PARAM_STR;
+            }
+        }
+
+        return $this->db->select($sql, $where, $paramTypes, $returnType, true);
     }
 
     /**
@@ -106,7 +127,20 @@ class Database
     {
         ksort($data);
 
-        return $this->db->insert($table, $data);
+        // Pre-process the $data variable to simulate the make the old Helper behavior.
+        $paramTypes = array();
+
+        foreach($data as $field => $value) {
+             // Prepare the compat entry into paramTypes.
+            if (is_integer($value)) {
+                $paramTypes[$field] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$field] = PDO::PARAM_STR;
+            }
+        }
+
+        return $this->db->insert($table, $data, $paramTypes);
     }
 
     /**
@@ -119,7 +153,30 @@ class Database
     {
         ksort($data);
 
-        return $this->db->update($table, $data, $where);
+        // Pre-process the $data and $where variables to simulate the old Helper behavior.
+        $paramTypes = array();
+
+        foreach($data as $field => $value) {
+             // Prepare the compat entry into paramTypes.
+            if (is_integer($value)) {
+                $paramTypes[$field] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$field] = PDO::PARAM_STR;
+            }
+        }
+
+        foreach($where as $field => $value) {
+             // Prepare the compat entry into paramTypes.
+            if (is_integer($value)) {
+                $paramTypes[$field] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$field] = PDO::PARAM_STR;
+            }
+        }
+
+        return $this->db->update($table, $data, $where, $paramTypes);
     }
 
     /**
@@ -133,7 +190,20 @@ class Database
     {
         ksort($where);
 
-        return $this->db->delete($table, $where);
+        // Pre-process the $where variable to simulate the old Helper behavior.
+        $paramTypes = array();
+
+        foreach($where as $field => $value) {
+             // Prepare the compat entry into paramTypes.
+            if (is_integer($value)) {
+                $paramTypes[$field] = PDO::PARAM_INT;
+            }
+            else {
+                $paramTypes[$field] = PDO::PARAM_STR;
+            }
+        }
+
+        return $this->db->delete($table, $where, $paramTypes);
     }
 
     /**

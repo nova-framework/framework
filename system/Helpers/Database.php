@@ -99,7 +99,7 @@ class Database
         $paramTypes = array();
 
         foreach($array as $field => $value) {
-            // Strip the ':' character i it exists in first position of $field.
+            // Strip the character ':', if it exists in the first position of $field.
             if(substr($field, 0, 1) == ':') {
                 $field = substr($field, 1);
             }

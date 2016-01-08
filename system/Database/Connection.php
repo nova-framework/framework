@@ -14,6 +14,7 @@ use Nova\Database\Manager;
 use Nova\Database\QueryBuilder;
 
 use \FluentStructure;
+use \Closure;
 use \PDO;
 
 
@@ -642,6 +643,36 @@ abstract class Connection extends PDO
      * @return int number of rows affected
      */
     abstract public function truncate($table);
+
+    /**
+     * Executes a function in a transaction.
+     *
+     * The function gets passed this Connection instance as an (optional) parameter.
+     *
+     * If an exception occurs during execution of the function or transaction commit,
+     * the transaction is rolled back and the exception re-thrown.
+     *
+     * @param \Closure $closure The function to execute transactionally.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function transactional(Closure $closure)
+    {
+        $this->beginTransaction();
+
+        try {
+            $closure($this);
+
+            $this->commit();
+        }
+        catch (Exception $e) {
+            $this->rollback();
+
+            throw $e;
+        }
+    }
 
     /**
      * Get the columns names for the specified Database Table.

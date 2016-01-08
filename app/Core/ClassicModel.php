@@ -485,33 +485,6 @@ class ClassicModel
     }
 
     /**
-     * Inserts multiple rows into the database at once. Takes an associative array of value pairs.
-     *
-     * $data = array(
-     *     array(
-     *         'title' => 'My title'
-     *     ),
-     *     array(
-     *         'title'  => 'My Other Title'
-     *     )
-     * );
-     *
-     * @param array $data An associate array of rows to insert.
-     *
-     * @return bool
-     */
-    public function insertBatch($data)
-    {
-        $data['batch'] = true;
-
-        $data = $this->trigger('beforeInsert', array('method' => 'insertBatch', 'fields' => $data));
-
-        unset($data['batch']);
-
-        return $this->db->insertBatch($this->table(), $data);
-    }
-
-    /**
      * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to
      * determine which row to replace.
      *
@@ -579,47 +552,6 @@ class ClassicModel
             $result = $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
 
             $result = $this->trigger('afterUpdate', array('id' => $id, 'method' => 'update', 'fields' => $data, 'result' => $result));
-        }
-
-        // Reset the Model State.
-        $this->resetState();
-
-        return $result;
-    }
-
-    /**
-     * Updates multiple records in the database at once.
-     *
-     * $data = array(
-     *     array(
-     *         'title'  => 'My title',
-     *         'body'   => 'body 1'
-     *     ),
-     *     array(
-     *         'title'  => 'Another Title',
-     *         'body'   => 'body 2'
-     *     )
-     * );
-     *
-     * The $whereKey should be the name of the column to match the record on.
-     * If $whereKey == 'title', then each record would be matched on that 'title' value of the array.
-     * This does mean that the array key needs to be provided with each row's data.
-     *
-     * @param array  $data     An associate array of row data to update.
-     * @param string $whereKey The column name to match on.
-     *
-     * @return bool
-     */
-    public function updateBatch($data, $whereKey)
-    {
-        foreach ($data as &$row) {
-            $row = $this->trigger('beforeUpdate', array('method' => 'updateBatch', 'fields' => $row));
-        }
-
-        $result = $this->db->updateBatch($this->table(), $data, $whereKey);
-
-        foreach ($data as &$row) {
-            $this->trigger('afterUpdate', array('fields' => $data, 'result' => $result, 'method' => 'updateBatch'));
         }
 
         // Reset the Model State.

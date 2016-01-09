@@ -11,7 +11,7 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
-use App\Modules\Demo\Models\Members as MembersModel;
+use App\Modules\Demo\Models\DBALMembers as MembersModel;
 
 
 /**

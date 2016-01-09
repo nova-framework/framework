@@ -3,15 +3,16 @@
  * Model - the base model
  *
  * @author David Carr - dave@daveismyname.com
- * @version 2.2
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
  * @date June 27, 2014
- * @date updated Sept 19, 2015
+ * @date updated January 9th 2016
  */
 
 namespace Nova\Core;
 
-use Nova\DBAL\Connection;
-use Nova\DBAL\Manager as Database;
+use Nova\Database\Connection;
+use Nova\Database\Manager as Database;
 
 /**
  * Base model class all other models will extend from this base.

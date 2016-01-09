@@ -69,7 +69,7 @@ class Database
         $sql = 'INSERT INTO ' .$table .' (' .implode(', ', array_keys($data)) .')
                 VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
-        $result = $this->executeUpdate($sql, array_values($data), $paramTypes, true);
+       return $this->executeUpdate($sql, array_values($data), $paramTypes, true);
     }
 
     public function update($table, array $data, array $where, array $paramTypes = array())
@@ -144,19 +144,23 @@ class Database
 
         $link->countIncomingQuery();
 
-        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-        $statement = $link->prepare($sql);
+        if(! empty($params)) {
+            // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+            $statement = $link->prepare($sql);
 
-        // Bind the parameters.
-        $this->bindParams($statement, $params, $paramTypes);
+            // Bind the parameters.
+            $this->bindParams($statement, $params, $paramTypes);
 
-        // Execute the statement, return false if fail.
-        if (! $statement->execute()) {
-            return false;
+            // Execute the statement, return false if fail.
+            if (! $statement->execute()) {
+                return false;
+            }
+
+            // Return the resulted PDO Statement.
+            return $statement;
         }
 
-        // Return the resulted PDO Statement.
-        return $statement;
+        return $link->query($sql);
     }
 
     protected function executeUpdate($sql, array $params, array $paramTypes = array())

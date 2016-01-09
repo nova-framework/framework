@@ -33,6 +33,8 @@ class Database
 
         // Setting Database into $instances to avoid duplication
         self::$instances[$linkName] = $instance;
+
+        return $instance;
     }
 
     protected function __construct($linkName)

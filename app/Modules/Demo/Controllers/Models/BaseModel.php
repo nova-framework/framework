@@ -11,7 +11,7 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
-use App\Modules\Demo\Models\ClassicMembers as MembersModel;
+use App\Modules\Demo\Models\Members as MembersModel;
 
 use \PDO;
 
@@ -19,7 +19,7 @@ use \PDO;
 /**
  * Sample Themed Controller with its typical usage.
  */
-class ClassicModel extends BaseController
+class BaseModel extends BaseController
 {
     private $model;
 

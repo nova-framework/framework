@@ -9,6 +9,15 @@
 
 $configDir = dirname(__FILE__) .DS;
 
+/*
+ * Check if the Doctrine DBAL is installed.
+ */
+if (! file_exists(BASEPATH .str_replace('/', DS, 'vendor/doctrine/dbal/composer.json'))) {
+    echo "<h1>Please install Doctrine DBAL via composer.json</h1>";
+    echo "<p>For properly work, this DBAL Package needs the Doctrine DBAL v2.5.x to be installed via composer.json</p>";
+    exit;
+}
+
 //
 include $configDir .'constants.php';
 include $configDir .'config.php';

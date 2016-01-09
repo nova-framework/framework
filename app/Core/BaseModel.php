@@ -1,6 +1,6 @@
 <?php
 /**
- * BaseModel - Extended Base Class for all the Application Models.
+ * ClassicModel - Extended Base Class for all the Application Models.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -9,12 +9,13 @@
 
 namespace App\Core;
 
-use Nova\Core\Model;
-use Nova\DBAL\Connection;
-
+use Nova\Database\Manager as Database;
 use Nova\Input\Filter as InputFilter;
+use Nova\Core\Model;
 
-use PDO;
+use \FluentStructure;
+use \FluentPDO;
+use \PDO;
 
 
 class BaseModel extends Model
@@ -38,6 +39,7 @@ class BaseModel extends Model
      * Valid types are: 'int', 'datetime', 'date'
      *
      * @var string
+     *
      * @access protected
      */
     protected $dateFormat = 'datetime';
@@ -46,6 +48,7 @@ class BaseModel extends Model
      * Whether or not to auto-fill a 'created_on' field on inserts.
      *
      * @var boolean
+     *
      * @access protected
      */
     protected $autoCreated = true;
@@ -54,6 +57,7 @@ class BaseModel extends Model
      * Field name to use to the created time column in the DB table.
      *
      * @var string
+     *
      * @access protected
      */
     protected $createdField = 'created_on';
@@ -62,6 +66,7 @@ class BaseModel extends Model
      * Whether or not to auto-fill a 'modified_on' field on updates.
      *
      * @var boolean
+     *
      * @access protected
      */
     protected $autoModified = true;
@@ -70,6 +75,7 @@ class BaseModel extends Model
      * Field name to use to the modified time column in the DB table.
      *
      * @var string
+     *
      * @access protected
      */
     protected $modifiedField = 'modified_on';
@@ -106,15 +112,20 @@ class BaseModel extends Model
     /**
      * Temporary select's ORDER attribute.
      */
-    protected $tempSelectOrder = null;
+    protected $selectOrder = null;
 
     /**
      * Temporary select's LIMIT attribute.
      */
-    protected $tempSelectLimit = null;
+    protected $selectLimit = null;
 
     /**
-     * Protected, non-modifiable attributes
+     * Temporary select's OFFSET attribute.
+     */
+    protected $selectOffset = null;
+
+    /**
+     * Protected, non-modifiable attributes.
      */
     protected $protectedFields = array();
 
@@ -131,7 +142,7 @@ class BaseModel extends Model
 
     /**
      * An array of validation rules.
-     * This needs to be the same format as validation rules passed to the Validator.
+     * This needs to be the same format as validation rules passed to the Validator helper.
      */
     protected $validateRules = array();
 
@@ -139,7 +150,8 @@ class BaseModel extends Model
      * An array of extra rules to add to validation rules during inserts only.
      * Often used for adding 'required' rules to fields on insert, but not updates.
      *
-     *   array( 'username' => 'required' );
+     * array( 'username' => 'required' );
+     *
      * @var array
      */
     protected $validateInsertRules = array();
@@ -152,9 +164,9 @@ class BaseModel extends Model
     protected $errors = array();
 
     /**
-     * @var Array Columns for the Model's database fields
+     * This can be set to avoid a database call if using $this->prepareData().
      *
-     * This can be set to avoid a database call if using $this->prepareData()
+     * @var Array Columns for the Model's database fields.
      */
     protected $fields = array();
 
@@ -163,9 +175,9 @@ class BaseModel extends Model
     /**
      * Constructor
      */
-    public function __construct($engine = null, $inputFilter = null)
+    public function __construct($connection = null, $inputFilter = null)
     {
-        parent::__construct($engine);
+        parent::__construct($connection);
 
         // Always protect our fields
         array_unshift($this->beforeInsert, 'protectFields');
@@ -185,8 +197,7 @@ class BaseModel extends Model
         // Do we have a Validator instance?
         if ($inputFilter instanceof InputFilter) {
             $this->inputFilter = $inputFilter;
-        }
-        else {
+        } else {
             $this->inputFilter = new InputFilter();
         }
 
@@ -195,7 +206,81 @@ class BaseModel extends Model
     }
 
     //--------------------------------------------------------------------
-    // CRUD Methods
+    // QueryBuilder Methods
+    //--------------------------------------------------------------------
+
+    public function queryBuilder(FluentStructure $structure = null)
+    {
+        if($structure === null) {
+            $structure = new FluentStructure($this->primaryKey);
+        }
+
+        $this->db->countIncomingQuery();
+
+        // Get a QueryBuilder instance.
+        return $this->db->getQueryBuilder($structure);
+    }
+
+    public function buildQuery($method, $param = null)
+    {
+        $returnType = $this->tempReturnType;
+
+        // Make sure our temp return type is correct.
+        $this->tempReturnType = $this->returnType;
+
+        // Get a QueryBuilder instance.
+        $queryBuilder = $this->queryBuilder();
+
+        // First, check and configure for the 'select' Method.
+        if ($method == 'select') {
+            $query = $queryBuilder->from($this->table(), $param);
+
+            // Setup the fetch Method.
+            if ($returnType == 'array') {
+                $object = false;
+            }
+            else if($returnType == 'object') {
+                $object = true;
+            }
+            else  {
+                $object = $returnType;
+
+                // Check for a valid className.
+                $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+
+                if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                    throw new \Exception(__('No valid Entity Name is given: {0}', $returnType));
+                }
+
+                if(! class_exists($returnType)) {
+                    throw new \Exception(__('No valid Entity Class is given: {0}', $returnType));
+                }
+            }
+
+            return $query->asObject($object);
+        }
+
+        // Then, configure the other Query building Methods.
+        if ($method == 'insert') {
+            $param = is_array($param) ? $param : array();
+
+            $query = $queryBuilder->insertInto($this->table(), $param);
+        }
+        else if ($method == 'update') {
+            $query = $queryBuilder->update($this->table(), $param);
+        }
+        else if ($method == 'delete') {
+            $query = $queryBuilder->delete($this->table(), $param);
+        }
+        else {
+            throw new \Exception(__('No valid Method given for Query building'));
+        }
+
+        return $query;
+    }
+
+    //--------------------------------------------------------------------
+    // CRUD Support Methods
     //--------------------------------------------------------------------
 
     /**
@@ -203,10 +288,10 @@ class BaseModel extends Model
      */
     public function first()
     {
-        $result = $this->limit(1, 0)->findAll();
+        $result = $this->limit(1)->findAll();
 
         if (is_array($result) && (count($result) > 0)) {
-            return $result[0];
+            return array_shift($result);
         }
 
         return $result;
@@ -215,7 +300,8 @@ class BaseModel extends Model
     /**
      * Finds a single record based on it's primary key.
      *
-     * @param  mixed $id The primaryKey value of the object to retrieve.
+     * @param mixed $id The primaryKey value of the object to retrieve.
+     *
      * @return object
      */
     public function find($id)
@@ -230,7 +316,8 @@ class BaseModel extends Model
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
-        $result = $this->select($sql, array('value' => $id));
+        // Build and process the Query.
+        $result = $this->buildQuery('select')->where($this->primaryKey, $id)->fetch();
 
         if (! empty($result)) {
             $result = $this->trigger('afterFind', array('id' => $id, 'method' => 'find', 'fields' => $result));
@@ -249,25 +336,16 @@ class BaseModel extends Model
      */
     public function findBy()
     {
-        $bindParams = array();
-
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        $this->setWhere($params);
-
-        $where = $this->wheres();
-
-        // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($where, $bindParams);
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 1";
+        $where = $this->setWhere($params);
 
         //
         $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
 
-        $result = $this->select($sql, $bindParams);
+        // Build and process the Query.
+        $result = $this->buildQuery('select')->where($where)->fetch();
 
         if (! empty($result)) {
             $result = $this->trigger('afterFind', array('method' => 'findBy', 'fields' => $result));
@@ -288,26 +366,17 @@ class BaseModel extends Model
      */
     public function findMany($values)
     {
-        if(! is_array($values)) {
-            throw new \UnexpectedValueException(__('Parameter should be an Array'));
+        if (! is_array($values) || empty($values)) {
+            throw new \UnexpectedValueException(__('Parameter should be a non empty Array'));
         }
 
-        // Prepare the ORDER details.
-        $orderStr = $this->parseSelectOrder();
+        // Build and process the Query.
+        $query = $this->buildQuery('select')->where($this->primaryKey, $values);
 
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:values) $orderStr";
+        $query = ($this->selectOrder === null) ? $query : $query->orderBy($this->selectOrder);
 
-        $result = $this->db->select(
-            $sql,
-            array('values' => $values),
-            array('values' => Connection::PARAM_INT_ARRAY),
-            $this->tempReturnType,
-            true
-        );
-
-        // Make sure our temp return type is correct.
-        $this->tempReturnType = $this->returnType;
+        // Fetch the result.
+        $result = $query->fetchAll();
 
         // Reset the Model State.
         $this->resetState();
@@ -337,26 +406,23 @@ class BaseModel extends Model
      */
     public function findAll()
     {
-        $bindParams = array();
-
         // Prepare the WHERE details.
         $where = $this->wheres();
-
-        $whereStr = $this->parseWheres($where, $bindParams);
-
-        // Prepare the ORDER details.
-        $orderStr = $this->parseSelectOrder();
-
-        // Prepare the LIMIT details.
-        $limitStr = $this->parseSelectLimit();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." $whereStr $orderStr $limitStr";
 
         //
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
 
-        $result = $this->select($sql, $bindParams, true);
+        // Build and process the Query.
+        $query = $this->buildQuery('select')->where($where);
+
+        $query = ($this->selectLimit === null)  ? $query : $query->limit($this->selectLimit);
+
+        $query = ($this->selectOffset === null) ? $query : $query->offset($this->selectOffset);
+
+        $query = ($this->selectOrder === null)  ? $query : $query->orderBy($this->selectOrder);
+
+        // Fetch the result.
+        $result = $query->fetchAll();
 
         if (is_array($result)) {
             foreach ($result as $key => &$row) {
@@ -373,8 +439,9 @@ class BaseModel extends Model
     /**
      * Inserts data into the database.
      *
-     * @param  array $data An array of key/value pairs to insert to database.
-     * @return mixed       The primaryKey value of the inserted record, or FALSE.
+     * @param array $data An array of key/value pairs to insert to database.
+     *
+     * @return mixed The primaryKey value of the inserted record, or FALSE.
      */
     public function insert($data, $skipValidation = null)
     {
@@ -391,16 +458,13 @@ class BaseModel extends Model
         if ($data !== false) {
             $data = $this->trigger('beforeInsert', array('method' => 'insert', 'fields' => $data));
 
-            // Prepare the Data
+            // Prepare the Data.
             $data = $this->prepareData($data);
 
-            // Get the parameter Types.
-            $paramTypes = Connection::getParamTypes($data);
-
             // Execute the INSERT.
-            $result = $this->db->insert($this->table(), $data, $paramTypes);
+            $result = $this->db->insert($this->table(), $data);
 
-            if($result !== false) {
+            if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
             }
         }
@@ -416,6 +480,7 @@ class BaseModel extends Model
      * determine which row to replace.
      *
      * @param $data
+     *
      * @return bool
      */
     public function replace($data, $skipValidation = null)
@@ -431,13 +496,13 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
+            // Prepare the Data.
             $data = $this->prepareData($data);
 
-            $paramTypes = Connection::getParamTypes($data);
+            // Execute the REPLACE.
+            $result = $this->db->replace($this->table(), $data);
 
-            $result = $this->db->replace($this->table(), $data, $paramTypes);
-
-            if($result !== false) {
+            if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
             }
         }
@@ -451,8 +516,9 @@ class BaseModel extends Model
     /**
      * Updates an existing record in the database.
      *
-     * @param  mixed $id The primaryKey value of the record to update.
-     * @param  array $data An array of value pairs to update in the record.
+     * @param mixed $id   The primaryKey value of the record to update.
+     * @param array $data An array of value pairs to update in the record.
+     *
      * @return bool
      */
     public function update($id, $data, $skipValidation = null)
@@ -473,13 +539,8 @@ class BaseModel extends Model
             // Prepare the Data.
             $data = $this->prepareData($data);
 
-            // Calculate the parameter Types.
-            $paramTypes = Connection::getParamTypes($data);
-
-            $paramTypes[$this->primaryKey] = is_integer($id) ? PDO::PARAM_INT : PDO::PARAM_STR;
-
-            // Execute the UPDATE.
-            $result = $this->db->update($this->table(), $data, array($this->primaryKey => $id), $paramTypes);
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
 
             $result = $this->trigger('afterUpdate', array('id' => $id, 'method' => 'update', 'fields' => $data, 'result' => $result));
         }
@@ -504,8 +565,9 @@ class BaseModel extends Model
      *
      * $this->model->updateMany($ids, $data);
      *
-     * @param  array $ids An array of primaryKey values to update.
-     * @param  array $data An array of value pairs to modify in each row.
+     * @param array $ids  An array of primaryKey values to update.
+     * @param array $data An array of value pairs to modify in each row.
+     *
      * @return bool
      */
     public function updateMany($ids, $data, $skipValidation = null)
@@ -519,41 +581,20 @@ class BaseModel extends Model
         }
 
         //
+        $result = false;
+
         $data = $this->trigger('beforeUpdate', array('ids' => $ids, 'method' => 'updateMany', 'fields' => $data));
 
         // Will be false if it didn't validate.
-        if ($data === false) {
-            // Reset the Model State.
-            $this->resetState();
+        if ($data !== false) {
+            // Prepare the Data.
+            $data = $this->prepareData($data);
 
-            return false;
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->where($this->primaryKey, $ids)->execute();
+
+            $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
         }
-
-        //
-        $this->db->connect();
-
-        // Prepare the SET command and parameter Types.
-        $setFields = array();
-
-        $paramTypes = array();
-
-        foreach ($data as $field => $value) {
-            $setFields[] = $field .' = :' .$field;
-
-            $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
-        }
-
-        // Prepare the parameters.
-        $params['values'] = $ids;
-
-        $paramTypes['values'] = Connection::PARAM_INT_ARRAY;
-
-        // Prepare the SQL Statement.
-        $sql = "UPDATE " .$this->table() ." SET " . implode(', ', $setFields) ." WHERE " .$this->primaryKey ." IN (:values)";
-
-        $result = $this->db->executeUpdate($sql, $params, $paramTypes);
-
-        $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
 
         // Reset the Model State.
         $this->resetState();
@@ -574,8 +615,9 @@ class BaseModel extends Model
      * $this->updateBy($wheres, $data);
      * $this->updateBy('user_id', 15, $data);
      *
-     * @param array $data An array of data pairs to update
-     * @param one or more WHERE-acceptable entries.
+     * @param array $data An array of data pairs to update.
+     * @param             One or more WHERE-acceptable entries.
+     *
      * @return bool
      */
     public function updateBy()
@@ -584,12 +626,12 @@ class BaseModel extends Model
 
         $data = array_pop($params);
 
-        if(empty($params) || empty($data)) {
+        if (empty($params) || empty($data)) {
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
         // Prepare the WHERE parameters.
-        $this->setWhere($params);
+        $where = $this->setWhere($params);
 
         //
         $result = false;
@@ -601,11 +643,8 @@ class BaseModel extends Model
             // Prepare the Data.
             $data = $this->prepareData($data);
 
-            // Calculate the parameter Types.
-            $paramTypes = Connection::getParamTypes($data);
-
-            // Execute the UPDATE.
-            $result = $this->db->update($this->table(), $data, $this->wheres(), $paramTypes);
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->where($where)->execute();
 
             $this->trigger('afterUpdate', array('method' => 'updateBy', 'fields' => $data, 'result' => $result));
         }
@@ -619,7 +658,8 @@ class BaseModel extends Model
     /**
      * Updates all records and sets the value pairs passed in the array.
      *
-     * @param  array $data An array of value pairs with the data to change.
+     * @param array $data An array of value pairs with the data to change.
+     *
      * @return bool
      */
     public function updateAll($data, $skipValidation = null)
@@ -640,11 +680,8 @@ class BaseModel extends Model
             // Prepare the Data.
             $data = $this->prepareData($data);
 
-            // Calculate the parameter Types.
-            $paramTypes = Connection::getParamTypes($data);
-
-            // Execute the UPDATE.
-            $result = $this->db->update($this->table(), $data, array(1 => 1), $paramTypes);
+            // Build and process the Query.
+            $result = $this->buildQuery('update')->set($data)->execute();
 
             $this->trigger('afterUpdate', array('method' => 'updateAll', 'fields' => $data, 'result' => $result));
         }
@@ -658,9 +695,10 @@ class BaseModel extends Model
     /**
      * Increments the value of field for a given row, selected by the primary key for the table.
      *
-     * @param $id
-     * @param $field
+     * @param     $id
+     * @param     $field
      * @param int $value
+     *
      * @return mixed
      */
     public function increment($id, $field, $value = 1)
@@ -668,29 +706,19 @@ class BaseModel extends Model
         $value = (int) abs($value);
 
         //
-        $this->db->connect();
+        $data = array($field => "{$field}+{$value}");
 
-        //
-        $params = array(
-            "field_$field" => "{$field}+{$value}",
-            'where_field' => $id
-        );
-
-        // Prepare the parameter Types.
-        $paramsTypes = getParamTypes($params);
-
-        // Prepare the SQL Query.
-        $sql = "UPDATE " .$this->table() ." SET $field = :field_$field WHERE " .$this->primaryKey ." = :where_field";
-
-        return $this->db->executeUpdate($sql, $params, $paramTypes);
+        // Build and process the Query.
+        return $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
     }
 
     /**
-     * Increments the value of field for a given row, selected by the primary key for the table.
+     * Decrements the value of field for a given row, selected by the primary key for the table.
      *
-     * @param $id
-     * @param $field
+     * @param     $id
+     * @param     $field
      * @param int $value
+     *
      * @return mixed
      */
     public function decrement($id, $field, $value = 1)
@@ -698,45 +726,30 @@ class BaseModel extends Model
         $value = (int) abs($value);
 
         //
-        $this->db->connect();
+        $data = array($field => "{$field}-{$value}");
 
-        //
-        $params = array(
-            "field_$field" => "{$field}-{$value}",
-            'where_field' => $id
-        );
-
-        // Prepare the parameter Types.
-        $paramsTypes = getParamTypes($params);
-
-        // Prepare the SQL Query.
-        $sql = "UPDATE " .$this->table() ." SET $field = :field_$field WHERE " .$this->primaryKey ." = :where_field";
-
-        return $this->db->executeUpdate($sql, $params, $paramTypes);
+        // Build and process the Query.
+        return $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
     }
 
     /**
      * Deletes a row by it's primary key value.
      *
-     * @param  mixed $id The primary key value of the row to delete.
+     * @param mixed $id The primary key value of the row to delete.
+     *
      * @return bool
      */
     public function delete($id)
     {
-        if(! is_integer($id)) {
+        if (! is_integer($id)) {
             throw new \UnexpectedValueException(__('Parameter should be an Integer'));
         }
-
-        // Prepare the Parameters.
-        $params = array($this->primaryKey => $id);
-
-        // Prepare the parameter Types.
-        $paramsTypes = getParamTypes($params);
 
         //
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
 
-        $result = $this->db->delete($this->table(), $params, $paramTypes);
+        // Build and process the Query.
+        $result = $this->buildQuery('delete')->where($this->primaryKey, $id)->execute();
 
         $this->trigger('afterDelete', array('id' => $id, 'method' => 'delete', 'result' => $result));
 
@@ -745,35 +758,20 @@ class BaseModel extends Model
 
     public function deleteBy()
     {
-        $bindParams = array();
-
-        //
         $params = func_get_args();
 
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
-        //
-        $this->db->connect();
-
         // Prepare the WHERE parameters.
-        $this->setWhere($params);
-
-        $where = $this->wheres();
+        $where = $this->setWhere($params);
 
         //
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));
 
-        $whereStr = $this->parseWheres($where, $bindParams);
-
-        // Prepare the parameter Types.
-        $paramTypes = Connection::getParamTypes($bindParams);
-
-        // Prepare the SQL Query.
-        $sql = "DELETE FROM " .$this->table() ." $whereStr";
-
-        $result = $this->db->executeUpdate($sql, $bindParams, $paramTypes);
+        // Build and process the Query.
+        $result = $this->buildQuery('delete')->where($where)->execute();
 
         $this->trigger('afterDelete', array('method' => 'deleteBy', 'fields' => $where, 'result' => $result));
 
@@ -787,19 +785,10 @@ class BaseModel extends Model
     {
         if (! is_array($ids) || (count($ids) == 0)) return NULL;
 
-        //
-        $this->db->connect();
-
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
-        //
-        $sql = "DELETE FROM " .$this->table() ." WHERE " .$this->primaryKey ." IN (:values)";
-
-        $result = $this->db->executeUpdate(
-            $sql,
-            array('values' => $ids),
-            array('values' => Connection::PARAM_INT_ARRAY)
-        );
+        // Build and process the Query.
+        $result = $this->buildQuery('delete')->where($this->primaryKey, $ids)->execute();
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));
 
@@ -828,14 +817,14 @@ class BaseModel extends Model
      * class name, meaning that it must include the namespace, if applicable.
      *
      * @param string $class
+     *
      * @return $this
      */
     public function asObject($className = null)
     {
-        if($className !== null) {
+        if ($className !== null) {
             $this->tempReturnType = $className;
-        }
-        else {
+        } else {
             $this->tempReturnType = 'object';
         }
 
@@ -843,45 +832,61 @@ class BaseModel extends Model
     }
 
     //--------------------------------------------------------------------
-    // Query Building Methods
+    // Built-in Query Building Methods
     //--------------------------------------------------------------------
 
-    public function where($field, $value = '')
-    {
-        if(empty($field)) {
-            throw new \UnexpectedValueException(__('Invalid parameters'));
-        }
+    /*
+        The FluentPDO based QueryBuilder accept the following WHERE styles:
 
-        $this->tempWheres[$field] = $value;
+        where("field", "x");                           // Translated to field = 'x'
+        where("field", null);                          // Translated to field IS NULL
+        where(null);                                   // Reset clause and remove all previous defined conditions.
+        where("field", array("x", "y"));               // Translated to field IN ('x', 'y')
+        where("field > ?", "x");                       // Bound by PDO
+        where("field > :name", array(':name' => 'x')); // Bound by PDO
+        where(array("field1" => "value1", ...));       // Translated to field1 = 'value1' AND ...
+
+        Then, to have a compatible WHERE method in the Model, we just need an array to keep the WHEREs and
+        to optionally process the array given as the first argument, otherwise literally storing the parameters.
+     */
+    public function where($condition, $value = null)
+    {
+        $params = func_get_args();
+
+        $this->setWhere($params);
 
         return $this;
     }
 
-    public function limit($limit, $start = 0)
+    public function limit($limit)
     {
-        if(! is_integer($limit) || ! is_integer($start)) {
-            throw new \UnexpectedValueException(__('Invalid parameters'));
+        if (! is_integer($limit) || ($limit < 0)) {
+            throw new \UnexpectedValueException(__('Invalid parameter'));
         }
 
-        $this->tempSelectLimit = array($start => $limit);
+        $this->selectLimit  = $limit;
 
         return $this;
     }
 
-    public function order($sense = 'ASC')
+    public function offset($offset)
     {
-        return $this->orderBy($this->primaryKey, $sense);
-    }
-
-    public function orderBy($field, $sense = 'ASC')
-    {
-        $sense = strtoupper($sense);
-
-        if(empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
-            throw new \UnexpectedValueException(__('Invalid parameters'));
+        if (! is_integer($offset) || ($offset < 0)) {
+            throw new \UnexpectedValueException(__('Invalid parameter'));
         }
 
-        $this->tempSelectOrder = array($field => $sense);
+        $this->selectOffset = $offset;
+
+        return $this;
+    }
+
+    public function orderBy($order)
+    {
+        if (! is_string($order) || empty($order)) {
+            throw new \UnexpectedValueException(__('Invalid parameter'));
+        }
+
+        $this->selectOrder = $order;
 
         return $this;
     }
@@ -892,40 +897,21 @@ class BaseModel extends Model
 
     /**
      * Counts number of rows modified by an arbitrary WHERE call.
+     *
      * @return INT
      */
     public function countBy()
     {
-        $bindParams = array();
-
-        //
         $params = func_get_args();
 
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
-        $this->setWhere($params);
+        $where = $this->setWhere($params);
 
-        // Prepare the WHERE details.
-        $whereStr = $this->parseWheres($this->wheres(), $bindParams);
-
-        // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
-
-        $result = $this->asArray()->select($sql, $bindParams);
-
-        if($result !== false) {
-            $count = $result['count'];
-        }
-        else {
-            $count = 0;
-        }
-
-        // Reset the Model State.
-        $this->resetState();
-
-        return $count;
+        // Build and process the Query.
+        return $this->buildQuery('select')->select($this->primaryKey)->where($where)->count();
     }
 
     /**
@@ -935,41 +921,28 @@ class BaseModel extends Model
      */
     public function countAll()
     {
-        // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table();
-
-        $result = $this->asArray()->select($sql);
-
-        if($result !== false) {
-            return $result['count'];
-        }
-
-        return 0;
+        // Build and process the Query.
+        return $this->buildQuery('select')->select($this->primaryKey)->where($this->wheres())->count();
     }
 
     /**
      * Checks whether a field/value pair exists within the table.
      *
-     * @param string $field The field to search for.
-     * @param string $value The value to match $field against.
+     * @param string $field  The field to search for.
+     * @param string $value  The value to match $field against.
      * @param string $ignore Optionally, the ignored primaryKey.
      *
      * @return bool TRUE/FALSE
      */
-    public function isUnique($field, $value, $ignore = null)
+    public function isUnique($field, $value, $ignoreId = null)
     {
-        $bindParams = array("where_$field" => $value);
+        // Build and process the Query.
+        $query = $this->buildQuery('select')->where($field, $value);
 
-        //
-        $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
+        $query = ($ignoreId === null) ? $query : $query->where($this->primaryKey .' != ?', $ignoreId);
 
-        if($ignore !== null) {
-            $sql .= " AND " .$this->primaryKey ." != :where_ignore";
+        $data = $query->fetchAll();
 
-            $bindParams['where_ignore'] = $ignore;
-        }
-
-        $data = $this->select($sql, $bindParams, true);
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -985,7 +958,7 @@ class BaseModel extends Model
      */
     public function table($table = null)
     {
-        if($table !== null) {
+        if ($table !== null) {
             // A custom Table Name is wanted.
             return DB_PREFIX .$table;
         }
@@ -1002,7 +975,7 @@ class BaseModel extends Model
      */
     public function protect($field)
     {
-        if(empty($field)) {
+        if (empty($field)) {
             throw new \UnexpectedValueException(__('Invalid parameter'));
         }
 
@@ -1015,11 +988,11 @@ class BaseModel extends Model
      * Protect attributes by removing them from $row array.
      * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
      *
-     * @param object /array $row The value pair item to remove.
+     * @param object|array $row The value pair item to remove.
      */
     public function protectFields(array $row)
     {
-        if(! empty($row)) {
+        if (! empty($row)) {
             foreach ($this->protectedFields as $field) {
                 if (is_object($row)) {
                     unset($row->$field);
@@ -1037,20 +1010,14 @@ class BaseModel extends Model
      * Get the field names for this Model's table.
      *
      * Returns the model's database fields stored in $this->fields if set, else it tries to retrieve
-     * the field list from $this->db->listFields($this->table());
+     * the field list from $this->db->listFields($this->table()).
      *
-     * @return array    Returns the database fields for this Model
+     * @return array Returns the database fields for this Model.
      */
     public function tableFields()
     {
         if (empty($this->fields)) {
-            $schemaManager = $this->db->getSchemaManager();
-
-            $columns = $schemaManager->listTableColumns($this->table());
-
-            foreach ($columns as $column) {
-                $this->fields[] = $column->getName();
-            }
+            $this->fields = $this->db->listColumns($this->table());
         }
 
         if (empty($this->fields)) {
@@ -1064,19 +1031,17 @@ class BaseModel extends Model
      * Execute Select Query, binding values into the $sql Query.
      *
      * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @param array  $params
+     * @param bool   $fetchAll   Ask the method to fetch all the records or not.
+     *
      * @return array|null
      *
      * @throws \Exception
      */
-    public function select($sql, $params = array(), $fetchAll = false)
+    public function select($sql, $params = array(), $paramTypes = array(), $fetchAll = false)
     {
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        // Prepare the parameter Types.
-        $paramTypes = Connection::getParamTypes($params);
 
         $result = $this->db->select($sql, $params, $paramTypes, $this->tempReturnType, $fetchAll);
 
@@ -1091,48 +1056,20 @@ class BaseModel extends Model
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        // Prepare the parameters.
-        $className = null;
-
-        $fetchMode = Connection::getFetchMode($this->tempReturnType, $className);
-
-        // Get the Query's Statement.
-        $statement = $this->db->query($sql);
-
-        // Set the Statement's Fetch Mode
-        $statement->setFetchMode($fetchMode, $className);
+        $result = $this->db->rawQuery($sql, $this->tempReturnType);
 
         // Make sure our temp return type is correct.
         $this->tempReturnType = $this->returnType;
 
-        return $statement;
+        return $result;
     }
 
-    public function prepare($sql, $bindParams = array())
+    public function prepare($sql, $params = array(), $paramTypes = array())
     {
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        // Prepare the parameters.
-        $className = null;
-
-        $fetchMode = Connection::getFetchMode($this->tempReturnType, $className);
-
-        // Prepare the Statement.
-        $statement = $this->db->prepare($sql);
-
-        foreach($bindParams as $key => $value) {
-            if (is_integer($value)) {
-                $statement->bindValue($key, $value, PDO::PARAM_INT);
-            } else {
-                $statement->bindValue($key, $value, PDO::PARAM_STR);
-            }
-        }
-
-        // Set the Statement's Fetch Mode
-        $statement->setFetchMode($fetchMode, $className);
-
-        return $statement;
+        return $this->db->rawPrepare($sql, $params, $paramTypes);
     }
 
     //--------------------------------------------------------------------
@@ -1145,10 +1082,10 @@ class BaseModel extends Model
      * If $type == 'insert', any additional rules in the class var $insert_validate_rules
      * for that field will be added to the rules.
      *
-     * @param  array $data An array of Validation Rules
-     * @param  string $type Either 'update' or 'insert'.
+     * @param array  $data An array of Validation Rules.
+     * @param string $type Either 'update' or 'insert'.
      *
-     * @return array/bool       The original data or FALSE
+     * @return array|bool The original data or FALSE.
      */
     public function validate($data, $type = 'update', $skipValidation = null)
     {
@@ -1179,7 +1116,7 @@ class BaseModel extends Model
             $inputFilter->populate($data);
 
             // Execute the Data Validation.
-            if(! $inputFilter->isValid()) {
+            if (! $inputFilter->isValid()) {
                 // Something was wrong; store the current Filter's Error Messages and return false.
                 $this->errors = $inputFilter->getErrors();
 
@@ -1195,6 +1132,11 @@ class BaseModel extends Model
         return $data;
     }
 
+    public function validation()
+    {
+        return $this->validator;
+    }
+
     //--------------------------------------------------------------------
     // Observers
     //--------------------------------------------------------------------
@@ -1203,7 +1145,7 @@ class BaseModel extends Model
      * Sets the created_on date for the object based on the current date/time and dateFormat.
      * Will not overwrite an existing field.
      *
-     * @param array $row The array of data to be inserted
+     * @param array $row The array of data to be inserted.
      *
      * @return array
      */
@@ -1228,7 +1170,7 @@ class BaseModel extends Model
      * Sets the modified_on date for the object based on the current date/time and dateFormat.
      * Will not overwrite an existing field.
      *
-     * @param array $row The array of data to be inserted
+     * @param array $row The array of data to be inserted.
      *
      * @return array
      */
@@ -1255,11 +1197,11 @@ class BaseModel extends Model
 
     /**
      * Extracts the Model's fields (except the key and those handled by Observers) from the $postData
-     * and returns an array of name => value pairs
+     * and returns an array of name => value pairs.
      *
-     * @param Array $postData Usually the POST data, when called from the Controller
+     * @param array $postData Usually the POST data, when called from the Controller.
      *
-     * @return Array An array of name => value pairs containing the data for the Model's fields
+     * @return array An array of name => value pairs containing the data for the Model's fields.
      */
     public function prepareData($postData)
     {
@@ -1280,7 +1222,7 @@ class BaseModel extends Model
         $fields = $this->tableFields();
 
         // If the field is the primary key, one of the created/modified/deleted fields,
-        // or has not been set in the $postData, skip it
+        // or has not been set in the $postData, skip it.
         foreach ($postData as $field => $value) {
             if (in_array($field, $skippedFields) || ! in_array($field, $fields)) {
                 continue;
@@ -1295,8 +1237,8 @@ class BaseModel extends Model
     /**
      * Triggers a model-specific event and call each of it's Observers.
      *
-     * @param string $event The name of the event to trigger
-     * @param mixed $data The data to be passed to the callback functions.
+     * @param string $event The name of the event to trigger.
+     * @param mixed  $data  The data to be passed to the callback functions.
      *
      * @return mixed
      */
@@ -1320,12 +1262,12 @@ class BaseModel extends Model
             $data = call_user_func_array(array($this, $method), array($data));
         }
 
-        // In case no method called or method returned the entire data array, we typically just need the $fields
+        // In case no method called or method returned the entire data array, we typically just need the $fields.
         if (isset($data['fields'])) {
             return $data['fields'];
         }
 
-        // A few methods might need to return 'ids'
+        // A few methods might need to return 'ids'.
         if (isset($data['ids'])) {
             return $data['ids'];
         }
@@ -1340,7 +1282,7 @@ class BaseModel extends Model
      * The available time formats are:
      * * 'int'      - Stores the date as an integer timestamp.
      * * 'datetime' - Stores the date and time in the SQL datetime format.
-     * * 'date'     - Stores teh date (only) in the SQL date format.
+     * * 'date'     - Stores the date (only) in the SQL date format.
      *
      * @param mixed $userDate An optional PHP timestamp to be converted.
      *
@@ -1356,11 +1298,9 @@ class BaseModel extends Model
             case 'int':
                 return $curr_date;
                 break;
-
             case 'datetime':
                 return date('Y-m-d H:i:s', $curr_date);
                 break;
-
             case 'date':
                 return date('Y-m-d', $curr_date);
                 break;
@@ -1373,117 +1313,58 @@ class BaseModel extends Model
         $this->tempWheres = array();
 
         // Reset our select ORDER
-        $this->tempSelectOrder = null;
+        $this->selectOrder = null;
 
         // Reset our select LIMIT
-        $this->tempSelectLimit = null;
+        $this->selectLimit = null;
+
+        // Reset our select OFFSET
+        $this->selectOffset = null;
     }
 
-    protected function setWhere($params)
+    protected function setWhere(array $params)
     {
-        if(empty($params)) {
-            throw new \UnexpectedValueException(__('Parameter should be a not empty Array'));
+        if (empty($params)) {
+            $this->tempWheres;
         }
 
-        if(is_array($params[0])) {
-            $this->tempWheres = array_merge($this->tempWheres, $params[0]);
+        // Get the WHERE condition.
+        $condition = array_shift($params);
+
+        if($condition == null) {
+            // Remove all previous defined conditions from our own WHEREs array, too.
+            $this->tempWheres = array();
+        }
+        else if(is_array($condition)) {
+            // Is given an array of Conditions; merge them into our own WHEREs array.
+            $this->tempWheres = array_merge($this->tempWheres, $condition);
+        }
+        else if(count($params) == 1) {
+            // Store the condition and its value.
+            $this->tempWheres[$condition] = array_shift($params);
+        }
+        else if(count($params) == 2) {
+            $operator = array_shift($params);
+
+            if(! in_array($operator, Connection::$whereOperators, true)) {
+                throw new \UnexpectedValueException(__('Second parameter is invalid'));
+            }
+
+            $condition = sprintf('%s $s ?', $condition, $operator);
+
+            // Store the composed condition and its value.
+            $this->tempWheres[$condition] = array_shift($params);
         }
         else {
-            $key = $params[0];
-
-            $value = isset($params[1]) ? $params[1] : '';
-
-            $this->tempWheres[$key] = $value;
+            throw new \UnexpectedValueException(__('Invalid number of parameters'));
         }
+
+        return $this->tempWheres;
     }
 
     protected function wheres()
     {
         return $this->tempWheres;
-    }
-
-    protected function parseWheres(array $where, &$bindParams = array())
-    {
-        $result = '';
-
-        ksort($where);
-
-        $idx = 0;
-
-        foreach ($where as $key => $value) {
-            if($idx > 0) {
-                $whereStr .= ' AND ';
-            }
-
-            $idx++;
-
-            if(empty($value)) {
-                // A string based condition; simplify its white spaces and use it directly.
-                $result .= preg_replace('/\s+/', ' ', trim($key));
-
-                continue;
-            }
-
-            if(strpos($key, ' ') !== false) {
-                $key = preg_replace('/\s+/', ' ', trim($key));
-
-                $segments = explode(' ', $key);
-
-                $key      = $segments[0];
-                $operator = $segments[1];
-            }
-            else {
-                $operator = '=';
-            }
-
-            $result .= "$key $operator :$key";
-
-            $bindParams[$key] = $value;
-        }
-
-        if(! empty($result)) {
-            $result = 'WHERE ' .$result;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectLimit()
-    {
-        $result = '';
-
-        $limits =& $this->tempSelectLimit;
-
-        if(is_numeric($limits)) {
-            $result = '0, ' .$limits;
-        }
-        else if(is_array($limits) && ! empty($limits)) {
-            list($offset, $limit) = each($limits);
-
-            $result = $offset .', ' .$limit;
-        }
-
-        if(! empty($result)) {
-            $result = 'LIMIT ' .$result;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectOrder()
-    {
-        $order =& $this->tempSelectOrder;
-
-        if(is_array($order) && ! empty($order)) {
-            list($key, $sense) = each($order);
-
-            $result = 'ORDER BY ' .$key .' ' .$sense;
-        }
-        else {
-            $result = '';
-        }
-
-        return $result;
     }
 
 }

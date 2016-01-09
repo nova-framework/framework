@@ -17,7 +17,7 @@ use \PDO;
 
 class Database
 {
-    private $connection;
+    private $connection = 'default';
 
     private static $instances = array();
 
@@ -39,7 +39,7 @@ class Database
 
     protected function __construct($linkName)
     {
-        $this->connection = Manager::getConnection($linkName);
+        $this->connection = $linkName;
     }
 
     public function getConnection()
@@ -51,7 +51,7 @@ class Database
     {
         $statement = $this->executeQuery($sql, $params, $paramTypes);
 
-        if(! $statement) {
+        if($statement === false) {
             return false;
         }
 
@@ -101,6 +101,11 @@ class Database
         return $this->executeUpdate($sql, array_values($where), $paramTypes);
     }
 
+    public function lastInsertId()
+    {
+        return Manager::getConnection($this->connection)->lastInsertId();
+    }
+
     protected function bindParams($statement, array $params, array $paramTypes = array())
     {
         if(empty($params)) {
@@ -135,10 +140,12 @@ class Database
 
     protected function executeQuery($sql, array $params, array $paramTypes = array())
     {
-        $this->connection->countIncomingQuery();
+        $link = Manager::getConnection($this->connection);
+
+        $link->countIncomingQuery();
 
         // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-        $statement = $this->connection->prepare($sql);
+        $statement = $connection->prepare($sql);
 
         // Bind the parameters.
         $this->bindParams($statement, $params, $paramTypes);
@@ -149,10 +156,12 @@ class Database
 
     protected function executeUpdate($sql, array $params, array $paramTypes = array())
     {
-        $this->connection->countIncomingQuery();
+        $link = Manager::getConnection($this->connection);
+
+        $link->countIncomingQuery();
 
         // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-        $statement = $this->connection->prepare($sql);
+        $statement = $link->prepare($sql);
 
         // Bind the parameters.
         $this->bindParams($statement, $params, $paramTypes);
@@ -163,19 +172,6 @@ class Database
 
         // Row count, affected rows.
         return $$statement->rowCount();
-    }
-
-    /**
-     * Provide direct access to any of \Nova\Database\Connection methods.
-     *
-     * @param $name
-     * @param $params
-     */
-    public function __call($method, $params = null)
-    {
-        if (method_exists($this->connection, $method)) {
-            return call_user_func_array(array($this->connection, $method), $params);
-        }
     }
 
 }

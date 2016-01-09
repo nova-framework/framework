@@ -172,6 +172,11 @@ class Database
             // Bind the parameters.
             $this->bindParams($statement, $params, $paramTypes);
 
+            // Execute the statement, return false if fail.
+            if (! $statement->execute()) {
+                return false;
+            }
+
             // Row count, affected rows.
             return $statement->rowCount();
         }

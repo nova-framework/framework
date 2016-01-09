@@ -8,7 +8,7 @@
  * @date updated Sept 19, 2015
  */
 
-namespace App\Packages\Core;
+namespace App\Packages\DBAL;
 
 use App\Packages\DBAL\Connection;
 use App\Packages\DBAL\Manager as Database;

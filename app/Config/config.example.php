@@ -149,6 +149,13 @@ Config::set('database', array(
 ));
 
 /**
+ * Active Packages
+ */
+Config::set('packages', array(
+    'DBAL',
+));
+
+/**
  * Active Modules
  */
 Config::set('modules', array(

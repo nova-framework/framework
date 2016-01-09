@@ -10,8 +10,8 @@
 namespace Nova\ORM;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use Nova\DBAL\Connection;
-use Nova\DBAL\Manager as DBALManager;
+use Nova\Database\Manager;
+use Nova\Database\Connection;
 use Nova\ORM\Annotation\Column;
 use \PDO;
 
@@ -73,24 +73,22 @@ abstract class Entity
     /**
      * Get Link instance.
      *
-     * @return Connection
+     * @return \Nova\Database\Connection
      */
     private static function getLink()
     {
-        return DBALManager::getConnection();
+        return Manager::getConnection();
     }
 
 
     /**
      * Query Builder for finding.
-     *
-     * @return QueryBuilder
-     *
+     * @return \Nova\Database\QueryBuilder
      * @codeCoverageIgnore
      */
     public static function getQueryBuilder()
     {
-        return self::getLink()->createQueryBuilder();
+        return self::getLink()->getQueryBuilder();
     }
 
     /**

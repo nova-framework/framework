@@ -116,7 +116,7 @@ class Database
         foreach ($params as $key => $value) {
             $bindKey = $key + 1;
 
-            if(isset($paramTypes[$key])) {
+            if(! empty($paramTypes) && isset($paramTypes[$key])) {
                 $statement->bindValue($bindKey, $value, $paramTypes[$key]);
 
                 continue;

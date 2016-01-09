@@ -159,7 +159,7 @@ class Database
         return $statement;
     }
 
-    protected function executeUpdate($sql, array $params, array $paramTypes = array(), $lastInsertId = false)
+    protected function executeUpdate($sql, array $params, array $paramTypes = array())
     {
         $link = Manager::getConnection($this->linkName);
 
@@ -173,10 +173,6 @@ class Database
 
         if (! $statement->execute()) {
             return false;
-        }
-
-        if($lastInsertId) {
-            return $link->lastInsertId();
         }
 
         // Row count, affected rows.

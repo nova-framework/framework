@@ -21,7 +21,6 @@ return array (
   'No valid Entity Class is given' => '',
   'No valid Entity Class is given: {0}' => '',
   'No valid Entity Name is given: {0}' => '',
-  'No valid Wrapper Class is given: {0}' => '',
   'Parameter should be an Array' => '',
   'SQLite Driver' => '',
   'The Event Name can not be empty' => '',

@@ -12,12 +12,14 @@ namespace Nova\ORM;
 use Nova\Database\Manager;
 use Nova\Database\Connection;
 
+use \PDO;
+
 
 class Database
 {
     private $connection;
 
-    private $instances = array();
+    private static $instances = array();
 
 
     public static function getInstance($linkName = 'default')
@@ -31,6 +33,8 @@ class Database
 
         // Setting Database into $instances to avoid duplication
         self::$instances[$linkName] = $instance;
+
+        return $instance;
     }
 
     protected function __construct($linkName)
@@ -46,6 +50,10 @@ class Database
     public function select($sql, array $params = array(), array $paramTypes = array(), $fetchClass = null, $fetchAll = false)
     {
         $statement = $this->executeQuery($sql, $params, $paramTypes);
+
+        if(! $statement) {
+            return false;
+        }
 
         if($fetchAll) {
             return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);

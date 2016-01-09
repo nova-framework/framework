@@ -19,7 +19,7 @@ class Database
 {
     private $connection;
 
-    private $instances = array();
+    private static $instances = array();
 
 
     public static function getInstance($linkName = 'default')

@@ -692,6 +692,11 @@ abstract class Connection extends PDO
         return $this->queryCount;
     }
 
+    public function countIncomingQuery()
+    {
+        $this->queryCount++;
+    }
+
     protected function parseWhereConditions(array $where, &$bindParams)
     {
         $result = '';

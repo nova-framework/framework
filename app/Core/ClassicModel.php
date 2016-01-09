@@ -222,6 +222,8 @@ class ClassicModel
             $structure = new FluentStructure($this->primaryKey);
         }
 
+        $this->db->countIncomingQuery();
+
         // Get a QueryBuilder instance.
         return $this->db->getQueryBuilder($structure);
     }

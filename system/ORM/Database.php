@@ -69,7 +69,7 @@ class Database
         $sql = 'INSERT INTO ' .$table .' (' .implode(', ', array_keys($data)) .')
                 VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
-       return $this->executeUpdate($sql, array_values($data), $paramTypes, true);
+       return $this->executeUpdate($sql, array_values($data), $paramTypes);
     }
 
     public function update($table, array $data, array $where, array $paramTypes = array())

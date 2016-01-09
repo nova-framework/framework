@@ -101,7 +101,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $car->costs = 50000;
 
         $insert = $car->save();
-        $this->assertGreaterThanOrEqual(2, $insert);
+        $this->assertGreaterThanOrEqual(1, $insert);
 
         $car2 = new Car();
 
@@ -278,7 +278,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
             $car->costs = 9900;
 
             $result = $car->save();
-            $this->assertGreaterThanOrEqual(2, $result);
+            $this->assertGreaterThanOrEqual(1, $result);
         }
 
         $all = Car::find()->all();

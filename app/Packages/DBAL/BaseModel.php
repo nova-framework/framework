@@ -9,7 +9,7 @@
 
 namespace App\Packages\DBAL;
 
-use Nova\Core\Model;
+use App\Packages\DBAL\Model;
 use App\Packages\DBAL\Connection;
 
 use Nova\Input\Filter as InputFilter;

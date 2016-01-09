@@ -48,14 +48,14 @@ Logger::initialize();
 set_exception_handler('Nova\Logger::ExceptionHandler');
 set_error_handler('Nova\Logger::ErrorHandler');
 
+/** Bootstrap the active Packages. */
+Packages::bootstrap();
+
 /** Get the current Router instance. */
 $router = Router::getInstance();
 
 /** Load the application wide Routes. */
 require $configDir .'routes.php';
-
-/** Bootstrap the active Packages. */
-Packages::bootstrap();
 
 /** Bootstrap the active Modules. */
 Modules::bootstrap();

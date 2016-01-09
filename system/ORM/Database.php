@@ -55,13 +55,21 @@ class Database
             return false;
         }
 
-        if($fetchAll) {
-            return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
+        if(! $fetchAll) {
+            // Fetch one record who match the criteria.
+            $statement->setFetchMode(PDO::FETCH_CLASS, $fetchClass);
+
+            return $statement->fetch();
         }
 
-        $statement->setFetchMode(PDO::FETCH_CLASS, $fetchClass);
+        // Fetch all records matching the criteria.
+        $result = $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
 
-        return $statement->fetch();
+        if (is_array($result) && (count($result) > 0)) {
+            return $result;
+        }
+
+        return false;
     }
 
     public function insert($table, array $data, array $paramTypes = array())
@@ -142,50 +150,52 @@ class Database
     {
         $link = Manager::getConnection($this->linkName);
 
+        // Signal to Connection instance the incoming Query.
         $link->countIncomingQuery();
 
-        if(! empty($params)) {
-            // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-            $statement = $link->prepare($sql);
-
-            // Bind the parameters.
-            $this->bindParams($statement, $params, $paramTypes);
-
-            // Execute the statement, return false if fail.
-            if (! $statement->execute()) {
-                return false;
-            }
-
-            // Return the resulted PDO Statement.
-            return $statement;
+        if(empty($params)) {
+            return $link->query($sql);
         }
 
-        return $link->query($sql);
+        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+        $statement = $link->prepare($sql);
+
+        // Bind the parameters.
+        $this->bindParams($statement, $params, $paramTypes);
+
+        // Execute the statement, return false if fail.
+        if (! $statement->execute()) {
+            return false;
+        }
+
+        // Return the resulted PDO Statement.
+        return $statement;
     }
 
     protected function executeUpdate($sql, array $params, array $paramTypes = array())
     {
         $link = Manager::getConnection($this->linkName);
 
+        // Signal to Connection instance the incoming Query.
         $link->countIncomingQuery();
 
-        if(! empty($params)) {
-            // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-            $statement = $link->prepare($sql);
-
-            // Bind the parameters.
-            $this->bindParams($statement, $params, $paramTypes);
-
-            // Execute the statement, return false if fail.
-            if (! $statement->execute()) {
-                return false;
-            }
-
-            // Row count, affected rows.
-            return $statement->rowCount();
+        if(empty($params)) {
+            return $link->exec($sql);
         }
 
-        return $link->exec($sql);
+        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+        $statement = $link->prepare($sql);
+
+        // Bind the parameters.
+        $this->bindParams($statement, $params, $paramTypes);
+
+        // Execute the statement, return false if fail.
+        if (! $statement->execute()) {
+            return false;
+        }
+
+        // Row count, affected rows.
+        return $statement->rowCount();
     }
 
 }

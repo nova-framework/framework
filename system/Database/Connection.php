@@ -131,15 +131,17 @@ abstract class Connection extends PDO
             $fetchMethod = PDO::FETCH_CLASS;
 
             // Check and setup the className.
-            $fetchClass = str_replace('\\', '/', ltrim($returnType, '\\'));
+            $checkClass = str_replace('\\', '/', ltrim($returnType, '\\'));
 
-            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $fetchClass)) {
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $checkClass)) {
                 throw new \Exception(__d('system', 'No valid Entity Name is given: {0}', $returnType));
             }
 
             if(! class_exists($returnType)) {
                 throw new \Exception(__d('system', 'No valid Entity Class is given: {0}', $returnType));
             }
+
+            $fetchClass = $returnType;
         }
 
         return $fetchMethod;

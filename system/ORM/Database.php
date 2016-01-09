@@ -50,15 +50,47 @@ class Database
 
     public function insert($table, array $data, array $paramTypes = array(), $transaction = false)
     {
-        return false;
+        $sql = 'INSERT INTO ' .$table .' (' .implode(', ', array_keys($data)) .')
+                VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
+
+        return $this->executeUpdate($sql, array_values($data), $paramTypes);
     }
 
     public function update($table, array $data, array $where, array $paramTypes = array())
     {
-        return false;
+        $set = array();
+
+        foreach ($data as $column => $value) {
+            $set[] = $column . ' = ?';
+        }
+
+        $params = array_merge(array_values($data), array_values($where));
+
+        $sql  = 'UPDATE ' . $table . ' SET ' . implode(', ', $set) .'
+                 WHERE ' . implode(' = ? AND ', array_keys($where)) .' = ?';
+
+        return $this->executeUpdate($sql, $params, $paramTypes);
     }
 
     public function delete($table, array $where, array $paramTypes = array())
+    {
+        $criteria = array();
+
+        foreach (array_keys($where) as $column) {
+            $criteria[] = $column .' = ?';
+        }
+
+        $sql = 'DELETE FROM ' .$table .' WHERE ' .implode(' AND ', $criteria);
+
+        return $this->executeUpdate($sql, array_values($where), $paramTypes);
+    }
+
+    private function executeQuery($sql, array $params, array $paramTypes = array())
+    {
+        return false;
+    }
+
+    private function executeUpdate($sql, array $params, array $paramTypes = array())
     {
         return false;
     }

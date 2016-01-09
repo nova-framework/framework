@@ -12,6 +12,8 @@ namespace Nova\ORM;
 use Nova\Database\Manager;
 use Nova\Database\Connection;
 
+use \PDO;
+
 
 class Database
 {

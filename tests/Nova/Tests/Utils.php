@@ -10,7 +10,7 @@
 namespace Nova\Tests;
 
 use Nova\Config;
-use Nova\DBAL\Manager;
+use Nova\Database\Manager;
 
 class Utils
 {

@@ -51,6 +51,16 @@ function phpGrep($q, $path) {
 }
 
 //
+if(is_dir(BASEPATH .'app'.DS.'Packages')) {
+    $path = str_replace('/', DS, BASEPATH .'app/Packages/*');
+
+    $dirs = glob($path , GLOB_ONLYDIR);
+
+    foreach($dirs as $package) {
+        $workPaths[] = str_replace('/', DS, 'app/Packages/'.basename($package));
+    }
+}
+
 if(is_dir(BASEPATH .'app'.DS.'Modules')) {
     $path = str_replace('/', DS, BASEPATH .'app/Modules/*');
 

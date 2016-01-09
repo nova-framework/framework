@@ -150,6 +150,14 @@ class Database
         // Bind the parameters.
         $this->bindParams($statement, $params, $paramTypes);
 
+        // Execute, we should capture the status of the result.
+        $status = $statement->execute();
+
+        // If failed, return now, and don't continue with fetching.
+        if (! $status) {
+            return false;
+        }
+
         // Return the resulted PDO Statement or false on error.
         return $statement->execute();
     }

@@ -312,11 +312,11 @@ abstract class Connection extends PDO
      * The result MUST be an array!
      *
      * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @param array $params
+     * @param array $paramTypes
      * @param null $returnType Customized method for fetching, null for engine default or config default.
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
      * @return array|null
-     *
      * @throws \Exception
      */
     public function select($sql, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)

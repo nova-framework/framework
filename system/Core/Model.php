@@ -27,9 +27,9 @@ abstract class Model
     protected $db;
 
     /**
-     * Setup the instance of DBAL Connection.
+     * Setup the instance of Database Connection.
      *
-     * @param string $connection Connection name or DBAL Connection instance, default is string 'default'
+     * @param string $connection Connection name or Database Connection instance, default is string 'default'
      */
     public function __construct($connection = null)
     {
@@ -40,7 +40,7 @@ abstract class Model
         else {
             $connection = ($connection !== null) ? $connection : 'default';
 
-            // Setup the DBAL Connection.
+            // Setup the Database Connection.
             $this->db = Database::getConnection($connection);
         }
     }

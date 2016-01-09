@@ -9,7 +9,7 @@
 
 namespace Nova\ORM;
 
-use Nova\DBAL\Manager;
+use Nova\Database\Manager;
 use Nova\ORM\Annotation\Column;
 use PDO;
 
@@ -255,7 +255,7 @@ class Query
     private function executeFetch($all = true)
     {
         /** @var Entity|Entity{} $object */
-        $object = Manager::getConnection()->fetchClass($this->query, $this->whereBindValues, $this->whereBindTypes, $this->entityClass, $all);
+        $object = Manager::getConnection()->select($this->query, $this->whereBindValues, $this->whereBindTypes, $this->entityClass, $all);
 
         // If no result return false
         if ($object === false || count($object) === 0) {

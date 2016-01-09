@@ -31,7 +31,7 @@ abstract class Manager
      * Please use the constants in this class as a driver parameter
      *
      * @param $linkName string Name of the connection provided in the configuration
-     * @return Engine|\PDO|null
+     * @return Connection|\PDO|null
      * @throws \Exception
      */
     public static function getConnection($linkName = 'default')

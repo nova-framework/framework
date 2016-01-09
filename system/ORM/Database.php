@@ -43,9 +43,17 @@ class Database
         return $this->connection;
     }
 
-    public function select($sql, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
+    public function select($sql, array $params = array(), array $paramTypes = array(), $fetchClass = null, $fetchAll = false)
     {
-        return false;
+        $statement = $this->executeQuery($sql, $params, $paramTypes);
+
+        if($fetchAll) {
+            return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
+        }
+
+        $statement->setFetchMode(PDO::FETCH_CLASS, $fetchClass);
+
+        return $statement->fetch();
     }
 
     public function insert($table, array $data, array $paramTypes = array(), $transaction = false)

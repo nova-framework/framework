@@ -18,7 +18,7 @@ use App\Modules\Demo\Models\Members as MembersModel;
 /**
  * Sample Themed Controller with its typical usage.
  */
-class BaseModel extends BaseController
+class DBALModel extends BaseController
 {
     private $model;
 

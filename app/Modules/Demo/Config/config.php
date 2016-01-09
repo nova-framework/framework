@@ -56,14 +56,14 @@ Config::set('demos_menu', array(
         'name'      => __d('demo', 'Models'),
         'icon'      => 'fa fa-server',
         'children'  => array(
-            'base_model' => array(
-                'name'      => __d('demo', 'DBAL BaseModel'),
-                'url'       => site_url('demos/models/base_model'),
-                'icon'      => 'fa fa-gears',
-            ),
             'classic_model' => array(
                 'name'      => __d('demo', 'Classic BaseModel'),
                 'url'       => site_url('demos/models/classic_model'),
+                'icon'      => 'fa fa-gears',
+            ),
+            'dbal_model' => array(
+                'name'      => __d('demo', 'DBAL BaseModel'),
+                'url'       => site_url('demos/models/dbal_model'),
                 'icon'      => 'fa fa-gears',
             ),
         ),

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demo\Models;
 
-use App\Core\BaseModel;
+use App\Packages\DBAL\BaseModel;
 
 
 class Members extends BaseModel

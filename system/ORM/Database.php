@@ -51,6 +51,10 @@ class Database
     {
         $statement = $this->executeQuery($sql, $params, $paramTypes);
 
+        if(! $statement) {
+            return false;
+        }
+
         if($fetchAll) {
             return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
         }

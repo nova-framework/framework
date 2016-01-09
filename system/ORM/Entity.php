@@ -9,9 +9,8 @@
 
 namespace Nova\ORM;
 
-use Doctrine\DBAL\Query\QueryBuilder;
-use Nova\Database\Manager;
-use Nova\Database\Connection;
+use Nova\Database\QueryBuilder;
+use Nova\ORM\Database;
 use Nova\ORM\Annotation\Column;
 use \PDO;
 
@@ -77,7 +76,7 @@ abstract class Entity
      */
     private static function getLink()
     {
-        return Manager::getConnection();
+        return Database::getInstance();
     }
 
 

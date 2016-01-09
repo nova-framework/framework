@@ -12,12 +12,14 @@ namespace Nova\ORM;
 use Nova\Database\Manager;
 use Nova\Database\Connection;
 
+use \PDO;
+
 
 class Database
 {
-    private $connection;
+    private $linkName = 'default';
 
-    private $instances = array();
+    private static $instances = array();
 
 
     public static function getInstance($linkName = 'default')
@@ -31,21 +33,27 @@ class Database
 
         // Setting Database into $instances to avoid duplication
         self::$instances[$linkName] = $instance;
+
+        return $instance;
     }
 
     protected function __construct($linkName)
     {
-        $this->connection = Manager::getConnection($linkName);
+        $this->linkName = $linkName;
     }
 
-    public function getConnection()
+    public function getLinkName()
     {
-        return $this->connection;
+        return $this->linkName;
     }
 
     public function select($sql, array $params = array(), array $paramTypes = array(), $fetchClass = null, $fetchAll = false)
     {
         $statement = $this->executeQuery($sql, $params, $paramTypes);
+
+        if($statement === false) {
+            return false;
+        }
 
         if($fetchAll) {
             return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
@@ -61,7 +69,7 @@ class Database
         $sql = 'INSERT INTO ' .$table .' (' .implode(', ', array_keys($data)) .')
                 VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
-        return $this->executeUpdate($sql, array_values($data), $paramTypes);
+       return $this->executeUpdate($sql, array_values($data), $paramTypes);
     }
 
     public function update($table, array $data, array $where, array $paramTypes = array())
@@ -91,6 +99,11 @@ class Database
         $sql = 'DELETE FROM ' .$table .' WHERE ' .implode(' AND ', $criteria);
 
         return $this->executeUpdate($sql, array_values($where), $paramTypes);
+    }
+
+    public function lastInsertId()
+    {
+        return Manager::getConnection($this->linkName)->lastInsertId();
     }
 
     protected function bindParams($statement, array $params, array $paramTypes = array())
@@ -127,47 +140,52 @@ class Database
 
     protected function executeQuery($sql, array $params, array $paramTypes = array())
     {
-        $this->connection->countIncomingQuery();
+        $link = Manager::getConnection($this->linkName);
 
-        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-        $statement = $this->connection->prepare($sql);
+        $link->countIncomingQuery();
 
-        // Bind the parameters.
-        $this->bindParams($statement, $params, $paramTypes);
+        if(! empty($params)) {
+            // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+            $statement = $link->prepare($sql);
 
-        // Return the resulted PDO Statement or false on error.
-        return $statement->execute();
+            // Bind the parameters.
+            $this->bindParams($statement, $params, $paramTypes);
+
+            // Execute the statement, return false if fail.
+            if (! $statement->execute()) {
+                return false;
+            }
+
+            // Return the resulted PDO Statement.
+            return $statement;
+        }
+
+        return $link->query($sql);
     }
 
     protected function executeUpdate($sql, array $params, array $paramTypes = array())
     {
-        $this->connection->countIncomingQuery();
+        $link = Manager::getConnection($this->linkName);
 
-        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-        $statement = $this->connection->prepare($sql);
+        $link->countIncomingQuery();
 
-        // Bind the parameters.
-        $this->bindParams($statement, $params, $paramTypes);
+        if(! empty($params)) {
+            // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+            $statement = $link->prepare($sql);
 
-        if (! $statement->execute()) {
-            return false;
+            // Bind the parameters.
+            $this->bindParams($statement, $params, $paramTypes);
+
+            // Execute the statement, return false if fail.
+            if (! $statement->execute()) {
+                return false;
+            }
+
+            // Row count, affected rows.
+            return $statement->rowCount();
         }
 
-        // Row count, affected rows.
-        return $$statement->rowCount();
-    }
-
-    /**
-     * Provide direct access to any of \Nova\Database\Connection methods.
-     *
-     * @param $name
-     * @param $params
-     */
-    public function __call($method, $params = null)
-    {
-        if (method_exists($this->connection, $method)) {
-            return call_user_func_array(array($this->connection, $method), $params);
-        }
+        return $link->exec($sql);
     }
 
 }

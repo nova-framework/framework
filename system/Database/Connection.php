@@ -84,6 +84,8 @@ abstract class Connection extends PDO
 
     /**
      * Set/Get the fetching return type.
+     * @param null $type
+     * @return string
      */
     public function returnType($type = null)
     {
@@ -104,7 +106,7 @@ abstract class Connection extends PDO
     }
 
     /**
-     * Get native connection. Could be PDO
+     * Get native connection. Could be PDO.
      * @return PDO
      */
     public function getLink()
@@ -112,11 +114,24 @@ abstract class Connection extends PDO
         return $this;
     }
 
+    /**
+     * Get Fluent Based query builder.
+     * @param FluentStructure|null $structure
+     * @return \Nova\Database\QueryBuilder
+     */
     public function getQueryBuilder(FluentStructure $structure = null)
     {
         return new QueryBuilder($this, $structure);
     }
 
+    /**
+     * Get fetch method and validate class if exists.
+     *
+     * @param int $returnType PDO Fetch Method type
+     * @param null|string $fetchClass Reference!
+     * @return int fetch method
+     * @throws \Exception
+     */
     public static function getFetchMethod($returnType, &$fetchClass = null) {
         // Prepare the parameters.
         $className = null;
@@ -147,6 +162,11 @@ abstract class Connection extends PDO
         return $fetchMethod;
     }
 
+    /**
+     * Guess parameters types
+     * @param array $params
+     * @return array types back, will be PDO::PARAM_* values
+     */
     public static function getParamTypes(array $params)
     {
         $result = array();
@@ -169,6 +189,14 @@ abstract class Connection extends PDO
         return $result;
     }
 
+    /**
+     * Bind the parameters into the statement
+     *
+     * @param \PDOStatement $statement
+     * @param array $params
+     * @param array $paramTypes
+     * @param string $prefix
+     */
     public function bindParams($statement, array $params, array $paramTypes = array(), $prefix = ':')
     {
         if(empty($params)) {
@@ -229,6 +257,15 @@ abstract class Connection extends PDO
         return $statement->fetchAll();
     }
 
+    /**
+     * Basic execute statement. Only for queries with no binding parameters
+     * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
+     * This will only return an array or boolean. Depends on your operation and if fetch is on.
+     *
+     * @param $sql
+     * @param null|int $returnType
+     * @return \PDOStatement
+     */
     public function rawQuery($sql, $returnType = null)
     {
         // What return type? Use default if no return type is given in the call.
@@ -281,11 +318,9 @@ abstract class Connection extends PDO
      * @param string $statement
      * @param array $params
      * @param array $paramTypes
-     * @param null|string $className
+     * @param null $returnType
      * @param bool $fetchAll
-     *
      * @return array|mixed
-     *
      * @throws \Exception
      */
     public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
@@ -303,10 +338,10 @@ abstract class Connection extends PDO
     /**
      * Prepares and executes an SQL query and returns the result as an associative array.
      *
-     * @param string $sql    The SQL query.
-     * @param array  $params The query parameters.
-     * @param array  $types  The query parameter types.
-     *
+     * @param string $sql The SQL query.
+     * @param array $params The query parameters.
+     * @param array $paramTypes
+     * @param null $returnType
      * @return array
      */
     public function fetchAll($sql, array $params = array(), $paramTypes = array(), $returnType = null)
@@ -389,11 +424,10 @@ abstract class Connection extends PDO
      * Convenience method for fetching one record.
      *
      * @param string $sql
-     * @param array $bindParams
-     * @param null $method Customized method for fetching, null for engine default or config default.
-     * @param null $class Class for fetching into classes.
-     * @return object|array|null|false
-     * @throws \Exception
+     * @param array $params
+     * @param array $paramTypes
+     * @param null $returnType
+     * @return array|false|null|object
      */
     public function selectOne($sql, array $params = array(), array $paramTypes = array(), $returnType = null)
     {
@@ -404,11 +438,10 @@ abstract class Connection extends PDO
      * Convenience method for fetching all records.
      *
      * @param string $sql
-     * @param array $bindParams
-     * @param null $method Customized method for fetching, null for engine default or config default.
-     * @param null $class Class for fetching into classes.
-     * @return array|null|false
-     * @throws \Exception
+     * @param array $params
+     * @param array $paramTypes Types of parameters, leave empty to auto detect
+     * @param null $returnType
+     * @return array|false|null
      */
     public function selectAll($sql, array $params = array(), array $paramTypes = array(), $returnType = null)
     {
@@ -421,6 +454,7 @@ abstract class Connection extends PDO
      * @param string $table Table to execute the insert.
      * @param array $data Represents one record, could also have multidimensional arrays inside to insert
      *                    multiple rows in one call. The engine must support this! Check manual!
+     * @param array $paramTypes Types of parameters, leave empty to auto detect
      * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
      * @param string $mode Represents the insertion Mode, must be 'insert' or 'replace'
      * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
@@ -495,9 +529,10 @@ abstract class Connection extends PDO
      * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to determine which row to replace.
      *
      * @param string $table Table to execute the replace.
-     * @param array $data Represents the Record data
+     * @param array $params Represents the Record data
+     * @param array $paramTypes
      * @param bool $transaction Use PDO Transaction. If one replace will fail we will rollback immediately. Default false.
-     * @return int|bool|array Could be false on error, or one single ID replaced.
+     * @return array|bool|int Could be false on error, or one single ID replaced.
      *
      * @throws \Exception
      */
@@ -512,6 +547,7 @@ abstract class Connection extends PDO
      * @param string $table Table to execute the statement.
      * @param array $data The updated array, will map into an update statement.
      * @param array $where Use key->value like column->value for where mapping.
+     * @param array $paramTypes Types, empty array for guessing.
      * @return int|bool
      *
      * @throws \Exception
@@ -564,6 +600,7 @@ abstract class Connection extends PDO
      *
      * @param string $table Table to execute the statement.
      * @param array|string $where Use a string or key->value like column->value for where mapping.
+     * @param array $paramTypes Types, empty array for guessing.
      * @return bool|int Row Count, number of deleted rows, or false on failure.
      *
      * @throws \Exception
@@ -597,8 +634,9 @@ abstract class Connection extends PDO
      * Optional bind is available.
      *
      * @param string $sql Query
-     * @param array $bindParams optional binding values
-     * @return PDOStatement|mixed
+     * @param array $params optional binding values
+     * @param array $paramTypes Types, optional
+     * @return \PDOStatement|mixed
      *
      * @throws \Exception
      */
@@ -634,7 +672,7 @@ abstract class Connection extends PDO
      * This method could not be always safe.
      *
      * @param $string String to be escaped
-     * @param int $parameter_type Optional parameter type.
+     * @param int $paramType Optional parameter type.
      *
      * @return string|false Quoted string or false on failure.
      */
@@ -673,7 +711,7 @@ abstract class Connection extends PDO
 
             $this->commit();
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             $this->rollback();
 
             throw $e;
@@ -698,6 +736,9 @@ abstract class Connection extends PDO
         return $this->queryCount;
     }
 
+    /**
+     * Upper the counter.
+     */
     public function countIncomingQuery()
     {
         $this->queryCount++;

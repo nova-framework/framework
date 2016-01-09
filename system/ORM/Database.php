@@ -20,11 +20,6 @@ class Database
     private $instances = array();
 
 
-    public function __construct($linkName = 'default')
-    {
-        $this->connection = Manager::getConnection($linkName);
-    }
-
     public static function getInstance($linkName = 'default')
     {
         // Checking if the same
@@ -36,6 +31,11 @@ class Database
 
         // Setting Database into $instances to avoid duplication
         self::$instances[$linkName] = $instance;
+    }
+
+    protected function __construct($linkName)
+    {
+        $this->connection = Manager::getConnection($linkName);
     }
 
     public function getConnection()
@@ -56,7 +56,7 @@ class Database
         return $statement->fetch();
     }
 
-    public function insert($table, array $data, array $paramTypes = array(), $transaction = false)
+    public function insert($table, array $data, array $paramTypes = array())
     {
         $sql = 'INSERT INTO ' .$table .' (' .implode(', ', array_keys($data)) .')
                 VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
@@ -93,14 +93,68 @@ class Database
         return $this->executeUpdate($sql, array_values($where), $paramTypes);
     }
 
-    private function executeQuery($sql, array $params, array $paramTypes = array())
+    protected function bindParams($statement, array $params, array $paramTypes = array())
     {
-        return false;
+        if(empty($params)) {
+            return;
+        }
+
+        // Bind the key and values (only if given).
+        foreach ($params as $key => $value) {
+            $bindKey = $key + 1;
+
+            if(isset($paramTypes[$key])) {
+                $statement->bindValue($bindKey, $value, $paramTypes[$key]);
+
+                continue;
+            }
+
+            // No parameter Type found, we try our best of to guess it.
+            if (is_integer($value)) {
+                $statement->bindValue($bindKey, $value, PDO::PARAM_INT);
+            }
+            else if (is_bool($value)) {
+                $statement->bindValue($bindKey, $value, PDO::PARAM_BOOL);
+            }
+            else if(is_null($value)) {
+                $statement->bindValue($bindKey, $value, PDO::PARAM_NULL);
+            }
+            else {
+                $statement->bindValue($bindKey, $value, PDO::PARAM_STR);
+            }
+        }
     }
 
-    private function executeUpdate($sql, array $params, array $paramTypes = array())
+    protected function executeQuery($sql, array $params, array $paramTypes = array())
     {
-        return false;
+        $this->connection->countIncomingQuery();
+
+        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+        $statement = $this->connection->prepare($sql);
+
+        // Bind the parameters.
+        $this->bindParams($statement, $params, $paramTypes);
+
+        // Return the resulted PDO Statement or false on error.
+        return $statement->execute();
+    }
+
+    protected function executeUpdate($sql, array $params, array $paramTypes = array())
+    {
+        $this->connection->countIncomingQuery();
+
+        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+        $statement = $this->connection->prepare($sql);
+
+        // Bind the parameters.
+        $this->bindParams($statement, $params, $paramTypes);
+
+        if (! $statement->execute()) {
+            return false;
+        }
+
+        // Row count, affected rows.
+        return $$statement->rowCount();
     }
 
     /**

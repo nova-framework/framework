@@ -17,7 +17,7 @@ use \PDO;
 
 class Database
 {
-    private $connection = 'default';
+    private $linkName = 'default';
 
     private static $instances = array();
 
@@ -39,12 +39,12 @@ class Database
 
     protected function __construct($linkName)
     {
-        $this->connection = $linkName;
+        $this->linkName = $linkName;
     }
 
-    public function getConnection()
+    public function getLinkName()
     {
-        return $this->connection;
+        return $this->linkName;
     }
 
     public function select($sql, array $params = array(), array $paramTypes = array(), $fetchClass = null, $fetchAll = false)
@@ -103,7 +103,7 @@ class Database
 
     public function lastInsertId()
     {
-        return Manager::getConnection($this->connection)->lastInsertId();
+        return Manager::getConnection($this->linkName)->lastInsertId();
     }
 
     protected function bindParams($statement, array $params, array $paramTypes = array())
@@ -140,12 +140,12 @@ class Database
 
     protected function executeQuery($sql, array $params, array $paramTypes = array())
     {
-        $link = Manager::getConnection($this->connection);
+        $link = Manager::getConnection($this->linkName);
 
         $link->countIncomingQuery();
 
         // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-        $statement = $connection->prepare($sql);
+        $statement = $link->prepare($sql);
 
         // Bind the parameters.
         $this->bindParams($statement, $params, $paramTypes);
@@ -156,7 +156,7 @@ class Database
 
     protected function executeUpdate($sql, array $params, array $paramTypes = array())
     {
-        $link = Manager::getConnection($this->connection);
+        $link = Manager::getConnection($this->linkName);
 
         $link->countIncomingQuery();
 

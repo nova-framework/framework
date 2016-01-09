@@ -11,13 +11,14 @@ namespace App\Core;
 
 use Nova\Database\Manager as Database;
 use Nova\Input\Filter as InputFilter;
+use Nova\Core\Model;
 
 use \FluentStructure;
 use \FluentPDO;
 use \PDO;
 
 
-class BaseModel
+class BaseModel extends Model
 {
     /**
      * The Model's default Table name.
@@ -176,15 +177,7 @@ class BaseModel
      */
     public function __construct($connection = null, $inputFilter = null)
     {
-        if ($connection instanceof Connection) {
-            // Set the given Database Connection.
-            $this->db = $connection;
-        } else {
-            $linkName = ($connection !== null) ? $connection : 'default';
-
-            // Setup the Database Connection.
-            $this->db = Database::getConnection($linkName);
-        }
+        parent::__construct($connection);
 
         // Always protect our fields
         array_unshift($this->beforeInsert, 'protectFields');

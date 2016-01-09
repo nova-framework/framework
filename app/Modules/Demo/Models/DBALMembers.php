@@ -5,7 +5,7 @@ namespace App\Modules\Demo\Models;
 use App\Packages\DBAL\BaseModel;
 
 
-class Members extends BaseModel
+class DBALMembers extends BaseModel
 {
     protected $table = 'members';
 

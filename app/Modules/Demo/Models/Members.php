@@ -2,10 +2,10 @@
 
 namespace App\Modules\Demo\Models;
 
-use App\Core\ClassicModel as BaseModel;
+use App\Core\BaseModel;
 
 
-class ClassicMembers extends BaseModel
+class Members extends BaseModel
 {
     protected $table = 'members';
 

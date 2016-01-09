@@ -58,7 +58,7 @@ Config::set('demos_menu', array(
         'children'  => array(
             'classic_model' => array(
                 'name'      => __d('demo', 'Classic BaseModel'),
-                'url'       => site_url('demos/models/classic_model'),
+                'url'       => site_url('demos/models/base_model'),
                 'icon'      => 'fa fa-gears',
             ),
             'dbal_model' => array(

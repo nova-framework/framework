@@ -10,7 +10,7 @@
 namespace Nova\Tests\ORM;
 
 use App\Modules\Demo\Models\Entities\Car;
-use Nova\DBAL\Manager;
+use Nova\Database\Manager;
 use Nova\ORM\Structure;
 use Nova\Tests\Utils;
 

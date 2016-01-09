@@ -80,4 +80,12 @@ abstract class Manager
         return $connection;
     }
 
+    public static function clearConnections()
+    {
+        foreach(static::$instances as $name => &$connection) {
+            $connection = null;
+        }
+
+        static::$instances = array();
+    }
 }

@@ -131,9 +131,9 @@ abstract class Connection extends PDO
             $fetchMethod = PDO::FETCH_CLASS;
 
             // Check and setup the className.
-            $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+            $fetchClass = str_replace('\\', '/', ltrim($returnType, '\\'));
 
-            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $fetchClass)) {
                 throw new \Exception(__d('system', 'No valid Entity Name is given: {0}', $returnType));
             }
 
@@ -175,24 +175,29 @@ abstract class Connection extends PDO
 
         // Bind the key and values (only if given).
         foreach ($params as $key => $value) {
+            $bindKey = $prefix .$key;
+            if (is_int($key)) {
+                $bindKey = $key+1;
+            }
+
             if(isset($paramTypes[$key])) {
-                $statement->bindValue($prefix .$key, $value, $paramTypes[$key]);
+                $statement->bindValue($bindKey, $value, $paramTypes[$key]);
 
                 continue;
             }
 
             // No parameter Type found, we try our best of to guess it.
             if (is_integer($value)) {
-                $statement->bindValue($prefix .$key, $value, PDO::PARAM_INT);
+                $statement->bindValue($bindKey, $value, PDO::PARAM_INT);
             }
             else if (is_bool($value)) {
-                $statement->bindValue($prefix .$key, $value, PDO::PARAM_BOOL);
+                $statement->bindValue($bindKey, $value, PDO::PARAM_BOOL);
             }
             else if(is_null($value)) {
-                $statement->bindValue($prefix .$key, $value, PDO::PARAM_NULL);
+                $statement->bindValue($bindKey, $value, PDO::PARAM_NULL);
             }
             else {
-                $statement->bindValue($prefix .$key, $value, PDO::PARAM_STR);
+                $statement->bindValue($bindKey, $value, PDO::PARAM_STR);
             }
         }
     }

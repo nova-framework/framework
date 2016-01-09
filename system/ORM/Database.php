@@ -69,7 +69,9 @@ class Database
         $sql = 'INSERT INTO ' .$table .' (' .implode(', ', array_keys($data)) .')
                 VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
-        return $this->executeUpdate($sql, array_values($data), $paramTypes);
+        $result = $this->executeUpdate($sql, array_values($data), $paramTypes, true);
+
+        if($result !== false)
     }
 
     public function update($table, array $data, array $where, array $paramTypes = array())
@@ -159,7 +161,7 @@ class Database
         return $statement;
     }
 
-    protected function executeUpdate($sql, array $params, array $paramTypes = array())
+    protected function executeUpdate($sql, array $params, array $paramTypes = array(), $lastInsertId = false)
     {
         $link = Manager::getConnection($this->linkName);
 
@@ -173,6 +175,10 @@ class Database
 
         if (! $statement->execute()) {
             return false;
+        }
+
+        if($lastInsertId) {
+            return $link->lastInsertId();
         }
 
         // Row count, affected rows.

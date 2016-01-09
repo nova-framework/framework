@@ -198,4 +198,19 @@ class Database
         return $statement->rowCount();
     }
 
+    /**
+     * Provide direct access to any of \Nova\Database\Connection methods.
+     *
+     * @param $name
+     * @param $params
+     */
+    public function __call($method, $params = null)
+    {
+        $connection = Manager::getConnection($this->linkName);
+
+        if (method_exists($connection, $method)) {
+            return call_user_func_array(array($connection, $method), $params);
+        }
+    }
+    
 }

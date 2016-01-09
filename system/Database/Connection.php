@@ -416,6 +416,7 @@ abstract class Connection extends PDO
         if ($fetchMethod === PDO::FETCH_CLASS) {
             // Fetch in class
             $stmt->setFetchMode($fetchMethod, $className);
+            
             return $stmt->fetch();
         }
         else {

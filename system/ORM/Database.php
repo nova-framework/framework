@@ -150,16 +150,13 @@ class Database
         // Bind the parameters.
         $this->bindParams($statement, $params, $paramTypes);
 
-        // Execute, we should capture the status of the result.
-        $status = $statement->execute();
-
-        // If failed, return now, and don't continue with fetching.
-        if (! $status) {
+        // Execute the statement, return false if fail.
+        if (! $statement->execute()) {
             return false;
         }
 
-        // Return the resulted PDO Statement or false on error.
-        return $statement->execute();
+        // Return the resulted PDO Statement.
+        return $statement;
     }
 
     protected function executeUpdate($sql, array $params, array $paramTypes = array())
@@ -179,7 +176,7 @@ class Database
         }
 
         // Row count, affected rows.
-        return $$statement->rowCount();
+        return $statement->rowCount();
     }
 
 }

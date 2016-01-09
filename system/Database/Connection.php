@@ -137,11 +137,9 @@ abstract class Connection extends PDO
                 throw new \Exception(__d('system', 'No valid Entity Name is given: {0}', $returnType));
             }
 
-            if(! class_exists($fetchType)) {
+            if(! class_exists($returnType)) {
                 throw new \Exception(__d('system', 'No valid Entity Class is given: {0}', $returnType));
             }
-
-            $fetchClass = $returnType;
         }
 
         return $fetchMethod;

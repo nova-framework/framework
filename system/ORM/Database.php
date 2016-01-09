@@ -70,8 +70,6 @@ class Database
                 VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
         $result = $this->executeUpdate($sql, array_values($data), $paramTypes, true);
-
-        if($result !== false)
     }
 
     public function update($table, array $data, array $where, array $paramTypes = array())

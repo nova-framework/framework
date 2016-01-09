@@ -165,14 +165,18 @@ class Database
 
         $link->countIncomingQuery();
 
-        // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
-        $statement = $link->prepare($sql);
+        if(! empty($params)) {
+            // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
+            $statement = $link->prepare($sql);
 
-        // Bind the parameters.
-        $this->bindParams($statement, $params, $paramTypes);
+            // Bind the parameters.
+            $this->bindParams($statement, $params, $paramTypes);
 
-        // Row count, affected rows.
-        return $statement->rowCount();
+            // Row count, affected rows.
+            return $statement->rowCount();
+        }
+
+        return $link->exec($sql);
     }
 
 }

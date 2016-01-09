@@ -67,6 +67,9 @@ class Language
         else if($pathName == 'App') {
             $langPath = APPPATH;
         }
+        else if(is_dir(APPPATH.'Packages'.DS.$pathName)) {
+            $langPath = APPPATH.'Packages/'.$pathName;
+        }
         else if(is_dir(APPPATH.'Modules'.DS.$pathName)) {
             $langPath = APPPATH.'Modules/'.$pathName;
         }

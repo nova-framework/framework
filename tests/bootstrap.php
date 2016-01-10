@@ -15,7 +15,6 @@ define('APPPATH', BASEPATH.'app'.DS);
 define('SYSPATH', BASEPATH.'system'.DS);
 
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Nova\Modules\Manager as Modules;
 use Nova\Events\Manager as Events;
 use Nova\Net\Router;
@@ -95,9 +94,3 @@ Events::initialize();
 error_reporting(E_ALL);
 set_exception_handler(null);
 set_error_handler(null);
-
-/** Register Annotation Namespace */
-$annotationPath = SYSPATH . "ORM" . DS . "Annotation" . DS;
-AnnotationRegistry::registerFile($annotationPath . 'Table.php');
-AnnotationRegistry::registerFile($annotationPath . 'Column.php');
-AnnotationRegistry::registerFile($annotationPath . 'Relation.php');

@@ -44,12 +44,12 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         $current_2 = false;
 
         // Add route with the new method
-        \Nova\Net\Router::getInstance()->addRoute('get', '/test/get/basic/1', function() use(&$current_1) {
+        \Nova\Net\Router::getInstance()->addRoute('get', '/test/get/basic/1', function () use (&$current_1) {
             $current_1 = true;
         });
 
         // Add route with old method
-        \Nova\Net\Router::get('/test/get/basic/2', function() use(&$current_2) {
+        \Nova\Net\Router::get('/test/get/basic/2', function () use (&$current_2) {
             $current_2 = true;
         });
 
@@ -82,7 +82,7 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         $current_query_test = null;
 
         // Add route with the new method
-        \Nova\Net\Router::getInstance()->addRoute('get', '/test/get/query/1', function() use(&$current_query, &$current_query_test) {
+        \Nova\Net\Router::getInstance()->addRoute('get', '/test/get/query/1', function () use (&$current_query, &$current_query_test) {
             $current_query = \Nova\Net\Request::query();
             $current_query_test = \Nova\Net\Request::query('test');
         });
@@ -112,12 +112,12 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         $current_2 = 0;
 
         // Add testing routes
-        \Nova\Net\Router::getInstance()->addRoute('GET', '/test/get/param/any/(:any)', function($param) use(&$current_1) {
+        \Nova\Net\Router::getInstance()->addRoute('GET', '/test/get/param/any/(:any)', function ($param) use (&$current_1) {
             $current_1 = $param;
         });
 
         // Add testing routes
-        \Nova\Net\Router::getInstance()->addRoute('GET', '/test/get/param/num/(:num)', function($param) use(&$current_2) {
+        \Nova\Net\Router::getInstance()->addRoute('GET', '/test/get/param/num/(:num)', function ($param) use (&$current_2) {
             $current_2 = $param;
         });
 
@@ -152,7 +152,7 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         $current_method_match = false;
 
         // Add testing routes
-        \Nova\Net\Router::getInstance()->addRoute('POST', '/test/post/1', function() use(&$current_method, &$current_method_match, &$current_url) {
+        \Nova\Net\Router::getInstance()->addRoute('POST', '/test/post/1', function () use (&$current_method, &$current_method_match, &$current_url) {
             $current_url = \Nova\Net\Url::detectUri();
             $current_method = \Nova\Net\Request::getMethod();
             $current_method_match = \Nova\Net\Request::isPost();
@@ -187,7 +187,7 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         $current_method_match = false;
 
         // Add testing routes
-        \Nova\Net\Router::getInstance()->addRoute('PUT', '/test/put/1', function() use(&$current_method, &$current_method_match, &$current_url) {
+        \Nova\Net\Router::getInstance()->addRoute('PUT', '/test/put/1', function () use (&$current_method, &$current_method_match, &$current_url) {
             $current_url = \Nova\Net\Url::detectUri();
             $current_method = \Nova\Net\Request::getMethod();
             $current_method_match = \Nova\Net\Request::isPut();
@@ -222,7 +222,7 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         $current_method_match = false;
 
         // Add testing routes
-        \Nova\Net\Router::getInstance()->addRoute('DELETE', '/test/delete/1', function() use(&$current_method, &$current_method_match, &$current_url) {
+        \Nova\Net\Router::getInstance()->addRoute('DELETE', '/test/delete/1', function () use (&$current_method, &$current_method_match, &$current_url) {
             $current_url = \Nova\Net\Url::detectUri();
             $current_method = \Nova\Net\Request::getMethod();
             $current_method_match = \Nova\Net\Request::isDelete();

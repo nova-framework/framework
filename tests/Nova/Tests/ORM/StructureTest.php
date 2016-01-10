@@ -9,7 +9,6 @@
 
 namespace Nova\Tests\ORM;
 
-
 use App\Modules\Demo\Models\Entities\Car;
 use Nova\ORM\Structure;
 

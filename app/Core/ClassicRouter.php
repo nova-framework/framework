@@ -62,8 +62,7 @@ class ClassicRouter extends Router
                 // Prepare the URI used by autoDispatch, applying the REGEX if exists.
                 if (! empty($regex)) {
                     $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
-                }
-                else {
+                } else {
                     $autoUri = $callback;
                 }
 

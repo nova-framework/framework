@@ -6,7 +6,7 @@
  * @version 3.0
  * @date December 23th, 2015
  */
-
+use Nova\Net\Router;
 
 
 /** The Module's known Routes definition. */

@@ -10,14 +10,14 @@
 
 namespace App\Controllers;
 
-use Nova\Core\Controller;
+use App\Core\BaseController;
 use Nova\Core\View;
 use Nova\Net\Response;
 
 /**
  * Error class to generate 404 pages.
  */
-class Error extends Controller
+class Error extends BaseController
 {
     /**
      * Call the parent construct

@@ -65,12 +65,5 @@ Events::initialize();
 /** Initialize the Sessions. */
 Session::initialize();
 
-/** Register Annotation Namespace */
-$annotationPath = SYSPATH .'ORM' .DS .'Annotation' .DS;
-
-Annotations::registerFile($annotationPath .'Table.php');
-Annotations::registerFile($annotationPath .'Column.php');
-Annotations::registerFile($annotationPath .'Relation.php');
-
 /** Execute the Request dispatching by Router. */
 $router->dispatch();

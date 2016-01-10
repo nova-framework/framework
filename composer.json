@@ -16,9 +16,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=5.5.0",
-        "doctrine/annotations": "1.2.*",
         "doctrine/inflector": "1.0.*",
-        "doctrine/dbal": "2.5.*",
         "phpmailer/phpmailer": "5.2.*",
         "siriusphp/validation": "~2.0",
         "siriusphp/filtration": "~1.2",

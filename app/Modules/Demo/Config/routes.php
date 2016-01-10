@@ -23,9 +23,6 @@ Router::any('demos/dbal(/index)', 'App\Modules\Demo\Controllers\Doctrine@index')
 /** Classic BaseModel Demo */
 Router::any('demos/models/base_model(/index)', 'App\Modules\Demo\Controllers\Models\BaseModel@index');
 
-/** DBAL BaseModel Demo */
-Router::any('demos/models/dbal_model(/index)', 'App\Modules\Demo\Controllers\Models\DBALModel@index');
-
 /** Event & Event Listener demo */
 Router::any('demos/events', 'App\Modules\Demo\Controllers\Events@index');
 

@@ -9,7 +9,6 @@
 
 namespace Nova\Events;
 
-
 class Listener
 {
     private $name;
@@ -38,5 +37,4 @@ class Listener
     {
         return $this->priority;
     }
-
 }

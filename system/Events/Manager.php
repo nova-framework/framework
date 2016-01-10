@@ -13,7 +13,6 @@ use Nova\Core\Controller;
 use Nova\Core\Event;
 use Nova\Events\Listener;
 
-
 class Manager
 {
     private static $instance;
@@ -32,8 +31,7 @@ class Manager
     {
         if (! self::$instance) {
             $manager = new self();
-        }
-        else {
+        } else {
             $manager =& self::$instance;
         }
 
@@ -53,7 +51,7 @@ class Manager
         // Get the EventManager instance.
         $manager = self::getInstance();
 
-        if(empty($name)) {
+        if (empty($name)) {
             throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
@@ -65,7 +63,7 @@ class Manager
         // Get the EventManager instance.
         $manager = self::getInstance();
 
-        if(! empty($name)) {
+        if (! empty($name)) {
             return $manager->exists($name);
         }
 
@@ -80,7 +78,7 @@ class Manager
         // Get the EventManager instance.
         $manager = self::getInstance();
 
-        if(empty($where)) {
+        if (empty($where)) {
             throw new \UnexpectedValueException(__d('system', 'The Hook Name can not be empty'));
         }
 
@@ -94,7 +92,7 @@ class Manager
         // Get the EventManager instance.
         $manager = self::getInstance();
 
-        if(! empty($where)) {
+        if (! empty($where)) {
             $name = self::$hookPath .$where;
 
             return $manager->exists($name);
@@ -120,7 +118,7 @@ class Manager
         // Get the Listerners registered to this Event.
         $listeners = $manager->listeners($name);
 
-        if($listeners === null) {
+        if ($listeners === null) {
             // There are no Listeners registered for this Event.
             return false;
         }
@@ -144,11 +142,11 @@ class Manager
         // Get the EventManager instance.
         $manager = self::getInstance();
 
-        if(empty($name)) {
+        if (empty($name)) {
             throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
-        if(! $manager->exists($name)) {
+        if (! $manager->exists($name)) {
             // There are no Listeners registered for this Event.
             return false;
         }
@@ -157,25 +155,22 @@ class Manager
         $event = new Event($name, $params);
 
         // Deploy the Event to its Listeners and parse the Result from every one.
-        return $manager->notify($event, function($data) use (&$result) {
-            if(is_array($result)) {
+        return $manager->notify($event, function ($data) use (&$result) {
+            if (is_array($result)) {
                 $result[] = $data;
-            }
-            else if(is_string($result)) {
-                if(! is_string($data) && ! is_integer($data)) {
+            } else if (is_string($result)) {
+                if (! is_string($data) && ! is_integer($data)) {
                     throw new \UnexpectedValueException(__d('system', 'Unsupported Data type while the Result is String'));
                 }
 
                 $result .= $data;
-            }
-            else if(is_bool($result)) {
-                if(! is_bool($data)) {
+            } else if (is_bool($result)) {
+                if (! is_bool($data)) {
                     throw new \UnexpectedValueException(__d('system', 'Unsupported Data type while the Result is Boolean'));
                 }
 
                 $result = $result ? $data : false;
-            }
-            else if(! is_null($result)) {
+            } else if (! is_null($result)) {
                 throw new \UnexpectedValueException(__d('system', 'Unsupported Result type'));
             }
         });
@@ -190,7 +185,7 @@ class Manager
 
     public function listeners($name)
     {
-        if(! empty($name) && isset($this->events[$name])) {
+        if (! empty($name) && isset($this->events[$name])) {
             return $this->events[$name];
         }
 
@@ -202,7 +197,7 @@ class Manager
 
     public function exists($name)
     {
-        if(! empty($name)) {
+        if (! empty($name)) {
             return isset($this->events[$name]);
         }
 
@@ -218,11 +213,11 @@ class Manager
      */
     public function attach($name, $callback, $priority = 0)
     {
-        if(empty($name)) {
+        if (empty($name)) {
             throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
-        if(! array_key_exists($name, $this->events)) {
+        if (! array_key_exists($name, $this->events)) {
             $this->events[$name] = array();
         }
 
@@ -239,13 +234,13 @@ class Manager
      */
     public function dettach($name, $callback)
     {
-        if(empty($name) || ! $this->exists($name)) {
+        if (empty($name) || ! $this->exists($name)) {
             return false;
         }
 
         $listeners =& $this->events[$name];
 
-        $listeners = array_filter($listeners, function($listener) use ($callback) {
+        $listeners = array_filter($listeners, function ($listener) use ($callback) {
             return ($listener->callback() !== $callback);
         });
 
@@ -254,11 +249,10 @@ class Manager
 
     public function clear($name = null)
     {
-        if($name !== null) {
+        if ($name !== null) {
             // Is wanted to clear the Listeners from a specific Event.
             unset($this->events[$name]);
-        }
-        else {
+        } else {
             // Clear the entire Events list.
             $this->events = array();
         }
@@ -273,7 +267,7 @@ class Manager
      */
     public function trigger($name, $params = array(), $callback = null)
     {
-        if(empty($name)) {
+        if (empty($name)) {
             throw new \UnexpectedValueException(__d('system', 'The Event Name can not be empty'));
         }
 
@@ -294,7 +288,7 @@ class Manager
     {
         $name = $event->name();
 
-        if(! $this->exists($name)) {
+        if (! $this->exists($name)) {
             // There are no Listeners to observe this type of Event.
             return false;
         }
@@ -357,7 +351,7 @@ class Manager
             throw new \Exception(__d('system', 'Method not found: {0}@{1}', $className, $method));
         }
 
-        if($object instanceof Controller) {
+        if ($object instanceof Controller) {
             // We are going to call-out a Controller; special setup is required.
             // The Controller instance should be properly initialized before executing its Method.
             $object->initialize($className, $method);
@@ -381,8 +375,8 @@ class Manager
     {
         $events = array();
 
-        foreach($this->events as $name => $listeners) {
-            usort($listeners, function($a, $b) {
+        foreach ($this->events as $name => $listeners) {
+            usort($listeners, function ($a, $b) {
                 return ($a->priority() - $b->priority());
             });
 

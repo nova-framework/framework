@@ -11,7 +11,6 @@ namespace Nova\Packages;
 
 use Nova\Config;
 
-
 class Manager
 {
     /**
@@ -22,14 +21,14 @@ class Manager
     {
         $packages = Config::get('packages');
 
-        if(! $packages) {
+        if (! $packages) {
             return;
         }
 
-        foreach($packages as $package) {
+        foreach ($packages as $package) {
             $filePath = str_replace('/', DS, APPPATH.'Packages/'.$package.'/Config/bootstrap.php');
 
-            if(!is_readable($filePath)) {
+            if (!is_readable($filePath)) {
                 continue;
             }
 

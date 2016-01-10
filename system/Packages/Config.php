@@ -9,7 +9,6 @@
 
 namespace Nova\Packages;
 
-
 abstract class Config
 {
 

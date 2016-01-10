@@ -120,8 +120,7 @@ class Database
 
             if (isset($paramTypes[$key])) {
                 $statement->bindValue($bindKey, $value, $paramTypes[$key]);
-            }
-            else {
+            } else {
                 $statement->bindValue($bindKey, $value, is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
             }
         }
@@ -141,13 +140,12 @@ class Database
         // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
         $statement = $link->prepare($sql);
 
-        if(! empty($paramTypes)) {
+        if (! empty($paramTypes)) {
             // Bind the parameters first.
             $this->bindParams($statement, $params, $paramTypes);
 
             $status = $statement->execute();
-        }
-        else {
+        } else {
             $status = $statement->execute($params);
         }
 
@@ -173,18 +171,17 @@ class Database
         // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
         $statement = $link->prepare($sql);
 
-        if(! empty($paramTypes)) {
+        if (! empty($paramTypes)) {
             // Bind the parameters first.
             $this->bindParams($statement, $params, $paramTypes);
 
             $status = $statement->execute();
-        }
-        else {
+        } else {
             $status = $statement->execute($params);
         }
 
         // Return the affected rows count if the statement execution was successful.
-        if($status) {
+        if ($status) {
             return $statement->rowCount();
         }
 

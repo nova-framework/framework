@@ -27,6 +27,18 @@ class Error extends BaseController
         parent::__construct();
     }
 
+    protected function beforeFlight()
+    {
+        // Leave to parent's method the Flight decisions.
+        return parent::beforeFlight();
+    }
+
+    protected function afterFlight($result)
+    {
+        // Leave to parent's method the Flight decisions.
+        return parent::afterFlight($result);
+    }
+
     /**
      * Load a 404 page with the error message.
      *

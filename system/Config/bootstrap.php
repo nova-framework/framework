@@ -7,8 +7,6 @@
  * @date December 15th, 2015
  */
 
-use Doctrine\Common\Annotations\AnnotationRegistry as Annotations;
-
 use Nova\Packages\Manager as Packages;
 use Nova\Modules\Manager as Modules;
 use Nova\Events\Manager as Events;

@@ -38,15 +38,15 @@ class ClassicController extends BaseController
 
     protected function afterFlight($result)
     {
-        if(($result === false) || ! $this->autoRender) {
+        if (($result === false) || ! $this->autoRender) {
             // Stop the Flight.
             return false;
         }
 
-        if(($result === true) || is_null($result)) {
+        if (($result === true) || is_null($result)) {
             $data =& $this->data();
 
-            if($this->useLayout) {
+            if ($this->useLayout) {
                 $content = View::renderView($this->method(), $data, true);
 
                 View::renderLayout($this->layout(), $content, $data);
@@ -64,5 +64,4 @@ class ClassicController extends BaseController
         // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
-
 }

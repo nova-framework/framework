@@ -16,7 +16,6 @@ use Nova\Input\Filter as InputFilter;
 
 use PDO;
 
-
 class BaseModel extends Model
 {
     /**
@@ -185,8 +184,7 @@ class BaseModel extends Model
         // Do we have a Validator instance?
         if ($inputFilter instanceof InputFilter) {
             $this->inputFilter = $inputFilter;
-        }
-        else {
+        } else {
             $this->inputFilter = new InputFilter();
         }
 
@@ -220,7 +218,7 @@ class BaseModel extends Model
      */
     public function find($id)
     {
-        if(! is_integer($id)) {
+        if (! is_integer($id)) {
             throw new \UnexpectedValueException(__d('dbal', 'Parameter should be an Integer'));
         }
 
@@ -288,7 +286,7 @@ class BaseModel extends Model
      */
     public function findMany($values)
     {
-        if(! is_array($values)) {
+        if (! is_array($values)) {
             throw new \UnexpectedValueException(__d('dbal', 'Parameter should be an Array'));
         }
 
@@ -400,7 +398,7 @@ class BaseModel extends Model
             // Execute the INSERT.
             $result = $this->db->insert($this->table(), $data, $paramTypes);
 
-            if($result !== false) {
+            if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
             }
         }
@@ -437,7 +435,7 @@ class BaseModel extends Model
 
             $result = $this->db->replace($this->table(), $data, $paramTypes);
 
-            if($result !== false) {
+            if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
             }
         }
@@ -510,7 +508,9 @@ class BaseModel extends Model
      */
     public function updateMany($ids, $data, $skipValidation = null)
     {
-        if (! is_array($ids) || (count($ids) == 0)) return NULL;
+        if (! is_array($ids) || (count($ids) == 0)) {
+            return null;
+        }
 
         $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
@@ -584,7 +584,7 @@ class BaseModel extends Model
 
         $data = array_pop($params);
 
-        if(empty($params) || empty($data)) {
+        if (empty($params) || empty($data)) {
             throw new \UnexpectedValueException(__d('dbal', 'Invalid parameters'));
         }
 
@@ -723,7 +723,7 @@ class BaseModel extends Model
      */
     public function delete($id)
     {
-        if(! is_integer($id)) {
+        if (! is_integer($id)) {
             throw new \UnexpectedValueException(__d('dbal', 'Parameter should be an Integer'));
         }
 
@@ -750,7 +750,7 @@ class BaseModel extends Model
         //
         $params = func_get_args();
 
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException(__d('dbal', 'Invalid parameters'));
         }
 
@@ -785,7 +785,9 @@ class BaseModel extends Model
 
     public function deleteMany($ids)
     {
-        if (! is_array($ids) || (count($ids) == 0)) return NULL;
+        if (! is_array($ids) || (count($ids) == 0)) {
+            return null;
+        }
 
         //
         $this->db->connect();
@@ -832,10 +834,9 @@ class BaseModel extends Model
      */
     public function asObject($className = null)
     {
-        if($className !== null) {
+        if ($className !== null) {
             $this->tempReturnType = $className;
-        }
-        else {
+        } else {
             $this->tempReturnType = 'object';
         }
 
@@ -848,7 +849,7 @@ class BaseModel extends Model
 
     public function where($field, $value = '')
     {
-        if(empty($field)) {
+        if (empty($field)) {
             throw new \UnexpectedValueException(__d('dbal', 'Invalid parameters'));
         }
 
@@ -859,7 +860,7 @@ class BaseModel extends Model
 
     public function limit($limit, $start = 0)
     {
-        if(! is_integer($limit) || ! is_integer($start)) {
+        if (! is_integer($limit) || ! is_integer($start)) {
             throw new \UnexpectedValueException(__d('dbal', 'Invalid parameters'));
         }
 
@@ -877,7 +878,7 @@ class BaseModel extends Model
     {
         $sense = strtoupper($sense);
 
-        if(empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
+        if (empty($field) || (($sense != 'ASC') && ($sense != 'DESC'))) {
             throw new \UnexpectedValueException(__d('dbal', 'Invalid parameters'));
         }
 
@@ -901,7 +902,7 @@ class BaseModel extends Model
         //
         $params = func_get_args();
 
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException(__d('dbal', 'Invalid parameters'));
         }
 
@@ -915,10 +916,9 @@ class BaseModel extends Model
 
         $result = $this->asArray()->select($sql, $bindParams);
 
-        if($result !== false) {
+        if ($result !== false) {
             $count = $result['count'];
-        }
-        else {
+        } else {
             $count = 0;
         }
 
@@ -940,7 +940,7 @@ class BaseModel extends Model
 
         $result = $this->asArray()->select($sql);
 
-        if($result !== false) {
+        if ($result !== false) {
             return $result['count'];
         }
 
@@ -963,7 +963,7 @@ class BaseModel extends Model
         //
         $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
 
-        if($ignore !== null) {
+        if ($ignore !== null) {
             $sql .= " AND " .$this->primaryKey ." != :where_ignore";
 
             $bindParams['where_ignore'] = $ignore;
@@ -985,7 +985,7 @@ class BaseModel extends Model
      */
     public function table($table = null)
     {
-        if($table !== null) {
+        if ($table !== null) {
             // A custom Table Name is wanted.
             return DB_PREFIX .$table;
         }
@@ -1002,7 +1002,7 @@ class BaseModel extends Model
      */
     public function protect($field)
     {
-        if(empty($field)) {
+        if (empty($field)) {
             throw new \UnexpectedValueException(__d('dbal', 'Invalid parameter'));
         }
 
@@ -1019,12 +1019,11 @@ class BaseModel extends Model
      */
     public function protectFields(array $row)
     {
-        if(! empty($row)) {
+        if (! empty($row)) {
             foreach ($this->protectedFields as $field) {
                 if (is_object($row)) {
                     unset($row->$field);
-                }
-                else {
+                } else {
                     unset($row[$field]);
                 }
             }
@@ -1121,7 +1120,7 @@ class BaseModel extends Model
         // Prepare the Statement.
         $statement = $this->db->prepare($sql);
 
-        foreach($bindParams as $key => $value) {
+        foreach ($bindParams as $key => $value) {
             if (is_integer($value)) {
                 $statement->bindValue($key, $value, PDO::PARAM_INT);
             } else {
@@ -1179,7 +1178,7 @@ class BaseModel extends Model
             $inputFilter->populate($data);
 
             // Execute the Data Validation.
-            if(! $inputFilter->isValid()) {
+            if (! $inputFilter->isValid()) {
                 // Something was wrong; store the current Filter's Error Messages and return false.
                 $this->errors = $inputFilter->getErrors();
 
@@ -1348,7 +1347,7 @@ class BaseModel extends Model
      *
      * @return int|null|string The current/user time converted to the proper format.
      */
-    protected function date($userDate = NULL)
+    protected function date($userDate = null)
     {
         $curr_date = ! empty($userDate) ? $userDate : time();
 
@@ -1381,14 +1380,13 @@ class BaseModel extends Model
 
     protected function setWhere($params)
     {
-        if(empty($params)) {
+        if (empty($params)) {
             throw new \UnexpectedValueException(__d('dbal', 'Parameter should be a not empty Array'));
         }
 
-        if(is_array($params[0])) {
+        if (is_array($params[0])) {
             $this->tempWheres = array_merge($this->tempWheres, $params[0]);
-        }
-        else {
+        } else {
             $key = $params[0];
 
             $value = isset($params[1]) ? $params[1] : '';
@@ -1411,28 +1409,27 @@ class BaseModel extends Model
         $idx = 0;
 
         foreach ($where as $key => $value) {
-            if($idx > 0) {
+            if ($idx > 0) {
                 $whereStr .= ' AND ';
             }
 
             $idx++;
 
-            if(empty($value)) {
+            if (empty($value)) {
                 // A string based condition; simplify its white spaces and use it directly.
                 $result .= preg_replace('/\s+/', ' ', trim($key));
 
                 continue;
             }
 
-            if(strpos($key, ' ') !== false) {
+            if (strpos($key, ' ') !== false) {
                 $key = preg_replace('/\s+/', ' ', trim($key));
 
                 $segments = explode(' ', $key);
 
                 $key      = $segments[0];
                 $operator = $segments[1];
-            }
-            else {
+            } else {
                 $operator = '=';
             }
 
@@ -1441,7 +1438,7 @@ class BaseModel extends Model
             $bindParams[$key] = $value;
         }
 
-        if(! empty($result)) {
+        if (! empty($result)) {
             $result = 'WHERE ' .$result;
         }
 
@@ -1454,16 +1451,15 @@ class BaseModel extends Model
 
         $limits =& $this->tempSelectLimit;
 
-        if(is_numeric($limits)) {
+        if (is_numeric($limits)) {
             $result = '0, ' .$limits;
-        }
-        else if(is_array($limits) && ! empty($limits)) {
+        } else if (is_array($limits) && ! empty($limits)) {
             list($offset, $limit) = each($limits);
 
             $result = $offset .', ' .$limit;
         }
 
-        if(! empty($result)) {
+        if (! empty($result)) {
             $result = 'LIMIT ' .$result;
         }
 
@@ -1474,16 +1470,14 @@ class BaseModel extends Model
     {
         $order =& $this->tempSelectOrder;
 
-        if(is_array($order) && ! empty($order)) {
+        if (is_array($order) && ! empty($order)) {
             list($key, $sense) = each($order);
 
             $result = 'ORDER BY ' .$key .' ' .$sense;
-        }
-        else {
+        } else {
             $result = '';
         }
 
         return $result;
     }
-
 }

@@ -17,7 +17,6 @@ use Nova\Config;
 
 use PDO;
 
-
 class Manager
 {
     /** @var Connection[] connection instances */
@@ -51,20 +50,18 @@ class Manager
         // Will set the driver when provided in the config.
         if (isset($options['driver'])) {
             $driver = $options['driver'];
-        }
-        else {
+        } else {
             $driver = 'pdo_mysql';
         }
 
         // Will set the wrapperClass when provided in the config.
         if (isset($options['wrapper_class'])) {
             $wrapperClass = $options['wrapper_class'];
-        }
-        else {
+        } else {
             $wrapperClass = '\App\Packages\DBAL\Connection';
         }
 
-        if(! class_exists($wrapperClass)) {
+        if (! class_exists($wrapperClass)) {
             throw new \Exception(__d('dbal', 'No valid Wrapper Class is given: {0}', $wrapperClass));
         }
 
@@ -72,8 +69,7 @@ class Manager
 
         if (isset($options['return_type'])) {
             $fetchType = $options['return_type'];
-        }
-        else {
+        } else {
             $fetchType = 'array';
         }
 
@@ -107,11 +103,10 @@ class Manager
 
     public static function clearConnections()
     {
-        foreach(static::$instances as $name => $connection) {
+        foreach (static::$instances as $name => $connection) {
             $connection->close();
         }
 
         static::$instances = array();
     }
-
 }

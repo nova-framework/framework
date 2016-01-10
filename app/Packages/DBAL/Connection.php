@@ -19,7 +19,6 @@ use App\Packages\DBAL\Logging\QueryCounter;
 
 use PDO;
 
-
 class Connection extends BaseConnection
 {
     protected $defaultFetchType = 'array';
@@ -35,7 +34,7 @@ class Connection extends BaseConnection
      */
     public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null)
     {
-        if($config !== null) {
+        if ($config !== null) {
             // Setup our favorite Logger.
             $logger = new QueryCounter();
 
@@ -51,27 +50,26 @@ class Connection extends BaseConnection
         $this->defaultFetchType = $fetchType;
     }
 
-    public static function getFetchMode($fetchType, &$fetchClass = null) {
+    public static function getFetchMode($fetchType, &$fetchClass = null)
+    {
         // Prepare the parameters.
         $className = null;
 
-        if($fetchType == 'array') {
+        if ($fetchType == 'array') {
             $fetchMode = PDO::FETCH_ASSOC;
-        }
-        else if($fetchType == 'object') {
+        } else if ($fetchType == 'object') {
             $fetchMode = PDO::FETCH_OBJ;
-        }
-        else {
+        } else {
             $fetchMode = PDO::FETCH_CLASS;
 
             // Check and setup the className.
             $classPath = str_replace('\\', '/', ltrim($fetchType, '\\'));
 
-            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+            if (! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
                 throw new \Exception(__d('dbal', 'No valid Entity Name is given: {0}', $fetchType));
             }
 
-            if(! class_exists($fetchType)) {
+            if (! class_exists($fetchType)) {
                 throw new \Exception(__d('dbal', 'No valid Entity Class is given: {0}', $fetchType));
             }
 
@@ -88,14 +86,11 @@ class Connection extends BaseConnection
         foreach ($params as $key => $value) {
             if (is_integer($value)) {
                 $result[$key] = PDO::PARAM_INT;
-            }
-            else if (is_bool($value)) {
+            } else if (is_bool($value)) {
                 $result[$key] = PDO::PARAM_BOOL;
-            }
-            else if(is_null($value)) {
+            } else if (is_null($value)) {
                 $result[$key] = PDO::PARAM_NULL;
-            }
-            else {
+            } else {
                 $result[$key] = PDO::PARAM_STR;
             }
         }
@@ -126,7 +121,7 @@ class Connection extends BaseConnection
         $statement->setFetchMode($fetchMode, $className);
 
         // Fetch and return the result.
-        if($fetchAll) {
+        if ($fetchAll) {
             return $statement->fetchAll();
         }
 
@@ -167,8 +162,7 @@ class Connection extends BaseConnection
     {
         if (($this->defaultFetchType != 'array') && ($this->defaultFetchType != 'object')) {
             $className = ($className !== null) ? $className : $this->defaultFetchType;
-        }
-        else if($className === null) {
+        } else if ($className === null) {
             throw new \Exception(__d('dbal', 'No valid Entity Class is given'));
         }
 
@@ -213,12 +207,11 @@ class Connection extends BaseConnection
     {
         $logger = $this->getConfiguration()->getSQLLogger();
 
-        if(! $logger instanceof QueryCounter) {
+        if (! $logger instanceof QueryCounter) {
             // We can't get the number of queries.
             return 0;
         }
 
         return $logger->getNumQueries();
     }
-
 }

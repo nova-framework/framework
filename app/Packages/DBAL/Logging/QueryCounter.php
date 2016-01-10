@@ -11,7 +11,6 @@ namespace App\Packages\DBAL\Logging;
 
 use Doctrine\DBAL\Logging\SQLLogger;
 
-
 class QueryCounter implements SQLLogger
 {
     private $queryCounter = 0;
@@ -44,5 +43,4 @@ class QueryCounter implements SQLLogger
     {
         return $this->queryCounter;
     }
-
 }

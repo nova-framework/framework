@@ -51,18 +51,18 @@ class BaseController extends Controller
         );
 
         // Broadcast the Event to all its Listeners; if they return a valid array, merge it to Data.
-        $this->events->trigger('App.Core.BaseController.BeforeFlight', $params, function($result) use (&$data) {
-            if(! is_array($result)) {
+        $this->events->trigger('App.Core.BaseController.BeforeFlight', $params, function ($result) use (&$data) {
+            if (! is_array($result)) {
                 return;
             }
 
-            foreach($result as $key => $value) {
-                switch($key) {
+            foreach ($result as $key => $value) {
+                switch ($key) {
                     case 'headerMetaData':
                     case 'headerCSSheets':
                     case 'headerJScripts':
                     case 'footerJScripts':
-                        if(! is_array($value)) {
+                        if (! is_array($value)) {
                             continue;
                         }
 
@@ -71,7 +71,7 @@ class BaseController extends Controller
                         continue;
                 }
 
-                if(! empty($value)) {
+                if (! empty($value)) {
                     $data[$key] = array_merge($data[$key], $value);
                 }
             }
@@ -86,5 +86,4 @@ class BaseController extends Controller
         // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
-
 }

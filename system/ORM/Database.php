@@ -14,7 +14,6 @@ use Nova\Database\Connection;
 
 use \PDO;
 
-
 class Database
 {
     private $linkName = 'default';
@@ -51,11 +50,11 @@ class Database
     {
         $statement = $this->executeQuery($sql, $params, $paramTypes);
 
-        if($statement === false) {
+        if ($statement === false) {
             return false;
         }
 
-        if(! $fetchAll) {
+        if (! $fetchAll) {
             // Fetch one record who match the criteria.
             $statement->setFetchMode(PDO::FETCH_CLASS, $fetchClass);
 
@@ -77,7 +76,7 @@ class Database
         $sql = 'INSERT INTO ' .$table .' (' .implode(', ', array_keys($data)) .')
                 VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
-       return $this->executeUpdate($sql, array_values($data), $paramTypes);
+        return $this->executeUpdate($sql, array_values($data), $paramTypes);
     }
 
     public function update($table, array $data, array $where, array $paramTypes = array())
@@ -116,7 +115,7 @@ class Database
 
     protected function bindParams($statement, array $params, array $paramTypes = array())
     {
-        if(empty($params)) {
+        if (empty($params)) {
             return;
         }
 
@@ -124,7 +123,7 @@ class Database
         foreach ($params as $key => $value) {
             $bindKey = $key + 1;
 
-            if(! empty($paramTypes) && isset($paramTypes[$key])) {
+            if (! empty($paramTypes) && isset($paramTypes[$key])) {
                 $statement->bindValue($bindKey, $value, $paramTypes[$key]);
 
                 continue;
@@ -133,14 +132,11 @@ class Database
             // No parameter Type found, we try our best of to guess it.
             if (is_integer($value)) {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_INT);
-            }
-            else if (is_bool($value)) {
+            } else if (is_bool($value)) {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_BOOL);
-            }
-            else if(is_null($value)) {
+            } else if (is_null($value)) {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_NULL);
-            }
-            else {
+            } else {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_STR);
             }
         }
@@ -153,7 +149,7 @@ class Database
         // Signal to Connection instance the incoming Query.
         $link->countIncomingQuery();
 
-        if(empty($params)) {
+        if (empty($params)) {
             return $link->query($sql);
         }
 
@@ -179,7 +175,7 @@ class Database
         // Signal to Connection instance the incoming Query.
         $link->countIncomingQuery();
 
-        if(empty($params)) {
+        if (empty($params)) {
             return $link->exec($sql);
         }
 
@@ -212,5 +208,4 @@ class Database
             return call_user_func_array(array($connection, $method), $params);
         }
     }
-    
 }

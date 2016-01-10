@@ -44,10 +44,11 @@ abstract class Entity
      *
      * @codeCoverageIgnore
      */
-    public static function __callStatic($method, $parameters){
+    public static function __callStatic($method, $parameters)
+    {
         if (method_exists(__CLASS__, $method)) {
             self::discoverEntity();
-            forward_static_call_array(array(__CLASS__,$method),$parameters);
+            forward_static_call_array(array(__CLASS__, $method), $parameters);
         }
     }
 
@@ -101,7 +102,7 @@ abstract class Entity
         $columns = Structure::getTableColumns($this);
 
         $data = array();
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             if ($types) {
                 $data[$column->name] = $column->getPdoType();
             } else {
@@ -197,7 +198,7 @@ abstract class Entity
         }
         $result = $many[0];
 
-        if($result instanceof Entity) {
+        if ($result instanceof Entity) {
             return $result;
         }
         return false;
@@ -223,8 +224,7 @@ abstract class Entity
      */
     public static function findBy($criteria, $operator = null, $value = null)
     {
-        if (! is_array($criteria) && ($operator == null && $value == null))
-        {
+        if (! is_array($criteria) && ($operator == null && $value == null)) {
             throw new \UnexpectedValueException("Criteria should be an array! Or use the shorthand syntax.");
         }
 
@@ -257,8 +257,7 @@ abstract class Entity
             $this->_state = 1;
         } else {
             // Update
-            $result = static::getLink()->update(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getPrimaryKey(),
-                array_merge($this->getColumns(true), $this->getPrimaryKey(true)));
+            $result = static::getLink()->update(Structure::getTable($this)->getFullTableName(), $this->getColumns(), $this->getPrimaryKey(), array_merge($this->getColumns(true), $this->getPrimaryKey(true)));
         }
 
         return $result;

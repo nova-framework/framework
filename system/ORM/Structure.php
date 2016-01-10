@@ -66,12 +66,11 @@ abstract class Structure
         // Get properties and loop.
         $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
 
-        foreach($properties as $prop) {
+        foreach ($properties as $prop) {
             /** @var Column $columnAnnotation */
             $columnAnnotation = $reader->getPropertyAnnotation($prop, "\\Nova\\ORM\\Annotation\\Column");
 
             if ($columnAnnotation instanceof Column) {
-
                 // Set field name
                 $columnAnnotation->setPropertyField($prop->getName());
 

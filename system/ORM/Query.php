@@ -89,7 +89,7 @@ class Query
         // Get column data and index it with column name in the key. Used for validating later on.
         $this->columnData = array();
         $columns = Structure::getTableColumns($this->entityClass);
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             $this->columnData[$column->name] = $column;
         }
     }
@@ -267,7 +267,7 @@ class Query
             foreach ($object as $nr => $entity) { /** @var Entity $entity */
                 $entity->_state = 1;
             }
-        }else{
+        } else {
             $object->_state = 1;
         }
 
@@ -380,11 +380,11 @@ class Query
         $this->whereBindValues[] = $value;
         if (is_bool($value)) {
             $this->whereBindTypes[] = PDO::PARAM_BOOL;
-        }elseif(is_int($value)) {
+        } else if (is_int($value)) {
             $this->whereBindTypes[] = PDO::PARAM_INT;
-        }elseif($value === null) {
+        } else if ($value === null) {
             $this->whereBindTypes[] = PDO::PARAM_NULL;
-        }else{
+        } else {
             $this->whereBindTypes[] = PDO::PARAM_STR;
         }
     }

@@ -88,7 +88,7 @@ class Column extends Annotation
      */
     public function getPdoType()
     {
-        switch($this->type){
+        switch ($this->type) {
             case 'string':
                 return PDO::PARAM_STR;
             case 'int':

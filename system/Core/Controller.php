@@ -71,17 +71,15 @@ abstract class Controller
         $classPath = str_replace('\\', '/', $className);
 
         // First, check on the App path.
-        if(preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
+        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
             $viewsPath = str_replace('/', DS, 'Views/'.$matches[1]);
-        }
         // Secondly, check on the Modules path.
-        else if(preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
+        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
             $this->module = $matches[1];
 
             // The View paths are in Module sub-directories.
             $viewsPath = str_replace('/', DS, 'Modules/'.$matches[1].'/Views/'.$matches[2]);
-        }
-        else {
+        } else {
             throw new \Exception(__d('system', 'Unknown Views Path for the Class: {0}', $className));
         }
 
@@ -100,7 +98,7 @@ abstract class Controller
 
     public function execute()
     {
-        if($this->beforeFlight() === false) {
+        if ($this->beforeFlight() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
@@ -108,7 +106,7 @@ abstract class Controller
         // Execute the Controller's Method with the given arguments.
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
-        if(($this->afterFlight($result) === false) || ! $this->autoRender) {
+        if (($this->afterFlight($result) === false) || ! $this->autoRender) {
             // Is wanted to stop the Flight or there is no auto-rendering.
             return true;
         }
@@ -120,21 +118,19 @@ abstract class Controller
 
     protected function renderResult($result)
     {
-        if($result instanceof View) {
+        if ($result instanceof View) {
             $result->display();
 
             return;
         }
 
-        if(is_array($result)) {
+        if (is_array($result)) {
             Response::addHeader('Content-Type: application/json');
 
             $result = json_encode($result);
-        }
-        else if(is_string($result)) {
+        } else if (is_string($result)) {
             Response::addHeader('Content-Type: text/html; charset=UTF-8');
-        }
-        else {
+        } else {
             return;
         }
 
@@ -146,7 +142,7 @@ abstract class Controller
 
     protected function autoRender($value = null)
     {
-        if(is_null($value)) {
+        if (is_null($value)) {
             return $this->autoRender;
         }
 
@@ -155,7 +151,7 @@ abstract class Controller
 
     protected function useLayout($value = null)
     {
-        if(is_null($value)) {
+        if (is_null($value)) {
             return $this->useLayout;
         }
 
@@ -164,10 +160,9 @@ abstract class Controller
 
     public function data($name = null)
     {
-        if(is_null($name)) {
+        if (is_null($name)) {
             return $this->data;
-        }
-        else if(isset($this->data[$name])) {
+        } else if (isset($this->data[$name])) {
             return $this->data[$name];
         }
 
@@ -179,12 +174,10 @@ abstract class Controller
         if (is_array($name)) {
             if (is_array($value)) {
                 $data = array_combine($name, $value);
-            }
-            else {
+            } else {
                 $data = $name;
             }
-        }
-        else {
+        } else {
             $data = array($name => $value);
         }
 
@@ -232,5 +225,4 @@ abstract class Controller
     {
         return $this->layout;
     }
-
 }

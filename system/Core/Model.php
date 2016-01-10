@@ -33,16 +33,14 @@ abstract class Model
      */
     public function __construct($connection = null)
     {
-        if($connection instanceof Connection) {
+        if ($connection instanceof Connection) {
             // Set the given Database Connection.
             $this->db = $connection;
-        }
-        else {
+        } else {
             $connection = ($connection !== null) ? $connection : 'default';
 
             // Setup the Database Connection.
             $this->db = Database::getConnection($connection);
         }
     }
-
 }

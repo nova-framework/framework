@@ -36,7 +36,7 @@ class View
      */
     public function __construct($param, $json = false)
     {
-        if(! $json) {
+        if (! $json) {
             $this->path = $param;
 
             return;
@@ -52,8 +52,7 @@ class View
 
     public function __call($method, $params)
     {
-        if (strpos($method, 'with') !== 0)
-        {
+        if (strpos($method, 'with') !== 0) {
             throw new \BadMethodCallException(__d('system', 'Invalid method called: View::{0}', $method));
         }
 
@@ -143,7 +142,7 @@ class View
         }
 
         // Prepare the rendering variables.
-        foreach($this->data as $name => $value) {
+        foreach ($this->data as $name => $value) {
             ${$name} = $value;
         }
 
@@ -162,7 +161,7 @@ class View
         }
 
         // Prepare the rendering variables.
-        foreach($this->data as $name => $value) {
+        foreach ($this->data as $name => $value) {
             ${$name} = $value;
         }
 
@@ -181,10 +180,9 @@ class View
 
     public function data($name = null)
     {
-        if(is_null($name)) {
+        if (is_null($name)) {
             return $this->data;
-        }
-        else if(isset($this->data[$name])) {
+        } else if (isset($this->data[$name])) {
             return $this->data[$name];
         }
 
@@ -193,10 +191,9 @@ class View
 
     public function loadData($data)
     {
-        if($data instanceof View) {
+        if ($data instanceof View) {
             $this->data = array_merge($this->data, $data->data());
-        }
-        else {
+        } else {
             if (! is_array($data)) {
                 throw new \UnexpectedValueException(__d('system', 'Unexpected parameter'));
             }
@@ -209,7 +206,7 @@ class View
 
     public function loadView($view)
     {
-        if($view instanceof View) {
+        if ($view instanceof View) {
             $this->data = $view->data();
 
             return $this->with('content', $view->fetch());
@@ -226,8 +223,7 @@ class View
         if ($path[0] === '/') {
             // A Views "Root" path is wanted.
             $viewPath = APPPATH."Views";
-        }
-        else {
+        } else {
             $viewPath = $instance->viewsPath();
         }
 
@@ -262,16 +258,15 @@ class View
         // Get the Controller instance.
         $instance =& get_instance();
 
-        if($fromTemplate) {
+        if ($fromTemplate) {
             $basePath = self::templatePath();
-        }
-        else {
+        } else {
             $basePath = APPPATH.'Views'.DS;
 
             // If we are in a Module, we should adjust the basePath.
             $module = $instance->module();
 
-            if($module) {
+            if ($module) {
                 // Adjust the filePath for Module.
                 $basePath = APPPATH.'Modules'.DS.$module.DS;
             }
@@ -298,8 +293,7 @@ class View
         if ($path[0] === '/') {
             // A Views "Root" Path is wanted.
             $basePath = APPPATH."Views";
-        }
-        else {
+        } else {
             $basePath = $instance->viewsPath();
         }
 
@@ -309,30 +303,28 @@ class View
             throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
-        if(is_array($data)) {
+        if (is_array($data)) {
             $data = $data + $instance->data();
-        }
-        else {
+        } else {
             $data = $instance->data();
         }
 
-        if(! empty($data)) {
+        if (! empty($data)) {
             // Extract the rendering variables.
-            foreach($data as $name => $value) {
+            foreach ($data as $name => $value) {
                 ${$name} = $value;
             }
         }
 
-        if($fetch) {
+        if ($fetch) {
             ob_start();
-        }
-        else {
+        } else {
             Response::sendHeaders();
         }
 
         require $filePath;
 
-        if($fetch) {
+        if ($fetch) {
             return ob_get_clean();
         }
 
@@ -358,11 +350,9 @@ class View
         if ($path[0] === '/') {
             // A Views "Root" Path is wanted.
             $basePath = APPPATH.str_replace('/', DS, "Modules/".$module.'/Views/');
-        }
-        else if($instance->module() == $module) {
+        } else if ($instance->module() == $module) {
             $basePath = $instance->viewsPath();
-        }
-        else {
+        } else {
             throw new \UnexpectedValueException(__d('system', 'Invalid Module requested: {0}', $module));
         }
 
@@ -372,30 +362,28 @@ class View
             throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
-        if(is_array($data)) {
+        if (is_array($data)) {
             $data = $data + $instance->data();
-        }
-        else {
+        } else {
             $data = $instance->data();
         }
 
-        if(! empty($data)) {
+        if (! empty($data)) {
             // Extract the rendering variables.
-            foreach($data as $name => $value) {
+            foreach ($data as $name => $value) {
                 ${$name} = $value;
             }
         }
 
-        if($fetch) {
+        if ($fetch) {
             ob_start();
-        }
-        else {
+        } else {
             Response::sendHeaders();
         }
 
         require $filePath;
 
-        if($fetch) {
+        if ($fetch) {
             return ob_get_clean();
         }
 
@@ -421,16 +409,15 @@ class View
             throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
-        if(is_array($data)) {
+        if (is_array($data)) {
             $data = $data + $instance->data();
-        }
-        else {
+        } else {
             $data = $instance->data();
         }
 
-        if(! empty($data)) {
+        if (! empty($data)) {
             // Extract the rendering variables.
-            foreach($data as $name => $value) {
+            foreach ($data as $name => $value) {
                 ${$name} = $value;
             }
         }
@@ -463,16 +450,15 @@ class View
             throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
         }
 
-        if(is_array($data)) {
+        if (is_array($data)) {
             $data = $data + $instance->data();
-        }
-        else {
+        } else {
             $data = $instance->data();
         }
 
-        if(! empty($data)) {
+        if (! empty($data)) {
             // Extract the rendering variables.
-            foreach($data as $name => $value) {
+            foreach ($data as $name => $value) {
                 ${$name} = $value;
             }
         }
@@ -481,5 +467,4 @@ class View
 
         require $filePath;
     }
-
 }

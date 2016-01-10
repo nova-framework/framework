@@ -9,7 +9,6 @@
 
 namespace Nova\Core;
 
-
 class Event
 {
     private $name;
@@ -31,5 +30,4 @@ class Event
     {
         return $this->params;
     }
-
 }

@@ -10,7 +10,6 @@
 use Nova\Config;
 use Nova\Events\Manager as Events;
 
-
 /**
  * Logger configuration
  */

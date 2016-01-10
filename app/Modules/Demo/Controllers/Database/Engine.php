@@ -4,7 +4,6 @@ namespace App\Modules\Demo\Controllers\Database;
 
 use App\Modules\Demo\Core\BaseController;
 
-
 class Engine extends BaseController
 {
     /**
@@ -65,5 +64,4 @@ class Engine extends BaseController
         $this->set('demo3_example1', $demo3_example1);
         $this->set('demo4_example1', $demo4_example1);
     }
-    
 }

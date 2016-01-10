@@ -11,7 +11,6 @@ namespace Nova\Modules;
 
 use Nova\Config;
 
-
 class Manager
 {
     /**
@@ -22,14 +21,14 @@ class Manager
     {
         $modules = Config::get('modules');
 
-        if(! $modules) {
+        if (! $modules) {
             return;
         }
 
-        foreach($modules as $module) {
+        foreach ($modules as $module) {
             $filePath = str_replace('/', DS, APPPATH.'Modules/'.$module.'/Config/bootstrap.php');
 
-            if(!is_readable($filePath)) {
+            if (!is_readable($filePath)) {
                 continue;
             }
 

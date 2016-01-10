@@ -9,7 +9,6 @@
 
 namespace Nova\Modules;
 
-
 abstract class Config
 {
 

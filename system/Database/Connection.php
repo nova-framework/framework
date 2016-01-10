@@ -373,9 +373,9 @@ abstract class Connection extends PDO
         // Bind the key and values (only if given).
         $this->bindParams($stmt, $params, $paramTypes);
 
-        // Execute, we should capture the status of the result.
         $this->countIncomingQuery();
 
+        // Execute, we should capture the status of the result.
         $status = $stmt->execute();
 
         // If failed, return now, and don't continue with fetching.
@@ -482,9 +482,9 @@ abstract class Connection extends PDO
 
         $this->bindParams($stmt, $data, $paramTypes);
 
-        // Execute
         $this->countIncomingQuery();
 
+        // Execute
         if (! $stmt->execute()) {
             $failure = true;
 
@@ -571,9 +571,9 @@ abstract class Connection extends PDO
         // Bind values
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        // Execute
         $this->countIncomingQuery();
 
+        // Execute and return false if failure.
         if (! $stmt->execute()) {
             return false;
         }
@@ -605,9 +605,9 @@ abstract class Connection extends PDO
         // Bind parameters.
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        // Execute and return if failure.
         $this->countIncomingQuery();
 
+        // Execute and return false if failure.
         if (! $stmt->execute()) {
             return false;
         }

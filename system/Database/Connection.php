@@ -209,16 +209,18 @@ abstract class Connection extends PDO
                 continue;
             }
 
-            // No parameter Type found, we try our best of to guess it.
+            // No parameter Type found, we try our best of to guess it from the Value.
             if (is_integer($value)) {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_INT);
+                $bindType = PDO::PARAM_INT;
             } else if (is_bool($value)) {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_BOOL);
+                $bindType = PDO::PARAM_BOOL;
             } else if (is_null($value)) {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_NULL);
+                $bindType = PDO::PARAM_NULL;
             } else {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_STR);
+                $bindType = PDO::PARAM_STR;
             }
+
+            $statement->bindValue($bindKey, $value, $bindType);
         }
     }
 

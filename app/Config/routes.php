@@ -27,7 +27,7 @@ Router::any('(:all)', 'demo/catchall/$1');
 /** End static routes */
 
 // All the un-matched Requests will be routed there.
-Router::catchAll('App\Controllers\Demo@catchAll');
+//Router::catchAll('App\Controllers\Demo@catchAll');
 
 /** If no Route found and no Catch-All Route defined. */
-Router::error('\App\Controllers\Error@error404');
+Router::error('App\Controllers\Error@error404');

@@ -58,7 +58,7 @@ class Logger
     {
         $options = Config::get('logger');
 
-        if($options === null) {
+        if ($options === null) {
             return;
         }
 

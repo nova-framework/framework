@@ -15,7 +15,8 @@ namespace Nova;
  *
  * @package Nova
  */
-class Config {
+class Config
+{
     /**
      * @var array
      */
@@ -74,5 +75,4 @@ class Config {
         self::$settings[$key][$subkey] = $value;
         return true;
     }
-
 }

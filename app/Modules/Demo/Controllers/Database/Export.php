@@ -4,7 +4,6 @@ namespace App\Modules\Demo\Controllers\Database;
 
 use App\Modules\Demo\Core\BaseController;
 
-
 class Export extends BaseController
 {
     /**
@@ -19,5 +18,4 @@ class Export extends BaseController
     {
         $this->title('MySQL Demo Database Export');
     }
-    
 }

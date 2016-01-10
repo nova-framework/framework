@@ -17,7 +17,6 @@ use \FluentStructure;
 use \FluentPDO;
 use \PDO;
 
-
 class BaseModel extends Model
 {
     /**
@@ -211,7 +210,7 @@ class BaseModel extends Model
 
     public function queryBuilder(FluentStructure $structure = null)
     {
-        if($structure === null) {
+        if ($structure === null) {
             $structure = new FluentStructure($this->primaryKey);
         }
 
@@ -238,21 +237,19 @@ class BaseModel extends Model
             // Setup the fetch Method.
             if ($returnType == 'array') {
                 $object = false;
-            }
-            else if($returnType == 'object') {
+            } else if ($returnType == 'object') {
                 $object = true;
-            }
-            else  {
+            } else {
                 $object = $returnType;
 
                 // Check for a valid className.
                 $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
 
-                if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+                if (! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
                     throw new \Exception(__('No valid Entity Name is given: {0}', $returnType));
                 }
 
-                if(! class_exists($returnType)) {
+                if (! class_exists($returnType)) {
                     throw new \Exception(__('No valid Entity Class is given: {0}', $returnType));
                 }
             }
@@ -265,14 +262,11 @@ class BaseModel extends Model
             $param = is_array($param) ? $param : array();
 
             $query = $queryBuilder->insertInto($this->table(), $param);
-        }
-        else if ($method == 'update') {
+        } else if ($method == 'update') {
             $query = $queryBuilder->update($this->table(), $param);
-        }
-        else if ($method == 'delete') {
+        } else if ($method == 'delete') {
             $query = $queryBuilder->delete($this->table(), $param);
-        }
-        else {
+        } else {
             throw new \Exception(__('No valid Method given for Query building'));
         }
 
@@ -306,7 +300,7 @@ class BaseModel extends Model
      */
     public function find($id)
     {
-        if(! is_integer($id)) {
+        if (! is_integer($id)) {
             throw new \UnexpectedValueException(__('Parameter should be an Integer'));
         }
 
@@ -572,8 +566,9 @@ class BaseModel extends Model
      */
     public function updateMany($ids, $data, $skipValidation = null)
     {
-        if (! is_array($ids) || (count($ids) == 0)) return NULL;
-
+        if (! is_array($ids) || (count($ids) == 0)) {
+            return null;
+        }
         $skipValidation = is_null($skipValidation) ? $this->skipValidation : $skipValidation;
 
         if ($skipValidation === false) {
@@ -783,7 +778,9 @@ class BaseModel extends Model
 
     public function deleteMany($ids)
     {
-        if (! is_array($ids) || (count($ids) == 0)) return NULL;
+        if (! is_array($ids) || (count($ids) == 0)) {
+            return null;
+        }
 
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
@@ -996,8 +993,7 @@ class BaseModel extends Model
             foreach ($this->protectedFields as $field) {
                 if (is_object($row)) {
                     unset($row->$field);
-                }
-                else {
+                } else {
                     unset($row[$field]);
                 }
             }
@@ -1290,7 +1286,7 @@ class BaseModel extends Model
      *
      * @return int|null|string The current/user time converted to the proper format.
      */
-    protected function date($userDate = NULL)
+    protected function date($userDate = null)
     {
         $curr_date = ! empty($userDate) ? $userDate : time();
 
@@ -1331,22 +1327,19 @@ class BaseModel extends Model
         // Get the WHERE condition.
         $condition = array_shift($params);
 
-        if($condition == null) {
+        if ($condition == null) {
             // Remove all previous defined conditions from our own WHEREs array, too.
             $this->tempWheres = array();
-        }
-        else if(is_array($condition)) {
+        } else if (is_array($condition)) {
             // Is given an array of Conditions; merge them into our own WHEREs array.
             $this->tempWheres = array_merge($this->tempWheres, $condition);
-        }
-        else if(count($params) == 1) {
+        } else if (count($params) == 1) {
             // Store the condition and its value.
             $this->tempWheres[$condition] = array_shift($params);
-        }
-        else if(count($params) == 2) {
+        } else if (count($params) == 2) {
             $operator = array_shift($params);
 
-            if(! in_array($operator, Connection::$whereOperators, true)) {
+            if (! in_array($operator, Connection::$whereOperators, true)) {
                 throw new \UnexpectedValueException(__('Second parameter is invalid'));
             }
 
@@ -1354,8 +1347,7 @@ class BaseModel extends Model
 
             // Store the composed condition and its value.
             $this->tempWheres[$condition] = array_shift($params);
-        }
-        else {
+        } else {
             throw new \UnexpectedValueException(__('Invalid number of parameters'));
         }
 
@@ -1366,5 +1358,4 @@ class BaseModel extends Model
     {
         return $this->tempWheres;
     }
-
 }

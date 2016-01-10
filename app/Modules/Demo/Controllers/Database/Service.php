@@ -5,7 +5,6 @@ namespace App\Modules\Demo\Controllers\Database;
 use App\Modules\Demo\Models\Entities\Car;
 use App\Modules\Demo\Core\BaseController;
 
-
 class Service extends BaseController
 {
     /**
@@ -75,5 +74,4 @@ class Service extends BaseController
         $this->set('demo3', $demo3);
         $this->set('demo4', $demo4);
     }
-    
 }

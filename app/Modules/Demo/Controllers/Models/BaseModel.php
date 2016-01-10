@@ -15,7 +15,6 @@ use App\Modules\Demo\Models\Members as MembersModel;
 
 use \PDO;
 
-
 /**
  * Sample Themed Controller with its typical usage.
  */
@@ -273,5 +272,4 @@ class BaseModel extends BaseController
 
         $this->set('message', $message);
     }
-
 }

@@ -188,12 +188,11 @@ class Session
             return null;
         }
 
-        if(! is_array($data)) {
+        if (! is_array($data)) {
             // The message is structured in the Default style.
             $alertType = $sessionName;
             $alertText = $data;
-        }
-        else {
+        } else {
             // The message is structured in the Hadrianus style.
             $alertType = $data['type'];
             $alertText = $data['text'];

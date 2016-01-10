@@ -41,7 +41,7 @@ class Request
      */
     public static function post($key = null)
     {
-        if($key === null) {
+        if ($key === null) {
             return isset($_POST) ? $_POST : null;
         }
 
@@ -58,7 +58,7 @@ class Request
      */
     public static function files($key = null)
     {
-        if($key === null) {
+        if ($key === null) {
             return isset($_FILES) ? $_FILES : null;
         }
 
@@ -75,7 +75,7 @@ class Request
      */
     public static function query($key = null)
     {
-        if($key === null) {
+        if ($key === null) {
             return isset($_GET) ? $_GET : null;
         }
 
@@ -94,7 +94,7 @@ class Request
     {
         parse_str(file_get_contents("php://input"), $_PUT);
 
-        if($key == null) {
+        if ($key == null) {
             return isset($_PUT) ? $_PUT : null;
         }
 
@@ -178,5 +178,4 @@ class Request
     {
         return $_SERVER["REQUEST_METHOD"] === "DELETE";
     }
-
 }

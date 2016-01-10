@@ -15,20 +15,19 @@ namespace Nova\Net;
  */
 class Cookie
 {
-    const FourYears = 126144000;
+    const FOURYEARS = 126144000;
 
 
     public static function exists($key)
     {
         if (isset($_COOKIE[$key])) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public static function set($key, $value, $expiry = self::FourYears, $path = "/", $domain = false)
+    public static function set($key, $value, $expiry = self::FOURYEARS, $path = "/", $domain = false)
     {
         $retval = false;
 
@@ -39,11 +38,9 @@ class Cookie
 
             if ($expiry === -1) {
                 $expiry = 1893456000; // Lifetime = 2030-01-01 00:00:00
-            }
-            else if (is_numeric($expiry)) {
+            } else if (is_numeric($expiry)) {
                 $expiry += time();
-            }
-            else {
+            } else {
                 $expiry = strtotime($expiry);
             }
 
@@ -73,5 +70,4 @@ class Cookie
 
         setcookie($key, '', time() - 3600, $path, $domain);
     }
-
 }

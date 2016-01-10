@@ -86,8 +86,8 @@ class Route
             $searches = array('(/', ')');
             $replaces = array('(?:/', ')?');
 
-            if(is_array($optionals) && ! empty($optionals)) {
-                $searches = array_merge(array_keys($optionals),   $searches);
+            if (is_array($optionals) && ! empty($optionals)) {
+                $searches = array_merge(array_keys($optionals), $searches);
                 $replaces = array_merge(array_values($optionals), $replaces);
             }
 

@@ -74,8 +74,7 @@ class Router
 
         if (! self::$instance) {
             $router = new $appRouter();
-        }
-        else {
+        } else {
             $router =& self::$instance;
         }
 
@@ -190,7 +189,7 @@ class Router
     protected function invokeController($className, $method, $params)
     {
         // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
-        switch($method) {
+        switch ($method) {
             case 'beforeFlight':
             case 'afterFlight':
                 return false;
@@ -269,7 +268,7 @@ class Router
         $method = Request::getMethod();
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
-        if($this->defaultRoute !== null) {
+        if ($this->defaultRoute !== null) {
             array_push($this->routes, $this->defaultRoute);
         }
 
@@ -280,7 +279,7 @@ class Router
 
                 $callback = $route->callback();
 
-                if($callback !== null) {
+                if ($callback !== null) {
                     // Invoke the Route's Callback with the associated parameters.
                     $this->invokeObject($callback, $route->params());
                 }
@@ -309,17 +308,16 @@ class Router
 
         $filePath = '';
 
-        if(preg_match('#^assets/(.*)$#i', $uri, $matches)) {
+        if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $filePath = BASEPATH.'assets'.DS.$matches[1];
-        }
-        else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
+        } else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
             // We need to classify the path name (the Module/Template path).
             $basePath = ucfirst($matches[1]) .DS .Inflector::classify($matches[2]);
 
             $filePath = APPPATH.$basePath.DS.'Assets'.DS.$matches[3];
         }
 
-        if(! empty($filePath)) {
+        if (! empty($filePath)) {
             // Serve the specified Asset File.
             Response::serveFile($filePath);
 
@@ -331,11 +329,10 @@ class Router
 
     protected function config($key = null)
     {
-        if($key !== null) {
+        if ($key !== null) {
             return array_key_exists($key, $this->config) ? $this->config[$key] : null;
         }
 
         return $this->config;
     }
-
 }

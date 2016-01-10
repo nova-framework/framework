@@ -10,7 +10,6 @@
 
 namespace Nova\Net;
 
-
 /**
  * Collection of methods for working with urls.
  */
@@ -155,7 +154,7 @@ class Url
      */
     public static function segments()
     {
-        if(empty(self::$segments)) {
+        if (empty(self::$segments)) {
             $uri = self::detectUri();
 
             self::$segments = array_filter(explode('/', $uri), 'strlen');

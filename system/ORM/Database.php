@@ -115,29 +115,14 @@ class Database
 
     protected function bindParams($statement, array $params, array $paramTypes = array())
     {
-        if (empty($params)) {
-            return;
-        }
-
-        // Bind the key and values (only if given).
         foreach ($params as $key => $value) {
             $bindKey = $key + 1;
 
-            if (! empty($paramTypes) && isset($paramTypes[$key])) {
+            if (isset($paramTypes[$key])) {
                 $statement->bindValue($bindKey, $value, $paramTypes[$key]);
-
-                continue;
             }
-
-            // No parameter Type found, we try our best of to guess it.
-            if (is_integer($value)) {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_INT);
-            } else if (is_bool($value)) {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_BOOL);
-            } else if (is_null($value)) {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_NULL);
-            } else {
-                $statement->bindValue($bindKey, $value, PDO::PARAM_STR);
+            else {
+                $statement->bindValue($bindKey, $value, is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
             }
         }
     }
@@ -156,16 +141,22 @@ class Database
         // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
         $statement = $link->prepare($sql);
 
-        // Bind the parameters.
-        $this->bindParams($statement, $params, $paramTypes);
+        if(! empty($paramTypes)) {
+            // Bind the parameters first.
+            $this->bindParams($statement, $params, $paramTypes);
 
-        // Execute the statement, return false if fail.
-        if (! $statement->execute()) {
-            return false;
+            $status = $statement->execute();
+        }
+        else {
+            $status = $statement->execute($params);
         }
 
-        // Return the resulted PDO Statement.
-        return $statement;
+        // Return the statement if its execution was successful.
+        if ($status) {
+            return $statement;
+        }
+
+        return false;
     }
 
     protected function executeUpdate($sql, array $params, array $paramTypes = array())
@@ -182,16 +173,22 @@ class Database
         // Prepare and get statement from PDO; note that we use the true PDO method 'prepare'
         $statement = $link->prepare($sql);
 
-        // Bind the parameters.
-        $this->bindParams($statement, $params, $paramTypes);
+        if(! empty($paramTypes)) {
+            // Bind the parameters first.
+            $this->bindParams($statement, $params, $paramTypes);
 
-        // Execute the statement, return false if fail.
-        if (! $statement->execute()) {
-            return false;
+            $status = $statement->execute();
+        }
+        else {
+            $status = $statement->execute($params);
         }
 
-        // Row count, affected rows.
-        return $statement->rowCount();
+        // Return the affected rows count if the statement execution was successful.
+        if($status) {
+            return $statement->rowCount();
+        }
+
+        return false;
     }
 
     /**

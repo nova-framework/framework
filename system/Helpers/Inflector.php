@@ -9,7 +9,6 @@
 
 namespace Nova\Helpers;
 
-
 class Inflector extends \Doctrine\Common\Inflector\Inflector
 {
 }

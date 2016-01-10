@@ -51,7 +51,9 @@ class Assets
      */
     public static function js($files, $cache = false, $refresh = false, $cachedMins = '1440')
     {
-        if(is_null($files)) return;
+        if (is_null($files)) {
+            return;
+        }
 
         $path = Url::relativeTemplatePath().'js/compressed.min.js';
         $type = 'js';
@@ -79,7 +81,9 @@ class Assets
      */
     public static function css($files, $cache = false, $refresh = false, $cachedMins = '1440')
     {
-        if(is_null($files)) return;
+        if (is_null($files)) {
+            return;
+        }
 
         $path = Url::relativeTemplatePath().'css/compressed.min.css';
         $type = 'css';

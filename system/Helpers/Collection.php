@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Collection.
  *
@@ -6,11 +6,10 @@
  * @version 3.0
  * @date January 2th, 2016
  */
- 
+
 namespace Nova\Helpers;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
 
 class Collection extends ArrayCollection
 {

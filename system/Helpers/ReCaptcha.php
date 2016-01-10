@@ -9,7 +9,6 @@
 
 namespace Nova\Helpers;
 
-
 use Nova\Config;
 
 /**
@@ -48,11 +47,7 @@ class ReCaptcha
             return false;
         }
 
-        $google_url = sprintf('%s?secret=%s&response=%s&remoteip=%s',
-                            self::GOOGLEHOST,
-                            $this->recaptcha_secret,
-                            $response,
-                            $this->remoteip);
+        $google_url = sprintf('%s?secret=%s&response=%s&remoteip=%s', self::GOOGLEHOST, $this->recaptcha_secret, $response, $this->remoteip);
 
         $response = file_get_contents($google_url);
 
@@ -64,5 +59,4 @@ class ReCaptcha
 
         return ($response['success'] === true);
     }
-
 }

@@ -13,7 +13,6 @@ namespace Nova\Helpers;
 
 use Nova\Config;
 
-
 /**
  * Class PhpMailer, extends \PHPMailer for adding in the Config.
  *

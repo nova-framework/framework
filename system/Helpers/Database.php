@@ -37,8 +37,8 @@ class Database
      */
     public static function get($linkName = false)
     {
-        if(is_array($linkName)) {
-            throw new \Exception(__d('system', 'Invalid Configuration on the Legacy Helper');
+        if (is_array($linkName)) {
+            throw new \Exception(__d('system', 'Invalid Configuration on the Legacy Helper'));
         }
 
         // Adjust the linkName value, if case.
@@ -57,7 +57,7 @@ class Database
         return $instance;
     }
 
-    protected __construct($linkName)
+    protected function __construct($linkName)
     {
         $this->db = Manager::getConnection($linkName);
     }
@@ -82,17 +82,15 @@ class Database
      */
     public function select($sql, $array = array(), $fetchMode = PDO::FETCH_OBJ, $class = '')
     {
-        if($fetchMode == PDO::FETCH_OBJ) {
+        if ($fetchMode == PDO::FETCH_OBJ) {
             $returnType = 'object';
-        }
-        else if($fetchMode == PDO::FETCH_CLASS) {
-            if(empty($class)) {
+        } else if ($fetchMode == PDO::FETCH_CLASS) {
+            if (empty($class)) {
                 throw new \Exception(__d('system', 'No valid Class is given'));
             }
 
             $returnType = $class;
-        }
-        else {
+        } else {
             $returnType = 'array';
         }
 
@@ -100,9 +98,9 @@ class Database
         $where = array();
         $paramTypes = array();
 
-        foreach($array as $field => $value) {
+        foreach ($array as $field => $value) {
             // Strip the character ':', if it exists in the first position of $field.
-            if(substr($field, 0, 1) == ':') {
+            if (substr($field, 0, 1) == ':') {
                 $field = substr($field, 1);
             }
 
@@ -127,7 +125,7 @@ class Database
         // Pre-process the $data variable to simulate the make the old Helper behavior.
         $paramTypes = array();
 
-        foreach($data as $field => $value) {
+        foreach ($data as $field => $value) {
             // Prepare the compat entry into paramTypes.
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
@@ -148,12 +146,12 @@ class Database
         // Pre-process the $data and $where variables to simulate the old Helper behavior.
         $paramTypes = array();
 
-        foreach($data as $field => $value) {
+        foreach ($data as $field => $value) {
             // Prepare the compat entry into paramTypes.
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
-        foreach($where as $field => $value) {
+        foreach ($where as $field => $value) {
             // Prepare the compat entry into paramTypes.
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
@@ -175,7 +173,7 @@ class Database
         // Pre-process the $where variable to simulate the old Helper behavior.
         $paramTypes = array();
 
-        foreach($where as $field => $value) {
+        foreach ($where as $field => $value) {
             // Prepare the compat entry into paramTypes.
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }

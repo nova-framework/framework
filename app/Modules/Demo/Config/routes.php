@@ -8,7 +8,6 @@
  */
 use Nova\Net\Router;
 
-
 /** The Module's known Routes definition. */
 Router::get('demos(/index)', 'App\Modules\Demo\Controllers\Index@home');
 

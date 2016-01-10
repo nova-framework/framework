@@ -17,21 +17,20 @@ use Nova\Input\Filtration\Filtrator;
 use Nova\Input\Validation\Validator;
 use Nova\Input\Element\Factory as ElementFactory;
 
-
 class Filter extends InputFilter
 {
 
     public function __construct(ElementFactory $elementFactory = null, ValidatorInterface $validator = null, FiltratorInterface $filtrator = null)
     {
-        if($elementFactory === null) {
+        if ($elementFactory === null) {
             $elementFactory = new ElementFactory();
         }
 
-        if($validator === null) {
+        if ($validator === null) {
             $validator = new Validator();
         }
 
-        if($filtrator === null) {
+        if ($filtrator === null) {
             $filtrator = new Filtrator();
         }
 
@@ -46,9 +45,8 @@ class Filter extends InputFilter
         $this->elementsIndex = PHP_INT_MAX;
 
         // Add the given Elements, one by one.
-        foreach($rules as $fieldName => $fieldRules) {
+        foreach ($rules as $fieldName => $fieldRules) {
             $this->addElement($fieldName, $fieldRules);
         }
     }
-
 }

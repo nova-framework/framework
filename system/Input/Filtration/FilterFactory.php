@@ -11,7 +11,6 @@ namespace Nova\Input\Filtration;
 
 use Sirius\Filtration\FilterFactory as BaseFilterFactory;
 
-
 class FilterFactory extends BaseFilterFactory
 {
 }

@@ -11,7 +11,6 @@ namespace Nova\Input\Element;
 
 use Sirius\Input\Element\Factory as BaseFactory;
 
-
 class Factory extends BaseFactory
 {
 }

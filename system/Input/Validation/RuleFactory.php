@@ -11,10 +11,9 @@ namespace Nova\Input\Validation;
 
 use Sirius\Validation\RuleFactory as BaseRuleFactory;
 
-
 class RuleFactory extends BaseRuleFactory
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
 
@@ -211,7 +210,7 @@ class RuleFactory extends BaseRuleFactory
         );
 
         // Refresh the Error Messages using the translated ones.
-        foreach($defaultMessages as $label => $row) {
+        foreach ($defaultMessages as $label => $row) {
             $this->setMessages($label, $row['default_message'], $row['labeled_message']);
         }
     }

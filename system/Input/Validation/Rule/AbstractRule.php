@@ -11,7 +11,6 @@ namespace Nova\Input\Validation\Rule;
 
 use Sirius\Validation\Rule\AbstractRule as AbstractBaseRule;
 
-
 abstract class AbstractRule extends AbstractBaseRule
 {
 }

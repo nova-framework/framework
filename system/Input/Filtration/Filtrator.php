@@ -13,7 +13,6 @@ use Sirius\Filtration\Filtrator as BaseFiltrator;
 
 use Nova\Input\Filtration\FilterFactory;
 
-
 class Filtrator extends BaseFiltrator
 {
     public function __construct(FilterFactory $filterFactory = null)

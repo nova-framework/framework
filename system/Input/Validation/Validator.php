@@ -14,7 +14,6 @@ use Sirius\Validation\Validator as BaseValidator;
 
 use Nova\Input\Validation\RuleFactory;
 
-
 class Validator extends BaseValidator
 {
     public function __construct(RuleFactory $ruleFactory = null, ErrorMessage $errorMessagePrototype = null)

@@ -11,7 +11,6 @@ namespace Nova\Input\Filtration\Filter;
 
 use Sirius\Filtration\Filter\AbstractFilter as AbstractBaseFilter;
 
-
 abstract class AbstractFilter extends AbstractBaseFilter
 {
 }

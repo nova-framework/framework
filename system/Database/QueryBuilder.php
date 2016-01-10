@@ -15,13 +15,11 @@ use \FluentPDO;
 use \FluentStructure;
 use \PDO;
 
-
 class QueryBuilder extends FluentPDO
 {
 
-    function __construct(Connection $connection, FluentStructure $structure = null)
+    public function __construct(Connection $connection, FluentStructure $structure = null)
     {
         parent::__construct($connection, $structure);
     }
-
 }

@@ -10,12 +10,10 @@
 
 namespace Nova\Database;
 
-
 use Nova\Config;
 use Nova\Database\Connection;
 use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
-
 
 abstract class Manager
 {
@@ -47,10 +45,9 @@ abstract class Manager
         // Make the engine
         $driverName = strtoupper($options['driver']);
 
-        if(strpos($driverName, 'PDO_') === 0) {
+        if (strpos($driverName, 'PDO_') === 0) {
             $driver = constant("static::DRIVER_" .str_replace('PDO_', '', $driverName));
-        }
-        else {
+        } else {
             throw new \Exception(__d('system', 'Driver not found, check your config.php'));
         }
 
@@ -82,7 +79,7 @@ abstract class Manager
 
     public static function clearConnections()
     {
-        foreach(static::$instances as $name => &$connection) {
+        foreach (static::$instances as $name => &$connection) {
             $connection = null;
         }
 

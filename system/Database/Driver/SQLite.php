@@ -13,7 +13,6 @@ namespace Nova\Database\Driver;
 use Nova\Database\Connection;
 use Nova\Database\Manager;
 
-
 class SQLite extends Connection
 {
 
@@ -24,7 +23,8 @@ class SQLite extends Connection
      * @param $config array
      * @throws \PDOException
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
         // Check for valid Config.
         if (! is_array($config)) {
             throw new \UnexpectedValueException('Parameter should be an Array');
@@ -81,7 +81,7 @@ class SQLite extends Connection
         // Find all Column names
         $result = $this->rawQuery("PRAGMA table_info($table)", 'array');
 
-        if($result !== false) {
+        if ($result !== false) {
             foreach ($result as $row) {
                 // Get the column name from the results
                 $columns[] = $row['name'];
@@ -90,5 +90,4 @@ class SQLite extends Connection
 
         return $columns;
     }
-
 }

@@ -13,7 +13,6 @@ namespace Nova\Database\Driver;
 use Nova\Database\Connection;
 use Nova\Database\Manager;
 
-
 class MySQL extends Connection
 {
 
@@ -25,7 +24,8 @@ class MySQL extends Connection
      *
      * @throws \PDOException
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
         // Check for valid Config.
         if (! is_array($config)) {
             throw new \UnexpectedValueException('Parameter should be an Array');
@@ -39,16 +39,14 @@ class MySQL extends Connection
         // Some Database Servers go crazy when a charset parameter is added, then we should make it optional.
         if (! isset($config['charset'])) {
             $charsetStr = "";
-        }
-        else {
+        } else {
             $charsetStr = ($config['charset'] == 'auto') ? "" : ";charset=" . $config['charset'];
         }
 
         // Prepare the PDO's options.
         if (isset($config['compress']) && ($config['compress'] === true)) {
             $options = array(\PDO::MYSQL_ATTR_COMPRESS => true);
-        }
-        else {
+        } else {
             $options = array();
         }
 
@@ -105,7 +103,7 @@ class MySQL extends Connection
         // Find all Column names
         $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
 
-        if($result !== false) {
+        if ($result !== false) {
             foreach ($result as $row) {
                 // Get the column name from the results
                 $columns[] = $row['Field'];

@@ -17,7 +17,6 @@ use \FluentStructure;
 use \Closure;
 use \PDO;
 
-
 abstract class Connection extends PDO
 {
     public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>");
@@ -42,7 +41,8 @@ abstract class Connection extends PDO
      * @param array $options
      * @throws \Exception
      */
-    public function __construct($dsn, $config = array(), $options = array()) {
+    public function __construct($dsn, $config = array(), $options = array())
+    {
         // Check for valid Config.
         if (! is_array($config) || ! is_array($options)) {
             throw new \UnexpectedValueException(__d('system', 'Config and Options parameters should be Arrays'));
@@ -89,7 +89,7 @@ abstract class Connection extends PDO
      */
     public function returnType($type = null)
     {
-        if($type === null) {
+        if ($type === null) {
             return $this->returnType;
         }
 
@@ -132,27 +132,26 @@ abstract class Connection extends PDO
      * @return int fetch method
      * @throws \Exception
      */
-    public static function getFetchMethod($returnType, &$fetchClass = null) {
+    public static function getFetchMethod($returnType, &$fetchClass = null)
+    {
         // Prepare the parameters.
         $className = null;
 
-        if($returnType == 'array') {
+        if ($returnType == 'array') {
             $fetchMethod = PDO::FETCH_ASSOC;
-        }
-        else if($returnType == 'object') {
+        } else if ($returnType == 'object') {
             $fetchMethod = PDO::FETCH_OBJ;
-        }
-        else {
+        } else {
             $fetchMethod = PDO::FETCH_CLASS;
 
             // Check and setup the className.
             $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
 
-            if(! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
+            if (! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
                 throw new \Exception(__d('system', 'No valid Entity Name is given: {0}', $returnType));
             }
 
-            if(! class_exists($returnType)) {
+            if (! class_exists($returnType)) {
                 throw new \Exception(__d('system', 'No valid Entity Class is given: {0}', $returnType));
             }
 
@@ -174,14 +173,11 @@ abstract class Connection extends PDO
         foreach ($params as $key => $value) {
             if (is_integer($value)) {
                 $result[$key] = PDO::PARAM_INT;
-            }
-            else if (is_bool($value)) {
+            } else if (is_bool($value)) {
                 $result[$key] = PDO::PARAM_BOOL;
-            }
-            else if(is_null($value)) {
+            } else if (is_null($value)) {
                 $result[$key] = PDO::PARAM_NULL;
-            }
-            else {
+            } else {
                 $result[$key] = PDO::PARAM_STR;
             }
         }
@@ -199,7 +195,7 @@ abstract class Connection extends PDO
      */
     public function bindParams($statement, array $params, array $paramTypes = array(), $prefix = ':')
     {
-        if(empty($params)) {
+        if (empty($params)) {
             return;
         }
 
@@ -207,7 +203,7 @@ abstract class Connection extends PDO
         foreach ($params as $key => $value) {
             $bindKey = $prefix .$key;
 
-            if(! empty($paramTypes) && isset($paramTypes[$key])) {
+            if (! empty($paramTypes) && isset($paramTypes[$key])) {
                 $statement->bindValue($bindKey, $value, $paramTypes[$key]);
 
                 continue;
@@ -216,14 +212,11 @@ abstract class Connection extends PDO
             // No parameter Type found, we try our best of to guess it.
             if (is_integer($value)) {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_INT);
-            }
-            else if (is_bool($value)) {
+            } else if (is_bool($value)) {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_BOOL);
-            }
-            else if(is_null($value)) {
+            } else if (is_null($value)) {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_NULL);
-            }
-            else {
+            } else {
                 $statement->bindValue($bindKey, $value, PDO::PARAM_STR);
             }
         }
@@ -324,8 +317,7 @@ abstract class Connection extends PDO
     {
         if (($this->returnType != 'array') && ($this->returnType != 'object')) {
             $returnType = ($returnType !== null) ? $returnType : $this->returnType;
-        }
-        else if($returnType === null) {
+        } else if ($returnType === null) {
             throw new \Exception(__d('system', 'No valid Entity Class is given'));
         }
 
@@ -389,13 +381,12 @@ abstract class Connection extends PDO
             return false;
         }
 
-        if($fetchAll) {
+        if ($fetchAll) {
             // Continue with fetching all records.
             if ($fetchMethod === PDO::FETCH_CLASS) {
                 // Fetch in class
                 $result = $stmt->fetchAll($fetchMethod, $className);
-            }
-            else {
+            } else {
                 $result = $stmt->fetchAll($fetchMethod);
             }
 
@@ -412,8 +403,7 @@ abstract class Connection extends PDO
             $stmt->setFetchMode($fetchMethod, $className);
 
             return $stmt->fetch();
-        }
-        else {
+        } else {
             return $stmt->fetch($fetchMethod);
         }
     }
@@ -463,10 +453,9 @@ abstract class Connection extends PDO
     {
         $insertId = 0;
 
-        if(($mode != 'insert') && ($mode != 'replace')) {
+        if (($mode != 'insert') && ($mode != 'replace')) {
             throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
-        }
-        else {
+        } else {
             $mode = strtoupper($mode);
         }
 
@@ -498,8 +487,7 @@ abstract class Connection extends PDO
 
         if (! $stmt->execute()) {
             $failure = true;
-        }
-        else {
+        } else {
             // If no error, capture the last inserted id
             $insertId = $this->lastInsertId();
         }
@@ -560,10 +548,9 @@ abstract class Connection extends PDO
         $idx = 0;
 
         foreach ($data as $key => $value) {
-            if($idx > 0) {
+            if ($idx > 0) {
                 $fieldDetails .= ', ';
-            }
-            else {
+            } else {
                 $idx++;
             }
 
@@ -708,8 +695,7 @@ abstract class Connection extends PDO
             $closure($this);
 
             $this->commit();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
 
             throw $e;
@@ -750,34 +736,33 @@ abstract class Connection extends PDO
         $idx = 0;
 
         foreach ($where as $field => $value) {
-            if($idx > 0) {
+            if ($idx > 0) {
                 // Add the 'AND' keyword, because a new condition will follow.
                 $result .= ' AND ';
-            }
-            else {
+            } else {
                 $idx++;
             }
 
             // Simplify the white spaces on $field
             $field = preg_replace('/\s+/', ' ', trim($field));
 
-            if(is_null($value)) {
+            if (is_null($value)) {
                 $result .= "$field is NULL";
 
                 continue;
             }
 
-            if(is_string($value) && empty($value)) {
+            if (is_string($value) && empty($value)) {
                 // A string based condition; use it directly.
                 $result .= $field;
 
                 continue;
             }
 
-            if(strpos($field, ' ') !== false) {
+            if (strpos($field, ' ') !== false) {
                 $segments = explode(' ', $field);
 
-                if(count($segments) != 3) {
+                if (count($segments) != 3) {
                     throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
                 }
 
@@ -785,17 +770,16 @@ abstract class Connection extends PDO
                 $operator  = $segments[1];
                 $bindName  = $segments[2];
 
-                if(! in_array($operator, self::$whereOperators, true)) {
+                if (! in_array($operator, self::$whereOperators, true)) {
                     throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
                 }
 
-                if($bindName == '?') {
+                if ($bindName == '?') {
                     $result .= "$fieldName $operator :$fieldName";
 
                     $bindParams[$fieldName] = $value;
-                }
-                else {
-                    if((substr($bindName, 0, 1) !== ':') || ! is_array($value)) {
+                } else {
+                    if ((substr($bindName, 0, 1) !== ':') || ! is_array($value)) {
                         throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
                     }
 
@@ -816,14 +800,12 @@ abstract class Connection extends PDO
             if (is_array($value)) {
                 // We need something like: user_id IN (1, 2, 3)
                 $result .= "$field IN (" . implode(', ', array_map(array($this, 'quote'), $value)) . ")";
-            }
-            else if(is_string($value) && empty($value)) {
+            } else if (is_string($value) && empty($value)) {
                 // A string based condition; use it directly.
                 $result .= $field;
 
                 continue;
-            }
-            else {
+            } else {
                 $result .= "$field = :$field";
             }
 
@@ -832,5 +814,4 @@ abstract class Connection extends PDO
 
         return $result;
     }
-
 }

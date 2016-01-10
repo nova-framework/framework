@@ -12,7 +12,6 @@ namespace App\Core;
 use Nova\Core\View;
 use App\Core\BaseController;
 
-
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
  */
@@ -39,15 +38,15 @@ class ThemedController extends BaseController
 
     protected function afterFlight($result)
     {
-        if(($result === false) || ! $this->autoRender) {
+        if (($result === false) || ! $this->autoRender) {
             // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
             return false;
         }
 
-        if(($result === true) || is_null($result)) {
+        if (($result === true) || is_null($result)) {
             $data =& $this->data();
 
-            if($this->useLayout) {
+            if ($this->useLayout) {
                 $content = View::make($this->method())
                     ->loadData($data)
                     ->fetch();
@@ -67,8 +66,7 @@ class ThemedController extends BaseController
 
             // Stop the Flight.
             return false;
-        }
-        else if($result instanceof View) {
+        } else if ($result instanceof View) {
             View::layout($this->layout())
                 ->loadView($result)
                 ->loadData($this->data())
@@ -81,5 +79,4 @@ class ThemedController extends BaseController
         // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
     }
-
 }

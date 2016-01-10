@@ -37,7 +37,7 @@ class Utils
             'engine' => 'sqlite',
             'driver'  => 'pdo_sqlite',
             'config' => array(
-                'path'        => BASEPATH .'storage'.DS.'persistent'.DS.'test.sqlite',
+                'path' => BASEPATH.'storage'.DS.'persistent'.DS.'test.sqlite',
                 'return_type' => 'object' // Not required, default is 'array'.
             )
         )
@@ -55,11 +55,10 @@ class Utils
         Manager::clearConnections();
 
         // Inject new configuration to the default link
-        if (isset(self::$dbConfig[$db])){
+        if (isset(self::$dbConfig[$db])) {
             Config::set('database', array(
                 'default' => self::$dbConfig[$db]
             ));
         }
     }
-
 }

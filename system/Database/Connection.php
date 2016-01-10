@@ -238,7 +238,7 @@ abstract class Connection extends PDO
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
         $method = ($this->returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
 
-        $this->queryCount++;
+        $this->countIncomingQuery();
 
         if (!$fetch) {
             return $this->exec($sql);
@@ -266,7 +266,7 @@ abstract class Connection extends PDO
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
         $method = ($returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
 
-        $this->queryCount++;
+        $this->countIncomingQuery();
 
         // We don't want to map in memory an entire Billion Records Table, so we return right on a Statement.
         return parent::query($sql, $method);
@@ -374,9 +374,9 @@ abstract class Connection extends PDO
         $this->bindParams($stmt, $params, $paramTypes);
 
         // Execute, we should capture the status of the result.
-        $status = $stmt->execute();
+        $this->countIncomingQuery();
 
-        $this->queryCount++;
+        $status = $stmt->execute();
 
         // If failed, return now, and don't continue with fetching.
         if (! $status) {
@@ -453,8 +453,6 @@ abstract class Connection extends PDO
      */
     public function insert($table, array $data, array $paramTypes = array(), $transaction = false, $mode = 'insert')
     {
-        $insertId = 0;
-
         if (($mode != 'insert') && ($mode != 'replace')) {
             throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
         } else {
@@ -485,10 +483,12 @@ abstract class Connection extends PDO
         $this->bindParams($stmt, $data, $paramTypes);
 
         // Execute
-        $this->queryCount++;
+        $this->countIncomingQuery();
 
         if (! $stmt->execute()) {
             $failure = true;
+
+            $insertId = 0;
         } else {
             // If no error, capture the last inserted id
             $insertId = $this->lastInsertId();
@@ -572,7 +572,7 @@ abstract class Connection extends PDO
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
         // Execute
-        $this->queryCount++;
+        $this->countIncomingQuery();
 
         if (! $stmt->execute()) {
             return false;
@@ -606,7 +606,7 @@ abstract class Connection extends PDO
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
         // Execute and return if failure.
-        $this->queryCount++;
+        $this->countIncomingQuery();
 
         if (! $stmt->execute()) {
             return false;
@@ -646,7 +646,7 @@ abstract class Connection extends PDO
         // Bind parameters.
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        $this->queryCount++;
+        $this->countIncomingQuery();
 
         return $stmt;
     }

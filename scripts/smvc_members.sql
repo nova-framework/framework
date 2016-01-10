@@ -23,20 +23,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `smvc_members`
+-- Table structure for table `nova_members`
 --
 
-CREATE TABLE IF NOT EXISTS `smvc_members` (
+CREATE TABLE IF NOT EXISTS `nova_members` (
   `id` int(11) unsigned NOT NULL,
   `username` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `smvc_members`
+-- Dumping data for table `nova_members`
 --
 
-INSERT INTO `smvc_members` (`id`, `username`, `email`) VALUES
+INSERT INTO `nova_members` (`id`, `username`, `email`) VALUES
 (1, 'admin', 'admin@novaframework.dev'),
 (2, 'marcus', 'marcus@novaframework.dev'),
 (3, 'michael', 'michael@novaframework.dev');
@@ -46,9 +46,9 @@ INSERT INTO `smvc_members` (`id`, `username`, `email`) VALUES
 --
 
 --
--- Indexes for table `smvc_members`
+-- Indexes for table `nova_members`
 --
-ALTER TABLE `smvc_members`
+ALTER TABLE `nova_members`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -56,9 +56,9 @@ ALTER TABLE `smvc_members`
 --
 
 --
--- AUTO_INCREMENT for table `smvc_members`
+-- AUTO_INCREMENT for table `nova_members`
 --
-ALTER TABLE `smvc_members`
+ALTER TABLE `nova_members`
   MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

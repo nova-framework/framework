@@ -206,12 +206,6 @@ abstract class Connection extends PDO
         // Bind the key and values (only if given).
         foreach ($params as $key => $value) {
             $bindKey = $prefix .$key;
-            // Disable for now the numeric binding, as will result into wrong bindings when there are
-            // multiple calls of this method, for example in the method 'update'.
-
-            //if (is_int($key)) {
-            //    $bindKey = $key+1;
-            //}
 
             if(! empty($paramTypes) && isset($paramTypes[$key])) {
                 $statement->bindValue($bindKey, $value, $paramTypes[$key]);

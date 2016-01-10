@@ -84,5 +84,4 @@ This content can be changed in <code>{0}</code>', $this->filePath);
 
         $this->set('message', $message);
     }
-
 }

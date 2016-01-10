@@ -14,7 +14,6 @@ use App\Modules\Demo\Core\BaseController;
 
 use Nova\DBAL\Manager as Database;
 
-
 /**
  * Sample Themed Controller with its typical usage.
  */
@@ -159,5 +158,4 @@ class Doctrine extends BaseController
 
         $this->set('message', $message);
     }
-
 }

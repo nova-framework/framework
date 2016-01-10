@@ -66,5 +66,4 @@ class Events extends BaseController
 
         $this->set('message', $message);
     }
-
 }

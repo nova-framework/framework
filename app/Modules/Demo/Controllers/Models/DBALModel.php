@@ -13,7 +13,6 @@ use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
 use App\Modules\Demo\Models\DBALMembers as MembersModel;
 
-
 /**
  * Sample Themed Controller with its typical usage.
  */
@@ -148,5 +147,4 @@ class DBALModel extends BaseController
 
         $this->set('message', $message);
     }
-
 }

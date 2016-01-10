@@ -31,14 +31,14 @@ define('TEMPLATE', 'default');
 define('LANGUAGE_CODE', 'en');
 
 /**
- * PREFER to be used in database calls default is smvc_
+ * PREFER to be used in database calls default is nova_
  */
-define('DB_PREFIX', 'smvc_');
+define('DB_PREFIX', 'nova_');
 
 /**
  * Set prefix for sessions.
  */
-define('SESSION_PREFIX', 'smvc_');
+define('SESSION_PREFIX', 'nova_');
 
 /**
  * Optional create a constant for the name of the site.

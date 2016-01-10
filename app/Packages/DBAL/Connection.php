@@ -138,6 +138,13 @@ class Connection extends BaseConnection
         return $this->select($query, $params, $paramTypes, $fetchType, true);
     }
 
+    public function fetchArray($statement, array $params = array(), array $types = array())
+    {
+        $this->connect();
+
+        return $this->executeQuery($statement, $params, $types)->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function fetchObject($statement, array $params = array(), array $types = array())
     {
         $this->connect();

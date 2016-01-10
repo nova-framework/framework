@@ -13,7 +13,6 @@ use Nova\Config;
 
 use \phpFastCahe;
 
-
 class Manager
 {
     // The phpFastCahe instance.
@@ -21,7 +20,6 @@ class Manager
 
     // The Cache Manager instances.
     protected static $instances[] = array();
-
 
     protected function __construct($storage = '')
     {
@@ -31,7 +29,7 @@ class Manager
 
         $storage = strtolower($storage);
 
-        if(($storage == '') || ($storage == 'auto')) {
+        if (($storage == '') || ($storage == 'auto')) {
             $storage = phpFastCache::getAutoClass($config);
         }
 
@@ -40,7 +38,7 @@ class Manager
 
     public static function getCache($storage = 'files')
     {
-        if(! isset(self::$instances[$storage])) {
+        if (! isset(self::$instances[$storage])) {
             self::$instances[$storage] = new self($storage);
         }
 
@@ -59,5 +57,4 @@ class Manager
             return call_user_func_array(array($this->cache, $method), $params);
         }
     }
-
 }

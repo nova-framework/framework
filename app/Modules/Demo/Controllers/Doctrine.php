@@ -12,7 +12,7 @@ namespace App\Modules\Demo\Controllers;
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
 
-use Nova\DBAL\Manager as Database;
+use Nova\Database\Manager as Database;
 
 /**
  * Sample Themed Controller with its typical usage.
@@ -78,9 +78,9 @@ class Doctrine extends BaseController
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'marcus'));
+        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'marcus'));
 
-        $message .= '<b>$this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'marcus\'));</b>';
+        $message .= '<b>$this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'marcus\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //

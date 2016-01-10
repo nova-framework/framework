@@ -17,7 +17,6 @@ use Nova\Net\Router;
 use Nova\Config;
 use Nova\Logger;
 
-
 /** Prepare the current directory for configuration files. */
 $configDir = APPPATH .'Config' .DS;
 

@@ -12,6 +12,10 @@ use Nova\Core\Controller;
 
 // Return the current Controller instance.
 
+/**
+ * Get controller instance
+ * @return Controller
+ */
 function &get_instance()
 {
     return Controller::getInstance();
@@ -19,22 +23,38 @@ function &get_instance()
 
 // String helpers.
 
+/**
+ * Test for string starts with
+ * @param $haystack
+ * @param $needle
+ * @return bool
+ */
 function str_starts_with($haystack, $needle)
 {
     return (($needle === '') || (strpos($haystack, $needle) === 0));
 }
 
+/**
+ * Test for string ends with
+ * @param $haystack
+ * @param $needle
+ * @return bool
+ */
 function str_ends_with($haystack, $needle)
 {
     return (($needle === '') || (substr($haystack, - strlen($needle)) === $needle));
 }
 
-// A very useful URL helper.
-
+/**
+ * Site url helper
+ * @param string $path
+ * @return string
+ */
 function site_url($path = '')
 {
     return DIR .ltrim($path, '/');
 }
+
 
 //
 // I18N functions

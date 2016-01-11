@@ -879,10 +879,6 @@ class BaseModel extends Model
 
     public function orderBy($order)
     {
-        if (! is_string($order) || empty($order)) {
-            throw new \UnexpectedValueException(__('Invalid parameter'));
-        }
-
         $this->selectOrder = $order;
 
         return $this;
@@ -1318,10 +1314,10 @@ class BaseModel extends Model
         $this->selectOffset = null;
     }
 
-    protected function setWhere(array $params)
+    protected function setWhere(array $params = array())
     {
         if (empty($params)) {
-            $this->tempWheres;
+            return $this->tempWheres;
         }
 
         // Get the WHERE condition.

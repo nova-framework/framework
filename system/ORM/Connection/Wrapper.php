@@ -23,7 +23,7 @@ class Wrapper
         $this->db = Database::getConnection($linkName);
     }
 
-    public getLink()
+    public function getLink()
     {
         return $this->db;
     }

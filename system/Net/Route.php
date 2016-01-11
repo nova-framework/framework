@@ -25,7 +25,7 @@ class Route
     private $pattern;
 
     /**
-     * @var mixed Callback
+     * @var callable Callback
      */
     private $callback = null;
 
@@ -44,7 +44,7 @@ class Route
      *
      * @param string $method HTTP method
      * @param string $pattern URL pattern
-     * @param mixed $callback Callback function
+     * @param callable $callback Callback function
      */
     public function __construct($method, $pattern, $callback)
     {
@@ -112,26 +112,41 @@ class Route
     //
     // Some Getters
 
+    /**
+     * @return string
+     */
     public function method()
     {
         return $this->method;
     }
 
+    /**
+     * @return string
+     */
     public function pattern()
     {
         return $this->pattern;
     }
 
+    /**
+     * @return callable
+     */
     public function callback()
     {
         return $this->callback;
     }
 
+    /**
+     * @return array
+     */
     public function params()
     {
         return $this->params;
     }
 
+    /**
+     * @return string
+     */
     public function regex()
     {
         return $this->regex;

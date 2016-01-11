@@ -17,6 +17,8 @@ use Nova\Input\Filtration\Filtrator;
 use Nova\Input\Validation\Validator;
 use Nova\Input\Element\Factory as ElementFactory;
 
+// TODO: Add more PHPDoc Blocks to all Input classes.
+
 class Filter extends InputFilter
 {
 

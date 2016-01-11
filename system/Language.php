@@ -7,7 +7,6 @@
  * @date December 15th, 2015
  */
 
-
 namespace Nova;
 
 use Nova\Helpers\Inflector;

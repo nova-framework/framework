@@ -32,7 +32,7 @@ abstract class Connection extends PDO
     protected $queryCount = 0;
 
     /** @var array Store the tables column details. */
-    public static $tables = array();
+    protected static $tables = array();
 
     /**
      * MySQLEngine constructor.

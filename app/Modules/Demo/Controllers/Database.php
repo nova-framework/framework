@@ -157,13 +157,17 @@ class Database extends BaseController
 
         $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Schema support').'</strong></h3><br>';
 
+        //
         $result = $this->db->getTableFields(DB_PREFIX ."members");
 
         $message .= '<b>$this->db->getTableFields(DB_PREFIX ."members");</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
-        $message .= '<b>Connection::$tables</b>';
-        $message .= '<pre>'.var_export(Connection::$tables, true).'</pre><br>';
+        //
+        $result = $this->db->listColumns(DB_PREFIX ."members");
+
+        $message .= '<b>$this->db->listColumns(DB_PREFIX ."members")</b>';
+        $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'Database Abstraction Layer Demo'));

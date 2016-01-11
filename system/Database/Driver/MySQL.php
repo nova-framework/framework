@@ -100,12 +100,15 @@ class MySQL extends Connection
             throw new \UnexpectedValueException('Parameter should be not empty');
         }
 
+        if(isset(Connection::$tables[$table])) {
+            return array_keys(Connection::$tables[$table]);
+        }
+
         // Find all Column names
         $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
 
         if ($result !== false) {
             foreach ($result as $row) {
-
                 // Get the column name from the results
                 $columns[] = $row['Field'];
             }
@@ -144,6 +147,20 @@ class MySQL extends Connection
             throw new \UnexpectedValueException('Parameter should be not empty');
         }
 
+        if(isset(Connection::$tables[$table])) {
+            $tableFields = Connection::$tables[$table];
+
+            foreach($tableFields as $field => $row) {
+                // Prepare the column entry
+                $columns[$field] = array(
+                    'type' => self::getTableFieldType($row['Type']),
+                    'null' => ($row['Null'] == 'YES') ? true : false
+                );
+            }
+
+            return $columns;
+        }
+
         // Find all Column names
         $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
 
@@ -161,7 +178,7 @@ class MySQL extends Connection
 
                 Connection::$tables[$table][$field] = $row;
 
-                // Get the column name from the results
+                // Prepare the column entry
                 $columns[$field] = array(
                     'type' => self::getTableFieldType($row['Type']),
                     'null' => ($row['Null'] == 'YES') ? true : false

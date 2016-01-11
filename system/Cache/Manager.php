@@ -13,13 +13,17 @@ use Nova\Config;
 
 use \phpFastCahe;
 
+/**
+ * Cache Manager
+ * @package Nova\Cache
+ */
 class Manager
 {
     // The phpFastCahe instance.
     protected $cache = null;
 
     // The Cache Manager instances.
-    protected static $instances[] = array();
+    protected static $instances = array();
 
     protected function __construct($storage = '')
     {

@@ -13,10 +13,11 @@ matrix:
     - php: 'nightly'
 
 before_script:
-  - composer self-update
   - mysql < scripts/testing_mysql.sql
 
-install: composer install --dev
+install:
+  - composer self-update
+  - composer install --dev
 
 script:
   - mkdir -p build/logs

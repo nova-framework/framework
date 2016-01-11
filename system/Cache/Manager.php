@@ -41,6 +41,12 @@ class Manager
         $this->cache = phpFastCache($storage, $config);
     }
 
+    /**
+     * Get cache instance of storage type.
+     *
+     * @param string $storage
+     * @return mixed
+     */
     public static function getCache($storage = 'files')
     {
         if (! isset(self::$instances[$storage])) {

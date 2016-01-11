@@ -15,9 +15,17 @@ use \FluentPDO;
 use \FluentStructure;
 use \PDO;
 
+/**
+ * Query Builder (FluentPDO)
+ */
 class QueryBuilder extends FluentPDO
 {
 
+    /**
+     * FluentPDO QueryBuilder constructor.
+     * @param \Nova\Database\Connection $connection
+     * @param FluentStructure|null $structure
+     */
     public function __construct(Connection $connection, FluentStructure $structure = null)
     {
         parent::__construct($connection, $structure);

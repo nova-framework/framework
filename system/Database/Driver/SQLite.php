@@ -95,6 +95,12 @@ class SQLite extends Connection
         return $columns;
     }
 
+    /**
+     * Get table field/column type
+     *
+     * @param string $sqliteType
+     * @return string
+     */
     private static function getTableFieldType($sqliteType)
     {
         switch (strtolower($sqliteType)) {
@@ -107,10 +113,14 @@ class SQLite extends Connection
             default:
                 return 'string';
         }
-
-        return 'string';
     }
 
+    /**
+     * Get table fields/columns
+     *
+     * @param string $table
+     * @return array
+     */
     public function getTableFields($table)
     {
         $columns = array();

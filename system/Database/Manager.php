@@ -1,6 +1,6 @@
 <?php
 /**
- * Engine Manager (Factory).
+ * Connection Manager (Factory).
  *
  * @author Tom Valk - tomvalk@lt-box.info
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
@@ -77,6 +77,9 @@ abstract class Manager
         return $connection;
     }
 
+    /**
+     * Clear all connections, usefull in tests.
+     */
     public static function clearConnections()
     {
         foreach (static::$instances as $name => &$connection) {

@@ -117,6 +117,12 @@ class MySQL extends Connection
         return $columns;
     }
 
+    /**
+     * Get table column/field type
+     *
+     * @param string $mysqlType
+     * @return string
+     */
     private static function getTableFieldType($mysqlType)
     {
         if (preg_match("/^([^(]+)/", $mysqlType, $match)) {
@@ -139,6 +145,11 @@ class MySQL extends Connection
         return 'string';
     }
 
+    /**
+     * Get table fields/columns
+     * @param string $table
+     * @return array
+     */
     public function getTableFields($table)
     {
         $columns = array();

@@ -9,23 +9,28 @@
 
 namespace Nova\ORM\Connection;
 
-use Nova\ORM\Connection\Adapter;
+use Nova\Database\Connection;
+use Nova\Database\Manager as Database;
 
 
 class Wrapper
 {
-    protected $adapter;
+    protected $db = null;
 
 
-    public function __construct()
+    public function __construct($linkName = 'default')
     {
+        $this->db = Database::getConnection($linkName);
+    }
+
+    public function getLink()
+    {
+        return $this->db;
     }
 
     public function getTableFields()
     {
-        // TBD
-        
-        return array();
+        return $this->db->getTableFields();
     }
 
 }

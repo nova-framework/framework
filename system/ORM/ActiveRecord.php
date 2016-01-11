@@ -10,7 +10,7 @@
 namespace Nova\ORM;
 
 use Nova\Helpers\Inflector;
-use Nova\ORM\Expects;
+use Nova\ORM\Expect;
 use Nova\ORM\Connection\Wrapper as ConnectionWrapper;
 
 
@@ -19,7 +19,6 @@ class ActiveRecord extends ConnectionWrapper
     protected $isNew = true;
 
     protected $db;
-    protected $adapter;
 
     protected static $cache = array();
 
@@ -35,6 +34,9 @@ class ActiveRecord extends ConnectionWrapper
 
     public function __construct()
     {
+        parent::__construct();
+
+        //
         $className = get_class($this);
 
         if (empty($this->tableName)) {
@@ -43,11 +45,11 @@ class ActiveRecord extends ConnectionWrapper
             $this->tableName = Inflector::tableize($tableName);
         }
 
-        $this->belongsTo = Expects::toAssocArray($this->belongsTo);
-        $this->hasOne    = Expects::toAssocArray((array)$this->hasOne);
-        $this->hasMany   = Expects::toAssocArray((array)$this->hasMany);
+        $this->belongsTo = Expect::expectAssocArray($this->belongsTo);
+        $this->hasOne    = Expect::expectAssocArray((array)$this->hasOne);
+        $this->hasMany   = Expect::expectAssocArray((array)$this->hasMany);
 
-        $this->serialize = Expects::toArray($this->serialize);
+        $this->serialize = Expect::expectArray($this->serialize);
 
         // Get the Table Fields.
         if ($this->getCache('$tableFields$') === null) {
@@ -66,7 +68,7 @@ class ActiveRecord extends ConnectionWrapper
             $arg = func_get_arg(0);
 
             if (is_array($arg)) {
-                $this->initWithArray($arg);
+                $this->initFromArray($arg);
             } else {
                 $this->initFromId($arg);
             }
@@ -106,7 +108,7 @@ class ActiveRecord extends ConnectionWrapper
         }
     }
 
-    private function initWithArray($assocArray)
+    private function initFromArray($assocArray)
     {
         $this->initFromAssocArray($assocArray);
 
@@ -150,8 +152,8 @@ class ActiveRecord extends ConnectionWrapper
         self::$cache[$token] = $value;
     }
 
-    public function __get($name) {
-
+    public function __get($name)
+    {
         if ($this->getCache($name) !== null) {
             return $this->getCache($name);
         }
@@ -213,7 +215,7 @@ class ActiveRecord extends ConnectionWrapper
 
             $obj = new $className();
 
-            $result = $obj->findBy($key, $this->{$this->primaryKey});
+            $result = $obj->findManyBy($key, $this->{$this->primaryKey});
 
             $this->setCache($name, $result);
 

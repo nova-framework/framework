@@ -1,19 +1,18 @@
 <?php
 /**
- * Model
+ * Connection Wrapper
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date January 11th, 2016
  */
 
-namespace Nova\ORM;
+namespace Nova\ORM\Connection;
 
-use Nova\ORM\Expects;
-use Nova\ORM\ActiveRecord;
+use Nova\ORM\Connection\Adapter;
 
 
-class Model extends ActiveRecord
+class Wrapper extends Adapter
 {
 
     public function __construct()

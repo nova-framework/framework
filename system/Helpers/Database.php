@@ -22,7 +22,7 @@ use Nova\Database\Connection;
 class Database
 {
     // The real Connection instance used.
-    protected $db = null;
+    protected $connection = null;
 
     /**
      * @var array Array of saved databases for reusing
@@ -59,7 +59,7 @@ class Database
 
     protected function __construct($linkName)
     {
-        $this->db = Manager::getConnection($linkName);
+        $this->connection = Manager::getConnection($linkName);
     }
 
     /**
@@ -69,7 +69,7 @@ class Database
      */
     public function raw($sql)
     {
-        return $this->db->rawQuery($sql);
+        return $this->connection->rawQuery($sql);
     }
 
     /**
@@ -110,7 +110,7 @@ class Database
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
-        return $this->db->select($sql, $where, $paramTypes, $returnType, true);
+        return $this->connection->select($sql, $where, $paramTypes, $returnType, true);
     }
 
     /**
@@ -130,7 +130,7 @@ class Database
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
-        return $this->db->insert($table, $data, $paramTypes);
+        return $this->connection->insert($table, $data, $paramTypes);
     }
 
     /**
@@ -156,7 +156,7 @@ class Database
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
-        return $this->db->update($table, $data, $where, $paramTypes);
+        return $this->connection->update($table, $data, $where, $paramTypes);
     }
 
     /**
@@ -178,7 +178,7 @@ class Database
             $paramTypes[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
-        return $this->db->delete($table, $where, $paramTypes);
+        return $this->connection->delete($table, $where, $paramTypes);
     }
 
     /**
@@ -187,7 +187,7 @@ class Database
      */
     public function truncate($table)
     {
-        return $this->db->truncate($table);
+        return $this->connection->truncate($table);
     }
 
     /**
@@ -198,8 +198,8 @@ class Database
      */
     public function __call($method, $params = null)
     {
-        if (method_exists($this->db, $method)) {
-            return call_user_func_array(array($this->db, $method), $params);
+        if (method_exists($this->connection, $method)) {
+            return call_user_func_array(array($this->connection, $method), $params);
         }
     }
 }

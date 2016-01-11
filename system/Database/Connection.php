@@ -203,14 +203,11 @@ abstract class Connection extends PDO
         foreach ($params as $key => $value) {
             $bindKey = $prefix .$key;
 
-            if (! empty($paramTypes) && isset($paramTypes[$key])) {
-                $statement->bindValue($bindKey, $value, $paramTypes[$key]);
-
-                continue;
+            if (isset($paramTypes[$key])) {
+                $bindType = $paramTypes[$key];
             }
-
             // No parameter Type found, we try our best of to guess it from the Value.
-            if (is_integer($value)) {
+            else if (is_integer($value)) {
                 $bindType = PDO::PARAM_INT;
             } else if (is_bool($value)) {
                 $bindType = PDO::PARAM_BOOL;
@@ -568,7 +565,7 @@ abstract class Connection extends PDO
         // Bind fields
         $this->bindParams($stmt, $data, $paramTypes, ':field_');
 
-        // Bind values
+        // Bind conditions
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
         $this->countIncomingQuery();
@@ -602,7 +599,7 @@ abstract class Connection extends PDO
         // Prepare statement
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
 
-        // Bind parameters.
+        // Bind conditions.
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
         $this->countIncomingQuery();
@@ -739,29 +736,27 @@ abstract class Connection extends PDO
 
         foreach ($where as $field => $value) {
             if ($idx > 0) {
-                // Add the 'AND' keyword, because a new condition will follow.
-                $result .= ' AND ';
+                // We have specified an OR condition?
+                if (strtolower(substr($sql, 0, 3)) === 'or ') {
+                    // Adjust the Field.
+                    $field = substr($field, 3);
+
+                    // Add the 'OR' keyword for the current condition.
+                    $result .= ' OR ';
+                } else {
+                    // Add the 'AND' keyword for the current condition.
+                    $result .= ' AND ';
+                }
             } else {
                 $idx++;
             }
 
-            // Simplify the white spaces on $field
-            $field = preg_replace('/\s+/', ' ', trim($field));
-
-            if (is_null($value)) {
-                $result .= "$field is NULL";
-
-                continue;
-            }
-
-            if (is_string($value) && empty($value)) {
-                // A string based condition; use it directly.
-                $result .= $field;
-
-                continue;
-            }
-
+            // Firstly, we need to check if the Field contains conditions.
             if (strpos($field, ' ') !== false) {
+                // Simplify the white spaces on Field.
+                $field = preg_replace('/\s+/', ' ', trim($field));
+
+                // Explode the field into its components.
                 $segments = explode(' ', $field);
 
                 if (count($segments) != 3) {
@@ -799,19 +794,26 @@ abstract class Connection extends PDO
                 continue;
             }
 
+            // Process the condition based on Value type.
+            if (is_null($value)) {
+                $result .= "$field is NULL";
+
+                continue;
+            }
+
             if (is_array($value)) {
                 // We need something like: user_id IN (1, 2, 3)
                 $result .= "$field IN (" . implode(', ', array_map(array($this, 'quote'), $value)) . ")";
-            } else if (is_string($value) && empty($value)) {
-                // A string based condition; use it directly.
-                $result .= $field;
-
-                continue;
             } else {
                 $result .= "$field = :$field";
             }
 
             $bindParams[$field] = $value;
+        }
+
+        if(empty($result)) {
+            // There are no WHERE conditions, then we make the Database to match all records.
+            $result = '1 = 1';
         }
 
         return $result;

@@ -743,8 +743,6 @@ abstract class Connection extends PDO
     /**
      * Parse the where conditions.
      *
-     * TODO: WARNING: Has a bug in it! Not stable!
-     *
      * @param array $where
      * @param $bindParams
      * @return string
@@ -758,17 +756,8 @@ abstract class Connection extends PDO
 
         foreach ($where as $field => $value) {
             if ($idx > 0) {
-                // We have specified an OR condition?
-                if (strtolower(substr($sql, 0, 3)) === 'or ') { // TODO: Fix bug! $sql is undefined!!
-                    // Adjust the Field.
-                    $field = substr($field, 3);
-
-                    // Add the 'OR' keyword for the current condition.
-                    $result .= ' OR ';
-                } else {
-                    // Add the 'AND' keyword for the current condition.
-                    $result .= ' AND ';
-                }
+                // Add the 'AND' keyword for the current condition.
+                $result .= ' AND ';
             } else {
                 $idx++;
             }

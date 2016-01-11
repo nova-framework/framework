@@ -10,9 +10,9 @@
 namespace Nova\ORM;
 
 
-class Expects
+class Expect
 {
-    public static function toAssocArray($mixed)
+    public static function expectAssocArray($mixed)
     {
         // We expect to have 'key:value,value,value,key:value'
         $result = array();
@@ -34,7 +34,7 @@ class Expects
         return $result;
     }
 
-    public static function toArray($mixed)
+    public static function expectArray($mixed)
     {
         // We expect to have 'row1,row2,row3'
         if (! is_array($mixed)) {
@@ -44,7 +44,7 @@ class Expects
         return $mixed;
     }
 
-    public static function toString($mixed)
+    public static function expectString($mixed)
     {
         if (is_array($mixed)) {
             return join(', ', $mixed);

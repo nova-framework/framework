@@ -12,13 +12,12 @@ namespace Nova\ORM;
 
 class Expects
 {
-    public static function expectAssocArray($mixed)
+    public static function toAssocArray($mixed)
     {
         // We expect to have 'key:value,value,value,key:value'
-
         $result = array();
 
-        $rows = self::expectArray($mixed);
+        $rows = self::toArray($mixed);
 
         foreach ($rows as $existingkey => $row) {
             list($key, $value) = preg_split("/:/", $row);
@@ -35,18 +34,17 @@ class Expects
         return $result;
     }
 
-    public static function expectArray($mixed)
+    public static function toArray($mixed)
     {
         // We expect to have 'row1,row2,row3'
-
-        if (is_array($mixed)) {
-            return $mixed;
+        if (! is_array($mixed)) {
+            return preg_split("/\s*,\s*/", $mixed);
         }
 
-        return preg_split("/\s*,\s*/", $mixed);
+        return $mixed;
     }
 
-    public static function expectString($mixed)
+    public static function toString($mixed)
     {
         if (is_array($mixed)) {
             return join(', ', $mixed);

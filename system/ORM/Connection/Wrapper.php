@@ -12,11 +12,20 @@ namespace Nova\ORM\Connection;
 use Nova\ORM\Connection\Adapter;
 
 
-class Wrapper extends Adapter
+class Wrapper
 {
+    protected $adapter;
+
 
     public function __construct()
     {
-        parent::__construct();
     }
+
+    public function getTableFields()
+    {
+        // TBD
+        
+        return array();
+    }
+
 }

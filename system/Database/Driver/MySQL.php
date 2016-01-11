@@ -162,7 +162,10 @@ class MySQL extends Connection
                 Connection::$tables[$table][$field] = $row;
 
                 // Get the column name from the results
-                $columns[$field] = self::getTableFieldType($row['Type']);
+                $columns[$field] = array(
+                    'type' => self::getTableFieldType($row['Type']),
+                    'null' => ($row['Null'] == 'YES') ? true : false
+                );
 
                 $cid++;
             }

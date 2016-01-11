@@ -98,4 +98,52 @@ class SQLite extends Connection
 
         return $columns;
     }
+
+    private static function getTableFieldType($sqliteType)
+    {
+        switch (strtolower($sqliteType)) {
+            case 'integer':
+            case 'real':
+            case 'numeric':
+            case 'boolean':
+                return 'int';
+
+            default:
+                return 'string';
+        }
+
+        return 'string';
+    }
+
+    public function getTableFields($table)
+    {
+        $columns = array();
+
+        if (empty($table)) {
+            throw new \UnexpectedValueException('Parameter should be not empty');
+        }
+
+        // Find all Column names
+        $result = $this->rawQuery("PRAGMA table_info($table)", 'array');
+
+        if ($result !== false) {
+            Connection::$tables[$table] = array();
+
+            foreach ($result as $row) {
+                $field = $row['name'];
+
+                unset($row['name']);
+
+                Connection::$tables[$table][$field] = $row;
+
+                // Get the column name from the results
+                $columns[$field] = array(
+                    'type' => self::getTableFieldType($row['type']),
+                    'null' => ($row['notnull'] == 0) ? true : false
+                );
+            }
+        }
+
+        return $columns;
+    }
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Nova Framework - Public Index.php
+ *
+ * This file needs to be as public, document root or at least the root of the url you want.
+ * Make sure you have setup the .htaccess, checked the configuration and installed through Composer!
+ *
+ */
+
 
 // Store the Framework's starting time in a define.
 define('FRAMEWORK_STARTING_MICROTIME', microtime(true));

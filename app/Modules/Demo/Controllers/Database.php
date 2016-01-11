@@ -74,6 +74,12 @@ class Database extends BaseController
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
+        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username LIKE :search LIMIT 0, 2", array('search' => '%micha%'));
+
+        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username LIKE :search LIMIT 0, 2", array(\'search\' => \'%micha%\'));</b>';
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
         $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'));
 
         $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'));</b>';

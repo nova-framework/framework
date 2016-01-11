@@ -9,6 +9,7 @@
 
 namespace App\Core;
 
+use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
 use Nova\Input\Filter as InputFilter;
 use Nova\Core\Model;
@@ -17,6 +18,10 @@ use \FluentStructure;
 use \FluentPDO;
 use \PDO;
 
+/**
+ * Base Model
+ * @package App\Core
+ */
 class BaseModel extends Model
 {
     /**
@@ -165,7 +170,7 @@ class BaseModel extends Model
     /**
      * This can be set to avoid a database call if using $this->prepareData().
      *
-     * @var Array Columns for the Model's database fields.
+     * @var array Columns for the Model's database fields.
      */
     protected $fields = array();
 
@@ -173,6 +178,8 @@ class BaseModel extends Model
 
     /**
      * Constructor
+     * @param null|Connection $connection
+     * @param null|InputFilter $inputFilter
      */
     public function __construct($connection = null, $inputFilter = null)
     {
@@ -208,6 +215,12 @@ class BaseModel extends Model
     // QueryBuilder Methods
     //--------------------------------------------------------------------
 
+    /**
+     * Start query builder
+     *
+     * @param FluentStructure|null $structure
+     * @return \Nova\Database\QueryBuilder
+     */
     public function queryBuilder(FluentStructure $structure = null)
     {
         if ($structure === null) {
@@ -220,6 +233,13 @@ class BaseModel extends Model
         return $this->db->getQueryBuilder($structure);
     }
 
+    /**
+     * Build Query.
+     * @param string $method
+     * @param null|array $param
+     * @return \BaseQuery|\DeleteQuery|\InsertQuery|\SelectQuery|\UpdateQuery
+     * @throws \Exception
+     */
     public function buildQuery($method, $param = null)
     {
         $returnType = $this->tempReturnType;
@@ -279,6 +299,7 @@ class BaseModel extends Model
 
     /**
      * A simple way to grab the first result of a search only.
+     * @return object
      */
     public function first()
     {
@@ -297,6 +318,7 @@ class BaseModel extends Model
      * @param mixed $id The primaryKey value of the object to retrieve.
      *
      * @return object
+     * @throws \UnexpectedValueException
      */
     public function find($id)
     {
@@ -357,6 +379,7 @@ class BaseModel extends Model
      * @param  array $values An array of primary key values to find.
      *
      * @return object or FALSE
+     * @throws \UnexpectedValueException
      */
     public function findMany($values)
     {
@@ -396,14 +419,13 @@ class BaseModel extends Model
      * Fetch all of the records in the table.
      * Can be used with scoped calls to restrict the results.
      *
-     * @return object or FALSE
+     * @return object|false Object or false
      */
     public function findAll()
     {
         // Prepare the WHERE details.
         $where = $this->wheres();
 
-        //
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
 
         // Build and process the Query.
@@ -434,8 +456,10 @@ class BaseModel extends Model
      * Inserts data into the database.
      *
      * @param array $data An array of key/value pairs to insert to database.
+     * @param null|bool $skipValidation
      *
-     * @return mixed The primaryKey value of the inserted record, or FALSE.
+     * @return mixed|false The primaryKey value of the inserted record, or false.
+     * @throws \Exception
      */
     public function insert($data, $skipValidation = null)
     {
@@ -474,6 +498,7 @@ class BaseModel extends Model
      * determine which row to replace.
      *
      * @param $data
+     * @param null|bool $skipValidation
      *
      * @return bool
      */
@@ -485,7 +510,6 @@ class BaseModel extends Model
             $data = $this->validate($data, 'insert', $skipValidation);
         }
 
-        //
         $result = false;
 
         // Will be false if it didn't validate.
@@ -512,6 +536,7 @@ class BaseModel extends Model
      *
      * @param mixed $id   The primaryKey value of the record to update.
      * @param array $data An array of value pairs to update in the record.
+     * @param null|bool $skipValidation
      *
      * @return bool
      */
@@ -561,6 +586,7 @@ class BaseModel extends Model
      *
      * @param array $ids  An array of primaryKey values to update.
      * @param array $data An array of value pairs to modify in each row.
+     * @param null|bool $skipValidation
      *
      * @return bool
      */
@@ -654,6 +680,7 @@ class BaseModel extends Model
      * Updates all records and sets the value pairs passed in the array.
      *
      * @param array $data An array of value pairs with the data to change.
+     * @param null|bool $skipValidation
      *
      * @return bool
      */
@@ -690,8 +717,8 @@ class BaseModel extends Model
     /**
      * Increments the value of field for a given row, selected by the primary key for the table.
      *
-     * @param     $id
-     * @param     $field
+     * @param mixed $id
+     * @param mixed $field
      * @param int $value
      *
      * @return mixed
@@ -710,8 +737,8 @@ class BaseModel extends Model
     /**
      * Decrements the value of field for a given row, selected by the primary key for the table.
      *
-     * @param     $id
-     * @param     $field
+     * @param mixed $id
+     * @param mixed $field
      * @param int $value
      *
      * @return mixed
@@ -751,6 +778,15 @@ class BaseModel extends Model
         return $result;
     }
 
+    /**
+     * Delete by
+     *
+     * Dynamic parameters
+     * @see updateBy
+     *
+     * @return \PDOStatement
+     * @throws \Exception
+     */
     public function deleteBy()
     {
         $params = func_get_args();
@@ -776,6 +812,13 @@ class BaseModel extends Model
         return $result;
     }
 
+    /**
+     * Delete many with primary key
+     *
+     * @param array $ids
+     * @return null|\PDOStatement
+     * @throws \Exception
+     */
     public function deleteMany($ids)
     {
         if (! is_array($ids) || (count($ids) == 0)) {
@@ -798,6 +841,7 @@ class BaseModel extends Model
 
     /**
      * Temporarily sets our return type to an array.
+     * @return BaseModel
      */
     public function asArray()
     {
@@ -813,7 +857,7 @@ class BaseModel extends Model
      * are instances of that class. $class MUST be an fully qualified
      * class name, meaning that it must include the namespace, if applicable.
      *
-     * @param string $class
+     * @param string $className
      *
      * @return $this
      */
@@ -832,7 +876,7 @@ class BaseModel extends Model
     // Built-in Query Building Methods
     //--------------------------------------------------------------------
 
-    /*
+    /**
         The FluentPDO based QueryBuilder accept the following WHERE styles:
 
         where("field", "x");                           // Translated to field = 'x'
@@ -855,6 +899,12 @@ class BaseModel extends Model
         return $this;
     }
 
+    /**
+     * Limit results
+     *
+     * @param int $limit
+     * @return BaseModel $this
+     */
     public function limit($limit)
     {
         if (! is_integer($limit) || ($limit < 0)) {
@@ -866,6 +916,12 @@ class BaseModel extends Model
         return $this;
     }
 
+    /**
+     * Offset
+     *
+     * @param int $offset
+     * @return BaseModel $this
+     */
     public function offset($offset)
     {
         if (! is_integer($offset) || ($offset < 0)) {
@@ -877,6 +933,11 @@ class BaseModel extends Model
         return $this;
     }
 
+    /**
+     * Order by
+     * @param mixed $order
+     * @return BaseModel $this
+     */
     public function orderBy($order)
     {
         $this->selectOrder = $order;
@@ -891,7 +952,7 @@ class BaseModel extends Model
     /**
      * Counts number of rows modified by an arbitrary WHERE call.
      *
-     * @return INT
+     * @return int
      */
     public function countBy()
     {
@@ -923,7 +984,7 @@ class BaseModel extends Model
      *
      * @param string $field  The field to search for.
      * @param string $value  The value to match $field against.
-     * @param string $ignore Optionally, the ignored primaryKey.
+     * @param null|string $ignoreId Optionally, the ignored primaryKey.
      *
      * @return bool TRUE/FALSE
      */
@@ -947,6 +1008,7 @@ class BaseModel extends Model
     /**
      * Getter for the table name.
      *
+     * @param null|string $table
      * @return string The name of the table used by this class (including the DB_PREFIX).
      */
     public function table($table = null)
@@ -965,6 +1027,7 @@ class BaseModel extends Model
      * @param $field
      *
      * @return mixed
+     * @throws \UnexpectedValueException
      */
     public function protect($field)
     {
@@ -982,6 +1045,7 @@ class BaseModel extends Model
      * Useful for removing id, or submit buttons names if you simply throw your $_POST array at your model. :)
      *
      * @param object|array $row The value pair item to remove.
+     * @return array|object
      */
     public function protectFields(array $row)
     {
@@ -1005,6 +1069,7 @@ class BaseModel extends Model
      * the field list from $this->db->listFields($this->table()).
      *
      * @return array Returns the database fields for this Model.
+     * @throws \UnexpectedValueException
      */
     public function tableFields()
     {
@@ -1024,6 +1089,7 @@ class BaseModel extends Model
      *
      * @param string $sql
      * @param array  $params
+     * @param array  $paramTypes
      * @param bool   $fetchAll   Ask the method to fetch all the records or not.
      *
      * @return array|null
@@ -1043,6 +1109,11 @@ class BaseModel extends Model
         return $result;
     }
 
+    /**
+     * Query
+     * @param string $sql
+     * @return \PDOStatement
+     */
     public function query($sql)
     {
         // Firstly, simplify the white spaces and trim the SQL query.
@@ -1056,6 +1127,13 @@ class BaseModel extends Model
         return $result;
     }
 
+    /**
+     * Prepare query.
+     * @param string $sql
+     * @param array $params
+     * @param array $paramTypes
+     * @return \PDOStatement
+     */
     public function prepare($sql, $params = array(), $paramTypes = array())
     {
         // Firstly, simplify the white spaces and trim the SQL query.
@@ -1074,8 +1152,9 @@ class BaseModel extends Model
      * If $type == 'insert', any additional rules in the class var $insert_validate_rules
      * for that field will be added to the rules.
      *
-     * @param array  $data An array of Validation Rules.
+     * @param array $data An array of Validation Rules.
      * @param string $type Either 'update' or 'insert'.
+     * @param null $skipValidation
      *
      * @return array|bool The original data or FALSE.
      */
@@ -1124,6 +1203,10 @@ class BaseModel extends Model
         return $data;
     }
 
+    /**
+     * Validation
+     * @return mixed
+     */
     public function validation()
     {
         return $this->validator;
@@ -1314,6 +1397,11 @@ class BaseModel extends Model
         $this->selectOffset = null;
     }
 
+    /**
+     * Set where
+     * @param array $params
+     * @return array
+     */
     protected function setWhere(array $params = array())
     {
         if (empty($params)) {
@@ -1350,6 +1438,10 @@ class BaseModel extends Model
         return $this->tempWheres;
     }
 
+    /**
+     * Wheres
+     * @return array
+     */
     protected function wheres()
     {
         return $this->tempWheres;

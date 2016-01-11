@@ -39,6 +39,10 @@ class BaseController extends Controller
         );
     }
 
+    /**
+     * Before 'Flight' action
+     * @return bool
+     */
     protected function beforeFlight()
     {
         $data =& $this->data;
@@ -81,6 +85,12 @@ class BaseController extends Controller
         return parent::beforeFlight();
     }
 
+    /**
+     * After 'flight' action
+     *
+     * @param mixed $result
+     * @return bool
+     */
     protected function afterFlight($result)
     {
         // Leave to parent's method the Flight decisions.

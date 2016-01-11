@@ -1,6 +1,6 @@
 <?php
 /**
- * MySQL Engine.
+ * Basic Connection.
  *
  * @author Tom Valk - tomvalk@lt-box.info
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
@@ -17,7 +17,9 @@ use \FluentStructure;
 use \Closure;
 use \PDO;
 
-
+/**
+ * Abstract Connection
+ */
 abstract class Connection extends PDO
 {
     public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>");
@@ -738,6 +740,15 @@ abstract class Connection extends PDO
         $this->queryCount++;
     }
 
+    /**
+     * Parse the where conditions.
+     *
+     * TODO: WARNING: Has a bug in it! Not stable!
+     *
+     * @param array $where
+     * @param $bindParams
+     * @return string
+     */
     protected function parseWhereConditions(array $where, &$bindParams)
     {
         $result = '';
@@ -748,7 +759,7 @@ abstract class Connection extends PDO
         foreach ($where as $field => $value) {
             if ($idx > 0) {
                 // We have specified an OR condition?
-                if (strtolower(substr($sql, 0, 3)) === 'or ') {
+                if (strtolower(substr($sql, 0, 3)) === 'or ') { // TODO: Fix bug! $sql is undefined!!
                     // Adjust the Field.
                     $field = substr($field, 3);
 

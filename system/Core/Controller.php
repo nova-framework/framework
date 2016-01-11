@@ -50,16 +50,31 @@ abstract class Controller
         self::$instance =& $this;
     }
 
+    /**
+     * Get instance
+     * @return Controller
+     */
     public static function &getInstance()
     {
         return self::$instance;
     }
 
+    /**
+     * Set current instance into instance holder
+     */
     public function setInstance()
     {
         self::$instance =& $this;
     }
 
+    /**
+     * Initialize controller
+     *
+     * @param string $className
+     * @param string $method
+     * @param array $params
+     * @throws \Exception
+     */
     public function initialize($className, $method, $params = array())
     {
         $this->className = $className;
@@ -86,16 +101,27 @@ abstract class Controller
         $this->viewsPath = APPPATH .$viewsPath .DS;
     }
 
+    /**
+     * @return bool
+     */
     protected function beforeFlight()
     {
         return true;
     }
 
+    /**
+     * @param $result
+     * @return bool
+     */
     protected function afterFlight($result)
     {
         return true;
     }
 
+    /**
+     * Execute Controller Method
+     * @return bool
+     */
     public function execute()
     {
         if ($this->beforeFlight() === false) {
@@ -116,6 +142,10 @@ abstract class Controller
         return true;
     }
 
+    /**
+     * Render Result
+     * @param View|array|string $result
+     */
     protected function renderResult($result)
     {
         if ($result instanceof View) {
@@ -140,6 +170,11 @@ abstract class Controller
         echo $result;
     }
 
+    /**
+     * Auto render
+     * @param null|bool $value
+     * @return bool
+     */
     protected function autoRender($value = null)
     {
         if (is_null($value)) {
@@ -149,6 +184,11 @@ abstract class Controller
         $this->autoRender = $value;
     }
 
+    /**
+     * Use Layouts
+     * @param null|bool $value
+     * @return bool
+     */
     protected function useLayout($value = null)
     {
         if (is_null($value)) {
@@ -158,6 +198,11 @@ abstract class Controller
         $this->useLayout = $value;
     }
 
+    /**
+     * Data
+     * @param string $name
+     * @return array|null
+     */
     public function data($name = null)
     {
         if (is_null($name)) {
@@ -169,6 +214,12 @@ abstract class Controller
         return null;
     }
 
+    /**
+     * Set data, will be available in the View.
+     *
+     * @param string $name Key
+     * @param mixed $value Value
+     */
     protected function set($name, $value = null)
     {
         if (is_array($name)) {
@@ -184,6 +235,10 @@ abstract class Controller
         $this->data = $data + $this->data;
     }
 
+    /**
+     * Set title, shorthand for set('title', $title);
+     * @param $title
+     */
     protected function title($title)
     {
         $data = array('title' => $title);
@@ -196,31 +251,49 @@ abstract class Controller
 
     // Some getters.
 
+    /**
+     * @return null
+     */
     public function module()
     {
         return $this->module;
     }
 
+    /**
+     * @return mixed
+     */
     public function method()
     {
         return $this->method;
     }
 
+    /**
+     * @return array
+     */
     public function params()
     {
         return $this->params;
     }
 
+    /**
+     * @return mixed
+     */
     public function viewsPath()
     {
         return $this->viewsPath;
     }
 
+    /**
+     * @return string
+     */
     public function template()
     {
         return $this->template;
     }
 
+    /**
+     * @return string
+     */
     public function layout()
     {
         return $this->layout;

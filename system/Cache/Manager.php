@@ -11,15 +11,20 @@ namespace Nova\Cache;
 
 use Nova\Config;
 
+use phpFastCache;
 use \phpFastCahe;
 
+/**
+ * Cache Manager
+ * @package Nova\Cache
+ */
 class Manager
 {
     // The phpFastCahe instance.
     protected $cache = null;
 
     // The Cache Manager instances.
-    protected static $instances[] = array();
+    protected static $instances = array();
 
     protected function __construct($storage = '')
     {
@@ -36,6 +41,12 @@ class Manager
         $this->cache = phpFastCache($storage, $config);
     }
 
+    /**
+     * Get cache instance of storage type.
+     *
+     * @param string $storage
+     * @return mixed
+     */
     public static function getCache($storage = 'files')
     {
         if (! isset(self::$instances[$storage])) {
@@ -48,8 +59,9 @@ class Manager
     /**
      * Provide direct access to any of \phpFastCahe methods.
      *
-     * @param $name
+     * @param $method
      * @param $params
+     * @return mixed
      */
     public function __call($method, $params = null)
     {

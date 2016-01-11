@@ -13,8 +13,12 @@ use Nova\Core\Controller;
 use Nova\Core\Event;
 use Nova\Events\Listener;
 
+/**
+ * Events Manager
+ */
 class Manager
 {
+    /** @var Manager $instance Holds single instance of the events manager */
     private static $instance;
 
     private $events = array();
@@ -27,6 +31,10 @@ class Manager
         self::$instance =& $this;
     }
 
+    /**
+     * Get current instance of Manager
+     * @return Manager
+     */
     public static function &getInstance()
     {
         if (! self::$instance) {
@@ -38,6 +46,9 @@ class Manager
         return $manager;
     }
 
+    /**
+     * Initialize Manager
+     */
     public static function initialize()
     {
         // Get the EventManager instance.
@@ -46,6 +57,13 @@ class Manager
         $manager->sortListeners();
     }
 
+    /**
+     * Add listener to the Manager.
+     *
+     * @param string $name
+     * @param callable $callback
+     * @param int $priority
+     */
     public static function addListener($name, $callback, $priority = 0)
     {
         // Get the EventManager instance.
@@ -58,6 +76,12 @@ class Manager
         $manager->attach($name, $callback, $priority);
     }
 
+    /**
+     * Test if we have a event registered
+     *
+     * @param string $name
+     * @return bool
+     */
     public static function hasEvent($name)
     {
         // Get the EventManager instance.
@@ -73,6 +97,12 @@ class Manager
     //
     // Hooks Compat/Legacy methods.
 
+    /**
+     * Add hook
+     * @param string $where
+     * @param callable $callback
+     * @throws \UnexpectedValueException
+     */
     public static function addHook($where, $callback)
     {
         // Get the EventManager instance.
@@ -87,6 +117,11 @@ class Manager
         $manager->attach($name, $callback);
     }
 
+    /**
+     * Has hook?
+     * @param string $where
+     * @return bool
+     */
     public static function hasHook($where)
     {
         // Get the EventManager instance.
@@ -101,6 +136,13 @@ class Manager
         return false;
     }
 
+    /**
+     * Run registered hooks for $where
+     * @param string $where
+     * @param string $args
+     * @return bool|mixed|string
+     * @throws \Exception
+     */
     public static function runHook($where, $args = '')
     {
         // Get the EventManager instance.
@@ -137,6 +179,13 @@ class Manager
         return $result;
     }
 
+    /**
+     * Send event / emit event
+     * @param string $name
+     * @param array $params
+     * @param null $result
+     * @return bool
+     */
     public static function sendEvent($name, $params = array(), &$result = null)
     {
         // Get the EventManager instance.
@@ -178,23 +227,38 @@ class Manager
 
     // Some getters
 
+    /**
+     * Get all events
+     * @return Event[]
+     */
     public function events()
     {
         return $this->events;
     }
 
+    /**
+     * Get listener
+     * @param $name
+     * @return Listener|null
+     */
     public function listeners($name)
     {
         if (! empty($name) && isset($this->events[$name])) {
             return $this->events[$name];
         }
 
-        // Let's make Tom happy! ;)
+        // Let's make Tom happy! ;). Thanks <3
         return null;
     }
 
     // Confirm if there are one or more Listeners registered to this Event Name.
 
+    /**
+     * Test if the event exists
+     *
+     * @param string $name
+     * @return bool
+     */
     public function exists($name)
     {
         if (! empty($name)) {
@@ -230,7 +294,8 @@ class Manager
      * Dettach a Listener from the specified Event.
      *
      * @param  string $name name of the Event
-     * @param  object $callback Callback executed on Event deploying
+     * @param  callable $callback Callback executed on Event deploying
+     * @return bool
      */
     public function dettach($name, $callback)
     {
@@ -247,6 +312,11 @@ class Manager
         return true;
     }
 
+    /**
+     * Clear event (listeners), or all listeners when null given (by default!)
+     *
+     * @param null|string $name
+     */
     public function clear($name = null)
     {
         if ($name !== null) {
@@ -261,9 +331,10 @@ class Manager
     /**
      * Trigger an Event deploying to the Listeners registered for it.
      *
-     * @param  string $name name of the event
-     * @param  array  $params array of parameters
-     * @param  string $callback callback invoked after Event deploying
+     * @param string $name name of the event
+     * @param array $params array of parameters
+     * @param string $callback callback invoked after Event deploying
+     * @return bool
      */
     public function trigger($name, $params = array(), $callback = null)
     {
@@ -281,8 +352,9 @@ class Manager
     /**
      * Notify event
      *
-     * @param $event
-     * @param null|callable $callback
+     * @param Event $event
+     * @param callable|null $callback
+     * @return bool
      */
     public function notify($event, $callback = null)
     {
@@ -361,6 +433,13 @@ class Manager
         return call_user_func(array($object, $method), $param);
     }
 
+    /**
+     * Invoke callback
+     * @param callable $callback
+     * @param $param
+     * @return mixed
+     * @throws \UnexpectedValueException
+     */
     protected function invokeCallback($callback, $param)
     {
         if (is_callable($callback)) {
@@ -371,6 +450,9 @@ class Manager
         throw new \UnexpectedValueException(__d('system', 'Unsupported Callback type'));
     }
 
+    /**
+     * Sort listeners
+     */
     protected function sortListeners()
     {
         $events = array();

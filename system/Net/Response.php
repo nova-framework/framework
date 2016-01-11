@@ -138,6 +138,12 @@ class Response
         }
     }
 
+    /**
+     * Serve file
+     *
+     * @param string $filePath
+     * @return bool
+     */
     public static function serveFile($filePath)
     {
         $httpProtocol = $_SERVER['SERVER_PROTOCOL'];

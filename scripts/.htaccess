@@ -3,10 +3,10 @@ Options None
 Options +FollowSymLinks
 
 # Set the catch-all handler to prevent scripts from being executed.
-SetHandler SMVC_Security_Do_Not_Remove
+SetHandler NOVA_Security_Do_Not_Remove
 <Files *>
   # Override the handler again if we're run later in the evaluation list.
-  SetHandler SMVC_Security_Do_Not_Remove
+  SetHandler NOVA_Security_Do_Not_Remove
 </Files>
 
 # If we know how to do it safely, disable the PHP engine entirely.

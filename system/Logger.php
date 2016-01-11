@@ -209,8 +209,8 @@ class Logger
 
             $mail->setFrom(SITE_EMAIL);
             $mail->addAddress(SITE_EMAIL);
-            $mail->subject('New error on '.SITE_TITLE);
-            $mail->body($message);
+            $mail->Subject = 'New error on '.SITE_TITLE;
+            $mail->Body = $message;
 
             $mail->send();
         }

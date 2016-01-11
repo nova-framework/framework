@@ -15,7 +15,6 @@ class Manager
 {
     /**
      * Bootstrap the active Modules.
-     *
      */
     public static function bootstrap()
     {

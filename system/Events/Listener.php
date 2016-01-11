@@ -9,13 +9,21 @@
 
 namespace Nova\Events;
 
+/**
+ * Listener Object
+ */
 class Listener
 {
     private $name;
     private $callback;
     private $priority;
 
-
+    /**
+     * Listener constructor.
+     * @param string $name
+     * @param callable $callback
+     * @param int $priority
+     */
     public function __construct($name, $callback, $priority = 0)
     {
         $this->name    = $name;
@@ -23,16 +31,28 @@ class Listener
         $this->priority = $priority;
     }
 
+    /**
+     * Get name
+     * @return string
+     */
     public function name()
     {
         return $this->name;
     }
 
+    /**
+     * Get callback
+     * @return callable
+     */
     public function callback()
     {
         return $this->callback;
     }
 
+    /**
+     * Get priority
+     * @return int
+     */
     public function priority()
     {
         return $this->priority;

@@ -100,6 +100,10 @@ class MySQL extends Connection
             throw new \UnexpectedValueException('Parameter should be not empty');
         }
 
+        if(isset(Connection::$tables[$table])) {
+            return array_keys(Connection::$tables[$table]);
+        }
+
         // Find all Column names
         $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
 
@@ -112,4 +116,79 @@ class MySQL extends Connection
 
         return $columns;
     }
+
+    private static function getTableFieldType($mysqlType)
+    {
+        if (preg_match("/^([^(]+)/", $mysqlType, $match)) {
+            switch (strtolower($match[1])) {
+                case 'tinyint':
+                case 'smallint':
+                case 'mediumint':
+                case 'int':
+                case 'bigint':
+                case 'float':
+                case 'double':
+                case 'decimal':
+                    return 'int';
+
+                default:
+                    return 'string';
+            }
+        }
+
+        return 'string';
+    }
+
+    public function getTableFields($table)
+    {
+        $columns = array();
+
+        if (empty($table)) {
+            throw new \UnexpectedValueException('Parameter should be not empty');
+        }
+
+        if(isset(Connection::$tables[$table])) {
+            $tableFields = Connection::$tables[$table];
+
+            foreach($tableFields as $field => $row) {
+                // Prepare the column entry
+                $columns[$field] = array(
+                    'type' => self::getTableFieldType($row['Type']),
+                    'null' => ($row['Null'] == 'YES') ? true : false
+                );
+            }
+
+            return $columns;
+        }
+
+        // Find all Column names
+        $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
+
+        $cid = 0;
+
+        if ($result !== false) {
+            Connection::$tables[$table] = array();
+
+            foreach ($result as $row) {
+                $field = $row['Field'];
+
+                unset($row['Field']);
+
+                $row['CID'] = $cid;
+
+                Connection::$tables[$table][$field] = $row;
+
+                // Prepare the column entry
+                $columns[$field] = array(
+                    'type' => self::getTableFieldType($row['Type']),
+                    'null' => ($row['Null'] == 'YES') ? true : false
+                );
+
+                $cid++;
+            }
+        }
+
+        return $columns;
+    }
+
 }

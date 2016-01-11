@@ -17,6 +17,7 @@ use \FluentStructure;
 use \Closure;
 use \PDO;
 
+
 abstract class Connection extends PDO
 {
     public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>");
@@ -30,6 +31,8 @@ abstract class Connection extends PDO
     /** @var int Counting how much queries have been executed in total. */
     protected $queryCount = 0;
 
+    /** @var array Store the tables column details. */
+    protected static $tables = array();
 
     /**
      * MySQLEngine constructor.
@@ -708,6 +711,14 @@ abstract class Connection extends PDO
      * @return array  Returns the Database Table fields
      */
     abstract public function listColumns($table);
+
+    /**
+     * Get the columns names and types for the specified Database Table.
+     *
+     * @param  string $table table name
+     * @return array  Returns the Database Table fields
+     */
+    abstract public function getTableFields($table);
 
     /**
      * Get total executed queries.

@@ -18,7 +18,7 @@ Router::any('demos/classic/welcome', 'App\Modules\Demo\Controllers\Classic@welco
 Router::any('demos/classic/subpage', 'App\Modules\Demo\Controllers\Classic@subPage');
 
 /** DBAL Demo */
-Router::any('demos/dbal(/index)', 'App\Modules\Demo\Controllers\Doctrine@index');
+Router::any('demos/dbal(/index)', 'App\Modules\Demo\Controllers\Database@index');
 
 /** Classic BaseModel Demo */
 Router::any('demos/models/base_model(/index)', 'App\Modules\Demo\Controllers\Models\BaseModel@index');

@@ -11,8 +11,7 @@ namespace Nova\Cache;
 
 use Nova\Config;
 
-use phpFastCache;
-use \phpFastCahe;
+use \phpFastCache;
 
 /**
  * Cache Manager

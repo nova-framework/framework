@@ -159,14 +159,15 @@ class Response
 
             return false;
         }
+        
         //
         // Collect the current file information.
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE); // Return mime type ala mimetype extension
+        $finfo = \finfo_open(FILEINFO_MIME_TYPE); // Return mime type ala mimetype extension
 
-        $contentType = finfo_file($finfo, $filePath);
+        $contentType = \finfo_file($finfo, $filePath);
 
-        finfo_close($finfo);
+        \finfo_close($finfo);
 
         // There is a bug with finfo_file();
         // https://bugs.php.net/bug.php?id=53035

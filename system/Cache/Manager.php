@@ -11,6 +11,7 @@ namespace Nova\Cache;
 
 use Nova\Config;
 
+use phpFastCache;
 use \phpFastCahe;
 
 /**
@@ -52,8 +53,9 @@ class Manager
     /**
      * Provide direct access to any of \phpFastCahe methods.
      *
-     * @param $name
+     * @param $method
      * @param $params
+     * @return mixed
      */
     public function __call($method, $params = null)
     {

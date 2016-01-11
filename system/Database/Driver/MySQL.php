@@ -105,6 +105,7 @@ class MySQL extends Connection
 
         if ($result !== false) {
             foreach ($result as $row) {
+
                 // Get the column name from the results
                 $columns[] = $row['Field'];
             }
@@ -112,4 +113,62 @@ class MySQL extends Connection
 
         return $columns;
     }
+
+    private static function getTableFieldType($mysqlType)
+    {
+        if (preg_match("/^([^(]+)/", $mysqlType, $match)) {
+            switch (strtolower($match[1])) {
+                case 'tinyint':
+                case 'smallint':
+                case 'mediumint':
+                case 'int':
+                case 'bigint':
+                case 'float':
+                case 'double':
+                case 'decimal':
+                    return 'int';
+
+                default:
+                    return 'string';
+            }
+        }
+
+        return 'string';
+    }
+
+    public function getTableFields($table)
+    {
+        $columns = array();
+
+        if (empty($table)) {
+            throw new \UnexpectedValueException('Parameter should be not empty');
+        }
+
+        // Find all Column names
+        $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
+
+        $cid = 0;
+
+        if ($result !== false) {
+            Connection::$tables[$table] = array();
+
+            foreach ($result as $row) {
+                $field = $row['Field'];
+
+                unset($row['Field']);
+
+                $row['CID'] = $cid;
+
+                Connection::$tables[$table][$field] = $row;
+
+                // Get the column name from the results
+                $columns[$field] = self::getTableFieldType($row['Type']);
+
+                $cid++;
+            }
+        }
+
+        return $columns;
+    }
+
 }

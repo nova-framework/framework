@@ -82,9 +82,17 @@ class SQLite extends Connection
         $result = $this->rawQuery("PRAGMA table_info($table)", 'array');
 
         if ($result !== false) {
+            Connection::$tables[$table] = array();
+
             foreach ($result as $row) {
+                $field = $row['name'];
+
+                unset($row['name']);
+
+                Connection::$tables[$table][] = $row;
+
                 // Get the column name from the results
-                $columns[] = $row['name'];
+                $columns[] = $field;
             }
         }
 

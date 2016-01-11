@@ -10,14 +10,16 @@
 namespace App\Modules\Demo\Controllers;
 
 use Nova\Core\View;
+use Nova\Database\Manager;
+use Nova\Database\Connection;
+
 use App\Modules\Demo\Core\BaseController;
 
-use Nova\Database\Manager as Database;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class Doctrine extends BaseController
+class Database extends BaseController
 {
     private $db;
 
@@ -29,7 +31,7 @@ class Doctrine extends BaseController
     {
         parent::__construct();
 
-        $this->db = Database::getConnection();
+        $this->db = Manager::getConnection();
     }
 
     protected function beforeFlight()
@@ -152,6 +154,16 @@ class Doctrine extends BaseController
 
         $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
+
+        $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Schema support').'</strong></h3><br>';
+
+        $result = $this->db->getTableFields(DB_PREFIX ."members");
+
+        $message .= '<b>$this->db->getTableFields(DB_PREFIX ."members");</b>';
+        $message .= '<pre>'.var_export($result, true).'</pre><br>';
+
+        $message .= '<b>Connection::$tables</b>';
+        $message .= '<pre>'.var_export(Connection::$tables, true).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'Database Abstraction Layer Demo'));

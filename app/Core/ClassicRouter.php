@@ -20,12 +20,18 @@ use Nova\Net\Url;
  */
 class ClassicRouter extends Router
 {
-    // Constructor
+    /**
+     * ClassicRouter constructor.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
+    /**
+     * Dispatch
+     * @return bool
+     */
     public function dispatch()
     {
         // Detect the current URI.
@@ -87,16 +93,18 @@ class ClassicRouter extends Router
         return true;
     }
 
-   /**
+    /**
      * Ability to call controllers in their module/directory/controller/method/param way.
+     *
+     * NOTE: This Auto-Dispatch routing use the styles:
+     *      <DIR><directory><controller><method><params>
+     *      <DIR><module><directory><controller><method><params>
+     *
+     * @param $uri
+     * @return bool
      */
     public function autoDispatch($uri)
     {
-        // NOTE: This Auto-Dispatch routing use the styles:
-        //
-        // <DIR><directory><controller><method><params>
-        // <DIR><module><directory><controller><method><params>
-
         $options = $this->config('auto_dispatch');
 
         // Explode the URI in its parts.

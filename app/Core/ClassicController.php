@@ -30,12 +30,21 @@ class ClassicController extends BaseController
         parent::__construct();
     }
 
+    /**
+     * Before Flight
+     * @return bool
+     */
     protected function beforeFlight()
     {
         // Leave to parent's method the Flight decisions.
         return parent::beforeFlight();
     }
 
+    /**
+     * After Flight
+     * @param mixed $result
+     * @return bool
+     */
     protected function afterFlight($result)
     {
         if (($result === false) || ! $this->autoRender) {

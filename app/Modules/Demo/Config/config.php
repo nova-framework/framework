@@ -60,11 +60,11 @@ Config::set('demos_menu', array(
                 'url'       => site_url('demos/models/base_model'),
                 'icon'      => 'fa fa-gears',
             ),
-            //'dbal_model' => array(
-            //    'name'      => __d('demo', 'DBAL BaseModel'),
-            //    'url'       => site_url('demos/models/dbal_model'),
-            //    'icon'      => 'fa fa-gears',
-            //),
+            'orm_model' => array(
+                'name'      => __d('demo', 'ORM - Relational Model'),
+                'url'       => site_url('demos/models/orm_model'),
+                'icon'      => 'fa fa-gears',
+            ),
         ),
     ),
     /*

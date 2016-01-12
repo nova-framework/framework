@@ -9,35 +9,42 @@
 
 namespace Nova\ORM;
 
-use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
+use Nova\Database\Manager as Database;
+use Nova\Helpers\Inflector;
 use Nova\ORM\Expect;
-use Nova\ORM\Connection\Wrapper as ConnectionWrapper;
 
 use \PDO;
 
 
-class ActiveRecord extends ConnectionWrapper
+class ActiveRecord
 {
-    protected $className;
+    protected $db = null;
 
-    protected $isNew = true;
+    protected $lastSqlQuery = null;
 
-    protected $db;
-
+    // Internal static Cache.
     protected static $cache = array();
 
+    // There is stored the called Class name.
+    protected $className;
+
+    protected $isNew   = true;
+    protected $isDirty = false;
+
     protected $primaryKey = 'id';
+
+    protected $attributes = array();
 
     protected $tableName;
     protected $serialize;
 
     /**
-     * The Relations
+     * The ActiveRecord Relations
      */
-    public $belongsTo = array();
-    public $hasOne    = array();
-    public $hasMany   = array();
+    protected $belongsTo = array();
+    protected $hasOne    = array();
+    protected $hasMany   = array();
 
     /**
      * Temporary select's WHERE attributes.
@@ -60,28 +67,31 @@ class ActiveRecord extends ConnectionWrapper
     protected $selectOffset = null;
 
     /**
-     * The Table Metadata
+     * There we store the Table Metadata.
      */
     protected $fields;
 
 
     public function __construct(array $data = array(), $linkName = 'default')
     {
-        parent::__construct($linkName);
-
-        //
         $this->className = get_class($this);
 
+        $this->db = Database::getConnection($linkName);
+
+        // Setup the Table name, if is empty.
         if (empty($this->tableName)) {
+            // Try the best to guess the Table name: Member -> members
             $tableName = Inflector::pluralize($className);
 
             $this->tableName = Inflector::tableize($tableName);
         }
 
+        // Process the Relations
         $this->belongsTo = Expect::expectAssocArray($this->belongsTo);
         $this->hasOne    = Expect::expectAssocArray((array)$this->hasOne);
         $this->hasMany   = Expect::expectAssocArray((array)$this->hasMany);
 
+        // Process the serialized fields (i.e. User Meta)
         $this->serialize = Expect::expectArray($this->serialize);
 
         // Get the Table Fields.
@@ -96,11 +106,11 @@ class ActiveRecord extends ConnectionWrapper
         if(! empty($data)) {
             $this->hydrate($data);
 
-            $this->initObject(true);
+            $this->initialize(true);
         }
     }
 
-    private function initObject($isNew)
+    private function initialize($isNew = false)
     {
         $this->isNew = $isNew;
 
@@ -111,11 +121,45 @@ class ActiveRecord extends ConnectionWrapper
         $this->afterLoad();
     }
 
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    public function getConnection()
+    {
+        return $this->db;
+    }
+
+    public function getTableFields($table)
+    {
+        return $this->db->getTableFields($table);
+    }
+
+    private function hydrate(array $data)
+    {
+        $this->attributes = array();
+
+        if(empty($data)) {
+            return;
+        }
+
+        foreach ($data as $key => $value) {
+            if(isset($this->fields[$key])) {
+                $this->attributes[$key] = $value;
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------
+    // Serialization Methods
+    //--------------------------------------------------------------------
+
     private function unserializeFields()
     {
         foreach ((array)$this->serialize as $field) {
-            if (! empty($this->$field)) {
-                $this->$field = unserialize($this->$field);
+            if (isset($this->attributes[$field]) && ! empty($this->attributes[$field])) {
+                $this->attributes[$field] = unserialize($this->attributes[$field]);
             }
         }
     }
@@ -123,21 +167,9 @@ class ActiveRecord extends ConnectionWrapper
     private function serializeFields()
     {
         foreach ((array) $this->serialize as $field) {
-            if (! empty($this->$field)) {
-                $this->$field = serialize($this->$field);
+            if (isset($this->attributes[$field]) && ! empty($this->attributes[$field])) {
+                $this->attributes[$field] = serialize($this->attributes[$field]);
             }
-        }
-    }
-
-    public function getTableName()
-    {
-        return $this->tableName;
-    }
-
-    private function hydrate(array $data)
-    {
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
         }
     }
 
@@ -167,11 +199,31 @@ class ActiveRecord extends ConnectionWrapper
     // Magic getter Method
     //--------------------------------------------------------------------
 
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        $this->attributes[$key] = $value;
+
+        $this->isDirty = true;
+    }
+
     public function __get($name)
     {
+        // Try to get the attribute from Cache.
         if ($this->getCache($name) !== null) {
             return $this->getCache($name);
         }
+        // If the attribute is really an attribute, return it from data.
+        else if(isset($this->attributes[$name])) {
+            return $this->attributes[$name];
+        }
+        // If the attribute is a belongsTo Record, return this object.
         else if (isset($this->belongsTo[$name])) {
             $value = $this->belongsTo[$name];
 
@@ -193,6 +245,7 @@ class ActiveRecord extends ConnectionWrapper
                 return $obj;
             }
         }
+        // If the attribute is a hasOne Record, return this object.
         else if (isset($this->hasOne[$name])) {
             $value = $this->hasOne[$name];
 
@@ -214,6 +267,7 @@ class ActiveRecord extends ConnectionWrapper
 
             return $result;
         }
+        // If the attribute is a hasMany Record, return an array of those objects.
         else if (isset($this->hasMany[$name])) {
             $value = $this->hasMany[$name];
 
@@ -237,24 +291,38 @@ class ActiveRecord extends ConnectionWrapper
         }
     }
 
+    public function __isset($name)
+    {
+        return isset($this->attributes[$name]);
+    }
+
+    public function __unset($name)
+    {
+        unset($this->attributes[$name]);
+    }
+
     //--------------------------------------------------------------------
     // Attributes handling Methods
     //--------------------------------------------------------------------
 
     public function setAttributes($attributes)
     {
-        $this->initWithAssocArray($attributes);
+        $this->hydrate($attributes);
     }
 
     public function getAttributes()
     {
-        $result = array();
+        return $this->attributes;
+    }
 
-        foreach ((array) $this->fields as $key => $value) {
-            $result[$key] = $this->$key;
-        }
+    public function setAttribute($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
 
-        return $result;
+    public function getAttribute($name)
+    {
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     //--------------------------------------------------------------------
@@ -282,8 +350,6 @@ class ActiveRecord extends ConnectionWrapper
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
-        $this->lastSqlQuery = $sql;
-
         $result = $this->select($sql, array('value' => $id));
 
         if($result !== false) {
@@ -291,7 +357,7 @@ class ActiveRecord extends ConnectionWrapper
 
             $object->hydrate($result);
 
-            $object->isNew = false;
+            $object->initialize();
         }
         else {
             $object = null;
@@ -319,8 +385,6 @@ class ActiveRecord extends ConnectionWrapper
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr LIMIT 1";
 
-        $this->lastSqlQuery = $sql;
-
         $result = $this->select($sql, $bindParams);
 
         // Reset the Model State.
@@ -331,7 +395,7 @@ class ActiveRecord extends ConnectionWrapper
 
             $object->hydrate($result);
 
-            $object->isNew = false;
+            $object->initialize();
         }
         else {
             $object = null;
@@ -361,8 +425,6 @@ class ActiveRecord extends ConnectionWrapper
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr";
 
-        $this->lastSqlQuery = $sql;
-
         $data = $this->select($sql, $bindParams, true);
 
         // Reset the Model State.
@@ -379,7 +441,7 @@ class ActiveRecord extends ConnectionWrapper
 
             $object->hydrate($row);
 
-            $object->isNew = false;
+            $object->initialize();
 
             // Add the current object instance to return list.
             $result[] = $object;
@@ -414,8 +476,6 @@ class ActiveRecord extends ConnectionWrapper
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $limitStr $offsetStr";
 
-        $this->lastSqlQuery = $sql;
-
         $data = $this->select($sql, $bindParams, true);
 
         // Reset the Model State.
@@ -432,7 +492,7 @@ class ActiveRecord extends ConnectionWrapper
 
             $object->hydrate($row);
 
-            $object->isNew = false;
+            $object->initialize();
 
             // Add the current object instance to return list.
             $result[] = $object;
@@ -445,21 +505,91 @@ class ActiveRecord extends ConnectionWrapper
     {
         $data = array();
 
-        $saveFields =& $this->fields;
-
         if (! $this->beforeSave()) {
             return;
         }
 
         $this->serializeFields();
 
-        foreach ($saveFields as $fieldName => $fieldInfo) {
-            $data[$fieldName] = $this->$fieldName;
+        foreach ($this->fields as $fieldName => $fieldInfo) {
+            if(($fieldName != $this->primaryKey) && isset($this->attributes[$fieldName])) {
+                $data[$fieldName] = $this->attributes[$fieldName];
+            }
         }
 
-        unset($data[$this->primaryKey]);
+        $paramTypes = $this->getParamTypes($data);
+
+        if ($this->isNew) {
+            // We are into INSERT mode.
+            $insertId = $this->db->insert($this->table(), $data, $paramTypes);
+
+            if($insertId !== false) {
+                $this->isNew = false;
+
+                $this->setAttribute($this->primaryKey, $insertId);
+            }
+
+            return $insertId;
+        }
+
+        // We are into UPDATE mode.
+        if($this->isDirty) {
+            $where = array(
+                $this->primaryKey => $this->getAttribute($this->primaryKey)
+            );
+
+            $paramTypes = $this->getParamTypes(array_merge($data, $where));
+
+            $result = $this->db->update($this->table(), $data, $where, $paramTypes);
+
+            $this->unserializeFields();
+
+            return $result;
+        }
 
         return false;
+    }
+
+    public function delete()
+    {
+        if ($this->isNew || ! $this->beforeDelete()) {
+            return false;
+        }
+
+        // Prepare the WHERE parameters.
+        $where = array(
+            $this->primaryKey => $this->getAttribute($this->primaryKey)
+        );
+
+        $paramTypes = $this->getParamTypes($where);
+
+        $result = $this->db->delete($this->table(), $where, $paramTypes);
+
+        $this->isNew = true;
+
+        return $result;
+    }
+
+    public function deleteBy()
+    {
+        $params = func_get_args();
+
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
+
+        // Prepare the WHERE parameters.
+        $where = $this->setWhere($params);
+
+        $paramTypes = $this->getParamTypes($where);
+
+        // Execute the Record deletetion.
+        $result = $this->db->delete($this->table(), $where);
+
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
     }
 
     //--------------------------------------------------------------------
@@ -574,7 +704,7 @@ class ActiveRecord extends ConnectionWrapper
     // Internal use Methods
     //--------------------------------------------------------------------
 
-    protected function getParamTypes($params)
+    protected function getParamTypes($params, $strict = true)
     {
         $fields =& $this->fields;
 
@@ -586,8 +716,8 @@ class ActiveRecord extends ConnectionWrapper
 
                 $result[$field] = ($fieldInfo['type'] == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
             }
-            // No registered field found? We try to guess then the Type.
-            else {
+            // No registered field found? We try to guess then the Type, if we aren't into strict mode.
+            else if(! $strict) {
                 $result[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
             }
         }
@@ -751,12 +881,18 @@ class ActiveRecord extends ConnectionWrapper
 
         unset($vars['db']);
 
+        unset($vars['lastSqlQuery']);
+        unset($vars['tempWheres']);
+        unset($vars['selectOrder']);
+        unset($vars['selectLimit']);
+        unset($vars['selectOffset']);
+
         return $vars;
     }
 
     public function lastSqlQuery()
     {
-        return $this->lastSqlQuery;
+        return $this->db->lastSqlQuery();
     }
 
     //--------------------------------------------------------------------
@@ -773,7 +909,7 @@ class ActiveRecord extends ConnectionWrapper
         return true;
     }
 
-    public function beforeDestroy()
+    public function beforeDelete()
     {
         return true;
     }

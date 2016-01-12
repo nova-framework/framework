@@ -144,7 +144,11 @@ class SQLite extends Connection
         }
 
         // Find all Column names
-        $result = $this->rawQuery("PRAGMA table_info($table)", 'array');
+        $sql = "PRAGMA table_info($table)";
+
+        $this->lastSqlQuery = $sql;
+
+        $result = $this->rawQuery($sql, 'array');
 
         if ($result !== false) {
             Connection::$tables[$table] = array();

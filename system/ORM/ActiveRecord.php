@@ -21,8 +21,6 @@ class ActiveRecord
 {
     protected $db = null;
 
-    protected $lastSqlQuery = null;
-
     // Internal static Cache.
     protected static $cache = array();
 
@@ -40,7 +38,7 @@ class ActiveRecord
     protected $serialize;
 
     /**
-     * The ActiveRecord Relations
+     * The (Active)Record Relations with other Records
      */
     protected $belongsTo = array();
     protected $hasOne    = array();

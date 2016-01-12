@@ -1009,7 +1009,7 @@ class BaseModel extends Model
      * Getter for the table name.
      *
      * @param null|string $table
-     * @return string The name of the table used by this class (including the DB_PREFIX).
+     * @return string The name of the table used by this class (without the DB_PREFIX).
      */
     public function table($table = null)
     {

@@ -31,6 +31,8 @@ class ActiveRecord extends ConnectionWrapper
     public $hasOne    = array();
     public $hasMany   = array();
 
+    protected $tempWheres = array();
+
 
     public function __construct()
     {
@@ -134,6 +136,10 @@ class ActiveRecord extends ConnectionWrapper
         return $this->tableName;
     }
 
+    //--------------------------------------------------------------------
+    // Caching Methods
+    //--------------------------------------------------------------------
+
     private function getCache($name)
     {
         $token = get_class($this) .'_' .$name;
@@ -152,13 +158,16 @@ class ActiveRecord extends ConnectionWrapper
         self::$cache[$token] = $value;
     }
 
+    //--------------------------------------------------------------------
+    // Magic getter Method
+    //--------------------------------------------------------------------
+
     public function __get($name)
     {
         if ($this->getCache($name) !== null) {
             return $this->getCache($name);
         }
-
-        if (isset($this->belongsTo[$name])) {
+        else if (isset($this->belongsTo[$name])) {
             $value = $this->belongsTo[$name];
 
             if (strpos($value, ':') !== false) {
@@ -177,8 +186,7 @@ class ActiveRecord extends ConnectionWrapper
                 return $obj;
             }
         }
-
-        if (isset($this->hasOne[$name])) {
+        else if (isset($this->hasOne[$name])) {
             $value = $this->hasOne[$name];
 
             if (strpos($value, ':') !== false) {
@@ -199,8 +207,7 @@ class ActiveRecord extends ConnectionWrapper
 
             return $result;
         }
-
-        if (isset($this->hasMany[$name])) {
+        else if (isset($this->hasMany[$name])) {
             $value = $this->hasMany[$name];
 
             if (strpos($value, ':') !== false) {
@@ -223,6 +230,10 @@ class ActiveRecord extends ConnectionWrapper
         }
     }
 
+    //--------------------------------------------------------------------
+    // Attributes handling Methods
+    //--------------------------------------------------------------------
+
     public function setAttributes($attributes)
     {
         $this->initWithAssocArray($attributes);
@@ -239,58 +250,183 @@ class ActiveRecord extends ConnectionWrapper
         return $result;
     }
 
-    public function __toString()
+    //--------------------------------------------------------------------
+    // Finder Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Getter for the table name.
+     *
+     * @return string The name of the table used by this class (without the DB_PREFIX).
+     */
+    public function table()
     {
-        $result = '';
+        return DB_PREFIX .$this->tableName;
+    }
 
-        // Support for checking if an object is empty.
-
-        if ($this->isNew) {
-            $isEmpty = true;
-
-            foreach ($this->fields as $fieldName => $fieldInfo) {
-                if (! empty($this->$fieldName)) {
-                    $isEmpty = false;
-
-                    break;
-                }
-            }
-
-            if ($isEmpty) {
-                return $result; // NOTE: there the result is an empty string.
-            }
+    public function find($id)
+    {
+        if (! is_integer($id)) {
+            throw new \UnexpectedValueException(__d('system', 'Parameter should be an Integer'));
         }
 
-        $result = get_class($this) ."(" .$this->{$this->primaryKey} .")\n";
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
-        foreach ($this->fields as $fieldName => $fieldInfo) {
-            $result .= "\t" .ucfirst($fieldName) .': ' .$this->$fieldName ."\n";
-        }
+        $result = $this->select($sql, array('value' => $id));
 
-        foreach ($this->hasOne as $fieldName => $className) {
-            $result .= "\t" .ucfirst($fieldName) .": (reference to a $className object)\n";
-        }
-
-        foreach ($this->hasMany as $fieldName => $className) {
-            $result .= "\t" .ucfirst($fieldName) .": (reference to $className objects)\n";
-        }
-
-        foreach ($this->belongsTo as $fieldName => $className) {
-            $result .= "\t" .ucfirst($fieldName) .": (reference to a $className object)\n";
-        }
+        // Reset the Model State.
+        $this->resetState();
 
         return $result;
     }
 
-    //
-    // Overwritable methods.
+    public function findBy()
+    {
+        $bindParams = array();
 
-    public function beforeSave()
+        // Prepare the WHERE parameters.
+        $params = func_get_args();
+
+        $where = $this->setWhere($params);
+
+        $whereStr = $this->parseWheres($this->wheres(), $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr LIMIT 1";
+
+        $result = $this->select($sql, $bindParams);
+
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
+    }
+
+    public function findManyBy()
+    {
+        // Prepare the WHERE parameters.
+        $params = func_get_args();
+
+        $this->setWhere($params);
+
+        return $this->findAll();
+    }
+
+    public function findAll()
+    {
+        $bindParams = array();
+
+        // Prepare the WHERE details.
+        $whereStr = $this->parseWheres($this->wheres(), $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." $whereStr";
+
+        $result = $this->select($sql, $bindParams, true);
+
+        // Reset the Model State.
+        $this->resetState();
+
+        return $result;
+    }
+
+    /**
+     * Execute Select Query, binding values into the $sql Query.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $params = array(), $fetchAll = false)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        // Prepare the parameter Types.
+        $paramTypes = $this->getParamTypes($params);
+
+        return $this->db->select($sql, $params, $paramTypes, 'array', $fetchAll);
+    }
+
+    //--------------------------------------------------------------------
+    // Internal use Methods
+    //--------------------------------------------------------------------
+
+    protected function getParamTypes($params)
+    {
+        return array();
+    }
+
+    protected function resetState()
+    {
+        // Reset our select WHEREs
+        $this->tempWheres = array();
+    }
+
+    /**
+     * Set where
+     * @param array $params
+     * @return array
+     */
+    protected function setWhere(array $params = array())
+    {
+        if (empty($params)) {
+            return $this->tempWheres;
+        }
+
+        // Get the WHERE condition.
+        $condition = array_shift($params);
+
+        if ($condition == null) {
+            // Remove all previous defined conditions from our own WHEREs array, too.
+            $this->tempWheres = array();
+        } else if (is_array($condition)) {
+            // Is given an array of Conditions; merge them into our own WHEREs array.
+            $this->tempWheres = array_merge($this->tempWheres, $condition);
+        } else if (count($params) == 1) {
+            // Store the condition and its value.
+            $this->tempWheres[$condition] = array_shift($params);
+        } else if (count($params) == 2) {
+            $operator = array_shift($params);
+
+            if (! in_array($operator, Connection::$whereOperators, true)) {
+                throw new \UnexpectedValueException(__d('system', 'Second parameter is invalid'));
+            }
+
+            $condition = sprintf('%s $s ?', $condition, $operator);
+
+            // Store the composed condition and its value.
+            $this->tempWheres[$condition] = array_shift($params);
+        } else {
+            throw new \UnexpectedValueException(__d('system', 'Invalid number of parameters'));
+        }
+
+        return $this->tempWheres;
+    }
+
+    /**
+     * Wheres
+     * @return array
+     */
+    protected function wheres()
+    {
+        return $this->tempWheres;
+    }
+
+    //--------------------------------------------------------------------
+    // Overwritable Methods
+    //--------------------------------------------------------------------
+
+    public function afterLoad()
     {
         return true;
     }
 
-    public function afterLoad()
+    public function beforeSave()
     {
         return true;
     }

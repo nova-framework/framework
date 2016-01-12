@@ -69,9 +69,9 @@ class RelationalModel extends BaseController
         $message .= '<pre>'. self::dumpObject($result).'</pre><br>';
 
         //
-        $result = $this->model->findAll();
+        $result = $this->model->orderBy('username DESC')->findAll();
 
-        $message .= '<b>$this->model->findAll();</b>';
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->findAll();</b>';
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 

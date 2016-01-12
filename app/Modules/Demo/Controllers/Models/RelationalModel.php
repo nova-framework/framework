@@ -11,7 +11,7 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
-use App\Modules\Demo\Models\Member as MemberModel;
+use App\Modules\Demo\Models\Member;
 
 use \PDO;
 
@@ -30,7 +30,7 @@ class RelationalModel extends BaseController
     {
         parent::__construct();
 
-        $this->model = new MemberModel();
+        $this->model = new Member();
     }
 
     protected function beforeFlight()
@@ -110,7 +110,7 @@ class RelationalModel extends BaseController
         $message .= '<h3><strong>'.__d('demo', 'Creating Records').'</strong></h3><br>';
 
         //
-        $user = new MemberModel();
+        $user = new Member();
 
         $user->username = 'Virgil';
         $user->email = 'virgil@novaframework.dev';

@@ -142,6 +142,9 @@ self::dumpObjectArray(\$user);
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
+        $message .= '<h3><strong>'.__d('demo', 'Modifying Records').'</strong></h3><br>';
+
+        //
         $user->email = 'modified@novaframework.dev';
 
         $result = $user->save();
@@ -166,6 +169,9 @@ self::dumpObjectArray(\$user);
         $message .= self::highlightText('$this->model->findAll();', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Deleting Records').'</strong></h3><br>';
 
         //
         $result = $user->delete();

@@ -516,7 +516,33 @@ class ActiveRecord extends ConnectionWrapper
      */
     public function orderBy($order)
     {
-        $this->selectOrder = $order;
+        if(empty($order)) {
+            $this->selectOrder = null;
+        }
+        // Ccheck if the Field contains conditions.
+        else if (strpos($order, ' ') !== false) {
+            // Simplify the white spaces on Field.
+            $order = preg_replace('/\s+/', ' ', trim($order));
+
+            // Explode the field into its components.
+            $segments = explode(' ', $order);
+
+            if(count($segments) !== 2) {
+                throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
+            }
+
+            $field = $segments[0];
+            $sense = strtoupper($segments[1]);
+
+            if(($sense != 'ASC') && ($sense != 'DESC')) {
+                throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
+            }
+
+            $this->selectOrder = $field .' ' .$sense;
+        }
+        else {
+            $this->selectOrder = $order;
+        }
 
         return $this;
     }

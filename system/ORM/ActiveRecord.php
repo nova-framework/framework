@@ -184,9 +184,11 @@ class ActiveRecord extends ConnectionWrapper
             }
 
             if (isset($this->$key) && ! empty($this->$key)) {
-                $obj = new $className($this->$key);
+                $obj = new $className();
 
-                $this->setCache($name, $obj);
+                $result = $obj->find(this->$key);
+
+                $this->setCache($name, $result);
 
                 return $obj;
             }

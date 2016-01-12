@@ -106,7 +106,7 @@ class Database extends BaseController
         //
         $userInfo = array(
             'username' => 'virgil',
-            'email'    => 'virgil@novaframwork.dev'
+            'email'    => 'virgil@novaframework.dev'
         );
 
         $message .= '<b>$userInfo</b>';
@@ -126,7 +126,7 @@ class Database extends BaseController
 
         //
         $userInfo = array(
-            'email' => 'modified@novaframwork.dev'
+            'email' => 'modified@novaframework.dev'
         );
 
         $message .= '<b>$userInfo</b>';

@@ -73,7 +73,7 @@ class BaseModel extends BaseController
         $userInfo = array(
             'username' => 'virgil',
             'password' => 'test',
-            'email'    => 'virgil@novaframwork.dev'
+            'email'    => 'virgil@novaframework.dev'
         );
 
         $message .= '<b>$userInfo</b>';
@@ -94,7 +94,7 @@ class BaseModel extends BaseController
         //
         $userInfo = array(
             'password' => 'testing',
-            'email'    => 'modified@novaframwork.dev'
+            'email'    => 'modified@novaframework.dev'
         );
 
         $message .= '<b>$userInfo</b>';
@@ -206,7 +206,7 @@ class BaseModel extends BaseController
         $userInfo = array(
             'username' => 'virgil',
             'password' => 'test',
-            'email'    => 'virgil@novaframwork.dev'
+            'email'    => 'virgil@novaframework.dev'
         );
 
         $message .= '<b>$userInfo</b>';
@@ -230,7 +230,7 @@ class BaseModel extends BaseController
         //
         $userInfo = array(
             'password' => 'testing',
-            'email' => 'modified@novaframwork.dev'
+            'email' => 'modified@novaframework.dev'
         );
 
         $message .= '<b>$userInfo</b>';

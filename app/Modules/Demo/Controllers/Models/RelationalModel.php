@@ -95,7 +95,7 @@ class RelationalModel extends BaseController
         //
         $result = $this->model->where('username != ?', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
 
-        $message .= self::highlightText('$this->model->(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
+        $message .= self::highlightText('$this->model->where(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 

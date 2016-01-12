@@ -172,7 +172,7 @@ class Model
     }
 
     //--------------------------------------------------------------------
-    // Caching Methods
+    // Caching Management Methods
     //--------------------------------------------------------------------
 
     private function getCache($name)
@@ -193,8 +193,15 @@ class Model
         self::$cache[$token] = $value;
     }
 
+    private function hasCached($name)
+    {
+        $token = $this->className .'_' .$name;
+
+        return isset(self::$cache[$token]);
+    }
+
     //--------------------------------------------------------------------
-    // Magic getter Method
+    // Magic Methods
     //--------------------------------------------------------------------
 
     /**
@@ -213,16 +220,20 @@ class Model
 
     public function __get($name)
     {
-        // Try to get the attribute from Cache.
-        if ($this->getCache($name) !== null) {
+        // First, we try to get the attribute from the Cache.
+        if ($this->hasCached($name)) {
             return $this->getCache($name);
         }
-        // If the attribute is really an attribute, return it from data.
+        // If the attribute is really an attribute, return it.
         else if(isset($this->attributes[$name])) {
             return $this->attributes[$name];
         }
+
+        // Model Relations; first, we prepare, our local fieldName.
+        $fieldName = Inflector::singularize($this->tableName);
+
         // If the attribute is a belongsTo Record, return this object.
-        else if (isset($this->belongsTo[$name])) {
+        if (isset($this->belongsTo[$name])) {
             $value = $this->belongsTo[$name];
 
             if (strpos($value, ':') !== false) {
@@ -234,13 +245,11 @@ class Model
             }
 
             if (isset($this->$key) && ! empty($this->$key)) {
-                $obj = new $className();
-
-                $result = $obj->find($this->$key);
+                $result = $this->belongsTo($className, $key);
 
                 $this->setCache($name, $result);
 
-                return $obj;
+                return $result;
             }
         }
         // If the attribute is a hasOne Record, return this object.
@@ -250,38 +259,30 @@ class Model
             if (strpos($value, ':') !== false) {
                 list($key, $className) = explode(':', $value);
             } else {
-                $fieldName = Inflector::singularize($this->tableName);
-
                 $key = $fieldName .'_id';
 
                 $className = $value;
             }
 
-            $obj = new $className();
-
-            $result = $obj->findBy($key, $this->{$this->primaryKey});
+            $result = $this->hasOne($className, $key);
 
             $this->setCache($name, $result);
 
             return $result;
         }
-        // If the attribute is a hasMany Record, return an array of those objects.
+        // If the attribute is a hasMany Records, return an array of those objects.
         else if (isset($this->hasMany[$name])) {
             $value = $this->hasMany[$name];
 
             if (strpos($value, ':') !== false) {
                 list($key, $className) = explode(':', $value);
             } else {
-                $fieldName = Inflector::singularize($this->tableName);
-
                 $key = $fieldName . '_id';
 
                 $className = $value;
             }
 
-            $obj = new $className();
-
-            $result = $obj->findManyBy($key, $this->{$this->primaryKey});
+            $result = $this->hasMany($className, $key);
 
             $this->setCache($name, $result);
 
@@ -321,6 +322,43 @@ class Model
     public function attribute($name)
     {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+    }
+
+    //--------------------------------------------------------------------
+    // Relation Methods
+    //--------------------------------------------------------------------
+
+    public function belongsTo($className, $otherKey)
+    {
+        if(! class_exists($className)) {
+            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
+        }
+
+        $model = new $className();
+
+        return $model->find($this->attribute($otherKey));
+    }
+
+    public function hasOne($className, $modelKey)
+    {
+        if(! class_exists($className)) {
+            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
+        }
+
+        $model = new $className();
+
+        return $model->findBy($modelKey, $this->attribute($this->primaryKey));
+    }
+
+    public function hasMany($className, $modelKey)
+    {
+        if(! class_exists($className)) {
+            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
+        }
+
+        $model = new $className();
+
+        return $model->findManyBy($modelKey, $this->attribute($this->primaryKey));
     }
 
     //--------------------------------------------------------------------

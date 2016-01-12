@@ -63,7 +63,7 @@ class SimpleCurl
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_POSTFIELDS => $fields,
             CURLOPT_POST => true,
-            CURLOPT_USERAGENT => "SMVC Agent",
+            CURLOPT_USERAGENT => "NOVA Agent",
         );
         curl_setopt_array($ch, $options);
 

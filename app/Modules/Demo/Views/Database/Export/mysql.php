@@ -11,7 +11,7 @@
 
 <br><br>
 <strong>Create Table</strong>
-<pre>CREATE TABLE `smvc_car` (
+<pre>CREATE TABLE `nova_car` (
     `carid` int(11) NOT NULL AUTO_INCREMENT,
     `make` varchar(45) NOT NULL,
     `model` varchar(90) NOT NULL,
@@ -21,7 +21,7 @@
 
 <br><br>
 <strong>Insert Demo Data</strong>
-<pre>INSERT INTO `dbname`.`smvc_car`
+<pre>INSERT INTO `dbname`.`nova_car`
 (
     `carid`,
     `make`,

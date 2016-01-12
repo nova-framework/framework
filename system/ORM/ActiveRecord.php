@@ -446,7 +446,7 @@ class ActiveRecord extends ConnectionWrapper
         $saveFields =& $this->fields;
 
         if (! $this->beforeSave()) {
-            break;
+            return;
         }
 
         $this->serializeFields();

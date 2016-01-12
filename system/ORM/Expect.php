@@ -17,7 +17,7 @@ class Expect
         // We expect to have 'key:value,value,value,key:value'
         $result = array();
 
-        $rows = self::toArray($mixed);
+        $rows = self::expectArray($mixed);
 
         foreach ($rows as $existingkey => $row) {
             list($key, $value) = preg_split("/:/", $row);

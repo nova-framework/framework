@@ -562,7 +562,7 @@ abstract class Connection extends PDO
         }
 
         // Prepare the WHERE conditions.
-        $whereDetails = $this->parseWhereConditions($where, $bindParams);
+        $whereDetails = self::parseWhereConditions($where, $bindParams);
 
         // Prepare statement.
         $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
@@ -599,7 +599,7 @@ abstract class Connection extends PDO
         $bindParams = array();
 
         // Prepare the WHERE conditions.
-        $whereDetails = $this->parseWhereConditions($where, $bindParams);
+        $whereDetails = self::parseWhereConditions($where, $bindParams);
 
         // Prepare statement
         $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
@@ -747,9 +747,11 @@ abstract class Connection extends PDO
      * @param $bindParams
      * @return string
      */
-    protected function parseWhereConditions(array $where, &$bindParams)
+    public static function parseWhereConditions(array $where, &$bindParams)
     {
         $result = '';
+
+        $connection = Manager::getConnection();
 
         // Flag which say when we need to add an AND keyword.
         $idx = 0;
@@ -814,7 +816,7 @@ abstract class Connection extends PDO
 
             if (is_array($value)) {
                 // We need something like: user_id IN (1, 2, 3)
-                $result .= "$field IN (" . implode(', ', array_map(array($this, 'quote'), $value)) . ")";
+                $result .= "$field IN (" . implode(', ', array_map(array($connection, 'quote'), $value)) . ")";
             } else {
                 $result .= "$field = :$field";
             }

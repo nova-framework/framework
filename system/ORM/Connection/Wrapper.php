@@ -17,6 +17,8 @@ class Wrapper
 {
     protected $db = null;
 
+    protected $lastSqlQuery = null;
+
 
     public function __construct($linkName = 'default')
     {
@@ -28,9 +30,9 @@ class Wrapper
         return $this->db;
     }
 
-    public function getTableFields()
+    public function getTableFields($table)
     {
-        return $this->db->getTableFields();
+        return $this->db->getTableFields($table);
     }
 
 }

@@ -81,9 +81,13 @@ class MySQL extends Connection
      */
     public function truncate($table)
     {
+        $sql = "TRUNCATE TABLE $table";
+
+        $this->lastSqlQuery = $sql;
+
         $this->queryCount++;
 
-        return $this->exec("TRUNCATE TABLE $table");
+        return $this->exec($sql);
     }
 
     /**
@@ -105,7 +109,11 @@ class MySQL extends Connection
         }
 
         // Find all Column names
-        $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
+        $sql = "SHOW COLUMNS FROM $table";
+
+        $this->lastSqlQuery = $sql;
+
+        $result = $this->rawQuery($sql, 'array');
 
         if ($result !== false) {
             foreach ($result as $row) {

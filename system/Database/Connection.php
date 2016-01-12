@@ -22,7 +22,9 @@ use \PDO;
  */
 abstract class Connection extends PDO
 {
-    public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>");
+    protected $lastSqlQuery = null;
+
+    public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>", "LIKE");
 
     /** @var string Return type. */
     protected $returnType = 'array';
@@ -237,6 +239,8 @@ abstract class Connection extends PDO
      */
     public function raw($sql, $fetch = false)
     {
+        $this->lastSqlQuery = $sql;
+
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
         $method = ($this->returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
 
@@ -262,6 +266,8 @@ abstract class Connection extends PDO
      */
     public function rawQuery($sql, $returnType = null)
     {
+        $this->lastSqlQuery = $sql;
+
         // What return type? Use default if no return type is given in the call.
         $returnType = $returnType ? $returnType : $this->returnType;
 
@@ -356,6 +362,8 @@ abstract class Connection extends PDO
      */
     public function select($sql, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
     {
+        $this->lastSqlQuery = $sql;
+
         // Append select if it isn't appended.
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
             $sql = "SELECT " . $sql;
@@ -480,7 +488,11 @@ abstract class Connection extends PDO
         $fieldNames = implode(',', array_keys($data));
         $fieldValues = ':'.implode(', :', array_keys($data));
 
-        $stmt = $this->prepare("$mode INTO $table ($fieldNames) VALUES ($fieldValues)");
+        $sql = "$mode INTO $table ($fieldNames) VALUES ($fieldValues)";
+
+        $this->lastSqlQuery = $sql;
+
+        $stmt = $this->prepare($sql);
 
         $this->bindParams($stmt, $data, $paramTypes);
 
@@ -565,7 +577,11 @@ abstract class Connection extends PDO
         $whereDetails = self::parseWhereConditions($where, $bindParams);
 
         // Prepare statement.
-        $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
+        $sql = "UPDATE $table SET $fieldDetails WHERE $whereDetails";
+
+        $this->lastSqlQuery = $sql;
+
+        $stmt = $this->prepare($sql);
 
         // Bind fields
         $this->bindParams($stmt, $data, $paramTypes, ':field_');
@@ -602,7 +618,11 @@ abstract class Connection extends PDO
         $whereDetails = self::parseWhereConditions($where, $bindParams);
 
         // Prepare statement
-        $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails");
+        $sql = "DELETE FROM $table WHERE $whereDetails";
+
+        $this->lastSqlQuery = $sql;
+
+        $stmt = $this->prepare($sql);
 
         // Bind conditions.
         $this->bindParams($stmt, $bindParams, $paramTypes);
@@ -631,6 +651,8 @@ abstract class Connection extends PDO
      */
     public function rawPrepare($sql, $params = array(), array $paramTypes = array())
     {
+        $this->lastSqlQuery = $sql;
+
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
@@ -831,4 +853,10 @@ abstract class Connection extends PDO
 
         return $result;
     }
+
+    public function lastSqlQuery()
+    {
+        return $this->lastSqlQuery;
+    }
+
 }

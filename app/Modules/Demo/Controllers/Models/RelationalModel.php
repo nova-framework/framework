@@ -11,7 +11,7 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
-use App\Modules\Demo\Models\Member as MembersModel;
+use App\Modules\Demo\Models\Member as MemberModel;
 
 use \PDO;
 
@@ -30,7 +30,7 @@ class RelationalModel extends BaseController
     {
         parent::__construct();
 
-        $this->model = new MembersModel();
+        $this->model = new MemberModel();
     }
 
     protected function beforeFlight()
@@ -55,51 +55,135 @@ class RelationalModel extends BaseController
     public function index()
     {
         //
-        $message = '';
+        $message = '<h3><strong>'.__d('demo', 'Details about Model').'</strong></h3><br>';
 
         //
-        $message .= '<b>var_export($this->model->getObjectVariables(), true);</b>';
+        $message .= self::highlightText('var_export($this->model->getObjectVariables(), true);', true);
         $message .= '<pre>'. var_export($this->model->getObjectVariables(), true).'</pre><br>';
+
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Finding Records').'</strong></h3><br>';
 
         //
         $result = $this->model->find(1);
 
-        $message .= '<b>$this->model->find(1);</b>';
+        $message .= self::highlightText('$this->model->find(1);', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->orderBy('username DESC')->findAll();
 
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->findAll();</b>';
+        $message .= self::highlightText('$this->model->orderBy(\'username DESC\')->findAll();', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findBy('username', 'marcus');
 
-        $message .= '<b>$this->model->findBy(\'username\', \'marcus\');</b>';
+        $message .= self::highlightText('$this->model->findBy(\'username\', \'marcus\');', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->findManyBy('username != ?', 'marcus');
 
-        $message .= '<b>$this->model->findManyBy(\'username != ?\', \'marcus\');</b>';
+        $message .= self::highlightText('$this->model->findManyBy(\'username != ?\', \'marcus\');', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->where('username != ?', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
 
-        $message .= '<b>$this->model->(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();</b>';
+        $message .= self::highlightText('$this->model->(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findMany(array(1, 3));
 
-        $message .= '<b>$this->model->findMany(array(1, 3));</b>';
+        $message .= self::highlightText('$this->model->findMany(array(1, 3));', true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Creating Records').'</strong></h3><br>';
+
+        //
+        $user = new MemberModel();
+
+        $user->username = 'Virgil';
+        $user->email = 'virgil@novaframework.dev';
+
+        $result = $user->save();
+
+        $text = "
+\$user = new Member();
+
+\$user->username = 'Virgil';
+\$user->email = 'virgil@novaframework.dev';
+
+\$result = \$user->save();
+
+var_dump(\$result);
+self::dumpObjectArray(\$user);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. var_export($result, true).'</pre><br>';
+        $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
+
+        //
+        $result = $this->model->findAll();
+
+        $message .= self::highlightText('$this->model->findAll();', true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+
+        //
+        $user->email = 'modified@novaframework.dev';
+
+        $result = $user->save();
+
+        $text = "
+\$user->email = 'modified@novaframework.dev';
+
+\$result = \$user->save();
+
+var_dump(\$result);
+self::dumpObjectArray(\$user);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. var_export($result, true).'</pre><br>';
+        $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
+
+        //
+        $result = $this->model->findAll();
+
+        $message .= self::highlightText('$this->model->findAll();', true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+
+        //
+        $result = $user->delete();
+
+        $text = "
+\$result = \$user->delete();
+
+var_dump(\$result);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. var_export($result, true).'</pre><br>';
+
+        //
+        $result = $this->model->findAll();
+
+        $message .= self::highlightText('$this->model->findAll();', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
@@ -107,6 +191,24 @@ class RelationalModel extends BaseController
         $this->title(__d('demo', 'ORM - Object Relational Model'));
 
         $this->set('message', $message);
+    }
+
+    private static function highlightText($text)
+    {
+        $text = trim($text);
+        $text = highlight_string("<?php " . $text, true);  // highlight_string requires opening PHP tag or otherwise it will not colorize the text
+        $text = trim($text);
+        $text = preg_replace("|^\\<code\\>\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>|", "", $text, 1);  // remove prefix
+        $text = preg_replace("|\\</code\\>\$|", "", $text, 1);  // remove suffix 1
+        $text = trim($text);  // remove line breaks
+        $text = preg_replace("|\\</span\\>\$|", "", $text, 1);  // remove suffix 2
+        $text = trim($text);  // remove line breaks
+        $text = preg_replace("|^(\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>)(&lt;\\?php&nbsp;)(.*?)(\\</span\\>)|", "\$1\$3\$4", $text);  // remove custom added "<?php "
+
+        // Finall processing.
+        $text = '<div style="font-weight: bold; margin-bottom: 10px;">'.$text.'</div>';
+
+        return $text;
     }
 
     private static function dumpObject($object)

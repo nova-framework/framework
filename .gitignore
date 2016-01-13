@@ -6,6 +6,9 @@ composer.lock
 app/Config/config.php
 app/Config/constants.php
 
+# The developers Playground
+works
+
 # Test specific
 tmp/test/*
 build/

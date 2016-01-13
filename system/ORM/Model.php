@@ -313,12 +313,20 @@ class Model
 
     public function hasOne($className, $foreignKey = null)
     {
+        if($foreignKey === null) {
+            $foreignKey = $this->getForeignKey();
+        }
+
         // Return a Nova\ORM\Relation\HasOne instance.
         return new HasOne($className, $this, $foreignKey);
     }
 
     public function hasMany($className, $foreignKey = null)
     {
+        if($foreignKey === null) {
+            $foreignKey = $this->getForeignKey();
+        }
+
         // Return a Nova\ORM\Relation\HasMany instance.
         return new HasMany($className, $this, $foreignKey);
     }
@@ -327,6 +335,10 @@ class Model
     {
         if (is_null($joinTable)) {
             $table = $this->joiningTable($className);
+        }
+        
+        if($foreignKey === null) {
+            $foreignKey = $this->getForeignKey();
         }
 
         // Return a Nova\ORM\Relation\BelongsToMany instance.

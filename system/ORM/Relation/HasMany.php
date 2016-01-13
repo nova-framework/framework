@@ -21,7 +21,7 @@ class HasMany extends Relation
     protected $primaryKey;
 
 
-    public function __construct($className, Model $model, $foreignKey = null)
+    public function __construct($className, Model $model, $foreignKey)
     {
         if(! class_exists($className)) {
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
@@ -29,11 +29,6 @@ class HasMany extends Relation
 
         // Setup the instance of Target Model.
         $this->model = new $className();
-
-        // Process the foreignKey.
-        if($foreignKey === null) {
-            $foreignKey = $model->getForeignKey();
-        }
 
         // The foreignKey is associated to host Model.
         $this->foreignKey = $foreignKey;

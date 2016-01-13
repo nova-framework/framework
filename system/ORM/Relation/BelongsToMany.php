@@ -32,11 +32,6 @@ class BelongsToMany extends Relation
         // Setup the instance of Target Model.
         $this->model = new $className();
 
-        // Process the foreignKey.
-        if($foreignKey === null) {
-            $foreignKey = $model->getForeignKey();
-        }
-
         // Process the otherKey.
         if($otherKey === null) {
             $otherKey = $this->model->getForeignKey();

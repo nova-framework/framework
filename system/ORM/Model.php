@@ -229,9 +229,6 @@ class Model
             return $this->attributes[$name];
         }
 
-        // Model Relations; first, we prepare, our local fieldName.
-        $fieldName = Inflector::singularize($this->tableName);
-
         // If the attribute is a belongsTo Record, return this object.
         if (isset($this->belongsTo[$name])) {
             $value = $this->belongsTo[$name];
@@ -252,14 +249,15 @@ class Model
                 return $result;
             }
         }
+
         // If the attribute is a hasOne Record, return this object.
-        else if (isset($this->hasOne[$name])) {
+        if (isset($this->hasOne[$name])) {
             $value = $this->hasOne[$name];
 
             if (strpos($value, ':') !== false) {
                 list($key, $className) = explode(':', $value);
             } else {
-                $key = $fieldName .'_id';
+                $key = $this->getForeignKey();
 
                 $className = $value;
             }
@@ -270,14 +268,15 @@ class Model
 
             return $result;
         }
+
         // If the attribute is a hasMany Records, return an array of those objects.
-        else if (isset($this->hasMany[$name])) {
+        if (isset($this->hasMany[$name])) {
             $value = $this->hasMany[$name];
 
             if (strpos($value, ':') !== false) {
                 list($key, $className) = explode(':', $value);
             } else {
-                $key = $fieldName . '_id';
+                $key = $this->getForeignKey();
 
                 $className = $value;
             }
@@ -328,37 +327,58 @@ class Model
     // Relation Methods
     //--------------------------------------------------------------------
 
-    public function belongsTo($className, $otherKey)
+    public function belongsTo($className, $otherKey = null)
     {
         if(! class_exists($className)) {
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
         }
 
         $model = new $className();
+
+        if($otherKey === null) {
+            $otherKey = $model->getForeignKey();
+        }
 
         return $model->find($this->attribute($otherKey));
     }
 
-    public function hasOne($className, $modelKey)
+    public function hasOne($className, $foreignKey = null)
     {
         if(! class_exists($className)) {
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
         }
 
+        if($foreignKey === null) {
+            $foreignKey = $this->getForeignKey();
+        }
+
+        // Get an other Model instance.
         $model = new $className();
 
-        return $model->findBy($modelKey, $this->attribute($this->primaryKey));
+        return $model->findBy($foreignKey, $this->attribute($this->primaryKey));
     }
 
-    public function hasMany($className, $modelKey)
+    public function hasMany($className, $foreignKey = null)
     {
         if(! class_exists($className)) {
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
         }
 
+        if($foreignKey === null) {
+            $foreignKey = $this->getForeignKey();
+        }
+
+        // Get an other Model instance.
         $model = new $className();
 
-        return $model->findManyBy($modelKey, $this->attribute($this->primaryKey));
+        return $model->findManyBy($foreignKey, $this->attribute($this->primaryKey));
+    }
+
+    public function getForeignKey()
+    {
+        $foreign = Inflector::singularize($this->tableName);
+
+        return $foreign .'_id';
     }
 
     //--------------------------------------------------------------------

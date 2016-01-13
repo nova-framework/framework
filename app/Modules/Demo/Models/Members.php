@@ -7,7 +7,7 @@ use App\Core\BaseModel;
 
 class Members extends BaseModel
 {
-    protected $table = 'members';
+    protected $tableName = 'members';
 
 
     public function __construct()

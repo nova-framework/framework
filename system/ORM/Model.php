@@ -89,39 +89,43 @@ class Model
      */
     protected $selectOffset = null;
 
-
-    public function __construct(array $data = array(), $linkName = 'default')
+    /*
+     * Constructor
+     */
+    public function __construct($connection = 'default')
     {
         $this->className = get_class($this);
 
-        $this->db = Database::getConnection($linkName);
+        if($connection instanceof Connection) {
+            $this->db = $connection;
+        } else {
+            $this->db = Database::getConnection($connection);
+        }
 
         // Setup the Table name, if is empty.
         if (empty($this->tableName)) {
-            // Try the best to guess the Table name: Member -> members
-            $tableName = Inflector::pluralize($className);
+            // Try the best to guess the Table name: User -> users
+            $classPath = str_replace('\\', '/', $this->className);
+
+            $tableName = Inflector::pluralize(basename($classPath));
 
             $this->tableName = Inflector::tableize($tableName);
         }
 
         // Get the Table Fields.
         if ($this->getCache('$tableFields$') === null) {
-            $this->fields = $this->getTableFields($this->table());
+            $this->fields = $this->db->getTableFields($this->table());
 
             $this->setCache('$tableFields$', $this->fields);
         } else {
             $this->fields = $this->getCache('$tableFields$');
         }
-
-        if(! empty($data)) {
-            $this->hydrate($data);
-
-            $this->initialize(true);
-        }
     }
 
-    private function initialize($isNew = false)
+    private function initObject(array $data = array(), $isNew = false)
     {
+        $this->hydrate($data);
+
         $this->isNew = $isNew;
 
         if (! $this->isNew) {
@@ -140,14 +144,14 @@ class Model
         return $this->tableName;
     }
 
-    public function getConnection()
+    /**
+     * Getter for the table name.
+     *
+     * @return string The name of the table used by this class (including the DB_PREFIX).
+     */
+    public function table()
     {
-        return $this->db;
-    }
-
-    public function getTableFields($table)
-    {
-        return $this->db->getTableFields($table);
+        return DB_PREFIX .$this->tableName;
     }
 
     private function hydrate(array $data)
@@ -207,6 +211,8 @@ class Model
      */
     public function __set($key, $value)
     {
+        $key = Inflector::tableize($key);
+
         $this->attributes[$key] = $value;
 
         $this->isDirty = true;
@@ -214,9 +220,11 @@ class Model
 
     public function __get($name)
     {
+        $fieldName = Inflector::tableize($name);
+
         // If the name is of one of attributes, return the Value from attribute.
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
+        if (isset($this->attributes[$fieldName])) {
+            return $this->attributes[$fieldName];
         }
 
         // If there is something into Cache assigned for this name, return it from.
@@ -236,11 +244,15 @@ class Model
 
     public function __isset($name)
     {
+        $name = Inflector::tableize($name);
+
         return isset($this->attributes[$name]);
     }
 
     public function __unset($name)
     {
+        $name = Inflector::tableize($name);
+
         unset($this->attributes[$name]);
     }
 
@@ -345,16 +357,6 @@ class Model
     // CRUD Methods
     //--------------------------------------------------------------------
 
-    /**
-     * Getter for the table name.
-     *
-     * @return string The name of the table used by this class (including the DB_PREFIX).
-     */
-    public function table()
-    {
-        return DB_PREFIX .$this->tableName;
-    }
-
     public function find($id)
     {
         $className =& $this->className;
@@ -371,9 +373,7 @@ class Model
         if($result !== false) {
             $object = new $className();
 
-            $object->hydrate($result);
-
-            $object->initialize();
+            $object->initObject($result);
         }
         else {
             $object = null;
@@ -409,9 +409,7 @@ class Model
         if($result !== false) {
             $object = new $className();
 
-            $object->hydrate($result);
-
-            $object->initialize();
+            $object->initObject($result);
         }
         else {
             $object = null;
@@ -455,11 +453,9 @@ class Model
         foreach($data as $row) {
             $object = new $className();
 
-            $object->hydrate($row);
+            $object->initObject($row);
 
-            $object->initialize();
-
-            // Add the current object instance to return list.
+            //
             $result[] = $object;
         }
 
@@ -506,11 +502,9 @@ class Model
         foreach($data as $row) {
             $object = new $className();
 
-            $object->hydrate($row);
+            $object->initObject($row);
 
-            $object->initialize();
-
-            // Add the current object instance to return list.
+            //
             $result[] = $object;
         }
 

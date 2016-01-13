@@ -15,8 +15,6 @@ use Nova\ORM\Relation;
 
 class HasOne extends Relation
 {
-    protected $model;
-
     protected $foreignKey;
     protected $primaryKey;
 

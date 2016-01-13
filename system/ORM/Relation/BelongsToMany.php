@@ -16,7 +16,6 @@ use Nova\ORM\Relation\JoiningPivot;
 
 class BelongsToMany extends Relation
 {
-    protected $model;
     protected $pivot;
 
     protected $foreignKey;

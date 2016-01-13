@@ -15,8 +15,6 @@ use Nova\ORM\Relation;
 
 class BelongsTo extends Relation
 {
-    protected $model;
-
     protected $primaryKey;
 
 

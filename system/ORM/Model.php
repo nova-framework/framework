@@ -13,6 +13,10 @@ use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
 
+use Nova\ORM\Relation\HasOne;
+use Nova\ORM\Relation\HasMany;
+use Nova\ORM\Relation\BelongsTo;
+
 use \PDO;
 
 
@@ -234,7 +238,9 @@ class Model
 
         // If there is a Relation defined for this name, process it.
         if (isset($this->relations[$name]) && method_exists($this, $name)) {
-            $result = call_user_func(array($this, $name));
+            $relation = call_user_func(array($this, $name));
+
+            $result = $relation->find();
 
             $this->setCache($name, $result);
 
@@ -299,51 +305,33 @@ class Model
     // Relation Methods
     //--------------------------------------------------------------------
 
-    public function belongsTo($className, $otherKey = null)
+    public function belongsTo($className, $foreignKey)
     {
-        if(! class_exists($className)) {
-            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
-        }
+        // Those primaryKey and foreignKey are defined on target Model.
+        $primaryKey = $model->attribute($foreignKey);
 
-        $model = new $className();
-
-        if($otherKey === null) {
-            $otherKey = $model->getForeignKey();
-        }
-
-        return $model->find($this->attribute($otherKey));
+        // Return a BelongsTo Relation instance.
+        return new BelongsTo($className, $primaryKey);
     }
 
     public function hasOne($className, $foreignKey = null)
     {
-        if(! class_exists($className)) {
-            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
-        }
-
         if($foreignKey === null) {
             $foreignKey = $this->getForeignKey();
         }
 
-        // Get an other Model instance.
-        $model = new $className();
-
-        return $model->findBy($foreignKey, $this->getPrimaryKey());
+        // Return a HasOne Relation instance.
+        return new HasOne($className, $foreignKey, $this->getPrimaryKey());
     }
 
     public function hasMany($className, $foreignKey = null)
     {
-        if(! class_exists($className)) {
-            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
-        }
-
         if($foreignKey === null) {
             $foreignKey = $this->getForeignKey();
         }
 
-        // Get an other Model instance.
-        $model = new $className();
-
-        return $model->findManyBy($foreignKey, $this->getPrimaryKey());
+        // Return a HasMany Relation instance.
+        return new HasMany($className, $foreignKey, $this->getPrimaryKey());
     }
 
     public function getForeignKey()

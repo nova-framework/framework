@@ -12,37 +12,57 @@ namespace Nova\ORM;
 use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
-use Nova\ORM\Expect;
 
 use \PDO;
 
 
 class Model
 {
+    /*
+     * The used \Nova\Database\Connection instance.
+     */
     protected $db = null;
 
-    // Internal static Cache.
+    /*
+     * Internal static Cache.
+     */
     protected static $cache = array();
 
-    // There is stored the called Class name.
+    /*
+     * There is stored the called Class name.
+     */
     protected $className;
 
+    /**
+     * The Model's State Management variables.
+     */
     protected $isNew   = true;
     protected $isDirty = false;
 
+    /**
+     * The Table's Primary Key.
+     */
     protected $primaryKey = 'id';
 
-    protected $attributes = array();
-
-    protected $tableName;
-    protected $serialize;
+    /**
+     * The Table Metadata.
+     */
+    protected $fields;
 
     /**
-     * The (Active)Record Relations with other Records
+     * There we store the Model Attributes (its Data).
      */
-    protected $belongsTo = array();
-    protected $hasOne    = array();
-    protected $hasMany   = array();
+    protected $attributes = array();
+
+    /**
+     * The Table name belonging to this Model.
+     */
+    protected $tableName;
+
+    /**
+     * The Model Relations with other Models.
+     */
+    protected $relations = array();
 
     /**
      * Temporary select's WHERE attributes.
@@ -64,11 +84,6 @@ class Model
      */
     protected $selectOffset = null;
 
-    /**
-     * There we store the Table Metadata.
-     */
-    protected $fields;
-
 
     public function __construct(array $data = array(), $linkName = 'default')
     {
@@ -83,14 +98,6 @@ class Model
 
             $this->tableName = Inflector::tableize($tableName);
         }
-
-        // Process the Relations
-        $this->belongsTo = Expect::expectAssocArray($this->belongsTo);
-        $this->hasOne    = Expect::expectAssocArray((array)$this->hasOne);
-        $this->hasMany   = Expect::expectAssocArray((array)$this->hasMany);
-
-        // Process the serialized fields (i.e. User Meta)
-        $this->serialize = Expect::expectArray($this->serialize);
 
         // Get the Table Fields.
         if ($this->getCache('$tableFields$') === null) {
@@ -111,10 +118,6 @@ class Model
     private function initialize($isNew = false)
     {
         $this->isNew = $isNew;
-
-        if (! $this->isNew) {
-            $this->unserializeFields();
-        }
 
         $this->afterLoad();
     }
@@ -145,28 +148,6 @@ class Model
         foreach ($data as $key => $value) {
             if(isset($this->fields[$key])) {
                 $this->attributes[$key] = $value;
-            }
-        }
-    }
-
-    //--------------------------------------------------------------------
-    // Serialization Methods
-    //--------------------------------------------------------------------
-
-    private function unserializeFields()
-    {
-        foreach ((array)$this->serialize as $field) {
-            if (isset($this->attributes[$field]) && ! empty($this->attributes[$field])) {
-                $this->attributes[$field] = unserialize($this->attributes[$field]);
-            }
-        }
-    }
-
-    private function serializeFields()
-    {
-        foreach ((array) $this->serialize as $field) {
-            if (isset($this->attributes[$field]) && ! empty($this->attributes[$field])) {
-                $this->attributes[$field] = serialize($this->attributes[$field]);
             }
         }
     }
@@ -220,68 +201,19 @@ class Model
 
     public function __get($name)
     {
-        // First, we try to get the attribute from the Cache.
-        if ($this->hasCached($name)) {
-            return $this->getCache($name);
-        }
-        // If the attribute is really an attribute, return it.
-        else if(isset($this->attributes[$name])) {
+        // If the name is of one of attributes, return the Value from attribute.
+        if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
         }
 
-        // If the attribute is a belongsTo Record, return this object.
-        if (isset($this->belongsTo[$name])) {
-            $value = $this->belongsTo[$name];
-
-            if (strpos($value, ':') !== false) {
-                list($key, $className) = explode(':', $value);
-            } else {
-                $key = $name . '_id';
-
-                $className = $value;
-            }
-
-            if (isset($this->$key) && ! empty($this->$key)) {
-                $result = $this->belongsTo($className, $key);
-
-                $this->setCache($name, $result);
-
-                return $result;
-            }
+        // If there is something into Cache assigned for this name, return it from.
+        if ($this->hasCached($name)) {
+            return $this->getCache($name);
         }
 
-        // If the attribute is a hasOne Record, return this object.
-        if (isset($this->hasOne[$name])) {
-            $value = $this->hasOne[$name];
-
-            if (strpos($value, ':') !== false) {
-                list($key, $className) = explode(':', $value);
-            } else {
-                $key = $this->getForeignKey();
-
-                $className = $value;
-            }
-
-            $result = $this->hasOne($className, $key);
-
-            $this->setCache($name, $result);
-
-            return $result;
-        }
-
-        // If the attribute is a hasMany Records, return an array of those objects.
-        if (isset($this->hasMany[$name])) {
-            $value = $this->hasMany[$name];
-
-            if (strpos($value, ':') !== false) {
-                list($key, $className) = explode(':', $value);
-            } else {
-                $key = $this->getForeignKey();
-
-                $className = $value;
-            }
-
-            $result = $this->hasMany($className, $key);
+        // If there is a Relation defined for this name, process it.
+        if (isset($this->relations[$name]) && method_exists($this, $name)) {
+            $result = call_user_func(array($this, $name));
 
             $this->setCache($name, $result);
 
@@ -565,8 +497,6 @@ class Model
             return;
         }
 
-        $this->serializeFields();
-
         foreach ($this->fields as $fieldName => $fieldInfo) {
             if(($fieldName != $this->primaryKey) && isset($this->attributes[$fieldName])) {
                 $data[$fieldName] = $this->attributes[$fieldName];
@@ -597,8 +527,6 @@ class Model
             $paramTypes = $this->getParamTypes(array_merge($data, $where));
 
             $result = $this->db->update($this->table(), $data, $where, $paramTypes);
-
-            $this->unserializeFields();
 
             return $result;
         }
@@ -914,18 +842,6 @@ class Model
 
         foreach ($this->fields as $fieldName => $fieldInfo) {
             $result .= "\t" . ucfirst($fieldName) . ': ' . $this->$fieldName . "\n";
-        }
-
-        foreach ($this->hasOne as $fieldName => $className) {
-            $result .= "\t" . ucfirst($fieldName) . ": (reference to $className objects)\n";
-        }
-
-        foreach ($this->hasMany as $fieldName => $className) {
-            $result .= "\t" . ucfirst($fieldName) . ": (reference to $className objects)\n";
-        }
-
-        foreach ($this->belongsTo as $fieldName => $className) {
-            $result .= "\t" . ucfirst($fieldName) . ": (reference to a $className object)\n";
         }
 
         return $result;

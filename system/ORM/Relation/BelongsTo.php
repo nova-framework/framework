@@ -20,15 +20,22 @@ class BelongsTo extends Relation
     protected $primaryKey;
 
 
-    public function __construct($className, $primaryKey)
+    public function __construct($$className, Model $model, $otherKey = null)
     {
-        if(! class_exists($className)) {
-            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
+        if(! class_exists($$className)) {
+            throw new \Exception(__d('system', 'No valid Class is given: {0}', $$className));
         }
 
-        $this->primaryKey = $primaryKey;
+        // Setup the instance of Target Model.
+        $this->model = new $$className();
 
-        $this->model = new $className();
+        // Process the otherKey.
+        if($otherKey === null) {
+            $otherKey = $this->model->getForeignKey();
+        }
+
+        // The primaryKey is associated to target Model.
+        $this->primaryKey = $model->attribute($otherKey);
     }
 
     public function get()

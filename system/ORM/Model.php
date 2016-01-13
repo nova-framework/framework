@@ -305,33 +305,27 @@ class Model
     // Relation Methods
     //--------------------------------------------------------------------
 
-    public function belongsTo($className, $otherKey)
+    public function belongsTo($className, $otherKey = null)
     {
-        // The primaryKey is associated to target Model.
-        $primaryKey = $model->attribute($otherKey);
-
         // Return a BelongsTo Relation instance.
-        return new BelongsTo($className, $primaryKey);
+        return new BelongsTo($className, $this, $otherKey);
     }
 
     public function hasOne($className, $foreignKey = null)
     {
-        if($foreignKey === null) {
-            $foreignKey = $this->getForeignKey();
-        }
-
         // Return a HasOne Relation instance.
-        return new HasOne($className, $foreignKey, $this->getPrimaryKey());
+        return new HasOne($className, $this, $foreignKey);
     }
 
     public function hasMany($className, $foreignKey = null)
     {
-        if($foreignKey === null) {
-            $foreignKey = $this->getForeignKey();
-        }
-
         // Return a HasMany Relation instance.
-        return new HasMany($className, $foreignKey, $this->getPrimaryKey());
+        return new HasMany($className, $this, $foreignKey);
+    }
+
+    public function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
+    {
+        return BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
     }
 
     public function getForeignKey()

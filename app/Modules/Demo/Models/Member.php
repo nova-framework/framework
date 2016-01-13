@@ -10,9 +10,9 @@ class Member extends BaseModel
     protected $tableName = 'members';
 
 
-    public function __construct()
+    public function __construct($connection = 'default')
     {
-        parent::__construct();
+        parent::__construct($connection);
     }
 
 

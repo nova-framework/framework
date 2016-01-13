@@ -29,7 +29,7 @@ class BaseModel extends Model
      *
      * @var string;
      */
-    protected $table;
+    protected $tableName;
 
     /**
      * The model's default primary key.
@@ -211,6 +211,27 @@ class BaseModel extends Model
         $this->tempReturnType = $this->returnType;
     }
 
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * Getter for the table name.
+     *
+     * @param null|string $table
+     * @return string The name of the table used by this class (including the DB_PREFIX).
+     */
+    public function table($table = null)
+    {
+        if ($table !== null) {
+            // A custom Table Name is wanted.
+            return DB_PREFIX .$table;
+        }
+
+        return DB_PREFIX .$this->tableName;
+    }
+    
     //--------------------------------------------------------------------
     // QueryBuilder Methods
     //--------------------------------------------------------------------
@@ -1029,22 +1050,6 @@ class BaseModel extends Model
         }
 
         return true;
-    }
-
-    /**
-     * Getter for the table name.
-     *
-     * @param null|string $table
-     * @return string The name of the table used by this class (including the DB_PREFIX).
-     */
-    public function table($table = null)
-    {
-        if ($table !== null) {
-            // A custom Table Name is wanted.
-            return DB_PREFIX .$table;
-        }
-
-        return DB_PREFIX .$this->table;
     }
 
     /**

@@ -16,7 +16,6 @@ use Nova\ORM\Relation\JoiningPivot;
 
 class BelongsToMany extends Relation
 {
-    protected $model;
     protected $pivot;
 
     protected $foreignKey;
@@ -25,12 +24,7 @@ class BelongsToMany extends Relation
 
     public function __construct($className, Model $model, $joinTable, $foreignKey, $otherKey = null)
     {
-        if(! class_exists($className)) {
-            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
-        }
-
-        // Setup the instance of Target Model.
-        $this->model = new $className();
+        parent::__construct($className);
 
         // Process the otherKey.
         if($otherKey === null) {

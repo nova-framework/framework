@@ -7,7 +7,7 @@
  * @date January 13th, 2016
  */
 
-namespace Nova\ORM\Relation;
+namespace Nova\ORM;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
@@ -15,7 +15,7 @@ use Nova\Database\Manager as Database;
 use Nova\ORM\Model;
 
 
-class BelongsToPivot
+class Pivot
 {
     protected $tableName;
 

@@ -336,13 +336,13 @@ class Model
         if (is_null($joinTable)) {
             $table = $this->joiningTable($className);
         }
-        
+
         if($foreignKey === null) {
             $foreignKey = $this->getForeignKey();
         }
 
         // Return a Nova\ORM\Relation\BelongsToMany instance.
-        return BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
+        return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
     }
 
     public function getForeignKey()

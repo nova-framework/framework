@@ -5,9 +5,9 @@ namespace App\Modules\Demo\Models;
 use Nova\ORM\Model as BaseModel;
 
 
-class User extends BaseModel
+class Category extends BaseModel
 {
-    protected $tableName = 'users';
+    protected $tableName = 'categories';
 
     protected $relations = array('posts');
 
@@ -19,7 +19,7 @@ class User extends BaseModel
 
     public function posts()
     {
-        return $this->hasMany('App\Modules\Demo\Post', 'author_id');
+        return $this->hasMany('App\Modules\Demo\Post', 'category_id');
     }
 
 }

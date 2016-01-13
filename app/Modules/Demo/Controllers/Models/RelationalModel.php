@@ -11,7 +11,7 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
-use App\Modules\Demo\Models\Member;
+use App\Modules\Demo\Models\User;
 
 use \PDO;
 
@@ -30,7 +30,7 @@ class RelationalModel extends BaseController
     {
         parent::__construct();
 
-        $this->model = new Member();
+        $this->model = new User();
     }
 
     protected function beforeFlight()
@@ -100,9 +100,9 @@ class RelationalModel extends BaseController
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
-        $result = $this->model->findMany(array(1, 3));
+        $result = $this->model->findMany(array(1, 3, 4));
 
-        $message .= self::highlightText('$this->model->findMany(array(1, 3));', true);
+        $message .= self::highlightText('$this->model->findMany(array(1, 3, 4));', true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
@@ -110,7 +110,7 @@ class RelationalModel extends BaseController
         $message .= '<h3><strong>'.__d('demo', 'Creating Records').'</strong></h3><br>';
 
         //
-        $user = new Member();
+        $user = new User();
 
         $user->username = 'Virgil';
         $user->email = 'virgil@novaframework.dev';
@@ -118,7 +118,7 @@ class RelationalModel extends BaseController
         $result = $user->save();
 
         $text = "
-\$user = new Member();
+\$user = new User();
 
 \$user->username = 'Virgil';
 \$user->email = 'virgil@novaframework.dev';

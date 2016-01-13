@@ -47,7 +47,7 @@ class Model
     /**
      * The Table Metadata.
      */
-    protected $fields;
+    protected $fields = array();
 
     /**
      * There we store the Model Attributes (its Data).
@@ -62,7 +62,7 @@ class Model
     /**
      * The Fields who are (un)serialized on-fly.
      */
-    protected $serialize;
+    protected $serialize = array();
 
     /**
      * The Model Relations with other Models.
@@ -102,11 +102,6 @@ class Model
             $tableName = Inflector::pluralize($className);
 
             $this->tableName = Inflector::tableize($tableName);
-        }
-
-        // Pre-process the serialized fields variable.
-        if(! is_array($this->serialize)) {
-            $this->serialize = preg_split("/\s*,\s*/", $this->serialize);
         }
 
         // Get the Table Fields.

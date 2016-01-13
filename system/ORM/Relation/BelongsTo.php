@@ -27,7 +27,7 @@ class BelongsTo extends Relation
         }
 
         // Setup the instance of Target Model.
-        $this->model = new $$className();
+        $this->model = new $className();
 
         // Process the otherKey.
         if($otherKey === null) {

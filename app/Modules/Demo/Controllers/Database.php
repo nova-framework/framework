@@ -56,57 +56,57 @@ class Database extends BaseController
         $message = '';
 
         //
-        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), 'object');
+        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), 'object');
 
-        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), \'object\');</b>';
+        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), \'object\');</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array('username' => 'marcus'));
+        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array('username' => 'marcus'));
 
-        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username != :username", array(\'username\' => \'marcus\'));</b>';
+        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array(\'username\' => \'marcus\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'), array(), 'object');
+        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'michael'), array(), 'object');
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'), array(), \'object\');</b>';
+        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'), array(), \'object\');</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username LIKE :search LIMIT 0, 2", array('search' => '%micha%'));
+        $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username LIKE :search LIMIT 0, 2", array('search' => '%micha%'));
 
-        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."members WHERE username LIKE :search LIMIT 0, 2", array(\'search\' => \'%micha%\'));</b>';
+        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username LIKE :search LIMIT 0, 2", array(\'search\' => \'%micha%\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'));
+        $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'michael'));
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'));</b>';
+        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'marcus'));
+        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'marcus'));
 
-        $message .= '<b>$this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'marcus\'));</b>';
+        $message .= '<b>$this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'marcus\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."members WHERE id = :userid", array('userid' => 1));
+        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array('userid' => 1));
 
-        $message .= '<b>$this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."members WHERE id = :userid", array(\'userid\' => 1));</b>';
+        $message .= '<b>$this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array(\'userid\' => 1));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchObject("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array('username' => 'michael'));
+        $data = $this->db->fetchObject("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'michael'));
 
-        $message .= '<b>$this->db->fetchObject("SELECT * FROM " .DB_PREFIX ."members WHERE username = :username", array(\'username\' => \'michael\'));</b>';
+        $message .= '<b>$this->db->fetchObject("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'));</b>';
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");
+        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");</b>';
+        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -119,15 +119,15 @@ class Database extends BaseController
         $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
 
         //
-        $retval = $this->db->insert(DB_PREFIX ."members", $userInfo);
+        $retval = $this->db->insert(DB_PREFIX ."users", $userInfo);
 
-        $message .= '<b>$this->db->insert(DB_PREFIX ."members", $userInfo);</b>';
+        $message .= '<b>$this->db->insert(DB_PREFIX ."users", $userInfo);</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");
+        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");</b>';
+        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -138,41 +138,41 @@ class Database extends BaseController
         $message .= '<b>$userInfo</b>';
         $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
 
-        $retval = $this->db->update(DB_PREFIX ."members", $userInfo, array('username' => 'virgil'));
+        $retval = $this->db->update(DB_PREFIX ."users", $userInfo, array('username' => 'virgil'));
 
-        $message .= '<b>$this->db->update(DB_PREFIX ."members", $userInfo, array(\'username\' => \'virgil\'));</b>';
+        $message .= '<b>$this->db->update(DB_PREFIX ."users", $userInfo, array(\'username\' => \'virgil\'));</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");
+        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");</b>';
+        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
-        $retval = $this->db->delete(DB_PREFIX ."members", array('username' => 'virgil'));
+        $retval = $this->db->delete(DB_PREFIX ."users", array('username' => 'virgil'));
 
-        $message .= '<b>$this->db->delete(DB_PREFIX ."members", array(\'username\' => \'virgil\'));</b>';
+        $message .= '<b>$this->db->delete(DB_PREFIX ."users", array(\'username\' => \'virgil\'));</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");
+        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."members");</b>';
+        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Schema support').'</strong></h3><br>';
 
         //
-        $result = $this->db->getTableFields(DB_PREFIX ."members");
+        $result = $this->db->getTableFields(DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->getTableFields(DB_PREFIX ."members");</b>';
+        $message .= '<b>$this->db->getTableFields(DB_PREFIX ."users");</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $result = $this->db->listColumns(DB_PREFIX ."members");
+        $result = $this->db->listColumns(DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->listColumns(DB_PREFIX ."members")</b>';
+        $message .= '<b>$this->db->listColumns(DB_PREFIX ."users")</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         // Setup the View variables.

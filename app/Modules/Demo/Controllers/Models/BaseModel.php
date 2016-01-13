@@ -11,7 +11,7 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
-use App\Modules\Demo\Models\Members as MembersModel;
+use App\Modules\Demo\Models\Users as UserModel;
 
 use \PDO;
 
@@ -30,7 +30,7 @@ class BaseModel extends BaseController
     {
         parent::__construct();
 
-        $this->model = new MembersModel();
+        $this->model = new UserModel();
     }
 
     protected function beforeFlight()
@@ -142,9 +142,9 @@ class BaseModel extends BaseController
         $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username DESC')->findMany(array(1, 3));
+        $members = $this->model->orderBy('username DESC')->findMany(array(1, 3, 4));
 
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->findMany(array(1, 3));</b>';
+        $message .= '<b>$this->model->orderBy(\'username DESC\')->findMany(array(1, 3, 4));</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //

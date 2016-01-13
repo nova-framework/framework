@@ -5,9 +5,9 @@ namespace App\Modules\Demo\Models;
 use App\Core\BaseModel;
 
 
-class Members extends BaseModel
+class Users extends BaseModel
 {
-    protected $tableName = 'members';
+    protected $tableName = 'users';
 
 
     public function __construct()

@@ -47,7 +47,7 @@ class Model
     /**
      * The Table Metadata.
      */
-    protected $fields;
+    protected $fields = array();
 
     /**
      * There we store the Model Attributes (its Data).
@@ -58,6 +58,11 @@ class Model
      * The Table name belonging to this Model.
      */
     protected $tableName;
+
+    /**
+     * The Fields who are (un)serialized on-fly.
+     */
+    protected $serialize = array();
 
     /**
      * The Model Relations with other Models.
@@ -118,6 +123,14 @@ class Model
     private function initialize($isNew = false)
     {
         $this->isNew = $isNew;
+
+        if (! $this->isNew) {
+            foreach ($this->attributes as $key => &$value) {
+                if(! empty($value) && in_array($key, $this->serialize)) {
+                    $value = unserialize($value);
+                }
+            }
+        }
 
         $this->afterLoad();
     }
@@ -255,6 +268,21 @@ class Model
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    public function getPrimaryKey()
+    {
+        if($this->isNew) {
+            return null;
+        }
+
+        $key =& $this->primaryKey;
+
+        if(isset($this->attributes[$key]) && ! empty($this->attributes[$key])) {
+            return $this->attributes[$key];
+        }
+
+        return null;
+    }
+
     //--------------------------------------------------------------------
     // Relation Methods
     //--------------------------------------------------------------------
@@ -287,7 +315,7 @@ class Model
         // Get an other Model instance.
         $model = new $className();
 
-        return $model->findBy($foreignKey, $this->attribute($this->primaryKey));
+        return $model->findBy($foreignKey, $this->getPrimaryKey());
     }
 
     public function hasMany($className, $foreignKey = null)
@@ -303,14 +331,14 @@ class Model
         // Get an other Model instance.
         $model = new $className();
 
-        return $model->findManyBy($foreignKey, $this->attribute($this->primaryKey));
+        return $model->findManyBy($foreignKey, $this->getPrimaryKey());
     }
 
     public function getForeignKey()
     {
-        $foreign = Inflector::singularize($this->tableName);
+        $tableKey = Inflector::singularize($this->tableName);
 
-        return $foreign .'_id';
+        return $tableKey .'_id';
     }
 
     //--------------------------------------------------------------------
@@ -499,39 +527,46 @@ class Model
 
         foreach ($this->fields as $fieldName => $fieldInfo) {
             if(($fieldName != $this->primaryKey) && isset($this->attributes[$fieldName])) {
-                $data[$fieldName] = $this->attributes[$fieldName];
+                if(! empty($value) && in_array($fieldName, $this->serialize)) {
+                    // The current is marked as a serialized one.
+                    $data[$fieldName] = serialize($this->attributes[$field]);
+                } else {
+                    $data[$fieldName] = $this->attributes[$fieldName];
+                }
             }
         }
+
+        //
+        $result = false;
 
         $paramTypes = $this->getParamTypes($data);
 
         if ($this->isNew) {
             // We are into INSERT mode.
-            $insertId = $this->db->insert($this->table(), $data, $paramTypes);
+            $result = $this->db->insert($this->table(), $data, $paramTypes);
 
-            if($insertId !== false) {
+            if($result !== false) {
                 $this->isNew = false;
 
-                $this->setAttribute($this->primaryKey, $insertId);
+                $this->setAttribute($this->primaryKey, $result);
             }
-
-            return $insertId;
         }
-
         // We are into UPDATE mode.
-        if($this->isDirty) {
+        else if($this->isDirty) {
             $where = array(
-                $this->primaryKey => $this->attribute($this->primaryKey)
+                $this->primaryKey => $this->getPrimaryKey()
             );
 
             $paramTypes = $this->getParamTypes(array_merge($data, $where));
 
             $result = $this->db->update($this->table(), $data, $where, $paramTypes);
 
-            return $result;
+            if($result !== false) {
+                $this->isDirty = false;
+            }
         }
 
-        return false;
+        return $result;
     }
 
     public function delete()
@@ -542,7 +577,7 @@ class Model
 
         // Prepare the WHERE parameters.
         $where = array(
-            $this->primaryKey => $this->attribute($this->primaryKey)
+            $this->primaryKey => $this->getPrimaryKey()
         );
 
         $paramTypes = $this->getParamTypes($where);
@@ -568,7 +603,7 @@ class Model
         $paramTypes = $this->getParamTypes($where);
 
         // Execute the Record deletetion.
-        $result = $this->db->delete($this->table(), $where);
+        $result = $this->db->delete($this->table(), $where, $paramTypes);
 
         // Reset the Model State.
         $this->resetState();

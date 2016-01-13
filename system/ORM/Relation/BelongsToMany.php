@@ -23,7 +23,7 @@ class BelongsToMany extends Relation
     protected $otherKey;
 
 
-    public function __construct($className, Model $model, $joinTable, $foreignKey, $otherKey = null, $otherKey = null, $otherKey, $otherKey = null)
+    public function __construct($className, Model $model, $joinTable, $foreignKey, $otherKey = null)
     {
         if(! class_exists($className)) {
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));

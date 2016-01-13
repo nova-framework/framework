@@ -240,7 +240,7 @@ class Model
         if (isset($this->relations[$name]) && method_exists($this, $name)) {
             $relation = call_user_func(array($this, $name));
 
-            $result = $relation->find();
+            $result = $relation->get();
 
             $this->setCache($name, $result);
 
@@ -305,10 +305,10 @@ class Model
     // Relation Methods
     //--------------------------------------------------------------------
 
-    public function belongsTo($className, $foreignKey)
+    public function belongsTo($className, $otherKey)
     {
-        // Those primaryKey and foreignKey are defined on target Model.
-        $primaryKey = $model->attribute($foreignKey);
+        // The primaryKey is associated to target Model.
+        $primaryKey = $model->attribute($otherKey);
 
         // Return a BelongsTo Relation instance.
         return new BelongsTo($className, $primaryKey);

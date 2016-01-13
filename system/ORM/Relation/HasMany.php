@@ -10,9 +10,10 @@
 namespace Nova\ORM\Relation;
 
 use Nova\ORM\Model;
+use Nova\ORM\Relation;
 
 
-class HasMany
+class HasMany extends Relation
 {
     protected $model;
 
@@ -33,7 +34,7 @@ class HasMany
         $this->model = new $className();
     }
 
-    public function find()
+    public function get()
     {
         return $this->model->findManyBy($this->foreignKey, $this->primaryKey);
     }

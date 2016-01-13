@@ -10,9 +10,10 @@
 namespace Nova\ORM\Relation;
 
 use Nova\ORM\Model;
+use Nova\ORM\Relation;
 
 
-class HasOne
+class HasOne extends Relation
 {
     protected $model;
     protected $where;
@@ -24,13 +25,14 @@ class HasOne
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
         }
 
-        $this->$where = $where;
+        $this->foreignKey = $foreignKey;
+        $this->primaryKey = $primaryKey;
 
         //
         $this->model = new $className();
     }
 
-    public function find()
+    public function get()
     {
         return $this->model->findManyBy($this->foreignKey, $this->primaryKey);
     }

@@ -20,7 +20,7 @@ class BelongsTo extends Relation
     protected $primaryKey;
 
 
-    public function __construct($$className, Model $model, $otherKey = null)
+    public function __construct($className, Model $model, $otherKey = null)
     {
         if(! class_exists($$className)) {
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $$className));

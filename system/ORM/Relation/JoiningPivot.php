@@ -15,7 +15,7 @@ use Nova\Database\Manager as Database;
 use Nova\ORM\Model;
 
 
-class Pivot
+class JoiningPivot
 {
     protected $tableName;
 

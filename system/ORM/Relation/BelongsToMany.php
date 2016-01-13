@@ -11,7 +11,7 @@ namespace Nova\ORM\Relation;
 
 use Nova\ORM\Model;
 use Nova\ORM\Relation;
-use Nova\ORM\Pivot;
+use Nova\ORM\Relation\JoiningPivot;
 
 
 class BelongsToMany extends Relation
@@ -38,7 +38,7 @@ class BelongsToMany extends Relation
         }
 
         // Setup the Pivot.
-        $this->pivot = new Pivot($joinTable, $foreignKey, $otherKey);
+        $this->pivot = new JoiningPivot($joinTable, $foreignKey, $otherKey);
 
         // The primaryKey is associated to host Model.
         $this->foreignKey = $foreignKey;

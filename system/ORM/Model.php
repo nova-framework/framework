@@ -307,24 +307,29 @@ class Model
 
     public function belongsTo($className, $otherKey = null)
     {
-        // Return a BelongsTo Relation instance.
+        // Return a Nova\ORM\Relation\BelongsTo instance.
         return new BelongsTo($className, $this, $otherKey);
     }
 
     public function hasOne($className, $foreignKey = null)
     {
-        // Return a HasOne Relation instance.
+        // Return a Nova\ORM\Relation\HasOne instance.
         return new HasOne($className, $this, $foreignKey);
     }
 
     public function hasMany($className, $foreignKey = null)
     {
-        // Return a HasMany Relation instance.
+        // Return a Nova\ORM\Relation\HasMany instance.
         return new HasMany($className, $this, $foreignKey);
     }
 
     public function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
     {
+        if (is_null($joinTable)) {
+            $table = $this->joiningTable($className);
+        }
+
+        // Return a Nova\ORM\Relation\BelongsToMany instance.
         return BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
     }
 
@@ -333,6 +338,23 @@ class Model
         $tableKey = Inflector::singularize($this->tableName);
 
         return $tableKey .'_id';
+    }
+
+    public function joiningTable($className)
+    {
+        $origin = basename(str_replace('\\', '/', $this->className));
+        $target = basename(str_replace('\\', '/', $className));
+
+        // Prepare an models array.
+        $models = array(
+            Inflector::tableize($origin),
+            Inflector::tableize($target)
+        );
+
+        // Sort the models.
+        sort($models);
+
+        return implode('_', $models);
     }
 
     //--------------------------------------------------------------------

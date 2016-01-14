@@ -34,6 +34,11 @@ abstract class Engine
     protected $className;
 
     /**
+     * The Table's Primary Key.
+     */
+    protected $primaryKey = 'id';
+
+    /**
      * The Table Metadata.
      */
     protected $fields = array();
@@ -174,6 +179,21 @@ abstract class Engine
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
+    public function getPrimaryKey()
+    {
+        if($this->isNew) {
+            return null;
+        }
+
+        $key =& $this->primaryKey;
+
+        if(isset($this->attributes[$key]) && ! empty($this->attributes[$key])) {
+            return $this->attributes[$key];
+        }
+
+        return null;
+    }
+    
     //--------------------------------------------------------------------
     // Data Conversion Methods
     //--------------------------------------------------------------------

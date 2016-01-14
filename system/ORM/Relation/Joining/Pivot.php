@@ -7,20 +7,17 @@
  * @date January 13th, 2016
  */
 
-namespace Nova\ORM;
+namespace Nova\ORM\Relation\Joining;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
 
+use Nova\ORM\Engine;
 use Nova\ORM\Model;
 
 
-class JoiningPivot
+class Pivot extends Engine
 {
-    protected $tableName;
-
-    protected $db;
-
     protected $foreignKey;
     protected $otherKey;
 
@@ -29,18 +26,14 @@ class JoiningPivot
     {
         $this->tableName = $tableName;
 
-        $this->db = Database::getConnection($connection);
+        // Execute the parent Constructor, after setting up the Table name.
+        parent::__construct();
 
         // The foreignKey is associated to host Model.
         $this->foreignKey = $foreignKey;
 
         // The otherKey is associated to target Model.
         $this->otherKey = $otherKey;
-    }
-
-    public function table()
-    {
-        return DB_PREFIX .$this->tableName;
     }
 
     public function attach($params)

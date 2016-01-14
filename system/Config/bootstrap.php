@@ -7,6 +7,7 @@
  * @date December 15th, 2015
  */
 
+// Framework
 use Nova\Packages\Manager as Packages;
 use Nova\Modules\Manager as Modules;
 use Nova\Events\Manager as Events;
@@ -14,6 +15,16 @@ use Nova\Net\Session;
 use Nova\Net\Router;
 use Nova\Config;
 use Nova\Logger;
+
+// Monolog
+use Monolog\Logger as MonologLogger;
+use Monolog\Handler\StreamHandler as MonologHandler;
+
+// Whoops!
+use Whoops\Run as WhoopsRunner;
+use Whoops\Handler\PrettyPageHandler as WhoopsPrettyHandler;
+use Whoops\Handler\PlainTextHandler as WhoopsPlainHandler;
+
 
 /** Prepare the current directory for configuration files. */
 $configDir = APPPATH .'Config' .DS;
@@ -41,9 +52,24 @@ date_default_timezone_set(Config::get('timezone'));
 /** Initialize the Logger. */
 Logger::initialize();
 
-/** Set the Framework Exception and Error Handlers. */
+/** Set the Framework Exception and Error Handlers using the native \Nova\Logger. */
 set_exception_handler('Nova\Logger::ExceptionHandler');
 set_error_handler('Nova\Logger::ErrorHandler');
+
+/** Set the Framework Exception and Error Handlers using the Monolog and Whoops. */
+/*
+$monolog = new MonologLogger('system');
+
+$monolog->pushHandler(new MonologHandler(BASEPATH .'storage' .DS .'logs' .DS .'app.log', MonologLogger::ERROR));
+
+// Whoops: php errors for cool kids
+$whoops = new WhoopsRunner();
+
+$whoops->pushHandler(new WhoopsPrettyHandler());
+$whoops->pushHandler(new WhoopsPlainHandler($monolog));
+
+$whoops->register();
+*/
 
 /** Bootstrap the active Packages. */
 Packages::bootstrap();

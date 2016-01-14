@@ -16,26 +16,15 @@ use Nova\Database\Manager as Database;
 use Nova\ORM\Relation\HasOne;
 use Nova\ORM\Relation\HasMany;
 use Nova\ORM\Relation\BelongsTo;
+use Nova\ORM\Relation\BelongsToMany;
+use Nova\ORM\Engine;
 
 use \PDO;
 
 
-class Model
+class Model extends Engine
 {
-    /*
-     * The used \Nova\Database\Connection instance.
-     */
-    protected $db = null;
-
-    /*
-     * Internal static Cache.
-     */
-    protected static $cache = array();
-
-    /*
-     * There is stored the called Class name.
-     */
-    protected $className;
+    use \Nova\ORM\Query\Builder;
 
     /**
      * The Model's State Management variables.
@@ -49,21 +38,6 @@ class Model
     protected $primaryKey = 'id';
 
     /**
-     * The Table Metadata.
-     */
-    protected $fields = array();
-
-    /**
-     * There we store the Model Attributes (its Data).
-     */
-    protected $attributes = array();
-
-    /**
-     * The Table name belonging to this Model.
-     */
-    protected $tableName;
-
-    /**
      * The Fields who are (un)serialized on-fly.
      */
     protected $serialize = array();
@@ -73,57 +47,12 @@ class Model
      */
     protected $relations = array();
 
-    /**
-     * Temporary select's WHERE attributes.
-     */
-    protected $tempWheres = array();
-
-    /**
-     * Temporary select's ORDER attribute.
-     */
-    protected $selectOrder = null;
-
-    /**
-     * Temporary select's LIMIT attribute.
-     */
-    protected $selectLimit = null;
-
-    /**
-     * Temporary select's OFFSET attribute.
-     */
-    protected $selectOffset = null;
-
     /*
      * Constructor
      */
     public function __construct($connection = 'default')
     {
-        $this->className = get_class($this);
-
-        if($connection instanceof Connection) {
-            $this->db = $connection;
-        } else {
-            $this->db = Database::getConnection($connection);
-        }
-
-        // Setup the Table name, if is empty.
-        if (empty($this->tableName)) {
-            // Try the best to guess the Table name: User -> users
-            $classPath = str_replace('\\', '/', $this->className);
-
-            $tableName = Inflector::pluralize(basename($classPath));
-
-            $this->tableName = Inflector::tableize($tableName);
-        }
-
-        // Get the Table Fields.
-        if ($this->getCache('$tableFields$') === null) {
-            $this->fields = $this->db->getTableFields($this->table());
-
-            $this->setCache('$tableFields$', $this->fields);
-        } else {
-            $this->fields = $this->getCache('$tableFields$');
-        }
+        parent::__construct($connection);
     }
 
     private function initObject(array $data = array(), $isNew = false)
@@ -143,21 +72,6 @@ class Model
         $this->afterLoad();
     }
 
-    public function getTableName()
-    {
-        return $this->tableName;
-    }
-
-    /**
-     * Getter for the table name.
-     *
-     * @return string The name of the table used by this class (including the DB_PREFIX).
-     */
-    public function table()
-    {
-        return DB_PREFIX .$this->tableName;
-    }
-
     private function hydrate(array $data)
     {
         $this->attributes = array();
@@ -171,35 +85,6 @@ class Model
                 $this->attributes[$key] = $value;
             }
         }
-    }
-
-    //--------------------------------------------------------------------
-    // Caching Management Methods
-    //--------------------------------------------------------------------
-
-    private function getCache($name)
-    {
-        $token = $this->className .'_' .$name;
-
-        if (isset(self::$cache[$token])) {
-            return self::$cache[$token];
-        }
-
-        return null;
-    }
-
-    private function setCache($name, $value)
-    {
-        $token = $this->className .'_' .$name;
-
-        self::$cache[$token] = $value;
-    }
-
-    private function hasCached($name)
-    {
-        $token = $this->className .'_' .$name;
-
-        return isset(self::$cache[$token]);
     }
 
     //--------------------------------------------------------------------
@@ -237,7 +122,7 @@ class Model
         }
 
         // If there is a Relation defined for this name, process it.
-        if (isset($this->relations[$name]) && method_exists($this, $name)) {
+        if (in_array($name, $this->relations) && method_exists($this, $name)) {
             $relation = call_user_func(array($this, $name));
 
             $result = $relation->get();
@@ -265,26 +150,6 @@ class Model
     //--------------------------------------------------------------------
     // Attributes handling Methods
     //--------------------------------------------------------------------
-
-    public function setAttributes($attributes)
-    {
-        $this->hydrate($attributes);
-    }
-
-    public function attributes()
-    {
-        return $this->attributes;
-    }
-
-    public function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-    }
-
-    public function attribute($name)
-    {
-        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
-    }
 
     public function getPrimaryKey()
     {
@@ -527,6 +392,44 @@ class Model
         return $result;
     }
 
+    public function fetchWithPivot($pivotTable, $foreignKey, $otherKey, $othereId)
+    {
+        $className = $this->className;
+
+        $table = $this->table();
+
+        $primaryKey = $this->primaryKey;
+
+        $bindParams = array('otherKey' => $othereId);
+
+        $paramTypes = array('otherKey' => is_integer($othereId) ? PDO::PARAM_INT : PDO::PARAM_STR);
+
+        // Build the SQL Query.
+        $sql = "SELECT $table.* FROM $table JOIN $pivotTable ON $table.$primaryKey = $pivotTable.$foreignKey WHERE $pivotTable.$otherKey = :otherKey";
+
+        $data = $this->db->select($sql, $bindParams, $paramTypes, 'array', true);
+
+        // Reset the Model State.
+        $this->resetState();
+
+        if($data === false) {
+            return false;
+        }
+
+        $result = array();
+
+        foreach($data as $row) {
+            $object = new $className();
+
+            $object->initObject($row);
+
+            //
+            $result[] = $object;
+        }
+
+        return $result;
+    }
+
     public function save()
     {
         $data = array();
@@ -621,93 +524,6 @@ class Model
         return $result;
     }
 
-    //--------------------------------------------------------------------
-    // Query Building Methods
-    //--------------------------------------------------------------------
-
-    public function where($field, $value = '')
-    {
-        if(empty($field)) {
-            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-        }
-
-        $this->tempWheres[$field] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Limit results
-     *
-     * @param int $limit
-     * @return BaseModel $this
-     */
-    public function limit($limit)
-    {
-        if (! is_integer($limit) || ($limit < 0)) {
-            throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
-        }
-
-        $this->selectLimit  = $limit;
-
-        return $this;
-    }
-
-    /**
-     * Offset
-     *
-     * @param int $offset
-     * @return BaseModel $this
-     */
-    public function offset($offset)
-    {
-        if (! is_integer($offset) || ($offset < 0)) {
-            throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
-        }
-
-        $this->selectOffset = $offset;
-
-        return $this;
-    }
-
-    /**
-     * Order by
-     * @param mixed $order
-     * @return BaseModel $this
-     */
-    public function orderBy($order)
-    {
-        if(empty($order)) {
-            $this->selectOrder = null;
-        }
-        // Ccheck if the Field contains conditions.
-        else if (strpos($order, ' ') !== false) {
-            // Simplify the white spaces on Field.
-            $order = preg_replace('/\s+/', ' ', trim($order));
-
-            // Explode the field into its components.
-            $segments = explode(' ', $order);
-
-            if(count($segments) !== 2) {
-                throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
-            }
-
-            $field = $segments[0];
-            $sense = strtoupper($segments[1]);
-
-            if(($sense != 'ASC') && ($sense != 'DESC')) {
-                throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
-            }
-
-            $this->selectOrder = $field .' ' .$sense;
-        }
-        else {
-            $this->selectOrder = $order;
-        }
-
-        return $this;
-    }
-
     /**
      * Execute Select Query, binding values into the $sql Query.
      *
@@ -741,9 +557,9 @@ class Model
 
         foreach($params as $field => $value) {
             if(isset($fields[$field])) {
-                $fieldInfo = $fields[$field];
+                $fieldType = $fields[$field];
 
-                $result[$field] = ($fieldInfo['type'] == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
+                $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
             }
             // No registered field found? We try to guess then the Type, if we aren't into strict mode.
             else if(! $strict) {
@@ -752,71 +568,6 @@ class Model
         }
 
         return $result;
-    }
-
-    protected function resetState()
-    {
-        // Reset our select WHEREs
-        $this->tempWheres = array();
-
-        // Reset our select ORDER
-        $this->selectOrder = null;
-
-        // Reset our select LIMIT
-        $this->selectLimit = null;
-
-        // Reset our select OFFSET
-        $this->selectOffset = null;
-    }
-
-    /**
-     * Set where
-     * @param array $params
-     * @return array
-     */
-    protected function setWhere(array $params = array())
-    {
-        if (empty($params)) {
-            return $this->tempWheres;
-        }
-
-        // Get the WHERE condition.
-        $condition = array_shift($params);
-
-        if ($condition == null) {
-            // Remove all previous defined conditions from our own WHEREs array, too.
-            $this->tempWheres = array();
-        } else if (is_array($condition)) {
-            // Is given an array of Conditions; merge them into our own WHEREs array.
-            $this->tempWheres = array_merge($this->tempWheres, $condition);
-        } else if (count($params) == 1) {
-            // Store the condition and its value.
-            $this->tempWheres[$condition] = array_shift($params);
-        } else if (count($params) == 2) {
-            $operator = array_shift($params);
-
-            if (! in_array($operator, Connection::$whereOperators, true)) {
-                throw new \UnexpectedValueException(__d('system', 'Second parameter is invalid'));
-            }
-
-            $condition = sprintf('%s $s ?', $condition, $operator);
-
-            // Store the composed condition and its value.
-            $this->tempWheres[$condition] = array_shift($params);
-        } else {
-            throw new \UnexpectedValueException(__d('system', 'Invalid number of parameters'));
-        }
-
-        return $this->tempWheres;
-    }
-
-    /**
-     * Wheres
-     * @return array
-     */
-    protected function wheres()
-    {
-        return $this->tempWheres;
     }
 
     protected function parseSelectLimit()
@@ -886,7 +637,7 @@ class Model
         $result = $this->className . " #" . $this->{$this->primaryKey} . "\n";
 
         foreach ($this->fields as $fieldName => $fieldInfo) {
-            $result .= "\t" . ucfirst($fieldName) . ': ' . $this->$fieldName . "\n";
+            $result .= "\t" . Inflector::classify($fieldName) . ': ' . $this->$fieldName . "\n";
         }
 
         return $result;
@@ -907,10 +658,7 @@ class Model
         return $vars;
     }
 
-    public function lastSqlQuery()
-    {
-        return $this->db->lastSqlQuery();
-    }
+
 
     //--------------------------------------------------------------------
     // Overwritable Methods

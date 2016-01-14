@@ -53,7 +53,7 @@ class ThemedController extends BaseController
         }
 
         if (($result === true) || is_null($result)) {
-            $data =& $this->data();
+            $data = $this->data();
 
             if ($this->useLayout) {
                 $content = View::make($this->method())

@@ -9,7 +9,7 @@ class User extends BaseModel
 {
     protected $tableName = 'users';
 
-    protected $relations = array('posts');
+    protected $relations = array('profile', 'posts');
 
 
     public function __construct()
@@ -17,9 +17,14 @@ class User extends BaseModel
         parent::__construct();
     }
 
+    public function profile()
+    {
+        return $this->hasOne('App\Modules\Demo\Models\Profile', 'user_id');
+    }
+
     public function posts()
     {
-        return $this->hasMany('App\Modules\Demo\Post', 'author_id');
+        return $this->hasMany('App\Modules\Demo\Models\Post', 'author_id');
     }
 
 }

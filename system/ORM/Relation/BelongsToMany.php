@@ -11,15 +11,20 @@ namespace Nova\ORM\Relation;
 
 use Nova\ORM\Model;
 use Nova\ORM\Relation;
-use Nova\ORM\Relation\JoiningPivot;
+use Nova\ORM\Relation\Joining\Pivot as JoiningPivot;
 
 
 class BelongsToMany extends Relation
 {
+    use \Nova\ORM\Query\Builder;
+
+    //
     protected $pivot;
 
     protected $foreignKey;
+
     protected $otherKey;
+    protected $otherId;
 
 
     public function __construct($className, Model $model, $joinTable, $foreignKey, $otherKey = null)
@@ -35,15 +40,24 @@ class BelongsToMany extends Relation
         $this->pivot = new JoiningPivot($joinTable, $foreignKey, $otherKey);
 
         // The primaryKey is associated to host Model.
-        $this->foreignKey = $foreignKey;
+        $this->foreignKey = $otherKey;
 
         // The primaryKey is the foreignKey of the target Model.
-        $this->otherKey = $otherKey;
+        $this->otherKey = $foreignKey;
+
+        $this->otherId = $model->getPrimaryKey();
     }
 
     public function get()
     {
-        return false;
+        $joinTable = $this->pivot->table();
+
+        return $this->model
+            ->where($this->wheres())
+            ->orderBy($order)
+            ->limit($limit)
+            ->offset($offset)
+            ->fetchWithPivot($joinTable, $this->foreignKey, $this->otherKey, $this->otherId);
     }
 
     public function &pivot()

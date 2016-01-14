@@ -9,7 +9,7 @@ class Post extends BaseModel
 {
     protected $tableName = 'posts';
 
-    protected $relations = array('user', 'category');
+    protected $relations = array('author', 'category');
 
 
     public function __construct()
@@ -19,12 +19,12 @@ class Post extends BaseModel
 
     public function author()
     {
-        return $this->belongsTo('App\Modules\Demo\User', 'author_id');
+        return $this->belongsTo('App\Modules\Demo\Models\User', 'author_id');
     }
 
     public function category()
     {
-        return $this->belongsTo('App\Modules\Demo\Category', 'category_id');
+        return $this->belongsTo('App\Modules\Demo\Models\Category', 'category_id');
     }
 
 }

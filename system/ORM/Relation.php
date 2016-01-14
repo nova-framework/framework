@@ -17,8 +17,10 @@ abstract class Relation
 
     public function __construct($className)
     {
-        if(! class_exists($$className)) {
-            throw new \Exception(__d('system', 'No valid Class is given: {0}', $$className));
+        $className = sprintf('\\%s', ltrim($className, '\\'));
+
+        if(! class_exists($className)) {
+            throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
         }
 
         // Setup the instance of Target Model.

@@ -19,7 +19,7 @@ class Category extends BaseModel
 
     public function posts()
     {
-        return $this->hasMany('App\Modules\Demo\Post', 'category_id');
+        return $this->hasMany('App\Modules\Demo\Models\Post', 'category_id');
     }
 
 }

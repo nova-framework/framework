@@ -11,7 +11,14 @@ namespace App\Modules\Demo\Controllers\Models;
 
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
+
 use App\Modules\Demo\Models\User;
+use App\Modules\Demo\Models\Profile;
+use App\Modules\Demo\Models\Post;
+use App\Modules\Demo\Models\Student;
+use App\Modules\Demo\Models\Course;
+
+use Nova\ORM\Model as BaseModel;
 
 use \PDO;
 
@@ -193,6 +200,149 @@ var_dump(\$result);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Relations: hasOne').'</strong></h3><br>';
+
+        //
+        $user = $this->model->findBy('username', 'marcus');
+
+        $profile = $user->profile()->get();
+
+        $text = "
+\$user = \$this->model->findBy('username', 'marcus');
+
+\$profile = \$user->profile
+
+self::dumpObject(\$user);
+self::dumpObject(\$profile);
+self::dumpObject(\$user->profile);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. self::dumpObject($user).'</pre>';
+        $message .= '<pre>'. self::dumpObject($profile).'</pre>';
+        $message .= '<pre>'. self::dumpObject($user->profile).'</pre><br>';
+
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Relations: belongsTo').'</strong></h3><br>';
+
+        //
+        $user = $this->model->findBy('username', 'marcus');
+
+        $profile = $user->profile;
+
+        $user2 = $profile->user;
+
+        $text = "
+\$user = \$this->model->findBy('username', 'marcus');
+
+\$profile = \$user->profile
+
+\$user2 = \$profile->user;
+
+self::dumpObject(\$user);
+self::dumpObject(\$profile);
+self::dumpObject(\$user2);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. self::dumpObject($user).'</pre>';
+        $message .= '<pre>'. self::dumpObject($profile).'</pre>';
+        $message .= '<pre>'. self::dumpObject($user2).'</pre><br>';
+
+        //
+        $model = new Post();
+
+        $post = $model->find(1);
+
+        $author = $post->author;
+
+        $text = "
+\$model = new Post();
+
+\$post = \$model->find(1);
+
+\$author = \$post->author;
+
+self::dumpObject(\$post);
+self::dumpObject(\$author);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. self::dumpObject($post).'</pre>';
+        $message .= '<pre>'. self::dumpObject($author).'</pre><br>';
+
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Relations: hasMany').'</strong></h3><br>';
+
+        //
+        $user = $this->model->findBy('username', 'marcus');
+
+        $posts = $user->posts;
+
+        $text = "
+\$user = \$this->model->findBy('username', 'marcus');
+
+\$posts = \$user->posts
+
+
+self::dumpObject(\$user);
+self::dumpObjectArray(\$posts);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. self::dumpObject($user).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($posts).'</pre><br>';
+
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany').'</strong></h3><br>';
+
+        //
+        $model = new Student();
+
+        $student = $model->find(1);
+
+        $courses = $student->courses;
+
+        $text = "
+\$model = new Student();
+
+\$student = \$model->find(1);
+
+\$courses = \$student->courses;
+
+self::dumpObject(\$student);
+self::dumpObjectArray(\$posts);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. self::dumpObject($student).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($courses).'</pre><br>';
+
+        //
+        $model = new Course();
+
+        $course = $model->find(1);
+
+        $students = $course->students;
+
+        $text = "
+\$model = new Course();
+
+\$course = \$course->find(1);
+
+\$students = \$course->students;
+
+self::dumpObject(\$course);
+self::dumpObjectArray(\$students);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. self::dumpObject($course).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+
         // Setup the View variables.
         $this->title(__d('demo', 'ORM - Object Relational Model'));
 
@@ -220,15 +370,27 @@ var_dump(\$result);
     private static function dumpObject($object)
     {
         if($object === null) {
-            return 'null'; // Empty string.
+            return 'null'; // NULL.
+        }
+        else if($object === false) {
+            return 'false'; // Boolean false.
+        }
+        else if(is_string($object)) {
+            return $object;
+        }
+        else if($object instanceof BaseModel) {
+            return (string) $object;
         }
 
-        return (string) $object;
+        //return var_export($object);
     }
 
     private static function dumpObjectArray($data)
     {
-        if($data === false) {
+        if($data === null) {
+            return 'null'; // NULL.
+        }
+        else if($data === false) {
             return 'false'; // Empty string.
         }
 

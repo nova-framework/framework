@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 13, 2016 at 01:04 PM
+-- Generation Time: Jan 14, 2016 at 02:19 AM
 -- Server version: 5.5.40-36.1
 -- PHP Version: 5.4.23
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `nova_testing`
+-- Database: `eliana_nova`
 --
 
 -- --------------------------------------------------------
@@ -116,6 +116,31 @@ INSERT INTO `nova_posts` (`id`, `author_id`, `category_id`, `title`, `content`) 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nova_profiles`
+--
+
+CREATE TABLE IF NOT EXISTS `nova_profiles` (
+  `id` int(11) unsigned NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `realname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `nova_profiles`
+--
+
+INSERT INTO `nova_profiles` (`id`, `user_id`, `realname`, `country`) VALUES
+(1, 1, 'Administrator', 'Italy'),
+(2, 2, 'Marcus Spears', 'UK'),
+(3, 3, 'Michael White', 'USA'),
+(4, 4, 'John Kennedy', 'UK'),
+(5, 5, 'Mark Black', 'Australia'),
+(6, 2, 'Marcus Williams', 'UK');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nova_students`
 --
 
@@ -146,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `nova_users` (
   `id` int(11) unsigned NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=370 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `nova_users`
@@ -188,6 +213,12 @@ ALTER TABLE `nova_posts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `nova_profiles`
+--
+ALTER TABLE `nova_profiles`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `nova_students`
 --
 ALTER TABLE `nova_students`
@@ -218,6 +249,11 @@ ALTER TABLE `nova_courses`
 --
 ALTER TABLE `nova_posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `nova_profiles`
+--
+ALTER TABLE `nova_profiles`
+  MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `nova_students`
 --

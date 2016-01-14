@@ -15,6 +15,9 @@ use Nova\ORM\Relation;
 
 class HasMany extends Relation
 {
+    use \Nova\ORM\Query\Builder;
+
+    //
     protected $foreignKey;
     protected $primaryKey;
 
@@ -32,7 +35,16 @@ class HasMany extends Relation
 
     public function get()
     {
-        return $this->model->findManyBy($this->foreignKey, $this->primaryKey);
+        $order = $this->getOrder();
+        $limit = $this->getLimit();
+        $offset = $this->getOffset();
+
+        return $this->model
+            ->where($this->wheres())
+            ->orderBy($order)
+            ->limit($limit)
+            ->offset($offset)
+            ->findManyBy($this->foreignKey, $this->primaryKey);
     }
 
 }

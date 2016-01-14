@@ -48,7 +48,13 @@ trait Builder
 
     public function where($field, $value = '')
     {
-        if(! empty($field)) {
+        if(is_null($field)) {
+            $this->tempWheres = array();
+        }
+        else if(is_array($field)) {
+            $this->tempWheres = array_merge($this->tempWheres, $field);
+        }
+        else {
             $this->tempWheres[$field] = $value;
         }
 

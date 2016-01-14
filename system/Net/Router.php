@@ -147,6 +147,7 @@ class Router
         }
 
         $this->errorCallback = $callback;
+        
         return null;
     }
 

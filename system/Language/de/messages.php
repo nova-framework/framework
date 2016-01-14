@@ -20,6 +20,7 @@ return array (
   'Method not found: {0}@{1}' => '',
   'MySQL Driver' => 'MySQL Treiber',
   'No valid Class is given' => '',
+  'No valid Class is given: {0}' => '',
   'No valid Entity Class is given' => '',
   'No valid Entity Class is given: {0}' => '',
   'No valid Entity Name is given: {0}' => '',

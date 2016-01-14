@@ -524,51 +524,9 @@ class Model extends Engine
         return $result;
     }
 
-    /**
-     * Execute Select Query, binding values into the $sql Query.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @return array|null
-     *
-     * @throws \Exception
-     */
-    public function select($sql, $params = array(), $fetchAll = false)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        // Prepare the parameter Types.
-        $paramTypes = $this->getParamTypes($params);
-
-        return $this->db->select($sql, $params, $paramTypes, 'array', $fetchAll);
-    }
-
     //--------------------------------------------------------------------
     // Internal use Methods
     //--------------------------------------------------------------------
-
-    protected function getParamTypes($params, $strict = true)
-    {
-        $fields =& $this->fields;
-
-        $result = array();
-
-        foreach($params as $field => $value) {
-            if(isset($fields[$field])) {
-                $fieldType = $fields[$field];
-
-                $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-            // No registered field found? We try to guess then the Type, if we aren't into strict mode.
-            else if(! $strict) {
-                $result[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-        }
-
-        return $result;
-    }
 
     protected function parseSelectLimit()
     {

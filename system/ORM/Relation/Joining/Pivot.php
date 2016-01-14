@@ -18,19 +18,17 @@ use Nova\ORM\Model;
 
 class Pivot extends Engine
 {
-    protected $foreignKey;
     protected $otherKey;
 
 
-    public function __construct($tableName, $foreignKey, $otherKey)
+    public function __construct($tableName, $primaryKey, $otherKey)
     {
         $this->tableName = $tableName;
 
-        // Execute the parent Constructor, after setting up the Table name.
-        parent::__construct();
+        $this->primaryKey = $foreignKey;
 
-        // The foreignKey is associated to host Model.
-        $this->foreignKey = $foreignKey;
+        // Execute the parent Constructor.
+        parent::__construct();
 
         // The otherKey is associated to target Model.
         $this->otherKey = $otherKey;

@@ -13,6 +13,8 @@ use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
 
+use \PDO;
+
 
 abstract class Engine
 {
@@ -70,16 +72,17 @@ abstract class Engine
         }
 
         // Get the Table Fields.
-        /* The Table Fields should be specified into form:
+        /* The Table Fields metadata should be specified into the form:
         array(
-            'first_field' => 'string'
-            'other_field' => 'int'
-            'third_field' => 'string'
+            'primary_key' => 'int',
+            'first_field' => 'string',
+            'other_field' => 'string',
+            'third_field' => 'int'
         );
         */
 
         if(! empty($this->fields)) {
-            // Do nothing.
+            // The user considered is better to directly specify the Table metadata.
         }
         else if ($this->getCache('$tableFields$') === null) {
             $fields = $this->db->getTableFields($this->table());
@@ -189,6 +192,56 @@ abstract class Engine
         }
 
         return $object;
+    }
+
+    //--------------------------------------------------------------------
+    // Select Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Execute Select Query, binding values into the $sql Query.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $params = array(), $fetchAll = false)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        // Prepare the parameter Types.
+        $paramTypes = $this->getParamTypes($params);
+
+        return $this->db->select($sql, $params, $paramTypes, 'array', $fetchAll);
+    }
+
+    //--------------------------------------------------------------------
+    // Internal use Methods
+    //--------------------------------------------------------------------
+
+    protected function getParamTypes($params, $strict = true)
+    {
+        $fields =& $this->fields;
+
+        $result = array();
+
+        foreach($params as $field => $value) {
+            if(isset($fields[$field])) {
+                $fieldType = $fields[$field];
+
+                $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
+            }
+            // No registered field found? We try to guess then the Type, if we aren't into strict mode.
+            else if(! $strict) {
+                $result[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+            }
+        }
+
+        return $result;
     }
 
     //--------------------------------------------------------------------

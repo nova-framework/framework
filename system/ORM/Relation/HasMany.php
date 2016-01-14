@@ -39,12 +39,16 @@ class HasMany extends Relation
         $limit = $this->getLimit();
         $offset = $this->getOffset();
 
-        return $this->model
+        $result = $this->model
             ->where($this->wheres())
             ->orderBy($order)
             ->limit($limit)
             ->offset($offset)
             ->findManyBy($this->foreignKey, $this->primaryKey);
+
+        $this->resetState();
+
+        return $result;
     }
 
 }

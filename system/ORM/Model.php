@@ -33,11 +33,6 @@ class Model extends Engine
     protected $isDirty = false;
 
     /**
-     * The Table's Primary Key.
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * The Fields who are (un)serialized on-fly.
      */
     protected $serialize = array();
@@ -145,25 +140,6 @@ class Model extends Engine
         $name = Inflector::tableize($name);
 
         unset($this->attributes[$name]);
-    }
-
-    //--------------------------------------------------------------------
-    // Attributes handling Methods
-    //--------------------------------------------------------------------
-
-    public function getPrimaryKey()
-    {
-        if($this->isNew) {
-            return null;
-        }
-
-        $key =& $this->primaryKey;
-
-        if(isset($this->attributes[$key]) && ! empty($this->attributes[$key])) {
-            return $this->attributes[$key];
-        }
-
-        return null;
     }
 
     //--------------------------------------------------------------------

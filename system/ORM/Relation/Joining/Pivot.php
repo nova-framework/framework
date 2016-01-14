@@ -36,6 +36,29 @@ class Pivot extends Engine
         $this->otherId  = $otherId;
     }
 
+    public function findAll()
+    {
+        $sql = sprintf(
+            'SELECT %s FROM %s WHERE %s = :otherId',
+            $this->primaryKey,
+            $this->table(),
+            $this->otherKey
+        );
+
+        // Prepare the PDO Statement.
+        $stmt = $this->db->prepare($sql);
+
+        // Bind the parameters.
+        $stmt->bindValue(':otherId', $this->otherId, PDO::PARAM_INT);
+
+        // Execute the Statement and return false if it fail.
+        if (! $stmt->execute()) {
+            return false;
+        }
+
+        return $stmt->fetchColumn();
+    }
+
     public function attach($ids)
     {
         $table = $this->table();
@@ -57,6 +80,8 @@ class Pivot extends Engine
         );
 
         // Prepare the values insertion in pairs.
+        $otherId = intval($this->otherId);
+
         $idx = 0;
 
         foreach($ids as $id) {
@@ -66,8 +91,15 @@ class Pivot extends Engine
                 $idx++;
             }
 
+            // Force the current ID to integer.
+            $id = intval($id);
+
+            if($id < 1) {
+                throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+            }
+
             // Prepare the keys Data; considering that we support only integer keys.
-            $data = array(intval($id), intval($this->otherId));
+            $data = array($id, $otherId);
 
             // Prepare the SQL insert values.
             $sql .= ' (' .implode(', ', array_map(array($this->db, 'quote'), $data)) .')';

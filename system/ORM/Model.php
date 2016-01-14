@@ -333,7 +333,7 @@ class Model extends Engine
         $bindParams = array();
 
         if(! is_array($values)) {
-            throw new \UnexpectedValueException(__d('dbal', 'Parameter should be an Array'));
+            throw new \UnexpectedValueException(__d('system', 'Parameter should be an Array'));
         }
 
         // Prepare the WHERE parameters.

@@ -210,6 +210,57 @@ class Model extends Engine
         return implode('_', $models);
     }
 
+    public function fetchWithPivot($pivotTable, $foreignKey, $otherKey, $othereId)
+    {
+        $className = $this->className;
+
+        $table = $this->table();
+
+        $primaryKey = $this->primaryKey;
+
+        $bindParams = array('otherKey' => $othereId);
+
+        $paramTypes = array('otherKey' => is_integer($othereId) ? PDO::PARAM_INT : PDO::PARAM_STR);
+
+        // Prepare the WHERE details.
+        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
+
+        $orderStr  = $this->parseSelectOrder();
+        $limitStr  = $this->parseSelectLimit();
+        $offsetStr = $this->parseSelectOffset();
+
+        // Build the SQL Query.
+        $sql = "
+            SELECT * FROM $table JOIN $pivotTable
+            ON $table.$primaryKey = $pivotTable.$foreignKey
+            WHERE $pivotTable.$otherKey = :otherKey AND $whereStr $orderStr $limitStr $offsetStr";
+
+        // Simplify the white spaces.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        $data = $this->db->select($sql, $bindParams, $paramTypes, 'array', true);
+
+        // Reset the Model State.
+        $this->resetState();
+
+        if($data === false) {
+            return false;
+        }
+
+        $result = array();
+
+        foreach($data as $row) {
+            $object = new $className();
+
+            $object->initObject($row);
+
+            //
+            $result[] = $object;
+        }
+
+        return $result;
+    }
+
     //--------------------------------------------------------------------
     // CRUD Methods
     //--------------------------------------------------------------------
@@ -346,44 +397,6 @@ class Model extends Engine
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $limitStr $offsetStr";
 
         $data = $this->select($sql, $bindParams, true);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        if($data === false) {
-            return false;
-        }
-
-        $result = array();
-
-        foreach($data as $row) {
-            $object = new $className();
-
-            $object->initObject($row);
-
-            //
-            $result[] = $object;
-        }
-
-        return $result;
-    }
-
-    public function fetchWithPivot($pivotTable, $foreignKey, $otherKey, $othereId)
-    {
-        $className = $this->className;
-
-        $table = $this->table();
-
-        $primaryKey = $this->primaryKey;
-
-        $bindParams = array('otherKey' => $othereId);
-
-        $paramTypes = array('otherKey' => is_integer($othereId) ? PDO::PARAM_INT : PDO::PARAM_STR);
-
-        // Build the SQL Query.
-        $sql = "SELECT $table.* FROM $table JOIN $pivotTable ON $table.$primaryKey = $pivotTable.$foreignKey WHERE $pivotTable.$otherKey = :otherKey";
-
-        $data = $this->db->select($sql, $bindParams, $paramTypes, 'array', true);
 
         // Reset the Model State.
         $this->resetState();

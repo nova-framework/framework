@@ -36,9 +36,6 @@ class BelongsToMany extends Relation
             $otherKey = $this->model->getForeignKey();
         }
 
-        // Setup the Pivot.
-        $this->pivot = new JoiningPivot($joinTable, $foreignKey, $otherKey);
-
         // The primaryKey is associated to host Model.
         $this->foreignKey = $otherKey;
 
@@ -46,18 +43,26 @@ class BelongsToMany extends Relation
         $this->otherKey = $foreignKey;
 
         $this->otherId = $model->getPrimaryKey();
+
+        // Setup the Joining Pivot.
+        $this->pivot = new JoiningPivot($joinTable, $this->model, $foreignKey, $otherKey, $this->otherId);
     }
 
     public function get()
     {
-        $joinTable = $this->pivot->table();
+        $table = $this->pivot->table();
 
+        $order  = $this->getOrder();
+        $limit  = $this->getLimit();
+        $offset = $this->getOffset();
+
+        // Execute the Query.
         return $this->model
             ->where($this->wheres())
             ->orderBy($order)
             ->limit($limit)
             ->offset($offset)
-            ->fetchWithPivot($joinTable, $this->foreignKey, $this->otherKey, $this->otherId);
+            ->fetchWithPivot($table, $this->foreignKey, $this->otherKey, $this->otherId);
     }
 
     public function &pivot()

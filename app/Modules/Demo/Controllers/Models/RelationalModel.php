@@ -325,23 +325,33 @@ self::dumpObjectArray(\$posts);
 
         $course = $model->find(1);
 
-        $students = $course->students;
+        $students = $course->students()
+            ->where('username != ?', 'tom')
+            ->orderBy('username DESC')
+            ->limit(2)
+            ->get();
 
         $text = "
 \$model = new Course();
 
 \$course = \$course->find(1);
 
-\$students = \$course->students;
+\$students = \$course->students()
+    ->where('username != ?', 'tom')
+    ->orderBy('username DESC')
+    ->limit(2)
+    ->get();
 
 self::dumpObject(\$course);
 self::dumpObjectArray(\$students);
+self::dumpObjectArray(\$course->students);
         ";
 
         $message .= self::highlightText($text, true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($course).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+        $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($course->students).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'ORM - Object Relational Model'));

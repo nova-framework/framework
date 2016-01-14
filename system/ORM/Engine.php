@@ -13,6 +13,8 @@ use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
 
+use \PDO;
+
 
 abstract class Engine
 {

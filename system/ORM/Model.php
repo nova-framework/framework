@@ -36,7 +36,53 @@ class Model extends Engine
     /**
      * There we store the associated Model instances.
      */
-    protected $localCache = array();
+    protected $objects = array();
+
+    /**
+     * The type of date/time field used for created_on and modified_on fields.
+     * Valid types are: 'int', 'datetime', 'date'
+     *
+     * @var string
+     *
+     * @access protected
+     */
+    protected $dateFormat = 'datetime';
+
+    /**
+     * Whether or not to auto-fill a 'created_on' field on inserts.
+     *
+     * @var boolean
+     *
+     * @access protected
+     */
+    protected $autoCreated = true;
+
+    /**
+     * Field name to use to the created time column in the DB table.
+     *
+     * @var string
+     *
+     * @access protected
+     */
+    protected $createdField = 'created_on';
+
+    /**
+     * Whether or not to auto-fill a 'modified_on' field on updates.
+     *
+     * @var boolean
+     *
+     * @access protected
+     */
+    protected $autoModified = true;
+
+    /**
+     * Field name to use to the modified time column in the DB table.
+     *
+     * @var string
+     *
+     * @access protected
+     */
+    protected $modifiedField = 'modified_on';
 
     /**
      * The Fields who are (un)serialized on-fly.
@@ -47,6 +93,11 @@ class Model extends Engine
      * The Model Relations with other Models.
      */
     protected $relations = array();
+
+    /**
+     * Protected, non-modifiable attributes.
+     */
+    protected $protectedFields = array();
 
     /*
      * Constructor
@@ -166,22 +217,26 @@ class Model extends Engine
         if (isset($this->fields[$fieldName])) {
             return $this->attribute($fieldName);
         }
+        else if($this->isNew) {
+            // No Relations can be called for the new Objects.
+            return null;
+        }
 
         // Calculate the Cache Token.
         $token = '__get_' .$name;
 
         // It there data associated with the Cache token, return it.
-        if(isset($this->localCache[$token])) {
-            return $this->localCache[$token];
+        if(isset($this->objects[$token])) {
+            return $this->objects[$token];
         }
 
         // If there is a Relation defined for this name, process it.
-        if (! $this->isNew && in_array($name, $this->relations) && method_exists($this, $name)) {
+        if (in_array($name, $this->relations) && method_exists($this, $name)) {
             $relation = call_user_func(array($this, $name));
 
-            $this->localCache[$token] = $relation->get();
+            $this->objects[$token] = $relation->get();
 
-            return $this->localCache[$token];
+            return $this->objects[$token];
         }
     }
 
@@ -229,7 +284,7 @@ class Model extends Engine
     protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
     {
         if (is_null($joinTable)) {
-            $table = $this->joiningTable($className);
+            $joinTable = $this->joiningTable($className);
         }
 
         if($foreignKey === null) {
@@ -284,18 +339,10 @@ class Model extends Engine
             return;
         }
 
-        foreach ($this->fields as $fieldName => $fieldInfo) {
-            if(($fieldName != $this->primaryKey) && isset($this->attributes[$fieldName])) {
-                if(! empty($value) && in_array($fieldName, $this->serialize)) {
-                    // The current is marked as a serialized one.
-                    $data[$fieldName] = serialize($this->attributes[$field]);
-                } else {
-                    $data[$fieldName] = $this->attributes[$fieldName];
-                }
-            }
-        }
+        // Prepare the Data.
+        $data = $this->prepareData();
 
-        //
+        // Default value for result.
         $result = false;
 
         $paramTypes = $this->getParamTypes($data);
@@ -346,6 +393,97 @@ class Model extends Engine
         $this->isNew = true;
 
         return $result;
+    }
+
+    //--------------------------------------------------------------------
+    // Internal Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Extracts the Model's fields.
+     *
+     *
+     * @return array An array of name => value pairs containing the data for the Model's fields.
+     */
+    public function prepareData()
+    {
+        $data = array();
+
+        $skippedFields = array();
+
+        // The primaryKey is skypped by default.
+        $skippedFields = array_merge($skippedFields, (array) $this->primaryKey);
+
+        // Remove any protected attributes.
+        $skippedFields = array_merge($skippedFields, $this->protectedFields);
+
+        // Walk over the defined Table Fields an prepare the data entries.
+        foreach ($this->fields as $fieldName => $fieldInfo) {
+            if(in_array($fieldName, $skippedFields) || ! isset($this->attributes[$fieldName])) {
+                continue;
+            }
+
+            if(! empty($this->attributes[$fieldName]) && in_array($fieldName, $this->serialize)) {
+                // The current is marked as a serialized one.
+                $data[$fieldName] = serialize($this->attributes[$fieldName]);
+            } else {
+                $data[$fieldName] = $this->attributes[$fieldName];
+            }
+        }
+
+        // created_on
+
+        if ($this->autoCreated === true) {
+            $fieldName = $this->createdField;
+
+            if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
+                $data[$fieldName] = $this->date();
+            }
+        }
+
+        // modified_on
+
+        if ($this->autoModified === true) {
+            $fieldName = $this->modifiedField;
+
+            if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
+                $data[$fieldName] = $this->date();
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * A utility function to allow child models to use the type of date/time format that they prefer.
+     * This is primarily used for setting created_on and modified_on values, but can be used by inheriting classes.
+     *
+     * The available time formats are:
+     * * 'int'      - Stores the date as an integer timestamp.
+     * * 'datetime' - Stores the date and time in the SQL datetime format.
+     * * 'date'     - Stores the date (only) in the SQL date format.
+     *
+     * @param mixed $userDate An optional PHP timestamp to be converted.
+     *
+     * @access protected
+     *
+     * @return int|null|string The current/user time converted to the proper format.
+     */
+    protected function date($userDate = null)
+    {
+        $curr_date = ! empty($userDate) ? $userDate : time();
+
+        switch ($this->dateFormat) {
+            case 'int':
+                return $curr_date;
+                break;
+            case 'datetime':
+                return date('Y-m-d H:i:s', $curr_date);
+                break;
+            case 'date':
+                return date('Y-m-d', $curr_date);
+                break;
+        }
     }
 
     //--------------------------------------------------------------------

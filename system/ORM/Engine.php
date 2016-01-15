@@ -27,7 +27,7 @@ abstract class Engine
     /*
      * The used \Nova\Cache\Manager instance.
      */
-    protected $cache;
+    protected $cache = null;
 
     /*
      * Internal static Cache.

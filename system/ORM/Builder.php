@@ -199,6 +199,37 @@ class Builder extends BaseBuilder
         return $result;
     }
 
+    public function first()
+    {
+        $className =& $this->className;
+
+        $bindParams = array();
+
+        // Prepare the WHERE details.
+        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
+
+        $orderStr  = $this->parseSelectOrder();
+        $offsetStr = $this->parseSelectOffset();
+
+        // Prepare the SQL Query.
+        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $offsetStr";
+
+        $data = $this->select($sql, $bindParams);
+
+        // Reset the Model State.
+        $this->resetState();
+
+        if($data === false) {
+            return false;
+        }
+
+        $object = new $className();
+
+        $object->initObject($row);
+
+        return $object;
+    }
+
     public function deleteBy()
     {
         $params = func_get_args();

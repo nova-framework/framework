@@ -10,6 +10,7 @@
 namespace Nova\ORM;
 
 use Nova\ORM\Base as BaseRelation;
+use Nova\ORM\Model;
 
 
 abstract class Relation extends BaseRelation
@@ -35,7 +36,7 @@ abstract class Relation extends BaseRelation
     {
         return get_class($this->model);
     }
-    
+
     abstract public function get();
 
 }

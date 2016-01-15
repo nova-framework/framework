@@ -12,6 +12,7 @@ namespace Nova\ORM;
 use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
+use Nova\Cache\Manager as CacheManager;
 
 use \PDO;
 
@@ -22,6 +23,11 @@ abstract class Engine
      * The used \Nova\Database\Connection instance.
      */
     protected $db = null;
+
+    /*
+     * The used \Nova\Cache\Manager instance.
+     */
+    protected $cache;
 
     /*
      * Internal static Cache.
@@ -71,25 +77,51 @@ abstract class Engine
             // Try the best to guess the Table name: User -> users
             $classPath = str_replace('\\', '/', $this->className);
 
-            $tableName = Inflector::pluralize(basename($classPath));
+            $name = Inflector::pluralize(basename($classPath));
 
-            $this->tableName = Inflector::tableize($tableName);
+            $this->tableName = Inflector::tableize($name);
         }
+
+        // Setup the Cache instance.
+        $this->cache = CacheManager::getCache();
 
         // Get the Table Fields.
         if(! empty($this->fields)) {
             // The user considered to directly specify the Table metadata.
-        } else if (! $this->isCached('$tableFields$')) {
+            return;
+        }
+
+        // Prepare the Cache Token.
+        $token = 'orm_table_fields_' .md5($this->tableName);
+
+        // Try to get the Table Fields from the fast static Cache.
+        if(isset(self::$globalCache[$token])) {
+            $this->fields = self::$globalCache[$token];
+
+            // The data was found in the static Cache.
+            return;
+        }
+
+        // Get the Table Fields, using the Framework Caching.
+        $fields = $this->cache->get($token);
+
+        if($fields === null) {
+             // No data found into Cache, then we should get it from Database.
             $fields = $this->db->getTableFields($this->table());
 
             foreach($fields as $field => $fieldInfo) {
                 $this->fields[$field] = $fieldInfo['type'];
             }
 
-            $this->setCache('$tableFields$', $this->fields);
-        } else {
-            $this->fields = $this->getCache('$tableFields$');
+            // Write to cache 300 seconds = 5 minutes
+            $this->cache->set($token, $fields, 300);
         }
+
+        // Store the data also into the fast static Cache.
+        self::$globalCache[$token] = $fields;
+
+        // Finaly, setup properly the Table Fields.
+        $this->fields = $fields;
     }
 
     public function getTableName()
@@ -105,44 +137,6 @@ abstract class Engine
     public function table()
     {
         return DB_PREFIX .$this->tableName;
-    }
-
-    //--------------------------------------------------------------------
-    // Caching Management Methods
-    //--------------------------------------------------------------------
-
-    protected function getCache($name)
-    {
-        $token = $this->className .'_' .$name;
-
-        if (isset(self::$globalCache[$token])) {
-            return self::$globalCache[$token];
-        }
-
-        return null;
-    }
-
-    protected function setCache($name, $value)
-    {
-        $token = $this->className .'_' .$name;
-
-        self::$globalCache[$token] = $value;
-    }
-
-    protected function clearCache($name)
-    {
-        $token = $this->className .'_' .$name;
-
-        if (isset(self::$globalCache[$token])) {
-            unset(self::$globalCache[$token]);
-        }
-    }
-
-    protected function isCached($name)
-    {
-        $token = $this->className .'_' .$name;
-
-        return isset(self::$globalCache[$token]);
     }
 
     //--------------------------------------------------------------------

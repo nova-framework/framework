@@ -306,7 +306,7 @@ class Model extends Engine
                 $this->setAttribute($this->primaryKey, $result);
             }
         }
-        // We are into UPDATE mode.
+        // If the Object is dirty, we are into UPDATE mode.
         else if($this->isDirty) {
             $where = array(
                 $this->primaryKey => $this->getPrimaryKey()
@@ -373,6 +373,16 @@ class Model extends Engine
 
         foreach ($this->fields as $fieldName => $fieldInfo) {
             $result .= "\t" . Inflector::classify($fieldName) . ': ' . $this->$fieldName . "\n";
+        }
+
+        if(! empty($this->relations)) {
+            $result .= "\t\n";
+
+            foreach ($this->relations as $name) {
+                $relation = call_user_func(array($this, $name));
+
+                $result .= "\t" .$relation->type()  .': ' .$relation->relatedModel() . "\n";
+            }
         }
 
         return $result;

@@ -30,6 +30,11 @@ class HasOne extends Relation
         $this->primaryKey = $model->getPrimaryKey();
     }
 
+    public function type()
+    {
+        return 'hasOne';
+    }
+
     public function get()
     {
         return $this->model->findBy($this->foreignKey, $this->primaryKey);

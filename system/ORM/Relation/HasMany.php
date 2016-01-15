@@ -30,6 +30,11 @@ class HasMany extends Relation
         $this->primaryKey = $model->getPrimaryKey();
     }
 
+    public function type()
+    {
+        return 'hasMany';
+    }
+
     public function get()
     {
         $order = $this->getOrder();

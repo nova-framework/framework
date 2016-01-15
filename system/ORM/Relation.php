@@ -31,6 +31,11 @@ abstract class Relation extends BaseRelation
         $this->model = new $className();
     }
 
+    public function relatedModel()
+    {
+        return get_class($this->model);
+    }
+    
     abstract public function get();
 
 }

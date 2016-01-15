@@ -45,7 +45,7 @@ abstract class Base
     // Query Building Methods
     //--------------------------------------------------------------------
 
-    protected function where($field, $value = '')
+    public function where($field, $value = '')
     {
         if(is_null($field)) {
             $this->tempWheres = array();
@@ -66,7 +66,7 @@ abstract class Base
      * @param int $limit
      * @return BaseModel $this
      */
-    protected function limit($limit = null)
+    public function limit($limit = null)
     {
         if (! is_null($limit) && ! is_integer($limit)) {
             throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
@@ -83,7 +83,7 @@ abstract class Base
      * @param int $offset
      * @return BaseModel $this
      */
-    protected function offset($offset = null)
+    public function offset($offset = null)
     {
         if (! is_null($offset) && ! is_integer($offset)) {
             throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
@@ -99,7 +99,7 @@ abstract class Base
      * @param mixed $order
      * @return BaseModel $this
      */
-    protected function orderBy($order)
+    public function orderBy($order)
     {
         if(empty($order)) {
             $this->selectOrder = null;

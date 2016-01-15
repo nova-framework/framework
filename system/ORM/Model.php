@@ -17,6 +17,7 @@ use Nova\ORM\Relation\HasOne;
 use Nova\ORM\Relation\HasMany;
 use Nova\ORM\Relation\BelongsTo;
 use Nova\ORM\Relation\BelongsToMany;
+use Nova\ORM\Builder;
 use Nova\ORM\Engine;
 
 use \PDO;
@@ -48,7 +49,7 @@ class Model extends Engine
         parent::__construct($connection);
     }
 
-    private function initObject(array $data = array(), $isNew = false)
+    public function initObject(array $data = array(), $isNew = false)
     {
         $this->hydrate($data);
 
@@ -93,25 +94,13 @@ class Model extends Engine
      */
     public function __call($method, $parameters)
     {
-        $validMethod = false;
+        $builder = $this->newBuilder();
 
-        switch($method) {
-            case 'where':
-            case 'limit':
-            case 'offset':
-            case 'orderBy':
-                $validMethod = true;
-
-                break;
-            default:
-                break;
+        if(method_exists($builder, $method)) {
+            return call_user_func_array(array($builder, $method), $parameters);
         }
 
-        if (! $validMethod && (strpos($method, 'find') !== 0)) {
-            return null;
-        }
-
-        return call_user_func_array(array($this, $method), $parameters);
+        return null;
     }
 
     /**
@@ -123,24 +112,6 @@ class Model extends Engine
      */
     public static function __callStatic($method, $parameters)
     {
-        $validMethod = false;
-
-        switch($method) {
-            case 'where':
-            case 'limit':
-            case 'offset':
-            case 'orderBy':
-                $validMethod = true;
-
-                break;
-            default:
-                break;
-        }
-
-        if (! $validMethod && (strpos($method, 'find') !== 0)) {
-            return null;
-        }
-
         $instance = new static();
 
         return call_user_func_array(array($instance, $method), $parameters);
@@ -270,214 +241,18 @@ class Model extends Engine
         return implode('_', $models);
     }
 
-    public function fetchWithPivot($pivotTable, $foreignKey, $otherKey, $othereId)
+    //--------------------------------------------------------------------
+    // Builder Methods
+    //--------------------------------------------------------------------
+
+    public function newBuilder()
     {
-        $className = $this->className;
-
-        $table = $this->table();
-
-        $primaryKey = $this->primaryKey;
-
-        $bindParams = array('otherKey' => $othereId);
-
-        $paramTypes = array('otherKey' => is_integer($othereId) ? PDO::PARAM_INT : PDO::PARAM_STR);
-
-        // Prepare the WHERE details.
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
-
-        $orderStr  = $this->parseSelectOrder();
-        $limitStr  = $this->parseSelectLimit();
-        $offsetStr = $this->parseSelectOffset();
-
-        // Build the SQL Query.
-        $sql = "
-            SELECT * FROM $table JOIN $pivotTable
-            ON $table.$primaryKey = $pivotTable.$foreignKey
-            WHERE $pivotTable.$otherKey = :otherKey AND $whereStr $orderStr $limitStr $offsetStr";
-
-        // Simplify the white spaces.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        $data = $this->db->select($sql, $bindParams, $paramTypes, 'array', true);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        if($data === false) {
-            return false;
-        }
-
-        $result = array();
-
-        foreach($data as $row) {
-            $object = new $className();
-
-            $object->initObject($row);
-
-            //
-            $result[] = $object;
-        }
-
-        return $result;
+        return new Builder($this->className, $this->tableName, $this->primaryKey, $this->db);
     }
 
     //--------------------------------------------------------------------
     // CRUD Methods
     //--------------------------------------------------------------------
-
-    protected function find($id)
-    {
-        $className =& $this->className;
-
-        if (! is_integer($id) || ($id < 1)) {
-            throw new \UnexpectedValueException(__d('system', 'Parameter should be an positive Integer'));
-        }
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
-
-        $result = $this->select($sql, array('value' => $id));
-
-        if($result !== false) {
-            $object = new $className();
-
-            $object->initObject($result);
-        }
-        else {
-            $object = null;
-        }
-
-        // Reset the Model State.
-        $this->resetState();
-
-        return $object;
-    }
-
-    protected function findBy()
-    {
-        $className =& $this->className;
-
-        $bindParams = array();
-
-        // Prepare the WHERE parameters.
-        $params = func_get_args();
-
-        $where = $this->setWhere($params);
-
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr LIMIT 1";
-
-        $result = $this->select($sql, $bindParams);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        if($result !== false) {
-            $object = new $className();
-
-            $object->initObject($result);
-        }
-        else {
-            $object = null;
-        }
-
-        return $object;
-    }
-
-    protected function findMany($values)
-    {
-        $className =& $this->className;
-
-        $bindParams = array();
-
-        if(! is_array($values)) {
-            throw new \UnexpectedValueException(__d('system', 'Parameter should be an Array'));
-        }
-
-        // Prepare the WHERE parameters.
-        $this->where($this->primaryKey, $values);
-
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
-
-        // Prepare the ORDER details.
-        $orderStr = $this->parseSelectOrder();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr";
-
-        $data = $this->select($sql, $bindParams, true);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        if($data === false) {
-            return false;
-        }
-
-        $result = array();
-
-        foreach($data as $row) {
-            $object = new $className();
-
-            $object->initObject($row);
-
-            //
-            $result[] = $object;
-        }
-
-        return $result;
-    }
-
-    protected function findManyBy()
-    {
-        // Prepare the WHERE parameters.
-        $params = func_get_args();
-
-        $this->setWhere($params);
-
-        return $this->findAll();
-    }
-
-    protected function findAll()
-    {
-        $className =& $this->className;
-
-        $bindParams = array();
-
-        // Prepare the WHERE details.
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
-
-        $orderStr  = $this->parseSelectOrder();
-        $limitStr  = $this->parseSelectLimit();
-        $offsetStr = $this->parseSelectOffset();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $limitStr $offsetStr";
-
-        $data = $this->select($sql, $bindParams, true);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        if($data === false) {
-            return false;
-        }
-
-        $result = array();
-
-        foreach($data as $row) {
-            $object = new $className();
-
-            $object->initObject($row);
-
-            //
-            $result[] = $object;
-        }
-
-        return $result;
-    }
 
     public function save()
     {
@@ -551,71 +326,6 @@ class Model extends Engine
         return $result;
     }
 
-    public function deleteBy()
-    {
-        $params = func_get_args();
-
-        if (empty($params)) {
-            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-        }
-
-        // Prepare the WHERE parameters.
-        $where = $this->setWhere($params);
-
-        $paramTypes = $this->getParamTypes($where);
-
-        // Execute the Record deletetion.
-        $result = $this->db->delete($this->table(), $where, $paramTypes);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        return $result;
-    }
-
-    //--------------------------------------------------------------------
-    // Internal use Methods
-    //--------------------------------------------------------------------
-
-    protected function parseSelectLimit()
-    {
-        $result = '';
-
-        $limit =& $this->selectLimit;
-
-        if($limit !== null) {
-            $result = 'LIMIT ' .$limit;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectOffset()
-    {
-        $result = '';
-
-        $offset =& $this->selectOffset;
-
-        if($offset !== null) {
-            $result = 'OFFSET ' .$offset;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectOrder()
-    {
-        $result = '';
-
-        $orderBy =& $this->selectOrder;
-
-        if($orderBy !== null) {
-            $result = 'ORDER BY ' .$orderBy;
-        }
-
-        return $result;
-    }
-
     //--------------------------------------------------------------------
     // Debug Methods
     //--------------------------------------------------------------------
@@ -656,16 +366,8 @@ class Model extends Engine
 
         unset($vars['db']);
 
-        unset($vars['lastSqlQuery']);
-        unset($vars['tempWheres']);
-        unset($vars['selectOrder']);
-        unset($vars['selectLimit']);
-        unset($vars['selectOffset']);
-
         return $vars;
     }
-
-
 
     //--------------------------------------------------------------------
     // Overwritable Methods

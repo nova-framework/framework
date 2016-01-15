@@ -31,34 +31,6 @@ abstract class Relation extends BaseRelation
         $this->model = new $className();
     }
 
-    /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        $validMethod = false;
-
-        switch($method) {
-            case 'where':
-            case 'limit':
-            case 'offset':
-            case 'orderBy':
-                $validMethod = true;
-
-                break;
-            default:
-                break;
-        }
-
-        if ($validMethod) {
-            return call_user_func_array(array($this, $method), $parameters);
-        }
-    }
-    
     abstract public function get();
 
 }

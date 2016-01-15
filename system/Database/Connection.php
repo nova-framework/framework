@@ -130,6 +130,8 @@ abstract class Connection extends PDO
      */
     public function getQueryBuilder(FluentStructure $structure = null)
     {
+        $this->countIncomingQuery();
+
         return new QueryBuilder($this, $structure);
     }
 

@@ -20,6 +20,8 @@ use Nova\ORM\Relation\BelongsToMany;
 use Nova\ORM\Builder;
 use Nova\ORM\Engine;
 
+use \FluentStructure;
+use \FluentPDO;
 use \PDO;
 
 
@@ -49,7 +51,7 @@ class Model extends Engine
         parent::__construct($connection);
     }
 
-    public static function fromArray(array $data)
+    public static function fromAssoc(array $data)
     {
         $model = new static();
 
@@ -62,7 +64,7 @@ class Model extends Engine
     {
         $data = get_object_vars($object);
 
-        return static::fromArray($data);
+        return static::fromAssoc($data);
     }
 
     protected function initObject(array $data = array(), $isNew = false)
@@ -383,6 +385,71 @@ class Model extends Engine
         unset($vars['db']);
 
         return $vars;
+    }
+
+    //--------------------------------------------------------------------
+    // QueryBuilder Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Start query builder
+     *
+     * @param FluentStructure|null $structure
+     * @return \Nova\Database\QueryBuilder
+     */
+    public function getQueryBuilder(FluentStructure $structure = null)
+    {
+        if ($structure === null) {
+            $structure = new FluentStructure($this->primaryKey);
+        }
+
+        // Get a QueryBuilder instance.
+        return $this->db->getQueryBuilder($structure);
+    }
+
+    //--------------------------------------------------------------------
+    // Events Management
+    //--------------------------------------------------------------------
+
+    /**
+     * Triggers a model-specific event and call each of it's Observers.
+     *
+     * @param string $event The name of the event to trigger.
+     * @param mixed  $data  The data to be passed to the callback functions.
+     *
+     * @return mixed
+     */
+    public function trigger($event, $data = false)
+    {
+        if (! isset($this->$event) || ! is_array($this->$event)) {
+            if (isset($data['fields'])) {
+                return $data['fields'];
+            }
+
+            return $data;
+        }
+
+        foreach ($this->$event as $method) {
+            if (strpos($method, '(') !== false) {
+                preg_match('/([a-zA-Z0-9\_\-]+)(\(([a-zA-Z0-9\_\-\., ]+)\))?/', $method, $matches);
+
+                $this->callbackParams = explode(',', $matches[3]);
+            }
+
+            $data = call_user_func_array(array($this, $method), array($data));
+        }
+
+        // In case no method called or method returned the entire data array, we typically just need the $fields.
+        if (isset($data['fields'])) {
+            return $data['fields'];
+        }
+
+        // A few methods might need to return 'ids'.
+        if (isset($data['ids'])) {
+            return $data['ids'];
+        }
+
+        return $data;
     }
 
     //--------------------------------------------------------------------

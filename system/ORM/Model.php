@@ -385,7 +385,7 @@ class Model extends Engine
             foreach ($this->relations as $name) {
                 $relation = call_user_func(array($this, $name));
 
-                $result .= "\t" .$relation->type()  .': ' .$relation->getClassName() . "\n";
+                $result .= "\t" .ucfirst($relation->type())  .': ' .$relation->getClassName() . "\n";
             }
         }
 

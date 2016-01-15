@@ -122,8 +122,6 @@ class Model extends Engine
         if(method_exists($builder, $method)) {
             return call_user_func_array(array($builder, $method), $parameters);
         }
-
-        return null;
     }
 
     /**
@@ -167,7 +165,9 @@ class Model extends Engine
 
         // If there is a Relation defined for this name, process it.
         if (! $this->isNew && in_array($name, $this->relations) && method_exists($this, $name)) {
-            return call_user_func(array($this, $name));
+            $relation = call_user_func(array($this, $name));
+
+            return $relation->get();
         }
     }
 

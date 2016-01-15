@@ -54,28 +54,32 @@ class Model extends Engine
     public function __construct($connection = 'default')
     {
         parent::__construct($connection);
+
+        $this->initObject(true);
     }
 
-    public static function fromAssoc(array $data)
+    public static function fromAssoc(array $data, $isNew = true)
     {
         $model = new static();
 
-        $model->initObject($data);
+        // Hydrate the Model.
+        $model->hydrate($data);
+
+        // Initialize the Model.
+        $model->initObject($isNew);
 
         return $model;
     }
 
-    public static function fromObject($object)
+    public static function fromObject($object, $isNew = true)
     {
         $data = get_object_vars($object);
 
-        return static::fromAssoc($data);
+        return static::fromAssoc($data, $isNew);
     }
 
-    protected function initObject(array $data = array(), $isNew = false)
+    protected function initObject($isNew = false)
     {
-        $this->hydrate($data);
-
         $this->isNew = $isNew;
 
         if (! $this->isNew) {

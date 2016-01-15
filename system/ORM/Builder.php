@@ -61,7 +61,7 @@ class Builder extends BaseBuilder
         $result = $this->select($sql, array('value' => $id));
 
         if($result !== false) {
-            return $className::fromAssoc($result);
+            return $className::fromAssoc($result, false);
         }
 
         return false;
@@ -89,7 +89,7 @@ class Builder extends BaseBuilder
         $this->resetState();
 
         if($result !== false) {
-            return $className::fromAssoc($result);
+            return $className::fromAssoc($result, false);
         }
 
         return false;
@@ -128,7 +128,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row);
+            $result[] = $className::fromAssoc($row, false);
         }
 
         return $result;
@@ -172,7 +172,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row);
+            $result[] = $className::fromAssoc($row, false);
         }
 
         return $result;
@@ -350,7 +350,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row);
+            $result[] = $className::fromAssoc($row, false);
         }
 
         return $result;

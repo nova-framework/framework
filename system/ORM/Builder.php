@@ -247,8 +247,11 @@ class Builder extends BaseBuilder
         // Prepare the WHERE details.
         $whereStr = Connection::parseWhereConditions($where, $bindParams);
 
+        $orderStr  = $this->parseSelectOrder();
+        $limitStr  = $this->parseSelectLimit();
+
         // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
+        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr $orderStr $offsetStr";
 
         $result = $this->select($sql, $bindParams);
 

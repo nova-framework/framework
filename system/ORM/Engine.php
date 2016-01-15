@@ -26,7 +26,7 @@ abstract class Engine
     /*
      * Internal static Cache.
      */
-    protected static $cache = array();
+    protected static $globalCache = array();
 
     /*
      * There is stored the called Class name.
@@ -77,19 +77,9 @@ abstract class Engine
         }
 
         // Get the Table Fields.
-        /* The Table Fields metadata should be specified into the form:
-        array(
-            'primary_key' => 'int',
-            'first_field' => 'string',
-            'other_field' => 'string',
-            'third_field' => 'int'
-        );
-        */
-
         if(! empty($this->fields)) {
-            // The user considered is better to directly specify the Table metadata.
-        }
-        else if ($this->getCache('$tableFields$') === null) {
+            // The user considered to directly specify the Table metadata.
+        } else if (! $this->isCached('$tableFields$')) {
             $fields = $this->db->getTableFields($this->table());
 
             foreach($fields as $field => $fieldInfo) {
@@ -125,8 +115,8 @@ abstract class Engine
     {
         $token = $this->className .'_' .$name;
 
-        if (isset(self::$cache[$token])) {
-            return self::$cache[$token];
+        if (isset(self::$globalCache[$token])) {
+            return self::$globalCache[$token];
         }
 
         return null;
@@ -136,23 +126,23 @@ abstract class Engine
     {
         $token = $this->className .'_' .$name;
 
-        self::$cache[$token] = $value;
+        self::$globalCache[$token] = $value;
     }
 
     protected function clearCache($name)
     {
         $token = $this->className .'_' .$name;
 
-        if (isset(self::$cache[$token])) {
-            unset(self::$cache[$token]);
+        if (isset(self::$globalCache[$token])) {
+            unset(self::$globalCache[$token]);
         }
     }
 
-    protected function hasCached($name)
+    protected function isCached($name)
     {
         $token = $this->className .'_' .$name;
 
-        return isset(self::$cache[$token]);
+        return isset(self::$globalCache[$token]);
     }
 
     //--------------------------------------------------------------------

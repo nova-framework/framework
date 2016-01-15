@@ -36,7 +36,7 @@ class Model extends Engine
     /**
      * There we store the associated Model instances.
      */
-    protected $instances = array();
+    protected $localCache = array();
 
     /**
      * The Fields who are (un)serialized on-fly.
@@ -163,15 +163,25 @@ class Model extends Engine
         $fieldName = Inflector::tableize($name);
 
         // If the name is of one of attributes, return the Value from attribute.
-        if (isset($this->attributes[$fieldName])) {
-            return $this->attributes[$fieldName];
+        if (isset($this->fields[$fieldName])) {
+            return $this->attribute($fieldName);
+        }
+
+        // Calculate the Cache Token.
+        $token = '__get_' .$name;
+
+        // It there data associated with the Cache token, return it.
+        if(isset($this->localCache[$token])) {
+            return $this->localCache[$token];
         }
 
         // If there is a Relation defined for this name, process it.
         if (! $this->isNew && in_array($name, $this->relations) && method_exists($this, $name)) {
             $relation = call_user_func(array($this, $name));
 
-            return $relation->get();
+            $this->localCache[$token] = $relation->get();
+
+            return $this->localCache[$token];
         }
     }
 
@@ -195,13 +205,14 @@ class Model extends Engine
 
     protected function belongsTo($className, $otherKey = null)
     {
-        $token = md5('belongsTo_' .$className);
+        // Calculate the Cache Token.
+        $token = 'belongsTo_' .$className;
 
-        if(! isset($this->instances[$token])) {
-            $this->instances[$token] = new BelongsTo($className, $this, $otherKey);
+        if(! isset($this->localCache[$token])) {
+            $this->localCache[$token] = new BelongsTo($className, $this, $otherKey);
         }
 
-        return $this->instances[$token];
+        return $this->localCache[$token];
     }
 
     protected function hasOne($className, $foreignKey = null)
@@ -210,14 +221,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        //
-        $token = md5('hasOne_' .$className);
+        // Calculate the Cache Token.
+        $token = 'hasOne_' .$className;
 
-        if(! isset($this->instances[$token])) {
-            $this->instances[$token] = new HasOne($className, $this, $foreignKey);
+        if(! isset($this->localCache[$token])) {
+            $this->localCache[$token] = new HasOne($className, $this, $foreignKey);
         }
 
-        return $this->instances[$token];
+        return $this->localCache[$token];
     }
 
     protected function hasMany($className, $foreignKey = null)
@@ -226,14 +237,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        //
-        $token = md5('hasMany_' .$className);
+        // Calculate the Cache Token.
+        $token = 'hasMany_' .$className;
 
-        if(! isset($this->instances[$token])) {
-            $this->instances[$token] = new HasMany($className, $this, $foreignKey);
+        if(! isset($this->localCache[$token])) {
+            $this->localCache[$token] = new HasMany($className, $this, $foreignKey);
         }
 
-        return $this->instances[$token];
+        return $this->localCache[$token];
     }
 
     protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
@@ -246,14 +257,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        //
-        $token = md5('belongsToMany_' .$className);
+        // Calculate the Cache Token.
+        $token = 'belongsToMany_' .$className;
 
-        if(! isset($this->instances[$token])) {
-            $this->instances[$token] = new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
+        if(! isset($this->localCache[$token])) {
+            $this->localCache[$token] = new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
         }
 
-        return $this->instances[$token];
+        return $this->localCache[$token];
     }
 
     public function getForeignKey()

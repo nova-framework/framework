@@ -38,7 +38,7 @@ class Pivot extends Engine
         $this->otherId  = $otherId;
     }
 
-    public function findAll()
+    public function get()
     {
         $sql = sprintf(
             'SELECT %s FROM %s WHERE %s = :whereId',

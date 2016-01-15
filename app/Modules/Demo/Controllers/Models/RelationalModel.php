@@ -211,7 +211,7 @@ var_dump(\$result);
         $text = "
 \$user = \$this->model->findBy('username', 'marcus');
 
-\$profile = \$user->profile
+\$profile = \$user->profile;
 
 self::dumpObject(\$user);
 self::dumpObject(\$profile);
@@ -236,7 +236,7 @@ self::dumpObject(\$user->profile);
         $text = "
 \$user = \$this->model->findBy('username', 'marcus');
 
-\$profile = \$user->profile
+\$profile = \$user->profile;
 
 \$user2 = \$profile->user;
 
@@ -251,16 +251,13 @@ self::dumpObject(\$user2);
         $message .= '<pre>'. self::dumpObject($user2).'</pre><br>';
 
         //
-        $model = new Post();
 
-        $post = $model->find(1);
+        $post = Post::find(1);
 
         $author = $post->author;
 
         $text = "
-\$model = new Post();
-
-\$post = \$model->find(1);
+\$post = Post::find(1);
 
 \$author = \$post->author;
 
@@ -283,7 +280,7 @@ self::dumpObject(\$author);
         $text = "
 \$user = \$this->model->findBy('username', 'marcus');
 
-\$posts = \$user->posts
+\$posts = \$user->posts;
 
 
 self::dumpObject(\$user);
@@ -298,16 +295,12 @@ self::dumpObjectArray(\$posts);
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany').'</strong></h3><br>';
 
         //
-        $model = new Student();
-
-        $student = $model->find(1);
+        $student = Student::find(1);
 
         $courses = $student->courses;
 
         $text = "
-\$model = new Student();
-
-\$student = \$model->find(1);
+\$student = Student::find(1);
 
 \$courses = \$student->courses;
 
@@ -321,9 +314,7 @@ self::dumpObjectArray(\$posts);
         $message .= '<pre>'. self::dumpObjectArray($courses).'</pre><br>';
 
         //
-        $model = new Course();
-
-        $course = $model->find(1);
+        $course = Course::find(1);
 
         $students = $course->students()
             ->where('username != ?', 'tom')
@@ -332,9 +323,7 @@ self::dumpObjectArray(\$posts);
             ->get();
 
         $text = "
-\$model = new Course();
-
-\$course = \$course->find(1);
+\$course = Course::find(1);
 
 \$students = \$course->students()
     ->where('username != ?', 'tom')
@@ -357,26 +346,22 @@ self::dumpObjectArray(\$course->students);
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany, operating with the Pivot').'</strong></h3><br>';
 
         //
-        $model = new Course();
-
-        $course = $model->find(2);
+        $course = Course::find(2);
 
         $students = $course->students()->get();
 
         $pivot = $course->students()->pivot();
 
-        $sids = $pivot->findAll();
+        $sids = $pivot->get();
 
         $text = "
-\$model = new Course();
-
-\$course = \$model->find(2);
+\$course = Course::find(2);
 
 \$students = \$course->students()->get();
 
 \$pivot = \$course->students()->pivot();
 
-\$sids = \$pivot->findAll();
+\$sids = \$pivot->get();
 
 var_export(\$sids, true);
 self::dumpObjectArray(\$students);
@@ -390,14 +375,14 @@ self::dumpObjectArray(\$students);
         //
         $pivot->attach(3);
 
-        $sids = $pivot->findAll();
+        $sids = $pivot->get();
 
         $students = $course->students()->get();
 
         $text = "
 \$pivot->attach(3);
 
-\$sids = \$pivot->findAll();
+\$sids = \$pivot->get();
 
 \$students = \$course->students()->get();
 
@@ -412,14 +397,14 @@ self::dumpObjectArray(\$students);
         //
         $pivot->dettach(3);
 
-        $sids = $pivot->findAll();
+        $sids = $pivot->get();
 
         $students = $course->students()->get();
 
         $text = "
 \$pivot->dettach(3);
 
-\$sids = \$pivot->findAll();
+\$sids = \$pivot->get();
 
 \$students = \$course->students()->get();
 
@@ -434,14 +419,14 @@ self::dumpObjectArray(\$students);
         //
         $pivot->sync(array(1,2,4));
 
-        $sids = $pivot->findAll();
+        $sids = $pivot->get();
 
         $students = $course->students()->get();
 
         $pivot->dettach(4);
 
         $text = "
-\$sids = \$pivot->findAll();
+\$sids = \$pivot->get();
 
 \$students = \$course->students()->get();
 

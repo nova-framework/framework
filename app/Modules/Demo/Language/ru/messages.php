@@ -32,6 +32,7 @@ This content can be changed in <code>{0}</code>' => 'Здраствуй, доб�
   'Open subpage' => 'Открыть подстраницу',
   'Relations: belongsTo' => '',
   'Relations: belongsToMany' => '',
+  'Relations: belongsToMany, operating with the Pivot' => '',
   'Relations: hasMany' => '',
   'Relations: hasOne' => '',
   'Schema support' => '',

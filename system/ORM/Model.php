@@ -34,6 +34,11 @@ class Model extends Engine
     protected $isDirty = false;
 
     /**
+     * There we store the associated Model instances.
+     */
+    protected $instances = array();
+
+    /**
      * The Fields who are (un)serialized on-fly.
      */
     protected $serialize = array();
@@ -160,20 +165,9 @@ class Model extends Engine
             return $this->attributes[$fieldName];
         }
 
-        // If there is something into Cache assigned for this name, return it from.
-        if ($this->hasCached($name)) {
-            return $this->getCache($name);
-        }
-
         // If there is a Relation defined for this name, process it.
-        if (in_array($name, $this->relations) && method_exists($this, $name)) {
-            $relation = call_user_func(array($this, $name));
-
-            $result = $relation->get();
-
-            $this->setCache($name, $result);
-
-            return $result;
+        if (! $this->isNew && in_array($name, $this->relations) && method_exists($this, $name)) {
+            return call_user_func(array($this, $name));
         }
     }
 
@@ -197,8 +191,13 @@ class Model extends Engine
 
     protected function belongsTo($className, $otherKey = null)
     {
-        // Return a Nova\ORM\Relation\BelongsTo instance.
-        return new BelongsTo($className, $this, $otherKey);
+        $token = md5('belongsTo_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new BelongsTo($className, $this, $otherKey);
+        }
+
+        return $this->instances[$token];
     }
 
     protected function hasOne($className, $foreignKey = null)
@@ -207,8 +206,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Return a Nova\ORM\Relation\HasOne instance.
-        return new HasOne($className, $this, $foreignKey);
+        //
+        $token = md5('hasOne_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new HasOne($className, $this, $foreignKey);
+        }
+
+        return $this->instances[$token];
     }
 
     protected function hasMany($className, $foreignKey = null)
@@ -217,8 +222,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Return a Nova\ORM\Relation\HasMany instance.
-        return new HasMany($className, $this, $foreignKey);
+        //
+        $token = md5('hasMany_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new HasMany($className, $this, $foreignKey);
+        }
+
+        return $this->instances[$token];
     }
 
     protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
@@ -231,8 +242,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Return a Nova\ORM\Relation\BelongsToMany instance.
-        return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
+        //
+        $token = md5('belongsToMany_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
+        }
+
+        return $this->instances[$token];
     }
 
     public function getForeignKey()

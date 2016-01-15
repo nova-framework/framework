@@ -541,6 +541,7 @@ class Model extends Engine
         $vars = get_object_vars($this);
 
         unset($vars['db']);
+        unset($vars['cache']);
 
         return $vars;
     }

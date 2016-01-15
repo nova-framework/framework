@@ -42,9 +42,9 @@ class Pivot extends Engine
     {
         $sql = sprintf(
             'SELECT %s FROM %s WHERE %s = :whereId',
-            $this->otherKey,
+            $this->primaryKey,
             $this->table(),
-            $this->primaryKey
+            $this->otherKey
         );
 
         // Prepare the PDO Statement.
@@ -111,7 +111,7 @@ class Pivot extends Engine
             }
 
             // Prepare the keys Data; considering that we support only integer keys.
-            $data = array($otherId, $id);
+            $data = array($id, $otherId);
 
             // Prepare the SQL insert values.
             $sql .= ' (' .implode(', ', array_map(array($this->db, 'quote'), $data)) .')';
@@ -125,10 +125,10 @@ class Pivot extends Engine
 
     public function dettach($ids = null)
     {
-        $where = array($this->primaryKey => $this->otherId);
+        $where = array($this->otherKey => $this->otherId);
 
         if(! is_null($ids)) {
-            $where[$this->otherKey] = $ids;
+            $where[$this->primaryKey] = $ids;
         }
 
         //Prepare the paramTypes.

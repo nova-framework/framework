@@ -24,8 +24,6 @@ use \PDO;
 
 class Model extends Engine
 {
-    use \Nova\ORM\Query\Builder;
-
     /**
      * The Model's State Management variables.
      */
@@ -95,9 +93,25 @@ class Model extends Engine
      */
     public function __call($method, $parameters)
     {
-        if (strpos($method, 'find') === 0) {
-            return call_user_func_array(array($this, $method), $parameters);
+        $validMethod = false;
+
+        switch($method) {
+            case 'where':
+            case 'limit':
+            case 'offset':
+            case 'orderBy':
+                $validMethod = true;
+
+                break;
+            default:
+                break;
         }
+
+        if (! $validMethod && (strpos($method, 'find') !== 0)) {
+            return null;
+        }
+
+        return call_user_func_array(array($this, $method), $parameters);
     }
 
     /**
@@ -109,11 +123,27 @@ class Model extends Engine
      */
     public static function __callStatic($method, $parameters)
     {
-        if (strpos($method, 'find') === 0) {
-            $instance = new static();
+        $validMethod = false;
 
-            return call_user_func_array(array($instance, $method), $parameters);
+        switch($method) {
+            case 'where':
+            case 'limit':
+            case 'offset':
+            case 'orderBy':
+                $validMethod = true;
+
+                break;
+            default:
+                break;
         }
+
+        if (! $validMethod && (strpos($method, 'find') !== 0)) {
+            return null;
+        }
+
+        $instance = new static();
+
+        return call_user_func_array(array($instance, $method), $parameters);
     }
 
     /**

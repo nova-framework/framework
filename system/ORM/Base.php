@@ -7,12 +7,12 @@
  * @date January 14th, 2016
  */
 
-namespace Nova\ORM\Query;
+namespace Nova\ORM;
 
 use Nova\Database\Connection;
 
 
-trait Builder
+abstract class Base
 {
     /**
      * Temporary select's WHERE attributes.
@@ -34,9 +34,8 @@ trait Builder
      */
     protected $selectOffset = null;
 
-
-    /*
-     * Constructor
+    /**
+     * Constuctor.
      */
     public function __construct()
     {
@@ -46,7 +45,7 @@ trait Builder
     // Query Building Methods
     //--------------------------------------------------------------------
 
-    public function where($field, $value = '')
+    protected function where($field, $value = '')
     {
         if(is_null($field)) {
             $this->tempWheres = array();
@@ -67,7 +66,7 @@ trait Builder
      * @param int $limit
      * @return BaseModel $this
      */
-    public function limit($limit = null)
+    protected function limit($limit = null)
     {
         if (! is_null($limit) && ! is_integer($limit)) {
             throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
@@ -84,7 +83,7 @@ trait Builder
      * @param int $offset
      * @return BaseModel $this
      */
-    public function offset($offset = null)
+    protected function offset($offset = null)
     {
         if (! is_null($offset) && ! is_integer($offset)) {
             throw new \UnexpectedValueException(__d('system', 'Invalid parameter'));
@@ -100,7 +99,7 @@ trait Builder
      * @param mixed $order
      * @return BaseModel $this
      */
-    public function orderBy($order)
+    protected function orderBy($order)
     {
         if(empty($order)) {
             $this->selectOrder = null;

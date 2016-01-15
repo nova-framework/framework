@@ -87,6 +87,36 @@ class Model extends Engine
     //--------------------------------------------------------------------
 
     /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        if (strpos($method, 'find') === 0) {
+            return call_user_func_array(array($this, $method), $parameters);
+        }
+    }
+
+    /**
+     * Handle dynamic static method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public static function __callStatic($method, $parameters)
+    {
+        if (strpos($method, 'find') === 0) {
+            $instance = new static();
+
+            return call_user_func_array(array($instance, $method), $parameters);
+        }
+    }
+
+    /**
      * Dynamically set attributes on the model.
      *
      * @param  string  $key
@@ -146,13 +176,13 @@ class Model extends Engine
     // Relation Methods
     //--------------------------------------------------------------------
 
-    public function belongsTo($className, $otherKey = null)
+    protected function belongsTo($className, $otherKey = null)
     {
         // Return a Nova\ORM\Relation\BelongsTo instance.
         return new BelongsTo($className, $this, $otherKey);
     }
 
-    public function hasOne($className, $foreignKey = null)
+    protected function hasOne($className, $foreignKey = null)
     {
         if($foreignKey === null) {
             $foreignKey = $this->getForeignKey();
@@ -162,7 +192,7 @@ class Model extends Engine
         return new HasOne($className, $this, $foreignKey);
     }
 
-    public function hasMany($className, $foreignKey = null)
+    protected function hasMany($className, $foreignKey = null)
     {
         if($foreignKey === null) {
             $foreignKey = $this->getForeignKey();
@@ -172,7 +202,7 @@ class Model extends Engine
         return new HasMany($className, $this, $foreignKey);
     }
 
-    public function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
+    protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
     {
         if (is_null($joinTable)) {
             $table = $this->joiningTable($className);
@@ -193,7 +223,7 @@ class Model extends Engine
         return $tableKey .'_id';
     }
 
-    public function joiningTable($className)
+    protected function joiningTable($className)
     {
         $origin = basename(str_replace('\\', '/', $this->className));
         $target = basename(str_replace('\\', '/', $className));
@@ -265,7 +295,7 @@ class Model extends Engine
     // CRUD Methods
     //--------------------------------------------------------------------
 
-    public function find($id)
+    protected function find($id)
     {
         $className =& $this->className;
 
@@ -293,7 +323,7 @@ class Model extends Engine
         return $object;
     }
 
-    public function findBy()
+    protected function findBy()
     {
         $className =& $this->className;
 
@@ -326,7 +356,7 @@ class Model extends Engine
         return $object;
     }
 
-    public function findMany($values)
+    protected function findMany($values)
     {
         $className =& $this->className;
 
@@ -370,7 +400,7 @@ class Model extends Engine
         return $result;
     }
 
-    public function findManyBy()
+    protected function findManyBy()
     {
         // Prepare the WHERE parameters.
         $params = func_get_args();
@@ -380,7 +410,7 @@ class Model extends Engine
         return $this->findAll();
     }
 
-    public function findAll()
+    protected function findAll()
     {
         $className =& $this->className;
 
@@ -611,17 +641,17 @@ class Model extends Engine
     // Overwritable Methods
     //--------------------------------------------------------------------
 
-    public function afterLoad()
+    protected function afterLoad()
     {
         return true;
     }
 
-    public function beforeSave()
+    protected function beforeSave()
     {
         return true;
     }
 
-    public function beforeDelete()
+    protected function beforeDelete()
     {
         return true;
     }

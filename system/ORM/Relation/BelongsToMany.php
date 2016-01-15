@@ -45,7 +45,7 @@ class BelongsToMany extends Relation
         $this->otherId = $model->getPrimaryKey();
 
         // Setup the Joining Pivot.
-        $this->pivot = new JoiningPivot($joinTable, $this->model, $foreignKey, $otherKey, $this->otherId);
+        $this->pivot = new JoiningPivot($joinTable, $foreignKey, $otherKey, $this->otherId);
     }
 
     public function get()
@@ -57,12 +57,16 @@ class BelongsToMany extends Relation
         $offset = $this->getOffset();
 
         // Execute the Query.
-        return $this->model
+        $result = $this->model
             ->where($this->wheres())
             ->orderBy($order)
             ->limit($limit)
             ->offset($offset)
             ->fetchWithPivot($table, $this->foreignKey, $this->otherKey, $this->otherId);
+
+        $this->resetState();
+
+        return $result;
     }
 
     public function &pivot()

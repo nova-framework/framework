@@ -15,6 +15,8 @@ use Nova\Database\Manager as Database;
 use Nova\ORM\Engine;
 use Nova\ORM\Model;
 
+use \PDO;
+
 
 class Pivot extends Engine
 {
@@ -36,31 +38,41 @@ class Pivot extends Engine
         $this->otherId  = $otherId;
     }
 
-    public function findAll()
+    public function get()
     {
         $sql = sprintf(
-            'SELECT %s FROM %s WHERE %s = :otherId',
-            $this->primaryKey,
+            'SELECT %s FROM %s WHERE %s = :whereId',
+            $this->otherKey,
             $this->table(),
-            $this->otherKey
+            $this->primaryKey
         );
 
         // Prepare the PDO Statement.
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->rawPrepare($sql);
 
         // Bind the parameters.
-        $stmt->bindValue(':otherId', $this->otherId, PDO::PARAM_INT);
+        $stmt->bindValue(':whereId', $this->otherId, PDO::PARAM_INT);
 
         // Execute the Statement and return false if it fail.
         if (! $stmt->execute()) {
             return false;
         }
 
-        return $stmt->fetchColumn();
+        //
+        $result = array();
+
+        while(($id = $stmt->fetchColumn()) !== false) {
+            $result[] = $id;
+        }
+
+        return $result;
     }
 
     public function attach($ids)
     {
+        // To avoid multiple insert into Database, we do everything into single step,
+        // using a custom method based directly into raw PDO commands.
+
         $table = $this->table();
 
         $primaryKey = $this->primaryKey;
@@ -99,29 +111,30 @@ class Pivot extends Engine
             }
 
             // Prepare the keys Data; considering that we support only integer keys.
-            $data = array($id, $otherId);
+            $data = array($otherId, $id);
 
             // Prepare the SQL insert values.
             $sql .= ' (' .implode(', ', array_map(array($this->db, 'quote'), $data)) .')';
         }
 
         // Prepare the Statement and return the result of its execution.
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->rawPrepare($sql);
 
         return $stmt->execute();
     }
 
     public function dettach($ids = null)
     {
-        $where = array($this->otherKey => $this->otherId);
+        $where = array($this->primaryKey => $this->otherId);
 
         if(! is_null($ids)) {
-            $key = $this->primaryKey;
-
-            $where[$key] = $ids;
+            $where[$this->otherKey] = $ids;
         }
 
-        return $this->db->delete($this->table(), $where);
+        //Prepare the paramTypes.
+        $paramTypes = $this->getParamTypes($where, true);
+
+        return $this->db->delete($this->table(), $where, $paramTypes);
     }
 
     public function sync($ids)

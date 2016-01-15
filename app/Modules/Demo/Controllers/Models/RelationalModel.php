@@ -211,7 +211,7 @@ var_dump(\$result);
         $text = "
 \$user = \$this->model->findBy('username', 'marcus');
 
-\$profile = \$user->profile
+\$profile = \$user->profile;
 
 self::dumpObject(\$user);
 self::dumpObject(\$profile);
@@ -236,7 +236,7 @@ self::dumpObject(\$user->profile);
         $text = "
 \$user = \$this->model->findBy('username', 'marcus');
 
-\$profile = \$user->profile
+\$profile = \$user->profile;
 
 \$user2 = \$profile->user;
 
@@ -251,16 +251,13 @@ self::dumpObject(\$user2);
         $message .= '<pre>'. self::dumpObject($user2).'</pre><br>';
 
         //
-        $model = new Post();
 
-        $post = $model->find(1);
+        $post = Post::find(1);
 
         $author = $post->author;
 
         $text = "
-\$model = new Post();
-
-\$post = \$model->find(1);
+\$post = Post::find(1);
 
 \$author = \$post->author;
 
@@ -283,7 +280,7 @@ self::dumpObject(\$author);
         $text = "
 \$user = \$this->model->findBy('username', 'marcus');
 
-\$posts = \$user->posts
+\$posts = \$user->posts;
 
 
 self::dumpObject(\$user);
@@ -298,16 +295,12 @@ self::dumpObjectArray(\$posts);
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany').'</strong></h3><br>';
 
         //
-        $model = new Student();
-
-        $student = $model->find(1);
+        $student = Student::find(1);
 
         $courses = $student->courses;
 
         $text = "
-\$model = new Student();
-
-\$student = \$model->find(1);
+\$student = Student::find(1);
 
 \$courses = \$student->courses;
 
@@ -321,9 +314,7 @@ self::dumpObjectArray(\$posts);
         $message .= '<pre>'. self::dumpObjectArray($courses).'</pre><br>';
 
         //
-        $model = new Course();
-
-        $course = $model->find(1);
+        $course = Course::find(1);
 
         $students = $course->students()
             ->where('username != ?', 'tom')
@@ -332,9 +323,7 @@ self::dumpObjectArray(\$posts);
             ->get();
 
         $text = "
-\$model = new Course();
-
-\$course = \$course->find(1);
+\$course = Course::find(1);
 
 \$students = \$course->students()
     ->where('username != ?', 'tom')
@@ -352,6 +341,104 @@ self::dumpObjectArray(\$course->students);
         $message .= '<pre>'. self::dumpObject($course).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($course->students).'</pre><br>';
+
+        //
+        $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany, operating with the Pivot').'</strong></h3><br>';
+
+        //
+        $course = Course::find(2);
+
+        $students = $course->students()->get();
+
+        $pivot = $course->students()->pivot();
+
+        $sids = $pivot->get();
+
+        $text = "
+\$course = Course::find(2);
+
+\$students = \$course->students()->get();
+
+\$pivot = \$course->students()->pivot();
+
+\$sids = \$pivot->get();
+
+var_export(\$sids, true);
+self::dumpObjectArray(\$students);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. var_export($sids, true).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+
+        //
+        $pivot->attach(3);
+
+        $sids = $pivot->get();
+
+        $students = $course->students()->get();
+
+        $text = "
+\$pivot->attach(3);
+
+\$sids = \$pivot->get();
+
+\$students = \$course->students()->get();
+
+var_export(\$sids, true);
+self::dumpObjectArray(\$students);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. var_export($sids, true).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+
+        //
+        $pivot->dettach(3);
+
+        $sids = $pivot->get();
+
+        $students = $course->students()->get();
+
+        $text = "
+\$pivot->dettach(3);
+
+\$sids = \$pivot->get();
+
+\$students = \$course->students()->get();
+
+var_export(\$sids, true);
+self::dumpObjectArray(\$students);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. var_export($sids, true).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+
+        //
+        $pivot->sync(array(1,2,4));
+
+        $sids = $pivot->get();
+
+        $students = $course->students()->get();
+
+        $pivot->dettach(4);
+
+        $text = "
+\$sids = \$pivot->get();
+
+\$students = \$course->students()->get();
+
+\$pivot->dettach(4);
+
+var_export(\$sids, true);
+self::dumpObjectArray(\$students);
+        ";
+
+        $message .= self::highlightText($text, true);
+        $message .= '<pre>'. var_export($sids, true).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'ORM - Object Relational Model'));

@@ -39,17 +39,18 @@ class Pivot extends Engine
     public function get()
     {
         $sql = sprintf(
-            'SELECT %s FROM %s WHERE %s = :whereId',
+            'SELECT %s FROM %s WHERE %s = :otherId',
             $this->primaryKey,
             $this->table(),
             $this->otherKey
         );
 
         // Prepare the PDO Statement.
-        $stmt = $this->db->rawPrepare($sql);
-
-        // Bind the parameters.
-        $stmt->bindValue(':whereId', $this->otherId, PDO::PARAM_INT);
+        $stmt = $this->db->rawPrepare(
+            $sql,
+            array('otherId' => $this->otherId),
+            array('otherId' => PDO::PARAM_INT)
+        );
 
         // Execute the Statement and return false if it fail.
         if (! $stmt->execute()) {

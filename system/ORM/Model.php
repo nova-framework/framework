@@ -286,7 +286,7 @@ class Model extends Engine
 
     public function newBuilder()
     {
-        return new Builder($this->className, $this->tableName, $this->primaryKey, $this->db);
+        return new Builder($this->className, $this->tableName, $this->primaryKey, $this->fields, $this->db);
     }
 
     //--------------------------------------------------------------------

@@ -49,7 +49,19 @@ class Model extends Engine
         parent::__construct($connection);
     }
 
-    public function initObject(array $data = array(), $isNew = false)
+    public function fromArray(array $data)
+    {
+        $this->initObject($data);
+    }
+
+    public function fromObject($object)
+    {
+        $data = get_object_vars($object);
+
+        $this->initObject($data);
+    }
+
+    protected function initObject(array $data = array(), $isNew = false)
     {
         $this->hydrate($data);
 

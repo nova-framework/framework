@@ -141,7 +141,7 @@ class Builder extends BaseBuilder
         foreach($data as $row) {
             $object = new $className();
 
-            $object->initObject($row);
+            $object->fromArray($row);
 
             //
             $result[] = $object;
@@ -190,7 +190,7 @@ class Builder extends BaseBuilder
         foreach($data as $row) {
             $object = new $className();
 
-            $object->initObject($row);
+            $object->fromArray($row);
 
             //
             $result[] = $object;
@@ -225,7 +225,7 @@ class Builder extends BaseBuilder
 
         $object = new $className();
 
-        $object->initObject($row);
+        $object->fromArray($row);
 
         return $object;
     }
@@ -323,7 +323,7 @@ class Builder extends BaseBuilder
         foreach($data as $row) {
             $object = new $className();
 
-            $object->initObject($row);
+            $object->fromArray($row);
 
             //
             $result[] = $object;

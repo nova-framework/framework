@@ -59,18 +59,10 @@ class Builder extends BaseBuilder
         $result = $this->select($sql, array('value' => $id));
 
         if($result !== false) {
-            $object = new $className();
-
-            $object->initObject($result);
-        }
-        else {
-            $object = null;
+            return $className::fromArray($result);
         }
 
-        // Reset the Model State.
-        $this->resetState();
-
-        return $object;
+        return false;
     }
 
     public function findBy()
@@ -95,15 +87,10 @@ class Builder extends BaseBuilder
         $this->resetState();
 
         if($result !== false) {
-            $object = new $className();
-
-            $object->initObject($result);
-        }
-        else {
-            $object = null;
+            return $className::fromArray($result);
         }
 
-        return $object;
+        return false;
     }
 
     public function findMany($values)
@@ -139,12 +126,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $object = new $className();
-
-            $object->fromArray($row);
-
-            //
-            $result[] = $object;
+            $result[] = $className::fromArray($row);
         }
 
         return $result;
@@ -188,12 +170,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $object = new $className();
-
-            $object->fromArray($row);
-
-            //
-            $result[] = $object;
+            $result[] = $className::fromArray($row);
         }
 
         return $result;
@@ -219,15 +196,11 @@ class Builder extends BaseBuilder
         // Reset the Model State.
         $this->resetState();
 
-        if($data === false) {
-            return false;
+        if($data !== false) {
+            return $className::fromArray($data);
         }
 
-        $object = new $className();
-
-        $object->fromArray($row);
-
-        return $object;
+        return false;
     }
 
     public function deleteBy()
@@ -321,12 +294,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $object = new $className();
-
-            $object->fromArray($row);
-
-            //
-            $result[] = $object;
+            $result[] = $className::fromArray($row);
         }
 
         return $result;

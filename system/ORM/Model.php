@@ -49,16 +49,20 @@ class Model extends Engine
         parent::__construct($connection);
     }
 
-    public function fromArray(array $data)
+    public static function fromArray(array $data)
     {
-        $this->initObject($data);
+        $model = new static();
+
+        $model->initObject($data);
+
+        return $model;
     }
 
-    public function fromObject($object)
+    public static function fromObject($object)
     {
         $data = get_object_vars($object);
 
-        $this->initObject($data);
+        return static::fromArray($data);
     }
 
     protected function initObject(array $data = array(), $isNew = false)

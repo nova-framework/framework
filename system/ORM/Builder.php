@@ -32,13 +32,10 @@ class Builder extends BaseBuilder
 
     public function __construct($className, $tableName, $primaryKey, array $fields, Connection &$connection)
     {
-        $this->className = $className;
-        $this->tableName = $tableName;
-
+        $this->className  = $className;
+        $this->tableName  = $tableName;
         $this->primaryKey = $primaryKey;
-
-        $this->fields = $fields;
-
+        $this->fields     = $fields;
         $this->connection = $connection;
     }
 

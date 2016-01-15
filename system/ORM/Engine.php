@@ -13,10 +13,12 @@ use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
 
+use Nova\ORM\Base as BaseEngine;
+
 use \PDO;
 
 
-abstract class Engine
+abstract class Engine extends BaseEngine
 {
     /*
      * The used \Nova\Database\Connection instance.
@@ -58,6 +60,9 @@ abstract class Engine
      */
     public function __construct($connection = 'default')
     {
+        parent::__construct();
+
+        //
         $this->className = get_class($this);
 
         if($connection instanceof Connection) {
@@ -193,7 +198,7 @@ abstract class Engine
 
         return null;
     }
-    
+
     //--------------------------------------------------------------------
     // Data Conversion Methods
     //--------------------------------------------------------------------

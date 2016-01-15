@@ -426,6 +426,8 @@ self::dumpObjectArray(\$students);
         $pivot->dettach(4);
 
         $text = "
+\$pivot->sync(array(1,2,4));
+
 \$sids = \$pivot->get();
 
 \$students = \$course->students()->get();

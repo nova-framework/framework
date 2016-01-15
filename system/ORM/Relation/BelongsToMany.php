@@ -16,9 +16,6 @@ use Nova\ORM\Relation\Joining\Pivot as JoiningPivot;
 
 class BelongsToMany extends Relation
 {
-    use \Nova\ORM\Query\Builder;
-
-    //
     protected $pivot;
 
     protected $foreignKey;
@@ -45,7 +42,7 @@ class BelongsToMany extends Relation
         $this->otherId = $model->getPrimaryKey();
 
         // Setup the Joining Pivot.
-        $this->pivot = new JoiningPivot($joinTable, $foreignKey, $otherKey, $this->otherId);
+        $this->pivot = new JoiningPivot($joinTable, $otherKey, $foreignKey, $this->otherId);
     }
 
     public function get()
@@ -73,5 +70,5 @@ class BelongsToMany extends Relation
     {
         return $this->pivot;
     }
-
+    
 }

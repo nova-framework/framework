@@ -15,9 +15,6 @@ use Nova\ORM\Relation;
 
 class HasMany extends Relation
 {
-    use \Nova\ORM\Query\Builder;
-
-    //
     protected $foreignKey;
     protected $primaryKey;
 
@@ -50,5 +47,4 @@ class HasMany extends Relation
 
         return $result;
     }
-
 }

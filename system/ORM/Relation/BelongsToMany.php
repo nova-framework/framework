@@ -45,6 +45,11 @@ class BelongsToMany extends Relation
         $this->pivot = new JoiningPivot($joinTable, $otherKey, $foreignKey, $this->otherId);
     }
 
+    public function type()
+    {
+        return 'belongsToMany';
+    }
+
     public function get()
     {
         $table = $this->pivot->table();
@@ -70,5 +75,5 @@ class BelongsToMany extends Relation
     {
         return $this->pivot;
     }
-    
+
 }

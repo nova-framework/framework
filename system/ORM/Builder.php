@@ -13,6 +13,8 @@ use Nova\Database\Connection;
 
 use Nova\ORM\Base as BaseBuilder;
 
+use \FluentStructure;
+use \FluentPDO;
 use \PDO;
 
 
@@ -59,7 +61,7 @@ class Builder extends BaseBuilder
         $result = $this->select($sql, array('value' => $id));
 
         if($result !== false) {
-            return $className::fromArray($result);
+            return $className::fromAssoc($result);
         }
 
         return false;
@@ -87,7 +89,7 @@ class Builder extends BaseBuilder
         $this->resetState();
 
         if($result !== false) {
-            return $className::fromArray($result);
+            return $className::fromAssoc($result);
         }
 
         return false;
@@ -126,7 +128,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromArray($row);
+            $result[] = $className::fromAssoc($row);
         }
 
         return $result;
@@ -170,7 +172,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromArray($row);
+            $result[] = $className::fromAssoc($row);
         }
 
         return $result;
@@ -197,7 +199,7 @@ class Builder extends BaseBuilder
         $this->resetState();
 
         if($data !== false) {
-            return $className::fromArray($data);
+            return $className::fromAssoc($data);
         }
 
         return false;
@@ -294,10 +296,41 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromArray($row);
+            $result[] = $className::fromAssoc($row);
         }
 
         return $result;
+    }
+
+    //--------------------------------------------------------------------
+    // QueryBuilder Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Build a Select Query.
+     * @return \SelectQuery
+     *
+     * @throws \Exception
+     */
+    public function query($returnType = null)
+    {
+        $table = $this->table();
+
+        if($returnType == 'array') {
+            $asObject = false;
+        }
+        else if($returnType == 'object') {
+            $asObject = true;
+        }
+        else {
+            $asObject = $this->className;
+        }
+
+        // Get a QueryBuilder instance.
+        $queryBuilder = $this->connection->queryBuilder();
+
+        // First, check and configure for the 'select' Method.
+        return $queryBuilder->from($table)->asObject($asObject);
     }
 
     //--------------------------------------------------------------------

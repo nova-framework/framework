@@ -15,8 +15,7 @@ use Nova\ORM\Relation;
 
 class BelongsTo extends Relation
 {
-    protected $foreignKey;
-    protected $otherKey;
+    protected $otherId;
 
 
     public function __construct($className, Model $model, $otherKey = null)
@@ -32,12 +31,17 @@ class BelongsTo extends Relation
         $this->primaryKey = $this->model->getPrimaryKey();
 
         // The otherKey is associated to target Model.
-        $this->otherKey = $model->attribute($otherKey);
+        $this->otherId = $model->attribute($otherKey);
+    }
+
+    public function type()
+    {
+        return 'belongsTo';
     }
 
     public function get()
     {
-        return $this->model->findBy($this->primaryKey, $this->otherKey);
+        return $this->model->findBy($this->primaryKey, $this->otherId);
     }
 
 }

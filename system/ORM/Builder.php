@@ -227,6 +227,60 @@ class Builder extends BaseBuilder
         return $result;
     }
 
+    /**
+     * Counts number of rows modified by an arbitrary WHERE call.
+     * @return INT
+     */
+    public function countBy()
+    {
+        $bindParams = array();
+
+        //
+        $params = func_get_args();
+
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
+
+        $where = $this->setWhere($params);
+
+        // Prepare the WHERE details.
+        $whereStr = Connection::parseWhereConditions($where, $bindParams);
+
+        // Prepare the SQL Query.
+        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
+
+        $result = $this->select($sql, $bindParams);
+
+        // Reset the Model State.
+        $this->resetState();
+
+        if ($result !== false) {
+            return $result['count'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * Counts total number of records, disregarding any previous conditions.
+     *
+     * @return int
+     */
+    public function countAll()
+    {
+        // Prepare the SQL Query.
+        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table();
+
+        $result = $this->select($sql);
+
+        if ($result !== false) {
+            return $result['count'];
+        }
+
+        return 0;
+    }
+
     //--------------------------------------------------------------------
     // Select Methods
     //--------------------------------------------------------------------

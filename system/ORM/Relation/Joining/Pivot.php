@@ -11,9 +11,7 @@ namespace Nova\ORM\Relation\Joining;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
-
 use Nova\ORM\Engine;
-use Nova\ORM\Model;
 
 use \PDO;
 

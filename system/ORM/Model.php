@@ -34,6 +34,11 @@ class Model extends Engine
     protected $isDirty = false;
 
     /**
+     * There we store the associated Model instances.
+     */
+    protected $instances = array();
+
+    /**
      * The Fields who are (un)serialized on-fly.
      */
     protected $serialize = array();
@@ -49,28 +54,32 @@ class Model extends Engine
     public function __construct($connection = 'default')
     {
         parent::__construct($connection);
+
+        $this->initObject(true);
     }
 
-    public static function fromAssoc(array $data)
+    public static function fromAssoc(array $data, $isNew = true)
     {
         $model = new static();
 
-        $model->initObject($data);
+        // Hydrate the Model.
+        $model->hydrate($data);
+
+        // Initialize the Model.
+        $model->initObject($isNew);
 
         return $model;
     }
 
-    public static function fromObject($object)
+    public static function fromObject($object, $isNew = true)
     {
         $data = get_object_vars($object);
 
-        return static::fromAssoc($data);
+        return static::fromAssoc($data, $isNew);
     }
 
-    protected function initObject(array $data = array(), $isNew = false)
+    protected function initObject($isNew = false)
     {
-        $this->hydrate($data);
-
         $this->isNew = $isNew;
 
         if (! $this->isNew) {
@@ -117,8 +126,6 @@ class Model extends Engine
         if(method_exists($builder, $method)) {
             return call_user_func_array(array($builder, $method), $parameters);
         }
-
-        return null;
     }
 
     /**
@@ -160,20 +167,11 @@ class Model extends Engine
             return $this->attributes[$fieldName];
         }
 
-        // If there is something into Cache assigned for this name, return it from.
-        if ($this->hasCached($name)) {
-            return $this->getCache($name);
-        }
-
         // If there is a Relation defined for this name, process it.
-        if (in_array($name, $this->relations) && method_exists($this, $name)) {
+        if (! $this->isNew && in_array($name, $this->relations) && method_exists($this, $name)) {
             $relation = call_user_func(array($this, $name));
 
-            $result = $relation->get();
-
-            $this->setCache($name, $result);
-
-            return $result;
+            return $relation->get();
         }
     }
 
@@ -197,8 +195,13 @@ class Model extends Engine
 
     protected function belongsTo($className, $otherKey = null)
     {
-        // Return a Nova\ORM\Relation\BelongsTo instance.
-        return new BelongsTo($className, $this, $otherKey);
+        $token = md5('belongsTo_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new BelongsTo($className, $this, $otherKey);
+        }
+
+        return $this->instances[$token];
     }
 
     protected function hasOne($className, $foreignKey = null)
@@ -207,8 +210,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Return a Nova\ORM\Relation\HasOne instance.
-        return new HasOne($className, $this, $foreignKey);
+        //
+        $token = md5('hasOne_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new HasOne($className, $this, $foreignKey);
+        }
+
+        return $this->instances[$token];
     }
 
     protected function hasMany($className, $foreignKey = null)
@@ -217,8 +226,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Return a Nova\ORM\Relation\HasMany instance.
-        return new HasMany($className, $this, $foreignKey);
+        //
+        $token = md5('hasMany_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new HasMany($className, $this, $foreignKey);
+        }
+
+        return $this->instances[$token];
     }
 
     protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
@@ -231,8 +246,14 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Return a Nova\ORM\Relation\BelongsToMany instance.
-        return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
+        //
+        $token = md5('belongsToMany_' .$className);
+
+        if(! isset($this->instances[$token])) {
+            $this->instances[$token] = new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
+        }
+
+        return $this->instances[$token];
     }
 
     public function getForeignKey()
@@ -415,51 +436,6 @@ class Model extends Engine
 
         // Get a QueryBuilder instance.
         return $this->db->getQueryBuilder($structure);
-    }
-
-    //--------------------------------------------------------------------
-    // Events Management
-    //--------------------------------------------------------------------
-
-    /**
-     * Triggers a model-specific event and call each of it's Observers.
-     *
-     * @param string $event The name of the event to trigger.
-     * @param mixed  $data  The data to be passed to the callback functions.
-     *
-     * @return mixed
-     */
-    public function trigger($event, $data = false)
-    {
-        if (! isset($this->$event) || ! is_array($this->$event)) {
-            if (isset($data['fields'])) {
-                return $data['fields'];
-            }
-
-            return $data;
-        }
-
-        foreach ($this->$event as $method) {
-            if (strpos($method, '(') !== false) {
-                preg_match('/([a-zA-Z0-9\_\-]+)(\(([a-zA-Z0-9\_\-\., ]+)\))?/', $method, $matches);
-
-                $this->callbackParams = explode(',', $matches[3]);
-            }
-
-            $data = call_user_func_array(array($this, $method), array($data));
-        }
-
-        // In case no method called or method returned the entire data array, we typically just need the $fields.
-        if (isset($data['fields'])) {
-            return $data['fields'];
-        }
-
-        // A few methods might need to return 'ids'.
-        if (isset($data['ids'])) {
-            return $data['ids'];
-        }
-
-        return $data;
     }
 
     //--------------------------------------------------------------------

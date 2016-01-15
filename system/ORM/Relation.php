@@ -16,6 +16,7 @@ use Nova\ORM\Model;
 abstract class Relation extends BaseRelation
 {
     protected $model;
+    protected $className;
 
 
     public function __construct($className)
@@ -28,13 +29,16 @@ abstract class Relation extends BaseRelation
             throw new \Exception(__d('system', 'No valid Class is given: {0}', $className));
         }
 
+        //
+        $this->className = $className;
+
         // Setup the instance of Target Model.
         $this->model = new $className();
     }
 
-    public function relatedModel()
+    public function getClassName()
     {
-        return get_class($this->model);
+        return $this->className;
     }
 
     abstract public function get();

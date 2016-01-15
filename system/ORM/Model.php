@@ -205,14 +205,7 @@ class Model extends Engine
 
     protected function belongsTo($className, $otherKey = null)
     {
-        // Calculate the Cache Token.
-        $token = 'belongsTo_' .$className;
-
-        if(! isset($this->localCache[$token])) {
-            $this->localCache[$token] = new BelongsTo($className, $this, $otherKey);
-        }
-
-        return $this->localCache[$token];
+        return new BelongsTo($className, $this, $otherKey);
     }
 
     protected function hasOne($className, $foreignKey = null)
@@ -221,14 +214,7 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Calculate the Cache Token.
-        $token = 'hasOne_' .$className;
-
-        if(! isset($this->localCache[$token])) {
-            $this->localCache[$token] = new HasOne($className, $this, $foreignKey);
-        }
-
-        return $this->localCache[$token];
+        return new HasOne($className, $this, $foreignKey);
     }
 
     protected function hasMany($className, $foreignKey = null)
@@ -237,14 +223,7 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Calculate the Cache Token.
-        $token = 'hasMany_' .$className;
-
-        if(! isset($this->localCache[$token])) {
-            $this->localCache[$token] = new HasMany($className, $this, $foreignKey);
-        }
-
-        return $this->localCache[$token];
+        return new HasMany($className, $this, $foreignKey);
     }
 
     protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
@@ -257,14 +236,7 @@ class Model extends Engine
             $foreignKey = $this->getForeignKey();
         }
 
-        // Calculate the Cache Token.
-        $token = 'belongsToMany_' .$className;
-
-        if(! isset($this->localCache[$token])) {
-            $this->localCache[$token] = new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
-        }
-
-        return $this->localCache[$token];
+        return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
     }
 
     public function getForeignKey()
@@ -413,7 +385,7 @@ class Model extends Engine
             foreach ($this->relations as $name) {
                 $relation = call_user_func(array($this, $name));
 
-                $result .= "\t" .$relation->type()  .': ' .$relation->relatedModel() . "\n";
+                $result .= "\t" .ucfirst($relation->type())  .': ' .$relation->getClassName() . "\n";
             }
         }
 

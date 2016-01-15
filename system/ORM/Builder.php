@@ -27,13 +27,17 @@ class Builder extends BaseBuilder
 
     protected $primaryKey;
 
+    protected $fields;
 
-    public function __construct($className, $tableName, $primaryKey, Connection &$connection)
+
+    public function __construct($className, $tableName, $primaryKey, array $fields, Connection &$connection)
     {
         $this->className = $className;
         $this->tableName = $tableName;
 
         $this->primaryKey = $primaryKey;
+
+        $this->fields = $fields;
 
         $this->connection = $connection;
     }
@@ -247,8 +251,11 @@ class Builder extends BaseBuilder
         // Prepare the WHERE details.
         $whereStr = Connection::parseWhereConditions($where, $bindParams);
 
+        $orderStr = $this->parseSelectOrder();
+        $limitStr = $this->parseSelectLimit();
+
         // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr";
+        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr $orderStr $offsetStr";
 
         $result = $this->select($sql, $bindParams);
 
@@ -279,6 +286,37 @@ class Builder extends BaseBuilder
         }
 
         return 0;
+    }
+
+    /**
+     * Checks whether a field/value pair exists within the table.
+     *
+     * @param string $field The field to search for.
+     * @param string $value The value to match $field against.
+     * @param string $ignore Optionally, the ignored primaryKey.
+     *
+     * @return bool TRUE/FALSE
+     */
+    public function isUnique($field, $value, $ignore = null)
+    {
+        $bindParams = array("where_$field" => $value);
+
+        //
+        $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
+
+        if ($ignore !== null) {
+            $sql .= " AND " .$this->primaryKey ." != :where_ignore";
+
+            $bindParams['where_ignore'] = $ignore;
+        }
+
+        $data = $this->select($sql, $bindParams, true);
+
+        if (is_array($data) && (count($data) == 0)) {
+            return true;
+        }
+
+        return true;
     }
 
     //--------------------------------------------------------------------

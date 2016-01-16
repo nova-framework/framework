@@ -256,11 +256,11 @@ abstract class Connection extends PDO
     /**
      * @return Statement
      */
-    public function prepare($query, array $options = null)
+    public function prepare($statement, array $options = null)
     {
         $params = is_array($options) ? $options : array();
 
-        return new Statement(parent::prepare($query), $this, $params);
+        return new Statement(parent::prepare($statement), $this, $params);
     }
 
     /**

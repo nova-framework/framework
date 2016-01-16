@@ -21,7 +21,8 @@ Config::set('logger', array(
  * Profiler configuration
  */
 Config::set('profiler', array(
-    'with_queries' => false
+    'use_forensics' => false,
+    'with_database' => false
 ));
 
 /**

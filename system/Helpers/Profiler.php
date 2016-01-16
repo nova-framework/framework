@@ -28,7 +28,7 @@ class Profiler
 
         $memory_usage = Number::humanSize(memory_get_usage());
 
-        if ($options['with_queries'] == true) {
+        if ($options['with_database'] == true) {
             $connection = Database::getConnection();
 
             $total_queries = $connection->getTotalQueries();

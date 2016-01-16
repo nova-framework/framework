@@ -26,6 +26,7 @@ namespace Nova\Forensics;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
+use Nova\Config;
 
 use Nova\Forensics\Console;
 
@@ -55,6 +56,13 @@ class Profiler
 
     public static process($connection = null, $fetch = false)
     {
+        $options = Config::get('profiler');
+
+        if ($options['use_forensics'] != true) {
+            return null;
+        }
+
+        // The QuickProfiller was enabled into Configuration.
         $profiler = new self($connection);
 
         return $profiler->display($connection, $fetch);

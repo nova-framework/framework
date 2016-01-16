@@ -258,8 +258,8 @@ abstract class Connection extends PDO
      */
     public function prepare($query, array $params = null)
     {
-        $params = is_array($params) ? $params : null;
-        
+        $params = is_array($params) ? $params : array();
+
         return new Statement(parent::prepare($query), $this, $params);
     }
 

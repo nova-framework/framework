@@ -256,7 +256,7 @@ abstract class Connection extends PDO
     /**
      * @return Statement
      */
-    public function prepare($statement, array $options = null)
+    public function prepare($statement, $options = null)
     {
         $params = is_array($options) ? $options : array();
 

@@ -32,12 +32,16 @@ use Nova\Forensics\Console;
 
 class Profiler
 {
+    protected $instance = null;
+
     public $output = array();
 
 
-    public function __construct($startTime)
+    public function __construct($connection = null)
     {
-        $this->startTime = $startTime;
+        $this->startTime = FRAMEWORK_STARTING_MICROTIME;
+
+        $this->db = $connection;
     }
 
     /*
@@ -184,27 +188,19 @@ class Profiler
         // Adapted from code at http://aidanlister.com/repos/v/function.size_readable.php
         $sizes = array('bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 
-        if ($result === null) {
-            $result = '%01.2f %s';
+        if ($result === null) $result = '%01.2f %s';
+
+        $lastSizeStr = end($sizes);
+
+        foreach ($sizes as $sizeStr) {
+            if ($size < 1024) break;
+
+            if ($sizeStr != $lastSizeStr) $size /= 1024;
         }
 
-        $lastSizeString = end($sizes);
+        if ($sizeStr == $sizes[0]) $result = '%01d %s';  // Bytes aren't normally fractional
 
-        foreach ($sizes as $sizeString) {
-            if ($size < 1024) {
-                break;
-            }
-
-            if ($sizeString != $lastSizeString) {
-                $size /= 1024;
-            }
-        }
-
-        if ($sizeString == $sizes[0]) {
-            $result = '%01d %s';  // Bytes aren't normally fractional
-        }
-
-        return sprintf($result, $size, $sizeString);
+        return sprintf($result, $size, $sizeStr);
     }
 
     public function getReadableTime($time)
@@ -234,260 +230,46 @@ class Profiler
     /*
      * Display to the screen -- CALL WHEN CODE TERMINATING
      */
-    public function display($connection = null)
+    public static function display($connection = null)
     {
-        $this->db = $connection;
+        if(self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        self::$instance;
 
         //
-        $this->gatherConsoleData();
-        $this->gatherFileData();
-        $this->gatherMemoryData();
-        $this->gatherQueryData();
-        $this->gatherSpeedData();
+        self::$instance->gatherConsoleData();
+        self::$instance->gatherFileData();
+        self::$instance->gatherMemoryData();
+        self::$instance->gatherQueryData();
+        self::$instance->gatherSpeedData();
 
-        $this->renderProfiler($this->output);
+        return self::$instance->render();
     }
 
     /*
      * HTML Output for Php Quick Profiler
      */
-    function renderProfiler($output)
+    function render()
     {
-        $cssUrl = '/assets/css/profiler.css';
+        $output =& $this->output;
 
-        //echo <<<JAVASCRIPT
+        //
+        $viewPath = APPPATH .'Views/Fragments/profiler.php';
 
-        echo '<div id="pqp-container" class="pQp" style="display:none">';
-
-        logCount = count($output['logs']['console']);
-
+        $logCount = count($output['logs']['console']);
         $fileCount = count($output['files']);
 
         $memoryUsed = $output['memoryTotals']['used'];
         $queryCount = $output['queryTotals']['count'];
         $speedTotal = $output['speedTotals']['total'];
 
-        echo '
-<div id="pQp" class="console">
-<table id="pqp-metrics" cellspacing="0">
-<tr>
-    <td class="green" onclick="changeTab(\'console\');">
-        <var>$logCount</var>
-        <h4>Console</h4>
-    </td>
-    <td class="blue" onclick="changeTab(\'speed\');">
-        <var>$speedTotal</var>
-        <h4>Load Time</h4>
-    </td>
-    <td class="purple" onclick="changeTab(\'queries\');">
-        <var>$queryCount Queries</var>
-        <h4>Database</h4>
-    </td>
-    <td class="orange" onclick="changeTab(\'memory\');">
-        <var>$memoryUsed</var>
-        <h4>Memory Used</h4>
-    </td>
-    <td class="red" onclick="changeTab(\'files\');">
-        <var>{$fileCount} Files</var>
-        <h4>Included</h4>
-    </td>
-</tr>
-</table>';
+        // Render the Profiler Fragment and return the output.
+        ob_start();
 
-        echo '<div id="pqp-console" class="pqp-box">';
+        require $viewPath;
 
-        if($logCount ==  0) {
-            echo '<h3>This panel has no log items.</h3>';
-        }
-        else {
-            echo '<table class="side" cellspacing="0">
-        <tr>
-            <td class="alt1"><var>'.$output['logs']['logCount'].'</var><h4>Logs</h4></td>
-            <td class="alt2"><var>'.$output['logs']['errorCount'].'</var> <h4>Errors</h4></td>
-        </tr>
-        <tr>
-            <td class="alt3"><var>'.$output['logs']['memoryCount'].'</var> <h4>Memory</h4></td>
-            <td class="alt4"><var>'.$output['logs']['speedCount'].'</var> <h4>Speed</h4></td>
-        </tr>
-        </table>
-        <table class="main" cellspacing="0">';
-
-            $class = '';
-            foreach($output['logs']['console'] as $log) {
-                echo '<tr class="log-'.$log['type'].'">
-                <td class="type">'.$log['type'].'</td>
-                <td class="'.$class.'">';
-
-                if($log['type'] == 'log') {
-                    echo '<div><pre>'.$log['data'].'</pre></div>';
-                }
-                elseif($log['type'] == 'memory') {
-                    echo '<div><pre>'.$log['data'].'</pre> <em>'.$log['dataType'].'</em>: '.$log['name'].' </div>';
-                }
-                elseif($log['type'] == 'speed') {
-                    echo '<div><pre>'.$log['data'].'</pre> <em>'.$log['name'].'</em></div>';
-                }
-                elseif($log['type'] == 'error') {
-                    echo '<div><em>Line '.$log['line'].'</em> : '.$log['data'].' <pre>'.$log['file'].'</pre></div>';
-                }
-
-                echo '</td></tr>';
-
-                if($class == '') $class = 'alt';
-
-                else $class = '';
-            }
-
-            echo '</table>';
-        }
-
-        echo '</div>';
-
-        echo '<div id="pqp-speed" class="pqp-box">';
-
-        if($output['logs']['speedCount'] ==  0) {
-            echo '<h3>This panel has no log items.</h3>';
-        }
-        else {
-            echo '<table class="side" cellspacing="0">
-          <tr><td><var>'.$output['speedTotals']['total'].'</var><h4>Load Time</h4></td></tr>
-          <tr><td class="alt"><var>'.$output['speedTotals']['allowed'].'</var> <h4>Max Execution Time</h4></td></tr>
-         </table>
-        <table class="main" cellspacing="0">';
-
-            $class = '';
-
-            foreach($output['logs']['console'] as $log) {
-                if($log['type'] == 'speed') {
-                    echo '<tr class="log-'.$log['type'].'">
-                <td class="'.$class.'">';
-
-                echo '<div><pre>'.$log['data'].'</pre> <em>'.$log['name'].'</em></div>';
-
-                echo '</td></tr>';
-
-                    if($class == '') $class = 'alt';
-                    else $class = '';
-                }
-            }
-
-            echo '</table>';
-        }
-
-        echo '</div>';
-
-        echo '<div id="pqp-queries" class="pqp-box">';
-
-        if($output['queryTotals']['count'] ==  0) {
-            echo '<h3>This panel has no log items.</h3>';
-        }
-        else {
-            echo '<table class="side" cellspacing="0">
-          <tr><td><var>'.$output['queryTotals']['count'].'</var><h4>Total Queries</h4></td></tr>
-          <tr><td class="alt"><var>'.$output['queryTotals']['time'].'</var> <h4>Total Time</h4></td></tr>
-          <tr><td><var>0</var> <h4>Duplicates</h4></td></tr>
-         </table>
-        <table class="main" cellspacing="0">';
-
-            $class = '';
-
-            foreach($output['queries'] as $query) {
-                echo '<tr>
-                <td class="'.$class.'">'.$query['sql'];
-                if($query['explain']) {
-                    echo '<em>
-                        Possible keys: <b>'.$query['explain']['possible_keys'].'</b> &middot;
-                        Key Used: <b>'.$query['explain']['key'].'</b> &middot;
-                        Type: <b>'.$query['explain']['type'].'</b> &middot;
-                        Rows: <b>'.$query['explain']['rows'].'</b> &middot;
-                        Speed: <b>'.$query['time'].'</b>
-                    </em>';
-                }
-
-                echo '</td></tr>';
-
-                if($class == '') $class = 'alt';
-                else $class = '';
-            }
-
-            echo '</table>';
-        }
-
-        echo '</div>';
-
-        echo '<div id="pqp-memory" class="pqp-box">';
-
-        if($output['logs']['memoryCount'] ==  0) {
-            echo '<h3>This panel has no log items.</h3>';
-        }
-        else {
-            echo '<table class="side" cellspacing="0">
-          <tr><td><var>'.$output['memoryTotals']['used'].'</var><h4>Used Memory</h4></td></tr>
-          <tr><td class="alt"><var>'.$output['memoryTotals']['total'].'</var> <h4>Total Available</h4></td></tr>
-         </table>
-        <table class="main" cellspacing="0">';
-
-            $class = '';
-
-            foreach($output['logs']['console'] as $log) {
-                if($log['type'] == 'memory') {
-                    echo '<tr class="log-'.$log['type'].'">';
-                    echo '<td class="'.$class.'"><b>'.$log['data'].'</b> <em>'.$log['dataType'].'</em>: '.$log['name'].'</td>';
-                    echo '</tr>';
-
-                    if($class == '') $class = 'alt';
-                    else $class = '';
-                }
-            }
-
-            echo '</table>';
-        }
-
-        echo '</div>';
-
-        echo '<div id="pqp-files" class="pqp-box">';
-
-        if($output['fileTotals']['count'] ==  0) {
-            echo '<h3>This panel has no log items.</h3>';
-        }
-        else {
-            echo '<table class="side" cellspacing="0">
-              <tr><td><var>'.$output['fileTotals']['count'].'</var><h4>Total Files</h4></td></tr>
-            <tr><td class="alt"><var>'.$output['fileTotals']['size'].'</var> <h4>Total Size</h4></td></tr>
-            <tr><td><var>'.$output['fileTotals']['largest'].'</var> <h4>Largest</h4></td></tr>
-         </table>
-        <table class="main" cellspacing="0">';
-
-            $class ='';
-
-            foreach($output['files'] as $file) {
-                echo '<tr><td class="'.$class.'"><b>'.$file['size'].'</b> '.$file['name'].'</td></tr>';
-
-                if($class == '') $class = 'alt';
-                else $class = '';
-            }
-
-            echo '</table>';
-        }
-
-        echo '</div>';
-
-        echo '
-    <table id="pqp-footer" cellspacing="0">
-        <tr>
-            <td class="credit">
-                <a href="http://particletree.com" target="_blank">
-                <strong>PHP</strong>
-                <b class="green">Q</b><b class="blue">u</b><b class="purple">i</b><b class="orange">c</b><b class="red">k</b>
-                Profiler</a></td>
-            <td class="actions">
-                <a href="#" onclick="toggleDetails();return false">Details</a>
-                <a class="heightToggle" href="#" onclick="toggleHeight();return false">Height</a>
-            </td>
-        </tr>
-    </table>
-';
-
-        echo '</div></div>';
+        return ob_get_clean();
     }
 }

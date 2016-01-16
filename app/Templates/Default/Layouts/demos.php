@@ -5,6 +5,7 @@
 
 use Nova\Helpers\Assets;
 use Nova\Helpers\Profiler;
+use Nova\Forensics\Profiler as QuickProfiler;
 use Nova\Net\Url;
 
 // Calculate the current URL
@@ -146,6 +147,9 @@ Assets::js(array(
 
 //Add Controller specific JS files.
 Assets::js($footerJScripts);
+
+// Show the QuickProfiler Widget.
+QuickProfiler::process();
 ?>
 
 

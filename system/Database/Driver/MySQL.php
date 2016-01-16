@@ -85,44 +85,14 @@ class MySQL extends Connection
 
         $this->lastSqlQuery = $sql;
 
-        $this->queryCount++;
+        // Get the current Time.
+        $time = $this->getTime();
 
-        return $this->exec($sql);
-    }
+        $result = $this->exec($sql);
 
-    /**
-     * Get the columns names for the specified Database Table.
-     *
-     * @param  string $table table name
-     * @return array  Returns the Database Table fields
-     */
-    public function listColumns($table)
-    {
-        $columns = array();
+        $this->logQuery($sql, array(), $time);
 
-        if (empty($table)) {
-            throw new \UnexpectedValueException('Parameter should be not empty');
-        }
-
-        if(isset(Connection::$tables[$table])) {
-            return array_keys(Connection::$tables[$table]);
-        }
-
-        // Find all Column names
-        $sql = "SHOW COLUMNS FROM $table";
-
-        $this->lastSqlQuery = $sql;
-
-        $result = $this->rawQuery($sql, 'array');
-
-        if ($result !== false) {
-            foreach ($result as $row) {
-                // Get the column name from the results
-                $columns[] = $row['Field'];
-            }
-        }
-
-        return $columns;
+        return $result;
     }
 
     /**
@@ -181,7 +151,14 @@ class MySQL extends Connection
         }
 
         // Find all Column names
-        $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
+        $sql = "SHOW COLUMNS FROM $table";
+
+        $this->lastSqlQuery = $sql;
+
+        // Get the current Time.
+        $time = $this->getTime();
+
+        $result = $this->rawQuery($sql, 'array');
 
         $cid = 0;
 
@@ -206,6 +183,8 @@ class MySQL extends Connection
                 $cid++;
             }
         }
+
+        $this->logQuery($sql, array(), $time);
 
         return $columns;
     }

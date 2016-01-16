@@ -231,7 +231,7 @@ class BaseModel extends Model
 
         return DB_PREFIX .$this->tableName;
     }
-    
+
     //--------------------------------------------------------------------
     // QueryBuilder Methods
     //--------------------------------------------------------------------
@@ -1105,7 +1105,9 @@ class BaseModel extends Model
     public function tableFields()
     {
         if (empty($this->fields)) {
-            $this->fields = $this->db->listColumns($this->table());
+            $fields = $this->db->getTableFields($this->table());
+
+            $this->fields = array_keys($fields);
         }
 
         if (empty($this->fields)) {

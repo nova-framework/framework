@@ -14,6 +14,7 @@
     var PQP_HEIGHT = "short";
 
     addEvent(window, 'load', loadCSS);
+    //addEvent(window, 'load', toggleDetails);
 
     function changeTab(tab) {
         var pQp = document.getElementById('pQp');
@@ -61,7 +62,7 @@
         sheet.setAttribute("rel", "stylesheet");
         sheet.setAttribute("type", "text/css");
         sheet.setAttribute("href", "<?= site_url('/assets/css/profiler.css'); ?>");
-        
+
         document.getElementsByTagName("head")[0].appendChild(sheet);
 
         setTimeout(function(){document.getElementById("pqp-container").style.display = "block"}, 10);
@@ -134,7 +135,7 @@
                 <h4>Database</h4>
             </td>
             <td class="orange" onclick="changeTab('memory');">
-                <var><?= $$memoryUsed; ?></var>
+                <var><?= $memoryUsed; ?></var>
                 <h4>Memory Used</h4>
             </td>
             <td class="red" onclick="changeTab('files');">
@@ -279,7 +280,7 @@
         <tr>
             <td class="credit">
                 <a href="http://particletree.com/features/php-quick-profiler/" target="_blank">
-                <strong>PHP</strong>
+                <strong>Nova</strong>
                 <b class="green">Q</b><b class="blue">u</b><b class="purple">i</b><b class="orange">c</b><b class="red">k</b>
                 Profiler</a></td>
             <td class="actions">

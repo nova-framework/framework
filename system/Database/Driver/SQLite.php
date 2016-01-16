@@ -65,37 +65,6 @@ class SQLite extends Connection
     }
 
     /**
-     * Get the field names for the specified Database Table.
-     *
-     * @param  string $table table name
-     * @return array  Returns the Database Table fields
-     */
-    public function listColumns($table)
-    {
-        $columns = array();
-
-        if (empty($table)) {
-            throw new \UnexpectedValueException('Parameter should be not empty');
-        }
-
-        if(isset(Connection::$tables[$table])) {
-            return array_keys(Connection::$tables[$table]);
-        }
-
-        // Find all Column names
-        $result = $this->rawQuery("PRAGMA table_info($table)", 'array');
-
-        if ($result !== false) {
-            foreach ($result as $row) {
-                // Get the column name from the results
-                $columns[] = $row['name'];
-            }
-        }
-
-        return $columns;
-    }
-
-    /**
      * Get table field/column type
      *
      * @param string $sqliteType
@@ -148,6 +117,9 @@ class SQLite extends Connection
 
         $this->lastSqlQuery = $sql;
 
+        // Get the current Time.
+        $time = $this->getTime();
+
         $result = $this->rawQuery($sql, 'array');
 
         if ($result !== false) {
@@ -167,6 +139,8 @@ class SQLite extends Connection
                 );
             }
         }
+
+        $this->logQuery($sql, array(), $time);
 
         return $columns;
     }

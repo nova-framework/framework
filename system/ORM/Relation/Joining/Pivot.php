@@ -45,24 +45,30 @@ class Pivot extends Engine
             $this->otherKey
         );
 
+        //
+        $params = array('otherId' => $this->otherId);
+
         // Prepare the PDO Statement.
         $stmt = $this->db->rawPrepare(
             $sql,
-            array('otherId' => $this->otherId),
+            $params,
             array('otherId' => PDO::PARAM_INT)
         );
 
         // Execute the Statement and return false if it fail.
-        if (! $stmt->execute()) {
-            return false;
+        $time = $this->db->getTime();
+
+        $result = $stmt->execute();
+
+        if ($result !== false) {
+            $result = array();
+
+            while(($id = $stmt->fetchColumn()) !== false) {
+                $result[] = $id;
+            }
         }
 
-        //
-        $result = array();
-
-        while(($id = $stmt->fetchColumn()) !== false) {
-            $result[] = $id;
-        }
+        $this->db->logQuery($sql, $params, $time);
 
         return $result;
     }
@@ -119,7 +125,13 @@ class Pivot extends Engine
         // Prepare the Statement and return the result of its execution.
         $stmt = $this->db->rawPrepare($sql);
 
-        return $stmt->execute();
+        $time = $this->db->getTime();
+
+        $result = $stmt->execute();
+
+        $this->db->logQuery($sql, array(), $time);
+
+        return $result;
     }
 
     public function dettach($ids = null)

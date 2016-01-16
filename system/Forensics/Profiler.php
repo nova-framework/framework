@@ -45,7 +45,17 @@ class Profiler
 
     public function __construct($connection = null)
     {
-        $this->db = $connection;
+        $options = Config::get('profiler');
+
+        if ($options['use_forensics'] != true) {
+            return;
+        }
+
+        if($connection instanceof Connection) {
+            $this->db = $connection;
+        } else if($options['with_database'] == true) {
+            $this->db = Database::getConnection();
+        }
 
         // Setup the View path.
         $this->viewPath = APPPATH .'Views/Fragments/profiler.php';
@@ -54,7 +64,7 @@ class Profiler
         $this->startTime = FRAMEWORK_STARTING_MICROTIME;
     }
 
-    public static process($connection = null, $fetch = false)
+    public static function process($fetch = false)
     {
         $options = Config::get('profiler');
 
@@ -63,7 +73,7 @@ class Profiler
         }
 
         // The QuickProfiller was enabled into Configuration.
-        $profiler = new self($connection);
+        $profiler = new self();
 
         return $profiler->display($connection, $fetch);
     }
@@ -111,7 +121,7 @@ class Profiler
             $size = filesize($file);
 
             $fileList[] = array(
-                'name' => $file,
+                'name' => str_replace(BASEPATH, '/', $file),
                 'size' => $this->getReadableFileSize($size)
             );
 
@@ -154,9 +164,9 @@ class Profiler
         $queries = array();
 
         if($this->db !== null) {
-            $queryTotals['count'] += $this->db->queryCount;
+            $queryTotals['count'] += $this->db->getTotalQueries();
 
-            foreach($this->db->queries() as $key => $query) {
+            foreach($this->db->getExecutedQueries() as $key => $query) {
                 $query = $this->attemptToExplainQuery($query);
 
                 $queryTotals['time'] += $query['time'];
@@ -182,15 +192,15 @@ class Profiler
 
         try {
             $statement = $this->db->query($sql);
+
+            if($statement !== false) {
+                $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+                $query['explain'] = $row;
+            }
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             // Do nothing.
-        }
-
-        if($statement !== false) {
-            $row = $statement->fetch(PDO::FETCH_ASSOC);
-
-            $query['explain'] = $row;
         }
 
         return $query;
@@ -239,7 +249,7 @@ class Profiler
 
         $formats = array('ms', 's', 'm');
 
-        if($time >= 1000 && $time < 60000) {
+        if(($time >= 1000) && ($time < 60000)) {
             $formatter = 1;
 
             $ret = ($time / 1000);
@@ -251,9 +261,7 @@ class Profiler
             $ret = ($time / 1000) / 60;
         }
 
-        $ret = number_format($ret, 3, '.', '') .' ' .$formats[$formatter];
-
-        return $ret;
+        return number_format($ret, 3, '.', '') .' ' .$formats[$formatter];
     }
 
     /*

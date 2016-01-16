@@ -417,13 +417,13 @@ class Model extends Engine
 
         $skippedFields = array();
 
-        // The primaryKey is skypped by default.
+        // The primaryKey is skipped by default.
         $skippedFields = array_merge($skippedFields, (array) $this->primaryKey);
 
         // Remove any protected attributes.
         $skippedFields = array_merge($skippedFields, $this->protectedFields);
 
-        // Walk over the defined Table Fields an prepare the data entries.
+        // Walk over the defined Table Fields and prepare the data entries.
         foreach ($this->fields as $fieldName => $fieldInfo) {
             if(in_array($fieldName, $skippedFields) || ! isset($this->attributes[$fieldName])) {
                 continue;

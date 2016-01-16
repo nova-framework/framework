@@ -333,8 +333,6 @@ class Model extends Engine
 
     public function save()
     {
-        $data = array();
-
         if (! $this->beforeSave()) {
             return;
         }
@@ -355,6 +353,8 @@ class Model extends Engine
                 $this->isNew = false;
 
                 $this->setAttribute($this->primaryKey, $result);
+
+                return true;
             }
         }
         // If the Object is dirty, we are into UPDATE mode.
@@ -369,10 +369,12 @@ class Model extends Engine
 
             if($result !== false) {
                 $this->isDirty = false;
+
+                return true;
             }
         }
 
-        return $result;
+        return false;
     }
 
     public function delete()
@@ -390,9 +392,13 @@ class Model extends Engine
 
         $result = $this->db->delete($this->table(), $where, $paramTypes);
 
-        $this->isNew = true;
+        if($result !== false) {
+            $this->isNew = true;
 
-        return $result;
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------
@@ -535,6 +541,7 @@ class Model extends Engine
         $vars = get_object_vars($this);
 
         unset($vars['db']);
+        unset($vars['cache']);
 
         return $vars;
     }

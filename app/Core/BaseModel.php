@@ -261,7 +261,7 @@ class BaseModel extends Model
      * @return \BaseQuery|\DeleteQuery|\InsertQuery|\SelectQuery|\UpdateQuery
      * @throws \Exception
      */
-    public function buildQuery($method, $param = null)
+    public function buildQuery($method)
     {
         $returnType = $this->tempReturnType;
 
@@ -273,7 +273,7 @@ class BaseModel extends Model
 
         // First, check and configure for the 'select' Method.
         if ($method == 'select') {
-            $query = $queryBuilder->from($this->table(), $param);
+            $query = $queryBuilder->from($this->table());
 
             // Setup the fetch Method.
             if ($returnType == 'array') {
@@ -300,13 +300,11 @@ class BaseModel extends Model
 
         // Then, configure the other Query building Methods.
         if ($method == 'insert') {
-            $param = is_array($param) ? $param : array();
-
-            $query = $queryBuilder->insertInto($this->table(), $param);
+            $query = $queryBuilder->insertInto($this->table());
         } else if ($method == 'update') {
-            $query = $queryBuilder->update($this->table(), $param);
+            $query = $queryBuilder->update($this->table());
         } else if ($method == 'delete') {
-            $query = $queryBuilder->delete($this->table(), $param);
+            $query = $queryBuilder->delete($this->table());
         } else {
             throw new \Exception(__('No valid Method given for Query building'));
         }

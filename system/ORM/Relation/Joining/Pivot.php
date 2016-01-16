@@ -56,8 +56,6 @@ class Pivot extends Engine
         );
 
         // Execute the Statement and return false if it fail.
-        $time = $this->db->getTime();
-
         $result = $stmt->execute();
 
         if ($result !== false) {
@@ -67,8 +65,6 @@ class Pivot extends Engine
                 $result[] = $id;
             }
         }
-
-        $this->db->logQuery($sql, $params, $time);
 
         return $result;
     }
@@ -125,11 +121,7 @@ class Pivot extends Engine
         // Prepare the Statement and return the result of its execution.
         $stmt = $this->db->rawPrepare($sql);
 
-        $time = $this->db->getTime();
-
         $result = $stmt->execute();
-
-        $this->db->logQuery($sql, array(), $time);
 
         return $result;
     }

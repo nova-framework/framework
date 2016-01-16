@@ -31,7 +31,9 @@ class PdoDebugger
             }
 
             // bring parameter into human-readable format
-            if (is_string($value)) {
+            if (is_numeric($value)) {
+                $values[$key] = intval($value);
+            } elseif (is_string($value)) {
                 $values[$key] = "'" . $value . "'";
             } elseif (is_array($value)) {
                 $values[$key] = implode(',', $value);

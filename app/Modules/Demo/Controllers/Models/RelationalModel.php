@@ -181,7 +181,7 @@ self::dumpObjectArray(\$user);
         $message .= '<h3><strong>'.__d('demo', 'Deleting Records').'</strong></h3><br>';
 
         //
-        $result = $user->delete();
+        //$result = $user->delete();
 
         $text = "
 \$result = \$user->delete();

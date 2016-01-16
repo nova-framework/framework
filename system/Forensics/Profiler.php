@@ -29,19 +29,35 @@ use Nova\Database\Manager as Database;
 
 use Nova\Forensics\Console;
 
+use \PDO;
+
 
 class Profiler
 {
-    protected $instance = null;
+    protected $db = null;
+
+    protected $viewPath;
+    protected $startTime;
 
     public $output = array();
 
 
     public function __construct($connection = null)
     {
-        $this->startTime = FRAMEWORK_STARTING_MICROTIME;
-
         $this->db = $connection;
+
+        // Setup the View path.
+        $this->viewPath = APPPATH .'Views/Fragments/profiler.php';
+
+        // Setup the Start Time.
+        $this->startTime = FRAMEWORK_STARTING_MICROTIME;
+    }
+
+    public static process($connection = null, $fetch = false)
+    {
+        $profiler = new self($connection);
+
+        return $profiler->display($connection, $fetch);
     }
 
     /*
@@ -120,7 +136,7 @@ class Profiler
     /*
      * QUERY DATA -- Database object with logging required
      */
-    public function gatherQueryData()
+    public function gatherSQLQueryData()
     {
         $queryTotals = array();
 
@@ -130,16 +146,17 @@ class Profiler
         $queries = array();
 
         if($this->db !== null) {
-            /*
             $queryTotals['count'] += $this->db->queryCount;
 
-            foreach($this->db->queries as $key => $query) {
+            foreach($this->db->queries() as $key => $query) {
                 $query = $this->attemptToExplainQuery($query);
+
                 $queryTotals['time'] += $query['time'];
+
                 $query['time'] = $this->getReadableTime($query['time']);
+
                 $queries[] = $query;
             }
-            */
         }
 
         $queryTotals['time'] = $this->getReadableTime($queryTotals['time']);
@@ -149,26 +166,30 @@ class Profiler
     }
 
     /*
-     * Call sql explain on the query to find more info
+     * Call SQL EXPLAIN on the Query to find more info.
      */
     function attemptToExplainQuery($query)
     {
-        /*
+        $sql = 'EXPLAIN '.$query['sql'];
+
         try {
-            $sql = 'EXPLAIN '.$query['sql'];
-            $rs = $this->db->query($sql);
+            $statement = $this->db->query($sql);
         }
-        catch(Exception $e) {}
-        if($rs) {
-            $row = mysql_fetch_array($rs, MYSQL_ASSOC);
+        catch(Exception $e) {
+            // Do nothing.
+        }
+
+        if($statement !== false) {
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+
             $query['explain'] = $row;
         }
-        */
+
         return $query;
     }
 
     /*
-     * Speed data for entire page load
+     * Speed data for entire page load.
      */
     public function gatherSpeedData()
     {
@@ -181,7 +202,7 @@ class Profiler
     }
 
     /*
-     * Helper functions to format data
+     * Helper functions to format data.
      */
     public function getReadableFileSize($size, $result = null)
     {
@@ -228,36 +249,27 @@ class Profiler
     }
 
     /*
-     * Display to the screen -- CALL WHEN CODE TERMINATING
+     * Display to the screen (or return) the render output.
      */
-    public static function display($connection = null)
+    public function display($fetch = false)
     {
-        if(self::$instance === null) {
-            self::$instance = new self();
-        }
+        // Gather the information.
+        $this->gatherConsoleData();
+        $this->gatherFileData();
+        $this->gatherMemoryData();
+        $this->gatherSQLQueryData();
+        $this->gatherSpeedData();
 
-        self::$instance;
-
-        //
-        self::$instance->gatherConsoleData();
-        self::$instance->gatherFileData();
-        self::$instance->gatherMemoryData();
-        self::$instance->gatherQueryData();
-        self::$instance->gatherSpeedData();
-
-        return self::$instance->render();
+        // Render the Profiler's widget.
+        return $this->render($this->output, $fetch);
     }
 
     /*
      * HTML Output for Php Quick Profiler
      */
-    function render()
+    function render($output, $fetch)
     {
-        $output =& $this->output;
-
-        //
-        $viewPath = APPPATH .'Views/Fragments/profiler.php';
-
+        // Prepare the information.
         $logCount = count($output['logs']['console']);
         $fileCount = count($output['files']);
 
@@ -265,11 +277,17 @@ class Profiler
         $queryCount = $output['queryTotals']['count'];
         $speedTotal = $output['speedTotals']['total'];
 
-        // Render the Profiler Fragment and return the output.
-        ob_start();
+        // Render the associated View Fragment (and return the output, if is the case).
+        if($fetch) {
+            ob_start();
+        }
 
-        require $viewPath;
+        require $this->viewPath;
 
-        return ob_get_clean();
+        if($fetch) {
+            return ob_get_clean();
+        }
+
+        return true;
     }
 }

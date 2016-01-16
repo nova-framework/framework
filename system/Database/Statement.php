@@ -10,7 +10,6 @@
 namespace Nova\Database;
 
 use Nova\Database\Connection;
-use Nova\Forensics\PdoDebugger;
 
 use \PDO;
 
@@ -29,17 +28,11 @@ class Statement
      */
     private $connection;
 
-    /**
-     * The binding parameters.
-     */
-    private $parameters = array();
 
-
-    public function __construct(PDOStatement $statement, Connection $connection, array $params = array())
+    public function __construct(PDOStatement $statement, Connection $connection)
     {
         $this->statement  = $statement;
         $this->connection = $connection;
-        $this->parameters = $params;
     }
 
     /**
@@ -53,9 +46,7 @@ class Statement
 
         $result = $this->statement->execute();
 
-        $query = PdoDebugger::show($this->statement->queryString, $this->parameters);
-
-        $this->connection->logQuery($query, array(), $start);
+        $this->connection->logQuery($this->statement->queryString, $start);
 
         return $result;
     }
@@ -74,4 +65,5 @@ class Statement
     {
         return $this->statement->$name;
     }
+
 }

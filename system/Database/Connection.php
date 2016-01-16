@@ -13,7 +13,6 @@ namespace Nova\Database;
 use Nova\Database\Manager;
 use Nova\Database\Statement;
 use Nova\Database\QueryBuilder;
-use Nova\Forensics\PdoDebugger;
 use Nova\Config;
 
 use \FluentStructure;
@@ -252,16 +251,15 @@ abstract class Connection extends PDO
 
         return $result;
     }
-
+/*
     /**
      * @return Statement
-     */
-    public function prepare($statement, $options = null)
+     * /
+    public function prepare($statement, array $driverOptions = array())
     {
-        $params = is_array($options) ? $options : array();
-
-        return new Statement(parent::prepare($statement), $this, $params);
+        return new Statement(parent::prepare($statement, $driverOptions), $this);
     }
+*/
 
     /**
      * Basic execute statement. Only for queries with no binding parameters
@@ -411,7 +409,7 @@ abstract class Connection extends PDO
         $fetchMethod = self::getFetchMethod($returnType, $className);
 
         // Prepare and get statement from PDO.
-        $stmt = $this->prepare($sql, $params);
+        $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
         $this->bindParams($stmt, $params, $paramTypes);
@@ -526,7 +524,7 @@ abstract class Connection extends PDO
         // Get the current Time.
         $time = $this->getTime();
 
-        $stmt = $this->prepare($sql, $data);
+        $stmt = $this->prepare($sql);
 
         $this->bindParams($stmt, $data, $paramTypes);
 
@@ -620,7 +618,7 @@ abstract class Connection extends PDO
             $params["field_$key"] = $value;
         }
 
-        $stmt = $this->prepare($sql, array_merge($params, $bindParams));
+        $stmt = $this->prepare($sql);
 
         // Bind fields
         $this->bindParams($stmt, $data, $paramTypes, ':field_');
@@ -671,7 +669,7 @@ abstract class Connection extends PDO
 
         $this->lastSqlQuery = $sql;
 
-        $stmt = $this->prepare($sql, $bindParams);
+        $stmt = $this->prepare($sql);
 
         // Bind conditions.
         $this->bindParams($stmt, $bindParams, $paramTypes);
@@ -703,7 +701,7 @@ abstract class Connection extends PDO
         $this->lastSqlQuery = $sql;
 
         // Prepare and get statement from PDO.
-        $stmt = $this->prepare($sql, $params);
+        $stmt = $this->prepare($sql);
 
         // Bind the key and values (only if given).
         $bindParams = array();
@@ -900,7 +898,7 @@ abstract class Connection extends PDO
     /**
      * Log a SQL Query.
      */
-    function logQuery($sql, $params = array(), $start = 0)
+    function logQuery($sql, $start = 0)
     {
         $options = Config::get('profiler');
 
@@ -913,14 +911,14 @@ abstract class Connection extends PDO
         }
 
         //
-        $start = ($start > 0) ? $start : microtime(true);
+        $start = ($start > 0) ? intval($start) : microtime(true);
 
         $time = microtime(true);
 
         $time = ($time - $start) * 1000;
 
         $query = array(
-            'sql' => PdoDebugger::show($sql, $params),
+            'sql' => $sql,
             'time' => $time
         );
 

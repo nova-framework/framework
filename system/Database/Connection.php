@@ -11,6 +11,7 @@
 namespace Nova\Database;
 
 use Nova\Database\Manager;
+use Nova\Database\Statement;
 use Nova\Database\QueryBuilder;
 use Nova\Forensics\PdoDebugger;
 use Nova\Config;
@@ -237,6 +238,29 @@ abstract class Connection extends PDO
         }
     }
 
+    public function query($query, $method = null)
+    {
+        $start = microtime(true);
+
+        if($method !== null) {
+            $result = parent::query($query, $method);
+        } else {
+            $result = parent::query($query);
+        }
+
+        $this->logQuery($query, array(), $start);
+
+        return $result;
+    }
+
+    /**
+     * @return Statement
+     */
+    public function prepare($query, array $params = array())
+    {
+        return new Statement(parent::prepare($query), $this, $params);
+    }
+
     /**
      * Basic execute statement. Only for queries with no binding parameters
      * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
@@ -253,9 +277,6 @@ abstract class Connection extends PDO
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
         $method = ($this->returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
 
-        // Get the current Time.
-        $time = $this->getTime();
-
         if (! $fetch) {
             $result = $this->exec($sql);
         } else {
@@ -263,8 +284,6 @@ abstract class Connection extends PDO
 
             $result = $statement->fetchAll();
         }
-
-        $this->logQuery($sql, array(), $time);
 
         return $result;
     }
@@ -390,18 +409,13 @@ abstract class Connection extends PDO
         $fetchMethod = self::getFetchMethod($returnType, $className);
 
         // Prepare and get statement from PDO.
-        $stmt = $this->prepare($sql);
+        $stmt = $this->prepare($sql, $params);
 
         // Bind the key and values (only if given).
         $this->bindParams($stmt, $params, $paramTypes);
 
-        // Get the current Time.
-        $time = $this->getTime();
-
         // Execute, we should capture the status of the result.
         $status = $stmt->execute();
-
-        $this->logQuery($sql, $params, $time);
 
         // If failed, return now, and don't continue with fetching.
         if (! $status) {
@@ -510,12 +524,9 @@ abstract class Connection extends PDO
         // Get the current Time.
         $time = $this->getTime();
 
-        $stmt = $this->prepare($sql);
+        $stmt = $this->prepare($sql, $data);
 
         $this->bindParams($stmt, $data, $paramTypes);
-
-        // Get the current Time.
-        $time = $this->getTime();
 
         // Execute
         if (! $stmt->execute()) {
@@ -531,8 +542,6 @@ abstract class Connection extends PDO
         if (! $failure && $transaction && $status) {
             $failure = ! $this->commit();
         }
-
-        $this->logQuery($sql, $data, $time);
 
         // Check for failures
         if ($failure) {
@@ -602,7 +611,14 @@ abstract class Connection extends PDO
 
         $this->lastSqlQuery = $sql;
 
-        $stmt = $this->prepare($sql);
+        //
+        $params = array();
+
+        foreach($data as $key => $value) {
+            $params["field_$key"] = $value;
+        }
+
+        $stmt = $this->prepare($sql, array_merge($params, $bindParams));
 
         // Bind fields
         $this->bindParams($stmt, $data, $paramTypes, ':field_');
@@ -622,8 +638,6 @@ abstract class Connection extends PDO
         foreach($data as $key => $value) {
             $params["field_$key"] = $value;
         }
-
-        $this->logQuery($sql, array_merge($params, $bindParams), $time);
 
         if ($result !== false) {
             // Row count, affected rows
@@ -655,18 +669,13 @@ abstract class Connection extends PDO
 
         $this->lastSqlQuery = $sql;
 
-        $stmt = $this->prepare($sql);
+        $stmt = $this->prepare($sql, $bindParams);
 
         // Bind conditions.
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        // Get the current Time.
-        $time = $this->getTime();
-
         // Execute and return false if failure.
         $result = $stmt->execute();
-
-        $this->logQuery($sql, $bindParams, $time);
 
         if ($result !== false) {
             // Return rowcount when succeeded.
@@ -692,7 +701,7 @@ abstract class Connection extends PDO
         $this->lastSqlQuery = $sql;
 
         // Prepare and get statement from PDO.
-        $stmt = $this->prepare($sql);
+        $stmt = $this->prepare($sql, $params);
 
         // Bind the key and values (only if given).
         $bindParams = array();
@@ -902,9 +911,9 @@ abstract class Connection extends PDO
         }
 
         //
-        $start = ($start != 0) ? $start : $this->getTime();
+        $start = ($start > 0) ? $start : microtime(true);
 
-        $time = $this->getTime();
+        $time = microtime(true);
 
         $time = ($time - $start) * 1000;
 

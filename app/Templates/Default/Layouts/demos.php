@@ -148,8 +148,10 @@ Assets::js(array(
 //Add Controller specific JS files.
 Assets::js($footerJScripts);
 
-// Show the QuickProfiler Widget.
-QuickProfiler::process();
+if(ENVIRONMENT == 'development') {
+    // Show the QuickProfiler Widget.
+    QuickProfiler::process();
+}
 ?>
 
 

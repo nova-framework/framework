@@ -366,8 +366,8 @@ class Builder extends BaseBuilder
 
         // Build the SQL Query.
         $sql = "
-            SELECT * FROM $table JOIN $pivotTable
-            ON $table.$primaryKey = $pivotTable.$foreignKey
+            SELECT * FROM $table
+            JOIN $pivotTable ON $table.$primaryKey = $pivotTable.$foreignKey
             WHERE $pivotTable.$otherKey = :otherKey AND $whereStr $orderStr $limitStr $offsetStr";
 
         // Simplify the white spaces.

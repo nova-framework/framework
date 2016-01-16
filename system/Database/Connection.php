@@ -12,6 +12,7 @@ namespace Nova\Database;
 
 use Nova\Database\Manager;
 use Nova\Database\QueryBuilder;
+use Nova\Forensics\PdoDebugger;
 use Nova\Config;
 
 use \FluentStructure;
@@ -506,7 +507,9 @@ abstract class Connection extends PDO
 
         $this->lastSqlQuery = $sql;
 
+        // Get the current Time.
         $time = $this->getTime();
+
         $stmt = $this->prepare($sql);
 
         $this->bindParams($stmt, $data, $paramTypes);
@@ -613,7 +616,14 @@ abstract class Connection extends PDO
         // Execute and return false if failure.
         $result = $stmt->execute();
 
-        $this->logQuery($sql, array_merge($data, $bindParams), $time);
+        //
+        $params = array();
+
+        foreach($data as $key => $value) {
+            $params["field_$key"] = $value;
+        }
+
+        $this->logQuery($sql, array_merge($params, $bindParams), $time);
 
         if ($result !== false) {
             // Row count, affected rows
@@ -881,13 +891,13 @@ abstract class Connection extends PDO
      */
     function logQuery($sql, $params = array(), $start = 0)
     {
+        $options = Config::get('profiler');
+
         // Count the current Query.
         $this->queryCount++;
 
         // Verify if the Forensics are enabled into Configuration.
-        $options = Config::get('profiler');
-
-        if ($options['use_forensics'] != true) {
+        if ($options['use_forensics'] == false) {
             return;
         }
 
@@ -899,7 +909,7 @@ abstract class Connection extends PDO
         $time = ($time - $start) * 1000;
 
         $query = array(
-            'sql' => \PdoDebugger::show($sql, $params),
+            'sql' => PdoDebugger::show($sql, $params),
             'time' => $time
         );
 

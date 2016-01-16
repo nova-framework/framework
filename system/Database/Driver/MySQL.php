@@ -150,11 +150,15 @@ class MySQL extends Connection
             return $columns;
         }
 
+        // Find all Column names
+        $sql = "SHOW COLUMNS FROM $table";
+
+        $this->lastSqlQuery = $sql;
+
         // Get the current Time.
         $time = $this->getTime();
 
-        // Find all Column names
-        $result = $this->rawQuery("SHOW COLUMNS FROM $table", 'array');
+        $result = $this->rawQuery($sql, 'array');
 
         $cid = 0;
 

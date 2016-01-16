@@ -22,8 +22,7 @@
         "siriusphp/filtration": "~1.2",
         "siriusphp/input": "dev-master",
         "lichtner/fluentpdo": "dev-master",
-        "phpfastcache/phpfastcache": "3.0.*",
-        "panique/pdo-debug": "0.2"
+        "phpfastcache/phpfastcache": "3.0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "5.1.4",

@@ -169,12 +169,6 @@ class Database extends BaseController
         $message .= '<b>$this->db->getTableFields(DB_PREFIX ."users");</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
-        //
-        $result = $this->db->listColumns(DB_PREFIX ."users");
-
-        $message .= '<b>$this->db->listColumns(DB_PREFIX ."users")</b>';
-        $message .= '<pre>'.var_export($result, true).'</pre><br>';
-
         // Setup the View variables.
         $this->title(__d('demo', 'Database Abstraction Layer Demo'));
 

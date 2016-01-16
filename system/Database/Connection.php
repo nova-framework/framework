@@ -12,6 +12,7 @@ namespace Nova\Database;
 
 use Nova\Database\Manager;
 use Nova\Database\QueryBuilder;
+use Nova\Config;
 
 use \FluentStructure;
 use \Closure;
@@ -37,6 +38,9 @@ abstract class Connection extends PDO
 
     /** @var array Store the tables column details. */
     protected static $tables = array();
+
+     /** @var array Store the executed queries, into Profiling mode. */
+    protected $queries = array();
 
     /**
      * MySQLEngine constructor.
@@ -248,15 +252,20 @@ abstract class Connection extends PDO
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
         $method = ($this->returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
 
-        $this->countIncomingQuery();
+        // Get the current Time.
+        $time = $this->getTime();
 
-        if (!$fetch) {
-            return $this->exec($sql);
+        if (! $fetch) {
+            $result = $this->exec($sql);
+        } else {
+            $statement = $this->query($sql, $method);
+
+            $result = $statement->fetchAll();
         }
 
-        $statement = $this->query($sql, $method);
+        $this->logQuery($sql, array(), $time);
 
-        return $statement->fetchAll();
+        return $result;
     }
 
     /**
@@ -277,8 +286,6 @@ abstract class Connection extends PDO
 
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
         $method = ($returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
-
-        $this->countIncomingQuery();
 
         // We don't want to map in memory an entire Billion Records Table, so we return right on a Statement.
         return parent::query($sql, $method);
@@ -387,10 +394,13 @@ abstract class Connection extends PDO
         // Bind the key and values (only if given).
         $this->bindParams($stmt, $params, $paramTypes);
 
-        $this->countIncomingQuery();
+        // Get the current Time.
+        $time = $this->getTime();
 
         // Execute, we should capture the status of the result.
         $status = $stmt->execute();
+
+        $this->logQuery($sql, $params, $time);
 
         // If failed, return now, and don't continue with fetching.
         if (! $status) {
@@ -496,11 +506,13 @@ abstract class Connection extends PDO
 
         $this->lastSqlQuery = $sql;
 
+        $time = $this->getTime();
         $stmt = $this->prepare($sql);
 
         $this->bindParams($stmt, $data, $paramTypes);
 
-        $this->countIncomingQuery();
+        // Get the current Time.
+        $time = $this->getTime();
 
         // Execute
         if (! $stmt->execute()) {
@@ -516,6 +528,8 @@ abstract class Connection extends PDO
         if (! $failure && $transaction && $status) {
             $failure = ! $this->commit();
         }
+
+        $this->logQuery($sql, $data, $time);
 
         // Check for failures
         if ($failure) {
@@ -593,15 +607,20 @@ abstract class Connection extends PDO
         // Bind conditions
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        $this->countIncomingQuery();
+        // Get the current Time.
+        $time = $this->getTime();
 
         // Execute and return false if failure.
-        if (! $stmt->execute()) {
-            return false;
+        $result = $stmt->execute();
+
+        $this->logQuery($sql, array_merge($data, $bindParams), $time);
+
+        if ($result !== false) {
+            // Row count, affected rows
+            return $stmt->rowCount();
         }
 
-        // Row count, affected rows
-        return $stmt->rowCount();
+        return false;
     }
 
     /**
@@ -631,15 +650,20 @@ abstract class Connection extends PDO
         // Bind conditions.
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        $this->countIncomingQuery();
+        // Get the current Time.
+        $time = $this->getTime();
 
         // Execute and return false if failure.
-        if (! $stmt->execute()) {
-            return false;
+        $result = $stmt->execute();
+
+        $this->logQuery($sql, $bindParams, $time);
+
+        if ($result !== false) {
+            // Return rowcount when succeeded.
+            return $stmt->rowCount();
         }
 
-        // Return rowcount when succeeded.
-        return $stmt->rowCount();
+        return false;
     }
 
     /**
@@ -673,8 +697,6 @@ abstract class Connection extends PDO
 
         // Bind parameters.
         $this->bindParams($stmt, $bindParams, $paramTypes);
-
-        $this->countIncomingQuery();
 
         return $stmt;
     }
@@ -733,38 +755,12 @@ abstract class Connection extends PDO
     }
 
     /**
-     * Get the columns names for the specified Database Table.
-     *
-     * @param  string $table table name
-     * @return array  Returns the Database Table fields
-     */
-    abstract public function listColumns($table);
-
-    /**
      * Get the columns names and types for the specified Database Table.
      *
      * @param  string $table table name
      * @return array  Returns the Database Table fields
      */
     abstract public function getTableFields($table);
-
-    /**
-     * Get total executed queries.
-     *
-     * @return int
-     */
-    public function getTotalQueries()
-    {
-        return $this->queryCount;
-    }
-
-    /**
-     * Upper the counter.
-     */
-    public function countIncomingQuery()
-    {
-        $this->queryCount++;
-    }
 
     /**
      * Parse the where conditions.
@@ -858,9 +854,83 @@ abstract class Connection extends PDO
         return $result;
     }
 
+    //--------------------------------------------------------------------
+    // Debugging and Profiling Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Get total executed queries.
+     *
+     * @return int
+     */
+    public function getTotalQueries()
+    {
+        return $this->queryCount;
+    }
+
+    /**
+     * Upper the counter.
+     */
+    public function countIncomingQuery()
+    {
+        $this->queryCount++;
+    }
+
+    /**
+     * Log a SQL Query.
+     */
+    function logQuery($sql, $params = array(), $start = 0)
+    {
+        // Count the current Query.
+        $this->queryCount++;
+
+        // Verify if the Forensics are enabled into Configuration.
+        $options = Config::get('profiler');
+
+        if ($options['use_forensics'] != true) {
+            return;
+        }
+
+        //
+        $start = ($start != 0) ? $start : $this->getTime();
+
+        $time = $this->getTime();
+
+        $time = ($time - $start) * 1000;
+
+        $query = array(
+            'sql' => \PdoDebugger::show($sql, $params),
+            'time' => $time
+        );
+
+        array_push($this->queries, $query);
+    }
+
+    /**
+     * Get the executed queries array.
+     *
+     * @return array
+     */
+    public function getExecutedQueries()
+    {
+        return $this->queries;
+    }
+
+    /**
+     * Get the last executed query.
+     *
+     * @return array
+     */
     public function lastSqlQuery()
     {
         return $this->lastSqlQuery;
     }
 
+    /**
+     * Return the current time.
+     */
+    public function getTime()
+    {
+        return microtime(true);
+    }
 }

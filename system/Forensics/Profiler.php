@@ -154,9 +154,9 @@ class Profiler
         $queries = array();
 
         if($this->db !== null) {
-            $queryTotals['count'] += $this->db->queryCount;
+            $queryTotals['count'] += $this->db->getTotalQueries();
 
-            foreach($this->db->queries() as $key => $query) {
+            foreach($this->db->getExecutedQueries() as $key => $query) {
                 $query = $this->attemptToExplainQuery($query);
 
                 $queryTotals['time'] += $query['time'];

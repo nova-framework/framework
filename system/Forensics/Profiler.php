@@ -73,6 +73,8 @@ class Profiler
             return null;
         }
 
+        Console::logSpeed('Forensics Profiler START');
+
         // The QuickProfiller was enabled into Configuration.
         $profiler = new self();
 

@@ -55,7 +55,7 @@
 	width:100%;
 }
 #pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files{
-	background:url(../images/overlay.gif);
+	background:url(../img/profiler/overlay.gif);
 	border-top:1px solid #ccc;
 	height:200px;
 	overflow:auto;
@@ -217,7 +217,7 @@
 }
 .pQp .side td{
 	padding:10px 0 5px 0;
-	background:url(../images/side.png) repeat-y right;
+	background:url(../img/profiler/side.png) repeat-y right;
 }
 .pQp .side var{
 	color:#fff;
@@ -301,6 +301,7 @@
 	white-space: normal;
 	display:block;
 	color:#FFFD70;
+    background: none;
 }
 
 /* ----- Speed ----- */

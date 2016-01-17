@@ -183,7 +183,7 @@
     </div>
 
     <div id="pqp-speed" class="pqp-box">
-        <?php if ($speedCount == 0) { ?>
+        <?php if ($speedTotal == 0) { ?>
             <h3>This panel has no log items.</h3>
         <?php } else { ?>
             <table class='side' cellspacing='0'>

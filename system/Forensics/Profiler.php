@@ -168,11 +168,13 @@ class Profiler
             $queryTotals['count'] += $this->db->getTotalQueries();
 
             foreach($this->db->getExecutedQueries() as $key => $query) {
-                $queryTotals['time'] += $query['time'];
-
                 if(isset($query['params']) && ! empty($query['params'])) {
                     $query['sql'] = PdoDebugger::show($query['sql'], $query['params']);
                 }
+
+                $query = $this->attemptToExplainQuery($query);
+
+                $queryTotals['time'] += $query['time'];
 
                 $query['time'] = $this->getReadableTime($query['time']);
 
@@ -184,6 +186,25 @@ class Profiler
 
         $this->output['queries'] = $queries;
         $this->output['queryTotals'] = $queryTotals;
+    }
+
+    /*
+     * Call SQL EXPLAIN on the Query to find more info.
+     */
+    function attemptToExplainQuery($query)
+    {
+        try {
+            $statement = $this->db->query('EXPLAIN '.$query['sql']);
+
+            if($statement !== false) {
+                $query['explain'] = $statement->fetch(PDO::FETCH_ASSOC);
+            }
+        }
+        catch(\Exception $e) {
+            // Do nothing.
+        }
+
+        return $query;
     }
 
     /*

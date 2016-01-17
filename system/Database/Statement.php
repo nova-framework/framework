@@ -19,20 +19,26 @@ use \PDO;
 class Statement
 {
     /**
+     * The Connection link.
+     */
+    private $connection;
+
+    /**
      * The PDOStatement we decorate.
      */
     private $statement;
 
     /**
-     * The Connection link.
+     * The Query bind parameters.
      */
-    private $connection;
+    private $parameters;
 
 
-    public function __construct(PDOStatement $statement, Connection $connection)
+    public function __construct(PDOStatement $statement, Connection $connection, array $parameters = array())
     {
         $this->statement  = $statement;
         $this->connection = $connection;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -40,13 +46,13 @@ class Statement
     * then log the query
     * @return PDO result set
     */
-    public function execute()
+    public function execute($params = null)
     {
         $start = microtime(true);
 
-        $result = $this->statement->execute();
+        $result = $this->statement->execute($params);
 
-        $this->connection->logQuery($this->statement->queryString, $start);
+        $this->connection->logQuery($this->statement->queryString, $start, $this->parameters);
 
         return $result;
     }
@@ -56,9 +62,9 @@ class Statement
     * @param string $function_name
     * @param array $parameters arguments
     */
-    public function __call($function_name, $parameters)
+    public function __call($method, $params)
     {
-        return call_user_func_array(array($this->statement, $function_name), $parameters);
+        return call_user_func_array(array($this->statement, $method), $params);
     }
 
     public function __get($name)

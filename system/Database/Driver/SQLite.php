@@ -118,7 +118,7 @@ class SQLite extends Connection
         $this->lastSqlQuery = $sql;
 
         // Get the current Time.
-        $time = $this->getTime();
+        $time = microtime(true);
 
         $result = $this->rawQuery($sql, 'array');
 

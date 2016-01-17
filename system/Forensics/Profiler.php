@@ -29,6 +29,7 @@ use Nova\Database\Manager as Database;
 use Nova\Config;
 
 use Nova\Forensics\Console;
+use Nova\Forensics\PdoDebugger;
 
 use \PDO;
 
@@ -168,6 +169,10 @@ class Profiler
 
             foreach($this->db->getExecutedQueries() as $key => $query) {
                 $queryTotals['time'] += $query['time'];
+
+                if(isset($query['params']) && ! empty($query['params'])) {
+                    $query['sql'] = PdoDebugger::show($query['sql'], $query['params']);
+                }
 
                 $query['time'] = $this->getReadableTime($query['time']);
 

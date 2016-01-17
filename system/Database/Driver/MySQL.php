@@ -86,11 +86,11 @@ class MySQL extends Connection
         $this->lastSqlQuery = $sql;
 
         // Get the current Time.
-        $time = $this->getTime();
+        $time = microtime(true);
 
         $result = $this->exec($sql);
 
-        $this->logQuery($sql, array(), $time);
+        $this->logQuery($sql, $time);
 
         return $result;
     }
@@ -156,9 +156,9 @@ class MySQL extends Connection
         $this->lastSqlQuery = $sql;
 
         // Get the current Time.
-        $time = $this->getTime();
+        $time = microtime(true);
 
-        $result = $this->rawQuery($sql, 'array');
+        $result = $this->rawQuery($sql, 'array', false);
 
         $cid = 0;
 
@@ -184,7 +184,7 @@ class MySQL extends Connection
             }
         }
 
-        $this->logQuery($sql, array(), $time);
+        $this->logQuery($sql, $time);
 
         return $columns;
     }

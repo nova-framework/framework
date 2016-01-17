@@ -12,6 +12,8 @@ namespace Nova\Database\Driver;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager;
+use Nova\Cache\Manager as CacheManager;
+
 
 class SQLite extends Connection
 {
@@ -112,24 +114,45 @@ class SQLite extends Connection
             return $columns;
         }
 
-        // Find all Column names
-        $sql = "PRAGMA table_info($table)";
+        // Prepare the Cache Token.
+        $token = 'sqlite_table_fields_' .md5($table);
 
-        // Get the current Time.
-        $time = microtime(true);
+        // Get the Table Fields, using the Framework Caching.
+        $fields = $this->cache->get($token);
 
-        $result = $this->rawQuery($sql, 'array');
+        if($fields === null) {
+            $fields = array();
 
-        if ($result !== false) {
-            Connection::$tables[$table] = array();
+            // Find all Column names
+            $sql = "PRAGMA table_info($table)";
 
-            foreach ($result as $row) {
-                $field = $row['name'];
+            // Get the current Time.
+            $time = microtime(true);
 
-                unset($row['name']);
+            $result = $this->rawQuery($sql, 'array');
 
-                Connection::$tables[$table][$field] = $row;
+            if ($result !== false) {
+                foreach ($result as $row) {
+                    $field = $row['name'];
 
+                    unset($row['name']);
+
+                    $fields[$field] = $row;
+
+                    // Prepare the column entry
+                    $columns[$field] = array(
+                        'type' => self::getTableFieldType($row['type']),
+                        'null' => ($row['notnull'] == 0) ? true : false
+                    );
+                }
+            }
+
+            $this->logQuery($sql, array(), $time);
+
+            // Write to Cache 300 seconds = 5 minutes
+            $this->cache->set($token, $fields, 300);
+        } else {
+            foreach($fields as $field => $row) {
                 // Prepare the column entry
                 $columns[$field] = array(
                     'type' => self::getTableFieldType($row['type']),
@@ -138,7 +161,8 @@ class SQLite extends Connection
             }
         }
 
-        $this->logQuery($sql, array(), $time);
+        // Write to local static Cache
+        Connection::$tables[$table] = $fields;
 
         return $columns;
     }

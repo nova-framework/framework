@@ -73,6 +73,8 @@ class Profiler
             return null;
         }
 
+        Console::logSpeed('Forensics - Profiler START');
+
         // The QuickProfiller was enabled into Configuration.
         $profiler = new self();
 
@@ -271,10 +273,13 @@ class Profiler
     public function display($fetch = false)
     {
         // Gather the information.
-        $this->gatherConsoleData();
         $this->gatherFileData();
         $this->gatherMemoryData();
         $this->gatherSQLQueryData();
+
+        Console::logSpeed('Forensics - Profiler DISPLAY');
+
+        $this->gatherConsoleData();
         $this->gatherSpeedData();
 
         // Render the Profiler's widget.

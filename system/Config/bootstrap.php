@@ -13,6 +13,7 @@ use Nova\Modules\Manager as Modules;
 use Nova\Events\Manager as Events;
 use Nova\Net\Session;
 use Nova\Net\Router;
+use Nova\Forensics\Console;
 use Nova\Config;
 use Nova\Logger;
 
@@ -23,6 +24,8 @@ $configDir = APPPATH .'Config' .DS;
 if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'constants.php')) {
     die('No config.php or constants.php found, configure and rename *.example.php in ' .$configDir);
 }
+
+Console::logSpeed('Nova Framework START');
 
 /** Turn on output buffering. */
 ob_start();

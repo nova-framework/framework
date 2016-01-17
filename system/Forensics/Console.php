@@ -54,7 +54,7 @@ class Console
     /*
      * Log memory usage of variable or entire script.
      */
-    public function logMemory($object = false, $name = 'PHP')
+    public static function logMemory($object = false, $name = 'PHP')
     {
         $memory = memory_get_usage();
 
@@ -75,7 +75,7 @@ class Console
     /*
      * Log a php exception object.
      */
-    public function logError($exception, $message)
+    public static function logError($exception, $message)
     {
         $logItem = array(
             "data" => $message,
@@ -92,10 +92,10 @@ class Console
     /*
      * Point in time speed snapshot.
      */
-    public function logSpeed($name = 'Point in Time')
+    public static function logSpeed($name = 'Point in Time')
     {
         $logItem = array(
-            "data" => PhpQuickProfiler::getMicroTime(),
+            "data" => microtime(true),
             "type" => 'speed',
             "name" => $name
         );
@@ -108,9 +108,9 @@ class Console
     /*
      * Return the logs.
      */
-    public function getLogs()
+    public static function getLogs()
     {
         return self::$logs;
     }
-    
+
 }

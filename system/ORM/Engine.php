@@ -92,36 +92,17 @@ abstract class Engine
         }
 
         // Prepare the Cache Token.
-        $token = 'orm_table_fields_' .md5($this->tableName);
+        $token = 'table_fields_' .$this->tableName;
 
         // Try to get the Table Fields from the fast static Cache.
         if(isset(self::$globalCache[$token])) {
             $this->fields = self::$globalCache[$token];
+        } else {
+            $this->fields = $this->db->getTableFields($this->table());
 
-            // The data was found in the static Cache.
-            return;
+            // Store the data also into the fast static Cache.
+            self::$globalCache[$token] = $this->fields;
         }
-
-        // Get the Table Fields, using the Framework Caching.
-        $fields = $this->cache->get($token);
-
-        if($fields === null) {
-             // No data found into Cache, then we should get it from Database.
-            $fields = $this->db->getTableFields($this->table());
-
-            foreach($fields as $field => $fieldInfo) {
-                $this->fields[$field] = $fieldInfo['type'];
-            }
-
-            // Write to cache 300 seconds = 5 minutes
-            $this->cache->set($token, $fields, 300);
-        }
-
-        // Store the data also into the fast static Cache.
-        self::$globalCache[$token] = $fields;
-
-        // Finaly, setup properly the Table Fields.
-        $this->fields = $fields;
     }
 
     public function getTableName()

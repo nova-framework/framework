@@ -13,6 +13,7 @@ namespace Nova\Database;
 use Nova\Database\Manager;
 use Nova\Database\Statement;
 use Nova\Database\QueryBuilder;
+use Nova\Cache\Manager as CacheManager;
 use Nova\Config;
 
 use \FluentStructure;
@@ -43,6 +44,9 @@ abstract class Connection extends PDO
      /** @var array Store the executed queries, into Profiling mode. */
     protected $queries = array();
 
+    /** The used \Nova\Cache\Manager instance. */
+    protected $cache = null;
+
     /**
      * MySQLEngine constructor.
      * Please use the Factory to maintain instances of the drivers.
@@ -71,7 +75,10 @@ abstract class Connection extends PDO
         // Store the config in class variable.
         $this->config = $config;
 
-        //
+        // Setup the Cache instance.
+        $this->cache = CacheManager::getCache();
+
+        // Prepare the parameters.
         $username = isset($config['user']) ? $config['user'] : '';
         $password = isset($config['password']) ? $config['password'] : '';
 
@@ -255,11 +262,15 @@ abstract class Connection extends PDO
     /**
      * @return Statement
      */
-    public function prepare($statement, $options = null)
+    public function prepare($sql, $options = null)
     {
-        $options = is_array($options) ? $options : array();
+        if(is_array($options)) {
+            $statement = parent::prepare($sql, $options);
+        } else {
+            $statement = parent::prepare($sql);
+        }
 
-        return new Statement(parent::prepare($statement, $options), $this);
+        return new Statement($statement, $this);
     }
 
     /**
@@ -339,7 +350,7 @@ abstract class Connection extends PDO
     public function rawPrepare($sql, $params = array(), array $paramTypes = array())
     {
         // Prepare and get statement from PDO.
-        $stmt = parent::prepare($sql);
+        $stmt = $this->prepare($sql);
 
         if($stmt === null) {
             throw new \Exception('Bad things happen into Heaven');
@@ -359,8 +370,7 @@ abstract class Connection extends PDO
         // Bind parameters.
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        //return new $stmt;
-        return new Statement($stmt, $this, $bindParams);
+        return $stmt;
     }
 
     /**

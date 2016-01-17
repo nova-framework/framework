@@ -12,6 +12,8 @@ namespace Nova\Database\Driver;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager;
+use Nova\Cache\Manager as CacheManager;
+
 
 class MySQL extends Connection
 {
@@ -148,39 +150,61 @@ class MySQL extends Connection
             return $columns;
         }
 
-        // Find all Column names
-        $sql = "SHOW COLUMNS FROM $table";
+        // Prepare the Cache Token.
+        $token = 'mysql_table_fields_' .md5($table);
 
-        // Get the current Time.
-        $time = microtime(true);
+        // Get the Table Fields, using the Framework Caching.
+        $fields = $this->cache->get($token);
 
-        $result = $this->rawQuery($sql, 'array', false);
+        if($fields === null) {
+            $fields = array();
 
-        $cid = 0;
+            // Find all Column names
+            $sql = "SHOW COLUMNS FROM $table";
 
-        if ($result !== false) {
-            Connection::$tables[$table] = array();
+            // Get the current Time.
+            $time = microtime(true);
 
-            foreach ($result as $row) {
-                $field = $row['Field'];
+            $result = $this->rawQuery($sql, 'array', false);
 
-                unset($row['Field']);
+            $cid = 0;
 
-                $row['CID'] = $cid;
+            if ($result !== false) {
+                foreach ($result as $row) {
+                    $field = $row['Field'];
 
-                Connection::$tables[$table][$field] = $row;
+                    unset($row['Field']);
 
+                    $row['CID'] = $cid;
+
+                    $fields[$field] = $row;
+
+                    // Prepare the column entry
+                    $columns[$field] = array(
+                        'type' => self::getTableFieldType($row['Type']),
+                        'null' => ($row['Null'] == 'YES') ? true : false
+                    );
+
+                    $cid++;
+                }
+            }
+
+            $this->logQuery($sql, $time);
+
+            // Write to Cache 300 seconds = 5 minutes
+            $this->cache->set($token, $fields, 300);
+        } else {
+            foreach($fields as $field => $row) {
                 // Prepare the column entry
                 $columns[$field] = array(
                     'type' => self::getTableFieldType($row['Type']),
                     'null' => ($row['Null'] == 'YES') ? true : false
                 );
-
-                $cid++;
             }
         }
 
-        $this->logQuery($sql, $time);
+        // Write to local static Cache
+        Connection::$tables[$table] = $fields;
 
         return $columns;
     }

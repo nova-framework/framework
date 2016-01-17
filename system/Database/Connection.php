@@ -241,8 +241,6 @@ abstract class Connection extends PDO
     {
         $start = microtime(true);
 
-        $this->lastSqlQuery = $sql;
-
         if($method !== null) {
             $result = parent::query($query, $method);
         } else {
@@ -259,7 +257,7 @@ abstract class Connection extends PDO
      */
     public function prepare($statement, $options = null)
     {
-        $options = $options ? $options : array();
+        $options = is_array($options) ? $options : array();
 
         return new Statement(parent::prepare($statement, $options), $this);
     }
@@ -277,9 +275,6 @@ abstract class Connection extends PDO
     {
         // Get the current Time.
         $start = microtime(true);
-
-        //
-        $this->lastSqlQuery = $sql;
 
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
         $method = ($this->returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
@@ -343,8 +338,6 @@ abstract class Connection extends PDO
      */
     public function rawPrepare($sql, $params = array(), array $paramTypes = array())
     {
-        $this->lastSqlQuery = $sql;
-
         // Prepare and get statement from PDO.
         $stmt = parent::prepare($sql);
 
@@ -455,8 +448,6 @@ abstract class Connection extends PDO
         // Get the current Time.
         $start = microtime(true);
 
-        $this->lastSqlQuery = $sql;
-
         // Append select if it isn't appended.
         if (strtolower(substr($sql, 0, 7)) !== 'select ') {
             $sql = "SELECT " . $sql;
@@ -481,8 +472,6 @@ abstract class Connection extends PDO
 
         // If failed, return now, and don't continue with fetching.
         if (! $status) {
-            //$this->logQuery($sql, $start, $params);
-
             return false;
         }
 
@@ -509,8 +498,6 @@ abstract class Connection extends PDO
                 $result = $stmt->fetch($fetchMethod);
             }
         }
-
-        //$this->logQuery($sql, $start, $params);
 
         return $result;
     }
@@ -558,9 +545,6 @@ abstract class Connection extends PDO
      */
     public function insert($table, array $data, array $paramTypes = array(), $transaction = false, $mode = 'insert')
     {
-        // Get the current Time.
-        $start = microtime(true);
-
         if (($mode != 'insert') && ($mode != 'replace')) {
             throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
         } else {
@@ -587,8 +571,6 @@ abstract class Connection extends PDO
         $fieldValues = ':'.implode(', :', array_keys($data));
 
         $sql = "$mode INTO $table ($fieldNames) VALUES ($fieldValues)";
-
-        $this->lastSqlQuery = $sql;
 
         $stmt = $this->prepare($sql);
 
@@ -622,8 +604,6 @@ abstract class Connection extends PDO
             $result = false;
         }
 
-        //$this->logQuery($sql, $start, $data);
-
         return $result;
     }
 
@@ -656,10 +636,6 @@ abstract class Connection extends PDO
      */
     public function update($table, array $data, array $where, array $paramTypes = array())
     {
-        // Get the current Time.
-        $start = microtime(true);
-
-        //
         $bindParams = array();
 
         // Column :bind for auto binding.
@@ -683,8 +659,6 @@ abstract class Connection extends PDO
         // Prepare statement.
         $sql = "UPDATE $table SET $fieldDetails WHERE $whereDetails";
 
-        $this->lastSqlQuery = $sql;
-
         $stmt = $this->prepare($sql);
 
         // Bind fields
@@ -701,17 +675,6 @@ abstract class Connection extends PDO
             $result = $stmt->rowCount();
         }
 
-        //
-        $params = array();
-
-        foreach($data as $key => $value) {
-            $params["field_$key"] = $value;
-        }
-
-        $params = array_merge($params, $bindParams);
-
-        //$this->logQuery($sql, $start, $params);
-
         return $result;
     }
 
@@ -727,10 +690,6 @@ abstract class Connection extends PDO
      */
     public function delete($table, array $where, array $paramTypes = array())
     {
-        // Get the current Time.
-        $start = microtime(true);
-
-        //
         $bindParams = array();
 
         // Prepare the WHERE conditions.
@@ -739,8 +698,6 @@ abstract class Connection extends PDO
         // Prepare statement
         $sql = "DELETE FROM $table WHERE $whereDetails";
 
-        $this->lastSqlQuery = $sql;
-
         $stmt = $this->prepare($sql);
 
         // Bind conditions.
@@ -748,8 +705,6 @@ abstract class Connection extends PDO
 
         // Execute and return false if failure.
         $result = $stmt->execute();
-
-        //$this->logQuery($sql, $start, $bindParams);
 
         if ($result !== false) {
             // Return rowcount when succeeded.
@@ -942,6 +897,8 @@ abstract class Connection extends PDO
 
         // Count the current Query.
         $this->queryCount++;
+
+        $this->lastSqlQuery = $sql;
 
         // Verify if the Forensics are enabled into Configuration.
         if ($options['use_forensics'] == false) {

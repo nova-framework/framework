@@ -118,7 +118,7 @@
     }
 </script>
 
-<div id="pqp-container" class="pQp" style="display:none">
+<div id="pqp-container" class="pQp" style="display: none;">
 <div id="pQp" class="console">
     <table id="pqp-metrics" cellspacing="0">
         <tr>

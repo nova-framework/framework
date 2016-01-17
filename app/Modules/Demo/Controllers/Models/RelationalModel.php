@@ -181,7 +181,7 @@ self::dumpObjectArray(\$user);
         $message .= '<h3><strong>'.__d('demo', 'Deleting Records').'</strong></h3><br>';
 
         //
-        //$result = $user->delete();
+        $result = $user->delete();
 
         $text = "
 \$result = \$user->delete();
@@ -363,12 +363,14 @@ self::dumpObjectArray(\$course->students);
 
 \$sids = \$pivot->get();
 
+self::dumpObject(\$course);
 var_export(\$sids, true);
 self::dumpObjectArray(\$students);
         ";
 
         $message .= self::highlightText($text, true);
         $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
+        $message .= '<pre>'. self::dumpObject($course).'</pre>';
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
 

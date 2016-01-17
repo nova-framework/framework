@@ -86,7 +86,7 @@ class Pivot extends Engine
 
         // Prepare the SQL Query.
         $sql = sprintf(
-            'INSERT IGNORE INTO %s (`%s`, `%s`) VALUES',
+            'INSERT INTO %s (`%s`, `%s`) VALUES',
             $this->table(),
             $this->primaryKey,
             $this->otherKey

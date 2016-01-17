@@ -893,14 +893,14 @@ abstract class Connection extends PDO
      */
     function logQuery($sql, $start = 0, array $params = array())
     {
-        $options = Config::get('profiler');
-
         // Count the current Query.
         $this->queryCount++;
 
         $this->lastSqlQuery = $sql;
 
         // Verify if the Forensics are enabled into Configuration.
+        $options = Config::get('profiler');
+
         if ($options['use_forensics'] == false) {
             return;
         }

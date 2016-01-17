@@ -277,7 +277,7 @@ class Profiler
         $this->gatherMemoryData();
         $this->gatherSQLQueryData();
 
-        Console::logSpeed('Forensics - Profiler DISPLAY');
+        Console::logSpeed('Forensics - Profiler RENDER');
 
         $this->gatherConsoleData();
         $this->gatherSpeedData();

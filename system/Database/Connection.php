@@ -255,11 +255,15 @@ abstract class Connection extends PDO
     /**
      * @return Statement
      */
-    public function prepare($statement, $options = null)
+    public function prepare($sql, $options = null)
     {
-        $options = is_array($options) ? $options : array();
+        if(is_array($options)) {
+            $statement = parent::prepare($sql, $options);
+        } else {
+            $statement = parent::prepare($sql);
+        }
 
-        return new Statement(parent::prepare($statement, $options), $this);
+        return new Statement($statement, $this);
     }
 
     /**
@@ -339,7 +343,7 @@ abstract class Connection extends PDO
     public function rawPrepare($sql, $params = array(), array $paramTypes = array())
     {
         // Prepare and get statement from PDO.
-        $stmt = parent::prepare($sql);
+        $stmt = $this->prepare($sql);
 
         if($stmt === null) {
             throw new \Exception('Bad things happen into Heaven');
@@ -359,8 +363,7 @@ abstract class Connection extends PDO
         // Bind parameters.
         $this->bindParams($stmt, $bindParams, $paramTypes);
 
-        //return new $stmt;
-        return new Statement($stmt, $this, $bindParams);
+        return $stmt;
     }
 
     /**

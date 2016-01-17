@@ -52,9 +52,22 @@ class Statement
 
         $result = $this->statement->execute($params);
 
+        if(is_array($params)) {
+            $this->parameters = $params;
+        }
+
         $this->connection->logQuery($this->statement->queryString, $start, $this->parameters);
 
         return $result;
+    }
+
+    public function bindValue($parameter, $value, $paramType = PDO::PARAM_STR)
+    {
+        $key = (strpos($parameter, ':') !== 0) ? $parameter : substr($parameter, 1);
+
+        $this->parameters[$key] = ($paramType == PDO::PARAM_INT) ? intval($value) : $value;
+
+        return $this->statement->bindValue($parameter, $value, $paramType);
     }
 
     /**

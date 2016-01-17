@@ -135,7 +135,7 @@ abstract class Connection extends PDO
      */
     public function getQueryBuilder(FluentStructure $structure = null)
     {
-        $this->countIncomingQuery();
+        //$this->countIncomingQuery();
 
         return new QueryBuilder($this, $structure);
     }
@@ -253,15 +253,15 @@ abstract class Connection extends PDO
 
         return $result;
     }
-/*
+
     /**
      * @return Statement
-     * /
+     */
     public function prepare($statement, array $driverOptions = array())
     {
         return new Statement(parent::prepare($statement, $driverOptions), $this);
     }
-*/
+
     /**
      * Basic execute statement. Only for queries with no binding parameters
      * This method is not SQL Injection safe! Please remember to don't use this with dynamic content!
@@ -344,7 +344,11 @@ abstract class Connection extends PDO
         $this->lastSqlQuery = $sql;
 
         // Prepare and get statement from PDO.
-        $stmt = $this->prepare($sql);
+        $stmt = parent::prepare($sql);
+
+        if($stmt === null) {
+            throw new \Exception('Bad things happen into Heaven');
+        }
 
         // Bind the key and values (only if given).
         $bindParams = array();
@@ -475,7 +479,7 @@ abstract class Connection extends PDO
 
         // If failed, return now, and don't continue with fetching.
         if (! $status) {
-            $this->logQuery($sql, $start, $params);
+            //$this->logQuery($sql, $start, $params);
 
             return false;
         }
@@ -504,7 +508,7 @@ abstract class Connection extends PDO
             }
         }
 
-        $this->logQuery($sql, $start, $params);
+        //$this->logQuery($sql, $start, $params);
 
         return $result;
     }
@@ -577,7 +581,7 @@ abstract class Connection extends PDO
         $failure = false;
 
         // Prepare the parameters.
-        $fieldNames = implode(',', array_keys($data));
+        $fieldNames = implode(', ', array_keys($data));
         $fieldValues = ':'.implode(', :', array_keys($data));
 
         $sql = "$mode INTO $table ($fieldNames) VALUES ($fieldValues)";
@@ -616,7 +620,7 @@ abstract class Connection extends PDO
             $result = false;
         }
 
-        $this->logQuery($sql, $start, $data);
+        //$this->logQuery($sql, $start, $data);
 
         return $result;
     }
@@ -704,7 +708,7 @@ abstract class Connection extends PDO
 
         $params = array_merge($params, $bindParams);
 
-        $this->logQuery($sql, $start, $params);
+        //$this->logQuery($sql, $start, $params);
 
         return $result;
     }
@@ -743,7 +747,7 @@ abstract class Connection extends PDO
         // Execute and return false if failure.
         $result = $stmt->execute();
 
-        $this->logQuery($sql, $start, $bindParams);
+        //$this->logQuery($sql, $start, $bindParams);
 
         if ($result !== false) {
             // Return rowcount when succeeded.
@@ -947,7 +951,8 @@ abstract class Connection extends PDO
 
         $time = microtime(true);
 
-        $time = ($time - $start) * 1000;
+        //$time = ($time - $start) * 1000;
+        $time = $time - $start;
 
         $query = array(
             'sql' => $sql,

@@ -14,7 +14,7 @@
     var PQP_HEIGHT = "short";
 
     addEvent(window, 'load', loadCSS);
-    //addEvent(window, 'load', toggleDetails);
+    addEvent(window, 'load', toggleDetails);
 
     function changeTab(tab) {
         var pQp = document.getElementById('pQp');

@@ -83,8 +83,6 @@ class MySQL extends Connection
     {
         $sql = "TRUNCATE TABLE $table";
 
-        $this->lastSqlQuery = $sql;
-
         // Get the current Time.
         $time = microtime(true);
 
@@ -152,8 +150,6 @@ class MySQL extends Connection
 
         // Find all Column names
         $sql = "SHOW COLUMNS FROM $table";
-
-        $this->lastSqlQuery = $sql;
 
         // Get the current Time.
         $time = microtime(true);

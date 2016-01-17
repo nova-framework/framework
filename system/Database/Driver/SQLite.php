@@ -115,8 +115,6 @@ class SQLite extends Connection
         // Find all Column names
         $sql = "PRAGMA table_info($table)";
 
-        $this->lastSqlQuery = $sql;
-
         // Get the current Time.
         $time = microtime(true);
 

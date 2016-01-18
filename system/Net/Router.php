@@ -11,6 +11,7 @@ namespace Nova\Net;
 
 use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
+use Nova\Forensics\Console;
 use Nova\Net\Request;
 use Nova\Net\Response;
 use Nova\Net\Route;
@@ -147,7 +148,7 @@ class Router
         }
 
         $this->errorCallback = $callback;
-        
+
         return null;
     }
 
@@ -208,6 +209,8 @@ class Router
             return false;
         }
 
+        Console::log(__d('system', 'Routing - invoking the Controller: {0} @{1}', $className, $method));
+
         // Initialize the Controller.
         /** @var Controller $controller */
         $controller = new $className();
@@ -239,6 +242,8 @@ class Router
             return true;
         }
 
+        Console::log(__d('system', 'Routing - invoking the Callback: {0}', $callback));
+
         // Call the object Controller and its Method.
         $segments = explode('@', $callback);
 
@@ -259,6 +264,8 @@ class Router
 
         // Detect the current URI.
         $uri = Url::detectUri();
+
+        Console::log(__d('system', 'Routing - Start dispatching for the URI: {0}', $uri));
 
         // First, we will supose that URI is associated with an Asset File.
         if (Request::isGet() && $this->dispatchFile($uri)) {
@@ -281,6 +288,8 @@ class Router
                 $callback = $route->callback();
 
                 if ($callback !== null) {
+                    Console::log(__d('system', 'Routing - URI "{0}" match the Route: {1}', $uri, $route->pattern()));
+
                     // Invoke the Route's Callback with the associated parameters.
                     $this->invokeObject($callback, $route->params());
                 }
@@ -288,6 +297,8 @@ class Router
                 return true;
             }
         }
+
+        Console::log(__d('system', 'Routing - URI "{0}" does not match any Route', $uri));
 
         // No valid Route found; invoke the Error Callback with the current URI as parameter.
         $params = array(

@@ -270,7 +270,7 @@ class Profiler
      */
     public function display($fetch = false)
     {
-        Console::logSpeed(__d('system', 'Forensics - Profiler start gathering the information'));
+        Console::log(__d('system', 'Forensics - Profiler start gathering the information'));
 
         // Gather the information.
         $this->gatherFileData();

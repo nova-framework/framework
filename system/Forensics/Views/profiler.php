@@ -13,7 +13,7 @@
 .pQp { width:100%; text-align: center; position: fixed; bottom: 0; }
 * html .pQp { position: absolute; }
 .pQp * { margin: 0; padding: 0; border: none; }
-#pQp { margin: 0 auto; width: 85%; min-width: 960px; background-color: #222; border:3px solid #000; border-bottom: none; font-family: "Lucida Grande", Tahoma, Arial, sans-serif; -webkit-border-top-left-radius: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topleft: 6px; -moz-border-radius-topright: 6px; border-top-left-radius: 6px; border-top-right-radius: 6px; overflow: hidden; }
+#pQp { margin: 0 auto; width: 85%; min-width: 960px; background-color: #222; border: 2px solid #000; border-bottom: none; font-family: "Lucida Grande", Tahoma, Arial, sans-serif; -webkit-border-top-left-radius: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; overflow: hidden; }
 #pQp .pqp-box h3 { font-weight: normal; line-height: 200px; padding: 0 15px; color: #fff; }
 .pQp, .pQp td { color: #444; }
 
@@ -38,13 +38,13 @@
 .tallDetails #pQp .pqp-box h3 { line-height: 500px; }
 .hideDetails #pQp .pqp-box { display: none !important; }
 .hideDetails #pqp-footer { border-top:1px dotted #444; }
-.hideDetails #pQp #pqp-metrics td { height: 40px; background: #000 !important; border-bottom: none !important; cursor: default !important; }
-.hideDetails #pQp var { font-size: 16px; margin: 0 0 2px 0; }
+.hideDetails #pQp #pqp-metrics td { height: 30px; background: #000 !important; border-bottom: none !important; cursor: default !important; }
+.hideDetails #pQp var { font-size: 14px; margin: 2px 0 0 0; }
 .hideDetails #pQp h4 { font-size: 10px; }
 .hideDetails .heightToggle { visibility: hidden; }
 
 /* ----- Metrics ----- */
-#pqp-metrics td { height: 50px; width: 20%; text-align: center; cursor: pointer; border: 1px solid #000; border-bottom: 6px solid #444; -webkit-border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-topright: 10px;}
+#pqp-metrics td { height: 50px; width: 20%; text-align: center; cursor: pointer; /*border: 1px solid #000;*/ border-bottom: 6px solid #444; -webkit-border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-topright: 10px; }
 #pqp-metrics td:hover { background: #222; border-bottom: 6px solid #777; }
 #pqp-metrics .green {  border-left: none; }
 #pqp-metrics .red { border-right: none; }
@@ -52,7 +52,7 @@
 #pqp-metrics h4 { text-shadow:#000 1px 1px 1px; }
 .side var { text-shadow: #444 1px 1px 1px; }
 
-.pQp var { font-size: 20px; font-weight: bold; font-style: normal; margin: 0 0 3px 0; display: block; }
+.pQp var { font-size: 18px; font-weight: bold; font-style: normal; margin: 0; display: block; }
 .pQp h4 { font-size: 12px; color: #fff; margin: 0 0 4px 0; }
 
 /* ----- Main ----- */
@@ -88,7 +88,7 @@
 .pQp .log-memory td.type { background:#D28C00 !important; }
 .pQp .log-speed td.type { background:#2B5481 !important; }
 
-.pQp .log-log pre { color: #999; }
+.pQp .log-log pre { white-space: normal; display: block; color: #FFFD70; background: none; }
 .pQp .log-log td:hover pre { color: #fff; }
 
 .pQp .log-memory em, .pQp .log-speed em { float: left; font-style: normal; display: block; color: #fff; }
@@ -118,8 +118,9 @@
 #pqp-footer { width: 100%; background: #000; font-size: 11px; border-top: 1px solid #ccc; }
 #pqp-footer td { padding: 0 !important; border: none !important; }
 #pqp-footer strong { color: #fff; }
-#pqp-footer a { color: #999; padding: 5px 10px; text-decoration: none; }
+#pqp-footer a { color: #999; padding: 3px 10px; text-decoration: none; }
 #pqp-footer .credit { width: 20%; text-align: left; }
+#pqp-footer .credit .logo { padding: 3px 10px; }
 #pqp-footer .actions { width: 80%; text-align: right; }
 #pqp-footer .actions a { float: right; width: auto; }
 #pqp-footer a:hover, #pqp-footer a:hover strong, #pqp-footer a:hover b { background: #fff; color: blue !important; text-decoration: underline; }
@@ -132,7 +133,7 @@
     var PQP_HEIGHT = "short";
 
     addEvent(window, 'load', showProfiler);
-    addEvent(window, 'load', toggleDetails);
+    //addEvent(window, 'load', toggleDetails);
 
     function changeTab(tab) {
         var pQp = document.getElementById('pQp');
@@ -388,10 +389,11 @@
     <table id="pqp-footer" cellspacing="0">
         <tr>
             <td class="credit">
-                <a href="http://particletree.com/features/php-quick-profiler/" target="_blank">
+                <div class="logo">
                 <strong>Nova</strong>
                 <b class="green">Q</b><b class="blue">u</b><b class="purple">i</b><b class="orange">c</b><b class="red">k</b>
-                Profiler</a></td>
+                Profiler</div>
+            </td>
             <td class="actions">
                 <a href="#" onclick="toggleDetails();return false">Details</a>
                 <a class="heightToggle" href="#" onclick="toggleHeight();return false">Height</a>

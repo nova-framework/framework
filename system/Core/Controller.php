@@ -12,6 +12,8 @@ namespace Nova\Core;
 
 use Nova\Core\View;
 use Nova\Net\Response;
+use Nova\Forensics\Console;
+use Nova\Config;
 
 /**
  * Core controller, all other controllers extend this base controller.
@@ -99,6 +101,8 @@ abstract class Controller
         }
 
         $this->viewsPath = APPPATH .$viewsPath .DS;
+
+        Console::log(__d('system', '{0} initialized', $this->className));
     }
 
     /**
@@ -106,6 +110,8 @@ abstract class Controller
      */
     protected function beforeFlight()
     {
+        Console::log(__d('system', '{0} finished the beforeFlight stage', $this->className));
+
         return true;
     }
 
@@ -124,13 +130,33 @@ abstract class Controller
      */
     public function execute()
     {
+        $options = Config::get('profiler');
+
+        Console::log(__d('system', '{0} enter into beforeFlight stage', $this->className));
+
         if ($this->beforeFlight() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
 
+        Console::log(__d('system', '{0} execute the Method: {1}', $this->className, $this->method()));
+
         // Execute the Controller's Method with the given arguments.
-        $result = call_user_func_array(array($this, $this->method()), $this->params());
+        try {
+            $result = call_user_func_array(array($this, $this->method()), $this->params());
+        }
+        // Catch the exceptions.
+        catch(\Exception $e) {
+            if((ENVIRONMENT == 'development') && ($options['use_forensics'] == true)) {
+                Console::logError($e, $e->getMessage());
+
+                $result = null;
+            } else {
+                throw $e;
+            }
+        }
+
+        Console::log(__d('system', '{0} enter into afterFlight stage', $this->className));
 
         if (($this->afterFlight($result) === false) || ! $this->autoRender) {
             // Is wanted to stop the Flight or there is no auto-rendering.

@@ -25,7 +25,7 @@ if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'consta
     die('No config.php or constants.php found, configure and rename *.example.php in ' .$configDir);
 }
 
-Console::logSpeed('Nova Framework START');
+Console::logSpeed('START Nova Framework');
 
 /** Turn on output buffering. */
 ob_start();

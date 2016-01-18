@@ -123,6 +123,14 @@ class MySQL extends Connection
         return 'string';
     }
 
+    private function getTableFieldData($data)
+    {
+        return array(
+            'type' => self::getTableFieldType($row['Type']),
+            'null' => ($row['Null'] == 'YES') ? true : false
+        );
+    }
+
     /**
      * Get table fields/columns
      * @param string $table
@@ -140,11 +148,7 @@ class MySQL extends Connection
             $tableFields = Connection::$tables[$table];
 
             foreach($tableFields as $field => $row) {
-                // Prepare the column entry
-                $columns[$field] = array(
-                    'type' => self::getTableFieldType($row['Type']),
-                    'null' => ($row['Null'] == 'YES') ? true : false
-                );
+                $columns[$field] = $this->getTableFieldData($row);
             }
 
             return $columns;
@@ -183,10 +187,7 @@ class MySQL extends Connection
                     $fields[$field] = $row;
 
                     // Prepare the column entry
-                    $columns[$field] = array(
-                        'type' => self::getTableFieldType($row['Type']),
-                        'null' => ($row['Null'] == 'YES') ? true : false
-                    );
+                    $columns[$field] = $this->getTableFieldData($row);
 
                     $cid++;
                 }
@@ -198,11 +199,7 @@ class MySQL extends Connection
             $cache->set($token, $fields, 300);
         } else {
             foreach($fields as $field => $row) {
-                // Prepare the column entry
-                $columns[$field] = array(
-                    'type' => self::getTableFieldType($row['Type']),
-                    'null' => ($row['Null'] == 'YES') ? true : false
-                );
+                $columns[$field] = $this->getTableFieldData($row);
             }
         }
 

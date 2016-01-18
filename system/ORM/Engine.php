@@ -30,11 +30,6 @@ abstract class Engine
     protected $cache = null;
 
     /*
-     * Internal static Cache.
-     */
-    protected static $globalCache = array();
-
-    /*
      * There is stored the called Class name.
      */
     protected $className;
@@ -85,23 +80,9 @@ abstract class Engine
         // Setup the Cache instance.
         $this->cache = CacheManager::getCache();
 
-        // Get the Table Fields.
-        if(! empty($this->fields)) {
-            // The user considered to directly specify the Table metadata.
-            return;
-        }
-
-        // Prepare the Cache Token.
-        $token = 'table_fields_' .$this->tableName;
-
-        // Try to get the Table Fields from the fast static Cache.
-        if(isset(self::$globalCache[$token])) {
-            $this->fields = self::$globalCache[$token];
-        } else {
+        // Get the Table Fields, if they aren't already specified.
+        if(empty($this->fields)) {
             $this->fields = $this->db->getTableFields($this->table());
-
-            // Store the data also into the fast static Cache.
-            self::$globalCache[$token] = $this->fields;
         }
     }
 

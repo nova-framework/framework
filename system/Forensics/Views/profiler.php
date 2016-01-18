@@ -78,8 +78,8 @@
 #pqp-console .side td { padding: 12px 0; }
 #pqp-console .side td.alt1 { background: #588E13; width: 51%; }
 #pqp-console .side td.alt2 { background-color: #B72F09; }
-#pqp-console .side td.alt3 { background: #D28C00; border-bottom-left-radius: 30px; }
-#pqp-console .side td.alt4 { background-color: #3769A0; }
+#pqp-console .side td.alt3 { display : block; background: #D28C00; border-bottom: 1px solid #9C6800; border-left: 1px solid #9C6800; border-bottom-left-radius: 30px; }
+#pqp-console .side td.alt4 { background-color: #3769A0; border-bottom: 1px solid #274B74; }
 
 #pqp-console .main table { width: 100%; }
 #pqp-console td div { width: 100%; overflow: hidden; }
@@ -98,22 +98,24 @@
 /* ----- Speed ----- */
 #pqp-speed .side td { padding: 12px 0; }
 #pqp-speed .side { background-color: #3769A0; }
-#pqp-speed .side td.alt { background-color: #2B5481; border-bottom-left-radius: 30px; }
+#pqp-speed .side td.alt { display : block; background-color: #2B5481; border-bottom: 1px solid #1E3C5C; border-left: 1px solid #1E3C5C; border-bottom-left-radius: 30px; }
 
 /* ----- Queries ----- */
 #pqp-queries .side { background-color: #953FA1; }
 #pqp-queries .side td.alt { background-color: #7B3384; }
+#pqp-queries .side td.last { display : block; border-bottom: 1px solid #662A6E; border-left: 1px solid #662A6E; border-bottom-left-radius: 30px; }
 #pqp-queries .main b { float: none; }
 #pqp-queries .main em { display: block; padding: 2px 0 0 0; font-style: normal; color: #aaa; }
 
 /* ----- Memory ----- */
 #pqp-memory .side td { padding: 12px 0; }
 #pqp-memory .side{ background-color: #C48200; }
-#pqp-memory .side td.alt { background-color: #AC7200; border-bottom-left-radius: 30px; }
+#pqp-memory .side td.alt { display : block; background-color: #AC7200; border-bottom: 1px solid #865900; border-left: 1px solid #865900; border-bottom-left-radius: 30px; }
 
 /* ----- Files ----- */
 #pqp-files .side { background-color: #B72F09; }
 #pqp-files .side td.alt { background-color: #9B2700; }
+#pqp-files .side td.last { display : block; border-bottom: 1px solid #7C1F00; border-left: 1px solid #7C1F00; border-bottom-left-radius: 30px; }
 
 /* ----- Variables ----- */
 
@@ -381,7 +383,7 @@
             <table class='side' cellspacing='0'>
             <tr><td><var><?= $output['queryTotals']['count'] ?></var><h4><?= __d('system', 'Total Queries'); ?></h4></td></tr>
             <tr><td class='alt'><var><?= $output['queryTotals']['time'] ?></var> <h4><?= __d('system', 'Total Time'); ?></h4></td></tr>
-            <tr><td><var>0</var> <h4><?= __d('system', 'Duplicates'); ?></h4></td></tr>
+            <tr><td class='last'><var>0</var> <h4><?= __d('system', 'Duplicates'); ?></h4></td></tr>
             </table>
 
                 <table class='main' cellspacing='0'>
@@ -434,7 +436,7 @@
             <table class='side' cellspacing='0'>
                 <tr><td><var><?= $output['fileTotals']['count']; ?></var><h4><?= __d('system', 'Total Files'); ?></h4></td></tr>
                 <tr><td class='alt'><var><?= $output['fileTotals']['size']; ?></var> <h4><?= __d('system', 'Total Size'); ?></h4></td></tr>
-                <tr><td><var><?= $output['fileTotals']['largest']; ?></var> <h4><?= __d('system', 'Largest'); ?></h4></td></tr>
+                <tr><td class='last'><var><?= $output['fileTotals']['largest']; ?></var> <h4><?= __d('system', 'Largest'); ?></h4></td></tr>
             </table>
             <table class='main' cellspacing='0'>
                 <?php $class = ''; ?>

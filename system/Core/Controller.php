@@ -149,6 +149,8 @@ abstract class Controller
         catch(\Exception $e) {
             if((ENVIRONMENT == 'development') && ($options['use_forensics'] == true)) {
                 Console::logError($e, $e->getMessage());
+
+                $result = null;
             } else {
                 throw $e;
             }

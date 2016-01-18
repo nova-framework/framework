@@ -42,7 +42,7 @@ class BelongsToMany extends Relation
         $this->otherId = $model->getPrimaryKey();
 
         // Setup the Joining Pivot.
-        $this->pivot = new JoiningPivot($joinTable, $otherKey, $foreignKey, $this->otherId);
+        $this->pivot = $model->newPivot($joinTable, $otherKey, $foreignKey, $this->otherId);
     }
 
     public function type()

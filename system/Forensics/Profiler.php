@@ -59,8 +59,7 @@ class Profiler
         }
 
         // Setup the View path.
-        //$this->viewPath = APPPATH .'Views/Fragments/profiler.php';
-        $this->viewPath = realpath(__DIR__) .'/Views/profiler.php';
+        $this->viewPath = realpath(__DIR__) .DS .'Views' .DS .'profiler.php';
 
         // Setup the Start Time.
         $this->startTime = FRAMEWORK_STARTING_MICROTIME;

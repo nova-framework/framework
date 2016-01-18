@@ -75,42 +75,36 @@ class RelationalModel extends BaseController
         $result = $this->model->find(1);
 
         $message .= self::highlightText('$this->model->find(1);', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->orderBy('username DESC')->findAll();
 
         $message .= self::highlightText('$this->model->orderBy(\'username DESC\')->findAll();', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findBy('username', 'marcus');
 
         $message .= self::highlightText('$this->model->findBy(\'username\', \'marcus\');', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->findManyBy('username != ?', 'marcus');
 
         $message .= self::highlightText('$this->model->findManyBy(\'username != ?\', \'marcus\');', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->where('username != ?', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
 
         $message .= self::highlightText('$this->model->where(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findMany(array(1, 3, 4));
 
         $message .= self::highlightText('$this->model->findMany(array(1, 3, 4));', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -137,7 +131,6 @@ self::dumpObjectArray(\$user);
         ";
 
         $message .= self::highlightText($text, true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
         $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
 
@@ -145,7 +138,6 @@ self::dumpObjectArray(\$user);
         $result = $this->model->findAll();
 
         $message .= self::highlightText('$this->model->findAll();', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -166,7 +158,6 @@ self::dumpObjectArray(\$user);
         ";
 
         $message .= self::highlightText($text, true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
         $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
 
@@ -174,7 +165,6 @@ self::dumpObjectArray(\$user);
         $result = $this->model->findAll();
 
         $message .= self::highlightText('$this->model->findAll();', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -190,14 +180,12 @@ var_dump(\$result);
         ";
 
         $message .= self::highlightText($text, true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
 
         //
         $result = $this->model->findAll();
 
         $message .= self::highlightText('$this->model->findAll();', true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -309,7 +297,6 @@ self::dumpObjectArray(\$posts);
         ";
 
         $message .= self::highlightText($text, true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($student).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($courses).'</pre><br>';
 
@@ -337,7 +324,6 @@ self::dumpObjectArray(\$course->students);
         ";
 
         $message .= self::highlightText($text, true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($course).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($course->students).'</pre><br>';
@@ -369,7 +355,6 @@ self::dumpObjectArray(\$students);
         ";
 
         $message .= self::highlightText($text, true);
-        $message .= '<pre>'. $this->model->lastSqlQuery().'</pre>';
         $message .= '<pre>'. self::dumpObject($course).'</pre>';
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';

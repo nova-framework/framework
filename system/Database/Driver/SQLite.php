@@ -117,6 +117,9 @@ class SQLite extends Connection
         // Prepare the Cache Token.
         $token = 'sqlite_table_fields_' .md5($table);
 
+        // Setup the Cache instance.
+        $cache = CacheManager::getCache();
+        
         // Get the Table Fields, using the Framework Caching.
         $fields = $this->cache->get($token);
 

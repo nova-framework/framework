@@ -13,12 +13,12 @@
 .pQp { width:100%; text-align: center; position: fixed; bottom: 0; }
 * html .pQp { position: absolute; }
 .pQp * { margin: 0; padding: 0; border: none; }
-#pQp { margin: 0 auto; width: 85%; min-width: 960px; background-color: #222; border: 2px solid #000; border-bottom: none; font-family: "Lucida Grande", Tahoma, Arial, sans-serif; -webkit-border-top-left-radius: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; overflow: hidden; }
+#pQp { margin: 0 auto; width: 85%; min-width: 960px; background-color: #222; border: 3px solid #000; border-bottom: none; font-family: "Lucida Grande", Tahoma, Arial, sans-serif; -webkit-border-top-left-radius: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-topleft: 10px; -moz-border-radius-topright: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px; overflow: hidden; }
 #pQp .pqp-box h3 { font-weight: normal; line-height: 200px; padding: 0 15px; color: #fff; }
 .pQp, .pQp td { color: #444; }
 
 /* ----- IDS ----- */
-#pqp-metrics { background: #000; width:100%; }
+#pqp-metrics { background: #000; width: 100%; }
 #pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files, #pqp-variables { background: url(data:image/gif;base64,R0lGODlhAwADAIABAAAAAP///yH5BAEAAAEALAAAAAADAAMAAAIDRG5YADs=); border-top: 1px solid #ccc; height: 200px; overflow: auto; }
 
 /* ----- Colors ----- */
@@ -45,7 +45,7 @@
 .hideDetails .heightToggle { visibility: hidden; }
 
 /* ----- Metrics ----- */
-#pqp-metrics td { height: 50px; width: 15%; text-align: center; cursor: pointer; /*border: 1px solid #000;*/ border-bottom: 6px solid #444; -webkit-border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-topright: 10px; }
+#pqp-metrics td { height: 50px; width: 15%; text-align: center; cursor: pointer; border: 1px solid #000; border-bottom: 6px solid #444; border-top-left-radius: 10px; border-top-right-radius: 10px; }
 #pqp-metrics td:hover { background: #222; border-bottom: 6px solid #777; }
 #pqp-metrics .green {  border-left: none; }
 #pqp-metrics .red { border-right: none; }
@@ -69,7 +69,7 @@
 .pQp .main td:hover { background: #2E2E2E; }
 
 /* ----- Side ----- */
-.pQp .side{ float: left; width: 20%; background: #000; color: #fff; -webkit-border-bottom-left-radius: 30px; -moz-border-radius-bottomleft: 30px; text-align: center; }
+.pQp .side { float: left; width: 20%; background: #000; color: #fff; border-bottom-left-radius: 30px; text-align: center; }
 .pQp .side td { padding: 10px 0 5px 0; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAHRCAYAAABTvCjlAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAG9JREFUeNrsykEKgEAQA8EZQUVW/P9v1+wPPHqoQJ9SPees7t6qarWnI53pSiPd6Vnnp4EgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIK/hK8AAwDLrAbmTOcZRgAAAABJRU5ErkJggg==) repeat-y right; }
 .pQp .side var {color: #fff; font-size: 15px; }
 .pQp .side h4 { font-weight: normal; color: #F4FCCA; font-size: 11px; }
@@ -78,8 +78,8 @@
 #pqp-console .side td { padding: 12px 0; }
 #pqp-console .side td.alt1 { background: #588E13; width: 51%; }
 #pqp-console .side td.alt2 { background-color: #B72F09; }
-#pqp-console .side td.alt3 { background: #D28C00; border-bottom: 1px solid #9C6800; border-left: 1px solid #9C6800; -webkit-border-bottom-left-radius: 30px; -moz-border-radius-bottomleft: 30px; }
-#pqp-console .side td.alt4 { background-color: #3769A0; border-bottom: 1px solid #274B74; }
+#pqp-console .side td.alt3 { background: #D28C00; border-bottom-left-radius: 30px; }
+#pqp-console .side td.alt4 { background-color: #3769A0; }
 
 #pqp-console .main table { width: 100%; }
 #pqp-console td div { width: 100%; overflow: hidden; }
@@ -98,21 +98,21 @@
 /* ----- Speed ----- */
 #pqp-speed .side td { padding: 12px 0; }
 #pqp-speed .side { background-color: #3769A0; }
-#pqp-speed .side td.alt { background-color: #2B5481; border-bottom: 1px solid #1E3C5C; border-left: 1px solid #1E3C5C; -webkit-border-bottom-left-radius: 30px; -moz-border-radius-bottomleft: 30px; }
+#pqp-speed .side td.alt { background-color: #2B5481; border-bottom-left-radius: 30px; }
 
 /* ----- Queries ----- */
-#pqp-queries .side{ background-color: #953FA1; border-bottom: 1px solid #662A6E; border-left: 1px solid #662A6E; }
+#pqp-queries .side { background-color: #953FA1; }
 #pqp-queries .side td.alt { background-color: #7B3384; }
-#pqp-queries .main b{ float: none; }
+#pqp-queries .main b { float: none; }
 #pqp-queries .main em { display: block; padding: 2px 0 0 0; font-style: normal; color: #aaa; }
 
 /* ----- Memory ----- */
 #pqp-memory .side td { padding: 12px 0; }
 #pqp-memory .side{ background-color: #C48200; }
-#pqp-memory .side td.alt { background-color: #AC7200; border-bottom: 1px solid #865900; border-left: 1px solid #865900; -webkit-border-bottom-left-radius: 30px; -moz-border-radius-bottomleft: 30px; }
+#pqp-memory .side td.alt { background-color: #AC7200; border-bottom-left-radius: 30px; }
 
 /* ----- Files ----- */
-#pqp-files .side { background-color: #B72F09; border-bottom: 1px solid #7C1F00; border-left: 1px solid #7C1F00; }
+#pqp-files .side { background-color: #B72F09; }
 #pqp-files .side td.alt { background-color: #9B2700; }
 
 /* ----- Variables ----- */
@@ -460,16 +460,16 @@
                         $title = __d('system', 'Server Headers');
                     }
                 ?>
-                <h3 style="font-size: 16px; font-weight: bold; line-height: 40px;"><?= $title; ?></h3>
+                <h3 style="text-align: left; font-size: 16px; font-weight: bold; line-height: 40px;"><?= $title; ?></h3>
             <table class='main' cellspacing='0' style="width: 100%; margin-bottom: 25px;">
                 <?php $class = ''; ?>
                 <?php if (is_array($sections[$section])) { ?>
                     <?php foreach($sections[$section] as $key => $value) { ?>
-                        <tr><td class="<?= $class; ?>"><b><?= $value; ?></b> <?=  $key; ?></td></tr>
+                        <tr><td class="<?= $class; ?>" style="width: 33%; vertical-align: middle;"><b><?= $key; ?></td><td class="<?= $class; ?>" style="vertical-align: middle;"></b> <?=  $value; ?></td></tr>
                         <?php $class = ($class == '') ? 'alt' : ''; ?>
                     <?php } ?>
                 <?php } else { ?>
-                    <tr><td class="<?= $class; ?>"><h5 class="orange" style="font-weight: bold;"><?= $sections[$section]; ?></h5></td></tr>
+                    <tr><td class="<?= $class; ?>"><h5 class="orange" style="text-align: center; vertical-align: middle; font-weight: bold;"><?= $sections[$section]; ?></h5></td></tr>
                 <?php } ?>
             </table>
             <?php } ?>

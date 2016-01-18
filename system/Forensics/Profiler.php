@@ -223,9 +223,31 @@ class Profiler
     /*
      * Server variables and Configuration.
      */
-    public function gatherServerData()
+    public function gatherFrameworkData()
     {
+        $instance = get_instance();
+
+        //
         $output = array();
+
+        // Controller variables
+        $data = get_instance()->data();
+
+        if (count($data) == 0) {
+            $output['controller'] = __d('system', 'No Controller data exists');
+        } else {
+            $output['controller'] = array();
+
+            ksort($data);
+
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    $output['controller']['&#36;'. $key] = '<pre>'. htmlspecialchars(stripslashes(print_r($value, TRUE))) .'</pre>';
+                } else {
+                    $output['controller']['&#36;'. $key] = htmlspecialchars(stripslashes($value));
+                }
+            }
+        }
 
         // GET variables
         if (count($_GET) == 0) {
@@ -354,7 +376,7 @@ class Profiler
         $this->gatherFileData();
         $this->gatherMemoryData();
         $this->gatherSQLQueryData();
-        $this->gatherServerData();
+        $this->gatherFrameworkData();
 
         Console::logSpeed(__d('system', 'Forensics - Profiler start displaying the information'));
 

@@ -118,6 +118,7 @@
 #pqp-files .side td.last { display : block; border-bottom: 1px solid #7C1F00; border-left: 1px solid #7C1F00; border-bottom-left-radius: 30px; }
 
 /* ----- Variables ----- */
+#pqp-variables pre { background: none; color: #fff; }
 
 /* ----- Footer ----- */
 #pqp-footer { width: 100%; background: #000; font-size: 11px; border-top: 1px solid #ccc; }
@@ -452,9 +453,11 @@
             <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <?php $sections = $output['variables']; ?>
-            <?php foreach(array('get', 'post', 'headers') as $section) { ?>
+            <?php foreach(array('controller', 'get', 'post', 'headers') as $section) { ?>
                 <?php
-                    if ($section == 'get') {
+                    if ($section == 'controller') {
+                        $title = __d('system', 'Controller Data');
+                    } else if ($section == 'get') {
                         $title = __d('system', 'GET Variables');
                     } else if($section == 'post') {
                         $title = __d('system', 'POST Variables');
@@ -467,7 +470,7 @@
                 <?php $class = ''; ?>
                 <?php if (is_array($sections[$section])) { ?>
                     <?php foreach($sections[$section] as $key => $value) { ?>
-                        <tr><td class="<?= $class; ?>" style="width: 33%; vertical-align: middle;"><b><?= $key; ?></td><td class="<?= $class; ?>" style="vertical-align: middle;"></b> <?=  $value; ?></td></tr>
+                        <tr><td class="<?= $class; ?>" style="width: 33%; vertical-align: top;"><b><?= $key; ?></td><td class="<?= $class; ?>" style="vertical-align: middle;"></b> <?=  $value; ?></td></tr>
                         <?php $class = ($class == '') ? 'alt' : ''; ?>
                     <?php } ?>
                 <?php } else { ?>

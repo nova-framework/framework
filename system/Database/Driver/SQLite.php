@@ -86,6 +86,14 @@ class SQLite extends Connection
         }
     }
 
+    private function getTableFieldData($data)
+    {
+        return array(
+            'type' => self::getTableFieldType($row['Type']),
+            'null' => ($row['notnull'] == 0) ? true : false
+        );
+    }
+
     /**
      * Get table fields/columns
      *
@@ -104,11 +112,7 @@ class SQLite extends Connection
             $tableFields = Connection::$tables[$table];
 
             foreach($tableFields as $field => $row) {
-                // Prepare the column entry
-                $columns[$field] = array(
-                    'type' => self::getTableFieldType($row['type']),
-                    'null' => ($row['notnull'] == 0) ? true : false
-                );
+                $columns[$field] = $this->getTableFieldData($row);
             }
 
             return $columns;
@@ -143,10 +147,7 @@ class SQLite extends Connection
                     $fields[$field] = $row;
 
                     // Prepare the column entry
-                    $columns[$field] = array(
-                        'type' => self::getTableFieldType($row['type']),
-                        'null' => ($row['notnull'] == 0) ? true : false
-                    );
+                    $columns[$field] = $this->getTableFieldData($row);
                 }
             }
 
@@ -156,11 +157,7 @@ class SQLite extends Connection
             $cache->set($token, $fields, 300);
         } else {
             foreach($fields as $field => $row) {
-                // Prepare the column entry
-                $columns[$field] = array(
-                    'type' => self::getTableFieldType($row['type']),
-                    'null' => ($row['notnull'] == 0) ? true : false
-                );
+                $columns[$field] = $this->getTableFieldData($row);
             }
         }
 

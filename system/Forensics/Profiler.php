@@ -221,6 +221,84 @@ class Profiler
     }
 
     /*
+     * Server variables and Configuration.
+     */
+    public function gatherServerData()
+    {
+        $output = array();
+
+        // GET variables
+        if (count($_GET) == 0) {
+            $output['get'] = __d('system', 'No GET data exists');
+        } else {
+            $output['get'] = array();
+
+            foreach ($_GET as $key => $value) {
+                if ( ! is_numeric($key)) {
+                    $key = "'".$key."'";
+                }
+
+                if (is_array($value)) {
+                    $output['get']['&#36;_GET['. $key .']'] = '<pre>'. htmlspecialchars(stripslashes(print_r($value, TRUE))) .'</pre>';
+                } else {
+                    $output['get']['&#36;_GET['. $key .']'] = htmlspecialchars(stripslashes($value));
+                }
+            }
+        }
+
+        // POST variables
+        if (count($_POST) == 0) {
+            $output['post'] = __d('system', 'No POST data exists');
+        } else {
+            $output['post'] = array();
+
+            foreach ($_POST as $key => $value) {
+                if ( ! is_numeric($key)) {
+                    $key = "'".$key."'";
+                }
+
+                if (is_array($value)) {
+                    $output['post']['&#36;_POST['. $key .']'] = '<pre>'. htmlspecialchars(stripslashes(print_r($value, TRUE))) .'</pre>';
+                } else {
+                    $output['post']['&#36;_POST['. $key .']'] = htmlspecialchars(stripslashes($value));
+                }
+            }
+        }
+
+        // Server Headers
+        $output['headers'] = array();
+
+        $headers = array(
+            'HTTP_ACCEPT',
+            'HTTP_USER_AGENT',
+            'HTTP_CONNECTION',
+            'SERVER_PORT',
+            'SERVER_NAME',
+            'REMOTE_ADDR',
+            'SERVER_SOFTWARE',
+            'HTTP_ACCEPT_LANGUAGE',
+            'SCRIPT_NAME',
+            'REQUEST_METHOD',
+            ' HTTP_HOST',
+            'REMOTE_HOST',
+            'CONTENT_TYPE',
+            'SERVER_PROTOCOL',
+            'QUERY_STRING',
+            'HTTP_ACCEPT_ENCODING',
+            'HTTP_X_FORWARDED_FOR'
+        );
+
+        foreach ($headers as $header) {
+            $value = (isset($_SERVER[$header])) ? $_SERVER[$header] : '';
+
+            $output['headers'][$header] = $value;
+        }
+
+        // Store the information.
+        $this->output['variables'] = $output;
+    }
+
+    /*
      * Helper functions to format data.
      */
     public function getReadableFileSize($size, $result = null)
@@ -276,6 +354,7 @@ class Profiler
         $this->gatherFileData();
         $this->gatherMemoryData();
         $this->gatherSQLQueryData();
+        $this->gatherServerData();
 
         Console::logSpeed(__d('system', 'Forensics - Profiler start displaying the information'));
 

@@ -19,7 +19,7 @@
 
 /* ----- IDS ----- */
 #pqp-metrics { background: #000; width:100%; }
-#pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files { background: url(data:image/gif;base64,R0lGODlhAwADAIABAAAAAP///yH5BAEAAAEALAAAAAADAAMAAAIDRG5YADs=); border-top: 1px solid #ccc; height: 200px; overflow: auto; }
+#pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files, #pqp-variables { background: url(data:image/gif;base64,R0lGODlhAwADAIABAAAAAP///yH5BAEAAAEALAAAAAADAAMAAAIDRG5YADs=); border-top: 1px solid #ccc; height: 200px; overflow: auto; }
 
 /* ----- Colors ----- */
 .pQp .green { color: #588E13 !important; }
@@ -27,12 +27,13 @@
 .pQp .purple { color: #953FA1 !important; }
 .pQp .orange { color: #D28C00 !important; }
 .pQp .red { color: #B72F09 !important; }
+.pQp .white { color: #FFFFFF !important; }
 
 /* ----- Logic ----- */
-#pQp, #pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files { display: none; }
-.pQp .console, .pQp .speed, .pQp .queries, .pQp .memory, .pQp .files { display: block !important; }
-.pQp .console #pqp-console, .pQp .speed #pqp-speed, .pQp .queries #pqp-queries, .pQp .memory #pqp-memory, .pQp .files #pqp-files { display: block; }
-.console td.green, .speed td.blue, .queries td.purple, .memory td.orange, .files td.red { background: #222 !important; border-bottom: 6px solid #fff !important; cursor:default !important; }
+#pQp, #pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files, #pqp-variables { display: none; }
+.pQp .console, .pQp .speed, .pQp .queries, .pQp .memory, .pQp .files, .pQp .variables { display: block !important; }
+.pQp .console #pqp-console, .pQp .speed #pqp-speed, .pQp .queries #pqp-queries, .pQp .memory #pqp-memory, .pQp .files #pqp-files, .pQp .variables #pqp-variables { display: block; }
+.console td.green, .speed td.blue, .queries td.purple, .memory td.orange, .files td.red, .variables td.white { background: #222 !important; border-bottom: 6px solid #fff !important; cursor:default !important; }
 
 .tallDetails #pQp .pqp-box { height: 500px; }
 .tallDetails #pQp .pqp-box h3 { line-height: 500px; }
@@ -44,7 +45,7 @@
 .hideDetails .heightToggle { visibility: hidden; }
 
 /* ----- Metrics ----- */
-#pqp-metrics td { height: 50px; width: 20%; text-align: center; cursor: pointer; /*border: 1px solid #000;*/ border-bottom: 6px solid #444; -webkit-border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-topright: 10px; }
+#pqp-metrics td { height: 50px; width: 15%; text-align: center; cursor: pointer; /*border: 1px solid #000;*/ border-bottom: 6px solid #444; -webkit-border-top-left-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-topright: 10px; }
 #pqp-metrics td:hover { background: #222; border-bottom: 6px solid #777; }
 #pqp-metrics .green {  border-left: none; }
 #pqp-metrics .red { border-right: none; }
@@ -114,6 +115,8 @@
 #pqp-files .side { background-color: #B72F09; border-bottom: 1px solid #7C1F00; border-left: 1px solid #7C1F00; }
 #pqp-files .side td.alt { background-color: #9B2700; }
 
+/* ----- Variables ----- */
+
 /* ----- Footer ----- */
 #pqp-footer { width: 100%; background: #000; font-size: 11px; border-top: 1px solid #ccc; }
 #pqp-footer td { padding: 0 !important; border: none !important; }
@@ -136,17 +139,21 @@
 
     function changeTab(tab) {
         var pQp = document.getElementById('pQp');
+
         hideAllTabs();
+
         addClassName(pQp, tab, true);
     }
 
     function hideAllTabs() {
         var pQp = document.getElementById('pQp');
+
         removeClassName(pQp, 'console');
         removeClassName(pQp, 'speed');
         removeClassName(pQp, 'queries');
         removeClassName(pQp, 'memory');
         removeClassName(pQp, 'files');
+        removeClassName(pQp, 'variables');
     }
 
     function toggleDetails(){
@@ -154,10 +161,12 @@
 
         if(PQP_DETAILS){
             addClassName(container, 'hideDetails', true);
+
             PQP_DETAILS = false;
         }
         else{
             removeClassName(container, 'hideDetails');
+
             PQP_DETAILS = true;
         }
     }
@@ -166,10 +175,12 @@
 
         if(PQP_HEIGHT == "short"){
             addClassName(container, 'tallDetails', true);
+
             PQP_HEIGHT = "tall";
         }
         else{
             removeClassName(container, 'tallDetails');
+
             PQP_HEIGHT = "short";
         }
     }
@@ -186,37 +197,6 @@
         setTimeout(function(){document.getElementById("pqp-button").style.display = "block"}, 10);
 
         setCookie('closed');
-    }
-
-    function readCookie() {
-        var nameEQ = "Profiler=";
-
-        var ca = document.cookie.split(';');
-
-        for (var i=0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
-
-    function setCookie(value) {
-        var date = new Date();
-        date.setTime(date.getTime() + (365*24*60*60*1000));
-        var expires = "; expires=" + date.toGMTString();
-
-        document.cookie = "Profiler=" + value + expires + "; path=/";
-    }
-
-    function setProfilerState() {
-        var cookie_state = readCookie();
-
-        if (cookie_state == 'open') {
-            showProfiler();
-        } else {
-            hideProfiler();
-        }
     }
 
     //http://www.bigbold.com/snippets/posts/show/2630
@@ -266,6 +246,37 @@
         obj.addEventListener( type, fn, false );
       }
     }
+
+    function readCookie() {
+        var nameEQ = "Profiler=";
+
+        var ca = document.cookie.split(';');
+
+        for (var i=0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    function setCookie(value) {
+        var date = new Date();
+        date.setTime(date.getTime() + (365*24*60*60*1000));
+        var expires = "; expires=" + date.toGMTString();
+
+        document.cookie = "Profiler=" + value + expires + "; path=/";
+    }
+
+    function setProfilerState() {
+        var cookie_state = readCookie();
+
+        if (cookie_state == 'open') {
+            showProfiler();
+        } else {
+            hideProfiler();
+        }
+    }
 </script>
 <!--
 <img id="pqp-button" style="z-index: 10001; width: 48px; height: 48px; position: fixed; cursor: pointer; bottom: 1em; left: 1em;" onclick="showProfiler(); return false;" title="" alt="" src="data:image/png;base64,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" />
@@ -295,6 +306,10 @@
             <td class="red" onclick="changeTab('files');">
                 <var><?= __d('system', '{0} Files', $fileCount); ?></var>
                 <h4><?= __d('system', 'Included'); ?></h4>
+            </td>
+            <td class="white" onclick="changeTab('variables');">
+                <var><?= __d('system', 'Variables'); ?></var>
+                <h4><?= __d('system', '& Server Headers'); ?></h4>
             </td>
         </tr>
     </table>
@@ -430,18 +445,46 @@
             </table>
     </div>
 
+    <div id='pqp-variables' class='pqp-box'>
+        <?php if(empty($output['variables'])) { ?>
+            <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
+        <?php } else { ?>
+            <?php $sections = $output['variables']; ?>
+            <?php foreach(array('get', 'post', 'headers') as $section) { ?>
+                <?php
+                    if ($section == 'get') {
+                        $title = __d('system', 'GET Variables');
+                    } else if($section == 'post') {
+                        $title = __d('system', 'POST Variables');
+                    } else if($section == 'headers') {
+                        $title = __d('system', 'Server Headers');
+                    }
+                ?>
+                <h3 style="font-size: 16px; font-weight: bold; line-height: 40px;"><?= $title; ?></h3>
+            <table class='main' cellspacing='0' style="width: 100%; margin-bottom: 25px;">
+                <?php $class = ''; ?>
+                <?php if (is_array($sections[$section])) { ?>
+                    <?php foreach($sections[$section] as $key => $value) { ?>
+                        <tr><td class="<?= $class; ?>"><b><?= $value; ?></b> <?=  $key; ?></td></tr>
+                        <?php $class = ($class == '') ? 'alt' : ''; ?>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr><td class="<?= $class; ?>"><h5 class="orange" style="font-weight: bold;"><?= $sections[$section]; ?></h5></td></tr>
+                <?php } ?>
+            </table>
+            <?php } ?>
+        <?php } ?>
+    </div>
+
     <table id="pqp-footer" cellspacing="0">
         <tr>
             <td class="credit">
-                <div class="logo">
-                <strong>Nova</strong>
-                <b class="green">Q</b><b class="blue">u</b><b class="purple">i</b><b class="orange">c</b><b class="red">k</b>
-                Profiler</div>
+                <div class="logo"><strong>Nova Forensics - Profiler</strong></div>
             </td>
             <td class="actions">
+                <a href="#" onclick="hideProfiler(); return false"><?= __d('system', 'Hide'); ?></a>
                 <a href="#" onclick="toggleDetails(); return false"><?= __d('system', 'Details'); ?></a>
                 <a class="heightToggle" href="#" onclick="toggleHeight(); return false"><?= __d('system', 'Height'); ?></a>
-                <a href="#" onclick="hideProfiler(); return false"><?= __d('system', 'Hide'); ?></a>
             </td>
         </tr>
     </table>

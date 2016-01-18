@@ -17,6 +17,7 @@ use Nova\ORM\Relation\HasOne;
 use Nova\ORM\Relation\HasMany;
 use Nova\ORM\Relation\BelongsTo;
 use Nova\ORM\Relation\BelongsToMany;
+use Nova\ORM\Relation\Joining\Pivot as JoiningPivot;
 use Nova\ORM\Builder;
 use Nova\ORM\Engine;
 
@@ -301,6 +302,11 @@ class Model extends Engine
         return $tableKey .'_id';
     }
 
+    public function newPivot($joinTable, $foreignKey, $otherKey, $otherId)
+    {
+        return new JoiningPivot($joinTable, $foreignKey, $otherKey, $otherId);
+    }
+    
     protected function joiningTable($className)
     {
         $origin = basename(str_replace('\\', '/', $this->className));

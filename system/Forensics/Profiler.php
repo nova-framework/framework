@@ -59,7 +59,8 @@ class Profiler
         }
 
         // Setup the View path.
-        $this->viewPath = APPPATH .'Views/Fragments/profiler.php';
+        //$this->viewPath = APPPATH .'Views/Fragments/profiler.php';
+        $this->viewPath = realpath(__DIR__) .'/Views/profiler.php';
 
         // Setup the Start Time.
         $this->startTime = FRAMEWORK_STARTING_MICROTIME;
@@ -72,8 +73,6 @@ class Profiler
         if ($options['use_forensics'] != true) {
             return null;
         }
-
-        Console::logSpeed('Forensics - Profiler START');
 
         // The QuickProfiller was enabled into Configuration.
         $profiler = new self();
@@ -272,12 +271,14 @@ class Profiler
      */
     public function display($fetch = false)
     {
+        Console::logSpeed(__d('system', 'Forensics - Profiler start gathering the information'));
+
         // Gather the information.
         $this->gatherFileData();
         $this->gatherMemoryData();
         $this->gatherSQLQueryData();
 
-        Console::logSpeed('Forensics - Profiler RENDER');
+        Console::logSpeed(__d('system', 'Forensics - Profiler start displaying the information'));
 
         $this->gatherConsoleData();
         $this->gatherSpeedData();

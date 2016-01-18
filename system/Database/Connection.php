@@ -13,7 +13,6 @@ namespace Nova\Database;
 use Nova\Database\Manager;
 use Nova\Database\Statement;
 use Nova\Database\QueryBuilder;
-use Nova\Cache\Manager as CacheManager;
 use Nova\Config;
 
 use \FluentStructure;
@@ -44,9 +43,6 @@ abstract class Connection extends PDO
      /** @var array Store the executed queries, into Profiling mode. */
     protected $queries = array();
 
-    /** The used \Nova\Cache\Manager instance. */
-    protected $cache = null;
-
     /**
      * MySQLEngine constructor.
      * Please use the Factory to maintain instances of the drivers.
@@ -74,9 +70,6 @@ abstract class Connection extends PDO
 
         // Store the config in class variable.
         $this->config = $config;
-
-        // Setup the Cache instance.
-        $this->cache = CacheManager::getCache();
 
         // Prepare the parameters.
         $username = isset($config['user']) ? $config['user'] : '';

@@ -117,8 +117,11 @@ class SQLite extends Connection
         // Prepare the Cache Token.
         $token = 'sqlite_table_fields_' .md5($table);
 
+        // Setup the Cache instance.
+        $cache = CacheManager::getCache();
+
         // Get the Table Fields, using the Framework Caching.
-        $fields = $this->cache->get($token);
+        $fields = $cache->get($token);
 
         if($fields === null) {
             $fields = array();
@@ -150,7 +153,7 @@ class SQLite extends Connection
             $this->logQuery($sql, array(), $time);
 
             // Write to Cache 300 seconds = 5 minutes
-            $this->cache->set($token, $fields, 300);
+            $cache->set($token, $fields, 300);
         } else {
             foreach($fields as $field => $row) {
                 // Prepare the column entry

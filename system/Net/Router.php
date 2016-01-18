@@ -265,7 +265,7 @@ class Router
         // Detect the current URI.
         $uri = Url::detectUri();
 
-        Console::log(__d('system', 'Routing - Start dispatching for the URI: {0}', $uri));
+        Console::log(__d('system', 'Routing - start dispatching for the URI: {0}', $uri));
 
         // First, we will supose that URI is associated with an Asset File.
         if (Request::isGet() && $this->dispatchFile($uri)) {

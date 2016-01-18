@@ -394,10 +394,10 @@
                                 <?= $query['sql']; ?>
                                 <?php if(isset($query['explain'])) { ?>
                                 <em>
-                                    <?= __d('system', 'Possible keys: <b>{0}</b>', $query['explain']['possible_keys']); ?> &middot;
-                                    <?= __d('system', 'Key Used: <b>{0}</b>', $query['explain']['key']); ?> &middot;
-                                    <?= __d('system', 'Type: <b>{0}</b>', $query['explain']['type']); ?> &middot;
-                                    <?= __d('system', 'Rows: <b>{0}</b>', $query['explain']['rows']); ?> &middot;
+                                    <?= __d('system', 'Possible keys: <b>{0}</b>', isset($query['explain']['possible_keys']) ? $query['explain']['possible_keys'] : ''); ?> &middot;
+                                    <?= __d('system', 'Key Used: <b>{0}</b>', isset($query['explain']['key']) ? $query['explain']['key'] : ''); ?> &middot;
+                                    <?= __d('system', 'Type: <b>{0}</b>', isset($query['explain']['type']) ? $query['explain']['type'] : ''); ?> &middot;
+                                    <?= __d('system', 'Rows: <b>{0}</b>', isset($query['explain']['rows']) ? $query['explain']['rows'] : ''); ?> &middot;
                                     <?= __d('system', 'Speed: <b>{0}</b>', $query['time']); ?>
                                 </em>
                                 <?php } ?>

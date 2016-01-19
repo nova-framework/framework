@@ -11,49 +11,107 @@ namespace Nova\ORM\Relation;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
-use Nova\ORM\Engine;
+use Nova\ORM\Model;
 
 use \PDO;
 
 
-class Pivot extends Engine
+class Pivot extends Model
 {
+    /**
+     * The parent model of the relationship.
+     *
+     * @var \Nova\ORM\Model
+     */
+    protected $parent;
+
+    /**
+     * The name of the foreign key column.
+     *
+     * @var string
+     */
+    protected $foreignKey;
+
+    /**
+     * The name of the "other key" column.
+     *
+     * @var string
+     */
     protected $otherKey;
+
     protected $otherId;
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
 
     public function __construct($tableName, $foreignKey, $otherKey, $otherId)
     {
         $this->tableName = $tableName;
 
-        $this->primaryKey = $foreignKey;
+        $this->foreignKey = $foreignKey;
 
         // Execute the parent Constructor.
         parent::__construct();
 
         // The otherKey and otherId are associated to target Model.
         $this->otherKey = $otherKey;
-        $this->otherId  = $otherId;
+
+        $this->otherId = $otherId;
+    }
+
+    /**
+     * Get the foreign key column name.
+     *
+     * @return string
+     */
+    public function getForeignKey()
+    {
+        return $this->foreignKey;
+    }
+
+    /**
+     * Get the "other key" column name.
+     *
+     * @return string
+     */
+    public function getOtherKey()
+    {
+        return $this->otherKey;
+    }
+
+    /**
+     * Set the key names for the pivot model instance.
+     *
+     * @param  string  $foreignKey
+     * @param  string  $otherKey
+     * @return $this
+     */
+    public function setPivotKeys($foreignKey, $otherKey)
+    {
+        $this->foreignKey = $foreignKey;
+
+        $this->otherKey = $otherKey;
+
+        return $this;
     }
 
     public function get()
     {
-        $sql = sprintf(
-            'SELECT %s FROM %s WHERE %s = :otherId',
-            $this->primaryKey,
-            $this->table(),
-            $this->otherKey
-        );
+        $table = $this->table();
+
+        // Prepare the SQL Query.
+        $sql = sprintf('SELECT %s FROM %s WHERE %s = :otherId', $this->foreignKey, $table, $this->otherKey);
 
         //
         $params = array('otherId' => $this->otherId);
 
         // Prepare the PDO Statement.
-        $stmt = $this->db->rawPrepare(
-            $sql,
-            $params,
-            array('otherId' => PDO::PARAM_INT)
-        );
+        $stmt = $this->db->rawPrepare($sql, $params, array('otherId' => PDO::PARAM_INT));
 
         // Execute the Statement and return false if it fail.
         $result = $stmt->execute();
@@ -71,13 +129,7 @@ class Pivot extends Engine
 
     public function attach($ids)
     {
-        // To avoid multiple insert into Database, we do everything into single step,
-        // using a custom method based directly into raw PDO commands.
-
         $table = $this->table();
-
-        $primaryKey = $this->primaryKey;
-        $otherKey   = $this->otherKey;
 
         // Ensure having always an array of IDs.
         if(! is_array($ids)) {
@@ -85,12 +137,7 @@ class Pivot extends Engine
         }
 
         // Prepare the SQL Query.
-        $sql = sprintf(
-            'INSERT INTO %s (`%s`, `%s`) VALUES',
-            $this->table(),
-            $this->primaryKey,
-            $this->otherKey
-        );
+        $sql = sprintf('INSERT INTO %s (`%s`, `%s`) VALUES', $table, $this->foreignKey, $this->otherKey);
 
         // Prepare the values insertion in pairs.
         $otherId = intval($this->otherId);
@@ -128,16 +175,20 @@ class Pivot extends Engine
 
     public function dettach($ids = null)
     {
+        $table = $this->table();
+
+        $foreignKey = $this->foreignKey;
+
         $where = array($this->otherKey => $this->otherId);
 
         if(! is_null($ids)) {
-            $where[$this->primaryKey] = $ids;
+            $where[$foreignKey] = $ids;
         }
 
         //Prepare the paramTypes.
         $paramTypes = $this->getParamTypes($where, true);
 
-        return $this->db->delete($this->table(), $where, $paramTypes);
+        return $this->db->delete($table, $where, $paramTypes);
     }
 
     public function sync($ids)

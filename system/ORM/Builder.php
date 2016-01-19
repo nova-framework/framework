@@ -62,7 +62,7 @@ class Builder extends BaseBuilder
         $result = $this->select($sql, array('value' => $id));
 
         if($result !== false) {
-            return $className::fromAssoc($result, false);
+            return $className::fromAssoc($result);
         }
 
         return false;
@@ -90,7 +90,7 @@ class Builder extends BaseBuilder
         $this->resetState();
 
         if($result !== false) {
-            return $className::fromAssoc($result, false);
+            return $className::fromAssoc($result);
         }
 
         return false;
@@ -129,7 +129,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row, false);
+            $result[] = $className::fromAssoc($row);
         }
 
         return $result;
@@ -173,7 +173,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row, false);
+            $result[] = $className::fromAssoc($row);
         }
 
         return $result;
@@ -366,9 +366,20 @@ class Builder extends BaseBuilder
 
         // Build the SQL Query.
         $sql = "
-            SELECT * FROM $table
-            JOIN $pivotTable ON $table.$primaryKey = $pivotTable.$foreignKey
-            WHERE $pivotTable.$otherKey = :otherKey AND $whereStr $orderStr $limitStr $offsetStr";
+            SELECT
+                $table.*
+            FROM
+                $table, $pivotTable
+            WHERE
+                $table.$primaryKey = $pivotTable.$foreignKey
+            AND
+                $pivotTable.$otherKey = :otherKey
+            AND
+                $whereStr
+            $orderStr
+            $limitStr
+            $offsetStr
+        ";
 
         // Simplify the white spaces.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
@@ -385,7 +396,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row, false);
+            $result[] = $className::fromAssoc($row);
         }
 
         return $result;

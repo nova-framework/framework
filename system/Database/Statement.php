@@ -19,8 +19,6 @@ use \PDO;
  */
 class Statement
 {
-    private $logEnabled = false;
-
     /**
      * The Connection link.
      */
@@ -42,13 +40,6 @@ class Statement
         $this->statement  = $statement;
         $this->connection = $connection;
         $this->parameters = $parameters;
-
-        // Configure the Logging.
-        $options = Config::get('profiler');
-
-        if ($options['use_forensics'] == true) {
-            $this->logEnabled = true;
-        }
     }
 
     /**
@@ -73,10 +64,6 @@ class Statement
 
     public function logQuery($sql, $start = 0, array $params = array())
     {
-        if(! $this->logEnabled) {
-            return;
-        }
-
         $this->connection->logQuery($this->statement->queryString, $start, $this->parameters);
     }
 

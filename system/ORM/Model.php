@@ -19,20 +19,54 @@ use Nova\ORM\Relation\BelongsTo;
 use Nova\ORM\Relation\BelongsToMany;
 use Nova\ORM\Relation\Pivot as RelationPivot;
 use Nova\ORM\Builder;
-use Nova\ORM\Engine;
 
 use \FluentStructure;
 use \FluentPDO;
 use \PDO;
 
 
-class Model extends Engine
+class Model
 {
+    /*
+     * There is stored the called Class name.
+     */
+    protected $className;
+
     /**
      * The Model's State Management variables.
      */
-    protected $isNew   = true;
+    protected $exists  = false;
     protected $isDirty = false;
+
+    /*
+     * The used \Nova\Database\Connection instance.
+     */
+    protected $db = null;
+
+    /**
+     * The Table's Primary Key.
+     */
+    protected $primaryKey = 'id';
+
+    /**
+     * The Table Metadata.
+     */
+    protected $fields = array();
+
+    /**
+     * There we store the Model Attributes (its Data).
+     */
+    protected $attributes = array();
+
+    /**
+     * There we store the original Model Attributes.
+     */
+    protected $original = array();
+
+    /**
+     * The Table name belonging to this Model.
+     */
+    protected $tableName;
 
     /**
      * There we store the associated Model instances.
@@ -77,11 +111,6 @@ class Model extends Engine
     protected $updatedField = 'updated_at';
 
     /**
-     * The Fields who are (un)serialized on-fly.
-     */
-    protected $serialize = array();
-
-    /**
      * The Model Relations with other Models.
      */
     protected $relations = array();
@@ -96,12 +125,33 @@ class Model extends Engine
      */
     public function __construct($connection = 'default')
     {
-        parent::__construct($connection);
+        $this->className = get_class($this);
 
-        $this->initObject(true);
+        if($connection instanceof Connection) {
+            $this->db = $connection;
+        } else {
+            $this->db = Database::getConnection($connection);
+        }
+
+        // Setup the Table name, if is empty.
+        if (empty($this->tableName)) {
+            // Try the best to guess the Table name: User -> users
+            $classPath = str_replace('\\', '/', $this->className);
+
+            $name = Inflector::pluralize(basename($classPath));
+
+            $this->tableName = Inflector::tableize($name);
+        }
+
+        // Get the Table Fields, if they aren't already specified.
+        if(empty($this->fields)) {
+            $this->fields = $this->db->getTableFields($this->table());
+        }
+
+        $this->initObject();
     }
 
-    public static function fromAssoc(array $data, $isNew = true)
+    public static function fromAssoc(array $data, $exists = true)
     {
         $model = new static();
 
@@ -109,31 +159,27 @@ class Model extends Engine
         $model->hydrate($data);
 
         // Initialize the Model.
-        $model->initObject($isNew);
+        $model->initObject($exists);
 
         return $model;
     }
 
-    public static function fromObject($object, $isNew = true)
+    public static function fromObject($object, $exists = true)
     {
         $data = get_object_vars($object);
 
-        return static::fromAssoc($data, $isNew);
+        return static::fromAssoc($data, $exists);
     }
 
-    protected function initObject($isNew = false)
+    protected function initObject($exists = false)
     {
-        $this->isNew = $isNew;
+        $this->exists = $exists;
 
-        if (! $this->isNew) {
-            foreach ($this->attributes as $key => &$value) {
-                if(! empty($value) && in_array($key, $this->serialize)) {
-                    $value = unserialize($value);
-                }
-            }
+        if($this->exists) {
+            $this->original = $this->attributes;
+
+            $this->afterLoad();
         }
-
-        $this->afterLoad();
     }
 
     private function hydrate(array $data)
@@ -149,6 +195,150 @@ class Model extends Engine
                 $this->attributes[$key] = $value;
             }
         }
+    }
+
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * Getter for the table name.
+     *
+     * @return string The name of the table used by this class (including the DB_PREFIX).
+     */
+    public function table()
+    {
+        return DB_PREFIX .$this->tableName;
+    }
+
+    //--------------------------------------------------------------------
+    // Attributes handling Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Determine if the model or given attribute(s) have been modified.
+     *
+     * @param  array|string|null  $attributes
+     * @return bool
+     */
+    public function isDirty($attributes = null)
+    {
+        $dirty = $this->getDirty();
+
+        if (is_null($attributes)) {
+            return count($dirty) > 0;
+        }
+
+        if (! is_array($attributes)) {
+            $attributes = func_get_args();
+        }
+
+        foreach ($attributes as $attribute) {
+            if (array_key_exists($attribute, $dirty)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the attributes that have been changed since last sync.
+     *
+     * @return array
+     */
+    public function getDirty()
+    {
+        $dirty = [];
+
+        foreach ($this->attributes as $key => $value) {
+            if (! array_key_exists($key, $this->original)) {
+                $dirty[$key] = $value;
+            } else if (($value !== $this->original[$key]) && ! $this->originalIsNumericallyEquivalent($key)) {
+                $dirty[$key] = $value;
+            }
+        }
+
+        return $dirty;
+    }
+
+    /**
+     * Determine if the new and old values for a given key are numerically equivalent.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function originalIsNumericallyEquivalent($key)
+    {
+        $current = $this->attributes[$key];
+
+        $original = $this->original[$key];
+
+        return (
+            is_numeric($current) &&
+            is_numeric($original) &&
+            (strcmp((string) $current, (string) $original) === 0)
+        );
+    }
+
+    //--------------------------------------------------------------------
+    // Attributes handling Methods
+    //--------------------------------------------------------------------
+
+    public function setAttributes($attributes)
+    {
+        $this->hydrate($attributes);
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    public function setAttribute($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    public function getAttribute($name)
+    {
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+    }
+
+    public function getPrimaryKey()
+    {
+        if(! $this->exists) {
+            return null;
+        }
+
+        $key =& $this->primaryKey;
+
+        if(isset($this->attributes[$key]) && ! empty($this->attributes[$key])) {
+            return $this->attributes[$key];
+        }
+
+        return null;
+    }
+
+    //--------------------------------------------------------------------
+    // Data Conversion Methods
+    //--------------------------------------------------------------------
+
+    public function toArray()
+    {
+        return $this->attributes;
+    }
+
+    public function toObject()
+    {
+        $object = new stdClass();
+
+        foreach ($this->attributes as $key => $value) {
+            $object->$key = $value;
+        }
+
+        return $object;
     }
 
     //--------------------------------------------------------------------
@@ -207,9 +397,9 @@ class Model extends Engine
 
         // If the name is of one of attributes, return the Value from attribute.
         if (isset($this->fields[$fieldName])) {
-            return $this->attribute($fieldName);
+            return $this->getAttribute($fieldName);
         }
-        else if($this->isNew) {
+        else if(! $this->exists) {
             // No Relations can be called for the new Objects.
             return null;
         }
@@ -346,20 +536,23 @@ class Model extends Engine
 
         $paramTypes = $this->getParamTypes($data);
 
-        if ($this->isNew) {
+        if (! $this->exists) {
             // We are into INSERT mode.
             $result = $this->db->insert($this->table(), $data, $paramTypes);
 
             if($result !== false) {
-                $this->isNew = false;
+                $this->exists = true;
 
                 $this->setAttribute($this->primaryKey, $result);
 
-                return true;
+                // Sync the original attributes.
+                $this->original = $this->attributes;
+
+                $result = true;
             }
         }
         // If the Object is dirty, we are into UPDATE mode.
-        else if($this->isDirty) {
+        else if($this->isDirty()) {
             $where = array(
                 $this->primaryKey => $this->getPrimaryKey()
             );
@@ -369,9 +562,10 @@ class Model extends Engine
             $result = $this->db->update($this->table(), $data, $where, $paramTypes);
 
             if($result !== false) {
-                $this->isDirty = false;
+                // Sync the original attributes.
+                $this->original = $this->attributes;
 
-                return true;
+                $result = true;
             }
         }
 
@@ -380,7 +574,7 @@ class Model extends Engine
 
     public function delete()
     {
-        if ($this->isNew || ! $this->beforeDelete()) {
+        if (! $this->exists || ! $this->beforeDelete()) {
             return false;
         }
 
@@ -394,7 +588,7 @@ class Model extends Engine
         $result = $this->db->delete($this->table(), $where, $paramTypes);
 
         if($result !== false) {
-            $this->isNew = true;
+            $this->exists = false;
 
             return true;
         }
@@ -403,8 +597,54 @@ class Model extends Engine
     }
 
     //--------------------------------------------------------------------
+    // Select Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Execute Select Query, binding values into the $sql Query.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $params = array(), $fetchAll = false)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        // Prepare the parameter Types.
+        $paramTypes = $this->getParamTypes($params);
+
+        return $this->db->select($sql, $params, $paramTypes, 'array', $fetchAll);
+    }
+
+    //--------------------------------------------------------------------
     // Internal Methods
     //--------------------------------------------------------------------
+
+    protected function getParamTypes($params, $strict = true)
+    {
+        $fields =& $this->fields;
+
+        $result = array();
+
+        foreach($params as $field => $value) {
+            if(isset($fields[$field])) {
+                $fieldType = $fields[$field];
+
+                $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
+            }
+            // No registered field found? We try to guess then the Type, if we aren't into strict mode.
+            else if(! $strict) {
+                $result[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * Extracts the Model's fields.
@@ -426,14 +666,7 @@ class Model extends Engine
 
         // Walk over the defined Table Fields and prepare the data entries.
         foreach ($this->fields as $fieldName => $fieldInfo) {
-            if(in_array($fieldName, $skippedFields) || ! isset($this->attributes[$fieldName])) {
-                continue;
-            }
-
-            if(! empty($this->attributes[$fieldName]) && in_array($fieldName, $this->serialize)) {
-                // The current is marked as a serialized one.
-                $data[$fieldName] = serialize($this->attributes[$fieldName]);
-            } else {
+            if(! in_array($fieldName, $skippedFields) && isset($this->attributes[$fieldName])) {
                 $data[$fieldName] = $this->attributes[$fieldName];
             }
         }
@@ -442,14 +675,14 @@ class Model extends Engine
             // Process the 'created_at' field
             $fieldName = $this->createdField;
 
-            if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
+            if(isset($this->fields[$fieldName]) && ! isset($data[$fieldName])) {
                 $data[$fieldName] = $this->getDate();
             }
 
             // Process the 'updated_at' field
             $fieldName = $this->modifiedField;
 
-            if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
+            if(isset($this->fields[$fieldName])) {
                 $data[$fieldName] = $this->getDate();
             }
         }
@@ -493,12 +726,17 @@ class Model extends Engine
     // Debug Methods
     //--------------------------------------------------------------------
 
+    public function lastSqlQuery()
+    {
+        return $this->db->lastSqlQuery();
+    }
+
     public function __toString()
     {
         $result = '';
 
         // Support for checking if an object is empty
-        if ($this->isNew) {
+        if (! $this->exists) {
             $isEmpty = true;
 
             foreach ($this->fields as $fieldName => $fieldInfo) {

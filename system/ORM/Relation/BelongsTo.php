@@ -31,7 +31,7 @@ class BelongsTo extends Relation
         $this->primaryKey = $this->model->getPrimaryKey();
 
         // The otherKey is associated to target Model.
-        $this->otherId = $model->attribute($otherKey);
+        $this->otherId = $model->getAttribute($otherKey);
     }
 
     public function type()

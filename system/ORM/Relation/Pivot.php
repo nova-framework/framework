@@ -7,7 +7,7 @@
  * @date January 13th, 2016
  */
 
-namespace Nova\ORM\Relation\Joining;
+namespace Nova\ORM\Relation;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;

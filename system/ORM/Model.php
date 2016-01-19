@@ -17,7 +17,7 @@ use Nova\ORM\Relation\HasOne;
 use Nova\ORM\Relation\HasMany;
 use Nova\ORM\Relation\BelongsTo;
 use Nova\ORM\Relation\BelongsToMany;
-use Nova\ORM\Relation\Joining\Pivot as JoiningPivot;
+use Nova\ORM\Relation\Pivot as RelationPivot;
 use Nova\ORM\Builder;
 use Nova\ORM\Engine;
 
@@ -50,13 +50,13 @@ class Model extends Engine
     protected $dateFormat = 'datetime';
 
     /**
-     * Whether or not to auto-fill a 'created_on' field on inserts.
+     * Whether or not to auto-fill a 'created_at' and 'created_at' fields on inserts.
      *
      * @var boolean
      *
      * @access protected
      */
-    protected $autoCreated = true;
+    protected $timestamps = false;
 
     /**
      * Field name to use to the created time column in the DB table.
@@ -65,16 +65,7 @@ class Model extends Engine
      *
      * @access protected
      */
-    protected $createdField = 'created_on';
-
-    /**
-     * Whether or not to auto-fill a 'modified_on' field on updates.
-     *
-     * @var boolean
-     *
-     * @access protected
-     */
-    protected $autoModified = true;
+    protected $createdField = 'created_at';
 
     /**
      * Field name to use to the modified time column in the DB table.
@@ -83,7 +74,7 @@ class Model extends Engine
      *
      * @access protected
      */
-    protected $modifiedField = 'modified_on';
+    protected $updatedField = 'updated_at';
 
     /**
      * The Fields who are (un)serialized on-fly.
@@ -302,11 +293,6 @@ class Model extends Engine
         return $tableKey .'_id';
     }
 
-    public function newPivot($joinTable, $foreignKey, $otherKey, $otherId)
-    {
-        return new JoiningPivot($joinTable, $foreignKey, $otherKey, $otherId);
-    }
-    
     protected function joiningTable($className)
     {
         $origin = basename(str_replace('\\', '/', $this->className));
@@ -322,6 +308,15 @@ class Model extends Engine
         sort($models);
 
         return implode('_', $models);
+    }
+
+    //--------------------------------------------------------------------
+    // Pivot Methods
+    //--------------------------------------------------------------------
+
+    public function newPivot($joinTable, $foreignKey, $otherKey, $otherId)
+    {
+        return new RelationPivot($joinTable, $foreignKey, $otherKey, $otherId);
     }
 
     //--------------------------------------------------------------------
@@ -443,23 +438,19 @@ class Model extends Engine
             }
         }
 
-        // created_on
-
-        if ($this->autoCreated === true) {
+        if ($this->timestamps === true) {
+            // Process the 'created_at' field
             $fieldName = $this->createdField;
 
             if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
-                $data[$fieldName] = $this->date();
+                $data[$fieldName] = $this->getDate();
             }
-        }
 
-        // modified_on
-
-        if ($this->autoModified === true) {
+            // Process the 'updated_at' field
             $fieldName = $this->modifiedField;
 
             if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
-                $data[$fieldName] = $this->date();
+                $data[$fieldName] = $this->getDate();
             }
         }
 
@@ -468,7 +459,7 @@ class Model extends Engine
 
     /**
      * A utility function to allow child models to use the type of date/time format that they prefer.
-     * This is primarily used for setting created_on and modified_on values, but can be used by inheriting classes.
+     * This is primarily used for setting 'created_at' and 'updated_at' values, but can be used by inheriting classes.
      *
      * The available time formats are:
      * * 'int'      - Stores the date as an integer timestamp.
@@ -481,7 +472,7 @@ class Model extends Engine
      *
      * @return int|null|string The current/user time converted to the proper format.
      */
-    protected function date($userDate = null)
+    protected function getDate($userDate = null)
     {
         $curr_date = ! empty($userDate) ? $userDate : time();
 

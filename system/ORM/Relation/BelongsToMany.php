@@ -11,7 +11,7 @@ namespace Nova\ORM\Relation;
 
 use Nova\ORM\Model;
 use Nova\ORM\Relation;
-use Nova\ORM\Relation\Joining\Pivot as JoiningPivot;
+use Nova\ORM\Relation\Pivot as RelationPivot;
 
 
 class BelongsToMany extends Relation

@@ -15,11 +15,14 @@ use Nova\ORM\Model;
 
 abstract class Relation extends BaseRelation
 {
-    protected $model;
     protected $className;
 
+    protected $related;
 
-    public function __construct($className)
+    protected $parent;
+
+
+    public function __construct($className, Model $model)
     {
         parent::__construct();
 
@@ -33,7 +36,10 @@ abstract class Relation extends BaseRelation
         $this->className = $className;
 
         // Setup the instance of Target Model.
-        $this->model = new $className();
+        $this->related = new $className();
+
+        // Setup the Parent Model
+        $this->parent = $model;
     }
 
     public function getClassName()

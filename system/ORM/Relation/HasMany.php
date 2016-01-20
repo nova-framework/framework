@@ -16,18 +16,18 @@ use Nova\ORM\Relation;
 class HasMany extends Relation
 {
     protected $foreignKey;
-    protected $primaryKey;
 
 
-    public function __construct($className, Model $model, $foreignKey)
+    public function __construct($className, Model $model, $foreignKey = null)
     {
-        parent::__construct($className);
+        parent::__construct($className, $model);
 
         // The foreignKey is associated to host Model.
-        $this->foreignKey = $foreignKey;
-
-        // The primaryKey is associated to host Model.
-        $this->primaryKey = $model->getPrimaryKey();
+        if($foreignKey === null) {
+            $this->foreignKey = $model->getForeignKey();
+        } else {
+            $this->foreignKey = $foreignKey;
+        }
     }
 
     public function type()
@@ -41,12 +41,12 @@ class HasMany extends Relation
         $limit = $this->getLimit();
         $offset = $this->getOffset();
 
-        $result = $this->model
+        $result = $this->related
             ->where($this->wheres())
             ->orderBy($order)
             ->limit($limit)
             ->offset($offset)
-            ->findManyBy($this->foreignKey, $this->primaryKey);
+            ->findManyBy($this->foreignKey, $this->parent->getKey());
 
         $this->resetState();
 

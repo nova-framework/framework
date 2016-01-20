@@ -158,39 +158,6 @@ class Model
         $this->initObject();
     }
 
-    public function newInstance(array $attributes, $exists = true)
-    {
-        $instance = new static();
-
-        // Hydrate the Model.
-        $instance->hydrate($attributes);
-
-        // Initialize the Model.
-        $instance->initObject($exists);
-
-        return $instance;
-    }
-
-    public static function fromAssoc(array $attributes, $exists = true)
-    {
-        $instance = new static();
-
-        // Hydrate the Model.
-        $instance->hydrate($attributes);
-
-        // Initialize the Model.
-        $instance->initObject($exists);
-
-        return $instance;
-    }
-
-    public static function fromObject($object, $exists = true)
-    {
-        $attributes = get_object_vars($object);
-
-        return static::fromAssoc($attributes, $exists);
-    }
-
     protected function initObject($exists = false)
     {
         $this->exists = $exists;
@@ -258,6 +225,19 @@ class Model
     public function getLink()
     {
         return $this->db;
+    }
+
+    public function newInstance(array $attributes, $exists = true)
+    {
+        $instance = new static();
+
+        // Hydrate the Model.
+        $instance->hydrate($attributes);
+
+        // Initialize the Model.
+        $instance->initObject($exists);
+
+        return $instance;
     }
 
     //--------------------------------------------------------------------

@@ -10,7 +10,9 @@
 namespace Nova\ORM;
 
 use Nova\Database\Connection;
+use Nova\Database\Manager as Database;
 
+use Nova\ORM\Model;
 use Nova\ORM\Base as BaseBuilder;
 
 use \FluentStructure;
@@ -20,9 +22,17 @@ use \PDO;
 
 class Builder extends BaseBuilder
 {
-    protected $connection;
+    protected $connection = 'default';
 
-    protected $className;
+    protected $db = null;
+
+    /**
+     * The model being queried.
+     *
+     * @var \Nova\ORM\Model
+     */
+    protected $model = null;
+
     protected $tableName;
 
     protected $primaryKey;
@@ -30,18 +40,40 @@ class Builder extends BaseBuilder
     protected $fields;
 
 
-    public function __construct($className, $tableName, $primaryKey, array $fields, Connection &$connection)
+    public function __construct(Model $model, $connection = 'default')
     {
-        $this->className  = $className;
-        $this->tableName  = $tableName;
-        $this->primaryKey = $primaryKey;
-        $this->fields     = $fields;
+        $this->model = $model;
+
+        $this->tableName = $model->getTable();
+
+        $this->primaryKey = $model->getKeyName();
+
+        $this->fields = $model->getTableFields();
+
+        // Setup the Connection instance.
         $this->connection = $connection;
+
+        $this->db = Database::getConnection($connection);
+    }
+
+    public function getTable()
+    {
+        return $this->tableName;
     }
 
     public function table()
     {
         return DB_PREFIX .$this->tableName;
+    }
+
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+    public function getLink()
+    {
+        return $this->db;
     }
 
     //--------------------------------------------------------------------
@@ -50,15 +82,13 @@ class Builder extends BaseBuilder
 
     public function find($id)
     {
-        $className =& $this->className;
-
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
         $result = $this->select($sql, array('value' => $id), 'array');
 
         if($result !== false) {
-            return $className::fromAssoc($result);
+            return $this->model->newInstance($result);
         }
 
         return false;
@@ -66,8 +96,6 @@ class Builder extends BaseBuilder
 
     public function findBy()
     {
-        $className =& $this->className;
-
         $bindParams = array();
 
         // Prepare the WHERE parameters.
@@ -86,7 +114,7 @@ class Builder extends BaseBuilder
         $this->resetState();
 
         if($result !== false) {
-            return $className::fromAssoc($result);
+            return $this->model->newInstance($result);
         }
 
         return false;
@@ -94,8 +122,6 @@ class Builder extends BaseBuilder
 
     public function findMany($values)
     {
-        $className =& $this->className;
-
         $bindParams = array();
 
         if(! is_array($values)) {
@@ -125,7 +151,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row);
+            $result[] = $this->model->newInstance($row);
         }
 
         return $result;
@@ -147,8 +173,6 @@ class Builder extends BaseBuilder
 
     public function findAll()
     {
-        $className =& $this->className;
-
         $bindParams = array();
 
         // Prepare the WHERE details.
@@ -173,7 +197,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row);
+            $result[] = $this->model->newInstance($row);
         }
 
         return $result;
@@ -181,8 +205,6 @@ class Builder extends BaseBuilder
 
     public function first()
     {
-        $className =& $this->className;
-
         $bindParams = array();
 
         // Prepare the WHERE details.
@@ -200,7 +222,7 @@ class Builder extends BaseBuilder
         $this->resetState();
 
         if($data !== false) {
-            return $className::fromAssoc($data);
+            return $this->model->newInstance($data);
         }
 
         return false;
@@ -224,17 +246,17 @@ class Builder extends BaseBuilder
         // Prepare the parameter Types.
         $paramTypes = $this->getParamTypes($params);
 
-        return $this->connection->select($sql, $params, $paramTypes, $returnType, $fetchAll);
+        return $this->db->select($sql, $params, $paramTypes, $returnType, $fetchAll);
     }
 
     public function selectOne($sql, $params = array(), $returnType = 'array')
     {
-        return $this->connection->select($sql, $params, $paramTypes, $returnType);
+        return $this->db->select($sql, $params, $paramTypes, $returnType);
     }
 
     public function selectAll($sql, $params = array(), $returnType = 'array')
     {
-        return $this->connection->select($sql, $params, $paramTypes, $returnType, true);
+        return $this->db->select($sql, $params, $paramTypes, $returnType, true);
     }
 
     public function insert(array $data)
@@ -242,7 +264,7 @@ class Builder extends BaseBuilder
         $paramTypes = $this->getParamTypes($data);
 
         // Execute the Record insertion.
-        return $this->connection->insert($this->table(), $data, $paramTypes);
+        return $this->db->insert($this->table(), $data, $paramTypes);
     }
 
     public function update(array $data, array $where)
@@ -253,7 +275,7 @@ class Builder extends BaseBuilder
         $paramTypes = $this->getParamTypes(array_merge($data, $params));
 
         // Execute the Record updating.
-        return $this->connection->update($this->table(), $data, $params, $paramTypes);
+        return $this->db->update($this->table(), $data, $params, $paramTypes);
     }
 
     public function delete($id)
@@ -264,7 +286,7 @@ class Builder extends BaseBuilder
         $paramTypes = $this->getParamTypes($where);
 
         // Execute the Record deletetion.
-        return $this->connection->delete($this->table(), $where, $paramTypes);
+        return $this->db->delete($this->table(), $where, $paramTypes);
     }
 
     public function deleteBy()
@@ -281,7 +303,7 @@ class Builder extends BaseBuilder
         $paramTypes = $this->getParamTypes($where);
 
         // Execute the Record deletetion.
-        $result = $this->connection->delete($this->table(), $where, $paramTypes);
+        $result = $this->db->delete($this->table(), $where, $paramTypes);
 
         // Reset the Model State.
         $this->resetState();
@@ -383,8 +405,6 @@ class Builder extends BaseBuilder
 
     public function fetchWithPivot($pivotTable, $foreignKey, $otherKey, $othereId)
     {
-        $className = $this->className;
-
         $table = $this->table();
 
         $primaryKey = $this->primaryKey;
@@ -420,7 +440,7 @@ class Builder extends BaseBuilder
         // Simplify the white spaces.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $data = $this->connection->select($sql, $bindParams, $paramTypes, 'array', true);
+        $data = $this->db->select($sql, $bindParams, $paramTypes, 'array', true);
 
         // Reset the Model State.
         $this->resetState();
@@ -432,7 +452,7 @@ class Builder extends BaseBuilder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $className::fromAssoc($row);
+            $result[] = $this->model->newInstance($row);
         }
 
         return $result;
@@ -459,11 +479,11 @@ class Builder extends BaseBuilder
             $asObject = true;
         }
         else {
-            $asObject = $this->className;
+            $asObject = $this->model->getClass();
         }
 
         // Get a QueryBuilder instance.
-        $queryBuilder = $this->connection->queryBuilder();
+        $queryBuilder = $this->db->queryBuilder();
 
         // First, check and configure for the 'select' Method.
         return $queryBuilder->from($table)->asObject($asObject);
@@ -475,13 +495,11 @@ class Builder extends BaseBuilder
 
     protected function getParamTypes(array $params, $strict = true)
     {
-        $fields =& $this->fields;
-
         $result = array();
 
         foreach($params as $field => $value) {
-            if(isset($fields[$field])) {
-                $fieldType = $fields[$field];
+            if(isset($this->fields[$field])) {
+                $fieldType = $this->fields[$field];
 
                 $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
             }

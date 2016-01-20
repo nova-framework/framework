@@ -126,8 +126,8 @@ class MySQL extends Connection
     private function getTableFieldData($data)
     {
         return array(
-            'type' => self::getTableFieldType($row['Type']),
-            'null' => ($row['Null'] == 'YES') ? true : false
+            'type' => self::getTableFieldType($data['Type']),
+            'null' => ($data['Null'] == 'YES') ? true : false
         );
     }
 
@@ -145,9 +145,9 @@ class MySQL extends Connection
         }
 
         if(isset(Connection::$tables[$table])) {
-            $tableFields = Connection::$tables[$table];
+            $fields = Connection::$tables[$table];
 
-            foreach($tableFields as $field => $row) {
+            foreach($fields as $field => $row) {
                 $columns[$field] = $this->getTableFieldData($row);
             }
 

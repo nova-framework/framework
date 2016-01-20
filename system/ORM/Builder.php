@@ -422,16 +422,11 @@ class Builder extends BaseBuilder
 
         // Build the SQL Query.
         $sql = "
-            SELECT
-                $table.*
-            FROM
-                $table, $pivotTable
-            WHERE
-                $table.$primaryKey = $pivotTable.$foreignKey
-            AND
-                $pivotTable.$otherKey = :otherKey
-            AND
-                $whereStr
+            SELECT $table.*
+            FROM $table, $pivotTable
+            WHERE $table.$primaryKey = $pivotTable.$foreignKey
+                AND $pivotTable.$otherKey = :otherKey
+                AND $whereStr
             $orderStr
             $limitStr
             $offsetStr

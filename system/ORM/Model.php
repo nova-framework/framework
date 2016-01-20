@@ -582,7 +582,7 @@ class Model
 
     public function newBuilder()
     {
-        return new Builder($this);
+        return new Builder($this, $this->connection);
     }
 
     //--------------------------------------------------------------------

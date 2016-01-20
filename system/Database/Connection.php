@@ -252,6 +252,18 @@ abstract class Connection extends PDO
         return $result;
     }
 
+    public function exec($query)
+    {
+        $start = microtime(true);
+
+        // Execute the Query.
+        $result = parent::exec($query);
+
+        $this->logQuery($query, $start);
+
+        return $result;
+    }
+
     /**
      * @return Statement
      */
@@ -693,18 +705,29 @@ abstract class Connection extends PDO
      * A generic Query execution which return \Nova\Database\Statement or false when fail.
      * This method is useful to build the 'select' commands.
      */
-    public function executeQuery($sql, array $params = array(), array $paramTypes = array())
+    public function executeQuery($query, array $params = array(), array $paramTypes = array())
     {
-        $stmt = $this->prepare($sql);
+        if(empty($params)) {
+            // No parameters given, so we execute a bare Query.
+            return $this->query($query);
+        }
 
-        // Bind conditions.
-        $this->bindParams($stmt, $params, $paramTypes);
+        // Prepare the SQL Query.
+        $stmt = $this->prepare($query);
 
-        // Execute and return false if failure.
-        $result = $stmt->execute();
+        // Execute the Query with parameters binding.
+        if(! empty($paramTypes)) {
+            // Bind the parameters.
+            $this->bindParams($stmt, $params, $paramTypes);
 
-        if ($result !== false) {
-            // Return rowcount when succeeded.
+            // Execute and return false if failure.
+            $result = $stmt->execute();
+        } else {
+            $result = $stmt->execute($params);
+        }
+
+        if($result !== false) {
+            // Return the Statement when succeeded.
             return $stmt;
         }
 
@@ -715,15 +738,29 @@ abstract class Connection extends PDO
      * A generic Query execution which return affected rows count or false when fail.
      * This method is useful to build the 'insert', 'update' and 'delete' commands.
      */
-    public function executeUpdate($sql, array $params = array(), array $paramTypes = array())
+    public function executeUpdate($query, array $params = array(), array $paramTypes = array())
     {
-        $stmt = $this->prepare($sql);
+        if(empty($params)) {
+            // No parameters given, so we execute a bare Query.
+            return $this->exec($query);
+        }
+
+        // Prepare the SQL Query.
+        $stmt = $this->prepare($query);
 
         // Bind conditions.
         $this->bindParams($stmt, $params, $paramTypes);
 
-        // Execute and return false if failure.
-        $result = $stmt->execute();
+        // Execute the Query with parameters binding.
+        if(! empty($paramTypes)) {
+            // Bind the parameters.
+            $this->bindParams($stmt, $params, $paramTypes);
+
+            // Execute and return false if failure.
+            $result = $stmt->execute();
+        } else {
+            $result = $stmt->execute($params);
+        }
 
         if ($result !== false) {
             // Return rowcount when succeeded.

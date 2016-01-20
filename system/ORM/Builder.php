@@ -495,13 +495,11 @@ class Builder extends BaseBuilder
 
     protected function getParamTypes(array $params, $strict = true)
     {
-        $fields =& $this->fields;
-
         $result = array();
 
         foreach($params as $field => $value) {
-            if(isset($fields[$field])) {
-                $fieldType = $fields[$field];
+            if(isset($this->fields[$field])) {
+                $fieldType = $this->fields[$field];
 
                 $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
             }

@@ -33,7 +33,6 @@ class Builder extends BaseBuilder
      */
     protected $model = null;
 
-    protected $className;
     protected $tableName;
 
     protected $primaryKey;
@@ -44,8 +43,6 @@ class Builder extends BaseBuilder
     public function __construct(Model $model, $connection = 'default')
     {
         $this->model = $model;
-
-        $this->className = $model->getClass();
 
         $this->tableName = $model->getTable();
 
@@ -482,7 +479,7 @@ class Builder extends BaseBuilder
             $asObject = true;
         }
         else {
-            $asObject = $this->className;
+            $asObject = $this->model->getClass();
         }
 
         // Get a QueryBuilder instance.

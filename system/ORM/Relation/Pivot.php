@@ -39,8 +39,6 @@ class Pivot extends Model
      */
     protected $otherKey;
 
-    protected $otherId;
-
     /**
      * The attributes that aren't mass assignable.
      *
@@ -49,19 +47,20 @@ class Pivot extends Model
     protected $guarded = [];
 
 
-    public function __construct($tableName, $foreignKey, $otherKey, $otherId)
+    public function __construct(Model $parent, array $attributes, $table, $exists = false)
     {
-        $this->tableName = $tableName;
-
-        $this->foreignKey = $foreignKey;
+        $this->tableName = $table;
 
         // Execute the parent Constructor.
         parent::__construct();
 
-        // The otherKey and otherId are associated to target Model.
-        $this->otherKey = $otherKey;
+        // Init this pivot Model.
+        $this->attributes = $attributes;
 
-        $this->otherId = $otherId;
+        $this->initObject($exists);
+
+        // Setup the parent Model.
+        $this->parent = $parent;
     }
 
     /**
@@ -100,106 +99,35 @@ class Pivot extends Model
         return $this;
     }
 
-    public function get()
+    public function relatedIds()
     {
         $table = $this->table();
 
         // Prepare the SQL Query.
-        $sql = sprintf('SELECT %s FROM %s WHERE %s = :otherId', $this->foreignKey, $table, $this->otherKey);
+        $sql = sprintf(
+            'SELECT %s FROM %s WHERE %s = :%s',
+            $this->foreignKey,
+            $table,
+            $this->otherKey,
+            $this->otherKey
+        );
 
         //
-        $params = array('otherId' => $this->otherId);
+        $params = array($this->otherKey => $this->getAttribute($this->otherKey));
 
-        // Prepare the PDO Statement.
-        $stmt = $this->db->rawPrepare($sql, $params, array('otherId' => PDO::PARAM_INT));
+        $data = $this->select($sql, $params, 'array', true);
 
-        // Execute the Statement and return false if it fail.
-        $result = $stmt->execute();
+        if($data === false) {
+            return false;
+        }
 
-        if ($result !== false) {
-            $result = array();
+        // Parse the gathered data and return the result.
+        $result = array();
 
-            while(($id = $stmt->fetchColumn()) !== false) {
-                $result[] = $id;
-            }
+        foreach($data as $row) {
+            $result[] = $row[$this->foreignKey];
         }
 
         return $result;
     }
-
-    public function attach($ids)
-    {
-        $table = $this->table();
-
-        // Ensure having always an array of IDs.
-        if(! is_array($ids)) {
-            $ids = array(intval($ids));
-        }
-
-        // Prepare the SQL Query.
-        $sql = sprintf('INSERT INTO %s (`%s`, `%s`) VALUES', $table, $this->foreignKey, $this->otherKey);
-
-        // Prepare the values insertion in pairs.
-        $otherId = intval($this->otherId);
-
-        $idx = 0;
-
-        foreach($ids as $id) {
-            if ($idx > 0) {
-                $sql .= ' ,';
-            } else {
-                $idx++;
-            }
-
-            // Force the current ID to integer.
-            $id = intval($id);
-
-            if($id < 1) {
-                throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-            }
-
-            // Prepare the keys Data; considering that we support only integer keys.
-            $data = array($id, $otherId);
-
-            // Prepare the SQL insert values.
-            $sql .= ' (' .implode(', ', array_map(array($this->db, 'quote'), $data)) .')';
-        }
-
-        // Prepare the Statement and return the result of its execution.
-        $stmt = $this->db->rawPrepare($sql);
-
-        $result = $stmt->execute();
-
-        return $result;
-    }
-
-    public function dettach($ids = null)
-    {
-        $table = $this->table();
-
-        $foreignKey = $this->foreignKey;
-
-        $where = array($this->otherKey => $this->otherId);
-
-        if(! is_null($ids)) {
-            $where[$foreignKey] = $ids;
-        }
-
-        //Prepare the paramTypes.
-        $paramTypes = $this->getParamTypes($where, true);
-
-        return $this->db->delete($table, $where, $paramTypes);
-    }
-
-    public function sync($ids)
-    {
-        $result = $this->dettach();
-
-        if($result !== false) {
-            $result = $this->attach($ids);
-        }
-
-        return $result;
-    }
-
 }

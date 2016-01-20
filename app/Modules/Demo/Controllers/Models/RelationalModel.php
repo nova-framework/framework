@@ -113,7 +113,7 @@ class RelationalModel extends BaseController
         //
         $user = new User();
 
-        $user->username = 'Virgil';
+        $user->username = 'virgil';
         $user->email = 'virgil@novaframework.dev';
 
         $result = $user->save();
@@ -204,12 +204,15 @@ var_dump(\$result);
 self::dumpObject(\$user);
 self::dumpObject(\$profile);
 self::dumpObject(\$user->profile);
+self::dumpObject(\$profile->user);
+
         ";
 
         $message .= self::highlightText($text, true);
         $message .= '<pre>'. self::dumpObject($user).'</pre>';
         $message .= '<pre>'. self::dumpObject($profile).'</pre>';
-        $message .= '<pre>'. self::dumpObject($user->profile).'</pre><br>';
+        $message .= '<pre>'. self::dumpObject($user->profile).'</pre>';
+        $message .= '<pre>'. self::dumpObject($profile->user).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsTo').'</strong></h3><br>';
@@ -219,7 +222,6 @@ self::dumpObject(\$user->profile);
 
         $profile = $user->profile;
 
-        $user2 = $profile->user;
 
         $text = "
 \$user = \$this->model->findBy('username', 'marcus');
@@ -230,13 +232,13 @@ self::dumpObject(\$user->profile);
 
 self::dumpObject(\$user);
 self::dumpObject(\$profile);
-self::dumpObject(\$user2);
+self::dumpObject(\$profile->user);
         ";
 
         $message .= self::highlightText($text, true);
         $message .= '<pre>'. self::dumpObject($user).'</pre>';
         $message .= '<pre>'. self::dumpObject($profile).'</pre>';
-        $message .= '<pre>'. self::dumpObject($user2).'</pre><br>';
+        $message .= '<pre>'. self::dumpObject($profile->user).'</pre><br>';
 
         //
 
@@ -251,11 +253,15 @@ self::dumpObject(\$user2);
 
 self::dumpObject(\$post);
 self::dumpObject(\$author);
+self::dumpObject(\$author->profile);
+self::dumpObjectArray(\$author->posts);
         ";
 
         $message .= self::highlightText($text, true);
         $message .= '<pre>'. self::dumpObject($post).'</pre>';
-        $message .= '<pre>'. self::dumpObject($author).'</pre><br>';
+        $message .= '<pre>'. self::dumpObject($author).'</pre>';
+        $message .= '<pre>'. self::dumpObject($author->profile).'</pre>';
+        $message .= '<pre>'. self::dumpObjectArray($author->posts).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Relations: hasMany').'</strong></h3><br>';
@@ -269,7 +275,6 @@ self::dumpObject(\$author);
 \$user = \$this->model->findBy('username', 'marcus');
 
 \$posts = \$user->posts;
-
 
 self::dumpObject(\$user);
 self::dumpObjectArray(\$posts);
@@ -293,7 +298,7 @@ self::dumpObjectArray(\$posts);
 \$courses = \$student->courses;
 
 self::dumpObject(\$student);
-self::dumpObjectArray(\$posts);
+self::dumpObjectArray(\$courses);
         ";
 
         $message .= self::highlightText($text, true);
@@ -334,20 +339,22 @@ self::dumpObjectArray(\$course->students);
         //
         $course = Course::find(2);
 
-        $students = $course->students()->get();
+        $relation = $course->students();
+
+        $students = $relation->get();
 
         $pivot = $course->students()->pivot();
 
-        $sids = $pivot->get();
+        $sids = $pivot->relatedIds();
 
         $text = "
 \$course = Course::find(2);
 
-\$students = \$course->students()->get();
+\$relation = \$course->students();
 
-\$pivot = \$course->students()->pivot();
+\$students = \$relation->get();
 
-\$sids = \$pivot->get();
+\$sids = \$relation->pivot()->relatedIds();
 
 self::dumpObject(\$course);
 var_export(\$sids, true);
@@ -356,22 +363,22 @@ self::dumpObjectArray(\$students);
 
         $message .= self::highlightText($text, true);
         $message .= '<pre>'. self::dumpObject($course).'</pre>';
-        $message .= '<pre>'. var_export($sids, true).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+        $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
+        $message .= '<pre>'. var_export($sids, true).'</pre><br>';
 
         //
-        $pivot->attach(3);
+        $relation->attach(3);
 
-        $sids = $pivot->get();
+        $sids = $relation->pivot()->relatedIds();
 
-        $students = $course->students()->get();
+        $students = $relation->get();
 
         $text = "
-\$pivot->attach(3);
+\$relation->attach(3);
 
-\$sids = \$pivot->get();
+\$sids = \$relation->pivot()->relatedIds();
 
-\$students = \$course->students()->get();
+\$students = \$relation->get();
 
 var_export(\$sids, true);
 self::dumpObjectArray(\$students);
@@ -382,18 +389,18 @@ self::dumpObjectArray(\$students);
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
 
         //
-        $pivot->dettach(3);
+        $relation->dettach(3);
 
-        $sids = $pivot->get();
+        $sids = $relation->pivot()->relatedIds();
 
-        $students = $course->students()->get();
+        $students = $relation->get();
 
         $text = "
-\$pivot->dettach(3);
+\$relation->dettach(3);
 
-\$sids = \$pivot->get();
+\$sids = \$relation->pivot()->relatedIds();
 
-\$students = \$course->students()->get();
+\$students = \$relation->get();
 
 var_export(\$sids, true);
 self::dumpObjectArray(\$students);
@@ -404,22 +411,22 @@ self::dumpObjectArray(\$students);
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
 
         //
-        $pivot->sync(array(1,2,4));
+        $relation->sync(array(1,2,4));
 
-        $sids = $pivot->get();
+        $sids = $relation->pivot()->relatedIds();
 
-        $students = $course->students()->get();
+        $students = $relation->get();
 
-        $pivot->dettach(4);
+        $relation->dettach(4);
 
         $text = "
-\$pivot->sync(array(1,2,4));
+\$relation->sync(array(1,2,4));
 
-\$sids = \$pivot->get();
+\$sids = \$relation->pivot()->relatedIds();
 
-\$students = \$course->students()->get();
+\$students = \$relation->get();
 
-\$pivot->dettach(4);
+\$relation->dettach(4);
 
 var_export(\$sids, true);
 self::dumpObjectArray(\$students);

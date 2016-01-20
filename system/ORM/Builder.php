@@ -52,14 +52,10 @@ class Builder extends BaseBuilder
     {
         $className =& $this->className;
 
-        if (! is_integer($id) || ($id < 1)) {
-            throw new \UnexpectedValueException(__d('system', 'Parameter should be an positive Integer'));
-        }
-
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
-        $result = $this->select($sql, array('value' => $id));
+        $result = $this->select($sql, array('value' => $id), 'array');
 
         if($result !== false) {
             return $className::fromAssoc($result);
@@ -84,7 +80,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr LIMIT 1";
 
-        $result = $this->select($sql, $bindParams);
+        $result = $this->select($sql, $bindParams, 'array');
 
         // Reset the Model State.
         $this->resetState();
@@ -117,7 +113,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr";
 
-        $data = $this->select($sql, $bindParams, true);
+        $data = $this->select($sql, $bindParams, 'array', true);
 
         // Reset the Model State.
         $this->resetState();
@@ -140,6 +136,10 @@ class Builder extends BaseBuilder
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
+
         $this->setWhere($params);
 
         return $this->findAll();
@@ -161,7 +161,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $limitStr $offsetStr";
 
-        $data = $this->select($sql, $bindParams, true);
+        $data = $this->select($sql, $bindParams, 'array', true);
 
         // Reset the Model State.
         $this->resetState();
@@ -194,7 +194,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $offsetStr";
 
-        $data = $this->select($sql, $bindParams);
+        $data = $this->select($sql, $bindParams, 'array');
 
         // Reset the Model State.
         $this->resetState();
@@ -204,6 +204,67 @@ class Builder extends BaseBuilder
         }
 
         return false;
+    }
+
+    /**
+     * Execute Select Query, binding values into the $sql Query.
+     *
+     * @param string $sql
+     * @param array $bindParams
+     * @param bool $fetchAll Ask the method to fetch all the records or not.
+     * @return array|null
+     *
+     * @throws \Exception
+     */
+    public function select($sql, $params = array(), $returnType = 'array', $fetchAll = false)
+    {
+        // Firstly, simplify the white spaces and trim the SQL query.
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+
+        // Prepare the parameter Types.
+        $paramTypes = $this->getParamTypes($params);
+
+        return $this->connection->select($sql, $params, $paramTypes, $returnType, $fetchAll);
+    }
+
+    public function selectOne($sql, $params = array(), $returnType = 'array')
+    {
+        return $this->connection->select($sql, $params, $paramTypes, $returnType);
+    }
+
+    public function selectAll($sql, $params = array(), $returnType = 'array')
+    {
+        return $this->connection->select($sql, $params, $paramTypes, $returnType, true);
+    }
+
+    public function insert(array $data)
+    {
+        $paramTypes = $this->getParamTypes($data);
+
+        // Execute the Record insertion.
+        return $this->connection->insert($this->table(), $data, $paramTypes);
+    }
+
+    public function update(array $data, array $where)
+    {
+        // Prepare the WHERE parameters.
+        $params = $this->setWhere($where);
+
+        $paramTypes = $this->getParamTypes(array_merge($data, $params));
+
+        // Execute the Record updating.
+        return $this->connection->update($this->table(), $data, $params, $paramTypes);
+    }
+
+    public function delete($id)
+    {
+        // Prepare the WHERE parameters.
+        $where = array($this->primaryKey => $id);
+
+        $paramTypes = $this->getParamTypes($where);
+
+        // Execute the Record deletetion.
+        return $this->connection->delete($this->table(), $where, $paramTypes);
     }
 
     public function deleteBy()
@@ -317,31 +378,6 @@ class Builder extends BaseBuilder
     }
 
     //--------------------------------------------------------------------
-    // Select Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Execute Select Query, binding values into the $sql Query.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @return array|null
-     *
-     * @throws \Exception
-     */
-    public function select($sql, $params = array(), $fetchAll = false)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        // Prepare the parameter Types.
-        $paramTypes = $this->getParamTypes($params);
-
-        return $this->connection->select($sql, $params, $paramTypes, 'array', $fetchAll);
-    }
-
-    //--------------------------------------------------------------------
     // Fetch Methods
     //--------------------------------------------------------------------
 
@@ -437,7 +473,7 @@ class Builder extends BaseBuilder
     // Internal use Methods
     //--------------------------------------------------------------------
 
-    protected function getParamTypes($params, $strict = true)
+    protected function getParamTypes(array $params, $strict = true)
     {
         $fields =& $this->fields;
 

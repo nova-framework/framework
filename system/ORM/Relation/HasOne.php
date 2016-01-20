@@ -16,18 +16,18 @@ use Nova\ORM\Relation;
 class HasOne extends Relation
 {
     protected $foreignKey;
-    protected $primaryKey;
 
 
-    public function __construct($className, Model $model, $foreignKey)
+    public function __construct($className, Model $model, $foreignKey = null)
     {
-        parent::__construct($className);
+        parent::__construct($className, $model);
 
         // The foreignKey is associated to host Model.
-        $this->foreignKey = $foreignKey;
-
-        // The primaryKey is associated to this Model.
-        $this->primaryKey = $model->getPrimaryKey();
+        if($foreignKey === null) {
+            $this->foreignKey = $model->getForeignKey();
+        } else {
+            $this->foreignKey = $foreignKey;
+        }
     }
 
     public function type()
@@ -37,6 +37,6 @@ class HasOne extends Relation
 
     public function get()
     {
-        return $this->model->findBy($this->foreignKey, $this->primaryKey);
+        return $this->related->findBy($this->foreignKey, $this->parent->getKey());
     }
 }

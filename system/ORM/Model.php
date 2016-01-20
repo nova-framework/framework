@@ -13,12 +13,12 @@ use Nova\Helpers\Inflector;
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
 
+use Nova\ORM\Builder;
 use Nova\ORM\Relation\HasOne;
 use Nova\ORM\Relation\HasMany;
 use Nova\ORM\Relation\BelongsTo;
 use Nova\ORM\Relation\BelongsToMany;
-use Nova\ORM\Relation\Pivot as RelationPivot;
-use Nova\ORM\Builder;
+use Nova\ORM\Relation\Pivot;
 
 use \FluentStructure;
 use \FluentPDO;
@@ -33,10 +33,9 @@ class Model
     protected $className;
 
     /**
-     * The Model's State Management variables.
+     * The Model's State Management variable.
      */
-    protected $exists  = false;
-    protected $isDirty = false;
+    protected $exists = false;
 
     /*
      * The used \Nova\Database\Connection instance.
@@ -151,12 +150,12 @@ class Model
         $this->initObject();
     }
 
-    public static function fromAssoc(array $data, $exists = true)
+    public static function fromAssoc(array $attributes, $exists = true)
     {
         $model = new static();
 
         // Hydrate the Model.
-        $model->hydrate($data);
+        $model->hydrate($attributes);
 
         // Initialize the Model.
         $model->initObject($exists);
@@ -166,9 +165,9 @@ class Model
 
     public static function fromObject($object, $exists = true)
     {
-        $data = get_object_vars($object);
+        $attributes = get_object_vars($object);
 
-        return static::fromAssoc($data, $exists);
+        return static::fromAssoc($attributes, $exists);
     }
 
     protected function initObject($exists = false)
@@ -176,28 +175,41 @@ class Model
         $this->exists = $exists;
 
         if($this->exists) {
-            $this->original = $this->attributes;
-
-            $this->afterLoad();
+            // Sync the original attributes.
+            $this->syncOriginal();
         }
+
+        $this->afterLoad();
     }
 
-    private function hydrate(array $data)
+    private function hydrate(array $attributes)
     {
         $this->attributes = array();
 
-        if(empty($data)) {
+        $this->original = array();
+
+        if(empty($attributes)) {
             return;
         }
 
-        foreach ($data as $key => $value) {
+        foreach ($attributes as $key => $value) {
             if(isset($this->fields[$key])) {
                 $this->attributes[$key] = $value;
             }
         }
     }
 
-    public function getTableName()
+    public function getTableFields()
+    {
+        return $this->fields;
+    }
+
+    public function setTable($table)
+    {
+        return $this->tableName = $table;
+    }
+
+    public function getTable()
     {
         return $this->tableName;
     }
@@ -212,9 +224,55 @@ class Model
         return DB_PREFIX .$this->tableName;
     }
 
+    public function getConnection()
+    {
+        return $this->db;
+    }
+
     //--------------------------------------------------------------------
     // Attributes handling Methods
     //--------------------------------------------------------------------
+
+    /**
+     * Get the model's original attribute values.
+     *
+     * @param  string|null  $key
+     * @param  mixed  $default
+     * @return array|mixed
+     */
+    public function getOriginal($key = null, $default = null)
+    {
+        if($key === null) {
+            return $this->original;
+        }
+
+        return array_key_exists($key, $this->original) ? $this->original[$key] : $default;
+    }
+
+    /**
+     * Sync the original attributes with the current.
+     *
+     * @return $this
+     */
+    public function syncOriginal()
+    {
+        $this->original = $this->attributes;
+
+        return $this;
+    }
+
+    /**
+     * Sync a single original attribute with its current value.
+     *
+     * @param  string  $attribute
+     * @return $this
+     */
+    public function syncOriginalAttribute($attribute)
+    {
+        $this->original[$attribute] = $this->attributes[$attribute];
+
+        return $this;
+    }
 
     /**
      * Determine if the model or given attribute(s) have been modified.
@@ -306,19 +364,24 @@ class Model
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
-    public function getPrimaryKey()
+    /**
+     * Get the value of the model's primary key.
+     *
+     * @return mixed
+     */
+    public function getKey()
     {
-        if(! $this->exists) {
-            return null;
-        }
+        return $this->getAttribute($this->getKeyName());
+    }
 
-        $key =& $this->primaryKey;
-
-        if(isset($this->attributes[$key]) && ! empty($this->attributes[$key])) {
-            return $this->attributes[$key];
-        }
-
-        return null;
+    /**
+     * Get the primary key for the model.
+     *
+     * @return string
+     */
+    public function getKeyName()
+    {
+        return $this->primaryKey;
     }
 
     //--------------------------------------------------------------------
@@ -387,8 +450,6 @@ class Model
         $key = Inflector::tableize($key);
 
         $this->attributes[$key] = $value;
-
-        $this->isDirty = true;
     }
 
     public function __get($name)
@@ -447,19 +508,11 @@ class Model
 
     protected function hasOne($className, $foreignKey = null)
     {
-        if($foreignKey === null) {
-            $foreignKey = $this->getForeignKey();
-        }
-
         return new HasOne($className, $this, $foreignKey);
     }
 
     protected function hasMany($className, $foreignKey = null)
     {
-        if($foreignKey === null) {
-            $foreignKey = $this->getForeignKey();
-        }
-
         return new HasMany($className, $this, $foreignKey);
     }
 
@@ -467,10 +520,6 @@ class Model
     {
         if (is_null($joinTable)) {
             $joinTable = $this->joiningTable($className);
-        }
-
-        if($foreignKey === null) {
-            $foreignKey = $this->getForeignKey();
         }
 
         return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
@@ -504,9 +553,18 @@ class Model
     // Pivot Methods
     //--------------------------------------------------------------------
 
-    public function newPivot($joinTable, $foreignKey, $otherKey, $otherId)
+    /**
+     * Create a new pivot model instance.
+     *
+     * @param  \Nova\ORM\Model  $parent
+     * @param  array  $attributes
+     * @param  string  $table
+     * @param  bool  $exists
+     * @return \Nova\ORM\\Relation\Pivot
+     */
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
     {
-        return new RelationPivot($joinTable, $foreignKey, $otherKey, $otherId);
+        return new Pivot($parent, $attributes, $table, $exists);
     }
 
     //--------------------------------------------------------------------
@@ -546,7 +604,7 @@ class Model
                 $this->setAttribute($this->primaryKey, $result);
 
                 // Sync the original attributes.
-                $this->original = $this->attributes;
+                $this->syncOriginal();
 
                 $result = true;
             }
@@ -554,7 +612,7 @@ class Model
         // If the Object is dirty, we are into UPDATE mode.
         else if($this->isDirty()) {
             $where = array(
-                $this->primaryKey => $this->getPrimaryKey()
+                $this->primaryKey => $this->getKey()
             );
 
             $paramTypes = $this->getParamTypes(array_merge($data, $where));
@@ -563,13 +621,13 @@ class Model
 
             if($result !== false) {
                 // Sync the original attributes.
-                $this->original = $this->attributes;
+                $this->syncOriginal();
 
                 $result = true;
             }
         }
 
-        return false;
+        return $result;
     }
 
     public function delete()
@@ -580,7 +638,7 @@ class Model
 
         // Prepare the WHERE parameters.
         $where = array(
-            $this->primaryKey => $this->getPrimaryKey()
+            $this->primaryKey => $this->getKey()
         );
 
         $paramTypes = $this->getParamTypes($where);
@@ -625,7 +683,7 @@ class Model
     // Internal Methods
     //--------------------------------------------------------------------
 
-    protected function getParamTypes($params, $strict = true)
+    public function getParamTypes($params, $strict = true)
     {
         $fields =& $this->fields;
 
@@ -666,7 +724,7 @@ class Model
 
         // Walk over the defined Table Fields and prepare the data entries.
         foreach ($this->fields as $fieldName => $fieldInfo) {
-            if(! in_array($fieldName, $skippedFields) && isset($this->attributes[$fieldName])) {
+            if(! in_array($fieldName, $skippedFields) && array_key_exists($fieldName, $this->attributes)) {
                 $data[$fieldName] = $this->attributes[$fieldName];
             }
         }
@@ -675,7 +733,7 @@ class Model
             // Process the 'created_at' field
             $fieldName = $this->createdField;
 
-            if(isset($this->fields[$fieldName]) && ! isset($data[$fieldName])) {
+            if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
                 $data[$fieldName] = $this->getDate();
             }
 
@@ -748,14 +806,16 @@ class Model
             }
 
             if ($isEmpty) {
-                return $result; // NOTE: result is an empty string.
+                //return $result; // NOTE: result is an empty string.
             }
         }
 
-        $result = $this->className . " #" . $this->{$this->primaryKey} . "\n";
+        $result = $this->className . " #" . $this->getKey() . "\n";
+
+        $result .= "\tExists: " . ($this->exists ? "YES" : "NO") . "\n\n";
 
         foreach ($this->fields as $fieldName => $fieldInfo) {
-            $result .= "\t" . Inflector::classify($fieldName) . ': ' . $this->$fieldName . "\n";
+            $result .= "\t" . Inflector::classify($fieldName) . ': ' .$this->getAttribute($fieldName) . "\n";
         }
 
         if(! empty($this->relations)) {
@@ -764,7 +824,7 @@ class Model
             foreach ($this->relations as $name) {
                 $relation = call_user_func(array($this, $name));
 
-                $result .= "\t" .ucfirst($relation->type())  .': ' .$relation->getClassName() . "\n";
+                $result .= "\t" .ucfirst($relation->type())  .': ' .$name .' -> ' .$relation->getClassName() . "\n";
             }
         }
 

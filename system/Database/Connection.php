@@ -252,6 +252,18 @@ abstract class Connection extends PDO
         return $result;
     }
 
+    public function exec($query)
+    {
+        $start = microtime(true);
+
+        // Execute the Query.
+        $result = parent::exec($query);
+
+        $this->logQuery($query, $start);
+
+        return $result;
+    }
+
     /**
      * @return Statement
      */
@@ -464,17 +476,10 @@ abstract class Connection extends PDO
 
         $fetchMethod = self::getFetchMethod($returnType, $className);
 
-        // Prepare and get statement from PDO.
-        $stmt = $this->prepare($sql);
+        // Execute the Query.
+        $stmt = $this->executeQuery($sql, $params, $paramTypes);
 
-        // Bind the key and values (only if given).
-        $this->bindParams($stmt, $params, $paramTypes);
-
-        // Execute, we should capture the status of the result.
-        $status = $stmt->execute();
-
-        // If failed, return now, and don't continue with fetching.
-        if (! $status) {
+        if($stmt === false) {
             return false;
         }
 
@@ -575,18 +580,14 @@ abstract class Connection extends PDO
 
         $sql = "$mode INTO $table ($fieldNames) VALUES ($fieldValues)";
 
-        $stmt = $this->prepare($sql);
+        // Execute the Update.
+        $result = $this->executeUpdate($sql, $data, $paramTypes);
 
-        $this->bindParams($stmt, $data, $paramTypes);
-
-        // Execute
-        if (! $stmt->execute()) {
+        if($result === false) {
             $failure = true;
-
-            $insertId = 0;
         } else {
             // If no error, capture the last inserted id
-            $insertId = $this->lastInsertId();
+            $result = $this->lastInsertId();
         }
 
         // Commit when in transaction
@@ -595,8 +596,6 @@ abstract class Connection extends PDO
         }
 
         // Check for failures
-        $result = $insertId;
-
         if ($failure) {
             // Ok, rollback when using transactions.
             if ($transaction) {
@@ -639,7 +638,7 @@ abstract class Connection extends PDO
      */
     public function update($table, array $data, array $where, array $paramTypes = array())
     {
-        $bindParams = array();
+        $params = array();
 
         // Column :bind for auto binding.
         $fieldDetails = '';
@@ -654,31 +653,28 @@ abstract class Connection extends PDO
             }
 
             $fieldDetails .= "$key = :field_$key";
+
+            $params["field_$key"] = $value;
+
+            // Adjust the parameter Type information.
+            if(isset($paramTypes[$key]) && ! isset($paramTypes["field_$key"])) {
+                $paramTypes["field_$key"] = $paramTypes[$key];
+            }
         }
 
         // Prepare the WHERE conditions.
-        $whereDetails = self::parseWhereConditions($where, $bindParams);
+        $whereParams = array();
+
+        $whereDetails = self::parseWhereConditions($where, $whereParams);
+
+        // Merge the whereParams into Update parameters.
+        $params = array_merge($params, $whereParams);
 
         // Prepare statement.
         $sql = "UPDATE $table SET $fieldDetails WHERE $whereDetails";
 
-        $stmt = $this->prepare($sql);
-
-        // Bind fields
-        $this->bindParams($stmt, $data, $paramTypes, ':field_');
-
-        // Bind conditions
-        $this->bindParams($stmt, $bindParams, $paramTypes);
-
-        // Execute and return false if failure.
-        $result = $stmt->execute();
-
-        if ($result !== false) {
-            // Row count, affected rows
-            $result = $stmt->rowCount();
-        }
-
-        return $result;
+        // Execute the Update and return the result.
+        return $this->executeUpdate($sql, $params, $paramTypes);
     }
 
     /**
@@ -701,13 +697,70 @@ abstract class Connection extends PDO
         // Prepare statement
         $sql = "DELETE FROM $table WHERE $whereDetails";
 
-        $stmt = $this->prepare($sql);
+        // Execute the Update and return the result.
+        return $this->executeUpdate($sql, $bindParams, $paramTypes);
+    }
+
+    /**
+     * A generic Query execution which return \Nova\Database\Statement or false when fail.
+     * This method is useful to build the 'select' commands.
+     */
+    public function executeQuery($query, array $params = array(), array $paramTypes = array())
+    {
+        if(empty($params)) {
+            // No parameters given, so we execute a bare Query.
+            return $this->query($query);
+        }
+
+        // Prepare the SQL Query.
+        $stmt = $this->prepare($query);
+
+        // Execute the Query with parameters binding.
+        if(! empty($paramTypes)) {
+            // Bind the parameters.
+            $this->bindParams($stmt, $params, $paramTypes);
+
+            // Execute and return false if failure.
+            $result = $stmt->execute();
+        } else {
+            $result = $stmt->execute($params);
+        }
+
+        if($result !== false) {
+            // Return the Statement when succeeded.
+            return $stmt;
+        }
+
+        return false;
+    }
+
+    /**
+     * A generic Query execution which return affected rows count or false when fail.
+     * This method is useful to build the 'insert', 'update' and 'delete' commands.
+     */
+    public function executeUpdate($query, array $params = array(), array $paramTypes = array())
+    {
+        if(empty($params)) {
+            // No parameters given, so we execute a bare Query.
+            return $this->exec($query);
+        }
+
+        // Prepare the SQL Query.
+        $stmt = $this->prepare($query);
 
         // Bind conditions.
-        $this->bindParams($stmt, $bindParams, $paramTypes);
+        $this->bindParams($stmt, $params, $paramTypes);
 
-        // Execute and return false if failure.
-        $result = $stmt->execute();
+        // Execute the Query with parameters binding.
+        if(! empty($paramTypes)) {
+            // Bind the parameters.
+            $this->bindParams($stmt, $params, $paramTypes);
+
+            // Execute and return false if failure.
+            $result = $stmt->execute();
+        } else {
+            $result = $stmt->execute($params);
+        }
 
         if ($result !== false) {
             // Return rowcount when succeeded.
@@ -715,6 +768,25 @@ abstract class Connection extends PDO
         }
 
         return false;
+    }
+
+    /**
+     * Extract ordered type list from two associate key lists of data and types.
+     *
+     * @param array $data
+     * @param array $types
+     *
+     * @return array
+     */
+    private function extractTypeValues(array $data, array $paramTypes)
+    {
+        $result = array();
+
+        foreach ($data as $key => $_) {
+            $result[] = isset($paramTypes[$key]) ? $paramTypes[$key] : PDO::PARAM_STR;
+        }
+
+        return $result;
     }
 
     /**

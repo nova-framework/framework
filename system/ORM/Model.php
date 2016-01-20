@@ -154,8 +154,6 @@ class Model
                 $this->fields[$fieldName] = $fieldInfo['type'];
             }
         }
-
-        $this->initObject();
     }
 
     protected function initObject($exists = false)
@@ -185,6 +183,19 @@ class Model
                 $this->attributes[$key] = $value;
             }
         }
+    }
+
+    public function newInstance(array $attributes, $exists = true)
+    {
+        $instance = new static();
+
+        // Hydrate the Model.
+        $instance->hydrate($attributes);
+
+        // Initialize the Model.
+        $instance->initObject($exists);
+
+        return $instance;
     }
 
     public function getClass()
@@ -225,19 +236,6 @@ class Model
     public function getLink()
     {
         return $this->db;
-    }
-
-    public function newInstance(array $attributes, $exists = true)
-    {
-        $instance = new static();
-
-        // Hydrate the Model.
-        $instance->hydrate($attributes);
-
-        // Initialize the Model.
-        $instance->initObject($exists);
-
-        return $instance;
     }
 
     //--------------------------------------------------------------------

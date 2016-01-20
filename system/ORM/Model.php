@@ -38,6 +38,11 @@ class Model
     protected $exists = false;
 
     /*
+     * The used \Nova\Database\Connection name.
+     */
+    protected $connection = 'default';
+
+    /*
      * The used \Nova\Database\Connection instance.
      */
     protected $db = null;
@@ -126,11 +131,7 @@ class Model
     {
         $this->className = get_class($this);
 
-        if($connection instanceof Connection) {
-            $this->db = $connection;
-        } else {
-            $this->db = Database::getConnection($connection);
-        }
+        $this->connection = $connection;
 
         // Setup the Table name, if is empty.
         if (empty($this->tableName)) {
@@ -142,25 +143,45 @@ class Model
             $this->tableName = Inflector::tableize($name);
         }
 
+        // Init the Connection instance.
+        $this->db = Database::getConnection($connection);
+
         // Get the Table Fields, if they aren't already specified.
         if(empty($this->fields)) {
-            $this->fields = $this->db->getTableFields($this->table());
+            $fields = $this->db->getTableFields($this->table());
+
+            foreach($fields as $fieldName => $fieldInfo) {
+                $this->fields[$fieldName] = $fieldInfo['type'];
+            }
         }
 
         $this->initObject();
     }
 
-    public static function fromAssoc(array $attributes, $exists = true)
+    public function newInstance(array $attributes, $exists = true)
     {
-        $model = new static();
+        $instance = new static();
 
         // Hydrate the Model.
-        $model->hydrate($attributes);
+        $instance->hydrate($attributes);
 
         // Initialize the Model.
-        $model->initObject($exists);
+        $instance->initObject($exists);
 
-        return $model;
+        return $instance;
+    }
+
+    public static function fromAssoc(array $attributes, $exists = true)
+    {
+        $instance = new static();
+
+        // Hydrate the Model.
+        $instance->hydrate($attributes);
+
+        // Initialize the Model.
+        $instance->initObject($exists);
+
+        return $instance;
     }
 
     public static function fromObject($object, $exists = true)
@@ -199,6 +220,11 @@ class Model
         }
     }
 
+    public function getClass()
+    {
+        return $this->className;
+    }
+
     public function getTableFields()
     {
         return $this->fields;
@@ -225,6 +251,11 @@ class Model
     }
 
     public function getConnection()
+    {
+        return $this->connection;
+    }
+
+    public function getLink()
     {
         return $this->db;
     }
@@ -573,7 +604,7 @@ class Model
 
     public function newBuilder()
     {
-        return new Builder($this->className, $this->tableName, $this->primaryKey, $this->fields, $this->db);
+        return new Builder($this);
     }
 
     //--------------------------------------------------------------------

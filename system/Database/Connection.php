@@ -771,6 +771,25 @@ abstract class Connection extends PDO
     }
 
     /**
+     * Extract ordered type list from two associate key lists of data and types.
+     *
+     * @param array $data
+     * @param array $types
+     *
+     * @return array
+     */
+    private function extractTypeValues(array $data, array $paramTypes)
+    {
+        $result = array();
+
+        foreach ($data as $key => $_) {
+            $result[] = isset($paramTypes[$key]) ? $paramTypes[$key] : PDO::PARAM_STR;
+        }
+
+        return $result;
+    }
+
+    /**
      * Quote escape a string for using in a query.
      *
      * WARNING: You can better prepare a query and bind values in that way.

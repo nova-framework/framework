@@ -552,7 +552,7 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function insert($table, array $data, array $paramTypes = array(), $transaction = false, $mode = 'insert')
+    public function insert($table, array $data, array $paramTypes = array(), $mode = 'insert')
     {
         // Check for valid data.
         if (! is_array($data)) {
@@ -575,7 +575,7 @@ abstract class Connection extends PDO
         $fieldValues = ':'.implode(', :', array_keys($data));
 
         // Prepare the SQL statement.
-        $sql = "$mode INTO $table ($fieldNames) VALUES ($fieldValues)";
+        $sql = "$insertMode INTO $table ($fieldNames) VALUES ($fieldValues)";
 
         // Execute the Update statement.
         $result = $this->executeUpdate($sql, $data, $paramTypes);
@@ -599,9 +599,9 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function replace($table, array $params, array $paramTypes = array(), $transaction = false)
+    public function replace($table, array $params, array $paramTypes = array())
     {
-        return $this->insert($table, $params, $paramTypes, $transaction, 'replace');
+        return $this->insert($table, $params, $paramTypes, 'replace');
     }
 
     /**

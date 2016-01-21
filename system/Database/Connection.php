@@ -361,6 +361,11 @@ abstract class Connection extends PDO
             throw new \Exception('Bad things happen into Heaven');
         }
 
+        // Prepare the paramTypes.
+        if(empty($paramTypes)) {
+            $paramTypes = $this->getTableBindTypes($table);
+        }
+
         // Bind the key and values (only if given).
         $bindParams = array();
 
@@ -650,7 +655,7 @@ abstract class Connection extends PDO
         if(empty($paramTypes)) {
             $paramTypes = $this->getTableBindTypes($table);
         }
-        
+
         // Column :bind for auto binding.
         $fieldDetails = '';
 
@@ -765,9 +770,6 @@ abstract class Connection extends PDO
 
         // Prepare the SQL Query.
         $stmt = $this->prepare($query);
-
-        // Bind conditions.
-        $this->bindParams($stmt, $params, $paramTypes);
 
         // Execute the Query with parameters binding.
         if(! empty($paramTypes)) {

@@ -881,7 +881,7 @@ abstract class Connection extends PDO
         $result = array();
 
         foreach($fields as $fieldName => $fieldInfo) {
-            $result[$fieldName] = ($fieldInfo['type'] == 'int') ? PDO::PARAM_INT : PDO::PARAM_INT;
+            $result[$fieldName] = ($fieldInfo['type'] == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
         }
 
         return $result;

@@ -753,7 +753,7 @@ abstract class Connection extends PDO
     }
 
     /**
-     * A generic Query execution which return affected rows count or false when fail.
+     * A generic Update execution which return affected rows count or false when fail.
      * This method is useful to build the 'insert', 'update' and 'delete' commands.
      */
     public function executeUpdate($query, array $params = array(), array $paramTypes = array())

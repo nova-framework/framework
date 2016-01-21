@@ -646,6 +646,11 @@ abstract class Connection extends PDO
     {
         $params = array();
 
+        // Prepare the paramTypes.
+        if(empty($paramTypes)) {
+            $paramTypes = $this->getTableBindTypes($table);
+        }
+        
         // Column :bind for auto binding.
         $fieldDetails = '';
 
@@ -677,11 +682,6 @@ abstract class Connection extends PDO
 
         // Merge the whereParams into Update parameters.
         $params = array_merge($params, $whereParams);
-
-        // Prepare the paramTypes.
-        if(empty($paramTypes)) {
-            $paramTypes = $this->getTableBindTypes($table);
-        }
 
         // Prepare the SQL statement.
         $sql = "UPDATE $table SET $fieldDetails WHERE $whereDetails";

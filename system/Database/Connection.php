@@ -652,13 +652,15 @@ abstract class Connection extends PDO
                 $idx++;
             }
 
-            $fieldDetails .= "$key = :field_$key";
+            $bindKey = "field_$key";
 
-            $params["field_$key"] = $value;
+            $fieldDetails .= "$key = :$bindKey";
+
+            $params[$bindKey] = $value;
 
             // Adjust the parameter Type information.
-            if(isset($paramTypes[$key]) && ! isset($paramTypes["field_$key"])) {
-                $paramTypes["field_$key"] = $paramTypes[$key];
+            if(isset($paramTypes[$key]) && ! isset($paramTypes[$bindKey])) {
+                $paramTypes[$bindKey] = $paramTypes[$key];
             }
         }
 

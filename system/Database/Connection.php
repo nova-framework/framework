@@ -578,7 +578,13 @@ abstract class Connection extends PDO
         $fieldNames = implode(', ', array_keys($data));
         $fieldValues = ':'.implode(', :', array_keys($data));
 
+        // Prepare the SQL statement.
         $sql = "$mode INTO $table ($fieldNames) VALUES ($fieldValues)";
+
+        // Prepare the paramTypes.
+        if(empty($paramTypes)) {
+            $paramTypes = $this->getTableBindTypes($table);
+        }
 
         // Execute the Update.
         $result = $this->executeUpdate($sql, $data, $paramTypes);
@@ -672,7 +678,12 @@ abstract class Connection extends PDO
         // Merge the whereParams into Update parameters.
         $params = array_merge($params, $whereParams);
 
-        // Prepare statement.
+        // Prepare the paramTypes.
+        if(empty($paramTypes)) {
+            $paramTypes = $this->getTableBindTypes($table);
+        }
+
+        // Prepare the SQL statement.
         $sql = "UPDATE $table SET $fieldDetails WHERE $whereDetails";
 
         // Execute the Update and return the result.
@@ -696,7 +707,12 @@ abstract class Connection extends PDO
         // Prepare the WHERE conditions.
         $whereDetails = self::parseWhereConditions($where, $bindParams);
 
-        // Prepare statement
+        // Prepare the paramTypes.
+        if(empty($paramTypes)) {
+            $paramTypes = $this->getTableBindTypes($table);
+        }
+
+        // Prepare the SQL statement.
         $sql = "DELETE FROM $table WHERE $whereDetails";
 
         // Execute the Update and return the result.
@@ -844,12 +860,32 @@ abstract class Connection extends PDO
     }
 
     /**
+     * Get the columns info for the specified Database Table.
+     *
+     * @param  string $table table name
+     * @return array  Returns the Database Table fields info
+     */
+    abstract public function getTableFields($table);
+
+    /**
      * Get the columns names and types for the specified Database Table.
      *
      * @param  string $table table name
-     * @return array  Returns the Database Table fields
+     * @return array  Returns the Database Table field types
      */
-    abstract public function getTableFields($table);
+    public function getTableBindTypes($table)
+    {
+        $fields = $this->getTableFields($table);
+
+        // Prepare the column types list.
+        $result = array();
+
+        foreach($fields as $fieldName => $fieldInfo) {
+            $result[$fieldName] = ($fieldInfo['type'] == 'int') ? PDO::PARAM_INT : PDO::PARAM_INT;
+        }
+
+        return $result;
+    }
 
     /**
      * Parse the where conditions.

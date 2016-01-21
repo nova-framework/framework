@@ -561,9 +561,6 @@ abstract class Connection extends PDO
             throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
         }
 
-        // Prepare the Insert Mode.
-        $insertMode = strtoupper($mode);
-
         // Prepare the paramTypes.
         if(empty($paramTypes)) {
             $paramTypes = $this->getTableBindTypes($table);
@@ -574,6 +571,9 @@ abstract class Connection extends PDO
 
         $fieldValues = ':'.implode(', :', array_keys($data));
 
+        // Prepare the Insert Mode.
+        $insertMode = strtoupper($mode);
+        
         // Prepare the SQL statement.
         $sql = "$insertMode INTO $table ($fieldNames) VALUES ($fieldValues)";
 

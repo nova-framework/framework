@@ -53,7 +53,7 @@ abstract class Connection extends PDO
      * @param array $options
      * @throws \Exception
      */
-    public function __construct($dsn, $config = array(), $options = array())
+    public function __construct($dsn, array $config, array $options = array())
     {
         // Check for valid Config.
         if (! is_array($config) || ! is_array($options)) {
@@ -80,7 +80,7 @@ abstract class Connection extends PDO
 
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        //$this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $fetchMethod);
     }
 
@@ -322,9 +322,6 @@ abstract class Connection extends PDO
         // Get the current Time.
         $start = microtime(true);
 
-        //
-        $this->lastSqlQuery = $sql;
-
         // What return type? Use default if no return type is given in the call.
         $returnType = $returnType ? $returnType : $this->returnType;
 
@@ -336,6 +333,10 @@ abstract class Connection extends PDO
 
         if($useLogging) {
             $this->logQuery($sql, $start);
+        } else {
+            $this->queryCount++;
+
+            $this->lastSqlQuery = $sql;
         }
 
         return $result;
@@ -359,11 +360,6 @@ abstract class Connection extends PDO
 
         if($stmt === false) {
             return false;
-        }
-
-        // Prepare the paramTypes.
-        if(empty($paramTypes)) {
-            $paramTypes = $this->getTableBindTypes($table);
         }
 
         // Bind the key and values (only if given).
@@ -556,68 +552,40 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function insert($table, array $data, array $paramTypes = array(), $transaction = false, $mode = 'insert')
+    public function insert($table, array $data, array $paramTypes = array(), $mode = 'insert')
     {
-        if (($mode != 'insert') && ($mode != 'replace')) {
-            throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
-        } else {
-            $mode = strtoupper($mode);
-        }
-
         // Check for valid data.
         if (! is_array($data)) {
             throw new \Exception(__d('system', 'Data to insert must be an array of column -> value.'));
+        } else if (($mode != 'insert') && ($mode != 'replace')) {
+            throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
         }
-
-        // Transaction?
-        $status = false;
-
-        if ($transaction) {
-            $status = $this->beginTransaction();
-        }
-
-        // Holding status
-        $failure = false;
-
-        // Prepare the parameters.
-        $fieldNames = implode(', ', array_keys($data));
-        $fieldValues = ':'.implode(', :', array_keys($data));
-
-        // Prepare the SQL statement.
-        $sql = "$mode INTO $table ($fieldNames) VALUES ($fieldValues)";
 
         // Prepare the paramTypes.
         if(empty($paramTypes)) {
             $paramTypes = $this->getTableBindTypes($table);
         }
 
-        // Execute the Update.
+        // Prepare the parameters.
+        $fieldNames = implode(', ', array_keys($data));
+
+        $fieldValues = ':'.implode(', :', array_keys($data));
+
+        // Prepare the Insert Mode.
+        $insertMode = strtoupper($mode);
+        
+        // Prepare the SQL statement.
+        $sql = "$insertMode INTO $table ($fieldNames) VALUES ($fieldValues)";
+
+        // Execute the Update statement.
         $result = $this->executeUpdate($sql, $data, $paramTypes);
 
-        if($result === false) {
-            $failure = true;
-        } else {
+        if($result !== false) {
             // If no error, capture the last inserted id
-            $result = $this->lastInsertId();
+            return $this->lastInsertId();
         }
 
-        // Commit when in transaction
-        if (! $failure && $transaction && $status) {
-            $failure = ! $this->commit();
-        }
-
-        // Check for failures
-        if ($failure) {
-            // Ok, rollback when using transactions.
-            if ($transaction) {
-                $this->rollBack();
-            }
-
-            // False on error.
-            $result = false;
-        }
-
-        return $result;
+        return false;
     }
 
     /**
@@ -631,9 +599,9 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function replace($table, array $params, array $paramTypes = array(), $transaction = false)
+    public function replace($table, array $params, array $paramTypes = array())
     {
-        return $this->insert($table, $params, $paramTypes, $transaction, 'replace');
+        return $this->insert($table, $params, $paramTypes, 'replace');
     }
 
     /**
@@ -731,7 +699,7 @@ abstract class Connection extends PDO
     public function executeQuery($query, array $params = array(), array $paramTypes = array())
     {
         if(empty($params)) {
-            // No parameters given, so we execute a bare Query.
+            // No parameters given, so we execute a bare 'query'.
             return $this->query($query);
         }
 
@@ -764,7 +732,7 @@ abstract class Connection extends PDO
     public function executeUpdate($query, array $params = array(), array $paramTypes = array())
     {
         if(empty($params)) {
-            // No parameters given, so we execute a bare Query.
+            // No parameters given, so we execute a bare 'exec'.
             return $this->exec($query);
         }
 
@@ -1049,7 +1017,7 @@ abstract class Connection extends PDO
      *
      * @return array
      */
-    public function lastSqlQuery()
+    public function getLastQuery()
     {
         return $this->lastSqlQuery;
     }

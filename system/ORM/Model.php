@@ -793,9 +793,9 @@ class Model
     // Debug Methods
     //--------------------------------------------------------------------
 
-    public function lastSqlQuery()
+    public function getLastQuery()
     {
-        return $this->db->lastSqlQuery();
+        return $this->db->getLastQuery();
     }
 
     public function __toString()

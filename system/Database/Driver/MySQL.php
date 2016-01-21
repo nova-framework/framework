@@ -26,7 +26,7 @@ class MySQL extends Connection
      *
      * @throws \PDOException
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
         // Check for valid Config.
         if (! is_array($config)) {

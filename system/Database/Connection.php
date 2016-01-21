@@ -357,8 +357,8 @@ abstract class Connection extends PDO
         // Prepare and get statement from PDO.
         $stmt = $this->prepare($sql);
 
-        if($stmt === null) {
-            throw new \Exception('Bad things happen into Heaven');
+        if($stmt === false) {
+            return false;
         }
 
         // Prepare the paramTypes.

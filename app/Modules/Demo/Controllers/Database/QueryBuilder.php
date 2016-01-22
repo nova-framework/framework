@@ -92,6 +92,26 @@ var_export(\$data);
 
         //
         $data = DB::table('users')
+            ->whereIn('id', array(1, 2, 4))
+            ->orderBy('username')
+            ->limit(2)
+            ->get();
+
+        $text = "
+\$data = DB::table('users')
+    ->whereIn('id', array(1, 2, 4))
+    ->orderBy('username')
+    ->limit(2)
+    ->get();
+
+var_export(\$data);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $data = DB::table('users')
             ->where('username', '!=', 'admin')
             ->orderBy('email', 'DESC')
             ->limit(2)

@@ -9,16 +9,13 @@ This content can be changed in <code>{0}</code>' => 'Здраствуй, доб�
 This content can be changed in <code>{0}</code>' => 'Здраствуй, добро пожаловать в привствующий контролер! <br/>
 Содержимое этого файла может быть изменено в <code>app/views/welcome/welcome.php',
   'Home' => 'Домой',
-  'Invalid number of parameters' => '',
   'Invalid parameter' => '',
   'Invalid parameters' => '',
-  'No valid Entity Class is given: {0}' => '',
-  'No valid Entity Name is given: {0}' => '',
-  'No valid Method given for Query building' => '',
+  'No valid Model Class is given: {0}' => '',
+  'No valid Model Name is given: {0}' => '',
   'Open subpage' => 'Открыть подстраницу',
   'Parameter should be a non empty Array' => '',
   'Parameter should be an Integer' => '',
-  'Second parameter is invalid' => '',
   'Subpage' => 'Подстраница',
   'Welcome' => 'Добро пожаловать!',
 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Connection Manager (Factory).
+ * Connection Manager.
  *
  * @author Tom Valk - tomvalk@lt-box.info
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com

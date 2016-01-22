@@ -11,11 +11,10 @@ namespace App\Core;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
+use Nova\Database\Query\Builder as QueryBuilder;
 use Nova\Input\Filter as InputFilter;
 use Nova\Core\Model;
 
-use \FluentStructure;
-use \FluentPDO;
 use \PDO;
 
 /**
@@ -39,7 +38,7 @@ class BaseModel extends Model
     protected $primaryKey = 'id';
 
     /**
-     * The type of date/time field used for created_on and modified_on fields.
+     * The type of date/time field used for created_at and updated_at fields.
      * Valid types are: 'int', 'datetime', 'date'
      *
      * @var string
@@ -49,13 +48,13 @@ class BaseModel extends Model
     protected $dateFormat = 'datetime';
 
     /**
-     * Whether or not to auto-fill a 'created_on' field on inserts.
+     * Whether or not to auto-fill a 'created_at' field on inserts.
      *
      * @var boolean
      *
      * @access protected
      */
-    protected $autoCreated = true;
+    protected $timestamps = true;
 
     /**
      * Field name to use to the created time column in the DB table.
@@ -64,16 +63,7 @@ class BaseModel extends Model
      *
      * @access protected
      */
-    protected $createdField = 'created_on';
-
-    /**
-     * Whether or not to auto-fill a 'modified_on' field on updates.
-     *
-     * @var boolean
-     *
-     * @access protected
-     */
-    protected $autoModified = true;
+    protected $createdField = 'created_at';
 
     /**
      * Field name to use to the modified time column in the DB table.
@@ -82,7 +72,7 @@ class BaseModel extends Model
      *
      * @access protected
      */
-    protected $modifiedField = 'modified_on';
+    protected $updatedField = 'updated_at';
 
     /**
      * Various callbacks available to the Class.
@@ -193,11 +183,11 @@ class BaseModel extends Model
         // Check our auto-set features and make sure they are part of our Observer System.
 
         if ($this->autoCreated === true) {
-            array_unshift($this->beforeInsert, 'createdOn');
+            array_unshift($this->beforeInsert, 'createdAt');
         }
 
         if ($this->autoModified === true) {
-            array_unshift($this->beforeUpdate, 'modifiedOn');
+            array_unshift($this->beforeUpdate, 'updatedAt');
         }
 
         // Do we have a Validator instance?
@@ -242,16 +232,10 @@ class BaseModel extends Model
      * @param FluentStructure|null $structure
      * @return \Nova\Database\QueryBuilder
      */
-    public function queryBuilder(FluentStructure $structure = null)
+    public function queryBuilder()
     {
-        if ($structure === null) {
-            $structure = new FluentStructure($this->primaryKey);
-        }
-
-        $this->db->countIncomingQuery();
-
         // Get a QueryBuilder instance.
-        return $this->db->getQueryBuilder($structure);
+        return $this->db->getQueryBuilder();
     }
 
     /**
@@ -261,7 +245,7 @@ class BaseModel extends Model
      * @return \BaseQuery|\DeleteQuery|\InsertQuery|\SelectQuery|\UpdateQuery
      * @throws \Exception
      */
-    public function buildQuery($method)
+    public function newQuery()
     {
         $returnType = $this->tempReturnType;
 
@@ -272,41 +256,28 @@ class BaseModel extends Model
         $queryBuilder = $this->queryBuilder();
 
         // First, check and configure for the 'select' Method.
-        if ($method == 'select') {
-            $query = $queryBuilder->from($this->table());
+        $query = $queryBuilder->from($this->tableName);
 
-            // Setup the fetch Method.
-            if ($returnType == 'array') {
-                $object = false;
-            } else if ($returnType == 'object') {
-                $object = true;
-            } else {
-                $object = $returnType;
+        // Setup the fetch Method.
+        if ($returnType == 'array') {
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+        } else if ($returnType == 'object') {
+                $query->setFetchMode(PDO::FETCH_OBJ);
+        } else {
+            $className = $returnType;
 
-                // Check for a valid className.
-                $classPath = str_replace('\\', '/', ltrim($returnType, '\\'));
+            // Check for a valid className.
+            $classPath = str_replace('\\', '/', ltrim($className, '\\'));
 
-                if (! preg_match('#^App(?:/Modules/.+)?/Models/Entities/(.*)$#i', $classPath)) {
-                    throw new \Exception(__('No valid Entity Name is given: {0}', $returnType));
-                }
-
-                if (! class_exists($returnType)) {
-                    throw new \Exception(__('No valid Entity Class is given: {0}', $returnType));
-                }
+            if (! preg_match('#^App(?:/Modules/.+)?/Models/(.*)$#i', $classPath)) {
+                throw new \Exception(__('No valid Model Name is given: {0}', $className));
             }
 
-            return $query->asObject($object);
-        }
+            if (! class_exists($className)) {
+                throw new \Exception(__('No valid Model Class is given: {0}', $className));
+            }
 
-        // Then, configure the other Query building Methods.
-        if ($method == 'insert') {
-            $query = $queryBuilder->insertInto($this->table());
-        } else if ($method == 'update') {
-            $query = $queryBuilder->update($this->table());
-        } else if ($method == 'delete') {
-            $query = $queryBuilder->delete($this->table());
-        } else {
-            throw new \Exception(__('No valid Method given for Query building'));
+            $this->setFetchMode(PDO::FETCH_CLASS, $className);
         }
 
         return $query;
@@ -322,13 +293,10 @@ class BaseModel extends Model
      */
     public function first()
     {
-        $result = $this->limit(1)->findAll();
+        // Build and process the Query.
+        $query = $this->newQuery();
 
-        if (is_array($result) && (count($result) > 0)) {
-            return array_shift($result);
-        }
-
-        return $result;
+        return $query->first();
     }
 
     /**
@@ -348,18 +316,14 @@ class BaseModel extends Model
         //
         $this->trigger('beforeFind', array('id' => $id, 'method' => 'find'));
 
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
-
         // Build and process the Query.
-        $result = $this->buildQuery('select')->where($this->primaryKey, $id)->fetch();
+        $query = $this->newQuery();
+
+        $result = $query->where($this->primaryKey, $id)->first();
 
         if (! empty($result)) {
             $result = $this->trigger('afterFind', array('id' => $id, 'method' => 'find', 'fields' => $result));
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -374,20 +338,24 @@ class BaseModel extends Model
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        $where = $this->setWhere($params);
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__('Invalid parameters'));
+        }
 
         //
         $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
 
-        // Build and process the Query.
-        $result = $this->buildQuery('select')->where($where)->fetch();
+        // Prepare and execute th Query.
+        $query = $this->newQuery();
+
+        $query = call_user_func_array(array($query, 'where'), $params);
+
+        // Fetch the first result.
+        $result = $query->first();
 
         if (! empty($result)) {
             $result = $this->trigger('afterFind', array('method' => 'findBy', 'fields' => $result));
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -407,15 +375,12 @@ class BaseModel extends Model
         }
 
         // Build and process the Query.
-        $query = $this->buildQuery('select')->where($this->primaryKey, $values);
+        $query = $this->newQuery();
 
-        $query = ($this->selectOrder === null) ? $query : $query->orderBy($this->selectOrder);
+        $query = $query->whereIn($this->primaryKey, $values);
 
         // Fetch the result.
-        $result = $query->fetchAll();
-
-        // Reset the Model State.
-        $this->resetState();
+        $result = $query->get();
 
         return $result;
     }
@@ -429,14 +394,20 @@ class BaseModel extends Model
     {
         $params = func_get_args();
 
-        $this->setWhere($params);
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__('Invalid parameters'));
+        }
 
-        return $this->findAll();
+        // Prepare and execute th Query.
+        $query = $this->newQuery();
+
+        $query = call_user_func_array(array($query, 'where'), $params);
+
+        return $query->get();
     }
 
     /**
      * Fetch all of the records in the table.
-     * Can be used with scoped calls to restrict the results.
      *
      * @return object|false Object or false
      */
@@ -448,25 +419,16 @@ class BaseModel extends Model
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
 
         // Build and process the Query.
-        $query = $this->buildQuery('select')->where($where);
-
-        $query = ($this->selectLimit === null)  ? $query : $query->limit($this->selectLimit);
-
-        $query = ($this->selectOffset === null) ? $query : $query->offset($this->selectOffset);
-
-        $query = ($this->selectOrder === null)  ? $query : $query->orderBy($this->selectOrder);
+        $query = $this->newQuery();
 
         // Fetch the result.
-        $result = $query->fetchAll();
+        $result = $query->get();
 
         if (is_array($result)) {
             foreach ($result as $key => &$row) {
                 $row = $this->trigger('afterFind', array('method' => 'findAll', 'fields' => $row));
             }
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -498,16 +460,15 @@ class BaseModel extends Model
             // Prepare the Data.
             $data = $this->prepareData($data);
 
-            // Execute the INSERT.
-            $result = $this->db->insert($this->table(), $data);
+            // Prepare and Execute the Query.
+            $query = $this->newQuery();
+
+            $result = $query->insert($data);
 
             if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $result, 'fields' => $data, 'method' => 'insert'));
             }
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -537,15 +498,14 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Execute the REPLACE.
-            $result = $this->db->replace($this->table(), $data);
+            $query = $this->newQuery();
+
+            $result = $query->replace($data);
 
             if ($result !== false) {
                 $this->trigger('afterInsert', array('id' => $id, 'fields' => $data, 'method' => 'replace'));
             }
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -578,13 +538,12 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $result = $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
+            $query = $this->newQuery();
+
+            $result = $query->where($this->primaryKey, $id)->update($data);
 
             $result = $this->trigger('afterUpdate', array('id' => $id, 'method' => 'update', 'fields' => $data, 'result' => $result));
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -631,13 +590,12 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $result = $this->buildQuery('update')->set($data)->where($this->primaryKey, $ids)->execute();
+            $query = $this->newQuery();
+
+            $result = $query->whereIn($this->primaryKey, $ids)->update($data);
 
             $this->trigger('afterUpdate', array('ids' => $ids, 'fields' => $data, 'result' => $result, 'method' => 'updateMany'));
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -684,13 +642,14 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $result = $this->buildQuery('update')->set($data)->where($where)->execute();
+            $query = $this->newQuery();
+
+            $query = call_user_func_array(array($query, 'where'), $params);
+
+            $result = $query->update($data);
 
             $this->trigger('afterUpdate', array('method' => 'updateBy', 'fields' => $data, 'result' => $result));
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -722,13 +681,12 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $result = $this->buildQuery('update')->set($data)->execute();
+            $query = $this->newQuery();
+
+            $result = $query->update($data);
 
             $this->trigger('afterUpdate', array('method' => 'updateAll', 'fields' => $data, 'result' => $result));
         }
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -750,7 +708,9 @@ class BaseModel extends Model
         $data = array($field => "{$field}+{$value}");
 
         // Build and process the Query.
-        return $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
+        $query = $this->newQuery();
+
+        return $query->where($this->primaryKey, $id)->update($data);
     }
 
     /**
@@ -770,7 +730,9 @@ class BaseModel extends Model
         $data = array($field => "{$field}-{$value}");
 
         // Build and process the Query.
-        return $this->buildQuery('update')->set($data)->where($this->primaryKey, $id)->execute();
+        $query = $this->newQuery();
+
+        return $query->where($this->primaryKey, $id)->update($data);
     }
 
     /**
@@ -790,7 +752,9 @@ class BaseModel extends Model
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
 
         // Build and process the Query.
-        $result = $this->buildQuery('delete')->where($this->primaryKey, $id)->execute();
+        $query = $this->newQuery();
+
+        $result = $query->where($this->primaryKey, $id)->execute();
 
         $this->trigger('afterDelete', array('id' => $id, 'method' => 'delete', 'result' => $result));
 
@@ -820,13 +784,15 @@ class BaseModel extends Model
         //
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));
 
-        // Build and process the Query.
-        $result = $this->buildQuery('delete')->where($where)->execute();
+        // Build the Query.
+        $query = $this->newQuery();
+
+        $query = call_user_func_array(array($query, 'where'), $params);
+
+        // Process the Query.
+        $result = $query->delete();
 
         $this->trigger('afterDelete', array('method' => 'deleteBy', 'fields' => $where, 'result' => $result));
-
-        // Reset the Model State.
-        $this->resetState();
 
         return $result;
     }
@@ -847,7 +813,9 @@ class BaseModel extends Model
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
         // Build and process the Query.
-        $result = $this->buildQuery('delete')->where($this->primaryKey, $ids)->execute();
+        $query = $this->newQuery();
+
+        $result = $query->whereIn($this->primaryKey, $ids)->delete();
 
         $this->trigger('afterDelete', array('ids' => $ids, 'method' => 'deleteMany', 'result' => $result));
 
@@ -892,105 +860,6 @@ class BaseModel extends Model
     }
 
     //--------------------------------------------------------------------
-    // Built-in Query Building Methods
-    //--------------------------------------------------------------------
-
-    /**
-        The FluentPDO based QueryBuilder accept the following WHERE styles:
-
-        where("field", "x");                           // Translated to field = 'x'
-        where("field", null);                          // Translated to field IS NULL
-        where(null);                                   // Reset clause and remove all previous defined conditions.
-        where("field", array("x", "y"));               // Translated to field IN ('x', 'y')
-        where("field > ?", "x");                       // Bound by PDO
-        where("field > :name", array(':name' => 'x')); // Bound by PDO
-        where(array("field1" => "value1", ...));       // Translated to field1 = 'value1' AND ...
-
-        Then, to have a compatible WHERE method in the Model, we just need an array to keep the WHEREs and
-        to optionally process the array given as the first argument, otherwise literally storing the parameters.
-     */
-    public function where($condition, $value = null)
-    {
-        $params = func_get_args();
-
-        $this->setWhere($params);
-
-        return $this;
-    }
-
-    /**
-     * Limit results
-     *
-     * @param int $limit
-     * @return BaseModel $this
-     */
-    public function limit($limit)
-    {
-        if (! is_integer($limit) || ($limit < 0)) {
-            throw new \UnexpectedValueException(__('Invalid parameter'));
-        }
-
-        $this->selectLimit  = $limit;
-
-        return $this;
-    }
-
-    /**
-     * Offset
-     *
-     * @param int $offset
-     * @return BaseModel $this
-     */
-    public function offset($offset)
-    {
-        if (! is_integer($offset) || ($offset < 0)) {
-            throw new \UnexpectedValueException(__('Invalid parameter'));
-        }
-
-        $this->selectOffset = $offset;
-
-        return $this;
-    }
-
-    /**
-     * Order by
-     * @param mixed $order
-     * @return BaseModel $this
-     */
-    public function orderBy($order)
-    {
-        if(empty($order)) {
-            $this->selectOrder = null;
-        }
-        // Ccheck if the Field contains conditions.
-        else if (strpos($order, ' ') !== false) {
-            // Simplify the white spaces on Field.
-            $order = preg_replace('/\s+/', ' ', trim($order));
-
-            // Explode the field into its components.
-            $segments = explode(' ', $order);
-
-            if(count($segments) !== 2) {
-                throw new \UnexpectedValueException(__('Invalid parameter'));
-            }
-
-            $field = $segments[0];
-            $sense = strtoupper($segments[1]);
-
-            if(($sense != 'ASC') && ($sense != 'DESC')) {
-                throw new \UnexpectedValueException(__('Invalid parameter'));
-            }
-
-            $this->selectOrder = $field .' ' .$sense;
-        }
-        else {
-            $this->selectOrder = $order;
-        }
-
-        return $this;
-    }
-
-    //--------------------------------------------------------------------
     // Utility Methods
     //--------------------------------------------------------------------
 
@@ -1007,10 +876,13 @@ class BaseModel extends Model
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
-        $where = $this->setWhere($params);
+        // Build the Query.
+        $query = $this->newQuery();
 
-        // Build and process the Query.
-        return $this->buildQuery('select')->select($this->primaryKey)->where($where)->count();
+        $query = call_user_func_array(array($query, 'where'), $params);
+
+        // Process the Query.
+        return $query->count();
     }
 
     /**
@@ -1020,8 +892,10 @@ class BaseModel extends Model
      */
     public function countAll()
     {
-        // Build and process the Query.
-        return $this->buildQuery('select')->select($this->primaryKey)->where($this->wheres())->count();
+        $query = $this->newQuery();
+
+        // Process the Query.
+        return $query->count();
     }
 
     /**
@@ -1036,12 +910,13 @@ class BaseModel extends Model
     public function isUnique($field, $value, $ignoreId = null)
     {
         // Build and process the Query.
-        $query = $this->buildQuery('select')->where($field, $value);
+        $query = $this->newQuery()->where($field, $value);
 
-        $query = ($ignoreId === null) ? $query : $query->where($this->primaryKey .' != ?', $ignoreId);
+        if($ignoreId === null) {
+            $query->where($this->primaryKey, '!=', $ignoreId);
+        }
 
         $data = $query->fetchAll();
-
 
         if (is_array($data) && (count($data) == 0)) {
             return true;
@@ -1141,24 +1016,6 @@ class BaseModel extends Model
     }
 
     /**
-     * Query
-     * @param string $sql
-     * @return \PDOStatement
-     */
-    public function query($sql)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        $result = $this->db->rawQuery($sql, $this->tempReturnType);
-
-        // Make sure our temp return type is correct.
-        $this->tempReturnType = $this->returnType;
-
-        return $result;
-    }
-
-    /**
      * Prepare query.
      * @param string $sql
      * @param array $params
@@ -1171,6 +1028,26 @@ class BaseModel extends Model
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
         return $this->db->rawPrepare($sql, $params, $paramTypes);
+    }
+
+    //--------------------------------------------------------------------
+    // Magic Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        $query = $this->newQuery();
+
+        if(method_exists($query, $method)) {
+            return call_user_func_array(array($query, $method), $parameters);
+        }
     }
 
     //--------------------------------------------------------------------
@@ -1248,14 +1125,14 @@ class BaseModel extends Model
     //--------------------------------------------------------------------
 
     /**
-     * Sets the created_on date for the object based on the current date/time and dateFormat.
+     * Sets the created_at date for the object based on the current date/time and dateFormat.
      * Will not overwrite an existing field.
      *
      * @param array $row The array of data to be inserted.
      *
      * @return array
      */
-    public function createdOn($row)
+    public function createdAt($row)
     {
         if (! is_array($row) || empty($row['fields'])) {
             return null;
@@ -1263,7 +1140,7 @@ class BaseModel extends Model
 
         $row = $row['fields'];
 
-        // created_on
+        // created_at
 
         if (is_array($row) && ! array_key_exists($this->createdField, $row)) {
             $row[$this->createdField] = $this->date();
@@ -1273,14 +1150,14 @@ class BaseModel extends Model
     }
 
     /**
-     * Sets the modified_on date for the object based on the current date/time and dateFormat.
+     * Sets the updated_at date for the object based on the current date/time and dateFormat.
      * Will not overwrite an existing field.
      *
      * @param array $row The array of data to be inserted.
      *
      * @return array
      */
-    public function modifiedOn($row)
+    public function updatedAt($row)
     {
         if (! is_array($row) || empty($row['fields'])) {
             return null;
@@ -1288,10 +1165,10 @@ class BaseModel extends Model
 
         $row = $row['fields'];
 
-        // modified_on
+        // updated_at
 
-        if (is_array($row) && ! array_key_exists($this->modifiedField, $row)) {
-            $row[$this->modifiedField] = $this->date();
+        if (is_array($row) && ! array_key_exists($this->updatedField, $row)) {
+            $row[$this->updatedField] = $this->date();
         }
 
         return $row;
@@ -1383,7 +1260,7 @@ class BaseModel extends Model
 
     /**
      * A utility function to allow child models to use the type of date/time format that they prefer.
-     * This is primarily used for setting created_on and modified_on values, but can be used by inheriting classes.
+     * This is primarily used for setting created_at and updated_at values, but can be used by inheriting classes.
      *
      * The available time formats are:
      * * 'int'      - Stores the date as an integer timestamp.
@@ -1413,68 +1290,4 @@ class BaseModel extends Model
         }
     }
 
-    protected function resetState()
-    {
-        // Reset our select WHEREs
-        $this->tempWheres = array();
-
-        // Reset our select ORDER
-        $this->selectOrder = null;
-
-        // Reset our select LIMIT
-        $this->selectLimit = null;
-
-        // Reset our select OFFSET
-        $this->selectOffset = null;
-    }
-
-    /**
-     * Set where
-     * @param array $params
-     * @return array
-     */
-    protected function setWhere(array $params = array())
-    {
-        if (empty($params)) {
-            return $this->tempWheres;
-        }
-
-        // Get the WHERE condition.
-        $condition = array_shift($params);
-
-        if ($condition == null) {
-            // Remove all previous defined conditions from our own WHEREs array, too.
-            $this->tempWheres = array();
-        } else if (is_array($condition)) {
-            // Is given an array of Conditions; merge them into our own WHEREs array.
-            $this->tempWheres = array_merge($this->tempWheres, $condition);
-        } else if (count($params) == 1) {
-            // Store the condition and its value.
-            $this->tempWheres[$condition] = array_shift($params);
-        } else if (count($params) == 2) {
-            $operator = array_shift($params);
-
-            if (! in_array($operator, Connection::$whereOperators, true)) {
-                throw new \UnexpectedValueException(__('Second parameter is invalid'));
-            }
-
-            $condition = sprintf('%s $s ?', $condition, $operator);
-
-            // Store the composed condition and its value.
-            $this->tempWheres[$condition] = array_shift($params);
-        } else {
-            throw new \UnexpectedValueException(__('Invalid number of parameters'));
-        }
-
-        return $this->tempWheres;
-    }
-
-    /**
-     * Wheres
-     * @return array
-     */
-    protected function wheres()
-    {
-        return $this->tempWheres;
-    }
 }

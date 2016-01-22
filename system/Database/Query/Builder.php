@@ -180,6 +180,27 @@ class Builder
     }
 
     /**
+     * This method should be used together with the custom query() command, and it offer
+     * the ability to return the last executed statement, for a further processing.
+     *
+     * @return \Nova\Database\Statement
+     */
+    public function getStatement()
+    {
+        return $this->statement;
+    }
+
+    /**
+     * This method return the result of the last Statement execution.
+     *
+     * @return boolean
+     */
+    public function getLastResult()
+    {
+        return $this->lastResult;
+    }
+
+    /**
      * @param       $sql
      * @param array $bindings
      *

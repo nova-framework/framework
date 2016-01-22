@@ -1,4 +1,13 @@
 <?php
+/**
+ * Event Handler.
+ *
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ * @date January 22th, 2016
+ *
+ * Based on Pixie Query Builder: https://github.com/usmanhalalit/pixie
+ */
 
 namespace Nova\Database;
 
@@ -37,6 +46,7 @@ class EventHandler
         if ($table instanceof Raw) {
             return null;
         }
+
         return isset($this->events[$table][$event]) ? $this->events[$table][$event] : null;
     }
 
@@ -88,11 +98,15 @@ class EventHandler
 
                 // Fire event
                 $handlerParams = func_get_args();
-                unset($handlerParams[1]); // we do not need $event
+
+                unset($handlerParams[1]); // We do not need $event
+
                 // Add to fired list
                 $this->firedEvents[] = $eventId;
+
                 $result = call_user_func_array($action, $handlerParams);
-                if (!is_null($result)) {
+
+                if (! is_null($result)) {
                     return $result;
                 };
             }

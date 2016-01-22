@@ -10,10 +10,10 @@
 
 namespace Nova\Database;
 
-use Nova\Database\EventHandler;
 use Nova\Database\Manager;
 use Nova\Database\Statement;
 use Nova\Database\QueryBuilder;
+use Nova\Database\EventHandler;
 use Nova\Config;
 
 use \FluentStructure;

@@ -20,6 +20,9 @@ Router::any('demos/classic/subpage', 'App\Modules\Demo\Controllers\Classic@subPa
 /** DBAL Demo */
 Router::any('demos/dbal(/index)', 'App\Modules\Demo\Controllers\Database@index');
 
+/** DBAL's QueryBuilder Demo */
+Router::any('demos/dbal/query_builder(/index)', 'App\Modules\Demo\Controllers\Database\QueryBuilder@index');
+
 /** Classic BaseModel Demo */
 Router::any('demos/models/base_model(/index)', 'App\Modules\Demo\Controllers\Models\BaseModel@index');
 

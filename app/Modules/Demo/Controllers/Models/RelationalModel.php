@@ -130,7 +130,7 @@ var_dump(\$result);
 self::dumpObjectArray(\$user);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
         $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
 
@@ -157,7 +157,7 @@ var_dump(\$result);
 self::dumpObjectArray(\$user);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
         $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
 
@@ -179,7 +179,7 @@ self::dumpObjectArray(\$user);
 var_dump(\$result);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
 
         //
@@ -208,7 +208,7 @@ self::dumpObject(\$profile->user);
 
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. self::dumpObject($user).'</pre>';
         $message .= '<pre>'. self::dumpObject($profile).'</pre>';
         $message .= '<pre>'. self::dumpObject($user->profile).'</pre>';
@@ -235,7 +235,7 @@ self::dumpObject(\$profile);
 self::dumpObject(\$profile->user);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. self::dumpObject($user).'</pre>';
         $message .= '<pre>'. self::dumpObject($profile).'</pre>';
         $message .= '<pre>'. self::dumpObject($profile->user).'</pre><br>';
@@ -257,7 +257,7 @@ self::dumpObject(\$author->profile);
 self::dumpObjectArray(\$author->posts);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. self::dumpObject($post).'</pre>';
         $message .= '<pre>'. self::dumpObject($author).'</pre>';
         $message .= '<pre>'. self::dumpObject($author->profile).'</pre>';
@@ -280,7 +280,7 @@ self::dumpObject(\$user);
 self::dumpObjectArray(\$posts);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. self::dumpObject($user).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($posts).'</pre><br>';
 
@@ -301,7 +301,7 @@ self::dumpObject(\$student);
 self::dumpObjectArray(\$courses);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. self::dumpObject($student).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($courses).'</pre><br>';
 
@@ -328,7 +328,7 @@ self::dumpObjectArray(\$students);
 self::dumpObjectArray(\$course->students);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. self::dumpObject($course).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($course->students).'</pre><br>';
@@ -361,7 +361,7 @@ var_export(\$sids, true);
 self::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. self::dumpObject($course).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
         $message .= '<pre>'. var_export($sids, true).'</pre><br>';
@@ -384,7 +384,7 @@ var_export(\$sids, true);
 self::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
 
@@ -406,7 +406,7 @@ var_export(\$sids, true);
 self::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
 
@@ -432,7 +432,7 @@ var_export(\$sids, true);
 self::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text, true);
+        $message .= self::highlightText($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
 

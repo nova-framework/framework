@@ -39,6 +39,11 @@ require dirname(__FILE__) .DS .'functions.php';
 /** Load the application Configuration. */
 require $configDir .'config.php';
 
+/** Load the database Configuration. */
+if (is_readable($configDir .'database.php')) {
+    require $configDir .'database.php';
+}
+
 /** Set the current Timezone. */
 date_default_timezone_set(Config::get('timezone'));
 
@@ -66,6 +71,9 @@ Events::initialize();
 
 /** Initialize the Sessions. */
 Session::initialize();
+
+/** Create the alias for QueryBuilder Facade. */
+class_alias('\\Nova\\Database\\Query\\AliasFacade', '\\Nova\\DB');
 
 /** Execute the Request dispatching by Router. */
 $router->dispatch();

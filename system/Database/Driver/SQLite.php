@@ -20,7 +20,7 @@ class SQLite extends Connection
 
     /**
      * SQLiteEngine constructor.
-     * Please use the Factory to maintain instances of the drivers.
+     * Please use the \Nova\Database\Manager to maintain instances of the drivers.
      *
      * @param $config array
      * @throws \PDOException

@@ -5,6 +5,7 @@ vendor
 composer.lock
 app/Config/config.php
 app/Config/constants.php
+app/Config/database.php
 
 # The developers Playground
 works

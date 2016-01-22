@@ -12,11 +12,10 @@ namespace Nova\Database;
 
 use Nova\Database\Manager;
 use Nova\Database\Statement;
-use Nova\Database\QueryBuilder;
+use Nova\Database\Query\Builder as QueryBuilder;
 use Nova\Database\EventHandler;
 use Nova\Config;
 
-use \FluentStructure;
 use \Closure;
 use \PDO;
 
@@ -141,11 +140,9 @@ abstract class Connection extends PDO
      * @param FluentStructure|null $structure
      * @return \Nova\Database\QueryBuilder
      */
-    public function getQueryBuilder(FluentStructure $structure = null)
+    public function getQueryBuilder()
     {
-        //$this->countIncomingQuery();
-
-        return new QueryBuilder($this, $structure);
+        return new QueryBuilder($this);
     }
 
     /**

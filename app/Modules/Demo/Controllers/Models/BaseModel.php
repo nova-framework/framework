@@ -58,15 +58,15 @@ class BaseModel extends BaseController
         $message = '<h3><strong>'.__d('demo', 'CRUD Support').'</strong></h3><br>';
 
         //
-        $result = $this->model->countBy('username != ?', 'admin');
+        $result = $this->model->countBy('username', '!=', 'admin');
 
-        $message .= '<b>$this->model->countBy(\'username != ?\', \'admin\');</b>';
+        $message .= '<b>$this->model->countBy(\'username\', \'!=\', \'admin\');</b>';
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $members = $this->model->limit(2)->findAll();
+        $members = $this->model->limit(2)->get();
 
-        $message .= '<b>$this->model->limit(2)->findAll();</b>';
+        $message .= '<b>$this->model->limit(2)->get();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -119,15 +119,15 @@ class BaseModel extends BaseController
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username DESC')->findAll();
+        $members = $this->model->orderBy('username', 'DESC')->get();
 
         $message .= '<b>$this->model->orderBy(\'username DESC\')->findAll();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username DESC')->limit(2)->offset(1)->findAll();
+        $members = $this->model->orderBy('username', 'DESC')->limit(2)->offset(1)->get();
 
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->limit(2)->offset(1)->findAll();</b>';
+        $message .= '<b>$this->model->orderBy(\'username\', \'DESC\')->limit(2)->offset(1)->get();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -142,9 +142,9 @@ class BaseModel extends BaseController
         $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username DESC')->findMany(array(1, 3, 4));
+        $members = $this->model->orderBy('username', 'DESC')->whereIn('id', array(1, 3, 4))->get();
 
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->findMany(array(1, 3, 4));</b>';
+        $message .= '<b>$this->model->orderBy(\'username\', \'DESC\')->whereIn(\'id\', array(1, 3, 4))->get();</b>';
         $message .= '<pre>'.var_export($members, true).'</pre><br>';
 
         //
@@ -153,53 +153,45 @@ class BaseModel extends BaseController
         $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Integrated QueryBuilder').'</strong></h3><br>';
 
         //
-        $query = $this->model->asArray()->buildQuery('select')
+        $query = $this->model->asArray()->newQuery()
             ->where('username', 'admin')
-            ->fetch();
+            ->first();
 
-        $message .= '<b>$this->model->asArray()->buildQuery(\'select\')->where(\'username\', \'admin\')->fetch();</b>';
+        $message .= '<b>$this->model->asArray()->newQuery()->where(\'username\', \'admin\')->first();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $query = $this->model->buildQuery('select')
-            ->where('username = ?', 'admin')
-            ->fetch();
+        $query = $this->model->newQuery()
+            ->where('username', '=', 'admin')
+            ->first();
 
-        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'username = ?\', \'admin\')->fetch();</b>';
+        $message .= '<b>$this->model->newQuery()->where(\'username\' \'=\', \'admin\')->first();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $query = $this->model->buildQuery('select')
-            ->where('username != :username', array(':username' => 'admin'))
-            ->fetchAll();
+        $query = $this->model->newQuery()
+            ->whereIn('id', array(1, 3))
+            ->get();
 
-        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'username != :username\', array(\':username\' => \'admin\'))->fetchAll();</b>';
+        $message .= '<b>$this->model->newQuery()->whereIn(\'id\', array(1, 3))->get();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $query = $this->model->buildQuery('select')
-            ->where('id', array(1, 3))
-            ->fetchAll();
+        $query = $this->model->asArray()->newQuery()
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'id\', array(1, 3))->fetchAll();</b>';
+        $message .= '<b>$this->model->asArray()->newQuery()->orderBy(\'id\', \'DESC\')->get();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $query = $this->model->asArray()->buildQuery('select')
-            ->orderBy('id DESC')
-            ->fetchAll();
-
-        $message .= '<b>$this->model->asArray()->buildQuery(\'select\')->orderBy(\'id DESC\')->fetchAll();</b>';
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
-
-        //
-        $query = $this->model->buildQuery('select')
-            ->where('username != ?', 'admin')
-            ->orderBy('id ASC')
+        $query = $this->model->newQuery()
+            ->where('username', '!=', 'admin')
+            ->orderBy('id', 'ASC')
             ->limit(2)
-            ->fetchAll();
+            ->get();
 
-        $message .= '<b>$this->model->buildQuery(\'select\')->where(\'username != ?\', \'admin\')->orderBy(\'id DESC\')->limit(2)->fetchAll();</b>';
+        $message .= '<b>$this->model->newQuery()->where(\'username\', \'!=\', \'admin\')->orderBy(\'id\', \'ASC\')->limit(2)->get();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
@@ -213,18 +205,16 @@ class BaseModel extends BaseController
         $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
 
         //
-        $retval = $this->model->buildQuery('insert')
-            ->values($this->model->prepareData($userInfo))
-            ->execute();
+        $retval = $this->model->newQuery()
+            ->insert($this->model->prepareData($userInfo));
 
-        $message .= '<b>$this->model->buildQuery(\'insert\')->values($this->model->prepareData($userInfo))->execute();</b>';
+        $message .= '<b>$this->model->newQuery()->insert($this->model->prepareData($userInfo));</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $query = $this->model->buildQuery('select')
-            ->fetchAll();
+        $query = $this->model->findAll();
 
-        $message .= '<b>$this->model->buildQuery(\'select\')->fetchAll();</b>';
+        $message .= '<b>$this->model->findAll();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
@@ -237,34 +227,31 @@ class BaseModel extends BaseController
         $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
 
         //
-        $retval = $this->model->buildQuery('update')
-            ->where('username = ?', 'virgil')
-            ->set($this->model->prepareData($userInfo))
-            ->execute();
+        $retval = $this->model->newQuery()
+            ->where('username', '=', 'virgil')
+            ->update($this->model->prepareData($userInfo));
 
-        $message .= '<b>$this->model->buildQuery(\'update\')->where(\'username = ?\', \'virgil\')->set($this->model->prepareData($userInfo))->execute();</b>';
+        $message .= '<b>$this->model->newQuery()->where(\'username\' \'=\', \'virgil\')->update($this->model->prepareData($userInfo));</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $query = $this->model->buildQuery('select')
-            ->fetchAll();
+        $query = $this->model->findAll();
 
-        $message .= '<b>$this->model->buildQuery(\'select\')->fetchAll();</b>';
+        $message .= '<b>$this->model->findAll();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $retval = $this->model->buildQuery('delete')
-            ->where('username = ?', 'virgil')
-            ->execute();
+        $retval = $this->model->newQuery()
+            ->where('username', '=', 'virgil')
+            ->delete();
 
-        $message .= '<b>$this->model->buildQuery(\'delete\')->where(\'username = ?\', \'virgil\')->execute();</b>';
+        $message .= '<b>$this->model->newQuery()->where(\'username = ?\', \'virgil\')->delete();</b>';
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $query = $this->model->buildQuery('select')
-            ->fetchAll();
+        $query = $this->model->findAll();
 
-        $message .= '<b>$this->model->buildQuery(\'select\')->fetchAll();</b>';
+        $message .= '<b>$this->model->findAll();</b>';
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         // Setup the View variables.

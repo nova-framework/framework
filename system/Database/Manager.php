@@ -18,6 +18,7 @@ use Nova\Helpers\Inflector;
 abstract class Manager
 {
     const DRIVER_MYSQL  = "MySQL";
+    const DRIVER_PGSQL  = "PgSQL";
     const DRIVER_SQLITE = "SQLite";
 
     /** @var Connection[] Connection instances */
@@ -36,8 +37,12 @@ abstract class Manager
     {
         $config = Config::get('database');
 
-        if (!isset($config[$linkName])) {
-            throw new \Exception(__d('system', 'Connection name \'{0}\' is not defined in your configuration!', $linkName));
+        if (($config === null)) {
+            throw new \Exception(__d('system', 'Configuration not found, check your {0}/Config/database.php', str_replace(BASEPATH, '', APPPATH)));
+        }
+
+        if (! isset($config[$linkName])) {
+            throw new \Exception(__d('system', 'Connection name \'{0}\' is not defined in your configuration', $linkName));
         }
 
         $options = $config[$linkName];
@@ -48,7 +53,7 @@ abstract class Manager
         if (strpos($driverName, 'PDO_') === 0) {
             $driver = constant("static::DRIVER_" .str_replace('PDO_', '', $driverName));
         } else {
-            throw new \Exception(__d('system', 'Driver not found, check your config.php'));
+            throw new \Exception(__d('system', 'Driver not found, check your {0}/Config/config.php', str_replace(BASEPATH, '', APPPATH)));
         }
 
         // Engine, when already have an instance, return it!

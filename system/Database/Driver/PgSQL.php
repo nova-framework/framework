@@ -15,7 +15,7 @@ use Nova\Database\Manager;
 use Nova\Cache\Manager as CacheManager;
 
 
-class MySQL extends Connection
+class PgSQL extends Connection
 {
 
     /**
@@ -35,23 +35,26 @@ class MySQL extends Connection
 
         // Default port if no port is provided.
         if (! isset($config['port'])) {
-            $config['port'] = 3306;
-        }
-
-        // Some Database Servers go crazy when a charset parameter is added, then we should make it optional.
-        if (! isset($config['charset'])) {
-            $charsetStr = "";
-        } else {
-            $charsetStr = ($config['charset'] == 'auto') ? "" : ";charset=" . $config['charset'];
+            $config['port'] = 5432;
         }
 
         // Prepare the options.
         $options = isset($config['options']) ? $config['options'] : array();
 
         // Prepare the PDO's DSN
-        $dsn = "mysql:host=" .$config['host'] .";port=" .$config['port'] .";dbname=" .$config['dbname'] .$charsetStr;
+        $dsn = "pgsql:host=" .$config['host'] .";port=" .$config['port'] .";dbname=" .$config['dbname'];
 
+        // Execute the Parent Constructor.
         parent::__construct($dsn, $config, $options);
+
+        // Post processing.
+        if (isset($config['charset'])) {
+            $this->prepare("SET NAMES '{$config['charset']}'")->execute();
+        }
+
+        if (isset($config['schema'])) {
+            $this->prepare("SET search_path TO '{$config['schema']}'")->execute();
+        }
     }
 
     /**
@@ -60,7 +63,7 @@ class MySQL extends Connection
      */
     public function getDriverName()
     {
-        return __d('system', 'MySQL Driver');
+        return __d('system', 'PostgresSQL Driver');
     }
 
     /**
@@ -69,7 +72,7 @@ class MySQL extends Connection
      */
     public function getDriverCode()
     {
-        return Manager::DRIVER_MYSQL;
+        return Manager::DRIVER_PGSQL;
     }
 
     /**
@@ -94,21 +97,22 @@ class MySQL extends Connection
     /**
      * Get table column/field type
      *
-     * @param string $mysqlType
+     * @param string $pgsqlType
      * @return string
      */
-    private static function getTableFieldType($mysqlType)
+    private static function getTableFieldType($pgsqlType)
     {
-        if (preg_match("/^([^(]+)/", $mysqlType, $match)) {
+        if (preg_match("/^([^(]+)/", $pgsqlType, $match)) {
             switch (strtolower($match[1])) {
-                case 'tinyint':
                 case 'smallint':
-                case 'mediumint':
-                case 'int':
+                case 'integer':
                 case 'bigint':
-                case 'float':
+                case 'real':
                 case 'double':
                 case 'decimal':
+                case 'numeric':
+                case 'serial':
+                case 'bigserial':
                     return 'int';
 
                 default:
@@ -121,9 +125,11 @@ class MySQL extends Connection
 
     private function getTableFieldData($data)
     {
+        $isNullable = strtoupper($data['is_nullable']);
+
         return array(
-            'type' => self::getTableFieldType($data['Type']),
-            'null' => ($data['Null'] == 'YES') ? true : false
+            'type' => self::getTableFieldType($data['data_type']),
+            'null' => ($isNullable == 'YES') ? true : false
         );
     }
 
@@ -151,7 +157,7 @@ class MySQL extends Connection
         }
 
         // Prepare the Cache Token.
-        $token = 'mysql_table_fields_' .md5($table);
+        $token = 'pgsql_table_fields_' .md5($table);
 
         // Setup the Cache instance.
         $cache = CacheManager::getCache();
@@ -163,7 +169,7 @@ class MySQL extends Connection
             $fields = array();
 
             // Find all Column names
-            $sql = "SHOW COLUMNS FROM $table";
+            $sql = "SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name ='$table';";
 
             // Get the current Time.
             $time = microtime(true);
@@ -174,9 +180,9 @@ class MySQL extends Connection
 
             if ($result !== false) {
                 foreach ($result as $row) {
-                    $field = $row['Field'];
+                    $field = $row['column_name'];
 
-                    unset($row['Field']);
+                    unset($row['column_name']);
 
                     $row['CID'] = $cid;
 

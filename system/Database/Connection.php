@@ -13,6 +13,7 @@ namespace Nova\Database;
 use Nova\Database\Manager;
 use Nova\Database\Statement;
 use Nova\Database\QueryBuilder;
+use Nova\Database\EventHandler;
 use Nova\Config;
 
 use \FluentStructure;
@@ -24,6 +25,7 @@ use \PDO;
  */
 abstract class Connection extends PDO
 {
+    /** @var string The last executed Query is stored there */
     protected $lastSqlQuery = null;
 
     public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>", "LIKE");
@@ -42,6 +44,9 @@ abstract class Connection extends PDO
 
      /** @var array Store the executed queries, into Profiling mode. */
     protected $queries = array();
+
+    /** @var EventHandler */
+    protected $eventHandler;
 
     /**
      * MySQLEngine constructor.
@@ -82,6 +87,9 @@ abstract class Connection extends PDO
 
         //$this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $fetchMethod);
+
+        // Create the Event Handler instance.
+        $this->eventHandler = new EventHandler();
     }
 
     /**
@@ -138,6 +146,15 @@ abstract class Connection extends PDO
         //$this->countIncomingQuery();
 
         return new QueryBuilder($this, $structure);
+    }
+
+    /**
+     * Get the Event Handler instance.
+     * @return \Nova\Database\EventHandler
+     */
+    public function getEventHandler()
+    {
+        return $this->eventHandler;
     }
 
     /**
@@ -573,7 +590,7 @@ abstract class Connection extends PDO
 
         // Prepare the Insert Mode.
         $insertMode = strtoupper($mode);
-        
+
         // Prepare the SQL statement.
         $sql = "$insertMode INTO $table ($fieldNames) VALUES ($fieldValues)";
 
@@ -943,7 +960,7 @@ abstract class Connection extends PDO
 
         if(empty($result)) {
             // There are no WHERE conditions, then we make the Database to match all records.
-            $result = '1 = 1';
+            $result = '1';
         }
 
         return $result;

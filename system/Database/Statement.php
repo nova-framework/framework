@@ -51,10 +51,12 @@ class Statement
     {
         $start = microtime(true);
 
-        $result = $this->statement->execute($params);
-
-        if(is_array($params)) {
+        if(empty($params)) {
+            $result = $this->statement->execute();
+        } else {
             $this->parameters = $params;
+
+            $result = $this->statement->execute($params);
         }
 
         $this->logQuery($this->statement->queryString, $start, $this->parameters);

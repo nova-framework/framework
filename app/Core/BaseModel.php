@@ -628,9 +628,6 @@ class BaseModel extends Model
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
 
-        // Prepare the WHERE parameters.
-        $where = $this->setWhere($params);
-
         //
         $result = false;
 
@@ -777,9 +774,6 @@ class BaseModel extends Model
         if (empty($params)) {
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
-
-        // Prepare the WHERE parameters.
-        $where = $this->setWhere($params);
 
         //
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));

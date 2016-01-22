@@ -46,10 +46,21 @@ Config::set('demos_menu', array(
         'url'       => site_url('demos/events'),
         'icon'      => 'fa fa-gears',
     ),
-    'dbal' => array(
-        'name'      => __d('demo', 'DBAL'),
-        'url'       => site_url('demos/dbal'),
-        'icon'      => 'fa fa-gears',
+    'database' => array(
+        'name'      => __d('demo', 'Database'),
+        'icon'      => 'fa fa-server',
+        'children'  => array(
+            'dbal' => array(
+                'name'      => __d('demo', 'Database Abstraction Layer'),
+                'url'       => site_url('demos/dbal'),
+                'icon'      => 'fa fa-gears',
+            ),
+            'query_builder' => array(
+                'name'      => __d('demo', 'Database Query Builder'),
+                'url'       => site_url('demos/dbal/query_builder'),
+                'icon'      => 'fa fa-gears',
+            ),
+        ),
     ),
     'models' => array(
         'name'      => __d('demo', 'Models'),

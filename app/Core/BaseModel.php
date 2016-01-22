@@ -494,6 +494,8 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
+            $data = $this->trigger('beforeInsert', array('method' => 'replace', 'fields' => $data));
+
             // Prepare the Data.
             $data = $this->prepareData($data);
 

@@ -494,6 +494,8 @@ class BaseModel extends Model
 
         // Will be false if it didn't validate.
         if ($data !== false) {
+            $data = $this->trigger('beforeInsert', array('method' => 'replace', 'fields' => $data));
+
             // Prepare the Data.
             $data = $this->prepareData($data);
 
@@ -627,9 +629,6 @@ class BaseModel extends Model
         if (empty($params) || empty($data)) {
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
-
-        // Prepare the WHERE parameters.
-        $where = $this->setWhere($params);
 
         //
         $result = false;
@@ -777,9 +776,6 @@ class BaseModel extends Model
         if (empty($params)) {
             throw new \UnexpectedValueException(__('Invalid parameters'));
         }
-
-        // Prepare the WHERE parameters.
-        $where = $this->setWhere($params);
 
         //
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));

@@ -99,26 +99,6 @@ class BaseModel extends Model
     protected $tempReturnType = null;
 
     /**
-     * Temporary select's WHERE attributes.
-     */
-    protected $tempWheres = array();
-
-    /**
-     * Temporary select's ORDER attribute.
-     */
-    protected $selectOrder = null;
-
-    /**
-     * Temporary select's LIMIT attribute.
-     */
-    protected $selectLimit = null;
-
-    /**
-     * Temporary select's OFFSET attribute.
-     */
-    protected $selectOffset = null;
-
-    /**
      * Protected, non-modifiable attributes.
      */
     protected $protectedFields = array();
@@ -245,7 +225,7 @@ class BaseModel extends Model
      * @return \BaseQuery|\DeleteQuery|\InsertQuery|\SelectQuery|\UpdateQuery
      * @throws \Exception
      */
-    public function newQuery()
+    public function buildQuery()
     {
         $returnType = $this->tempReturnType;
 
@@ -294,7 +274,7 @@ class BaseModel extends Model
     public function first()
     {
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         return $query->first();
     }
@@ -309,15 +289,15 @@ class BaseModel extends Model
      */
     public function find($id)
     {
-        if (! is_integer($id)) {
-            throw new \UnexpectedValueException(__('Parameter should be an Integer'));
+        if (! is_numeric($id)) {
+            throw new \UnexpectedValueException(__('Parameter should be numeric'));
         }
 
         //
         $this->trigger('beforeFind', array('id' => $id, 'method' => 'find'));
 
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $result = $query->where($this->primaryKey, $id)->first();
 
@@ -346,7 +326,7 @@ class BaseModel extends Model
         $this->trigger('beforeFind', array('method' => 'findBy', 'fields' => $where));
 
         // Prepare and execute th Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $query = call_user_func_array(array($query, 'where'), $params);
 
@@ -375,7 +355,7 @@ class BaseModel extends Model
         }
 
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $query = $query->whereIn($this->primaryKey, $values);
 
@@ -399,7 +379,7 @@ class BaseModel extends Model
         }
 
         // Prepare and execute th Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $query = call_user_func_array(array($query, 'where'), $params);
 
@@ -419,7 +399,7 @@ class BaseModel extends Model
         $this->trigger('beforeFind', array('method' => 'findAll', 'fields' => $where));
 
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         // Fetch the result.
         $result = $query->get();
@@ -461,7 +441,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Prepare and Execute the Query.
-            $query = $this->newQuery();
+            $query = $this->buildQuery();
 
             $result = $query->insert($data);
 
@@ -500,7 +480,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Execute the REPLACE.
-            $query = $this->newQuery();
+            $query = $this->buildQuery();
 
             $result = $query->replace($data);
 
@@ -540,7 +520,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $query = $this->newQuery();
+            $query = $this->buildQuery();
 
             $result = $query->where($this->primaryKey, $id)->update($data);
 
@@ -592,7 +572,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $query = $this->newQuery();
+            $query = $this->buildQuery();
 
             $result = $query->whereIn($this->primaryKey, $ids)->update($data);
 
@@ -641,7 +621,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $query = $this->newQuery();
+            $query = $this->buildQuery();
 
             $query = call_user_func_array(array($query, 'where'), $params);
 
@@ -680,7 +660,7 @@ class BaseModel extends Model
             $data = $this->prepareData($data);
 
             // Build and process the Query.
-            $query = $this->newQuery();
+            $query = $this->buildQuery();
 
             $result = $query->update($data);
 
@@ -707,7 +687,7 @@ class BaseModel extends Model
         $data = array($field => "{$field}+{$value}");
 
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         return $query->where($this->primaryKey, $id)->update($data);
     }
@@ -729,7 +709,7 @@ class BaseModel extends Model
         $data = array($field => "{$field}-{$value}");
 
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         return $query->where($this->primaryKey, $id)->update($data);
     }
@@ -751,7 +731,7 @@ class BaseModel extends Model
         $this->trigger('beforeDelete', array('id' => $id, 'method' => 'delete'));
 
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $result = $query->where($this->primaryKey, $id)->execute();
 
@@ -781,7 +761,7 @@ class BaseModel extends Model
         $where = $this->trigger('beforeDelete', array('method' => 'deleteBy', 'fields' => $where));
 
         // Build the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $query = call_user_func_array(array($query, 'where'), $params);
 
@@ -809,7 +789,7 @@ class BaseModel extends Model
         $ids = $this->trigger('beforeDelete', array('ids' => $ids, 'method' => 'deleteMany'));
 
         // Build and process the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $result = $query->whereIn($this->primaryKey, $ids)->delete();
 
@@ -873,7 +853,7 @@ class BaseModel extends Model
         }
 
         // Build the Query.
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         $query = call_user_func_array(array($query, 'where'), $params);
 
@@ -888,7 +868,7 @@ class BaseModel extends Model
      */
     public function countAll()
     {
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         // Process the Query.
         return $query->count();
@@ -906,7 +886,7 @@ class BaseModel extends Model
     public function isUnique($field, $value, $ignoreId = null)
     {
         // Build and process the Query.
-        $query = $this->newQuery()->where($field, $value);
+        $query = $this->buildQuery()->where($field, $value);
 
         if($ignoreId === null) {
             $query->where($this->primaryKey, '!=', $ignoreId);
@@ -1039,7 +1019,7 @@ class BaseModel extends Model
      */
     public function __call($method, $parameters)
     {
-        $query = $this->newQuery();
+        $query = $this->buildQuery();
 
         if(method_exists($query, $method)) {
             return call_user_func_array(array($query, $method), $parameters);

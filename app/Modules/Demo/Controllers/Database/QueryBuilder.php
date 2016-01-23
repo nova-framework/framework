@@ -193,6 +193,7 @@ var_export(\$data);
 
         $userId = DB::table('users')->insert($userInfo);
 
+
         $text = "
 \$userInfo = array(
     'username' => 'virgil',
@@ -208,10 +209,10 @@ var_export(\$userId, true);
         $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
-        $data = DB::table('users')->get();
+        $data = DB::table('users')->where('id', $userId)->first();
 
         $text = "
-\$data = DB::table('users')->get();
+\$data = DB::table('users')->where('id', \$userId)->first();
 
 var_export(\$data, true);
         ";
@@ -220,38 +221,35 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = DB::table('users')->where('id', $userId)->first();
-
         $userInfo = array(
             'email' => 'modified@novaframework.dev'
         );
 
         $result = DB::table('users')->where('id', $userId)->update($userInfo);
 
-        $data2 = DB::table('users')->where('id', $userId)->asObject()->first();
-
         $text = "
-\$data = DB::table('users')->where('id', \$userId)->first();
-
 \$userInfo = array(
     'email' => 'modified@novaframework.dev'
 );
 
-\$result = DB::table('users')->where('id', \$userId)->update(\$userInfo);
+\$data = DB::table('users')->where('id', \$userId)->asObject()->first();
 
-\$data2 = DB::table('users')->where('id', \$userId)->asObject()->first();
-
-var_export(\$userId, true);
-var_export(\$data, true);
 var_export(\$result, true);
-var_export(\$data2, true);
         ";
 
         $message .= self::highlightText($text);
-        $message .= '<pre>'.var_export($userId, true).'</pre>';
-        $message .= '<pre>'.var_export($data, true).'</pre>';
         $message .= '<pre>'.var_export($result, true).'</pre>';
-        $message .= '<pre>'.var_export($data2, true).'</pre><br>';
+
+        $data = DB::table('users')->where('id', $userId)->asObject()->first();
+
+        $text = "
+\$data = DB::table('users')->where('id', \$userId)->asObject()->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $result = DB::table('users')->where('username', 'virgil')->delete();

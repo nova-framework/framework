@@ -60,14 +60,26 @@ class BaseModel extends BaseController
         //
         $result = $this->model->countBy('username', '!=', 'admin');
 
-        $message .= '<b>$this->model->countBy(\'username\', \'!=\', \'admin\');</b>';
+        $text = "
+\$result = \$this->model->countBy('username', '!=', 'admin');
+
+var_export(\$result, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $members = $this->model->limit(2)->get();
+        $data = $this->model->limit(2)->get();
 
-        $message .= '<b>$this->model->limit(2)->get();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = "
+\$data = \$this->model->limit(2)->get();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $userInfo = array(
@@ -76,20 +88,34 @@ class BaseModel extends BaseController
             'email'    => 'virgil@novaframework.dev'
         );
 
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
-
-        //
         $retval = $this->model->insert($userInfo);
 
-        $message .= '<b>$this->model->insert($userInfo);</b>';
+        $text = "
+\$userInfo = array(
+    'username' => 'virgil',
+    'password' => 'test',
+    'email'    => 'virgil@novaframework.dev'
+);
+
+\$retval = \$this->model->insert(\$userInfo);
+
+var_export(\$retval, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->model->findAll();
+        $data = $this->model->findAll();
 
-        $message .= '<b>$this->model->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = "
+\$data = \$this->model->findAll();;
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $userInfo = array(
@@ -97,55 +123,119 @@ class BaseModel extends BaseController
             'email'    => 'modified@novaframework.dev'
         );
 
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
-
-        //
         $retval = $this->model->updateBy('username', 'virgil', $userInfo);
 
-        $message .= '<b>$this->model->updateBy(\'username\', \'virgil\', $userInfo);</b>';
+        $text = "
+\$userInfo = array(
+    'password' => 'testing',
+    'email'    => 'modified@novaframework.dev'
+);
+
+\$retval = \$this->model->updateBy('username', 'virgil', $userInfo);
+
+var_export(\$retval, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->model->findAll();
+        $data = $this->model->findAll();
 
-        $message .= '<b>$this->model->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = "
+\$data = \$this->model->findAll();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $retval = $this->model->deleteBy('username', 'virgil');
 
-        $message .= '<b>$this->model->deleteBy(\'username\', \'virgil\');</b>';
+        $text = "
+\$retval = \$this->model->deleteBy('username', 'virgil');
+
+var_export(\$retval, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username', 'DESC')->get();
+        $data = $this->model->orderBy('username', 'DESC')->get();
 
-        $message .= '<b>$this->model->orderBy(\'username DESC\')->findAll();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = "
+\$data = \$this->model->orderBy('username', 'DESC')->get();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username', 'DESC')->limit(2)->offset(1)->get();
+        $data = $this->model
+            ->orderBy('username', 'DESC')
+            ->limit(2)
+            ->offset(1)
+            ->get();
 
-        $message .= '<b>$this->model->orderBy(\'username\', \'DESC\')->limit(2)->offset(1)->get();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = "
+\$data = \$this->model
+    ->orderBy('username', 'DESC')
+    ->limit(2)
+    ->offset(1)
+    ->get();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $result = $this->model->findBy('username', 'marcus');
+        $data = $this->model->findBy('username', 'marcus');
 
-        $message .= '<b>$this->model->findBy(\'username\', \'marcus\');</b>';
+        $text = "
+\$data = \$this->model->findBy('username', 'marcus');
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
-        $result = $this->model->find(3);
+        $data = $this->model->find(3);
 
-        $message .= '<b>$this->model->find(3);</b><pre>'.var_export($result, true).'</pre><br>';
+        $text = "
+\$data = \$this->model->find(3);
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $members = $this->model->orderBy('username', 'DESC')->whereIn('id', array(1, 3, 4))->get();
+        $data = $this->model
+            ->orderBy('username', 'DESC')
+            ->whereIn('id', array(1, 3, 4))
+            ->get();
 
-        $message .= '<b>$this->model->orderBy(\'username\', \'DESC\')->whereIn(\'id\', array(1, 3, 4))->get();</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = "
+\$this->model->
+    orderBy('username', 'DESC')
+    ->whereIn('id', array(1, 3, 4))
+    ->get()
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         // QueryBuilder
@@ -153,46 +243,92 @@ class BaseModel extends BaseController
         $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Integrated QueryBuilder').'</strong></h3><br>';
 
         //
-        $query = $this->model->asArray()->newQuery()
-            ->where('username', 'admin')
-            ->first();
+        $query = $this->model->buildQuery();
 
-        $message .= '<b>$this->model->asArray()->newQuery()->where(\'username\', \'admin\')->first();</b>';
+        $data = $query->where('username', 'admin')->asAssoc()->first();
+
+        $text = "
+\$query = \$this->model->buildQuery();
+
+\$data = \$query->where('username', 'admin')->asAssoc()->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery();
+
+        $data = $query->where('username', '=', 'admin')->first();
+
+        $text = "
+\$query = \$this->model->buildQuery();
+
+\$data = \$query->where('username', '=', 'admin')->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery();
+
+        $data = $query->whereIn('id', array(1, 3))->get();
+
+        $text = "
+\$query = \$this->model->buildQuery();
+
+\$data = \$query->whereIn('id', array(1, 2, 4))->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $query = $this->model->buildQuery();
+
+        $query = $query->orderBy('id', 'DESC')->asAssoc()->get();
+
+        $text = "
+\$query = \$this->model->buildQuery();
+
+\$data = \$query->orderBy('id', 'DESC')->asAssoc()->get();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $query = $this->model->newQuery()
-            ->where('username', '=', 'admin')
-            ->first();
+        $query = $this->model->buildQuery();
 
-        $message .= '<b>$this->model->newQuery()->where(\'username\' \'=\', \'admin\')->first();</b>';
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
-
-        //
-        $query = $this->model->newQuery()
-            ->whereIn('id', array(1, 3))
-            ->get();
-
-        $message .= '<b>$this->model->newQuery()->whereIn(\'id\', array(1, 3))->get();</b>';
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
-
-        //
-        $query = $this->model->asArray()->newQuery()
-            ->orderBy('id', 'DESC')
-            ->get();
-
-        $message .= '<b>$this->model->asArray()->newQuery()->orderBy(\'id\', \'DESC\')->get();</b>';
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
-
-        //
-        $query = $this->model->newQuery()
+        $data = $query
             ->where('username', '!=', 'admin')
             ->orderBy('id', 'ASC')
             ->limit(2)
             ->get();
 
-        $message .= '<b>$this->model->newQuery()->where(\'username\', \'!=\', \'admin\')->orderBy(\'id\', \'ASC\')->limit(2)->get();</b>';
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+        $text = "
+\$query = \$this->model->buildQuery();
+
+\$data = \$query
+    ->where('username', '!=', 'admin')
+    ->orderBy('id', 'DESC')
+    ->limit(2)
+    ->get();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $userInfo = array(
@@ -201,21 +337,42 @@ class BaseModel extends BaseController
             'email'    => 'virgil@novaframework.dev'
         );
 
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+        $data = $this->model->prepareData($userInfo);
+
+        $query = $this->model->buildQuery();
+
+        $userId = $query->insert($this->model->prepareData($userInfo));
+
+        $text = "
+\$userInfo = array(
+    'username' => 'virgil',
+    'password' => 'test',
+    'email'    => 'virgil@novaframework.dev'
+);
+
+\$data = \$this->model->prepareData(\$userInfo);
+
+\$query = \$this->model->buildQuery();
+
+\$userId = \$query->insert(\$data);
+
+var_export(\$userId, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
-        $retval = $this->model->newQuery()
-            ->insert($this->model->prepareData($userInfo));
+        $data = $this->model->find($userId);
 
-        $message .= '<b>$this->model->newQuery()->insert($this->model->prepareData($userInfo));</b>';
-        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+        $text = "
+\$data = \$this->model->find(\$userId);
 
-        //
-        $query = $this->model->findAll();
+var_export(\$data, true);
+        ";
 
-        $message .= '<b>$this->model->findAll();</b>';
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $userInfo = array(
@@ -223,40 +380,91 @@ class BaseModel extends BaseController
             'email' => 'modified@novaframework.dev'
         );
 
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+        $data = $this->model->prepareData($userInfo);
 
-        //
-        $retval = $this->model->newQuery()
-            ->where('username', '=', 'virgil')
-            ->update($this->model->prepareData($userInfo));
+        $query = $this->model->buildQuery();
 
-        $message .= '<b>$this->model->newQuery()->where(\'username\' \'=\', \'virgil\')->update($this->model->prepareData($userInfo));</b>';
+        $retval = $query->where('id', $userId)->update($data);
+
+        $text = "
+\$userInfo = array(
+    'password' => 'testing',
+    'email'    => 'modified@novaframework.dev'
+);
+
+\$data = \$this->model->prepareData(\$userInfo);
+
+\$query = \$this->model->buildQuery();
+
+\$retval = \$query->where('id', \$userId)->update(\$data);
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $query = $this->model->findAll();
+        $query = $this->model->find($userId);
 
-        $message .= '<b>$this->model->findAll();</b>';
+        $text = "
+\$data = \$this->model->find(\$userId);
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
-        $retval = $this->model->newQuery()
-            ->where('username', '=', 'virgil')
-            ->delete();
+        $query = $this->model->buildQuery();
 
-        $message .= '<b>$this->model->newQuery()->where(\'username = ?\', \'virgil\')->delete();</b>';
+        $retval = $query->where('username', '=', 'virgil')->delete();
+
+        $text = "
+\$query = \$this->model->buildQuery();
+
+\$retval = \$query->where('username', '=', 'virgil')->delete();
+
+var_export(\$retval, true);
+        ";
+
+        $message .= self::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $query = $this->model->findAll();
+        $data = $this->model->findAll();
 
-        $message .= '<b>$this->model->findAll();</b>';
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+        $text = "
+\$data = \$this->model->findAll();
+
+var_export(\$data, true);
+        ";
+
+        $message .= self::highlightText($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'Classic BaseModel'));
 
         $this->set('message', $message);
+    }
+
+    private static function highlightText($text)
+    {
+        $text = trim($text);
+        $text = highlight_string("<?php " . $text, true);  // highlight_string requires opening PHP tag or otherwise it will not colorize the text
+        $text = trim($text);
+        $text = preg_replace("|^\\<code\\>\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>|", "", $text, 1);  // remove prefix
+        $text = preg_replace("|\\</code\\>\$|", "", $text, 1);  // remove suffix 1
+        $text = trim($text);  // remove line breaks
+        $text = preg_replace("|\\</span\\>\$|", "", $text, 1);  // remove suffix 2
+        $text = trim($text);  // remove line breaks
+        $text = preg_replace("|^(\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>)(&lt;\\?php&nbsp;)(.*?)(\\</span\\>)|", "\$1\$3\$4", $text);  // remove custom added "<?php "
+
+        // Finall processing.
+        $text = '<div style="font-weight: bold; margin-bottom: 10px;">'.$text.'</div>';
+
+        return $text;
     }
 }

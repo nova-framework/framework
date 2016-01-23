@@ -12,6 +12,7 @@ namespace App\Modules\Demo\Controllers\Database;
 use Nova\Core\View;
 use Nova\Database\Query\Builder\Facade as DB;
 use App\Modules\Demo\Core\BaseController;
+use App\Modules\Demo\Helpers\ObjectDumper as Dumper;
 
 /**
  * Sample Themed Controller with its typical usage.
@@ -57,7 +58,7 @@ class QueryBuilder extends BaseController
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -69,7 +70,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -81,7 +82,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -101,7 +102,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -123,7 +124,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -145,7 +146,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -176,7 +177,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -199,7 +200,7 @@ var_export(\$data, true);
 var_export(\$userId, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
@@ -211,7 +212,7 @@ var_export(\$userId, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -231,7 +232,7 @@ var_export(\$data, true);
 var_export(\$result, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($result, true).'</pre>';
 
         $data = DB::table('users')->where('id', $userId)->asObject()->first();
@@ -242,7 +243,7 @@ var_export(\$result, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -254,7 +255,7 @@ var_export(\$data, true);
 var_export(\$result, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
@@ -266,7 +267,7 @@ var_export(\$result, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         // Setup the View variables.

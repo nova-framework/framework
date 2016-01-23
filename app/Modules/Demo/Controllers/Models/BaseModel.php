@@ -12,8 +12,10 @@ namespace App\Modules\Demo\Controllers\Models;
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
 use App\Modules\Demo\Models\Users as UserModel;
+use App\Modules\Demo\Helpers\ObjectDumper as Dumper;
 
 use \PDO;
+
 
 /**
  * Sample Themed Controller with its typical usage.
@@ -66,7 +68,7 @@ class BaseModel extends BaseController
 var_export(\$result, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
@@ -78,7 +80,7 @@ var_export(\$result, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -102,7 +104,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -114,7 +116,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -136,7 +138,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -148,7 +150,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -160,7 +162,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -172,7 +174,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -192,7 +194,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -204,7 +206,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
@@ -216,7 +218,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -234,7 +236,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -255,7 +257,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -271,7 +273,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -287,7 +289,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -303,7 +305,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
@@ -327,7 +329,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -359,7 +361,7 @@ var_export(\$data, true);
 var_export(\$userId, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
@@ -371,7 +373,7 @@ var_export(\$userId, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -398,10 +400,10 @@ var_export(\$data, true);
 
 \$retval = \$query->where('id', \$userId)->update(\$data);
 
-var_export(\$data, true);
+var_export(\$retval, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -413,7 +415,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
@@ -429,7 +431,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -441,7 +443,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         // Setup the View variables.
@@ -450,21 +452,4 @@ var_export(\$data, true);
         $this->set('message', $message);
     }
 
-    private static function highlightText($text)
-    {
-        $text = trim($text);
-        $text = highlight_string("<?php " . $text, true);  // highlight_string requires opening PHP tag or otherwise it will not colorize the text
-        $text = trim($text);
-        $text = preg_replace("|^\\<code\\>\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>|", "", $text, 1);  // remove prefix
-        $text = preg_replace("|\\</code\\>\$|", "", $text, 1);  // remove suffix 1
-        $text = trim($text);  // remove line breaks
-        $text = preg_replace("|\\</span\\>\$|", "", $text, 1);  // remove suffix 2
-        $text = trim($text);  // remove line breaks
-        $text = preg_replace("|^(\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>)(&lt;\\?php&nbsp;)(.*?)(\\</span\\>)|", "\$1\$3\$4", $text);  // remove custom added "<?php "
-
-        // Finall processing.
-        $text = '<div style="font-weight: bold; margin-bottom: 10px;">'.$text.'</div>';
-
-        return $text;
-    }
 }

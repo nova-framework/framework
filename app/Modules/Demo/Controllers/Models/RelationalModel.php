@@ -17,6 +17,7 @@ use App\Modules\Demo\Models\Profile;
 use App\Modules\Demo\Models\Post;
 use App\Modules\Demo\Models\Student;
 use App\Modules\Demo\Models\Course;
+use App\Modules\Demo\Helpers\ObjectDumper as Dumper;
 
 use Nova\ORM\Model as BaseModel;
 
@@ -65,7 +66,7 @@ class RelationalModel extends BaseController
         $message = '<h3><strong>'.__d('demo', 'Details about Model').'</strong></h3><br>';
 
         //
-        $message .= self::highlightText('var_export($this->model->getObjectVariables(), true);', true);
+        $message .= Dumper::highlightText('var_export($this->model->getObjectVariables(), true);', true);
         $message .= '<pre>'. var_export($this->model->getObjectVariables(), true).'</pre><br>';
 
         //
@@ -74,38 +75,38 @@ class RelationalModel extends BaseController
         //
         $result = $this->model->find(1);
 
-        $message .= self::highlightText('$this->model->find(1);', true);
-        $message .= '<pre>'. self::dumpObject($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->find(1);', true);
+        $message .= '<pre>'. Dumper::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->orderBy('username DESC')->findAll();
 
-        $message .= self::highlightText('$this->model->orderBy(\'username DESC\')->findAll();', true);
-        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->orderBy(\'username DESC\')->findAll();', true);
+        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findBy('username', 'marcus');
 
-        $message .= self::highlightText('$this->model->findBy(\'username\', \'marcus\');', true);
-        $message .= '<pre>'. self::dumpObject($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->findBy(\'username\', \'marcus\');', true);
+        $message .= '<pre>'. Dumper::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->findManyBy('username != ?', 'marcus');
 
-        $message .= self::highlightText('$this->model->findManyBy(\'username != ?\', \'marcus\');', true);
-        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->findManyBy(\'username != ?\', \'marcus\');', true);
+        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->where('username != ?', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
 
-        $message .= self::highlightText('$this->model->where(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
-        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->where(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
+        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findMany(array(1, 3, 4));
 
-        $message .= self::highlightText('$this->model->findMany(array(1, 3, 4));', true);
-        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->findMany(array(1, 3, 4));', true);
+        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Creating Records').'</strong></h3><br>';
@@ -127,18 +128,18 @@ class RelationalModel extends BaseController
 \$result = \$user->save();
 
 var_dump(\$result);
-self::dumpObjectArray(\$user);
+Dumper::dumpObjectArray(\$user);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
-        $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre><br>';
 
         //
         $result = $this->model->findAll();
 
-        $message .= self::highlightText('$this->model->findAll();', true);
-        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->findAll();', true);
+        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Modifying Records').'</strong></h3><br>';
@@ -154,18 +155,18 @@ self::dumpObjectArray(\$user);
 \$result = \$user->save();
 
 var_dump(\$result);
-self::dumpObjectArray(\$user);
+Dumper::dumpObjectArray(\$user);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
-        $message .= '<pre>'. self::dumpObject($user).'</pre><br>';
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre><br>';
 
         //
         $result = $this->model->findAll();
 
-        $message .= self::highlightText('$this->model->findAll();', true);
-        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->findAll();', true);
+        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Deleting Records').'</strong></h3><br>';
@@ -179,14 +180,14 @@ self::dumpObjectArray(\$user);
 var_dump(\$result);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
 
         //
         $result = $this->model->findAll();
 
-        $message .= self::highlightText('$this->model->findAll();', true);
-        $message .= '<pre>'. self::dumpObjectArray($result).'</pre><br>';
+        $message .= Dumper::highlightText('$this->model->findAll();', true);
+        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Relations: hasOne').'</strong></h3><br>';
@@ -201,18 +202,18 @@ var_dump(\$result);
 
 \$profile = \$user->profile;
 
-self::dumpObject(\$user);
-self::dumpObject(\$profile);
-self::dumpObject(\$user->profile);
-self::dumpObject(\$profile->user);
+Dumper::dumpObject(\$user);
+Dumper::dumpObject(\$profile);
+Dumper::dumpObject(\$user->profile);
+Dumper::dumpObject(\$profile->user);
 
         ";
 
-        $message .= self::highlightText($text);
-        $message .= '<pre>'. self::dumpObject($user).'</pre>';
-        $message .= '<pre>'. self::dumpObject($profile).'</pre>';
-        $message .= '<pre>'. self::dumpObject($user->profile).'</pre>';
-        $message .= '<pre>'. self::dumpObject($profile->user).'</pre><br>';
+        $message .= Dumper::highlightText($text);
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($profile).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($user->profile).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($profile->user).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsTo').'</strong></h3><br>';
@@ -230,15 +231,15 @@ self::dumpObject(\$profile->user);
 
 \$user2 = \$profile->user;
 
-self::dumpObject(\$user);
-self::dumpObject(\$profile);
-self::dumpObject(\$profile->user);
+Dumper::dumpObject(\$user);
+Dumper::dumpObject(\$profile);
+Dumper::dumpObject(\$profile->user);
         ";
 
-        $message .= self::highlightText($text);
-        $message .= '<pre>'. self::dumpObject($user).'</pre>';
-        $message .= '<pre>'. self::dumpObject($profile).'</pre>';
-        $message .= '<pre>'. self::dumpObject($profile->user).'</pre><br>';
+        $message .= Dumper::highlightText($text);
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($profile).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($profile->user).'</pre><br>';
 
         //
 
@@ -251,17 +252,17 @@ self::dumpObject(\$profile->user);
 
 \$author = \$post->author;
 
-self::dumpObject(\$post);
-self::dumpObject(\$author);
-self::dumpObject(\$author->profile);
-self::dumpObjectArray(\$author->posts);
+Dumper::dumpObject(\$post);
+Dumper::dumpObject(\$author);
+Dumper::dumpObject(\$author->profile);
+Dumper::dumpObjectArray(\$author->posts);
         ";
 
-        $message .= self::highlightText($text);
-        $message .= '<pre>'. self::dumpObject($post).'</pre>';
-        $message .= '<pre>'. self::dumpObject($author).'</pre>';
-        $message .= '<pre>'. self::dumpObject($author->profile).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($author->posts).'</pre><br>';
+        $message .= Dumper::highlightText($text);
+        $message .= '<pre>'. Dumper::dumpObject($post).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($author).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($author->profile).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($author->posts).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Relations: hasMany').'</strong></h3><br>';
@@ -276,13 +277,13 @@ self::dumpObjectArray(\$author->posts);
 
 \$posts = \$user->posts;
 
-self::dumpObject(\$user);
-self::dumpObjectArray(\$posts);
+Dumper::dumpObject(\$user);
+Dumper::dumpObjectArray(\$posts);
         ";
 
-        $message .= self::highlightText($text);
-        $message .= '<pre>'. self::dumpObject($user).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($posts).'</pre><br>';
+        $message .= Dumper::highlightText($text);
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($posts).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany').'</strong></h3><br>';
@@ -297,13 +298,13 @@ self::dumpObjectArray(\$posts);
 
 \$courses = \$student->courses;
 
-self::dumpObject(\$student);
-self::dumpObjectArray(\$courses);
+Dumper::dumpObject(\$student);
+Dumper::dumpObjectArray(\$courses);
         ";
 
-        $message .= self::highlightText($text);
-        $message .= '<pre>'. self::dumpObject($student).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($courses).'</pre><br>';
+        $message .= Dumper::highlightText($text);
+        $message .= '<pre>'. Dumper::dumpObject($student).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($courses).'</pre><br>';
 
         //
         $course = Course::find(1);
@@ -323,15 +324,15 @@ self::dumpObjectArray(\$courses);
     ->limit(2)
     ->get();
 
-self::dumpObject(\$course);
-self::dumpObjectArray(\$students);
-self::dumpObjectArray(\$course->students);
+Dumper::dumpObject(\$course);
+Dumper::dumpObjectArray(\$students);
+Dumper::dumpObjectArray(\$course->students);
         ";
 
-        $message .= self::highlightText($text);
-        $message .= '<pre>'. self::dumpObject($course).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($course->students).'</pre><br>';
+        $message .= Dumper::highlightText($text);
+        $message .= '<pre>'. Dumper::dumpObject($course).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($course->students).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany, operating with the Pivot').'</strong></h3><br>';
@@ -356,14 +357,14 @@ self::dumpObjectArray(\$course->students);
 
 \$sids = \$relation->pivot()->relatedIds();
 
-self::dumpObject(\$course);
+Dumper::dumpObject(\$course);
 var_export(\$sids, true);
-self::dumpObjectArray(\$students);
+Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text);
-        $message .= '<pre>'. self::dumpObject($course).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($students).'</pre>';
+        $message .= Dumper::highlightText($text);
+        $message .= '<pre>'. Dumper::dumpObject($course).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre>';
         $message .= '<pre>'. var_export($sids, true).'</pre><br>';
 
         //
@@ -381,12 +382,12 @@ self::dumpObjectArray(\$students);
 \$students = \$relation->get();
 
 var_export(\$sids, true);
-self::dumpObjectArray(\$students);
+Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre><br>';
 
         //
         $relation->dettach(3);
@@ -403,12 +404,12 @@ self::dumpObjectArray(\$students);
 \$students = \$relation->get();
 
 var_export(\$sids, true);
-self::dumpObjectArray(\$students);
+Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre><br>';
 
         //
         $relation->sync(array(1,2,4));
@@ -429,80 +430,16 @@ self::dumpObjectArray(\$students);
 \$relation->dettach(4);
 
 var_export(\$sids, true);
-self::dumpObjectArray(\$students);
+Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= self::highlightText($text);
+        $message .= Dumper::highlightText($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
-        $message .= '<pre>'. self::dumpObjectArray($students).'</pre><br>';
+        $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'ORM - Object Relational Model'));
 
         $this->set('message', $message);
     }
-
-    private static function highlightText($text)
-    {
-        $text = trim($text);
-        $text = highlight_string("<?php " . $text, true);  // highlight_string requires opening PHP tag or otherwise it will not colorize the text
-        $text = trim($text);
-        $text = preg_replace("|^\\<code\\>\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>|", "", $text, 1);  // remove prefix
-        $text = preg_replace("|\\</code\\>\$|", "", $text, 1);  // remove suffix 1
-        $text = trim($text);  // remove line breaks
-        $text = preg_replace("|\\</span\\>\$|", "", $text, 1);  // remove suffix 2
-        $text = trim($text);  // remove line breaks
-        $text = preg_replace("|^(\\<span style\\=\"color\\: #[a-fA-F0-9]{0,6}\"\\>)(&lt;\\?php&nbsp;)(.*?)(\\</span\\>)|", "\$1\$3\$4", $text);  // remove custom added "<?php "
-
-        // Finall processing.
-        $text = '<div style="font-weight: bold; margin-bottom: 10px;">'.$text.'</div>';
-
-        return $text;
-    }
-
-    private static function dumpObject($object)
-    {
-        if($object === null) {
-            return 'null'; // NULL.
-        }
-        else if($object === false) {
-            return 'false'; // Boolean false.
-        }
-        else if(is_string($object)) {
-            return $object;
-        }
-        else if($object instanceof BaseModel) {
-            return (string) $object;
-        }
-
-        //return var_export($object);
-    }
-
-    private static function dumpObjectArray($data)
-    {
-        if($data === null) {
-            return 'null'; // NULL.
-        }
-        else if($data === false) {
-            return 'false'; // Empty string.
-        }
-
-        $result = '';
-
-        $cnt = 0;
-
-        foreach($data as $object) {
-            if($cnt > 0) {
-                $result .= "\n";
-            }
-            else {
-                $cnt++;
-            }
-
-            $result .= (string) $object;
-        }
-
-        return $result;
-    }
-
 }

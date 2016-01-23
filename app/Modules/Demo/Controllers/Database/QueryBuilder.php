@@ -10,14 +10,8 @@
 namespace App\Modules\Demo\Controllers\Database;
 
 use Nova\Core\View;
-use Nova\Database\Manager as Database;
-use Nova\Database\Connection;
-use Nova\Database\Query\Builder;
-
+use Nova\Database\Query\Builder\Facade as DB;
 use App\Modules\Demo\Core\BaseController;
-
-// The QueryBuilder static alias.
-use Nova\DB;
 
 /**
  * Sample Themed Controller with its typical usage.

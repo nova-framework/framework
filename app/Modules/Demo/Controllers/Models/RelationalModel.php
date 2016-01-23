@@ -17,6 +17,7 @@ use App\Modules\Demo\Models\Profile;
 use App\Modules\Demo\Models\Post;
 use App\Modules\Demo\Models\Student;
 use App\Modules\Demo\Models\Course;
+use App\Modules\Demo\Helpers\TextHighlight as Highlighter;
 use App\Modules\Demo\Helpers\ObjectDumper as Dumper;
 
 use Nova\ORM\Model as BaseModel;
@@ -66,7 +67,7 @@ class RelationalModel extends BaseController
         $message = '<h3><strong>'.__d('demo', 'Details about Model').'</strong></h3><br>';
 
         //
-        $message .= Dumper::highlightText('var_export($this->model->getObjectVariables(), true);', true);
+        $message .= Highlighter::parse('var_export($this->model->getObjectVariables(), true);', true);
         $message .= '<pre>'. var_export($this->model->getObjectVariables(), true).'</pre><br>';
 
         //
@@ -75,37 +76,37 @@ class RelationalModel extends BaseController
         //
         $result = $this->model->find(1);
 
-        $message .= Dumper::highlightText('$this->model->find(1);', true);
+        $message .= Highlighter::parse('$this->model->find(1);', true);
         $message .= '<pre>'. Dumper::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->orderBy('username DESC')->findAll();
 
-        $message .= Dumper::highlightText('$this->model->orderBy(\'username DESC\')->findAll();', true);
+        $message .= Highlighter::parse('$this->model->orderBy(\'username DESC\')->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findBy('username', 'marcus');
 
-        $message .= Dumper::highlightText('$this->model->findBy(\'username\', \'marcus\');', true);
+        $message .= Highlighter::parse('$this->model->findBy(\'username\', \'marcus\');', true);
         $message .= '<pre>'. Dumper::dumpObject($result).'</pre><br>';
 
         //
         $result = $this->model->findManyBy('username != ?', 'marcus');
 
-        $message .= Dumper::highlightText('$this->model->findManyBy(\'username != ?\', \'marcus\');', true);
+        $message .= Highlighter::parse('$this->model->findManyBy(\'username != ?\', \'marcus\');', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->where('username != ?', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
 
-        $message .= Dumper::highlightText('$this->model->where(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
+        $message .= Highlighter::parse('$this->model->where(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
         $result = $this->model->findMany(array(1, 3, 4));
 
-        $message .= Dumper::highlightText('$this->model->findMany(array(1, 3, 4));', true);
+        $message .= Highlighter::parse('$this->model->findMany(array(1, 3, 4));', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -131,14 +132,14 @@ var_dump(\$result);
 Dumper::dumpObjectArray(\$user);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
         $message .= '<pre>'. Dumper::dumpObject($user).'</pre><br>';
 
         //
         $result = $this->model->findAll();
 
-        $message .= Dumper::highlightText('$this->model->findAll();', true);
+        $message .= Highlighter::parse('$this->model->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -158,14 +159,14 @@ var_dump(\$result);
 Dumper::dumpObjectArray(\$user);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
         $message .= '<pre>'. Dumper::dumpObject($user).'</pre><br>';
 
         //
         $result = $this->model->findAll();
 
-        $message .= Dumper::highlightText('$this->model->findAll();', true);
+        $message .= Highlighter::parse('$this->model->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -180,13 +181,13 @@ Dumper::dumpObjectArray(\$user);
 var_dump(\$result);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($result, true).'</pre><br>';
 
         //
         $result = $this->model->findAll();
 
-        $message .= Dumper::highlightText('$this->model->findAll();', true);
+        $message .= Highlighter::parse('$this->model->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -209,7 +210,7 @@ Dumper::dumpObject(\$profile->user);
 
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
         $message .= '<pre>'. Dumper::dumpObject($profile).'</pre>';
         $message .= '<pre>'. Dumper::dumpObject($user->profile).'</pre>';
@@ -236,7 +237,7 @@ Dumper::dumpObject(\$profile);
 Dumper::dumpObject(\$profile->user);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
         $message .= '<pre>'. Dumper::dumpObject($profile).'</pre>';
         $message .= '<pre>'. Dumper::dumpObject($profile->user).'</pre><br>';
@@ -258,7 +259,7 @@ Dumper::dumpObject(\$author->profile);
 Dumper::dumpObjectArray(\$author->posts);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. Dumper::dumpObject($post).'</pre>';
         $message .= '<pre>'. Dumper::dumpObject($author).'</pre>';
         $message .= '<pre>'. Dumper::dumpObject($author->profile).'</pre>';
@@ -281,7 +282,7 @@ Dumper::dumpObject(\$user);
 Dumper::dumpObjectArray(\$posts);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($posts).'</pre><br>';
 
@@ -302,7 +303,7 @@ Dumper::dumpObject(\$student);
 Dumper::dumpObjectArray(\$courses);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. Dumper::dumpObject($student).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($courses).'</pre><br>';
 
@@ -329,7 +330,7 @@ Dumper::dumpObjectArray(\$students);
 Dumper::dumpObjectArray(\$course->students);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. Dumper::dumpObject($course).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($course->students).'</pre><br>';
@@ -362,7 +363,7 @@ var_export(\$sids, true);
 Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. Dumper::dumpObject($course).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre>';
         $message .= '<pre>'. var_export($sids, true).'</pre><br>';
@@ -385,7 +386,7 @@ var_export(\$sids, true);
 Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre><br>';
 
@@ -407,7 +408,7 @@ var_export(\$sids, true);
 Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre><br>';
 
@@ -433,7 +434,7 @@ var_export(\$sids, true);
 Dumper::dumpObjectArray(\$students);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre><br>';
 

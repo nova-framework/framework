@@ -12,7 +12,7 @@ namespace App\Modules\Demo\Controllers\Models;
 use Nova\Core\View;
 use App\Modules\Demo\Core\BaseController;
 use App\Modules\Demo\Models\Users as UserModel;
-use App\Modules\Demo\Helpers\ObjectDumper as Dumper;
+use App\Modules\Demo\Helpers\TextHighlight as Highlighter;
 
 use \PDO;
 
@@ -68,7 +68,7 @@ class BaseModel extends BaseController
 var_export(\$result, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
@@ -80,7 +80,7 @@ var_export(\$result, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -104,7 +104,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -116,7 +116,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -138,7 +138,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -150,7 +150,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -162,7 +162,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -174,7 +174,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -194,7 +194,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -206,7 +206,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($result, true).'</pre><br>';
 
         //
@@ -218,7 +218,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -236,7 +236,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -257,7 +257,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -273,7 +273,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -289,7 +289,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -305,7 +305,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
@@ -329,7 +329,7 @@ var_export(\$data, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -361,7 +361,7 @@ var_export(\$data, true);
 var_export(\$userId, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
@@ -373,7 +373,7 @@ var_export(\$userId, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
@@ -403,7 +403,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -415,7 +415,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($query, true).'</pre><br>';
 
         //
@@ -431,7 +431,7 @@ var_export(\$data, true);
 var_export(\$retval, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
@@ -443,7 +443,7 @@ var_export(\$retval, true);
 var_export(\$data, true);
         ";
 
-        $message .= Dumper::highlightText($text);
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         // Setup the View variables.

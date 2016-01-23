@@ -14,6 +14,7 @@ use Nova\Database\Manager;
 use Nova\Database\Connection;
 
 use App\Modules\Demo\Core\BaseController;
+use App\Modules\Demo\Helpers\TextHighlight as Highlighter;
 
 
 /**
@@ -58,56 +59,110 @@ class Database extends BaseController
         //
         $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), 'object');
 
-        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), \'object\');</b>';
+        $text = '
+$data = $this->db->selectAll(\"SELECT * FROM \" .DB_PREFIX .\"users WHERE username != :username\", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), \'object\');
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array('username' => 'marcus'));
 
-        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array(\'username\' => \'marcus\'));</b>';
+        $text = '
+$data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array(\'username\' => \'marcus\'));
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'michael'), array(), 'object');
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'), array(), \'object\');</b>';
+       $text = '
+$data = $this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'), array(), \'object\');
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username LIKE :search LIMIT 0, 2", array('search' => '%micha%'));
 
-        $message .= '<b>$this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username LIKE :search LIMIT 0, 2", array(\'search\' => \'%micha%\'));</b>';
+        $text = '
+$data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username LIKE :search LIMIT 0, 2", array(\'search\' => \'%micha%\'));
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'michael'));
 
-        $message .= '<b>$this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'));</b>';
+        $text = '
+$data = $this->db->select("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'));
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'marcus'));
 
-        $message .= '<b>$this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'marcus\'));</b>';
+        $text = '
+$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'marcus\'));
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array('userid' => 1));
 
-        $message .= '<b>$this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array(\'userid\' => 1));</b>';
+        $text = '
+$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array(\'userid\' => 1));
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->db->fetchObject("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'michael'));
 
-        $message .= '<b>$this->db->fetchObject("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'));</b>';
+        $text = '
+$data = $this->db->fetchObject("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'michael\'));
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
+        $data = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = '
+$data = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $userInfo = array(
@@ -115,59 +170,103 @@ class Database extends BaseController
             'email'    => 'virgil@novaframework.dev'
         );
 
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+        $userId = $this->db->insert(DB_PREFIX ."users", $userInfo);
+
+        $text = '
+$userInfo = array(
+    \'username\' => \'virgil\',
+    \'email\'    => \'virgil@novaframework.dev\'
+);
+
+$userId = $this->db->insert(DB_PREFIX ."users", $userInfo);
+
+var_export($userId, true);
+        ';
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
-        $retval = $this->db->insert(DB_PREFIX ."users", $userInfo);
+        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array('userId' => $userId));
 
-        $message .= '<b>$this->db->insert(DB_PREFIX ."users", $userInfo);</b>';
-        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+        $text = '
+$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array(\'userId\' => $userId));
 
-        //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
+var_export($data, true);
+        ';
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $userInfo = array(
             'email' => 'modified@novaframework.dev'
         );
 
-        $message .= '<b>$userInfo</b>';
-        $message .= '<pre>'.var_export($userInfo, true).'</pre><br>';
+        $retval = $this->db->update(DB_PREFIX ."users", $userInfo, array('id' => $userId));
 
-        $retval = $this->db->update(DB_PREFIX ."users", $userInfo, array('username' => 'virgil'));
+        $text = '
+$userInfo = array(
+    \'email\' => \'modified@novaframework.dev\'
+);
 
-        $message .= '<b>$this->db->update(DB_PREFIX ."users", $userInfo, array(\'username\' => \'virgil\'));</b>';
+$retval = $this->db->update(DB_PREFIX ."users", $userInfo, array(\'id\' => $userId));
+
+var_export($retval, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
+        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array('userId' => $userId));
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = '
+$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array(\'userId\' => $userId));
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $retval = $this->db->delete(DB_PREFIX ."users", array('username' => 'virgil'));
 
-        $message .= '<b>$this->db->delete(DB_PREFIX ."users", array(\'username\' => \'virgil\'));</b>';
+        $text = '
+$retval = $this->db->delete(DB_PREFIX ."users", array(\'username\' => \'virgil\'));
+
+var_export($retval, true);
+        ';
+
+        $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $members = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
+        $data = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");</b>';
-        $message .= '<pre>'.var_export($members, true).'</pre><br>';
+        $text = '
+$data = $this->db->fetchAll("SELECT * FROM " .DB_PREFIX ."users");
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Schema support').'</strong></h3><br>';
 
         //
-        $result = $this->db->getTableFields(DB_PREFIX ."users");
+        $data = $this->db->getTableFields(DB_PREFIX ."users");
 
-        $message .= '<b>$this->db->getTableFields(DB_PREFIX ."users");</b>';
-        $message .= '<pre>'.var_export($result, true).'</pre><br>';
+        $text = '
+$data = $this->db->getTableFields(DB_PREFIX ."users");
+
+var_export($data, true);
+        ';
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'Database Abstraction Layer Demo'));

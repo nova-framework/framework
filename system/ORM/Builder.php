@@ -103,7 +103,7 @@ class Builder extends BaseBuilder
 
         $where = $this->setWhere($params);
 
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
+        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
 
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr LIMIT 1";
@@ -131,7 +131,7 @@ class Builder extends BaseBuilder
         // Prepare the WHERE parameters.
         $this->where($this->primaryKey, $values);
 
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
+        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
 
         // Prepare the ORDER details.
         $orderStr = $this->parseSelectOrder();
@@ -176,7 +176,7 @@ class Builder extends BaseBuilder
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
+        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
 
         $orderStr  = $this->parseSelectOrder();
         $limitStr  = $this->parseSelectLimit();
@@ -208,7 +208,7 @@ class Builder extends BaseBuilder
         $bindParams = array();
 
         // Prepare the WHERE details.
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
+        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
 
         $orderStr  = $this->parseSelectOrder();
         $offsetStr = $this->parseSelectOffset();
@@ -329,7 +329,7 @@ class Builder extends BaseBuilder
         $where = $this->setWhere($params);
 
         // Prepare the WHERE details.
-        $whereStr = Connection::parseWhereConditions($where, $bindParams);
+        $whereStr = BaseBuilder::parseWhereConditions($where, $bindParams);
 
         $orderStr = $this->parseSelectOrder();
         $limitStr = $this->parseSelectLimit();
@@ -414,7 +414,7 @@ class Builder extends BaseBuilder
         $paramTypes = array('otherKey' => is_integer($othereId) ? PDO::PARAM_INT : PDO::PARAM_STR);
 
         // Prepare the WHERE details.
-        $whereStr = Connection::parseWhereConditions($this->wheres(), $bindParams);
+        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
 
         $orderStr  = $this->parseSelectOrder();
         $limitStr  = $this->parseSelectLimit();

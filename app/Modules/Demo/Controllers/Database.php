@@ -274,14 +274,14 @@ var_export($data, true);
         $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Integrated QueryBuilder').'</strong></h3><br>';
 
         //
-        $query = $this->db->getQueryBuilder();
+        $queryBuilder = $this->db->getQueryBuilder();
 
-        $data = $query->table('users')->where('username', 'admin')->asAssoc()->first();
+        $data = $queryBuilder->table('users')->where('username', 'admin')->asAssoc()->first();
 
         $text = "
-\$query = \$this->db->getQueryBuilder();
+\$queryBuilder = \$this->db->getQueryBuilder();
 
-\$data = \$query->table('users')->where('username', 'admin')->asAssoc()->first();
+\$data = \$queryBuilder->table('users')->where('username', 'admin')->asAssoc()->first();
 
 var_export(\$data, true);
         ";
@@ -290,14 +290,10 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $query = $this->db->getQueryBuilder();
-
-        $data = $query->table('users')->where('username', '=', 'admin')->first();
+        $data = $queryBuilder->table('users')->where('username', '=', 'admin')->first();
 
         $text = "
-\$query = \$this->db->getQueryBuilder();
-
-\$data = \$query->table('users')->where('username', '=', 'admin')->first();
+\$data = \$queryBuilder->table('users')->where('username', '=', 'admin')->first();
 
 var_export(\$data, true);
         ";
@@ -306,14 +302,10 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $query = $this->db->getQueryBuilder();
-
-        $data = $query->table('users')->whereIn('id', array(1, 3))->get();
+        $data = $queryBuilder->table('users')->whereIn('id', array(1, 3))->get();
 
         $text = "
-\$query = \$this->db->getQueryBuilder();
-
-\$data = \$query->table('users')->whereIn('id', array(1, 2, 4))->first();
+\$data = \$queryBuilder->table('users')->whereIn('id', array(1, 2, 4))->first();
 
 var_export(\$data, true);
         ";
@@ -322,25 +314,19 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $query = $this->db->getQueryBuilder();
-
-        $query = $query->table('users')->orderBy('id', 'DESC')->asAssoc()->get();
+        $data = $queryBuilder->table('users')->orderBy('id', 'DESC')->asAssoc()->get();
 
         $text = "
-\$query = \$this->db->getQueryBuilder();
-
-\$data = \$query->table('users')->orderBy('id', 'DESC')->asAssoc()->get();
+\$data = \$queryBuilder->table('users')->orderBy('id', 'DESC')->asAssoc()->get();
 
 var_export(\$data, true);
         ";
 
         $message .= Highlighter::parse($text);
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $query = $this->db->getQueryBuilder();
-
-        $data = $query
+        $data = $queryBuilder
             ->table('users')
             ->where('username', '!=', 'admin')
             ->orderBy('id', 'ASC')
@@ -348,9 +334,7 @@ var_export(\$data, true);
             ->get();
 
         $text = "
-\$query = \$this->db->getQueryBuilder();
-
-\$data = \$query
+\$data = \$queryBuilder
     ->table('users')
     ->where('username', '!=', 'admin')
     ->orderBy('id', 'DESC')
@@ -369,9 +353,7 @@ var_export(\$data, true);
             'email'    => 'virgil@novaframework.dev'
         );
 
-        $query = $this->db->getQueryBuilder();
-
-        $userId = $query->table('users')->insert($userInfo);
+        $userId = $queryBuilder->table('users')->insert($userInfo);
 
         $text = "
 \$userInfo = array(
@@ -379,9 +361,7 @@ var_export(\$data, true);
     'email'    => 'virgil@novaframework.dev'
 );
 
-\$query = \$this->db->getQueryBuilder();
-
-\$userId = \$query->table('users')->insert(\$userInfo);
+\$userId = \$queryBuilder->table('users')->insert(\$userInfo);
 
 var_export(\$userId, true);
         ";
@@ -390,10 +370,10 @@ var_export(\$userId, true);
         $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
-        $data = $query->table('users')->find($userId);
+        $data = $queryBuilder->table('users')->find($userId);
 
         $text = "
-\$data = \$query->table('users')->find(\$userId);
+\$data = \$queryBuilder->table('users')->find(\$userId);
 
 var_export(\$data, true);
         ";
@@ -406,18 +386,14 @@ var_export(\$data, true);
             'email' => 'modified@novaframework.dev'
         );
 
-        $query = $this->db->getQueryBuilder();
-
-        $retval = $query->table('users')->where('id', $userId)->update($userInfo);
+        $retval = $queryBuilder->table('users')->where('id', $userId)->update($userInfo);
 
         $text = "
 \$userInfo = array(
     'email'    => 'modified@novaframework.dev'
 );
 
-\$query = \$this->db->getQueryBuilder();
-
-\$retval = \$query->table('users')->where('id', \$userId)->update(\$userInfo);
+\$retval = \$queryBuilder->table('users')->where('id', \$userId)->update(\$userInfo);
 
 var_export(\$retval, true);
         ";
@@ -426,26 +402,22 @@ var_export(\$retval, true);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $query = $query->table('users')->where('id', $userId)->first();
+        $data = $queryBuilder->table('users')->where('id', $userId)->first();
 
         $text = "
-\$data = \$query->table('users')->where('id', \$userId)->first();
+\$data = \$queryBuilder->table('users')->where('id', \$userId)->first();
 
 var_export(\$data, true);
         ";
 
         $message .= Highlighter::parse($text);
-        $message .= '<pre>'.var_export($query, true).'</pre><br>';
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $query = $this->db->getQueryBuilder();
-
-        $retval = $query->table('users')->where('id', '=', $userId)->delete();
+        $retval = $queryBuilder->table('users')->where('id', '=', $userId)->delete();
 
         $text = "
-\$query = \$this->db->getQueryBuilder();
-
-\$retval = \$query->table('users')->where('username', '=', \$userId)->delete();
+\$retval = \$queryBuilder->table('users')->where('username', '=', \$userId)->delete();
 
 var_export(\$retval, true);
         ";
@@ -454,12 +426,11 @@ var_export(\$retval, true);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $query = $this->db->getQueryBuilder();
-
-        $data = $query->table('users')->get();
+        $data = $queryBuilder->table('users')->get();
 
         $text = "
-\$data = \$query->table('users')->get();
+
+\$data = \$queryBuilder->table('users')->get();
 
 var_export(\$data, true);
         ";

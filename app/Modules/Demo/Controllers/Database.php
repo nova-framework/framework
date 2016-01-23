@@ -54,7 +54,7 @@ class Database extends BaseController
      */
     public function index()
     {
-        $message = '';
+        $message = '<h3><strong>'.__d('demo', 'CRUD Support').'</strong></h3><br>';
 
         //
         $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), 'object');
@@ -264,6 +264,176 @@ $data = $this->db->getTableFields(DB_PREFIX ."users");
 
 var_export($data, true);
         ';
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        // QueryBuilder
+
+        $message .= '<h3 style="margin-top: 40px;"><strong>'.__d('demo', 'Integrated QueryBuilder').'</strong></h3><br>';
+
+        //
+        $queryBuilder = $this->db->getQueryBuilder();
+
+        $data = $queryBuilder->table('users')->where('username', 'admin')->asAssoc()->first();
+
+        $text = "
+\$queryBuilder = \$this->db->getQueryBuilder();
+
+\$data = \$queryBuilder->table('users')->where('username', 'admin')->asAssoc()->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $data = $queryBuilder->table('users')->where('username', '=', 'admin')->first();
+
+        $text = "
+\$data = \$queryBuilder->table('users')->where('username', '=', 'admin')->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $data = $queryBuilder->table('users')->whereIn('id', array(1, 3))->get();
+
+        $text = "
+\$data = \$queryBuilder->table('users')->whereIn('id', array(1, 2, 4))->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $data = $queryBuilder->table('users')->orderBy('id', 'DESC')->asAssoc()->get();
+
+        $text = "
+\$data = \$queryBuilder->table('users')->orderBy('id', 'DESC')->asAssoc()->get();
+
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $data = $queryBuilder
+            ->table('users')
+            ->where('username', '!=', 'admin')
+            ->orderBy('id', 'ASC')
+            ->limit(2)
+            ->get();
+
+        $text = "
+\$data = \$queryBuilder
+    ->table('users')
+    ->where('username', '!=', 'admin')
+    ->orderBy('id', 'DESC')
+    ->limit(2)
+    ->get();
+
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $userInfo = array(
+            'username' => 'virgil',
+            'email'    => 'virgil@novaframework.dev'
+        );
+
+        $userId = $queryBuilder->table('users')->insert($userInfo);
+
+        $text = "
+\$userInfo = array(
+    'username' => 'virgil',
+    'email'    => 'virgil@novaframework.dev'
+);
+
+\$userId = \$queryBuilder->table('users')->insert(\$userInfo);
+
+var_export(\$userId, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($userId, true).'</pre><br>';
+
+        //
+        $data = $queryBuilder->table('users')->find($userId);
+
+        $text = "
+\$data = \$queryBuilder->table('users')->find(\$userId);
+
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $userInfo = array(
+            'email' => 'modified@novaframework.dev'
+        );
+
+        $retval = $queryBuilder->table('users')->where('id', $userId)->update($userInfo);
+
+        $text = "
+\$userInfo = array(
+    'email'    => 'modified@novaframework.dev'
+);
+
+\$retval = \$queryBuilder->table('users')->where('id', \$userId)->update(\$userInfo);
+
+var_export(\$retval, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $data = $queryBuilder->table('users')->where('id', $userId)->first();
+
+        $text = "
+\$data = \$queryBuilder->table('users')->where('id', \$userId)->first();
+
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
+
+        //
+        $retval = $queryBuilder->table('users')->where('id', '=', $userId)->delete();
+
+        $text = "
+\$retval = \$queryBuilder->table('users')->where('username', '=', \$userId)->delete();
+
+var_export(\$retval, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'.var_export($retval, true).'</pre><br>';
+
+        //
+        $data = $queryBuilder->table('users')->get();
+
+        $text = "
+
+\$data = \$queryBuilder->table('users')->get();
+
+var_export(\$data, true);
+        ";
 
         $message .= Highlighter::parse($text);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';

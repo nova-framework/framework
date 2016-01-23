@@ -7,7 +7,7 @@
  * @date January 22th, 2016
  */
 
-namespace Nova\Database\Query;
+namespace Nova\Database\Query\Builder;
 
 
 class TransactionHaltException extends \Exception

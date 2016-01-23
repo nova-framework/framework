@@ -60,7 +60,7 @@ class QueryBuilder extends BaseController
         $text = "
 \$data = DB::table('users')->where('username', '!=', 'marcus')->count();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -72,7 +72,7 @@ var_export(\$data);
         $text = "
 \$data = DB::table('users')->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -84,7 +84,7 @@ var_export(\$data);
         $text = "
 \$data = DB::table('users')->find(3);
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -104,7 +104,7 @@ var_export(\$data);
     ->limit(2)
     ->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -126,7 +126,7 @@ var_export(\$data);
     ->offset(1)
     ->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -148,7 +148,7 @@ var_export(\$data);
 
 \$data = \$query->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -179,7 +179,7 @@ var_export(\$data);
 
 \$data = \$query->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -232,7 +232,7 @@ var_export(\$data, true);
     'email' => 'modified@novaframework.dev'
 );
 
-\$data = DB::table('users')->where('id', \$userId)->asObject()->first();
+\$result = DB::table('users')->where('id', \$userId)->update(\$userInfo);
 
 var_export(\$result, true);
         ";

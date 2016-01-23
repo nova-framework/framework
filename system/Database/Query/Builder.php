@@ -15,11 +15,12 @@ use Nova\Database\Connection;
 use Nova\Database\Exception;
 use Nova\Database\Manager as Database;
 
-use Nova\Database\Query\Adapter;
-use Nova\Database\Query\Join as JoinBuilder;
-use Nova\Database\Query\Object as QueryObject;
 use Nova\Database\Query\Raw;
-use Nova\Database\Query\Transaction;
+use Nova\Database\Query\Adapter;
+use Nova\Database\Query\Object as QueryObject;
+use Nova\Database\Query\Builder\Join as JoinBuilder;
+use Nova\Database\Query\Builder\Transaction;
+use Nova\Database\Query\Builder\TransactionHaltException;
 
 use PDO;
 

@@ -15,7 +15,7 @@ namespace Nova\Database\Query;
 use Nova\Database\Connection;
 use Nova\Database\Exception;
 
-use Nova\Database\Query\NestedCriteria;
+use Nova\Database\Query\Builder\NestedCriteria;
 use Nova\Database\Query\Raw;
 
 

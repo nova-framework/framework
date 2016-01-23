@@ -10,14 +10,8 @@
 namespace App\Modules\Demo\Controllers\Database;
 
 use Nova\Core\View;
-use Nova\Database\Manager as Database;
-use Nova\Database\Connection;
-use Nova\Database\Query\Builder;
-
+use Nova\Database\Query\Builder\Facade as DB;
 use App\Modules\Demo\Core\BaseController;
-
-// The QueryBuilder static alias.
-use Nova\DB;
 
 /**
  * Sample Themed Controller with its typical usage.
@@ -60,7 +54,7 @@ class QueryBuilder extends BaseController
         $text = "
 \$data = DB::table('users')->where('username', '!=', 'marcus')->count();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -72,7 +66,7 @@ var_export(\$data);
         $text = "
 \$data = DB::table('users')->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -84,7 +78,7 @@ var_export(\$data);
         $text = "
 \$data = DB::table('users')->find(3);
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -104,7 +98,7 @@ var_export(\$data);
     ->limit(2)
     ->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -126,7 +120,7 @@ var_export(\$data);
     ->offset(1)
     ->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -148,7 +142,7 @@ var_export(\$data);
 
 \$data = \$query->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -179,7 +173,7 @@ var_export(\$data);
 
 \$data = \$query->get();
 
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= self::highlightText($text);
@@ -232,7 +226,7 @@ var_export(\$data, true);
     'email' => 'modified@novaframework.dev'
 );
 
-\$data = DB::table('users')->where('id', \$userId)->asObject()->first();
+\$result = DB::table('users')->where('id', \$userId)->update(\$userInfo);
 
 var_export(\$result, true);
         ";

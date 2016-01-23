@@ -72,8 +72,5 @@ Events::initialize();
 /** Initialize the Sessions. */
 Session::initialize();
 
-/** Create the alias for QueryBuilder Facade. */
-class_alias('\\Nova\\Database\\Query\\AliasFacade', '\\Nova\\DB');
-
 /** Execute the Request dispatching by Router. */
 $router->dispatch();

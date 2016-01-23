@@ -9,9 +9,10 @@
  * Based on Pixie Query Builder: https://github.com/usmanhalalit/pixie
  */
 
-namespace Nova\Database\Query;
+namespace Nova\Database\Query\Builder;
 
 use Nova\Database\Query\Builder as BaseBuilder;
+use Nova\Database\Query\Builder\TransactionHaltException;
 
 
 class Transaction extends BaseBuilder

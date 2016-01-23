@@ -341,7 +341,7 @@ var_export(\$data, true);
 
         $query = $this->model->buildQuery();
 
-        $userId = $query->insert($this->model->prepareData($userInfo));
+        $userId = $query->insert($data);
 
         $text = "
 \$userInfo = array(

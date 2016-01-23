@@ -229,8 +229,7 @@ class Builder
             );
         }
 
-        //$this->lastResult = $statement->execute();
-        $statement->execute();
+        $this->lastResult = $statement->execute();
 
         return array($statement, microtime(true) - $start);
     }

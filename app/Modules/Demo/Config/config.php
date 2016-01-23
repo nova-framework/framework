@@ -78,39 +78,6 @@ Config::set('demos_menu', array(
             ),
         ),
     ),
-    /*
-    'database' => array(
-        'name'      => __d('demo', 'Database'),
-        'icon'      => 'fa fa-server',
-        'children'  => array(
-            array(
-                'name' => __d('demo', 'MySQL Export'),
-                'url'  => site_url('demos/database/mysqlexport'),
-                'icon' => 'fa fa-gears',
-            ),
-            array(
-                'name' => __d('demo', 'Engine MySQL'),
-                'url'  => site_url('demos/database/engine/basic/mysql'),
-                'icon' => 'fa fa-gears',
-            ),
-            array(
-                'name' => __d('demo', 'Engine SQLite'),
-                'url'  => site_url('demos/database/engine/basic/sqlite'),
-                'icon' => 'fa fa-gears',
-            ),
-            array(
-                'name' => __d('demo', 'Service MySQL'),
-                'url'  => site_url('demos/database/service/basic/mysql'),
-                'icon' => 'fa fa-gears',
-            ),
-            array(
-                'name' => __d('demo', 'Service SQLite'),
-                'url'  => site_url('demos/database/service/basic/sqlite'),
-                'icon' => 'fa fa-gears',
-            ),
-        ),
-    ),
-    */
 ));
 
 /**

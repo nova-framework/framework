@@ -54,7 +54,7 @@ return array (
   'Routing - URI "{0}" does not match any Route' => 'Routing - URI "{0}" entspricht keiner Route',
   'Routing - URI "{0}" match the Route: {1}' => 'Routing - URI "{0}" entspricht der Route: {1}',
   'Routing - invoking the Callback: {0}' => 'Routing - Aufruf des Callbacks: {0}',
-  'Routing - invoking the Controller: {0} @{1}' => 'Routing - Aufruf des Controllers: {0}@{1}',
+  'Routing - invoking the Controller: {0}@{1}' => 'Routing - Aufruf des Controllers: {0}@{1}',
   'Routing - start dispatching for the URI: {0}' => 'Routing - starte das Senden für die URI: {0}',
   'Rows: <b>{0}</b>' => 'Zeilen: <b>{0}</b>',
   'SQLite Driver' => 'SQLite Treiber',

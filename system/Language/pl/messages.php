@@ -50,7 +50,7 @@ return array (
   'POST Variables' => '',
   'Parameter should be an Array' => '',
   'Possible keys: <b>{0}</b>' => '',
-  'PostgresSQL Driver' => '',
+  'PostgreSQL Driver' => '',
   'Routing - URI "{0}" does not match any Route' => '',
   'Routing - URI "{0}" match the Route: {1}' => '',
   'Routing - invoking the Callback: {0}' => '',

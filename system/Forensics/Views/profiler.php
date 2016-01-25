@@ -312,7 +312,7 @@
             </td>
             <td class="white" onclick="changeTab('variables');">
                 <var><?= __d('system', 'Variables'); ?></var>
-                <h4><?= __d('system', '& Server Headers'); ?></h4>
+                <h4><?= __d('system', 'Server Headers'); ?></h4>
             </td>
         </tr>
     </table>

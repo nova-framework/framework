@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  '& Server Headers' => '',
   'An error occurred. The error has been reported.' => '',
   'Class not found: {0}' => '',
   'Config and Options parameters should be Arrays' => '',

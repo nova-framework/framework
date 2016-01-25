@@ -209,7 +209,7 @@ class Router
             return false;
         }
 
-        Console::log(__d('system', 'Routing - invoking the Controller: {0} @{1}', $className, $method));
+        Console::log(__d('system', 'Routing - invoking the Controller: {0}@{1}', $className, $method));
 
         // Initialize the Controller.
         /** @var Controller $controller */

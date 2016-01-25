@@ -63,7 +63,7 @@ class PgSQL extends Connection
      */
     public function getDriverName()
     {
-        return __d('system', 'PostgresSQL Driver');
+        return __d('system', 'PostgreSQL Driver');
     }
 
     /**

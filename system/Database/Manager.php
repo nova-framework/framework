@@ -38,7 +38,7 @@ abstract class Manager
         $config = Config::get('database');
 
         if (($config === null)) {
-            throw new \Exception(__d('system', 'Configuration not found, check your {0}/Config/database.php', str_replace(BASEPATH, '', APPPATH)));
+            throw new \Exception(__d('system', 'Configuration not found. Check your {0}/Config/database.php', str_replace(BASEPATH, '', APPPATH)));
         }
 
         if (! isset($config[$linkName])) {
@@ -53,7 +53,7 @@ abstract class Manager
         if (strpos($driverName, 'PDO_') === 0) {
             $driver = constant("static::DRIVER_" .str_replace('PDO_', '', $driverName));
         } else {
-            throw new \Exception(__d('system', 'Driver not found, check your {0}/Config/config.php', str_replace(BASEPATH, '', APPPATH)));
+            throw new \Exception(__d('system', 'Driver not found. Check your {0}/Config/config.php', str_replace(BASEPATH, '', APPPATH)));
         }
 
         // Engine, when already have an instance, return it!

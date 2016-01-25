@@ -114,7 +114,6 @@ return array (
   'Unsupported Data type while the Result is Boolean' => '',
   'Unsupported Data type while the Result is String' => '',
   'Unsupported Result type' => '',
-  'Used Memory' => '',
   'Variables' => '',
   'queries' => '',
   'query' => '',

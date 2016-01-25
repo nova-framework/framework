@@ -415,7 +415,7 @@
             <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <table class='side' cellspacing='0'>
-                <tr><td><var><?= $output['memoryTotals']['used']; ?></var><h4><?= __d('system', 'Used Memory'); ?></h4></td></tr>
+                <tr><td><var><?= $output['memoryTotals']['used']; ?></var><h4><?= __d('system', 'Memory Used'); ?></h4></td></tr>
                 <tr><td class='alt'><var><?= $output['memoryTotals']['total']; ?></var> <h4><?= __d('system', 'Total Available'); ?></h4></td></tr>
             </table>
 

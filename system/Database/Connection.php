@@ -461,7 +461,6 @@ abstract class Connection extends PDO
         $result = false;
 
         if ($fetchMethod === PDO::FETCH_CLASS) {
-            // Fetch in class
             $stmt->setFetchMode($fetchMethod, $className);
         } else {
             $stmt->setFetchMode($fetchMethod);
@@ -512,7 +511,6 @@ abstract class Connection extends PDO
      *                    multiple rows in one call. The engine must support this! Check manual!
      * @param array $paramTypes Types of parameters, leave empty to auto detect
      * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
-     * @param string $mode Represents the insertion Mode, must be 'insert' or 'replace'
      * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
      *
      * @throws \Exception
@@ -522,14 +520,15 @@ abstract class Connection extends PDO
         // Prepare the SQL statement.
         $sql = 'INSERT INTO ' .$table .' (' . implode(', ', array_keys($data)) .') VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
+        // Execute the Update and capture the result.
         $result = $this->executeUpdate(
             $sql,
             array_values($data),
             is_string(key($paramTypes)) ? $this->extractTypeValues($data, $paramTypes) : $paramTypes
         );
 
+        // If no error, return the connection's last inserted ID
         if($result !== false) {
-            // If no error, capture the last inserted id
             return $this->lastInsertId();
         }
 
@@ -563,6 +562,7 @@ abstract class Connection extends PDO
 
         $sql  = 'UPDATE ' .$table .' SET ' .implode(', ', $set) .' WHERE ' .implode(' = ? AND ', array_keys($where)) .' = ?';
 
+        // Execute the Update and return the result.
         return $this->executeUpdate($sql, $params, $paramTypes);
     }
 
@@ -587,6 +587,7 @@ abstract class Connection extends PDO
         // Prepare the SQL statement.
         $sql = 'DELETE FROM ' .$table .' WHERE ' .implode(' AND ', $criteria);
 
+        // Execute the Update and return the result.
         return $this->executeUpdate(
             $sql,
             array_values($where),

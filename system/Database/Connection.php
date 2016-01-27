@@ -680,17 +680,15 @@ abstract class Connection extends PDO
         }
 
         foreach ($params as $key => $value) {
+            $bindKey = is_integer($key) ? $key + 1 : $key;
+
             if (isset($paramTypes[$key])) {
                 $bindType = $paramTypes[$key];
             } else {
                 $bindType = (is_int($value) || is_bool($value)) ? PDO::PARAM_INT : PDO::PARAM_STR;
             }
 
-            $stmt->bindValue(
-                is_integer($key) ? $key + 1 : $key,
-                $value,
-                $bindType
-            );
+            $stmt->bindValue($bindKey, $value, $bindType);
         }
     }
 

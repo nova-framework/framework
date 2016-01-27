@@ -959,11 +959,11 @@ class Builder
             };
         }
 
-        // Build a new JoinBuilder class, keep it by reference so any changes made
-        // in the closure should reflect here
+        // Build a new JoinBuilder class, keep it by reference so any changes made in the closure should reflect here.
         $joinBuilder = new JoinBuilder($this->connection);
 
         $joinBuilder = & $joinBuilder;
+
         // Call the closure with our new joinBuilder object
         $key($joinBuilder);
 

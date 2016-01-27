@@ -39,6 +39,15 @@ class Builder extends BaseBuilder
 
     protected $fields;
 
+    /**
+     * The methods that should be returned from Query Builder.
+     *
+     * @var array
+     */
+    protected $passthru = array(
+        'insert', 'count', 'getConnection',
+    );
+
 
     public function __construct(Model $model, $connection = 'default')
     {
@@ -77,7 +86,7 @@ class Builder extends BaseBuilder
     }
 
     //--------------------------------------------------------------------
-    // Base Query Builder Methods
+    // Query Builder Methods
     //--------------------------------------------------------------------
 
     public function newQuery()
@@ -478,21 +487,23 @@ class Builder extends BaseBuilder
     {
         $table = $this->table();
 
-        if($returnType == 'assoc') {
-            $asObject = false;
-        }
-        else if($returnType == 'object') {
-            $asObject = true;
-        }
-        else {
-            $asObject = $this->model->getClass();
-        }
-
         // Get a QueryBuilder instance.
         $queryBuilder = $this->db->queryBuilder();
 
-        // First, check and configure for the 'select' Method.
-        return $queryBuilder->from($table)->asObject($asObject);
+        $query = $queryBuilder->table($table);
+
+        if($returnType == 'assoc') {
+            return $query->asAssoc();
+        } else if($returnType == 'array') {
+            return $query->asArray();
+        } else if($returnType == 'object') {
+            return $query->asObject();
+        }
+
+        // By default we fetch into Model.
+        $className = $this->model->getClass();
+
+        return $query->asObject($className);
     }
 
     //--------------------------------------------------------------------

@@ -124,7 +124,7 @@ abstract class Adapter
     {
         $sql = $bindings = array();
 
-        if (!isset($statements['criteria'])) {
+        if (! isset($statements['criteria'])) {
             return compact('sql', 'bindings');
         }
 
@@ -144,7 +144,7 @@ abstract class Adapter
      */
     private function doInsert($statements, array $data, $type)
     {
-        if (!isset($statements['tables'])) {
+        if (! isset($statements['tables'])) {
             throw new Exception('No table specified', 3);
         } elseif (count($data) < 1) {
             throw new Exception('No data given.', 4);
@@ -546,7 +546,7 @@ abstract class Adapter
     {
         $sql = '';
 
-        if (!array_key_exists('joins', $statements) || !is_array($statements['joins'])) {
+        if (! array_key_exists('joins', $statements) || ! is_array($statements['joins'])) {
             return $sql;
         }
 
@@ -558,9 +558,7 @@ abstract class Adapter
 
                 $table = $this->wrapSanitizer($mainTable) . ' AS ' . $this->wrapSanitizer($aliasTable);
             } else {
-                $table = $joinArr['table'] instanceof Raw ?
-                    (string) $joinArr['table'] :
-                    $this->wrapSanitizer($joinArr['table']);
+                $table = ($joinArr['table'] instanceof Raw) ? (string) $joinArr['table'] : $this->wrapSanitizer($joinArr['table']);
             }
 
             $joinBuilder = $joinArr['joinBuilder'];

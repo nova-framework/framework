@@ -16,6 +16,7 @@ Acest conținut poate fi modificat în <code>{0}</code>',
   'Open subpage' => 'Deschide subpagina',
   'Parameter should be a non empty Array' => '',
   'Parameter should be an Integer' => '',
+  'Parameter should be numeric' => '',
   'Subpage' => 'Subpagina',
   'Welcome' => 'Bun venit',
 );

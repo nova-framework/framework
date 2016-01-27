@@ -14,6 +14,7 @@ This content can be changed in <code>{0}</code>' => '',
   'Open subpage' => '',
   'Parameter should be a non empty Array' => '',
   'Parameter should be an Integer' => '',
+  'Parameter should be numeric' => '',
   'Subpage' => '',
   'Welcome' => '',
 );

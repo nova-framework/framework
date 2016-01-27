@@ -112,11 +112,11 @@ class Builder
             $classPath = str_replace('\\', '/', ltrim($className, '\\'));
 
             if (! preg_match('#^App(?:/Modules/.+)?/Models/(.*)$#i', $classPath)) {
-                throw new \Exception(__('No valid Model Name is given: {0}', $className));
+                throw new \Exception(__d('system', 'No valid Model Name is given: {0}', $className));
             }
 
             if (! class_exists($className)) {
-                throw new \Exception(__('No valid Model Class is given: {0}', $className));
+                throw new \Exception(__d('system', 'No valid Model Class is given: {0}', $className));
             }
 
             $this->setFetchMode(PDO::FETCH_CLASS, $className);

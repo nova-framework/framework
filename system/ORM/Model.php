@@ -397,9 +397,14 @@ class Model
     // Data Conversion Methods
     //--------------------------------------------------------------------
 
-    public function toArray()
+    public function toAssoc()
     {
         return $this->attributes;
+    }
+
+    public function toArray()
+    {
+        return array_values($this->attributes);
     }
 
     public function toObject()

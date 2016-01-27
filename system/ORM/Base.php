@@ -52,12 +52,10 @@ abstract class Base
     {
         if(is_null($field)) {
             $this->tempWheres = array();
-        }
-        else if(is_array($field)) {
-            $this->tempWheres = array_merge($this->tempWheres, $field);
-        }
-        else {
-            $this->tempWheres[$field] = $value;
+        } else {
+            $params = func_get_args();
+
+            $this->setWhere($params);
         }
 
         return $this;
@@ -180,7 +178,7 @@ abstract class Base
                 throw new \UnexpectedValueException(__d('system', 'Second parameter is invalid'));
             }
 
-            $condition = sprintf('%s $s ?', $condition, $operator);
+            $condition = sprintf('%s %s ?', $condition, $operator);
 
             // Store the composed condition and its value.
             $this->tempWheres[$condition] = array_shift($params);

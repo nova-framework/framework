@@ -162,6 +162,7 @@ class Router
     public function addRoute($method, $route, $callback = null)
     {
         $method = strtoupper($method);
+        
         $pattern = ltrim(self::$routeGroup.'/'.$route, '/');
 
         $route = new Route($method, $pattern, $callback);

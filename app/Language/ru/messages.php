@@ -16,6 +16,7 @@ This content can be changed in <code>{0}</code>' => 'Здраствуй, доб�
   'Open subpage' => 'Открыть подстраницу',
   'Parameter should be a non empty Array' => '',
   'Parameter should be an Integer' => '',
+  'Parameter should be numeric' => '',
   'Subpage' => 'Подстраница',
   'Welcome' => 'Добро пожаловать!',
 );

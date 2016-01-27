@@ -16,6 +16,7 @@ Tą treść możesz zmienić w pliku <code>{0}</code>',
   'Open subpage' => 'Otwórz podstronę',
   'Parameter should be a non empty Array' => '',
   'Parameter should be an Integer' => '',
+  'Parameter should be numeric' => '',
   'Subpage' => 'Podstrona',
   'Welcome' => 'Witaj',
 );

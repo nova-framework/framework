@@ -16,6 +16,7 @@ Questo contenuto può essere cambiato in <code>{0}</code>',
   'Open subpage' => 'Apri sottopagina',
   'Parameter should be a non empty Array' => '',
   'Parameter should be an Integer' => '',
+  'Parameter should be numeric' => '',
   'Subpage' => 'Sottopagina',
   'Welcome' => 'Benvenuto',
 );

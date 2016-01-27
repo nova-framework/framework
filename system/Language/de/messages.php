@@ -47,6 +47,8 @@ return array (
   'No valid Entity Class is given' => 'Keine gültige Entitäten-Klasse angegeben',
   'No valid Entity Class is given: {0}' => 'Keine gültige Entitäten-Klasse angegeben: {0}',
   'No valid Entity Name is given: {0}' => 'Kein gültiger Entitäten-Name angegeben: {0}',
+  'No valid Model Class is given: {0}' => '',
+  'No valid Model Name is given: {0}' => '',
   'POST Variables' => 'POST Variablen',
   'Parameter should be an Array' => 'Parameter sollte ein Array sein',
   'Possible keys: <b>{0}</b>' => 'Mögliche Schlüssel: <b>{0}</b>',

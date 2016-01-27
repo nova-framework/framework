@@ -16,6 +16,7 @@ Tento obsah lze změnit v <code>{0}</code>',
   'Open subpage' => 'Otevřít podstránku',
   'Parameter should be a non empty Array' => '',
   'Parameter should be an Integer' => '',
+  'Parameter should be numeric' => '',
   'Subpage' => 'Podstránka',
   'Welcome' => 'Vítejte',
 );

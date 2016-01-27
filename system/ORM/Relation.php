@@ -67,17 +67,6 @@ abstract class Relation
     abstract public function get();
 
     /**
-     * Run a raw update against the base query.
-     *
-     * @param  array  $attributes
-     * @return int
-     */
-    public function rawUpdate(array $attributes = array())
-    {
-        return $this->query->update($attributes);
-    }
-
-    /**
      * Get the underlying query for the relation.
      *
      * @return \Nova\ORM\Builder

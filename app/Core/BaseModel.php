@@ -91,8 +91,9 @@ class BaseModel extends Model
 
     /**
      * By default, we return items as objects. You can change this for the entire class by setting this
-     * value to 'array' instead of 'object', or you can specify a qualified Class name for the returned object.
-     * Alternatively, you can do it on a per-instance basis using the 'as_array()' and 'as_object()' methods.
+     * value to 'assoc' or 'array' instead of 'object', or you can specify a qualified Class name for the
+     * returned object. Alternatively, you can do it on a per-instance basis using the 'asArray()' and
+     * 'asObject()' methods.
      */
     protected $returnType = 'object';
 
@@ -239,8 +240,10 @@ class BaseModel extends Model
         $query = $queryBuilder->from($this->tableName);
 
         // Setup the fetch Method.
-        if ($returnType == 'array') {
+        if ($returnType == 'assoc') {
             $query->setFetchMode(PDO::FETCH_ASSOC);
+        } else if ($returnType == 'array') {
+            $query->setFetchMode(PDO::FETCH_NUM);
         } else if ($returnType == 'object') {
                 $query->setFetchMode(PDO::FETCH_OBJ);
         } else {
@@ -809,6 +812,17 @@ class BaseModel extends Model
     public function asArray()
     {
         $this->tempReturnType = 'array';
+
+        return $this;
+    }
+
+    /**
+     * Temporarily sets our return type to an array.
+     * @return BaseModel
+     */
+    public function asAssoc()
+    {
+        $this->tempReturnType = 'assoc';
 
         return $this;
     }

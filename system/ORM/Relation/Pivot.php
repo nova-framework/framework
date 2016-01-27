@@ -115,7 +115,7 @@ class Pivot extends Model
         //
         $params = array($this->otherKey => $this->getAttribute($this->otherKey));
 
-        $data = $this->select($sql, $params, 'array', true);
+        $data = $this->select($sql, $params, 'assoc', true);
 
         if($data === false) {
             return false;

@@ -101,8 +101,10 @@ class Builder
         // Setup the Fetch Mode.
         $returnType = $this->connection->returnType();
 
-        if ($returnType == 'array') {
+        if ($returnType == 'assoc') {
             $this->setFetchMode(PDO::FETCH_ASSOC);
+        } else if ($returnType == 'array') {
+            $this->setFetchMode(PDO::FETCH_NUM);
         } else if ($returnType == 'object') {
             $this->setFetchMode(PDO::FETCH_OBJ);
         } else {
@@ -144,6 +146,16 @@ class Builder
     public function asAssoc()
     {
         return $this->setFetchMode(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Fetch query results as array
+     *
+     * @return \Nova\Database\Query\Builder
+     */
+    public function asArray()
+    {
+        return $this->setFetchMode(PDO::FETCH_NUM);
     }
 
     /**

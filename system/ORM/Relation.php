@@ -9,23 +9,37 @@
 
 namespace Nova\ORM;
 
-use Nova\ORM\Base as BaseRelation;
 use Nova\ORM\Model;
 
 
-abstract class Relation extends BaseRelation
+abstract class Relation
 {
     protected $className;
 
+    /**
+     * The related model instance.
+     *
+     * @var \Nova\ORM\Model
+     */
     protected $related;
 
+    /**
+     * The parent model instance.
+     *
+     * @var \Nova\ORM\Model
+     */
     protected $parent;
 
+    /**
+     * The ORM query builder instance.
+     *
+     * @var \Nova\ORM\Builder
+     */
+    protected $query;
 
-    public function __construct($className, Model $model)
+
+    public function __construct($className, Model $parent)
     {
-        parent::__construct();
-
         $className = sprintf('\\%s', ltrim($className, '\\'));
 
         if(! class_exists($className)) {
@@ -39,7 +53,10 @@ abstract class Relation extends BaseRelation
         $this->related = new $className();
 
         // Setup the Parent Model
-        $this->parent = $model;
+        $this->parent = $parent;
+
+        // Setup the Query Builder
+        $this->query = $this->related->newBuilder();
     }
 
     public function getClassName()
@@ -49,4 +66,44 @@ abstract class Relation extends BaseRelation
 
     abstract public function get();
 
+    /**
+     * Run a raw update against the base query.
+     *
+     * @param  array  $attributes
+     * @return int
+     */
+    public function rawUpdate(array $attributes = array())
+    {
+        return $this->query->update($attributes);
+    }
+
+    /**
+     * Get the underlying query for the relation.
+     *
+     * @return \Nova\ORM\Builder
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * Get the parent model of the relation.
+     *
+     * @return \Nova\ORM\Model
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Get the related model of the relation.
+     *
+     * @return \Nova\ORM\Model
+     */
+    public function getRelated()
+    {
+        return $this->related;
+    }
 }

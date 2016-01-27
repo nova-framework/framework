@@ -115,7 +115,7 @@ class Pivot extends Model
         //
         $params = array($this->otherKey => $this->getAttribute($this->otherKey));
 
-        $data = $this->select($sql, $params, 'assoc', true);
+        $data = $this->select($sql, $params, 'array', true);
 
         if($data === false) {
             return false;
@@ -125,7 +125,7 @@ class Pivot extends Model
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $row[$this->foreignKey];
+            $result[] = array_shift($row);
         }
 
         return $result;

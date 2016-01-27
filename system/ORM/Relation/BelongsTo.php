@@ -43,7 +43,7 @@ class BelongsTo extends Relation
 
     public function get()
     {
-        return $this->related->findBy($this->primaryKey, $this->primaryId);
+        return $this->query->findBy($this->primaryKey, $this->primaryId);
     }
 
 }

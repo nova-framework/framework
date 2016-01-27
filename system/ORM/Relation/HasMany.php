@@ -37,19 +37,22 @@ class HasMany extends Relation
 
     public function get()
     {
-        $order = $this->getOrder();
-        $limit = $this->getLimit();
-        $offset = $this->getOffset();
+        return $this->query->findManyBy($this->foreignKey, $this->parent->getKey());
+    }
 
-        $result = $this->related
-            ->where($this->wheres())
-            ->orderBy($order)
-            ->limit($limit)
-            ->offset($offset)
-            ->findManyBy($this->foreignKey, $this->parent->getKey());
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        if(method_exists($this->query, $method)) {
+            call_user_func_array(array($this->query, $method), $parameters);
 
-        $this->resetState();
-
-        return $result;
+            return $this;
+        }
     }
 }

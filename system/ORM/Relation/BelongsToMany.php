@@ -93,21 +93,25 @@ class BelongsToMany extends Relation
     {
         $table = $this->pivot->table();
 
-        $order  = $this->getOrder();
-        $limit  = $this->getLimit();
-        $offset = $this->getOffset();
+        $otherId = $this->parent->getKey();
 
-        // Execute the Query.
-        $result = $this->related
-            ->where($this->wheres())
-            ->orderBy($order)
-            ->limit($limit)
-            ->offset($offset)
-            ->fetchWithPivot($table, $this->foreignKey, $this->otherKey, $this->parent->getKey());
+        return $this->query->fetchWithPivot($table, $this->foreignKey, $this->otherKey, $otherId);
+    }
 
-        $this->resetState();
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        if(method_exists($this->query, $method)) {
+            call_user_func_array(array($this->query, $method), $parameters);
 
-        return $result;
+            return $this;
+        }
     }
 
     public function attach($id, array $attributes = array())

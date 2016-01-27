@@ -70,7 +70,7 @@ abstract class Connection extends PDO
         }
 
         // Prepare the FetchMethod and check the returnType
-        $fetchMethod = self::getFetchMethod($this->returnType);
+        list($fetchMethod) = self::getFetchMethod($this->returnType);
 
         // Store the config in class variable.
         $this->config = $config;
@@ -158,11 +158,10 @@ abstract class Connection extends PDO
      * Get fetch method and validate class if exists.
      *
      * @param int $returnType PDO Fetch Method type
-     * @param null|string $fetchClass Reference!
      * @return int fetch method
      * @throws \Exception
      */
-    public static function getFetchMethod($returnType, &$fetchClass = null)
+    public static function getFetchMethod($returnType)
     {
         // Prepare the parameters.
         $fetchClass = null;
@@ -190,67 +189,7 @@ abstract class Connection extends PDO
             $fetchClass = $returnType;
         }
 
-        return $fetchMethod;
-    }
-
-    /**
-     * Guess parameters types
-     * @param array $params
-     * @return array types back, will be PDO::PARAM_* values
-     */
-    public static function getParamTypes(array $params)
-    {
-        $result = array();
-
-        foreach ($params as $key => $value) {
-            if (is_integer($value)) {
-                $result[$key] = PDO::PARAM_INT;
-            } else if (is_bool($value)) {
-                $result[$key] = PDO::PARAM_BOOL;
-            } else if (is_null($value)) {
-                $result[$key] = PDO::PARAM_NULL;
-            } else {
-                $result[$key] = PDO::PARAM_STR;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Bind the parameters into the statement
-     *
-     * @param \PDOStatement $statement
-     * @param array $params
-     * @param array $paramTypes
-     * @param string $prefix
-     */
-    public function bindParams($statement, array $params, array $paramTypes = array(), $prefix = ':')
-    {
-        if (empty($params)) {
-            return;
-        }
-
-        // Bind the key and values (only if given).
-        foreach ($params as $key => $value) {
-            $bindKey = $prefix .$key;
-
-            if (isset($paramTypes[$key])) {
-                $bindType = $paramTypes[$key];
-            }
-            // No parameter Type found, we try our best of to guess it from the Value.
-            else if (is_integer($value)) {
-                $bindType = PDO::PARAM_INT;
-            } else if (is_bool($value)) {
-                $bindType = PDO::PARAM_BOOL;
-            } else if (is_null($value)) {
-                $bindType = PDO::PARAM_NULL;
-            } else {
-                $bindType = PDO::PARAM_STR;
-            }
-
-            $statement->bindValue($bindKey, $value, $bindType);
-        }
+        return array($fetchMethod, $fetchClass);
     }
 
     public function query($query, $method = null)
@@ -401,8 +340,8 @@ abstract class Connection extends PDO
             $bindParams[$field] = $value;
         }
 
-        // Bind parameters.
-        $this->bindParams($stmt, $bindParams, $paramTypes);
+        // Bind the parameters.
+        $this->bindTypedValues($stmt, $bindParams, $paramTypes);
 
         return $stmt;
     }
@@ -418,9 +357,9 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function fetchAssoc($statement, array $params = array(), array $paramTypes = array())
+    public function fetchAssoc($statement, array $params = array(), array $paramTypes = array(), $fetchAll = false)
     {
-        return $this->select($statement, $params, $paramTypes, 'assoc');
+        return $this->select($statement, $params, $paramTypes, 'assoc', $fetchAll);
     }
 
     /**
@@ -434,9 +373,9 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function fetchArray($statement, array $params = array(), array $paramTypes = array())
+    public function fetchArray($statement, array $params = array(), array $paramTypes = array(), $fetchAll = false)
     {
-        return $this->select($statement, $params, $paramTypes, 'array');
+        return $this->select($statement, $params, $paramTypes, 'array', $fetchAll);
     }
 
     /**
@@ -450,9 +389,9 @@ abstract class Connection extends PDO
      *
      * @throws \Exception
      */
-    public function fetchObject($statement, array $params = array(), array $paramTypes = array())
+    public function fetchObject($statement, array $params = array(), array $paramTypes = array(), $fetchAll = false)
     {
-        return $this->select($statement, $params, $paramTypes, 'object');
+        return $this->select($statement, $params, $paramTypes, 'object', $fetchAll);
     }
 
     /**
@@ -505,21 +444,11 @@ abstract class Connection extends PDO
      */
     public function select($sql, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
     {
-        // Get the current Time.
-        $start = microtime(true);
-
-        // Append select if it isn't appended.
-        if (strtolower(substr($sql, 0, 7)) !== 'select ') {
-            $sql = "SELECT " . $sql;
-        }
-
         // What return type? Use default if no return type is given in the call.
         $returnType = $returnType ? $returnType : $this->returnType;
 
         // Prepare the FetchMethod and check the returnType
-        $className = null;
-
-        $fetchMethod = self::getFetchMethod($returnType, $className);
+        list($fetchMethod, $className) = self::getFetchMethod($returnType);
 
         // Execute the Query.
         $stmt = $this->executeQuery($sql, $params, $paramTypes);
@@ -531,28 +460,19 @@ abstract class Connection extends PDO
         // Fetch the data.
         $result = false;
 
+        if ($fetchMethod === PDO::FETCH_CLASS) {
+            $stmt->setFetchMode($fetchMethod, $className);
+        } else {
+            $stmt->setFetchMode($fetchMethod);
+        }
+
         if ($fetchAll) {
-            // Continue with fetching all records.
-            if ($fetchMethod === PDO::FETCH_CLASS) {
-                // Fetch in class
-                $result = $stmt->fetchAll($fetchMethod, $className);
-            } else {
-                $result = $stmt->fetchAll($fetchMethod);
-            }
-        }
-        // Continue with fetching one record.
-        else {
-            if ($fetchMethod === PDO::FETCH_CLASS) {
-                // Fetch in class
-                $stmt->setFetchMode($fetchMethod, $className);
-
-                $result = $stmt->fetch();
-            } else {
-                $result = $stmt->fetch($fetchMethod);
-            }
+            // Fetch and return all records.
+            return $stmt->fetchAll();
         }
 
-        return $result;
+        // Fetch and return one record.
+        return $stmt->fetch();
     }
 
     /**
@@ -591,61 +511,28 @@ abstract class Connection extends PDO
      *                    multiple rows in one call. The engine must support this! Check manual!
      * @param array $paramTypes Types of parameters, leave empty to auto detect
      * @param bool $transaction Use PDO Transaction. If one insert will fail we will rollback immediately. Default false.
-     * @param string $mode Represents the insertion Mode, must be 'insert' or 'replace'
      * @return int|bool|array Could be false on error, or one single id inserted, or an array of inserted id's.
      *
      * @throws \Exception
      */
-    public function insert($table, array $data, array $paramTypes = array(), $mode = 'insert')
+    public function insert($table, array $data, array $paramTypes = array())
     {
-        // Check for valid data.
-        if (! is_array($data)) {
-            throw new \Exception(__d('system', 'Data to insert must be an array of column -> value.'));
-        } else if (($mode != 'insert') && ($mode != 'replace')) {
-            throw new \Exception(__d('system', 'Insert Mode must be \'insert\' or \'replace\''));
-        }
-
-        // Prepare the paramTypes.
-        if(empty($paramTypes)) {
-            $paramTypes = $this->getTableBindTypes($table);
-        }
-
-        // Prepare the parameters.
-        $fieldNames = implode(', ', array_keys($data));
-
-        $fieldValues = ':'.implode(', :', array_keys($data));
-
-        // Prepare the Insert Mode.
-        $insertMode = strtoupper($mode);
-
         // Prepare the SQL statement.
-        $sql = "$insertMode INTO $table ($fieldNames) VALUES ($fieldValues)";
+        $sql = 'INSERT INTO ' .$table .' (' . implode(', ', array_keys($data)) .') VALUES (' .implode(', ', array_fill(0, count($data), '?')) .')';
 
-        // Execute the Update statement.
-        $result = $this->executeUpdate($sql, $data, $paramTypes);
+        // Execute the Update and capture the result.
+        $result = $this->executeUpdate(
+            $sql,
+            array_values($data),
+            is_string(key($paramTypes)) ? $this->extractTypeValues($data, $paramTypes) : $paramTypes
+        );
 
+        // If no error, return the connection's last inserted ID
         if($result !== false) {
-            // If no error, capture the last inserted id
             return $this->lastInsertId();
         }
 
         return false;
-    }
-
-    /**
-     * Performs the SQL standard for a combined DELETE + INSERT, using PRIMARY and UNIQUE keys to determine which row to replace.
-     *
-     * @param string $table Table to execute the replace.
-     * @param array $params Represents the Record data
-     * @param array $paramTypes
-     * @param bool $transaction Use PDO Transaction. If one replace will fail we will rollback immediately. Default false.
-     * @return array|bool|int Could be false on error, or one single ID replaced.
-     *
-     * @throws \Exception
-     */
-    public function replace($table, array $params, array $paramTypes = array())
-    {
-        return $this->insert($table, $params, $paramTypes, 'replace');
     }
 
     /**
@@ -661,47 +548,19 @@ abstract class Connection extends PDO
      */
     public function update($table, array $data, array $where, array $paramTypes = array())
     {
-        $params = array();
+        $set = array();
 
-        // Prepare the paramTypes.
-        if(empty($paramTypes)) {
-            $paramTypes = $this->getTableBindTypes($table);
+        foreach ($data as $columnName => $value) {
+            $set[] = $columnName . ' = ?';
         }
 
-        // Column :bind for auto binding.
-        $fieldDetails = '';
-
-        $idx = 0;
-
-        foreach ($data as $key => $value) {
-            if ($idx > 0) {
-                $fieldDetails .= ', ';
-            } else {
-                $idx++;
-            }
-
-            $bindKey = "field_$key";
-
-            $fieldDetails .= "$key = :$bindKey";
-
-            $params[$bindKey] = $value;
-
-            // Adjust the parameter Type information.
-            if(isset($paramTypes[$key]) && ! isset($paramTypes[$bindKey])) {
-                $paramTypes[$bindKey] = $paramTypes[$key];
-            }
+        if (is_string(key($paramTypes))) {
+            $paramTypes = $this->extractTypeValues(array_merge($data, $where), $paramTypes);
         }
 
-        // Prepare the WHERE conditions.
-        $whereParams = array();
+        $params = array_merge(array_values($data), array_values($where));
 
-        $whereDetails = self::parseWhereConditions($where, $whereParams);
-
-        // Merge the whereParams into Update parameters.
-        $params = array_merge($params, $whereParams);
-
-        // Prepare the SQL statement.
-        $sql = "UPDATE $table SET $fieldDetails WHERE $whereDetails";
+        $sql  = 'UPDATE ' .$table .' SET ' .implode(', ', $set) .' WHERE ' .implode(' = ? AND ', array_keys($where)) .' = ?';
 
         // Execute the Update and return the result.
         return $this->executeUpdate($sql, $params, $paramTypes);
@@ -719,21 +578,21 @@ abstract class Connection extends PDO
      */
     public function delete($table, array $where, array $paramTypes = array())
     {
-        $bindParams = array();
+        $criteria = array();
 
-        // Prepare the WHERE conditions.
-        $whereDetails = self::parseWhereConditions($where, $bindParams);
-
-        // Prepare the paramTypes.
-        if(empty($paramTypes)) {
-            $paramTypes = $this->getTableBindTypes($table);
+        foreach (array_keys($where) as $columnName) {
+            $criteria[] = $columnName . ' = ?';
         }
 
         // Prepare the SQL statement.
-        $sql = "DELETE FROM $table WHERE $whereDetails";
+        $sql = 'DELETE FROM ' .$table .' WHERE ' .implode(' AND ', $criteria);
 
         // Execute the Update and return the result.
-        return $this->executeUpdate($sql, $bindParams, $paramTypes);
+        return $this->executeUpdate(
+            $sql,
+            array_values($where),
+            is_string(key($paramTypes)) ? $this->extractTypeValues($where, $paramTypes) : $paramTypes
+        );
     }
 
     /**
@@ -753,7 +612,7 @@ abstract class Connection extends PDO
         // Execute the Query with parameters binding.
         if(! empty($paramTypes)) {
             // Bind the parameters.
-            $this->bindParams($stmt, $params, $paramTypes);
+            $this->bindTypedValues($stmt, $params, $paramTypes);
 
             // Execute and return false if failure.
             $result = $stmt->execute();
@@ -786,7 +645,7 @@ abstract class Connection extends PDO
         // Execute the Query with parameters binding.
         if(! empty($paramTypes)) {
             // Bind the parameters.
-            $this->bindParams($stmt, $params, $paramTypes);
+            $this->bindTypedValues($stmt, $params, $paramTypes);
 
             // Execute and return false if failure.
             $result = $stmt->execute();
@@ -803,18 +662,49 @@ abstract class Connection extends PDO
     }
 
     /**
+     * Binds a set of parameters, some or all of which are typed with a PDO binding type, to a given statement.
+     *
+     * @param \Nova\Database\Statement $stmt   The statement to bind the values to.
+     * @param array                    $params The map/list of named/positional parameters.
+     * @param array                    $types  The parameter types (PDO binding types).
+     *
+     * @return void
+     *
+     * @internal Duck-typing used on the $stmt parameter to support driver statements as well as
+     *           raw PDOStatement instances.
+     */
+    private function bindTypedValues($stmt, array $params, array $paramTypes = array())
+    {
+        if (empty($params)) {
+            return;
+        }
+
+        foreach ($params as $key => $value) {
+            $bindKey = is_integer($key) ? $key + 1 : $key;
+
+            if (isset($paramTypes[$key])) {
+                $bindType = $paramTypes[$key];
+            } else {
+                $bindType = (is_int($value) || is_bool($value)) ? PDO::PARAM_INT : PDO::PARAM_STR;
+            }
+
+            $stmt->bindValue($bindKey, $value, $bindType);
+        }
+    }
+
+    /**
      * Extract ordered type list from two associate key lists of data and types.
      *
-     * @param array $data
+     * @param array $params
      * @param array $types
      *
      * @return array
      */
-    private function extractTypeValues(array $data, array $paramTypes)
+    private function extractTypeValues(array $params, array $paramTypes)
     {
         $result = array();
 
-        foreach ($data as $key => $_) {
+        foreach ($params as $key => $_) {
             $result[] = isset($paramTypes[$key]) ? $paramTypes[$key] : PDO::PARAM_STR;
         }
 

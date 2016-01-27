@@ -77,6 +77,17 @@ class Builder extends BaseBuilder
     }
 
     //--------------------------------------------------------------------
+    // Base Query Builder Methods
+    //--------------------------------------------------------------------
+
+    public function newQuery()
+    {
+        $query = $this->db->getQueryBuilder();
+
+        return $query->table($this->tableName)->asAssoc();
+    }
+
+    //--------------------------------------------------------------------
     // Finder Methods
     //--------------------------------------------------------------------
 

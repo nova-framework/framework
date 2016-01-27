@@ -98,9 +98,9 @@ class RelationalModel extends BaseController
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
-        $result = $this->model->where('username != ?', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
+        $result = $this->model->where('username', '!=', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
 
-        $message .= Highlighter::parse('$this->model->where(\'username != ?\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
+        $message .= Highlighter::parse('$this->model->where(\'username\', \'!=\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -311,7 +311,7 @@ Dumper::dumpObjectArray(\$courses);
         $course = Course::find(1);
 
         $students = $course->students()
-            ->where('username != ?', 'tom')
+            ->where('username', '!=', 'tom')
             ->orderBy('username DESC')
             ->limit(2)
             ->get();
@@ -320,7 +320,7 @@ Dumper::dumpObjectArray(\$courses);
 \$course = Course::find(1);
 
 \$students = \$course->students()
-    ->where('username != ?', 'tom')
+    ->where('username', '!=', 'tom')
     ->orderBy('username DESC')
     ->limit(2)
     ->get();

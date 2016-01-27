@@ -329,20 +329,9 @@ abstract class Connection extends PDO
             return false;
         }
 
-        // Bind the key and values (only if given).
-        $bindParams = array();
-
-        foreach ($params as $field => $value) {
-            if (substr($field, 0, 1) === ':') {
-                $field = substr($field, 1);
-            }
-
-            $bindParams[$field] = $value;
-        }
-
+        // Bind the parameters.
         if(! empty($paramTypes)) {
-            // Bind the parameters.
-            $this->bindTypedValues($stmt, $bindParams, $paramTypes);
+            $this->bindTypedValues($stmt, $params, $paramTypes);
         } else {
             foreach ($params as $key => $value) {
                 $bindType = (is_int($value) || is_bool($value)) ? PDO::PARAM_INT : PDO::PARAM_STR;

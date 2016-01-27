@@ -174,7 +174,7 @@ class PgSQL extends Connection
             // Get the current Time.
             $time = microtime(true);
 
-            $result = $this->rawQuery($sql, 'array', false);
+            $result = $this->rawQuery($sql, 'assoc', false);
 
             $cid = 0;
 

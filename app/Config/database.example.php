@@ -26,7 +26,7 @@ Config::set('database', array(
             'user'        => 'root',
             'password'    => 'password',
             'charset'     => 'utf8',      // Not required, default and recommended is utf8.
-            'return_type' => 'array',     // Not required, default is 'array'.
+            'return_type' => 'assoc',     // Not required, default is 'assoc'.
             'compress'    => false        // Changing to true will hugely improve the persormance on remote servers.
         )
     ),
@@ -36,7 +36,7 @@ Config::set('database', array(
         'driver'  => 'pdo_sqlite',
         'config' => array(
             'path'         => BASEPATH .'storage/persistent/database.sqlite',
-            'return_type'  => 'object' // Not required, default is 'array'.
+            'return_type'  => 'object' // Not required, default is 'assoc'.
         )
     )
 

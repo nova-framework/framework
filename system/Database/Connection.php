@@ -30,7 +30,7 @@ abstract class Connection extends PDO
     public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>", "LIKE");
 
     /** @var string Return type. */
-    protected $returnType = 'array';
+    protected $returnType = 'assoc';
 
     /** @var array Config from the user's app config. */
     protected $config;
@@ -165,10 +165,12 @@ abstract class Connection extends PDO
     public static function getFetchMethod($returnType, &$fetchClass = null)
     {
         // Prepare the parameters.
-        $className = null;
+        $fetchClass = null;
 
-        if ($returnType == 'array') {
+        if ($returnType == 'assoc') {
             $fetchMethod = PDO::FETCH_ASSOC;
+        } else if ($returnType == 'array') {
+            $fetchMethod = PDO::FETCH_NUM;
         } else if ($returnType == 'object') {
             $fetchMethod = PDO::FETCH_OBJ;
         } else {
@@ -307,7 +309,13 @@ abstract class Connection extends PDO
         $start = microtime(true);
 
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
-        $method = ($this->returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
+        if($returnType == 'assoc') {
+            $method = PDO::FETCH_ASSOC;
+        } else if($returnType == 'array') {
+            $method = PDO::FETCH_NUM;
+        } else {
+            $method = PDO::FETCH_OBJ;
+        }
 
         if (! $fetch) {
             $result = $this->exec($sql);
@@ -340,7 +348,13 @@ abstract class Connection extends PDO
         $returnType = $returnType ? $returnType : $this->returnType;
 
         // We can't fetch class here to stay conform the interface, make it OBJ for this simple query.
-        $method = ($returnType == 'array') ? PDO::FETCH_ASSOC : PDO::FETCH_OBJ;
+        if($returnType == 'assoc') {
+            $method = PDO::FETCH_ASSOC;
+        } else if($returnType == 'array') {
+            $method = PDO::FETCH_NUM;
+        } else {
+            $method = PDO::FETCH_OBJ;
+        }
 
         // We don't want to map in memory an entire Billion Records Table, so we return right on a Statement.
         $result = parent::query($sql, $method);
@@ -394,6 +408,22 @@ abstract class Connection extends PDO
     }
 
     /**
+     * Fetch associative array
+     *
+     * @param string $statement
+     * @param array $params
+     * @param array $paramTypes
+     *
+     * @return array|mixed
+     *
+     * @throws \Exception
+     */
+    public function fetchAssoc($statement, array $params = array(), array $paramTypes = array())
+    {
+        return $this->select($statement, $params, $paramTypes, 'assoc');
+    }
+
+    /**
      * Fetch array
      *
      * @param string $statement
@@ -438,7 +468,7 @@ abstract class Connection extends PDO
      */
     public function fetchClass($statement, array $params = array(), array $paramTypes = array(), $returnType = null, $fetchAll = false)
     {
-        if (($this->returnType != 'array') && ($this->returnType != 'object')) {
+        if (($this->returnType != 'assoc') && ($this->returnType != 'array') && ($this->returnType != 'object')) {
             $returnType = ($returnType !== null) ? $returnType : $this->returnType;
         } else if ($returnType === null) {
             throw new \Exception(__d('system', 'No valid Entity Class is given'));

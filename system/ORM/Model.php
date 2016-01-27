@@ -685,7 +685,7 @@ class Model
         // Prepare the parameter Types.
         $paramTypes = $this->getParamTypes($params);
 
-        return $this->db->select($sql, $params, $paramTypes, 'array', $fetchAll);
+        return $this->db->select($sql, $params, $paramTypes, 'assoc', $fetchAll);
     }
 
     //--------------------------------------------------------------------

@@ -85,7 +85,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
 
-        $result = $this->select($sql, array('value' => $id), 'array');
+        $result = $this->select($sql, array('value' => $id), 'assoc');
 
         if($result !== false) {
             return $this->model->newInstance($result);
@@ -108,7 +108,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr LIMIT 1";
 
-        $result = $this->select($sql, $bindParams, 'array');
+        $result = $this->select($sql, $bindParams, 'assoc');
 
         // Reset the Model State.
         $this->resetState();
@@ -139,7 +139,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr";
 
-        $data = $this->select($sql, $bindParams, 'array', true);
+        $data = $this->select($sql, $bindParams, 'assoc', true);
 
         // Reset the Model State.
         $this->resetState();
@@ -185,7 +185,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $limitStr $offsetStr";
 
-        $data = $this->select($sql, $bindParams, 'array', true);
+        $data = $this->select($sql, $bindParams, 'assoc', true);
 
         // Reset the Model State.
         $this->resetState();
@@ -216,7 +216,7 @@ class Builder extends BaseBuilder
         // Prepare the SQL Query.
         $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $offsetStr";
 
-        $data = $this->select($sql, $bindParams, 'array');
+        $data = $this->select($sql, $bindParams, 'assoc');
 
         // Reset the Model State.
         $this->resetState();
@@ -238,7 +238,7 @@ class Builder extends BaseBuilder
      *
      * @throws \Exception
      */
-    public function select($sql, $params = array(), $returnType = 'array', $fetchAll = false)
+    public function select($sql, $params = array(), $returnType = 'assoc', $fetchAll = false)
     {
         // Firstly, simplify the white spaces and trim the SQL query.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
@@ -249,12 +249,12 @@ class Builder extends BaseBuilder
         return $this->db->select($sql, $params, $paramTypes, $returnType, $fetchAll);
     }
 
-    public function selectOne($sql, $params = array(), $returnType = 'array')
+    public function selectOne($sql, $params = array(), $returnType = 'assoc')
     {
         return $this->db->select($sql, $params, $paramTypes, $returnType);
     }
 
-    public function selectAll($sql, $params = array(), $returnType = 'array')
+    public function selectAll($sql, $params = array(), $returnType = 'assoc')
     {
         return $this->db->select($sql, $params, $paramTypes, $returnType, true);
     }
@@ -435,7 +435,7 @@ class Builder extends BaseBuilder
         // Simplify the white spaces.
         $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-        $data = $this->db->select($sql, $bindParams, $paramTypes, 'array', true);
+        $data = $this->db->select($sql, $bindParams, $paramTypes, 'assoc', true);
 
         // Reset the Model State.
         $this->resetState();
@@ -467,7 +467,7 @@ class Builder extends BaseBuilder
     {
         $table = $this->table();
 
-        if($returnType == 'array') {
+        if($returnType == 'assoc') {
             $asObject = false;
         }
         else if($returnType == 'object') {

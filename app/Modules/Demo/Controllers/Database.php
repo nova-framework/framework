@@ -117,10 +117,10 @@ var_export($data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'marcus'));
+        $data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array('username' => 'marcus'));
 
         $text = '
-$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'marcus\'));
+$data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE username = :username", array(\'username\' => \'marcus\'));
 
 var_export($data, true);
         ';
@@ -129,10 +129,10 @@ var_export($data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array('userid' => 1));
+        $data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array('userid' => 1));
 
         $text = '
-$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array(\'userid\' => 1));
+$data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userid", array(\'userid\' => 1));
 
 var_export($data, true);
         ';
@@ -187,10 +187,10 @@ var_export($userId, true);
         $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array('userId' => $userId));
+        $data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array('userId' => $userId));
 
         $text = '
-$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array(\'userId\' => $userId));
+$data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array(\'userId\' => $userId));
 
 var_export($data, true);
         ';
@@ -219,10 +219,10 @@ var_export($retval, true);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array('userId' => $userId));
+        $data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array('userId' => $userId));
 
         $text = '
-$data = $this->db->fetchArray("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array(\'userId\' => $userId));
+$data = $this->db->fetchAssoc("SELECT * FROM " .DB_PREFIX ."users WHERE id = :userId", array(\'userId\' => $userId));
 
 var_export($data, true);
         ';

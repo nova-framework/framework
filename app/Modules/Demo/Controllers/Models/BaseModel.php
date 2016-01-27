@@ -207,7 +207,7 @@ var_export(\$data, true);
         ";
 
         $message .= Highlighter::parse($text);
-        $message .= '<pre>'.var_export($result, true).'</pre><br>';
+        $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
         $data = $this->model->find(3);

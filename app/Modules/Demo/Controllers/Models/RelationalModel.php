@@ -129,7 +129,7 @@ class RelationalModel extends BaseController
 \$result = \$user->save();
 
 var_dump(\$result);
-Dumper::dumpObjectArray(\$user);
+Dumper::dumpObject(\$user);
         ";
 
         $message .= Highlighter::parse($text);
@@ -156,7 +156,7 @@ Dumper::dumpObjectArray(\$user);
 \$result = \$user->save();
 
 var_dump(\$result);
-Dumper::dumpObjectArray(\$user);
+Dumper::dumpObject(\$user);
         ";
 
         $message .= Highlighter::parse($text);

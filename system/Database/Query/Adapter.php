@@ -352,7 +352,7 @@ abstract class Adapter
                 $piece = $this->wrapSanitizer($piece);
             }
 
-            if (!is_int($key)) {
+            if (! is_integer($key)) {
                 $piece = ($wrapSanitizer ? $this->wrapSanitizer($key) : $key) . ' AS ' . $piece;
             }
 
@@ -372,9 +372,11 @@ abstract class Adapter
     protected function concatenateQuery(array $pieces)
     {
         $str = '';
+
         foreach ($pieces as $piece) {
             $str = trim($str) . ' ' . trim($piece);
         }
+
         return trim($str);
     }
 
@@ -448,7 +450,7 @@ abstract class Adapter
             } else {
                 // Usual where like criteria
 
-                if (!$bindValues) {
+                if (! $bindValues) {
                     // Specially for joins
 
                     // We are not binding values, lets sanitize then
@@ -487,7 +489,7 @@ abstract class Adapter
     {
         // Its a raw query, just cast as string, object has __toString()
         if ($value instanceof Raw) {
-            return (string)$value;
+            return (string) $value;
         } elseif ($value instanceof \Closure) {
             return $value;
         }

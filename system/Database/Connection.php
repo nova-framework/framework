@@ -137,8 +137,7 @@ abstract class Connection extends PDO
 
     /**
      * Get Fluent Based query builder.
-     * @param FluentStructure|null $structure
-     * @return \Nova\Database\QueryBuilder
+     * @return \Nova\Database\Query\Builder
      */
     public function getQueryBuilder()
     {
@@ -783,98 +782,6 @@ abstract class Connection extends PDO
 
         foreach($fields as $fieldName => $fieldInfo) {
             $result[$fieldName] = ($fieldInfo['type'] == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Parse the where conditions.
-     *
-     * @param array $where
-     * @param $bindParams
-     * @return string
-     */
-    public static function parseWhereConditions(array $where, &$bindParams)
-    {
-        $result = '';
-
-        $connection = Manager::getConnection();
-
-        // Flag which say when we need to add an AND keyword.
-        $idx = 0;
-
-        foreach ($where as $field => $value) {
-            if ($idx > 0) {
-                // Add the 'AND' keyword for the current condition.
-                $result .= ' AND ';
-            } else {
-                $idx++;
-            }
-
-            // Firstly, we need to check if the Field contains conditions.
-            if (strpos($field, ' ') !== false) {
-                // Simplify the white spaces on Field.
-                $field = preg_replace('/\s+/', ' ', trim($field));
-
-                // Explode the field into its components.
-                $segments = explode(' ', $field);
-
-                if (count($segments) != 3) {
-                    throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-                }
-
-                $fieldName = $segments[0];
-                $operator  = $segments[1];
-                $bindName  = $segments[2];
-
-                if (! in_array($operator, self::$whereOperators, true)) {
-                    throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-                }
-
-                if ($bindName == '?') {
-                    $result .= "$fieldName $operator :$fieldName";
-
-                    $bindParams[$fieldName] = $value;
-                } else {
-                    if ((substr($bindName, 0, 1) !== ':') || ! is_array($value)) {
-                        throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-                    }
-
-                    $result .= "$fieldName $operator $bindName";
-
-                    // Extract the Value from the array.
-                    $value = $value[$bindName];
-
-                    // Remove first character, aka ':', from bindName.
-                    $bindName = substr($bindName, 1);
-
-                    $bindParams[$bindName] = $value;
-                }
-
-                continue;
-            }
-
-            // Process the condition based on Value type.
-            if (is_null($value)) {
-                $result .= "$field is NULL";
-
-                continue;
-            }
-
-            if (is_array($value)) {
-                // We need something like: user_id IN (1, 2, 3)
-                $result .= "$field IN (" . implode(', ', array_map(array($connection, 'quote'), $value)) . ")";
-            } else {
-                $result .= "$field = :$field";
-            }
-
-            $bindParams[$field] = $value;
-        }
-
-        if(empty($result)) {
-            // There are no WHERE conditions, then we make the Database to match all records.
-            $result = '1';
         }
 
         return $result;

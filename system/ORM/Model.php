@@ -131,15 +131,19 @@ class Model
             throw new Exception('No table specified.', 3);
         }
 
-        // Get the Table Fields, if they aren't already specified.
-        if(empty($this->fields)) {
-            $connection = Database::getConnection($this->connection);
+        // Prepare the Table Fields, if they aren't already specified.
+        if(! empty($this->fields)) {
+            return;
+        }
 
-            $fields = $connection->getTableFields($this->table());
+        // Get the specified Connection instance.
+        $connection = Database::getConnection($this->connection);
 
-            foreach($fields as $fieldName => $fieldInfo) {
-                $this->fields[$fieldName] = $fieldInfo['type'];
-            }
+        // Get the Table Fields information.
+        $fields = $connection->getTableFields($this->table());
+
+        foreach($fields as $fieldName => $fieldInfo) {
+            $this->fields[$fieldName] = $fieldInfo['type'];
         }
     }
 
@@ -158,12 +162,6 @@ class Model
     private function hydrate(array $attributes)
     {
         $this->attributes = array();
-
-        $this->original = array();
-
-        if(empty($attributes)) {
-            return;
-        }
 
         foreach ($attributes as $key => $value) {
             if(isset($this->fields[$key])) {
@@ -334,26 +332,6 @@ class Model
     // Attributes handling Methods
     //--------------------------------------------------------------------
 
-    public function setAttributes($attributes)
-    {
-        $this->hydrate($attributes);
-    }
-
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    public function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-    }
-
-    public function getAttribute($name)
-    {
-        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
-    }
-
     /**
      * Get the value of the model's primary key.
      *
@@ -372,6 +350,26 @@ class Model
     public function getKeyName()
     {
         return $this->primaryKey;
+    }
+
+    public function setAttributes($attributes)
+    {
+        $this->hydrate($attributes);
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    public function setAttribute($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    public function getAttribute($name)
+    {
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     //--------------------------------------------------------------------
@@ -723,7 +721,7 @@ class Model
         return $result;
     }
 
-    public function getObjectVariables()
+    public function getObjectVars()
     {
         return get_object_vars($this);
     }

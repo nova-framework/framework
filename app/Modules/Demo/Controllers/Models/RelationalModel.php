@@ -68,7 +68,7 @@ class RelationalModel extends BaseController
 
         //
         $message .= Highlighter::parse('var_export($this->model->getObjectVariables(), true);', true);
-        $message .= '<pre>'. var_export($this->model->getObjectVariables(), true).'</pre><br>';
+        $message .= '<pre>'. var_export($this->model->getObjectVars(), true).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Finding Records').'</strong></h3><br>';

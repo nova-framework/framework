@@ -14,7 +14,7 @@ use Nova\Database\Manager as Database;
 
 use Nova\ORM\Model;
 
-use \PDO;
+use PDO;
 
 
 class Builder

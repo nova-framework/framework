@@ -605,11 +605,12 @@ class Model
         }
         // If the Object is dirty, we are into UPDATE mode.
         else if($this->isDirty()) {
+            // Get the primaryKey value associated with this instance.
             $id = $this->getKey();
 
             $result = $builder->where($this->primaryKey, $id)->update($data);
 
-            $result = ($result !== false);
+            $result = ($result !== false) ? true : $result;
         }
 
         if($result) {

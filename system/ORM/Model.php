@@ -581,43 +581,8 @@ class Model
         if (! $this->beforeSave()) {
             return;
         }
-        /*
-        $connection = Database::getConnection($this->connection);
 
-        // Prepare the Data.
-        $data = $this->prepareData();
-
-        // Default value for result.
-        $result = false;
-
-        $paramTypes = $this->getParamTypes($data);
-
-        if (! $this->exists) {
-            // We are into INSERT mode.
-            $result = $connection->insert($this->table(), $data, $paramTypes);
-
-            if($result !== false) {
-                $this->exists = true;
-
-                $this->setAttribute($this->primaryKey, $result);
-
-                $result = true;
-            }
-        }
-        // If the Object is dirty, we are into UPDATE mode.
-        else if($this->isDirty()) {
-            $where = array(
-                $this->primaryKey => $this->getKey()
-            );
-
-            $paramTypes = $this->getParamTypes(array_merge($data, $where));
-
-            $result = $connection->update($this->table(), $data, $where, $paramTypes);
-
-            $result = ($result !== false);
-        }
-        */
-
+        // Get a new Builder instance.
         $builder = $this->newBuilder();
 
         // Prepare the Data.
@@ -640,9 +605,9 @@ class Model
         }
         // If the Object is dirty, we are into UPDATE mode.
         else if($this->isDirty()) {
-            $result = $builder
-                ->where($this->primaryKey, $this->getKey())
-                ->update($data);
+            $id = $this->getKey();
+
+            $result = $builder->where($this->primaryKey, $id)->update($data);
 
             $result = ($result !== false);
         }
@@ -664,7 +629,7 @@ class Model
         // Get the primaryKey value associated with this instance.
         $id = $this->getKey();
 
-        // Get a new Builder and execute it.
+        // Get a new Builder instance and execute it.
         $builder = $this->newBuilder();
 
         $result = $builder->delete($id);

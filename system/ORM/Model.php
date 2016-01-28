@@ -582,7 +582,8 @@ class Model
             return;
         }
 
-        $connection = Database::getConnection($this->connection);
+        // Get a new Builder instance.
+        $builder = $this->newBuilder();
 
         // Prepare the Data.
         $data = $this->prepareData();
@@ -590,39 +591,30 @@ class Model
         // Default value for result.
         $result = false;
 
-        $paramTypes = $this->getParamTypes($data);
-
         if (! $this->exists) {
             // We are into INSERT mode.
-            $result = $connection->insert($this->table(), $data, $paramTypes);
+            $result = $builder->insert($data);
 
             if($result !== false) {
                 $this->exists = true;
 
                 $this->setAttribute($this->primaryKey, $result);
 
-                // Sync the original attributes.
-                $this->syncOriginal();
-
                 $result = true;
             }
         }
         // If the Object is dirty, we are into UPDATE mode.
         else if($this->isDirty()) {
-            $where = array(
-                $this->primaryKey => $this->getKey()
-            );
+            $id = $this->getKey();
 
-            $paramTypes = $this->getParamTypes(array_merge($data, $where));
+            $result = $builder->where($this->primaryKey, $id)->update($data);
 
-            $result = $connection->update($this->table(), $data, $where, $paramTypes);
+            $result = ($result !== false);
+        }
 
-            if($result !== false) {
-                // Sync the original attributes.
-                $this->syncOriginal();
-
-                $result = true;
-            }
+        if($result) {
+            // Sync the original attributes.
+            $this->syncOriginal();
         }
 
         return $result;
@@ -634,10 +626,13 @@ class Model
             return false;
         }
 
-        // Get a new Builder and execute it.
+        // Get the primaryKey value associated with this instance.
+        $id = $this->getKey();
+
+        // Get a new Builder instance and execute it.
         $builder = $this->newBuilder();
 
-        $result = $builder->delete($this->getKey());
+        $result = $builder->delete($id);
 
         if($result !== false) {
             $this->exists = false;
@@ -651,27 +646,6 @@ class Model
     //--------------------------------------------------------------------
     // Internal Methods
     //--------------------------------------------------------------------
-
-    public function getParamTypes($params, $strict = true)
-    {
-        $fields =& $this->fields;
-
-        $result = array();
-
-        foreach($params as $field => $value) {
-            if(isset($fields[$field])) {
-                $fieldType = $fields[$field];
-
-                $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-            // No registered field found? We try to guess then the Type, if we aren't into strict mode.
-            else if(! $strict) {
-                $result[$field] = (is_integer($value) || is_bool($value)) ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-        }
-
-        return $result;
-    }
 
     /**
      * Extracts the Model's fields.

@@ -204,6 +204,18 @@ class Builder
         return false;
     }
 
+    public function insert($data)
+    {
+        $query = $this->newBaseQuery();
+
+        return $query->insert($data);
+    }
+
+    public function update($data)
+    {
+        return $this->query->update($data);
+    }
+
     public function delete($id)
     {
         // We use an new Query to perform this operation.

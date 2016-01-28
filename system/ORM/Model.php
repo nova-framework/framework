@@ -301,7 +301,7 @@ class Model
      */
     public function getDirty()
     {
-        $dirty = [];
+        $dirty = array();
 
         foreach ($this->attributes as $key => $value) {
             if (! array_key_exists($key, $this->original)) {
@@ -323,14 +323,9 @@ class Model
     protected function originalIsNumericallyEquivalent($key)
     {
         $current = $this->attributes[$key];
-
         $original = $this->original[$key];
 
-        return (
-            is_numeric($current) &&
-            is_numeric($original) &&
-            (strcmp((string) $current, (string) $original) === 0)
-        );
+        return (is_numeric($current) && is_numeric($original) && (strcmp((string)$current, (string)$original) === 0));
     }
 
     //--------------------------------------------------------------------
@@ -364,7 +359,7 @@ class Model
      */
     public function getKey()
     {
-        return $this->getAttribute($this->getKeyName());
+        return $this->getAttribute($this->primaryKey);
     }
 
     /**
@@ -381,14 +376,9 @@ class Model
     // Data Conversion Methods
     //--------------------------------------------------------------------
 
-    public function toAssoc()
-    {
-        return $this->attributes;
-    }
-
     public function toArray()
     {
-        return array_values($this->attributes);
+        return $this->attributes;
     }
 
     public function toObject()
@@ -461,7 +451,7 @@ class Model
             return null;
         }
 
-        // Calculate the Cache Token.
+        // Calculate the Objects Cache Token.
         $token = '__get_' .$name;
 
         // It there data associated with the Cache token, return it.
@@ -582,11 +572,11 @@ class Model
             return;
         }
 
-        // Get a new Builder instance.
-        $builder = $this->newBuilder();
-
         // Prepare the Data.
         $data = $this->prepareData();
+
+        // Get a new Builder instance.
+        $builder = $this->newBuilder();
 
         // Default value for result.
         $result = false;
@@ -605,10 +595,7 @@ class Model
         }
         // If the Object is dirty, we are into UPDATE mode.
         else if($this->isDirty()) {
-            // Get the primaryKey value associated with this instance.
-            $id = $this->getKey();
-
-            $result = $builder->where($this->primaryKey, $id)->update($data);
+            $result = $builder->updateBy($this->primaryKey, $this->getKey(), $data);
 
             $result = ($result !== false) ? true : $result;
         }
@@ -627,13 +614,10 @@ class Model
             return false;
         }
 
-        // Get the primaryKey value associated with this instance.
-        $id = $this->getKey();
-
-        // Get a new Builder instance and execute it.
+        // Get a new Builder instance.
         $builder = $this->newBuilder();
 
-        $result = $builder->delete($id);
+        $result = $builder->deleteBy($this->primaryKey, $this->getKey());
 
         if($result !== false) {
             $this->exists = false;
@@ -752,7 +736,7 @@ class Model
             }
 
             if ($isEmpty) {
-                //return $result; // NOTE: result is an empty string.
+                return $result; // NOTE: result is an empty string.
             }
         }
 

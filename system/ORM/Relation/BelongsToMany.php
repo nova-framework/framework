@@ -11,6 +11,7 @@ namespace Nova\ORM\Relation;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
+use Nova\Database\Query\Builder\Facade as QB;
 
 use Nova\ORM\Model;
 use Nova\ORM\Relation;
@@ -91,11 +92,44 @@ class BelongsToMany extends Relation
 
     public function get()
     {
-        $table = $this->pivot->table();
+        $table = $this->related->getTable();
+
+        $primaryKey = $this->related->getKeyName();
+
+        $foreignKey = $this->foreignKey;
+
+        //
+        $pivotTable = $this->pivot->getTable();
+
+        //
+        $otherKey = $this->otherKey;
 
         $otherId = $this->parent->getKey();
 
-        return $this->query->fetchWithPivot($table, $this->foreignKey, $this->otherKey, $otherId);
+        //
+        $query = $this->query->getBaseQuery();
+
+        $data = $query
+            ->from($pivotTable)
+            ->where(QB::raw(DB_PREFIX .$table .'.' .$primaryKey .' = ' .DB_PREFIX .$pivotTable .'.' .$foreignKey))
+            ->where($pivotTable .'.' .$otherKey, '=', $otherId)
+            ->select("$table.*")
+            ->asAssoc()
+            ->get();
+
+        if($data === null) {
+            return false;
+        }
+
+        $result = array();
+
+        foreach($data as $row) {
+            $result[] = $this->related->newInstance($row);
+        }
+
+        $this->query = $this->related->newBuilder();
+
+        return $result;
     }
 
     /**
@@ -107,8 +141,8 @@ class BelongsToMany extends Relation
      */
     public function __call($method, $parameters)
     {
-        if(method_exists($this->query, $method)) {
-            call_user_func_array(array($this->query, $method), $parameters);
+        if(in_array($method, $this->validQueryCalls) && method_exists($this->query, $method)) {
+            $this->query = call_user_func_array(array($this->query, $method), $parameters);
 
             return $this;
         }
@@ -116,33 +150,36 @@ class BelongsToMany extends Relation
 
     public function attach($id, array $attributes = array())
     {
-        $table = $this->pivot->table();
+        $query = $this->pivot->newBuilder();
 
+        $otherId = $this->parent->getKey();
+
+        // Prepare the data.
         $data = array(
             $this->foreignKey => $id,
-            $this->otherKey => $this->parent->getKey()
+            $this->otherKey => $otherId
         );
 
         if(! empty($attributes)) {
-            $data = array_merge($attributes, $data);
+            $data = array_merge($data, $attributes);
         }
 
-        return $this->pivot->insert($data);
+        return $query->insert($data);
     }
 
     public function dettach($ids = null)
     {
-        $table = $this->pivot->table();
+        $query = $this->pivot->newBuilder();
 
-        $foreignKey = $this->foreignKey;
+        $otherId = $this->parent->getKey();
 
-        $where = array($this->otherKey => $this->parent->getKey());
-
-        if(! is_null($ids)) {
-            $where[$foreignKey] = $ids;
+        if(is_array($ids)) {
+            $query = $query->whereIn($this->foreignKey, $ids);
+        } else if(! is_null($ids)) {
+            $query = $query->where($this->foreignKey, $ids);
         }
 
-        return $this->pivot->deleteBy($where);
+        return $query->deleteBy($this->otherKey, $otherId);
     }
 
     public function sync($ids, $detaching = true)
@@ -217,16 +254,15 @@ class BelongsToMany extends Relation
 
     protected function updateExistingPivot($id, array $attributes)
     {
-        $table = $this->pivot->table();
+        $query = $this->pivot->newBuilder();
 
-        $connection = $this->model->getConnection();
+        $otherId = $this->parent->getKey();
 
-        $where = array(
-            $this->foreignKey => $id,
-            $this->otherKey => $this->parent->getKey()
-        );
-
-        return $this->pivot->update($attributes, $where);
+        //
+        return $query
+            ->where($this->foreignKey, $id)
+            ->where($this->otherKey, $otherId)
+            ->update($attributes);
     }
 
 }

@@ -14,6 +14,32 @@ use Nova\ORM\Model;
 
 abstract class Relation
 {
+    protected $validQueryCalls = array(
+        'where',
+        'orWhere',
+        'whereNot',
+        'orWhereNot',
+        'whereIn',
+        'orWhereIn',
+        'orWhereNotIn',
+        'whereBetween',
+        'orWhereBetween',
+        'whereNull',
+        'orWhereNull',
+        'whereNotNull',
+        'orWhereNotNull',
+        'having',
+        'orHaving',
+        'orderBy',
+        'limit',
+        'offset'
+    );
+
+    /**
+     * The related model class name.
+     *
+     * @var string
+     */
     protected $className;
 
     /**

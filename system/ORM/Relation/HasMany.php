@@ -49,8 +49,8 @@ class HasMany extends Relation
      */
     public function __call($method, $parameters)
     {
-        if(method_exists($this->query, $method)) {
-            call_user_func_array(array($this->query, $method), $parameters);
+        if(in_array($method, $this->validQueryCalls) && method_exists($this->query, $method)) {
+            $this->query = call_user_func_array(array($this->query, $method), $parameters);
 
             return $this;
         }

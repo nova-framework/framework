@@ -25,6 +25,7 @@ class Raw
      */
     protected $bindings;
 
+    
     public function __construct($value, $bindings = array())
     {
         $this->value = (string) $value;

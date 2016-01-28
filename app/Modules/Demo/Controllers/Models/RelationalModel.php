@@ -80,9 +80,9 @@ class RelationalModel extends BaseController
         $message .= '<pre>'. Dumper::dumpObject($result).'</pre><br>';
 
         //
-        $result = $this->model->orderBy('username DESC')->findAll();
+        $result = $this->model->orderBy('username', 'DESC')->findAll();
 
-        $message .= Highlighter::parse('$this->model->orderBy(\'username DESC\')->findAll();', true);
+        $message .= Highlighter::parse('$this->model->orderBy(\'username\', \'DESC\')->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -92,15 +92,15 @@ class RelationalModel extends BaseController
         $message .= '<pre>'. Dumper::dumpObject($result).'</pre><br>';
 
         //
-        $result = $this->model->findManyBy('username != ?', 'marcus');
+        $result = $this->model->findManyBy('username', '!=', 'marcus');
 
-        $message .= Highlighter::parse('$this->model->findManyBy(\'username != ?\', \'marcus\');', true);
+        $message .= Highlighter::parse('$this->model->findManyBy(\'username\', \'!=\', \'marcus\');', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
-        $result = $this->model->where('username', '!=', 'virgil')->limit(2)->orderBy('email DESC')->findAll();
+        $result = $this->model->where('username', '!=', 'virgil')->limit(2)->orderBy('email', 'DESC')->findAll();
 
-        $message .= Highlighter::parse('$this->model->where(\'username\', \'!=\', \'virgil\')->limit(2)->orderBy(\'email DESC\')->findAll();', true);
+        $message .= Highlighter::parse('$this->model->where(\'username\', \'!=\', \'virgil\')->limit(2)->orderBy(\'email\', \'DESC\')->findAll();', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
@@ -120,6 +120,8 @@ class RelationalModel extends BaseController
 
         $result = $user->save();
 
+        $user2 = User::find($user->id);
+
         $text = "
 \$user = new User();
 
@@ -128,19 +130,17 @@ class RelationalModel extends BaseController
 
 \$result = \$user->save();
 
+\$user2 = User::find(\$user->id);
+
 var_dump(\$result);
 Dumper::dumpObject(\$user);
+Dumper::dumpObject(\$user2);
         ";
 
         $message .= Highlighter::parse($text);
-        $message .= '<pre>'. var_export($result, true).'</pre><br>';
-        $message .= '<pre>'. Dumper::dumpObject($user).'</pre><br>';
-
-        //
-        $result = $this->model->findAll();
-
-        $message .= Highlighter::parse('$this->model->findAll();', true);
-        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
+        $message .= '<pre>'. var_export($result, true).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($user2).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Modifying Records').'</strong></h3><br>';
@@ -150,24 +150,24 @@ Dumper::dumpObject(\$user);
 
         $result = $user->save();
 
+        $user2 = User::find($user->id);
+
         $text = "
 \$user->email = 'modified@novaframework.dev';
 
 \$result = \$user->save();
 
+\$user2 = User::find(\$user->id);
+
 var_dump(\$result);
 Dumper::dumpObject(\$user);
+Dumper::dumpObject(\$user2);
         ";
 
         $message .= Highlighter::parse($text);
-        $message .= '<pre>'. var_export($result, true).'</pre><br>';
-        $message .= '<pre>'. Dumper::dumpObject($user).'</pre><br>';
-
-        //
-        $result = $this->model->findAll();
-
-        $message .= Highlighter::parse('$this->model->findAll();', true);
-        $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
+        $message .= '<pre>'. var_export($result, true).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($user2).'</pre><br>';
 
         //
         $message .= '<h3><strong>'.__d('demo', 'Deleting Records').'</strong></h3><br>';
@@ -312,7 +312,7 @@ Dumper::dumpObjectArray(\$courses);
 
         $students = $course->students()
             ->where('username', '!=', 'tom')
-            ->orderBy('username DESC')
+            ->orderBy('username', 'DESC')
             ->limit(2)
             ->get();
 
@@ -321,7 +321,7 @@ Dumper::dumpObjectArray(\$courses);
 
 \$students = \$course->students()
     ->where('username', '!=', 'tom')
-    ->orderBy('username DESC')
+    ->orderBy('username,' 'DESC')
     ->limit(2)
     ->get();
 

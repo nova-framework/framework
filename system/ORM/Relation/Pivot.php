@@ -101,23 +101,14 @@ class Pivot extends Model
 
     public function relatedIds()
     {
-        $table = $this->table();
-
-        // Prepare the SQL Query.
-        $sql = sprintf(
-            'SELECT %s FROM %s WHERE %s = :%s',
-            $this->foreignKey,
-            $table,
-            $this->otherKey,
-            $this->otherKey
-        );
+        $otherId = $this->getAttribute($this->otherKey);
 
         //
-        $params = array($this->otherKey => $this->getAttribute($this->otherKey));
+        $query = $this->newBaseQuery();
 
-        $data = $this->select($sql, $params, 'array', true);
+        $data = $query->where($this->otherKey, $otherId)->select($this->foreignKey)->get();
 
-        if($data === false) {
+        if($data === null) {
             return false;
         }
 

@@ -37,7 +37,11 @@ class HasMany extends Relation
 
     public function get()
     {
-        return $this->query->findManyBy($this->foreignKey, $this->parent->getKey());
+        $result = $this->query->findManyBy($this->foreignKey, $this->parent->getKey());
+
+        $this->query = $this->related->newBuilder();
+
+        return $result;
     }
 
     /**
@@ -49,8 +53,8 @@ class HasMany extends Relation
      */
     public function __call($method, $parameters)
     {
-        if(method_exists($this->query, $method)) {
-            call_user_func_array(array($this->query, $method), $parameters);
+        if(in_array($method, $this->validQueryCalls) && method_exists($this->query, $method)) {
+            $this->query = call_user_func_array(array($this->query, $method), $parameters);
 
             return $this;
         }

@@ -449,7 +449,6 @@ class Builder
 
         // If first value is not an array, it's not a batch insert
         if (! is_array(current($data))) {
-
             $queryObject = $this->getQuery($type, $data);
 
             list($result, $executionTime) = $this->statement($queryObject->getSql(), $queryObject->getBindings());

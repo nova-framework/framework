@@ -11,20 +11,20 @@ namespace Nova\ORM;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
+use Nova\Database\Query\Builder\Facade as QB;
 
 use Nova\ORM\Model;
-use Nova\ORM\Base as BaseBuilder;
 
-use \FluentStructure;
-use \FluentPDO;
 use \PDO;
 
 
-class Builder extends BaseBuilder
+class Builder
 {
     protected $connection = 'default';
 
     protected $db = null;
+
+    protected $query = null;
 
     /**
      * The model being queried.
@@ -63,6 +63,9 @@ class Builder extends BaseBuilder
         $this->connection = $connection;
 
         $this->db = Database::getConnection($connection);
+
+        // Finally, setup the inner Query Builder.
+        $this->query = $this->newBaseQuery();
     }
 
     public function getTable()
@@ -89,11 +92,18 @@ class Builder extends BaseBuilder
     // Query Builder Methods
     //--------------------------------------------------------------------
 
-    public function newQuery()
+    public function newBaseQuery()
     {
+        $table = $this->getTable();
+
         $query = $this->db->getQueryBuilder();
 
-        return $query->table($this->tableName)->asAssoc();
+        return $query->table($table);
+    }
+
+    public function getBaseQuery()
+    {
+        return $this->query;
     }
 
     //--------------------------------------------------------------------
@@ -102,10 +112,10 @@ class Builder extends BaseBuilder
 
     public function find($id)
     {
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE " .$this->primaryKey ." = :value";
+        // We use an new Query to perform this operation.
+        $query = $this->newBaseQuery();
 
-        $result = $this->select($sql, array('value' => $id), 'assoc');
+        $result = $query->where($this->primaryKey, $id)->asAssoc()->first();
 
         if($result !== false) {
             return $this->model->newInstance($result);
@@ -116,22 +126,15 @@ class Builder extends BaseBuilder
 
     public function findBy()
     {
-        $bindParams = array();
-
-        // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        $where = $this->setWhere($params);
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
 
-        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
+        $query = call_user_func_array(array($this->query, 'where'), $params);
 
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr LIMIT 1";
-
-        $result = $this->select($sql, $bindParams, 'assoc');
-
-        // Reset the Model State.
-        $this->resetState();
+        $result = $query->asAssoc()->first();
 
         if($result !== false) {
             return $this->model->newInstance($result);
@@ -142,27 +145,9 @@ class Builder extends BaseBuilder
 
     public function findMany($values)
     {
-        $bindParams = array();
+        $query = $this->newBaseQuery();
 
-        if(! is_array($values)) {
-            throw new \UnexpectedValueException(__d('system', 'Parameter should be an Array'));
-        }
-
-        // Prepare the WHERE parameters.
-        $this->where($this->primaryKey, $values);
-
-        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
-
-        // Prepare the ORDER details.
-        $orderStr = $this->parseSelectOrder();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr";
-
-        $data = $this->select($sql, $bindParams, 'assoc', true);
-
-        // Reset the Model State.
-        $this->resetState();
+        $data = $query->whereIn($this->primaryKey, $values)->asAssoc()->get();
 
         if($data === false) {
             return false;
@@ -186,29 +171,14 @@ class Builder extends BaseBuilder
             throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
         }
 
-        $this->setWhere($params);
+        $this->query = call_user_func_array(array($this->query, 'where'), $params);
 
         return $this->findAll();
     }
 
     public function findAll()
     {
-        $bindParams = array();
-
-        // Prepare the WHERE details.
-        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
-
-        $orderStr  = $this->parseSelectOrder();
-        $limitStr  = $this->parseSelectLimit();
-        $offsetStr = $this->parseSelectOffset();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $limitStr $offsetStr";
-
-        $data = $this->select($sql, $bindParams, 'assoc', true);
-
-        // Reset the Model State.
-        $this->resetState();
+        $data = $this->query->asAssoc()->get();
 
         if($data === false) {
             return false;
@@ -225,21 +195,7 @@ class Builder extends BaseBuilder
 
     public function first()
     {
-        $bindParams = array();
-
-        // Prepare the WHERE details.
-        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
-
-        $orderStr  = $this->parseSelectOrder();
-        $offsetStr = $this->parseSelectOffset();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT * FROM " .$this->table() ." WHERE $whereStr $orderStr $offsetStr";
-
-        $data = $this->select($sql, $bindParams, 'assoc');
-
-        // Reset the Model State.
-        $this->resetState();
+        $data = $this->query->asAssoc()->first();
 
         if($data !== false) {
             return $this->model->newInstance($data);
@@ -248,65 +204,68 @@ class Builder extends BaseBuilder
         return false;
     }
 
-    /**
-     * Execute Select Query, binding values into the $sql Query.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @return array|null
-     *
-     * @throws \Exception
-     */
-    public function select($sql, $params = array(), $returnType = 'assoc', $fetchAll = false)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        // Prepare the parameter Types.
-        $paramTypes = $this->getParamTypes($params);
-
-        return $this->db->select($sql, $params, $paramTypes, $returnType, $fetchAll);
-    }
-
-    public function selectOne($sql, $params = array(), $returnType = 'assoc')
-    {
-        return $this->db->select($sql, $params, $paramTypes, $returnType);
-    }
-
-    public function selectAll($sql, $params = array(), $returnType = 'assoc')
-    {
-        return $this->db->select($sql, $params, $paramTypes, $returnType, true);
-    }
-
-    public function insert(array $data)
-    {
-        $paramTypes = $this->getParamTypes($data);
-
-        // Execute the Record insertion.
-        return $this->db->insert($this->table(), $data, $paramTypes);
-    }
-
-    public function update(array $data, array $where)
+    public function where()
     {
         // Prepare the WHERE parameters.
-        $params = $this->setWhere($where);
+        $params = func_get_args();
 
-        $paramTypes = $this->getParamTypes(array_merge($data, $params));
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
 
-        // Execute the Record updating.
-        return $this->db->update($this->table(), $data, $params, $paramTypes);
+        $this->query = call_user_func_array(array($this->query, 'where'), $params);
+
+        return $this;
+    }
+
+    public function whereIn()
+    {
+        // Prepare the WHERE parameters.
+        $params = func_get_args();
+
+        if (empty($params)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
+
+        $this->query = call_user_func_array(array($this->query, 'whereIn'), $params);
+
+        return $this;
+    }
+
+    public function orderBy($fields, $defaultDirection = 'ASC')
+    {
+        $this->query = $this->query->orderBy($fields, $defaultDirection);
+
+        return $this;
+    }
+
+    public function limit($limit)
+    {
+        $this->query = $this->query->limit($limit);
+
+        return $this;
+    }
+
+    public function offset($offset)
+    {
+        $this->query = $this->query->offset($offset);
+
+        return $this;
+    }
+
+    public function select($fields)
+    {
+        $this->query = $this->query->select($fields);
+
+        return $this;
     }
 
     public function delete($id)
     {
-        // Prepare the WHERE parameters.
-        $where = array($this->primaryKey => $id);
+        // We use an new Query to perform this operation.
+        $query = $this->newBaseQuery();
 
-        $paramTypes = $this->getParamTypes($where);
-
-        // Execute the Record deletetion.
-        return $this->db->delete($this->table(), $where, $paramTypes);
+        return $query->where($this->primaryKey, $id)->delete();
     }
 
     public function deleteBy()
@@ -317,18 +276,9 @@ class Builder extends BaseBuilder
             throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
         }
 
-        // Prepare the WHERE parameters.
-        $where = $this->setWhere($params);
+        $query = call_user_func_array(array($this->query, 'where'), $params);
 
-        $paramTypes = $this->getParamTypes($where);
-
-        // Execute the Record deletetion.
-        $result = $this->db->delete($this->table(), $where, $paramTypes);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        return $result;
+        return $query->delete();
     }
 
     /**
@@ -337,36 +287,15 @@ class Builder extends BaseBuilder
      */
     public function countBy()
     {
-        $bindParams = array();
-
-        //
         $params = func_get_args();
 
         if (empty($params)) {
             throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
         }
 
-        $where = $this->setWhere($params);
+        $query = call_user_func_array(array($this->query, 'where'), $params);
 
-        // Prepare the WHERE details.
-        $whereStr = BaseBuilder::parseWhereConditions($where, $bindParams);
-
-        $orderStr = $this->parseSelectOrder();
-        $limitStr = $this->parseSelectLimit();
-
-        // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table() ." $whereStr $orderStr $offsetStr";
-
-        $result = $this->select($sql, $bindParams);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        if ($result !== false) {
-            return $result['count'];
-        }
-
-        return 0;
+        return $query->count();
     }
 
     /**
@@ -376,16 +305,10 @@ class Builder extends BaseBuilder
      */
     public function countAll()
     {
-        // Prepare the SQL Query.
-        $sql = "SELECT COUNT(".$this->primaryKey.") as count FROM " .$this->table();
+        // We use an new Query to perform this operation.
+        $query = $this->newBaseQuery();
 
-        $result = $this->select($sql);
-
-        if ($result !== false) {
-            return $result['count'];
-        }
-
-        return 0;
+        return $query->count();
     }
 
     /**
@@ -399,78 +322,34 @@ class Builder extends BaseBuilder
      */
     public function isUnique($field, $value, $ignore = null)
     {
-        $bindParams = array("where_$field" => $value);
+        // We use an new Query to perform this operation.
+        $query = $this->newBaseQuery();
 
-        //
-        $sql = "SELECT " .$this->primaryKey ." FROM " .$this->table() ." WHERE $field = :where_$field";
+        $query = $query->where($field, $value);
 
         if ($ignore !== null) {
-            $sql .= " AND " .$this->primaryKey ." != :where_ignore";
-
-            $bindParams['where_ignore'] = $ignore;
+            $query = $query->where($this->primaryKey, $ignore);
         }
 
-        $data = $this->select($sql, $bindParams, true);
+        $result = $query->count();
 
-        if (is_array($data) && (count($data) == 0)) {
-            return true;
-        }
-
-        return true;
+        return ($result > 0) ? false : true;
     }
 
-    //--------------------------------------------------------------------
-    // Fetch Methods
-    //--------------------------------------------------------------------
-
-    public function fetchWithPivot($pivotTable, $foreignKey, $otherKey, $othereId)
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
     {
-        $table = $this->table();
+        if(method_exists($this->query, $method)) {
+            call_user_func_array(array($this->query, $method), $parameters);
 
-        $primaryKey = $this->primaryKey;
-
-        $bindParams = array('otherKey' => $othereId);
-
-        $paramTypes = array('otherKey' => is_integer($othereId) ? PDO::PARAM_INT : PDO::PARAM_STR);
-
-        // Prepare the WHERE details.
-        $whereStr = BaseBuilder::parseWhereConditions($this->wheres(), $bindParams);
-
-        $orderStr  = $this->parseSelectOrder();
-        $limitStr  = $this->parseSelectLimit();
-        $offsetStr = $this->parseSelectOffset();
-
-        // Build the SQL Query.
-        $sql = "
-            SELECT $table.*
-            FROM $table, $pivotTable
-            WHERE $table.$primaryKey = $pivotTable.$foreignKey
-                AND $pivotTable.$otherKey = :otherKey
-                AND $whereStr
-            $orderStr
-            $limitStr
-            $offsetStr
-        ";
-
-        // Simplify the white spaces.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        $data = $this->db->select($sql, $bindParams, $paramTypes, 'assoc', true);
-
-        // Reset the Model State.
-        $this->resetState();
-
-        if($data === false) {
-            return false;
+            return $this;
         }
-
-        $result = array();
-
-        foreach($data as $row) {
-            $result[] = $this->model->newInstance($row);
-        }
-
-        return $result;
     }
 
     //--------------------------------------------------------------------
@@ -504,68 +383,6 @@ class Builder extends BaseBuilder
         $className = $this->model->getClass();
 
         return $query->asObject($className);
-    }
-
-    //--------------------------------------------------------------------
-    // Internal use Methods
-    //--------------------------------------------------------------------
-
-    protected function getParamTypes(array $params, $strict = true)
-    {
-        $result = array();
-
-        foreach($params as $field => $value) {
-            if(isset($this->fields[$field])) {
-                $fieldType = $this->fields[$field];
-
-                $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-            // No registered field found? We try to guess then the Type, if we aren't into strict mode.
-            else if(! $strict) {
-                $result[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectLimit()
-    {
-        $result = '';
-
-        $limit =& $this->selectLimit;
-
-        if($limit !== null) {
-            $result = 'LIMIT ' .$limit;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectOffset()
-    {
-        $result = '';
-
-        $offset =& $this->selectOffset;
-
-        if($offset !== null) {
-            $result = 'OFFSET ' .$offset;
-        }
-
-        return $result;
-    }
-
-    protected function parseSelectOrder()
-    {
-        $result = '';
-
-        $orderBy =& $this->selectOrder;
-
-        if($orderBy !== null) {
-            $result = 'ORDER BY ' .$orderBy;
-        }
-
-        return $result;
     }
 
 }

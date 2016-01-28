@@ -25,7 +25,11 @@ if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'consta
     die('No config.php or constants.php found, configure and rename *.example.php in ' .$configDir);
 }
 
+/** Log the Framework startup. */
 Console::logSpeed('START Nova Framework');
+
+/** A useful alias for the Query Builder Facade. */
+class_alias('Nova\Database\Query\Builder\Facade', 'Nova\Database\Query');
 
 /** Turn on output buffering. */
 ob_start();

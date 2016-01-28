@@ -581,7 +581,7 @@ class Model
         if (! $this->beforeSave()) {
             return;
         }
-
+        /*
         $connection = Database::getConnection($this->connection);
 
         // Prepare the Data.
@@ -601,9 +601,6 @@ class Model
 
                 $this->setAttribute($this->primaryKey, $result);
 
-                // Sync the original attributes.
-                $this->syncOriginal();
-
                 $result = true;
             }
         }
@@ -617,12 +614,42 @@ class Model
 
             $result = $connection->update($this->table(), $data, $where, $paramTypes);
 
+            $result = ($result !== false);
+        }
+        */
+
+        $builder = $this->newBuilder();
+
+        // Prepare the Data.
+        $data = $this->prepareData();
+
+        // Default value for result.
+        $result = false;
+
+        if (! $this->exists) {
+            // We are into INSERT mode.
+            $result = $builder->insert($data);
+
             if($result !== false) {
-                // Sync the original attributes.
-                $this->syncOriginal();
+                $this->exists = true;
+
+                $this->setAttribute($this->primaryKey, $result);
 
                 $result = true;
             }
+        }
+        // If the Object is dirty, we are into UPDATE mode.
+        else if($this->isDirty()) {
+            $result = $builder
+                ->where($this->primaryKey, $this->getKey())
+                ->update($data);
+
+            $result = ($result !== false);
+        }
+
+        if($result) {
+            // Sync the original attributes.
+            $this->syncOriginal();
         }
 
         return $result;
@@ -634,10 +661,13 @@ class Model
             return false;
         }
 
+        // Get the primaryKey value associated with this instance.
+        $id = $this->getKey();
+
         // Get a new Builder and execute it.
         $builder = $this->newBuilder();
 
-        $result = $builder->delete($this->getKey());
+        $result = $builder->delete($id);
 
         if($result !== false) {
             $this->exists = false;

@@ -20,9 +20,7 @@ use Nova\ORM\Relation\BelongsTo;
 use Nova\ORM\Relation\BelongsToMany;
 use Nova\ORM\Relation\Pivot;
 
-use \FluentStructure;
-use \FluentPDO;
-use \PDO;
+use PDO;
 
 
 class Model
@@ -306,7 +304,7 @@ class Model
         foreach ($this->attributes as $key => $value) {
             if (! array_key_exists($key, $this->original)) {
                 $dirty[$key] = $value;
-            } else if (($value !== $this->original[$key]) && ! $this->originalIsNumericallyEquivalent($key)) {
+            } else if (($value !== $this->original[$key]) && ! $this->originalIsEquivalent($key)) {
                 $dirty[$key] = $value;
             }
         }
@@ -320,12 +318,16 @@ class Model
      * @param  string  $key
      * @return bool
      */
-    protected function originalIsNumericallyEquivalent($key)
+    protected function originalIsEquivalent($key)
     {
         $current = $this->attributes[$key];
         $original = $this->original[$key];
 
-        return (is_numeric($current) && is_numeric($original) && (strcmp((string)$current, (string)$original) === 0));
+        return (
+            is_numeric($current) &&
+            is_numeric($original) &&
+            (strcmp((string) $current, (string) $original) === 0)
+        );
     }
 
     //--------------------------------------------------------------------
@@ -373,26 +375,6 @@ class Model
     }
 
     //--------------------------------------------------------------------
-    // Data Conversion Methods
-    //--------------------------------------------------------------------
-
-    public function toArray()
-    {
-        return $this->attributes;
-    }
-
-    public function toObject()
-    {
-        $object = new stdClass();
-
-        foreach ($this->attributes as $key => $value) {
-            $object->$key = $value;
-        }
-
-        return $object;
-    }
-
-    //--------------------------------------------------------------------
     // Magic Methods
     //--------------------------------------------------------------------
 
@@ -433,18 +415,14 @@ class Model
      */
     public function __set($key, $value)
     {
-        $key = Inflector::tableize($key);
-
         $this->attributes[$key] = $value;
     }
 
     public function __get($name)
     {
-        $fieldName = Inflector::tableize($name);
-
         // If the name is of one of attributes, return the Value from attribute.
-        if (isset($this->fields[$fieldName])) {
-            return $this->getAttribute($fieldName);
+        if (isset($this->fields[$name])) {
+            return $this->getAttribute($name);
         }
         else if(! $this->exists) {
             // No Relations can be called for the new Objects.
@@ -471,15 +449,11 @@ class Model
 
     public function __isset($name)
     {
-        $name = Inflector::tableize($name);
-
         return isset($this->attributes[$name]);
     }
 
     public function __unset($name)
     {
-        $name = Inflector::tableize($name);
-
         unset($this->attributes[$name]);
     }
 
@@ -504,9 +478,7 @@ class Model
 
     protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
     {
-        if (is_null($joinTable)) {
-            $joinTable = $this->joiningTable($className);
-        }
+        $joinTable = ($joinTable !== null) ? $joinTable : $this->joiningTable($className);
 
         return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
     }
@@ -520,13 +492,13 @@ class Model
 
     protected function joiningTable($className)
     {
-        $origin = basename(str_replace('\\', '/', $this->className));
-        $target = basename(str_replace('\\', '/', $className));
+        $parentPath = str_replace('\\', '/', $this->className);
+        $relatedPath = str_replace('\\', '/', $className);
 
         // Prepare an models array.
         $models = array(
-            Inflector::tableize($origin),
-            Inflector::tableize($target)
+            Inflector::tableize(basename($parentPath)),
+            Inflector::tableize(basename($relatedPath))
         );
 
         // Sort the models.
@@ -569,7 +541,7 @@ class Model
     public function save()
     {
         if (! $this->beforeSave()) {
-            return;
+            return false;
         }
 
         // Prepare the Data.
@@ -578,51 +550,53 @@ class Model
         // Get a new Builder instance.
         $builder = $this->newBuilder();
 
-        // Default value for result.
-        $result = false;
-
         if (! $this->exists) {
             // We are into INSERT mode.
-            $result = $builder->insert($data);
+            $insertId = $builder->insert($data);
 
-            if($result !== false) {
+            if($insertId !== false) {
+                $this->setAttribute($this->primaryKey, $insertId);
+
+                // Sync the original attributes.
+                $this->syncOriginal();
+
+                // Mark the instance as existing.
                 $this->exists = true;
 
-                $this->setAttribute($this->primaryKey, $result);
-
-                $result = true;
+                return true;
             }
-        }
-        // If the Object is dirty, we are into UPDATE mode.
-        else if($this->isDirty()) {
+        } else if($this->isDirty()) {
+            // The instance is dirty, then we are into UPDATE mode.
             $result = $builder->updateBy($this->primaryKey, $this->getKey(), $data);
 
-            $result = ($result !== false) ? true : $result;
+            if($result !== false) {
+                // Sync the original attributes.
+                $this->syncOriginal();
+
+                return true;
+            }
         }
 
-        if($result) {
-            // Sync the original attributes.
-            $this->syncOriginal();
-        }
-
-        return $result;
+        return false;
     }
 
     public function delete()
     {
-        if (! $this->exists || ! $this->beforeDelete()) {
+        if (! $this->beforeDelete()) {
             return false;
         }
 
         // Get a new Builder instance.
         $builder = $this->newBuilder();
 
-        $result = $builder->deleteBy($this->primaryKey, $this->getKey());
+        if($this->exists) {
+            $result = $builder->deleteBy($this->primaryKey, $this->getKey());
 
-        if($result !== false) {
-            $this->exists = false;
+            if($result !== false) {
+                $this->exists = false;
 
-            return true;
+                return true;
+            }
         }
 
         return false;
@@ -642,13 +616,8 @@ class Model
     {
         $data = array();
 
-        $skippedFields = array();
-
-        // The primaryKey is skipped by default.
-        $skippedFields = array_merge($skippedFields, (array) $this->primaryKey);
-
-        // Remove any protected attributes.
-        $skippedFields = array_merge($skippedFields, $this->protectedFields);
+        // Remove any protected attributes; the primaryKey is skipped by default.
+        $skippedFields = array_merge((array) $this->primaryKey, $this->protectedFields);
 
         // Walk over the defined Table Fields and prepare the data entries.
         foreach ($this->fields as $fieldName => $fieldInfo) {
@@ -712,13 +681,6 @@ class Model
     // Debug Methods
     //--------------------------------------------------------------------
 
-    public function getLastQuery()
-    {
-        $connection = Database::getConnection($this->connection);
-
-        return $connection->getLastQuery();
-    }
-
     public function __toString()
     {
         $result = '';
@@ -728,7 +690,7 @@ class Model
             $isEmpty = true;
 
             foreach ($this->fields as $fieldName => $fieldInfo) {
-                if (! empty($this->$fieldName)) {
+                if (isset($this->attributes[$fieldName])) {
                     $isEmpty = false;
 
                     break;
@@ -736,7 +698,7 @@ class Model
             }
 
             if ($isEmpty) {
-                return $result; // NOTE: result is an empty string.
+                return $result;
             }
         }
 
@@ -763,12 +725,7 @@ class Model
 
     public function getObjectVariables()
     {
-        $vars = get_object_vars($this);
-
-        unset($vars['db']);
-        unset($vars['cache']);
-
-        return $vars;
+        return get_object_vars($this);
     }
 
     //--------------------------------------------------------------------

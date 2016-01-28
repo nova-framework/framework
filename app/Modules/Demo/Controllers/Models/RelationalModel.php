@@ -92,9 +92,9 @@ class RelationalModel extends BaseController
         $message .= '<pre>'. Dumper::dumpObject($result).'</pre><br>';
 
         //
-        $result = $this->model->findManyBy('username', '!=', 'marcus');
+        $result = $this->model->findAll('username', '!=', 'marcus');
 
-        $message .= Highlighter::parse('$this->model->findManyBy(\'username\', \'!=\', \'marcus\');', true);
+        $message .= Highlighter::parse('$this->model->findAll(\'username\', \'!=\', \'marcus\');', true);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //

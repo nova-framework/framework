@@ -317,19 +317,6 @@ class Builder
      *
      * @return null|\stdClass
      */
-    public function findMany($values, $fieldName = 'id')
-    {
-        $this->whereIn($fieldName, $values);
-
-        return $this->get();
-    }
-
-    /**
-     * @param        $value
-     * @param string $fieldName
-     *
-     * @return null|\stdClass
-     */
     public function find($value, $fieldName = 'id')
     {
         $this->where($fieldName, '=', $value);

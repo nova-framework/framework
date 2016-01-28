@@ -37,7 +37,7 @@ class HasMany extends Relation
 
     public function get()
     {
-        $result = $this->query->findManyBy($this->foreignKey, $this->parent->getKey());
+        $result = $this->query->findAll($this->foreignKey, $this->parent->getKey());
 
         $this->query = $this->related->newBuilder();
 

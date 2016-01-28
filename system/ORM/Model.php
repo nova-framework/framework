@@ -128,14 +128,9 @@ class Model
 
         $this->connection = $connection;
 
-        // Setup the Table name, if is empty.
+        // Check for the Table name.
         if (empty($this->tableName)) {
-            // Try the best to guess the Table name: User -> users
-            $classPath = str_replace('\\', '/', $this->className);
-
-            $name = Inflector::pluralize(basename($classPath));
-
-            $this->tableName = Inflector::tableize($name);
+            throw new Exception('No table specified.', 3);
         }
 
         // Get the Table Fields, if they aren't already specified.

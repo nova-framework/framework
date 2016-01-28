@@ -222,11 +222,6 @@ class Model
         return $this->connection;
     }
 
-    public function getLink()
-    {
-        return $this->db;
-    }
-
     //--------------------------------------------------------------------
     // Attributes handling Methods
     //--------------------------------------------------------------------

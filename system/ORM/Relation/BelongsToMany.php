@@ -11,7 +11,6 @@ namespace Nova\ORM\Relation;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
-use Nova\Database\Query\Builder\Facade as QB;
 
 use Nova\ORM\Model;
 use Nova\ORM\Relation;
@@ -109,11 +108,17 @@ class BelongsToMany extends Relation
         //
         $query = $this->query->getBaseQuery();
 
+        $tableKey = $query->addTablePrefix($table .'.' .$primaryKey);
+        $pivotKey = $query->addTablePrefix($pivotTable .'.' .$foreignKey);
+
+        // Get the pivot Raw where.
+        $pivotRaw = $query->raw($tableKey .' = ' .$pivotKey);
+
         $data = $query
             ->from($pivotTable)
-            ->where(QB::raw(DB_PREFIX .$table .'.' .$primaryKey .' = ' .DB_PREFIX .$pivotTable .'.' .$foreignKey))
+            ->where($pivotRaw)
             ->where($pivotTable .'.' .$otherKey, '=', $otherId)
-            ->select("$table.*")
+            ->select($table .'.*')
             ->asAssoc()
             ->get();
 

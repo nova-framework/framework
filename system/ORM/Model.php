@@ -433,9 +433,7 @@ class Model
     {
         $builder = $this->newBuilder();
 
-        if(method_exists($builder, $method)) {
-            return call_user_func_array(array($builder, $method), $parameters);
-        }
+        return call_user_func_array(array($builder, $method), $parameters);
     }
 
     /**

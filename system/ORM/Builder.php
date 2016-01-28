@@ -204,62 +204,6 @@ class Builder
         return false;
     }
 
-    public function where()
-    {
-        // Prepare the WHERE parameters.
-        $params = func_get_args();
-
-        if (empty($params)) {
-            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-        }
-
-        $this->query = call_user_func_array(array($this->query, 'where'), $params);
-
-        return $this;
-    }
-
-    public function whereIn()
-    {
-        // Prepare the WHERE parameters.
-        $params = func_get_args();
-
-        if (empty($params)) {
-            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
-        }
-
-        $this->query = call_user_func_array(array($this->query, 'whereIn'), $params);
-
-        return $this;
-    }
-
-    public function orderBy($fields, $defaultDirection = 'ASC')
-    {
-        $this->query = $this->query->orderBy($fields, $defaultDirection);
-
-        return $this;
-    }
-
-    public function limit($limit)
-    {
-        $this->query = $this->query->limit($limit);
-
-        return $this;
-    }
-
-    public function offset($offset)
-    {
-        $this->query = $this->query->offset($offset);
-
-        return $this;
-    }
-
-    public function select($fields)
-    {
-        $this->query = $this->query->select($fields);
-
-        return $this;
-    }
-
     public function delete($id)
     {
         // We use an new Query to perform this operation.
@@ -293,7 +237,10 @@ class Builder
             throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
         }
 
-        $query = call_user_func_array(array($this->query, 'where'), $params);
+        // We use an new Query to perform this operation.
+        $query = $this->newBaseQuery();
+
+        $query = call_user_func_array(array($query, 'where'), $params);
 
         return $query->count();
     }
@@ -345,11 +292,9 @@ class Builder
      */
     public function __call($method, $parameters)
     {
-        if(method_exists($this->query, $method)) {
-            call_user_func_array(array($this->query, $method), $parameters);
+        $this->query = call_user_func_array(array($this->query, $method), $parameters);
 
-            return $this;
-        }
+        return $this;
     }
 
     //--------------------------------------------------------------------

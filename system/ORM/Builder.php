@@ -109,12 +109,15 @@ class Builder
     // CRUD Methods
     //--------------------------------------------------------------------
 
-    public function find($id)
+    public function find($id, $fieldName = null)
     {
         // We use an new Query to perform this operation.
         $query = $this->newBaseQuery();
 
-        $result = $query->where($this->primaryKey, $id)->asAssoc()->first();
+        // Get the field name, using the primaryKey as default.
+        $fieldName = ($fieldName !== null) ? $fieldName : $this->primaryKey;
+
+        $result = $query->where($fieldName, $id)->asAssoc()->first();
 
         if($result !== false) {
             return $this->model->newInstance($result);
@@ -161,22 +164,15 @@ class Builder
         return $result;
     }
 
-    public function findManyBy()
+    public function findAll()
     {
         // Prepare the WHERE parameters.
         $params = func_get_args();
 
-        if (empty($params)) {
-            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        if (! empty($params)) {
+            $this->query = call_user_func_array(array($this->query, 'where'), $params);
         }
 
-        $this->query = call_user_func_array(array($this->query, 'where'), $params);
-
-        return $this->findAll();
-    }
-
-    public function findAll()
-    {
         $data = $this->query->asAssoc()->get();
 
         if($data === false) {

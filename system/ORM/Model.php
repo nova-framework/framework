@@ -647,27 +647,6 @@ class Model
     // Internal Methods
     //--------------------------------------------------------------------
 
-    public function getParamTypes($params, $strict = true)
-    {
-        $fields =& $this->fields;
-
-        $result = array();
-
-        foreach($params as $field => $value) {
-            if(isset($fields[$field])) {
-                $fieldType = $fields[$field];
-
-                $result[$field] = ($fieldType == 'int') ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-            // No registered field found? We try to guess then the Type, if we aren't into strict mode.
-            else if(! $strict) {
-                $result[$field] = (is_integer($value) || is_bool($value)) ? PDO::PARAM_INT : PDO::PARAM_STR;
-            }
-        }
-
-        return $result;
-    }
-
     /**
      * Extracts the Model's fields.
      *

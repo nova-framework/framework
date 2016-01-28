@@ -42,11 +42,6 @@ class Model
      */
     protected $connection = 'default';
 
-    /*
-     * The used \Nova\Database\Connection instance.
-     */
-    protected $db = null;
-
     /**
      * The Table's Primary Key.
      */
@@ -143,12 +138,11 @@ class Model
             $this->tableName = Inflector::tableize($name);
         }
 
-        // Init the Connection instance.
-        $this->db = Database::getConnection($connection);
-
         // Get the Table Fields, if they aren't already specified.
         if(empty($this->fields)) {
-            $fields = $this->db->getTableFields($this->table());
+            $connection = Database::getConnection($this->connection);
+
+            $fields = $connection->getTableFields($this->table());
 
             foreach($fields as $fieldName => $fieldInfo) {
                 $this->fields[$fieldName] = $fieldInfo['type'];
@@ -598,6 +592,8 @@ class Model
             return;
         }
 
+        $connection = Database::getConnection($this->connection);
+
         // Prepare the Data.
         $data = $this->prepareData();
 
@@ -608,7 +604,7 @@ class Model
 
         if (! $this->exists) {
             // We are into INSERT mode.
-            $result = $this->db->insert($this->table(), $data, $paramTypes);
+            $result = $connection->insert($this->table(), $data, $paramTypes);
 
             if($result !== false) {
                 $this->exists = true;
@@ -629,7 +625,7 @@ class Model
 
             $paramTypes = $this->getParamTypes(array_merge($data, $where));
 
-            $result = $this->db->update($this->table(), $data, $where, $paramTypes);
+            $result = $connection->update($this->table(), $data, $where, $paramTypes);
 
             if($result !== false) {
                 // Sync the original attributes.
@@ -648,14 +644,10 @@ class Model
             return false;
         }
 
-        // Prepare the WHERE parameters.
-        $where = array(
-            $this->primaryKey => $this->getKey()
-        );
+        // Get a new Builder and execute it.
+        $builder = $this->newBuilder();
 
-        $paramTypes = $this->getParamTypes($where);
-
-        $result = $this->db->delete($this->table(), $where, $paramTypes);
+        $result = $builder->delete($this->getKey());
 
         if($result !== false) {
             $this->exists = false;
@@ -664,31 +656,6 @@ class Model
         }
 
         return false;
-    }
-
-    //--------------------------------------------------------------------
-    // Select Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Execute Select Query, binding values into the $sql Query.
-     *
-     * @param string $sql
-     * @param array $bindParams
-     * @param bool $fetchAll Ask the method to fetch all the records or not.
-     * @return array|null
-     *
-     * @throws \Exception
-     */
-    public function select($sql, $params = array(), $fetchAll = false)
-    {
-        // Firstly, simplify the white spaces and trim the SQL query.
-        $sql = preg_replace('/\s+/', ' ', trim($sql));
-
-        // Prepare the parameter Types.
-        $paramTypes = $this->getParamTypes($params);
-
-        return $this->db->select($sql, $params, $paramTypes, 'assoc', $fetchAll);
     }
 
     //--------------------------------------------------------------------
@@ -709,7 +676,7 @@ class Model
             }
             // No registered field found? We try to guess then the Type, if we aren't into strict mode.
             else if(! $strict) {
-                $result[$field] = is_integer($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+                $result[$field] = (is_integer($value) || is_bool($value)) ? PDO::PARAM_INT : PDO::PARAM_STR;
             }
         }
 
@@ -798,7 +765,9 @@ class Model
 
     public function getLastQuery()
     {
-        return $this->db->getLastQuery();
+        $connection = Database::getConnection($this->connection);
+
+        return $connection->getLastQuery();
     }
 
     public function __toString()
@@ -851,26 +820,6 @@ class Model
         unset($vars['cache']);
 
         return $vars;
-    }
-
-    //--------------------------------------------------------------------
-    // QueryBuilder Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Start query builder
-     *
-     * @param FluentStructure|null $structure
-     * @return \Nova\Database\QueryBuilder
-     */
-    public function getQueryBuilder(FluentStructure $structure = null)
-    {
-        if ($structure === null) {
-            $structure = new FluentStructure($this->primaryKey);
-        }
-
-        // Get a QueryBuilder instance.
-        return $this->db->getQueryBuilder($structure);
     }
 
     //--------------------------------------------------------------------

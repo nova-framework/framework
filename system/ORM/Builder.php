@@ -11,7 +11,6 @@ namespace Nova\ORM;
 
 use Nova\Database\Connection;
 use Nova\Database\Manager as Database;
-use Nova\Database\Query\Builder\Facade as QB;
 
 use Nova\ORM\Model;
 
@@ -107,7 +106,7 @@ class Builder
     }
 
     //--------------------------------------------------------------------
-    // Finder Methods
+    // CRUD Methods
     //--------------------------------------------------------------------
 
     public function find($id)
@@ -216,12 +215,24 @@ class Builder
         return $this->query->update($data);
     }
 
-    public function delete($id)
+    public function updateBy()
     {
-        // We use an new Query to perform this operation.
-        $query = $this->newBaseQuery();
+        $params = func_get_args();
 
-        return $query->where($this->primaryKey, $id)->delete();
+        $data = array_pop($params);
+
+        if (empty($params) || empty($data)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
+
+        $query = call_user_func_array(array($this->query, 'where'), $params);
+
+        return $query->update($data);
+    }
+
+    public function delete()
+    {
+        return $this->query->delete();
     }
 
     public function deleteBy()
@@ -235,6 +246,15 @@ class Builder
         $query = call_user_func_array(array($this->query, 'where'), $params);
 
         return $query->delete();
+    }
+
+    /**
+     * Counts number of rows modified by the current built Query.
+     * @return INT
+     */
+    public function count()
+    {
+        return $this->query->count();
     }
 
     /**

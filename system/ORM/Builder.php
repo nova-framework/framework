@@ -111,7 +111,7 @@ class Builder
 
     public function find($id, $fieldName = null)
     {
-        // We use an new Query to perform this operation.
+        // We use a new Query to perform this operation.
         $query = $this->newBaseQuery();
 
         // Get the field name, using the primaryKey as default.
@@ -265,7 +265,7 @@ class Builder
             throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
         }
 
-        // We use an new Query to perform this operation.
+        // We use a new Query to perform this operation.
         $query = $this->newBaseQuery();
 
         $query = call_user_func_array(array($query, 'where'), $params);
@@ -280,10 +280,24 @@ class Builder
      */
     public function countAll()
     {
-        // We use an new Query to perform this operation.
+        // We use a new Query to perform this operation.
         $query = $this->newBaseQuery();
 
         return $query->count();
+    }
+
+    /**
+     * @param       $sql
+     * @param array $bindings
+     *
+     * @return $this
+     */
+    public function query($sql, $bindings = array())
+    {
+        // We use a new Query to perform this operation.
+        $query = $this->newBaseQuery();
+
+        return $query->query($sql, $bindings);
     }
 
     /**
@@ -297,7 +311,7 @@ class Builder
      */
     public function isUnique($field, $value, $ignore = null)
     {
-        // We use an new Query to perform this operation.
+        // We use a new Query to perform this operation.
         $query = $this->newBaseQuery();
 
         $query = $query->where($field, $value);
@@ -323,39 +337,6 @@ class Builder
         $this->query = call_user_func_array(array($this->query, $method), $parameters);
 
         return $this;
-    }
-
-    //--------------------------------------------------------------------
-    // QueryBuilder Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Build a Select Query.
-     * @return \SelectQuery
-     *
-     * @throws \Exception
-     */
-    public function query($returnType = null)
-    {
-        $table = $this->table();
-
-        // Get a QueryBuilder instance.
-        $queryBuilder = $this->db->queryBuilder();
-
-        $query = $queryBuilder->table($table);
-
-        if($returnType == 'assoc') {
-            return $query->asAssoc();
-        } else if($returnType == 'array') {
-            return $query->asArray();
-        } else if($returnType == 'object') {
-            return $query->asObject();
-        }
-
-        // By default we fetch into Model.
-        $className = $this->model->getClass();
-
-        return $query->asObject($className);
     }
 
 }

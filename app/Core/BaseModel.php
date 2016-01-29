@@ -28,7 +28,7 @@ class BaseModel extends Model
      *
      * @var string;
      */
-    protected $tableName;
+    protected $table;
 
     /**
      * The model's default primary key.
@@ -182,9 +182,9 @@ class BaseModel extends Model
         $this->tempReturnType = $this->returnType;
     }
 
-    public function getTableName()
+    public function getTable()
     {
-        return $this->tableName;
+        return $this->table;
     }
 
     /**
@@ -200,7 +200,7 @@ class BaseModel extends Model
             return DB_PREFIX .$table;
         }
 
-        return DB_PREFIX .$this->tableName;
+        return DB_PREFIX .$this->table;
     }
 
     //--------------------------------------------------------------------
@@ -237,7 +237,7 @@ class BaseModel extends Model
         $queryBuilder = $this->queryBuilder();
 
         // First, check and configure for the 'select' Method.
-        $query = $queryBuilder->from($this->tableName);
+        $query = $queryBuilder->from($this->table);
 
         // Setup the fetch Method.
         if ($returnType == 'assoc') {

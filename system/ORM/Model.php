@@ -212,10 +212,33 @@ class Model
         $this->afterLoad();
     }
 
+    /**
+     * Save a new Model and return the instance.
+     *
+     * @param  array  $attributes
+     * @return static
+     */
+    public static function create(array $attributes = array())
+    {
+        $model = new static();
+
+        $model->setRawAttributes($attributes);
+
+        // Initialize the Model.
+        $model->initObject();
+
+        $model->save();
+
+        return $model;
+    }
+
     public function fill(array $attributes)
     {
         // Skip any protected attributes; the primaryKey is skipped by default.
-        $skippedFields = array_merge((array) $this->primaryKey, $this->protectedFields);
+        $skippedFields = array_merge(
+            array($this->primaryKey, $this->createdField, $this->modifiedField),
+            $this->protectedFields
+        );
 
         foreach ($attributes as $key => $value) {
             if(! in_array($key, $skippedFields)) {
@@ -232,7 +255,7 @@ class Model
      */
     public function forceFill(array $attributes)
     {
-        $this->attributes = array();
+        $this->attributes = $attributes;
     }
 
     /**
@@ -281,13 +304,17 @@ class Model
      */
     public static function hydrate(array $items, $connection = null)
     {
-        $instance = (new static())->setConnection($connection);
+        $instance = new static();
 
-        $items = array_map(function ($item) use ($instance) {
+        if($connection !== null) {
+            $instance->setConnection($connection);
+        }
+
+        $models = array_map(function ($item) use ($instance) {
             return $instance->newFromBuilder($item);
         }, $items);
 
-        return $items;
+        return $models;
     }
 
     /**
@@ -692,7 +719,6 @@ class Model
     /**
      * Extracts the Model's fields.
      *
-     *
      * @return array An array of name => value pairs containing the data for the Model's fields.
      */
     public function prepareData(Builder $builder)
@@ -711,18 +737,15 @@ class Model
             }
         }
 
-        if ($this->timestamps === true) {
-            // Process the 'created_at' field
-            $fieldName = $this->createdField;
+        // Process the timestamps.
+        if ($this->timestamps) {
+            $timestamps = array($this->createdField, $this->modifiedField);
+        } else {
+            $timestamps = array();
+        }
 
+        foreach($timestamps as $fieldName) {
             if(in_array($fieldName, $fields) && ! array_key_exists($fieldName, $data)) {
-                $data[$fieldName] = $this->getDate();
-            }
-
-            // Process the 'updated_at' field
-            $fieldName = $this->modifiedField;
-
-            if(in_array($fieldName, $fields)) {
                 $data[$fieldName] = $this->getDate();
             }
         }

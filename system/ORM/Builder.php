@@ -42,18 +42,9 @@ class Builder
     protected $fields = array();
 
     /**
-     * The cached Table Metadata.
+     * The cached information is stored there.
      */
     protected static $cache = array();
-
-    /**
-     * The methods that should be returned from Query Builder.
-     *
-     * @var array
-     */
-    protected $passthru = array(
-        'insert', 'count',
-    );
 
 
     public function __construct(Model $model, $connection = null)
@@ -62,44 +53,53 @@ class Builder
 
         $this->primaryKey = $model->getKeyName();
 
+        // Setup the parent Model.
+        $this->model = $model;
+
         // Setup the Connection name.
-        $this->connection = $connection ? $connection : $model->getConnection();
+        $this->connection = ($connection !== null) ? $connection : $model->getConnection();
 
         // Setup the Connection instance.
         $this->db = Database::getConnection($this->connection);
 
-        // Get a Query Builder instance.
-        $query = $this->newBaseQuery();
+        // Setup the inner Query Builder instance.
+        $this->query = $this->newBaseQuery();
 
-        // Prepare the Table Fields, using the data from Model, Cache and Database.
-        $fields = $model->getTableFields();
+        // Finally, we initialize the Builder instance.
+        $this->initialize();
+    }
 
-        // Prepare the local Cache token.
-        $token = $this->connection .'_' .$this->table;
+    protected function initialize()
+    {
+        $fields = $this->model->getTableFields();
 
         if(! empty($fields)) {
-            // The Table fields are specified by user directly into Model.
+            // The fields are specified by the programmer, directly into Model.
             $this->fields = $fields;
-        } else if($this->hasCached($token)) {
-            $this->fields = $this->getCache($token);
-        } else {
-            $table = $query->addTablePrefix($this->table, false);
 
-            // Get the Table information directly from Connection instance.
-            $fields = $this->db->getTableFields($table);
-
-            // We use only the keys of Table information array.
-            $this->fields = array_keys($fields);
-
-            // Cache the Table fields for the further use.
-            $this->setCache($token, $this->fields);
+            return;
         }
 
-        // Setup the parent Model.
-        $this->model = $model;
+        // Prepare the Cache token.
+        $token = $this->connection .'_' .$this->table;
 
-        // Setup the inner Query Builder instance.
-        $this->query = $query;
+        if($this->hasCached($token)) {
+            // The fields are already cached by a previous Builder instance.
+            $this->fields = $this->getCache($token);
+
+            return;
+        }
+
+        $table = $this->query->addTablePrefix($this->table, false);
+
+        // Get the Table fields directly from Connection instance.
+        $fields = $this->db->getTableFields($table);
+
+        // We use only the keys of Table information array.
+        $this->fields = array_keys($fields);
+
+        // Cache the Table fields for the further use.
+        $this->setCache($token, $this->fields);
     }
 
     public function getTable()

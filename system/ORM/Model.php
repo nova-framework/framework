@@ -791,12 +791,15 @@ class Model
 
     public function getDebugInfo()
     {
+        // Prepare the Cache token.
+        $token = $this->connection .'_' .$this->table;
+
         // Prepare the Table fields.
         if(! empty($this->fields))  {
             $fields = $this->fields;
         } else if(Builder::hasCached($token)) {
             // There was a Builder instance who use this table.
-            $fields = Builder::getCached($token);
+            $fields = Builder::getCache($token);
         } else {
             $builder = $this->newBuilder();
 

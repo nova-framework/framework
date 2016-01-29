@@ -312,6 +312,19 @@ class Builder
     }
 
     /**
+     * @param array  $value
+     * @param string $fieldName
+     *
+     * @return null|\stdClass
+     */
+    public function findMany($fieldName, $values)
+    {
+        $this->whereIn($fieldName, $values);
+
+        return $this->get();
+    }
+
+    /**
      * @param        $value
      * @param string $fieldName
      *

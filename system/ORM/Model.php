@@ -124,6 +124,7 @@ class Model
     {
         $this->className = get_class($this);
 
+        // Setup the Connection name.
         $this->connection = $connection;
 
         // Prepare the Table Name only if it is not already specified.
@@ -154,13 +155,18 @@ class Model
                 $this->fields[$fieldName] = $fieldInfo['type'];
             }
         }
+
+        // Init the Model when it has the attributes loaded (via class fetching).
+        if(! empty($this->attributes)) {
+            $this->initObject(true);
+        }
     }
 
     protected function initObject($exists = false)
     {
         $this->exists = $exists;
 
-        if($this->exists) {
+        if($this->exists && ! empty($this->attributes)) {
             // Sync the original attributes.
             $this->syncOriginal();
         }
@@ -204,7 +210,9 @@ class Model
 
     public function setTable($table)
     {
-        return $this->table = $table;
+        $this->table = $table;
+
+        return $this;
     }
 
     public function getTable()
@@ -213,15 +221,27 @@ class Model
     }
 
     /**
-     * Getter for the table name.
+     * Getter for the Table name.
      *
-     * @return string The name of the table used by this class (including the DB_PREFIX).
+     * @return string The name of the table used by this Model (including the DB_PREFIX).
      */
     public function table()
     {
         return DB_PREFIX .$this->table;
     }
 
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+
+        return $this;
+    }
+
+    /**
+     * Getter for the Connection name.
+     *
+     * @return string The name of the Connection used by this Model.
+     */
     public function getConnection()
     {
         return $this->connection;

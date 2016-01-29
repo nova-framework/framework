@@ -36,7 +36,15 @@ class Builder
 
     protected $primaryKey;
 
+    /**
+     * The Table Metadata.
+     */
     protected $fields = array();
+
+    /**
+     * The cached Table Metadata.
+     */
+    protected static $cache = array();
 
     /**
      * The methods that should be returned from Query Builder.
@@ -69,17 +77,20 @@ class Builder
         // Prepare the Table Fields if they aren't specified into Model.
         $fields = $this->model->getTableFields();
 
-        if(empty($fields)) {
-            $table = $query->addTablePrefix($this->table);
+        // Prepare the Table Fields if they aren't specified into Model.
+        $token = $this->connection .'_' .$this->table;
+
+        if(! empty($fields)) {
+            $this->fields = $fields;
+        } else if(isset(self::$cache[$token])) {
+            $this->fields = self::$cache[$token];
+        } else {
+            $table = $query->addTablePrefix($this->table, false);
 
             // Get the Table Fields information directly from Connection.
             $tableFields = $this->db->getTableFields($table);
 
-            foreach($tableFields as $fieldName => $fieldInfo) {
-                $this->fields[$fieldName] = $fieldInfo['type'];
-            }
-        } else {
-            $this->fields = $fields;
+            $this->fields = array_keys($tableFields);
         }
 
         // Setup the inner Query Builder instance.
@@ -99,6 +110,16 @@ class Builder
     public function getTableFields()
     {
         return $this->fields;
+    }
+
+    public static function hasCachedFields($token)
+    {
+        return isset(self::$cache[$token]);
+    }
+
+    public static function getCachedFields($token)
+    {
+        return isset(self::$cache[$token]) ? self::$cache[$token] : null;
     }
 
     public function getConnection()
@@ -129,6 +150,11 @@ class Builder
         return $this->query;
     }
 
+    public function addTablePrefix($values, $tableFieldMix = true)
+    {
+        return $this->query->addTablePrefix($values, $tableFieldMix);
+    }
+
     //--------------------------------------------------------------------
     // CRUD Methods
     //--------------------------------------------------------------------
@@ -144,7 +170,7 @@ class Builder
         $result = $query->where($fieldName, $id)->asAssoc()->first();
 
         if($result !== false) {
-            return $this->model->newInstance($result);
+            return $this->model->newFromBuilder($result);
         }
 
         return false;
@@ -163,7 +189,7 @@ class Builder
         $result = $query->asAssoc()->first();
 
         if($result !== false) {
-            return $this->model->newInstance($result);
+            return $this->model->newFromBuilder($result);
         }
 
         return false;
@@ -183,7 +209,7 @@ class Builder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $this->model->newInstance($row);
+            $result[] = $this->model->newFromBuilder($row);
         }
 
         return $result;
@@ -210,7 +236,7 @@ class Builder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $this->model->newInstance($row);
+            $result[] = $this->model->newFromBuilder($row);
         }
 
         return $result;
@@ -221,7 +247,7 @@ class Builder
         $data = $this->query->asAssoc()->first();
 
         if($data !== false) {
-            return $this->model->newInstance($data);
+            return $this->model->newFromBuilder($data);
         }
 
         return false;

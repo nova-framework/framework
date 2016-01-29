@@ -86,10 +86,10 @@ class Builder
             $table = $query->addTablePrefix($this->table, false);
 
             // Get the Table information directly from Connection instance.
-            $tableFields = $this->db->getTableFields($table);
+            $fields = $this->db->getTableFields($table);
 
             // We use only the keys of Table information array.
-            $this->fields = array_keys($tableFields);
+            $this->fields = array_keys($fields);
 
             // Cache the Table fields for the further use.
             $this->setCache($token, $this->fields);

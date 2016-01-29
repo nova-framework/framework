@@ -128,7 +128,7 @@ class BelongsToMany extends Relation
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $this->related->newInstance($row);
+            $result[] = $this->related->newFromBuilder($row);
         }
 
         $this->query = $this->related->newBuilder();

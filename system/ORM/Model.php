@@ -143,58 +143,10 @@ class Model
             $this->table = implode('_', $segments);
         }
 
-        // Prepare the Table Fields if they aren't specified into Model.
-        if(empty($this->fields)) {
-            $connection = Database::getConnection($this->connection);
-
-            // Get the Table Fields information directly from Connection.
-            $fields = $connection->getTableFields(DB_PREFIX .$this->table);
-
-            foreach($fields as $fieldName => $fieldInfo) {
-                $this->fields[$fieldName] = $fieldInfo['type'];
-            }
-        }
-
-        // Init the Model when it has the attributes loaded (via class fetching).
+        // Init the Model; exists when it has attributes loaded (via class fetching).
         if(! empty($this->attributes)) {
             $this->initObject(true);
         }
-    }
-
-    protected function initObject($exists = false)
-    {
-        $this->exists = $exists;
-
-        if($this->exists && ! empty($this->attributes)) {
-            // Sync the original attributes.
-            $this->syncOriginal();
-        }
-
-        $this->afterLoad();
-    }
-
-    private function hydrate(array $attributes)
-    {
-        $this->attributes = array();
-
-        foreach ($attributes as $key => $value) {
-            if(isset($this->fields[$key])) {
-                $this->attributes[$key] = $value;
-            }
-        }
-    }
-
-    public function newInstance(array $attributes, $exists = true)
-    {
-        $instance = new static();
-
-        // Hydrate the Model.
-        $instance->hydrate($attributes);
-
-        // Initialize the Model.
-        $instance->initObject($exists);
-
-        return $instance;
     }
 
     public function getClass()
@@ -231,7 +183,9 @@ class Model
 
     public function setConnection($connection)
     {
-        $this->connection = $connection;
+        if($connection !== null) {
+            $this->connection = $connection;
+        }
 
         return $this;
     }
@@ -246,9 +200,153 @@ class Model
         return $this->connection;
     }
 
-    //--------------------------------------------------------------------
-    // Attributes handling Methods
-    //--------------------------------------------------------------------
+    protected function initObject($exists = false)
+    {
+        $this->exists = $exists;
+
+        if($this->exist) {
+            // Sync the original attributes.
+            $this->syncOriginal();
+        }
+
+        $this->afterLoad();
+    }
+
+    public function fill(array $attributes)
+    {
+        // Skip any protected attributes; the primaryKey is skipped by default.
+        $skippedFields = array_merge((array) $this->primaryKey, $this->protectedFields);
+
+        foreach ($attributes as $key => $value) {
+            if(! in_array($key, $skippedFields)) {
+                $this->setAttribute($key, $value);
+            }
+        }
+    }
+
+    /**
+     * Fill the model with an array of attributes. Force mass assignment.
+     *
+     * @param  array  $attributes
+     * @return $this
+     */
+    public function forceFill(array $attributes)
+    {
+        $this->attributes = array();
+    }
+
+    /**
+     * Create a new instance of the given Model.
+     *
+     * @param  array  $attributes
+     * @param  bool  $exists
+     * @return static
+     */
+    public function newInstance($attributes = array(), $exists = false)
+    {
+        $instance = new static();
+
+        $instance->setAttributes((array) $attributes);
+
+        // Initialize the Model.
+        $instance->initObject($exists);
+
+        return $instance;
+    }
+
+    /**
+     * Create a new Model instance that is existing.
+     *
+     * @param  array  $attributes
+     * @param  string|null  $connection
+     * @return static
+     */
+    public function newFromBuilder($attributes = array(), $connection = null)
+    {
+        $model = $this->newInstance(array(), true);
+
+        $model->setRawAttributes((array) $attributes, true);
+
+        $model->setConnection($connection ?: $this->connection);
+
+        return $model;
+    }
+
+    /**
+     * Create a collection of models from plain arrays.
+     *
+     * @param  array  $items
+     * @param  string|null  $connection
+     * @return array
+     */
+    public static function hydrate(array $items, $connection = null)
+    {
+        $instance = (new static())->setConnection($connection);
+
+        $items = array_map(function ($item) use ($instance) {
+            return $instance->newFromBuilder($item);
+        }, $items);
+
+        return $items;
+    }
+
+    /**
+     * Get the value of the model's primary key.
+     *
+     * @return mixed
+     */
+    public function getKey()
+    {
+        return $this->getAttribute($this->primaryKey);
+    }
+
+    /**
+     * Get the primary key for the model.
+     *
+     * @return string
+     */
+    public function getKeyName()
+    {
+        return $this->primaryKey;
+    }
+
+    public function setAttributes($attributes)
+    {
+        $this->forceFill($attributes);
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    public function setAttribute($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    /**
+     * Set the array of model attributes. No checking is done.
+     *
+     * @param  array  $attributes
+     * @param  bool  $sync
+     * @return $this
+     */
+    public function setRawAttributes(array $attributes, $sync = false)
+    {
+        $this->attributes = $attributes;
+
+        if ($sync) {
+            $this->syncOriginal();
+        }
+
+        return $this;
+    }
+
+    public function getAttribute($name)
+    {
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+    }
 
     /**
      * Get the model's original attribute values.
@@ -357,50 +455,6 @@ class Model
     }
 
     //--------------------------------------------------------------------
-    // Attributes handling Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Get the value of the model's primary key.
-     *
-     * @return mixed
-     */
-    public function getKey()
-    {
-        return $this->getAttribute($this->primaryKey);
-    }
-
-    /**
-     * Get the primary key for the model.
-     *
-     * @return string
-     */
-    public function getKeyName()
-    {
-        return $this->primaryKey;
-    }
-
-    public function setAttributes($attributes)
-    {
-        $this->hydrate($attributes);
-    }
-
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    public function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-    }
-
-    public function getAttribute($name)
-    {
-        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
-    }
-
-    //--------------------------------------------------------------------
     // Magic Methods
     //--------------------------------------------------------------------
 
@@ -446,9 +500,9 @@ class Model
 
     public function __get($name)
     {
-        // If the name is of one of attributes, return the Value from attribute.
-        if (isset($this->fields[$name])) {
-            return $this->getAttribute($name);
+        // If the name is of one of attributes, return the its Value.
+        if (array_key_exists($name, $this->attributes)) {
+            return $this->attributes[$name];
         }
         else if(! $this->exists) {
             // No Relations can be called for the new Objects.
@@ -651,7 +705,7 @@ class Model
         $skippedFields = array_merge((array) $this->primaryKey, $this->protectedFields);
 
         // Walk over the defined Table Fields and prepare the data entries.
-        foreach ($fields as $fieldName => $fieldInfo) {
+        foreach ($fields as $fieldName) {
             if(! in_array($fieldName, $skippedFields) && array_key_exists($fieldName, $this->attributes)) {
                 $data[$fieldName] = $this->attributes[$fieldName];
             }
@@ -661,14 +715,14 @@ class Model
             // Process the 'created_at' field
             $fieldName = $this->createdField;
 
-            if(isset($this->fields[$fieldName]) && ! array_key_exists($fieldName, $data)) {
+            if(in_array($fieldName, $fields) && ! array_key_exists($fieldName, $data)) {
                 $data[$fieldName] = $this->getDate();
             }
 
             // Process the 'updated_at' field
             $fieldName = $this->modifiedField;
 
-            if(isset($this->fields[$fieldName])) {
+            if(in_array($fieldName, $fields)) {
                 $data[$fieldName] = $this->getDate();
             }
         }
@@ -716,11 +770,23 @@ class Model
     {
         $result = '';
 
+        // Prepare the Table fields.
+        if(! empty($this->fields))  {
+            $fields = $this->fields;
+        } else if(Builder::hasCachedFields($token)) {
+            // There was a Builder instance who use this table.
+            $fields = Builder::getCachedFields($token);
+        } else {
+            $builder = $this->newBuilder();
+
+            $fields = $builder->getTableFields();
+        }
+
         // Support for checking if an object is empty
         if (! $this->exists) {
             $isEmpty = true;
 
-            foreach ($this->fields as $fieldName => $fieldInfo) {
+            foreach ($fields as $fieldName) {
                 if (isset($this->attributes[$fieldName])) {
                     $isEmpty = false;
 
@@ -737,7 +803,7 @@ class Model
 
         $result .= "\tExists: " . ($this->exists ? "YES" : "NO") . "\n\n";
 
-        foreach ($this->fields as $fieldName => $fieldInfo) {
+        foreach ($fields as $fieldName) {
             $result .= "\t" . Inflector::classify($fieldName) . ': ' .$this->getAttribute($fieldName) . "\n";
         }
 

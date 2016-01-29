@@ -212,26 +212,6 @@ class Model
         $this->afterLoad();
     }
 
-    /**
-     * Save a new Model and return the instance.
-     *
-     * @param  array  $attributes
-     * @return static
-     */
-    public static function create(array $attributes = array())
-    {
-        $model = new static();
-
-        $model->setRawAttributes($attributes);
-
-        // Initialize the Model.
-        $model->initObject();
-
-        $model->save();
-
-        return $model;
-    }
-
     public function fill(array $attributes)
     {
         // Skip any protected attributes; the primaryKey is skipped by default.
@@ -256,6 +236,48 @@ class Model
     public function forceFill(array $attributes)
     {
         $this->attributes = $attributes;
+    }
+
+    /**
+     * Save a new Model and return the instance.
+     *
+     * @param  array  $attributes
+     * @return static
+     */
+    public static function create(array $attributes = array())
+    {
+        $model = new static();
+
+        $model->setRawAttributes($attributes);
+
+        // Initialize the Model.
+        $model->initObject();
+
+        $model->save();
+
+        return $model;
+    }
+
+     /**
+     * Create a collection of models from plain arrays.
+     *
+     * @param  array  $items
+     * @param  string|null  $connection
+     * @return array
+     */
+    public static function hydrate(array $items, $connection = null)
+    {
+        $instance = new static();
+
+        if($connection !== null) {
+            $instance->setConnection($connection);
+        }
+
+        $models = array_map(function ($item) use ($instance) {
+            return $instance->newFromBuilder($item);
+        }, $items);
+
+        return $models;
     }
 
     /**
@@ -293,28 +315,6 @@ class Model
         $model->setConnection($connection ?: $this->connection);
 
         return $model;
-    }
-
-    /**
-     * Create a collection of models from plain arrays.
-     *
-     * @param  array  $items
-     * @param  string|null  $connection
-     * @return array
-     */
-    public static function hydrate(array $items, $connection = null)
-    {
-        $instance = new static();
-
-        if($connection !== null) {
-            $instance->setConnection($connection);
-        }
-
-        $models = array_map(function ($item) use ($instance) {
-            return $instance->newFromBuilder($item);
-        }, $items);
-
-        return $models;
     }
 
     /**
@@ -789,21 +789,22 @@ class Model
     // Debug Methods
     //--------------------------------------------------------------------
 
-    public function __toString()
+    public function getDebugInfo()
     {
-        $result = '';
-
         // Prepare the Table fields.
         if(! empty($this->fields))  {
             $fields = $this->fields;
-        } else if(Builder::hasCachedFields($token)) {
+        } else if(Builder::hasCached($token)) {
             // There was a Builder instance who use this table.
-            $fields = Builder::getCachedFields($token);
+            $fields = Builder::getCached($token);
         } else {
             $builder = $this->newBuilder();
 
             $fields = $builder->getTableFields();
         }
+
+        // There we store the parsed output.
+        $result = '';
 
         // Support for checking if an object is empty
         if (! $this->exists) {

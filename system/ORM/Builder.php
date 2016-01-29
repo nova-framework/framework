@@ -56,17 +56,14 @@ class Builder
     );
 
 
-    public function __construct(Model $model, $connection = 'default')
+    public function __construct(Model $model, $connection = null)
     {
-        $this->model = $model;
+        $this->table = $model->getTable();
 
-        //
-        $this->table = $this->model->getTable();
-
-        $this->primaryKey = $this->model->getKeyName();
+        $this->primaryKey = $model->getKeyName();
 
         // Setup the Connection name.
-        $this->connection = $connection;
+        $this->connection = $connection ? $connection : $model->getConnection();
 
         // Setup the Connection instance.
         $this->db = Database::getConnection($this->connection);
@@ -74,24 +71,32 @@ class Builder
         // Get a Query Builder instance.
         $query = $this->newBaseQuery();
 
-        // Prepare the Table Fields if they aren't specified into Model.
-        $fields = $this->model->getTableFields();
+        // Prepare the Table Fields, using the data from Model, Cache and Database.
+        $fields = $model->getTableFields();
 
-        // Prepare the Table Fields if they aren't specified into Model.
+        // Prepare the local Cache token.
         $token = $this->connection .'_' .$this->table;
 
         if(! empty($fields)) {
+            // The Table fields are specified by user directly into Model.
             $this->fields = $fields;
-        } else if(isset(self::$cache[$token])) {
-            $this->fields = self::$cache[$token];
+        } else if($this->hasCached($token)) {
+            $this->fields = $this->getCache($token);
         } else {
             $table = $query->addTablePrefix($this->table, false);
 
-            // Get the Table Fields information directly from Connection.
+            // Get the Table information directly from Connection instance.
             $tableFields = $this->db->getTableFields($table);
 
+            // We use only the keys of Table information array.
             $this->fields = array_keys($tableFields);
+
+            // Cache the Table fields for the further use.
+            $this->setCache($token, $this->fields);
         }
+
+        // Setup the parent Model.
+        $this->model = $model;
 
         // Setup the inner Query Builder instance.
         $this->query = $query;
@@ -112,16 +117,6 @@ class Builder
         return $this->fields;
     }
 
-    public static function hasCachedFields($token)
-    {
-        return isset(self::$cache[$token]);
-    }
-
-    public static function getCachedFields($token)
-    {
-        return isset(self::$cache[$token]) ? self::$cache[$token] : null;
-    }
-
     public function getConnection()
     {
         return $this->connection;
@@ -130,6 +125,21 @@ class Builder
     public function getLink()
     {
         return $this->db;
+    }
+
+    public static function hasCached($token)
+    {
+        return isset(self::$cache[$token]);
+    }
+
+    public static function setCache($token, $value)
+    {
+        self::$cache[$token] = $value;
+    }
+
+    public static function getCache($token)
+    {
+        return isset(self::$cache[$token]) ? self::$cache[$token] : null;
     }
 
     //--------------------------------------------------------------------
@@ -148,11 +158,6 @@ class Builder
     public function getBaseQuery()
     {
         return $this->query;
-    }
-
-    public function addTablePrefix($values, $tableFieldMix = true)
-    {
-        return $this->query->addTablePrefix($values, $tableFieldMix);
     }
 
     //--------------------------------------------------------------------
@@ -359,6 +364,10 @@ class Builder
         return $query->count();
     }
 
+    //--------------------------------------------------------------------
+    // Utility Methods
+    //--------------------------------------------------------------------
+
     /**
      * @param       $sql
      * @param array $bindings
@@ -401,6 +410,15 @@ class Builder
 
         return false;
     }
+
+    public function addTablePrefix($values, $tableFieldMix = true)
+    {
+        return $this->query->addTablePrefix($values, $tableFieldMix);
+    }
+
+    //--------------------------------------------------------------------
+    // Magic Methods
+    //--------------------------------------------------------------------
 
     /**
      * Handle dynamic method calls into the method.

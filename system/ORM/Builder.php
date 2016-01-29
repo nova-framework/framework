@@ -71,29 +71,28 @@ class Builder
 
     protected function initialize()
     {
-        // Prepare the Table Fields, using the data from Model, Cache and Database.
         $fields = $this->model->getTableFields();
 
         if(! empty($fields)) {
+            // The fields are specified by the programmer, directly into Model.
             $this->fields = $fields;
 
-            // The fields are specified by user directly into Model.
             return;
         }
 
-        // Prepare the local Cache token.
+        // Prepare the Cache token.
         $token = $this->connection .'_' .$this->table;
 
         if($this->hasCached($token)) {
+            // The fields are already cached by a previous Builder instance.
             $this->fields = $this->getCache($token);
 
-            // The fields are already cached by a previous Builder instance.
             return;
         }
 
         $table = $this->query->addTablePrefix($this->table, false);
 
-        // Get the Table information directly from Connection instance.
+        // Get the Table fields directly from Connection instance.
         $fields = $this->db->getTableFields($table);
 
         // We use only the keys of Table information array.

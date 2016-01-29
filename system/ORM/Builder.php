@@ -155,6 +155,7 @@ class Builder
             return false;
         }
 
+        // Prepare and return an instances array.
         $result = array();
 
         foreach($data as $row) {
@@ -170,15 +171,18 @@ class Builder
         $params = func_get_args();
 
         if (! empty($params)) {
-            $this->query = call_user_func_array(array($this->query, 'where'), $params);
+            $query = call_user_func_array(array($this->query, 'where'), $params);
+        } else {
+            $query = $this->query;
         }
 
-        $data = $this->query->asAssoc()->get();
+        $data = $query->asAssoc()->get();
 
         if($data === false) {
             return false;
         }
 
+        // Prepare and return an instances array.
         $result = array();
 
         foreach($data as $row) {
@@ -206,6 +210,20 @@ class Builder
         return $query->insert($data);
     }
 
+    public function insertIgnore($data)
+    {
+        $query = $this->newBaseQuery();
+
+        return $query->insertIgnore($data);
+    }
+
+    public function replace($data)
+    {
+        $query = $this->newBaseQuery();
+
+        return $query->replace($data);
+    }
+
     public function update($data)
     {
         return $this->query->update($data);
@@ -224,6 +242,11 @@ class Builder
         $query = call_user_func_array(array($this->query, 'where'), $params);
 
         return $query->update($data);
+    }
+
+    public function updateOrInsert($data)
+    {
+        return $this->query->updateOrInsert($data);
     }
 
     public function delete()
@@ -268,7 +291,7 @@ class Builder
         // We use a new Query to perform this operation.
         $query = $this->newBaseQuery();
 
-        $query = call_user_func_array(array($query, 'where'), $params);
+        call_user_func_array(array($query, 'where'), $params);
 
         return $query->count();
     }
@@ -314,15 +337,19 @@ class Builder
         // We use a new Query to perform this operation.
         $query = $this->newBaseQuery();
 
-        $query = $query->where($field, $value);
+        $query->where($field, $value);
 
         if ($ignore !== null) {
-            $query = $query->where($this->primaryKey, $ignore);
+            $query->where($this->primaryKey, $ignore);
         }
 
         $result = $query->count();
 
-        return ($result > 0) ? false : true;
+        if($result == 0) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -334,7 +361,7 @@ class Builder
      */
     public function __call($method, $parameters)
     {
-        $this->query = call_user_func_array(array($this->query, $method), $parameters);
+        call_user_func_array(array($this->query, $method), $parameters);
 
         return $this;
     }

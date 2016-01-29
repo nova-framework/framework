@@ -552,27 +552,32 @@ class Model
             // We are into INSERT mode.
             $insertId = $builder->insert($data);
 
-            if($insertId !== false) {
-                $this->setAttribute($this->primaryKey, $insertId);
-
-                // Sync the original attributes.
-                $this->syncOriginal();
-
-                // Mark the instance as existing.
-                $this->exists = true;
-
-                return true;
+            if($insertId === false) {
+                return false;
             }
-        } else if($this->isDirty()) {
-            // The instance is dirty, then we are into UPDATE mode.
-            $result = $builder->updateBy($this->primaryKey, $this->getKey(), $data);
 
-            if($result !== false) {
-                // Sync the original attributes.
-                $this->syncOriginal();
+            // Mark the instance as existing and setup it primary key value.
+            $this->exists = true;
 
-                return true;
-            }
+            $this->setAttribute($this->primaryKey, $insertId);
+
+            // Sync the original attributes.
+            $this->syncOriginal();
+
+            return true;
+        } else if(! $this->isDirty()) {
+            // When the Model exists and it is not dirty, there is nothing to do.
+            return false;
+        }
+
+        // We are into UPDATE mode.
+        $result = $builder->updateBy($this->primaryKey, $this->getKey(), $data);
+
+        if($result !== false) {
+            // Sync the original attributes.
+            $this->syncOriginal();
+
+            return true;
         }
 
         return false;
@@ -580,21 +585,19 @@ class Model
 
     public function delete()
     {
-        if (! $this->beforeDelete()) {
+        if (! $this->exists || ! $this->beforeDelete()) {
             return false;
         }
 
         // Get a new Builder instance.
         $builder = $this->newBuilder();
 
-        if($this->exists) {
-            $result = $builder->deleteBy($this->primaryKey, $this->getKey());
+        $result = $builder->deleteBy($this->primaryKey, $this->getKey());
 
-            if($result !== false) {
-                $this->exists = false;
+        if($result !== false) {
+            $this->exists = false;
 
-                return true;
-            }
+            return true;
         }
 
         return false;

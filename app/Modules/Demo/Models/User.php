@@ -7,7 +7,7 @@ use Nova\ORM\Model as BaseModel;
 
 class User extends BaseModel
 {
-    protected $tableName = 'users';
+    protected $table = 'users';
 
     protected $relations = array('profile', 'posts');
 

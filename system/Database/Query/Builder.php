@@ -1127,7 +1127,7 @@ class Builder
         // If supplied value is not an array then make it one
         $single = false;
 
-        if (!is_array($values)) {
+        if (! is_array($values)) {
             $values = array($values);
             // We had single value, so should return a single value
             $single = true;
@@ -1137,8 +1137,9 @@ class Builder
 
         foreach ($values as $key => $value) {
             // It's a raw query, just add it to our return array and continue next
-            if ($value instanceof Raw || $value instanceof \Closure) {
+            if (($value instanceof Raw) || ($value instanceof \Closure)) {
                 $return[$key] = $value;
+
                 continue;
             }
 

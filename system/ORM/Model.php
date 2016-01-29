@@ -143,13 +143,12 @@ class Model
             $this->table = implode('_', $segments);
         }
 
-        // Prepare the Table Fields only if they aren't already specified.
+        // Prepare the Table Fields if they aren't specified into Model.
         if(empty($this->fields)) {
-            // Get the specified Connection instance.
             $connection = Database::getConnection($this->connection);
 
-            // Get the Table Fields information.
-            $fields = $connection->getTableFields($this->table());
+            // Get the Table Fields information directly from Connection.
+            $fields = $connection->getTableFields(DB_PREFIX .$this->table);
 
             foreach($fields as $fieldName => $fieldInfo) {
                 $this->fields[$fieldName] = $fieldInfo['type'];
@@ -571,11 +570,11 @@ class Model
             return false;
         }
 
-        // Prepare the Data.
-        $data = $this->prepareData();
-
         // Get a new Builder instance.
         $builder = $this->newBuilder();
+
+        // Prepare the Data.
+        $data = $this->prepareData($builder);
 
         if (! $this->exists) {
             // We are into INSERT mode.
@@ -642,15 +641,17 @@ class Model
      *
      * @return array An array of name => value pairs containing the data for the Model's fields.
      */
-    public function prepareData()
+    public function prepareData(Builder $builder)
     {
         $data = array();
+
+        $fields = ! empty($this->fields) ? $this->fields : $builder->getTableFields();
 
         // Remove any protected attributes; the primaryKey is skipped by default.
         $skippedFields = array_merge((array) $this->primaryKey, $this->protectedFields);
 
         // Walk over the defined Table Fields and prepare the data entries.
-        foreach ($this->fields as $fieldName => $fieldInfo) {
+        foreach ($fields as $fieldName => $fieldInfo) {
             if(! in_array($fieldName, $skippedFields) && array_key_exists($fieldName, $this->attributes)) {
                 $data[$fieldName] = $this->attributes[$fieldName];
             }

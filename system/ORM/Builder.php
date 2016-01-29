@@ -32,11 +32,11 @@ class Builder
      */
     protected $model = null;
 
-    protected $tableName;
+    protected $table;
 
     protected $primaryKey;
 
-    protected $fields;
+    protected $fields = array();
 
     /**
      * The methods that should be returned from Query Builder.
@@ -44,7 +44,7 @@ class Builder
      * @var array
      */
     protected $passthru = array(
-        'insert', 'count', 'getConnection',
+        'insert', 'count',
     );
 
 
@@ -52,29 +52,53 @@ class Builder
     {
         $this->model = $model;
 
-        $this->tableName = $model->getTable();
+        //
+        $this->table = $this->model->getTable();
 
-        $this->primaryKey = $model->getKeyName();
+        $this->primaryKey = $this->model->getKeyName();
 
-        $this->fields = $model->getTableFields();
-
-        // Setup the Connection instance.
+        // Setup the Connection name.
         $this->connection = $connection;
 
-        $this->db = Database::getConnection($connection);
+        // Setup the Connection instance.
+        $this->db = Database::getConnection($this->connection);
 
-        // Finally, setup the inner Query Builder.
-        $this->query = $this->newBaseQuery();
+        // Get a Query Builder instance.
+        $query = $this->newBaseQuery();
+
+        // Prepare the Table Fields if they aren't specified into Model.
+        $fields = $this->model->getTableFields();
+
+        if(empty($fields)) {
+            $table = $query->addTablePrefix($this->table);
+
+            // Get the Table Fields information directly from Connection.
+            $tableFields = $this->db->getTableFields($table);
+
+            foreach($tableFields as $fieldName => $fieldInfo) {
+                $this->fields[$fieldName] = $fieldInfo['type'];
+            }
+        } else {
+            $this->fields = $fields;
+        }
+
+        // Setup the inner Query Builder instance.
+        $this->query = $query;
     }
 
     public function getTable()
     {
-        return $this->tableName;
+        return $this->table;
     }
 
     public function table()
     {
-        return DB_PREFIX .$this->tableName;
+        return $this->query->addTablePrefix($this->table);
+    }
+
+    public function getTableFields()
+    {
+        return $this->fields;
     }
 
     public function getConnection()

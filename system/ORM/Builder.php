@@ -149,7 +149,7 @@ class Builder
     {
         $query = $this->newBaseQuery();
 
-        $data = $query->whereIn($this->primaryKey, $values)->asAssoc()->get();
+        $data = $query->asAssoc()->findMany($this->primaryKey, $values);
 
         if($data === false) {
             return false;

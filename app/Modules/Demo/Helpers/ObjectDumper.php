@@ -18,15 +18,12 @@ class ObjectDumper
     {
         if($object === null) {
             return 'null'; // NULL.
-        }
-        else if($object === false) {
+        } else if($object === false) {
             return 'false'; // Boolean false.
-        }
-        else if(is_string($object)) {
+        } else if(is_string($object)) {
             return $object;
-        }
-        else if($object instanceof BaseModel) {
-            return (string) $object;
+        } else if($object instanceof BaseModel) {
+            return $object->getDebugInfo();
         }
 
         //return var_export($object);
@@ -34,26 +31,23 @@ class ObjectDumper
 
     public static function dumpObjectArray($data)
     {
-        if($data === null) {
-            return 'null'; // NULL.
-        }
-        else if($data === false) {
-            return 'false'; // Empty string.
-        }
-
-        $result = '';
-
         $cnt = 0;
 
-        foreach($data as $object) {
-            if($cnt > 0) {
-                $result .= "\n";
-            }
-            else {
-                $cnt++;
-            }
+        // There we store the parsed output.
+        $result = '';
 
-            $result .= (string) $object;
+        if(is_array($data)) {
+            foreach($data as $object) {
+                if($cnt > 0) {
+                    $result .= "\n";
+                } else {
+                    $cnt++;
+                }
+
+                $result .= self::dumpObject($object);
+            }
+        } else {
+            $result .= self::dumpObject($object);
         }
 
         return $result;

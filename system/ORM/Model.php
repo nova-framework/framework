@@ -789,7 +789,7 @@ class Model
     // Debug Methods
     //--------------------------------------------------------------------
 
-    public function __toString()
+    public function getDebugInfo()
     {
         // Prepare the Table fields.
         if(! empty($this->fields))  {

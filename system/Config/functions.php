@@ -55,6 +55,15 @@ function site_url($path = '')
     return DIR .ltrim($path, '/');
 }
 
+/**
+ * Class name helper
+ * @param string $className
+ * @return string
+ */
+function class_basename($className)
+{
+    return basename(str_replace('\\', '/', $className));
+}
 
 //
 // I18N functions

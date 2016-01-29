@@ -7,7 +7,7 @@ use Nova\ORM\Model as BaseModel;
 
 class Student extends BaseModel
 {
-    protected $tableName = 'students';
+    protected $table = 'students';
 
     protected $relations = array('courses');
 

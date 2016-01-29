@@ -63,7 +63,7 @@ class Model
     /**
      * The Table name belonging to this Model.
      */
-    protected $tableName;
+    protected $table;
 
     /**
      * There we store the associated Model instances.
@@ -126,24 +126,33 @@ class Model
 
         $this->connection = $connection;
 
-        // Check for the Table name.
-        if (empty($this->tableName)) {
-            throw new Exception('No table specified.', 3);
+        // Prepare the Table Name only if it is not already specified.
+        if (empty($this->table)) {
+            // Get the Class name without namespace part.
+            $className = class_basename($this->className);
+
+            // Explode the tableized baseName into segments (delimited by '_').
+            $segments = explode('_', Inflector::tableize($className));
+
+            // Replace the last segment with its pluralized variant.
+            array_push($segments, Inflector::pluralize(array_pop($segments)));
+
+            // Finally, we recombine the segments, obtaining something like:
+            // 'UserProfile' -> 'user_profiles'
+            $this->table = implode('_', $segments);
         }
 
-        // Prepare the Table Fields, if they aren't already specified.
-        if(! empty($this->fields)) {
-            return;
-        }
+        // Prepare the Table Fields only if they aren't already specified.
+        if(empty($this->fields)) {
+            // Get the specified Connection instance.
+            $connection = Database::getConnection($this->connection);
 
-        // Get the specified Connection instance.
-        $connection = Database::getConnection($this->connection);
+            // Get the Table Fields information.
+            $fields = $connection->getTableFields($this->table());
 
-        // Get the Table Fields information.
-        $fields = $connection->getTableFields($this->table());
-
-        foreach($fields as $fieldName => $fieldInfo) {
-            $this->fields[$fieldName] = $fieldInfo['type'];
+            foreach($fields as $fieldName => $fieldInfo) {
+                $this->fields[$fieldName] = $fieldInfo['type'];
+            }
         }
     }
 
@@ -195,12 +204,12 @@ class Model
 
     public function setTable($table)
     {
-        return $this->tableName = $table;
+        return $this->table = $table;
     }
 
     public function getTable()
     {
-        return $this->tableName;
+        return $this->table;
     }
 
     /**
@@ -210,7 +219,7 @@ class Model
      */
     public function table()
     {
-        return DB_PREFIX .$this->tableName;
+        return DB_PREFIX .$this->table;
     }
 
     public function getConnection()
@@ -483,20 +492,20 @@ class Model
 
     public function getForeignKey()
     {
-        $tableKey = Inflector::singularize($this->tableName);
+        $tableKey = Inflector::singularize($this->table);
 
         return $tableKey .'_id';
     }
 
     protected function joiningTable($className)
     {
-        $parentPath = str_replace('\\', '/', $this->className);
-        $relatedPath = str_replace('\\', '/', $className);
+        $parent = class_basename($this->className);
+        $related = class_basename($className);
 
         // Prepare an models array.
         $models = array(
-            Inflector::tableize(basename($parentPath)),
-            Inflector::tableize(basename($relatedPath))
+            Inflector::tableize($parent),
+            Inflector::tableize($related)
         );
 
         // Sort the models.

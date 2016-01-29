@@ -49,7 +49,7 @@ class Pivot extends Model
 
     public function __construct(Model $parent, array $attributes, $table, $exists = false)
     {
-        $this->tableName = $table;
+        $this->table = $table;
 
         // Execute the parent Constructor.
         parent::__construct();

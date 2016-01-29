@@ -7,7 +7,7 @@ use Nova\ORM\Model as BaseModel;
 
 class Category extends BaseModel
 {
-    protected $tableName = 'categories';
+    protected $table = 'categories';
 
     protected $relations = array('posts');
 

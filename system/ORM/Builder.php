@@ -46,6 +46,23 @@ class Builder
      */
     protected static $cache = array();
 
+    /**
+     * The methods that should be returned from Query Builder.
+     *
+     * @var array
+     */
+    protected $passthru = array(
+        'insert',
+        'insertIgnore',
+        'replace',
+        'update',
+        'updateOrInsert',
+        'delete',
+        'count',
+        'query',
+        'addTablePrefix'
+    );
+
 
     public function __construct(Model $model, $connection = null)
     {
@@ -258,32 +275,6 @@ class Builder
         return false;
     }
 
-    public function insert($data)
-    {
-        $query = $this->newBaseQuery();
-
-        return $query->insert($data);
-    }
-
-    public function insertIgnore($data)
-    {
-        $query = $this->newBaseQuery();
-
-        return $query->insertIgnore($data);
-    }
-
-    public function replace($data)
-    {
-        $query = $this->newBaseQuery();
-
-        return $query->replace($data);
-    }
-
-    public function update($data)
-    {
-        return $this->query->update($data);
-    }
-
     public function updateBy()
     {
         $params = func_get_args();
@@ -299,16 +290,6 @@ class Builder
         return $query->update($data);
     }
 
-    public function updateOrInsert($data)
-    {
-        return $this->query->updateOrInsert($data);
-    }
-
-    public function delete()
-    {
-        return $this->query->delete();
-    }
-
     public function deleteBy()
     {
         $params = func_get_args();
@@ -320,15 +301,6 @@ class Builder
         $query = call_user_func_array(array($this->query, 'where'), $params);
 
         return $query->delete();
-    }
-
-    /**
-     * Counts number of rows modified by the current built Query.
-     * @return INT
-     */
-    public function count()
-    {
-        return $this->query->count();
     }
 
     /**
@@ -369,20 +341,6 @@ class Builder
     //--------------------------------------------------------------------
 
     /**
-     * @param       $sql
-     * @param array $bindings
-     *
-     * @return $this
-     */
-    public function query($sql, $bindings = array())
-    {
-        // We use a new Query to perform this operation.
-        $query = $this->newBaseQuery();
-
-        return $query->query($sql, $bindings);
-    }
-
-    /**
      * Checks whether a field/value pair exists within the table.
      *
      * @param string $field The field to search for.
@@ -411,11 +369,6 @@ class Builder
         return false;
     }
 
-    public function addTablePrefix($values, $tableFieldMix = true)
-    {
-        return $this->query->addTablePrefix($values, $tableFieldMix);
-    }
-
     //--------------------------------------------------------------------
     // Magic Methods
     //--------------------------------------------------------------------
@@ -429,9 +382,9 @@ class Builder
      */
     public function __call($method, $parameters)
     {
-        call_user_func_array(array($this->query, $method), $parameters);
+        $result = call_user_func_array(array($this->query, $method), $parameters);
 
-        return $this;
+        return in_array($method, $this->passthru) ? $result : $this;
     }
 
 }

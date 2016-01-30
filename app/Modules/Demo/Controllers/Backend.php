@@ -31,7 +31,7 @@ class Backend extends BaseController
 {
     protected $template = 'Backend';
 
-    protected $layout = 'default';
+    protected $layout = 'demos';
 
     private $model;
 
@@ -68,14 +68,26 @@ class Backend extends BaseController
     public function index()
     {
         //
-        $message = '<h3><strong>'.__d('demo', 'Details about Model').'</strong></h3><br>';
+        $message = '
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Details about Model').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $message .= Highlighter::parse('var_export($this->model->getObjectVariables(), true);', true);
         $message .= '<pre>'. var_export($this->model->getObjectVars(), true).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Finding Records').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Finding Records').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $result = $this->model->find(1);
@@ -114,7 +126,14 @@ class Backend extends BaseController
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Creating Records').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Creating Records').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $user = new User();
@@ -147,7 +166,14 @@ Dumper::dumpObject(\$user2);
         $message .= '<pre>'. Dumper::dumpObject($user2).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Modifying Records').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Modifying Records').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $user->email = 'modified@novaframework.dev';
@@ -174,7 +200,14 @@ Dumper::dumpObject(\$user2);
         $message .= '<pre>'. Dumper::dumpObject($user2).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Deleting Records').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Deleting Records').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $result = $user->delete();
@@ -195,7 +228,14 @@ var_dump(\$result);
         $message .= '<pre>'. Dumper::dumpObjectArray($result).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Relations: hasOne').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Relations: hasOne').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $user = $this->model->findBy('username', 'marcus');
@@ -221,7 +261,14 @@ Dumper::dumpObject(\$profile->user);
         $message .= '<pre>'. Dumper::dumpObject($profile->user).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Relations: belongsTo').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Relations: belongsTo').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $user = $this->model->findBy('username', 'marcus');
@@ -270,7 +317,14 @@ Dumper::dumpObjectArray(\$author->posts);
         $message .= '<pre>'. Dumper::dumpObjectArray($author->posts).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Relations: hasMany').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Relations: hasMany').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $user = $this->model->findBy('username', 'marcus');
@@ -291,7 +345,14 @@ Dumper::dumpObjectArray(\$posts);
         $message .= '<pre>'. Dumper::dumpObjectArray($posts).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Relations: belongsToMany').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $student = Student::find(1);
@@ -340,7 +401,14 @@ Dumper::dumpObjectArray(\$course->students);
         $message .= '<pre>'. Dumper::dumpObjectArray($course->students).'</pre><br>';
 
         //
-        $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany, operating with the Pivot').'</strong></h3><br>';
+        $message .= '
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">'.__d('demo', 'Relations: belongsToMany, operating with the Pivot').'</h3>
+            </div>
+            <div class="box-body">';
 
         //
         $course = Course::find(2);
@@ -441,6 +509,10 @@ Dumper::dumpObjectArray(\$students);
         $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($sids, true).'</pre>';
         $message .= '<pre>'. Dumper::dumpObjectArray($students).'</pre><br>';
+
+        $message .= '
+            </div>
+        </div>';
 
         // Setup the View variables.
         $this->title(__d('demo', 'ORM - Object Relational Model'));

@@ -1,3 +1,12 @@
+<?php
+/**
+ * Backend Default Layout
+ */
+
+use Nova\Helpers\Assets;
+use Nova\Helpers\Profiler;
+
+?>
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -5,31 +14,50 @@ scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Starter</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.5 -->
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-        page. However, you can choose any other skin. Make sure you
-        apply the skin class to the body tag so the changes take effect.
-  -->
-  <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <?php
+    // Add Controller specific data.
+    if (is_array($headerMetaData)) {
+        foreach($headerMetaData as $str) {
+            echo $str;
+        }
+    }
+    ?>
+    <title><?= $title.' - '.SITE_TITLE; ?></title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <?php
+    Assets::css(array(
+        // Bootstrap 3.3.5
+        site_url('templates/backend/assets/bootstrap/css/bootstrap.min.css'),
+        // Font Awesome
+        'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css',
+        // Ionicons
+        'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css',
+        // Theme style
+        site_url('templates/backend/assets/dist/css/AdminLTE.min.css'),
+        // AdminLTE Skins. We have chosen the skin-blue for this starter page. However, you can choose
+        // any other skin. Make sure you apply the skin class to the body tag so the changes take effect.
+        site_url('templates/backend/assets/dist/css/skins/skin-blue.min.css')
+    ));
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
+    //Add Controller specific CSS files.
+    Assets::css($headerCSSheets);
+
+    Assets::js(array(
+        '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
+    ));
+
+    //Add Controller specific JS files.
+    Assets::js($headerJScripts);
+    ?>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -60,9 +88,9 @@ desired effect
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>LT</span>
+      <span class="logo-mini"><b>A</b>DM</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>LTE</span>
+      <span class="logo-lg"><b>Administration</b></span>
     </a>
 
     <!-- Header Navbar -->
@@ -90,7 +118,7 @@ desired effect
                     <a href="#">
                       <div class="pull-left">
                         <!-- User Image -->
-                        <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="<?= site_url('templates/backend/assets/dist/img/user2-160x160.jpg'); ?>" class="img-circle" alt="User Image">
                       </div>
                       <!-- Message title and timestamp -->
                       <h4>
@@ -174,14 +202,14 @@ desired effect
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <img src="<?= site_url('templates/backend/assets/dist/img/user2-160x160.jpg'); ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs">Alexander Pierce</span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="<?= site_url('templates/backend/assets/dist/img/user2-160x160.jpg'); ?>" class="img-circle" alt="User Image">
 
                 <p>
                   Alexander Pierce - Web Developer
@@ -231,7 +259,7 @@ desired effect
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="<?= site_url('templates/backend/assets/dist/img/user2-160x160.jpg'); ?>" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p>Alexander Pierce</p>
@@ -276,8 +304,7 @@ desired effect
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Page Header
-        <small>Optional description</small>
+        <?= $title ?>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
@@ -289,6 +316,7 @@ desired effect
     <section class="content">
 
       <!-- Your Page Content Here -->
+      <?= $content; ?>
 
     </section>
     <!-- /.content -->
@@ -299,10 +327,12 @@ desired effect
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      Anything you want
+      <?php if(ENVIRONMENT == 'development') { ?>
+      <small><?= Profiler::report(); ?></small>
+      <?php } ?>
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.simplemvcframework.com/" target="_blank"><b>Nova Framework</b></a></strong>
   </footer>
 
   <!-- Control Sidebar -->
@@ -383,14 +413,16 @@ desired effect
 <!-- ./wrapper -->
 
 <!-- REQUIRED JS SCRIPTS -->
+<?php
+Assets::js(array(
+    site_url('templates/backend/assets/plugins/jQuery/jQuery-2.1.4.min.js'),
+    site_url('templates/backend/assets/bootstrap/js/bootstrap.min.js'),
+    site_url('templates/backend/assets/dist/js/app.min.js'),
+));
 
-<!-- jQuery 2.1.4 -->
-<script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
-<!-- Bootstrap 3.3.5 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/app.min.js"></script>
-
+//Add Controller specific JS files.
+Assets::js($footerJScripts);
+?>
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. Slimscroll is required when using the

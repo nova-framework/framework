@@ -66,21 +66,14 @@ class Builder
 
     public function __construct(Model $model, $connection = null)
     {
-        $this->table = $model->getTable();
-
-        $this->primaryKey = $model->getKeyName();
-
-        // Setup the parent Model.
-        $this->model = $model;
-
         // Setup the Connection name.
         $this->connection = ($connection !== null) ? $connection : $model->getConnection();
 
         // Setup the Connection instance.
         $this->db = Database::getConnection($this->connection);
 
-        // Setup the inner Query Builder instance.
-        $this->query = $this->newBaseQuery();
+        // Setup the parent Model.
+        $this->model = $model;
 
         // Finally, we initialize the Builder instance.
         $this->initialize();
@@ -88,10 +81,18 @@ class Builder
 
     protected function initialize()
     {
-        $fields = $this->model->getTableFields();
+        // Prepare the Table and Primary Key information from the Model.
+        $this->table = $this->model->getTable();
+
+        $this->primaryKey = $this->model->getKeyName();
+
+        // Setup the inner Query Builder instance.
+        $this->query = $this->newBaseQuery();
+
+        // If the Fields are specified directly into Model, just use them and quit.
+        $fields = $this->model->getFields();
 
         if(! empty($fields)) {
-            // The fields are specified by the programmer, directly into Model.
             $this->fields = $fields;
 
             return;
@@ -100,23 +101,20 @@ class Builder
         // Prepare the Cache token.
         $token = $this->connection .'_' .$this->table;
 
+        // Check if the fields are already cached by a previous Builder instance.
         if($this->hasCached($token)) {
-            // The fields are already cached by a previous Builder instance.
             $this->fields = $this->getCache($token);
-
-            return;
         }
+        // Get the Fields directly from the database connection, then cache them.
+        else {
+            $table = $this->query->addTablePrefix($this->table, false);
 
-        $table = $this->query->addTablePrefix($this->table, false);
+            $fields = $this->db->getTableFields($table);
 
-        // Get the Table fields directly from Connection instance.
-        $fields = $this->db->getTableFields($table);
+            $this->fields = array_keys($fields);
 
-        // We use only the keys of Table information array.
-        $this->fields = array_keys($fields);
-
-        // Cache the Table fields for the further use.
-        $this->setCache($token, $this->fields);
+            $this->setCache($token, $this->fields);
+        }
     }
 
     public function getTable()
@@ -129,7 +127,7 @@ class Builder
         return $this->query->addTablePrefix($this->table);
     }
 
-    public function getTableFields()
+    public function getFields()
     {
         return $this->fields;
     }
@@ -159,10 +157,6 @@ class Builder
         return isset(self::$cache[$token]) ? self::$cache[$token] : null;
     }
 
-    //--------------------------------------------------------------------
-    // Query Builder Methods
-    //--------------------------------------------------------------------
-
     public function newBaseQuery()
     {
         $table = $this->getTable();
@@ -175,6 +169,24 @@ class Builder
     public function getBaseQuery()
     {
         return $this->query;
+    }
+
+    //--------------------------------------------------------------------
+    // Magic Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        $result = call_user_func_array(array($this->query, $method), $parameters);
+
+        return in_array($method, $this->passthru) ? $result : $this;
     }
 
     //--------------------------------------------------------------------
@@ -336,10 +348,6 @@ class Builder
         return $query->count();
     }
 
-    //--------------------------------------------------------------------
-    // Utility Methods
-    //--------------------------------------------------------------------
-
     /**
      * Checks whether a field/value pair exists within the table.
      *
@@ -368,23 +376,4 @@ class Builder
 
         return false;
     }
-
-    //--------------------------------------------------------------------
-    // Magic Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        $result = call_user_func_array(array($this->query, $method), $parameters);
-
-        return in_array($method, $this->passthru) ? $result : $this;
-    }
-
 }

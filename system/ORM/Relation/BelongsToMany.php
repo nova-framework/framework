@@ -136,22 +136,6 @@ class BelongsToMany extends Relation
         return $result;
     }
 
-    /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        if(in_array($method, $this->validQueryCalls)) {
-            $this->query = call_user_func_array(array($this->query, $method), $parameters);
-
-            return $this;
-        }
-    }
-
     public function attach($id, array $attributes = array())
     {
         $query = $this->pivot->newBuilder();

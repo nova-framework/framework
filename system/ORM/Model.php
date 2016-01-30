@@ -154,7 +154,7 @@ class Model
         return $this->className;
     }
 
-    public function getTableFields()
+    public function getFields()
     {
         return $this->fields;
     }
@@ -481,6 +481,44 @@ class Model
         );
     }
 
+    public function newBuilder()
+    {
+        return new Builder($this, $this->connection);
+    }
+
+    /**
+     * Create a new pivot model instance.
+     *
+     * @param  \Nova\ORM\Model  $parent
+     * @param  array  $attributes
+     * @param  string  $table
+     * @param  bool  $exists
+     * @return \Nova\ORM\\Relation\Pivot
+     */
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        return new Pivot($parent, $attributes, $table, $exists);
+    }
+
+    //--------------------------------------------------------------------
+    // Overwritable Methods
+    //--------------------------------------------------------------------
+
+    protected function afterLoad()
+    {
+        return true;
+    }
+
+    protected function beforeSave()
+    {
+        return true;
+    }
+
+    protected function beforeDelete()
+    {
+        return true;
+    }
+
     //--------------------------------------------------------------------
     // Magic Methods
     //--------------------------------------------------------------------
@@ -615,33 +653,6 @@ class Model
     }
 
     //--------------------------------------------------------------------
-    // Pivot Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Create a new pivot model instance.
-     *
-     * @param  \Nova\ORM\Model  $parent
-     * @param  array  $attributes
-     * @param  string  $table
-     * @param  bool  $exists
-     * @return \Nova\ORM\\Relation\Pivot
-     */
-    public function newPivot(Model $parent, array $attributes, $table, $exists)
-    {
-        return new Pivot($parent, $attributes, $table, $exists);
-    }
-
-    //--------------------------------------------------------------------
-    // Builder Methods
-    //--------------------------------------------------------------------
-
-    public function newBuilder()
-    {
-        return new Builder($this, $this->connection);
-    }
-
-    //--------------------------------------------------------------------
     // CRUD Methods
     //--------------------------------------------------------------------
 
@@ -725,7 +736,7 @@ class Model
     {
         $data = array();
 
-        $fields = ! empty($this->fields) ? $this->fields : $builder->getTableFields();
+        $fields = ! empty($this->fields) ? $this->fields : $builder->getFields();
 
         // Remove any protected attributes; the primaryKey is skipped by default.
         $skippedFields = array_merge((array) $this->primaryKey, $this->protectedFields);
@@ -803,7 +814,7 @@ class Model
         } else {
             $builder = $this->newBuilder();
 
-            $fields = $builder->getTableFields();
+            $fields = $builder->getFields();
         }
 
         // There we store the parsed output.
@@ -840,7 +851,7 @@ class Model
             foreach ($this->relations as $name) {
                 $relation = call_user_func(array($this, $name));
 
-                $result .= "\t" .ucfirst($relation->type())  .': ' .$name .' -> ' .$relation->getClassName() . "\n";
+                $result .= "\t" .ucfirst($relation->type())  .': ' .$name .' -> ' .$relation->getClass() . "\n";
             }
         }
 
@@ -850,25 +861,6 @@ class Model
     public function getObjectVars()
     {
         return get_object_vars($this);
-    }
-
-    //--------------------------------------------------------------------
-    // Overwritable Methods
-    //--------------------------------------------------------------------
-
-    protected function afterLoad()
-    {
-        return true;
-    }
-
-    protected function beforeSave()
-    {
-        return true;
-    }
-
-    protected function beforeDelete()
-    {
-        return true;
     }
 
 }

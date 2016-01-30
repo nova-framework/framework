@@ -14,27 +14,6 @@ use Nova\ORM\Model;
 
 abstract class Relation
 {
-    protected $validQueryCalls = array(
-        'where',
-        'orWhere',
-        'whereNot',
-        'orWhereNot',
-        'whereIn',
-        'orWhereIn',
-        'orWhereNotIn',
-        'whereBetween',
-        'orWhereBetween',
-        'whereNull',
-        'orWhereNull',
-        'whereNotNull',
-        'orWhereNotNull',
-        'having',
-        'orHaving',
-        'orderBy',
-        'limit',
-        'offset'
-    );
-
     /**
      * The related model class name.
      *
@@ -63,6 +42,33 @@ abstract class Relation
      */
     protected $query;
 
+    /**
+     * The methods that should be returned from Query Builder.
+     *
+     * @var array
+     */
+    protected $passthru = array(
+        'find',
+        'findBy',
+        'findMany',
+        'findAll',
+        'first',
+        'insert',
+        'insertIgnore',
+        'replace',
+        'update',
+        'updateBy',
+        'updateOrInsert',
+        'delete',
+        'deleteBy',
+        'count',
+        'countBy',
+        'countAll',
+        'isUnique',
+        'query',
+        'addTablePrefix'
+    );
+
 
     public function __construct($className, Model $parent)
     {
@@ -85,7 +91,21 @@ abstract class Relation
         $this->query = $this->related->newBuilder();
     }
 
-    public function getClassName()
+    /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        $result = call_user_func_array(array($this->query, $method), $parameters);
+
+        return in_array($method, $this->passthru) ? $result : $this;
+    }
+
+    public function getClass()
     {
         return $this->className;
     }
@@ -97,7 +117,7 @@ abstract class Relation
      *
      * @return \Nova\ORM\Builder
      */
-    public function getQuery()
+    public function getBuilder()
     {
         return $this->query;
     }

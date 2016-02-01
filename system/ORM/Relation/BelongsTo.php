@@ -15,25 +15,19 @@ use Nova\ORM\Relation;
 
 class BelongsTo extends Relation
 {
-    protected $primaryKey;
-
-    protected $primaryId;
+    protected $foreignKey;
 
 
-    public function __construct($className, Model $model, $otherKey = null)
+    public function __construct($className, Model $model, $foreignKey = null)
     {
         parent::__construct($className, $model);
 
-        // Process the otherKey.
-        if($otherKey === null) {
-            $otherKey = $this->related->getForeignKey();
+        // Process the foreignKey.
+        if($foreignKey === null) {
+            $this->foreignKey = $this->related->getForeignKey();
+        } else {
+            $this->foreignKey = $foreignKey;
         }
-
-        // The primaryKey is associated to target Model.
-        $this->primaryKey = $this->related->getKeyName();
-
-        // The otherKey is associated to target Model.
-        $this->primaryId = $model->getAttribute($otherKey);
     }
 
     public function type()
@@ -43,7 +37,10 @@ class BelongsTo extends Relation
 
     public function get()
     {
-        return $this->query->findBy($this->primaryKey, $this->primaryId);
+        return $this->query->findBy(
+            $this->related->getKeyName(),
+            $this->parent->getAttribute($this->foreignKey)
+        );
     }
 
 }

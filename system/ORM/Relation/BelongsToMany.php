@@ -92,23 +92,14 @@ class BelongsToMany extends Relation
     public function get()
     {
         $table = $this->related->getTable();
-        $primaryKey = $this->related->getKeyName();
 
-        $foreignKey = $this->foreignKey;
-
-        //
         $pivotTable = $this->pivot->getTable();
-
-        //
-        $otherKey = $this->otherKey;
-
-        $otherId = $this->parent->getKey();
 
         //
         $query = $this->query->getBaseQuery();
 
-        $tableKey = $query->addTablePrefix($table .'.' .$primaryKey);
-        $pivotKey = $query->addTablePrefix($pivotTable .'.' .$foreignKey);
+        $tableKey = $query->addTablePrefix($table .'.' .$this->related->getKeyName());
+        $pivotKey = $query->addTablePrefix($pivotTable .'.' .$this->foreignKey);
 
         // Get the pivot's Raw command.
         $pivotRaw = $query->raw($tableKey .' = ' .$pivotKey);
@@ -116,9 +107,8 @@ class BelongsToMany extends Relation
         $data = $query
             ->from($pivotTable)
             ->where($pivotRaw)
-            ->where($pivotTable .'.' .$otherKey, $otherId)
+            ->where($pivotTable .'.' .$this->otherKey, $this->parent->getKey())
             ->select($table .'.*')
-            ->asAssoc()
             ->get();
 
         if($data === null) {

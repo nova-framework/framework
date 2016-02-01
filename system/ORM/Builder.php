@@ -159,11 +159,9 @@ class Builder
 
     public function newBaseQuery()
     {
-        $table = $this->getTable();
-
         $query = $this->db->getQueryBuilder();
 
-        return $query->table($table);
+        return $query->table($this->table)->asAssoc();
     }
 
     public function getBaseQuery()
@@ -201,7 +199,7 @@ class Builder
         // Get the field name, using the primaryKey as default.
         $fieldName = ($fieldName !== null) ? $fieldName : $this->primaryKey;
 
-        $result = $query->where($fieldName, $id)->asAssoc()->first();
+        $result = $query->where($fieldName, $id)->first();
 
         if($result !== false) {
             return $this->model->newFromBuilder($result);
@@ -220,7 +218,7 @@ class Builder
 
         $query = call_user_func_array(array($this->query, 'where'), $params);
 
-        $result = $query->asAssoc()->first();
+        $result = $query->first();
 
         if($result !== false) {
             return $this->model->newFromBuilder($result);
@@ -229,11 +227,15 @@ class Builder
         return false;
     }
 
-    public function findMany($values)
+    public function findMany(array $values)
     {
+        if (empty($values)) {
+            throw new \UnexpectedValueException(__d('system', 'Invalid parameters'));
+        }
+
         $query = $this->newBaseQuery();
 
-        $data = $query->asAssoc()->findMany($this->primaryKey, $values);
+        $data = $query->findMany($this->primaryKey, $values);
 
         if($data === false) {
             return false;
@@ -260,7 +262,7 @@ class Builder
             $query = $this->query;
         }
 
-        $data = $query->asAssoc()->get();
+        $data = $query->get();
 
         if($data === false) {
             return false;
@@ -278,7 +280,7 @@ class Builder
 
     public function first()
     {
-        $data = $this->query->asAssoc()->first();
+        $data = $this->query->first();
 
         if($data !== false) {
             return $this->model->newFromBuilder($data);

@@ -693,32 +693,28 @@ class Model
         // Prepare the Data.
         $data = $this->prepareData($builder);
 
+        $result = false;
+
         if (! $this->exists) {
             // We are into INSERT mode.
             $insertId = $builder->insert($data);
 
             if($insertId === false) {
-                return false;
+                // Mark the instance as existing and setup it primary key value.
+                $this->exists = true;
+
+                $this->setAttribute($this->primaryKey, $insertId);
+
+                $result = true;
             }
+        } else if($this->isDirty()) {
+            // When the Model exists and it is dirty, we are into UPDATE mode.
+            $result = $builder->updateBy($this->primaryKey, $this->getKey(), $data);
 
-            // Mark the instance as existing and setup it primary key value.
-            $this->exists = true;
-
-            $this->setAttribute($this->primaryKey, $insertId);
-
-            // Sync the original attributes.
-            $this->syncOriginal();
-
-            return true;
-        } else if(! $this->isDirty()) {
-            // When the Model exists and it is not dirty, there is nothing to do.
-            return false;
+            $result = ($result !== false) ? true : $result;
         }
 
-        // We are into UPDATE mode.
-        $result = $builder->updateBy($this->primaryKey, $this->getKey(), $data);
-
-        if($result !== false) {
+        if($result) {
             // Sync the original attributes.
             $this->syncOriginal();
 

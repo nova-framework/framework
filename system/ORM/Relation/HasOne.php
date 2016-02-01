@@ -37,9 +37,8 @@ class HasOne extends Relation
 
     public function get()
     {
-        return $this->query->findBy(
-            $this->foreignKey,
-            $this->parent->getKey()
-        );
+        $foreignId = $this->parent->getKey();
+
+        return $this->query->findBy($this->foreignKey, $foreignId);
     }
 }

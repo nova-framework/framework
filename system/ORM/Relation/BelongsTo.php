@@ -37,10 +37,9 @@ class BelongsTo extends Relation
 
     public function get()
     {
-        return $this->query->findBy(
-            $this->related->getKeyName(),
-            $this->parent->getAttribute($this->foreignKey)
-        );
+        $otherId = $this->parent->getAttribute($this->foreignKey);
+
+        return $this->query->findBy($this->related->getKeyName(), $otherId);
     }
 
 }

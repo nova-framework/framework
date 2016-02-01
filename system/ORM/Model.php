@@ -148,11 +148,6 @@ class Model
             $this->table = implode('_', $segments);
         }
 
-        // Prepare the serialized fields.
-        if(! empty($this->serialize) && ! is_array($this->serialize)) {
-            $this->serialize = preg_split("/\s*,\s*/", $this->serialize);
-        }
-
         // Init the Model; exists when it has attributes loaded (via class fetching).
         if(! empty($this->attributes)) {
             $this->initObject(true);
@@ -215,27 +210,24 @@ class Model
         $this->exists = $exists;
 
         if($this->exist) {
-            // Unserialize the fields.
-            $this->unserializeFields();
+            // Unserialize the specified fields into 'serialize'.
+            foreach ((array) $this->serialize as $fieldName) {
+                if (! array_key_exists($fieldName, $this->attributes)) {
+                    continue;
+                }
+
+                $fieldValue = $this->attributes[$fieldName];
+
+                if(! empty($fieldValue)) {
+                    $this->attributes[$fieldName] = unserialize($fieldValue);
+                }
+            }
 
             // Sync the original attributes.
             $this->syncOriginal();
         }
 
         $this->afterLoad();
-    }
-
-    private function unserializeFields()
-    {
-        foreach ((array) $this->serialize as $field) {
-            if (isset($this->attributes[$field])) {
-                $value = $this->attributes[$field];
-
-                if(! empty($value)) {
-                    $this->attributes[$field] = unserialize($value);
-                }
-            }
-        }
     }
 
     public function fill(array $attributes)

@@ -76,7 +76,14 @@ class Backend extends BaseController
             <div class="box-body">';
 
         //
-        $message .= Highlighter::parse('var_export($this->model->getObjectVariables(), true);', true);
+        $text = '
+Dumper::dumpObject($this->model);
+
+var_export($this->model->getObjectVariables(), true);
+        ';
+
+        $message .= Highlighter::parse($text, true);
+        $message .= '<pre>'. Dumper::dumpObject($this->model).'</pre>';
         $message .= '<pre>'. var_export($this->model->getObjectVars(), true).'</pre><br>';
 
         //
@@ -141,29 +148,35 @@ class Backend extends BaseController
         $user->username = 'virgil';
         $user->email = 'virgil@novaframework.dev';
 
+        $user2 = clone $user;
+
         $result = $user->save();
 
-        $user2 = User::find($user->id);
+        $user3 = User::find($user->id);
 
         $text = "
 \$user = new User();
 
-\$user->username = 'Virgil';
+\$user->username = 'virgil';
 \$user->email = 'virgil@novaframework.dev';
+
+\$user2 = clone \$user;
 
 \$result = \$user->save();
 
-\$user2 = User::find(\$user->id);
+\$user3 = User::find(\$user->id);
 
 var_dump(\$result);
-Dumper::dumpObject(\$user);
 Dumper::dumpObject(\$user2);
+Dumper::dumpObject(\$user);
+Dumper::dumpObject(\$user3);
         ";
 
         $message .= Highlighter::parse($text);
         $message .= '<pre>'. var_export($result, true).'</pre>';
+        $message .= '<pre>'. Dumper::dumpObject($user2).'</pre>';
         $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
-        $message .= '<pre>'. Dumper::dumpObject($user2).'</pre><br>';
+        $message .= '<pre>'. Dumper::dumpObject($user3).'</pre><br>';
 
         //
         $message .= '
@@ -210,16 +223,18 @@ Dumper::dumpObject(\$user2);
             <div class="box-body">';
 
         //
-        $result = $user->delete();
+        $result = $user->destroy();
 
         $text = "
-\$result = \$user->delete();
+\$result = \$user->destroy();
 
 var_dump(\$result);
+Dumper::dumpObject(\$user);
         ";
 
         $message .= Highlighter::parse($text);
-        $message .= '<pre>'. var_export($result, true).'</pre><br>';
+        $message .= '<pre>'. var_export($result, true).'</pre>';
+        $message .= '<pre>'.Dumper::dumpObject($user).'</pre><br>';
 
         //
         $result = $this->model->findAll();

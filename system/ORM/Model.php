@@ -215,6 +215,7 @@ class Model
         $this->exists = $exists;
 
         if($this->exist) {
+            // Unserialize the fields.
             $this->unserializeFields();
 
             // Sync the original attributes.
@@ -546,7 +547,7 @@ class Model
         return true;
     }
 
-    protected function beforeDelete()
+    protected function beforeDestroy()
     {
         return true;
     }
@@ -727,19 +728,24 @@ class Model
         return false;
     }
 
-    public function delete()
+    public function destroy()
     {
-        if (! $this->exists || ! $this->beforeDelete()) {
+        if (! $this->exists || ! $this->beforeDestroy()) {
             return false;
         }
 
         // Get a new Builder instance.
         $builder = $this->newBuilder();
 
-        $result = $builder->deleteBy($this->primaryKey, $this->getKey());
+        $key = $this->primaryKey;
+
+        $result = $builder->deleteBy($key, $this->getKey());
 
         if($result !== false) {
             $this->exists = false;
+
+            // There is no valid primaryKey anymore.
+            unset($this->attributes[$key]);
 
             return true;
         }
@@ -775,7 +781,7 @@ class Model
 
             $value = $this->attributes[$fieldName];
 
-            if(in_array($fieldName, $this->serialize) && ! empty($value)) {
+            if(in_array($fieldName, (array) $this->serialize) && ! empty($value)) {
                 $data[$fieldName] = serialize($value);
             } else {
                 $data[$fieldName] = $value;
@@ -855,9 +861,9 @@ class Model
         $result = '';
 
         // Support for checking if an object is empty
-        if (! $this->exists) {
-            $isEmpty = true;
+        $isEmpty = true;
 
+        if (! $this->exists) {
             foreach ($fields as $fieldName) {
                 if (isset($this->attributes[$fieldName])) {
                     $isEmpty = false;
@@ -865,18 +871,18 @@ class Model
                     break;
                 }
             }
-
-            if ($isEmpty) {
-                return $result;
-            }
         }
 
-        $result = $this->className . " #" . $this->getKey() . "\n";
+        $result = $this->className .(! empty($this->getKey()) ? " #" . $this->getKey() : "") . "\n";
 
         $result .= "\tExists: " . ($this->exists ? "YES" : "NO") . "\n\n";
 
+        if (! $this->exists && $isEmpty) {
+            return $result;
+        }
+
         foreach ($fields as $fieldName) {
-            $result .= "\t" . Inflector::classify($fieldName) . ': ' .$this->getAttribute($fieldName) . "\n";
+            $result .= "\t" . Inflector::classify($fieldName) . ': ' .var_export($this->getAttribute($fieldName), true) . "\n";
         }
 
         if(! empty($this->relations)) {

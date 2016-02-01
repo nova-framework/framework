@@ -45,18 +45,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
     //Add Controller specific CSS files.
     Assets::css($headerCSSheets);
 
-    Assets::js(array(
-        '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js',
-    ));
-
     //Add Controller specific JS files.
     Assets::js($headerJScripts);
     ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <?php
+    Assets::css(array(
+        'https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js',
+        'https://oss.maxcdn.com/respond/1.4.2/respond.min.js'
+    ));
+    ?>
     <![endif]-->
 </head>
 <!--
@@ -134,7 +134,7 @@ desired effect
         <?= $title ?>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Demos</a></li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">Backend</li>
       </ol>
     </section>

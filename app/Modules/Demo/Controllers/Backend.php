@@ -515,7 +515,7 @@ Dumper::dumpObjectArray(\$students);
         </div>';
 
         // Setup the View variables.
-        $this->title(__d('demo', 'ORM - Object Relational Model'));
+        $this->title(__d('demo', 'Backend - Object Relational Model'));
 
         $this->set('message', $message);
     }

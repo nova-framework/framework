@@ -117,6 +117,11 @@ class Model
      */
     protected $protectedFields = array();
 
+    /**
+     * Serialized attributes.
+     */
+    protected $serialize = array();
+
     /*
      * Constructor
      */
@@ -132,7 +137,7 @@ class Model
             // Get the Class name without namespace part.
             $className = class_basename($this->className);
 
-            // Explode the tableized baseName into segments (delimited by '_').
+            // Explode the tableized className into segments delimited by '_'.
             $segments = explode('_', Inflector::tableize($className));
 
             // Replace the last segment with its pluralized variant.
@@ -141,6 +146,11 @@ class Model
             // Finally, we recombine the segments, obtaining something like:
             // 'UserProfile' -> 'user_profiles'
             $this->table = implode('_', $segments);
+        }
+
+        // Prepare the serialized fields.
+        if(! empty($this->serialize) && ! is_array($this->serialize)) {
+            $this->serialize = preg_split("/\s*,\s*/", $this->serialize);
         }
 
         // Init the Model; exists when it has attributes loaded (via class fetching).
@@ -205,11 +215,26 @@ class Model
         $this->exists = $exists;
 
         if($this->exist) {
+            $this->unserializeFields();
+
             // Sync the original attributes.
             $this->syncOriginal();
         }
 
         $this->afterLoad();
+    }
+
+    private function unserializeFields()
+    {
+        foreach ((array) $this->serialize as $field) {
+            if (isset($this->attributes[$field])) {
+                $value = $this->attributes[$field];
+
+                if(! empty($value)) {
+                    $this->attributes[$field] = unserialize($value);
+                }
+            }
+        }
     }
 
     public function fill(array $attributes)
@@ -335,6 +360,13 @@ class Model
     public function getKeyName()
     {
         return $this->primaryKey;
+    }
+
+    public function getForeignKey()
+    {
+        $tableKey = Inflector::singularize($this->table);
+
+        return $tableKey .'_id';
     }
 
     public function setAttributes($attributes)
@@ -474,11 +506,11 @@ class Model
         $current = $this->attributes[$key];
         $original = $this->original[$key];
 
-        return (
-            is_numeric($current) &&
-            is_numeric($original) &&
-            (strcmp((string) $current, (string) $original) === 0)
-        );
+        if(is_numeric($current) && is_numeric($original)) {
+            return (strcmp((string) $current, (string) $original) === 0);
+        }
+
+        return false;
     }
 
     public function newBuilder()
@@ -568,8 +600,7 @@ class Model
         // If the name is of one of attributes, return the its Value.
         if (array_key_exists($name, $this->attributes)) {
             return $this->attributes[$name];
-        }
-        else if(! $this->exists) {
+        } else if(! $this->exists) {
             // No Relations can be called for the new Objects.
             return null;
         }
@@ -606,9 +637,9 @@ class Model
     // Relation Methods
     //--------------------------------------------------------------------
 
-    protected function belongsTo($className, $otherKey = null)
+    protected function belongsTo($className, $foreignKey = null)
     {
-        return new BelongsTo($className, $this, $otherKey);
+        return new BelongsTo($className, $this, $foreignKey);
     }
 
     protected function hasOne($className, $foreignKey = null)
@@ -626,13 +657,6 @@ class Model
         $joinTable = ($joinTable !== null) ? $joinTable : $this->joiningTable($className);
 
         return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
-    }
-
-    public function getForeignKey()
-    {
-        $tableKey = Inflector::singularize($this->table);
-
-        return $tableKey .'_id';
     }
 
     protected function joiningTable($className)
@@ -741,10 +765,20 @@ class Model
         // Remove any protected attributes; the primaryKey is skipped by default.
         $skippedFields = array_merge((array) $this->primaryKey, $this->protectedFields);
 
+        $fields = array_diff($fields, $skippedFields);
+
         // Walk over the defined Table Fields and prepare the data entries.
         foreach ($fields as $fieldName) {
-            if(! in_array($fieldName, $skippedFields) && array_key_exists($fieldName, $this->attributes)) {
-                $data[$fieldName] = $this->attributes[$fieldName];
+            if(! array_key_exists($fieldName, $this->attributes)) {
+                continue;
+            }
+
+            $value = $this->attributes[$fieldName];
+
+            if(in_array($fieldName, $this->serialize) && ! empty($value)) {
+                $data[$fieldName] = serialize($value);
+            } else {
+                $data[$fieldName] = $value;
             }
         }
 

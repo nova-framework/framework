@@ -699,7 +699,7 @@ class Model
             // We are into INSERT mode.
             $insertId = $builder->insert($data);
 
-            if($insertId === false) {
+            if($insertId !== false) {
                 // Mark the instance as existing and setup it primary key value.
                 $this->exists = true;
 

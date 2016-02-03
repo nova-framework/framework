@@ -12,7 +12,7 @@ namespace App\Modules\Demo\Controllers;
 use Nova\Core\View;
 use Nova\Database\Manager;
 use Nova\Database\Connection;
-use Nova\Database\Query;
+use Nova\QB;
 
 use App\Modules\Demo\Core\BaseController;
 use App\Modules\Demo\Helpers\TextHighlight as Highlighter;
@@ -277,12 +277,12 @@ var_export($data, true);
         //
         $queryBuilder = $this->db->getQueryBuilder();
 
-        $data = Query::table('users')->where('username', 'admin')->asAssoc()->first();
+        $data = QB::table('users')->where('username', 'admin')->asAssoc()->first();
 
         $text = "
 \$queryBuilder = \$this->db->getQueryBuilder();
 
-\$data = Query::table('users')->where('username', 'admin')->asAssoc()->first();
+\$data = QB::table('users')->where('username', 'admin')->asAssoc()->first();
 
 var_export(\$data, true);
         ";
@@ -291,10 +291,10 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = Query::table('users')->where('username', '=', 'admin')->first();
+        $data = QB::table('users')->where('username', '=', 'admin')->first();
 
         $text = "
-\$data = Query::table('users')->where('username', '=', 'admin')->first();
+\$data = QB::table('users')->where('username', '=', 'admin')->first();
 
 var_export(\$data, true);
         ";
@@ -303,10 +303,10 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = Query::table('users')->whereIn('id', array(1, 3))->get();
+        $data = QB::table('users')->whereIn('id', array(1, 3))->get();
 
         $text = "
-\$data = Query::table('users')->whereIn('id', array(1, 2, 4))->first();
+\$data = QB::table('users')->whereIn('id', array(1, 2, 4))->first();
 
 var_export(\$data, true);
         ";
@@ -315,10 +315,10 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = Query::table('users')->orderBy('id', 'DESC')->asAssoc()->get();
+        $data = QB::table('users')->orderBy('id', 'DESC')->asAssoc()->get();
 
         $text = "
-\$data = Query::table('users')->orderBy('id', 'DESC')->asAssoc()->get();
+\$data = QB::table('users')->orderBy('id', 'DESC')->asAssoc()->get();
 
 var_export(\$data, true);
         ";
@@ -327,14 +327,14 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $data = Query::table('users')
+        $data = QB::table('users')
             ->where('username', '!=', 'admin')
             ->orderBy('id', 'ASC')
             ->limit(2)
             ->get();
 
         $text = "
-\$data = Query::table('users')
+\$data = QB::table('users')
     ->where('username', '!=', 'admin')
     ->orderBy('id', 'DESC')
     ->limit(2)
@@ -352,7 +352,7 @@ var_export(\$data, true);
             'email'    => 'virgil@novaframework.dev'
         );
 
-        $userId = Query::table('users')->insert($userInfo);
+        $userId = QB::table('users')->insert($userInfo);
 
         $text = "
 \$userInfo = array(
@@ -360,7 +360,7 @@ var_export(\$data, true);
     'email'    => 'virgil@novaframework.dev'
 );
 
-\$userId = Query::table('users')->insert(\$userInfo);
+\$userId = QB::table('users')->insert(\$userInfo);
 
 var_export(\$userId, true);
         ";
@@ -369,10 +369,10 @@ var_export(\$userId, true);
         $message .= '<pre>'.var_export($userId, true).'</pre><br>';
 
         //
-        $data = Query::table('users')->find($userId);
+        $data = QB::table('users')->find($userId);
 
         $text = "
-\$data = Query::table('users')->find(\$userId);
+\$data = QB::table('users')->find(\$userId);
 
 var_export(\$data, true);
         ";
@@ -385,14 +385,14 @@ var_export(\$data, true);
             'email' => 'modified@novaframework.dev'
         );
 
-        $retval = Query::table('users')->where('id', $userId)->update($userInfo);
+        $retval = QB::table('users')->where('id', $userId)->update($userInfo);
 
         $text = "
 \$userInfo = array(
     'email'    => 'modified@novaframework.dev'
 );
 
-\$retval = Query::table('users')->where('id', \$userId)->update(\$userInfo);
+\$retval = QB::table('users')->where('id', \$userId)->update(\$userInfo);
 
 var_export(\$retval, true);
         ";
@@ -401,10 +401,10 @@ var_export(\$retval, true);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $data = Query::table('users')->where('id', $userId)->first();
+        $data = QB::table('users')->where('id', $userId)->first();
 
         $text = "
-\$data = Query::table('users')->where('id', \$userId)->first();
+\$data = QB::table('users')->where('id', \$userId)->first();
 
 var_export(\$data, true);
         ";
@@ -413,10 +413,10 @@ var_export(\$data, true);
         $message .= '<pre>'.var_export($data, true).'</pre><br>';
 
         //
-        $retval = Query::table('users')->where('id', '=', $userId)->delete();
+        $retval = QB::table('users')->where('id', '=', $userId)->delete();
 
         $text = "
-\$retval = Query::table('users')->where('username', '=', \$userId)->delete();
+\$retval = QB::table('users')->where('username', '=', \$userId)->delete();
 
 var_export(\$retval, true);
         ";
@@ -425,11 +425,11 @@ var_export(\$retval, true);
         $message .= '<pre>'.var_export($retval, true).'</pre><br>';
 
         //
-        $data = Query::table('users')->get();
+        $data = QB::table('users')->get();
 
         $text = "
 
-\$data = Query::table('users')->get();
+\$data = QB::table('users')->get();
 
 var_export(\$data, true);
         ";

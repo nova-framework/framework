@@ -61,7 +61,7 @@ class Database extends BaseController
         $data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array('username' => 'marcus'), array(\PDO::PARAM_STR), 'object');
 
         $text = '
-$data = $this->db->selectAll("SELECT * FROM \" .DB_PREFIX .\"users WHERE username != :username\", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), \'object\');
+$data = $this->db->selectAll("SELECT * FROM " .DB_PREFIX ."users WHERE username != :username", array(\'username\' => \'marcus\'), array(\PDO::PARAM_STR), \'object\');
 
 var_export($data, true);
         ';

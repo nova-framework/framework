@@ -13,6 +13,7 @@ use Nova\Database\Connection;
 use Nova\Config;
 
 use \PDO;
+use \PDOStatement;
 
 /**
  * PDOStatement decorator that logs when a PDOStatement is executed.

@@ -56,6 +56,12 @@ class SimpleCurl
     */
     public static function post($url, $fields = array())
     {
+        if (is_array($fields) && count($fields) > 0) {
+            $postFieldsString = http_build_query($fields, '', '&');
+        } else {
+            $postFieldsString = '';
+        }
+
         $ch = curl_init();
 
         $options = array(
@@ -63,7 +69,7 @@ class SimpleCurl
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_POSTFIELDS => $fields,
+            CURLOPT_POSTFIELDS => $postFieldsString,
             CURLOPT_POST => true,
             CURLOPT_USERAGENT => "SMVC Agent",
         );
@@ -86,7 +92,11 @@ class SimpleCurl
     */
     public static function put($url, $fields = array())
     {
-        $post_field_string = http_build_query($fields);
+        if (is_array($fields) && count($fields) > 0) {
+            $postFieldsString = http_build_query($fields, '', '&');
+        } else {
+            $postFieldsString = '';
+        }
         $ch = curl_init($url);
 
         $options = array(
@@ -94,7 +104,7 @@ class SimpleCurl
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_CUSTOMREQUEST => "PUT",
-            CURLOPT_POSTFIELDS => $post_field_string
+            CURLOPT_POSTFIELDS => $postFieldsString
             );
         curl_setopt_array($ch, $options);
 

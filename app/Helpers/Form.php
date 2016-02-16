@@ -5,7 +5,7 @@
  * @author David Carr - dave@daveismyname.com
  * @version 1.0
  * @date June 27, 2014
- * @date updated Sept 19, 2015
+ * @date updated Feb 15, 2016
  */
 
 namespace Helpers;
@@ -137,7 +137,7 @@ class Form
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
         $o .= ">\n";
-        $o .= "<option value=''>Select</option>\n";
+        $o .= (isset($params['placeholder'])) ? "<option value=''>{$params['placeholder']}</option>\n" : '';
         if (isset($params['data']) && is_array($params['data'])) {
             foreach ($params['data'] as $k => $v) {
                 if (isset($params['value']) && $params['value'] == $k) {
@@ -149,6 +149,23 @@ class Form
         }
         $o .= "</select>\n";
         return $o;
+    }
+    
+    /**
+     * @param array $params
+     * @param $min
+     * @param $max
+     * @return string
+     */
+    public static function selectQty($params = array(), $min, $max)
+    {
+        $data = range($min, $max);
+
+        $params['data'] = $data;
+
+        $html = self::select($params);
+
+        return $html;
     }
 
     /**
@@ -208,7 +225,11 @@ class Form
                 $o .= (isset($v['name']))           ? " name='{$v['name']}'"                            : '';
                 $o .= (isset($v['value']))          ? " value='{$v['value']}'"                          : '';
                 $o .= (isset($v['class']))          ? " class='{$v['class']}'"                          : '';
-                $o .= (isset($v['checked']))        ? " checked='checked'"                              : '';
+                
+                $o .= (isset($v['value']) &&
+                        isset($params['value'])  &&
+                        $v['value'] === $params['value'])        ? " checked='checked'"                   : '';
+                        
                 $o .= (isset($v['disabled']))       ? " disabled='{$v['disabled']}'"                    : '';
                 $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
                 $o .= " />\n";
@@ -278,6 +299,24 @@ class Form
         $o .= (isset($params['class']))     ? " class='{$params['class']}'"   : '';
         $o .= (isset($params['value']))     ? " value='{$params['value']}'"                     : '';
         $o .= " />\n";
+        return $o;
+    }
+    
+    /**
+     * @param array $params
+     * @return string
+     */
+    public static function itemWrapper($params = array())
+    {
+        $o = '<div';
+        $o .= (isset($params['class']))       ? " class='{$params['class']}' >"                : '>';
+        $o .= (isset($params['name']))        ? "<label for=\"{$params['name']}\">"            : '<label>';
+        $o .= (isset($params['label']))       ? $params['label'] . "</label>"                  : '</label>';
+        $o .= '<div>';
+        $o .= (isset($params['field']))       ? $params['field']                               : '';
+        $o .= '</div>';
+        $o .= "</div>\n";
+
         return $o;
     }
 }

@@ -111,7 +111,7 @@ class Date
      */
     public static function daysInMonth($month = 0, $year = '') {
         if ($month < 1 OR $month > 12) {
-            $month = date('m');
+            return(date('t'));
         }
         elseif (!is_numeric($year) OR strlen($year) !== 4) {
             $year = date('Y');

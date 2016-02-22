@@ -111,7 +111,7 @@ class Date
      */
     public static function daysInMonth($month = 0, $year = '') {
         if ($month < 1 OR $month > 12) {
-            return 0;
+            return date('t');
         }
         if (defined('CAL_GREGORIAN')) {
             return cal_days_in_month(CAL_GREGORIAN, $month, $year);

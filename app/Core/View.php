@@ -1,13 +1,13 @@
 <?php
 /**
- * View - load template pages
+ * View - load template pages.
  *
  * @author David Carr - dave@daveismyname.com
+ *
  * @version 2.2
  * @date June 27, 2014
  * @date updated Sept 19, 2015
  */
-
 namespace Core;
 
 /**
@@ -18,42 +18,42 @@ class View
     /**
      * @var array Array of HTTP headers
      */
-    private static $headers = array();
+    private static $headers = [];
 
     /**
      * Include template file.
      *
-     * @param  string $path  path to file from views folder
-     * @param  array  $data  array of data
-     * @param  array  $error array of errors
+     * @param string $path  path to file from views folder
+     * @param array  $data  array of data
+     * @param array  $error array of errors
      */
     public static function render($path, $data = false, $error = false)
     {
         self::sendHeaders();
-        
+
         require SMVC."app/views/$path.php";
     }
 
     /**
      * Include template file.
      *
-     * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
+     * @param string $path  path to file from Modules folder
+     * @param array  $data  array of data
+     * @param array  $error array of errors
      */
     public static function renderModule($path, $data = false, $error = false)
     {
         self::sendHeaders();
-        
+
         require SMVC."app/Modules/$path.php";
     }
 
     /**
      * Return absolute path to selected template directory.
      *
-     * @param  string  $path  path to file from views folder
-     * @param  array   $data  array of data
-     * @param  string  $custom path to template folder
+     * @param string $path   path to file from views folder
+     * @param array  $data   array of data
+     * @param string $custom path to template folder
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
@@ -65,7 +65,7 @@ class View
     /**
      * Add HTTP header to headers array.
      *
-     * @param  string  $header HTTP header text
+     * @param string $header HTTP header text
      */
     public function addHeader($header)
     {
@@ -77,13 +77,13 @@ class View
      *
      * @param array $headers
      */
-    public function addHeaders(array $headers = array())
+    public function addHeaders(array $headers = [])
     {
         self::$headers = array_merge(self::$headers, $headers);
     }
-    
+
     /**
-     * Send headers
+     * Send headers.
      */
     public static function sendHeaders()
     {

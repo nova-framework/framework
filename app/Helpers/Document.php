@@ -1,13 +1,13 @@
 <?php
 /**
- * Document Helper
+ * Document Helper.
  *
  * @author David Carr - dave@daveismyname.com
+ *
  * @version 1.0
  * @date May 18 2015
  * @date updated Sept 19, 2015
  */
-
 namespace Helpers;
 
 /**
@@ -16,53 +16,54 @@ namespace Helpers;
 class Document
 {
     /**
-     * group types into collections, its purpose is to assign the passed extension to the suitable group
+     * group types into collections, its purpose is to assign the passed extension to the suitable group.
      *
-     * @param  string $extension file extension
+     * @param string $extension file extension
      *
-     * @return string            group name
+     * @return string group name
      */
     public static function getFileType($extension)
     {
-        $images = array('jpg', 'gif', 'png', 'bmp');
-        $docs   = array('txt', 'rtf', 'doc', 'docx', 'pdf');
-        $apps   = array('zip', 'rar', 'exe', 'html');
-        $video  = array('mpg', 'wmv', 'avi', 'mp4');
-        $audio  = array('wav', 'mp3');
-        $db     = array('sql', 'csv', 'xls','xlsx');
+        $images = ['jpg', 'gif', 'png', 'bmp'];
+        $docs = ['txt', 'rtf', 'doc', 'docx', 'pdf'];
+        $apps = ['zip', 'rar', 'exe', 'html'];
+        $video = ['mpg', 'wmv', 'avi', 'mp4'];
+        $audio = ['wav', 'mp3'];
+        $db = ['sql', 'csv', 'xls', 'xlsx'];
 
         if (in_array($extension, $images)) {
-            return "Image";
+            return 'Image';
         }
         if (in_array($extension, $docs)) {
-            return "Document";
+            return 'Document';
         }
         if (in_array($extension, $apps)) {
-            return "Application";
+            return 'Application';
         }
         if (in_array($extension, $video)) {
-            return "Video";
+            return 'Video';
         }
         if (in_array($extension, $audio)) {
-            return "Audio";
+            return 'Audio';
         }
         if (in_array($extension, $db)) {
-            return "Database/Spreadsheet";
+            return 'Database/Spreadsheet';
         }
-        return "Other";
+
+        return 'Other';
     }
 
     /**
      * Create a human friendly measure of the size provided.
      *
-     * @param  integer  $bytes     file size
-     * @param  integer $precision precision to be used
+     * @param int $bytes     file size
+     * @param int $precision precision to be used
      *
-     * @return string             size with measure
+     * @return string size with measure
      */
     public static function formatBytes($bytes, $precision = 2)
     {
-        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
@@ -70,7 +71,7 @@ class Document
 
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return round($bytes, $precision).' '.$units[$pow];
     }
 
     /**
@@ -111,6 +112,7 @@ class Document
                     $m[1] *= 1024;
                     break;
             }
+
             return $m[1];
         }, $value);
     }
@@ -127,13 +129,14 @@ class Document
         $io = popen('/usr/bin/du -sb '.$path, 'r');
         $size = intval(fgets($io, 80));
         pclose($io);
+
         return $size;
     }
 
     /**
      * Return the file type based on the filename provided.
      *
-     * @param  string $file
+     * @param string $file
      *
      * @return string
      */
@@ -145,7 +148,7 @@ class Document
     /**
      * Remove extension of file.
      *
-     * @param  string  $file filename and extension
+     * @param string $file filename and extension
      *
      * @return file name missing extension
      */
@@ -154,6 +157,7 @@ class Document
         if (strpos($file, '.')) {
             $file = pathinfo($file, PATHINFO_FILENAME);
         }
+
         return $file;
     }
 }

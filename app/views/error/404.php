@@ -1,8 +1,7 @@
 <?php
 /**
- * Sample layout
+ * Sample layout.
  */
-
 use Core\Error;
 
 ?>
@@ -12,7 +11,7 @@ use Core\Error;
 
 			<h1>404</h1>
 
-			<?php echo $data['error'];?>
+			<?php echo $data['error']; ?>
 
 			<hr />
 

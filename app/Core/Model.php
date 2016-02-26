@@ -1,13 +1,13 @@
 <?php
 /**
- * Model - the base model
+ * Model - the base model.
  *
  * @author David Carr - dave@daveismyname.com
+ *
  * @version 2.2
  * @date June 27, 2014
  * @date updated Sept 19, 2015
  */
-
 namespace Core;
 
 use Helpers\Database;
@@ -29,7 +29,7 @@ abstract class Model
      */
     public function __construct()
     {
-        /** connect to PDO here. */
+        /* connect to PDO here. */
         $this->db = Database::get();
     }
 }

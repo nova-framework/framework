@@ -1,13 +1,13 @@
 <?php
 /**
- * Mail Helper
+ * Mail Helper.
  *
  * @author David Carr - dave@simplemvcframework.com
+ *
  * @version 1.0
  * @date May 18 2015
  * @date updated Sept 19, 2015
  */
-
 namespace Helpers\PhpMailer;
 
 /**
@@ -16,71 +16,72 @@ namespace Helpers\PhpMailer;
 class Mail extends PhpMailer
 {
     /**
-     * From
+     * From.
      *
-     * @var string $From set sender email
+     * @var string set sender email
      */
-    public $From     = 'noreply@domain.com';
+    public $From = 'noreply@domain.com';
 
     /**
-     * FromName
+     * FromName.
      *
-     * @var string $FromName set sender name
+     * @var string set sender name
      */
     public $FromName = SITETITLE;
 
     /**
-     * Host
+     * Host.
      *
-     * @var string $Host set sender SMTP Route
+     * @var string set sender SMTP Route
      */
     //public $Host     = 'smtp.gmail.com';
 
     /**
-     * Mailer
+     * Mailer.
      *
-     * @var string $Mailer set type default is SMTP
+     * @var string set type default is SMTP
      */
     //public $Mailer   = 'smtp';
 
     /**
-     * SMTPAuth
+     * SMTPAuth.
      *
-     * @var string $SMTPAuth use authenticated
+     * @var string use authenticated
      */
     //public $SMTPAuth = true;
 
     /**
-     * Username
+     * Username.
      *
-     * @var string $Username set username
+     * @var string set username
      */
     //public $Username = 'email';
 
     /**
-     * Password
+     * Password.
      *
-     * @var string $Password set password
+     * @var string set password
      */
     //public $Password = 'password';
 
     /**
-     * SMTPSecure
+     * SMTPSecure.
      *
-     * @var string $SMTPSecure set Secure SMTP
+     * @var string set Secure SMTP
      */
     //public $SMTPSecure = 'tls';
 
     /**
-     * WordWrap
-     * @var integer $WordWrap set word wrap
+     * WordWrap.
+     *
+     * @var int set word wrap
      */
     public $WordWrap = 75;
 
     /**
-     * Subject
+     * Subject.
      *
-     * @param  string $subject The subject of the email
+     * @param string $subject The subject of the email
      */
     public function subject($subject)
     {
@@ -88,9 +89,9 @@ class Mail extends PhpMailer
     }
 
     /**
-     * Body
+     * Body.
      *
-     * @param  string $body The content of the email
+     * @param string $body The content of the email
      */
     public function body($body)
     {
@@ -98,14 +99,15 @@ class Mail extends PhpMailer
     }
 
     /**
-     * Send
+     * Send.
      *
      * @return none - sends the email.
      */
     public function send()
     {
         $this->AltBody = strip_tags(stripslashes($this->Body))."\n\n";
-        $this->AltBody = str_replace("&nbsp;", "\n\n", $this->AltBody);
+        $this->AltBody = str_replace('&nbsp;', "\n\n", $this->AltBody);
+
         return parent::send();
     }
 }

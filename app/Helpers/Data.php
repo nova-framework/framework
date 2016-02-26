@@ -1,13 +1,13 @@
 <?php
 /**
- * Data Helper
+ * Data Helper.
  *
  * @author David Carr - dave@daveismyname.com
+ *
  * @version 1.0
  * @date March 28, 2015
  * @date updated Sept 19, 2015
  */
-
 namespace Helpers;
 
 /**
@@ -16,21 +16,21 @@ namespace Helpers;
 class Data
 {
     /**
-     * print_r call wrapped in pre tags
+     * print_r call wrapped in pre tags.
      *
-     * @param  string or array $data
+     * @param string or array $data
      */
     public static function pr($data)
     {
-        echo "<pre>";
+        echo '<pre>';
         print_r($data);
-        echo "</pre>";
+        echo '</pre>';
     }
 
     /**
-     * var_dump call
+     * var_dump call.
      *
-     * @param  string or array $data
+     * @param string or array $data
      */
     public static function vd($data)
     {
@@ -40,7 +40,8 @@ class Data
     /**
      * strlen call - count the lengh of the string.
      *
-     * @param  string $data
+     * @param string $data
+     *
      * @return string return the count
      */
     public static function sl($data)
@@ -51,7 +52,8 @@ class Data
     /**
      * strtoupper - convert string to uppercase.
      *
-     * @param  string $data
+     * @param string $data
+     *
      * @return string
      */
     public static function stu($data)
@@ -62,7 +64,8 @@ class Data
     /**
      * strtolower - convert string to lowercase.
      *
-     * @param  string $data
+     * @param string $data
+     *
      * @return string
      */
     public static function stl($data)
@@ -73,7 +76,8 @@ class Data
     /**
      * ucwords - the first letter of each word to be a capital.
      *
-     * @param  string $data
+     * @param string $data
+     *
      * @return string
      */
     public static function ucw($data)
@@ -81,19 +85,20 @@ class Data
         return ucwords($data);
     }
 
-    /**
-     * key - this will generate a 32 character key
-     * @return string
-     */
+     /**
+      * key - this will generate a 32 character key.
+      *
+      * @return string
+      */
      public static function create_key($length = 32)
      {
-        $chars = "!@#$%^&*()_+-=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-        $key = "";
+         $chars = '!@#$%^&*()_+-=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+         $key = '';
 
-        for ($i = 0; $i < $length; $i++) {
-            $key .= $chars{rand(0, strlen($chars) - 1)};
-        }
+         for ($i = 0; $i < $length; $i++) {
+             $key .= $chars{rand(0, strlen($chars) - 1)};
+         }
 
-        return $key;
+         return $key;
      }
 }

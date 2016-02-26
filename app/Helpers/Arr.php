@@ -1,12 +1,11 @@
 <?php
 /**
- * Array Helper Class
+ * Array Helper Class.
  *
  * @author Benjamin von Minden | http://pandory.de
  * @date   August 1, 2015
  * @date updated Sept 19, 2015
  */
-
 namespace Helpers;
 
 /**
@@ -28,10 +27,10 @@ class Arr
         $segments = explode('.', $path);
         while (count($segments) > 1) {
             $segment = array_shift($segments);
-            if ( ! isset( $array[$segment] ) || ! is_array($array[$segment])) {
+            if (!isset($array[$segment]) || !is_array($array[$segment])) {
                 $array[$segment] = [];
             }
-            $array =& $array[$segment];
+            $array = &$array[$segment];
         }
         $array[array_shift($segments)] = $value;
     }
@@ -48,7 +47,7 @@ class Arr
     {
         $segments = explode('.', $path);
         foreach ($segments as $segment) {
-            if ( ! is_array($array) || ! isset( $array[$segment] )) {
+            if (!is_array($array) || !isset($array[$segment])) {
                 return false;
             }
             $array = $array[$segment];
@@ -58,7 +57,7 @@ class Arr
     }
 
     /**
-     * Returns value from array
+     * Returns value from array.
      *
      * @param array  $array
      * @param string $path
@@ -70,7 +69,7 @@ class Arr
     {
         $segments = explode('.', $path);
         foreach ($segments as $segment) {
-            if ( ! is_array($array) || ! isset( $array[$segment] )) {
+            if (!is_array($array) || !isset($array[$segment])) {
                 return $default;
             }
             $array = $array[$segment];
@@ -82,22 +81,22 @@ class Arr
     /**
      * Remove an array value.
      *
-     * @param   array  $array Array you want to modify
-     * @param   string $path  Array path
+     * @param array  $array Array you want to modify
+     * @param string $path  Array path
      *
-     * @return  boolean
+     * @return bool
      */
     public static function remove(array &$array, $path)
     {
         $segments = explode('.', $path);
         while (count($segments) > 1) {
             $segment = array_shift($segments);
-            if ( ! isset( $array[$segment] ) || ! is_array($array[$segment])) {
+            if (!isset($array[$segment]) || !is_array($array[$segment])) {
                 return false;
             }
-            $array =& $array[$segment];
+            $array = &$array[$segment];
         }
-        unset( $array[array_shift($segments)] );
+        unset($array[array_shift($segments)]);
 
         return true;
     }
@@ -105,9 +104,9 @@ class Arr
     /**
      * Returns a random value from an array.
      *
-     * @param   array $array Array you want to pick a random value from
+     * @param array $array Array you want to pick a random value from
      *
-     * @return  mixed
+     * @return mixed
      */
     public static function rand(array $array)
     {
@@ -117,9 +116,9 @@ class Arr
     /**
      * Returns TRUE if the array is associative and FALSE if not.
      *
-     * @param   array $array Array to check
+     * @param array $array Array to check
      *
-     * @return  boolean
+     * @return bool
      */
     public static function isAssoc(array $array)
     {
@@ -129,10 +128,10 @@ class Arr
     /**
      * Returns the values from a single column of the input array, identified by the key.
      *
-     * @param   array  $array Array to pluck from
-     * @param   string $key   Array key
+     * @param array  $array Array to pluck from
+     * @param string $key   Array key
      *
-     * @return  array
+     * @return array
      */
     public static function value(array $array, $key)
     {

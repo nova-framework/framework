@@ -1,13 +1,13 @@
 <?php
 /**
- * database Helper
+ * database Helper.
  *
  * @author David Carr - dave@daveismyname.com
+ *
  * @version 2.1
  * @date June 27, 2014
  * @date updated Sept 19, 2015
  */
-
 namespace Helpers;
 
 use PDO;
@@ -20,24 +20,25 @@ class Database extends PDO
     /**
      * @var array Array of saved databases for reusing
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
-     * Static method get
+     * Static method get.
      *
-     * @param  array $group
+     * @param array $group
+     *
      * @return \helpers\database
      */
     public static function get($group = false)
     {
         // Determining if exists or it's not empty, then use default group defined in config
-        $group = !$group ? array (
+        $group = !$group ?  [
             'type' => DB_TYPE,
             'host' => DB_HOST,
             'name' => DB_NAME,
             'user' => DB_USER,
-            'pass' => DB_PASS
-        ) : $group;
+            'pass' => DB_PASS,
+        ] : $group;
 
         // Group information
         $type = $group['type'];
@@ -58,7 +59,7 @@ class Database extends PDO
             // I've run into problem where
             // SET NAMES "UTF8" not working on some hostings.
             // Specifiying charset in DSN fixes the charset problem perfectly!
-            $instance = new Database("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
+            $instance = new self("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
             $instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Setting Database into $instances to avoid duplication
@@ -73,8 +74,10 @@ class Database extends PDO
     }
 
     /**
-     * run raw sql queries
-     * @param  string $sql sql command
+     * run raw sql queries.
+     *
+     * @param string $sql sql command
+     *
      * @return return query
      */
     public function raw($sql)
@@ -83,14 +86,16 @@ class Database extends PDO
     }
 
     /**
-     * method for selecting records from a database
-     * @param  string $sql       sql query
-     * @param  array  $array     named params
-     * @param  object $fetchMode
-     * @param  string $class     class name
-     * @return array            returns an array of records
+     * method for selecting records from a database.
+     *
+     * @param string $sql       sql query
+     * @param array  $array     named params
+     * @param object $fetchMode
+     * @param string $class     class name
+     *
+     * @return array returns an array of records
      */
-    public function select($sql, $array = array(), $fetchMode = PDO::FETCH_OBJ, $class = '')
+    public function select($sql, $array = [], $fetchMode = PDO::FETCH_OBJ, $class = '')
     {
         $stmt = $this->prepare($sql);
         foreach ($array as $key => $value) {
@@ -111,9 +116,10 @@ class Database extends PDO
     }
 
     /**
-     * insert method
-     * @param  string $table table name
-     * @param  array $data  array of columns and values
+     * insert method.
+     *
+     * @param string $table table name
+     * @param array  $data  array of columns and values
      */
     public function insert($table, $data)
     {
@@ -129,14 +135,16 @@ class Database extends PDO
         }
 
         $stmt->execute();
+
         return $this->lastInsertId();
     }
 
     /**
-     * update method
-     * @param  string $table table name
-     * @param  array $data  array of columns and values
-     * @param  array $where array of columns and values
+     * update method.
+     *
+     * @param string $table table name
+     * @param array  $data  array of columns and values
+     * @param array  $where array of columns and values
      */
     public function update($table, $data, $where)
     {
@@ -171,15 +179,16 @@ class Database extends PDO
         }
 
         $stmt->execute();
+
         return $stmt->rowCount();
     }
 
     /**
-     * Delete method
+     * Delete method.
      *
-     * @param  string $table table name
-     * @param  array $where array of columns and values
-     * @param  integer   $limit limit number of records
+     * @param string $table table name
+     * @param array  $where array of columns and values
+     * @param int    $limit limit number of records
      */
     public function delete($table, $where, $limit = 1)
     {
@@ -209,12 +218,14 @@ class Database extends PDO
         }
 
         $stmt->execute();
+
         return $stmt->rowCount();
     }
 
     /**
-     * truncate table
-     * @param  string $table table name
+     * truncate table.
+     *
+     * @param string $table table name
      */
     public function truncate($table)
     {

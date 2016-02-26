@@ -1,20 +1,17 @@
 <?php
 /**
- * Cross Site Request Forgery helper
+ * Cross Site Request Forgery helper.
  *
  * @author jimgwhit
  * @date May 23 2015
  * @date updated Sept 19, 2015
  */
-
 namespace Helpers;
-
-use Helpers\Session;
 
 /**
  * Instructions:
  * At the top of the controller where the other "use" statements are place:
- * use Helpers\Csrf;
+ * use Helpers\Csrf;.
  *
  * Just prior to rendering the view for adding or editing data create the CSRF token:
  * $data['csrf_token'] = Csrf::makeToken();
@@ -34,17 +31,17 @@ use Helpers\Session;
 class Csrf
 {
     /**
-     * get CSRF token and generate a new one if expired
+     * get CSRF token and generate a new one if expired.
      *
-     * @access public
      * @static static method
+     *
      * @return string
      */
     public static function makeToken()
     {
-        $max_time    = 60 * 60 * 24; // token is valid for 1 day
+        $max_time = 60 * 60 * 24; // token is valid for 1 day
         $csrf_token = Session::get('csrf_token');
-        $stored_time  = Session::get('csrf_token_time');
+        $stored_time = Session::get('csrf_token_time');
 
         if ($max_time + $stored_time <= time() || empty($csrf_token)) {
             Session::set('csrf_token', md5(uniqid(rand(), true)));
@@ -55,10 +52,10 @@ class Csrf
     }
 
     /**
-     * checks if CSRF token in session is same as in the form submitted
+     * checks if CSRF token in session is same as in the form submitted.
      *
-     * @access public
      * @static static method
+     *
      * @return bool
      */
     public static function isTokenValid()

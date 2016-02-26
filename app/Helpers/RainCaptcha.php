@@ -6,7 +6,6 @@
 ** http://raincaptcha.driversworld.us/
 ** This code is in the public domain.
 */
-
 namespace Helpers;
 
 /**
@@ -34,7 +33,7 @@ class RainCaptcha
     public function __construct($sessionId = null)
     {
         if ($sessionId === null) {
-            $this->sessionId = md5($_SERVER['SERVER_NAME'] . ':' . $_SERVER['REMOTE_ADDR']);
+            $this->sessionId = md5($_SERVER['SERVER_NAME'].':'.$_SERVER['REMOTE_ADDR']);
         } else {
             $this->sessionId = $sessionId;
         }
@@ -47,24 +46,26 @@ class RainCaptcha
      */
     public function getImage()
     {
-        return self::HOST . '/image/' . $this->sessionId . '?rand' . rand(100000, 999999);
+        return self::HOST.'/image/'.$this->sessionId.'?rand'.rand(100000, 999999);
     }
 
     /**
      * Compare given answer against the generated session.
      *
-     * @param  string $answer
-     * @return boolean
+     * @param string $answer
+     *
+     * @return bool
      */
     public function checkAnswer($answer)
     {
         if (empty($answer)) {
             return false;
         }
-        $response = file_get_contents(self::HOST . '/check/' . $this->sessionId. '/' . $answer);
+        $response = file_get_contents(self::HOST.'/check/'.$this->sessionId.'/'.$answer);
         if ($response === false) {
             return true;
         }
+
         return $response === 'true';
     }
 }

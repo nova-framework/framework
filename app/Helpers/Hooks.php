@@ -1,12 +1,12 @@
 <?php
 /**
- * Hooks controller
+ * Hooks controller.
  *
  * @author David Carr - dave@daveismyname.com
+ *
  * @version 2.2
  * @date updated Sept 19, 2015
  */
-
 namespace Helpers;
 
 /**
@@ -16,28 +16,29 @@ class Hooks
 {
     /**
      * Array of plugins.
+     *
      * @var array
      */
-    private static $plugins = array();
+    private static $plugins = [];
 
     /**
      * Array of available hooks.
      *
      * @var array
      */
-    private static $hooks = array();
+    private static $hooks = [];
 
     /**
      * Array of instances - for the purpose of reusing the same instance.
      *
      * @var array
      */
-    private static $instances = array();
+    private static $instances = [];
 
     /**
      * Initial hooks.
      *
-     * @param  integer $id
+     * @param int $id
      *
      * @return $instance
      */
@@ -49,21 +50,21 @@ class Hooks
         }
 
         //define hooks
-        self::setHooks(array(
+        self::setHooks([
             'meta',
             'css',
             'afterBody',
             'footer',
             'js',
-            'routes'
-        ));
+            'routes',
+        ]);
 
         //load modules
         self::loadPlugins(SMVC.'app/Modules/');
         $instance = new self();
         self::$instances[$id] = $instance;
-        return $instance;
 
+        return $instance;
     }
 
     /**
@@ -93,7 +94,7 @@ class Hooks
      *
      * Only load modulename.module.php files
      *
-     * @param  string $fromFolder path to the folder.
+     * @param string $fromFolder path to the folder.
      */
     public static function loadPlugins($fromFolder)
     {
@@ -101,8 +102,8 @@ class Hooks
             while ($file = readdir($handle)) {
                 if (is_file($fromFolder.$file)) {
                     //only load modulename.module.php file
-                    if(preg_match('@module.php@', $file)) {
-                        require_once $fromFolder . $file;
+                    if (preg_match('@module.php@', $file)) {
+                        require_once $fromFolder.$file;
                     }
                     self::$plugins [$file] ['file'] = $file;
                 } elseif ((is_dir($fromFolder.$file)) && ($file != '.') && ($file != '..')) {
@@ -116,30 +117,34 @@ class Hooks
     /**
      * Attach custom function to hook.
      *
-     * @param string $where hook to use
+     * @param string $where    hook to use
      * @param string $function function to attach to hook
-     * @return boolean success with adding, false if $where is not defined.
+     *
      * @throws \Exception Exception when hook $where (location) isn't known (yet)
+     *
+     * @return bool success with adding, false if $where is not defined.
      */
     public static function addHook($where, $function)
     {
         if (!isset(self::$hooks[$where])) {
-            throw new \Exception('Hook location (' . $where . ') not defined!');
+            throw new \Exception('Hook location ('.$where.') not defined!');
         }
         $theseHooks = explode('|', self::$hooks[$where]);
         $theseHooks[] = $function;
         self::$hooks[$where] = implode('|', $theseHooks);
+
         return true;
     }
 
     /**
      * Run all hooks attached to the hook.
      *
-     * @param  string $where Hook to execute
-     * @param  string $args option arguments
+     * @param string $where Hook to execute
+     * @param string $args  option arguments
+     *
+     * @throws \Exception Exception when hook $where (location) isn't known (yet)
      *
      * @return object|false - returns the called function or false if the $where is not found
-     * @throws \Exception Exception when hook $where (location) isn't known (yet)
      */
     public function run($where, $args = '')
     {
@@ -148,7 +153,7 @@ class Hooks
             $result = $args;
 
             foreach ($theseHooks as $hook) {
-                if (preg_match("/@/i", $hook)) {
+                if (preg_match('/@/i', $hook)) {
                     //grab all parts based on a / separator
                     $parts = explode('/', $hook);
 
@@ -159,8 +164,7 @@ class Hooks
                     $segments = explode('@', $last);
 
                     $classname = new $segments[0]();
-                    $result = call_user_func(array($classname, $segments[1]), $result);
-
+                    $result = call_user_func([$classname, $segments[1]], $result);
                 } else {
                     if (function_exists($hook)) {
                         $result = call_user_func($hook, $result);
@@ -170,20 +174,22 @@ class Hooks
 
             return $result;
         }
-        throw new \Exception('Hook location (' . $where . ') not defined!');
+        throw new \Exception('Hook location ('.$where.') not defined!');
     }
 
     /**
-     * Execute hooks attached to run and collect instead of running
+     * Execute hooks attached to run and collect instead of running.
      *
-     * @param  string $where hook
-     * @param  string $args optional arguments
+     * @param string $where hook
+     * @param string $args  optional arguments
+     *
      * @return object - returns output of hook call
      */
     public function collectHook($where, $args = null)
     {
         ob_start();
-            echo $this->run($where, $args);
+        echo $this->run($where, $args);
+
         return ob_get_clean();
     }
 }

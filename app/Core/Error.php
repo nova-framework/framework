@@ -3,15 +3,12 @@
  * Error class - calls a 404 page.
  *
  * @author David Carr - dave@daveismyname.com
+ *
  * @version 2.2
  * @date June 27, 2014
  * @date updated Sept 19, 2015
  */
-
 namespace Core;
-
-use Core\Controller;
-use Core\View;
 
 /**
  * Error class to generate 404 pages.
@@ -41,7 +38,7 @@ class Error extends Controller
      */
     public function index()
     {
-        header("HTTP/1.0 404 Not Found");
+        header('HTTP/1.0 404 Not Found');
 
         $data['title'] = '404';
         $data['error'] = $this->error;
@@ -54,8 +51,8 @@ class Error extends Controller
     /**
      * Display errors.
      *
-     * @param  array  $error an error of errors
-     * @param  string $class name of class to apply to div
+     * @param array  $error an error of errors
+     * @param string $class name of class to apply to div
      *
      * @return string return the errors inside divs
      */
@@ -63,8 +60,9 @@ class Error extends Controller
     {
         if (is_array($error)) {
             foreach ($error as $error) {
-                $row.= "<div class='$class'>$error</div>";
+                $row .= "<div class='$class'>$error</div>";
             }
+
             return $row;
         } else {
             if (isset($error)) {

@@ -1,13 +1,13 @@
 <?php
 /**
- * FTP Class.
+ * FTP Class
  *
  * @author David Carr - dave@daveismyname.com
- *
  * @version 1.0
  * @date June 27, 2014
  * @date updated Sept 19, 2015
  */
+
 namespace Helpers;
 
 /**
@@ -18,7 +18,7 @@ class Ftp
     /**
      * Hold the FTP connection.
      *
-     * @var int
+     * @var integer
      */
     private $conn;
 
@@ -60,7 +60,7 @@ class Ftp
     /**
      * Create a directory on the remote FTP server.
      *
-     * @param string $dirToCreate name of the directory to create
+     * @param  string $dirToCreate name of the directory to create
      */
     public function makeDirectory($dirToCreate)
     {
@@ -72,7 +72,7 @@ class Ftp
     /**
      * Delete directory from FTP server.
      *
-     * @param string $dir foldr to delete
+     * @param  string $dir foldr to delete
      */
     public function deleteDirectory($dir)
     {
@@ -82,10 +82,10 @@ class Ftp
     /**
      * Set folder permission.
      *
-     * @param string $folderChmod folder name
-     * @param int    $permission  permission value
+     * @param  string $folderChmod folder name
+     * @param  integer $permission permission value
      *
-     * @return string success message
+     * @return string              success message
      */
     public function folderPermission($folderChmod, $permission)
     {
@@ -97,10 +97,10 @@ class Ftp
     /**
      * Upload file to FTP server.
      *
-     * @param string $remoteFile path and filename for remote file
-     * @param string $localFile  local path to file
+     * @param  string $remoteFile path and filename for remote file
+     * @param  string $localFile  local path to file
      *
-     * @return string message
+     * @return string             message
      */
     public function uploadFile($remoteFile, $localFile)
     {
@@ -114,7 +114,7 @@ class Ftp
     /**
      * Delete remove file.
      *
-     * @param string $file path and filename
+     * @param  string $file path and filename
      */
     public function deleteFile($file)
     {

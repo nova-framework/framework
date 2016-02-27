@@ -1,10 +1,11 @@
 <?php
 /**
- * Sample layout.
+ * Sample layout
  */
+
 use Helpers\Assets;
-use Helpers\Hooks;
 use Helpers\Url;
+use Helpers\Hooks;
 
 //initialise hooks
 $hooks = Hooks::get();
@@ -14,10 +15,10 @@ $hooks = Hooks::get();
 
 <!-- JS -->
 <?php
-Assets::js([
-    Url::templatePath().'js/jquery.js',
-    '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
-]);
+Assets::js(array(
+	Url::templatePath() . 'js/jquery.js',
+	'//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'
+));
 
 //hook for plugging in javascript
 $hooks->run('js');

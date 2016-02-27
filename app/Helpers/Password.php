@@ -1,11 +1,11 @@
 <?php
-
 namespace Helpers;
 
 class Password
 {
+
     /**
-     * Hash the password using the specified algorithm.
+     * Hash the password using the specified algorithm
      *
      * @param string $password The password to hash
      * @param int    $algo     The algorithm to use (Defined by PASSWORD_* constants)
@@ -13,7 +13,7 @@ class Password
      *
      * @return string|false The hashed password, or false on error.
      */
-    public static function make($password, $algo = PASSWORD_DEFAULT, array $options = [])
+    public static function make($password, $algo = PASSWORD_DEFAULT, array $options = array())
     {
         return password_hash($password, $algo, $options);
     }
@@ -40,7 +40,7 @@ class Password
     }
 
     /**
-     * Determine if the password hash needs to be rehashed according to the options provided.
+     * Determine if the password hash needs to be rehashed according to the options provided
      *
      * If the answer is true, after validating the password using password_verify, rehash it.
      *
@@ -48,20 +48,21 @@ class Password
      * @param int    $algo    The algorithm used for new password hashes
      * @param array  $options The options array passed to password_hash
      *
-     * @return bool True if the password needs to be rehashed.
+     * @return boolean True if the password needs to be rehashed.
      */
-    public static function needsRehash($hash, $algo = PASSWORD_DEFAULT, array $options = [])
+
+    public static function needsRehash($hash, $algo = PASSWORD_DEFAULT, array $options = array())
     {
         return password_needs_rehash($hash, $algo, $options);
     }
 
     /**
-     * Verify a password against a hash using a timing attack resistant approach.
+     * Verify a password against a hash using a timing attack resistant approach
      *
      * @param string $password The password to verify
      * @param string $hash     The hash to verify against
      *
-     * @return bool If the password matches the hash
+     * @return boolean If the password matches the hash
      */
     public static function verify($password, $hash)
     {

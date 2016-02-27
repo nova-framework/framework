@@ -1,12 +1,13 @@
 <?php
 /**
- * Assets static helper.
+ * Assets static helper
  *
  * @author volter9
  * @author QsmaPL
  * @date 27th November, 2014
  * @date updated Sept 19, 2015
  */
+
 namespace Helpers;
 
 /**
@@ -17,11 +18,11 @@ class Assets
     /**
      * @var array Asset templates
      */
-    protected static $templates = 
-    [
+    protected static $templates = array
+    (
         'js'  => '<script src="%s" type="text/javascript"></script>',
-        'css' => '<link href="%s" rel="stylesheet" type="text/css">',
-    ];
+        'css' => '<link href="%s" rel="stylesheet" type="text/css">'
+    );
 
     /**
      * Common templates for assets.
@@ -35,10 +36,10 @@ class Assets
 
         if (is_array($files)) {
             foreach ($files as $file) {
-                echo sprintf($template, $file)."\n";
+                echo sprintf($template, $file) . "\n";
             }
         } else {
-            echo sprintf($template, $files)."\n";
+            echo sprintf($template, $files) . "\n";
         }
     }
 

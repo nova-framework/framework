@@ -1,10 +1,11 @@
 <?php
 /**
- * Sample layout.
+ * Sample layout
  */
+
 use Helpers\Assets;
-use Helpers\Hooks;
 use Helpers\Url;
+use Helpers\Hooks;
 
 //initialise hooks
 $hooks = Hooks::get();
@@ -16,21 +17,21 @@ $hooks = Hooks::get();
 	<!-- Site meta -->
 	<meta charset="utf-8">
 	<?php
-    //hook for plugging in meta tags
-    $hooks->run('meta');
-    ?>
+	//hook for plugging in meta tags
+	$hooks->run('meta');
+	?>
 	<title><?php echo $data['title'].' - '.SITETITLE; //SITETITLE defined in app/Core/Config.php ?></title>
 
 	<!-- CSS -->
 	<?php
-    Assets::css([
-        '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
-        Url::templatePath().'css/style.css',
-    ]);
+	Assets::css(array(
+		'//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
+		Url::templatePath() . 'css/style.css',
+	));
 
-    //hook for plugging in css
-    $hooks->run('css');
-    ?>
+	//hook for plugging in css
+	$hooks->run('css');
+	?>
 
 </head>
 <body>

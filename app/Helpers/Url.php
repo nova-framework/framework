@@ -1,14 +1,16 @@
 <?php
 /**
- * url Class.
+ * url Class
  *
  * @author David Carr - dave@daveismyname.com
- *
  * @version 2.2
  * @date June 27, 2014
  * @date updated Sept 19, 2015
  */
+
 namespace Helpers;
+
+use Helpers\Session;
 
 /**
  * Collection of methods for working with urls.
@@ -18,13 +20,13 @@ class Url
     /**
      * Redirect to chosen url.
      *
-     * @param string $url      the url to redirect to
-     * @param bool   $fullpath if true use only url in redirect instead of using DIR
+     * @param  string  $url      the url to redirect to
+     * @param  boolean $fullpath if true use only url in redirect instead of using DIR
      */
     public static function redirect($url = null, $fullpath = false)
     {
         if ($fullpath == false) {
-            $url = DIR.$url;
+            $url = DIR . $url;
         }
 
         header('Location: '.$url);
@@ -34,8 +36,7 @@ class Url
     /**
      * Created the absolute address to the template folder.
      *
-     * @param bool $custom
-     *
+     * @param  boolean $custom
      * @return string url to template folder
      */
     public static function templatePath($custom = false)
@@ -50,16 +51,15 @@ class Url
     /**
      * Created the relative address to the template folder.
      *
-     * @param bool $custom
-     *
+     * @param  boolean $custom
      * @return string url to template folder
      */
     public static function relativeTemplatePath($custom = false)
     {
         if ($custom) {
-            return 'app/templates/'.$custom.'/';
+            return "app/templates/".$custom."/";
         } else {
-            return 'app/templates/'.TEMPLATE.'/';
+            return "app/templates/".TEMPLATE."/";
         }
     }
 
@@ -68,14 +68,14 @@ class Url
      * used as the url label <a href=''>$custom</a>.
      *
      *
-     * @param string $text   data containing the text to read
-     * @param string $custom if provided, this is used for the link label
+     * @param  string $text   data containing the text to read
+     * @param  string $custom if provided, this is used for the link label
      *
-     * @return string returns the data with links created around urls
+     * @return string         returns the data with links created around urls
      */
     public static function autoLink($text, $custom = null)
     {
-        $regex = '@(http)?(s)?(://)?(([-\w]+\.)+([^\s]+)+[^,.\s])@';
+        $regex   = '@(http)?(s)?(://)?(([-\w]+\.)+([^\s]+)+[^,.\s])@';
 
         if ($custom === null) {
             $replace = '<a href="http$2://$4">$1$2$3$4</a>';
@@ -98,7 +98,7 @@ class Url
      */
     public static function generateSafeSlug($slug)
     {
-        setlocale(LC_ALL, 'en_US.utf8');
+        setlocale(LC_ALL, "en_US.utf8");
 
         $slug = preg_replace('/[`^~\'"]/', null, iconv('UTF-8', 'ASCII//TRANSLIT', $slug));
 
@@ -120,7 +120,7 @@ class Url
      */
     public static function previous()
     {
-        header('Location: '.$_SERVER['HTTP_REFERER']);
+        header('Location: '. $_SERVER['HTTP_REFERER']);
         exit;
     }
 
@@ -137,8 +137,8 @@ class Url
     /**
      * Get item in array.
      *
-     * @param array $segments array
-     * @param int   $id       array index
+     * @param  array $segments array
+     * @param  int $id array index
      *
      * @return string - returns array index
      */
@@ -152,8 +152,7 @@ class Url
     /**
      * Get last item in array.
      *
-     * @param array $segments
-     *
+     * @param  array $segments
      * @return string - last array segment
      */
     public static function lastSegment($segments)
@@ -162,10 +161,9 @@ class Url
     }
 
     /**
-     * Get first item in array.
+     * Get first item in array
      *
      * @param  array segments
-     *
      * @return int - returns first first array index
      */
     public static function firstSegment($segments)

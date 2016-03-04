@@ -480,6 +480,9 @@ class Gump
                 case 'validate_alpha_dash':
                     $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain alpha characters &amp; dashes";
                     break;
+                case 'validate_alpha_space':
+                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain alpha characters &amp; spaces";
+                    break;
                 case 'validate_numeric':
                     $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain numeric characters";
                     break;
@@ -1059,6 +1062,32 @@ class Gump
                 'rule'  => __FUNCTION__,
                 'param' => $param,
             ];
+        }
+    }
+    
+    /**
+     * Determine if the provided value contains only alpha numeric characters with spaces.
+     *
+     * Usage: '<index>' => 'alpha_space'
+     *
+     * @param string $field
+     * @param array  $input
+     * @param null   $param
+     *
+     * @return mixed
+     */
+    protected function validate_alpha_space($field, $input, $param = null)
+    {
+        if (!isset($input[$field]) || empty($input[$field])) {
+            return;
+        }
+        if (!preg_match("/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s])+$/i", $input[$field]) !== false) {
+            return array(
+                'field' => $field,
+                'value' => $input[$field],
+                'rule' => __FUNCTION__,
+                'param' => $param,
+            );
         }
     }
 

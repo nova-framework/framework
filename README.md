@@ -1,7 +1,5 @@
 # framework
-Version 3.0 of the Framework
-
-This is a temp readme, for beta testing.
+Version 3.0 Release Candidate 1 (R1) of the Framework
 
 #Install
 * Download the files

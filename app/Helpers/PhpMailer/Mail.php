@@ -110,4 +110,17 @@ class Mail extends PhpMailer
 
         return parent::send();
     }
+    
+    /**
+     * Clean Message.
+     * Remove email specific characters from a given string
+     *
+     * @param string. Email body.
+     * @return string.
+     */
+    public function cleanMessage($string)
+    {
+        $bad = array("content-type","bcc:","to:","cc:","href");
+        return str_replace($bad,"",$string);
+    }
 }

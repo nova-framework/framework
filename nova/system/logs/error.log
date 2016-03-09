@@ -1,0 +1,116 @@
+Exception information:
+
+           Date: Mar 09, 2016 10:02AM
+
+           Message: Class 'App\Controllers\PHPMailer' not found
+
+           Code: 0
+
+           File: /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/app/Controllers/Welcome.php
+
+           Line: 41
+
+           Stack trace:
+
+           #0 [internal function]: App\Controllers\Welcome->index()
+#1 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(129): call_user_func_array(Array, Array)
+#2 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(34): Core\ClassicRouter::autoDispatch('/')
+#3 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/routes.php(40): Core\ClassicRouter->dispatch()
+#4 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/public_html/index.php(67): require('/Users/davidcar...')
+#5 {main}
+
+           ---------
+
+Exception information:
+
+           Date: Mar 09, 2016 10:02AM
+
+           Message: Class 'PHPMailer' not found
+
+           Code: 0
+
+           File: /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/app/Controllers/Welcome.php
+
+           Line: 41
+
+           Stack trace:
+
+           #0 [internal function]: App\Controllers\Welcome->index()
+#1 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(129): call_user_func_array(Array, Array)
+#2 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(34): Core\ClassicRouter::autoDispatch('/')
+#3 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/routes.php(40): Core\ClassicRouter->dispatch()
+#4 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/public_html/index.php(67): require('/Users/davidcar...')
+#5 {main}
+
+           ---------
+
+Exception information:
+
+           Date: Mar 09, 2016 10:03AM
+
+           Message: Class 'PHPMailer' not found
+
+           Code: 0
+
+           File: /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/app/Controllers/Welcome.php
+
+           Line: 41
+
+           Stack trace:
+
+           #0 [internal function]: App\Controllers\Welcome->index()
+#1 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(129): call_user_func_array(Array, Array)
+#2 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(34): Core\ClassicRouter::autoDispatch('/')
+#3 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/routes.php(40): Core\ClassicRouter->dispatch()
+#4 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/public_html/index.php(67): require('/Users/davidcar...')
+#5 {main}
+
+           ---------
+
+Exception information:
+
+           Date: Mar 09, 2016 10:06AM
+
+           Message: Class 'PHPMailer\PHPMailer' not found
+
+           Code: 0
+
+           File: /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/app/Controllers/Welcome.php
+
+           Line: 41
+
+           Stack trace:
+
+           #0 [internal function]: App\Controllers\Welcome->index()
+#1 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(129): call_user_func_array(Array, Array)
+#2 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(34): Core\ClassicRouter::autoDispatch('/')
+#3 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/routes.php(40): Core\ClassicRouter->dispatch()
+#4 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/public_html/index.php(67): require('/Users/davidcar...')
+#5 {main}
+
+           ---------
+
+Exception information:
+
+           Date: Mar 09, 2016 10:09AM
+
+           Message: Class 'Helpers\PreMailer' not found
+
+           Code: 0
+
+           File: /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Helpers/PhpMailer/Mail.php
+
+           Line: 27
+
+           Stack trace:
+
+           #0 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/app/Controllers/Welcome.php(44): Helpers\PhpMailer\Mail->body('<h1>Hey</h1><p>...')
+#1 [internal function]: App\Controllers\Welcome->index()
+#2 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(129): call_user_func_array(Array, Array)
+#3 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/ClassicRouter.php(34): Core\ClassicRouter::autoDispatch('/')
+#4 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/nova/system/Core/routes.php(40): Core\ClassicRouter->dispatch()
+#5 /Users/davidcarr/Dropbox (TheOnePointLimited)/projects/mvc/public_html/index.php(67): require('/Users/davidcar...')
+#6 {main}
+
+           ---------
+

@@ -1,57 +1,45 @@
-![Simple MVC Framework](http://simplemvcframework.com/app/templates/publicthemes/smvc/images/logo.png)
+# framework
+Version 3.0 of the Framework
 
-## Packagist
+This is a temp readme, for beta testing.
 
-[![Join the chat at https://gitter.im/simple-mvc-framework/framework](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/simple-mvc-framework/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+#Install
+* Download the files
+* for a localserver place index.php and .htaccess in your public folder and the nova folder above it.
+*This path can be configured from public_html/index.php, for security reasons it's a good idea to place sensative files above the document root.
+* open system/Core/Config.example.php and edit the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Save file as Config.php
+* open .htaccess and set the rewrite base same path as in the config the path is relative to the project url
+* open index.php and set the paths to if running all folders in the root no change will be needed. If app and system are in a higher folder above then edit the path to be ../app and ../system
+* in terminal run composer install
 
-[![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg?style=flat-square)](LICENSE)
-[![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg?style=flat-square)](https://packagist.org/packages/simple-mvc-framework/v2)
-[![Dependency Status](https://www.versioneye.com/user/projects/554367f738331321e2000005/badge.svg?style=flat)](https://www.versioneye.com/user/projects/554367f738331321e2000005)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/simple-mvc-framework/v2/master/license.txt)
-[![GitHub stars](https://img.shields.io/github/stars/simple-mvc-framework/framework.svg)](https://github.com/simple-mvc-framework/framework/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/simple-mvc-framework/framework.svg)](https://github.com/simple-mvc-framework/framework/network)
 
-The framework is now on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2)
+This has been tested with php 5.6 and php 7 please report any bugs.
 
-Install from terminal now by using:
+#Routing images / js / css files
+When the files are above the document root the browser cannot see them to use them a new route has been created inside the routes file.
+
+To route to these resourses simple start the path with resource/ then the path for instance:
 
 ````
-composer create-project simple-mvc-framework/v2 foldername -s dev
+<img src='resource/<?=Url::templatePath();?>images/logo.png' alt='logo'>
 ````
 
-The foldername is the desired folder to be created.
+This will then return the image from template/images.
 
-#V2.2
-#What is Simple MVC Framework?
 
-Simple MVC Framework is a PHP 5.5 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
+#Namespace change
 
-The base framework comes with a range of helper classes.
+classes in app/Controller app/Model and app/Modules now have a namespace starting with App:
 
-## Documentation
+* App\Controllers
+* App\Models
+* App\Modules
 
-Full docs & tutorials are available at [simplemvcframework.com](http://simplemvcframework.com)
+That is only for classes within app, this is not needed for classes within system.
 
-##Requirements
+#Error Log
+The error log is no longer a .html file but rather a log file. On a production server it should be outside the document root, in order to see the any errors there are a few options:
 
- The framework requirements are limited
-
- - Apache Web Server or equivalent with mod rewrite support.
- - PHP 5.5 or greater is required
-
- Although a database is not required, if a database is to be used the system is designed to work with a MySQL database. The framework can be changed to work with another database type.
-
-## Installation
-
-1. Download the framework
-2. Unzip the package.
-3. To run composer, navigate to your project on a terminal/command prompt then run 'composer install' that will update the vendor folder. Or use the vendor folder as is (composer is not required for this step)
-Upload the framework files to your server. Normally the index.php file will be at your root.
-4. Open the app/Core/routes.php file with a text editor, setup your routes.
-5. Open app/Core/Config.example.php and set your base path (if the framework is installed in a folder the base path should reflect the folder path /path/to/folder/ otherwise a single / will do. and database credentials (if a database is needed). Set the default theme. When you are done, rename the file to Core/Config.php
-6. Edit .htaccess file and save the base path. (if the framework is installed in a folder the base path should reflect the folder path /path/to/folder/ otherwise a single / will do.
-
-### Other Contributions
-Have you found this library helpful? Why not take a minute to endorse my hard work on [coderwall](https://coderwall.com/daveismynamecom)! Just click the badge below:
-
-[![endorse](https://api.coderwall.com/daveismynamecom/endorsecount.png)](https://coderwall.com/daveismynamecom)
+* Open system/logs/error.log
+* OR open system/Core/Logger.php set $display to true to print errors to the screen
+* set $emailError to true and setup the siteEmail const in system/Core/Config.php this relies on an email server (not provided by the framework)

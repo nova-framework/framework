@@ -9,6 +9,8 @@
 
 namespace Helpers;
 
+use Helpers\Document;
+
 /**
  * Class Response
  *
@@ -150,7 +152,7 @@ class Response
 
         $expires = 60 * 60 * 24 * 365; // Cache for one year
 
-        if (! file_exists($filePath)) {
+        if (! file_exists($filePath) || Document::getExtension($filePath) == 'php') {
             header("$httpProtocol 404 Not Found");
 
             return false;

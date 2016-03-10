@@ -62,6 +62,23 @@ class Url
     }
 
     /**
+     * Created the absolute address to the assets folder.
+     *
+     * @param  string|null $module
+     * @return string url to assets folder
+     */
+    public static function resourcePath($module = null)
+    {
+        if($module !== null) {
+            $path = sprintf('modules/%s/', Inflector::tableize($module));
+        } else {
+            $path = '';
+        }
+
+        return DIR .$path .'assets/';
+    }
+
+    /**
      * Created the absolute address to the template folder.
      *
      * @param  boolean $custom

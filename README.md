@@ -14,16 +14,8 @@ Version 3.0 Release Candidate 1 (R1) of the Framework
 This has been tested with php 5.6 and php 7 please report any bugs.
 
 #Routing images / js / css files
-When the files are above the document root the browser cannot see them to use them a new route has been created inside the routes file.
-
-To route to these resourses simple start the path with resource/ then the path for instance:
-
-````
-<img src='resource/<?=Url::templatePath();?>images/logo.png' alt='logo'>
-````
-
-This will then return the image from template/images.
-
+From within Templates your css/js and images must be in a Assets folder to be routed correctly.
+Additionally there is an Assets folder in the root of nova this is for storing resources outside of templates that can still be routed from above the document root.
 
 #Namespace change
 

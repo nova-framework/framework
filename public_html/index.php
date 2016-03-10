@@ -1,4 +1,7 @@
 <?php
+
+defined('DS') || define('DS', DIRECTORY_SEPARATOR);
+
 /** Define the absolute paths for configured directories */
 define('APPDIR', dirname(__DIR__).'/nova/app/');
 define('SYSTEMDIR', dirname(__DIR__).'/nova/system/');

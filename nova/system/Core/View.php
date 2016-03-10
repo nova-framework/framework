@@ -81,7 +81,7 @@ class View
             ${$name} = $value;
         }
 
-        require APPDIR."templates/$custom/$path.php";
+        require APPDIR."Templates/$custom/$path.php";
     }
 
     /**

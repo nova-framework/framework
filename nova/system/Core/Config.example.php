@@ -51,7 +51,7 @@ class Config
         /**
          * Set the default template.
          */
-        define('TEMPLATE', 'default');
+        define('TEMPLATE', 'Default');
 
         /**
          * Set a default language.

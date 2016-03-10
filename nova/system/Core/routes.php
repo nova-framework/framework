@@ -23,11 +23,6 @@ Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('admin/(:any)(/(:any))(/(:any))(/(:any))', 'App\Controllers\Demo@test');
 /** End default routes */
 
-/** Do not remove - route for resources css / js files path is relative to app directory */
-Router::get('resource/(:all)', function ($path) {
-    Response::serveFile(APPDIR.$path);
-});
-
 /** Module routes. */
 $hooks = Hooks::get();
 $hooks->run('routes');

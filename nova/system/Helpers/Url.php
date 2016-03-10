@@ -75,7 +75,7 @@ class Url
             $path = '';
         }
 
-        return DIR .$path .'assets/';
+        return SITEURL .$path .'assets/';
     }
 
     /**
@@ -88,7 +88,7 @@ class Url
     {
         $template = Inflector::tableize($custom);
 
-        return DIR.'templates/' .$template .'/';
+        return SITEURL .'templates/' .$template .'/';
     }
 
     /**

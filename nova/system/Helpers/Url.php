@@ -11,6 +11,7 @@
 namespace Helpers;
 
 use Helpers\Session;
+use Helpers\Inflector;
 
 /**
  * Collection of methods for working with urls.
@@ -68,8 +69,9 @@ class Url
      */
     public static function templatePath($custom = TEMPLATE)
     {
-        return DIR.'Templates/'.$custom.'/';
+        $template = Inflector::tableize($custom);
 
+        return DIR.'templates/' .$template .'/';
     }
 
     /**
@@ -80,7 +82,9 @@ class Url
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        return "Templates/".$custom."/";
+        $template = Inflector::tableize($custom);
+
+        return "templates/" .$template ."/";
     }
 
     /**

@@ -68,7 +68,7 @@ class Url
      */
     public static function templatePath($custom = TEMPLATE)
     {
-        return DIR.'templates/'.$custom.'/';
+        return DIR.'Templates/'.$custom.'/';
 
     }
 
@@ -80,7 +80,7 @@ class Url
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        return "templates/".$custom."/";
+        return "Templates/".$custom."/";
     }
 
     /**

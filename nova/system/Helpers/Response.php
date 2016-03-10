@@ -9,8 +9,6 @@
 
 namespace Helpers;
 
-use Helpers\Document;
-
 /**
  * Class Response
  *
@@ -152,7 +150,7 @@ class Response
 
         $expires = 60 * 60 * 24 * 365; // Cache for one year
 
-        if (! file_exists($filePath) || Document::getExtension($filePath) == 'php') {
+        if (! file_exists($filePath)) {
             header("$httpProtocol 404 Not Found");
 
             return false;
@@ -204,11 +202,13 @@ class Response
         header('Content-type: ' .$contentType);
         header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
         header('Last-Modified: '.gmdate('D, d M Y H:i:s', $lastModified).' GMT');
+        //header('Etag: '.$etagFile);
         header('Cache-Control: max-age='.$expires);
 
         // Check if page has changed. If not, send 304 and exit
-        if (strtotime($ifModifiedSince) == $lastModified) {
+        if (@strtotime($ifModifiedSince) == $lastModified) {
             header("$httpProtocol 304 Not Modified");
+
             return true;
         }
 

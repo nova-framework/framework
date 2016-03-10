@@ -30,6 +30,33 @@ class Url
         header('Location: '.$url);
         exit;
     }
+    
+    /**
+     * Detect the true URI
+     *
+     * * @return string parsed URI
+     */
+    public static function detectUri()
+    {
+        $requestUri = $_SERVER['REQUEST_URI'];
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+
+        $pathName = dirname($scriptName);
+
+        if (strpos($requestUri, $scriptName) === 0) {
+            $requestUri = substr($requestUri, strlen($scriptName));
+        } else if (strpos($requestUri, $pathName) === 0) {
+            $requestUri = substr($requestUri, strlen($pathName));
+        }
+
+        if (($requestUri == '/') || empty($requestUri)) {
+            return '/';
+        }
+
+        $uri = parse_url($requestUri, PHP_URL_PATH);
+
+        return str_replace(array('//', '../'), '/', ltrim($uri, '/'));
+    }
 
     /**
      * Created the absolute address to the template folder.

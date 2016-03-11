@@ -10,7 +10,6 @@
 /** Create alias for Router. */
 use Core\Router;
 use Helpers\Hooks;
-use Helpers\Response;
 
 /** Get the Router instance. */
 $router = Router::getInstance();

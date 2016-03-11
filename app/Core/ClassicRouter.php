@@ -76,21 +76,19 @@ class ClassicRouter extends Router
             }
         }
 
-        // We arrived there
-        $result = $this->autoDispatch($autoUri);
-
-        if (!$result) {
-            // No valid Route found; invoke the Error Callback with the current URI as parameter.
-            $params = array(
-                htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
-            );
-
-            $this->invokeObject($this->callback(), $params);
-
-            return false;
+        // Auto-dispatch the processed URI; quit if the attempt finished successfully.
+        if ($this->autoDispatch($autoUri)) {
+            return true;
         }
 
-        return true;
+        // The dispatching failed; invoke the Error Callback with the current URI as parameter.
+        $params = array(
+            htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
+        );
+
+        $this->invokeObject($this->callback(), $params);
+
+        return false;
     }
 
     /**

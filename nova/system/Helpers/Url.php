@@ -11,6 +11,7 @@
 namespace Helpers;
 
 use Helpers\Session;
+use Helpers\Inflector;
 
 /**
  * Collection of methods for working with urls.
@@ -61,6 +62,23 @@ class Url
     }
 
     /**
+     * Created the absolute address to the assets folder.
+     *
+     * @param  string|null $module
+     * @return string url to assets folder
+     */
+    public static function resourcePath($module = null)
+    {
+        if($module !== null) {
+            $path = sprintf('modules/%s/', Inflector::tableize($module));
+        } else {
+            $path = '';
+        }
+
+        return SITEURL .$path .'assets/';
+    }
+
+    /**
      * Created the absolute address to the template folder.
      *
      * @param  boolean $custom
@@ -68,8 +86,9 @@ class Url
      */
     public static function templatePath($custom = TEMPLATE)
     {
-        return DIR.'templates/'.$custom.'/';
+        $template = Inflector::tableize($custom);
 
+        return SITEURL .'templates/' .$template .'/';
     }
 
     /**
@@ -80,7 +99,9 @@ class Url
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        return "templates/".$custom."/";
+        $template = Inflector::tableize($custom);
+
+        return "templates/" .$template ."/";
     }
 
     /**

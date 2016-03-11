@@ -30,6 +30,11 @@ class Config
         ob_start();
 
         /**
+         * Define the complete site URL.
+         */
+        define('SITEURL', 'http://www.novaframework.dev/');
+
+        /**
          * Define relative base path.
          */
         define('DIR', '/');

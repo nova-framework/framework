@@ -95,13 +95,11 @@ class Url
      * Created the relative address to the template folder.
      *
      * @param  boolean $custom
-     * @return string url to template folder
+     * @return string path to template folder
      */
     public static function relativeTemplatePath($custom = TEMPLATE)
     {
-        $template = Inflector::tableize($custom);
-
-        return "templates/" .$template ."/";
+        return "Templates/" .$custom ."/Assets/";
     }
 
     /**

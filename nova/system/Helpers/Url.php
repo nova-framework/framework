@@ -88,7 +88,7 @@ class Url
     {
         $template = Inflector::tableize($custom);
 
-        return SITEURL .'templates/' .$template .'/';
+        return SITEURL .'templates/' .$template .'/assets/';
     }
 
     /**

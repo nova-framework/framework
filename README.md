@@ -2,14 +2,30 @@
 Version 3.0 Release Candidate 1 (R1) of the Framework
 
 #Install
-* Download the files
-* for a localserver place index.php and .htaccess in your public folder and the nova folder above it.
-*This path can be configured from public_html/index.php, for security reasons it's a good idea to place sensative files above the document root.
-* open system/Core/Config.example.php and edit the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Save file as Config.php
-* open .htaccess and set the rewrite base same path as in the config the path is relative to the project url
-* open index.php and set the paths to if running all folders in the root no change will be needed. If app and system are in a higher folder above then edit the path to be ../app and ../system
-* in terminal run composer install
 
+Option 1 - files above document root:
+
+* place the nova folder above your htdocs / public / public_html folder
+* place the contents of public_html into your public folder (.htaccess and index.php)
+* navigate to nova in terminal and type composer install to initate the composer install.
+* edit public_html/.htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
+* edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
+
+Option 2 - everything inside your public folder
+
+* place the contents of nova and public_html folder inside your htdocs / public / public_html folder
+* navigate to the public folder in terminal and type composer install to initate the composer install.
+* open index.php and change the paths from using DIR to FILE:
+
+````
+define('APPDIR', dirname(__FILE__).'/app/');
+define('SYSTEMDIR', dirname(__FILE__).'/system/');
+define('PUBLICDIR', dirname(__FILE__).'/');
+define('ROOTDIR', dirname(__FILE__).'/');
+````
+
+* edit .htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
+* edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
 
 This has been tested with php 5.6 and php 7 please report any bugs.
 

@@ -15,7 +15,6 @@ use Helpers\Request;
 use Helpers\Response;
 use Core\Route;
 use Helpers\Url;
-use Helpers\Session;
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -241,10 +240,6 @@ class Router
         if (Request::isGet() && $this->dispatchFile($uri)) {
             return true;
         }
-
-        //assign language
-        empty($_GET['lang']) ? $lang = LANGUAGE_CODE : $lang = $_GET['lang'];
-        Session::set("lang",$lang);
 
         // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();

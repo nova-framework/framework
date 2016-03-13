@@ -63,6 +63,9 @@ if (defined('ENVIRONMENT')) {
 
 }
 
+/** initiate Alias */
+new Core\Alias();
+
 /** initiate config */
 new \Core\Config();
 

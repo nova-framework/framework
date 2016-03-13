@@ -8,7 +8,7 @@
  * @date updated March 9th, 2016
  */
 
-namespace Nova\Net;
+namespace Helpers;
 
 /**
  * Class Cookie

@@ -15,8 +15,7 @@
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 
-	RewriteRule ^(cs|de|en|fr|it|nl|pl|ro|ru)?(/(.*))?$ index.php?lang=$1&uri=$2 [QSA,L]
-  RewriteRule ^(.*)$ index.php?uri=$1 [QSA,L]
+	RewriteRule ^(.*)$ index.php$1 [QSA,L]
 
 </IfModule>
 

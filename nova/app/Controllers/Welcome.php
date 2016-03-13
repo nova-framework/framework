@@ -5,13 +5,14 @@
  * @author David Carr - dave@daveismyname.com
  * @version 3.0
  * @date June 27, 2014
- * @date updated March 9th, 2016
+ * @date updated March 13th, 2016
  */
 
 namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
+use Helpers\Session;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.
@@ -24,7 +25,7 @@ class Welcome extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->language->load('Welcome');
+        $this->language->load('Welcome', Session::get('lang'));
     }
 
     /**

@@ -41,7 +41,7 @@ class Url
      */
     public static function detectUri()
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = str_replace($_GET['lang'],'',$_SERVER['REQUEST_URI']);
         $scriptName = $_SERVER['SCRIPT_NAME'];
 
         $pathName = dirname($scriptName);

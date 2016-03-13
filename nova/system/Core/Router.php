@@ -241,6 +241,10 @@ class Router
             return true;
         }
 
+        //assign language
+        empty($_GET['lang']) ? $lang = LANGUAGE_CODE : $lang = $_GET['lang'];
+        Session::set("lang",$lang);
+
         // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();
 

@@ -5,21 +5,21 @@
 return array(
 
 	// Index method
-	'welcome_text' => 'Willkommen',
-	'welcome_message' => '
+	'welcomeText' => 'Willkommen',
+	'welcomeMessage' => '
 		Hallo und Willkommen im welcome-Controller! <br />
 		Dieser Inhalt kann in <code>/app/views/welcome/welcome.php</code> geändert werden.
 	',
 
 	// Subpage method
-	'subpage_text' => 'Subpage',
-	'subpage_message' => '
+	'subpageText' => 'Subpage',
+	'subpageMessage' => '
 		Hallo und Wilkommen im welcome-Controller in der subpage-Methode! <br />
 		Dieser Inhalt kann in <code>/app/views/welcome/subpage.php</code> geändert werden.
 	',
 
 	// Buttons
-	'open_subpage' => 'Subpage öffnen',
-	'back_home' => 'Home',
+	'openSubpage' => 'Subpage öffnen',
+	'backHome' => 'Home',
 
 );

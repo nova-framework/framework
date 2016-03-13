@@ -15,6 +15,7 @@ use Helpers\Request;
 use Helpers\Response;
 use Core\Route;
 use Helpers\Url;
+use Helpers\Session;
 
 /**
  * Router class will load requested controller / closure based on url.

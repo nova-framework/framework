@@ -25,7 +25,7 @@ class Welcome extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->language->load('Welcome', Session::get('lang'));
+        $this->language->load('Welcome');
     }
 
     /**

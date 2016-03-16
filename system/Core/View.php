@@ -158,19 +158,9 @@ class View
 
     public function render()
     {
-        if ($this->json) {
-            echo json_encode($this->data);
-        }
-
-        // Prepare the rendering variables.
-        foreach ($this->data as $name => $value) {
-            ${$name} = $value;
-        }
-
-        // Execute the rendering to output.
         Response::sendHeaders();
 
-        require $this->path;
+        echo $this->fetch();
     }
 
     public function with($key, $value = null)
@@ -222,14 +212,10 @@ class View
         // Get the Controller instance.
         $instance =& get_instance();
 
-        if ($path[0] === '/') {
-            // A Views "Root" path is wanted.
-            $viewPath = APPPATH."Views";
-        } else {
-            $viewPath = $instance->viewsPath();
-        }
+        //
+        $basePath = $instance->viewsPath();
 
-        return realpath($viewPath.$path.'.php');
+        return $basePath .$path .'.php';
     }
 
     private static function templatePath($template = null)
@@ -237,7 +223,9 @@ class View
         // Get the Controller instance.
         $instance =& get_instance();
 
-        $template = $template ? $template : $instance->template();
+        if(is_null($template)) {
+            $template = $instance->template();
+        }
 
         return APPPATH.'Templates'.DS.$template.DS;
     }
@@ -247,12 +235,14 @@ class View
         // Get the Controller instance.
         $instance =& get_instance();
 
-        $layout = $layout ? $layout : $instance->layout();
+        if(is_null($layout)) {
+            $layout = $instance->layout();
+        }
 
         $basePath = self::templatePath($template);
 
         // Adjust the filePath for Layouts
-        return $basePath.'Layouts'.DS.$layout.'.php';
+        return $basePath .'Layouts' .DS .$layout .'.php';
     }
 
     private static function fragmentPath($fragment, $fromTemplate = true)
@@ -260,22 +250,22 @@ class View
         // Get the Controller instance.
         $instance =& get_instance();
 
+        //
+        $module = $instance->module();
+
         if ($fromTemplate) {
+            // On Template path.
             $basePath = self::templatePath();
+        } else if($module !== null) {
+            // On Modules path.
+            $basePath = APPPATH .'Modules' .DS.$module .DS;
         } else {
-            $basePath = APPPATH.'Views'.DS;
-
-            // If we are in a Module, we should adjust the basePath.
-            $module = $instance->module();
-
-            if ($module) {
-                // Adjust the filePath for Module.
-                $basePath = APPPATH.'Modules'.DS.$module.DS;
-            }
+            // On Default path.
+            $basePath = APPPATH .'Views'.DS;
         }
 
         // Adjust the filePath for Fragments
-        return $basePath.'Fragments'.DS.$fragment.'.php';
+        return $basePath .'Fragments' .DS .$fragment .'.php';
     }
-    
+
 }

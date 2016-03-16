@@ -67,7 +67,7 @@ This content can be changed in <code>{0}</code>', $filePath);
      */
     public function subPage()
     {
-        $viewName = 'subpage';
+        $viewName = $this->method();
 
         $filePath = $this->basePath.$viewName.'.php';
 

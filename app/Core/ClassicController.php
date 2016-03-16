@@ -56,15 +56,30 @@ class ClassicController extends BaseController
             $data = $this->data();
 
             if ($this->useLayout) {
-                $content = View::renderView($this->method(), $data, true);
+                $content = View::make($this->method())
+                    ->loadData($data)
+                    ->fetch();
 
-                View::renderLayout($this->layout(), $content, $data);
+                View::layout($this->layout())
+                    ->loadData($data)
+                    ->withContent($content)
+                    ->render();
 
                 // Stop the Flight.
                 return false;
             }
 
-            View::renderView($this->method(), $data, false);
+            View::make($this->method())
+                ->loadData($data)
+                ->render();
+
+            // Stop the Flight.
+            return false;
+        } else if ($result instanceof View) {
+            View::layout($this->layout())
+                ->loadView($result)
+                ->loadData($this->data())
+                ->render();
 
             // Stop the Flight.
             return false;

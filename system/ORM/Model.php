@@ -145,9 +145,7 @@ class Model
 
         // Pre-process the Model Relations.
         if(! empty($this->relations)) {
-            $data = array();
-
-            $this->relations = array_fill_keys($this->relations, $data);
+            $this->relations = array_fill_keys($this->relations, array());
         }
 
         // Init the Model; exists when it has attributes loaded (via class fetching).

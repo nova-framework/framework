@@ -11,7 +11,7 @@
 namespace App\Controllers;
 
 use Nova\Core\View;
-use App\Core\BaseController;
+use App\Core\ThemedController as BaseController;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.
@@ -46,23 +46,21 @@ class Welcome extends BaseController
     }
 
     /**
-     * Define Index page title and load template files
+     * Define Welcome page title and load template files
      */
-    public function index()
+    public function welcome()
     {
-        $viewName = 'welcome';
+        $viewName = $this->method();
 
-        $filePath = $this->basePath.$viewName.'.php';
+        $filePath = $this->basePath .$viewName .'.php';
 
-        $data['title'] = __('Welcome');
-        $data['welcome_message'] = __('Hello, welcome from the welcome controller! <br/>
+        $message = __('Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
-        /*
-        View::renderTemplate('header', $data);
-        View::renderView($viewName, $data);
-        View::renderTemplate('footer', $data);
-        */
-        View::renderPage($viewName, $data, 'legacy');
+
+        // Setup the View variables.
+        $this->title(__('Welcome'));
+
+        $this->set('welcome_message', $message);
     }
 
     /**
@@ -70,17 +68,16 @@ This content can be changed in <code>{0}</code>', $filePath);
      */
     public function subPage()
     {
-        $viewName = 'subpage';
+        $viewName = $this->method();
 
-        $filePath = $this->basePath.$viewName.'.php';
+        $filePath = $this->basePath .$viewName .'.php';
 
-        $data['title'] = __('Subpage');
-        $data['welcome_message'] = __('Hello, welcome from the welcome controller and subpage method! <br/>
+        $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
 
-        // Render the Page using the Content fetching and the Layout.
-        $content = View::renderView($viewName, $data, true);
+        // Setup the View variables.
+        $this->title(__('Subpage'));
 
-        View::renderLayout('legacy', $content, $data);
+        $this->set('welcome_message', $message);
     }
 }

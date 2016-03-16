@@ -39,11 +39,11 @@ class Demo extends Controller
             'param4' => $param4
         );
 
-        echo '<pre>'.var_export($params, true).'</pre>';
+        return '<pre>'.var_export($params, true).'</pre>';
     }
 
     public function catchAll($str)
     {
-        echo htmlspecialchars($str, ENT_COMPAT, 'ISO-8859-1', true);
+        return htmlspecialchars($str, ENT_COMPAT, 'ISO-8859-1', true);
     }
 }

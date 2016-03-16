@@ -46,11 +46,10 @@ class Error extends BaseController
      */
     public function error404($error = null)
     {
-        $data['title'] = '404';
-        $data['error'] = $error;
-
         Response::addHeader("HTTP/1.0 404 Not Found");
 
-        View::renderPage('error404', $data);
+        return View::make('error404')
+            ->withTitle('404')
+            ->withError($error);
     }
 }

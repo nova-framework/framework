@@ -66,11 +66,6 @@ class Model
     protected $table;
 
     /**
-     * There we store the associated Model instances.
-     */
-    protected $objects = array();
-
-    /**
      * The type of date/time field used for created_on and modified_on fields.
      * Valid types are: 'int', 'datetime', 'date'
      *
@@ -148,6 +143,13 @@ class Model
             $this->table = implode('_', $segments);
         }
 
+        // Pre-process the Model Relations.
+        if(! empty($this->relations)) {
+            $data = array();
+
+            $this->relations = array_fill_keys($this->relations, $data);
+        }
+
         // Init the Model; exists when it has attributes loaded (via class fetching).
         if(! empty($this->attributes)) {
             $this->initObject(true);
@@ -211,7 +213,7 @@ class Model
 
         if($this->exist) {
             // Unserialize the specified fields into 'serialize'.
-            foreach ((array) $this->serialize as $fieldName) {
+            foreach ($this->serialize as $fieldName) {
                 if (! array_key_exists($fieldName, $this->attributes)) {
                     continue;
                 }
@@ -590,29 +592,22 @@ class Model
 
     public function __get($name)
     {
-        // If the name is of one of attributes, return the its Value.
+        // If the name is of one of attributes, return its value.
         if (array_key_exists($name, $this->attributes)) {
             return $this->attributes[$name];
-        } else if(! $this->exists) {
-            // No Relations can be called for the new Objects.
-            return null;
         }
 
-        // Calculate the Objects Cache Token.
-        $token = '__get_' .$name;
+        if($this->exists && array_key_exists($name, $this->relations) && method_exists($this, $name)) {
+            $data =& $this->relations[$name];
 
-        // It there data associated with the Cache token, return it.
-        if(isset($this->objects[$token])) {
-            return $this->objects[$token];
-        }
+            if(empty($data)) {
+                // If the current Relation data is empty, fetch the associated information.
+                $relation = call_user_func(array($this, $name));
 
-        // If there is a Relation defined for this name, process it.
-        if (in_array($name, $this->relations) && method_exists($this, $name)) {
-            $relation = call_user_func(array($this, $name));
+                $data = $relation->get();
+            }
 
-            $this->objects[$token] = $relation->get();
-
-            return $this->objects[$token];
+            return $data;
         }
     }
 
@@ -876,7 +871,7 @@ class Model
         if(! empty($this->relations)) {
             $result .= "\t\n";
 
-            foreach ($this->relations as $name) {
+            foreach ($this->relations as $name => $data) {
                 $relation = call_user_func(array($this, $name));
 
                 $result .= "\t" .ucfirst($relation->type())  .': ' .$name .' -> ' .$relation->getClass() . "\n";

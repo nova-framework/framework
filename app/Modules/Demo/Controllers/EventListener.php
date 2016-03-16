@@ -11,12 +11,12 @@ namespace App\Modules\Demo\Controllers;
 
 use Nova\Core\Event;
 use Nova\Core\View;
-use App\Core\ClassicController;
+use App\Core\ThemedController as BaseController;
 
 /**
  * Sample Themed Controller with its typical usage.
  */
-class EventListener extends ClassicController
+class EventListener extends BaseController
 {
 
     /**

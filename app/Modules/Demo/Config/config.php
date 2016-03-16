@@ -34,11 +34,6 @@ Config::set('demos_menu', array(
                 'url'  => site_url('demos/themed/welcome'),
                 'icon' => 'fa fa-gears',
             ),
-            array(
-                'name' => __d('demo', 'Classic Controller'),
-                'url'  => site_url('demos/classic/welcome'),
-                'icon' => 'fa fa-gears',
-            ),
         ),
     ),
     'events' => array(

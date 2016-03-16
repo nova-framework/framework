@@ -14,8 +14,6 @@ Router::get('demos(/index)', 'App\Modules\Demo\Controllers\Index@home');
 /** Controller Demo */
 Router::any('demos/themed/welcome', 'App\Modules\Demo\Controllers\Themed@welcome');
 Router::any('demos/themed/subpage', 'App\Modules\Demo\Controllers\Themed@subPage');
-Router::any('demos/classic/welcome', 'App\Modules\Demo\Controllers\Classic@welcome');
-Router::any('demos/classic/subpage', 'App\Modules\Demo\Controllers\Classic@subPage');
 
 /** Backend Demo */
 Router::any('demos/backend(/index)', 'App\Modules\Demo\Controllers\Backend@index');

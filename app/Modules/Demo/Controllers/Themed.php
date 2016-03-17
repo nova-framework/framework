@@ -19,7 +19,7 @@ class Themed extends BaseController
 {
     private $basePath;
 
-    protected $useLayout  = true;
+    protected $useLayout = true;
 
     /**
      * Call the parent construct
@@ -52,7 +52,7 @@ class Themed extends BaseController
     {
         $viewName = $this->method();
 
-        $filePath = $this->basePath.$viewName.'.php';
+        $filePath = $this->basePath .$viewName .'.php';
 
         $message = __d('demo', 'Hello, welcome from the welcome controller! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
@@ -70,14 +70,14 @@ This content can be changed in <code>{0}</code>', $filePath);
     {
         $viewName = $this->method();
 
-        $filePath = $this->basePath.$viewName.'.php';
+        $filePath = $this->basePath .$viewName .'.php';
 
         $message = __d('demo', 'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
 
         return View::make($viewName)
-            ->withTitle(__d('demo', 'Subpage'))
-            ->withMessage($message);
+            ->shares('title', __d('demo', 'Subpage'))
+            ->with('message', $message);
     }
 
     /**

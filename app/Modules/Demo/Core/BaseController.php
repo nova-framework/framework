@@ -12,12 +12,12 @@ namespace App\Modules\Demo\Core;
 use Nova\Core\View;
 use Nova\Events\Manager as Events;
 use Nova\Config;
-use App\Core\ThemedController;
+use App\Core\BaseController as Controller;
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
  */
-class BaseController extends ThemedController
+class BaseController extends Controller
 {
     protected $layout = 'demos';
 

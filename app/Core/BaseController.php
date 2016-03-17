@@ -18,6 +18,8 @@ use Nova\Events\Manager as Events;
  */
 class BaseController extends Controller
 {
+    protected $layout = 'themed';
+
     protected $events = null;
 
 
@@ -93,6 +95,31 @@ class BaseController extends Controller
      */
     protected function afterFlight($result)
     {
+        if (($result === false) || ! $this->autoRender) {
+            // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
+            return false;
+        }
+
+        if (($result === true) || is_null($result)) {
+            $result = View::make($this->method())->with($this->data());
+        }
+
+        if ($result instanceof View) {
+            $content = $result->fetch();
+
+            if ($this->useLayout) {
+                View::layout($this->layout())
+                    ->with($this->data())
+                    ->with('content', $content)
+                    ->render();
+            } else {
+                echo $content;
+            }
+
+            // Stop the Flight.
+            return false;
+        }
+
         // Leave to parent's method the Flight decisions.
         return parent::afterFlight($result);
     }

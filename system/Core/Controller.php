@@ -157,7 +157,7 @@ abstract class Controller
             return true;
         }
 
-        // Method execution Result rendering; we handle there only the strings and arrays.
+        // Result rendering; we handle there only strings and the arrays.
 
         if (is_array($result)) {
             // When the returned result is an Array, we should prepare a JSON response.

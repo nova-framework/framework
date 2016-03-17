@@ -1,10 +1,10 @@
 <?php
 
 return array (
+  'Backend - Object Relational Model' => '',
   'CRUD Support' => '',
   'Classic BaseModel' => '',
-  'Classic Controller' => '',
-  'Controllers' => '',
+  'Controller' => '',
   'Creating Records' => '',
   'Dashboard' => '',
   'Database' => '',
@@ -36,6 +36,5 @@ Tento obsah lze změnit v <code>{0}</code>',
   'Relations: hasOne' => '',
   'Schema support' => '',
   'Subpage' => 'Podstránka',
-  'Themed Controller' => '',
   'Welcome' => 'Vítejte',
 );

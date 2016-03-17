@@ -35,9 +35,9 @@ class BaseController extends Controller
         // Setup the Data Entries.
         $this->data = array(
             'headerMetaData' => array(),
-            'headerCSSheets'  => array(),
-            'headerJScripts'  => array(),
-            'footerJScripts'  => array(),
+            'headerCSSheets' => array(),
+            'headerJScripts' => array(),
+            'footerJScripts' => array(),
         );
     }
 

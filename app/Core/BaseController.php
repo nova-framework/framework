@@ -101,17 +101,14 @@ class BaseController extends Controller
         }
 
         if (($result === true) || is_null($result)) {
-            $result = View::make($this->method())->with($this->data());
+            $result = View::make($this->method(), $this->data());
         }
 
         if ($result instanceof View) {
             $content = $result->fetch();
 
             if ($this->useLayout) {
-                View::layout($this->layout())
-                    ->with($this->data())
-                    ->with('content', $content)
-                    ->render();
+                View::layout($this->layout(), $this->data())->withContent($content)->render();
             } else {
                 echo $content;
             }

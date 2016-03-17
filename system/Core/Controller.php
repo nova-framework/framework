@@ -175,7 +175,7 @@ abstract class Controller
     protected function renderResult($result)
     {
         if ($result instanceof View) {
-            $result->display();
+            $result->render();
 
             return;
         }

@@ -143,7 +143,7 @@ class Model
             $this->table = implode('_', $segments);
         }
 
-        // Pre-process the Model Relations.
+        // Adjust the Relations array to permit the storage of associated Models data.
         if(! empty($this->relations)) {
             $this->relations = array_fill_keys($this->relations, array());
         }

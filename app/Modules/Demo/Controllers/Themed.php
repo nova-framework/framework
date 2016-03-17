@@ -19,6 +19,7 @@ class Themed extends BaseController
 {
     private $basePath;
 
+    protected $useLayout  = true;
 
     /**
      * Call the parent construct

@@ -114,7 +114,7 @@ class BaseController extends Controller
                 $content = $result->fetch();
             }
 
-            // Display the Rendering result.
+            // Display the View/Layout Rendering result.
             Response::sendHeaders();
 
             echo $content;

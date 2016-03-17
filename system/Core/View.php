@@ -23,7 +23,7 @@ use Nova\Net\Response;
 class View
 {
     /**
-     * The path to the view on disk.
+     * The path to the View file on disk.
      *
      * @var string
      */
@@ -43,7 +43,6 @@ class View
      */
     public static $shared = array();
 
-    protected $json = false;
 
     /**
      * Constructor
@@ -51,20 +50,14 @@ class View
      * @param mixed $json
      * @throws \UnexpectedValueException
      */
-    public function __construct($param, $json = false)
+    public function __construct($path, array $data = array())
     {
-        if (! $json) {
-            $this->path = $param;
-
-            return;
+        if (! is_readable($path)) {
+            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $path));
         }
 
-        if (! is_array($param)) {
-            throw new \UnexpectedValueException(__d('system', 'Parameter should be an Array'));
-        }
-
-        $this->json = true;
-        $this->data = $param;
+        $this->path = $path;
+        $this->data = $data;
     }
 
     /**
@@ -125,13 +118,9 @@ class View
      */
     public static function make($view, $data = array())
     {
-        $filePath = self::viewPath($view);
+        $path = self::viewPath($view);
 
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
-        }
-
-        return new View($filePath);
+        return new View($path, $data);
     }
 
     /**
@@ -142,15 +131,11 @@ class View
      */
     public static function layout($layout = null, $data = array())
     {
-        $filePath = self::layoutPath($layout);
-
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
-        }
+        $path = self::layoutPath($layout);
 
         Response::addHeader('Content-Type: text/html; charset=UTF-8');
 
-        return new View($filePath);
+        return new View($path, $data);
     }
 
     /**
@@ -159,45 +144,16 @@ class View
      * @return View
      * @throws \UnexpectedValueException
      */
-    public static function fragment($fragment, $fromTemplate = true)
+    public static function fragment($fragment, $fromTemplate = true, $data = array())
     {
-        $filePath = self::fragmentPath($fragment, $fromTemplate);
+        $path = self::fragmentPath($fragment, $fromTemplate);
 
-        if (! is_readable($filePath)) {
-            throw new \UnexpectedValueException(__d('system', 'File not found: {0}', $filePath));
-        }
-
-        return new View($filePath);
-    }
-
-    /**
-     * @param $data
-     * @return View
-     * @throws \UnexpectedValueException
-     */
-    public static function json($data)
-    {
-        if (! is_array($data)) {
-            throw new \UnexpectedValueException(__d('system', 'Unexpected parameter'));
-        }
-
-        Response::addHeader('Content-Type: application/json');
-
-        return new View($data, true);
-    }
-
-    public function isJson()
-    {
-        return $this->json;
+        return new View($path, $data);
     }
 
     public function fetch()
     {
         $data = $this->data();
-
-        if ($this->json) {
-            return json_encode($data);
-        }
 
         // Prepare the rendering variables.
         foreach ($data as $name => $value) {
@@ -303,6 +259,10 @@ class View
     {
         static::$shared[$key] = $value;
     }
+
+    //--------------------------------------------------------------------
+    // Private Methods
+    //--------------------------------------------------------------------
 
     private static function viewPath($path)
     {

@@ -11,7 +11,7 @@ namespace App\Modules\Demo\Controllers;
 
 use Nova\Core\Event;
 use Nova\Core\View;
-use App\Core\ThemedController as BaseController;
+use App\Core\BaseController;
 
 /**
  * Sample Themed Controller with its typical usage.

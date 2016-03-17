@@ -223,12 +223,10 @@ class View
     {
         $data = array_merge($this->data, static::$shared);
 
-        // All nested views and responses are evaluated before the main view.
-        // This allows the assets used by nested views to be added to the
-        // asset container before the main view is evaluated.
+        // All nested Views are evaluated before the main view.
         foreach ($data as $key => $value) {
             if ($value instanceof View) {
-                $data[$key] = $value->render();
+                $data[$key] = $value->fetch();
             }
         }
 

@@ -75,9 +75,10 @@ This content can be changed in <code>{0}</code>', $filePath);
         $message = __d('demo', 'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>{0}</code>', $filePath);
 
-        return View::make($viewName)
-            ->shares('title', __d('demo', 'Subpage'))
-            ->with('message', $message);
+        //
+        View::share('title', __d('demo', 'Subpage'));
+
+        return View::make($viewName)->withMessage($message);
     }
 
     /**

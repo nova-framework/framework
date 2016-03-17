@@ -54,7 +54,6 @@ class Error extends BaseController
         //
         View::share('title', __('Error 404'));
 
-        return View::make('error404')
-            ->withError($error);
+        return View::make('error404')->withError($error);
     }
 }

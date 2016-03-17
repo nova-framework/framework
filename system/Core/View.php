@@ -1,12 +1,10 @@
 <?php
 /**
- * View - load template pages
+ * View - View class to load template and views files.
  *
- * @author David Carr - dave@daveismyname.com
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
- * @date June 27, 2014
- * @date updated Dec 18, 2015
+ * @date updated Mar 17, 2016
  */
 
 namespace Nova\Core;
@@ -15,7 +13,6 @@ use Nova\Core\Controller;
 use Nova\Helpers\Inflector;
 use Nova\Net\Response;
 
-// TODO: Add more PHPDoc Blocks
 
 /**
  * View class to load template and views files.
@@ -114,7 +111,6 @@ class View
      * Make view
      * @param $view
      * @return View
-     * @throws \UnexpectedValueException
      */
     public static function make($view, $data = array())
     {
@@ -127,7 +123,6 @@ class View
      * Make view layout
      * @param null $layout
      * @return View
-     * @throws \UnexpectedValueException
      */
     public static function layout($layout = null, $data = array())
     {
@@ -142,7 +137,6 @@ class View
      * @param $fragment
      * @param bool $fromTemplate
      * @return View
-     * @throws \UnexpectedValueException
      */
     public static function fragment($fragment, $fromTemplate = true, $data = array())
     {
@@ -179,7 +173,7 @@ class View
     {
         $data = array_merge($this->data, static::$shared);
 
-//         // All nested Views are evaluated before the main View.
+        // All nested Views are evaluated before the main View.
         foreach ($data as $key => $value) {
             if ($value instanceof View) {
                 $data[$key] = $value->fetch();

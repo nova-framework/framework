@@ -367,7 +367,7 @@ class Builder
         $query->where($field, $value);
 
         if ($ignore !== null) {
-            $query->where($this->primaryKey, $ignore);
+            $query->where($this->primaryKey, '!=', $ignore);
         }
 
         $result = $query->count();

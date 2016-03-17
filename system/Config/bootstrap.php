@@ -29,7 +29,7 @@ if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'consta
 Console::logSpeed('START Nova Framework');
 
 /** A useful alias for the Query Builder Facade. */
-class_alias('Nova\Database\Query\Builder\Facade', 'Nova\QB');
+class_alias('\Nova\Database\Query\Builder\Facade', 'Nova\QB');
 
 /** Turn on output buffering. */
 ob_start();

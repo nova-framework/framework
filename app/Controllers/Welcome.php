@@ -11,7 +11,7 @@
 namespace App\Controllers;
 
 use Nova\Core\View;
-use App\Core\ThemedController as BaseController;
+use App\Core\BaseController;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.

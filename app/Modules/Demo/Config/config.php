@@ -26,12 +26,17 @@ Config::set('demos_menu', array(
         'icon'      => 'fa fa-dashboard',
     ),
     'platform' => array(
-        'name'      => __d('demo', 'Controllers'),
+        'name'      => __d('demo', 'Controller'),
         'icon'      => 'fa fa-server',
         'children'  => array(
             array(
-                'name' => __d('demo', 'Themed Controller'),
+                'name' => __d('demo', 'Welcome'),
                 'url'  => site_url('demos/themed/welcome'),
+                'icon' => 'fa fa-gears',
+            ),
+            array(
+                'name' => __d('demo', 'Subpage'),
+                'url'  => site_url('demos/themed/subpage'),
                 'icon' => 'fa fa-gears',
             ),
         ),

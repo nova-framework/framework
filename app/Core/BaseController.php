@@ -106,8 +106,9 @@ class BaseController extends Controller
 
         if ($result instanceof View) {
             if ($this->useLayout) {
-                $result = View::layout($this->layout(), $this->data())
-                    ->withContent($result->fetch());
+                $content = $result->fetch();
+
+                $result = View::layout($this->layout(), $this->data())->withContent($content);
             }
 
             $result->render();

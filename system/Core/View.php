@@ -46,8 +46,8 @@ class View
 
     /**
      * Constructor
-     * @param array $param
-     * @param mixed $json
+     * @param mixed $path
+     * @param array $data
      * @throws \UnexpectedValueException
      */
     public function __construct($path, array $data = array())
@@ -101,13 +101,13 @@ class View
      */
     public function __call($method, $params)
     {
-        if (strpos($method, 'with') !== 0) {
-            throw new \BadMethodCallException(__d('system', 'Invalid method called: View::{0}', $method));
+        if (strpos($method, 'with') === 0) {
+            $name = Inflector::tableize(substr($method, 4));
+
+            return $this->with($name, array_shift($params));
         }
 
-        $name = Inflector::tableize(substr($method, 4));
-
-        return $this->with($name, array_shift($params));
+        throw new \BadMethodCallException(__d('system', 'Method [{0}] is not defined on the View class', $method));
     }
 
     /**
@@ -179,7 +179,7 @@ class View
     {
         $data = array_merge($this->data, static::$shared);
 
-        // All nested Views are evaluated before the main view.
+//         // All nested Views are evaluated before the main View.
         foreach ($data as $key => $value) {
             if ($value instanceof View) {
                 $data[$key] = $value->fetch();
@@ -193,11 +193,11 @@ class View
      * Add a view instance to the view data.
      *
      * <code>
-     *              // Add a view instance to a view's data
-     *              $view = View::make('foo')->nest('footer', 'partials.footer');
+     *     // Add a view instance to a view's data
+     *     $view = View::make('foo')->nest('footer', 'partials/footer');
      *
-     *              // Equivalent functionality using the "with" method
-     *              $view = View::make('foo')->with('footer', View::make('partials.footer'));
+     *     // Equivalent functionality using the "with" method
+     *     $view = View::make('foo')->with('footer', View::make('partials/footer'));
      * </code>
      *
      * @param  string  $key

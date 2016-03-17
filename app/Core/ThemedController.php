@@ -53,33 +53,21 @@ class ThemedController extends BaseController
         }
 
         if (($result === true) || is_null($result)) {
-            $data = $this->data();
+            $result = View::make($this->method())->with($this->data());
+        }
+
+        if ($result instanceof View) {
+            $content = $result->fetch();
 
             if ($this->useLayout) {
-                $content = View::make($this->method())
-                    ->loadData($data)
-                    ->fetch();
-
                 View::layout($this->layout())
-                    ->loadData($data)
+                    ->with($this->data())
+                    ->with($result->data())
                     ->withContent($content)
                     ->render();
-
-                // Stop the Flight.
-                return false;
+            } else {
+                echo $content;
             }
-
-            View::make($this->method())
-                ->loadData($data)
-                ->render();
-
-            // Stop the Flight.
-            return false;
-        } else if ($result instanceof View) {
-            View::layout($this->layout())
-                ->loadView($result)
-                ->loadData($this->data())
-                ->render();
 
             // Stop the Flight.
             return false;

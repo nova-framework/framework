@@ -52,6 +52,45 @@ class View
         $this->data = $param;
     }
 
+    /**
+     * Magic Method for handling dynamic data access.
+     */
+    public function __get($key)
+    {
+        return $this->data[$key];
+    }
+
+    /**
+     * Magic Method for handling the dynamic setting of data.
+     */
+    public function __set($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+
+    /**
+     * Magic Method for checking dynamically-set data.
+     */
+    public function __isset($key)
+    {
+        return isset($this->data[$key]);
+    }
+
+    /**
+     * Get the evaluated string content of the View.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->fetch();
+    }
+
+    /**
+     * Magic Method for handling dynamic functions.
+     *
+     * This method handles calls to dynamic with helpers.
+     */
     public function __call($method, $params)
     {
         if (strpos($method, 'with') !== 0) {
@@ -165,46 +204,29 @@ class View
 
     public function with($key, $value = null)
     {
-        $this->data[$key] = $value;
-
-        return $this;
-    }
-
-    public function data($name = null)
-    {
-        if (is_null($name)) {
-            return $this->data;
-        } else if (isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        return null;
-    }
-
-    public function loadData($data)
-    {
-        if ($data instanceof View) {
-            $this->data = array_merge($this->data, $data->data());
+        if (is_array($key)) {
+            $this->data = array_merge($this->data, $key);
         } else {
-            if (! is_array($data)) {
-                throw new \UnexpectedValueException(__d('system', 'Unexpected parameter'));
-            }
-
-            $this->data = array_merge($this->data, $data);
+            $this->data[$key] = $value;
         }
 
         return $this;
+    }
+
+    public function data()
+    {
+        return $this->data;
     }
 
     public function loadView($view)
     {
-        if ($view instanceof View) {
-            $this->data = $view->data();
-
-            return $this->with('content', $view->fetch());
+        if (! $view instanceof View) {
+            throw new \UnexpectedValueException(__d('system', 'Unknown parameter'));
         }
 
-        throw new \UnexpectedValueException(__d('system', 'Unknown parameter'));
+        $this->data = $view->data();
+
+        return $this->with('content', $view->fetch());
     }
 
     private static function viewPath($path)
@@ -227,7 +249,7 @@ class View
             $template = $instance->template();
         }
 
-        return APPPATH.'Templates'.DS.$template.DS;
+        return APPPATH .'Templates' .DS .$template .DS;
     }
 
     private static function layoutPath($layout = null, $template = null)

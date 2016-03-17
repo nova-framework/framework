@@ -32,12 +32,3 @@ Router::any('demos/models/orm_model(/index)', 'App\Modules\Demo\Controllers\Mode
 
 /** Event & Event Listener demo */
 Router::any('demos/events', 'App\Modules\Demo\Controllers\Events@index');
-
-/** Database & Database Abstraction Layer demo */
-/*
-Router::get('demos/database/mysqlexport',          'App\Modules\Demo\Controllers\Database\Export@mysql');
-Router::get('demos/database/engine/basic/mysql',   'App\Modules\Demo\Controllers\Database\Engine@basicMysql');
-Router::get('demos/database/engine/basic/sqlite',  'App\Modules\Demo\Controllers\Database\Engine@basicSqlite');
-Router::get('demos/database/service/basic/mysql',  'App\Modules\Demo\Controllers\Database\Service@basicMysql');
-Router::get('demos/database/service/basic/sqlite', 'App\Modules\Demo\Controllers\Database\Service@basicSqlite');
-*/

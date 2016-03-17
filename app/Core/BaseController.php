@@ -12,6 +12,7 @@ namespace App\Core;
 use Nova\Core\View;
 use Nova\Core\Controller;
 use Nova\Events\Manager as Events;
+use Nova\Net\Response;
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.
@@ -106,12 +107,17 @@ class BaseController extends Controller
 
         if ($result instanceof View) {
             if ($this->useLayout) {
+                $content = View::layout($this->layout(), $this->data())
+                    ->withContent($result)
+                    ->fetch();
+            } else {
                 $content = $result->fetch();
-
-                $result = View::layout($this->layout(), $this->data())->withContent($content);
             }
 
-            $result->render();
+            // Display the View/Layout Rendering result.
+            Response::sendHeaders();
+
+            echo $content;
 
             // Stop the Flight.
             return false;

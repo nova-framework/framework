@@ -27,8 +27,6 @@ abstract class Connection extends PDO
     /** @var string The last executed Query is stored there */
     protected $lastSqlQuery = null;
 
-    public static $whereOperators = array("=", "!=", ">", "<", ">=", "<=", "<>", "LIKE");
-
     /** @var string Return type. */
     protected $returnType = 'assoc';
 

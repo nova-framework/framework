@@ -1,6 +1,6 @@
 <?php
 /**
- * Router - routing urls to closures and controllers.
+ * Controller - Base Class for all Controllers from Framework.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -101,8 +101,6 @@ abstract class Controller
         }
 
         $this->viewsPath = APPPATH .$viewsPath .DS;
-
-        Console::log(__d('system', '{0} initialized', $this->className));
     }
 
     /**
@@ -110,8 +108,6 @@ abstract class Controller
      */
     protected function beforeFlight()
     {
-        Console::log(__d('system', '{0} finished the beforeFlight stage', $this->className));
-
         return true;
     }
 
@@ -238,7 +234,8 @@ abstract class Controller
             $data = array($name => $value);
         }
 
-        $this->data = $data + $this->data;
+        //$this->data = $data + $this->data;
+        $this->data = array_merge($this->data, $data);
     }
 
     /**

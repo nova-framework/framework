@@ -2,10 +2,9 @@
 /**
  * Error class - calls a 404 page.
  *
- * @author David Carr - dave@daveismyname.com
- * @version 2.2
- * @date June 27, 2014
- * @date updated Sept 19, 2015
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ * @date Mar 17, 2016
  */
 
 namespace App\Controllers;

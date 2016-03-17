@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Services\Database\Car;
@@ -8,9 +9,9 @@ use Nova\Core\Controller;
 use Nova\Database\Manager;
 
 /*
-*
-* Demo controller
-*/
+ *
+ * Demo controller
+ */
 class Demo extends Controller
 {
 
@@ -39,11 +40,13 @@ class Demo extends Controller
             'param4' => $param4
         );
 
-        return '<pre>'.var_export($params, true).'</pre>';
+        $result = '<pre>' .var_export($params, true) .'</pre>';
+
+        return $result;
     }
 
-    public function catchAll($str)
+    public function catchAll($param)
     {
-        return htmlspecialchars($str, ENT_COMPAT, 'ISO-8859-1', true);
+        return htmlspecialchars($param, ENT_COMPAT, 'ISO-8859-1', true);
     }
 }

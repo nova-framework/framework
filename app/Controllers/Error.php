@@ -19,6 +19,9 @@ use Nova\Net\Response;
  */
 class Error extends BaseController
 {
+    protected $useLayout = true;
+
+
     /**
      * Call the parent construct
      */
@@ -48,8 +51,10 @@ class Error extends BaseController
     {
         Response::addHeader("HTTP/1.0 404 Not Found");
 
+        //
+        View::share('title', __('Error 404'));
+
         return View::make('error404')
-            ->withTitle('404')
             ->withError($error);
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
 return array (
+  'Backend - Object Relational Model' => '',
   'CRUD Support' => 'CRUD Unterstützung',
   'Classic BaseModel' => 'klassisches Basis Model',
-  'Classic Controller' => 'klassischer Controller',
-  'Controllers' => 'Controller',
+  'Controller' => '',
   'Creating Records' => 'Erstellen von Datensätzen',
   'Dashboard' => 'Übersicht',
   'Database' => 'Datenbank',
@@ -36,6 +36,5 @@ Dieser Inhalt kann in <code>{0}</code> geändert werden.',
   'Relations: hasOne' => 'Relation: hat ein (hasOne)',
   'Schema support' => 'Schemaunterstützung',
   'Subpage' => 'Subpage',
-  'Themed Controller' => 'thematischer Controller',
   'Welcome' => 'Willkommen',
 );

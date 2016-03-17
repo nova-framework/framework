@@ -2,6 +2,7 @@
 
 return array (
   'Cannot initialize the Table Fields' => '',
+  'Error 404' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>{0}</code>' => 'Hallo, welkom van de welcome controller en de subpagina methode! <br/>
 Deze inhoud kan worden veranderd in <code>{0}</code>',

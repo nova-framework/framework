@@ -132,14 +132,10 @@ abstract class Controller
     {
         $options = Config::get('profiler');
 
-        Console::log(__d('system', '{0} enter into beforeFlight stage', $this->className));
-
         if ($this->beforeFlight() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
-
-        Console::log(__d('system', '{0} execute the Method: {1}', $this->className, $this->method()));
 
         // Execute the Controller's Method with the given arguments.
         try {
@@ -156,44 +152,28 @@ abstract class Controller
             }
         }
 
-        Console::log(__d('system', '{0} enter into afterFlight stage', $this->className));
-
         if (($this->afterFlight($result) === false) || ! $this->autoRender) {
             // Is wanted to stop the Flight or there is no auto-rendering.
             return true;
         }
 
-        $this->renderResult($result);
-
-        return true;
-    }
-
-    /**
-     * Render Result
-     * @param View|array|string $result
-     */
-    protected function renderResult($result)
-    {
-        if ($result instanceof View) {
-            $result->render();
-
-            return;
-        }
+        // Method execution Result rendering; we handle there only the strings and arrays.
 
         if (is_array($result)) {
+            // When the returned result is an Array, we should prepare a JSON response.
             Response::addHeader('Content-Type: application/json');
 
             $result = json_encode($result);
-        } else if (is_string($result)) {
-            Response::addHeader('Content-Type: text/html; charset=UTF-8');
-        } else {
-            return;
         }
 
         // Output the result.
-        Response::sendHeaders();
+        if (is_string($result)) {
+            Response::sendHeaders();
 
-        echo $result;
+            echo $result;
+        }
+
+        return true;
     }
 
     /**

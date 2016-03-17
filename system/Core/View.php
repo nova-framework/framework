@@ -22,12 +22,27 @@ use Nova\Net\Response;
  */
 class View
 {
-    /*
-     * The View's internal stored variables.
+    /**
+     * The path to the view on disk.
+     *
+     * @var string
      */
     protected $path = null;
 
+    /**
+     * The view data.
+     *
+     * @var array
+     */
     protected $data = array();
+
+    /**
+     * All of the shared view data.
+     *
+     * @var array
+     */
+    public static $shared = array();
+
     protected $json = false;
 
     /**
@@ -97,9 +112,9 @@ class View
             throw new \BadMethodCallException(__d('system', 'Invalid method called: View::{0}', $method));
         }
 
-        $varname = Inflector::tableize(substr($method, 4));
+        $name = Inflector::tableize(substr($method, 4));
 
-        return $this->with($varname, array_shift($params));
+        return $this->with($name, array_shift($params));
     }
 
     /**
@@ -108,7 +123,7 @@ class View
      * @return View
      * @throws \UnexpectedValueException
      */
-    public static function make($view)
+    public static function make($view, $data = array())
     {
         $filePath = self::viewPath($view);
 
@@ -125,7 +140,7 @@ class View
      * @return View
      * @throws \UnexpectedValueException
      */
-    public static function layout($layout = null)
+    public static function layout($layout = null, $data = array())
     {
         $filePath = self::layoutPath($layout);
 
@@ -178,12 +193,14 @@ class View
 
     public function fetch()
     {
+        $data = $this->data();
+
         if ($this->json) {
-            return json_encode($this->data);
+            return json_encode($data);
         }
 
         // Prepare the rendering variables.
-        foreach ($this->data as $name => $value) {
+        foreach ($data as $name => $value) {
             ${$name} = $value;
         }
 
@@ -202,6 +219,52 @@ class View
         echo $this->fetch();
     }
 
+    public function data()
+    {
+        $data = array_merge($this->data, static::$shared);
+
+        // All nested views and responses are evaluated before the main view.
+        // This allows the assets used by nested views to be added to the
+        // asset container before the main view is evaluated.
+        foreach ($data as $key => $value) {
+            if ($value instanceof View) {
+                $data[$key] = $value->render();
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Add a view instance to the view data.
+     *
+     * <code>
+     *              // Add a view instance to a view's data
+     *              $view = View::make('foo')->nest('footer', 'partials.footer');
+     *
+     *              // Equivalent functionality using the "with" method
+     *              $view = View::make('foo')->with('footer', View::make('partials.footer'));
+     * </code>
+     *
+     * @param  string  $key
+     * @param  string  $view
+     * @param  array   $data
+     * @return View
+     */
+    public function nest($key, $view, $data = array())
+    {
+        return $this->with($key, static::make($view, $data));
+    }
+
+    /**
+     * Add a key / value pair to the view data.
+     *
+     * Bound data will be available to the view as variables.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return View
+     */
     public function with($key, $value = null)
     {
         if (is_array($key)) {
@@ -213,20 +276,34 @@ class View
         return $this;
     }
 
-    public function data()
+    /**
+     * Add a key / value pair to the shared view data.
+     *
+     * Shared view data is accessible to every view created by the application.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return View
+     */
+    public function shares($key, $value)
     {
-        return $this->data;
+        static::share($key, $value);
+
+        return $this;
     }
 
-    public function loadView($view)
+    /**
+     * Add a key / value pair to the shared view data.
+     *
+     * Shared view data is accessible to every view created by the application.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return void
+     */
+    public static function share($key, $value)
     {
-        if (! $view instanceof View) {
-            throw new \UnexpectedValueException(__d('system', 'Unknown parameter'));
-        }
-
-        $this->data = $view->data();
-
-        return $this->with('content', $view->fetch());
+        static::$shared[$key] = $value;
     }
 
     private static function viewPath($path)

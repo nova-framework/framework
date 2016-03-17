@@ -62,8 +62,7 @@ class ThemedController extends BaseController
             if ($this->useLayout) {
                 View::layout($this->layout())
                     ->with($this->data())
-                    ->with($result->data())
-                    ->withContent($content)
+                    ->with('content', $content)
                     ->render();
             } else {
                 echo $content;

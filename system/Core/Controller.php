@@ -117,6 +117,28 @@ abstract class Controller
      */
     protected function afterFlight($result)
     {
+        if (is_null($result) || ! $this->autoRender) {
+            // No result returned or there is no auto-rendering.
+            return true;
+        }
+
+        if ($result instanceof View) {
+            // The result is a View instance; we should fetch it.
+            Response::addHeader('Content-Type: text/html; charset=UTF-8');
+
+            $result = $result->fetch();
+        } else if (is_array($result)) {
+            // The returned result is an Array; prepare a JSON response.
+            Response::addHeader('Content-Type: application/json');
+
+            $result = json_encode($result);
+        }
+        
+        // Output the result.
+        Response::sendHeaders();
+
+        echo $result;
+
         return true;
     }
 
@@ -126,48 +148,23 @@ abstract class Controller
      */
     public function execute()
     {
-        $options = Config::get('profiler');
+        //
+        // Before Flight stage.
 
         if ($this->beforeFlight() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
 
+        //
         // Execute the Controller's Method with the given arguments.
-        try {
-            $result = call_user_func_array(array($this, $this->method()), $this->params());
-        }
-        // Catch the exceptions.
-        catch(\Exception $e) {
-            if((ENVIRONMENT == 'development') && ($options['use_forensics'] == true)) {
-                Console::logError($e, $e->getMessage());
 
-                $result = null;
-            } else {
-                throw $e;
-            }
-        }
+        $result = call_user_func_array(array($this, $this->method()), $this->params());
 
-        if (($this->afterFlight($result) === false) || ! $this->autoRender) {
-            // Is wanted to stop the Flight or there is no auto-rendering.
-            return true;
-        }
+        //
+        // After Flight stage.
 
-        // Result rendering; we handle there only strings and the arrays.
-
-        if (is_array($result)) {
-            // When the returned result is an Array, we should prepare a JSON response.
-            Response::addHeader('Content-Type: application/json');
-
-            $result = json_encode($result);
-        }
-
-        // Output the result.
-        if (is_string($result)) {
-            Response::sendHeaders();
-
-            echo $result;
-        }
+        $this->afterFlight($result);
 
         return true;
     }

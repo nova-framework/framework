@@ -36,7 +36,7 @@ class Language
         /* check if is readable */
         if (is_readable($file)) {
             /* require file */
-            $this->array = include $file;
+            $this->array[$code] = include $file;
         } else {
             /* display error */
             echo Error::display("Could not load language file '$code/$name.php'");
@@ -45,16 +45,19 @@ class Language
     }
 
     /**
-     * Get element from language array by key.
+     * Get element from language array by key or by key and language.
      *
      * @param string $value
+     * @param string $code
      *
      * @return string
      */
-    public function get($value)
+    public function get($value, $code = LANGUAGE_CODE)
     {
-        if (!empty($this->array[$value])) {
-            return $this->array[$value];
+        if (!empty($this->array[$code][$value])) {
+            return $this->array[$code][$value];
+        } elseif(!empty($this->array[LANGUAGE_CODE][$value])) {
+            return $this->array[LANGUAGE_CODE][$value];
         } else {
             return $value;
         }

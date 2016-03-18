@@ -50,14 +50,6 @@ class RelationalModel extends BaseController
         return parent::beforeAction();
     }
 
-    protected function afterAction($result)
-    {
-        // Do some processing there, even deciding to stop the Flight, if case.
-
-        // Leave to parent's method the Flight decisions.
-        return parent::afterAction($result);
-    }
-
     /**
      * CakePHP style - Define Welcome page message and set the Controller's variables.
      */

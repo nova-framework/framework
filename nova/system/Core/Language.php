@@ -5,7 +5,7 @@
  * @author Bartek Kuśmierczuk - contact@qsma.pl - http://qsma.pl
  * @version 3.0
  * @date November 18, 2014
- * @date updated March 9th, 2016
+ * @date updated March 18th, 2016
  */
 
 namespace Core;
@@ -38,7 +38,7 @@ class Language
         /** check if is readable */
         if (is_readable($file)) {
             /** require file */
-            $this->array = include($file);
+            $this->array[$code] = include $file;
         } else {
             /** display error */
             echo Error::display("Could not load language file '$code/$name.php'");
@@ -53,10 +53,12 @@ class Language
      *
      * @return string
      */
-    public function get($value)
+    public function get($value, $code = LANGUAGE_CODE)
     {
-        if (!empty($this->array[$value])) {
-            return $this->array[$value];
+        if (!empty($this->array[$code][$value])) {
+            return $this->array[$code][$value];
+        } elseif(!empty($this->array[LANGUAGE_CODE][$value])) {
+            return $this->array[LANGUAGE_CODE][$value];
         } else {
             return $value;
         }

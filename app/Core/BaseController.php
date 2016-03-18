@@ -12,7 +12,7 @@ namespace App\Core;
 use Nova\Core\View;
 use Nova\Core\Controller;
 use Nova\Events\Manager as Events;
-use Nova\Net\Response;
+
 
 /**
  * Simple themed controller showing the typical usage of the Flight Control method.

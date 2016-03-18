@@ -162,7 +162,7 @@ class Router
     public function addRoute($method, $route, $callback = null)
     {
         $method = strtoupper($method);
-        
+
         $pattern = ltrim(self::$routeGroup.'/'.$route, '/');
 
         $route = new Route($method, $pattern, $callback);
@@ -193,8 +193,8 @@ class Router
     {
         // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
         switch ($method) {
-            case 'beforeFlight':
-            case 'afterFlight':
+            case 'beforeAction':
+            case 'afterAction':
                 return false;
 
             default:

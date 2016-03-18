@@ -31,18 +31,18 @@ class QueryBuilder extends BaseController
         parent::__construct();
     }
 
-    protected function beforeFlight()
+    protected function beforeAction()
     {
         // Leave to parent's method the Flight decisions.
-        return parent::beforeFlight();
+        return parent::beforeAction();
     }
 
-    protected function afterFlight($result)
+    protected function afterAction($result)
     {
         // Do some processing there, even deciding to stop the Flight, if case.
 
         // Leave to parent's method the Flight decisions.
-        return parent::afterFlight($result);
+        return parent::afterAction($result);
     }
 
     /**

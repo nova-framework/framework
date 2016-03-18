@@ -112,8 +112,6 @@ return array (
   'query' => '',
   '{0} Files' => '',
   '{0} Queries' => '',
-  '{0} finished the beforeFlight stage' => '',
-  '{0} initialized' => '',
   '{label} can contain only letters' => '',
   '{label} does not belong to a valid domain' => '',
   '{label} does not have an acceptable extension ({file_extensions})' => '',

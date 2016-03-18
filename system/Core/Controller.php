@@ -106,7 +106,7 @@ abstract class Controller
     /**
      * @return bool
      */
-    protected function beforeFlight()
+    protected function beforeAction()
     {
         return true;
     }
@@ -115,7 +115,7 @@ abstract class Controller
      * @param $result
      * @return bool
      */
-    protected function afterFlight($result)
+    protected function afterAction($result)
     {
         if (is_null($result) || ! $this->autoRender) {
             // No result returned or there is no auto-rendering.
@@ -133,7 +133,7 @@ abstract class Controller
 
             $result = json_encode($result);
         }
-        
+
         // Output the result.
         Response::sendHeaders();
 
@@ -151,7 +151,7 @@ abstract class Controller
         //
         // Before Flight stage.
 
-        if ($this->beforeFlight() === false) {
+        if ($this->beforeAction() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
@@ -164,7 +164,7 @@ abstract class Controller
         //
         // After Flight stage.
 
-        $this->afterFlight($result);
+        $this->afterAction($result);
 
         return true;
     }

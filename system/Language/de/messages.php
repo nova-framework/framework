@@ -112,8 +112,6 @@ return array (
   'query' => 'Abfrage',
   '{0} Files' => '{0} Dateien',
   '{0} Queries' => '{0} Abfragen',
-  '{0} finished the beforeAction stage' => '{0} hat die beforeAction Phase beendet',
-  '{0} initialized' => '{0} initialisiert',
   '{label} can contain only letters' => '{label} darf nur Buchstaben enthalten',
   '{label} does not belong to a valid domain' => '{label} gehört nicht zu einer gültigen Domäne',
   '{label} does not have an acceptable extension ({file_extensions})' => '{label} hat keine zulässige Dateiendung ({file_extensions})',

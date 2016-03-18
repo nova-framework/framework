@@ -149,7 +149,7 @@ abstract class Controller
     public function execute()
     {
         //
-        // Before Flight stage.
+        // Before Action stage.
 
         if ($this->beforeAction() === false) {
             // Is wanted to stop the Flight.
@@ -157,12 +157,12 @@ abstract class Controller
         }
 
         //
-        // Execute the Controller's Method with the given arguments.
+        // Calling Action stage; execute the Controller's Method with the given arguments.
 
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
         //
-        // After Flight stage.
+        // After Action stage.
 
         $this->afterAction($result);
 
@@ -243,7 +243,7 @@ abstract class Controller
     {
         $data = array('title' => $title);
 
-        $this->data = $data + $this->data;
+        $this->data = array_merge($this->data, $data);
 
         // Activate the Rendering on Layout.
         $this->useLayout = true;

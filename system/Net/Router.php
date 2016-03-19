@@ -163,10 +163,10 @@ class Router
     {
         $method = strtoupper($method);
 
+        $pattern = ltrim($route, '/');
+
         if (! empty(self::$routeGroups)) {
-            $pattern = implode('/', self::$routeGroups) .'/' .$route;
-        } else {
-            $pattern = ltrim($route, '/');
+            $pattern = implode('/', self::$routeGroups) .'/' .$pattern;
         }
 
         $route = new Route($method, $pattern, $callback);

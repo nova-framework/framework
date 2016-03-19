@@ -166,7 +166,7 @@ class Router
         if (! empty(self::$routeGroups)) {
             $pattern = implode('/', self::$routeGroups) .'/' .$route;
         } else {
-            $pattern = $route;
+            $pattern = ltrim($route, '/');
         }
 
         $route = new Route($method, $pattern, $callback);

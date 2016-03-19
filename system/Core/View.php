@@ -162,10 +162,15 @@ class View
         return ob_get_clean();
     }
 
-    public function render()
+    public function display()
     {
         Response::sendHeaders();
 
+        $this->render();
+    }
+
+    public function render()
+    {
         echo $this->fetch();
     }
 

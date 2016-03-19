@@ -85,7 +85,7 @@ abstract class Controller
         $this->params = $params;
 
         // Prepare the Views Path using the Controller's full Name including its namespace.
-        $classPath = str_replace('\\', '/', $className);
+        $classPath = str_replace('\\', '/', ltrim($className, '\\'));
 
         // First, check on the App path.
         if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {

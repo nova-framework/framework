@@ -23,7 +23,7 @@ class Router
 {
     private static $instance;
 
-    private static $routeGroup = '';
+    private static $routeGroups = array();
 
     /**
      * Array of routes
@@ -117,14 +117,14 @@ class Router
      */
     public static function group($group, $callback)
     {
-        // Set the current Routes Group
-        self::$routeGroup = trim($group, '/');
+        // Add the Route Group to the array.
+        array_push(self::$routeGroups, trim($group, '/'));
 
         // Call the Callback, to define the Routes on the current Group.
         call_user_func($callback);
 
-        // Reset the Routes Group to default (none).
-        self::$routeGroup = '';
+        // Removes the last Route Group from the array.
+        array_pop(self::$routeGroups);
     }
 
     /**
@@ -154,7 +154,11 @@ class Router
     {
         $method = strtoupper($method);
 
-        $pattern = ltrim(self::$routeGroup.'/'.$route, '/');
+        $pattern = ltrim($route, '/');
+
+        if (! empty(self::$routeGroups)) {
+            $pattern = implode('/', self::$routeGroups) .'/' .$pattern;
+        }
 
         $route = new Route($method, $pattern, $callback);
 

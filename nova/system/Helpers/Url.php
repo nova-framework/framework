@@ -84,11 +84,11 @@ class Url
      * @param  boolean $custom
      * @return string url to template folder
      */
-    public static function templatePath($custom = TEMPLATE)
+    public static function templatePath($custom = TEMPLATE, $folder = '/assets/')
     {
         $template = Inflector::tableize($custom);
 
-        return SITEURL .'templates/' .$template .'/assets/';
+        return SITEURL .'templates/' .$template .$folder;
     }
 
     /**
@@ -97,9 +97,9 @@ class Url
      * @param  boolean $custom
      * @return string path to template folder
      */
-    public static function relativeTemplatePath($custom = TEMPLATE)
+    public static function relativeTemplatePath($custom = TEMPLATE, $folder = '/Assets/')
     {
-        return "Templates/" .$custom ."/Assets/";
+        return "Templates/" .$custom .$folder;
     }
 
     /**

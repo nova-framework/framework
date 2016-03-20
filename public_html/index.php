@@ -3,10 +3,10 @@
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
-define('APPDIR', dirname(__DIR__).'/nova/app/');
-define('SYSTEMDIR', dirname(__DIR__).'/nova/system/');
-define('PUBLICDIR', dirname(__FILE__).'/');
-define('ROOTDIR', dirname(__DIR__).'/nova/');
+define('APPDIR', realpath(__DIR__.'/../nova/app/').'/');
+define('SYSTEMDIR', realpath(__DIR__.'/../nova/system/').'/');
+define('PUBLICDIR', realpath(__DIR__).'../');
+define('ROOTDIR', realpath(__DIR__.'/../nova/').'/');
 
 /** load composer autoloader */
 if (file_exists(ROOTDIR.'vendor/autoload.php')) {

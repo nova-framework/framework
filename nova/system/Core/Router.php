@@ -202,7 +202,10 @@ class Router
         }
 
         // Execute the Controller's Method with the given arguments.
-        return call_user_func_array(array($controller, $method), $params);
+        call_user_func_array(array($controller, $method), $params);
+
+        // Controller invocation was a success; return true.
+        return true;
     }
 
     /**

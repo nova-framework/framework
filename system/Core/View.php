@@ -145,7 +145,7 @@ class View
         return new View($path, $data);
     }
 
-    public function fetch()
+    public function render()
     {
         $data = $this->data();
 
@@ -154,10 +154,14 @@ class View
             ${$name} = $value;
         }
 
-        // Execute the rendering, then capture and return the output.
+        require $this->path;
+    }
+
+    public function fetch()
+    {
         ob_start();
 
-        require $this->path;
+        $this->render();
 
         return ob_get_clean();
     }
@@ -168,12 +172,7 @@ class View
 
         $this->render();
     }
-
-    public function render()
-    {
-        echo $this->fetch();
-    }
-
+    
     public function data()
     {
         $data = array_merge($this->data, static::$shared);

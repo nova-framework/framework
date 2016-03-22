@@ -197,6 +197,7 @@ class Router
     {
         // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
         switch ($method) {
+            case 'initialize':
             case 'before':
             case 'after':
                 return false;

@@ -93,7 +93,7 @@ class Config
         define('SITETITLE', 'V2.2');
 
         /*
-         * Optionall set a site email address.
+         * Optional set a site email address.
          */
         //define('SITEEMAIL', '');
 

@@ -29,7 +29,7 @@ class Events extends BaseController
         parent::__construct();
     }
 
-    protected function beforeAction()
+    protected function before()
     {
         $method = $this->method();
 
@@ -38,7 +38,7 @@ class Events extends BaseController
         $this->filePath = $viewsPath.$method.'.php';
 
         // Leave to parent's method the Flight decisions.
-        return parent::beforeAction();
+        return parent::before();
     }
 
     /**

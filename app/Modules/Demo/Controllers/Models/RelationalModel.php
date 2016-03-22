@@ -42,12 +42,12 @@ class RelationalModel extends BaseController
         $this->model = new User();
     }
 
-    protected function beforeAction()
+    protected function before()
     {
         $this->set('useClassicDb', true);
 
         // Leave to parent's method the Flight decisions.
-        return parent::beforeAction();
+        return parent::before();
     }
 
     /**

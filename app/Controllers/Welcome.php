@@ -29,20 +29,20 @@ class Welcome extends BaseController
         parent::__construct();
     }
 
-    protected function beforeAction()
+    protected function before()
     {
         $this->basePath = str_replace(BASEPATH, '', $this->viewsPath());
 
         // Leave to parent's method the Flight decisions.
-        return parent::beforeAction();
+        return parent::before();
     }
 
-    protected function afterAction($result)
+    protected function after($result)
     {
         // Do some processing there, even deciding to stop the Flight, if case.
 
         // Leave to parent's method the Flight decisions.
-        return parent::afterAction($result);
+        return parent::after($result);
     }
 
     /**

@@ -29,12 +29,12 @@ class Themed extends BaseController
         parent::__construct();
     }
 
-    protected function beforeAction()
+    protected function before()
     {
         $this->basePath = str_replace(BASEPATH, '', $this->viewsPath());
 
         // Leave to parent's method the Flight decisions.
-        return parent::beforeAction();
+        return parent::before();
     }
 
     /**

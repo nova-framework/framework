@@ -46,7 +46,7 @@ class BaseController extends Controller
      * Before 'Flight' action
      * @return bool
      */
-    protected function beforeAction()
+    protected function before()
     {
         $data =& $this->data;
 
@@ -58,7 +58,7 @@ class BaseController extends Controller
         );
 
         // Broadcast the Event to all its Listeners; if they return a valid array, merge it to Data.
-        $this->events->trigger('App.Core.BaseController.beforeAction', $params, function ($result) use (&$data) {
+        $this->events->trigger('App.Core.BaseController.before', $params, function ($result) use (&$data) {
             if (! is_array($result)) {
                 return;
             }
@@ -85,7 +85,7 @@ class BaseController extends Controller
         });
 
         // Leave to parent's method the Flight decisions.
-        return parent::beforeAction();
+        return parent::before();
     }
 
     /**
@@ -94,7 +94,7 @@ class BaseController extends Controller
      * @param mixed $result
      * @return bool
      */
-    protected function afterAction($result)
+    protected function after($result)
     {
         if (($result === false) || ! $this->autoRender) {
             // Errors in called Method or isn't wanted the auto-Rendering; stop the Flight.
@@ -117,6 +117,6 @@ class BaseController extends Controller
         }
 
         // Leave to parent's method the Flight decisions.
-        return parent::afterAction($result);
+        return parent::after($result);
     }
 }

@@ -35,12 +35,12 @@ class BaseModel extends BaseController
         $this->model = new UserModel();
     }
 
-    protected function beforeAction()
+    protected function before()
     {
         $this->set('useClassicDb', true);
 
         // Leave to parent's method the Flight decisions.
-        return parent::beforeAction();
+        return parent::before();
     }
 
     /**

@@ -35,16 +35,16 @@ class BaseController extends Controller
         $this->set('dashboardUrl', site_url('demos'));
     }
 
-    protected function beforeAction()
+    protected function before()
     {
         // Leave to parent's method the Flight decisions.
-        return parent::beforeAction();
+        return parent::before();
     }
 
-    protected function afterAction($result)
+    protected function after($result)
     {
         // Leave to parent's method the Flight decisions.
-        return parent::afterAction($result);
+        return parent::after($result);
     }
 
 }

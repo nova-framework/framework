@@ -106,7 +106,7 @@ abstract class Controller
     /**
      * @return bool
      */
-    protected function beforeAction()
+    protected function before()
     {
         return true;
     }
@@ -115,7 +115,7 @@ abstract class Controller
      * @param $result
      * @return bool
      */
-    protected function afterAction($result)
+    protected function after($result)
     {
         if (is_null($result) || ! $this->autoRender) {
             // No result returned or there is no auto-rendering.
@@ -151,7 +151,7 @@ abstract class Controller
         //
         // Before Action stage.
 
-        if ($this->beforeAction() === false) {
+        if ($this->before() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
@@ -164,7 +164,7 @@ abstract class Controller
         //
         // After Action stage.
 
-        $this->afterAction($result);
+        $this->after($result);
 
         return true;
     }

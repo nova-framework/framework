@@ -215,10 +215,8 @@ class Router
     protected function invokeObject($callback, $params = array())
     {
         if (is_object($callback)) {
-            // Call the Closure.
-            call_user_func_array($callback, $params);
-
-            return true;
+            // Call the Closure function with the given arguments.
+            return call_user_func_array($callback, $params);
         }
 
         // Call the object Controller and its Method.

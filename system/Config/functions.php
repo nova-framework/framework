@@ -9,8 +9,8 @@
 
 use Nova\Language;
 use Nova\Core\Controller;
+use Nova\Core\View;
 
-// Return the current Controller instance.
 
 /**
  * Get controller instance
@@ -19,6 +19,38 @@ use Nova\Core\Controller;
 function &get_instance()
 {
     return Controller::getInstance();
+}
+
+/**
+ * View creation helper
+ * @param string $view
+ * @param array $data
+ * @return View
+ */
+function view($view, array $data = array())
+{
+    return View::make($view, $data);
+}
+
+/**
+ * View Fragment rendering helper
+ * @param string $fragment
+ * @param array $data
+ * @return void
+ */
+function fragment($fragment, array $data = array())
+{
+    View::fragment($fragment, $data)->render();
+}
+
+/**
+ * Site url helper
+ * @param string $path
+ * @return string
+ */
+function site_url($path = '')
+{
+    return SITE_URL .ltrim($path, '/');
 }
 
 // String helpers.
@@ -43,16 +75,6 @@ function str_starts_with($haystack, $needle)
 function str_ends_with($haystack, $needle)
 {
     return (($needle === '') || (substr($haystack, - strlen($needle)) === $needle));
-}
-
-/**
- * Site url helper
- * @param string $path
- * @return string
- */
-function site_url($path = '')
-{
-    return DIR .ltrim($path, '/');
 }
 
 /**

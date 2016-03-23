@@ -193,7 +193,7 @@ class Router
      * @param  array $params parameters passed to method
      * @return bool
      */
-    protected function invokeController($className, $method, $params)
+    protected function invokeController($className, $method, $params, $withResult = true)
     {
         // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
         switch ($method) {

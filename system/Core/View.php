@@ -38,7 +38,7 @@ class View
      *
      * @var array
      */
-    public static $shared = array();
+    protected static $shared = array();
 
 
     /**
@@ -112,7 +112,7 @@ class View
      * @param $view
      * @return View
      */
-    public static function make($view, $data = array())
+    public static function make($view, array $data = array())
     {
         $path = self::viewPath($view);
 
@@ -124,7 +124,7 @@ class View
      * @param null $layout
      * @return View
      */
-    public static function layout($layout = null, $data = array())
+    public static function layout($layout = null, array $data = array())
     {
         $path = self::layoutPath($layout);
 
@@ -138,20 +138,18 @@ class View
      * @param bool $fromTemplate
      * @return View
      */
-    public static function fragment($fragment, $fromTemplate = true, $data = array())
+    public static function fragment($fragment, array $data = array())
     {
-        $path = self::fragmentPath($fragment, $fromTemplate);
+        $path = self::fragmentPath($fragment);
 
         return new View($path, $data);
     }
 
     public function render()
     {
-        $data = $this->data();
-
-        // Prepare the rendering variables.
-        foreach ($data as $name => $value) {
-            ${$name} = $value;
+        // Prepare the rendering variables from the internal data.
+        foreach ($this->data() as $variable => $value) {
+            ${$variable} = $value;
         }
 
         require $this->path;
@@ -172,7 +170,7 @@ class View
 
         $this->render();
     }
-    
+
     public function data()
     {
         $data = array_merge($this->data, static::$shared);
@@ -265,62 +263,39 @@ class View
     private static function viewPath($path)
     {
         // Get the Controller instance.
-        $instance =& get_instance();
+        $controller =& get_instance();
 
         //
-        $basePath = $instance->viewsPath();
-
-        return $basePath .$path .'.php';
+        return $controller->viewsPath() .$path .'.php';
     }
 
-    private static function templatePath($template = null)
+    private static function layoutPath($layout = null)
     {
         // Get the Controller instance.
-        $instance =& get_instance();
-
-        if(is_null($template)) {
-            $template = $instance->template();
-        }
-
-        return APPPATH .'Templates' .DS .$template .DS;
-    }
-
-    private static function layoutPath($layout = null, $template = null)
-    {
-        // Get the Controller instance.
-        $instance =& get_instance();
+        $controller =& get_instance();
 
         if(is_null($layout)) {
-            $layout = $instance->layout();
+            $layout = $controller->layout();
         }
-
-        $basePath = self::templatePath($template);
 
         // Adjust the filePath for Layouts
-        return $basePath .'Layouts' .DS .$layout .'.php';
+        return self::templatePath($controller) .'Layouts' .DS .$layout .'.php';
     }
 
-    private static function fragmentPath($fragment, $fromTemplate = true)
+    private static function fragmentPath($fragment)
     {
         // Get the Controller instance.
-        $instance =& get_instance();
-
-        //
-        $module = $instance->module();
-
-        if ($fromTemplate) {
-            // On Template path.
-            $basePath = self::templatePath();
-        } else if($module !== null) {
-            // On Modules path.
-            $basePath = APPPATH .'Modules' .DS.$module .DS;
-        } else {
-            // On Default path.
-            $basePath = APPPATH .'Views'.DS;
-        }
+        $controller =& get_instance();
 
         // Adjust the filePath for Fragments
-        return $basePath .'Fragments' .DS .$fragment .'.php';
+        return self::templatePath($controller) .'Fragments' .DS .$fragment .'.php';
+    }
+
+    private static function templatePath(Controller $controller)
+    {
+        $template = $controller->template();
+
+        return APPPATH .'Templates' .DS .$template .DS;
     }
 
 }

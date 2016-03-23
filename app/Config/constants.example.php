@@ -8,6 +8,11 @@
  */
 
 /**
+ * Define the complete site URL.
+ */
+define('SITE_URL', 'http://www.novaframework.dev/');
+
+/**
  * Define relative base path.
  */
 define('DIR', '/');

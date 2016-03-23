@@ -202,7 +202,10 @@ class Router
         }
 
         // Execute the Controller's Method with the given arguments.
-        return call_user_func_array(array($controller, $method), $params);
+        call_user_func_array(array($controller, $method), $params);
+
+        // Controller invocation was a success; return true.
+        return true;
     }
 
     /**
@@ -215,10 +218,8 @@ class Router
     protected function invokeObject($callback, $params = array())
     {
         if (is_object($callback)) {
-            // Call the Closure.
-            call_user_func_array($callback, $params);
-
-            return true;
+            // Call the Closure function with the given arguments.
+            return call_user_func_array($callback, $params);
         }
 
         // Call the object Controller and its Method.

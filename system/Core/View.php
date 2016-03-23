@@ -274,12 +274,14 @@ class View
         // Get the Controller instance.
         $controller =& get_instance();
 
+        $template = $controller->template();
+
         if(is_null($layout)) {
             $layout = $controller->layout();
         }
 
         // Adjust the filePath for Layouts
-        return self::templatePath($controller) .'Layouts' .DS .$layout .'.php';
+        return APPPATH .'Templates' .DS .$template .DS .'Layouts' .DS .$layout .'.php';
     }
 
     private static function fragmentPath($fragment)
@@ -287,15 +289,10 @@ class View
         // Get the Controller instance.
         $controller =& get_instance();
 
-        // Adjust the filePath for Fragments
-        return self::templatePath($controller) .'Fragments' .DS .$fragment .'.php';
-    }
-
-    private static function templatePath(Controller $controller)
-    {
         $template = $controller->template();
 
-        return APPPATH .'Templates' .DS .$template .DS;
+        // Adjust the filePath for Fragments
+        return APPPATH .'Templates' .DS .$template .DS .'Fragments' .DS .$fragment .'.php';
     }
 
 }

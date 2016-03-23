@@ -14,7 +14,7 @@ use Nova\Core\View;
 
 /**
  * Get controller instance
- * @return Controller
+ * @return \Nova\Core\Controller
  */
 function &get_instance()
 {
@@ -25,7 +25,7 @@ function &get_instance()
  * View creation helper
  * @param string $view
  * @param array $data
- * @return View
+ * @return \Nova\Core\View
  */
 function view($view = null, array $data = array())
 {
@@ -36,11 +36,11 @@ function view($view = null, array $data = array())
  * View Fragment rendering helper
  * @param string $fragment
  * @param array $data
- * @return void
+ * @return \Nova\Core\View
  */
 function fragment($fragment, array $data = array())
 {
-    View::fragment($fragment, $data)->render();
+    return View::fragment($fragment, $data);
 }
 
 /**

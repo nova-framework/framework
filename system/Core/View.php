@@ -123,9 +123,10 @@ class View
             $view = $controller->method();
         }
 
-        $filePath = $viewsPath .$view .'.php';
+        // Prepare the file path.
+        $path = $viewsPath .$view .'.php';
 
-        return new View($filePath, $data);
+        return new View($path, $data);
     }
 
     /**
@@ -144,12 +145,13 @@ class View
             $layout = $controller->layout();
         }
 
-        $filePath = APPPATH .'Templates' .DS .$template .DS .'Layouts' .DS .$layout .'.php';
+        // Prepare the file path.
+        $path = APPPATH .'Templates' .DS .$template .DS .'Layouts' .DS .$layout .'.php';
 
         //
         Response::addHeader('Content-Type: text/html; charset=UTF-8');
 
-        return new View($filePath, $data);
+        return new View($path, $data);
     }
 
     /**
@@ -164,9 +166,10 @@ class View
 
         $template = $controller->template();
 
-        $filePath = APPPATH .'Templates' .DS .$template .DS .'Fragments' .DS .$fragment .'.php';
+        // Prepare the file path.
+        $path = APPPATH .'Templates' .DS .$template .DS .'Fragments' .DS .$fragment .'.php';
 
-        return new View($filePath, $data);
+        return new View($path, $data);
     }
 
     public function render()

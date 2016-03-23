@@ -20,14 +20,18 @@ class Url
      *
      * @param string $url      the url to redirect to
      * @param bool   $fullpath if true use only url in redirect instead of using DIR
+     * @param int $code the server status code for the redirection
      */
-    public static function redirect($url = null, $fullpath = false)
+    public static function redirect($url = null, $fullpath = false, $code = 200)
     {
-        if ($fullpath == false) {
-            $url = DIR.$url;
+        $url = ($fullpath===false) ? DIR.$url : $url;
+        
+        if($code == 200) {
+            header('Location: '.$url);
         }
-
-        header('Location: '.$url);
+        else {
+            header('Location: '.$url, true, $code);
+        }
         exit;
     }
     

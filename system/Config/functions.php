@@ -27,7 +27,7 @@ function &get_instance()
  * @param array $data
  * @return View
  */
-function view($view, array $data = array())
+function view($view = null, array $data = array())
 {
     return View::make($view, $data);
 }

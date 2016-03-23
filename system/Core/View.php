@@ -112,7 +112,7 @@ class View
      * @param $view
      * @return View
      */
-    public static function make($view, array $data = array())
+    public static function make($view = null, array $data = array())
     {
         $path = self::viewPath($view);
 
@@ -260,13 +260,19 @@ class View
     // Private Methods
     //--------------------------------------------------------------------
 
-    private static function viewPath($path)
+    private static function viewPath($view = null)
     {
         // Get the Controller instance.
         $controller =& get_instance();
 
-        //
-        return $controller->viewsPath() .$path .'.php';
+        $viewsPath = $controller->viewsPath();
+
+        if(is_null($view)) {
+            $view = $controller->method();
+        }
+
+        // Return the filePath for Views
+        return $viewsPath .$view .'.php';
     }
 
     private static function layoutPath($layout = null)
@@ -280,7 +286,7 @@ class View
             $layout = $controller->layout();
         }
 
-        // Adjust the filePath for Layouts
+        // Return the filePath for Layouts
         return APPPATH .'Templates' .DS .$template .DS .'Layouts' .DS .$layout .'.php';
     }
 
@@ -291,7 +297,7 @@ class View
 
         $template = $controller->template();
 
-        // Adjust the filePath for Fragments
+        // Return the filePath for Fragments
         return APPPATH .'Templates' .DS .$template .DS .'Fragments' .DS .$fragment .'.php';
     }
 

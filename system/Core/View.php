@@ -108,7 +108,8 @@ class View
     }
 
     /**
-     * Make view
+     * Make a View
+     *
      * @param $view
      * @return View
      */
@@ -130,7 +131,8 @@ class View
     }
 
     /**
-     * Make view layout
+     * Make a View Layout
+     *
      * @param null $layout
      * @return View
      */
@@ -155,6 +157,8 @@ class View
     }
 
     /**
+     * Make a View fragment
+     *
      * @param $fragment
      * @param bool $fromTemplate
      * @return View

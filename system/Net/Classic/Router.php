@@ -7,19 +7,20 @@
  * @date December 11th, 2015
  */
 
-namespace Nova\Net;
+namespace Nova\Net\Classic;
 
 use Nova\Core\View;
 use Nova\Helpers\Inflector;
-use Nova\Net\Route;
-use Nova\Net\Router;
 use Nova\Net\Request;
 use Nova\Net\Url;
+use Nova\Net\Route;
+use Nova\Net\Router as BaseRouter;
+
 
 /**
  * Router class will load requested controller / closure based on url.
  */
-class ClassicRouter extends Router
+class Router extends BaseRouter
 {
     /**
      * ClassicRouter constructor.

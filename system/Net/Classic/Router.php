@@ -1,25 +1,26 @@
 <?php
 /**
- * ClassicRoute - manage, in classic style, a route to an HTTP request and an assigned callback function.
+ * ClassicRouter - manage, in the classic style, a route to an HTTP request and an assigned callback function.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  * @date December 11th, 2015
  */
 
-namespace App\Core;
+namespace Nova\Net\Classic;
 
 use Nova\Core\View;
 use Nova\Helpers\Inflector;
-use Nova\Net\Route;
-use Nova\Net\Router;
 use Nova\Net\Request;
 use Nova\Net\Url;
+use Nova\Net\Route;
+use Nova\Net\Router as BaseRouter;
+
 
 /**
  * Router class will load requested controller / closure based on url.
  */
-class ClassicRouter extends Router
+class Router extends BaseRouter
 {
     /**
      * ClassicRouter constructor.

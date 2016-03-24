@@ -23,7 +23,7 @@ define('DIR', '/');
 // Default Routing
 define('APPROUTER', '\Nova\Net\Router');
 // Classic Routing
-//define('APPROUTER', '\App\Core\ClassicRouter');
+//define('APPROUTER', '\Nova\Net\Classic\Router');
 
 /**
  * Set the default template.

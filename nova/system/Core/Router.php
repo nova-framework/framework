@@ -186,18 +186,12 @@ class Router
      */
     protected function invokeController($className, $method, $params)
     {
-        // Check first if the Controller exists.
-        if (! class_exists($className)) {
-            return false;
-        }
-
         // Initialize the Controller.
         /** @var Controller $controller */
         $controller = new $className();
 
-        // The called Method should be defined right in the called Controller and it should do not start with '_'.
-        if (($method[0] === '_') ||
-            ! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
+        // The called Method should be defined right in the called Controller.
+        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
             return false;
         }
 
@@ -228,8 +222,13 @@ class Router
         $controller = $segments[0];
         $method     = $segments[1];
 
-        // Invoke the Controller's Method with the given arguments.
-        return $this->invokeController($controller, $method, $params);
+        // The Method shouldn't start with '_'; also check if the Controller's class exists.
+        if (($method[0] !== '_') && class_exists($controller)) {
+            // Invoke the Controller's Method with the given arguments.
+            return $this->invokeController($controller, $method, $params);
+        }
+
+        return false;
     }
 
     /**

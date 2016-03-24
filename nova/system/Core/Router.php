@@ -263,7 +263,7 @@ class Router
 
                 if ($callback !== null) {
                     // Invoke the Route's Callback with the associated parameters.
-                    $this->invokeObject($callback, $route->params());
+                    return $this->invokeObject($callback, $route->params());
                 }
 
                 return true;

@@ -9,6 +9,7 @@
 
 namespace App\Core;
 
+use Nova\Core\View;
 use Nova\Helpers\Inflector;
 use Nova\Net\Route;
 use Nova\Net\Router;
@@ -45,9 +46,7 @@ class ClassicRouter extends Router
         // Not an Asset File URI? Routes the current request.
         $method = Request::getMethod();
 
-        // The URI used by autoDispatch is, by default, the incoming one.
-        $autoUri = $uri;
-
+        // Search the defined Routes for matches; invoke the associated Callback, if any.
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method, false)) {
                 // Found a valid Route; process it.
@@ -57,7 +56,14 @@ class ClassicRouter extends Router
 
                 if (is_object($callback)) {
                     // Invoke the Route's Callback with the associated parameters.
-                    return call_user_func_array($callback, $route->params());
+                    $result = call_user_func_array($callback, $route->params());
+
+                    if ($result instanceof View) {
+                        // If the callback invocation returned a View instance, render it.
+                        $result->display();
+                    }
+
+                    return true;
                 }
 
                 // Pattern based Route.
@@ -65,9 +71,9 @@ class ClassicRouter extends Router
 
                 // Prepare the URI used by autoDispatch, applying the REGEX if exists.
                 if (! empty($regex)) {
-                    $autoUri = preg_replace('#^' .$regex .'$#', $callback, $uri);
+                    $uri = preg_replace('#^' .$regex .'$#', $callback, $uri);
                 } else {
-                    $autoUri = $callback;
+                    $uri = $callback;
                 }
 
                 break;
@@ -75,7 +81,7 @@ class ClassicRouter extends Router
         }
 
         // Auto-dispatch the processed URI; quit if the attempt finished successfully.
-        if ($this->autoDispatch($autoUri)) {
+        if ($this->autoDispatch($uri)) {
             return true;
         }
 

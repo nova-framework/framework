@@ -148,22 +148,16 @@ abstract class Controller
      */
     public function execute()
     {
-        //
         // Before Action stage.
-
         if ($this->before() === false) {
             // Is wanted to stop the Flight.
             return false;
         }
 
-        //
         // Calling Action stage; execute the Controller's Method with the given arguments.
-
         $result = call_user_func_array(array($this, $this->method()), $this->params());
 
-        //
         // After Action stage.
-
         $this->after($result);
 
         return true;

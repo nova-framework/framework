@@ -159,10 +159,15 @@ class ClassicRouter extends Router
         // Get the Controller's class name.
         $controller = str_replace(array('//', '/'), '\\', 'App/'.$basePath.$directory.$controller);
 
-        // Get the parameters, if any.
-        $params = !empty($parts) ? $parts : array();
+        // The Method shouldn't start with '_'; also check if the Controller's class exists.
+        if (($method[0] !== '_') && class_exists($controller)) {
+            // Get the parameters, if any.
+            $params = !empty($parts) ? $parts : array();
 
-        // Invoke the Controller's Method with the given arguments.
-        return $this->invokeController($controller, $method, $params);
+            // Invoke the Controller's Method with the given arguments.
+            return $this->invokeController($controller, $method, $params);
+        }
+
+        return false;
     }
 }

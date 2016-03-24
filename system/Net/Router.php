@@ -10,6 +10,7 @@
 namespace Nova\Net;
 
 use Nova\Core\Controller;
+use Nova\Core\View;
 use Nova\Helpers\Inflector;
 use Nova\Forensics\Console;
 use Nova\Net\Request;
@@ -196,26 +197,9 @@ class Router
     protected function invokeController($className, $method, $params, $withResult = true)
     {
         // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
-        switch ($method) {
-            case 'initialize':
-            case 'before':
-            case 'after':
-                return false;
-
-            default:
-                if ($method[0] === '_') {
-                    return false;
-                }
-
-                break;
-        }
-
-        // Check first if the Controller exists.
-        if (!class_exists($className)) {
+        if(($method == 'initialize') || ($method == 'before') || ($method == 'after')) {
             return false;
         }
-
-        Console::log(__d('system', 'Routing - invoking the Controller: {0}@{1}', $className, $method));
 
         // Initialize the Controller.
         /** @var Controller $controller */
@@ -246,16 +230,17 @@ class Router
             return call_user_func_array($callback, $params);
         }
 
-        Console::log(__d('system', 'Routing - invoking the Callback: {0}', $callback));
-
         // Call the object Controller and its Method.
         $segments = explode('@', $callback);
 
         $controller = $segments[0];
         $method     = $segments[1];
 
-        // Invoke the Controller's Method with the given arguments.
-        return $this->invokeController($controller, $method, $params);
+        // The Method shouldn't start with '_'; also check if the Controller's class exists.
+        if (($method[0] !== '_') && class_exists($controller)) {
+            // Invoke the Controller's Method with the given arguments.
+            return $this->invokeController($controller, $method, $params);
+        }
     }
 
     /**
@@ -268,8 +253,6 @@ class Router
 
         // Detect the current URI.
         $uri = Url::detectUri();
-
-        Console::log(__d('system', 'Routing - start dispatching for the URI: {0}', $uri));
 
         // First, we will supose that URI is associated with an Asset File.
         if (Request::isGet() && $this->dispatchFile($uri)) {
@@ -292,17 +275,18 @@ class Router
                 $callback = $route->callback();
 
                 if ($callback !== null) {
-                    Console::log(__d('system', 'Routing - URI "{0}" match the Route: {1}', $uri, $route->pattern()));
-
                     // Invoke the Route's Callback with the associated parameters.
-                    $this->invokeObject($callback, $route->params());
+                    $result = $this->invokeObject($callback, $route->params());
+
+                    if ($result instanceof View) {
+                        // If the object invocation returned a View instance, render it.
+                        $result->display();
+                    }
                 }
 
                 return true;
             }
         }
-
-        Console::log(__d('system', 'Routing - URI "{0}" does not match any Route', $uri));
 
         // No valid Route found; invoke the Error Callback with the current URI as parameter.
         $params = array(

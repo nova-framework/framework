@@ -101,8 +101,6 @@ class ClassicRouter extends Router
      */
     public function autoDispatch($uri)
     {
-        $options = $this->config('auto_dispatch');
-
         // Explode the URI in its parts.
         $parts = explode('/', trim($uri, '/'));
 
@@ -150,12 +148,12 @@ class ClassicRouter extends Router
         }
 
         // Get the normalized Controller
-        $defaultOne = !empty($moduleName) ? $moduleName : $options['default_controller'];
+        $defaultOne = !empty($moduleName) ? $moduleName : DEFAULT_CONTROLLER;
 
         $controller = !empty($controller) ? $controller : $defaultOne;
 
         // Get the normalized Method
-        $method = !empty($parts) ? array_shift($parts) : $options['default_method'];
+        $method = !empty($parts) ? array_shift($parts) : DEFAULT_METHOD;
 
         // Prepare the Controller's class name.
         $controller = str_replace(array('//', '/'), '\\', 'App/'.$basePath.$directory.$controller);

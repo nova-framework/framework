@@ -227,7 +227,14 @@ class Router
     {
         if (is_object($callback)) {
             // Call the Closure function with the given arguments.
-            return call_user_func_array($callback, $params);
+             $result = call_user_func_array($callback, $params);
+
+             if ($result instanceof View) {
+                 // If the object invocation returned a View instance, render it.
+                 $result->display();
+             }
+
+             return true;
         }
 
         // Call the object Controller and its Method.
@@ -276,12 +283,7 @@ class Router
 
                 if ($callback !== null) {
                     // Invoke the Route's Callback with the associated parameters.
-                    $result = $this->invokeObject($callback, $route->params());
-
-                    if ($result instanceof View) {
-                        // If the object invocation returned a View instance, render it.
-                        $result->display();
-                    }
+                    return $this->invokeObject($callback, $route->params());
                 }
 
                 return true;

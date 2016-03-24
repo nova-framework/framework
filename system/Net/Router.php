@@ -248,6 +248,8 @@ class Router
             // Invoke the Controller's Method with the given arguments.
             return $this->invokeController($controller, $method, $params);
         }
+
+        return false;
     }
 
     /**

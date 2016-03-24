@@ -48,7 +48,7 @@ define('SESSION_PREFIX', 'nova_');
 /**
  * Optional create a constant for the name of the site.
  */
-define('SITE_TITLE', 'V3.0');
+define('SITE_TITLE', 'NovaIgniter');
 
 /**
  * Optional set a site email address.

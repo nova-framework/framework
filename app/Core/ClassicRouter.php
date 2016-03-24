@@ -56,14 +56,7 @@ class ClassicRouter extends Router
 
                 if (is_object($callback)) {
                     // Invoke the Route's Callback with the associated parameters.
-                    $result = call_user_func_array($callback, $route->params());
-
-                    if ($result instanceof View) {
-                        // If the callback invocation returned a View instance, render it.
-                        $result->display();
-                    }
-
-                    return true;
+                    return $this->invokeObject($callback, $route->params());
                 }
 
                 // Pattern based Route.

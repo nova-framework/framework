@@ -55,7 +55,9 @@ class ClassicRouter extends Router
 
                 if (is_object($callback)) {
                     // Invoke the Route's Callback with the associated parameters.
-                    return call_user_func_array($callback, $route->params());
+                    call_user_func_array($callback, $route->params());
+
+                    return true;
                 }
 
                 // Pattern based Route.

@@ -213,7 +213,9 @@ class Router
     {
         if (is_object($callback)) {
             // Call the Closure function with the given arguments.
-            return call_user_func_array($callback, $params);
+            call_user_func_array($callback, $params);
+
+            return true;
         }
 
         // Call the object Controller and its Method.

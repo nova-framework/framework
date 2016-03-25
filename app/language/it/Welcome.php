@@ -1,25 +1,25 @@
 <?php
 /**
- * Sample language.
+ * Sample language
  */
-return [
+return array(
 
-    // Index method
-    'welcome_text'    => 'Benvenuto',
-    'welcome_message' => '
+	// Index method
+	'welcomeText' => 'Benvenuto',
+	'welcomeMessage' => '
 		Ciao, benvenuto dal controller di benvenuto! <br/>
 		Questo contenuto può essere cambiato in <code>app/views/welcome/welcome.php</code>
 	',
 
-    // Subpage method
-    'subpage_text'    => 'Sottopagina',
-    'subpage_message' => '
+	// Subpage method
+	'subpageText' => 'Sottopagina',
+	'subpageMessage' => '
 		Ciao, benvenuto dal controller di benvenuto e dal metodo sottopagina! <br/>
 		Questo contenuto può essere cambiato in <code>app/views/welcome/subpage.php</code>
 	',
 
-    // Buttons
-    'open_subpage' => 'Apri sottopagina',
-    'back_home'    => 'Home',
+	// Buttons
+	'openSubpage' => 'Apri sottopagina',
+	'backHome' => 'Home',
 
-];
+);

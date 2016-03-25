@@ -1,17 +1,16 @@
 <?php
 /**
- * Welcome controller.
+ * Welcome controller
  *
- * @author David Carr - dave@daveismyname.com
- *
- * @version 2.2
- * @date June 27, 2014
- * @date updated Sept 19, 2015
+ * @author David Carr - dave@novaframework.com
+ * @version 3.0
  */
-namespace Controllers;
 
-use Core\Controller;
+namespace App\Controllers;
+
 use Core\View;
+use Core\Controller;
+use Helpers\Session;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.
@@ -19,7 +18,7 @@ use Core\View;
 class Welcome extends Controller
 {
     /**
-     * Call the parent construct.
+     * Call the parent construct
      */
     public function __construct()
     {
@@ -28,28 +27,28 @@ class Welcome extends Controller
     }
 
     /**
-     * Define Index page title and load template files.
+     * Define Index page title and load template files
      */
     public function index()
     {
-        $data['title'] = $this->language->get('welcome_text');
-        $data['welcome_message'] = $this->language->get('welcome_message');
+        $data['title'] = $this->language->get('welcomeText');
+        $data['welcomeMessage'] = $this->language->get('welcomeMessage');
 
         View::renderTemplate('header', $data);
-        View::render('welcome/welcome', $data);
+        View::render('Welcome/Welcome', $data);
         View::renderTemplate('footer', $data);
     }
 
     /**
-     * Define Subpage page title and load template files.
+     * Define Subpage page title and load template files
      */
     public function subPage()
     {
-        $data['title'] = $this->language->get('subpage_text');
-        $data['welcome_message'] = $this->language->get('subpage_message');
+        $data['title'] = $this->language->get('subpageText');
+        $data['welcomeMessage'] = $this->language->get('subpageMessage');
 
         View::renderTemplate('header', $data);
-        View::render('welcome/subpage', $data);
+        View::render('Welcome/SubPage', $data);
         View::renderTemplate('footer', $data);
     }
 }

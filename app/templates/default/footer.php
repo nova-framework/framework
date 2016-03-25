@@ -1,29 +1,12 @@
-<?php
-/**
- * Sample layout.
- */
-use Helpers\Assets;
-use Helpers\Hooks;
-use Helpers\Url;
-
-//initialise hooks
-$hooks = Hooks::get();
-?>
-
 </div>
 
-<!-- JS -->
 <?php
 Assets::js([
-    Url::templatePath().'js/jquery.js',
-    '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
+	'https://code.jquery.com/jquery-1.12.1.min.js',
+    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
 ]);
-
-//hook for plugging in javascript
-$hooks->run('js');
-
-//hook for plugging in code into the footer
-$hooks->run('footer');
+echo $js; //place to pass data / plugable hook zone
+echo $footer; //place to pass data / plugable hook zone
 ?>
 
 </body>

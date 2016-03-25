@@ -1,59 +1,52 @@
-![Simple MVC Framework](http://simplemvcframework.com/app/templates/publicthemes/smvc/images/logo.png)
+# framework
+Version 3.0 Release Candidate 1 (R1) of the Framework
 
-# Version 2.2
+#Install
 
-[![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg)](LICENSE)
-[![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg)](https://packagist.org/packages/simple-mvc-framework/v2)
-[![Dependency Status](https://www.versioneye.com/user/projects/554367f738331321e2000005/badge.svg)](https://www.versioneye.com/user/projects/554367f738331321e2000005)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/simple-mvc-framework/v2/master/license.txt)
-[![GitHub stars](https://img.shields.io/github/stars/simple-mvc-framework/framework.svg)](https://github.com/simple-mvc-framework/framework/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/simple-mvc-framework/framework.svg)](https://github.com/simple-mvc-framework/framework/network)
+Option 1 - files above document root:
 
-[![Join the chat at https://gitter.im/simple-mvc-framework/framework](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/simple-mvc-framework/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+* place the nova folder above your htdocs / public / public_html folder
+* place the contents of public_html into your public folder (.htaccess and index.php)
+* navigate to nova in terminal and type composer install to initate the composer install.
+* edit public_html/.htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
+* edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
 
-## What is Simple MVC Framework?
+Option 2 - everything inside your public folder
 
-Simple MVC Framework is a PHP 5.5 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
+* place the contents of nova and public_html folder inside your htdocs / public / public_html folder
+* navigate to the public folder in terminal and type composer install to initate the composer install.
+* open index.php and change the paths from using DIR to FILE:
 
-The base framework comes with a range of [helper classes](https://github.com/simple-mvc-framework/framework/tree/master/app/Helpers).
+````
+define('APPDIR', dirname(__FILE__).'/app/');
+define('SYSTEMDIR', dirname(__FILE__).'/system/');
+define('PUBLICDIR', dirname(__FILE__).'/');
+define('ROOTDIR', dirname(__FILE__).'/');
+````
 
-## Packagist
+* edit .htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
+* edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
 
-The framework is now on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2).
+This has been tested with php 5.6 and php 7 please report any bugs.
 
-Install from terminal now by using:
+#Routing images / js / css files
+From within Templates your css/js and images must be in a Assets folder to be routed correctly.
+This applies to Modules as well, to have a css file from a Module the css file would be placed inside nova/app/Modules/ModuleName/Assets/css/file.css.
+Additionally there is an Assets folder in the root of nova this is for storing resources outside of templates that can still be routed from above the document root.
 
-```
-composer create-project simple-mvc-framework/v2 foldername -s dev
-```
+#Namespace change
 
-The foldername is the desired folder to be created.
+classes in app/Controller app/Model and app/Modules now have a namespace starting with App:
 
-## Documentation
+* App\Controllers
+* App\Models
+* App\Modules
 
-Full docs & tutorials are available at [simplemvcframework.com](http://simplemvcframework.com).
+That is only for classes within app, this is not needed for classes within system.
 
-## Requirements
+#Error Log
+The error log is no longer a .html file but rather a log file. On a production server it should be outside the document root, in order to see the any errors there are a few options:
 
-The framework requirements are limited:
-
-- [Apache Web Server](https://httpd.apache.org/) or equivalent with [mod_rewrite](http://httpd.apache.org/docs/current/mod/mod_rewrite.html) support
-- [PHP 5.5 or greater](http://php.net/downloads.php) is required
-
-Although a database is not required, if a database is to be used the system is designed to work with a [MySQL database](http://www.mysql.com/). The framework can be changed to work with another database type.
-
-## Installation
-
-1. [Download](https://github.com/simple-mvc-framework/framework/archive/master.zip) the framework.
-2. Unzip the package.
-3. To run [composer](https://getcomposer.org/), navigate to your project on a terminal/command prompt, then run `composer install`. That will update the vendor folder. Or use the vendor folder as is (composer is not required for this step).
-Upload the framework files to your server. Normally the `index.php` file will be at your root.
-4. Open the `app/Core/routes.php` file with a text editor and setup your routes.
-5. Open `app/Core/Config.example.php` and set your base path (if the framework is installed in a folder, the base path should reflect the folder path `/path/to/folder/` otherwise a single `/` will do) and database credentials (if a database is needed). Set the default theme. When you are done, rename the file to `Core/Config.php`.
-6. Edit `.htaccess` file and save the base path (if the framework is installed in a folder, the base path should reflect the folder path `/path/to/folder/` otherwise a single `/` will do).
-
-## Other Contributions
-
-Have you found this framework helpful? Why not take a minute to endorse my hard work on [coderwall](https://coderwall.com/daveismynamecom)! Just click the badge below:
-
-[![endorse](https://api.coderwall.com/daveismynamecom/endorsecount.png)](https://coderwall.com/daveismynamecom)
+* Open system/logs/error.log
+* OR open system/Core/Logger.php set $display to true to print errors to the screen
+* set $emailError to true and setup the siteEmail const in system/Core/Config.php this relies on an email server (not provided by the framework)

@@ -1,8 +1,8 @@
 {
-    "name": "simple-mvc-framework/framework",
+    "name": "nova-framework/framework",
     "type": "project",
     "description": "Framework for PHP 5.5+",
-    "homepage": "https://github.com/simple-mvc-framework/framework",
+    "homepage": "https://github.com/nova-framework/framework",
     "license": "MIT",
     "authors": [
         {
@@ -13,10 +13,15 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=5.5.0",
+        "symfony/console": "3.0.x-dev",
+        "doctrine/inflector": "1.0.*"
     },
     "autoload": {
-        "psr-4": {"": "app/"}
+        "psr-4": {
+            "" : "system/",
+            "App\\" : "app/"
+        }
     },
     "minimum-stability": "dev"
 }

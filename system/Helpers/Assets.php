@@ -63,13 +63,13 @@ class Assets
             static::resource($files, $type);
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
-                $path = str_replace(APPDIR, 'resource/', $path);
+                $path = str_replace(APPDIR, null, $path);
                 static::resource(DIR.$path, $type);
             } else {
                 $source = static::collect($files, $type);
                 $source = JsMin::minify($source);// Minify::js($source);
                 file_put_contents($path, $source);
-                $path = str_replace(APPDIR, 'resource/', $path);
+                $path = str_replace(APPDIR, null, $path);
                 static::resource(DIR.$path, $type);
             }
         }
@@ -91,14 +91,14 @@ class Assets
             static::resource($files, $type);
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
-                $path = str_replace(APPDIR, 'resource/', $path);
+                $path = str_replace(APPDIR, null, $path);
                 static::resource(DIR.$path, $type);
             } else {
                 $source = static::collect($files, $type);
                 $source = static::compress($source);
                 file_put_contents($path, $source);
 
-                $path = str_replace(APPDIR, 'resource/', $path);
+                $path = str_replace(APPDIR, null, $path);
                 static::resource(DIR.$path, $type);
             }
         }
@@ -109,7 +109,6 @@ class Assets
         $content = null;
         if (is_array($files)) {
             foreach ($files as $file) {
-                $file = APPDIR.str_replace('resource/', '', $file);
                 if (!empty($file)) {
                     if (strpos(basename($file), '.min.') === false && $type == 'css') {
                         //compress files that aren't minified
@@ -124,7 +123,6 @@ class Assets
         } else {
             if (!empty($files)) {
                 if (strpos(basename($files), '.min.') === false && $type == 'css') {
-                    $files = APPDIR.str_replace('resource/', '', $files);
                     //compress files that aren't minified
                     $content.= static::compress(file_get_contents($files));
                 } else {

@@ -1,4 +1,4 @@
-# Nova Framework
+![Nova Framework](http://novaframework.com/app/templates/publicthemes/nova/images/nova.png)
 
 # Version 3.0
 

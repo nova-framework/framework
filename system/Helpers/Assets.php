@@ -12,6 +12,7 @@ namespace Helpers;
 use Helpers\Url;
 use Helpers\JsMin;
 use Helpers\Response;
+use Helpers\Inflector;
 
 class Assets
 {
@@ -63,14 +64,20 @@ class Assets
             static::resource($files, $type);
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
+
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.strtolower($path), $type);
+                $path = Inflector::tableize($path);
+
+                static::resource(DIR.$path, $type);
             } else {
                 $source = static::collect($files, $type);
-                $source = JsMin::minify($source);// Minify::js($source);
+                $source = JsMin::minify($source);
                 file_put_contents($path, $source);
+
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.strtolower($path), $type);
+                $path = Inflector::tableize($path);
+
+                static::resource(DIR.$path, $type);
             }
         }
     }
@@ -92,14 +99,18 @@ class Assets
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.strtolower($path), $type);
+
+                $path = Inflector::tableize($path);
+                static::resource(DIR.$path, $type);
             } else {
                 $source = static::collect($files, $type);
                 $source = static::compress($source);
                 file_put_contents($path, $source);
 
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.strtolower($path), $type);
+                $path = Inflector::tableize($path);
+
+                static::resource(DIR.$path, $type);
             }
         }
     }

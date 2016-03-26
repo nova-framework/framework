@@ -85,7 +85,7 @@ class Url
      * @param  boolean $custom
      * @return string url to template folder
      */
-    public static function templatePath($custom = TEMPLATE, $folder = '/Assets/')
+    public static function templatePath($custom = TEMPLATE, $folder = '/assets/')
     {
         $template = Inflector::tableize($custom);
 
@@ -98,9 +98,9 @@ class Url
      * @param  boolean $custom
      * @return string path to template folder
      */
-    public static function relativeTemplatePath($custom = TEMPLATE, $folder = '/Assets/')
+    public static function relativeTemplatePath($custom = TEMPLATE, $folder = '/assets/')
     {
-        return "Templates/" .$custom .$folder;
+        return "templates/" .$custom .$folder;
     }
 
     /**

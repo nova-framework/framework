@@ -4,22 +4,22 @@
  */
 return array(
 
-	// Index method
-	'welcomeText' => 'Vítejte',
-	'welcomeMessage' => '
-		Dobrý den, vítá Vás úvodní kontroler! <br/>
-		Tento obsah lze změnit v <code>/app/views/welcome/welcome.php</code>
-	',
+   // Index method
+   'welcomeText' => 'Willkommen',
+   'welcomeMessage' => '
+       Hallo und Willkommen im welcome-Controller! <br />
+       Dieser Inhalt kann in <code>/app/views/welcome/welcome.php</code> geändert werden.
+   ',
 
-	// Subpage method
-	'subpageText' => 'Podstránka',
-	'subpageMessage' => '
-		Dobrý den, vítá Vás úvodní kontroler a metoda podstránka! <br/>
-		Tento obsah lze změnit v <code>/app/views/welcome/subpage.php</code>
-	',
+   // Subpage method
+   'subpageText' => 'Subpage',
+   'subpageMessage' => '
+       Hallo und Wilkommen im welcome-Controller in der subpage-Methode! <br />
+       Dieser Inhalt kann in <code>/app/views/welcome/subpage.php</code> geändert werden.
+   ',
 
-	// Buttons
-	'openSubpage' => 'Otevřít podstránku',
-	'backHome' => 'Domů',
+   // Buttons
+   'openSubpage' => 'Subpage öffnen',
+   'backHome' => 'Home',
 
 );

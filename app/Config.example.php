@@ -59,7 +59,7 @@ class Config
         /**
          * Set a default language.
          */
-        define('LANGUAGE_CODE', 'en');
+        define('LANGUAGE_CODE', 'En');
 
         //database details ONLY NEEDED IF USING A DATABASE
 

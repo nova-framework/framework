@@ -49,15 +49,14 @@ The foldername is the desired folder to be created.
 
 Option 1 - files above document root:
 
-* place the nova folder above your htdocs / public / public_html folder
-* place the contents of public_html into your public folder (.htaccess and index.php)
-* navigate to nova in terminal and type composer install to initiate the composer install.
-* edit public_html/.htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
+* place the contents of public into your public folder (.htaccess and index.php)
+* navigate to your project in terminal and type composer install to initiate the composer install.
+* edit public/.htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
 * edit app/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
 
 Option 2 - everything inside your public folder
 
-* place the contents of nova and public_html folder inside your htdocs / public / public_html folder
+* place all files inside your public folder
 * navigate to the public folder in terminal and type composer install to initiate the composer install.
 * open index.php and change the paths from using DIR to FILE:
 

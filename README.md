@@ -40,7 +40,7 @@ The framework is on packagist [https://packagist.org/packages/nova-framework/fra
 Install from terminal now by using:
 
 ```
-composer create-project simple-mvc-framework/v2 foldername -s dev
+composer create-project nova-framework/framework foldername -s dev
 ```
 
 The foldername is the desired folder to be created.

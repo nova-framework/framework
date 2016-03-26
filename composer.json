@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "symfony/console": "3.0.x-dev",
+        "symfony/console": "3.0.*",
         "doctrine/inflector": "1.0.*"
     },
     "autoload": {

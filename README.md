@@ -35,12 +35,12 @@ Although a database is not required, if a database is to be used the system is d
 
 # Recommended way to install
 
-The framework is on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2).
+The framework is on packagist [https://packagist.org/packages/nova-framework/framework](https://packagist.org/packages/nova-framework/framework).
 
 Install from terminal now by using:
 
 ```
-composer create-project nova-framework/framework foldername -s dev
+composer create-project simple-mvc-framework/v2 foldername -s dev
 ```
 
 The foldername is the desired folder to be created.

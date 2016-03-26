@@ -31,7 +31,7 @@ class Language
     public function load($name, $code = LANGUAGE_CODE)
     {
         /** lang file */
-        $file = APPDIR."language/$code/$name.php";
+        $file = APPDIR."Language/$code/$name.php";
 
         /** check if is readable */
         if (is_readable($file)) {
@@ -74,7 +74,7 @@ class Language
     public static function show($value, $name, $code = LANGUAGE_CODE)
     {
         /** lang file */
-        $file = APPDIR."language/$code/$name.php";
+        $file = APPDIR."Language/$code/$name.php";
 
         /** check if is readable */
         if (is_readable($file)) {

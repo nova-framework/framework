@@ -1,0 +1,8 @@
+
+# Framework specific
+vendor/
+composer.lock
+app/Config.php
+
+# The developers Playground
+works

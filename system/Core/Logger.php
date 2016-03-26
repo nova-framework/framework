@@ -41,7 +41,7 @@ class Logger
     *
     * @var string
     */
-    public static $errorFile = 'logs/error.log';
+    public static $errorFile = 'Logs/error.log';
 
     /**
     * store errors for output.

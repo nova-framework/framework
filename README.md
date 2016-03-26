@@ -1,52 +1,134 @@
-# framework
-Version 3.0 Release Candidate 1 (R1) of the Framework
+# Nova Framework
 
-#Install
+# Version 3.0
+
+[![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg)](LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg)](https://packagist.org/packages/simple-mvc-framework/v2)
+[![Dependency Status](https://www.versioneye.com/user/projects/554367f738331321e2000005/badge.svg)](https://www.versioneye.com/user/projects/554367f738331321e2000005)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/simple-mvc-framework/v2/master/license.txt)
+[![GitHub stars](https://img.shields.io/github/stars/simple-mvc-framework/framework.svg)](https://github.com/simple-mvc-framework/framework/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/simple-mvc-framework/framework.svg)](https://github.com/simple-mvc-framework/framework/network)
+
+[![Join the chat at https://gitter.im/simple-mvc-framework/framework](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/simple-mvc-framework/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+## What is Nova Framework? (formally known as Simple MVC Framework)
+
+Nova Framework is a PHP 5.5 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
+
+The base framework comes with a range of [helper classes](https://github.com/nova-framework/framework/tree/master/app/Helpers).
+
+## Documentation
+
+Full docs & tutorials are available at [novaframework.com](http://novaframework.com).
+
+## Requirements
+
+The framework requirements are limited.
+
+- Apache Web Server or equivalent with mod rewrite support.
+- IIS with URL Rewrite module installed - [http://www.iis.net/downloads/microsoft/url-rewrite](http://www.iis.net/downloads/microsoft/url-rewrite)
+- PHP 5.5 or greater is required
+- fileinfo enabled (edit php.ini and uncomment php_fileinfo.dll or use php selector within cpanel if available.)
+
+
+Although a database is not required, if a database is to be used the system is designed to work with a MySQL database using PDO. The framework can be changed to work with another database type such as Medoo.
+
+# Recommended way to install
+
+The framework is on packagist [https://packagist.org/packages/simple-mvc-framework/v2](https://packagist.org/packages/simple-mvc-framework/v2).
+
+Install from terminal now by using:
+
+```
+composer create-project simple-mvc-framework/v2 foldername -s dev
+```
+
+The foldername is the desired folder to be created.
+
+# Install Manually
 
 Option 1 - files above document root:
 
 * place the nova folder above your htdocs / public / public_html folder
 * place the contents of public_html into your public folder (.htaccess and index.php)
-* navigate to nova in terminal and type composer install to initate the composer install.
+* navigate to nova in terminal and type composer install to initiate the composer install.
 * edit public_html/.htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
-* edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
+* edit app/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
 
 Option 2 - everything inside your public folder
 
 * place the contents of nova and public_html folder inside your htdocs / public / public_html folder
-* navigate to the public folder in terminal and type composer install to initate the composer install.
+* navigate to the public folder in terminal and type composer install to initiate the composer install.
 * open index.php and change the paths from using DIR to FILE:
 
 ````
-define('APPDIR', dirname(__FILE__).'/app/');
-define('SYSTEMDIR', dirname(__FILE__).'/system/');
-define('PUBLICDIR', dirname(__FILE__).'/');
-define('ROOTDIR', dirname(__FILE__).'/');
+define('APPDIR', realpath(__DIR__.'/app/').'/');
+define('SYSTEMDIR', realpath(__DIR__.'/system/').'/');
+define('PUBLICDIR', realpath(__DIR__).'/');
+define('ROOTDIR', realpath(__DIR__).'/');
 ````
 
 * edit .htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
 * edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
 
+---
+
+##Nginx configuration
+
+No special configuration, you only need to configure Nginx and PHP-FPM.
+
+````
+server {
+  listen 80;
+  server_name yourdomain.tld;
+
+  access_log /var/www/access.log;
+  error_log  /var/www/error.log;
+
+  root   /var/www;
+  index  index.php index.html;
+
+  location = /robots.txt {access_log off; log_not_found off;}
+  location ~ /\\. {deny all; access_log off; log_not_found off;}
+  location / {
+    try_files $uri $uri/ /index.php?$args;
+  }
+
+  location ~ \.php$ {
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+  }
+}
+````
+
+---
+
+##IIS with URL Rewrite module installed - [http://www.iis.net/downloads/microsoft/url-rewrite](http://www.iis.net/downloads/microsoft/url-rewrite)
+
+For IIS the htaccess needs to be converted to web.config:
+
+````
+<configuration>
+    <system.webserver>
+        <directorybrowse enabled="true"/>
+        <rewrite>
+            <rules>
+                <rule name="rule 1p" stopprocessing="true">
+                    <match url="^(.+)/$"/>
+                    <action type="Rewrite" url="/{R:1}"/>
+                </rule>
+                <rule name="rule 2p" stopprocessing="true">
+                    <match url="^(.*)$"/
+                    <action type="Rewrite" url="/index.php?{R:1}" appendquerystring="true"/>
+                </rule>
+            </rules>
+        </rewrite>
+    </system.webserver>
+</configuration>
+````
+
 This has been tested with php 5.6 and php 7 please report any bugs.
 
-#Routing images / js / css files
-From within Templates your css/js and images must be in a Assets folder to be routed correctly.
-This applies to Modules as well, to have a css file from a Module the css file would be placed inside nova/app/Modules/ModuleName/Assets/css/file.css.
-Additionally there is an Assets folder in the root of nova this is for storing resources outside of templates that can still be routed from above the document root.
-
-#Namespace change
-
-classes in app/Controller app/Model and app/Modules now have a namespace starting with App:
-
-* App\Controllers
-* App\Models
-* App\Modules
-
-That is only for classes within app, this is not needed for classes within system.
-
-#Error Log
-The error log is no longer a .html file but rather a log file. On a production server it should be outside the document root, in order to see the any errors there are a few options:
-
-* Open system/logs/error.log
-* OR open system/Core/Logger.php set $display to true to print errors to the screen
-* set $emailError to true and setup the siteEmail const in system/Core/Config.php this relies on an email server (not provided by the framework)
+See complete [Change Log](http://novaframework.com/documentation/v3/overview-change-log)

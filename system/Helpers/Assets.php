@@ -64,13 +64,13 @@ class Assets
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.$path, $type);
+                static::resource(DIR.strtolower($path), $type);
             } else {
                 $source = static::collect($files, $type);
                 $source = JsMin::minify($source);// Minify::js($source);
                 file_put_contents($path, $source);
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.$path, $type);
+                static::resource(DIR.strtolower($path), $type);
             }
         }
     }
@@ -92,14 +92,14 @@ class Assets
         } else {
             if ($refresh == false && file_exists($path) && (filemtime($path) > (time() - 60 * $cachedMins))) {
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.$path, $type);
+                static::resource(DIR.strtolower($path), $type);
             } else {
                 $source = static::collect($files, $type);
                 $source = static::compress($source);
                 file_put_contents($path, $source);
 
                 $path = str_replace(APPDIR, null, $path);
-                static::resource(DIR.$path, $type);
+                static::resource(DIR.strtolower($path), $type);
             }
         }
     }

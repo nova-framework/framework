@@ -98,9 +98,9 @@ class Url
      * @param  boolean $custom
      * @return string path to template folder
      */
-    public static function relativeTemplatePath($custom = TEMPLATE, $folder = '/assets/')
+    public static function relativeTemplatePath($custom = TEMPLATE, $folder = '/Assets/')
     {
-        return "templates/" .$custom .$folder;
+        return 'Templates/' .$custom .$folder;
     }
 
     /**

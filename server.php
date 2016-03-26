@@ -7,7 +7,7 @@
 // php -S localhost:8080 -t ../public/ server.php
 
 
-$public_path = '../public/';
+$public_path = 'public/';
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = urldecode($uri);
 $requested = $public_path.$uri;

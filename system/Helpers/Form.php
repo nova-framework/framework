@@ -35,7 +35,7 @@ class Form
         $o .= (isset($params['action']))    ? " action='{$params['action']}'"               : '';
         $o .= (isset($params['files']))     ? " enctype='multipart/form-data'"              : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= (isset($params['role']))      ? " role='{$params['role']}'"                 : '';
+        $o .= (isset($params['role']))      ? " role='{$params['role']}'"                   : '';
         $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
         $o .= '>';
         //create a token append the form name to the end of the token name if provided
@@ -89,7 +89,7 @@ class Form
         $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"      : '';
         $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"         : '';
         $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
+        $o .= (isset($params['required']))     ? " required='required'"                         : '';
         $o .= '>';
         $o .= (isset($params['value']))     ? $params['value']                                  : '';
         $o .= "</textarea>\n";
@@ -107,25 +107,24 @@ class Form
      */
     public static function input($params = array())
     {
-        $o = (isset($params['label']))      ? " <label class='control-label' for='{$params['label']}'>{$params['label']}</label> ": '';
-        $o .= '<input ';
-        $o .= (isset($params['type']))      ? " type='{$params['type']}'"                   : 'type="text"';
-        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                       : "id='{$params['label']}'";
-        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                   : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'" : '';
-        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"             : '';
-        $o .= (isset($params['onkeypress']))? " onkeypress='{$params['onkeypress']}'"       : '';
-        $o .= (isset($params['value']))     ? ' value="' . $params['value'] . '"'           : '';
-        $o .= (isset($params['length']))    ? " maxlength='{$params['length']}'"            : '';
-        $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"        : '';
-        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"           : '';
-        $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"  : '';
-        $o .= (isset($params['accept']))     ? " accept='{$params['accept']}'"              : '';
-        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"     : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
+        $o  = '<input ';
+        $o .= (isset($params['type']))      ? " type='{$params['type']}'"                    : 'type="text"';
+        $o .= (isset($params['id']))        ? " id='{$params['id']}'"                        : '';
+        $o .= (isset($params['name']))      ? " name='{$params['name']}'"                    : '';
+        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                  : '';
+        $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"              : '';
+        $o .= (isset($params['onkeypress']))? " onkeypress='{$params['onkeypress']}'"        : '';
+        $o .= (isset($params['value']))     ? ' value="' . $params['value'] . '"'            : '';
+        $o .= (isset($params['length']))    ? " maxlength='{$params['length']}'"             : '';
+        $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"         : '';
+        $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"            : '';
+        $o .= (isset($params['placeholder']))  ? " placeholder='{$params['placeholder']}'"   : '';
+        $o .= (isset($params['accept']))     ? " accept='{$params['accept']}'"               : '';
+        $o .= (isset($params['maxlength']))     ? " maxlength='{$params['maxlength']}'"      : '';
+        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                  : '';
+        $o .= (isset($params['required']))     ? " required='required'"                      : '';
         $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
-        $o .= (isset($params['autofocus'])) ? " autofocus" : '';
+        $o .= (isset($params['autofocus'])) ? " autofocus"                                   : '';
         $o .= " />\n";
         return $o;
     }
@@ -149,9 +148,9 @@ class Form
         $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
         $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
         $o .= (isset($params['width']))     ? " style='width:{$params['width']}px;'"            : '';
-        $o .= (isset($params['required']))     ? " required='required'"                     : '';
+        $o .= (isset($params['required']))     ? " required='required'"                         : '';
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
         $o .= ">\n";
         $o .= "<option value=''>Select</option>\n";
         if (isset($params['data']) && is_array($params['data'])) {
@@ -192,7 +191,7 @@ class Form
                 $o .= (isset($v['class']))          ? " class='{$v['class']}'"                          : '';
                 $o .= (isset($v['checked']))        ? " checked='checked'"                              : '';
                 $o .= (isset($v['disabled']))       ? " disabled='{$v['disabled']}'"                    : '';
-                $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+                $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
                 $o .= " />\n";
                 $o .= (isset($v['label']))          ? "<label for='{$v['id']}'>{$v['label']}</label> "  : '';
                 $x++;
@@ -226,7 +225,7 @@ class Form
                 $o .= (isset($v['class']))          ? " class='{$v['class']}'"                          : '';
                 $o .= (isset($v['checked']))        ? " checked='checked'"                              : '';
                 $o .= (isset($v['disabled']))       ? " disabled='{$v['disabled']}'"                    : '';
-                $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+                $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
                 $o .= " />\n";
                 $o .= (isset($v['label']))          ? "<label for='{$v['id']}'>{$v['label']}</label> "  : '';
                 $x++;
@@ -250,7 +249,7 @@ class Form
         $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
         $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
         $o .= ">";
         $o .= (isset($params['iclass']))    ? "<i class='fa {$params['iclass']}'></i> "         : '';
         $o .= (isset($params['value']))     ? "{$params['value']}"                              : '';
@@ -274,7 +273,7 @@ class Form
         $o .= (isset($params['onclick']))   ? " onclick='{$params['onclick']}'"                 : '';
         $o .= (isset($params['value']))     ? " value='{$params['value']}'"                     : '';
         $o .= (isset($params['disabled']))  ? " disabled='{$params['disabled']}'"               : '';
-        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                 : '';
+        $o .= (isset($params['style']))     ? " style='{$params['style']}'"                     : '';
         $o .= " />\n";
         return $o;
     }
@@ -291,7 +290,7 @@ class Form
         $o = '<input type="hidden"';
         $o .= (isset($params['id']))        ? " id='{$params['id']}'"                           : '';
         $o .= (isset($params['name']))      ? " name='{$params['name']}'"                       : '';
-        $o .= (isset($params['class']))     ? " class='{$params['class']}'"   : '';
+        $o .= (isset($params['class']))     ? " class='{$params['class']}'"                     : '';
         $o .= (isset($params['value']))     ? " value='{$params['value']}'"                     : '';
         $o .= " />\n";
         return $o;

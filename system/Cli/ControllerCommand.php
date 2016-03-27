@@ -55,8 +55,8 @@ class ControllerCommand extends Command
             exit;
         }
 
-        if (!is_dir("app/Views/".$this->controllerName)) {
-             mkdir("app/Views/".$this->controllerName);
+        if (!is_dir("app/Views/".ucwords($this->controllerName))) {
+             mkdir("app/Views/".ucwords($this->controllerName));
         }
 
         $this->makeViews();
@@ -68,12 +68,12 @@ class ControllerCommand extends Command
 
     private function makeViews()
     {
-        if (!is_dir("app/Views/".$this->controllerName)) {
-            mkdir("app/Views/".$this->controllerName);
+        if (!is_dir("app/Views/".ucwords($this->controllerName))) {
+            mkdir("app/Views/".ucwords($this->controllerName));
         }
         if (is_array($this->methods)) {
             foreach ($this->methods as $method) {
-                file_put_contents("app/Views/".$this->controllerName."/".$method.".php", null);
+                file_put_contents("app/Views/".ucwords($this->controllerName)."/".ucwords($method.".php"), null);
             }
         }
     }
@@ -118,7 +118,7 @@ if (is_array($this->methods)) {
         \$data['title'] = '$method';
 
         View::renderTemplate('header', \$data);
-        View::render('".$this->controllerName."/$method', \$data);
+        View::render('".ucwords($this->controllerName)."/".ucwords($method)."', \$data);
         View::renderTemplate('footer', \$data);
     }\n";
     }

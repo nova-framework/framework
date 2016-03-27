@@ -4,7 +4,7 @@
 // Provides a convenient way to test the application without having installed a "real" web server software.
 
 // Usage:
-// php -S localhost:8080 -t ../public/ server.php
+// php -S localhost:8080 -t public/ server.php
 
 
 $public_path = 'public/';

@@ -119,12 +119,7 @@ class Router
     {
         $router =& self::getInstance();
 
-        // Ensure that the methods parameter is always an array.
-        $methods = is_array($methods) ? $methods : array($methods);
-
-        foreach ($methods as $method) {
-            $router->addRoute($method, $route, $callback);
-        }
+        $router->addRoute($methods, $route, $callback);
     }
 
     /**
@@ -164,13 +159,13 @@ class Router
     /**
      * Maps a Method and URL pattern to a Callback.
      *
-     * @param string $method HTTP metod to match
+     * @param string $methods HTTP metods to match
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
-    public function addRoute($method, $route, $callback = null)
+    public function addRoute($methods, $route, $callback = null)
     {
-        $method = strtoupper($method);
+        $methods = array_map('strtoupper', is_array($methods) ? $methods : array($methods));
 
         $pattern = ltrim($route, '/');
 
@@ -178,7 +173,7 @@ class Router
             $pattern = implode('/', self::$routeGroups) .'/' .$pattern;
         }
 
-        $route = new Route($method, $pattern, $callback);
+        $route = new Route($methods, $pattern, $callback);
 
         // Add the current Route instance to the known Routes list.
         array_push($this->routes, $route);

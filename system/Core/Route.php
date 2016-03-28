@@ -16,7 +16,7 @@ class Route
     /**
      * @var string HTTP method or 'ANY'
      */
-    private $method;
+    private $methods = array();
 
     /**
      * @var string URL pattern
@@ -41,13 +41,13 @@ class Route
     /**
      * Constructor.
      *
-     * @param string $method HTTP method
+     * @param string $methods HTTP methods
      * @param string $pattern URL pattern
      * @param callable $callback Callback function
      */
-    public function __construct($method, $pattern, $callback)
+    public function __construct(array $methods, $pattern, $callback)
     {
-        $this->method = strtoupper($method);
+        $this->methods = $methods;
 
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
@@ -65,7 +65,7 @@ class Route
      */
     public function match($uri, $method, $optionals = true)
     {
-        if (($this->method != $method) && ($this->method != 'ANY')) {
+        if (! in_array($method, $this->methods) && ! in_array('ANY', $this->methods)) {
             return false;
         }
 

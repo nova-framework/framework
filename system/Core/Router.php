@@ -109,6 +109,25 @@ class Router
     }
 
     /**
+     * Defines a multi-method Route Match.
+     *
+     * @param array|string $methods The Route's method(s).
+     * @param string $route The Route definition.
+     * @param callback $callback Callback object called to define the Routes.
+     */
+    public static function match($methods, $route, $callback = null)
+    {
+        $router =& self::getInstance();
+
+        // Ensure that the methods parameter is always an array.
+        $methods = is_array($methods) ? $methods : array($methods);
+
+        foreach ($methods as $method) {
+            $router->addRoute($method, $route, $callback);
+        }
+    }
+
+    /**
      * Defines a Route Group.
      *
      * @param string $group The scope of the current Routes Group

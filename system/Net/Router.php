@@ -110,6 +110,7 @@ class Router
 
     /**
      * Register catchAll route
+     *
      * @param $callback
      */
     public static function catchAll($callback)
@@ -117,6 +118,20 @@ class Router
         $router =& self::getInstance();
 
         $router->defaultRoute = new Route('ANY', '(:all)', $callback);
+    }
+
+    /**
+     * Defines a multi-method Route Match.
+     *
+     * @param string|array $method HTTP method(s) to match.
+     * @param string $route URL pattern to match.
+     * @param callback $callback Callback object.
+     */
+    public static function match($method, $route, $callback = null)
+    {
+        $router =& self::getInstance();
+
+        $router->addRoute($method, $route, $callback);
     }
 
     /**
@@ -138,7 +153,8 @@ class Router
     }
 
     /**
-     * Router callback
+     * Router Error Callback
+     *
      * @param null $callback
      * @return callback|null
      */
@@ -156,13 +172,13 @@ class Router
     /**
      * Maps a Method and URL pattern to a Callback.
      *
-     * @param string $method HTTP metod to match
+     * @param string|array $method HTTP method(s) to match
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
     public function addRoute($method, $route, $callback = null)
     {
-        $method = strtoupper($method);
+        $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
         $pattern = ltrim($route, '/');
 
@@ -170,7 +186,7 @@ class Router
             $pattern = implode('/', self::$routeGroups) .'/' .$pattern;
         }
 
-        $route = new Route($method, $pattern, $callback);
+        $route = new Route($methods, $pattern, $callback);
 
         // Add the current Route instance to the known Routes list.
         array_push($this->routes, $route);

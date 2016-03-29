@@ -84,7 +84,7 @@ class View
     }
 
     /**
-     * place hook calls into the relevent data array call
+     * place hook calls into the relevant data array call
      * @param  array $data
      * @return array $data
      */

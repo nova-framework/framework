@@ -117,15 +117,15 @@ class Router
     {
         $router =& self::getInstance();
 
-        $router->defaultRoute = new Route('ANY', '(:all)', $callback);
+        $router->defaultRoute = new Route('any', '(:all)', $callback);
     }
 
     /**
      * Defines a multi-method Route Match.
      *
-     * @param string|array $method HTTP method(s) to match.
-     * @param string $route URL pattern to match.
-     * @param callback $callback Callback object.
+     * @param string|array $method HTTP method(s) to match
+     * @param string $route URL pattern to match
+     * @param callback $callback Callback object
      */
     public static function match($method, $route, $callback = null)
     {

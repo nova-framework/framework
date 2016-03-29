@@ -18,7 +18,7 @@ use Nova\Config;
 use Nova\Logger;
 
 /** Prepare the current directory for configuration files. */
-$configDir = APPPATH .'Config' .DS;
+$configDir = dirname(__FILE__) .DS;
 
 /** Check for valid configuration files. */
 if (! is_readable($configDir .'config.php') || ! is_readable($configDir .'constants.php')) {
@@ -38,7 +38,7 @@ ob_start();
 require $configDir .'constants.php';
 
 /** Load the System's helper functions. */
-require dirname(__FILE__) .DS .'functions.php';
+require SYSPATH .'functions.php';
 
 /** Load the application Configuration. */
 require $configDir .'config.php';

@@ -16,11 +16,12 @@ define('FRAMEWORK_STARTING_MICROTIME', microtime(true));
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
-define('BASEPATH', realpath(dirname(__DIR__)).DS);
+define('BASEPATH', dirname(__DIR__) .DS);
+
 // The Application paths.
-define('WEBPATH', realpath(__DIR__).DS);
-define('APPPATH', BASEPATH.'app'.DS);
-define('SYSPATH', BASEPATH.'system'.DS);
+define('WEBPATH', dirname(__FILE__) .DS);
+define('APPPATH', BASEPATH .'app' .DS);
+define('SYSPATH', BASEPATH .'system' .DS);
 
 
 /** load composer autoloader */

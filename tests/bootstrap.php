@@ -28,7 +28,7 @@ $configDir = BASEPATH .'app' .DS .'Config' .DS;
 
 require_once $configDir.'constants.example.php';
 
-require_once SYSPATH. 'Config' .DS .'functions.php';
+require_once SYSPATH. 'functions.php';
 
 require_once $configDir.'config.example.php';
 

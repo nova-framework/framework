@@ -104,7 +104,7 @@ class Config
         define('SITETITLE', 'Nova V3.0');
 
         /**
-         * Optionall set a site email address.
+         * Optional set a site email address.
          */
         // define('SITEEMAIL', 'email@domain.com');
 

@@ -128,6 +128,48 @@ For IIS the htaccess needs to be converted to web.config:
 </configuration>
 ````
 
+---
+
+##Setting up a VirtualHost (Optional but recommended)
+
+Navigate to: 
+```` 
+<path to your xampp installation>\apache\conf\extra\httpd-vhosts.conf
+````
+
+and uncomment:
+
+````
+NameVirtualHost *:80
+````
+
+Then add your VirtualHost to the same file at the bottom:
+
+````
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot "C:\xampp\htdocs\testproject\public"
+    ServerName testproject.dev
+
+    <Directory "C:\xampp\htdocs\testproject\public">
+        Options Indexes FollowSymLinks Includes ExecCGI
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
+````
+
+Finally, find your hosts file and add:
+
+````
+127.0.0.1       testproject.dev
+````
+
+You should then have a virtual host set up, and in your web browser, you can navigate to testproject.dev to see what you are working on.
+
+---
+
 This has been tested with php 5.6 and php 7 please report any bugs.
 
 See complete [Change Log](http://novaframework.com/documentation/v3/overview-change-log)

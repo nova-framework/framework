@@ -53,11 +53,11 @@ class Url
             $requestUri = substr($requestUri, strlen($pathName));
         }
 
-        if (($requestUri == '/') || empty($requestUri)) {
+        $uri = parse_url($requestUri, PHP_URL_PATH);
+
+        if (($uri == '/') || empty($uri)) {
             return '/';
         }
-
-        $uri = parse_url($requestUri, PHP_URL_PATH);
 
         return str_replace(array('//', '../'), '/', ltrim($uri, '/'));
     }

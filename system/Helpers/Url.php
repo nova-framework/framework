@@ -53,13 +53,14 @@ class Url
             $requestUri = substr($requestUri, strlen($pathName));
         }
 
-        $uri = parse_url($requestUri, PHP_URL_PATH);
+        $uri = parse_url(ltrim($requestUri, '/'), PHP_URL_PATH);
 
-        if (($uri == '/') || empty($uri)) {
-            return '/';
+        if (! empty($uri)) {
+            return str_replace(array('//', '../'), '/', $uri);
         }
 
-        return str_replace(array('//', '../'), '/', ltrim($uri, '/'));
+        // Empty URI of homepage; internally encoded as '/'
+        return '/';
     }
 
     /**

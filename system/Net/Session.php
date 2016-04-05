@@ -198,9 +198,24 @@ class Session
             $alertText = $data['text'];
         }
 
+        switch($alertType) {
+            case 'success':
+                $alertIcon = 'check';
+                break;
+            case 'warning':
+                $alertIcon = 'warning';
+                break;
+            case 'danger':
+                $alertIcon = 'bomb';
+                break;
+            case 'info':
+            default:
+                $alertIcon = 'info';
+        }
+
         return "<div class='alert alert-".$alertType." alert-dismissable'>
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                    <h4><i class='fa fa-check'></i> ".$alertText."</h4>
+                    <i class='fa fa-".$alertIcon."'></i> ".$alertText."
                 </div>";
     }
 }

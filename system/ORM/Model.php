@@ -145,7 +145,7 @@ class Model
 
         // Adjust the Relations array to permit the storage of associated Models data.
         if(! empty($this->relations)) {
-            $this->relations = array_fill_keys($this->relations, array());
+            $this->relations = array_fill_keys($this->relations, null);
         }
 
         // Init the Model; exists when it has attributes loaded (via class fetching).

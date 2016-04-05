@@ -353,7 +353,7 @@ Dumper::dumpObjectArray(\$course->students);
 \$data = \$course->toArray();
 
 Dumper::dumpObject(\$course);
-var_export(\$data, true);
+var_export(\$data);
         ";
 
         $message .= Highlighter::parse($text);

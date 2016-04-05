@@ -531,7 +531,7 @@ class Model
     }
 
     /**
-     * Eager load relations on the model.
+     * Eager load relations on the Model.
      *
      * @param  array|string  $relations
      * @return $this
@@ -554,7 +554,7 @@ class Model
     }
 
     /**
-     * Begin querying a model with eager loading.
+     * Begin querying a Model with eager loading.
      *
      * @param  array|string  $relations
      * @return \Nova\ORM\Builder|static

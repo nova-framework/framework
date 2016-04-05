@@ -111,6 +111,9 @@ class BelongsToMany extends Relation
             ->select($table .'.*')
             ->get();
 
+        //
+        $this->query = $this->related->newBuilder();
+
         if($data === null) {
             return false;
         }
@@ -125,8 +128,6 @@ class BelongsToMany extends Relation
 
             $result[$id] = $this->related->newFromBuilder($row);
         }
-
-        $this->query = $this->related->newBuilder();
 
         return $result;
     }

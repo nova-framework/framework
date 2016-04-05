@@ -45,6 +45,13 @@ class HasMany extends Relation
         $data = $query->where($this->foreignKey, $id)->get();
 
         //
+        $this->query = $this->related->newBuilder();
+
+        if($data === null) {
+            return false;
+        }
+        
+        //
         $key = $this->related->getKeyName();
 
         $result = array();
@@ -54,8 +61,6 @@ class HasMany extends Relation
 
             $result[$id] = $this->related->newFromBuilder($row);
         }
-
-        $this->query = $this->related->newBuilder();
 
         return $result;
     }

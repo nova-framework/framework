@@ -52,6 +52,7 @@ class Builder
      * @var array
      */
     protected $passthru = array(
+        'select',
         'insert',
         'insertIgnore',
         'replace',
@@ -220,7 +221,7 @@ class Builder
 
         $result = $query->first();
 
-        if($result !== false) {
+        if($result !== null) {
             return $this->model->newFromBuilder($result);
         }
 
@@ -282,7 +283,7 @@ class Builder
     {
         $data = $this->query->first();
 
-        if($data !== false) {
+        if($data !== null) {
             return $this->model->newFromBuilder($data);
         }
 

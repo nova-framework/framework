@@ -374,8 +374,8 @@ class Model
                 // We have an array of associated Models.
                 $attributes[$key] = array();
 
-                foreach ($value as $entry) {
-                    $attributes[$key][] = $entry->toArray();
+                foreach ($value as $id => $entry) {
+                    $attributes[$key][$id] = $entry->toArray();
                 }
             } else if (is_null($value)) {
                 // We have an empty relationship.

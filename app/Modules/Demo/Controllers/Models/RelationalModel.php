@@ -343,12 +343,12 @@ Dumper::dumpObjectArray(\$course->students);
         $message .= '<pre>'. Dumper::dumpObjectArray($course->students).'</pre><br>';
 
         //
-        $course = Course::with('students')->find(1);
+        $course = Course::with('students')->find(2);
 
         $data = $course->toArray();
 
         $text = "
-\$course = Course::with('students')->find(1);
+\$course = Course::with('students')->find(2);
 
 \$data = \$course->toArray();
 

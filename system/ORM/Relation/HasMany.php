@@ -39,9 +39,28 @@ class HasMany extends Relation
     {
         $id = $this->parent->getKey();
 
-        $result = $this->query->findAll($this->foreignKey, $id);
+        $query = $this->query->getBaseQuery();
 
+        //
+        $data = $query->where($this->foreignKey, $id)->get();
+
+        //
         $this->query = $this->related->newBuilder();
+
+        if($data === null) {
+            return false;
+        }
+        
+        //
+        $key = $this->related->getKeyName();
+
+        $result = array();
+
+        foreach ($data as $row) {
+            $id = $row[$key];
+
+            $result[$id] = $this->related->newFromBuilder($row);
+        }
 
         return $result;
     }

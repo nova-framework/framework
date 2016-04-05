@@ -111,17 +111,23 @@ class BelongsToMany extends Relation
             ->select($table .'.*')
             ->get();
 
+        //
+        $this->query = $this->related->newBuilder();
+
         if($data === null) {
             return false;
         }
 
+        //
+        $key = $this->related->getKeyName();
+
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $this->related->newFromBuilder($row);
-        }
+            $id = $row[$key];
 
-        $this->query = $this->related->newBuilder();
+            $result[$id] = $this->related->newFromBuilder($row);
+        }
 
         return $result;
     }

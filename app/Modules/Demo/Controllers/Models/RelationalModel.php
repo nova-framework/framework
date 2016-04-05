@@ -294,6 +294,24 @@ Dumper::dumpObjectArray(\$posts);
         $message .= '<pre>'. Dumper::dumpObjectArray($posts).'</pre><br>';
 
         //
+        $user = User::with('profile', 'posts')->find(2);
+
+        $data = $user->toArray();
+
+        $text = "
+\$user = User::with('profile', 'posts')->find(2);
+
+\$data = \$user->toArray();
+
+Dumper::dumpObject(\$user);
+var_export(\$data);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'. Dumper::dumpObject($user).'</pre>';
+        $message .= '<pre>'. var_export($data, true).'</pre><br>';
+
+        //
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany').'</strong></h3><br>';
 
         //
@@ -353,7 +371,7 @@ Dumper::dumpObjectArray(\$course->students);
 \$data = \$course->toArray();
 
 Dumper::dumpObject(\$course);
-var_export(\$data);
+var_export(\$data, true);
         ";
 
         $message .= Highlighter::parse($text);

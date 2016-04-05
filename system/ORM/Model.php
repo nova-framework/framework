@@ -362,20 +362,24 @@ class Model
         return $tableKey .'_id';
     }
 
-    public function toArray()
+    public function toArray($withRelations = true)
     {
+        if(! $withRelations) {
+            return $this->attributes;
+        }
+
         $attributes = $this->attributes;
 
         foreach ($this->relations as $key => $value) {
             if ($value instanceof Model) {
                 // We have an associated Model.
-                $attributes[$key] = $value->toArray();
+                $attributes[$key] = $value->toArray(false);
             } else if (is_array($value)) {
                 // We have an array of associated Models.
                 $attributes[$key] = array();
 
-                foreach ($value as $entry) {
-                    $attributes[$key][] = $entry->toArray();
+                foreach ($value as $id => $entry) {
+                    $attributes[$key][$id] = $entry->toArray(false);
                 }
             } else if (is_null($value)) {
                 // We have an empty relationship.

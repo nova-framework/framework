@@ -115,11 +115,12 @@ class BelongsToMany extends Relation
             return false;
         }
 
+        //
+        $key = $this->related->getKeyName();
+
         $result = array();
 
         foreach($data as $row) {
-            $key = $this->related->getKeyName();
-
             $id = $row[$key];
 
             $result[$id] = $this->related->newFromBuilder($row);

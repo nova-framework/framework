@@ -47,6 +47,13 @@ class Builder
     protected static $cache = array();
 
     /**
+     * The relationships that should be eager loaded.
+     *
+     * @var array
+     */
+    protected $eagerLoad = [];
+
+    /**
      * The methods that should be returned from Query Builder.
      *
      * @var array
@@ -202,8 +209,8 @@ class Builder
 
         $result = $query->where($fieldName, $id)->first();
 
-        if($result !== false) {
-            return $this->model->newFromBuilder($result);
+        if ($result !== false) {
+            return $this->model->newFromBuilder($result)->load($this->eagerLoad);
         }
 
         return false;
@@ -222,7 +229,7 @@ class Builder
         $result = $query->first();
 
         if($result !== null) {
-            return $this->model->newFromBuilder($result);
+            return $this->model->newFromBuilder($result)->load($this->eagerLoad);
         }
 
         return false;
@@ -246,7 +253,7 @@ class Builder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $this->model->newFromBuilder($row);
+            $result[] = $this->model->newFromBuilder($row)->load($this->eagerLoad);
         }
 
         return $result;
@@ -273,7 +280,7 @@ class Builder
         $result = array();
 
         foreach($data as $row) {
-            $result[] = $this->model->newFromBuilder($row);
+            $result[] = $this->model->newFromBuilder($row)->load($this->eagerLoad);
         }
 
         return $result;
@@ -284,7 +291,7 @@ class Builder
         $data = $this->query->first();
 
         if($data !== null) {
-            return $this->model->newFromBuilder($data);
+            return $this->model->newFromBuilder($result)->load($this->eagerLoad);
         }
 
         return false;
@@ -379,4 +386,22 @@ class Builder
 
         return false;
     }
+
+    /**
+     * Set the relationships that should be eager loaded.
+     *
+     * @param  mixed  $relations
+     * @return $this
+     */
+    public function with($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        $this->eagerLoad = array_merge($this->eagerLoad, $relations);
+
+        return $this;
+    }
+
 }

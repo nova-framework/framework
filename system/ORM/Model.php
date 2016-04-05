@@ -362,6 +362,30 @@ class Model
         return $tableKey .'_id';
     }
 
+    public function toArray()
+    {
+        $attributes = $this->attributes;
+
+        foreach ($this->relations as $key => $value) {
+            if ($value instanceof Model) {
+                // We have an associated Model.
+                $attributes[$key] = $value->toArray();
+            } else if (is_array($value)) {
+                // We have an array of associated Models.
+                $attributes[$key] = array();
+
+                foreach ($value as $entry) {
+                    $attributes[$key][] = $entry->toArray();
+                }
+            } else if (is_null($value)) {
+                // We have an empty relationship.
+                $attributes[$key] = $value;
+            }
+        }
+
+        return $attributes;
+    }
+
     public function setAttributes($attributes)
     {
         $this->forceFill($attributes);
@@ -504,6 +528,46 @@ class Model
         }
 
         return false;
+    }
+
+    /**
+     * Eager load relations on the model.
+     *
+     * @param  array|string  $relations
+     * @return $this
+     */
+    public function load($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        foreach ($relations as $name) {
+            if(array_key_exists($name, $this->relations) && method_exists($this, $name)) {
+                $relation = call_user_func(array($this, $name));
+
+                $this->relations[$name] = $relation->get();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Begin querying a model with eager loading.
+     *
+     * @param  array|string  $relations
+     * @return \Nova\ORM\Builder|static
+     */
+    public static function with($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        $instance = new static();
+
+        return $instance->newBuilder()->with($relations);
     }
 
     public function newBuilder()

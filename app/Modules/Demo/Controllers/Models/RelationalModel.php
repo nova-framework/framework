@@ -343,6 +343,24 @@ Dumper::dumpObjectArray(\$course->students);
         $message .= '<pre>'. Dumper::dumpObjectArray($course->students).'</pre><br>';
 
         //
+        $course = Course::with('students')->find(1);
+
+        $data = $course->toArray();
+
+        $text = "
+\$course = Course::with('students')->find(1);
+
+\$data = \$course->toArray();
+
+Dumper::dumpObject(\$course);
+var_export(\$data, true);
+        ";
+
+        $message .= Highlighter::parse($text);
+        $message .= '<pre>'. Dumper::dumpObject($course).'</pre>';
+        $message .= '<pre>'. var_export($data, true).'</pre><br>';
+
+        //
         $message .= '<h3><strong>'.__d('demo', 'Relations: belongsToMany, operating with the Pivot').'</strong></h3><br>';
 
         //

@@ -40,18 +40,19 @@ class Csrf
      * @static static method
      * @return string
      */
-    public static function makeToken()
+    public static function makeToken($name = 'csrfToken')
     {
-        $max_time    = 60 * 60 * 24; // token is valid for 1 day
-        $csrf_token = Session::get('csrf_token');
-        $stored_time  = Session::get('csrf_token_time');
+        $max_time = 60 * 60 * 24; // token is valid for 1 day
 
-        if ($max_time + $stored_time <= time() || empty($csrf_token)) {
-            Session::set('csrf_token', md5(uniqid(rand(), true)));
-            Session::set('csrf_token_time', time());
+        $csrf_token  = Session::get($name);
+        $stored_time = Session::get($name .'_time');
+
+        if (($max_time + $stored_time) <= time()) || empty($csrf_token)) {
+            Session::set($name, md5(uniqid(rand(), true)));
+            Session::set($name .'_time', time());
         }
 
-        return Session::get('csrf_token');
+        return Session::get('csrfToken');
     }
 
     /**
@@ -61,8 +62,8 @@ class Csrf
      * @static static method
      * @return bool
      */
-    public static function isTokenValid()
+    public static function isTokenValid($name = 'csrfToken')
     {
-        return $_POST['csrf_token'] === Session::get('csrf_token');
+        return ($_POST[$name] === Session::get($name));
     }
 }

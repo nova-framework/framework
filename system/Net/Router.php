@@ -97,6 +97,16 @@ class Router
     }
 
     /**
+     * Return the available Routes.
+     *
+     * @return Route[]
+     */
+    public function routes()
+    {
+        return $this->routes;
+    }
+    
+    /**
      * Defines callback if route is not found.
      *
      * @param string $callback

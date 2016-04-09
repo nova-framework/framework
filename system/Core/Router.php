@@ -86,6 +86,16 @@ class Router
     }
 
     /**
+     * Return the available Routes.
+     *
+     * @return Route[]
+     */
+    public function routes()
+    {
+        return $this->routes;
+    }
+
+    /**
      * Defines callback if route is not found.
      *
      * @param string $callback
@@ -130,14 +140,55 @@ class Router
      */
     public static function group($group, $callback)
     {
+        if(is_array($group)) {
+            $prefix    = $group['prefix'];
+            $namespace = $group['namespace'];
+        } else {
+            $prefix    = trim($group, '/');
+            $namespace = '';
+        }
+
         // Add the Route Group to the array.
-        array_push(self::$routeGroups, trim($group, '/'));
+        array_push(self::$routeGroups, array('prefix' => $prefix, 'namespace' => $namespace));
 
         // Call the Callback, to define the Routes on the current Group.
         call_user_func($callback);
 
         // Removes the last Route Group from the array.
         array_pop(self::$routeGroups);
+    }
+
+    /* The Resourcefull Routes in the Laravel Style.
+
+    Method     |  Path                 |  Action   |
+    ------------------------------------------------
+    GET        |  /photo               |  index    |
+    GET        |  /photo/create        |  create   |
+    POST       |  /photo               |  store    |
+    GET        |  /photo/{photo}       |  show     |
+    GET        |  /photo/{photo}/edit  |  edit     |
+    PUT/PATCH  |  /photo/{photo}       |  update   |
+    DELETE     |  /photo/{photo}       |  destroy  |
+
+    */
+
+    /**
+     * Defines a Resourcefull Routes Group to a target Controller.
+     *
+     * @param string $basePath The base path of the resourcefull routes group
+     * @param string $controller The target Resourcefull Controller's name.
+     */
+    public static function resource($basePath, $controller)
+    {
+        $router =& self::getInstance();
+
+        $router->addRoute('get',                 $basePath,                 $controller .'@index');
+        $router->addRoute('get',                 $basePath .'/create',      $controller .'@create');
+        $router->addRoute('post',                $basePath,                 $controller .'@store');
+        $router->addRoute('get',                 $basePath .'/(:any)',      $controller .'@show');
+        $router->addRoute('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
+        $router->addRoute(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
+        $router->addRoute('delete',              $basePath .'/(:any)',      $controller .'@delete');
     }
 
     /**
@@ -171,7 +222,25 @@ class Router
         $pattern = ltrim($route, '/');
 
         if (! empty(self::$routeGroups)) {
-            $pattern = implode('/', self::$routeGroups) .'/' .$pattern;
+            $prefixes  = array();
+            $namespace = '';
+
+            foreach (self::$routeGroups as $group) {
+                // Add the current prefix to the prefixes list.
+                array_push($prefixes, $group['prefix']);
+                // Keep always the last Controller's namespace.
+                $namespace = $group['namespace'];
+            }
+
+            // Adjust the Route PATTERN.
+            if(! empty($prefixes)) {
+                $pattern = implode('/', $prefixes) .'/' .$pattern;
+            }
+
+            // Adjust the Route CALLBACK, when it is not a Closure.
+            if(! empty($namespace) && ! is_object($callback)) {
+                $callback = $namespace .'\\' .$callback;
+            }
         }
 
         $route = new Route($methods, $pattern, $callback);

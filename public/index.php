@@ -64,5 +64,5 @@ if (defined('ENVIRONMENT')) {
 
 }
 
-/** Boot the Framework */
+/** Bootstrap the Framework */
 require SYSTEMDIR.'bootstrap.php';

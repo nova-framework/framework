@@ -222,23 +222,27 @@ class Router
         $pattern = ltrim($route, '/');
 
         if (! empty(self::$routeGroups)) {
-            $prefixes  = array();
+            $parts     = array();
             $namespace = '';
 
             foreach (self::$routeGroups as $group) {
                 // Add the current prefix to the prefixes list.
-                array_push($prefixes, $group['prefix']);
+                array_push($parts, $group['prefix']);
                 // Keep always the last Controller's namespace.
                 $namespace = $group['namespace'];
             }
 
+            if (! empty($pattern)) {
+                array_push($parts, $pattern);
+            }
+
             // Adjust the Route PATTERN.
-            if(! empty($prefixes)) {
-                $pattern = implode('/', $prefixes) .'/' .$pattern;
+            if (! empty($parts)) {
+                $pattern = implode('/', $parts);
             }
 
             // Adjust the Route CALLBACK, when it is not a Closure.
-            if(! empty($namespace) && ! is_object($callback)) {
+            if (! empty($namespace) && ! is_object($callback)) {
                 $callback = $namespace .'\\' .$callback;
             }
         }

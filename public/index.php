@@ -64,11 +64,5 @@ if (defined('ENVIRONMENT')) {
 
 }
 
-/** initiate Alias */
-new Core\Alias();
-
-/** initiate config */
-new \App\Config();
-
-/** load routes */
-require APPDIR.'Routes.php';
+/** Boot the Framework */
+require SYSTEMDIR.'bootstrap.php';

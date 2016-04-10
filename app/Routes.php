@@ -10,9 +10,6 @@
 use Core\Router;
 use Helpers\Hooks;
 
-/** Get the Router instance. */
-$router = Router::getInstance();
-
 /** Define static routes. */
 
 // Default Routing
@@ -28,6 +25,3 @@ $hooks->run('routes');
 
 /** If no route found. */
 Router::error('Core\Error@index');
-
-/** Execute matched routes. */
-$router->dispatch();

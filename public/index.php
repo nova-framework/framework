@@ -4,10 +4,10 @@ defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories */
 
-define('APPDIR', realpath(__DIR__.'/../app/').'/');
-define('SYSTEMDIR', realpath(__DIR__.'/../system/').'/');
-define('PUBLICDIR', realpath(__DIR__).'/');
-define('ROOTDIR', realpath(__DIR__.'/../').'/');
+define('APPDIR', realpath(__DIR__.'/../app/') .DS);
+define('SYSTEMDIR', realpath(__DIR__.'/../system/') .DS);
+define('PUBLICDIR', realpath(__DIR__) .DS);
+define('ROOTDIR', realpath(__DIR__.'/../') .DS);
 
 /** load composer autoloader */
 if (file_exists(ROOTDIR.'vendor/autoload.php')) {
@@ -64,11 +64,5 @@ if (defined('ENVIRONMENT')) {
 
 }
 
-/** initiate Alias */
-new Core\Alias();
-
-/** initiate config */
-new \App\Config();
-
-/** load routes */
-require APPDIR.'Routes.php';
+/** Bootstrap the Framework */
+require SYSTEMDIR .'bootstrap.php';

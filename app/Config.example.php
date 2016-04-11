@@ -12,7 +12,6 @@ namespace App;
 
 use Core\Language;
 use Helpers\Session;
-use Helpers\Cookie;
 
 /**
  * Configuration constants and options.
@@ -129,20 +128,7 @@ class Config
         /**
          * Setup the current Language.
          */
-        self::setupLanguage();
+        Language::init();
     }
 
-    protected static function setupLanguage()
-    {
-        if (Session::exists('language')) {
-            // The Language was already set; nothing to do.
-            return;
-        } else if(Cookie::exists(PREFIX .'language')) {
-            $cookie = Cookie::get(PREFIX .'language');
-
-            if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, Language::$codes)) {
-                Session::set('language', ucfirst($cookie));
-            }
-        }
-    }
 }

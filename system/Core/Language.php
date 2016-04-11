@@ -10,6 +10,7 @@ namespace Core;
 
 use Core\Error;
 use Helpers\Session;
+use Helpers\Cookie;
 
 /**
  * Language class to load the requested language file.
@@ -29,6 +30,20 @@ class Language
      */
     private $array;
 
+
+    public static function init()
+    {
+        if (Session::exists('language')) {
+            // The Language was already set; nothing to do.
+            return;
+        } else if(Cookie::exists(PREFIX .'language')) {
+            $cookie = Cookie::get(PREFIX .'language');
+
+            if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, self::$codes)) {
+                Session::set('language', ucfirst($cookie));
+            }
+        }
+    }
 
     protected static function getCurrentLanguage($code = LANGUAGE_CODE)
     {

@@ -17,4 +17,16 @@
 
 <div class="container">
 
+<p>
+<a href='<?=DIR;?>language/cs'>Cs</a>
+<a href='<?=DIR;?>language/en'>English</a>
+<a href='<?=DIR;?>language/de'>Dutch</a>
+<a href='<?=DIR;?>language/fr'>French</a>
+<a href='<?=DIR;?>language/it'>Italian</a>
+<a href='<?=DIR;?>language/nl'>Nl</a>
+<a href='<?=DIR;?>language/pl'>Pl</a>
+<a href='<?=DIR;?>language/ro'>Ro</a>
+<a href='<?=DIR;?>language/ru'>Ru</a>
+</p>
+
 <p><img src='<?=Url::templatePath();?>images/nova.png' alt='<?=SITETITLE;?>'></p>

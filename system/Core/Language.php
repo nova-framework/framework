@@ -16,11 +16,27 @@ use Core\Error;
 class Language
 {
     /**
+     * list of language codes
+     * @var array
+     */
+    public static $codes = ['cs', 'de', 'en', 'fr', 'it', 'nl', 'pl', 'ro', 'ru'];
+    /**
      * Variable holds array with language.
      *
      * @var array
      */
     private $array;
+
+    public function safeCookie($code)
+    {
+
+        if (preg_match ('/[a-z]/', $_COOKIE[PREFIX.'language']) && in_array(strtolower($_COOKIE[PREFIX.'language']), self::$codes)) {
+            return $_COOKIE[PREFIX.'language'];
+        }
+
+        return $code;
+
+    }
 
     /**
      * Load language function.
@@ -30,6 +46,8 @@ class Language
      */
     public function load($name, $code = LANGUAGE_CODE)
     {
+        $code = $this->safeCookie($code);
+
         /** lang file */
         $file = APPDIR."Language/$code/$name.php";
 
@@ -53,9 +71,11 @@ class Language
      */
     public function get($value, $code = LANGUAGE_CODE)
     {
+        $code = $this->safeCookie($code);
+
         if (!empty($this->array[$code][$value])) {
             return $this->array[$code][$value];
-        } elseif(!empty($this->array[LANGUAGE_CODE][$value])) {
+        } elseif (!empty($this->array[LANGUAGE_CODE][$value])) {
             return $this->array[LANGUAGE_CODE][$value];
         } else {
             return $value;
@@ -73,6 +93,8 @@ class Language
      */
     public static function show($value, $name, $code = LANGUAGE_CODE)
     {
+        $code = self::safeCookie($code);
+
         /** lang file */
         $file = APPDIR."Language/$code/$name.php";
 

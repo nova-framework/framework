@@ -16,6 +16,7 @@ use Helpers\Hooks;
 Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('admin/(:any)(/(:any)(/(:any)(/(:any))))', 'App\Controllers\Demo@test');
+Router::any('language/(:any)', 'App\Controllers\Language@change');
 /** End default routes */
 
 /** Module routes. */

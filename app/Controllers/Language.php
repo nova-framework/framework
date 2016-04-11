@@ -9,11 +9,9 @@ class Language
 {
     public function change($language)
     {
-        $codes = CoreLanguage::$codes;
-
-        //only set language if it's in the above array
-        if (preg_match ('/[a-z]/', $_COOKIE[PREFIX.'language']) && in_array($language, $codes)) {
-            setcookie(PREFIX.'language', ucfirst($language), false, '/', false);
+        // Only set language if it's in the Languages array
+        if (preg_match ('/[a-z]/', $language) && in_array($language, CoreLanguage::$codes)) {
+            Cookie::set(PREFIX .'language', $language);
         }
 
         Url::redirect();

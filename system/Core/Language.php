@@ -9,6 +9,7 @@
 namespace Core;
 
 use Core\Error;
+use Helpers\Cookie;
 
 /**
  * Language class to load the requested language file.
@@ -20,6 +21,7 @@ class Language
      * @var array
      */
     public static $codes = ['cs', 'de', 'en', 'fr', 'it', 'nl', 'pl', 'ro', 'ru'];
+
     /**
      * Variable holds array with language.
      *
@@ -27,15 +29,21 @@ class Language
      */
     private $array;
 
-    public function safeCookie($code)
-    {
 
-        if (preg_match ('/[a-z]/', $_COOKIE[PREFIX.'language']) && in_array(strtolower($_COOKIE[PREFIX.'language']), self::$codes)) {
-            return $_COOKIE[PREFIX.'language'];
+    protected static function getCurrentLanguage($code = LANGUAGE_CODE)
+    {
+        if($code != LANGUAGE_CODE) {
+            // User defined Language Code?
+            return $code;
+        } else if (Cookie::exists(PREFIX .'language')) {
+            $cookie = Cookie::get(PREFIX .'language');
+
+            if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, self::$codes)) {
+                return ucfirst($cookie);
+            }
         }
 
         return $code;
-
     }
 
     /**
@@ -46,7 +54,7 @@ class Language
      */
     public function load($name, $code = LANGUAGE_CODE)
     {
-        $code = $this->safeCookie($code);
+        $code = self::getCurrentLanguage($code);
 
         /** lang file */
         $file = APPDIR."Language/$code/$name.php";
@@ -71,11 +79,11 @@ class Language
      */
     public function get($value, $code = LANGUAGE_CODE)
     {
-        $code = $this->safeCookie($code);
+        $code = self::getCurrentLanguage($code);
 
         if (!empty($this->array[$code][$value])) {
             return $this->array[$code][$value];
-        } elseif (!empty($this->array[LANGUAGE_CODE][$value])) {
+        } elseif(!empty($this->array[LANGUAGE_CODE][$value])) {
             return $this->array[LANGUAGE_CODE][$value];
         } else {
             return $value;
@@ -93,7 +101,7 @@ class Language
      */
     public static function show($value, $name, $code = LANGUAGE_CODE)
     {
-        $code = self::safeCookie($code);
+        $code = self::getCurrentLanguage($code);
 
         /** lang file */
         $file = APPDIR."Language/$code/$name.php";

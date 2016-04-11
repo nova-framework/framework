@@ -32,6 +32,14 @@ class Session
     }
 
     /**
+     * Determine if a key exists into session.
+     */
+    public static function exists($key)
+    {
+        return isset($_SESSION[SESSION_PREFIX .$key]);
+    }
+
+    /**
      * Add value to a session.
      *
      * @param string $key   name the data to save

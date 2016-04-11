@@ -9,7 +9,7 @@
 namespace Core;
 
 use Core\Error;
-use Helpers\Cookie;
+use Helpers\Session;
 
 /**
  * Language class to load the requested language file.
@@ -32,15 +32,11 @@ class Language
 
     protected static function getCurrentLanguage($code = LANGUAGE_CODE)
     {
-        if($code != LANGUAGE_CODE) {
+        if ($code != LANGUAGE_CODE) {
             // User defined Language Code?
             return $code;
-        } else if (Cookie::exists(PREFIX .'language')) {
-            $cookie = Cookie::get(PREFIX .'language');
-
-            if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, self::$codes)) {
-                return ucfirst($cookie);
-            }
+        } else if (Session::exists('language')) {
+            return Session::get('language');
         }
 
         return $code;

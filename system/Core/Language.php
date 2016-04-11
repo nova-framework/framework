@@ -45,7 +45,7 @@ class Language
         }
     }
 
-    protected static function getCurrentLanguage($code = LANGUAGE_CODE)
+    protected static function getCurrentLanguage($code)
     {
         if ($code != LANGUAGE_CODE) {
             // User defined Language Code?

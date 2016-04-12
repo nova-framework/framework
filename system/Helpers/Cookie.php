@@ -40,7 +40,7 @@ class Cookie
      * @param bool $domain
      * @return bool
      */
-    public static function set($key, $value, $expiry = self::FOURYEARS, $path = "/", $domain = false)
+    public static function set($key, $value, $expiry = self::FOURYEARS, $path = '/', $domain = false)
     {
         $retval = false;
 
@@ -93,7 +93,7 @@ class Cookie
      * @param string $path Optional
      * @param string $domain Optional
      */
-    public static function destroy($key, $path = "/", $domain = false)
+    public static function destroy($key, $path = '/', $domain = false)
     {
         unset($_COOKIE[$key]);
 
@@ -101,8 +101,8 @@ class Cookie
         $domain = ($domain !== false) ? $domain : $_SERVER['HTTP_HOST'];
 
         if (! headers_sent()) {
-            // To delete the Cookie we set its expiration 100 days into past.
-            @setcookie($key, '', time() - 100 * 24 * 3600, $path, $domain);
+            // To delete the Cookie we set its expiration four years into past.
+            @setcookie($key, '', time() - FOURYEARS, $path, $domain);
         }
     }
 }

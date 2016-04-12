@@ -1,6 +1,6 @@
 ![Nova Framework](http://novaframework.com/app/templates/publicthemes/nova/images/nova.png)
 
-# Version 3.2.0
+# Version 3.3.0
 
 [![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg)](https://packagist.org/packages/simple-mvc-framework/v2)
@@ -20,6 +20,8 @@ The base framework comes with a range of [helper classes](https://github.com/nov
 ## Documentation
 
 Full docs & tutorials are available at [novaframework.com](http://novaframework.com).
+
+Offline docs are available in PDF, EPUB and MOBI formats on [Leanpub](https://leanpub.com/novaframeworkmanual22)
 
 ## Requirements
 

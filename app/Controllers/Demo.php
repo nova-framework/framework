@@ -11,7 +11,6 @@ use Helpers\Url;
 */
 class Demo extends Controller
 {
-
     /**
      * Call the parent construct
      */

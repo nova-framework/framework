@@ -95,12 +95,12 @@ class Cookie
      */
     public static function destroy($key, $path = '/', $domain = false)
     {
-        unset($_COOKIE[$key]);
-
         // Ensure to have a valid domain.
         $domain = ($domain !== false) ? $domain : $_SERVER['HTTP_HOST'];
 
         if (! headers_sent()) {
+            unset($_COOKIE[$key]);
+
             // To delete the Cookie we set its expiration four years into past.
             @setcookie($key, '', time() - FOURYEARS, $path, $domain);
         }

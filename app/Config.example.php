@@ -97,8 +97,8 @@ define('SITETITLE', 'Nova V3.0');
 // define('SITEEMAIL', 'email@domain.com');
 
 /**
- * Set the class aliases
-*/
+ * Setup the (class) Aliases configuration.
+ */
 Config::set('class_aliases', array(
     'Errors'        => '\Core\Error',
     'Language'      => '\Core\Language',

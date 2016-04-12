@@ -90,7 +90,7 @@ class ControllerCommand extends Command
                 }
             }
             $file = file_get_contents("app/Routes.php");
-            $file = str_replace("/** End default routes */", "$methods/** End default routes */", $file);
+            $file = str_replace("/** End default Routes */", "$methods/** End default Routes */", $file);
             file_put_contents("app/Routes.php", $file);
         }
     }

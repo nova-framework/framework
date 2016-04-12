@@ -46,7 +46,7 @@ class Router
      *
      * @var null $errorCallback
      */
-    private $errorCallback = '\Core\Error@index';
+    private $errorCallback = '\App\Controllers\Error@index';
 
 
     /**

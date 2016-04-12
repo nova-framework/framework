@@ -6,9 +6,9 @@
  * @version 3.0
  */
 
-/** Create alias for Router. */
 use Core\Router;
 use Helpers\Hooks;
+
 
 /** Define static routes. */
 
@@ -19,12 +19,13 @@ Router::any('admin/(:any)(/(:any)(/(:any)(/(:any))))', 'App\Controllers\Demo@tes
 
 // The Framework's Language Changer.
 Router::any('language/(:any)', 'App\Controllers\Language@change');
-/** End default routes */
+/** End default Routes */
 
-/** Module routes. */
+/** Module Routes. */
 $hooks = Hooks::get();
-$hooks->run('routes');
-/** End Module routes. */
 
-/** If no route found. */
-Router::error('Core\Error@index');
+$hooks->run('routes');
+/** End Module Routes. */
+
+/** If no Route found. */
+Router::error('App\Controllers\Error@index');

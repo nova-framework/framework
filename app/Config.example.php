@@ -10,6 +10,7 @@
 
 namespace App;
 
+use Core\Language;
 use Helpers\Session;
 
 /**
@@ -123,5 +124,11 @@ class Config
          * Start sessions.
          */
         Session::init();
+
+        /**
+         * Setup the current Language.
+         */
+        Language::init();
     }
+
 }

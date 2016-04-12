@@ -9,6 +9,7 @@
 namespace Core;
 
 use Core\Error;
+use Helpers\Session;
 use Helpers\Cookie;
 
 /**
@@ -30,17 +31,27 @@ class Language
     private $array;
 
 
-    protected static function getCurrentLanguage($code = LANGUAGE_CODE)
+    public static function init()
     {
-        if($code != LANGUAGE_CODE) {
-            // User defined Language Code?
-            return $code;
-        } else if (Cookie::exists(PREFIX .'language')) {
+        if (Session::exists('language')) {
+            // The Language was already set; nothing to do.
+            return;
+        } else if(Cookie::exists(PREFIX .'language')) {
             $cookie = Cookie::get(PREFIX .'language');
 
             if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, self::$codes)) {
-                return ucfirst($cookie);
+                Session::set('language', ucfirst($cookie));
             }
+        }
+    }
+
+    protected static function getCurrentLanguage($code)
+    {
+        if ($code != LANGUAGE_CODE) {
+            // User defined Language Code?
+            return $code;
+        } else if (Session::exists('language')) {
+            return Session::get('language');
         }
 
         return $code;

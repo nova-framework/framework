@@ -8,6 +8,7 @@
  */
 
 use Core\Aliases;
+use Core\Language;
 use Core\Router;
 use Helpers\Session;
 

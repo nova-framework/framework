@@ -48,13 +48,12 @@ class Language
     protected static function getCurrentLanguage($code)
     {
         if ($code != LANGUAGE_CODE) {
-            // User defined Language Code?
-            return $code;
+            // User defined Language Code; nothing to do.
         } else if (Session::exists('language')) {
             return Session::get('language');
         }
 
-        return $code;
+        return ucfirst($code);
     }
 
     /**

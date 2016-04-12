@@ -19,7 +19,7 @@ return array(
 	',
 
 	// Buttons
-	'openSubpage' => 'Otwórz podstronę',
+	'openSubPage' => 'Otwórz podstronę',
 	'backHome' => 'Strona główna',
 
 );

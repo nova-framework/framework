@@ -23,11 +23,7 @@ class Cookie
      */
     public static function exists($key)
     {
-        if (isset($_COOKIE[$key])) {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($_COOKIE[$key]);
     }
 
     /**

@@ -8,110 +8,123 @@
  * @version 3.0
  */
 
-namespace App;
-
+use Core\Config;
 
 /**
- * Configuration constants and options.
+ * Define the complete site URL.
  */
-class Config
-{
-    /**
-     * Executed as soon as the framework runs.
-     */
-    public static function init()
-    {
-        /**
-         * Define the complete site URL.
-         */
-        define('SITEURL', 'http://novaframework.dev/');
+define('SITEURL', 'http://novaframework.dev/');
 
-        /**
-         * Define relative base path.
-         */
-        define('DIR', '/');
+/**
+ * Define relative base path.
+ */
+define('DIR', '/');
 
-        /**
-         * Set the Application Router.
-         */
-        // Default Routing
-        define('APPROUTER', '\Core\Router');
-        // Classic Routing
-        // define('APPROUTER', '\Core\ClassicRouter');
+/**
+ * Set the Application Router.
+ */
+// Default Routing
+define('APPROUTER', '\Core\Router');
+// Classic Routing
+// define('APPROUTER', '\Core\ClassicRouter');
 
-        /**
-         * Set default controller and method for legacy calls.
-         */
-        define('DEFAULT_CONTROLLER', 'Welcome');
-        define('DEFAULT_METHOD', 'index');
+/**
+ * Set timezone.
+ */
+define('DEFAULT_TIMEZONE', 'Europe/London');
 
-        /**
-         * Set the default template.
-         */
-        define('TEMPLATE', 'Default');
+/**
+ * Set default controller and method for legacy calls.
+ */
+define('DEFAULT_CONTROLLER', 'Welcome');
+define('DEFAULT_METHOD', 'index');
 
-        /**
-         * Set a default language.
-         */
-        define('LANGUAGE_CODE', 'en');
+/**
+ * Set the default template.
+ */
+define('TEMPLATE', 'Default');
 
-        //database details ONLY NEEDED IF USING A DATABASE
+/**
+ * Set a default language.
+ */
+define('LANGUAGE_CODE', 'en');
 
-        /**
-         * Database engine default is mysql.
-         */
-        define('DB_TYPE', 'mysql');
+//database details ONLY NEEDED IF USING A DATABASE
 
-        /**
-         * Database host default is localhost.
-         */
-        define('DB_HOST', 'localhost');
+/**
+ * Database engine default is mysql.
+ */
+define('DB_TYPE', 'mysql');
 
-        /**
-         * Database name.
-         */
-        define('DB_NAME', 'dbname');
+/**
+ * Database host default is localhost.
+ */
+define('DB_HOST', 'localhost');
 
-        /**
-         * Database username.
-         */
-        define('DB_USER', 'root');
+/**
+ * Database name.
+ */
+define('DB_NAME', 'dbname');
 
-        /**
-         * Database password.
-         */
-        define('DB_PASS', 'password');
+/**
+ * Database username.
+ */
+define('DB_USER', 'root');
 
-        /**
-         * PREFER to be used in database calls default is smvc_
-         */
-        define('PREFIX', 'nova_');
+/**
+ * Database password.
+ */
+define('DB_PASS', 'password');
 
-        /**
-         * Set prefix for sessions.
-         */
-        define('SESSION_PREFIX', 'nova_');
+/**
+ * PREFER to be used in database calls default is smvc_
+ */
+define('PREFIX', 'nova_');
 
-        /**
-         * Optional create a constant for the name of the site.
-         */
-        define('SITETITLE', 'Nova V3.0');
+/**
+ * Set prefix for sessions.
+ */
+define('SESSION_PREFIX', 'nova_');
 
-        /**
-         * Optional set a site email address.
-         */
-        // define('SITEEMAIL', 'email@domain.com');
+/**
+ * Optional create a constant for the name of the site.
+ */
+define('SITETITLE', 'Nova V3.0');
 
-        /**
-         * Turn on custom error handling.
-         */
-        set_exception_handler('Core\Logger::ExceptionHandler');
-        set_error_handler('Core\Logger::ErrorHandler');
+/**
+ * Optional set a site email address.
+ */
+// define('SITEEMAIL', 'email@domain.com');
 
-        /**
-         * Set timezone.
-         */
-        date_default_timezone_set('Europe/London');
-    }
+/**
+ * Set the class aliases
+*/
+Config::set('class_aliases', array(
+    'Errors'        => '\Core\Error',
+    'Language'      => '\Core\Language',
+    'Mail'          => '\Helpers\PhpMailer\Mail',
+    'Assets'        => '\Helpers\Assets',
+    'Arr'           => '\Helpers\Arr',
+    'Cookie'        => '\Helpers\Cookie',
+    'Csrf'          => '\Helpers\Csrf',
+    'Date'          => '\Helpers\Date',
+    'Document'      => '\Helpers\Document',
+    'Form'          => '\Helpers\Form',
+    'Ftp'           => '\Helpers\Ftp',
+    'GeoCode'       => '\Helpers\GeoCode',
+    'Hooks'         => '\Helpers\Hooks',
+    'Inflector'     => '\Helpers\Inflector',
+    'Number'        => '\Helpers\Number',
+    'Paginator'     => '\Helpers\Paginator',
+    'Password'      => '\Helpers\Password',
+    'RainCaptcha'   => '\Helpers\RainCaptcha',
+    'Request'       => '\Helpers\Request',
+    'ReservedWords' => '\Helpers\ReservedWords',
+    'Response'      => '\Helpers\Response',
+    'Session'       => '\Helpers\Session',
+    'SimpleCurl'    => '\Helpers\SimpleCurl',
+    'TableBuilder'  => '\Helpers\TableBuilder',
+    'Tags'          => '\Helpers\Tags',
+    'Url'           => '\Helpers\Url'
+));
 
-}

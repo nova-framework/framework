@@ -18,12 +18,12 @@ ob_start();
 /** Load the Configuration. */
 require APPDIR .'Config.php';
 
-/** Set the Default Timezone. */
-date_default_timezone_set(DEFAULT_TIMEZONE);
-
 /** Turn on the custom error handling. */
 set_exception_handler('Core\Logger::ExceptionHandler');
 set_error_handler('Core\Logger::ErrorHandler');
+
+/** Set the Default Timezone. */
+date_default_timezone_set(DEFAULT_TIMEZONE);
 
 /** Load the Framework wide functions. */
 require dirname(__FILE__) .DS .'functions.php';

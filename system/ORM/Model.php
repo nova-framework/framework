@@ -746,8 +746,6 @@ class Model
         // Prepare the Data.
         $data = $this->prepareData($builder);
 
-        $result = false;
-
         if (! $this->exists) {
             // We are into INSERT mode.
             $insertId = $builder->insert($data);
@@ -765,11 +763,16 @@ class Model
             $result = $builder->updateBy($this->primaryKey, $this->getKey(), $data);
 
             $result = ($result !== false) ? true : $result;
+        } else {
+            // The Model exists and is unchanged.
+            $result = true;
         }
 
         if($result) {
-            // Sync the original attributes.
-            $this->syncOriginal();
+            // Sync the original attributes if is dirty.
+            if ($this->isDirty()) {
+                $this->syncOriginal();
+            }
 
             return true;
         }

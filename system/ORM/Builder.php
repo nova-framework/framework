@@ -209,7 +209,7 @@ class Builder
 
         $result = $query->where($fieldName, $id)->first();
 
-        if ($result !== false) {
+        if ($result !== null) {
             return $this->model->newFromBuilder($result)->load($this->eagerLoad);
         }
 

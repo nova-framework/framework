@@ -113,7 +113,7 @@ function ucw($data)
  * key - this will generate a 32 character key
  * @return string
  */
-function create_key($length = 32)
+function createKey($length = 32)
 {
     $chars = "!@#$%^&*()_+-=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
     $key = "";

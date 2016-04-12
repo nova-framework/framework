@@ -1,6 +1,6 @@
 ![Nova Framework](http://novaframework.com/app/templates/publicthemes/nova/images/nova.png)
 
-# Version 3.3.0
+# Version 3.4.1
 
 [![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg)](https://packagist.org/packages/simple-mvc-framework/v2)

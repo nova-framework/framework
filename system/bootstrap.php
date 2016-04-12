@@ -11,16 +11,15 @@ use Core\Aliases;
 use Core\Router;
 use Helpers\Session;
 
+/** Turn on the custom error handling. */
+set_exception_handler('Core\Logger::ExceptionHandler');
+set_error_handler('Core\Logger::ErrorHandler');
 
 /** Turn on output buffering. */
 ob_start();
 
 /** Load the Configuration. */
 require APPDIR .'Config.php';
-
-/** Turn on the custom error handling. */
-set_exception_handler('Core\Logger::ExceptionHandler');
-set_error_handler('Core\Logger::ErrorHandler');
 
 /** Set the Default Timezone. */
 date_default_timezone_set(DEFAULT_TIMEZONE);

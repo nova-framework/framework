@@ -10,8 +10,6 @@
 
 namespace App;
 
-use Core\Language;
-use Helpers\Session;
 
 /**
  * Configuration constants and options.
@@ -21,13 +19,8 @@ class Config
     /**
      * Executed as soon as the framework runs.
      */
-    public function __construct()
+    public static function init()
     {
-        /**
-         * Turn on output buffering.
-         */
-        ob_start();
-
         /**
          * Define the complete site URL.
          */
@@ -60,7 +53,7 @@ class Config
         /**
          * Set a default language.
          */
-        define('LANGUAGE_CODE', 'En');
+        define('LANGUAGE_CODE', 'en');
 
         //database details ONLY NEEDED IF USING A DATABASE
 
@@ -119,16 +112,6 @@ class Config
          * Set timezone.
          */
         date_default_timezone_set('Europe/London');
-
-        /**
-         * Start sessions.
-         */
-        Session::init();
-
-        /**
-         * Setup the current Language.
-         */
-        Language::init();
     }
 
 }

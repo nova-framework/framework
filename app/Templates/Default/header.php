@@ -17,7 +17,7 @@
 
 <div class="container">
 
-<p>
+<p class="pull-right">
 <a href='<?=DIR;?>language/cs'>Czech</a>
 <a href='<?=DIR;?>language/en'>English</a>
 <a href='<?=DIR;?>language/de'>German</a>
@@ -28,5 +28,6 @@
 <a href='<?=DIR;?>language/ro'>Romanian</a>
 <a href='<?=DIR;?>language/ru'>Russian</a>
 </p>
+<div class="clearfix"></div>
 
 <p><img src='<?=Url::templatePath();?>images/nova.png' alt='<?=SITETITLE;?>'></p>

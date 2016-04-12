@@ -7,19 +7,35 @@
  * @date April 10th, 2016
  */
 
+use Core\Aliases;
 use Core\Router;
+use Helpers\Session;
+use App\Config;
 
-/** initiate Alias */
-new \Core\Alias();
 
-/** initiate config */
-new \App\Config();
+/** Turn on output buffering. */
+ob_start();
+
+/** Initialize the Configuration */
+Config::init();
+
+/** Initialize the Aliases */
+Aliases::init();
+
+/** Start the Session. */
+Session::init();
+
+/** Initialize the Language. */
+Language::init();
+
+/** Load the Framework wide functions. */
+require dirname(__FILE__) .DS .'functions.php';
 
 /** Get the Router instance. */
 $router = Router::getInstance();
 
-/** load routes */
-require APPDIR.'Routes.php';
+/** Load the Routes */
+require APPDIR .'Routes.php';
 
-/** Execute matched routes. */
+/** Execute matched Routes. */
 $router->dispatch();

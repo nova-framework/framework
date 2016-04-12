@@ -19,7 +19,7 @@ return array(
 	',
 
 	// Buttons
-	'openSubpage' => 'Apri sottopagina',
+	'openSubPage' => 'Apri sottopagina',
 	'backHome' => 'Home',
 
 );

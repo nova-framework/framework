@@ -19,7 +19,7 @@ return array(
 	',
 
 	// Buttons
-	'openSubpage' => 'Otevřít podstránku',
+	'openSubPage' => 'Otevřít podstránku',
 	'backHome' => 'Domů',
 
 );

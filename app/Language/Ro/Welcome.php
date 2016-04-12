@@ -16,6 +16,6 @@ return array(
 		Acest conținut poate fi modificat în <code>/app/views/welcome/subpage.php</code>
 	',
 	// Butoane
-	'openSubpage' => 'Deschide subpagina',
+	'openSubPage' => 'Deschide subpagina',
 	'backHome' => 'Acasă',
 );

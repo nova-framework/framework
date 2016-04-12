@@ -15,8 +15,10 @@ use Helpers\Hooks;
 // Default Routing
 Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
-Router::any('language/(:any)', 'App\Controllers\Language@change');
 Router::any('admin/(:any)(/(:any)(/(:any)(/(:any))))', 'App\Controllers\Demo@test');
+
+// The Framework's Language Changer.
+Router::any('language/(:any)', 'App\Controllers\Language@change');
 /** End default routes */
 
 /** Module routes. */

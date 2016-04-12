@@ -18,14 +18,14 @@
 <div class="container">
 
 <p class="pull-right">
-<a href='<?=DIR;?>language/cs'>Czech</a>
-<a href='<?=DIR;?>language/en'>English</a>
-<a href='<?=DIR;?>language/de'>German</a>
-<a href='<?=DIR;?>language/fr'>French</a>
-<a href='<?=DIR;?>language/it'>Italian</a>
-<a href='<?=DIR;?>language/nl'>Dutch</a>
-<a href='<?=DIR;?>language/pl'>Polish</a>
-<a href='<?=DIR;?>language/ro'>Romanian</a>
+<a href='<?=DIR;?>language/cs'>Czech</a> |
+<a href='<?=DIR;?>language/en'>English</a> |
+<a href='<?=DIR;?>language/de'>German</a> |
+<a href='<?=DIR;?>language/fr'>French</a> |
+<a href='<?=DIR;?>language/it'>Italian</a> |
+<a href='<?=DIR;?>language/nl'>Dutch</a> |
+<a href='<?=DIR;?>language/pl'>Polish</a> |
+<a href='<?=DIR;?>language/ro'>Romanian</a> |
 <a href='<?=DIR;?>language/ru'>Russian</a>
 </p>
 <div class="clearfix"></div>

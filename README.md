@@ -1,6 +1,6 @@
 ![Nova Framework](http://novaframework.com/app/templates/publicthemes/nova/images/nova.png)
 
-# Version 3.5.1
+# Note **fileinfo is required to be enabled** (edit php.ini and uncomment php_fileinfo.dll or use php selector within cpanel if available.)
 
 [![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg)](https://packagist.org/packages/simple-mvc-framework/v2)

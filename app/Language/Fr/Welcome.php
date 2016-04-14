@@ -8,14 +8,14 @@ return array(
 	'welcomeText' => 'Bienvenue',
 	'welcomeMessage' => '
 		Bonjour, bienvenue dans le contrôleur de bienvenue ! <br/>
-		Ce contenu peut être changé via le fichier: <code>app/views/welcome/welcome.php</code>
+		Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.php</code>
 	',
 
 	// Subpage method
 	'subpageText' => 'Sous-page',
 	'subpageMessage' => '
 		Bonjour, bienvenue dans le contrôleur de bienvenue et sa sous-page ! <br/>
-		Ce contenu peut être changé via le fichier: <code>app/views/welcome/subpage.php</code>
+		Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/SubPage.php</code>
 	',
 
 	// Buttons

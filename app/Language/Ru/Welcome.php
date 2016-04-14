@@ -8,14 +8,14 @@ return array(
 	'welcomeText' => 'Добро пожаловать!',
 	'welcomeMessage' => '
 		Здраствуй, добро пожаловать в привствующий контролер! <br/>
-		Содержимое этого файла может быть изменено в <code>app/views/welcome/welcome.php</code>
+		Содержимое этого файла может быть изменено в <code>app/Views/Welcome/Welcome.php</code>
 	',
 
 	// Subpage method
 	'subpageText' => 'Подстраница',
 	'subpageMessage' => '
 		Здраствуй, добро пожаловать в привствующий контролер в метод подстраницы! <br/>
-		Содержимое этого файла можеть быть изменено в <code>app/views/welcome/subpage.php</code>
+		Содержимое этого файла можеть быть изменено в <code>app/Views/Welcome/SubPage.php</code>
 	',
 
 	// Buttons

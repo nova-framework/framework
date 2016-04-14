@@ -8,14 +8,14 @@ return array(
 	'welcomeText' => 'Benvenuto',
 	'welcomeMessage' => '
 		Ciao, benvenuto dal controller di benvenuto! <br/>
-		Questo contenuto può essere cambiato in <code>app/views/welcome/welcome.php</code>
+		Questo contenuto può essere cambiato in <code>app/Views/Welcome/Welcome.php</code>
 	',
 
 	// Subpage method
 	'subpageText' => 'Sottopagina',
 	'subpageMessage' => '
 		Ciao, benvenuto dal controller di benvenuto e dal metodo sottopagina! <br/>
-		Questo contenuto può essere cambiato in <code>app/views/welcome/subpage.php</code>
+		Questo contenuto può essere cambiato in <code>app/Views/Welcome/SubPage.php</code>
 	',
 
 	// Buttons

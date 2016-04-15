@@ -316,8 +316,8 @@ class Router
         $controller = $segments[0];
         $method     = $segments[1];
 
-        // The Method shouldn't start with '_'; also check if the Controller's class exists.
-        if (($method[0] !== '_') && ($method != 'after') && class_exists($controller)) {
+        // The Method shouldn't be called 'after' or starting with '_'; also check if the Controller's class exists.
+        if (($method != 'after') && ($method[0] !== '_') && class_exists($controller)) {
             // Invoke the Controller's Method with the given arguments.
             return $this->invokeController($controller, $method, $params);
         }

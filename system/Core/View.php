@@ -48,8 +48,6 @@ class View
      */
     public static function render($path, $data = false, $module = false)
     {
-        self::sendHeaders();
-
         // Pass data to check and store it.
         $data = self::prepareData($data);
 
@@ -66,6 +64,8 @@ class View
         }
 
         // Render the View.
+        self::sendHeaders();
+
         require APPDIR .$filePath;
     }
 
@@ -99,8 +99,6 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
-        self::sendHeaders();
-
         // Pass data to check and store it.
         $data = self::prepareData($data);
 
@@ -111,6 +109,9 @@ class View
         foreach ($data as $name => $value) {
             ${$name} = $value;
         }
+
+        // Render the Template.
+        self::sendHeaders();
 
         require APPDIR .$filePath;
     }

@@ -27,7 +27,17 @@ abstract class Controller
      */
     public function __construct()
     {
-        /** initialise the language object */
+        /** Initialise the Language object */
         $this->language = new Language();
+    }
+
+    /**
+     * Method automatically invoked after the current Action, when it not return a
+     * null or boolean value. This Method is supposed to be overriden for using it.
+     *
+     * Note that the Action's returned value is passed to this Method as parameter.
+     */
+    public function after($data)
+    {
     }
 }

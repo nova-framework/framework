@@ -283,7 +283,12 @@ class Router
         }
 
         // Execute the Controller's Method with the given arguments.
-        call_user_func_array(array($controller, $method), $params);
+        $result = call_user_func_array(array($controller, $method), $params);
+
+        if(($result !== null) && ! is_bool($result)) {
+            // Execute the Controller's post-processing with the returned value as argument.
+            call_user_func_array(array($controller, 'after'), array($result));
+        }
 
         // Controller invocation was a success; return true.
         return true;
@@ -311,8 +316,8 @@ class Router
         $controller = $segments[0];
         $method     = $segments[1];
 
-        // The Method shouldn't start with '_'; also check if the Controller's class exists.
-        if (($method[0] !== '_') && class_exists($controller)) {
+        // The Method shouldn't be called 'after' or starting with '_'; also check if the Controller's class exists.
+        if (($method != 'after') && ($method[0] !== '_') && class_exists($controller)) {
             // Invoke the Controller's Method with the given arguments.
             return $this->invokeController($controller, $method, $params);
         }

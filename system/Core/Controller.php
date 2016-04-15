@@ -37,7 +37,7 @@ abstract class Controller
      *
      * Note that the Action's returned value is passed to this Method as parameter.
      */
-    protected function after($data)
+    public function after($data)
     {
     }
 }

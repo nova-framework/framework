@@ -21,6 +21,31 @@ class View
     private static $headers = array();
 
     /**
+     * Render the View file and return the result.
+     *
+     * @param  string $path  path to file from views folder
+     * @param  array  $data  array of data
+     * @param  string|false  $module module name or false
+     */
+    public static function fetch($path, $data = false, $module = false)
+    {
+        // Start the output buffering.
+        ob_start();
+
+        // Render the View.
+        if($module !== false) {
+            $path = str_replace('/', DS, $module .'/Views/' .$path);
+
+            self::renderModule($path, $data);
+        } else {
+            self::render($path, $data);
+        }
+
+        // Return the captured output.
+        return ob_get_clean();
+    }
+
+    /**
      * Include template file.
      *
      * @param  string $path  path to file from views folder

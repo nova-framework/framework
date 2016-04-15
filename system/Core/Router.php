@@ -283,7 +283,12 @@ class Router
         }
 
         // Execute the Controller's Method with the given arguments.
-        call_user_func_array(array($controller, $method), $params);
+        $result = call_user_func_array(array($controller, $method), $params);
+
+        if(($result !== null) && ! is_bool($result)) {
+            // Execute the Controller's post-processing with the returned value as argument.
+            call_user_func_array(array($controller, 'after'), array($result));
+        }
 
         // Controller invocation was a success; return true.
         return true;

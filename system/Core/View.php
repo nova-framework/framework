@@ -87,7 +87,7 @@ class View
 
         if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
             // Render the Module's View using the standard 'render' way.
-            self::render($matches[1], $data, $matches[0]);
+            self::render($matches[2], $data, $matches[1]);
         }
     }
 

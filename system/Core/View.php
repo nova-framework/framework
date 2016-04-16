@@ -45,6 +45,7 @@ class View
      * @param  string $path  path to file from views folder
      * @param  array  $data  array of data
      * @param  string|false  $module module name or false
+     * @param  bool   $withHeaders send or not the stored Headers
      */
     public static function render($path, $data = false, $module = false, $withHeaders = true)
     {

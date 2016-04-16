@@ -32,14 +32,8 @@ class View
         // Start the output buffering.
         ob_start();
 
-        // Render the View.
-        if($module !== false) {
-            $path = str_replace('/', DS, $module .'/Views/' .$path);
-
-            self::renderModule($path, $data);
-        } else {
-            self::render($path, $data);
-        }
+        // Render the requested View.
+        self::render($path, $data, $module, false);
 
         // Return the captured output.
         return ob_get_clean();
@@ -50,20 +44,32 @@ class View
      *
      * @param  string $path  path to file from views folder
      * @param  array  $data  array of data
-     * @param  array  $error array of errors
+     * @param  string|false  $module module name or false
+     * @param  bool   $withHeaders send or not the stored Headers
      */
-    public static function render($path, $data = false, $error = false)
+    public static function render($path, $data = false, $module = false, $withHeaders = true)
     {
-        self::sendHeaders();
+        // Pass data to check and store it.
+        $data = self::prepareData($data);
 
-        //pass data to check and store it
-        $data = self::dataLoadandConvert($data);
+        // Prepare the (relative) file path according with Module parameter presence.
+        if($module !== false) {
+            $filePath = str_replace('/', DS, "Modules/$module/Views/$path.php");
+        } else {
+            $filePath = str_replace('/', DS, "Views/$path.php");
+        }
 
+        // Prepare the rendering variables.
         foreach ($data as $name => $value) {
             ${$name} = $value;
         }
 
-        require APPDIR."Views/$path.php";
+        // Render the View.
+        if($withHeaders) {
+            self::sendHeaders();
+        }
+
+        require APPDIR .$filePath;
     }
 
     /**
@@ -75,16 +81,15 @@ class View
      */
     public static function renderModule($path, $data = false, $error = false)
     {
-        self::sendHeaders();
-
-        //pass data to check and store it
-        $data = self::dataLoadandConvert($data);
-
-        foreach ($data as $name => $value) {
-            ${$name} = $value;
+        if(($error !== false) && ! isset($data['error'])) {
+            // Adjust the $error parameter handling, injecting it into $data.
+            $data['error'] = $error;
         }
 
-        require APPDIR."Modules/$path.php";
+        if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
+            // Render the Module's View using the standard 'render' way.
+            self::render($matches[2], $data, $matches[1]);
+        }
     }
 
     /**
@@ -96,16 +101,21 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
-        self::sendHeaders();
+        // Pass data to check and store it.
+        $data = self::prepareData($data);
 
-        //pass data to check and store it
-        $data = self::dataLoadandConvert($data);
+        // Prepare the (relative) file path.
+        $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
 
+        // Prepare the rendering variables.
         foreach ($data as $name => $value) {
             ${$name} = $value;
         }
 
-        require APPDIR."Templates/$custom/$path.php";
+        // Render the Template.
+        self::sendHeaders();
+
+        require APPDIR .$filePath;
     }
 
     /**
@@ -113,12 +123,16 @@ class View
      * @param  array $data
      * @return array $data
      */
-    public static function dataLoadandConvert($data)
+    public static function prepareData($data)
     {
+        $data = ($data !== false) ? $data : array();
+
+        // Run the associated Hooks.
         $hooks = Hooks::get();
-        $data['afterBody']  = $hooks->run('afterBody', $data['afterBody']);
-        $data['css']        = $hooks->run('css', $data['css']);
-        $data['js']         = $hooks->run('js', $data['js']);
+
+        $data['afterBody'] = $hooks->run('afterBody', $data['afterBody']);
+        $data['css']       = $hooks->run('css', $data['css']);
+        $data['js']        = $hooks->run('js', $data['js']);
 
         return $data;
     }
@@ -148,7 +162,7 @@ class View
      */
     public static function sendHeaders()
     {
-        if (!headers_sent()) {
+        if (! headers_sent()) {
             foreach (self::$headers as $header) {
                 header($header, true);
             }

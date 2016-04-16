@@ -3,7 +3,7 @@
  * View - load template pages
  *
  * @author David Carr - dave@novaframework.com
- * @version 2.2
+ * @version 3
  */
 
 namespace Core;
@@ -53,7 +53,7 @@ class View
         $data = self::prepareData($data);
 
         // Prepare the (relative) file path according with Module parameter presence.
-        if($module !== false) {
+        if ($module !== false) {
             $filePath = str_replace('/', DS, "Modules/$module/Views/$path.php");
         } else {
             $filePath = str_replace('/', DS, "Views/$path.php");
@@ -65,7 +65,7 @@ class View
         }
 
         // Render the View.
-        if($withHeaders) {
+        if ($withHeaders) {
             self::sendHeaders();
         }
 
@@ -81,7 +81,7 @@ class View
      */
     public static function renderModule($path, $data = false, $error = false)
     {
-        if(($error !== false) && ! isset($data['error'])) {
+        if (($error !== false) && ! isset($data['error'])) {
             // Adjust the $error parameter handling, injecting it into $data.
             $data['error'] = $error;
         }

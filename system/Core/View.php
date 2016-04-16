@@ -33,7 +33,7 @@ class View
         ob_start();
 
         // Render the requested View.
-        self::render($path, $data, $module);
+        self::render($path, $data, $module, false);
 
         // Return the captured output.
         return ob_get_clean();
@@ -46,7 +46,7 @@ class View
      * @param  array  $data  array of data
      * @param  string|false  $module module name or false
      */
-    public static function render($path, $data = false, $module = false)
+    public static function render($path, $data = false, $module = false, $withHeaders = true)
     {
         // Pass data to check and store it.
         $data = self::prepareData($data);
@@ -64,7 +64,9 @@ class View
         }
 
         // Render the View.
-        self::sendHeaders();
+        if($withHeaders) {
+            self::sendHeaders();
+        }
 
         require APPDIR .$filePath;
     }

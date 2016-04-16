@@ -81,7 +81,7 @@ class View
     public static function renderModule($path, $data = false, $error = false)
     {
         if(($error !== false) && ! isset($data['error'])) {
-            // Adjust the errors data handling, injecting it into $data.
+            // Adjust the $error parameter handling, injecting it into $data.
             $data['error'] = $error;
         }
 

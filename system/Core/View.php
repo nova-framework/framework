@@ -72,6 +72,26 @@ class View
     }
 
     /**
+     * Include template file.
+     *
+     * @param  string  $path  path to file from Modules folder
+     * @param  array $data  array of data
+     * @param  array $error array of errors
+     */
+    public static function renderModule($path, $data = false, $error = false)
+    {
+        if($error !== false) {
+            // Adjust the errors data handling, injecting it into $data.
+            $data['error'] = $error;
+        }
+
+        if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
+            // Render the Module's View using the standard 'render' way.
+            self::render($matches[1], $data, $matches[0]);
+        }
+    }
+
+    /**
      * Return absolute path to selected template directory.
      *
      * @param  string  $path  path to file from views folder

@@ -21,6 +21,16 @@ class View
     private static $headers = array();
 
     /**
+     * @var array Array of shared data
+     */
+    private static $shared = array();
+
+    /**
+     * @var bool Flag for the Hooks loading
+     */
+    private static $hooksLoaded = false;
+
+    /**
      * Render the View file and return the result.
      *
      * @param  string $path  path to file from views folder
@@ -119,20 +129,43 @@ class View
     }
 
     /**
-     * place hook calls into the relevant data array call
+     * Add a key / value pair to the shared View data.
+     *
+     * Shared View data is accessible to every View created by the application.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return void
+     */
+    public static function share($key, $value)
+    {
+        static::$shared[$key] = $value;
+    }
+
+    /**
+     * Place hook calls into the relevant data array call
      * @param  array $data
      * @return array $data
      */
-    public static function prepareData($data)
+    private static function prepareData($data)
     {
-        $data = ($data !== false) ? $data : array();
+        // Run the associated Hooks if they aren't already loaded.
+        if(! static::$hooksLoaded) {
+            $hooks = Hooks::get();
 
-        // Run the associated Hooks.
-        $hooks = Hooks::get();
+            static::$shared['afterBody'] = $hooks->run('afterBody', static::$shared['afterBody']);
+            static::$shared['css']       = $hooks->run('css', static::$shared['css']);
+            static::$shared['js']        = $hooks->run('js', static::$shared['js']);
 
-        $data['afterBody'] = $hooks->run('afterBody', $data['afterBody']);
-        $data['css']       = $hooks->run('css', $data['css']);
-        $data['js']        = $hooks->run('js', $data['js']);
+            // Mark the Hooks being loaded.
+            static::$hooksLoaded = true;
+        }
+
+        // Ensure that the current data is an array.
+        $data = is_array($data) ? $data : array();
+
+        // Merge the current data and the shared one.
+        $data = array_merge($data, static::$shared);
 
         return $data;
     }

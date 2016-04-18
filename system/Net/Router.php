@@ -29,6 +29,18 @@ class Router
     private static $routeGroups = array();
 
     /**
+     * Current detected URI.
+     */
+    protected static $currentUri = null;
+
+    /**
+     * Array of filters
+     *
+     * @var array $filters
+     */
+    protected static $filters = array();
+
+    /**
      * Array of routes
      *
      * @var Route[] $routes
@@ -97,6 +109,20 @@ class Router
     }
 
     /**
+     * Return the current detected URI.
+     *
+     * @return string
+     */
+    public static function currentUri()
+    {
+        if(static::$currentUri === null) {
+            static::$currentUri = Url::detectUri();
+        }
+
+        return static::$currentUri;
+    }
+
+    /**
      * Return the available Routes.
      *
      * @return Route[]
@@ -104,6 +130,16 @@ class Router
     public function routes()
     {
         return $this->routes;
+    }
+
+    /**
+     * Return the available Filters.
+     *
+     * @return array
+     */
+    public static function filters()
+    {
+        return self::$filters;
     }
 
     /**
@@ -145,6 +181,17 @@ class Router
     }
 
     /**
+     * Define a Routing Filter
+     *
+     * @param string $name
+     * @param callback $callback
+     */
+    public static function filter($name, $callback)
+    {
+        self::$filters[$name] = $callback;
+    }
+
+    /**
      * Defines a Route Group.
      *
      * @param string $group The scope of the current Routes Group
@@ -154,14 +201,20 @@ class Router
     {
         if(is_array($group)) {
             $prefix    = $group['prefix'];
+            $before    = $group['before'];
             $namespace = $group['namespace'];
         } else {
             $prefix    = trim($group, '/');
+            $before    = '';
             $namespace = '';
         }
 
         // Add the Route Group to the array.
-        array_push(self::$routeGroups, array('prefix' => $prefix, 'namespace' => $namespace));
+        array_push(self::$routeGroups, array(
+            'prefix' => $prefix,
+            'before' => $before,
+            'namespace' => $namespace
+        ));
 
         // Call the Callback, to define the Routes on the current Group.
         call_user_func($callback);
@@ -233,6 +286,15 @@ class Router
 
         $pattern = ltrim($route, '/');
 
+        // If there is an options array, extract the filters and callback.
+        if(is_array($callback)) {
+            $filters = isset($callback['before']) ? $callback['before'] : '';
+
+            $callback = $callback['uses'];
+        } else {
+            $filters = '';
+        }
+
         if (! empty(self::$routeGroups)) {
             $parts     = array();
             $namespace = '';
@@ -240,6 +302,12 @@ class Router
             foreach (self::$routeGroups as $group) {
                 // Add the current prefix to the prefixes list.
                 array_push($parts, $group['prefix']);
+
+                // Keep always the last filters if they exists.
+                if(isset($group['before'])) {
+                    $filters = $group['before'];
+                }
+
                 // Keep always the last Controller's namespace.
                 $namespace = $group['namespace'];
             }
@@ -259,7 +327,7 @@ class Router
             }
         }
 
-        $route = new Route($methods, $pattern, $callback);
+        $route = new Route($methods, $pattern, array('before' => $filters, 'uses' => $callback));
 
         // Add the current Route instance to the known Routes list.
         array_push($this->routes, $route);
@@ -350,7 +418,7 @@ class Router
         $patterns = $this->config('patterns');
 
         // Detect the current URI.
-        $uri = Url::detectUri();
+        $uri = static::currentUri();
 
         // First, we will supose that URI is associated with an Asset File.
         if (Request::isGet() && $this->dispatchFile($uri)) {
@@ -369,6 +437,11 @@ class Router
             if ($route->match($uri, $method, $patterns)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
+
+                if(! $this->filterRoute($route)) {
+                    // Route filtering failed; we should go on (404) Error.
+                    break;
+                }
 
                 $callback = $route->callback();
 
@@ -389,6 +462,36 @@ class Router
         $this->invokeObject($this->callback(), $params);
 
         return false;
+    }
+
+    protected function filterRoute(Route $route)
+    {
+        $uri = self::currentUri();
+
+        $result = true;
+
+        foreach ($route->filters() as $filter) {
+            if(isset(self::$filters[$filter])) {
+                // Get the current Filter Callback.
+                $callback = self::$filters[$filter];
+
+                // Execute the current Filter's callback with the Route and current URI as arguments.
+                //
+                // When the Filter returns false, the filtering is considered being as globally failed.
+                // The redirects should be implemented directly into Filter if there is need for them.
+                $result = call_user_func($callback, $route, $uri);
+            } else {
+                // No Filter with this name found; mark that as failure.
+                $result = false;
+            }
+
+            if($result === false) {
+                // Failure of the current Filter; stop the loop.
+                break;
+            }
+        }
+
+        return $result;
     }
 
     protected function dispatchFile($uri)

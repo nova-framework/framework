@@ -25,6 +25,11 @@ class Route
     private $pattern;
 
     /**
+     * @var array Filters to be appliend on match
+     */
+    private $filters = array();
+
+    /**
      * @var callable Callback
      */
     private $callback = null;
@@ -57,7 +62,15 @@ class Route
 
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
-        $this->callback = $callback;
+        if(is_array($callback)) {
+            $this->callback = isset($callback['uses']) ? $callback['uses'] : null;
+
+            if(isset($callback['before']) && ! empty(isset($callback['before']))) {
+                $this->filters = array_filter(explode('|', $callback['before']), 'strlen');
+            }
+        } else {
+            $this->callback = $callback;
+        }
     }
 
     /**
@@ -134,6 +147,14 @@ class Route
     public function pattern()
     {
         return $this->pattern;
+    }
+
+    /**
+     * @return array
+     */
+    public function filters()
+    {
+        return $this->filters;
     }
 
     /**

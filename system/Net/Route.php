@@ -65,7 +65,7 @@ class Route
         if(is_array($callback)) {
             $this->callback = isset($callback['uses']) ? $callback['uses'] : null;
 
-            if(isset($callback['before']) && ! empty(isset($callback['before']))) {
+            if(isset($callback['before']) && ! empty($callback['before'])) {
                 $this->filters = array_filter(explode('|', $callback['before']), 'strlen');
             }
         } else {

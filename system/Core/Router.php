@@ -277,21 +277,18 @@ class Router
         /** @var Controller $controller */
         $controller = new $className();
 
-        // The called Method should be defined right in the called Controller.
-        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
-            return false;
+        // Obtain the available methods into requested Controller.
+        $methods = array_map('strtolower', get_class_methods($controller));
+
+        // The called Method should be defined right on the called Controller to be executed.
+        if (in_array(strtolower($method), $methods)) {
+            // Execute the Controller's Method with the given arguments.
+            $controller->execute($method, $params);
+
+            return true;
         }
 
-        // Execute the Controller's Method with the given arguments.
-        $result = call_user_func_array(array($controller, $method), $params);
-
-        if(($result !== null) && ! is_bool($result)) {
-            // Execute the Controller's post-processing with the returned value as argument.
-            call_user_func_array(array($controller, 'after'), array($result));
-        }
-
-        // Controller invocation was a success; return true.
-        return true;
+        return false;
     }
 
     /**
@@ -316,8 +313,8 @@ class Router
         $controller = $segments[0];
         $method     = $segments[1];
 
-        // The Method shouldn't be called 'after' or starting with '_'; also check if the Controller's class exists.
-        if (($method != 'after') && ($method[0] !== '_') && class_exists($controller)) {
+        // The Method shouldn't be called 'execute' or starting with '_'; also check if the Controller's class exists.
+        if (($method != 'execute') && ($method[0] !== '_') && class_exists($controller)) {
             // Invoke the Controller's Method with the given arguments.
             return $this->invokeController($controller, $method, $params);
         }

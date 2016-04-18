@@ -8,8 +8,6 @@
 
 namespace Core;
 
-use Helpers\Hooks;
-
 /**
  * View class to load template and views files.
  */
@@ -24,11 +22,6 @@ class View
      * @var array Array of shared data
      */
     private static $shared = array();
-
-    /**
-     * @var bool Flag for the Hooks loading
-     */
-    private static $hooksLoaded = false;
 
     /**
      * Render the View file and return the result.
@@ -149,25 +142,24 @@ class View
      */
     private static function prepareData($data)
     {
-        // Run the associated Hooks if they aren't already loaded.
-        if(! static::$hooksLoaded) {
-            $hooks = Hooks::get();
-
-            static::$shared['afterBody'] = $hooks->run('afterBody', static::$shared['afterBody']);
-            static::$shared['css']       = $hooks->run('css', static::$shared['css']);
-            static::$shared['js']        = $hooks->run('js', static::$shared['js']);
-
-            // Mark the Hooks being loaded.
-            static::$hooksLoaded = true;
-        }
-
-        // Ensure that the current data is an array.
+        // Ensure that the given data is an array.
         $data = is_array($data) ? $data : array();
 
-        // Merge the current data and the shared one.
-        $data = array_merge($data, static::$shared);
+        // Make a local copy of the shared data.
+        $shared = static::$shared;
 
-        return $data;
+        // Merge the given and shared data using two steps.
+        foreach (array('afterBody', 'css', 'js') as $key) {
+            if (isset($shared[$key])) {
+                $value = isset($data[$key]) ? $data[$key] : '';
+
+                $data[$key] = $value . $shared[$key];
+            }
+
+            unset($shared[$key]);
+        }
+
+        return empty($shared) ? $data : array_merge($data, $shared);
     }
 
     /**

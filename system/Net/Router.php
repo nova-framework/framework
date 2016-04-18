@@ -440,7 +440,7 @@ class Router
 
                 if(! $this->applyFilters($route)) {
                     // Route filtering failed; we should go on (404) Error.
-                    break;
+                    //break;
                 }
 
                 $callback = $route->callback();

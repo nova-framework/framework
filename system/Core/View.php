@@ -150,13 +150,15 @@ class View
 
         // Merge the given and shared data using two steps.
         foreach (array('afterBody', 'css', 'js') as $key) {
-            if (isset($shared[$key])) {
-                $value = isset($data[$key]) ? $data[$key] : '';
+            $value = isset($data[$key]) ? $data[$key] : '';
 
-                $data[$key] = $value . $shared[$key];
+            if (isset($shared[$key])) {
+                $value .= $shared[$key];
             }
 
             unset($shared[$key]);
+
+            $data[$key] = $value;
         }
 
         return empty($shared) ? $data : array_merge($data, $shared);

@@ -49,7 +49,7 @@ class RouterMethodTest extends \PHPUnit_Framework_TestCase
         });
 
         // Add route with old method
-        \Nova\Net\Router::get('/test/get/basic/2', function () use (&$current_2) {
+        \Nova\Net\Router::get('test/get/basic/2', function () use (&$current_2) {
             $current_2 = true;
         });
 

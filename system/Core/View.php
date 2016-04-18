@@ -1,4 +1,5 @@
 <?php
+
 /**
  * View - load template pages
  *
@@ -15,6 +16,7 @@ use Helpers\Hooks;
  */
 class View
 {
+
     /**
      * @var array Array of HTTP headers
      */
@@ -49,8 +51,13 @@ class View
      */
     public static function render($path, $data = false, $module = false, $withHeaders = true)
     {
-        // Pass data to check and store it.
-        $data = self::prepareData($data);
+        // Pass data to check and store it and Prepare the rendering variables..
+        if ($data !== false) {
+            $data = self::prepareData($data);
+            foreach ($data as $name => $value) {
+                ${$name} = $value;
+            }
+        }
 
         // Prepare the (relative) file path according with Module parameter presence.
         if ($module !== false) {
@@ -59,17 +66,12 @@ class View
             $filePath = str_replace('/', DS, "Views/$path.php");
         }
 
-        // Prepare the rendering variables.
-        foreach ($data as $name => $value) {
-            ${$name} = $value;
-        }
-
         // Render the View.
         if ($withHeaders) {
             self::sendHeaders();
         }
 
-        require APPDIR .$filePath;
+        require APPDIR . $filePath;
     }
 
     /**
@@ -81,7 +83,7 @@ class View
      */
     public static function renderModule($path, $data = false, $error = false)
     {
-        if (($error !== false) && ! isset($data['error'])) {
+        if (($error !== false) && !isset($data['error'])) {
             // Adjust the $error parameter handling, injecting it into $data.
             $data['error'] = $error;
         }
@@ -101,21 +103,22 @@ class View
      */
     public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
     {
-        // Pass data to check and store it.
-        $data = self::prepareData($data);
+        // Pass data to check and store it and Prepare the rendering variables.
+        if ($data !== false) {
+            $data = self::prepareData($data);
+            foreach ($data as $name => $value) {
+                ${$name} = $value;
+            }
+        }
+
 
         // Prepare the (relative) file path.
         $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
 
-        // Prepare the rendering variables.
-        foreach ($data as $name => $value) {
-            ${$name} = $value;
-        }
-
         // Render the Template.
         self::sendHeaders();
 
-        require APPDIR .$filePath;
+        require APPDIR . $filePath;
     }
 
     /**
@@ -131,8 +134,8 @@ class View
         $hooks = Hooks::get();
 
         $data['afterBody'] = $hooks->run('afterBody', $data['afterBody']);
-        $data['css']       = $hooks->run('css', $data['css']);
-        $data['js']        = $hooks->run('js', $data['js']);
+        $data['css'] = $hooks->run('css', $data['css']);
+        $data['js'] = $hooks->run('js', $data['js']);
 
         return $data;
     }
@@ -162,10 +165,11 @@ class View
      */
     public static function sendHeaders()
     {
-        if (! headers_sent()) {
+        if (!headers_sent()) {
             foreach (self::$headers as $header) {
                 header($header, true);
             }
         }
     }
+
 }

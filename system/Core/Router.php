@@ -25,6 +25,11 @@ class Router
     private static $routeGroups = array();
 
     /**
+     * Current detected URI.
+     */
+    protected static $currentUri = null;
+
+    /**
      * Array of routes
      *
      * @var Route[] $routes
@@ -47,7 +52,6 @@ class Router
      * @var null $errorCallback
      */
     private $errorCallback = '\App\Controllers\Error@index';
-
 
     /**
      * Router constructor.
@@ -83,6 +87,20 @@ class Router
         $router = self::getInstance();
 
         $router->addRoute($method, $params[0], $params[1]);
+    }
+
+    /**
+     * Return the current detected URI.
+     *
+     * @return string
+     */
+    public static function currentUri()
+    {
+        if(static::$currentUri === null) {
+            static::$currentUri = Url::detectUri();
+        }
+
+        return static::$currentUri;
     }
 
     /**
@@ -329,7 +347,7 @@ class Router
     public function dispatch()
     {
         // Detect the current URI.
-        $uri = Url::detectUri();
+        $uri = static::currentUri();
 
         // First, we will supose that URI is associated with an Asset File.
         if (Request::isGet() && $this->dispatchFile($uri)) {

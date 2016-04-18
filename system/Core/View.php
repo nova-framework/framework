@@ -161,7 +161,7 @@ class View
             $data[$key] = $value;
         }
 
-        return empty($shared) ? $data : array_merge($data, $shared);
+        return array_merge($data, $shared);
     }
 
     /**

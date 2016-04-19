@@ -266,11 +266,14 @@ class Router
             $callback = isset($options['uses']) ? $options['uses'] : null;
         } else {
             $filters = '';
+
             $callback = $options;
         }
 
         if (! empty(self::$routeGroups)) {
-            $parts     = array();
+            $parts = array();
+
+            // The current Controller namespace; prepended to Callback if it is not a Closure.
             $namespace = '';
 
             foreach (self::$routeGroups as $group) {
@@ -281,10 +284,10 @@ class Router
 
                 // Append the Group Filters to the main list.
                 if(! empty($filter)) {
-                    $filters = $filters .'|' .$filter;
+                    $filters = trim($filters .'|' .$filter, '|');
                 }
 
-                // Keep always the last namespace.
+                // Update always to the last Controller namespace.
                 $namespace = $group['namespace'];
             }
 
@@ -296,16 +299,15 @@ class Router
             if (! empty($parts)) {
                 $pattern = implode('/', $parts);
             }
-        } else {
-            $namespace = '';
+
+            // Adjust the Route CALLBACK, when it is not a Closure.
+            if(! empty($namespace) && ! is_object($callback)) {
+                $callback = sprintf('%s\%s', trim($namespace, '\\'),  trim($callback, '\\'));
+            }
         }
 
-        // Adjust the Route CALLBACK, when it is not a Closure.
-        if(! empty($namespace) && ! is_object($callback)) {
-            $callback = sprintf('%s\%s', trim($namespace, '\\'),  trim($callback, '\\'));
-        }
-
-        $route = new Route($methods, $pattern, array('filters' => trim($filters, '|'), 'uses' => $callback));
+        // Create a Route instance using the processed information.
+        $route = new Route($methods, $pattern, array('filters' => $filters, 'uses' => $callback));
 
         // Add the current Route instance to the known Routes list.
         array_push($this->routes, $route);

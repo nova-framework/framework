@@ -115,7 +115,7 @@ class Router
      */
     public static function currentUri()
     {
-        if(ENVIRONMENT === 'development') {
+        if(ENVIRONMENT == 'development') {
             return Url::detectUri();
         }
 
@@ -441,12 +441,12 @@ class Router
             if ($route->match($uri, $method, $patterns)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
-                /*
+
                 if(! $this->applyFilters($route)) {
                     // Route filtering failed; we should go on (404) Error.
                     break;
                 }
-                */
+
                 $callback = $route->callback();
 
                 if ($callback !== null) {

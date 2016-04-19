@@ -428,8 +428,11 @@ class Router
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 
-                if(! $route->applyFilters()) {
-                    // Current Route filtering failed; we should go to (404) Error.
+                // Apply the (specified) Filters on matched Route.
+                $result = $route->applyFilters();
+
+                if($result === false) {
+                    // Matched Route filtering failed; we should go to (404) Error.
                     break;
                 }
 

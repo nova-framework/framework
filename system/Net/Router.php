@@ -26,6 +26,8 @@ class Router
 {
     private static $instance;
 
+    private static $testing = false;
+
     private static $routeGroups = array();
 
     /**
@@ -80,6 +82,10 @@ class Router
         self::$instance =& $this;
 
         $this->config = Config::get('routing');
+
+        if (ENVIRONMENT == 'development') {
+            static::$testing = true;
+        }
     }
 
     public static function &getInstance()
@@ -109,17 +115,23 @@ class Router
     }
 
     /**
+     * Return true if the Router is in Testing Mode.
+     *
+     * @return bool
+     */
+    public static function testing()
+    {
+        return static::$testing;
+    }
+
+    /**
      * Return the current detected URI.
      *
      * @return string
      */
     public static function currentUri()
     {
-        if(ENVIRONMENT == 'development') {
-            return Url::detectUri();
-        }
-
-        if(static::$currentUri === null) {
+        if((static::$currentUri === null) || static::$testing) {
             static::$currentUri = Url::detectUri();
         }
 
@@ -205,18 +217,18 @@ class Router
     {
         if(is_array($group)) {
             $prefix    = $group['prefix'];
-            $before    = $group['before'];
-            $namespace = $group['namespace'];
+            $before    = isset($group['before']) ? $group['before'] : '';
+            $namespace = isset($group['namespace']) ? $group['namespace'] : '';
         } else {
-            $prefix    = trim($group, '/');
+            $prefix    = $group;
             $before    = '';
             $namespace = '';
         }
 
-        // Add the Route Group to the array.
+        // Add the current Route Group to the array.
         array_push(self::$routeGroups, array(
-            'prefix' => $prefix,
-            'before' => $before,
+            'prefix'    => trim($prefix, '/'),
+            'before'    => $before,
             'namespace' => $namespace
         ));
 
@@ -282,21 +294,22 @@ class Router
      *
      * @param string|array $method HTTP method(s) to match
      * @param string $route URL pattern to match
-     * @param callback $callback Callback object
+     * @param string|array|callable $options Callback object or options
      */
-    public function addRoute($method, $route, $callback = null)
+    public function addRoute($method, $route, $options = null)
     {
         $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
         $pattern = ltrim($route, '/');
 
         // If there is an options array, extract the filters and callback.
-        if(is_array($callback)) {
-            $filters = isset($callback['before']) ? $callback['before'] : '';
+        if(is_array($options)) {
+            $filters = isset($options['before']) ? $options['before'] : '';
 
-            $callback = $callback['uses'];
+            $callback = isset($options['uses']) ? $options['uses'] : null;
         } else {
             $filters = '';
+            $callback = $options;
         }
 
         if (! empty(self::$routeGroups)) {
@@ -307,12 +320,12 @@ class Router
                 // Add the current prefix to the prefixes list.
                 array_push($parts, $group['prefix']);
 
-                // Keep always the last filters if they exists.
-                if(isset($group['before'])) {
-                    $filters = $group['before'];
+                // Add the Filters recursive.
+                if(! empty($group['before'])) {
+                    $filters = trim($filters, '|') .'|' .$group['before'];
                 }
 
-                // Keep always the last Controller's namespace.
+                // Keep always the last namespace.
                 $namespace = $group['namespace'];
             }
 
@@ -324,14 +337,16 @@ class Router
             if (! empty($parts)) {
                 $pattern = implode('/', $parts);
             }
-
-            // Adjust the Route CALLBACK, when it is not a Closure.
-            if(! empty($namespace) && ! is_object($callback)) {
-                $callback = $namespace .'\\' .$callback;
-            }
+        } else {
+            $namespace = '';
         }
 
-        $route = new Route($methods, $pattern, array('before' => $filters, 'uses' => $callback));
+        // Adjust the Route CALLBACK, when it is not a Closure.
+        if(! empty($namespace) && ! is_object($callback)) {
+            $callback = sprintf('%s\%s', $namespace,  $callback);
+        }
+
+        $route = new Route($methods, $pattern, array('before' => trim($filters, '|'), 'uses' => $callback));
 
         // Add the current Route instance to the known Routes list.
         array_push($this->routes, $route);

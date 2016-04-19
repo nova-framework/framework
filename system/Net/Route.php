@@ -25,7 +25,7 @@ class Route
     private $pattern;
 
     /**
-     * @var array Filters to be appliend on match
+     * @var array Filters to be applied on match
      */
     private $filters = array();
 
@@ -54,22 +54,22 @@ class Route
      *
      * @param string|array $method HTTP method(s)
      * @param string $pattern URL pattern
-     * @param callable $callback Callback function
+     * @param string|array|callable $options Callback object or options
      */
-    public function __construct($method, $pattern, $callback)
+    public function __construct($method, $pattern, $options)
     {
         $this->methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
-        if(is_array($callback)) {
-            $this->callback = isset($callback['uses']) ? $callback['uses'] : null;
+        if(is_array($options)) {
+            $this->callback = isset($options['uses']) ? $options['uses'] : null;
 
-            if(isset($callback['before']) && ! empty($callback['before'])) {
-                $this->filters = array_filter(explode('|', $callback['before']), 'strlen');
+            if(isset($options['before']) && ! empty($options['before'])) {
+                $this->filters = array_filter(explode('|', $options['before']), 'strlen');
             }
         } else {
-            $this->callback = $callback;
+            $this->callback = $options;
         }
     }
 

@@ -16,7 +16,10 @@ use Nova\Net\Router;
 Router::any('', 'App\Controllers\Welcome@welcome');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 
-Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@test');
+Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
+    'before' => 'test',
+    'uses' => 'App\Controllers\Demo@test'
+));
 
 /*
 // Classic Routing

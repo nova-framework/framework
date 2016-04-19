@@ -65,6 +65,7 @@ Packages::bootstrap();
 $router = Router::getInstance();
 
 /** Load the application wide Routes. */
+require $configDir .'filters.php';
 require $configDir .'routes.php';
 
 /** Bootstrap the active Modules. */

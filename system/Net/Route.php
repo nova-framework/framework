@@ -35,6 +35,11 @@ class Route
     private $callback = null;
 
     /**
+     * @var string The matched URI
+     */
+    private $matchUri = null;
+
+    /**
      * @var string The matched HTTP method
      */
     private $method = null;
@@ -96,6 +101,8 @@ class Route
 
         // Exact match Route.
         if ($this->pattern == $uri) {
+            $this->matchUri = $uri;
+
             return true;
         }
 
@@ -122,6 +129,9 @@ class Route
         if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
             // Remove $matched[0] as [1] is the first parameter.
             array_shift($matches);
+
+            // Store the matched URI.
+            $this->matchUri = $uri;
             // Store the extracted parameters.
             $this->params = $matches;
             // Also, store the compiled regex.
@@ -166,6 +176,14 @@ class Route
     public function callback()
     {
         return $this->callback;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function matchUri()
+    {
+        return $this->matchUri;
     }
 
     /**

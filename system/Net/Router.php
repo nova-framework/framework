@@ -26,8 +26,6 @@ class Router
 {
     private static $instance;
 
-    private static $testing = false;
-
     private static $routeGroups = array();
 
     /**
@@ -82,10 +80,6 @@ class Router
         self::$instance =& $this;
 
         $this->config = Config::get('routing');
-
-        if (ENVIRONMENT == 'development') {
-            static::$testing = true;
-        }
     }
 
     public static function &getInstance()
@@ -131,11 +125,7 @@ class Router
      */
     public static function currentUri()
     {
-        if((static::$currentUri === null) || static::$testing) {
-            static::$currentUri = Url::detectUri();
-        }
-
-        return static::$currentUri;
+        return Url::detectUri();
     }
 
     /**
@@ -493,15 +483,16 @@ class Router
         $result = true;
 
         foreach ($route->filters() as $filter) {
-            if(isset(self::$filters[$filter])) {
+            if(array_key_exists($filter, self::$filters)) {
                 // Get the current Filter Callback.
                 $callback = self::$filters[$filter];
 
-                // Execute the current Filter's callback with the Route and current URI as arguments.
+                // Execute the current Filter's callback with the current matched Route as argument.
                 //
-                // When the Filter returns false, the filtering is considered being as globally failed.
-                // The redirects should be implemented directly into Filter if there is need for them.
-                $result = call_user_func($callback, $route, $uri);
+                // When the Filter returns false, the filtering is considered being globally failed.
+                if($callback !== null) {
+                    $result = call_user_func($callback, $route);
+                }
             } else {
                 // No Filter with this name found; mark that as failure.
                 $result = false;

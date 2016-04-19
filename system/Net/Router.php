@@ -29,18 +29,6 @@ class Router
     private static $routeGroups = array();
 
     /**
-     * Current detected URI.
-     */
-    protected static $currentUri = null;
-
-    /**
-     * Array of filters
-     *
-     * @var array $filters
-     */
-    protected static $filters = array();
-
-    /**
      * Array of routes
      *
      * @var Route[] $routes
@@ -186,7 +174,7 @@ class Router
     {
         if(is_array($group)) {
             $prefix    = $group['prefix'];
-            $before    = isset($group['before']) ? $group['before'] : '';
+            $before    = isset($group['filters']) ? $group['filters'] : '';
             $namespace = isset($group['namespace']) ? $group['namespace'] : '';
         } else {
             $prefix    = $group;
@@ -197,7 +185,7 @@ class Router
         // Add the current Route Group to the array.
         array_push(self::$routeGroups, array(
             'prefix'    => trim($prefix, '/'),
-            'before'    => $before,
+            'filters'    => $before,
             'namespace' => $namespace
         ));
 
@@ -273,7 +261,7 @@ class Router
 
         // If there is an options array, extract the filters and callback.
         if(is_array($options)) {
-            $filters = isset($options['before']) ? trim($options['before'], '|') : '';
+            $filters = isset($options['filters']) ? trim($options['filters'], '|') : '';
 
             $callback = isset($options['uses']) ? $options['uses'] : null;
         } else {
@@ -289,11 +277,11 @@ class Router
                 // Add the current prefix to the prefixes list.
                 array_push($parts, trim($group['prefix'], '/'));
 
-                $before = trim($group['before'], '|');
+                $filter = trim($group['filters'], '|');
 
                 // Append the Group Filters to the main list.
-                if(! empty($before)) {
-                    $filters = $filters .'|' .$before;
+                if(! empty($filter)) {
+                    $filters = $filters .'|' .$filter;
                 }
 
                 // Keep always the last namespace.
@@ -317,7 +305,7 @@ class Router
             $callback = sprintf('%s\%s', trim($namespace, '\\'),  trim($callback, '\\'));
         }
 
-        $route = new Route($methods, $pattern, array('before' => trim($filters, '|'), 'uses' => $callback));
+        $route = new Route($methods, $pattern, array('filters' => trim($filters, '|'), 'uses' => $callback));
 
         // Add the current Route instance to the known Routes list.
         array_push($this->routes, $route);
@@ -344,7 +332,7 @@ class Router
     protected function invokeController($className, $method, $params, $withResult = true)
     {
         // Controller's Methods starting with '_' and the Flight ones cannot be called via Router.
-        if(($method == 'initialize') || ($method == 'before') || ($method == 'after')) {
+        if(($method == 'initialize') || ($method == 'filters') || ($method == 'after')) {
             return false;
         }
 

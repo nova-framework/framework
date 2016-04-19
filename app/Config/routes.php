@@ -17,8 +17,8 @@ Router::any('', 'App\Controllers\Welcome@welcome');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 
 Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
-    'before' => 'test',
-    'uses' => 'App\Controllers\Demo@test'
+    'filters' => 'test',
+    'uses'    => 'App\Controllers\Demo@test'
 ));
 
 /*

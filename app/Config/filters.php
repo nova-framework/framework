@@ -7,10 +7,10 @@
  * @date April 19th, 2016
  */
 
-/** Create alias for Route. */
 use Nova\Net\Route;
 
-/** Define static Filters. */
+
+/** Define Route Filters. */
 
 // A Testing Filter which dump the matched Route.
 Route::filter('test', function($route) {

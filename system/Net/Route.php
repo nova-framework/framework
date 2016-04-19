@@ -120,7 +120,7 @@ class Route
                 //
                 // When the Filter returns false, the filtering is considered being globally failed.
                 if($callback !== null) {
-                    $result = call_user_func($callback, $this);
+                    $result = $this->invokeCallback($callback);
                 }
             } else {
                 // No Filter with this name found; mark that as failure.
@@ -134,6 +134,34 @@ class Route
         }
 
         return $result;
+    }
+
+    private function invokeCallback($callback)
+    {
+        if (is_object($callback)) {
+            // We have a Closure; execute it with the Route instance as parameter.
+            return call_user_func($callback, $this);
+        }
+
+        // Extract the Class name and the Method from the callback's string.
+        $segments = explode('@', $callback);
+
+        $className = $segments[0];
+        $method    = $segments[1];
+
+        if (! class_exists($className)) {
+            return false;
+        }
+
+        // The Filter Class receive on Constructor the Route instance as parameter.
+        $object = new $className($this);
+
+        if (method_exists($object, $method)) {
+            // Execute the object's method without arguments and return the result.
+            return call_user_func(array($object, $method));
+        }
+
+        return false;
     }
 
     /**

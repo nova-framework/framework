@@ -66,7 +66,10 @@ class Route
             $this->callback = isset($options['uses']) ? $options['uses'] : null;
 
             if(isset($options['before']) && ! empty($options['before'])) {
-                $this->filters = array_filter(explode('|', $options['before']), 'strlen');
+                // Explode the filters string using the '|' delimiter.
+                $filters = array_filter(explode('|', $options['before']), 'strlen');
+
+                $this->filters = array_unique($filters);
             }
         } else {
             $this->callback = $options;

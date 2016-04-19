@@ -458,7 +458,7 @@ class Router
                 $this->matchedRoute = $route;
 
                 if(! $this->applyFilters($route)) {
-                    // Route filtering failed; we should go on (404) Error.
+                    // Current Route filtering failed; we should go with Error.
                     break;
                 }
 
@@ -485,18 +485,12 @@ class Router
 
     protected function applyFilters(Route $route)
     {
-        $filters = $route->filters();
-
-        if(empty($filters)) {
-            // There are no specified filters.
-            return true;
-        }
-
         $uri = self::currentUri();
 
+        // There we store the filtering result.
         $result = true;
 
-        foreach ($filters as $filter) {
+        foreach ($route->filters() as $filter) {
             if(isset(self::$filters[$filter])) {
                 // Get the current Filter Callback.
                 $callback = self::$filters[$filter];

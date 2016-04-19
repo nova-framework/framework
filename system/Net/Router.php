@@ -487,15 +487,12 @@ class Router
                 // Get the current Filter Callback.
                 $callback = self::$filters[$filter];
 
-                if($callback === null) {
-                    // A Filter without Callback; nothing to do.
-                    continue;
-                }
-
                 // Execute the current Filter's callback with the current matched Route as argument.
                 //
                 // When the Filter returns false, the filtering is considered being globally failed.
-                $result = call_user_func($callback, $route);
+                if($callback !== null) {
+                    $result = call_user_func($callback, $route);
+                }
             } else {
                 // No Filter with this name found; mark that as failure.
                 $result = false;

@@ -304,7 +304,7 @@ class Router
 
         // If there is an options array, extract the filters and callback.
         if(is_array($options)) {
-            $filters = isset($options['before']) ? $options['before'] : '';
+            $filters = isset($options['before']) ? trim($options['before'], '|') : '';
 
             $callback = isset($options['uses']) ? $options['uses'] : null;
         } else {
@@ -318,11 +318,13 @@ class Router
 
             foreach (self::$routeGroups as $group) {
                 // Add the current prefix to the prefixes list.
-                array_push($parts, $group['prefix']);
+                array_push($parts, trim($group['prefix'], '/'));
 
-                // Add the Filters recursive.
-                if(! empty($group['before'])) {
-                    $filters = trim($filters, '|') .'|' .$group['before'];
+                $before = trim($group['before'], '|');
+
+                // Append the Group Filters to the main list.
+                if(! empty($before)) {
+                    $filters = $filters .'|' .$before;
                 }
 
                 // Keep always the last namespace.
@@ -343,7 +345,7 @@ class Router
 
         // Adjust the Route CALLBACK, when it is not a Closure.
         if(! empty($namespace) && ! is_object($callback)) {
-            $callback = sprintf('%s\%s', $namespace,  $callback);
+            $callback = sprintf('%s\%s', trim($namespace, '\\'),  trim($callback, '\\'));
         }
 
         $route = new Route($methods, $pattern, array('before' => trim($filters, '|'), 'uses' => $callback));

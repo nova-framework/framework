@@ -37,7 +37,7 @@ class Router extends BaseRouter
     public function dispatch()
     {
         // Detect the current URI.
-        $uri = Url::detectUri();
+        $uri = static::currentUri();
 
         // First, we will supose that URI is associated with an Asset File.
         if (Request::isGet() && $this->dispatchFile($uri)) {

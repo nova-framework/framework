@@ -115,6 +115,10 @@ class Router
      */
     public static function currentUri()
     {
+        if(ENVIRONMENT === 'development') {
+            return Url::detectUri();
+        }
+
         if(static::$currentUri === null) {
             static::$currentUri = Url::detectUri();
         }

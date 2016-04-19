@@ -7,13 +7,13 @@
  * @date April 19th, 2016
  */
 
-/** Create alias for Router. */
-use Nova\Net\Router;
+/** Create alias for Route. */
+use Nova\Net\Route;
 
 /** Define static Filters. */
 
-// A test Filter.
-Router::filter('test', function($route) {
+// A Testing Filter which dump the matched Route.
+Route::filter('test', function($route) {
     echo '<pre>' .var_export($route, true) .'</pre>';
 
     return true;

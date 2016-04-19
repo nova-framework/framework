@@ -15,6 +15,11 @@ namespace Nova\Net;
 class Route
 {
     /**
+     * @var array All available Filters
+     */
+    private static $availFilters = array();
+
+    /**
      * @var array Supported HTTP methods
      */
     private $methods = array();
@@ -79,6 +84,56 @@ class Route
         } else {
             $this->callback = $options;
         }
+    }
+
+    /**
+     * Define a Route Filter
+     *
+     * @param string $name
+     * @param callback $callback
+     */
+    public static function filter($name, $callback)
+    {
+        self::$availFilters[$name] = $callback;
+    }
+
+    /**
+     * Return the available Filters.
+     *
+     * @return array
+     */
+    public static function availFilters()
+    {
+        return self::$availFilters;
+    }
+
+    public function applyFilters()
+    {
+        $result = true;
+
+        foreach ($this->filters as $filter) {
+            if(array_key_exists($filter, self::$availFilters)) {
+                // Get the current Filter Callback.
+                $callback = self::$availFilters[$filter];
+
+                // Execute the current Filter's callback with the current matched Route as argument.
+                //
+                // When the Filter returns false, the filtering is considered being globally failed.
+                if($callback !== null) {
+                    $result = call_user_func($callback, $this);
+                }
+            } else {
+                // No Filter with this name found; mark that as failure.
+                $result = false;
+            }
+
+            if($result === false) {
+                // Failure of the current Filter; stop the loop.
+                break;
+            }
+        }
+
+        return $result;
     }
 
     /**

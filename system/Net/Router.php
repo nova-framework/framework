@@ -139,16 +139,6 @@ class Router
     }
 
     /**
-     * Return the available Filters.
-     *
-     * @return array
-     */
-    public static function filters()
-    {
-        return self::$filters;
-    }
-
-    /**
      * Defines callback if route is not found.
      *
      * @param string $callback
@@ -184,17 +174,6 @@ class Router
         $router =& self::getInstance();
 
         $router->addRoute($method, $route, $callback);
-    }
-
-    /**
-     * Define a Routing Filter
-     *
-     * @param string $name
-     * @param callback $callback
-     */
-    public static function filter($name, $callback)
-    {
-        self::$filters[$name] = $callback;
     }
 
     /**
@@ -449,8 +428,8 @@ class Router
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 
-                if(! $this->applyFilters($route)) {
-                    // Current Route filtering failed; we should go with Error.
+                if(! $route->applyFilters()) {
+                    // Current Route filtering failed; we should go to (404) Error.
                     break;
                 }
 
@@ -473,38 +452,6 @@ class Router
         $this->invokeObject($this->callback(), $params);
 
         return false;
-    }
-
-    protected function applyFilters(Route $route)
-    {
-        $uri = self::currentUri();
-
-        // There we store the filtering result.
-        $result = true;
-
-        foreach ($route->filters() as $filter) {
-            if(array_key_exists($filter, self::$filters)) {
-                // Get the current Filter Callback.
-                $callback = self::$filters[$filter];
-
-                // Execute the current Filter's callback with the current matched Route as argument.
-                //
-                // When the Filter returns false, the filtering is considered being globally failed.
-                if($callback !== null) {
-                    $result = call_user_func($callback, $route);
-                }
-            } else {
-                // No Filter with this name found; mark that as failure.
-                $result = false;
-            }
-
-            if($result === false) {
-                // Failure of the current Filter; stop the loop.
-                break;
-            }
-        }
-
-        return $result;
     }
 
     protected function dispatchFile($uri)

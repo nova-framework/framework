@@ -29,13 +29,6 @@ class Router
     private static $routeGroups = array();
 
     /**
-     * Array of filters
-     *
-     * @var array $filters
-     */
-    protected static $filters = array();
-
-    /**
      * Array of routes
      *
      * @var Route[] $routes

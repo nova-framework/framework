@@ -75,9 +75,9 @@ class Route
         if(is_array($options)) {
             $this->callback = isset($options['uses']) ? $options['uses'] : null;
 
-            if(isset($options['before']) && ! empty($options['before'])) {
+            if(isset($options['filters']) && ! empty($options['filters'])) {
                 // Explode the filters string using the '|' delimiter.
-                $filters = array_filter(explode('|', $options['before']), 'strlen');
+                $filters = array_filter(explode('|', $options['filters']), 'strlen');
 
                 $this->filters = array_unique($filters);
             }

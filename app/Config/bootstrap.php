@@ -48,6 +48,9 @@ if (is_readable($configDir .'database.php')) {
     require $configDir .'database.php';
 }
 
+/** Load the Route Filters. */
+require $configDir .'filters.php';
+
 /** Set the current Timezone. */
 date_default_timezone_set(Config::get('timezone'));
 
@@ -65,7 +68,6 @@ Packages::bootstrap();
 $router = Router::getInstance();
 
 /** Load the application wide Routes. */
-require $configDir .'filters.php';
 require $configDir .'routes.php';
 
 /** Bootstrap the active Modules. */

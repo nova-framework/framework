@@ -40,7 +40,7 @@ abstract class Controller
      * Execute Controller Method
      * @return bool
      */
-    public function execute($method, $params)
+    public function execute($method, $params = array())
     {
         // Initialize the Controller's variables.
         $this->method = $method;

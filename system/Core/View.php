@@ -8,8 +8,6 @@
 
 namespace Core;
 
-use Helpers\Hooks;
-
 /**
  * View class to load template and views files.
  */
@@ -19,6 +17,11 @@ class View
      * @var array Array of HTTP headers
      */
     private static $headers = array();
+
+    /**
+     * @var array Array of shared data
+     */
+    private static $shared = array();
 
     /**
      * Render the View file and return the result.
@@ -119,22 +122,46 @@ class View
     }
 
     /**
-     * place hook calls into the relevant data array call
+     * Add a key / value pair to the shared View data.
+     *
+     * Shared View data is accessible to every View created by the application.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return void
+     */
+    public static function share($key, $value)
+    {
+        static::$shared[$key] = $value;
+    }
+
+    /**
+     * Place hook calls into the relevant data array call
      * @param  array $data
      * @return array $data
      */
-    public static function prepareData($data)
+    private static function prepareData($data)
     {
-        $data = ($data !== false) ? $data : array();
+        // Ensure that the given data is an array.
+        $data = is_array($data) ? $data : array();
 
-        // Run the associated Hooks.
-        $hooks = Hooks::get();
+        // Make a local copy of the shared data.
+        $shared = static::$shared;
 
-        $data['afterBody'] = $hooks->run('afterBody', $data['afterBody']);
-        $data['css']       = $hooks->run('css', $data['css']);
-        $data['js']        = $hooks->run('js', $data['js']);
+        // Merge the given and shared data using two steps.
+        foreach (array('afterBody', 'css', 'js') as $key) {
+            $value = isset($data[$key]) ? $data[$key] : '';
 
-        return $data;
+            if (isset($shared[$key])) {
+                $value .= $shared[$key];
+            }
+
+            unset($shared[$key]);
+
+            $data[$key] = $value;
+        }
+
+        return array_merge($data, $shared);
     }
 
     /**

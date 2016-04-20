@@ -57,7 +57,6 @@ class Router
      */
     private $config;
 
-
     /**
      * An array of HTTP request Methods.
      *

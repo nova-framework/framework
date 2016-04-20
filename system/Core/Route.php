@@ -156,7 +156,7 @@ class Route
         $object = new $className();
 
         if (method_exists($object, $method)) {
-            // Execute the object's method without arguments and return the result.
+            // Execute the object's method with this Route instance as argument.
             return call_user_func(array($object, $method), $this);
         }
 

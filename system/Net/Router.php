@@ -272,9 +272,9 @@ class Router
      *
      * @param string|array $method HTTP method(s) to match
      * @param string $route URL pattern to match
-     * @param string|array|callable $options Callback object or options
+     * @param string|array|callable $callback Callback object or options
      */
-    public static function register($method, $route, $options = null)
+    public static function register($method, $route, $callback = null)
     {
         // Get the Router instance.
         $router =& self::getInstance();
@@ -295,14 +295,12 @@ class Router
         // Prepare the Route PATTERN.
         $pattern = ltrim($route, '/');
 
-        // If there is an options array, extract the filters and callback.
-        if(is_array($options)) {
-            $callback = isset($options['uses']) ? $options['uses'] : null;
+        // If $callback is an options array, extract the Filters and Callback.
+        if(is_array($callback)) {
+            $filters = isset($callback['filters']) ? trim($callback['filters'], '|') : '';
 
-            $filters = isset($options['filters']) ? trim($options['filters'], '|') : '';
+            $callback = isset($callback['uses']) ? $callback['uses'] : null;
         } else {
-            $callback = $options;
-
             $filters = '';
         }
 

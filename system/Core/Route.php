@@ -70,7 +70,7 @@ class Route
      */
     public function match($uri, $method, $optionals = true)
     {
-        if (! in_array('ANY', $this->methods) && ! in_array($method, $this->methods)) {
+        if (! in_array($method, $this->methods)) {
             return false;
         }
 

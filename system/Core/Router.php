@@ -49,6 +49,13 @@ class Router
     private $errorCallback = '\App\Controllers\Error@index';
 
     /**
+     * An array of HTTP request Methods.
+     *
+     * @var array
+     */
+    public static $methods = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS');
+    
+    /**
      * Router constructor.
      *
      * @codeCoverageIgnore
@@ -79,9 +86,15 @@ class Router
      */
     public static function __callStatic($method, $params)
     {
-        $router = self::getInstance();
+        $method = strtoupper($method);
 
-        $router->addRoute($method, $params[0], $params[1]);
+        if(($method == 'ANY') || in_array($method, static::$methods)) {
+            $route    = array_shift($params);
+            $callback = array_shift($params);
+
+            // Register the route.
+            static::register($method, $route, $callback);
+        }
     }
 
     /**
@@ -101,8 +114,10 @@ class Router
      */
     public static function error($callback)
     {
+        // Get the Router instance.
         $router = self::getInstance();
 
+        //
         $router->callback($callback);
     }
 
@@ -112,8 +127,10 @@ class Router
      */
     public static function catchAll($callback)
     {
+        // Get the Router instance.
         $router =& self::getInstance();
 
+        //
         $router->defaultRoute = new Route('any', '(:all)', $callback);
     }
 
@@ -126,9 +143,7 @@ class Router
      */
     public static function match($method, $route, $callback = null)
     {
-        $router =& self::getInstance();
-
-        $router->addRoute($method, $route, $callback);
+        self::register($method, $route, $callback);
     }
 
     /**
@@ -179,15 +194,13 @@ class Router
      */
     public static function resource($basePath, $controller)
     {
-        $router =& self::getInstance();
-
-        $router->addRoute('get',                 $basePath,                 $controller .'@index');
-        $router->addRoute('get',                 $basePath .'/create',      $controller .'@create');
-        $router->addRoute('post',                $basePath,                 $controller .'@store');
-        $router->addRoute('get',                 $basePath .'/(:any)',      $controller .'@show');
-        $router->addRoute('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
-        $router->addRoute(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
-        $router->addRoute('delete',              $basePath .'/(:any)',      $controller .'@delete');
+        self::register('get',                 $basePath,                 $controller .'@index');
+        self::register('get',                 $basePath .'/create',      $controller .'@create');
+        self::register('post',                $basePath,                 $controller .'@store');
+        self::register('get',                 $basePath .'/(:any)',      $controller .'@show');
+        self::register('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
+        self::register(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
+        self::register('delete',              $basePath .'/(:any)',      $controller .'@delete');
     }
 
     /**
@@ -214,10 +227,27 @@ class Router
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
-    public function addRoute($method, $route, $callback = null)
+    public static function register($method, $route, $callback = null)
     {
-        $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
+        // Get the Router instance.
+        $router =& self::getInstance();
 
+        // Prepare the route Methods.
+        if(is_string($method) && (strtolower($method) == 'any')) {
+            $methods = static::$methods;
+        } else {
+            $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
+
+            // Ensure the requested Methods being valid ones.
+            $methods = array_intersect($methods, static::$methods);
+        }
+
+        if (empty($methods)) {
+            // If there are no valid Methods defined, fallback to ANY.
+            $methods = static::$methods;
+        }
+
+        // Prepare the Route PATTERN.
         $pattern = ltrim($route, '/');
 
         if (! empty(self::$routeGroups)) {
@@ -249,7 +279,7 @@ class Router
         $route = new Route($methods, $pattern, $callback);
 
         // Add the current Route instance to the known Routes list.
-        array_push($this->routes, $route);
+        array_push($router->routes, $route);
     }
 
     /**

@@ -371,13 +371,16 @@ class Router
         /** @var Controller $controller */
         $controller = new $className();
 
-        // The called Method should be defined in the called Controller, not in one of its parents.
-        if (! in_array(strtolower($method), array_map('strtolower', get_class_methods($controller)))) {
-            return false;
+        // Obtain the available methods into requested Controller.
+        $methods = array_map('strtolower', get_class_methods($controller));
+
+        // The called Method should be defined right on the called Controller to be executed.
+        if (in_array(strtolower($method), $methods)) {
+            // Start the Execution Flow and return the result.
+            return $controller->execute($method, $params);
         }
 
-        // Start the Execution Flow and return the result.
-        return $controller->execute($method, $params);
+        return false;
     }
 
     /**

@@ -289,8 +289,10 @@ class Router
             $methods = array_intersect($methods, static::$methods);
         }
 
-        // No empty Route Methods allowed; fallback to ANY.
-        $methods = ! empty($methods) ? $methods : static::$methods;
+        if (empty($methods)) {
+            // If there are no valid Methods defined, fallback to ANY.
+            $methods = static::$methods;
+        }
 
         // Prepare the Route PATTERN.
         $pattern = ltrim($route, '/');

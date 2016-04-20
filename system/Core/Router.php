@@ -292,7 +292,7 @@ class Router
     protected function invokeController($className, $method, $params)
     {
         // The Controller's the Execution Flow Methods cannot be called via Router.
-        if(($method == 'execute') || ($method == 'before') || ($method == 'after')) {
+        if(($method == 'execute')) {
             return false;
         }
 

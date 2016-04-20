@@ -166,7 +166,7 @@ class Router
      * </code>
      *
      * @param  array  $routes
-     * @param  mixed  $action
+     * @param  mixed  $callback
      * @return void
      */
     public static function share($routes, $callback)

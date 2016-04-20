@@ -64,25 +64,25 @@ class Route
      *
      * @param string|array $method HTTP method(s)
      * @param string $pattern URL pattern
-     * @param string|array|callable $options Callback object or options
+     * @param string|array|callable $callback Callback object or options
      */
-    public function __construct($method, $pattern, $options)
+    public function __construct($method, $pattern, $callback)
     {
         $this->methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
-        if(is_array($options)) {
-            $this->callback = isset($options['uses']) ? $options['uses'] : null;
+        if(is_array($callback)) {
+            $this->callback = isset($callback['uses']) ? $callback['uses'] : null;
 
-            if(isset($options['filters']) && ! empty($options['filters'])) {
+            if(isset($callback['filters']) && ! empty($callback['filters'])) {
                 // Explode the filters string using the '|' delimiter.
-                $filters = array_filter(explode('|', $options['filters']), 'strlen');
+                $filters = array_filter(explode('|', $callback['filters']), 'strlen');
 
                 $this->filters = array_unique($filters);
             }
         } else {
-            $this->callback = $options;
+            $this->callback = $callback;
         }
     }
 
@@ -184,6 +184,7 @@ class Route
 
         // Exact match Route.
         if ($this->pattern == $uri) {
+            // Store the current matched URI.
             $this->currentUri = $uri;
 
             return true;

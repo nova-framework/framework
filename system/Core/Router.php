@@ -49,6 +49,13 @@ class Router
     private $errorCallback = '\App\Controllers\Error@index';
 
     /**
+     * An array of HTTP request Methods.
+     *
+     * @var array
+     */
+    public static $methods = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS');
+
+    /**
      * Router constructor.
      *
      * @codeCoverageIgnore
@@ -79,9 +86,15 @@ class Router
      */
     public static function __callStatic($method, $params)
     {
-        $router = self::getInstance();
+        $method = strtoupper($method);
 
-        $router->addRoute($method, $params[0], $params[1]);
+        if (($method == 'ANY') || in_array($method, static::$methods)) {
+            $route    = array_shift($params);
+            $callback = array_shift($params);
+
+            // Register the route.
+            static::register($method, $route, $callback);
+        }
     }
 
     /**
@@ -101,8 +114,10 @@ class Router
      */
     public static function error($callback)
     {
+        // Get the Router instance.
         $router = self::getInstance();
 
+        //
         $router->callback($callback);
     }
 
@@ -112,8 +127,10 @@ class Router
      */
     public static function catchAll($callback)
     {
+        // Get the Router instance.
         $router =& self::getInstance();
 
+        //
         $router->defaultRoute = new Route('any', '(:all)', $callback);
     }
 
@@ -126,9 +143,30 @@ class Router
      */
     public static function match($method, $route, $callback = null)
     {
-        $router =& self::getInstance();
+        self::register($method, $route, $callback);
+    }
 
-        $router->addRoute($method, $route, $callback);
+    /**
+     * Register many request URIs to a single Callback.
+     *
+     * <code>
+     *      // Register a group of URIs for a Callback
+     *      Router::share(array(array('GET', '/'), array('POST', '/home')), 'App\Controllers\Home@index');
+     * </code>
+     *
+     * @param  array  $routes
+     * @param  mixed  $callback
+     * @return void
+     */
+    public static function share($routes, $callback)
+    {
+        foreach ($routes as $entry) {
+            $method = array_shift($entry);
+            $route  = array_shift($entry);
+
+            // Register the route.
+            static::register($method, $route, $callback);
+        }
     }
 
     /**
@@ -139,9 +177,9 @@ class Router
      */
     public static function group($group, $callback)
     {
-        if(is_array($group)) {
-            $prefix    = $group['prefix'];
-            $namespace = $group['namespace'];
+        if (is_array($group)) {
+            $prefix    = trim($group['prefix'], '/');
+            $namespace = isset($group['namespace']) ? trim($group['namespace'], '\\') : '';
         } else {
             $prefix    = trim($group, '/');
             $namespace = '';
@@ -179,15 +217,13 @@ class Router
      */
     public static function resource($basePath, $controller)
     {
-        $router =& self::getInstance();
-
-        $router->addRoute('get',                 $basePath,                 $controller .'@index');
-        $router->addRoute('get',                 $basePath .'/create',      $controller .'@create');
-        $router->addRoute('post',                $basePath,                 $controller .'@store');
-        $router->addRoute('get',                 $basePath .'/(:any)',      $controller .'@show');
-        $router->addRoute('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
-        $router->addRoute(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
-        $router->addRoute('delete',              $basePath .'/(:any)',      $controller .'@delete');
+        self::register('get',                 $basePath,                 $controller .'@index');
+        self::register('get',                 $basePath .'/create',      $controller .'@create');
+        self::register('post',                $basePath,                 $controller .'@store');
+        self::register('get',                 $basePath .'/(:any)',      $controller .'@show');
+        self::register('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
+        self::register(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
+        self::register('delete',              $basePath .'/(:any)',      $controller .'@delete');
     }
 
     /**
@@ -214,21 +250,50 @@ class Router
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
-    public function addRoute($method, $route, $callback = null)
+    public static function register($method, $route, $callback = null)
     {
-        $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
+        // Get the Router instance.
+        $router =& self::getInstance();
 
+        // Prepare the route Methods.
+        if (is_string($method) && (strtolower($method) == 'any')) {
+            $methods = static::$methods;
+        } else {
+            $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
+
+            // Ensure the requested Methods being valid ones.
+            $methods = array_intersect($methods, static::$methods);
+        }
+
+        if (empty($methods)) {
+            // If there are no valid Methods defined, fallback to ANY.
+            $methods = static::$methods;
+        }
+
+        // Prepare the Route PATTERN.
         $pattern = ltrim($route, '/');
 
+        // If $callback is an options array, extract the Filters and Callback.
+        if (is_array($callback)) {
+            $filters = isset($callback['filters']) ? trim($callback['filters'], '|') : '';
+
+            $callback = isset($callback['uses']) ? $callback['uses'] : null;
+        } else {
+            $filters = '';
+        }
+
         if (! empty(self::$routeGroups)) {
-            $parts     = array();
+            $parts = array();
+
+            // The current Controller namespace; prepended to Callback if it is not a Closure.
             $namespace = '';
 
             foreach (self::$routeGroups as $group) {
                 // Add the current prefix to the prefixes list.
-                array_push($parts, $group['prefix']);
-                // Keep always the last Controller's namespace.
-                $namespace = $group['namespace'];
+                array_push($parts, trim($group['prefix'], '/'));
+
+                // Update always to the last Controller namespace.
+                $namespace = trim($group['namespace'], '\\');
             }
 
             if (! empty($pattern)) {
@@ -242,14 +307,15 @@ class Router
 
             // Adjust the Route CALLBACK, when it is not a Closure.
             if (! empty($namespace) && ! is_object($callback)) {
-                $callback = $namespace .'\\' .$callback;
+                $callback = sprintf('%s\%s', $namespace,  trim($callback, '\\'));
             }
         }
 
-        $route = new Route($methods, $pattern, $callback);
+        // Create a Route instance using the processed information.
+        $route = new Route($methods, $pattern, array('filters' => $filters, 'uses' => $callback));
 
         // Add the current Route instance to the known Routes list.
-        array_push($this->routes, $route);
+        array_push($router->routes, $route);
     }
 
     /**
@@ -273,7 +339,7 @@ class Router
     protected function invokeController($className, $method, $params)
     {
         // The Controller's the Execution Flow Methods cannot be called via Router.
-        if(($method == 'execute')) {
+        if (($method == 'execute')) {
             return false;
         }
 
@@ -352,6 +418,14 @@ class Router
             if ($route->match($uri, $method)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
+
+                // Apply the (specified) Filters on matched Route.
+                $result = $route->applyFilters();
+
+                if ($result === false) {
+                    // Matched Route filtering failed; we should go to (404) Error.
+                    break;
+                }
 
                 $callback = $route->callback();
 

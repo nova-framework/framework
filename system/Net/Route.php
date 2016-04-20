@@ -40,9 +40,9 @@ class Route
     private $callback = null;
 
     /**
-     * @var string The matched URI
+     * @var string The current matched URI
      */
-    private $matchUri = null;
+    private $currentUri = null;
 
     /**
      * @var string The matched HTTP method
@@ -175,7 +175,7 @@ class Route
      */
     public function match($uri, $method, $optionals = true)
     {
-        if (! in_array('ANY', $this->methods) && ! in_array($method, $this->methods)) {
+        if (! in_array($method, $this->methods)) {
             return false;
         }
 
@@ -184,14 +184,14 @@ class Route
 
         // Exact match Route.
         if ($this->pattern == $uri) {
-            $this->matchUri = $uri;
+            $this->currentUri = $uri;
 
             return true;
         }
 
         // Build the regex for matching.
         if (strpos($this->pattern, ':') !== false) {
-            $regex = str_replace(array(':any', ':num', ':all'), array('[^/]+', '-?[0-9]+', '.*'), $this->pattern);
+            $regex = str_replace(array(':any', ':num', ':all'), array('[^/]+', '[0-9]+', '.*'), $this->pattern);
         } else {
             $regex = $this->pattern;
         }
@@ -213,11 +213,13 @@ class Route
             // Remove $matched[0] as [1] is the first parameter.
             array_shift($matches);
 
-            // Store the matched URI.
-            $this->matchUri = $uri;
+            // Store the current matched URI.
+            $this->currentUri = $uri;
+
             // Store the extracted parameters.
             $this->params = $matches;
-            // Also, store the compiled regex.
+
+            // Also, store the compiled Regex.
             $this->regex = $regex;
 
             return true;
@@ -264,9 +266,9 @@ class Route
     /**
      * @return string|null
      */
-    public function matchUri()
+    public function currentUri()
     {
-        return $this->matchUri;
+        return $this->currentUri;
     }
 
     /**

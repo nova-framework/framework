@@ -363,7 +363,7 @@ class Router
     protected function invokeController($className, $method, $params, $withResult = true)
     {
         // The Controller's the Flight Methods cannot be called via Router.
-        if(($method == 'initialize') || ($method != 'execute') || ($method == 'before') || ($method == 'after')) {
+        if(($method == 'initialize') || ($method == 'execute') || ($method == 'before') || ($method == 'after')) {
             return false;
         }
 

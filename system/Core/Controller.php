@@ -74,7 +74,7 @@ abstract class Controller
      *
      * @throws \Exception
      */
-    protected function initialize($method, $params = array())
+    public function initialize($method, $params = array())
     {
         // Setup the Controller's properties.
         $this->className = get_class($this);

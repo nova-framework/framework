@@ -105,7 +105,7 @@ class Router
             $callback = array_shift($params);
 
             // Register the route.
-            static::match($method, $route, $callback);
+            static::register($method, $route, $callback);
         }
     }
 
@@ -187,7 +187,7 @@ class Router
             $route  = array_shift($entry);
 
             // Register the route.
-            static::match($method, $route, $callback);
+            static::register($method, $route, $callback);
         }
     }
 

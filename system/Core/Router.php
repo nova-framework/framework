@@ -291,6 +291,11 @@ class Router
      */
     protected function invokeController($className, $method, $params)
     {
+        // The Controller's the Execution Flow Methods cannot be called via Router.
+        if(($method == 'execute') || ($method == 'before') || ($method == 'after')) {
+            return false;
+        }
+
         // Initialize the Controller.
         /** @var Controller $controller */
         $controller = new $className();
@@ -332,7 +337,7 @@ class Router
         $method     = $segments[1];
 
         // The Method shouldn't be called 'execute' or starting with '_'; also check if the Controller's class exists.
-        if (($method != 'execute') && ($method[0] !== '_') && class_exists($controller)) {
+        if (($method[0] !== '_') && class_exists($controller)) {
             // Invoke the Controller's Method with the given arguments.
             return $this->invokeController($controller, $method, $params);
         }

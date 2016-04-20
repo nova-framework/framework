@@ -159,6 +159,9 @@ class Response
             case 'js':
                 $contentType = 'application/javascript';
                 break;
+            case 'svg':
+                $contentType = 'image/svg+xml';
+                break;
             default:
                 break;
         }

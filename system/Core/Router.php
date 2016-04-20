@@ -54,7 +54,7 @@ class Router
      * @var array
      */
     public static $methods = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS');
-    
+
     /**
      * Router constructor.
      *
@@ -147,6 +147,29 @@ class Router
     }
 
     /**
+     * Register many request URIs to a single Callback.
+     *
+     * <code>
+     *      // Register a group of URIs for a Callback
+     *      Router::share(array(array('GET', '/'), array('POST', '/home')), 'App\Controllers\Home@index');
+     * </code>
+     *
+     * @param  array  $routes
+     * @param  mixed  $callback
+     * @return void
+     */
+    public static function share($routes, $callback)
+    {
+        foreach ($routes as $entry) {
+            $method = array_shift($entry);
+            $route  = array_shift($entry);
+
+            // Register the route.
+            static::register($method, $route, $callback);
+        }
+    }
+
+    /**
      * Defines a Route Group.
      *
      * @param string $group The scope of the current Routes Group
@@ -155,8 +178,8 @@ class Router
     public static function group($group, $callback)
     {
         if(is_array($group)) {
-            $prefix    = $group['prefix'];
-            $namespace = $group['namespace'];
+            $prefix    = trim($group['prefix'], '/');
+            $namespace = isset($group['namespace']) ? trim($group['namespace'], '\\') : '';
         } else {
             $prefix    = trim($group, '/');
             $namespace = '';
@@ -250,15 +273,27 @@ class Router
         // Prepare the Route PATTERN.
         $pattern = ltrim($route, '/');
 
+        // If $callback is an options array, extract the Filters and Callback.
+        if(is_array($callback)) {
+            $filters = isset($callback['filters']) ? trim($callback['filters'], '|') : '';
+
+            $callback = isset($callback['uses']) ? $callback['uses'] : null;
+        } else {
+            $filters = '';
+        }
+
         if (! empty(self::$routeGroups)) {
-            $parts     = array();
+            $parts = array();
+
+            // The current Controller namespace; prepended to Callback if it is not a Closure.
             $namespace = '';
 
             foreach (self::$routeGroups as $group) {
                 // Add the current prefix to the prefixes list.
-                array_push($parts, $group['prefix']);
-                // Keep always the last Controller's namespace.
-                $namespace = $group['namespace'];
+                array_push($parts, trim($group['prefix'], '/'));
+
+                // Update always to the last Controller namespace.
+                $namespace = trim($group['namespace'], '\\');
             }
 
             if (! empty($pattern)) {
@@ -271,12 +306,13 @@ class Router
             }
 
             // Adjust the Route CALLBACK, when it is not a Closure.
-            if (! empty($namespace) && ! is_object($callback)) {
-                $callback = $namespace .'\\' .$callback;
+            if(! empty($namespace) && ! is_object($callback)) {
+                $callback = sprintf('%s\%s', $namespace,  trim($callback, '\\'));
             }
         }
 
-        $route = new Route($methods, $pattern, $callback);
+        // Create a Route instance using the processed information.
+        $route = new Route($methods, $pattern, array('filters' => $filters, 'uses' => $callback));
 
         // Add the current Route instance to the known Routes list.
         array_push($router->routes, $route);
@@ -382,6 +418,14 @@ class Router
             if ($route->match($uri, $method)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
+
+                // Apply the (specified) Filters on matched Route.
+                $result = $route->applyFilters();
+
+                if($result === false) {
+                    // Matched Route filtering failed; we should go to (404) Error.
+                    break;
+                }
 
                 $callback = $route->callback();
 

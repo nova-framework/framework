@@ -25,11 +25,6 @@ class Router
     private static $routeGroups = array();
 
     /**
-     * Current detected URI.
-     */
-    protected static $currentUri = null;
-
-    /**
      * Array of routes
      *
      * @var Route[] $routes
@@ -96,11 +91,7 @@ class Router
      */
     public static function currentUri()
     {
-        if(static::$currentUri === null) {
-            static::$currentUri = Url::detectUri();
-        }
-
-        return static::$currentUri;
+        return Url::detectUri();
     }
 
     /**

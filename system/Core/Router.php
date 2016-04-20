@@ -88,7 +88,7 @@ class Router
     {
         $method = strtoupper($method);
 
-        if(($method == 'ANY') || in_array($method, static::$methods)) {
+        if (($method == 'ANY') || in_array($method, static::$methods)) {
             $route    = array_shift($params);
             $callback = array_shift($params);
 
@@ -177,7 +177,7 @@ class Router
      */
     public static function group($group, $callback)
     {
-        if(is_array($group)) {
+        if (is_array($group)) {
             $prefix    = trim($group['prefix'], '/');
             $namespace = isset($group['namespace']) ? trim($group['namespace'], '\\') : '';
         } else {
@@ -256,7 +256,7 @@ class Router
         $router =& self::getInstance();
 
         // Prepare the route Methods.
-        if(is_string($method) && (strtolower($method) == 'any')) {
+        if (is_string($method) && (strtolower($method) == 'any')) {
             $methods = static::$methods;
         } else {
             $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
@@ -274,7 +274,7 @@ class Router
         $pattern = ltrim($route, '/');
 
         // If $callback is an options array, extract the Filters and Callback.
-        if(is_array($callback)) {
+        if (is_array($callback)) {
             $filters = isset($callback['filters']) ? trim($callback['filters'], '|') : '';
 
             $callback = isset($callback['uses']) ? $callback['uses'] : null;
@@ -306,7 +306,7 @@ class Router
             }
 
             // Adjust the Route CALLBACK, when it is not a Closure.
-            if(! empty($namespace) && ! is_object($callback)) {
+            if (! empty($namespace) && ! is_object($callback)) {
                 $callback = sprintf('%s\%s', $namespace,  trim($callback, '\\'));
             }
         }
@@ -339,7 +339,7 @@ class Router
     protected function invokeController($className, $method, $params)
     {
         // The Controller's the Execution Flow Methods cannot be called via Router.
-        if(($method == 'execute')) {
+        if (($method == 'execute')) {
             return false;
         }
 
@@ -422,7 +422,7 @@ class Router
                 // Apply the (specified) Filters on matched Route.
                 $result = $route->applyFilters();
 
-                if($result === false) {
+                if ($result === false) {
                     // Matched Route filtering failed; we should go to (404) Error.
                     break;
                 }

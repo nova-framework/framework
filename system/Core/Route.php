@@ -71,10 +71,10 @@ class Route
 
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
-        if(is_array($callback)) {
+        if (is_array($callback)) {
             $this->callback = isset($callback['uses']) ? $callback['uses'] : null;
 
-            if(isset($callback['filters']) && ! empty($callback['filters'])) {
+            if (isset($callback['filters']) && ! empty($callback['filters'])) {
                 // Explode the filters string using the '|' delimiter.
                 $filters = array_filter(explode('|', $callback['filters']), 'strlen');
 
@@ -111,14 +111,14 @@ class Route
         $result = true;
 
         foreach ($this->filters as $filter) {
-            if(array_key_exists($filter, self::$availFilters)) {
+            if (array_key_exists($filter, self::$availFilters)) {
                 // Get the current Filter Callback.
                 $callback = self::$availFilters[$filter];
 
                 // Execute the current Filter's callback with the current matched Route as argument.
                 //
                 // When the Filter returns false, the filtering is considered being globally failed.
-                if($callback !== null) {
+                if ($callback !== null) {
                     $result = $this->invokeCallback($callback);
                 }
             } else {
@@ -126,7 +126,7 @@ class Route
                 $result = false;
             }
 
-            if($result === false) {
+            if ($result === false) {
                 // Failure of the current Filter; stop the loop.
                 break;
             }

@@ -360,9 +360,9 @@ class Router
      * @param  array $params parameters passed to method
      * @return bool
      */
-    protected function invokeController($className, $method, $params, $withResult = true)
+    protected function invokeController($className, $method, $params)
     {
-        // The Controller's Flight Methods cannot be called via Router.
+        // The Controller's Execution Flow cannot be called via Router.
         if(($method == 'initialize') || ($method == 'execute')) {
             return false;
         }
@@ -376,10 +376,8 @@ class Router
             return false;
         }
 
-        $controller->initialize($className, $method, $params);
-
-        // Start the Flight and return the result.
-        return $controller->execute();
+        // Start the Execution Flow and return the result.
+        return $controller->execute($method, $params);
     }
 
     /**

@@ -70,22 +70,20 @@ abstract class Controller
     }
 
     /**
-     * Initialize controller
+     * Initialize the Controller.
      *
-     * @param string $className
-     * @param string $method
-     * @param array $params
      * @throws \Exception
      */
-    public function initialize($className, $method, $params = array())
+    public function initialize($method, $params = array())
     {
-        $this->className = $className;
+        // Setup the Controller's properties.
+        $this->className = get_class($this);
 
         $this->method = $method;
         $this->params = $params;
 
         // Prepare the Views Path using the Controller's full Name including its namespace.
-        $classPath = str_replace('\\', '/', ltrim($className, '\\'));
+        $classPath = str_replace('\\', '/', ltrim($this->className, '\\'));
 
         // First, check on the App path.
         if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
@@ -97,10 +95,34 @@ abstract class Controller
             // The View paths are in Module sub-directories.
             $viewsPath = str_replace('/', DS, 'Modules/'.$matches[1].'/Views/'.$matches[2]);
         } else {
-            throw new \Exception(__d('system', 'Unknown Views Path for the Class: {0}', $className));
+            throw new \Exception(__d('system', 'Unknown Views Path for the Class: {0}', $this->className));
         }
 
         $this->viewsPath = APPPATH .$viewsPath .DS;
+    }
+
+   /**
+     * Execute the requested Controller Method.
+     * @return bool
+     */
+    public function execute($method, $params = array())
+    {
+        // Initialize the Controller instance.
+        $this->initialize($method, $params);
+
+        // Before Action stage.
+        if ($this->before() === false) {
+            // Is wanted to stop the Flight.
+            return false;
+        }
+
+        // Calling Action stage; execute the Controller's Method with the given arguments.
+        $result = call_user_func_array(array($this, $this->method()), $this->params());
+
+        // After Action stage.
+        $this->after($result);
+
+        return true;
     }
 
     /**
@@ -138,27 +160,6 @@ abstract class Controller
         Response::sendHeaders();
 
         echo $result;
-
-        return true;
-    }
-
-    /**
-     * Execute Controller Method
-     * @return bool
-     */
-    public function execute()
-    {
-        // Before Action stage.
-        if ($this->before() === false) {
-            // Is wanted to stop the Flight.
-            return false;
-        }
-
-        // Calling Action stage; execute the Controller's Method with the given arguments.
-        $result = call_user_func_array(array($this, $this->method()), $this->params());
-
-        // After Action stage.
-        $this->after($result);
 
         return true;
     }

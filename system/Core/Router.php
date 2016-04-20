@@ -85,16 +85,6 @@ class Router
     }
 
     /**
-     * Return the current detected URI.
-     *
-     * @return string
-     */
-    public static function currentUri()
-    {
-        return Url::detectUri();
-    }
-
-    /**
      * Return the available Routes.
      *
      * @return Route[]
@@ -343,7 +333,7 @@ class Router
     public function dispatch()
     {
         // Detect the current URI.
-        $uri = static::currentUri();
+        $uri = Url::detectUri();
 
         // First, we will supose that URI is associated with an Asset File.
         if (Request::isGet() && $this->dispatchFile($uri)) {

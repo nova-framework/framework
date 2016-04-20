@@ -426,7 +426,7 @@ class Manager
         if ($object instanceof Controller) {
             // We are going to call-out a Controller; special setup is required.
             // The Controller instance should be properly initialized before executing its Method.
-            $object->initialize($className, $method);
+            $object->initialize($method, array($param));
         }
 
         // Execute the Object's Method and return the result.

@@ -110,7 +110,7 @@ abstract class Controller
     {
         if (! $result instanceof View) {
             // The value returned by the Action execution is not a View instance.
-            // We just quit, without further processing, on doing something else.
+            // We just quit, without further processing; go doing something else.
             return;
         }
 

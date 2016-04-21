@@ -342,7 +342,7 @@ class View implements ArrayAccess
 
         // Add the support for the dynamic with* Methods.
         if (strpos($method, 'with') === 0) {
-            $name = Inflector::tableize(substr($method, 4));
+            $name = lcfirst(substr($method, 4));
 
             return $this->with($name, array_shift($params));
         }

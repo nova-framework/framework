@@ -89,8 +89,11 @@ abstract class Controller
      *
      * Note that the Action's returned value is passed to this Method as parameter.
      */
-    protected function after($data)
+    protected function after($result)
     {
+        if ($result instanceof View) {
+            $result->display();
+        }
     }
 
     /**

@@ -3,122 +3,244 @@
  * View - load template pages
  *
  * @author David Carr - dave@novaframework.com
- * @version 3
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
  */
 
 namespace Core;
 
+use Helpers\Inflector;
+use Helpers\Response;
+
+use ArrayAccess;
+
+
 /**
  * View class to load template and views files.
  */
-class View
+class View implements ArrayAccess
 {
-    /**
-     * @var array Array of HTTP headers
-     */
-    private static $headers = array();
-
     /**
      * @var array Array of shared data
      */
     private static $shared = array();
 
     /**
-     * Render the View file and return the result.
-     *
-     * @param  string $path  path to file from views folder
-     * @param  array  $data  array of data
-     * @param  string|false  $module module name or false
+     * @var string The path to the View file on disk.
      */
-    public static function fetch($path, $data = false, $module = false)
+    private $path = null;
+
+    /**
+     * @var array Array of local data.
+     */
+    private $data = array();
+
+    /**
+     * @var bool Flag for the View instances built as Template.
+     */
+    private $template = false;
+
+    /**
+     * Constructor
+     * @param mixed $path
+     * @param array $data
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function __construct($path, array $data = array())
     {
-        // Start the output buffering.
-        ob_start();
+        if (! is_readable($path)) {
+            throw new \UnexpectedValueException('File not found: ' .$path);
+        }
 
-        // Render the requested View.
-        self::render($path, $data, $module, false);
-
-        // Return the captured output.
-        return ob_get_clean();
+        $this->path = $path;
+        $this->data = $data;
     }
 
     /**
-     * Include template file.
+     * Make a Standard View instance
      *
-     * @param  string $path  path to file from views folder
-     * @param  array  $data  array of data
-     * @param  string|false  $module module name or false
-     * @param  bool   $withHeaders send or not the stored Headers
+     * @param string $path
+     * @param array $data
+     * @param string|null $module
+     * @return View
      */
-    public static function render($path, $data = false, $module = false, $withHeaders = true)
+    public static function make($path, array $data = array(), $module = null)
     {
-        // Pass data to check and store it.
-        $data = self::prepareData($data);
-
         // Prepare the (relative) file path according with Module parameter presence.
-        if ($module !== false) {
+        if ($module !== null) {
             $filePath = str_replace('/', DS, "Modules/$module/Views/$path.php");
         } else {
             $filePath = str_replace('/', DS, "Views/$path.php");
         }
 
-        // Prepare the rendering variables.
-        foreach ($data as $name => $value) {
-            ${$name} = $value;
-        }
-
-        // Render the View.
-        if ($withHeaders) {
-            self::sendHeaders();
-        }
-
-        require APPDIR .$filePath;
+        return new View(APPDIR .$filePath, $data);
     }
 
     /**
-     * Include template file.
+     * Make a Template View instance
      *
-     * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
+     * @param string $path
+     * @param array $data
+     * @param string $custom
+     * @return View
      */
-    public static function renderModule($path, $data = false, $error = false)
+    public static function makeTemplate($path, array $data = array(), $custom = TEMPLATE)
     {
-        if (($error !== false) && ! isset($data['error'])) {
-            // Adjust the $error parameter handling, injecting it into $data.
-            $data['error'] = $error;
-        }
-
-        if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
-            // Render the Module's View using the standard 'render' way.
-            self::render($matches[2], $data, $matches[1]);
-        }
-    }
-
-    /**
-     * Return absolute path to selected template directory.
-     *
-     * @param  string  $path  path to file from views folder
-     * @param  array   $data  array of data
-     * @param  string  $custom path to template folder
-     */
-    public static function renderTemplate($path, $data = false, $custom = TEMPLATE)
-    {
-        // Pass data to check and store it.
-        $data = self::prepareData($data);
-
-        // Prepare the (relative) file path.
+        // Prepare the file path.
         $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
 
-        // Prepare the rendering variables.
-        foreach ($data as $name => $value) {
-            ${$name} = $value;
+        // Get a View instance first, to set it as Template.
+        $object = new View(APPDIR .$filePath, $data);
+
+        $object->template = true;
+
+        return $object;
+    }
+
+    /**
+     * Return true if this View instance is built as Template.
+     *
+     * @return bool
+     */
+    public function isTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * Render the View and return the result.
+     *
+     * @return string
+     */
+    protected function fetch()
+    {
+        ob_start();
+
+        $this->render();
+
+        return ob_get_clean();
+    }
+
+    /**
+     * Render the View and output the result.
+     *
+     * @return void
+     */
+    protected function render()
+    {
+        // Prepare the rendering variables from the internal data.
+        foreach ($this->data() as $variable => $value) {
+            ${$variable} = $value;
         }
 
-        // Render the Template.
-        self::sendHeaders();
+        require $this->path;
+    }
 
-        require APPDIR .$filePath;
+    /**
+     * Render the View and display the result.
+     *
+     * @return void
+     */
+    public function display()
+    {
+        Response::sendHeaders();
+
+        $this->render();
+    }
+
+    /**
+     * Return all variables stored on local and shared data.
+     *
+     * @return array
+     */
+    public function data()
+    {
+        // Make a local copy of the shared data.
+        $shared = static::$shared;
+
+        // Merge the local and shared data using two steps.
+        foreach (array('afterBody', 'css', 'js') as $key) {
+            $value = isset($data[$key]) ? $data[$key] : '';
+
+            if (isset($shared[$key])) {
+                $value .= $shared[$key];
+            }
+
+            $data[$key] = $value;
+
+            // Remove that key from shared data.
+            unset($shared[$key]);
+        }
+
+        $data = array_merge($this->data, $shared);
+
+        // All nested Views are evaluated before the main View.
+        foreach ($data as $key => $value) {
+            if ($value instanceof View) {
+                $data[$key] = $value->fetch();
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Add a view instance to the view data.
+     *
+     * <code>
+     *     // Add a View instance to a View's data
+     *     $view = View::make('foo')->nest('footer', 'Partials/Footer');
+     *
+     *     // Equivalent functionality using the "with" method
+     *     $view = View::make('foo')->with('footer', View::make('Partials/Footer'));
+     * </code>
+     *
+     * @param  string  $key
+     * @param  string  $view
+     * @param  array   $data
+     * @param  string|null  $module
+     * @return View
+     */
+    public function nest($key, $view, array $data = array(), $module = null)
+    {
+        return $this->with($key, static::make($view, $data, $module));
+    }
+
+    /**
+     * Add a key / value pair to the view data.
+     *
+     * Bound data will be available to the view as variables.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return View
+     */
+    public function with($key, $value = null)
+    {
+        if (is_array($key)) {
+            $this->data = array_merge($this->data, $key);
+        } else {
+            $this->data[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a key / value pair to the shared view data.
+     *
+     * Shared view data is accessible to every view created by the application.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return View
+     */
+    public function shares($key, $value)
+    {
+        static::share($key, $value);
+
+        return $this;
     }
 
     /**
@@ -136,63 +258,161 @@ class View
     }
 
     /**
-     * Place hook calls into the relevant data array call
-     * @param  array $data
-     * @return array $data
+     * Implementation of the ArrayAccess offsetExists method.
      */
-    private static function prepareData($data)
+    public function offsetExists($offset)
     {
-        // Ensure that the given data is an array.
-        $data = is_array($data) ? $data : array();
+        return array_key_exists($offset, $this->data);
+    }
 
-        // Make a local copy of the shared data.
-        $shared = static::$shared;
+    /**
+     * Implementation of the ArrayAccess offsetGet method.
+     */
+    public function offsetGet($offset)
+    {
+        if (isset($this[$offset])) return $this->data[$offset];
+    }
 
-        // Merge the given and shared data using two steps.
-        foreach (array('afterBody', 'css', 'js') as $key) {
-            $value = isset($data[$key]) ? $data[$key] : '';
+    /**
+      * Implementation of the ArrayAccess offsetSet method.
+      */
+    public function offsetSet($offset, $value)
+    {
+        $this->data[$offset] = $value;
+    }
 
-            if (isset($shared[$key])) {
-                $value .= $shared[$key];
-            }
+    /**
+     * Implementation of the ArrayAccess offsetUnset method.
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->data[$offset]);
+    }
 
-            unset($shared[$key]);
+    /**
+     * Magic Method for handling dynamic data access.
+     */
+    public function __get($key)
+    {
+        return $this->data[$key];
+    }
 
-            $data[$key] = $value;
+    /**
+     * Magic Method for handling the dynamic setting of data.
+     */
+    public function __set($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+
+    /**
+     * Magic Method for checking dynamically-set data.
+     */
+    public function __isset($key)
+    {
+        return isset($this->data[$key]);
+    }
+
+    /**
+     * Get the evaluated string content of the View.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->fetch();
+    }
+
+     /**
+     * Magic Method for handling dynamic functions.
+     *
+     * This method handles calls to dynamic with helpers.
+     */
+    public function __call($method, $params)
+    {
+        // The 'fetch' and 'render' Methods are protected; expose them.
+        switch($method) {
+            case 'fetch':
+            case 'render':
+                return call_user_func_array($method, $params);
+
+            default:
+                break;
         }
 
-        return array_merge($data, $shared);
-    }
+        // Add the support for the dynamic with* Methods.
+        if (strpos($method, 'with') === 0) {
+            $name = Inflector::tableize(substr($method, 4));
 
-    /**
-     * Add HTTP header to headers array.
-     *
-     * @param  string  $header HTTP header text
-     */
-    public function addHeader($header)
-    {
-        self::$headers[] = $header;
-    }
-
-    /**
-     * Add an array with headers to the view.
-     *
-     * @param array $headers
-     */
-    public function addHeaders(array $headers = array())
-    {
-        self::$headers = array_merge(self::$headers, $headers);
-    }
-
-    /**
-     * Send headers
-     */
-    public static function sendHeaders()
-    {
-        if (! headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
+            return $this->with($name, array_shift($params));
         }
+    }
+
+    /**
+     * Magic Method for handling dynamic functions.
+     *
+     * This method handles calls to dynamic with helpers.
+     */
+    public static function __callStatic($method, $params)
+    {
+        switch($method) {
+            case 'addHeader':
+            case 'addHeaders':
+            case 'sendHeaders':
+                return call_user_func_array(array(Response::class, $method), $params);
+
+            case 'fetch':
+                return call_user_func_array(array(static::class, 'make'), $params)->fetch();
+
+            default:
+                break;
+        }
+
+        // Flag for sending, or not, the Headers, default being true.
+        $withHeaders = true;
+
+        // The called Method into View instance, default being 'make'.
+        $classMethod = 'make';
+
+        // Prepare the required information.
+        if($method == 'render') {
+            if(count($params) == 4) {
+                // Respect the current API, where the Headers sending can be customized.
+                $withHeaders = array_pop($params);
+            }
+        } else if($method == 'renderModule') {
+            $path = ! empty($params) ? array_shift($params) : 'undefined';
+
+            if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
+                $module = $matches[1];
+                $path   = $matches[2];
+            } else {
+                $module = null;
+            }
+
+            $data = ! empty($params) ? array_shift($params) : array();
+
+            // Rebuild $params from the collected information.
+            $params = array($path, $data);
+
+            if($module !== null) {
+                array_push($params, $module);
+            }
+        } else if($method == 'renderTemplate') {
+            $classMethod = 'makeTemplate';
+        } else {
+            // No valid Legacy Call found; go out.
+            return;
+        }
+
+        // Create a View instance, using the given classMethod and parameters.
+        $view = call_user_func_array(array(static::class, $classMethod), $params);
+
+        if($withHeaders) {
+            Response::sendHeaders();
+        }
+
+        // Finally, render the View.
+        $view->render();
     }
 }

@@ -91,7 +91,16 @@ abstract class Controller
      */
     protected function after($result)
     {
-        if ($result instanceof View) {
+        if (! $result instanceof View) {
+            // The value returned by the Action execution is not a View instance.
+            // We just quit, without further processing, on doing something else.
+            return;
+        }
+
+        // Apply the default Template based rendering of the View instance.
+        if(! $result->isTemplate()) {
+            View::makeTemplate('default')->withContent($result)->display();
+        } else {
             $result->display();
         }
     }

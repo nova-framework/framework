@@ -21,6 +21,20 @@ abstract class Controller
     private $params = array();
 
     /**
+     * The current used Template.
+     *
+     * @var string
+     */
+    protected $template = null;
+
+    /**
+     * The current used Layout.
+     *
+     * @var string
+     */
+    protected $layout = 'default';
+
+    /**
      * Language variable to use the languages class.
      *
      * @var string
@@ -32,6 +46,9 @@ abstract class Controller
      */
     public function __construct()
     {
+        // Adjust to default Template if no one is defined.
+        $this->template = ($this->template !== null) ?: TEMPLATE;
+
         /** Initialise the Language object */
         $this->language = new Language();
     }
@@ -56,7 +73,7 @@ abstract class Controller
         $result = call_user_func_array(array($this, $method), $params);
 
         // After Action execution stage.
-        if(($result !== null) && ! is_bool($result)) {
+        if (($result !== null) && ! is_bool($result)) {
             $this->after($result);
         }
 
@@ -98,8 +115,10 @@ abstract class Controller
         }
 
         // Apply the default Template based rendering of the View instance.
-        if(! $result->isTemplate()) {
-            View::makeTemplate('default')->withContent($result)->display();
+        if (! $result->isTemplate()) {
+            View::makeTemplate($this->layout, array(), $this->template)
+                ->withContent($result)
+                ->display();
         } else {
             $result->display();
         }
@@ -112,6 +131,22 @@ abstract class Controller
     protected function trans($str, $code = LANGUAGE_CODE)
     {
         return $this->language->get($str, $code);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function template()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function layout()
+    {
+        return $this->layout;
     }
 
     /**

@@ -44,11 +44,20 @@ class Welcome extends Controller
      */
     public function subPage()
     {
+        /*
+        // Standard Rendering Style.
         $data['title'] = $this->language->get('subpageText');
         $data['welcomeMessage'] = $this->language->get('subpageMessage');
+
 
         View::renderTemplate('header', $data);
         View::render('Welcome/SubPage', $data);
         View::renderTemplate('footer', $data);
+        */
+        
+        // New Rendering Style.
+        $data['welcomeMessage'] = $this->trans('subpageMessage');
+
+        return View::make('Welcome/SubPage', $data)->shares('title', $this->trans('subpageText'));
     }
 }

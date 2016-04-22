@@ -375,12 +375,12 @@ class View implements ArrayAccess
         $classMethod = 'make';
 
         // Prepare the required information.
-        if($method == 'render') {
-            if(count($params) == 4) {
+        if ($method == 'render') {
+            if (count($params) == 4) {
                 // Respect the current API, where the Headers sending can be customized.
                 $withHeaders = array_pop($params);
             }
-        } else if($method == 'renderModule') {
+        } else if ($method == 'renderModule') {
             $path = ! empty($params) ? array_shift($params) : 'undefined';
 
             if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
@@ -395,10 +395,10 @@ class View implements ArrayAccess
             // Rebuild $params from the collected information.
             $params = array($path, $data);
 
-            if($module !== null) {
+            if ($module !== null) {
                 array_push($params, $module);
             }
-        } else if($method == 'renderTemplate') {
+        } else if ($method == 'renderTemplate') {
             $classMethod = 'makeTemplate';
         } else {
             // No valid Legacy Call found; go out.
@@ -408,7 +408,7 @@ class View implements ArrayAccess
         // Create a View instance, using the given classMethod and parameters.
         $view = call_user_func_array(array(static::class, $classMethod), $params);
 
-        if($withHeaders) {
+        if ($withHeaders) {
             Response::sendHeaders();
         }
 

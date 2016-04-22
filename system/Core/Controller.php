@@ -106,29 +106,33 @@ abstract class Controller
      *
      * Note that the Action's returned value is passed to this Method as parameter.
      */
-    protected function after($result)
+    protected function after($data)
     {
-        if (is_string($result)) {
-            // The returned result is a String; send the Response Headers and output it.
+        if (is_string($data)) {
+            // The data is a String; send the Response Headers and output it.
             Response::sendHeaders();
 
-            echo $result;
-        } else if (is_array($result)) {
-            // The returned result is an Array; prepare and send a JSON response.
+            echo $data;
+        } else if (is_array($data)) {
+            // The data is an Array; prepare and send a JSON response.
             header('Content-Type: application/json', true);
 
-            echo json_encode($result);
-        } else if (! $result instanceof View) {
-            // No further processing required.
+            echo json_encode($data);
+        } else if (! $data instanceof View) {
+            // The data is not a View instance; no further processing required.
             return;
         }
 
-        // Apply the default Template based rendering of the View instance.
-        if (! $result->isTemplate() && ($this->layout !== false)) {
+        //
+        // Execute the default Template-based rendering of the given View instance.
+
+        if (! $data->isTemplate() && ($this->layout !== false)) {
+            // The View instance is NOT a Template, but have a Layout is specified.
             View::makeTemplate($this->layout, array(), $this->template)
-                ->withContent($result)
+                ->withContent($data)
                 ->display();
         } else {
+            // The given View instance is a Template, or no Layout is specified.
             $result->display();
         }
     }

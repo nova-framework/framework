@@ -44,8 +44,8 @@ class Welcome extends Controller
      */
     public function subPage()
     {
-        /*
         // The Default Rendering Style.
+        /*
         $data['title'] = $this->language->get('subpageText');
         $data['welcomeMessage'] = $this->language->get('subpageMessage');
 

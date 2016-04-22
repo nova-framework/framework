@@ -387,11 +387,16 @@ class View implements ArrayAccess
 
             // Extract the path and module parameters from the composite path.
             if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
-                $module = $matches[1];
-                $path   = $matches[2];
+                $origPath = $matches[0];
+                $module   = $matches[1];
+                $path     = $matches[2];
             } else {
-                $module = 'undefined';
+                $origPath = $path;
+                $module   = 'undefined';
             }
+
+            // Display the update suggestion and go out?
+            //echo "Please replace <b>View::renderModule('$origPath', \$data)</b> with <b>View::render('$path', \$data, '$module')</b>";
 
             // Get the data from parameters, if exits.
             $data = ! empty($params) ? array_shift($params) : array();

@@ -337,7 +337,7 @@ class View implements ArrayAccess
         switch ($method) {
             case 'fetch':
             case 'render':
-                return call_user_func_array($method, $params);
+                return call_user_func_array(array($this, $method), $params);
 
             default:
                 break;
@@ -367,13 +367,6 @@ class View implements ArrayAccess
 
             default:
                 break;
-        }
-
-        // The compat 'fetch' Method need special processing because it return a value.
-        if ($method == 'fetch') {
-            $view = call_user_func_array(array(static::class, 'make'), $params);
-
-            return $view->fetch();
         }
 
         // Flag for sending, or not, the Headers, default being true.
@@ -407,13 +400,17 @@ class View implements ArrayAccess
             $params = array($path, $data, $module);
         } else if ($method == 'renderTemplate') {
             $classMethod = 'makeTemplate';
-        } else {
+        } else if ($method != 'fetch') {
             // No valid Compat Method found; go out.
             return;
         }
 
         // Create a View instance, using the given classMethod and parameters.
         $view = call_user_func_array(array(static::class, $classMethod), $params);
+
+        if ($method == 'fetch') {
+            return $view->fetch();
+        }
 
         if ($withHeaders) {
             Response::sendHeaders();

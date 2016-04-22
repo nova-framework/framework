@@ -386,25 +386,22 @@ class View implements ArrayAccess
                 $withHeaders = array_pop($params);
             }
         } else if ($method == 'renderModule') {
-            $module = null;
-
-            // Get the path from parameters defaulting to a fake one.
+            // Get the path from parameters, defaulting to a fake one.
             $path = ! empty($params) ? array_shift($params) : 'undefined';
 
+            // Extract the path and module parameters from the composite path.
             if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
                 $module = $matches[1];
                 $path   = $matches[2];
+            } else {
+                $module = 'undefined';
             }
 
             // Get the data from parameters, if exits.
             $data = ! empty($params) ? array_shift($params) : array();
 
             // Rebuild $params from the collected information.
-            $params = array($path, $data);
-
-            if ($module !== null) {
-                array_push($params, $module);
-            }
+            $params = array($path, $data, $module);
         } else if ($method == 'renderTemplate') {
             $classMethod = 'makeTemplate';
         } else {

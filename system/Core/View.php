@@ -156,6 +156,13 @@ class View implements ArrayAccess
      */
     public function data()
     {
+        // All nested Views are evaluated before the main View.
+        foreach ($data as $key => $value) {
+            if ($value instanceof View) {
+                $data[$key] = $value->fetch();
+            }
+        }
+
         // Make a local copy of the shared data.
         $shared = static::$shared;
 
@@ -173,16 +180,7 @@ class View implements ArrayAccess
             unset($shared[$key]);
         }
 
-        $data = array_merge($this->data, $shared);
-
-        // All nested Views are evaluated before the main View.
-        foreach ($data as $key => $value) {
-            if ($value instanceof View) {
-                $data[$key] = $value->fetch();
-            }
-        }
-
-        return $data;
+        return array_merge($this->data, $shared);
     }
 
     /**

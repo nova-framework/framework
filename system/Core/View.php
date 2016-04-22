@@ -161,15 +161,15 @@ class View implements ArrayAccess
     {
         $data =& $this->data;
 
+        // Make a local copy of the shared data.
+        $shared = static::$shared;
+
         // All nested Views are evaluated before the main View.
         foreach ($data as $key => $value) {
             if ($value instanceof View) {
                 $data[$key] = $value->fetch();
             }
         }
-
-        // Make a local copy of the shared data.
-        $shared = static::$shared;
 
         // Merge the local and shared data using two steps.
         foreach (array('afterBody', 'css', 'js') as $key) {

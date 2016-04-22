@@ -331,7 +331,7 @@ class View implements ArrayAccess
     public function __call($method, $params)
     {
         // The 'fetch' and 'render' Methods are protected; expose them.
-        switch($method) {
+        switch ($method) {
             case 'fetch':
             case 'render':
                 return call_user_func_array($method, $params);
@@ -355,17 +355,22 @@ class View implements ArrayAccess
      */
     public static function __callStatic($method, $params)
     {
-        switch($method) {
+        // Process the compat Methods associatated to Headers management.
+        switch ($method) {
             case 'addHeader':
             case 'addHeaders':
             case 'sendHeaders':
                 return call_user_func_array(array(Response::class, $method), $params);
 
-            case 'fetch':
-                return call_user_func_array(array(static::class, 'make'), $params)->fetch();
-
             default:
                 break;
+        }
+
+        // The compat 'fetch' Method need special processing because it return a value.
+        if ($method == 'fetch') {
+            $view = call_user_func_array(array(static::class, 'make'), $params);
+
+            return $view->fetch();
         }
 
         // Flag for sending, or not, the Headers, default being true.
@@ -401,7 +406,7 @@ class View implements ArrayAccess
         } else if ($method == 'renderTemplate') {
             $classMethod = 'makeTemplate';
         } else {
-            // No valid Legacy Call found; go out.
+            // No valid Compat Method found; go out.
             return;
         }
 

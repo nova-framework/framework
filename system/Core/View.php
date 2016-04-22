@@ -401,8 +401,7 @@ class View implements ArrayAccess
         } else if ($method == 'renderTemplate') {
             $classMethod = 'makeTemplate';
         } else if ($method != 'fetch') {
-            // No valid Compat Method found; go out.
-            return;
+            return null;
         }
 
         // Create a View instance, using the given classMethod and parameters.
@@ -417,6 +416,6 @@ class View implements ArrayAccess
         }
 
         // Finally, render the View.
-        $view->render();
+        return $view->render();
     }
 }

@@ -13,7 +13,7 @@ return [
 	// Subpage method
 	'subpageText' => 'Subpágina',
 	'subpageMessage' => '
-		Hola, bienvenido desde el controlador welcome y el método subpágina! <br/>
+		Hola, bienvenido desde el controlador welcome y el método subpage! <br/>
 		Este contenido puede ser cambiado en <code>/app/Views/Welcome/SubPage.php</code>
 	',
 

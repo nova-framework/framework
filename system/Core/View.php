@@ -382,7 +382,7 @@ class View implements ArrayAccess
         // Prepare the required information.
         if ($method == 'render') {
             if (count($params) == 4) {
-                // Respect the current API, where the Headers sending can be customized.
+                // There is a withHeaders parameter.
                 $withHeaders = array_pop($params);
             }
         } else if ($method == 'renderModule') {

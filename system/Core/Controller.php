@@ -108,14 +108,23 @@ abstract class Controller
      */
     protected function after($result)
     {
-        if (! $result instanceof View) {
-            // The value returned by the Action execution is not a View instance.
-            // We just quit, without further processing; go doing something else.
+        if (is_string($result)) {
+            // The returned result is a String; send the Response Headers and output it.
+            Response::sendHeaders();
+
+            echo $result;
+        } else if (is_array($result)) {
+            // The returned result is an Array; prepare and send a JSON response.
+            header('Content-Type: application/json', true);
+
+            echo json_encode($result);
+        } else if (! $result instanceof View) {
+            // No further processing required.
             return;
         }
 
         // Apply the default Template based rendering of the View instance.
-        if (! $result->isTemplate()) {
+        if (! $result->isTemplate() && ($this->layout !== false)) {
             View::makeTemplate($this->layout, array(), $this->template)
                 ->withContent($result)
                 ->display();

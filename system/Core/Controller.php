@@ -10,6 +10,7 @@ namespace Core;
 
 use Core\Language;
 use Core\View;
+use Core\Template;
 use Helpers\Hooks;
 
 /**
@@ -126,9 +127,9 @@ abstract class Controller
         //
         // Execute the default Template-based rendering of the given View instance.
 
-        if (! $data->isTemplate() && ($this->layout !== false)) {
-            // The View instance is NOT a Template, but have a Layout is specified.
-            View::makeTemplate($this->layout, array(), $this->template)
+        if ((! $data instanceof Template) && ($this->layout !== false)) {
+            // The View instance is NOT a Template, but we have a Layout specified.
+            Template::make($this->layout, array(), $this->template)
                 ->withContent($data)
                 ->display();
         } else {

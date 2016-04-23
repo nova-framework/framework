@@ -362,7 +362,7 @@ class View implements ArrayAccess
             // Render the object and return the captured output.
             return $object->fetch();
         } else if ($withHeaders) {
-            // Render the object, with Headers sending before.
+            // Render the object with sending the Headers first.
             return $object->display();
         }
 

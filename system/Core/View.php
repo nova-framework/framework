@@ -11,6 +11,7 @@ namespace Core;
 
 use Helpers\Inflector;
 use Helpers\Response;
+use Core\Template;
 
 use ArrayAccess;
 
@@ -23,22 +24,17 @@ class View implements ArrayAccess
     /**
      * @var array Array of shared data
      */
-    private static $shared = array();
+    protected static $shared = array();
 
     /**
      * @var string The path to the View file on disk.
      */
-    private $path = null;
+    protected $path = null;
 
     /**
      * @var array Array of local data.
      */
-    private $data = array();
-
-    /**
-     * @var bool Flag for the View instances built as Template.
-     */
-    private $template = false;
+    protected $data = array();
 
     /**
      * Constructor
@@ -58,7 +54,7 @@ class View implements ArrayAccess
     }
 
     /**
-     * Make a Standard View instance
+     * Create a View instance
      *
      * @param string $path
      * @param array $data
@@ -75,37 +71,6 @@ class View implements ArrayAccess
         }
 
         return new View(APPDIR .$filePath, $data);
-    }
-
-    /**
-     * Make a Template View instance
-     *
-     * @param string $path
-     * @param array $data
-     * @param string $custom
-     * @return View
-     */
-    public static function makeTemplate($path, array $data = array(), $custom = TEMPLATE)
-    {
-        // Prepare the file path.
-        $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
-
-        // Get a View instance first, to set it as Template.
-        $object = new View(APPDIR .$filePath, $data);
-
-        $object->template = true;
-
-        return $object;
-    }
-
-    /**
-     * Return true if this View instance is built as Template.
-     *
-     * @return bool
-     */
-    public function isTemplate()
-    {
-        return $this->template;
     }
 
     /**
@@ -358,12 +323,15 @@ class View implements ArrayAccess
      */
     public static function __callStatic($method, $params)
     {
-        // Process the compat Methods associatated to Headers management.
+        // Process the compat Methods associated to Headers management.
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
             case 'sendHeaders':
                 return call_user_func_array(array(Response::class, $method), $params);
+
+            case 'makeTemplate':
+                return call_user_func_array(array(Template::class, 'make'), $params);
 
             default:
                 break;
@@ -372,8 +340,8 @@ class View implements ArrayAccess
         // Flag for sending, or not, the Headers, default being true.
         $withHeaders = true;
 
-        // The called Method into View instance, default being 'make'.
-        $classMethod = 'make';
+        // The called Class name for getting an instance.
+        $className = static::class;
 
         // Prepare the required information.
         if ($method == 'render') {
@@ -381,46 +349,44 @@ class View implements ArrayAccess
                 // There is a withHeaders parameter.
                 $withHeaders = array_pop($params);
             }
-        } else if ($method == 'renderModule') {
-            // Get the path from parameters, defaulting to a fake one.
-            $path = ! empty($params) ? array_shift($params) : 'undefined';
-
-            // Extract the path and module parameters from the composite path.
-            if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
-                $origPath = $matches[0];
-                $module   = $matches[1];
-                $path     = $matches[2];
-            } else {
-                $origPath = $path;
-                $module   = 'undefined';
-            }
-
-            // Display the update suggestion and go out?
-            //echo "Please replace <b>View::renderModule('$origPath', \$data)</b> with <b>View::render('$path', \$data, '$module')</b>";
-
-            // Get the data from parameters, if exits.
-            $data = ! empty($params) ? array_shift($params) : array();
-
-            // Rebuild $params from the collected information.
-            $params = array($path, $data, $module);
         } else if ($method == 'renderTemplate') {
-            $classMethod = 'makeTemplate';
+            $className = Template::class;
         } else if ($method != 'fetch') {
             return null;
         }
 
         // Create a View instance, using the given classMethod and parameters.
-        $view = call_user_func_array(array(static::class, $classMethod), $params);
+        $object = call_user_func_array(array($className, 'make'), $params);
 
         if ($method == 'fetch') {
-            return $view->fetch();
+            return $object->fetch();
+        } else if ($withHeaders) {
+            return $object->display();
         }
 
-        if ($withHeaders) {
-            Response::sendHeaders();
+        // Render the View object.
+        return $object->render();
+    }
+
+    /**
+     * Compat Layer - Render a Module View file.
+     *
+     * @param  string  $path  path to file from Modules folder
+     * @param  array $data  array of data
+     * @param  array $error array of errors
+     */
+    public static function renderModule($path, $data = false, $error = false)
+    {
+        if (($error !== false) && ! isset($data['error'])) {
+            // Adjust the $error parameter handling, injecting it into $data.
+            $data['error'] = $error;
         }
 
-        // Finally, render the View.
-        return $view->render();
+        if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
+            // Render the Module's View using the standard way.
+            $object = call_user_func(array(static::class, 'make'), $matches[2], $data, $matches[1]);
+
+            $object->display();
+        }
     }
 }

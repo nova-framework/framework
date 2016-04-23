@@ -330,9 +330,6 @@ class View implements ArrayAccess
             case 'sendHeaders':
                 return call_user_func_array(array(Response::class, $method), $params);
 
-            case 'makeTemplate':
-                return call_user_func_array(array(Template::class, 'make'), $params);
-
             default:
                 break;
         }
@@ -379,6 +376,8 @@ class View implements ArrayAccess
      */
     public static function renderModule($path, $data = false, $error = false)
     {
+        echo '<p>Please use <b>View::render()</b> instead of <b>View::renderModule()</b></p>';
+
         if (($error !== false) && ! isset($data['error'])) {
             // Adjust the $error parameter handling, injecting it into $data.
             $data['error'] = $error;

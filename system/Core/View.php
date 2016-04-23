@@ -359,8 +359,10 @@ class View implements ArrayAccess
         $object = call_user_func_array(array($className, 'make'), $params);
 
         if ($method == 'fetch') {
+            // Render the object and return the captured output.
             return $object->fetch();
         } else if ($withHeaders) {
+            // Render the object, with Headers sending before.
             return $object->display();
         }
 

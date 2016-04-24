@@ -172,7 +172,7 @@ class View implements ArrayAccess
      */
     public function nest($key, $view, array $data = array(), $module = null)
     {
-        return $this->with($key, static::make($view, $data, $module));
+        return $this->with($key, View::make($view, $data, $module));
     }
 
     /**

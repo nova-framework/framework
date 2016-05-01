@@ -10,6 +10,7 @@ namespace Core;
 
 use Core\Language;
 use Core\View;
+use Core\Template;
 use Helpers\Hooks;
 
 /**
@@ -19,6 +20,20 @@ abstract class Controller
 {
     private $method = null;
     private $params = array();
+
+    /**
+     * The current used Template.
+     *
+     * @var string
+     */
+    protected $template = null;
+
+    /**
+     * The current used Layout.
+     *
+     * @var string
+     */
+    protected $layout = 'default';
 
     /**
      * Language variable to use the languages class.
@@ -32,6 +47,9 @@ abstract class Controller
      */
     public function __construct()
     {
+        // Adjust to default Template if no one is defined.
+        $this->template = ($this->template !== null) ?: TEMPLATE;
+
         /** Initialise the Language object */
         $this->language = new Language();
     }
@@ -56,7 +74,7 @@ abstract class Controller
         $result = call_user_func_array(array($this, $method), $params);
 
         // After Action execution stage.
-        if(($result !== null) && ! is_bool($result)) {
+        if (($result !== null) && ! is_bool($result)) {
             $this->after($result);
         }
 
@@ -91,6 +109,33 @@ abstract class Controller
      */
     protected function after($data)
     {
+        if (is_string($data)) {
+            // The data is a String; send the Response Headers and output it.
+            Response::sendHeaders();
+
+            echo $data;
+        } else if (is_array($data)) {
+            // The data is an Array; prepare and send a JSON response.
+            header('Content-Type: application/json', true);
+
+            echo json_encode($data);
+        } else if (! $data instanceof View) {
+            // The data is not a View instance; no further processing required.
+            return;
+        }
+
+        //
+        // Execute the default Template-based rendering of the given View instance.
+
+        if ((! $data instanceof Template) && ($this->layout !== false)) {
+            // The View instance is NOT a Template, but we have a Layout specified.
+            Template::make($this->layout, array(), $this->template)
+                ->withContent($data)
+                ->display();
+        } else {
+            // The given View instance is a Template, or no Layout is specified.
+            $data->display();
+        }
     }
 
     /**
@@ -100,6 +145,22 @@ abstract class Controller
     protected function trans($str, $code = LANGUAGE_CODE)
     {
         return $this->language->get($str, $code);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function template()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function layout()
+    {
+        return $this->layout;
     }
 
     /**

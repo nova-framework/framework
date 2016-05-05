@@ -368,7 +368,7 @@ class View implements ArrayAccess
     }
 
     /**
-     * Compat Layer - Render a Module View file.
+     * Compat Layer - Render a Module View file (now throw a Exception).
      *
      * @param  string  $path  path to file from Modules folder
      * @param  array $data  array of data
@@ -376,18 +376,6 @@ class View implements ArrayAccess
      */
     public static function renderModule($path, $data = false, $error = false)
     {
-        echo '<p>Please use <b>View::render()</b> instead of <b>View::renderModule()</b></p>';
-
-        if (($error !== false) && ! isset($data['error'])) {
-            // Adjust the $error parameter handling, injecting it into $data.
-            $data['error'] = $error;
-        }
-
-        if (preg_match('#^(.+)/Views/(.*)$#i', $path, $matches)) {
-            // Render the Module's View using the standard way.
-            $object = call_user_func(array(static::class, 'make'), $matches[2], $data, $matches[1]);
-
-            $object->display();
-        }
+        throw new \Exception('Please use "View::render()" instead of "View::renderModule()"');
     }
 }

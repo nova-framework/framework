@@ -50,18 +50,4 @@ class Template extends View
     {
         // No Compatibility Layer exists there; nothing to do.
     }
-
-    /**
-     * Compat Layer - Render a Module View file.
-     *
-     * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
-     *
-     * @throws \Exception
-     */
-    public static function renderModule($path, $data = false, $error = false)
-    {
-        throw new \Exception('renderModule is not available on ' .static::class);
-    }
 }

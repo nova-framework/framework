@@ -370,7 +370,7 @@ class View implements ArrayAccess
     }
 
     /**
-     * Compat Layer - Render a Module View file (now throw a Exception).
+     * Compat Layer - Render a Module View file (now throwing an Exception instead).
      *
      * @param  string  $path  path to file from Modules folder
      * @param  array $data  array of data

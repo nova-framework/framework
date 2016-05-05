@@ -336,14 +336,14 @@ class View implements ArrayAccess
                 break;
         }
 
+        // The called Class; for getting a View instance.
+        $className = static::class;
+
         // Flag for fetching the View rendering output.
         $shouldFetch = false;
 
         // Flag for sending, or not, the HTTP Headers.
         $withHeaders = true;
-
-        // The called Class name for getting an instance.
-        $className = static::class;
 
         // Prepare the required information.
         if ($method == 'fetch') {
@@ -360,7 +360,7 @@ class View implements ArrayAccess
             return null;
         }
 
-        // Create a View instance, using the given classMethod and parameters.
+        // Create a View instance, using the current Class and the given parameters.
         $object = call_user_func_array(array($className, 'make'), $params);
 
         if ($shouldFetch) {

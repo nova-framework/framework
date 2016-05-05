@@ -99,13 +99,20 @@ class Router
     {
         $method = strtoupper($method);
 
-        if (($method == 'ANY') || in_array($method, static::$methods)) {
-            $route    = array_shift($params);
-            $callback = array_shift($params);
-
-            // Register the route.
-            static::register($method, $route, $callback);
+        if (($method != 'ANY') && ! in_array($method, static::$methods)) {
+            throw new \Exception('Invalid Route method');
+        } else if (empty($params)) {
+            throw new \Exception('Invalid Route parameters');
         }
+
+        // Get the Route.
+        $route = array_shift($params);
+
+        // Get the Callback, if any.
+        $callback = ! empty($params) ? array_shift($params) : null;
+
+        // Register the Route.
+        static::register($method, $route, $callback);
     }
 
     /**

@@ -60,7 +60,7 @@ class Router
      *
      * @codeCoverageIgnore
      */
-    public function __construct()
+    protected function __construct()
     {
     }
 

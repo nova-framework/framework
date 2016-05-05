@@ -268,7 +268,7 @@ class Router
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
-    public static function register($method, $route, $callback = null)
+    protected static function register($method, $route, $callback = null)
     {
         // Get the Router instance.
         $router =& self::getInstance();

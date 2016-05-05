@@ -48,6 +48,7 @@ class Template extends View
      */
     public static function __callStatic($method, $params)
     {
-        // No Compatibility Layer exists there; nothing to do.
+        // No Compatibility Layer there; nothing to do.
+        return null;
     }
 }

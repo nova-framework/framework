@@ -238,7 +238,7 @@ class View implements ArrayAccess
      */
     public function offsetGet($offset)
     {
-        if (isset($this[$offset])) return $this->data[$offset];
+        return isset($this->data[$offset]) ? $this->data[$offset] : null;
     }
 
     /**

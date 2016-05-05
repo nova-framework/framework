@@ -100,9 +100,9 @@ class Router
         $method = strtoupper($method);
 
         if (($method != 'ANY') && ! in_array($method, static::$methods)) {
-            throw new \Exception('Invalid Route method');
+            throw new \Exception('Invalid method');
         } else if (empty($params)) {
-            throw new \Exception('Invalid Route parameters');
+            throw new \Exception('Invalid parameters');
         }
 
         // Get the Route.

@@ -336,33 +336,41 @@ class View implements ArrayAccess
                 break;
         }
 
-        // Flag for sending, or not, the Headers, default being true.
+        // Flag for fetching the View rendering output.
+        $shouldFetch = false;
+
+        // Flag for sending, or not, the HTTP Headers.
         $withHeaders = true;
 
         // The called Class name for getting an instance.
         $className = static::class;
 
         // Prepare the required information.
-        if ($method == 'render') {
+        if ($method == 'fetch') {
+            $shouldFetch = true;
+        } else if ($method == 'render') {
             if (count($params) == 4) {
                 // There is a withHeaders parameter.
                 $withHeaders = array_pop($params);
             }
         } else if ($method == 'renderTemplate') {
             $className = Template::class;
-        } else if ($method != 'fetch') {
+        } else {
+            // No valid Compat Method found.
             return null;
         }
 
         // Create a View instance, using the given classMethod and parameters.
         $object = call_user_func_array(array($className, 'make'), $params);
 
-        if ($method == 'fetch') {
+        if ($shouldFetch) {
             // Render the object and return the captured output.
             return $object->fetch();
-        } else if ($withHeaders) {
-            // Render the object with sending the Headers first.
-            return $object->display();
+        }
+
+        if ($withHeaders) {
+            // Send the Headers first.
+            Response::sendHeaders();
         }
 
         // Render the View object.

@@ -356,7 +356,7 @@ class View implements ArrayAccess
         } else if ($method == 'renderTemplate') {
             $className = Template::class;
         } else {
-            // No valid Compat Method found.
+            // No valid Compat Method found; go out.
             return null;
         }
 

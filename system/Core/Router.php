@@ -62,20 +62,17 @@ class Router
      */
     public function __construct()
     {
-        self::$instance =& $this;
     }
 
     public static function &getInstance()
     {
-        $appRouter = APPROUTER;
+        if (self::$instance === null) {
+            $appRouter = APPROUTER;
 
-        if (! self::$instance) {
-            $router = new $appRouter();
-        } else {
-            $router =& self::$instance;
+            self::$instance = new $appRouter();
         }
 
-        return $router;
+        return self::$instance;
     }
 
     /**
@@ -448,6 +445,10 @@ class Router
         return false;
     }
 
+    /**
+     * Dispatch/Serve a file
+     * @return bool
+     */
     protected function dispatchFile($uri)
     {
         // For properly Assets serving, the file URI should be as following:

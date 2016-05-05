@@ -314,6 +314,8 @@ class View implements ArrayAccess
 
             return $this->with($name, array_shift($params));
         }
+
+        return null;
     }
 
     /**

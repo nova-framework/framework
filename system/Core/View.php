@@ -325,13 +325,13 @@ class View implements ArrayAccess
      */
     public static function __callStatic($method, $params)
     {
-        // Throw an \Exception when is requested the Compat Method View::renderModule()
-        if ($method == 'renderModule') {
-            throw new \Exception('Please use "View::render()" instead of "View::renderModule()"');
-        }
-
-        // Process the compat Methods associated to Headers management.
+        // Throw an \Exception for the deprecated View::renderModule().
+        // Process the compat Methods associated to Headers management
         switch ($method) {
+            case 'renderModule':
+                throw new \Exception('Please use "View::render()" instead of "View::renderModule()"');
+
+                break;
             case 'addHeader':
             case 'addHeaders':
             case 'sendHeaders':

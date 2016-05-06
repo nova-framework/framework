@@ -59,7 +59,7 @@ class View extends BaseView
     public static function __callStatic($method, $params)
     {
         // Throw an \Exception for the deprecated View::renderModule().
-        // Process the compat Methods associated to Headers management
+        // Process the compat Methods associated to Headers management.
         switch ($method) {
             case 'renderModule':
                 throw new \Exception('Please use "View::render()" instead of "View::renderModule()"');

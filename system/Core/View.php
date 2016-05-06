@@ -325,6 +325,11 @@ class View implements ArrayAccess
      */
     public static function __callStatic($method, $params)
     {
+        // Throw an \Exception when is requested the Compat Method View::renderModule()
+        if ($method == 'renderModule') {
+            throw new \Exception('Please use "View::render()" instead of "View::renderModule()"');
+        }
+
         // Process the compat Methods associated to Headers management.
         switch ($method) {
             case 'addHeader':
@@ -342,7 +347,7 @@ class View implements ArrayAccess
         // Flag for fetching the View rendering output.
         $shouldFetch = false;
 
-        // Flag for sending, or not, the HTTP Headers.
+        // Flag for sending, or not, the HTTP Headers before rendering.
         $withHeaders = true;
 
         // Prepare the required information.
@@ -375,17 +380,5 @@ class View implements ArrayAccess
 
         // Render the View object.
         return $object->render();
-    }
-
-    /**
-     * Compat Layer - Render a Module View file (now throwing an Exception instead).
-     *
-     * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
-     */
-    public static function renderModule($path, $data = false, $error = false)
-    {
-        throw new \Exception('Please use "View::render()" instead of "View::renderModule()"');
     }
 }

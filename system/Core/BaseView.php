@@ -11,7 +11,6 @@ namespace Core;
 
 use Helpers\Inflector;
 use Helpers\Response;
-use Core\Template;
 use Core\View;
 
 use ArrayAccess;

@@ -26,7 +26,8 @@
 <a href='<?=DIR;?>language/nl'>Dutch</a> |
 <a href='<?=DIR;?>language/pl'>Polish</a> |
 <a href='<?=DIR;?>language/ro'>Romanian</a> |
-<a href='<?=DIR;?>language/ru'>Russian</a>
+<a href='<?=DIR;?>language/ru'>Russian</a> |
+<a href='<?=DIR;?>language/fa'>Persian</a>
 </p>
 <div class="clearfix"></div>
 

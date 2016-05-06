@@ -8,10 +8,10 @@
 
 namespace Core;
 
-use Core\View;
+use Core\BaseView;
 
 
-class Template extends View
+class Template extends BaseView
 {
     /**
      * Constructor
@@ -20,7 +20,7 @@ class Template extends View
      *
      * @throws \UnexpectedValueException
      */
-    public function __construct($path, array $data = array())
+    protected function __construct($path, array $data = array())
     {
         parent::__construct($path, $data);
     }
@@ -39,16 +39,5 @@ class Template extends View
         $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
 
         return new Template(APPDIR .$filePath, $data);
-    }
-
-    /**
-     * Magic Method for handling dynamic functions.
-     *
-     * This method handles calls to dynamic with helpers.
-     */
-    public static function __callStatic($method, $params)
-    {
-        // No Compatibility Layer there; nothing to do.
-        return null;
     }
 }

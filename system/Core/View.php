@@ -369,7 +369,7 @@ class View implements ArrayAccess
         }
 
         if ($withHeaders) {
-            // Send the Headers first.
+            // Send the HTTP Headers first.
             Response::sendHeaders();
         }
 

@@ -15,7 +15,7 @@ use Core\BaseView;
 
 
 /**
- * View class to load template and views files.
+ * View class to load views files.
  */
 class View extends BaseView
 {

@@ -10,7 +10,9 @@ namespace Core;
 
 use Core\BaseView;
 
-
+/**
+ * View class to load templates files.
+ */
 class Template extends BaseView
 {
     /**

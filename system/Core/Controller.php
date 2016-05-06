@@ -119,7 +119,7 @@ abstract class Controller
             header('Content-Type: application/json', true);
 
             echo json_encode($data);
-        } else if (! $data instanceof View) {
+        } else if (! $data instanceof BaseView) {
             // The data is not a View instance; no further processing required.
             return;
         }

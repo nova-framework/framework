@@ -111,7 +111,7 @@ abstract class BaseView implements ArrayAccess
 
         // All nested Views are evaluated before the main View.
         foreach ($data as $key => $value) {
-            if ($value instanceof View) {
+            if ($value instanceof BaseView) {
                 $data[$key] = $value->fetch();
             }
         }

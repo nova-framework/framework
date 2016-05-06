@@ -366,11 +366,11 @@ class View implements ArrayAccess
         }
 
         // Create a View instance, using the current Class and the given parameters.
-        $object = call_user_func_array(array($className, 'make'), $params);
+        $view = call_user_func_array(array($className, 'make'), $params);
 
         if ($shouldFetch) {
             // Render the object and return the captured output.
-            return $object->fetch();
+            return $view->fetch();
         }
 
         if ($withHeaders) {
@@ -379,6 +379,6 @@ class View implements ArrayAccess
         }
 
         // Render the View object.
-        return $object->render();
+        return $view->render();
     }
 }

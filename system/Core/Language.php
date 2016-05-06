@@ -21,7 +21,7 @@ class Language
      * list of language codes
      * @var array
      */
-    public static $codes = ['cs', 'de', 'en', 'fr', 'it', 'nl', 'pl', 'ro', 'ru'];
+    public static $codes = ['cs', 'de', 'en', 'fr', 'it', 'nl', 'pl', 'ro', 'ru', 'fa'];
 
     /**
      * Variable holds array with language.

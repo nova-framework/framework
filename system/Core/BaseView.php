@@ -125,7 +125,7 @@ abstract class BaseView implements ArrayAccess
     public function data()
     {
         // A local array of Data, to simulate the old behavior.
-        $data = $this->data;
+        $data =& $this->data;
 
         // A local copy of the shared Data.
         $shared = static::$shared;

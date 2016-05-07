@@ -28,7 +28,7 @@ class Aliases
                 $classAlias = '\\' .$classAlias;
             }
 
-            // Check if a class already exists
+            // Check if the Class already exists
             if (class_exists($classAlias)) {
                 // Bail out, a Class already exists with the same name.
                 throw new RuntimeException('Class already exists!');

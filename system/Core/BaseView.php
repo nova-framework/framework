@@ -289,10 +289,14 @@ abstract class BaseView implements ArrayAccess
         }
 
         // Add the support for the dynamic with* Methods.
-        if (strpos($method, 'with') === 0) {
+        if ((strpos($method, 'with') === 0) && (strlen($method) > 4)) {
             $name = lcfirst(substr($method, 4));
 
             return $this->with($name, array_shift($params));
+        } else if ((strpos($method, 'share') === 0) && (strlen($method) > 5)) {
+            $name = lcfirst(substr($method, 5));
+
+            return $this->shares($name, array_shift($params));
         }
 
         return null;

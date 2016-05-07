@@ -49,7 +49,9 @@ abstract class Controller
     public function __construct()
     {
         // Adjust to default Template if no one is defined.
-        $this->template = ($this->template !== null) ?: TEMPLATE;
+        if ($this->template === null) {
+            $this->template = TEMPLATE;
+        }
 
         /** Initialise the Language object */
         $this->language = new Language();

@@ -9,8 +9,9 @@
 namespace Core;
 
 use Core\Language;
-use Core\View;
+use Core\BaseView;
 use Core\Template;
+use Core\View;
 use Helpers\Hooks;
 
 /**

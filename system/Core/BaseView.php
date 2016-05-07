@@ -173,6 +173,11 @@ abstract class BaseView implements ArrayAccess
      */
     public function nest($key, $view, array $data = array(), $module = null)
     {
+        if(empty($data)) {
+            // The nested View instance inherit parent Data if none is given.
+            $data = $this->data;
+        }
+
         return $this->with($key, View::make($view, $data, $module));
     }
 

@@ -7,14 +7,40 @@
  * @date April 12th, 2016
  */
 
+use Helpers\Url;
+
+
 /**
- * Site url helper
+ * Site URL helper
  * @param string $path
  * @return string
  */
 function site_url($path = '/')
 {
     return SITEURL .ltrim($path, '/');
+}
+
+/**
+ * Resource URL helper
+ * @param string $path
+ * @param string|null $module
+ * @return string
+ */
+function resource_url($path, $module = null)
+{
+    return Url::resourcePath($module) .ltrim($path, '/');
+}
+
+/**
+ * Template URL helper
+ * @param string $path
+ * @param string $template
+ * @param string $folder
+ * @return string
+ */
+function template_url($path, $template = TEMPLATE, $folder = '/assets/')
+{
+    return Url::templatePath($template, $folder) .ltrim($path, '/');
 }
 
 /** String helpers. */

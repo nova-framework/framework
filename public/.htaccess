@@ -15,6 +15,10 @@
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 
+        # Remove Trailing slash uncomment to activate
+        #RewriteCond %{REQUEST_URI} (.+)/$
+        #RewriteRule ^ %1 [R=301,L]
+
 	RewriteRule ^(.*)$ index.php?$1 [QSA,L]
 
 </IfModule>

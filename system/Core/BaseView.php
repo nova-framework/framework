@@ -98,15 +98,36 @@ abstract class BaseView implements ArrayAccess
     }
 
     /**
+     * Return all variables stored on local data.
+     *
+     * @return array
+     */
+    public function localData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Return all variables stored on shared data.
+     *
+     * @return array
+     */
+    public static function sharedData()
+    {
+        return static::$shared;
+    }
+
+    /**
      * Return all variables stored on local and shared data.
      *
      * @return array
      */
     public function data()
     {
-        $data =& $this->data;
+        // A local array of Data, to simulate the old behavior.
+        $data = $this->data;
 
-        // Make a local copy of the shared data.
+        // A local copy of the shared Data.
         $shared = static::$shared;
 
         // All nested Views are evaluated before the main View.
@@ -130,7 +151,7 @@ abstract class BaseView implements ArrayAccess
             unset($shared[$key]);
         }
 
-        return array_merge($data, $shared);
+        return empty($shared) ? $data : array_merge($data, $shared);
     }
 
     /**

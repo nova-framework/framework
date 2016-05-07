@@ -75,7 +75,7 @@ abstract class Controller
 
         // After Action execution stage.
         if (($result !== null) && ! is_bool($result)) {
-            $this->after($result);
+            return $this->after($result);
         }
 
         return true;
@@ -107,35 +107,38 @@ abstract class Controller
      *
      * Note that the Action's returned value is passed to this Method as parameter.
      */
-    protected function after($data)
+    protected function after($result)
     {
-        if (is_string($data)) {
+        if (is_string($result)) {
             // The data is a String; send the Response Headers and output it.
             Response::sendHeaders();
 
-            echo $data;
-        } else if (is_array($data)) {
+            echo $result;
+        } else if (is_array($result)) {
             // The data is an Array; prepare and send a JSON response.
             header('Content-Type: application/json', true);
 
-            echo json_encode($data);
-        } else if (! $data instanceof BaseView) {
+            echo json_encode($result);
+        } else if (! $result instanceof BaseView) {
             // The data is not a View instance; no further processing required.
-            return;
+            return true;
         }
 
         //
         // Execute the default Template-based rendering of the given View instance.
 
-        if ((! $data instanceof Template) && ($this->layout !== false)) {
+        if ((! $result instanceof Template) && ($this->layout !== false)) {
             // The View instance is NOT a Template, but we have a Layout specified.
-            Template::make($this->layout, array(), $this->template)
-                ->withContent($data)
-                ->display();
-        } else {
-            // The instance is a Template, or a View while no Layout is specified.
-            $data->display();
+            $data = $result->localData();
+
+            $result = Template::make($this->layout, $data, $this->template)
+                ->with('content', $result->fetch());
         }
+
+        // Send the HTTP headers and render the given View or Template.
+        $result->display();
+
+        return true;
     }
 
     /**

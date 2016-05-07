@@ -23,6 +23,8 @@ class Welcome extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        // Load the Language file.
         $this->language->load('Welcome');
     }
 

@@ -133,7 +133,7 @@ abstract class Controller
                 ->withContent($data)
                 ->display();
         } else {
-            // The given View instance is a Template, or no Layout is specified.
+            // The instance is a Template, or a View while no Layout is specified.
             $data->display();
         }
     }

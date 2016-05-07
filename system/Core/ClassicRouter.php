@@ -22,7 +22,7 @@ class ClassicRouter extends Router
     /**
      * ClassicRouter constructor.
      */
-    public function __construct()
+    protected function __construct()
     {
         parent::__construct();
     }

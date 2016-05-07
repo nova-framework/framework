@@ -20,8 +20,18 @@ use Helpers\Url;
  */
 class Router
 {
+    /**
+     * The Router instance.
+     *
+     * @var Router $instance
+     */
     private static $instance;
 
+    /**
+     * Array of Route Groups
+     *
+     * @var array $routeGroups
+     */
     private static $routeGroups = array();
 
     /**
@@ -33,11 +43,15 @@ class Router
 
     /**
      * Default Route, usualy the Catch-All one.
+     *
+     * @var Route $defaultRoute
      */
     private $defaultRoute = null;
 
     /**
      * Matched Route, the current found Route, if any.
+     *
+     * @var Route|null $matchedRoute
      */
     protected $matchedRoute = null;
 
@@ -51,7 +65,7 @@ class Router
     /**
      * An array of HTTP request Methods.
      *
-     * @var array
+     * @var array $methods
      */
     public static $methods = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS');
 
@@ -60,22 +74,19 @@ class Router
      *
      * @codeCoverageIgnore
      */
-    public function __construct()
+    protected function __construct()
     {
-        self::$instance =& $this;
     }
 
     public static function &getInstance()
     {
-        $appRouter = APPROUTER;
+        if (self::$instance === null) {
+            $appRouter = APPROUTER;
 
-        if (! self::$instance) {
-            $router = new $appRouter();
-        } else {
-            $router =& self::$instance;
+            self::$instance = new $appRouter();
         }
 
-        return $router;
+        return self::$instance;
     }
 
     /**
@@ -88,13 +99,20 @@ class Router
     {
         $method = strtoupper($method);
 
-        if (($method == 'ANY') || in_array($method, static::$methods)) {
-            $route    = array_shift($params);
-            $callback = array_shift($params);
-
-            // Register the route.
-            static::register($method, $route, $callback);
+        if (($method != 'ANY') && ! in_array($method, static::$methods)) {
+            throw new \Exception('Invalid method');
+        } else if (empty($params)) {
+            throw new \Exception('Invalid parameters');
         }
+
+        // Get the Route.
+        $route = array_shift($params);
+
+        // Get the Callback, if any.
+        $callback = ! empty($params) ? array_shift($params) : null;
+
+        // Register the Route.
+        static::register($method, $route, $callback);
     }
 
     /**
@@ -250,7 +268,7 @@ class Router
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
-    public static function register($method, $route, $callback = null)
+    protected static function register($method, $route, $callback = null)
     {
         // Get the Router instance.
         $router =& self::getInstance();
@@ -448,6 +466,10 @@ class Router
         return false;
     }
 
+    /**
+     * Dispatch/Serve a file
+     * @return bool
+     */
     protected function dispatchFile($uri)
     {
         // For properly Assets serving, the file URI should be as following:
@@ -459,12 +481,12 @@ class Router
         $filePath = '';
 
         if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
-            $filePath = ROOTDIR.'assets'.DS.$matches[1];
+            $filePath = ROOTDIR .'assets' .DS .$matches[1];
         } else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
             // We need to classify the path name (the Module/Template path).
             $basePath = ucfirst($matches[1]) .DS .Inflector::classify($matches[2]);
 
-            $filePath = APPDIR.$basePath.DS.'Assets'.DS.$matches[3];
+            $filePath = APPDIR .$basePath .DS .'Assets' .DS .$matches[3];
         }
 
         if (! empty($filePath)) {

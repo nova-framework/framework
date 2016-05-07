@@ -35,8 +35,7 @@ class Demo extends Controller
             'param3' => $param3,
             'param4' => $param4
         );
-        echo '<pre>';
-        print_r($params);
-        echo '</pre>';
+
+        echo '<pre>' .var_export($params, true) .'</pre>';
     }
 }

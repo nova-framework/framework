@@ -99,11 +99,11 @@ class View extends BaseView
         }
 
         // Create a View instance, using the current Class and the given parameters.
-        $view = call_user_func_array(array($className, 'make'), $params);
+        $instance = call_user_func_array(array($className, 'make'), $params);
 
         if ($shouldFetch) {
             // Render the object and return the captured output.
-            return $view->fetch();
+            return $instance->fetch();
         }
 
         if ($withHeaders) {
@@ -112,6 +112,6 @@ class View extends BaseView
         }
 
         // Render the View object.
-        return $view->render();
+        return $instance->render();
     }
 }

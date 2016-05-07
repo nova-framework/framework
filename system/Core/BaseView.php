@@ -293,7 +293,7 @@ abstract class BaseView implements ArrayAccess
             $name = lcfirst(substr($method, 4));
 
             return $this->with($name, array_shift($params));
-        } else if ((strpos($method, 'share') === 0) && (strlen($method) > 5)) {
+        } else if ((strpos($method, 'share') === 0) && (strlen($method) > 6)) {
             $name = lcfirst(substr($method, 5));
 
             return $this->shares($name, array_shift($params));

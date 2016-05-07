@@ -29,7 +29,7 @@ class Welcome extends Controller
     }
 
     /**
-     * Define Index page title and load template files
+     * Define Index page title and load template files.
      */
     public function index()
     {
@@ -42,7 +42,7 @@ class Welcome extends Controller
     }
 
     /**
-     * Define Subpage page title and load template files
+     * The New Style Rendering - create and return a proper View instance.
      */
     public function subPage()
     {

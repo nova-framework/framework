@@ -10,6 +10,7 @@ namespace Core;
 
 use Core\Language;
 use Core\BaseView;
+use Core\Response;
 use Core\Template;
 use Core\View;
 use Helpers\Hooks;

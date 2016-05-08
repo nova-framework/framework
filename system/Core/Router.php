@@ -403,14 +403,13 @@ class Router
                 $result = $route->applyFilters();
 
                 if($result instanceof Response) {
+                    // The Filters returned a Response instance; send it and quit processing.
                     $result->send();
 
                     return true;
-                } else if ($result === false) {
-                    // Matched Route filtering failed; we should go to (404) Error.
-                    break;
                 }
 
+                // Get the matched Route callback.
                 $callback = $route->callback();
 
                 if ($callback !== null) {

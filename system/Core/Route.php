@@ -124,8 +124,8 @@ class Route
             // Execute the current Filter's Callback with the current matched Route as argument.
             //
             // When the Filter returns a Response instance, the Route Filtering will be stopped.
-            if ($callback !== null) {
-                $result = $this->invokeCallback($callback);
+            if (is_object($callback)) {
+                $result = call_user_func($callback, $this);
             }
 
             if ($result instanceof Response) {
@@ -135,34 +135,6 @@ class Route
         }
 
         return $result;
-    }
-
-    private function invokeCallback($callback)
-    {
-        if (is_object($callback)) {
-            // We have a Closure; execute it with the Route instance as parameter.
-            return call_user_func($callback, $this);
-        }
-
-        // Extract the Class name and the Method from the callback's string.
-        $segments = explode('@', $callback);
-
-        $className = $segments[0];
-        $method    = $segments[1];
-
-        if (! class_exists($className)) {
-            return false;
-        }
-
-        // The Filter Class receive on Constructor the Route instance as parameter.
-        $object = new $className();
-
-        if (method_exists($object, $method)) {
-            // Execute the object's method with this Route instance as argument.
-            return call_user_func(array($object, $method), $this);
-        }
-
-        return false;
     }
 
     /**

@@ -9,7 +9,7 @@
 namespace Core;
 
 use Core\Route;
-use Core\Router;
+use Core\BaseRouter;
 use Core\Response;
 use Helpers\Inflector;
 use Helpers\Request;
@@ -18,7 +18,7 @@ use Helpers\Url;
 /**
  * Router class will load requested controller / closure based on url.
  */
-class ClassicRouter extends Router
+class ClassicRouter extends BaseRouter
 {
     /**
      * ClassicRouter constructor.
@@ -26,6 +26,43 @@ class ClassicRouter extends Router
     protected function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * Maps a Method and URL pattern to a Callback.
+     *
+     * @param string $method HTTP metod(s) to match
+     * @param string $route URL pattern to match
+     * @param callback $callback Callback object
+     */
+    protected static function register($method, $route, $callback = null)
+    {
+        // Get the Router instance.
+        $router =& self::getInstance();
+
+        // Prepare the route Methods.
+        if (is_string($method) && (strtolower($method) == 'any')) {
+            $methods = static::$methods;
+        } else {
+            $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
+
+            // Ensure the requested Methods being valid ones.
+            $methods = array_intersect($methods, static::$methods);
+        }
+
+        if (empty($methods)) {
+            // If there are no valid Methods defined, fallback to ANY.
+            $methods = static::$methods;
+        }
+
+        // Prepare the Route PATTERN.
+        $pattern = ltrim($route, '/');
+
+        // Create a Route instance using the processed information.
+        $route = new Route($methods, $pattern, $callback);
+
+        // Add the current Route instance to the known Routes list.
+        array_push($router->routes, $route);
     }
 
     /**

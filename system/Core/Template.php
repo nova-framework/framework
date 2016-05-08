@@ -22,9 +22,9 @@ class Template extends BaseView
      *
      * @throws \UnexpectedValueException
      */
-    protected function __construct($path, array $data = array())
+    protected function __construct($view, $path, array $data = array())
     {
-        parent::__construct($path, $data);
+        parent::__construct($view, $path, $data);
     }
 
     /**
@@ -40,6 +40,6 @@ class Template extends BaseView
         // Prepare the file path.
         $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
 
-        return new Template(APPDIR .$filePath, $data);
+        return new Template($path, APPDIR .$filePath, $data);
     }
 }

@@ -26,9 +26,9 @@ class View extends BaseView
      *
      * @throws \UnexpectedValueException
      */
-    protected function __construct($path, array $data = array())
+    protected function __construct($view, $path, array $data = array())
     {
-        parent::__construct($path, $data);
+        parent::__construct($view, $path, $data);
     }
 
     /**
@@ -48,7 +48,7 @@ class View extends BaseView
             $filePath = str_replace('/', DS, "Views/$path.php");
         }
 
-        return new View(APPDIR .$filePath, $data);
+        return new View($path, APPDIR .$filePath, $data);
     }
 
     /**

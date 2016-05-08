@@ -27,6 +27,11 @@ abstract class BaseView implements ArrayAccess
     protected static $shared = array();
 
     /**
+     * @var string The given View name.
+     */
+    protected $view = null;
+
+    /**
      * @var string The path to the View file on disk.
      */
     protected $path = null;
@@ -40,15 +45,10 @@ abstract class BaseView implements ArrayAccess
      * Constructor
      * @param mixed $path
      * @param array $data
-     *
-     * @throws \UnexpectedValueException
      */
-    protected function __construct($path, array $data = array())
+    protected function __construct($view, $path, array $data = array())
     {
-        if (! is_readable($path)) {
-            throw new \UnexpectedValueException('File not found: ' .$path);
-        }
-
+        $this->view = $view;
         $this->path = $path;
         $this->data = $data;
     }
@@ -71,9 +71,15 @@ abstract class BaseView implements ArrayAccess
      * Render the View and output the result.
      *
      * @return void
+     *
+     * @throws \InvalidArgumentException
      */
     protected function render()
     {
+        if (! is_readable($this->path)) {
+            throw new \InvalidArgumentException("Unable to load the view '" .$this->view ."'. File '" .$this->path."' not found.", 1);
+        }
+
         // Get a local copy of the prepared data.
         $data = $this->data();
 
@@ -124,10 +130,10 @@ abstract class BaseView implements ArrayAccess
      */
     public function data()
     {
-        // A local array of Data, to simulate the old behavior.
+        // Get a local array of Data.
         $data =& $this->data;
 
-        // A local copy of the shared Data.
+        // Get a local copy of the shared Data.
         $shared = static::$shared;
 
         // All nested Views are evaluated before the main View.

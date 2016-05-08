@@ -13,7 +13,7 @@ echo $meta; //place to pass data / plugable hook zone
 
 Assets::css([
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
-    template_url('css/style.css'),
+    template_url('css/style.css', 'Default'),
 ]);
 
 echo $css; //place to pass data / plugable hook zone
@@ -38,7 +38,7 @@ echo $css; //place to pass data / plugable hook zone
     </p>
     <div class="clearfix"></div>
     <p>
-        <img src='<?= template_url('images/nova.png'); ?>' alt='<?= SITETITLE; ?>'>
+        <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>'>
     </p>
 
     <?= $content; ?>

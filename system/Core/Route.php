@@ -96,6 +96,10 @@ class Route
      */
     public static function filter($name, $callback)
     {
+        if (array_key_exists($name, self::$availFilters)) {
+            throw new \Exception('Filter already exists: ' .$name);
+        }
+
         self::$availFilters[$name] = $callback;
     }
 

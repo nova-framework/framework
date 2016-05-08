@@ -294,7 +294,11 @@ abstract class BaseView implements ArrayAccess
      */
     public function __toString()
     {
-        return $this->fetch();
+        try {
+            return $this->fetch();
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
      /**

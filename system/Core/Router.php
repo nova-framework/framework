@@ -9,7 +9,6 @@
 namespace Core;
 
 use Core\BaseRouter;
-use Core\Controller;
 use Core\Response;
 use Core\Route;
 use Helpers\Inflector;

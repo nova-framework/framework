@@ -24,10 +24,11 @@
 <a href='<?=DIR;?>language/fr'>French</a> |
 <a href='<?=DIR;?>language/it'>Italian</a> |
 <a href='<?=DIR;?>language/nl'>Dutch</a> |
+<a href='<?=DIR;?>language/fa'>Persian</a> |
 <a href='<?=DIR;?>language/pl'>Polish</a> |
 <a href='<?=DIR;?>language/ro'>Romanian</a> |
 <a href='<?=DIR;?>language/ru'>Russian</a> |
-<a href='<?=DIR;?>language/fa'>Persian</a>
+<a href='<?=DIR;?>language/es'>Spanish</a>
 </p>
 <div class="clearfix"></div>
 

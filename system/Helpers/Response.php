@@ -78,11 +78,13 @@ class Response
      */
     public static function addStatus($code)
     {
-        if (isset(self::$status[$code])) {
-            $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
-
-            self::addHeader("$httpProtocol $code " . self::$status[$code]);
+        if (! isset(self::$status[$code])) {
+            return;
         }
+
+        $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
+
+        self::addHeader("$httpProtocol $code " . self::$status[$code]);
     }
 
     /**
@@ -100,8 +102,12 @@ class Response
      *
      * @param array $headers
      */
-    public static function addHeaders(array $headers = array())
+    public static function addHeaders(array $headers)
     {
+        if(empty($headers)) {
+            return;
+        }
+
         self::$headers = array_merge(self::$headers, $headers);
     }
 
@@ -110,10 +116,12 @@ class Response
      */
     public static function sendHeaders()
     {
-        if (! headers_sent()) {
-            foreach (self::$headers as $header) {
-                header($header, true);
-            }
+        if (headers_sent()) {
+            return;
+        }
+
+        foreach (self::$headers as $header) {
+            header($header, true);
         }
     }
 

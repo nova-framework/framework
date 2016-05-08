@@ -26,9 +26,9 @@ class View extends BaseView
      *
      * @throws \UnexpectedValueException
      */
-    protected function __construct($path, array $data = array())
+    protected function __construct($view, $path, array $data = array())
     {
-        parent::__construct($path, $data);
+        parent::__construct($view, $path, $data);
     }
 
     /**
@@ -39,16 +39,16 @@ class View extends BaseView
      * @param string|null $module
      * @return View
      */
-    public static function make($path, array $data = array(), $module = null)
+    public static function make($view, array $data = array(), $module = null)
     {
         // Prepare the (relative) file path according with Module parameter presence.
         if ($module !== null) {
-            $filePath = str_replace('/', DS, "Modules/$module/Views/$path.php");
+            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
         } else {
-            $filePath = str_replace('/', DS, "Views/$path.php");
+            $path = str_replace('/', DS, APPDIR ."Views/$view.php");
         }
 
-        return new View(APPDIR .$filePath, $data);
+        return new View($view, $path, $data);
     }
 
     /**
@@ -99,11 +99,11 @@ class View extends BaseView
         }
 
         // Create a View instance, using the current Class and the given parameters.
-        $view = call_user_func_array(array($className, 'make'), $params);
+        $instance = call_user_func_array(array($className, 'make'), $params);
 
         if ($shouldFetch) {
             // Render the object and return the captured output.
-            return $view->fetch();
+            return $instance->fetch();
         }
 
         if ($withHeaders) {
@@ -112,6 +112,6 @@ class View extends BaseView
         }
 
         // Render the View object.
-        return $view->render();
+        return $instance->render();
     }
 }

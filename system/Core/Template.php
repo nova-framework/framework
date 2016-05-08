@@ -8,10 +8,12 @@
 
 namespace Core;
 
-use Core\View;
+use Core\BaseView;
 
-
-class Template extends View
+/**
+ * View class to load templates files.
+ */
+class Template extends BaseView
 {
     /**
      * Constructor
@@ -20,7 +22,7 @@ class Template extends View
      *
      * @throws \UnexpectedValueException
      */
-    public function __construct($path, array $data = array())
+    protected function __construct($path, array $data = array())
     {
         parent::__construct($path, $data);
     }
@@ -39,29 +41,5 @@ class Template extends View
         $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
 
         return new Template(APPDIR .$filePath, $data);
-    }
-
-    /**
-     * Magic Method for handling dynamic functions.
-     *
-     * This method handles calls to dynamic with helpers.
-     */
-    public static function __callStatic($method, $params)
-    {
-        // No Compatibility Layer exists there; nothing to do.
-    }
-
-    /**
-     * Compat Layer - Render a Module View file.
-     *
-     * @param  string  $path  path to file from Modules folder
-     * @param  array $data  array of data
-     * @param  array $error array of errors
-     *
-     * @throws \Exception
-     */
-    public static function renderModule($path, $data = false, $error = false)
-    {
-        throw new \Exception('renderModule is not available on ' .static::class);
     }
 }

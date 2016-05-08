@@ -43,12 +43,12 @@ class View extends BaseView
     {
         // Prepare the (relative) file path according with Module parameter presence.
         if ($module !== null) {
-            $filePath = str_replace('/', DS, "Modules/$module/Views/$view.php");
+            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
         } else {
-            $filePath = str_replace('/', DS, "Views/$view.php");
+            $path = str_replace('/', DS, APPDIR ."Views/$view.php");
         }
 
-        return new View($view, APPDIR .$filePath, $data);
+        return new View($view, $path, $data);
     }
 
     /**

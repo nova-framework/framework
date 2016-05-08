@@ -38,8 +38,8 @@ class Template extends BaseView
     public static function make($view, array $data = array(), $template = TEMPLATE)
     {
         // Prepare the file path.
-        $filePath = str_replace('/', DS, "Templates/$template/$view.php");
+        $path = str_replace('/', DS, APPDIR ."Templates/$template/$view.php");
 
-        return new Template($view, APPDIR .$filePath, $data);
+        return new Template($view, $path, $data);
     }
 }

@@ -10,6 +10,7 @@ namespace Core;
 
 use Core\Route;
 use Core\Router;
+use Core\Response;
 use Helpers\Inflector;
 use Helpers\Request;
 use Helpers\Url;
@@ -78,12 +79,10 @@ class ClassicRouter extends Router
             return true;
         }
 
-        // The dispatching failed; invoke the Error Callback with the current URI as parameter.
-        $params = array(
-            htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
-        );
+        // The dispatching failed; send an Error 404 Response.
+        $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        $this->invokeObject($this->callback(), $params);
+        Response::error('404', $data)->send();
 
         return false;
     }

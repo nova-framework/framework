@@ -56,13 +56,6 @@ class Router
     protected $matchedRoute = null;
 
     /**
-     * Set an Error Callback
-     *
-     * @var null $errorCallback
-     */
-    private $errorCallback = '\App\Controllers\Error@index';
-
-    /**
      * An array of HTTP request Methods.
      *
      * @var array $methods
@@ -123,20 +116,6 @@ class Router
     public function routes()
     {
         return $this->routes;
-    }
-
-    /**
-     * Defines callback if route is not found.
-     *
-     * @param string $callback
-     */
-    public static function error($callback)
-    {
-        // Get the Router instance.
-        $router = self::getInstance();
-
-        //
-        $router->callback($callback);
     }
 
     /**
@@ -242,23 +221,6 @@ class Router
         self::register('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
         self::register(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
         self::register('delete',              $basePath .'/(:any)',      $controller .'@delete');
-    }
-
-    /**
-     * Router Error Callback
-     *
-     * @param null $callback
-     * @return callback|null
-     */
-    public function callback($callback = null)
-    {
-        if (is_null($callback)) {
-            return $this->errorCallback;
-        }
-
-        $this->errorCallback = $callback;
-
-        return null;
     }
 
     /**
@@ -463,7 +425,7 @@ class Router
         // No valid Route found; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        Response::error(404, $data)->send();
+        Response::error('404', $data)->send();
 
         return false;
     }

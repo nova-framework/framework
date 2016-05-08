@@ -77,7 +77,7 @@ abstract class Controller
         // Execute the requested Method with the given arguments.
         $result = call_user_func_array(array($this, $method), $params);
 
-        // When the result is a Response instance; send it and go out with success.
+        // When the result is a Response instance; send it and stop the processing.
         if ($result instanceof Response) {
             $result->send();
 

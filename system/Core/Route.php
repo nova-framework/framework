@@ -8,8 +8,11 @@
 
 namespace Core;
 
+use Core\Response;
+
+
 /**
- * The Route class is responsible for routing an HTTP request to an assigned callback function.
+ * The Route class is responsible for routing an HTTP request to an assigned Callback function.
  */
 class Route
 {
@@ -126,8 +129,8 @@ class Route
                 $result = false;
             }
 
-            if ($result === false) {
-                // Failure of the current Filter; stop the loop.
+            if (($result instanceof Response) || ($result === false)) {
+                // Obtained a Response or having a failure on the current Filter; stop the loop.
                 break;
             }
         }

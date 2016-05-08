@@ -9,9 +9,9 @@
 
 namespace Core;
 
-use Helpers\Inflector;
-use Helpers\Response;
+use Core\Response;
 use Core\View;
+use Helpers\Inflector;
 
 use ArrayAccess;
 

@@ -9,10 +9,10 @@
 namespace Core;
 
 use Core\Controller;
+use Core\Response;
+use Core\Route;
 use Helpers\Inflector;
 use Helpers\Request;
-use Helpers\Response;
-use Core\Route;
 use Helpers\Url;
 
 /**
@@ -440,7 +440,11 @@ class Router
                 // Apply the (specified) Filters on matched Route.
                 $result = $route->applyFilters();
 
-                if ($result === false) {
+                if($result instanceof Response) {
+                    $result->send();
+
+                    return true;
+                } else if ($result === false) {
                     // Matched Route filtering failed; we should go to (404) Error.
                     break;
                 }
@@ -456,12 +460,10 @@ class Router
             }
         }
 
-        // No valid Route found; invoke the Error Callback with the current URI as parameter.
-        $params = array(
-            htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true)
-        );
+        // No valid Route found; send an Error 404 Response.
+        $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        $this->invokeObject($this->callback(), $params);
+        Response::error(404, $data)->send();
 
         return false;
     }

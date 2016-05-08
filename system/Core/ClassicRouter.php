@@ -8,9 +8,9 @@
 
 namespace Core;
 
-use Helpers\Inflector;
 use Core\Route;
 use Core\Router;
+use Helpers\Inflector;
 use Helpers\Request;
 use Helpers\Url;
 

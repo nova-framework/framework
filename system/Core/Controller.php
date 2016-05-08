@@ -76,12 +76,15 @@ abstract class Controller
         // Execute the requested Method with the given arguments.
         $result = call_user_func_array(array($this, $method), $params);
 
-        // After Action execution stage.
-        if (($result !== null) && ! is_bool($result)) {
-            return $this->after($result);
+        // When the result is a Response instance; send it and go out with success.
+        if ($result instanceof Response) {
+            $result->send();
+
+            return true;
         }
 
-        return true;
+        // After Action execution stage.
+        return $this->after($result);
     }
 
     /**
@@ -112,18 +115,8 @@ abstract class Controller
      */
     protected function after($result)
     {
-        if (is_string($result)) {
-            // The data is a String; send the Response Headers and output it.
-            Response::sendHeaders();
-
-            echo $result;
-        } else if (is_array($result)) {
-            // The data is an Array; prepare and send a JSON response.
-            header('Content-Type: application/json', true);
-
-            echo json_encode($result);
-        } else if (! $result instanceof BaseView) {
-            // The data is not a View instance; no further processing required.
+        if (! $result instanceof BaseView) {
+            // The result is not a View instance; no further processing required.
             return true;
         }
 

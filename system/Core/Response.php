@@ -401,7 +401,7 @@ class Response
         $ifModifiedSince = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
 
         // Firstly, we finalize the output buffering.
-        if (ob_get_level()) {
+        while (ob_get_level() > 0) {
             ob_end_clean();
         }
 

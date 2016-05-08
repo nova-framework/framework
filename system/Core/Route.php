@@ -111,26 +111,25 @@ class Route
 
     public function applyFilters()
     {
-        $result = true;
+        $result = null;
 
         foreach ($this->filters as $filter) {
-            if (array_key_exists($filter, self::$availFilters)) {
-                // Get the current Filter Callback.
-                $callback = self::$availFilters[$filter];
-
-                // Execute the current Filter's callback with the current matched Route as argument.
-                //
-                // When the Filter returns false, the filtering is considered being globally failed.
-                if ($callback !== null) {
-                    $result = $this->invokeCallback($callback);
-                }
-            } else {
-                // No Filter with this name found; mark that as failure.
-                $result = false;
+            if (! array_key_exists($filter, self::$availFilters)) {
+                throw new \Exception('Invalid Filter specified: ' .$filter);
             }
 
-            if (($result instanceof Response) || ($result === false)) {
-                // Obtained a Response or having a failure on the current Filter; stop the loop.
+            // Get the current Filter Callback.
+            $callback = self::$availFilters[$filter];
+
+            // Execute the current Filter's Callback with the current matched Route as argument.
+            //
+            // When the Filter returns a Response instance, the Route Filtering will be stopped.
+            if ($callback !== null) {
+                $result = $this->invokeCallback($callback);
+            }
+
+            if ($result instanceof Response) {
+                // We get a Response instance from the current Filter; stop the loop.
                 break;
             }
         }

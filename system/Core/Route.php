@@ -125,15 +125,13 @@ class Route
             // Get the current Filter Callback.
             $callback = self::$availFilters[$filter];
 
-            // Execute the current Filter's Callback with the current matched Route as argument.
-            //
-            // When the Filter returns a Response instance, the Route Filtering will be stopped.
+            // Execute the current Filter's Callback with the Route instance as argument.
+            // When the Filter returns a Response instance, the Filtering will be stopped.
             if (is_object($callback)) {
                 $result = call_user_func($callback, $this);
             }
 
             if ($result instanceof Response) {
-                // We get a Response instance from the current Filter; stop the loop.
                 break;
             }
         }

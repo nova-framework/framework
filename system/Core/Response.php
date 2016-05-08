@@ -432,7 +432,7 @@ class Response
     }
 
     //--------------------------------------------------------------------
-    // Legacy API
+    // Legacy Headers API
     //--------------------------------------------------------------------
 
     /**
@@ -456,7 +456,7 @@ class Response
             return;
         }
 
-        self::$legacyHeaders = array_merge(self::$sharedHeaders, $headers);
+        self::$legacyHeaders = array_merge(self::$legacyHeaders, $headers);
     }
 
     /**

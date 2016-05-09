@@ -8,8 +8,8 @@
 
 namespace Core;
 
+use Core\Base\View as BaseView;
 use Core\Language;
-use Core\BaseView;
 use Core\Response;
 use Core\Template;
 use Core\View;

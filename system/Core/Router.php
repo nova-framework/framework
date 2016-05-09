@@ -8,7 +8,7 @@
 
 namespace Core;
 
-use Core\BaseRouter;
+use Core\Base\Router as BaseRouter;
 use Core\Response;
 use Core\Route;
 use Helpers\Inflector;

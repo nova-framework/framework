@@ -8,7 +8,8 @@
 
 namespace Core;
 
-use Core\BaseView;
+use Core\Base\View as BaseView;
+
 
 /**
  * View class to load templates files.

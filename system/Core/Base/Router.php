@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Core\Base;
 
 use Core\Controller;
 use Core\Response;
@@ -17,7 +17,7 @@ use Helpers\Inflector;
 /**
  * Router class will load requested Controller / Closure based on URL.
  */
-abstract class BaseRouter
+abstract class Router
 {
     /**
      * The Router instance.

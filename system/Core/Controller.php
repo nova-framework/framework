@@ -117,18 +117,11 @@ abstract class Controller
     protected function after($result)
     {
         if (! $result instanceof BaseView) {
-            // The result is not a View instance; no further processing required.
+            // The result is not a View or Tempate instance; no processing required.
             return true;
-        }
-
-        //
-        // Execute the default Template-based rendering of the given View instance.
-
-        if ((! $result instanceof Template) && ($this->layout !== false)) {
-            // A View instance, having a Layout specified; render it on current Layout.
-            $data = $result->localData();
-
-            $result = Template::make($this->layout, $data, $this->template)
+        } else if ((! $result instanceof Template) && ($this->layout !== false)) {
+            // A View instance, having a Layout specified; create a Template instance.
+            $result = Template::make($this->layout, $result->localData(), $this->template)
                 ->with('content', $result->fetch());
         }
 

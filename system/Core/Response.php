@@ -242,9 +242,6 @@ class Response
     {
         $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
 
-        // Render the Content (convert to a string)
-        $content = $this->render();
-
         //
         // Send the HTTP Status and Headers
 
@@ -263,7 +260,7 @@ class Response
         //
         // Send the stringified Content.
 
-        echo $content;
+        echo $this->render();
     }
 
     /**
@@ -281,7 +278,7 @@ class Response
             $this->content = (string) $this->content;
         }
 
-        return $this->content;
+        return trim($this->content);
     }
 
     /**

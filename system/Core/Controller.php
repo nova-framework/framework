@@ -119,7 +119,9 @@ abstract class Controller
         if (! $result instanceof BaseView) {
             // The result is not a View or Tempate instance; no processing required.
             return true;
-        } else if ((! $result instanceof Template) && ($this->layout !== false)) {
+        }
+
+        if ((! $result instanceof Template) && ($this->layout !== false)) {
             // A View instance, having a Layout specified; create a Template instance.
             $result = Template::make($this->layout, $result->localData(), $this->template)
                 ->with('content', $result->fetch());

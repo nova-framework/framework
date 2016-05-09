@@ -27,6 +27,11 @@ abstract class BaseView implements ArrayAccess
     protected static $shared = array();
 
     /**
+     * @var string The given View name.
+     */
+    protected $view = null;
+
+    /**
      * @var string The path to the View file on disk.
      */
     protected $path = null;
@@ -40,15 +45,10 @@ abstract class BaseView implements ArrayAccess
      * Constructor
      * @param mixed $path
      * @param array $data
-     *
-     * @throws \UnexpectedValueException
      */
-    protected function __construct($path, array $data = array())
+    protected function __construct($view, $path, array $data = array())
     {
-        if (! is_readable($path)) {
-            throw new \UnexpectedValueException('File not found: ' .$path);
-        }
-
+        $this->view = $view;
         $this->path = $path;
         $this->data = $data;
     }
@@ -71,9 +71,15 @@ abstract class BaseView implements ArrayAccess
      * Render the View and output the result.
      *
      * @return void
+     *
+     * @throws \InvalidArgumentException
      */
     protected function render()
     {
+        if (! is_readable($this->path)) {
+            throw new \InvalidArgumentException("Unable to load the view '" .$this->view ."'. File '" .$this->path."' not found.", 1);
+        }
+
         // Get a local copy of the prepared data.
         $data = $this->data();
 
@@ -98,15 +104,36 @@ abstract class BaseView implements ArrayAccess
     }
 
     /**
+     * Return all variables stored on local data.
+     *
+     * @return array
+     */
+    public function localData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Return all variables stored on shared data.
+     *
+     * @return array
+     */
+    public static function sharedData()
+    {
+        return static::$shared;
+    }
+
+    /**
      * Return all variables stored on local and shared data.
      *
      * @return array
      */
     public function data()
     {
+        // Get a local array of Data.
         $data =& $this->data;
 
-        // Make a local copy of the shared data.
+        // Get a local copy of the shared Data.
         $shared = static::$shared;
 
         // All nested Views are evaluated before the main View.
@@ -130,7 +157,7 @@ abstract class BaseView implements ArrayAccess
             unset($shared[$key]);
         }
 
-        return array_merge($data, $shared);
+        return empty($shared) ? $data : array_merge($data, $shared);
     }
 
     /**
@@ -152,6 +179,11 @@ abstract class BaseView implements ArrayAccess
      */
     public function nest($key, $view, array $data = array(), $module = null)
     {
+        if(empty($data)) {
+            // The nested View instance inherit parent Data if none is given.
+            $data = $this->data;
+        }
+
         return $this->with($key, View::make($view, $data, $module));
     }
 
@@ -268,7 +300,11 @@ abstract class BaseView implements ArrayAccess
      */
     public function __toString()
     {
-        return $this->fetch();
+        try {
+            return $this->fetch();
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
      /**
@@ -288,11 +324,17 @@ abstract class BaseView implements ArrayAccess
                 break;
         }
 
-        // Add the support for the dynamic with* Methods.
-        if (strpos($method, 'with') === 0) {
+        // Add the support for the dynamic withX Methods.
+        if ((strpos($method, 'with') === 0) && (strlen($method) > 5)) {
             $name = lcfirst(substr($method, 4));
 
             return $this->with($name, array_shift($params));
+        }
+        // Add the support for the dynamic shareX Methods.
+        else if ((strpos($method, 'share') === 0) && (strlen($method) > 6)) {
+            $name = lcfirst(substr($method, 5));
+
+            return $this->shares($name, array_shift($params));
         }
 
         return null;

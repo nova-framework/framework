@@ -22,24 +22,24 @@ class Template extends BaseView
      *
      * @throws \UnexpectedValueException
      */
-    protected function __construct($path, array $data = array())
+    protected function __construct($view, $path, array $data = array())
     {
-        parent::__construct($path, $data);
+        parent::__construct($view, $path, $data);
     }
 
     /**
      * Create a Template instance
      *
-     * @param string $path
+     * @param string $view
      * @param array $data
      * @param string $custom
      * @return Template
      */
-    public static function make($path, array $data = array(), $custom = TEMPLATE)
+    public static function make($view, array $data = array(), $template = TEMPLATE)
     {
         // Prepare the file path.
-        $filePath = str_replace('/', DS, "Templates/$custom/$path.php");
+        $path = str_replace('/', DS, APPDIR ."Templates/$template/$view.php");
 
-        return new Template(APPDIR .$filePath, $data);
+        return new Template($view, $path, $data);
     }
 }

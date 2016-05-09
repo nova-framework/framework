@@ -23,11 +23,13 @@ class Welcome extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        // Load the Language file.
         $this->language->load('Welcome');
     }
 
     /**
-     * Define Index page title and load template files
+     * Define Index page title and load template files.
      */
     public function index()
     {
@@ -40,24 +42,12 @@ class Welcome extends Controller
     }
 
     /**
-     * Define Subpage page title and load template files
+     * The New Style Rendering - create and return a proper View instance.
      */
     public function subPage()
     {
-        // The Default Rendering Style.
-        /*
-        $data['title'] = $this->language->get('subpageText');
-        $data['welcomeMessage'] = $this->language->get('subpageMessage');
-
-
-        View::renderTemplate('header', $data);
-        View::render('Welcome/SubPage', $data);
-        View::renderTemplate('footer', $data);
-        */
-
-        // The New Rendering Style.
         return View::make('Welcome/SubPage')
-            ->shares('title', $this->trans('subpageText'))
+            ->withTitle($this->trans('subpageText'))
             ->withWelcomeMessage($this->trans('subpageMessage'));
     }
 }

@@ -34,7 +34,15 @@ class Redirect extends Response
      */
     public static function to($url, $status = 302)
     {
-        return static::make('', $status)->header('Location', site_url($url));
+        // The Content is a workaround for when the HTTP Headers are already sent.
+        $content = '
+<html>
+<body onload="redirect_to(\'' .$url .'\');"></body>
+<script type="text/javascript">function redirect_to(url) { window.location.href = url; }</script>
+</body>
+</html>';
+
+        return static::make($content, $status)->header('Location', site_url($url));
     }
 
     /**
@@ -65,16 +73,6 @@ class Redirect extends Response
      */
     public function send()
     {
-        if (headers_sent()) {
-            // Workaround for when the HTTP Headers are already sent.
-            $this->content = '
-<html>
-<body onload="redirect_to(\'' .$this->headers['Location'] .'\');"></body>
-<script type="text/javascript">function redirect_to(url) { window.location.href = url; }</script>
-</body>
-</html>';
-        }
-
         // Dump all output buffering first.
         while (ob_get_level() > 0) {
             ob_end_clean();

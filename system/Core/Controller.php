@@ -128,13 +128,17 @@ abstract class Controller
             // A View instance, having a Layout specified; render it on current Layout.
             $data = $result->localData();
 
-            Template::make($this->layout, $data, $this->template)
-                ->with('content', $result)
-                ->display();
+            $view = Template::make($this->layout, $data, $this->template)
+                ->with('content', $result);
+
+            $response = Response::make($view);
         } else {
             // A Template, or a View instance with no Layout specified; just render it.
-            $result->display();
+            $response = Response::make($result);
         }
+
+        // Send the Response and go out.
+        $response->send();
 
         return true;
     }

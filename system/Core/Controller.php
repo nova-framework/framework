@@ -128,12 +128,13 @@ abstract class Controller
             // The View instance is NOT a Template, but we have a Layout specified.
             $data = $result->localData();
 
-            $result = Template::make($this->layout, $data, $this->template)
-                ->with('content', $result->fetch());
+            Template::make($this->layout, $data, $this->template)
+                ->with('content', $result)
+                ->display();
+        } else {
+            // A Template instance or a View with no Layout specified.
+            $result->display();
         }
-
-        // Send the HTTP headers and render the given View or Template.
-        $result->display();
 
         return true;
     }

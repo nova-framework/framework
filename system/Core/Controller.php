@@ -125,14 +125,14 @@ abstract class Controller
         // Execute the default Template-based rendering of the given View instance.
 
         if ((! $result instanceof Template) && ($this->layout !== false)) {
-            // The View instance is NOT a Template, but we have a Layout specified.
+            // A View instance, having a Layout specified; render it on current Layout.
             $data = $result->localData();
 
             Template::make($this->layout, $data, $this->template)
                 ->with('content', $result)
                 ->display();
         } else {
-            // A Template instance or a View with no Layout specified.
+            // A Template, or a View instance with no Layout specified; just render it.
             $result->display();
         }
 

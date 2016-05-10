@@ -195,7 +195,7 @@ class Query {
     }
 
     /**
-     * Add a "join where" clause to the query.
+     * Add a "JOIN WHERE" clause to the query.
      *
      * @param  string  $table
      * @param  string  $first
@@ -224,7 +224,7 @@ class Query {
     }
 
     /**
-     * Add a "join where" clause to the query.
+     * Add a "JOIN WHERE" clause to the query.
      *
      * @param  string  $table
      * @param  string  $first
@@ -282,7 +282,7 @@ class Query {
     }
 
     /**
-     * Add an "or where" clause to the query.
+     * Add an "OR WHERE" clause to the query.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -428,7 +428,7 @@ class Query {
     }
 
     /**
-     * Add a "where in" clause to the query.
+     * Add a "WHERE IN" clause to the query.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -452,7 +452,7 @@ class Query {
     }
 
     /**
-     * Add an "or where in" clause to the query.
+     * Add an "OR WHERE IN" clause to the query.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -464,7 +464,7 @@ class Query {
     }
 
     /**
-     * Add a "where not in" clause to the query.
+     * Add a "WHERE NOT IN" clause to the query.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -477,7 +477,7 @@ class Query {
     }
 
     /**
-     * Add an "or where not in" clause to the query.
+     * Add an "OR WHERE NOT IN" clause to the query.
      *
      * @param  string  $column
      * @param  mixed   $values
@@ -511,7 +511,7 @@ class Query {
     }
 
     /**
-     * Add a "where null" clause to the query.
+     * Add a "WHERE NULL" clause to the query.
      *
      * @param  string  $column
      * @param  string  $boolean
@@ -528,7 +528,7 @@ class Query {
     }
 
     /**
-     * Add an "or where null" clause to the query.
+     * Add an "OR WHERE NULL" clause to the query.
      *
      * @param  string  $column
      * @return \Database\Query
@@ -539,7 +539,7 @@ class Query {
     }
 
     /**
-     * Add a "where not null" clause to the query.
+     * Add a "WHERE NOT NULL" clause to the query.
      *
      * @param  string  $column
      * @param  string  $boolean
@@ -551,7 +551,7 @@ class Query {
     }
 
     /**
-     * Add an "or where not null" clause to the query.
+     * Add an "OR WHERE NOT NULL" clause to the query.
      *
      * @param  string  $column
      * @return \Database\Query
@@ -562,7 +562,7 @@ class Query {
     }
 
     /**
-     * Add an "order by" clause to the query.
+     * Add an "ORDER BY" clause to the query.
      *
      * @param  string  $column
      * @param  string  $direction
@@ -578,7 +578,7 @@ class Query {
     }
 
     /**
-     * Set the "offset" value of the query.
+     * Set the "OFFSET" value of the query.
      *
      * @param  int  $value
      * @return \Database\Query
@@ -591,7 +591,7 @@ class Query {
     }
 
     /**
-     * Alias to set the "offset" value of the query.
+     * Alias to set the "OFFSET" value of the query.
      *
      * @param  int  $value
      * @return \Database\Query
@@ -602,7 +602,7 @@ class Query {
     }
 
     /**
-     * Set the "limit" value of the query.
+     * Set the "LIMIT" value of the query.
      *
      * @param  int  $value
      * @return \Database\Query
@@ -617,7 +617,7 @@ class Query {
     }
 
     /**
-     * Alias to set the "limit" value of the query.
+     * Alias to set the "LIMIT" value of the query.
      *
      * @param  int  $value
      * @return \Database\Query
@@ -672,7 +672,7 @@ class Query {
     }
 
     /**
-     * Execute the query as a "select" statement.
+     * Execute the query as a "SELECT" statement.
      *
      * @param  array  $columns
      * @return array
@@ -689,7 +689,7 @@ class Query {
     }
 
     /**
-     * Run the query as a "select" statement against the connection.
+     * Run the query as a "SELECT" statement against the connection.
      *
      * @return array
      */
@@ -719,7 +719,7 @@ class Query {
     }
 
     /**
-     * Retrieve the "count" result of the query.
+     * Retrieve the "COUNT" result of the query.
      *
      * @param  string  $column
      * @return int
@@ -1039,7 +1039,7 @@ class Query {
     }
 
     /**
-     * Compile the "select *" portion of the query.
+     * Compile the "SELECT *" portion of the query.
      *
      * @param  \Database\Query  $query
      * @param  array  $columns
@@ -1055,7 +1055,7 @@ class Query {
     }
 
     /**
-     * Compile the "from" portion of the query.
+     * Compile the "FROM" portion of the query.
      *
      * @param  \Database\Query  $query
      * @param  string  $table
@@ -1067,7 +1067,7 @@ class Query {
     }
 
     /**
-     * Compile the "join" portions of the query.
+     * Compile the "JOIN" portions of the query.
      *
      * @param  \Database\Query  $query
      * @param  array  $joins
@@ -1114,7 +1114,7 @@ class Query {
     }
 
     /**
-     * Compile the "where" portions of the query.
+     * Compile the "WHERE" portions of the query.
      *
      * @param  \Database\Query  $query
      * @return string
@@ -1182,7 +1182,7 @@ class Query {
     }
 
     /**
-     * Compile a "between" where clause.
+     * Compile a "BETWEEN" where clause.
      *
      * @param  array  $where
      * @return string
@@ -1195,7 +1195,7 @@ class Query {
     }
 
     /**
-     * Compile a "where in" clause.
+     * Compile a "WHERE IN" clause.
      *
      * @param  array  $where
      * @return string
@@ -1208,7 +1208,7 @@ class Query {
     }
 
     /**
-     * Compile a "where not in" clause.
+     * Compile a "WHERE NOT IN" clause.
      *
      * @param  array  $where
      * @return string
@@ -1247,7 +1247,7 @@ class Query {
     }
 
     /**
-     * Compile a "where null" clause.
+     * Compile a "WHERE NULL" clause.
      *
      * @param  array  $where
      * @return string
@@ -1258,7 +1258,7 @@ class Query {
     }
 
     /**
-     * Compile a "where not null" clause.
+     * Compile a "WHERE NOT NULL" clause.
      *
      * @param  array  $where
      * @return string
@@ -1269,7 +1269,7 @@ class Query {
     }
 
     /**
-     * Compile the "order by" portions of the query.
+     * Compile the "ORDER BY" portions of the query.
      *
      * @param  \Database\Query  $query
      * @param  array  $orders
@@ -1289,7 +1289,7 @@ class Query {
     }
 
     /**
-     * Compile the "limit" portions of the query.
+     * Compile the "LIMIT" portions of the query.
      *
      * @param  \Database\Query  $query
      * @param  int  $limit
@@ -1301,7 +1301,7 @@ class Query {
     }
 
     /**
-     * Compile the "offset" portions of the query.
+     * Compile the "OFFSET" portions of the query.
      *
      * @param  \Database\Query  $query
      * @param  int  $offset

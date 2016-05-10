@@ -57,7 +57,7 @@ class JoinClause {
 	}
 
 	/**
-    * Add an "on" clause to the join.
+    * Add an "ON" clause to the join.
     *
     * @param  string  $first
     * @param  string  $operator
@@ -76,7 +76,7 @@ class JoinClause {
 	}
 
 	/**
-    * Add an "or on" clause to the join.
+    * Add an "OR ON" clause to the join.
     *
     * @param  string  $first
     * @param  string  $operator
@@ -89,7 +89,7 @@ class JoinClause {
 	}
 
 	/**
-    * Add an "on where" clause to the join.
+    * Add an "ON WHERE" clause to the join.
     *
     * @param  string  $first
     * @param  string  $operator
@@ -103,7 +103,7 @@ class JoinClause {
 	}
 
 	/**
-    * Add an "or on where" clause to the join.
+    * Add an "OR ON WHERE" clause to the join.
     *
     * @param  string  $first
     * @param  string  $operator

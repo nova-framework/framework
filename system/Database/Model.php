@@ -46,6 +46,16 @@ class Model {
     }
 
     /**
+     * Get the Table for the Model.
+     *
+     * @return string
+     */
+    public function getTable()
+    {
+        return $this->table;
+    }
+
+    /**
      * Get the Primary Key for the Model.
      *
      * @return string
@@ -63,18 +73,6 @@ class Model {
     public function newQuery()
     {
         return $this->db->table($this->table)->setModel($this);
-    }
-
-    /**
-     * Get the Table for this Model.
-     *
-     * @return string
-     */
-    public static function getTable()
-    {
-        $instance = new static();
-
-        return $instance->table;
     }
 
     /**

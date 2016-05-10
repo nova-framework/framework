@@ -97,6 +97,21 @@ define('SITETITLE', 'Nova V3.0');
 // define('SITEEMAIL', 'email@domain.com');
 
 /**
+ * Database configuration.
+ */
+Config::set('database', array(
+    'default' => array(
+        'driver'    => DB_TYPE,
+        'hostname'  => DB_HOST,
+        'database'  => DB_NAME,
+        'username'  => DB_USER,
+        'password'  => DB_PASS,
+        'charset'   => 'utf8',
+        'collation' => 'utf8_general_ci',
+    ),
+));
+
+/**
  * Setup the (class) Aliases configuration.
  */
 Config::set('class_aliases', array(
@@ -127,19 +142,4 @@ Config::set('class_aliases', array(
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url'
-));
-
-/**
- * Database configuration.
- */
-Config::set('database', array(
-    'default' => array(
-        'driver'    => DB_TYPE,
-        'hostname'  => DB_HOST,
-        'database'  => DB_NAME,
-        'username'  => DB_USER,
-        'password'  => DB_PASS,
-        'charset'   => 'utf8',
-        'collation' => 'utf8_general_ci',
-    ),
 ));

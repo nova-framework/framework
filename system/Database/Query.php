@@ -269,7 +269,7 @@ class Query {
         }
 
         if (is_null($value)) {
-            return $this->whereNull($column, $boolean, $operator != '=');
+            return $this->whereNull($column, $boolean, ($operator != '='));
         }
 
         $type = 'Basic';
@@ -715,7 +715,7 @@ class Query {
      */
     public function exists()
     {
-        return $this->count() > 0;
+        return ($this->count() > 0);
     }
 
     /**
@@ -791,9 +791,7 @@ class Query {
         $this->aggregate = null;
 
         if (isset($results[0])) {
-            $result = $results[0];
-
-            $result = (array) $result;
+            $result = (array) $results[0];
 
             return $result['aggregate'];
         }
@@ -807,7 +805,7 @@ class Query {
      */
     public function insert(array $values)
     {
-        if (!is_array(reset($values))) {
+        if (! is_array(reset($values))) {
             $values = array($values);
         } else {
             foreach ($values as $key => $value) {
@@ -838,7 +836,7 @@ class Query {
      */
     public function replace(array $values)
     {
-        if (!is_array(reset($values))) {
+        if (! is_array(reset($values))) {
             $values = array($values);
         } else {
             foreach ($values as $key => $value) {
@@ -1034,7 +1032,7 @@ class Query {
         $column = $this->columnize($aggregate['columns']);
 
         if ($query->distinct && $column !== '*') {
-            $column = 'DISTINCT '.$column;
+            $column = 'DISTINCT ' .$column;
         }
 
         return 'SELECT ' .$aggregate['function'] .'(' .$column .') AS AGGREGATE';
@@ -1067,7 +1065,7 @@ class Query {
      */
     protected function compileFrom(Query $query, $table)
     {
-        return 'FROM '.$this->wrapTable($table);
+        return 'FROM ' .$this->wrapTable($table);
     }
 
     /**
@@ -1134,7 +1132,7 @@ class Query {
         foreach ($query->wheres as $where) {
             $method = "compileWhere{$where['type']}";
 
-            $sql[] = $where['boolean'].' '.$this->$method($where);
+            $sql[] = $where['boolean'] .' ' .$this->$method($where);
         }
 
         if (count($sql) > 0) {
@@ -1416,10 +1414,10 @@ class Query {
 
         $where = is_array($this->wheres) ? $this->compileWheres($this) : '';
 
-        $sql = trim("DELETE FROM $table ".$where);
+        $sql = trim("DELETE FROM $table " .$where);
 
         if (isset($this->limit)) {
-            $sql .= ' '.$this->compileLimit($this, $this->limit);
+            $sql .= ' ' .$this->compileLimit($this, $this->limit);
         }
 
         return rtrim($sql);
@@ -1466,7 +1464,7 @@ class Query {
         $segments = explode('.', $value);
 
         foreach ($segments as $key => $segment) {
-            if ($key == 0 && count($segments) > 1) {
+            if (($key == 0) && (count($segments) > 1)) {
                 $wrapped[] = $this->wrapTable($segment);
             } else {
                 $wrapped[] = $this->wrapValue($segment);

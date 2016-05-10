@@ -135,6 +135,20 @@ abstract class Router
     }
 
     /**
+     * Invoke the callback with its associated parameters.
+     *
+     * @param  callable $callback
+     * @param  array $params array of matched parameters
+     * @return bool
+     */
+    protected function invokeCallback($callback, $params = array())
+    {
+        call_user_func_array($callback, $params);
+
+        return true;
+    }
+
+    /**
      * Invoke the Controller's Method with its associated parameters.
      *
      * @param  string $className to be instantiated
@@ -178,9 +192,7 @@ abstract class Router
     {
         if (is_object($callback)) {
             // Call the Closure function with the given arguments.
-            call_user_func_array($callback, $params);
-
-            return true;
+            return $this->invokeCallback($callback, $params);
         }
 
         // Call the object Controller and its Method.

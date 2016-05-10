@@ -8,6 +8,7 @@
 
 namespace Core\Base;
 
+use Core\Base\View;
 use Core\Controller;
 use Core\Response;
 use Core\Route;
@@ -143,7 +144,14 @@ abstract class Router
      */
     protected function invokeCallback($callback, $params = array())
     {
-        call_user_func_array($callback, $params);
+        $result = call_user_func_array($callback, $params);
+
+        if($result instanceof Response) {
+            $result->send();
+        }  else if($result instanceof View) {
+            // Create and send a Response.
+            Response::make($result)->send();
+        }
 
         return true;
     }

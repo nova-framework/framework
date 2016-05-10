@@ -9,7 +9,6 @@
 namespace Core;
 
 use Core\Base\Router as BaseRouter;
-use Core\Base\View as BaseView;
 use Core\Response;
 use Core\Route;
 use Helpers\Inflector;
@@ -212,27 +211,6 @@ class Router extends BaseRouter
 
         // Add the current Route instance to the known Routes list.
         array_push($router->routes, $route);
-    }
-
-    /**
-     * Invoke the callback with its associated parameters.
-     *
-     * @param  callable $callback
-     * @param  array $params array of matched parameters
-     * @return bool
-     */
-    protected function invokeCallback($callback, $params = array())
-    {
-        $result = call_user_func_array($callback, $params);
-
-        if($result instanceof Response) {
-            $result->send();
-        }  else if($result instanceof BaseView) {
-            // Create and send a Response.
-            Response::make($result)->send();
-        }
-
-        return true;
     }
 
     /**

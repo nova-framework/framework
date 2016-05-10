@@ -609,7 +609,9 @@ class Query {
      */
     public function limit($value)
     {
-        if ($value > 0) $this->limit = $value;
+        if ($value > 0) {
+            $this->limit = $value;
+        }
 
         return $this;
     }
@@ -1121,7 +1123,9 @@ class Query {
     {
         $sql = array();
 
-        if (is_null($query->wheres)) return '';
+        if (is_null($query->wheres)) {
+            return '';
+        }
 
         foreach ($query->wheres as $where) {
             $method = "compileWhere{$where['type']}";

@@ -66,7 +66,7 @@ class Model {
     }
 
     /**
-     * Get the Primary Key for the Model.
+     * Get the Table for this Model.
      *
      * @return string
      */

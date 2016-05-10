@@ -9,9 +9,9 @@
 
 namespace Core;
 
-use Helpers\Response;
+use Core\Base\View as BaseView;
+use Core\Response;
 use Core\Template;
-use Core\BaseView;
 
 
 /**

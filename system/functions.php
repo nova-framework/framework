@@ -67,6 +67,17 @@ function str_ends_with($haystack, $needle)
     return (($needle === '') || (substr($haystack, - strlen($needle)) === $needle));
 }
 
+/**
+ * Determine if the given object has a toString method.
+ *
+ * @param  object  $value
+ * @return bool
+ */
+function str_object($value)
+{
+    return (is_object($value) && method_exists($value, '__toString'));
+}
+
 /** Common data lookup methods. */
 
 /**

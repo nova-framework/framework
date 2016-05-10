@@ -102,6 +102,8 @@ define('SITETITLE', 'Nova V3.0');
 Config::set('class_aliases', array(
     'Errors'        => '\Core\Error',
     'Language'      => '\Core\Language',
+    'Response'      => '\Core\Response',
+    'Redirect'      => '\Core\Redirect',
     'Mail'          => '\Helpers\PhpMailer\Mail',
     'Assets'        => '\Helpers\Assets',
     'Arr'           => '\Helpers\Arr',
@@ -120,7 +122,6 @@ Config::set('class_aliases', array(
     'RainCaptcha'   => '\Helpers\RainCaptcha',
     'Request'       => '\Helpers\Request',
     'ReservedWords' => '\Helpers\ReservedWords',
-    'Response'      => '\Helpers\Response',
     'Session'       => '\Helpers\Session',
     'SimpleCurl'    => '\Helpers\SimpleCurl',
     'TableBuilder'  => '\Helpers\TableBuilder',

@@ -7,11 +7,11 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Core\Base;
 
+use Core\Response;
+use Core\View as CoreView;
 use Helpers\Inflector;
-use Helpers\Response;
-use Core\View;
 
 use ArrayAccess;
 
@@ -19,7 +19,7 @@ use ArrayAccess;
 /**
  * View class to load template and views files.
  */
-abstract class BaseView implements ArrayAccess
+abstract class View implements ArrayAccess
 {
     /**
      * @var array Array of shared data
@@ -138,7 +138,7 @@ abstract class BaseView implements ArrayAccess
 
         // All nested Views are evaluated before the main View.
         foreach ($data as $key => $value) {
-            if ($value instanceof BaseView) {
+            if ($value instanceof View) {
                 $data[$key] = $value->fetch();
             }
         }
@@ -184,7 +184,7 @@ abstract class BaseView implements ArrayAccess
             $data = $this->data;
         }
 
-        return $this->with($key, View::make($view, $data, $module));
+        return $this->with($key, CoreView::make($view, $data, $module));
     }
 
     /**
@@ -325,16 +325,10 @@ abstract class BaseView implements ArrayAccess
         }
 
         // Add the support for the dynamic withX Methods.
-        if ((strpos($method, 'with') === 0) && (strlen($method) > 5)) {
+        if ((strpos($method, 'with') === 0) && (strlen($method) > 4)) {
             $name = lcfirst(substr($method, 4));
 
             return $this->with($name, array_shift($params));
-        }
-        // Add the support for the dynamic shareX Methods.
-        else if ((strpos($method, 'share') === 0) && (strlen($method) > 6)) {
-            $name = lcfirst(substr($method, 5));
-
-            return $this->shares($name, array_shift($params));
         }
 
         return null;

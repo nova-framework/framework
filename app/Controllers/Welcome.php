@@ -35,6 +35,9 @@ class Welcome extends Controller
     {
         $data['title'] = $this->language->get('welcomeText');
         $data['welcomeMessage'] = $this->language->get('welcomeMessage');
+        
+        // Specify page / method specific js files to load
+        $data['requiredJs'] = ['custom.js'];
 
         View::renderTemplate('header', $data);
         View::render('Welcome/Welcome', $data);

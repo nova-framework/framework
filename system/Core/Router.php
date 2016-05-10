@@ -9,10 +9,9 @@
 namespace Core;
 
 use Core\Base\Router as BaseRouter;
+use Core\Base\View as BaseView;
 use Core\Response;
 use Core\Route;
-use Core\Template;
-use Core\View;
 use Helpers\Inflector;
 use Helpers\Request;
 use Helpers\Url;
@@ -228,18 +227,10 @@ class Router extends BaseRouter
 
         if($result instanceof Response) {
             $result->send();
-
-            return true;
+        }  else if($result instanceof BaseView) {
+            // Create and send a Response.
+            Response::make($result)->send();
         }
-
-        if ($result instanceof View) {
-            $result = Template::make('default')->with('content', $result->fetch());
-        } else if(! $result instanceof Template) {
-            return true;
-        }
-
-        // Create and send a Response.
-        Response::make($result)->send();
 
         return true;
     }

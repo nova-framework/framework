@@ -97,7 +97,7 @@ define('SITETITLE', 'Nova V3.0');
 // define('SITEEMAIL', 'email@domain.com');
 
 /**
- * Database configuration.
+ * Setup the Database configuration.
  */
 Config::set('database', array(
     'default' => array(

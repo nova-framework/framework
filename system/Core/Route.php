@@ -8,8 +8,11 @@
 
 namespace Core;
 
+use Core\Response;
+
+
 /**
- * The Route class is responsible for routing an HTTP request to an assigned callback function.
+ * The Route class is responsible for routing an HTTP request to an assigned Callback function.
  */
 class Route
 {
@@ -93,6 +96,10 @@ class Route
      */
     public static function filter($name, $callback)
     {
+        if (array_key_exists($name, self::$availFilters)) {
+            throw new \Exception('Filter already exists: ' .$name);
+        }
+
         self::$availFilters[$name] = $callback;
     }
 
@@ -108,59 +115,28 @@ class Route
 
     public function applyFilters()
     {
-        $result = true;
+        $result = null;
 
         foreach ($this->filters as $filter) {
-            if (array_key_exists($filter, self::$availFilters)) {
-                // Get the current Filter Callback.
-                $callback = self::$availFilters[$filter];
-
-                // Execute the current Filter's callback with the current matched Route as argument.
-                //
-                // When the Filter returns false, the filtering is considered being globally failed.
-                if ($callback !== null) {
-                    $result = $this->invokeCallback($callback);
-                }
-            } else {
-                // No Filter with this name found; mark that as failure.
-                $result = false;
+            if (! array_key_exists($filter, self::$availFilters)) {
+                throw new \Exception('Invalid Filter specified: ' .$filter);
             }
 
-            if ($result === false) {
-                // Failure of the current Filter; stop the loop.
+            // Get the current Filter Callback.
+            $callback = self::$availFilters[$filter];
+
+            // Execute the current Filter's Callback with the Route instance as argument.
+            // If the Callback return a Response instance, the Filtering will be stopped.
+            if (is_object($callback)) {
+                $result = call_user_func($callback, $this);
+            }
+
+            if ($result instanceof Response) {
                 break;
             }
         }
 
         return $result;
-    }
-
-    private function invokeCallback($callback)
-    {
-        if (is_object($callback)) {
-            // We have a Closure; execute it with the Route instance as parameter.
-            return call_user_func($callback, $this);
-        }
-
-        // Extract the Class name and the Method from the callback's string.
-        $segments = explode('@', $callback);
-
-        $className = $segments[0];
-        $method    = $segments[1];
-
-        if (! class_exists($className)) {
-            return false;
-        }
-
-        // The Filter Class receive on Constructor the Route instance as parameter.
-        $object = new $className();
-
-        if (method_exists($object, $method)) {
-            // Execute the object's method with this Route instance as argument.
-            return call_user_func(array($object, $method), $this);
-        }
-
-        return false;
     }
 
     /**

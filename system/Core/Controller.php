@@ -8,8 +8,9 @@
 
 namespace Core;
 
+use Core\Base\View as BaseView;
 use Core\Language;
-use Core\BaseView;
+use Core\Response;
 use Core\Template;
 use Core\View;
 use Helpers\Hooks;
@@ -76,12 +77,15 @@ abstract class Controller
         // Execute the requested Method with the given arguments.
         $result = call_user_func_array(array($this, $method), $params);
 
-        // After Action execution stage.
-        if (($result !== null) && ! is_bool($result)) {
-            return $this->after($result);
+        // The Method returned a Response instance; send it and stop the processing.
+        if ($result instanceof Response) {
+            $result->send();
+
+            return true;
         }
 
-        return true;
+        // After Action execution stage.
+        return $this->after($result);
     }
 
     /**
@@ -112,34 +116,19 @@ abstract class Controller
      */
     protected function after($result)
     {
-        if (is_string($result)) {
-            // The data is a String; send the Response Headers and output it.
-            Response::sendHeaders();
-
-            echo $result;
-        } else if (is_array($result)) {
-            // The data is an Array; prepare and send a JSON response.
-            header('Content-Type: application/json', true);
-
-            echo json_encode($result);
-        } else if (! $result instanceof BaseView) {
-            // The data is not a View instance; no further processing required.
+        if (! $result instanceof BaseView) {
+            // The result is not a View or Tempate instance; no processing required.
             return true;
         }
 
-        //
-        // Execute the default Template-based rendering of the given View instance.
-
         if ((! $result instanceof Template) && ($this->layout !== false)) {
-            // The View instance is NOT a Template, but we have a Layout specified.
-            $data = $result->localData();
-
-            $result = Template::make($this->layout, $data, $this->template)
+            // A View instance, having a Layout specified; create a Template instance.
+            $result = Template::make($this->layout, $result->localData(), $this->template)
                 ->with('content', $result->fetch());
         }
 
-        // Send the HTTP headers and render the given View or Template.
-        $result->display();
+        // Create and send a Response.
+        Response::make($result)->send();
 
         return true;
     }

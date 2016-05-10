@@ -31,5 +31,3 @@ $hooks = Hooks::get();
 $hooks->run('routes');
 /** End Module Routes. */
 
-/** If no Route found. */
-Router::error('App\Controllers\Error@index');

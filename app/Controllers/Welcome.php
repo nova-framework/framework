@@ -47,7 +47,7 @@ class Welcome extends Controller
     public function subPage()
     {
         return View::make('Welcome/SubPage')
-            ->withTitle($this->trans('subpageText'))
+            ->shares('title', $this->trans('subpageText'))
             ->withWelcomeMessage($this->trans('subpageMessage'));
     }
 }

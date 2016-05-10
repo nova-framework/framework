@@ -129,3 +129,17 @@ Config::set('class_aliases', array(
     'Url'           => '\Helpers\Url'
 ));
 
+/**
+ * Database configuration.
+ */
+Config::set('database', array(
+    'default' => array(
+        'driver'    => DB_TYPE,
+        'hostname'  => DB_HOST,
+        'database'  => DB_NAME,
+        'username'  => DB_USER,
+        'password'  => DB_PASS,
+        'charset'   => 'utf8',
+        'collation' => 'utf8_general_ci',
+    ),
+));

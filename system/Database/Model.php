@@ -72,7 +72,9 @@ class Model {
      */
     public function newQuery()
     {
-        return $this->db->table($this->table)->setModel($this);
+        return $this->db
+            ->table($this->table)
+            ->setModel($this);
     }
 
     /**

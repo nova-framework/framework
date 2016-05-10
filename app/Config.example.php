@@ -141,5 +141,6 @@ Config::set('class_aliases', array(
     'SimpleCurl'    => '\Helpers\SimpleCurl',
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
-    'Url'           => '\Helpers\Url'
+    'Url'           => '\Helpers\Url',
+    'DB'            => '\Database\Facade',
 ));

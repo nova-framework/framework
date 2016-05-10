@@ -305,7 +305,7 @@ class Query {
     {
         $isOperator = in_array($operator, $this->operators);
 
-        return ($isOperator && $operator != '=' && is_null($value));
+        return ($isOperator && ($operator != '=') && is_null($value));
     }
 
     /**
@@ -655,7 +655,7 @@ class Query {
             $result = (array) $result;
         }
 
-        return count($result) > 0 ? reset($result) : null;
+        return (count($result) > 0) ? reset($result) : null;
     }
 
     /**
@@ -668,7 +668,7 @@ class Query {
     {
         $results = $this->take(1)->get($columns);
 
-        return count($results) > 0 ? reset($results) : null;
+        return (count($results) > 0) ? reset($results) : null;
     }
 
     /**
@@ -905,7 +905,9 @@ class Query {
     {
         $uniqueIdentifier = isset($this->model) ? $this->model->getKeyName() : 'id';
 
-        if (!is_null($id)) $this->where($uniqueIdentifier, '=', $id);
+        if (! is_null($id)) {
+            $this->where($uniqueIdentifier, '=', $id);
+        }
 
         $sql = $this->compileDelete();
 
@@ -1047,11 +1049,13 @@ class Query {
      */
     protected function compileColumns(Query $query, $columns)
     {
-        if (!is_null($query->aggregate)) return;
+        if (is_null($query->aggregate)) {
+            $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
 
-        $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
+            return $select .$this->columnize($columns);
+        }
 
-        return $select .$this->columnize($columns);
+        return '';
     }
 
     /**
@@ -1136,7 +1140,7 @@ class Query {
         if (count($sql) > 0) {
             $sql = implode(' ', $sql);
 
-            return 'WHERE '.preg_replace('/AND |OR /', '', $sql, 1);
+            return 'WHERE ' .preg_replace('/AND |OR /', '', $sql, 1);
         }
 
         return '';
@@ -1454,7 +1458,7 @@ class Query {
         if (strpos(strtolower($value), ' as ') !== false) {
             $segments = explode(' ', $value);
 
-            return $this->wrap($segments[0]).' AS '.$this->wrap($segments[2]);
+            return $this->wrap($segments[0]) .' AS ' .$this->wrap($segments[2]);
         }
 
         $wrapped = array();

@@ -15,15 +15,15 @@ class Facade
 {
     /**
      * @param $method
-     * @param $args
+     * @param $params
      *
      * @return mixed
      */
-    public static function __callStatic($method, $args)
+    public static function __callStatic($method, $params)
     {
         $instance = Connection::getInstance();
 
-        // Call the non-static method from the Class instance
-        return call_user_func_array(array($instance, $method), $args);
+        // Call the non-static method from the Connection instance.
+        return call_user_func_array(array($instance, $method), $params);
     }
 }

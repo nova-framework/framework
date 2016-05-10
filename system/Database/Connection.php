@@ -53,13 +53,22 @@ class Connection
      */
     public function __construct(array $config)
     {
-        $this->pdo = $this->createConnection($config);
-
         $this->tablePrefix = $config['prefix'];
+
+        // Create the PDO instance from the given configuration.
+        extract($config);
+
+        $dsn = "$driver:host={$hostname};dbname={$database}";
+
+        $options = array(
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset} COLLATE {$collation}"
+        );
+
+        $this->pdo = new PDO($dsn, $username, $password, $options);
     }
 
     /**
-     * Get an instance of the Database Connection you prefer.
+     * Get an instance of the Database Connection.
      *
      * @param $name string Name of the connection provided in the configuration
      * @return Connection|\PDO|null
@@ -84,25 +93,6 @@ class Connection
         }
 
         throw new \Exception("Connection name '$name' is not defined in your configuration");
-    }
-
-    /**
-     * Create a new PDO connection.
-     *
-     * @param  array   $config
-     * @return PDO
-     */
-    public function createConnection(array $config)
-    {
-        extract($config);
-
-        $dsn = "$driver:host={$hostname};dbname={$database}";
-
-        $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset} COLLATE {$collation}"
-        );
-
-        return new PDO($dsn, $username, $password, $options);
     }
 
     /**

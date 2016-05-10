@@ -9,6 +9,7 @@
 namespace Database;
 
 use Database\Connection;
+use Helpers\Inflector;
 
 
 class Model {
@@ -25,7 +26,7 @@ class Model {
      *
      * @var string
      */
-    protected $table;
+    protected $table = null;
 
     /**
      * The primary key for the model.
@@ -42,6 +43,13 @@ class Model {
      */
     public function __construct()
     {
+        if(is_null($this->table) {
+            // Not Table name specified? Try to auto-calculate it.
+            $className = get_class($this);
+
+            $this->table = Inflector::tableize(class_basename($className));
+        }
+
         $this->db = Connection::getInstance();
     }
 

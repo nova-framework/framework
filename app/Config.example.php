@@ -106,6 +106,7 @@ Config::set('database', array(
         'database'  => DB_NAME,
         'username'  => DB_USER,
         'password'  => DB_PASS,
+        'prefix'    => PREFIX,
         'charset'   => 'utf8',
         'collation' => 'utf8_general_ci',
     ),
@@ -114,7 +115,7 @@ Config::set('database', array(
 /**
  * Setup the (class) Aliases configuration.
  */
-Config::set('class_aliases', array(
+Config::set('classAliases', array(
     'Errors'        => '\Core\Error',
     'Language'      => '\Core\Language',
     'Response'      => '\Core\Response',
@@ -143,4 +144,15 @@ Config::set('class_aliases', array(
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
     'DB'            => '\Database\Facade',
+    'Auth'          => '\Auth\Auth',
+));
+
+/**
+ * Setup the Auth configuration.
+ */
+Config::set('authentication', array(
+    'model'      => 'Auth\Model',
+    // The used Database Table information.
+    'table'      => 'users'
+    'primaryKey' => 'id'
 ));

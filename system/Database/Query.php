@@ -12,8 +12,8 @@ use Database\Connection;
 use Database\JoinClause;
 use Database\Model;
 
-use PDO;
-use Closure;
+use \PDO;
+use \Closure;
 
 
 class Query {
@@ -1112,7 +1112,9 @@ class Query {
 
         $second = $clause['where'] ? '?' : $this->wrap($clause['second']);
 
-        return "{$clause['boolean']} $first {$clause['operator']} $second";
+        $boolean = strtoupper($clause['boolean']);
+
+        return "$boolean $first {$clause['operator']} $second";
     }
 
     /**
@@ -1132,7 +1134,7 @@ class Query {
         foreach ($query->wheres as $where) {
             $method = "compileWhere{$where['type']}";
 
-            $sql[] = $where['boolean'] .' ' .$this->$method($where);
+            $sql[] = strtoupper($where['boolean']) .' ' .$this->$method($where);
         }
 
         if (count($sql) > 0) {

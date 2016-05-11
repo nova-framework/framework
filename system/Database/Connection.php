@@ -12,7 +12,7 @@ use Core\Config;
 use Database\Model;
 use Database\Query;
 
-use PDO;
+use \PDO;
 
 
 class Connection
@@ -36,7 +36,7 @@ class Connection
      *
      * @var int
      */
-    protected $fetchMode = PDO::FETCH_OBJECT;
+    protected $fetchMode = PDO::FETCH_OBJ;
 
     /**
      * The table prefix for the connection.

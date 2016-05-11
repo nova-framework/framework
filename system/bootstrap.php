@@ -11,6 +11,7 @@ use Core\Aliases;
 use Core\Language;
 use Core\Router;
 use Helpers\Session;
+use Auth\Auth;
 
 /** Turn on the custom error handling. */
 set_exception_handler('Core\Logger::ExceptionHandler');
@@ -39,6 +40,9 @@ Session::init();
 
 /** Initialize the Language. */
 Language::init();
+
+/** Initialize the Authentication. */
+Auth::init();
 
 /** Get the Router instance. */
 $router = Router::getInstance();

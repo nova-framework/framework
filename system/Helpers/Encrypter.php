@@ -3,14 +3,14 @@
 /**
  *  Encrypter for Nova Framework
  *
- * @author Manuel Jhobanny Morillo Ordoñez geomorillo@yahoo.com 
- * 
+ * @author Manuel Jhobanny Morillo Ordoñez geomorillo@yahoo.com
+ *
  */
 
 namespace Helpers;
 
-class Encrypter {
-
+class Encrypter
+{
     protected static $ivSize = 16;
     protected static $randomBytesLength = 16;
     protected static $algo;
@@ -23,17 +23,20 @@ class Encrypter {
      * @param String $key
      * @return boolean|string
      */
-    protected static function suportedAlgo($key) {
-
+    protected static function suportedAlgo($key)
+    {
         switch (self::keyLenght($key)) {
             case 16:
                 return "AES-128-CBC";
+
                 break;
             case 32:
                 return "AES-256-CBC";
+
                 break;
             default:
                 return FALSE;
+
                 break;
         }
     }
@@ -42,17 +45,24 @@ class Encrypter {
      * Setups the key and algo using ENCRYPT_KEY
      * @return void
      */
-    protected static function setConfig() {
+    protected static function setConfig()
+    {
         self::$key = ENCRYPT_KEY;
+
+        if(empty(self::$key)) {
+            throw new \Exception('Please configure the ENCRYPT_KEY.');
+        }
+
         self::$algo = self::suportedAlgo(self::$key);
     }
 
     /**
      * Gets key lenght from string
-     * @param String $key 
+     * @param String $key
      * @return Integer
      */
-    public static function keyLenght($key) {
+    public static function keyLenght($key)
+    {
         return mb_strlen($key, '8bit');
     }
 
@@ -64,26 +74,34 @@ class Encrypter {
      *
      * @throws Exception
      */
-    public static function encrypt($value) {
+    public static function encrypt($value)
+    {
         self::setConfig();
+
         if (self::$algo === FALSE) {
             throw new \Exception('Not supported algorithm found.');
         }
+
         $iv = mcrypt_create_iv(self::$ivSize, MCRYPT_DEV_URANDOM);
+
         $value = openssl_encrypt(serialize($value), self::$algo, self::$key, 0, $iv);
 
         if ($value === false) {
             throw new \Exception('Could not encrypt the data.');
         }
+
         // Once we have the encrypted value we will go ahead base64_encode the input
         // vector and create the MAC for the encrypted value so we can verify its
         // authenticity. Then, we'll JSON encode the data in a "payload" array.
 
         $mac = self::hash($iv = base64_encode($iv), $value);
+
         $json = json_encode(compact('iv', 'value', 'mac'));
-        if (!is_string($json)) {
+
+        if (! is_string($json)) {
             throw new \Exception('Could not encrypt the data.');
         }
+
         return base64_encode($json);
     }
 
@@ -95,14 +113,20 @@ class Encrypter {
      *
      * @throws Exception
      */
-    public static function decrypt($payload) {
+    public static function decrypt($payload)
+    {
         self::setConfig();
+
         $payload = self::getJsonPayload($payload);
+
         $iv = base64_decode($payload['iv']);
+
         $decrypted = openssl_decrypt($payload['value'], self::$algo, self::$key, 0, $iv);
+
         if ($decrypted === false) {
             throw new \Exception('Could not decrypt the data.');
         }
+
         return unserialize($decrypted);
     }
 
@@ -118,7 +142,8 @@ class Encrypter {
      * @param	int	$length	Output length
      * @return	string
      */
-    public static function get_random_bytes($length) {
+    public static function getRandomBytes($length)
+    {
         if (empty($length) OR ! ctype_digit((string) $length)) {
             return FALSE;
         }
@@ -136,7 +161,8 @@ class Encrypter {
      * @param type $value
      * @return string
      */
-    public static function hash($iv, $value) {
+    public static function hash($iv, $value)
+    {
 
         return hash_hmac(self::$hashAlgo, $iv . $value, self::$key);
     }
@@ -149,17 +175,21 @@ class Encrypter {
      *
      * @throws Exception
      */
-    protected static function getJsonPayload($payload) {
+    protected static function getJsonPayload($payload)
+    {
         $payload = json_decode(base64_decode($payload), true);
+
         // If the payload is not valid JSON or does not have the proper keys set we will
         // assume it is invalid and bail out of the routine since we will not be able
         // to decrypt the given value. We'll also check the MAC for this encryption.
-        if (!$payload || self::invalidPayload($payload)) {
+        if (! $payload || ! self::validPayload($payload)) {
             throw new \Exception('The payload is invalid.');
         }
-        if (!self::validMac($payload)) {
+
+        if (! self::validMac($payload)) {
             throw new \Exception('The MAC is invalid.');
         }
+
         return $payload;
     }
 
@@ -169,8 +199,9 @@ class Encrypter {
      * @param  array|mixed  $data
      * @return bool
      */
-    protected static function invalidPayload($data) {
-        return !is_array($data) || !isset($data['iv']) || !isset($data['value']) || !isset($data['mac']);
+    protected static function validPayload($data)
+    {
+        return (is_array($data) && isset($data['iv']) && isset($data['value']) || isset($data['mac']));
     }
 
     /**
@@ -179,12 +210,15 @@ class Encrypter {
      * @param  array  $payload
      * @return bool
      *
-     * 
+     *
      */
-    protected static function validMac(array $payload) {
-        $bytes = self::get_random_bytes(self::$randomBytesLength);
+    protected static function validMac(array $payload)
+    {
+        $bytes = self::getRandomBytes(self::$randomBytesLength);
+
         $calcMac = hash_hmac(self::$hashAlgo, self::hash($payload['iv'], $payload['value']), $bytes, true);
         $knowMac = hash_hmac(self::$hashAlgo, $payload['mac'], $bytes, true);
+
         return hash_equals($knowMac, $calcMac);
     }
 

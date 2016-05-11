@@ -32,7 +32,7 @@ class Auth
 
             $className = '\\' .ltrim($config['guard'], '\\');
 
-            static::$guard = new $className($config);
+            static::$guard = new $className();
         }
     }
 

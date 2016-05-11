@@ -26,7 +26,7 @@ Router::any('login',     array('filters' => 'guest|csrf', 'uses' => 'App\Control
 Router::get('logout',    array('filters' => 'auth',       'uses' => 'App\Controllers\Auth@logout'));
 
 // The User's Dashboard.
-Router::get('dashboard', array('filters' => 'auth',       'uses' => 'App\Controllers\Dashboard@index'));
+Router::get('dashboard', array('filters' => 'auth', 'uses' => 'App\Controllers\Dashboard@index'));
 
 // The Framework's Language Changer.
 Router::any('language/(:any)', 'App\Controllers\Language@change');

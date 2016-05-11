@@ -13,10 +13,10 @@ use Core\Redirect;
 use Core\View;
 use Helpers\Csrf;
 use Helpers\Request;
-use Auth\Auth as Authorize;
+use Auth\Auth;
 
 
-class Auth extends Controller
+class Users extends Controller
 {
     protected $layout = 'custom';
 
@@ -24,6 +24,11 @@ class Auth extends Controller
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function dashboard()
+    {
+        return View::make('Users/Dashboard')->shares('title', 'Dashboard');
     }
 
     public function login()
@@ -41,9 +46,9 @@ class Auth extends Controller
             $remember = (Request::post('remember') == 'on');
 
             // Make an attempt to login the Guest with the given credentials.
-            if(Authorize::attempt($credentials, $remember)) {
+            if(Auth::attempt($credentials, $remember)) {
                 // The User is authenticated now; retrieve his data as an stdClass instance.
-                $user = Authorize::user();
+                $user = Auth::user();
 
                 // Prepare the flash message.
                 $message = sprintf('<b>%s</b>, you have successfully logged in.', $user->realname);
@@ -56,7 +61,7 @@ class Auth extends Controller
             }
         }
 
-        return View::make('Auth/Login')
+        return View::make('Users/Login')
             ->shares('title', 'User Login')
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);
@@ -64,7 +69,7 @@ class Auth extends Controller
 
     public function logout()
     {
-        Authorize::logout();
+        Auth::logout();
 
         return Redirect::to('login')->with('message', 'You have successfully logged out.');
     }

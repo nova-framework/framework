@@ -70,8 +70,7 @@ class Csrf {
      * @return integer
      */
 
-    public static function genRandomNumber() {
-        $size = 32;
+    public static function genRandomNumber($size = 32) {
         if (extension_loaded('openssl')) {
             return openssl_random_pseudo_bytes($size);
         }

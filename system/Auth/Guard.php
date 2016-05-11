@@ -363,13 +363,13 @@ class Guard
      */
     public function createModel()
     {
-        if(is_null($this->model)) {
-            $config = Config::get('authentication');
+        $config = Config::get('authentication');
 
+        if(is_null($this->model)) {
             $className = '\\' .ltrim($config['model'], '\\');
 
             // Create the specified Model instance.
-            $this->model = new $className($config);
+            $this->model = new $className();
         }
 
         return $this->model;

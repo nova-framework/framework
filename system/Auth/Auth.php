@@ -27,9 +27,9 @@ class Auth
      */
     public static function init()
     {
-        if (! isset(static::$guard)) {
-            $config = Config::get('authentication');
+        $config = Config::get('authentication');
 
+        if (! isset(static::$guard)) {
             $className = '\\' .ltrim($config['guard'], '\\');
 
             static::$guard = new $className();

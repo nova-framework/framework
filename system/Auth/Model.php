@@ -8,14 +8,17 @@
 
 namespace Auth;
 
+use Core\Config;
 use Database\Model as BaseModel;
 
 
 class Model extends BaseModel
 {
-    public function __construct(array $config = array())
+    public function __construct()
     {
-        if(is_null($this->table) && ! empty($config)) {
+        $config = Config::get('authentication');
+
+        if(is_null($this->table)) {
             // No Table name specified, prepare it from configuration.
             $this->table = $config['table'];
 

@@ -13,7 +13,7 @@ use Core\Redirect;
 use Core\View;
 use Helpers\Csrf;
 use Helpers\Request;
-use Auth\Auth;
+use Auth;
 
 
 class Users extends Controller

@@ -92,6 +92,11 @@ define('SESSION_PREFIX', 'nova_');
 define('SITETITLE', 'Nova V3.0');
 
 /**
+ * Define a 32 bits key
+ */
+define('ENCRYPT_KEY', '');
+
+/**
  * Optional set a site email address.
  */
 // define('SITEEMAIL', 'email@domain.com');

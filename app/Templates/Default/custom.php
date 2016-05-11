@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Layout - a Layout similar with the classic Header and Footer files.
+ * Custom Layout - a Layout similar with the classic Header and Footer files.
  */
 ?>
 <!DOCTYPE html>

@@ -38,11 +38,7 @@ class Auth extends Controller
             );
 
             // Prepare the 'remember' parameter.
-            if (Request::post('remember') == 'on') {
-                $remember = true;
-            } else {
-                $remember = false;
-            }
+            $remember = (Request::post('remember') == 'on');
 
             // Make an attempt to login the Guest with the given credentials.
             if(Authorize::attempt($credentials, $remember)) {

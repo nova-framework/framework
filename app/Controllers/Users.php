@@ -1,6 +1,6 @@
 <?php
 /**
- * Auth - A Controller for managing the User Authentication.
+ * Users - A Controller for managing the Users Authentication.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

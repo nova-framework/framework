@@ -38,7 +38,7 @@ class Auth extends Controller
             );
 
             // Prepare the 'remember' parameter.
-            if (Request::post('remember') && (Request::post('remember') == 'on')) {
+            if (Request::post('remember') == 'on') {
                 $remember = true;
             } else {
                 $remember = false;
@@ -61,7 +61,7 @@ class Auth extends Controller
         }
 
         return View::make('Auth/Login')
-            ->shares('title', 'Login')
+            ->shares('title', 'User Login')
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);
     }

@@ -156,6 +156,7 @@ Config::set('classAliases', array(
  * Setup the Auth configuration.
  */
 Config::set('authentication', array(
+    'guard'      => 'Auth\Guard',
     'model'      => 'Auth\Model',
     // The used Database Table information.
     'table'      => 'users',

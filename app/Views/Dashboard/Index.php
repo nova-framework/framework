@@ -1,9 +1,6 @@
 <div class='row-responsive'>
     <h2>Dashboard</h2>
-
-    <ul class="breadcrumb">
-        <li>Dashboard</li>
-    </ul>
+    <hr>
 
     <?= Session::message('message'); ?>
 </div>

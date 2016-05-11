@@ -20,6 +20,23 @@ class Auth
      */
     protected static $guard;
 
+    /**
+     * Get the Guard instance dynamically.
+     *
+     * @return \Auth\Guard
+     */
+    protected static function getGuard()
+    {
+        $config = Config::get('authentication');
+
+        if (! isset(static::$guard)) {
+            $className = '\\' .ltrim($config['guard'], '\\');
+
+            static::$guard = new $className($config);
+        }
+
+        return static::$guard;
+    }
 
     /**
      * Call the Guard methods dynamically.
@@ -30,14 +47,8 @@ class Auth
      */
     public static function __callStatic($method, $params)
     {
-        $config = Config::get('authentication');
+        $guard = static::getGuard();
 
-        if (! isset(static::$guard)) {
-            $className = '\\' .ltrim($config['guard'], '\\');
-
-            static::$guard = new $className();
-        }
-
-        return call_user_func_array(array(static::$guard, $method), $params);
+        return call_user_func_array(array($guard, $method), $params);
     }
 }

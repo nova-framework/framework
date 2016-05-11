@@ -48,12 +48,16 @@ class Guard
     protected $tokenRetrievalAttempted = false;
 
     /**
-     * Create a new Authentication Guard.
+     * Create a new Authentication Guard instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $config)
     {
+        $className = '\\' .ltrim($config['model'], '\\');
+
+        // Create the configuration specified Model instance.
+        $this->model = new $className();
     }
 
     /**
@@ -134,6 +138,8 @@ class Guard
      */
     public function login(stdClass $user, $remember = false)
     {
+        $this->setUser($user);
+
         $this->updateSession($user);
 
         if ($remember) {
@@ -143,8 +149,6 @@ class Guard
 
             $this->setRecallerCookie($user);
         }
-
-        $this->setUser($user);
     }
 
     /**
@@ -177,7 +181,7 @@ class Guard
      */
     public function retrieveUser(array $credentials)
     {
-        $query = $this->createModel()->newQuery();
+        $query = $this->model->newQuery();
 
         foreach ($credentials as $key => $value) {
             if ($key !== 'password') {
@@ -196,7 +200,7 @@ class Guard
      */
     public function retrieveUserById($id)
     {
-        $keyName = $this->createModel()->getKeyName();
+        $keyName = $this->model->getKeyName();
 
         return $this->retrieveUser(array($keyName => $id));
     }
@@ -214,26 +218,22 @@ class Guard
     }
 
     /**
-     * Refresh the "Remember me" token for the user.
+     * Refresh the "Remember me" Token for the User.
      *
      * @param  \stdClass $user
      * @return void
      */
     protected function refreshRememberToken(stdClass $user)
     {
-        $model = $this->createModel();
-
-        $keyName = $model->getKeyName();
-
-        $keyValue = $user->{$keyName};
+        $keyName = $this->model->getKeyName();
 
         // Get a new Query from Model.
-        $query = $model->newQuery();
+        $query = $this->model->newQuery();
 
         // Create a new Token and update it into Database.
         $user->remember_token = createKey(60);
 
-        $query->where($keyName, $keyValue)->update(array('remember_token' => $user->remember_token));
+        $query->where($keyName, $user->{$keyName})->update(array('remember_token' => $user->remember_token));
     }
 
     /**
@@ -255,11 +255,9 @@ class Guard
      */
     protected function updateSession(stdClass $user)
     {
-        $keyName = $this->createModel()->getKeyName();
+        $keyName = $this->model->getKeyName();
 
-        $keyValue = $user->{$keyName};
-
-        Session::set($this->getName(), $keyValue);
+        Session::set($this->getName(), $user->{$keyName});
     }
 
     /**
@@ -270,12 +268,10 @@ class Guard
      */
     protected function setRecallerCookie(stdClass $user)
     {
-        $keyName = $this->createModel()->getKeyName();
-
-        $keyValue = $user->{$keyName};
+        $keyName = $this->model->getKeyName();
 
         // Prepare the value and set the remembering Cookie.
-        $value = $keyValue .'|' .$user->remember_token;
+        $value = $user->{$keyName} .'|' .$user->remember_token;
 
         Cookie::set($this->getRecallerName(), Encrypter::encrypt($value));
     }
@@ -290,7 +286,11 @@ class Guard
     {
         if (! $this->validRecaller($recaller)) {
             Cookie::destroy($this->getRecallerName());
-        } else if (! $this->tokenRetrievalAttempted) {
+
+            return null;
+        }
+
+        if (! $this->tokenRetrievalAttempted) {
             $this->tokenRetrievalAttempted = true;
 
             list($id, $remember_token) = explode('|', $recaller, 2);
@@ -323,13 +323,14 @@ class Guard
      */
     protected function getRecaller()
     {
-        $payload = Cookie::get($this->getRecallerName());
+        $cookie = Cookie::get($this->getRecallerName());
 
         try {
-            $recaller = Encrypter::decrypt($payload);
+            $recaller = Encrypter::decrypt($cookie);
         } catch (\Exception $e) {
             $recaller = null;
 
+            // That's not a valid Cookie; destroy it.
             Cookie::destroy($this->getRecallerName());
         }
 
@@ -354,24 +355,5 @@ class Guard
     public function getName()
     {
         return 'login_' .md5(get_class($this));
-    }
-
-    /**
-     * Create a new instance of the Model.
-     *
-     * @return \Auth\Model
-     */
-    public function createModel()
-    {
-        $config = Config::get('authentication');
-
-        if(is_null($this->model)) {
-            $className = '\\' .ltrim($config['model'], '\\');
-
-            // Create the specified Model instance.
-            $this->model = new $className();
-        }
-
-        return $this->model;
     }
 }

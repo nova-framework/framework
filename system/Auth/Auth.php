@@ -20,21 +20,6 @@ class Auth
      */
     protected static $guard;
 
-    /**
-     * Intialize the authentication service.
-     *
-     * @return void
-     */
-    public static function init()
-    {
-        $config = Config::get('authentication');
-
-        if (! isset(static::$guard)) {
-            $className = '\\' .ltrim($config['guard'], '\\');
-
-            static::$guard = new $className();
-        }
-    }
 
     /**
      * Call the Guard methods dynamically.
@@ -45,8 +30,14 @@ class Auth
      */
     public static function __callStatic($method, $params)
     {
-        if (isset(static::$guard)) {
-            return call_user_func_array(array(static::$guard, $method), $params);
+        $config = Config::get('authentication');
+
+        if (! isset(static::$guard)) {
+            $className = '\\' .ltrim($config['guard'], '\\');
+
+            static::$guard = new $className();
         }
+
+        return call_user_func_array(array(static::$guard, $method), $params);
     }
 }

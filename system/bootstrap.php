@@ -41,9 +41,6 @@ Session::init();
 /** Initialize the Language. */
 Language::init();
 
-/** Initialize the Authentication. */
-Auth::init();
-
 /** Get the Router instance. */
 $router = Router::getInstance();
 

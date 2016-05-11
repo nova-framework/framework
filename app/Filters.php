@@ -31,7 +31,7 @@ Route::filter('csrf', function($route) {
 
 // Authentication Filters.
 Route::filter('auth', function($route) {
-    if (Auth::guest()) {
+    if (! Auth::check()) {
          // User is not logged in, respond with a Redirect code 401 (Unauthorized)
          return Redirect::to('login', 401);
     }

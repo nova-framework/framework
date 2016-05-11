@@ -70,16 +70,6 @@ class Guard
     }
 
     /**
-     * Determine if the current User is NOT authenticated.
-     *
-     * @return bool
-     */
-    public function guest()
-    {
-        return is_null($this->user());
-    }
-
-    /**
      * Get the authenticated user.
      *
      * @return \stdClass|null

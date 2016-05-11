@@ -297,7 +297,9 @@ class Guard
      */
     protected function getUserByRecaller($recaller)
     {
-        if ($this->validRecaller($recaller) && ! $this->tokenRetrievalAttempted) {
+        if (! $this->validRecaller($recaller)) {
+            Cookie::destroy($this->getRecallerName());
+        } else if (! $this->tokenRetrievalAttempted) {
             $this->tokenRetrievalAttempted = true;
 
             list($id, $remember_token) = explode('|', $recaller, 2);

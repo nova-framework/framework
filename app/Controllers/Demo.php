@@ -4,7 +4,6 @@ namespace App\Controllers;
 use Core\View;
 use Core\Controller;
 use Helpers\Url;
-use Helpers\Password;
 
 /*
 *
@@ -38,7 +37,5 @@ class Demo extends Controller
         );
 
         echo '<pre>' .var_export($params, true) .'</pre>';
-
-        echo '<pre>' .var_export(Password::make('admin'), true) .'</pre>';
     }
 }

@@ -1,3 +1,8 @@
+<div class='row-responsive'>
+    <h2>User Login</h2>
+    <hr>
+</div>
+
 <div class="row">
     <?php echo Errors::display($error); ?>
     <?php echo Session::message('message'); ?>

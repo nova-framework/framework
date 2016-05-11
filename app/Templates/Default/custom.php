@@ -29,10 +29,11 @@ echo $css; //place to pass data / plugable hook zone
     </p>
     <div class="clearfix"></div>
     <?php } ?>
-
-    <div style="padding-top: 50px;">
+    <p>
+        <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>'>
+    </p>
+    
     <?= $content; ?>
-    </div>
 </div>
 
 <?php

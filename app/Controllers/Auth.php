@@ -46,7 +46,7 @@ class Auth extends Controller
 
             // Make an attempt to login the Guest with the given credentials.
             if(Authorize::attempt($credentials, $remember)) {
-                // The User is authenticated now; retrieve his data as an (std)Class instance.
+                // The User is authenticated now; retrieve his data as an stdClass instance.
                 $user = Authorize::user();
 
                 // Prepare the flash message.

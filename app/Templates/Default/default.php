@@ -17,6 +17,10 @@ Assets::css([
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css',
 =======
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css',
+<<<<<<< HEAD
+>>>>>>> upstream/master
+=======
+    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css',
 >>>>>>> upstream/master
     template_url('css/style.css', 'Default'),
 ]);

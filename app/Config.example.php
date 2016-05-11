@@ -158,6 +158,6 @@ Config::set('classAliases', array(
 Config::set('authentication', array(
     'model'      => 'Auth\Model',
     // The used Database Table information.
-    'table'      => 'users'
+    'table'      => 'users',
     'primaryKey' => 'id'
 ));

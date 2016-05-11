@@ -128,7 +128,7 @@ class Connection
      * @param  array   $bindings
      * @return array
      */
-    public function select($query, $bindings = array())
+    public function select($query, array $bindings = array())
     {
         $statement = $this->getPdo()->prepare($query);
 
@@ -144,7 +144,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function insert($query, $bindings = array())
+    public function insert($query, array $bindings = array())
     {
         return $this->statement($query, $bindings);
     }
@@ -156,7 +156,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function update($query, $bindings = array())
+    public function update($query, array $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -168,7 +168,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function delete($query, $bindings = array())
+    public function delete($query, array $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -180,7 +180,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function statement($query, $bindings = array())
+    public function statement($query, array $bindings = array())
     {
         return $this->getPdo()->prepare($query)->execute($bindings);
     }
@@ -192,7 +192,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function affectingStatement($query, $bindings = array())
+    public function affectingStatement($query, array $bindings = array())
     {
         $statement = $this->getPdo()->prepare($query);
 

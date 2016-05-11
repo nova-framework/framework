@@ -179,7 +179,7 @@ class Session
         if (!empty($msg)) {
             return "<div class='alert alert-success alert-dismissable'>
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                    <h4><i class='fa fa-check'></i> ".$msg."</h4>
+                    <h4><i class='glyphicon glyphicon-ok'></i> ".$msg."</h4>
                   </div>";
         }
     }

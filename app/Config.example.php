@@ -92,7 +92,7 @@ define('SESSION_PREFIX', 'nova_');
 define('SITETITLE', 'Nova V3.0');
 
 /**
- * Define a 32 bits Encription Key.
+ * Define a 32 bits Encryption Key.
  */
 define('ENCRYPT_KEY', '');
 

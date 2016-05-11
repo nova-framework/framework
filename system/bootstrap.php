@@ -12,6 +12,7 @@ use Core\Language;
 use Core\Router;
 use Helpers\Session;
 
+
 /** Turn on the custom error handling. */
 set_exception_handler('Core\Logger::ExceptionHandler');
 set_error_handler('Core\Logger::ErrorHandler');

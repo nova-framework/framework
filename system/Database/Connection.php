@@ -12,7 +12,7 @@ use Core\Config;
 use Database\Model;
 use Database\Query;
 
-use PDO;
+use \PDO;
 
 
 class Connection
@@ -36,7 +36,7 @@ class Connection
      *
      * @var int
      */
-    protected $fetchMode = PDO::FETCH_OBJECT;
+    protected $fetchMode = PDO::FETCH_OBJ;
 
     /**
      * The table prefix for the connection.
@@ -53,18 +53,9 @@ class Connection
      */
     public function __construct(array $config)
     {
+        $this->pdo = $this->createConnection($config);
+
         $this->tablePrefix = $config['prefix'];
-
-        // Create the PDO instance from the given configuration.
-        extract($config);
-
-        $dsn = "$driver:host={$hostname};dbname={$database}";
-
-        $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset} COLLATE {$collation}"
-        );
-
-        $this->pdo = new PDO($dsn, $username, $password, $options);
     }
 
     /**
@@ -85,14 +76,36 @@ class Connection
         $config = Config::get('database');
 
         if (isset($config[$name])) {
+            $options = $config[$name];
+
             // Create the Connection instance.
-            static::$instances[$name] = new static($config[$name]);
+            static::$instances[$name] = new static($options);
 
             // Return the Connection instance.
             return static::$instances[$name];
         }
 
         throw new \Exception("Connection name '$name' is not defined in your configuration");
+    }
+
+    /**
+     * Create a new PDO connection.
+     *
+     * @param  array   $config
+     * @return PDO
+     */
+    public function createConnection(array $config)
+    {
+        extract($config);
+
+        $dsn = "$driver:host={$hostname};dbname={$database}";
+
+        $options = array(
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset} COLLATE {$collation}"
+        );
+
+        return new PDO($dsn, $username, $password, $options);
     }
 
     /**
@@ -115,7 +128,7 @@ class Connection
      * @param  array   $bindings
      * @return array
      */
-    public function select($query, $bindings = array())
+    public function select($query, array $bindings = array())
     {
         $statement = $this->getPdo()->prepare($query);
 
@@ -131,7 +144,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function insert($query, $bindings = array())
+    public function insert($query, array $bindings = array())
     {
         return $this->statement($query, $bindings);
     }
@@ -143,7 +156,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function update($query, $bindings = array())
+    public function update($query, array $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -155,7 +168,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function delete($query, $bindings = array())
+    public function delete($query, array $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -167,7 +180,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function statement($query, $bindings = array())
+    public function statement($query, array $bindings = array())
     {
         return $this->getPdo()->prepare($query)->execute($bindings);
     }
@@ -179,7 +192,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function affectingStatement($query, $bindings = array())
+    public function affectingStatement($query, array $bindings = array())
     {
         $statement = $this->getPdo()->prepare($query);
 

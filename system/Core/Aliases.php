@@ -16,7 +16,7 @@ class Aliases
 {
     public static function init()
     {
-        $classes = Config::get('class_aliases');
+        $classes = Config::get('classAliases');
 
         if(! is_array($classes)) {
             return;

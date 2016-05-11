@@ -8,13 +8,13 @@
 
 namespace Core;
 
-use Core\Base\View;
+use Core\Base\View as BaseView;
 
 
 /**
  * View class to load templates files.
  */
-class Template extends View
+class Template extends BaseView
 {
     /**
      * Constructor

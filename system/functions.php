@@ -68,6 +68,16 @@ function str_ends_with($haystack, $needle)
 }
 
 /**
+ * Class name helper
+ * @param string $className
+ * @return string
+ */
+function class_basename($className)
+{
+    return basename(str_replace('\\', '/', $className));
+}
+
+/**
  * Determine if the given object has a toString method.
  *
  * @param  object  $value

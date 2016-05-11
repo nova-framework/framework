@@ -29,6 +29,7 @@ echo $css; //place to pass data / plugable hook zone
         <a href='<?= site_url('language/de'); ?>'>German</a> |
         <a href='<?= site_url('language/fr'); ?>'>French</a> |
         <a href='<?= site_url('language/it'); ?>'>Italian</a> |
+        <a href='<?= site_url('language/ja'); ?>'>Japanese</a> |
         <a href='<?= site_url('language/nl'); ?>'>Dutch</a> |
         <a href='<?= site_url('language/fa'); ?>'>Persian</a> |
         <a href='<?= site_url('language/pl'); ?>'>Polish</a> |

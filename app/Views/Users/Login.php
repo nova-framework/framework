@@ -31,7 +31,7 @@
                         <button type="submit" class="btn btn-success col-lg-6 pull-right"><i class='fa fa-sign-in'></i> Sign In</button>
                     </div>
                     <div class="clearfix"></div>
-                    <input type="hidden" name="csrfToken" value="<?= $data['csrfToken']; ?>" />
+                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
                 </form>
             </div>
         </div>

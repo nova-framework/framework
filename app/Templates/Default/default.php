@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <title><?= $title .' - ' .SITETITLE; ?></title>
 <?php
-echo $meta; //place to pass data / plugable hook zone
+echo $meta; // Place to pass data / plugable hook zone
 
 Assets::css([
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
@@ -25,11 +25,11 @@ Assets::css([
     template_url('css/style.css', 'Default'),
 ]);
 
-echo $css; //place to pass data / plugable hook zone
+echo $css; // Place to pass data / plugable hook zone
 ?>
 </head>
 <body>
-<?= $afterBody; //place to pass data / plugable hook zone ?>
+<?= $afterBody; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
     <p class="pull-right">
@@ -60,8 +60,8 @@ Assets::js([
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
 ]);
 
-echo $js; //place to pass data / plugable hook zone
-echo $footer; //place to pass data / plugable hook zone
+echo $js; // Place to pass data / plugable hook zone
+echo $footer; // Place to pass data / plugable hook zone
 ?>
 
 </body>

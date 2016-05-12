@@ -57,7 +57,19 @@ class Guard
         $className = '\\' .ltrim($config['model'], '\\');
 
         // Create the configuration specified Model instance.
-        $this->model = new $className();
+        $this->model = new $className($config);
+    }
+
+    /**
+     * Determine if the current User is not logged in.
+     *
+     * This method is the inverse of the "check" method.
+     *
+     * @return bool
+     */
+    public function guest()
+    {
+        return ! $this->check();
     }
 
     /**

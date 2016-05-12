@@ -100,10 +100,10 @@ class Users extends Controller
 
             if(! Password::verify(Request::post('password'), $user->password)) {
                 $error[] = 'Wrong current Password inserted';
-            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
-                $error[] = 'The new Password is not strong enough';
             } else if ($password != $verify) {
                 $error[] = 'The new Password and its verify are not equals';
+            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
+                $error[] = 'The new Password is not strong enough';
             } else {
                 $this->model->updateUser($user, array('password' => Password::make($password)));
 

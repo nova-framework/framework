@@ -12,8 +12,8 @@ use Database\Connection;
 use Helpers\Inflector;
 
 
-class Model {
-
+class Model
+{
     /**
      * The database connection instance.
      *

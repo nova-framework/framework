@@ -29,7 +29,7 @@ Router::get('logout', array('filters' => 'auth',       'uses' => 'App\Controller
 Router::get('dashboard', array('filters' => 'auth', 'uses' => 'App\Controllers\Users@dashboard'));
 
 // The User's Profile.
-Router::any('profile', array('filters' => 'auth', 'uses' => 'App\Controllers\Users@profile'));
+Router::any('profile', array('filters' => 'auth|csrf', 'uses' => 'App\Controllers\Users@profile'));
 
 // The Framework's Language Changer.
 Router::any('language/(:any)', 'App\Controllers\Language@change');

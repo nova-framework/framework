@@ -14,11 +14,9 @@ use Database\Model as BaseModel;
 
 class Model extends BaseModel
 {
-    public function __construct()
+    public function __construct(array $config = array())
     {
-        $config = Config::get('authentication');
-
-        if(is_null($this->table)) {
+        if(is_null($this->table) && ! empty($config)) {
             // No Table name specified, prepare it from configuration.
             $this->table = $config['table'];
 

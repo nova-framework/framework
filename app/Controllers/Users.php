@@ -71,7 +71,7 @@ class Users extends Controller
                 return Redirect::to('dashboard')->with('message', $message);
             } else {
                 // Errors happened on authentication; add a message into $error array.
-                $error[] = 'Wrong username or password';
+                $error[] = 'Wrong username or password.';
             }
         }
 
@@ -95,19 +95,22 @@ class Users extends Controller
         if(Request::isPost()) {
             $user = Auth::user();
 
-            $password = Request::post('newPassword');
-            $verify   = Request::post('verPassword');
+            $password = Request::post('password');
 
-            if(! Password::verify($user->password, Request::post('password'))) {
-                $error[] = 'Wrong current Password inserted';
-            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
-                $error[] = 'The new Password is not strong enough';
-            } else if ($password != $verify) {
-                $error[] = 'The new Password and its verify are not equals';
+            $newPassword = Request::post('newPassword');
+            $verPassword = Request::post('verPassword');
+
+            if (! Password::verify($password, $user->password)) {
+                $error[] = 'Wrong current Password inserted.';
+            } else if ($newPassword != $verPassword) {
+                $error[] = 'The new Password and its verification are not equals.';
+            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $newPassword)) {
+                $error[] = 'The new Password is not strong enough.';
             } else {
-                $this->model->updateUser($user, array('password' => Password::make($password)));
+                $this->model->updateUser($user, array('password' => Password::make($newPassword)));
 
-                return Redirect::to('dashboard')->with('message', 'You have successfully updated your Password.');
+                // Use a Redirect to avoid the reposting the data.
+                return Redirect::to('profile')->with('message', 'You have successfully updated your Password.');
             }
         }
 

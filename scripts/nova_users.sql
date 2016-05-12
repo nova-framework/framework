@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.5
+-- version 4.5.5.1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 11, 2016 at 02:15 PM
+-- Generation Time: May 12, 2016 at 10:02 AM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.21
 
@@ -31,6 +31,7 @@ CREATE TABLE `nova_users` (
   `username` varchar(255) NOT NULL,
   `realname` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -38,8 +39,8 @@ CREATE TABLE `nova_users` (
 -- Dumping data for table `nova_users`
 --
 
-INSERT INTO `nova_users` (`id`, `username`, `realname`, `password`, `remember_token`) VALUES
-(1, 'admin', 'Administrator', '$2y$10$uof0T8Gj7oXXMBohSgZK2e0K84JvbsFvoL9GTekg.iTYyxBmQnvYK', NULL);
+INSERT INTO `nova_users` (`id`, `username`, `realname`, `password`, `email`, `remember_token`) VALUES
+(1, 'admin', 'Administrator', '$2y$10$uof0T8Gj7oXXMBohSgZK2e0K84JvbsFvoL9GTekg.iTYyxBmQnvYK', 'admin@novaframework.dev', NULL);
 
 --
 -- Indexes for dumped tables

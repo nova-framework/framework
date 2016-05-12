@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <title><?= $title .' - ' .SITETITLE; ?></title>
 <?php
-echo $meta; //place to pass data / plugable hook zone
+echo $meta; // Place to pass data / plugable hook zone
 
 Assets::css([
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
@@ -18,7 +18,7 @@ Assets::css([
     template_url('css/style.css', 'Default'),
 ]);
 
-echo $css; //place to pass data / plugable hook zone
+echo $css; // Place to pass data / plugable hook zone
 ?>
 </head>
 <body style='padding-top: 60px;'>
@@ -36,8 +36,18 @@ echo $css; //place to pass data / plugable hook zone
             <a class="navbar-brand" href="<?= site_url('dashboard'); ?>"><strong><?= SITETITLE; ?></strong></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <?php if (Auth::check()) { ?>
+                <li <?php if($currentUri == 'dashboard') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-dashboard'></i> Dashboard</a>
+                </li>
+                <?php } ?>
+            </ul>
             <ul class="nav navbar-nav navbar-right" style="margin-right: 5px;">
                 <?php if (Auth::check()) { ?>
+                <li <?php if($currentUri == 'profile') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> Profile</a>
+                </li>
                 <li>
                     <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> Logout</a>
                 </li>
@@ -47,7 +57,7 @@ echo $css; //place to pass data / plugable hook zone
     </div>
 </nav>
 
-<?= $afterBody; //place to pass data / plugable hook zone ?>
+<?= $afterBody; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
     <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>'></p>
@@ -61,8 +71,8 @@ Assets::js([
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
 ]);
 
-echo $js; //place to pass data / plugable hook zone
-echo $footer; //place to pass data / plugable hook zone
+echo $js; // Place to pass data / plugable hook zone
+echo $footer; // Place to pass data / plugable hook zone
 ?>
 
 </body>

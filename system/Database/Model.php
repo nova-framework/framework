@@ -44,7 +44,7 @@ class Model
     public function __construct()
     {
         if(is_null($this->table)) {
-            // Not Table name specified? Try to auto-calculate it.
+            // If there is not a table name specified, try to auto-calculate it.
             $className = get_class($this);
 
             $this->table = Inflector::tableize(class_basename($className));

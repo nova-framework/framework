@@ -1,6 +1,6 @@
 <?php
 /**
-* Curl class
+* Curl class.
 *
 * @author SecretD - https://github.com/SecretD
 * @version 3.0
@@ -9,12 +9,12 @@
 namespace Helpers;
 
 /**
- * Sets some default functions and settings.
+ * Set some default functions and settings.
  */
 class SimpleCurl
 {
     /**
-    * Performs a get request on the chosen link and the chosen parameters
+    * Perform a get request on the chosen link and the chosen parameters
     * in the array.
     *
     * @param string $url
@@ -42,7 +42,7 @@ class SimpleCurl
     }
 
     /**
-    * Performs a post request on the chosen link and the chosen parameters
+    * Perform a post request on the chosen link and the chosen parameters
     * in the array.
     *
     * @param string $url
@@ -72,7 +72,7 @@ class SimpleCurl
     }
 
     /**
-    * Performs a put request on the chosen link and the chosen parameters
+    * Perform a put request on the chosen link and the chosen parameters
     * in the array.
     *
     * @param string $url

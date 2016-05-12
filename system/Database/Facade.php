@@ -1,6 +1,6 @@
 <?php
 /**
- * Facade - A static Facade to Database Connection.
+ * Facade - A static Facade to the Database Connection.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

@@ -238,7 +238,7 @@ class Query
     }
 
     /**
-     * Add a basic where clause to the query.
+     * Add a basic "WHERE" clause to the query.
      *
      * @param  string  $column
      * @param  string  $operator
@@ -253,7 +253,7 @@ class Query
         if (func_num_args() == 2) {
             list($value, $operator) = array($operator, '=');
         } else if ($this->invalidOperatorAndValue($operator, $value)) {
-            throw new \InvalidArgumentException("Value must be provided.");
+            throw new \InvalidArgumentException("A value must be provided.");
         }
 
         if ($column instanceof Closure) {
@@ -309,7 +309,7 @@ class Query
     }
 
     /**
-     * Add a where between statement to the query.
+     * Add a "WHERE BETWEEN" statement to the query.
      *
      * @param  string  $column
      * @param  array   $values
@@ -329,7 +329,7 @@ class Query
     }
 
     /**
-     * Add an or where between statement to the query.
+     * Add an "OR WHERE BETWEEN" statement to the query.
      *
      * @param  string  $column
      * @param  array   $values
@@ -341,7 +341,7 @@ class Query
     }
 
     /**
-     * Add a where not between statement to the query.
+     * Add a "WHERE NOT BETWEEN" statement to the query.
      *
      * @param  string  $column
      * @param  array   $values
@@ -354,7 +354,7 @@ class Query
     }
 
     /**
-     * Add an or where not between statement to the query.
+     * Add an "OR WHERE NOT BETWEEN" statement to the query.
      *
      * @param  string  $column
      * @param  array   $values

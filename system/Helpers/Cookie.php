@@ -1,6 +1,6 @@
 <?php
 /**
- * Simple cookie class
+ * Simple cookie class.
  *
  * @author Jhobanny Morillo geomorillo@yahoo.com
  * @version 3.0
@@ -9,14 +9,14 @@
 namespace Helpers;
 
 /**
- * Class Cookie
+ * Class Cookie.
  */
 class Cookie
 {
     const FOURYEARS = 126144000;
 
     /**
-     * Doest the cookie with key exists?
+     * Does the cookie with the specified key exist?
      *
      * @param string $key
      * @return bool
@@ -63,7 +63,7 @@ class Cookie
     }
 
     /**
-     * Get cookie value
+     * Retrieve the value of the cookie.
      *
      * @param $key
      * @param string $default
@@ -75,7 +75,7 @@ class Cookie
     }
 
     /**
-     * Get the cookie array
+     * Retrieve the cookie array.
      * @return array
      */
     public static function display()
@@ -84,7 +84,7 @@ class Cookie
     }
 
     /**
-     * Destroy cookie entry
+     * Destroy the cookie entry.
      * @param string $key
      * @param string $path Optional
      * @param string $domain Optional
@@ -97,7 +97,7 @@ class Cookie
         if (! headers_sent()) {
             unset($_COOKIE[$key]);
 
-            // To delete the Cookie we set its expiration four years into past.
+            // To delete the Cookie we set the expiration four years into past.
             @setcookie($key, '', time() - FOURYEARS, $path, $domain);
         }
     }

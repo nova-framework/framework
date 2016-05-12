@@ -9,13 +9,13 @@ define('SYSTEMDIR', realpath(__DIR__.'/../system/') .DS);
 define('PUBLICDIR', realpath(__DIR__) .DS);
 define('ROOTDIR', realpath(__DIR__.'/../') .DS);
 
-/** load composer autoloader */
+/** Load the composer autoloader */
 if (file_exists(ROOTDIR.'vendor/autoload.php')) {
     require ROOTDIR.'vendor/autoload.php';
 } else {
     echo "<h1>Please install via composer.json</h1>";
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
-    echo "<p>Once composer is installed navigate to the working directory in your terminal/command promt and enter 'composer install'</p>";
+    echo "<p>Once composer is installed, navigate to the working directory in your terminal/command prompt and enter 'composer install'</p>";
     exit;
 }
 

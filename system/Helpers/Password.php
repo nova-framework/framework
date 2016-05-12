@@ -1,6 +1,6 @@
 <?php
 /**
- * Password
+ * Password Helper.
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -9,13 +9,13 @@
 namespace Helpers;
 
 /**
- * Password functions for php's native password functions
+ * A collection of password functions for php's native password functions.
  */
 class Password
 {
 
     /**
-     * Hash the password using the specified algorithm
+     * Hash the password using the specified algorithm.
      *
      * @param string $password The password to hash
      * @param int    $algo     The algorithm to use (Defined by PASSWORD_* constants)
@@ -29,8 +29,8 @@ class Password
     }
 
     /**
-     * Get information about the password hash. Returns an array of the information
-     * that was used to generate the password hash.
+     * Get information about the password hash. Return an array of the information
+     * which was used to generate the password hash.
      *
      * array(
      *    'algo' => 1,
@@ -40,7 +40,7 @@ class Password
      *    ),
      * )
      *
-     * @param string $hash The password hash to extract info from
+     * @param string $hash The password hash to extract the information from
      *
      * @return array The array of information about the hash.
      */
@@ -50,7 +50,7 @@ class Password
     }
 
     /**
-     * Determine if the password hash needs to be rehashed according to the options provided
+     * Determine if the password hash needs to be rehashed according to the options provided.
      *
      * If the answer is true, after validating the password using password_verify, rehash it.
      *
@@ -67,7 +67,7 @@ class Password
     }
 
     /**
-     * Verify a password against a hash using a timing attack resistant approach
+     * Verify a password against a hash using a timing attack resistant approach.
      *
      * @param string $password The password to verify
      * @param string $hash     The hash to verify against

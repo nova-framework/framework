@@ -1,6 +1,6 @@
 <?php
 /**
- * Array Helper Class
+ * Array Helper Class.
  *
  * @author Benjamin von Minden | http://pandory.de
  * @version 3.0
@@ -36,7 +36,7 @@ class Arr
     }
 
     /**
-     * Search for an array value. Returns TRUE if the array key exists and FALSE if not.
+     * Search for an array value. Return TRUE if the array key exists and FALSE if not.
      *
      * @param array  $array
      * @param string $path
@@ -57,7 +57,7 @@ class Arr
     }
 
     /**
-     * Returns value from array
+     * Return a value from the array.
      *
      * @param array  $array
      * @param string $path
@@ -102,7 +102,7 @@ class Arr
     }
 
     /**
-     * Returns a random value from an array.
+     * Return a random value from an array.
      *
      * @param   array $array Array you want to pick a random value from
      *
@@ -114,7 +114,7 @@ class Arr
     }
 
     /**
-     * Returns TRUE if the array is associative and FALSE if not.
+     * Return TRUE if the array is an associative and FALSE if not.
      *
      * @param   array $array Array to check
      *
@@ -126,7 +126,7 @@ class Arr
     }
 
     /**
-     * Returns the values from a single column of the input array, identified by the key.
+     * Return the values from a single column of the input array, identified by the key.
      *
      * @param   array  $array Array to pluck from
      * @param   string $key   Array key

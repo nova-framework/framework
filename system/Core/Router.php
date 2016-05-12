@@ -28,7 +28,7 @@ class Router extends BaseRouter
     private static $routeGroups = array();
 
     /**
-     * Default Route, usualy the Catch-All one.
+     * Default Route, usually the Catch-All one.
      *
      * @var Route $defaultRoute
      */
@@ -46,7 +46,8 @@ class Router extends BaseRouter
     }
 
     /**
-     * Register catchAll route
+     * Register catchAll route.
+     *
      * @param $callback
      */
     public static function catchAll($callback)
@@ -107,7 +108,7 @@ class Router extends BaseRouter
         array_pop(self::$routeGroups);
     }
 
-    /* The Resourcefull Routes in the Laravel Style.
+    /* The Resourceful Routes in the Laravel Style.
 
     Method     |  Path                 |  Action   |
     ------------------------------------------------
@@ -122,10 +123,10 @@ class Router extends BaseRouter
     */
 
     /**
-     * Defines a Resourcefull Routes Group to a target Controller.
+     * Defines a Resourceful Routes Group to a target Controller.
      *
-     * @param string $basePath The base path of the resourcefull routes group
-     * @param string $controller The target Resourcefull Controller's name.
+     * @param string $basePath The base path of the resourceful routes group
+     * @param string $controller The target Resourceful Controller's name.
      */
     public static function resource($basePath, $controller)
     {
@@ -156,7 +157,7 @@ class Router extends BaseRouter
         } else {
             $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
-            // Ensure the requested Methods being valid ones.
+            // Ensure the requested Methods are valid ones.
             $methods = array_intersect($methods, static::$methods);
         }
 
@@ -184,10 +185,10 @@ class Router extends BaseRouter
             $namespace = '';
 
             foreach (self::$routeGroups as $group) {
-                // Add the current prefix to the prefixes list.
+                // Add the current prefix to the prefix list.
                 array_push($parts, trim($group['prefix'], '/'));
 
-                // Update always to the last Controller namespace.
+                // Always update to the last Controller namespace.
                 $namespace = trim($group['namespace'], '\\');
             }
 
@@ -214,7 +215,8 @@ class Router extends BaseRouter
     }
 
     /**
-     * Dispatch route
+     * Dispatch route.
+     *
      * @return bool
      */
     public function dispatch()
@@ -227,7 +229,7 @@ class Router extends BaseRouter
             return true;
         }
 
-        // Not an Asset File URI? Routes the current request.
+        // Not an Asset File URI? Route the current request.
         $method = Request::getMethod();
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.

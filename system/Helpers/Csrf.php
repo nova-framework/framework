@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cross Site Request Forgery helper
+ * Cross Site Request Forgery helper.
  *
  * @author jimgwhit
  * @version 3.0
@@ -13,10 +13,10 @@ use Helpers\Session;
 
 /**
  * Instructions:
- * At the top of the controller where the other "use" statements are place:
+ * At the top of the controller where the other "use" statements are, place:
  * use Helpers\Csrf;
  *
- * Just prior to rendering the view for adding or editing data create the CSRF token:
+ * Just prior to rendering the view for adding or editing data, create the CSRF token:
  * $data['csrf_token'] = Csrf::makeToken();
  * $this->view->renderTemplate('header', $data);
  * $this->view->render('pet/edit', $data, $error); // as an example
@@ -29,18 +29,18 @@ use Helpers\Session;
  * if (!Csrf::isTokenValid()) {
  *      Url::redirect('admin/login'); // or wherever you want to redirect to.
  *    }
- * And that's all
+ * And that's all.
  */
 class Csrf {
     /**
-     * get CSRF token and generate a new one if expired
+     * Retrieve the CSRF token and generate a new one if expired.
      *
      * @access public
      * @static static method
      * @return string
      */
     public static function makeToken($name = 'csrfToken') {
-        $max_time = 60 * 60 * 24; // token is valid for 1 day
+        $max_time = 60 * 60 * 24; // token is valid for 1 day.
         $csrf_token = Session::get($name);
         $stored_time = Session::get($name . '_time');
 
@@ -54,7 +54,7 @@ class Csrf {
     }
 
     /**
-     * checks if CSRF token in session is same as in the form submitted
+     * Check to see if the CSRF token in session is the same as submitted form.
      *
      * @access public
      * @static static method
@@ -64,7 +64,8 @@ class Csrf {
         return $_POST[$name] === Session::get($name);
     }
     /**
-     * Generates a random number using any avaliable function on system
+     * Generate a random number using any available function on the system.
+     *
      * @access public
      * @static static method
      * @return integer

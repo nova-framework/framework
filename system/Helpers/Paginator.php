@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP Pagination Class
+ * PHP Pagination Class.
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -9,7 +9,7 @@
 namespace Helpers;
 
 /**
- * Split records into multiple pages.
+ * Split the records into multiple pages.
  */
 class Paginator
 {
@@ -22,14 +22,14 @@ class Paginator
     private $perPage;
 
     /**
-     * Set get parameter for fetching the page number.
+     * Set the get parameter for fetching the page number.
      *
      * @var string
      */
     private $instance;
 
     /**
-     * Sets the page number.
+     * Set the page number.
      *
      * @var numeric
      */
@@ -52,9 +52,9 @@ class Paginator
     /**
      *  __construct
      *
-     *  Pass values when class is istantiated.
+     *  Pass the values when the class is instantiated.
      *
-     * @param numeric  $perPage  sets the number of iteems per page
+     * @param numeric  $perPage  sets the number of items per page
      * @param numeric  $instance sets the instance for the GET parameter
      */
     public function __construct($perPage, $instance)
@@ -67,7 +67,7 @@ class Paginator
     /**
      * getStart
      *
-     * Creates the starting point for limiting the dataset.
+     * Create the starting point for limiting the dataset.
      *
      * @return numeric
      */
@@ -79,7 +79,7 @@ class Paginator
     /**
      * getInstance
      *
-     * Gets the current page number if needed anywhere in your application.
+     * Retrieve the current page number, if needed.
      *
      * @var numeric
      */
@@ -91,7 +91,7 @@ class Paginator
     /**
      * setInstance
      *
-     * Sets the instance parameter, if numeric value is 0 then set to 1.
+     * Set the instance parameter, if the numeric value is 0, then set to 1.
      *
      * @var numeric
      */
@@ -104,9 +104,9 @@ class Paginator
     /**
      * setTotal
      *
-     * Collect a numberic value and assigns it to the totalRows.
+     * Collect a numeric value and assign it to the totalRows.
      *
-     * @param int $totalRows holds the total number of rows
+     * @param int $totalRows Hold the total number of rows
      */
     public function setTotal($totalRows)
     {
@@ -116,7 +116,7 @@ class Paginator
     /**
      * getLimit
      *
-     * Returns the limit for the data source, calling the getStart method and passing in the number of items perp page.
+     * Return the limit for the data source, call the getStart method and pass in the number of items per page.
      *
      * @return string
      */
@@ -161,7 +161,7 @@ class Paginator
     /**
      * Get Per Page.
      *
-     * @return int returns the number of records per page.
+     * @return int return the number of records per page.
      */
     public function getPerPage()
     {
@@ -176,7 +176,7 @@ class Paginator
      * @param string $path optionally set the path for the link
      * @param string $ext optionally pass in extra parameters to the GET
      *
-     * @return string returns the html menu
+     * @return string return the html menu
      */
     public function pageLinks($path = '?', $ext = null)
     {

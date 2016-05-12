@@ -46,7 +46,7 @@ class ClassicRouter extends BaseRouter
         } else {
             $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
-            // Ensure the requested Methods being valid ones.
+            // Ensure that the requested Methods are valid ones.
             $methods = array_intersect($methods, static::$methods);
         }
 
@@ -79,10 +79,10 @@ class ClassicRouter extends BaseRouter
             return true;
         }
 
-        // Not an Asset File URI? Routes the current request.
+        // Not an Asset File URI? Route the current request.
         $method = Request::getMethod();
 
-        // Search the defined Routes for matches; invoke the associated Callback, if any.
+        // Search the defined Routes for any matches; invoke the associated Callback, if any.
         foreach ($this->routes as $route) {
             if ($route->match($uri, $method, false)) {
                 // Found a valid Route; process it.
@@ -136,10 +136,10 @@ class ClassicRouter extends BaseRouter
      */
     public function autoDispatch($uri)
     {
-        // Explode the URI in its parts.
+        // Explode the URI to its parts.
         $parts = explode('/', trim($uri, '/'));
 
-        // Loop through URI parts, checking for the Controller file including its path.
+        // Loop through the URI parts, checking for the Controller file including its path.
         $controller = '';
 
         if (! empty($parts)) {
@@ -147,7 +147,7 @@ class ClassicRouter extends BaseRouter
             $controller = Inflector::classify(array_shift($parts));
         }
 
-        // Verify if the first URI part match a Module.
+        // Verify if the first URI part matches a Module.
         $testPath = APPDIR.'Modules'.DS.$controller;
 
         if (! empty($controller) && is_dir($testPath)) {
@@ -155,7 +155,7 @@ class ClassicRouter extends BaseRouter
             $moduleName = $controller;
             $basePath   = 'Modules/'.$controller.'/Controllers/';
 
-            // Go further only if have other URI Parts, to permit URL mappings like:
+            // Go further, only if it has other URI Parts, to permit URL mappings like:
             // '<DIR>/clients' -> '<APPDIR>/app/Modules/Clients/Controllers/Clients.php'
             if (! empty($parts)) {
                 $controller = Inflector::classify(array_shift($parts));
@@ -182,12 +182,12 @@ class ClassicRouter extends BaseRouter
             break;
         }
 
-        // Get the normalized Controller
+        // Get the normalized Controller.
         $defaultOne = !empty($moduleName) ? $moduleName : DEFAULT_CONTROLLER;
 
         $controller = !empty($controller) ? $controller : $defaultOne;
 
-        // Get the normalized Method
+        // Get the normalized Method.
         $method = !empty($parts) ? array_shift($parts) : DEFAULT_METHOD;
 
         // Prepare the Controller's class name.

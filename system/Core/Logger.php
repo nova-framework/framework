@@ -1,6 +1,6 @@
 <?php
 /**
- *occurred class - Custom errors
+ * Logger class - Custom errors
  *
  * @author David Carr - dave@daveismyname.com
  * @version 3.0
@@ -16,7 +16,7 @@ use Helpers\PhpMailer\Mail;
 class Logger
 {
     /**
-    * Determins if error should be emailed to SITEEMAIL defined in app/Core/Config.php.
+    * Determines if the error should be emailed to SITEEMAIL defined in app/Core/Config.php.
     *
     * @var boolean
     */
@@ -30,42 +30,42 @@ class Logger
     private static $clear = false;
 
     /**
-    * show the error.
+    * Display the error.
     *
     * @var boolean
     */
     private static $display = false;
 
     /**
-    * Path to error file.
+    * Path to the error file.
     *
     * @var string
     */
     public static $errorFile = 'Logs/error.log';
 
     /**
-    * store errors for output.
+    * Store errors for output.
     *
     * @var string
     */
     public static $error;
 
     /**
-    * In the event of an error show this message.
+    * In the event of an error, show this message.
     */
     public static function customErrorMsg()
     {
         if (self::$display) {
             echo '<pre>'.self::$error.'</pre>';
         } else {
-            echo "<p>An error occurred, The error has been reported.</p>";
+            echo "<p>An error has occurred. This error has been reported.</p>";
             exit;
         }
 
     }
 
     /**
-    * Saved the exception and calls customer error function.
+    * Save the exception and call a custom error function.
     *
     * @param  exeption $e
     */
@@ -75,7 +75,7 @@ class Logger
     }
 
     /**
-    * Saves error message from exception.
+    * Save the error message from exception.
     *
     * @param  numeric $number  error number
     * @param  string  $message the error
@@ -135,13 +135,13 @@ class Logger
             }
         }
 
-        // Append
+        // Append to the error log file.
         file_put_contents(APPDIR.self::$errorFile, $logMessage, FILE_APPEND);
 
         self::$error = $logMessage;
         self::customErrorMsg();
 
-        //send email
+        // Send email.
         self::sendEmail($logMessage);
     }
 
@@ -170,16 +170,16 @@ class Logger
 
             $content = null;
         } else {
-            // Append
+            // Append to the error log file.
             file_put_contents(APPDIR.self::$errorFile, $logMessage, FILE_APPEND);
         }
 
-        /** send email */
+        // Send email.
         self::sendEmail($logMessage);
     }
 
     /**
-     * Send Email upon error.
+     * Send an Email upon error.
      *
      * @param  string $message holds the error to send
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * url Class
+ * URL Class.
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -17,7 +17,7 @@ use Helpers\Inflector;
 class Url
 {
     /**
-     * Redirect to chosen url.
+     * Redirect to a chosen url.
      *
      * @param string $url      the url to redirect to
      * @param bool   $fullpath if true use only url in redirect instead of using DIR
@@ -36,7 +36,7 @@ class Url
     }
 
     /**
-     * Detect the true URI
+     * Detect the true URI.
      *
      * * @return string parsed URI
      */
@@ -64,7 +64,7 @@ class Url
     }
 
     /**
-     * Created the absolute address to the assets folder.
+     * Create the absolute address to the assets folder.
      *
      * @param  string|null $module
      * @return string url to assets folder
@@ -81,7 +81,7 @@ class Url
     }
 
     /**
-     * Created the absolute address to the template folder.
+     * Create the absolute address to the template folder.
      *
      * @param  boolean $custom
      * @return string url to template folder
@@ -94,7 +94,7 @@ class Url
     }
 
     /**
-     * Created the relative address to the template folder.
+     * Create the relative address to the template folder.
      *
      * @param  boolean $custom
      * @return string path to template folder
@@ -105,7 +105,7 @@ class Url
     }
 
     /**
-     * Converts plain text urls into HTML links, second argument will be
+     * Converts plain text urls into HTML links, the second argument will be
      * used as the url label <a href=''>$custom</a>.
      *
      *
@@ -128,8 +128,8 @@ class Url
     }
 
     /**
-     * This function converts and url segment to an safe one, for example:
-     * `test name @132` will be converted to `test-name--123`
+     * This function converts a url segment to a safe one, for example:
+     * `test name @123` will be converted to `test-name--123`
      * Basicly it works by replacing every character that isn't an letter or an number to an dash sign
      * It will also return all letters in lowercase.
      *
@@ -166,7 +166,7 @@ class Url
     }
 
     /**
-     * Get all url parts based on a / seperator.
+     * Retrieve all url parts based on a / seperator.
      *
      * @return array of segments
      */
@@ -176,14 +176,14 @@ class Url
     }
 
     /**
-     * Get item in array.
+     * Retrieve an item in an array.
      *
      * @param  array $segments array
      * @param  int $id array index
      *
      * @return string - returns array index
      */
-    public static function getSegment($segments, $id)
+    public static function Retrieve theSegment($segments, $id)
     {
         if (array_key_exists($id, $segments)) {
             return $segments[$id];
@@ -191,7 +191,7 @@ class Url
     }
 
     /**
-     * Get last item in array.
+     * Retrieve the last item in an array.
      *
      * @param  array $segments
      * @return string - last array segment
@@ -202,7 +202,7 @@ class Url
     }
 
     /**
-     * Get first item in array
+     * Retrieve the first item in an array
      *
      * @param  array segments
      * @return int - returns first first array index

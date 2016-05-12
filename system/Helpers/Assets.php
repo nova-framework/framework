@@ -2,7 +2,7 @@
 namespace Helpers;
 
 /**
- * Assets static helper
+ * Assets static helper.
  *
  * @author volter9
  * @author QsmaPL
@@ -49,9 +49,10 @@ class Assets
     }
 
     /**
-     * load js scripts
+     * Load js scripts.
+     *
      * @param  String|Array  $files      paths to file/s
-     * @param  boolean       $cache      if set to true a cache will be created and serverd
+     * @param  boolean       $cache      if set to true a cache will be created and served
      * @param  boolean       $refresh    if true the cache will be updated
      * @param  string        $cachedMins minutes to hold the cache
      */
@@ -83,9 +84,10 @@ class Assets
     }
 
     /**
-     * load css scripts
+     * Load css scripts.
+     *
      * @param  String|Array  $files      paths to file/s
-     * @param  boolean       $cache      if set to true a cache will be created and serverd
+     * @param  boolean       $cache      if set to true a cache will be created and served
      * @param  boolean       $refresh    if true the cache will be updated
      * @param  string        $cachedMins minutes to hold the cache
      */
@@ -122,7 +124,7 @@ class Assets
             foreach ($files as $file) {
                 if (!empty($file)) {
                     if (strpos(basename($file), '.min.') === false && $type == 'css') {
-                        //compress files that aren't minified
+                        // Compress files that aren't minified
                         $content.= static::compress(file_get_contents($file));
 
                     } else {
@@ -134,7 +136,7 @@ class Assets
         } else {
             if (!empty($files)) {
                 if (strpos(basename($files), '.min.') === false && $type == 'css') {
-                    //compress files that aren't minified
+                    // Compress files that aren't minified
                     $content.= static::compress(file_get_contents($files));
                 } else {
                     $content.= file_get_contents($files);
@@ -147,11 +149,11 @@ class Assets
 
     private static function compress($buffer)
     {
-        /* remove comments */
+        // Remove comments.
         $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
-        /* remove tabs, spaces, newlines, etc. */
+        // Remove tabs, spaces, newlines, etc.
         $buffer = str_replace(array("\r\n","\r","\n","\t",'  ','    ','     '), '', $buffer);
-        /* remove other spaces before/after ; */
+        // Remove other spaces before/after ';'.
         $buffer = preg_replace(array('(( )+{)','({( )+)'), '{', $buffer);
         $buffer = preg_replace(array('(( )+})','(}( )+)','(;( )*})'), '}', $buffer);
         $buffer = preg_replace(array('(;( )+)','(( )+;)'), ';', $buffer);

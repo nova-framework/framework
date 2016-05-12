@@ -89,7 +89,7 @@ class Route
     }
 
     /**
-     * Define a Route Filter
+     * Define a Route Filter.
      *
      * @param string $name
      * @param callback $callback
@@ -125,8 +125,8 @@ class Route
             // Get the current Filter Callback.
             $callback = self::$availFilters[$filter];
 
-            // Execute the current Filter's Callback with the Route instance as argument.
-            // If the Callback return a Response instance, the Filtering will be stopped.
+            // Execute the current Filter's Callback with the Route instance as an argument.
+            // If the Callback returns a Response instance, the Filtering will be stopped.
             if (is_object($callback)) {
                 $result = call_user_func($callback, $this);
             }
@@ -196,7 +196,6 @@ class Route
         return false;
     }
 
-    //
     // Some Getters
 
     /**

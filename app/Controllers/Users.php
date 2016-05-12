@@ -98,7 +98,7 @@ class Users extends Controller
             $password = Request::post('newPassword');
             $verify   = Request::post('verPassword');
 
-            if(! Password::verify($user->password, Request::post('password'))) {
+            if(! Password::verify(Request::post('password'), $user->password)) {
                 $error[] = 'Wrong current Password inserted';
             } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
                 $error[] = 'The new Password is not strong enough';
@@ -107,7 +107,8 @@ class Users extends Controller
             } else {
                 $this->model->updateUser($user, array('password' => Password::make($password)));
 
-                return Redirect::to('dashboard')->with('message', 'You have successfully updated your Password.');
+                // Use a Redirect to avoid the reposting the data.
+                return Redirect::to('profile')->with('message', 'You have successfully updated your Password.');
             }
         }
 

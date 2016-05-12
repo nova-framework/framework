@@ -286,7 +286,7 @@ abstract class View implements ArrayAccess
     }
 
     /**
-     * Magic Method for checking dynamically-set data.
+     * Magic Method for checking dynamically set data.
      */
     public function __isset($key)
     {

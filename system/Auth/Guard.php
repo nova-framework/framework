@@ -119,7 +119,7 @@ class Guard
     }
 
     /**
-     * Attempt to authenticate an User using the given credentials.
+     * Attempt to authenticate a User, using the given credentials.
      *
      * @param  array $credentials
      * @param  bool  $remember

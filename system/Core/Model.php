@@ -11,7 +11,7 @@ namespace Core;
 use Helpers\Database;
 
 /**
- * Base model class all other models will extend from this base.
+ * Base model class. All other models will extend from this base.
  */
 abstract class Model
 {
@@ -27,7 +27,7 @@ abstract class Model
      */
     public function __construct()
     {
-        /** connect to PDO here. */
+        // Connect to PDO here.
         $this->db = Database::get();
     }
 }

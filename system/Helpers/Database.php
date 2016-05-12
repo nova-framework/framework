@@ -1,6 +1,6 @@
 <?php
 /**
- * database Helper
+ * Database Helper
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -11,7 +11,7 @@ namespace Helpers;
 use PDO;
 
 /**
- * Extending PDO to use custom methods.
+ * Extend PDO to use custom methods.
  */
 class Database extends PDO
 {
@@ -24,11 +24,11 @@ class Database extends PDO
      * Static method get
      *
      * @param  array $group
-     * @return \helpers\database
+     * @return Helpers\Database
      */
     public static function get($group = false)
     {
-        // Determining if exists or it's not empty, then use default group defined in config
+        // Determine if the group exists or it is not empty, then use the default group defined in config.
         $group = !$group ? array (
             'type' => DB_TYPE,
             'host' => DB_HOST,
@@ -37,17 +37,17 @@ class Database extends PDO
             'pass' => DB_PASS
         ) : $group;
 
-        // Group information
+        // Group information.
         $type = $group['type'];
         $host = $group['host'];
         $name = $group['name'];
         $user = $group['user'];
         $pass = $group['pass'];
 
-        // ID for database based on the group information
+        // ID for the database, based on the group information.
         $id = "$type.$host.$name.$user.$pass";
 
-        // Checking if the same
+        // Check if the instance is the same.
         if (isset(self::$instances[$id])) {
             return self::$instances[$id];
         }
@@ -59,19 +59,20 @@ class Database extends PDO
             $instance = new Database("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
             $instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Setting Database into $instances to avoid duplication
+            // Set the Database into $instances to avoid any potential duplication.
             self::$instances[$id] = $instance;
 
             return $instance;
         } catch (PDOException $e) {
-            //in the event of an error record the error to ErrorLog.html
+            // In the event of an error, record the error to Logs/error.log
             Logger::newMessage($e);
             Logger::customErrorMsg();
         }
     }
 
     /**
-     * run raw sql queries
+     * Run raw sql queries.
+     *
      * @param  string $sql sql command
      * @return return query
      */
@@ -81,7 +82,8 @@ class Database extends PDO
     }
 
     /**
-     * method for selecting records from a database
+     * Select records from the database.
+     *
      * @param  string $sql       sql query
      * @param  array  $array     named params
      * @param  object $fetchMode
@@ -109,7 +111,8 @@ class Database extends PDO
     }
 
     /**
-     * insert method
+     * Insert method.
+     *
      * @param  string $table table name
      * @param  array $data  array of columns and values
      */
@@ -131,7 +134,8 @@ class Database extends PDO
     }
 
     /**
-     * update method
+     * Update method.
+     *
      * @param  string $table table name
      * @param  array $data  array of columns and values
      * @param  array $where array of columns and values
@@ -173,7 +177,7 @@ class Database extends PDO
     }
 
     /**
-     * Delete method
+     * Delete method.
      *
      * @param  string $table table name
      * @param  array $where array of columns and values
@@ -195,7 +199,7 @@ class Database extends PDO
         }
         $whereDetails = ltrim($whereDetails, ' AND ');
 
-        //if limit is a number use a limit on the query
+        // If the limit is a number, use a limit on the query.
         if (is_numeric($limit)) {
             $uselimit = "LIMIT $limit";
         }
@@ -211,7 +215,8 @@ class Database extends PDO
     }
 
     /**
-     * truncate table
+     * Truncate table.
+     *
      * @param  string $table table name
      */
     public function truncate($table)

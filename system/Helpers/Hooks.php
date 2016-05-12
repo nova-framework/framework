@@ -1,6 +1,6 @@
 <?php
 /**
- * Hooks controller
+ * Hooks controller.
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -42,12 +42,12 @@ class Hooks
      */
     public static function get($id = 0)
     {
-        // return if instance exists
+        // Return if the instance exists.
         if (isset(self::$instances[$id])) {
             return self::$instances[$id];
         }
 
-        //define default hooks
+        // Define the default hooks.
         self::setHooks(array(
             'meta',
             'css',
@@ -57,7 +57,7 @@ class Hooks
             'routes'
         ));
 
-        //load modules
+        // Load the modules.
         self::loadPlugins(APPDIR.'Modules/');
         $instance = new self();
         self::$instances[$id] = $instance;
@@ -66,7 +66,7 @@ class Hooks
     }
 
     /**
-     * Adds hook to hook list.
+     * Add a hook to the hook list.
      *
      * @param string $where Hook to add.
      */
@@ -88,9 +88,8 @@ class Hooks
     }
 
     /**
-     * Add multiple hooks.
-     *
-     * @param array $where array of hooks to add.
+     * Retrieve an array of the hooks.
+     * @return array Hooks.
      */
     public static function getHooks()
     {
@@ -98,9 +97,9 @@ class Hooks
     }
 
     /**
-     * Load all modules found in folder.
+     * Load all the modules found in the module folder.
      *
-     * Only load modulename.module.php files
+     * Only load modulename.module.php files.
      *
      * @param  string $fromFolder path to the folder.
      */
@@ -109,7 +108,7 @@ class Hooks
         if ($handle = opendir($fromFolder)) {
             while ($file = readdir($handle)) {
                 if (is_file($fromFolder.$file)) {
-                    //only load modulename.module.php file
+                    // Only load modulename.module.php files.
                     if (preg_match('@module.php@', $file)) {
                         require_once $fromFolder . $file;
                     }
@@ -123,10 +122,10 @@ class Hooks
     }
 
     /**
-     * Attach custom function to hook.
+     * Attach custom functions to a hook.
      *
      * @param string $where hook to use
-     * @param string $function function to attach to hook
+     * @param string $function function to attach to the hook
      */
     public static function addHook($where, $function)
     {
@@ -141,7 +140,7 @@ class Hooks
     }
 
     /**
-     * Run all hooks attached to the hook.
+     * Run all the hooks attached to the hook.
      *
      * @param  string $where Hook to execute
      * @param  string $args option arguments
@@ -157,13 +156,13 @@ class Hooks
             foreach ($theseHooks as $hook) {
 
                 if (preg_match("/@/i", $hook)) {
-                    //grab all parts based on a / separator
+                    // Grab all parts based on a / separator.
                     $parts = explode('/', $hook);
 
-                    //collect the last index of the array
+                    // Collect the last index of the array.
                     $last = end($parts);
 
-                    //grab the controller name and method call
+                    // Grab the controller name and method call.
                     $segments = explode('@', $last);
 
                     $classname = new $segments[0]();
@@ -185,7 +184,7 @@ class Hooks
     }
 
     /**
-     * Execute hooks attached to run and collect instead of running
+     * Execute hooks attached to run and collect instead of running.
      *
      * @param  string $where hook
      * @param  string $args optional arguments

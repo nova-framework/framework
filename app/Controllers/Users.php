@@ -67,10 +67,10 @@ class Users extends Controller
                 // Prepare the flash message.
                 $message = sprintf('<b>%s</b>, you have successfully logged in.', $user->realname);
 
-                // Redirect to Users Dashboard.
+                // Redirect to the User's Dashboard.
                 return Redirect::to('dashboard')->with('message', $message);
             } else {
-                // Errors happened on authentication; add a message into $error array.
+                // An error has happened on authentication; add a message into $error array.
                 $error[] = 'Wrong username or password.';
             }
         }

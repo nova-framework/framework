@@ -1,6 +1,6 @@
 <?php
 /**
- * Form Helper
+ * Form Helper.
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -16,9 +16,9 @@ use Helpers\Csrf;
 class Form
 {
     /**
-     * open form
+     * Open form tags.
      *
-     * This method return the form element <form...
+     * This method will return the form element <form...
      *
      * @param   array(id, name, class, onsubmit, method, action, files, style)
      *
@@ -38,13 +38,13 @@ class Form
         $o .= (isset($params['role']))      ? " role='{$params['role']}'"                   : '';
         $o .= (isset($params['autocomplete'])) ? " autocomplete='{$params['autocomplete']}'" : '';
         $o .= '>';
-        //create a token append the form name to the end of the token name if provided
+        // Create a token and append the form name to the end of the token name (if provided).
         $o .= "\n<input type='hidden' name='csrfToken".ucwords($params['name'])."' value='".Csrf::makeToken('csrfToken'.ucwords($params['name']))."'>\n";
         return $o."\n";
     }
 
     /**
-     * closed the form
+     * Closed the form tags.
      *
      * @return string
      */
@@ -54,9 +54,9 @@ class Form
     }
 
     /**
-     * textBox
+     * Textbox.
      *
-     * backwards compatable method calls textarea
+     * A backwards compatible method that calls the textarea.
      *
      * @param   array(id, name, class, onclick, columns, rows, disabled, placeholder, style, value)
      *
@@ -68,9 +68,9 @@ class Form
     }
 
     /**
-     * Textarea
+     * Textarea.
      *
-     * This method creates a textarea element
+     * This method creates a textarea element.
      *
      * @param   array(id, name, class, onclick, columns, rows, disabled, placeholder, style, value)
      *
@@ -97,11 +97,11 @@ class Form
     }
 
     /**
-     * input
+     * Input.
      *
      * This method returns a input text element.
      *
-     * @param   array(id, name, class, onclick, value, length, width, disable,placeholder)
+     * @param   array(id, name, class, onclick, value, length, width, disable, placeholder)
      *
      * @return  string
      */
@@ -130,11 +130,11 @@ class Form
     }
 
     /**
-     * select
+     * Select.
      *
      * This method returns a select html element.
-     * It can be given a param called value which then will be preselected
-     * data has to be array(k=>v)
+     * It can be given a parameter called value, which then will be preselected
+     * data. Has to be an array(key => value)
      *
      * @param   array(id, name, class, onclick, disabled)
      *
@@ -167,9 +167,9 @@ class Form
     }
 
     /**
-     * checkboxMulti
+     * checkboxMulti.
      *
-     * This method returns multiple checkbox elements in order given in an array
+     * This method returns multiple checkbox elements in the order given in an array
      * For checking of checkbox pass checked
      * Each checkbox should look like array(0=>array('id'=>'1', 'name'=>'cb[]', 'value'=>'x', 'label'=>'label_text' ))
      *
@@ -203,7 +203,7 @@ class Form
     /**
      * radioMulti
      *
-     * This method returns radio elements in order given in an array
+     * This method returns radio elements in the order given in an array
      * For selection pass checked
      * Each radio should look like array(0=>array('id'=>'1', 'name'=>'rd[]', 'value'=>'x', 'label'=>'label_text' ))
      *
@@ -235,7 +235,7 @@ class Form
     }
 
     /**
-     * This method returns a button element given the params for settings
+     * This method returns a button element given the params for settings.
      *
      * @param   array(id, name, class, onclick, value, disabled)
      *
@@ -258,7 +258,7 @@ class Form
     }
 
     /**
-     * This method returns a submit button element given the params for settings
+     * This method returns a submit button element given the params for settings.
      *
      * @param   array(id, name, class, onclick, value, disabled)
      *
@@ -279,7 +279,7 @@ class Form
     }
 
     /**
-     * This method returns a hidden input elements given its params
+     * This method returns a hidden input element given its params.
      *
      * @param   array(id, name, class, value)
      *

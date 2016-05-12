@@ -19,7 +19,8 @@ class Encrypter
     protected static $strong;
 
     /**
-     * Searchs supported algorithm from key length
+     * Search supported algorithm from the key length.
+     *
      * @param String $key
      * @return boolean|string
      */
@@ -42,7 +43,8 @@ class Encrypter
     }
 
     /**
-     * Setups the key and algo using ENCRYPT_KEY
+     * Setup the key and algo using ENCRYPT_KEY.
+     *
      * @return void
      */
     protected static function setConfig()
@@ -57,7 +59,8 @@ class Encrypter
     }
 
     /**
-     * Gets key lenght from string
+     * Retrieve the key length from the string.
+     *
      * @param String $key
      * @return Integer
      */
@@ -79,7 +82,7 @@ class Encrypter
         self::setConfig();
 
         if (self::$algo === FALSE) {
-            throw new \Exception('Not supported algorithm found.');
+            throw new \Exception('Supported algorithm not found.');
         }
 
         $iv = mcrypt_create_iv(self::$ivSize, MCRYPT_DEV_URANDOM);
@@ -90,7 +93,7 @@ class Encrypter
             throw new \Exception('Could not encrypt the data.');
         }
 
-        // Once we have the encrypted value we will go ahead base64_encode the input
+        // Once we have the encrypted the value, we will go ahead and base64_encode the input
         // vector and create the MAC for the encrypted value so we can verify its
         // authenticity. Then, we'll JSON encode the data in a "payload" array.
 
@@ -137,7 +140,7 @@ class Encrypter
      */
 
     /**
-     * Get random bytes
+     * Get random bytes.
      *
      * @param	int	$length	Output length
      * @return	string
@@ -156,7 +159,8 @@ class Encrypter
     }
 
     /**
-     * Returns a hash mac from im and value
+     * Return a hash MAC from the IV and value.
+     *
      * @param type $iv
      * @param type $value
      * @return string
@@ -179,7 +183,7 @@ class Encrypter
     {
         $payload = json_decode(base64_decode($payload), true);
 
-        // If the payload is not valid JSON or does not have the proper keys set we will
+        // If the payload is not valid JSON or does not have the proper keys set, we will
         // assume it is invalid and bail out of the routine since we will not be able
         // to decrypt the given value. We'll also check the MAC for this encryption.
         if (! $payload || ! self::validPayload($payload)) {
@@ -209,8 +213,6 @@ class Encrypter
      *
      * @param  array  $payload
      * @return bool
-     *
-     *
      */
     protected static function validMac(array $payload)
     {

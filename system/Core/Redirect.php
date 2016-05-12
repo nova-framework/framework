@@ -13,7 +13,7 @@ use Helpers\Session;
 
 
 /**
- * Class Redirect
+ * Class Redirect.
  */
 class Redirect extends Response
 {

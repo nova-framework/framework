@@ -1,6 +1,6 @@
 <?php
 /**
- * Request Class
+ * Request Class.
  *
  * @version 3.0
  */
@@ -8,12 +8,12 @@
 namespace Helpers;
 
 /**
- * It contains the request information and provide methods to fetch request body.
+ * Contains the request information and provides methods to fetch the request body.
  */
 class Request
 {
     /**
-     * Gets the request method.
+     * Retrieve the request method.
      *
      * @return string
      */
@@ -83,7 +83,7 @@ class Request
     }
 
     /**
-     * Detect if request is Ajax.
+     * Detect if the request is Ajax.
      *
      * @static static method
      *
@@ -98,7 +98,7 @@ class Request
     }
 
     /**
-     * Detect if request is POST request.
+     * Detect if the request is a POST request.
      *
      * @static static method
      *
@@ -110,7 +110,7 @@ class Request
     }
 
     /**
-     * Detect if request is GET request.
+     * Detect if the request is a GET request.
      *
      * @static static method
      *

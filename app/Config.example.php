@@ -49,15 +49,16 @@ define('TEMPLATE', 'Default');
  */
 define('LANGUAGE_CODE', 'en');
 
-//database details ONLY NEEDED IF USING A DATABASE
+//
+// database details ONLY NEEDED IF USING A DATABASE
 
 /**
- * Database engine default is mysql.
+ * Database engine, default is mysql.
  */
 define('DB_TYPE', 'mysql');
 
 /**
- * Database host default is localhost.
+ * Database host, default is localhost.
  */
 define('DB_HOST', 'localhost');
 
@@ -77,27 +78,27 @@ define('DB_USER', 'root');
 define('DB_PASS', 'password');
 
 /**
- * PREFER to be used in database calls default is smvc_
+ * PREFER to be used in database calls, default is nova_
  */
 define('PREFIX', 'nova_');
 
 /**
- * Set prefix for sessions.
+ * Set a prefix for sessions.
  */
 define('SESSION_PREFIX', 'nova_');
 
 /**
- * Optional create a constant for the name of the site.
+ * OPTIONAL, create a constant for the name of the site.
  */
 define('SITETITLE', 'Nova V3.0');
 
 /**
- * Define a 32 bits Encryption Key.
+ * Define a 32 bit Encryption Key.
  */
 define('ENCRYPT_KEY', '');
 
 /**
- * Optional set a site email address.
+ * OPTIONAL, set a site email address.
  */
 // define('SITEEMAIL', 'email@domain.com');
 

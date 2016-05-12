@@ -24,14 +24,14 @@ abstract class Controller
     private $params = array();
 
     /**
-     * The current used Template.
+     * The currently used Template.
      *
      * @var string
      */
     protected $template = null;
 
     /**
-     * The current used Layout.
+     * The currently used Layout.
      *
      * @var string
      */
@@ -45,32 +45,32 @@ abstract class Controller
     public $language;
 
     /**
-     * On run make an instance of the config class and view class.
+     * On the initial run, create an instance of the config class and the view class.
      */
     public function __construct()
     {
-        // Adjust to default Template if no one is defined.
+        // Adjust to the default Template, if it is not defined.
         if ($this->template === null) {
             $this->template = TEMPLATE;
         }
 
-        /** Initialise the Language object */
+        // Initialise the Language object.
         $this->language = new Language();
     }
 
     /**
-     * Execute Controller Method
+     * Execute the Controller Method
      * @return bool
      */
     public function execute($method, $params = array())
     {
-        // Initialize the Controller's variables.
+        // Initialise the Controller's variables.
         $this->method = $method;
         $this->params = $params;
 
-        // Before Action execution stage.
+        // Before the Action execution stage.
         if ($this->before() === false) {
-            // Is wanted to stop the execution.
+            // This is needed to stop the execution.
             return false;
         }
 
@@ -84,17 +84,17 @@ abstract class Controller
             return true;
         }
 
-        // After Action execution stage.
+        // After the Action execution stage.
         return $this->after($result);
     }
 
     /**
      * Method automatically invoked before the current Action, stopping the flight
-     * when it return false. This Method is supposed to be overriden for using it.
+     * when it returns false. This Method is supposed to be overriden for using it.
      */
     protected function before()
     {
-        // Run the Hooks associated to Views.
+        // Run the Hooks associated to the Views.
         $hooks = Hooks::get();
 
         foreach (array('afterBody', 'css', 'js') as $hook) {
@@ -109,7 +109,7 @@ abstract class Controller
     }
 
     /**
-     * Method automatically invoked after the current Action, when it not return a
+     * This method automatically invokes after the current Action, when it does not return a
      * null or boolean value. This Method is supposed to be overriden for using it.
      *
      * Note that the Action's returned value is passed to this Method as parameter.
@@ -117,7 +117,7 @@ abstract class Controller
     protected function after($result)
     {
         if (! $result instanceof BaseView) {
-            // The result is not a View or Tempate instance; no processing required.
+            // If the result is neither a View or Tempate instance; no processing is required.
             return true;
         }
 

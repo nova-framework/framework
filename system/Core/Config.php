@@ -18,7 +18,7 @@ class Config
     protected static $settings = array();
 
     /**
-     * Get value
+     * Get the value.
      * @param string $key
      * @return mixed|null
      */
@@ -28,7 +28,7 @@ class Config
     }
 
     /**
-     * Set value
+     * Set the value.
      * @param string $key
      * @param mixed $value
      */

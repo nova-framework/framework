@@ -113,7 +113,7 @@ function vd($data)
 }
 
 /**
- * strlen call - count the lengh of the string.
+ * strlen call - count the length of the string.
  *
  * @param  string $data
  * @return string return the count

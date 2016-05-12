@@ -90,11 +90,11 @@ class Users extends Controller
 
     public function profile()
     {
+        $user = Auth::user();
+
         $error = array();
 
         if(Request::isPost()) {
-            $user = Auth::user();
-
             $password = Request::post('password');
 
             $newPassword = Request::post('newPassword');
@@ -116,6 +116,7 @@ class Users extends Controller
 
         return View::make('Users/Profile')
             ->shares('title', 'User Profile')
+            ->with('user', $user)
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);
     }

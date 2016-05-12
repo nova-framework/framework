@@ -1,5 +1,5 @@
 <div class='row-responsive'>
-    <h2>User Profile</h2>
+    <h2>User Profile : <?= $user->realname; ?></h2>
     <hr>
 </div>
 

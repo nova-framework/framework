@@ -28,6 +28,9 @@ Router::get('logout', array('filters' => 'auth',       'uses' => 'App\Controller
 // The User's Dashboard.
 Router::get('dashboard', array('filters' => 'auth', 'uses' => 'App\Controllers\Users@dashboard'));
 
+// The User's Profile.
+Router::any('profile', array('filters' => 'auth', 'uses' => 'App\Controllers\Users@profile'));
+
 // The Framework's Language Changer.
 Router::any('language/(:any)', 'App\Controllers\Language@change');
 /** End default Routes */

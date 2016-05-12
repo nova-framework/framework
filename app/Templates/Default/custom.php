@@ -39,6 +39,9 @@ echo $css; // Place to pass data / plugable hook zone
             <ul class="nav navbar-nav navbar-right" style="margin-right: 5px;">
                 <?php if (Auth::check()) { ?>
                 <li>
+                    <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> Profile</a>
+                </li>
+                <li>
                     <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> Logout</a>
                 </li>
                 <?php } ?>

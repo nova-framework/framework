@@ -14,6 +14,7 @@ use Core\View;
 use Helpers\Csrf;
 use Helpers\Request;
 use Helpers\Password;
+use Helpers\Url;
 use Auth;
 
 
@@ -30,6 +31,13 @@ class Users extends Controller
 
         // Prepare the Users Model instance.
         $this->model = new \App\Models\Users();
+    }
+
+    protected function before()
+    {
+        View::share('currentUri', Url::detectUri());
+
+        return parent::before();
     }
 
     public function dashboard()

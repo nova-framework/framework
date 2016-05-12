@@ -36,9 +36,16 @@ echo $css; // Place to pass data / plugable hook zone
             <a class="navbar-brand" href="<?= site_url('dashboard'); ?>"><strong><?= SITETITLE; ?></strong></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <?php if (Auth::check()) { ?>
+                <li <?php if($currentUri == 'dashboard') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-dashboard'></i> Dashboard</a>
+                </li>
+                <?php } ?>
+            </ul>
             <ul class="nav navbar-nav navbar-right" style="margin-right: 5px;">
                 <?php if (Auth::check()) { ?>
-                <li>
+                <li <?php if($currentUri == 'profile') echo 'class="active"'; ?>>
                     <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> Profile</a>
                 </li>
                 <li>

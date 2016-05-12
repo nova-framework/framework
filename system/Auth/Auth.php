@@ -25,11 +25,11 @@ class Auth
      *
      * @return \Auth\Guard
      */
-    protected static function getGuard()
+    protected static function getGuardInstance()
     {
-        $config = Config::get('authentication');
-
         if (! isset(static::$guard)) {
+            $config = Config::get('authentication');
+
             $className = '\\' .ltrim($config['guard'], '\\');
 
             static::$guard = new $className($config);
@@ -47,7 +47,7 @@ class Auth
      */
     public static function __callStatic($method, $params)
     {
-        $guard = static::getGuard();
+        $guard = static::getGuardInstance();
 
         return call_user_func_array(array($guard, $method), $params);
     }

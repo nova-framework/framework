@@ -38,7 +38,7 @@ Route::filter('auth', function($route) {
 });
 
 Route::filter('guest', function($route) {
-    if (Auth::check()) {
+    if (! Auth::guest()) {
         // User is authenticated, respond with a Redirect code 401 (Unauthorized)
         return Redirect::to('dashboard', 401);
     }

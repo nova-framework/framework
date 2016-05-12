@@ -105,8 +105,6 @@ class Users extends Controller
             } else if ($password != $verify) {
                 $error[] = 'The new Password and its verify are not equals';
             } else {
-                $keyName = $this->model->getKeyName();
-
                 $this->model->updateUser($user, array('password' => Password::make($password)));
 
                 return Redirect::to('dashboard')->with('message', 'You have successfully updated your Password.');

@@ -25,12 +25,14 @@ class Users extends BaseModel
         parent::__construct();
     }
 
-    public function updateUser($id, array $data)
+    public function updateUser($user, array $data)
     {
-        if($id instanceof stdClass) {
-            $userId = $id->{$this->primaryKey};
+        if($user instanceof stdClass) {
+            // We have a stdClass instance; extract the userId from it.
+            $userId = $user->{$this->primaryKey};
         } else {
-            $userId = intval($id);
+            // We have an ID; just use it for userId.
+            $userId = intval($user);
         }
 
         $this->where($this->primaryKey, $userId)->update($data);

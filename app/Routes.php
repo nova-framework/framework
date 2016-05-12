@@ -22,8 +22,8 @@ Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
 ));
 
 // The default Auth Routes.
-Router::any('login',     array('filters' => 'guest|csrf', 'uses' => 'App\Controllers\Users@login'));
-Router::get('logout',    array('filters' => 'auth',       'uses' => 'App\Controllers\Users@logout'));
+Router::any('login',  array('filters' => 'guest|csrf', 'uses' => 'App\Controllers\Users@login'));
+Router::get('logout', array('filters' => 'auth',       'uses' => 'App\Controllers\Users@logout'));
 
 // The User's Dashboard.
 Router::get('dashboard', array('filters' => 'auth', 'uses' => 'App\Controllers\Users@dashboard'));

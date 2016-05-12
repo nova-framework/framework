@@ -60,7 +60,7 @@ echo $css; // Place to pass data / plugable hook zone
 <?= $afterBody; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
-    <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>'></p>
+    <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>' style="max-width: 360px; height: auto;"></p>
 
     <?= $content; ?>
 </div>

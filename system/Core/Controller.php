@@ -117,7 +117,7 @@ abstract class Controller
     protected function after($result)
     {
         if (! $result instanceof BaseView) {
-            // If the result is neither a View or Tempate instance; no processing is required.
+            // If the result is neither a View or Template instance; no processing is required.
             return true;
         }
 

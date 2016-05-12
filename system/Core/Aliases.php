@@ -23,10 +23,8 @@ class Aliases
         }
 
         foreach ($classes as $classAlias => $className) {
-            if (substr($classAlias, 0, 1) != '\\') {
-                // This ensures the alias is created in the global namespace.
-                $classAlias = '\\' .$classAlias;
-            }
+            // This ensures the alias is created in the global namespace.
+            $classAlias = '\\' .ltrim($classAlias, '\\');
 
             // Check if the Class already exists
             if (class_exists($classAlias)) {

@@ -183,7 +183,7 @@ class Url
      *
      * @return string - returns array index
      */
-    public static function Retrieve theSegment($segments, $id)
+    public static function getSegment($segments, $id)
     {
         if (array_key_exists($id, $segments)) {
             return $segments[$id];

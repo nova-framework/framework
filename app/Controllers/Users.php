@@ -99,7 +99,7 @@ class Users extends Controller
             $verify   = Request::post('verPassword');
             if ($password != $verify) {
                 $error[] = 'The new Password and its verify are not equals';
-            }else  if(! Password::verify($user->password, Request::post('password'))) {
+            }else  if(! Password::verify($password, $user->password)) {
                 $error[] = 'Wrong current Password inserted';
             } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
                 $error[] = 'The new Password is not strong enough';

@@ -16,8 +16,8 @@ use \PDO;
 use \Closure;
 
 
-class Query {
-
+class Query
+{
     /**
      * The database connection instance.
      *

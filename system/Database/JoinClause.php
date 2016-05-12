@@ -11,8 +11,8 @@ namespace Database;
 use Database\Query;
 
 
-class JoinClause {
-
+class JoinClause
+{
     /**
     * The QueryBuilder instance.
     *

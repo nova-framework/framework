@@ -123,7 +123,10 @@ abstract class Router
      * @param string $route URL pattern to match
      * @param callback $callback Callback object
      */
-    abstract protected static function register($method, $route, $callback = null);
+    protected static function register($method, $route, $callback = null)
+    {
+        // Nothing to do there. 
+    }
 
     /**
      * Return the current Matched Route, if there are any.

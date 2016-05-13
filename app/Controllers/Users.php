@@ -95,14 +95,16 @@ class Users extends Controller
         $error = array();
 
         if(Request::isPost()) {
+            // Get the actual Password.
             $password = Request::post('password');
 
+            // The requested new Password information.
             $newPassword = Request::post('newPassword');
-            $verPassword = Request::post('verPassword');
+            $verifyPass  = Request::post('verifyPass');
 
             if (! Password::verify($password, $user->password)) {
-                $error[] = 'Wrong current Password inserted.';
-            } else if ($newPassword != $verPassword) {
+                $error[] = 'The current Password is invalid.';
+            } else if ($newPassword != $verifyPass) {
                 $error[] = 'The new Password and its verification are not equals.';
             } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $newPassword)) {
                 $error[] = 'The new Password is not strong enough.';

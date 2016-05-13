@@ -29,6 +29,13 @@ class Guard
     protected $user = null;
 
     /**
+     * Indicates if the User was authenticated via a recaller Cookie.
+     *
+     * @var bool
+     */
+    protected $viaRemember = false;
+
+    /**
      * @var \Auth\Model
      */
     protected $model = null;
@@ -116,6 +123,23 @@ class Guard
         }
 
         return $this->user = $user;
+    }
+
+
+    /**
+     * Get the ID for the currently authenticated User.
+     *
+     * @return int|null
+     */
+    public function id()
+    {
+        if ($this->loggedOut) {
+            return null;
+        }
+
+        $id = Session::get($this->getName());
+
+        return ! is_null($id) ? $id : $this->getRecallerId();
     }
 
     /**
@@ -296,18 +320,14 @@ class Guard
      */
     protected function getUserByRecaller($recaller)
     {
-        if (! $this->validRecaller($recaller)) {
-            Cookie::destroy($this->getRecallerName());
-
-            return null;
-        }
-
-        if (! $this->tokenRetrievalAttempted) {
+        if ($this->validRecaller($recaller) && ! $this->tokenRetrievalAttempted) {
             $this->tokenRetrievalAttempted = true;
 
             list($id, $remember_token) = explode('|', $recaller, 2);
 
-            return $this->retrieveUser(compact('id', 'remember_token'));
+            $this->viaRemember = ! is_null($user = $this->retrieveUser(compact('id', 'remember_token')));
+
+            return $user;
         }
     }
 
@@ -350,6 +370,18 @@ class Guard
     }
 
     /**
+     * Get the user ID from the recaller Cookie.
+     *
+     * @return string
+     */
+    protected function getRecallerId()
+    {
+        if ($this->validRecaller($recaller = $this->getRecaller())) {
+            return head(explode('|', $recaller));
+        }
+    }
+
+    /**
      * Get the name of the Cookie used to store the "recaller".
      *
      * @return string
@@ -367,5 +399,15 @@ class Guard
     public function getName()
     {
         return 'login_' .md5(get_class($this));
+    }
+
+    /**
+     * Determine if the User was authenticated via "remember me" Cookie.
+     *
+     * @return bool
+     */
+    public function viaRemember()
+    {
+        return $this->viaRemember;
     }
 }

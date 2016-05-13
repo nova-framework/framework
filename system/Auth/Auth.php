@@ -37,7 +37,7 @@ class Auth
      */
     public static function guard($guard = null)
     {
-        $guard = ($guard !== null) ? $guard : 'native';
+        $guard = ($guard !== null) ? $guard : 'default';
 
         if ( ! isset(static::$guards[$guard])) {
             static::$guards[$guard] = static::factory($guard);
@@ -58,7 +58,7 @@ class Auth
             $resolver = static::$registrar[$guard];
 
             return call_user_func($resolver);
-        } else if($guard == 'native') {
+        } else if($guard == 'default') {
             $config = Config::get('authentication');
 
             return new \Auth\Guard($config);

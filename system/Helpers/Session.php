@@ -195,22 +195,17 @@ class Session
         switch ($name) {
             case 'info':
                 $icon = 'info';
-
                 break;
             case 'warning':
                 $icon = 'warning';
-
                 break;
             case 'danger':
                 $icon = 'bomb';
-
                 break;
             case 'success':
             default:
                 $icon = 'check';
                 $type = 'success';
-
-                break;
         }
 
         $type = ($type !== null) ? $type : $name;

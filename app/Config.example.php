@@ -126,7 +126,7 @@ Config::set('classAliases', array(
     'Language'      => '\Core\Language',
     'Response'      => '\Core\Response',
     'Redirect'      => '\Core\Redirect',
-    'Mail'          => '\Helpers\PhpMailer\Mail',
+    'Mail'          => '\Helpers\Mailer',
     'Assets'        => '\Helpers\Assets',
     'Arr'           => '\Helpers\Arr',
     'Cookie'        => '\Helpers\Cookie',

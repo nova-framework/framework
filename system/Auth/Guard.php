@@ -151,13 +151,11 @@ class Guard
      */
     public function id()
     {
-        if ($this->loggedOut) {
-            return null;
+        if (! $this->loggedOut) {
+            $id = Session::get($this->getName());
+
+            return ! is_null($id) ? $id : $this->getRecallerId();
         }
-
-        $id = Session::get($this->getName());
-
-        return ! is_null($id) ? $id : $this->getRecallerId();
     }
 
     /**

@@ -26,13 +26,6 @@ class Query
     protected $db;
 
     /**
-     * The model being queried.
-     *
-     * @var \Database\Model
-     */
-    protected $model = null;
-
-    /**
      * The current query value bindings.
      *
      * @var array
@@ -167,7 +160,7 @@ class Query
     }
 
     /**
-     * Add a join clause to the query.
+     * Add a "JOIN" clause to the query.
      *
      * @param  string  $table
      * @param  string  $first
@@ -210,7 +203,7 @@ class Query
     }
 
     /**
-     * Add a left join to the query.
+     * Add a "LEFT JOIN" to the query.
      *
      * @param  string  $table
      * @param  string  $first
@@ -224,7 +217,7 @@ class Query
     }
 
     /**
-     * Add a "JOIN WHERE" clause to the query.
+     * Add a "LEFT JOIN WHERE" clause to the query.
      *
      * @param  string  $table
      * @param  string  $first
@@ -628,20 +621,6 @@ class Query
     }
 
     /**
-     * Execute a query for a single record by ID.
-     *
-     * @param  int    $id
-     * @param  array  $columns
-     * @return mixed
-     */
-    public function find($id, $columns = array('*'))
-    {
-        $uniqueIdentifier = isset($this->model) ? $this->model->getKeyName() : 'id';
-
-        return $this->where($uniqueIdentifier, '=', $id)->first($columns);
-    }
-
-    /**
      * Pluck a single column's value from the first result of a query.
      *
      * @param  string  $column
@@ -896,17 +875,10 @@ class Query
     /**
      * Delete a record from the database.
      *
-     * @param  mixed  $id
      * @return int
      */
-    public function delete($id = null)
+    public function delete()
     {
-        $uniqueIdentifier = isset($this->model) ? $this->model->getKeyName() : 'id';
-
-        if (! is_null($id)) {
-            $this->where($uniqueIdentifier, '=', $id);
-        }
-
         $sql = $this->compileDelete();
 
         return $this->db->delete($sql, $this->bindings);
@@ -958,19 +930,6 @@ class Query
         return array_values(array_filter($bindings, function($binding) {
             return true;
         }));
-    }
-
-    /**
-     * Set a model instance for the model being queried.
-     *
-     * @param  \Database\Model|null  $model
-     * @return \Database\Query
-     */
-    public function setModel($model)
-    {
-        $this->model = $model;
-
-        return $this;
     }
 
     /**

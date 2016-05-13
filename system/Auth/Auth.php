@@ -10,36 +10,85 @@ namespace Auth;
 
 use Core\Config;
 
+use \Closure;
+
 
 class Auth
 {
     /**
-     * The Authentication Guard instance.
+     * The currently active Authentication Guards.
      *
-     * @var \Auth\Guard
+     * @var array
      */
-    protected static $guard;
+     public static $guards = array();
 
     /**
-     * Get the Guard instance dynamically.
+     * The third-party Guard Registrar.
      *
-     * @return \Auth\Guard
+     * @var array
      */
-    protected static function getGuardInstance()
+    public static $registrar = array();
+
+    /**
+     * Get an Authentication Guard instance.
+     *
+     * @param  string  $guard
+     * @return Guard
+     */
+    public static function guard($guard = null)
     {
-        if (! isset(static::$guard)) {
-            $config = Config::get('authentication');
+        $guard = ($guard !== null) ? $guard : 'default';
 
-            $className = '\\' .ltrim($config['guard'], '\\');
-
-            static::$guard = new $className($config);
+        if ( ! isset(static::$guards[$guard])) {
+            static::$guards[$guard] = static::factory($guard);
         }
 
-        return static::$guard;
+        return static::$guards[$guard];
     }
 
     /**
-     * Call the Guard methods dynamically.
+     * Create a new Authentication Guard instance.
+     *
+     * @param  string  $guard
+     * @return Guard
+     */
+    protected static function factory($guard)
+    {
+        $config = Config::get('authentication');
+
+        if (isset(static::$registrar[$guard])) {
+            $resolver = static::$registrar[$guard];
+
+            return call_user_func($resolver, $config);
+        } else if($guard == 'default') {
+            return new \Auth\Guard($config);
+        }
+
+        throw new \Exception("Auth Guard {$guard} is not supported.");
+    }
+
+    /**
+     * Register a third-party Authentication Guard.
+     *
+     * @param  string   $guard
+     * @param  Closure  $resolver
+     * @return void
+     */
+    public static function extend($guard, Closure $resolver)
+    {
+        static::$registrar[$guard] = $resolver;
+    }
+
+    /**
+     * Magic Method for calling the methods on the default cache Guard.
+     *
+     * <code>
+     *      // Call the "user" method on the default Auth Guard
+     *      $user = Auth::user();
+     *
+     *      // Call the "check" method on the default Auth Guard
+     *      Auth::check();
+     * </code>
      *
      * @param  string $method
      * @param  array  $params
@@ -47,8 +96,6 @@ class Auth
      */
     public static function __callStatic($method, $params)
     {
-        $guard = static::getGuardInstance();
-
-        return call_user_func_array(array($guard, $method), $params);
+        return call_user_func_array(array(static::guard(), $method), $params);
     }
 }

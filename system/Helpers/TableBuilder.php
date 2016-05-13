@@ -1,6 +1,6 @@
 <?php
 /**
- * Table builder class
+ * Table builder class.
  *
  * @author Volter9 - https://github.com/Volter9
  * @version 3.0
@@ -12,15 +12,15 @@ use PDO;
 use Helpers\Database;
 
 /**
- * Table builder class for SimpleMVCFramework.
- * This class' purpose is to generate SQL code and execute query
- * to create MySQL table.
+ * Table builder class for the Nova Framework.
+ * This class' purpose is to generate SQL code and execute queries
+ * to create a MySQL table.
  *
  * For 'CREATE TABLE' syntax reference visit: http://dev.mysql.com/doc/refman/5.1/en/create-table.html [1]
  *
  * Example of usage:
  *
- * // After namespace: use \helpers\tableBuilder;
+ * // After namespace: use Helpers\TableBuilder;
  *
  * // Model or Controller method
  * $tableBuilder = new tableBuilder;
@@ -49,7 +49,7 @@ class TableBuilder
     const CURRENT_TIMESTAMP = 2;
 
     /**
-     * @var \helpers\database A database instance
+     * @var Helpers\Database A database instance
      */
     protected $db;
 
@@ -66,21 +66,21 @@ class TableBuilder
     private $name = '';
 
     /**
-     * fields
+     * Fields
      *
      * @var array  $fields Table fields
      */
     private $fields = array();
 
     /**
-     * pk
+     * Primary Key
      *
      * @var strin  $pk     Primary key field
      */
     private $pk = '';
 
     /**
-     * @var boolean Prevents errors in case if table already exists
+     * @var boolean Prevents any errors in case the table already exists
      */
     private $notExists = false;
 
@@ -95,7 +95,7 @@ class TableBuilder
 
     /**
      * Set alias.
-     * Alias is just a way to simplify datatype of field in expression.
+     * An alias is just a way to simplify datatypes of field in expression.
      * You probably don't want to write a lot of times INT(11), so you can add 'int' alias 'INT(11)'
      *
      * @param string $aliasName - Name of the Alias
@@ -109,17 +109,17 @@ class TableBuilder
     /**
      * Table builder constructor.
      * Database class initialization, don't create too many instances of table builder,
-     * because it will create many database instances which will decrease performance.
-     * By default this class would create a `id` field INT(11) NOT null AUTO_INCREMENT PRIMARY KEY, unless
-     * you'll set second parameter false.
+     * because it will create many database instances which will decrease server performance.
+     * By default this class would create an `id` field INT(11) NOT null AUTO_INCREMENT PRIMARY KEY, unless
+     * you set the second parameter as false.
      *
-     * @param PDO|null $db - PDO instance (it can be a \helper\database instance)
-     * @param boolean  $id - A flag to add or not to add `id` field automatically
+     * @param PDO|null $db - PDO instance (it can be a Helper\Database instance)
+     * @param boolean  $id - A flag to add or not to add an `id` field automatically
      */
     public function __construct(PDO $db = null, $id = true)
     {
-        // If database is not given, create new database instance.
-        // database is in the same namespace, we don't need to specify namespace
+        // If the database is not given, create a new database instance.
+        // If the database is in the same namespace, we don't need to specify namespace
         $this->db = !$db ? Database::get() : $db;
 
         if ($id === true) {
@@ -156,16 +156,16 @@ class TableBuilder
     }
 
     /**
-     * Add a field to table definition.
+     * Add a field to the table definition.
      *
      * @param string    $field   - Field name
      * @param string    $type    - Type of the field, for types, please visit CREATE TABLE page for reference
      * @param boolean   $null    - NOT null or null
-     * @param array|int $options - Options, it's either array of constants or just one constant
+     * @param array|int $options - Options, it's either an array of constants or just one constant
      */
     public function addField($field, $type, $null = false, $options = 0)
     {
-        // Check for alias
+        // Check for an alias.
         if (isset(self::$typeAliases[$type])) {
             $type = self::$typeAliases[$type];
         }
@@ -184,7 +184,7 @@ class TableBuilder
     }
 
     /**
-     * Sets 'IF NOT EXISTS' property
+     * Set the 'IF NOT EXISTS' property.
      *
      * @param boolean $boolean
      */
@@ -194,7 +194,7 @@ class TableBuilder
     }
 
     /**
-     * Set Primary Key field
+     * Set the Primary Key field.
      *
      * @param string $field - Field which you want to set a primary key
      * @return boolean
@@ -211,9 +211,9 @@ class TableBuilder
     }
 
     /**
-     * Set name of table
+     * Set the name of a table.
      *
-     * @param string $name - A name for database
+     * @param string $name - A name for the database table
      */
     public function setName($name)
     {
@@ -223,11 +223,11 @@ class TableBuilder
     }
 
     /**
-     * Adding default field for specific field.
-     * Note: to add CURRENT_TIMESTAMP, use addField method and $options argument!
+     * Add default field to a specific field.
+     * Note: to add CURRENT_TIMESTAMP, use the addField method and the $options argument!
      *
-     * @param string $field - Field that need default value
-     * @param mixed  $value - Value that you want to add
+     * @param string $field - Field that needs default value
+     * @param mixed  $value - A value that you want to add
      */
     public function setDefault($field, $value)
     {
@@ -252,7 +252,7 @@ class TableBuilder
 
         $sql .= "{$this->name} (";
 
-        // Handling fields
+        // Handle fields
         foreach ($this->fields as $name => $field) {
             $sql .= "`$name` {$field['type']} " . ($field['null'] === false ? 'NOT' : '') . " null ";
 
@@ -267,14 +267,14 @@ class TableBuilder
             $sql .= "CONSTRAINT pk_{$this->pk} PRIMARY KEY (`{$this->pk}`)";
         }
 
-        // Removing additional commas
+        // Remove additional commas
         $sql = rtrim($sql, ', ') . ')';
 
         $this->sql = $sql;
     }
 
     /**
-     * Get SQL, if you might need it.
+     * Retrieve SQL, if you might need it.
      *
      * @return string
      */
@@ -288,9 +288,9 @@ class TableBuilder
     }
 
     /**
-     * Creates table
+     * Create a table.
      *
-     * @param boolean $reset - A flag to reset whole set of data.
+     * @param boolean $reset - A flag to reset data.
      * @return boolean
      */
     public function create($reset = true)
@@ -309,7 +309,7 @@ class TableBuilder
     }
 
     /**
-     * Resets the properties of tableBuilder class so
+     * Reset the properties of tableBuilder class so
      * you could build another table.
      */
     public function reset()

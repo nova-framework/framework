@@ -1,6 +1,6 @@
 <?php
 /**
- * Document Helper
+ * Document Helper.
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -14,10 +14,9 @@ namespace Helpers;
 class Document
 {
     /**
-     * group types into collections, its purpose is to assign the passed extension to the suitable group
+     * Group the document types into collections, its purpose is to assign the passed extension to the suitable group.
      *
      * @param  string $extension file extension
-     *
      * @return string            group name
      */
     public static function getFileType($extension)
@@ -55,7 +54,6 @@ class Document
      *
      * @param  integer  $bytes     file size
      * @param  integer $precision precision to be used
-     *
      * @return string             size with measure
      */
     public static function formatBytes($bytes, $precision = 2)
@@ -89,7 +87,6 @@ class Document
      * </code>
      *
      * @param number|string $value
-     *
      * @return number
      */
     public static function getBytesSize($value)
@@ -117,7 +114,6 @@ class Document
      * Return the bytes file of a folder.
      *
      * @param string $path
-     *
      * @return string
      */
     public static function getFolderSize($path)
@@ -132,7 +128,6 @@ class Document
      * Return the file type based on the filename provided.
      *
      * @param  string $file
-     *
      * @return string
      */
     public static function getExtension($file)
@@ -141,10 +136,9 @@ class Document
     }
 
     /**
-     * Remove extension of file.
+     * Remove the extension of a file.
      *
      * @param  string  $file filename and extension
-     *
      * @return file name missing extension
      */
     public static function removeExtension($file)

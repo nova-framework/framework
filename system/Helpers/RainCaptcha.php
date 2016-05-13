@@ -1,6 +1,6 @@
 <?php
 /**
-** RainCaptcha PHP Wrapper v1.1.0
+** RainCaptcha PHP Wrapper v1.1.0.
 **
 ** Documentation: http://raincaptcha.driversworld.us/pages/docs_php_wrapper
 ** http://raincaptcha.driversworld.us/
@@ -27,7 +27,7 @@ class RainCaptcha
     private $sessionId;
 
     /**
-     * When class is called sessionId is stored or server settings are used for reference.
+     * When the class is called, the $sessionId is stored or the server settings are used as a reference.
      *
      * @param string $sessionId instance id
      */
@@ -51,7 +51,7 @@ class RainCaptcha
     }
 
     /**
-     * Compare given answer against the generated session.
+     * Compare the given answer against the generated session.
      *
      * @param  string $answer
      * @return boolean

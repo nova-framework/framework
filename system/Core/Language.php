@@ -13,18 +13,18 @@ use Helpers\Session;
 use Helpers\Cookie;
 
 /**
- * Language class to load the requested language file.
+ * A language class to load the requested language file.
  */
 class Language
 {
     /**
-     * list of language codes
+     * list of language codes.
      * @var array
      */
     public static $codes = ['cs', 'de', 'en', 'es', 'fa', 'fr', 'it', 'ja', 'nl', 'pl', 'ro', 'ru'];
 
     /**
-     * Variable holds array with language.
+     * This variable holds an array with the languages.
      *
      * @var array
      */
@@ -66,22 +66,22 @@ class Language
     {
         $code = self::getCurrentLanguage($code);
 
-        /** lang file */
+        // Language file.
         $file = APPDIR."Language/$code/$name.php";
 
-        /** check if is readable */
+        // Check if it is readable.
         if (is_readable($file)) {
-            /** require file */
+            // Require the file.
             $this->array[$code] = include $file;
         } else {
-            /** display error */
-            echo Error::display("Could not load language file '$code/$name.php'");
+            // Display an error.
+            echo Error::display("Could not load the language file: '$code/$name.php'");
             die;
         }
     }
 
     /**
-     * Get element from language array by key.
+     * Retrieve an element from the language array by its key.
      *
      * @param  string $value
      *
@@ -101,10 +101,10 @@ class Language
     }
 
     /**
-     * Get lang for views.
+     * Get the language for the views.
      *
-     * @param  string $value this is "word" value from language file
-     * @param  string $name  name of file with language
+     * @param  string $value this is a "word" value from the language file
+     * @param  string $name  name of the file with the language
      * @param  string $code  optional, language code
      *
      * @return string
@@ -113,16 +113,16 @@ class Language
     {
         $code = self::getCurrentLanguage($code);
 
-        /** lang file */
+        // Language file.
         $file = APPDIR."Language/$code/$name.php";
 
-        /** check if is readable */
+        // Check if it is readable.
         if (is_readable($file)) {
-            /** require file */
+            // Require the file.
             $array = include($file);
         } else {
-            /** display error */
-            echo Error::display("Could not load language file '$code/$name.php'");
+            // Display an error.
+            echo Error::display("Could not load the language file: '$code/$name.php'");
             die;
         }
 

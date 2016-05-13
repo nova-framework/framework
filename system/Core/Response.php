@@ -107,13 +107,13 @@ class Response
      * Create a new Response instance.
      *
      * <code>
-     *      // Create a Response instance with string content
+     *      // Create a Response instance with string content.
      *      return Response::make(json_encode($user));
      *
-     *      // Create a Response instance with a given status
+     *      // Create a Response instance with a given status.
      *      return Response::make('Not Found', 404);
      *
-     *      // Create a Response with some custom headers
+     *      // Create a Response with some custom headers.
      *      return Response::make(json_encode($user), 200, array('header' => 'value'));
      * </code>
      *
@@ -131,10 +131,10 @@ class Response
      * Create a new Response instance containing a View.
      *
      * <code>
-     *      // Create a response instance with a View
+     *      // Create a response instance with a View.
      *      return Response::view('Home/Index');
      *
-     *      // Create a response instance with a View and Data
+     *      // Create a response instance with a View and Data.
      *      return Response::view('Home/Index', array('name' => 'Taylor'));
      * </code>
      *
@@ -153,7 +153,7 @@ class Response
      * Create a new JSON Response.
      *
      * <code>
-     *       // Create a response instance with JSON
+     *       // Create a response instance with JSON.
      *       return Response::json($data, 200, array('header' => 'value'));
      * </code>
      *
@@ -174,7 +174,7 @@ class Response
      * Create a new JSONP response.
      *
      * <code>
-     *      // Create a response instance with JSONP
+     *      // Create a response instance with JSONP.
      *      return Response::jsonp('myFunctionCall', $data, 200, array('header' => 'value'));
      * </code>
      *
@@ -198,10 +198,10 @@ class Response
      * The specified error should match a View in your Views/Error directory.
      *
      * <code>
-     *      // Create a 404 response
+     *      // Create a 404 response.
      *      return Response::error('404');
      *
-     *      // Create a 404 response with data
+     *      // Create a 404 response with data.
      *      return Response::error('404', array('message' => 'Not Found'));
      * </code>
      *
@@ -242,8 +242,7 @@ class Response
     {
         $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
 
-        //
-        // Send the HTTP Status and Headers
+        // Send the HTTP Status and Headers.
 
         if (! headers_sent()) {
             $status = $this->status();
@@ -251,13 +250,12 @@ class Response
             // Send the HTTP Status Header.
             header("$httpProtocol $status " . self::$statuses[$status]);
 
-            // Send the rest of HTTP Headers.
+            // Send the rest of the HTTP Headers.
             foreach ($this->headers as $name => $value) {
                 header("$name: $value", true);
             }
         }
 
-        //
         // Send the stringified Content.
 
         echo $this->render();
@@ -333,7 +331,7 @@ class Response
     }
 
     /**
-     * Render the response when cast to string.
+     * Render the response when cast to a string.
      *
      * @return string
      */
@@ -343,7 +341,7 @@ class Response
     }
 
     /**
-     * Serve a File
+     * Serve a File.
      *
      * @param string $filePath
      * @return bool
@@ -364,10 +362,9 @@ class Response
             return false;
         }
 
-        //
         // Collect the current file information.
 
-        $finfo = \finfo_open(FILEINFO_MIME_TYPE); // Return mime type ala mimetype extension
+        $finfo = \finfo_open(FILEINFO_MIME_TYPE); // Return mime type a la mimetype extension
 
         $contentType = \finfo_file($finfo, $filePath);
 
@@ -376,7 +373,7 @@ class Response
         // There is a bug with finfo_file();
         // https://bugs.php.net/bug.php?id=53035
         //
-        // Hard coding the correct mime types for presently needed file extensions
+        // Hard coding the correct mime types for presently needed file extensions.
         switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
             case 'css':
                 $contentType = 'text/css';
@@ -388,13 +385,12 @@ class Response
                 break;
         }
 
-        //
         // Prepare and send the headers with browser-side caching support.
 
-        // Get the last-modified-date of this very file
+        // Get the last-modified-date of this very file.
         $lastModified = filemtime($filePath);
 
-        // Get the HTTP_IF_MODIFIED_SINCE header if set
+        // Get the HTTP_IF_MODIFIED_SINCE header if set.
         $ifModifiedSince = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
 
         // Firstly, we finalize the output buffering.
@@ -406,17 +402,16 @@ class Response
         header('Content-type: ' .$contentType);
         header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
         header('Last-Modified: '.gmdate('D, d M Y H:i:s', $lastModified).' GMT');
-        //header('Etag: '.$etagFile);
+        // header('Etag: '.$etagFile);
         header('Cache-Control: max-age='.$expires);
 
-        // Check if page has changed. If not, send 304 and exit
+        // Check if the page has changed. If not, send 304 and exit.
         if (@strtotime($ifModifiedSince) == $lastModified) {
             header("$httpProtocol 304 Not Modified");
 
             return true;
         }
 
-        //
         // Send the current file.
 
         header("$httpProtocol 200 OK");
@@ -433,7 +428,7 @@ class Response
     //--------------------------------------------------------------------
 
     /**
-     * Add HTTP header to headers array.
+     * Add the HTTP header to the headers array.
      *
      * @param  string  $header HTTP header text
      */
@@ -457,7 +452,7 @@ class Response
     }
 
     /**
-     * Send headers
+     * Send headers.
      */
     public static function sendHeaders()
     {

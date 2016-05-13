@@ -1,6 +1,6 @@
 <?php
 /**
- * Reserved Words
+ * Reserved Words.
  *
  * @author David Carr - dave@novaframework.com
  * @version 3.0
@@ -9,7 +9,7 @@
 namespace Helpers;
 
 /**
- * List of reserved words for php 5.x and 7
+ * A List of reserved words for php 5.x and 7
  */
 class ReservedWords
 {

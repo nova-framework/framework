@@ -67,10 +67,10 @@ class Users extends Controller
                 // Prepare the flash message.
                 $message = sprintf('<b>%s</b>, you have successfully logged in.', $user->realname);
 
-                // Redirect to Users Dashboard.
+                // Redirect to the User's Dashboard.
                 return Redirect::to('dashboard')->with('message', $message);
             } else {
-                // Errors happened on authentication; add a message into $error array.
+                // An error has happened on authentication; add a message into $error array.
                 $error[] = 'Wrong username or password.';
             }
         }
@@ -90,24 +90,23 @@ class Users extends Controller
 
     public function profile()
     {
+        $user = Auth::user();
+
         $error = array();
 
         if(Request::isPost()) {
-            $user = Auth::user();
+            // The requested new Password information.
+            $password = Request::post('newPassword');
+            $confirm  = Request::post('confirmPass');
 
-            $password = Request::post('password');
-
-            $newPassword = Request::post('newPassword');
-            $verPassword = Request::post('verPassword');
-
-            if (! Password::verify($password, $user->password)) {
-                $error[] = 'Wrong current Password inserted.';
-            } else if ($newPassword != $verPassword) {
+            if (! Password::verify(Request::post('password'), $user->password)) {
+                $error[] = 'The current Password is invalid.';
+            } else if ($password != $confirm) {
                 $error[] = 'The new Password and its verification are not equals.';
-            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $newPassword)) {
+            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
                 $error[] = 'The new Password is not strong enough.';
             } else {
-                $this->model->updateUser($user, array('password' => Password::make($newPassword)));
+                $this->model->updateUser($user, array('password' => Password::make($password)));
 
                 // Use a Redirect to avoid the reposting the data.
                 return Redirect::to('profile')->with('message', 'You have successfully updated your Password.');
@@ -116,6 +115,7 @@ class Users extends Controller
 
         return View::make('Users/Profile')
             ->shares('title', 'User Profile')
+            ->with('user', $user)
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);
     }

@@ -1,5 +1,5 @@
 <div class='row-responsive'>
-    <h2>User Profile</h2>
+    <h2>User Profile : <?= $user->realname; ?></h2>
     <hr>
 </div>
 
@@ -22,7 +22,7 @@
                         <input type="password" class="input-medium input-block-level form-control" name="newPassword" placeholder="Insert the new Password" title="Insert the new Password">
                     </div>
                     <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="verPassword" placeholder="Verify the new Password" title="Verify the new Password">
+                        <input type="password" class="input-medium input-block-level form-control" name="confirmPass" placeholder="Verify the new Password" title="Verify the new Password">
                     </div>
                     <hr>
                     <div>

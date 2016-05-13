@@ -1,6 +1,6 @@
 <?php
 /**
- * Tags Class
+ * Tags Class.
  *
  * @author David Carr - dave@daveismyname.com
  * @version 3.0
@@ -24,7 +24,7 @@ class Tags
      */
     public static function clean($data)
     {
-        //replace spacer code for a space
+        // Replace spacer code for a space.
         $data[1] = str_replace("&nbsp;", " ", $data[1]);
         $parts = explode(" ", $data[1]);
         $params = array();
@@ -35,7 +35,7 @@ class Tags
 
                 list($opt, $val) = explode("=", $part);
 
-                //remove any quotes
+                // Remove any quotes.
                 $val = str_replace('&quot;', '', $val);
                 $val = str_replace('&rdquo;', '', $val);
                 $val = str_replace('&rsquo;', '', $val);
@@ -47,7 +47,7 @@ class Tags
     }
 
     /**
-     * Get
+     * Get.
      *
      * @param  string $string content to scan
      *
@@ -55,16 +55,16 @@ class Tags
      */
     public static function get($string)
     {
-        //current year
+        // Current year.
         $string = str_replace('[year]', date('Y'), $string);
 
-        //name of website
+        // Name of website.
         $string = str_replace('[sitetitle]', SITETITLE, $string);
 
-        //site email address
+        // Site email address.
         $string = str_replace('[siteemail]', SITEEMAIL, $string);
 
-        //feedburner subscribe form
+        // Feedburner subscribe form.
         $string = preg_replace_callback("(\[feedburner(.*?)])is", function ($matches) {
             $params = tags::clean($matches);
 
@@ -79,7 +79,7 @@ class Tags
             return $form;
         }, $string);
 
-        //google plus box
+        // Google plus box.
         $string = preg_replace_callback("(\[googleplusbox(.*?)])is", function ($matches) {
             $params = tags::clean($matches);
             $username  = (isset($params['username']) ? $params['username'] : '');
@@ -88,7 +88,7 @@ class Tags
                     <g:page href='https://plus.google.com/+$username'></g:page>";
         }, $string);
 
-        //twitter follow button
+        // Twitter follow button.
         $string = preg_replace_callback("(\[twitterfollowbutton(.*?)])is", function ($matches) {
             $params = tags::clean($matches);
 
@@ -100,7 +100,7 @@ class Tags
                 $params['size'] = null;
             }
 
-            //if key exits use it
+            // If the key exits then use it.
             $username   = (isset($params['username']) ? $params['username'] : '');
             $count      = ($params['count'] == 'no' ? "data-show-count='false'" : '');
             $size       = ($params['size'] == 'large' ? "data-size='large'" : '');
@@ -110,7 +110,7 @@ class Tags
         }, $string);
 
 
-        //twitter share button
+        // Twitter share button.
         $string = preg_replace_callback("(\[twittersharebutton(.*?)])is", function ($matches) {
             $params = tags::clean($matches);
 
@@ -122,7 +122,7 @@ class Tags
                 $params['size'] = null;
             }
 
-            //if key exits use it
+            // If the key exits then use it.
             $count      = ($params['count'] == 'no' ? "data-count='none'" : '');
             $size       = ($params['size'] == 'large' ? "data-size='large'" : '');
             $via        = (isset($params['via']) ? "data-via='{$params['via']}'" : '');
@@ -133,11 +133,11 @@ class Tags
         }, $string);
 
 
-        //youtube embeds
+        // Youtube embeds.
         $string = preg_replace_callback("(\[youtube (.*?)])is", function ($matches) {
             $params = tags::clean($matches);
 
-            //if key exits use it
+            // If the key exits then use it.
             $video  = (isset($params['video']) ? $params['video'] : '');
             $video = str_replace("https://www.youtube.com/watch?v=", "", $video);
             $width  = (isset($params['width']) ? $params['width'] : '640');
@@ -146,7 +146,7 @@ class Tags
             return "<iframe width='$width' height='$height' src='//www.youtube.com/embed/$video' frameborder='0' allowfullscreen></iframe>";
         }, $string);
 
-        //youtube subscribe
+        // Youtube subscribe.
         $string = preg_replace_callback("(\[youtubesub(.*?)])is", function ($matches) {
             $params = tags::clean($matches);
 
@@ -166,11 +166,11 @@ class Tags
                 <div class='g-ytsubscribe' data-channel='$username' data-layout='$layout' data-count='$count'></div>";
         }, $string);
 
-        //vimeo embeds
+        // Vimeo embeds.
         $string = preg_replace_callback("(\[vimeo (.*?)])is", function ($matches) {
             $params = tags::clean($matches);
 
-            //if key exits use it
+            // If the key exits then use it.
             $video  = (isset($params['video']) ? $params['video'] : '');
             $video = str_replace("https://vimeo.com/", "", $video);
             $width  = (isset($params['width']) ? $params['width'] : '640');

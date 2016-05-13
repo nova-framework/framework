@@ -16,8 +16,8 @@ class Error
     /**
      * Display errors.
      *
-     * @param  array  $error an error of errors
-     * @param  string $class name of class to apply to div
+     * @param  array  $error an array of errors
+     * @param  string $class name of the class to apply to the div
      *
      * @return string return the errors inside divs
      */

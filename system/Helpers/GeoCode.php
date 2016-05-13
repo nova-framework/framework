@@ -1,6 +1,6 @@
 <?php
 /**
- * GeoCode Helper
+ * GeoCode Helper.
  *
  * @author Mark Parrish - mark@pipcommunications.com - http://www.pipcommunications.com
  * @version 3.0
@@ -8,17 +8,17 @@
 namespace Helpers;
 
 /**
- * Collection of methods for working with Google's GeoCoder.
+ * A collection of methods for working with Google's GeoCoder.
  */
 class GeoCode
 {
    /**
-    * Helper class to house google map api calls.
+    * Helper class to house Google map api calls.
     *
-    * This function connects to google maps and retrives the lat/lon of the address provided
-    * usage: GeoCode::getLngLat(array($address, $city, $state, $zipcode));
+    * This function connects to Google maps and retrieves the Latitude/Longitude of the address provided.
+    * Usage: GeoCode::getLngLat(array($address, $city, $state, $zipcode));
     *
-    * @param  array $options should contain up to 4 keys for steet,city,state and zipcode
+    * @param  array $options should contain up to 4 keys for steet, city, state and zipcode
     *
     * @return array array(lon, lat)
     */
@@ -48,7 +48,7 @@ class GeoCode
             'lat' => $result['results'][0]['geometry']['location']['lat'],
             );
         } else {
-            return 'Failed to GeoCode address';
+            return 'Failed to GeoCode the address.';
         }
     }
 }

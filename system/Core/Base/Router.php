@@ -126,7 +126,7 @@ abstract class Router
     abstract protected static function register($method, $route, $callback = null);
 
     /**
-     * Return the current Matched Route, if there is any.
+     * Return the current Matched Route, if there are any.
      *
      * @return null|Route
      */
@@ -175,7 +175,7 @@ abstract class Router
         /** @var Controller $controller */
         $controller = new $className();
 
-        // Obtain the available methods into requested Controller.
+        // Obtain the available methods into the requested Controller.
         $methods = array_map('strtolower', get_class_methods($controller));
 
         // The called Method should be defined right on the called Controller to be executed.
@@ -230,7 +230,7 @@ abstract class Router
      */
     protected function dispatchFile($uri)
     {
-        // For properly Assets serving, the file URI should be as following:
+        // For proper Assets serving, the file URI should be either of the following:
         //
         // /templates/default/assets/css/style.css
         // /modules/blog/assets/css/style.css

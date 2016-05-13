@@ -21,14 +21,14 @@ class Ftp
     private $conn;
 
     /**
-     * Holds the path relative to the root of the server.
+     * Hold the path relative to the root of the server.
      *
      * @var string
      */
     private $basePath;
 
     /**
-     * Open a FTP connection.
+     * Open an FTP connection.
      *
      * @param string $host the server address
      * @param string $user username
@@ -37,13 +37,13 @@ class Ftp
      */
     public function __construct($host, $user, $pass, $base)
     {
-        //set the basepath
+        // Set the basepath.
         $this->basePath = $base.'/';
 
-        //open a connection
+        // Open a connection.
         $this->conn = ftp_connect($host);
 
-        //login to server
+        // Login to the server.
         ftp_login($this->conn, $user, $pass);
     }
 
@@ -68,7 +68,7 @@ class Ftp
     }
 
     /**
-     * Delete directory from FTP server.
+     * Delete a directory from the FTP server.
      *
      * @param  string $dir foldr to delete
      */
@@ -78,7 +78,7 @@ class Ftp
     }
 
     /**
-     * Set folder permission.
+     * Set the folder permissions.
      *
      * @param  string $folderChmod folder name
      * @param  integer $permission permission value
@@ -93,7 +93,7 @@ class Ftp
     }
 
     /**
-     * Upload file to FTP server.
+     * Upload a file to the FTP server.
      *
      * @param  string $remoteFile path and filename for remote file
      * @param  string $localFile  local path to file
@@ -110,7 +110,7 @@ class Ftp
     }
 
     /**
-     * Delete remove file.
+     * Delete a file.
      *
      * @param  string $file path and filename
      */

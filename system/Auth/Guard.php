@@ -29,6 +29,13 @@ class Guard
     protected $user = null;
 
     /**
+     * Indicates if the User was authenticated via a recaller Cookie.
+     *
+     * @var bool
+     */
+    protected $viaRemember = false;
+
+    /**
      * @var \Auth\Model
      */
     protected $model = null;
@@ -48,15 +55,33 @@ class Guard
     protected $tokenRetrievalAttempted = false;
 
     /**
+     * @var string
+     */
+    protected $passwordField = 'password';
+
+    /**
+     * @var string
+     */
+    protected $rememberToken = 'remember_token';
+
+    /**
      * Create a new Authentication Guard instance.
      *
      * @return void
      */
     public function __construct(array $config)
     {
-        $className = '\\' .ltrim($config['model'], '\\');
+        // Get the used Table columns from configuration.
+        if(isset($config['columns']) && is_array($config['columns'])) {
+            $fields = $config['columns'];
+
+            $this->passwordField = $fields['password'];
+            $this->rememberToken = $fields['rememberToken'];
+        }
 
         // Create the configuration specified Model instance.
+        $className = '\\' .ltrim($config['model'], '\\');
+
         $this->model = new $className($config);
     }
 
@@ -118,8 +143,23 @@ class Guard
         return $this->user = $user;
     }
 
+
     /**
-     * Attempt to authenticate an User using the given credentials.
+     * Get the ID for the currently authenticated User.
+     *
+     * @return int|null
+     */
+    public function id()
+    {
+        if (! $this->loggedOut) {
+            $id = Session::get($this->getName());
+
+            return ! is_null($id) ? $id : $this->getRecallerId();
+        }
+    }
+
+    /**
+     * Attempt to authenticate a User, using the given credentials.
      *
      * @param  array $credentials
      * @param  bool  $remember
@@ -155,7 +195,7 @@ class Guard
         $this->updateSession($user);
 
         if ($remember) {
-            if (empty($user->remember_token)) {
+            if (empty($user->{$this->rememberToken})) {
                 $this->refreshRememberToken($user);
             }
 
@@ -196,7 +236,7 @@ class Guard
         $query = $this->model->newQuery();
 
         foreach ($credentials as $key => $value) {
-            if ($key !== 'password') {
+            if ($key !== $this->passwordField) {
                 $query->where($key, $value);
             }
         }
@@ -226,7 +266,7 @@ class Guard
      */
     protected function validateCredentials(stdClass $user, array $credentials)
     {
-        return Password::verify($credentials['password'], $user->password);
+        return Password::verify($credentials['password'], $user->{$this->passwordField});
     }
 
     /**
@@ -245,7 +285,8 @@ class Guard
         // Create a new Token and update it into Database.
         $user->remember_token = createKey(60);
 
-        $query->where($keyName, $user->{$keyName})->update(array('remember_token' => $user->remember_token));
+        $query->where($keyName, $user->{$keyName})
+            ->update(array($this->rememberToken => $user->remember_token));
     }
 
     /**
@@ -296,18 +337,22 @@ class Guard
      */
     protected function getUserByRecaller($recaller)
     {
-        if (! $this->validRecaller($recaller)) {
-            Cookie::destroy($this->getRecallerName());
-
-            return null;
-        }
-
-        if (! $this->tokenRetrievalAttempted) {
+        if ($this->validRecaller($recaller) && ! $this->tokenRetrievalAttempted) {
             $this->tokenRetrievalAttempted = true;
 
             list($id, $remember_token) = explode('|', $recaller, 2);
 
-            return $this->retrieveUser(compact('id', 'remember_token'));
+            // Prepare the requested User credentials.
+            $keyName = $this->model->getKeyName();
+
+            $credentials = array(
+                $keyName => $id,
+                $this->rememberToken => $remember_token
+            );
+
+            $this->viaRemember = ! is_null($user = $this->retrieveUser($credentials));
+
+            return $user;
         }
     }
 
@@ -350,6 +395,18 @@ class Guard
     }
 
     /**
+     * Get the user ID from the recaller Cookie.
+     *
+     * @return string
+     */
+    protected function getRecallerId()
+    {
+        if ($this->validRecaller($recaller = $this->getRecaller())) {
+            return head(explode('|', $recaller));
+        }
+    }
+
+    /**
      * Get the name of the Cookie used to store the "recaller".
      *
      * @return string
@@ -367,5 +424,15 @@ class Guard
     public function getName()
     {
         return 'login_' .md5(get_class($this));
+    }
+
+    /**
+     * Determine if the User was authenticated via "remember me" Cookie.
+     *
+     * @return bool
+     */
+    public function viaRemember()
+    {
+        return $this->viaRemember;
     }
 }

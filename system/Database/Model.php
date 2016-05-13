@@ -44,10 +44,13 @@ class Model
     public function __construct()
     {
         if(is_null($this->table)) {
-            // Not Table name specified? Try to auto-calculate it.
+            // If there is not a table name specified, try to auto-calculate it.
             $className = get_class($this);
 
-            $this->table = Inflector::tableize(class_basename($className));
+            if($className != 'Database\Model') {
+                // A child Class with no Table specified; try to auto-configure.
+                $this->table = Inflector::tableize(class_basename($className));
+            }
         }
 
         $this->db = Connection::getInstance();
@@ -80,7 +83,7 @@ class Model
      */
     public function newQuery()
     {
-        return $this->db->table($this->table)->setModel($this);
+        return $this->db->table($this->table);
     }
 
     /**

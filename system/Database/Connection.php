@@ -59,7 +59,7 @@ class Connection
     }
 
     /**
-     * Get an instance of the Database Connection.
+     * Retrieve an instance of the Database Connection.
      *
      * @param $name string Name of the connection provided in the configuration
      * @return Connection|\PDO|null
@@ -68,11 +68,11 @@ class Connection
     public static function getInstance($name = 'default')
     {
         if (isset(static::$instances[$name])) {
-            // When already have an Connection instance, return it.
+            // If there is already a Connection instance, return it.
             return static::$instances[$name];
         }
 
-        // Get the requested Connection options.
+        // Retrieve the requested Connection options.
         $config = Config::get('database');
 
         if (isset($config[$name])) {

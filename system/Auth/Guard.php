@@ -283,7 +283,7 @@ class Guard
         $query = $this->model->newQuery();
 
         // Create a new Token and update it into Database.
-        $user->remember_token = str_random(60);
+        $user->remember_token = str_random(100);
 
         $query->where($keyName, $user->{$keyName})
             ->update(array($this->rememberToken => $user->remember_token));

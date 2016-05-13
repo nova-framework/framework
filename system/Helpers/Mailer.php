@@ -6,12 +6,14 @@
  * @version 3.0
  */
 
-namespace Helpers\PhpMailer;
+namespace Helpers;
+
+use \PHPMailer;
 
 /**
  * Custom class for PHPMailer to uniform sending emails.
  */
-class Mail extends PhpMailer
+class Mailer extends PHPMailer
 {
     /**
      * From
@@ -104,6 +106,7 @@ class Mail extends PhpMailer
     {
         $this->AltBody = strip_tags(stripslashes($this->Body))."\n\n";
         $this->AltBody = str_replace("&nbsp;", "\n\n", $this->AltBody);
+
         return parent::send();
     }
 
@@ -116,7 +119,8 @@ class Mail extends PhpMailer
      */
     public function cleanMessage($string)
     {
-        $bad = array("content-type","bcc:","to:","cc:","href");
+        $bad = array("content-type", "bcc:", "to:", "cc:", "href");
+
         return str_replace($bad, "", $string);
     }
 }

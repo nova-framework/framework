@@ -55,15 +55,33 @@ class Guard
     protected $tokenRetrievalAttempted = false;
 
     /**
+     * @var string
+     */
+    protected $passwordField = 'password';
+
+    /**
+     * @var string
+     */
+    protected $rememberToken = 'remember_token';
+
+    /**
      * Create a new Authentication Guard instance.
      *
      * @return void
      */
     public function __construct(array $config)
     {
-        $className = '\\' .ltrim($config['model'], '\\');
+        // Get the used Table columns from configuration.
+        if(isset($config['columns']) && is_array($config['columns'])) {
+            $fields = $config['columns'];
+
+            $this->passwordField = $fields['password'];
+            $this->rememberToken = $fields['rememberToken'];
+        }
 
         // Create the configuration specified Model instance.
+        $className = '\\' .ltrim($config['model'], '\\');
+
         $this->model = new $className($config);
     }
 
@@ -133,13 +151,11 @@ class Guard
      */
     public function id()
     {
-        if ($this->loggedOut) {
-            return null;
+        if (! $this->loggedOut) {
+            $id = Session::get($this->getName());
+
+            return ! is_null($id) ? $id : $this->getRecallerId();
         }
-
-        $id = Session::get($this->getName());
-
-        return ! is_null($id) ? $id : $this->getRecallerId();
     }
 
     /**
@@ -179,7 +195,7 @@ class Guard
         $this->updateSession($user);
 
         if ($remember) {
-            if (empty($user->remember_token)) {
+            if (empty($user->{$this->rememberToken})) {
                 $this->refreshRememberToken($user);
             }
 
@@ -220,7 +236,7 @@ class Guard
         $query = $this->model->newQuery();
 
         foreach ($credentials as $key => $value) {
-            if ($key !== 'password') {
+            if ($key !== $this->passwordField) {
                 $query->where($key, $value);
             }
         }
@@ -250,7 +266,7 @@ class Guard
      */
     protected function validateCredentials(stdClass $user, array $credentials)
     {
-        return Password::verify($credentials['password'], $user->password);
+        return Password::verify($credentials['password'], $user->{$this->passwordField});
     }
 
     /**
@@ -269,7 +285,8 @@ class Guard
         // Create a new Token and update it into Database.
         $user->remember_token = createKey(60);
 
-        $query->where($keyName, $user->{$keyName})->update(array('remember_token' => $user->remember_token));
+        $query->where($keyName, $user->{$keyName})
+            ->update(array($this->rememberToken => $user->remember_token));
     }
 
     /**
@@ -325,7 +342,15 @@ class Guard
 
             list($id, $remember_token) = explode('|', $recaller, 2);
 
-            $this->viaRemember = ! is_null($user = $this->retrieveUser(compact('id', 'remember_token')));
+            // Prepare the requested User credentials.
+            $keyName = $this->model->getKeyName();
+
+            $credentials = array(
+                $keyName => $id,
+                $this->rememberToken => $remember_token
+            );
+
+            $this->viaRemember = ! is_null($user = $this->retrieveUser($credentials));
 
             return $user;
         }

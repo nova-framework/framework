@@ -95,21 +95,18 @@ class Users extends Controller
         $error = array();
 
         if(Request::isPost()) {
-            // Get the actual Password.
-            $password = Request::post('password');
-
             // The requested new Password information.
-            $newPassword = Request::post('newPassword');
-            $verifyPass  = Request::post('verifyPass');
+            $password = Request::post('newPassword');
+            $confirm  = Request::post('confirmPass');
 
-            if (! Password::verify($password, $user->password)) {
+            if (! Password::verify(Request::post('password'), $user->password)) {
                 $error[] = 'The current Password is invalid.';
-            } else if ($newPassword != $verifyPass) {
+            } else if ($password != $confirm) {
                 $error[] = 'The new Password and its verification are not equals.';
-            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $newPassword)) {
+            } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
                 $error[] = 'The new Password is not strong enough.';
             } else {
-                $this->model->updateUser($user, array('password' => Password::make($newPassword)));
+                $this->model->updateUser($user, array('password' => Password::make($password)));
 
                 // Use a Redirect to avoid the reposting the data.
                 return Redirect::to('profile')->with('message', 'You have successfully updated your Password.');

@@ -32,7 +32,7 @@ class Auth
     /**
      * Get an Authentication Guard instance.
      *
-     * @param  string  $driver
+     * @param  string  $guard
      * @return Guard
      */
     public static function guard($guard = null)
@@ -49,7 +49,7 @@ class Auth
     /**
      * Create a new Authentication Guard instance.
      *
-     * @param  string  $driver
+     * @param  string  $guard
      * @return Guard
      */
      protected static function factory($guard)

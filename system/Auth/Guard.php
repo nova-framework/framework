@@ -344,7 +344,7 @@ class Guard
 
             list($id, $remember_token) = explode('|', $recaller, 2);
 
-            // Prepare the User credentials.
+            // Prepare the requested User credentials.
             $keyName = $this->model->getKeyName();
 
             $credentials = array(

@@ -9,7 +9,6 @@
 namespace Database;
 
 use Core\Config;
-use Database\Model;
 use Database\Query;
 
 use \PDO;

@@ -14,6 +14,8 @@ use Database\Connection;
 class Facade
 {
     /**
+     * Magic Method for calling the methods on the default Connection instance.
+     *
      * @param $method
      * @param $params
      *

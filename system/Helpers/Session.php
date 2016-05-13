@@ -8,6 +8,9 @@
 
 namespace Helpers;
 
+use Core\Template;
+
+
 /**
  * Prefix sessions with useful methods.
  */
@@ -165,20 +168,48 @@ class Session
      */
 
     /**
-     * Display a one time message, then clear it from the session.
+     * Display a one time Message, then clear it from the Session.
      *
-     * @param  string $sessionName default session name
+     * @param  string $name default Session name
      *
      * @return string
      */
-    public static function message($sessionName = 'success')
+    public static function message($name = 'success')
     {
-        $msg = Session::pull($sessionName);
-        if (!empty($msg)) {
-            return "<div class='alert alert-$sessionName alert-dismissable'>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'><span aria-hidden='true'>&times;</span></button>
-                <h4><i class='fa fa-check'></i> ".$msg."</h4>
-              </div>";
+        if (! Session::exists($name)) {
+            return null;
         }
+
+        // Pull the Message from Session.
+        $message = Session::pull($name);
+
+        if (is_array($message)) {
+            // The Message is structured in the New Style.
+            $name    = $message['type'];
+            $message = $message['text'];
+        }
+
+        // Prepare the allert Type and Icon.
+        $type = null;
+
+        switch ($name) {
+            case 'info':
+                $icon = 'info';
+                break;
+            case 'warning':
+                $icon = 'warning';
+                break;
+            case 'danger':
+                $icon = 'bomb';
+                break;
+            default:
+                $icon = 'check';
+                $type = 'success';
+        }
+
+        $type = ($type !== null) ? $type : $name;
+
+        // Render the Template Fragment and return the result.
+        return Template::make('message', compact('type', 'icon', 'message'))->fetch();
     }
 }

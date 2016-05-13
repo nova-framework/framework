@@ -10,7 +10,6 @@ namespace Database;
 
 use Database\Connection;
 use Database\JoinClause;
-use Database\Model;
 
 use \PDO;
 use \Closure;

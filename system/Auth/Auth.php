@@ -54,13 +54,13 @@ class Auth
      */
     protected static function factory($guard)
     {
+        $config = Config::get('authentication');
+
         if (isset(static::$registrar[$guard])) {
             $resolver = static::$registrar[$guard];
 
-            return call_user_func($resolver);
+            return call_user_func($resolver, $config);
         } else if($guard == 'default') {
-            $config = Config::get('authentication');
-
             return new \Auth\Guard($config);
         }
 

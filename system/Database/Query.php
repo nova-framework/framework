@@ -993,7 +993,7 @@ class Query
             $column = 'DISTINCT ' .$column;
         }
 
-        return 'SELECT ' .$aggregate['function'] .'(' .$column .') AS AGGREGATE';
+        return 'SELECT ' .$aggregate['function'] .'(' .$column .') AS aggregate';
     }
 
     /**

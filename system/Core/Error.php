@@ -23,16 +23,16 @@ class Error
      */
     public static function display($errors, $class = 'alert alert-danger')
     {
+        $result = '';
+
         if (is_array($errors)) {
             foreach ($errors as $error) {
-                $row .= "<div class='$class'>$error</div>";
+                $result .= "<div class='$class'>$error</div>";
             }
-
-            return $row;
+        } else if (! empty($errors)) {
+            $result = "<div class='$class'>$errors</div>";
         }
 
-        if (! empty($errors)) {
-            return "<div class='$class'>$errors</div>";
-        }
+        return $result;
     }
 }

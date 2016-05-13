@@ -126,7 +126,7 @@ Config::set('classAliases', array(
     'Language'      => '\Core\Language',
     'Response'      => '\Core\Response',
     'Redirect'      => '\Core\Redirect',
-    'Mail'          => '\Helpers\PhpMailer\Mail',
+    'Mail'          => '\Helpers\Mailer',
     'Assets'        => '\Helpers\Assets',
     'Arr'           => '\Helpers\Arr',
     'Cookie'        => '\Helpers\Cookie',
@@ -151,6 +151,8 @@ Config::set('classAliases', array(
     'Url'           => '\Helpers\Url',
     'DB'            => '\Database\Facade',
     'Auth'          => '\Auth\Auth',
+    // The Legacy Mailer
+    'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',
 ));
 
 /**

@@ -160,7 +160,12 @@ Config::set('authentication', array(
     'guard'      => 'Auth\Guard',
     //'model'      => 'Auth\Model',
     'model'      => 'App\Models\Users',
-    // The User's Table information.
-    'table'      => 'users',
-    'primaryKey' => 'id'
+    // The used Table name and its primary key.
+    'table'         => 'users',
+    'primaryKey'    => 'id',
+    // The used Table columns.
+    'columns' => array(
+        'password'      => 'password',
+        'rememberToken' => 'remember_token'
+    ),
 ));

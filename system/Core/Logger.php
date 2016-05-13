@@ -8,7 +8,7 @@
 
 namespace Core;
 
-use Helpers\PhpMailer\Mail;
+use Helpers\Mailer;
 
 /**
  * Record and email/display errors or a custom error message.
@@ -186,11 +186,14 @@ class Logger
     public static function sendEmail($message)
     {
         if (self::$emailError == true) {
-            $mail = new Mail();
+            $mail = new Mailer();
+
             $mail->setFrom(SITEEMAIL);
             $mail->addAddress(SITEEMAIL);
+
             $mail->subject('New error on '.SITETITLE);
             $mail->body($message);
+
             $mail->send();
         }
     }

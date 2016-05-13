@@ -209,7 +209,7 @@ class Session
 
         $type = ($type !== null) ? $type : $name;
 
-        // Render the Template Fragment and return the result.
+        // Fetch the associated Template Fragment and return the result.
         return Template::make('message', compact('type', 'icon', 'message'))->fetch();
     }
 }

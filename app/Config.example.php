@@ -161,8 +161,8 @@ Config::set('authentication', array(
     //'model'      => 'Auth\Model',
     'model'      => 'App\Models\Users',
     // The used Table name and its primary key.
-    'table'         => 'users',
-    'primaryKey'    => 'id',
+    'table'      => 'users',
+    'primaryKey' => 'id',
     // The used Table columns.
     'columns' => array(
         'password'      => 'password',

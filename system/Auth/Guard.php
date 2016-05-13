@@ -72,10 +72,12 @@ class Guard
     public function __construct(array $config)
     {
         // Get the used Table columns from configuration.
-        $fields = $config['columns'];
+        if(isset($config['columns']) && is_array($config['columns'])) {
+            $fields = $config['columns'];
 
-        $this->passwordField = $fields['password'];
-        $this->rememberToken = $fields['rememberToken'];
+            $this->passwordField = $fields['password'];
+            $this->rememberToken = $fields['rememberToken'];
+        }
 
         // Create the configuration specified Model instance.
         $className = '\\' .ltrim($config['model'], '\\');

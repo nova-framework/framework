@@ -52,23 +52,19 @@ class Auth
      * @param  string  $guard
      * @return Guard
      */
-     protected static function factory($guard)
-     {
-         if (isset(static::$registrar[$guard])) {
+    protected static function factory($guard)
+    {
+        if (isset(static::$registrar[$guard])) {
             $resolver = static::$registrar[$guard];
 
             return call_user_func($resolver);
-         }
+        } else if($guard == 'native') {
+            $config = Config::get('authentication');
 
-         $config = Config::get('authentication');
+            return new \Auth\Guard($config);
+        }
 
-         switch ($guard) {
-            case 'native':
-                return new \Auth\Guard($config);
-
-            default:
-                throw new \Exception("Auth Guard {$guard} is not supported.");
-         }
+        throw new \Exception("Auth Guard {$guard} is not supported.");
     }
 
     /**

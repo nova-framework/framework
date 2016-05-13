@@ -283,7 +283,7 @@ class Guard
         $query = $this->model->newQuery();
 
         // Create a new Token and update it into Database.
-        $user->remember_token = createKey(60);
+        $user->remember_token = str_random(60);
 
         $query->where($keyName, $user->{$keyName})
             ->update(array($this->rememberToken => $user->remember_token));
@@ -402,7 +402,7 @@ class Guard
     protected function getRecallerId()
     {
         if ($this->validRecaller($recaller = $this->getRecaller())) {
-            return head(explode('|', $recaller));
+            return reset(explode('|', $recaller));
         }
     }
 

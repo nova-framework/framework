@@ -170,7 +170,7 @@ class Session
     /**
      * Display a one time Message, then clear it from the Session.
      *
-     * @param  string $name default session name
+     * @param  string $name default Session name
      *
      * @return string
      */
@@ -202,7 +202,6 @@ class Session
             case 'danger':
                 $icon = 'bomb';
                 break;
-            case 'success':
             default:
                 $icon = 'check';
                 $type = 'success';

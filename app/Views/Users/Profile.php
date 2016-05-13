@@ -22,7 +22,7 @@
                         <input type="password" class="input-medium input-block-level form-control" name="newPassword" placeholder="Insert the new Password" title="Insert the new Password">
                     </div>
                     <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="verifyPass" placeholder="Verify the new Password" title="Verify the new Password">
+                        <input type="password" class="input-medium input-block-level form-control" name="confirmPass" placeholder="Verify the new Password" title="Verify the new Password">
                     </div>
                     <hr>
                     <div>

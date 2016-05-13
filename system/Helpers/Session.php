@@ -176,9 +176,9 @@ class Session
         $msg = Session::pull($sessionName);
         if (!empty($msg)) {
             return "<div class='alert alert-success alert-dismissable'>
-                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                    <h4><i class='fa fa-check'></i> ".$msg."</h4>
-                  </div>";
+                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'><span aria-hidden='true'>&times;</span></button>
+                <h4><i class='fa fa-check'></i> ".$msg."</h4>
+              </div>";
         }
     }
 }

@@ -768,7 +768,7 @@ class Query
 
         $this->aggregate = null;
 
-        if (! empty($results)) {
+        if (count($results) > 0) {
             $result = (array) reset($results);
 
             return $result['aggregate'];

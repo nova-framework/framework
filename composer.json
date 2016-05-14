@@ -16,7 +16,8 @@
         "php": ">=5.5.0",
         "symfony/console": "3.0.*",
         "doctrine/inflector": "1.0.*",
-        "phpmailer/phpmailer": "5.2.*"
+        "phpmailer/phpmailer": "5.2.*",
+        "phpfastcache/phpfastcache": "3.0.*"
     },
     "autoload": {
         "psr-4": {

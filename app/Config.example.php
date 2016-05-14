@@ -93,33 +93,22 @@ define('SESSION_PREFIX', 'nova_');
 define('SITETITLE', 'Nova V3.0');
 
 /**
- * Define a 32 bit Encryption Key.
- */
-define('ENCRYPT_KEY', '');
-
-/**
  * OPTIONAL, set a site email address.
  */
 // define('SITEEMAIL', 'email@domain.com');
 
 /**
- * Setup the Database configuration.
+ * Define a 32 bit Encryption Key.
  */
-Config::set('database', array(
-    'default' => array(
-        'driver'    => DB_TYPE,
-        'hostname'  => DB_HOST,
-        'database'  => DB_NAME,
-        'username'  => DB_USER,
-        'password'  => DB_PASS,
-        'prefix'    => PREFIX,
-        'charset'   => 'utf8',
-        'collation' => 'utf8_general_ci',
-    ),
-));
+define('ENCRYPT_KEY', '');
 
 /**
- * Setup the (class) Aliases configuration.
+ * Set the Cache files Path.
+ */
+define('CACHEPATH', APPDIR .'Cache');
+
+/**
+ * Setup the Class Aliases configuration.
  */
 Config::set('classAliases', array(
     'Errors'        => '\Core\Error',
@@ -133,6 +122,8 @@ Config::set('classAliases', array(
     'Csrf'          => '\Helpers\Csrf',
     'Date'          => '\Helpers\Date',
     'Document'      => '\Helpers\Document',
+    'Encrypter'     => '\Helpers\Encrypter',
+    'Cache'         => '\Helpers\FastCache',
     'Form'          => '\Helpers\Form',
     'Ftp'           => '\Helpers\Ftp',
     'GeoCode'       => '\Helpers\GeoCode',
@@ -156,6 +147,22 @@ Config::set('classAliases', array(
 ));
 
 /**
+ * Setup the Database configuration.
+ */
+Config::set('database', array(
+    'default' => array(
+        'driver'    => DB_TYPE,
+        'hostname'  => DB_HOST,
+        'database'  => DB_NAME,
+        'username'  => DB_USER,
+        'password'  => DB_PASS,
+        'prefix'    => PREFIX,
+        'charset'   => 'utf8',
+        'collation' => 'utf8_general_ci',
+    ),
+));
+
+/**
  * Setup the Auth configuration.
  */
 Config::set('authentication', array(
@@ -170,3 +177,39 @@ Config::set('authentication', array(
         'rememberToken' => 'remember_token'
     ),
 ));
+
+/**
+ * FastCache configuration
+ */
+Config::set('cache', array(
+    'storage'       => 'files', // Blank for auto
+    'default_chmod' => 0777,    // 0777, 0666, 0644
+
+    /*
+     * Fall back when Driver is not supported.
+     */
+    'fallback'    => "files",
+
+    'securityKey' => 'auto',
+    'htaccess'    => true,
+    'path'        => CACHEPATH,
+
+    'memcache' => array(
+        array("127.0.0.1",11211,1),
+    ),
+    'redis' => array(
+        'host'     => '127.0.0.1',
+        'port'     => '',
+        'password' => '',
+        'database' => '',
+        'timeout'  => ''
+    ),
+    'ssdb' => array(
+        'host'     => '127.0.0.1',
+        'port'     => 8888,
+        'password' => '',
+        'timeout'  => ''
+    ),
+    'extensions' => array(),
+));
+

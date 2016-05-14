@@ -179,7 +179,7 @@ Config::set('authentication', array(
 ));
 
 /**
- * FastCache configuration
+ * Setup the FastCache configuration.
  */
 Config::set('cache', array(
     'storage'       => 'files', // Blank for auto

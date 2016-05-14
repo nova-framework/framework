@@ -123,7 +123,7 @@ Config::set('classAliases', array(
     'Date'          => '\Helpers\Date',
     'Document'      => '\Helpers\Document',
     'Encrypter'     => '\Helpers\Encrypter',
-    'Cache'         => '\Helpers\FastCache',
+    'FastCache'     => '\Helpers\FastCache',
     'Form'          => '\Helpers\Form',
     'Ftp'           => '\Helpers\Ftp',
     'GeoCode'       => '\Helpers\GeoCode',

@@ -46,6 +46,42 @@ function template_url($path, $template = TEMPLATE, $folder = '/assets/')
 /** String helpers. */
 
 /**
+ * Determine if a given string matches a given pattern.
+ *
+ * @param  string  $pattern
+ * @param  string  $value
+ * @return bool
+ */
+function str_is($pattern, $value)
+{
+    if ($pattern != $value) {
+        $pattern = str_replace('\*', '.*', preg_quote($pattern, '#')) .'\z';
+
+        return (bool) preg_match('#^' .$pattern .'#', $value);
+    }
+
+    return true;
+}
+
+/**
+ * Determine if a given string contains a given substring.
+ *
+ * @param  string  $haystack
+ * @param  string|array  $needles
+ * @return bool
+ */
+function str_contains($haystack, $needles)
+{
+    foreach ((array) $needles as $needle) {
+        if (($needle != '') && (strpos($haystack, $needle) !== false)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Test for string starts with
  * @param $haystack
  * @param $needle

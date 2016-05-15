@@ -51,10 +51,6 @@ class Modules
      */
     public static function loadRoutes()
     {
-        if(empty(static::$modules)) {
-            static::$modules = Config::get('modules');
-        }
-
         foreach (static::$modules as $module) {
             $filePath = str_replace('/', DS, APPDIR.'Modules/'.$module.'/Routes.php');
 

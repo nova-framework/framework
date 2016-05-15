@@ -91,6 +91,11 @@ class Model implements \ArrayAccess
      */
     public function __construct(array $attributes = array())
     {
+        // Adjust the Relations array to permit the storage of associated Models data.
+        if(! empty($this->relations)) {
+            $this->relations = array_fill_keys($this->relations, null);
+        }
+
         $this->syncOriginal();
 
         $this->fill($attributes);
@@ -191,6 +196,46 @@ class Model implements \ArrayAccess
     public function newPivot(Model $parent, array $attributes, $table, $exists)
     {
         return new Pivot($parent, $attributes, $table, $exists);
+    }
+
+    /**
+     * Eager load relations on the Model.
+     *
+     * @param  array|string  $relations
+     * @return $this
+     */
+    public function load($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        foreach ($relations as $name) {
+            if(array_key_exists($name, $this->relations) && method_exists($this, $name)) {
+                $relation = call_user_func(array($this, $name));
+
+                $this->relations[$name] = $relation->get();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Begin querying a Model with eager loading.
+     *
+     * @param  array|string  $relations
+     * @return \Database\ORM\Query
+     */
+    public static function with($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        $instance = new static();
+
+        return $instance->newQuery()->with($relations);
     }
 
     /**
@@ -295,11 +340,16 @@ class Model implements \ArrayAccess
     public function delete()
     {
         if ($this->exists) {
-            $query = $this->newQuery();
+            $keyName = $this->getKeyName();
 
-            $query->where($this->getKeyName(), $this->getKey())->delete();
+            $this->newQuery()
+                ->where($keyName, $this->getKey())
+                ->delete();
 
             $this->exists = false;
+
+            // There is no valid primaryKey anymore.
+            unset($this->attributes[$keyName]);
         }
 
         return true;
@@ -537,7 +587,7 @@ class Model implements \ArrayAccess
 
         return $connection->table($this->table);
     }
-    
+
     /**
      * Get a new Query for the Model's table.
      *
@@ -641,9 +691,32 @@ class Model implements \ArrayAccess
      *
      * @return array
      */
-    public function toArray()
+    public function toArray($withRelations = true)
     {
-        return $this->attributes;
+        if(! $withRelations) {
+            return $this->attributes;
+        }
+
+        $attributes = $this->attributes;
+
+        foreach ($this->relations as $key => $value) {
+            if ($value instanceof Model) {
+                // We have an associated Model.
+                $attributes[$key] = $value->toArray(false);
+            } else if (is_array($value)) {
+                // We have an array of associated Models.
+                $attributes[$key] = array();
+
+                foreach ($value as $id => $model) {
+                    $attributes[$key][$id] = $model->toArray(false);
+                }
+            } else if (is_null($value)) {
+                // We have an empty relationship.
+                $attributes[$key] = $value;
+            }
+        }
+
+        return $attributes;
     }
 
     /**
@@ -699,7 +772,22 @@ class Model implements \ArrayAccess
      */
     public function __get($key)
     {
-        return $this->getAttribute($key);
+        if (isset($this->attributes[$key]) || ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key)))) {
+            return $this->getAttribute($key);
+        }
+
+        if($this->exists && array_key_exists($name, $this->relations) && method_exists($this, $name)) {
+            $data = $this->relations[$name];
+
+            if(empty($data)) {
+                // If the current Relation data is empty, fetch the associated information.
+                $relation = call_user_func(array($this, $name));
+
+                $data = $relation->get();
+            }
+
+            return $data;
+        }
     }
 
     /**
@@ -722,8 +810,7 @@ class Model implements \ArrayAccess
      */
     public function __isset($key)
     {
-        return (isset($this->attributes[$key]) ||
-            ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key))));
+        return (isset($this->attributes[$key]) || ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key))));
     }
 
     /**

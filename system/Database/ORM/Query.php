@@ -23,6 +23,13 @@ class Query extends BaseQuery
     protected $model = null;
 
     /**
+     * The relationships that should be eager loaded.
+     *
+     * @var array
+     */
+    protected $eagerLoad = array();
+
+    /**
      * Create a new Query instance.
      *
      * @return void
@@ -156,6 +163,23 @@ class Query extends BaseQuery
     public function setModel($model)
     {
         $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * Set the relationships that should be eager loaded.
+     *
+     * @param  mixed  $relations
+     * @return $this
+     */
+    public function with($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        $this->eagerLoad = array_merge($this->eagerLoad, $relations);
 
         return $this;
     }

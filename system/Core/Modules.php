@@ -47,7 +47,7 @@ class Modules
     {
         // Load the Routes from every specified Module.
         foreach (static::$modules as $module) {
-            $filePath = str_replace('/', DS, APPDIR.'Modules/'.$module.'/Routes.php');
+            $filePath = str_replace('/', DS, APPDIR .'Modules/' .$module .'/Routes.php');
 
             if (is_readable($filePath)) {
                 require $filePath;

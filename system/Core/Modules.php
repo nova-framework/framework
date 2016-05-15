@@ -25,9 +25,8 @@ class Modules
      */
     public static function init()
     {
-        if(empty(static::$modules)) {
-            static::$modules = Config::get('modules');
-        }
+        // Load the the Modules configuration.
+        static::$modules = Config::get('modules');
 
         foreach (static::$modules as $module) {
             // Load the Configuration.

@@ -114,6 +114,17 @@ class Dispatcher
     }
 
     /**
+     * Flush a set of Queued Events.
+     *
+     * @param  string  $event
+     * @return void
+     */
+    public function flush($event)
+    {
+        $this->fire($event .'_queue');
+    }
+
+    /**
      * Fire an Event until the first non-null response is returned.
      *
      * @param  string  $event
@@ -123,17 +134,6 @@ class Dispatcher
     public function until($event, $payload = array())
     {
         return $this->fire($event, $payload, true);
-    }
-
-    /**
-     * Flush a set of Queued Events.
-     *
-     * @param  string  $event
-     * @return void
-     */
-    public function flush($event)
-    {
-        $this->fire($event .'_queue');
     }
 
     /**

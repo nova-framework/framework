@@ -40,7 +40,7 @@ class Dispatcher
     protected $sorted = array();
 
     /**
-     * Get the Dispatcher instance.
+     * Get the active Dispatcher instance.
      *
      * @return \Events\Dispatcher
      */
@@ -98,6 +98,22 @@ class Dispatcher
     }
 
     /**
+     * Register a Queued Event and payload.
+     *
+     * @param  string  $event
+     * @param  array   $payload
+     * @return void
+     */
+    public function queue($event, $payload = array())
+    {
+        $me = $this;
+
+        $this->listen($event .'_queue', function() use ($me, $event, $payload) {
+            $me->fire($event, $payload);
+        });
+    }
+
+    /**
      * Fire an Event until the first non-null response is returned.
      *
      * @param  string  $event
@@ -107,6 +123,17 @@ class Dispatcher
     public function until($event, $payload = array())
     {
         return $this->fire($event, $payload, true);
+    }
+
+    /**
+     * Flush a set of Queued Events.
+     *
+     * @param  string  $event
+     * @return void
+     */
+    public function flush($event)
+    {
+        $this->fire($event .'_queue');
     }
 
     /**
@@ -121,6 +148,9 @@ class Dispatcher
     {
         $responses = array();
 
+        // If an array is not given to us as the payload, we will turn it into one so
+        // we can easily use call_user_func_array on the listeners, passing in the
+        // payload to each of them so that they receive each of these arguments.
         if (! is_array($payload)) {
             $payload = array($payload);
         }
@@ -128,10 +158,16 @@ class Dispatcher
         foreach ($this->getListeners($event) as $listener) {
             $response = call_user_func_array($listener, $payload);
 
+            // If a response is returned from the Listener and Event halting is enabled
+            // we will just return this response, and not call the rest of the event
+            // listeners. Otherwise we will add the response on the response list.
             if (! is_null($response) && $halt) {
                 return $response;
             }
 
+            // If a boolean false is returned from a Listener, we will stop propagating
+            // the Event to any further listeners down in the chain, else we keep on
+            // looping through the listeners and firing every one in our sequence.
             if ($response === false) break;
 
             $responses[] = $response;
@@ -186,13 +222,14 @@ class Dispatcher
     {
         $this->sorted[$eventName] = array();
 
-        if (! isset($this->listeners[$eventName])) {
-            return;
+        // If listeners exist for the given Event, we will sort them by the priority
+        // so that we can call them in the correct order. We will cache off these
+        // sorted event listeners so we do not have to re-sort on every events.
+        if (isset($this->listeners[$eventName])) {
+            krsort($this->listeners[$eventName]);
+
+            $this->sorted[$eventName] = call_user_func_array('array_merge', $this->listeners[$eventName]);
         }
-
-        krsort($this->listeners[$eventName]);
-
-        $this->sorted[$eventName] = call_user_func_array('array_merge', $this->listeners[$eventName]);
     }
 
     /**
@@ -204,7 +241,7 @@ class Dispatcher
     public function makeListener($listener)
     {
         if (is_string($listener)) {
-            return $this->createClassListener($listener);
+            $listener = $this->createClassListener($listener);
         }
 
         return $listener;
@@ -219,14 +256,19 @@ class Dispatcher
     public function createClassListener($listener)
     {
         return function() use ($listener) {
-            $data = func_get_args();
-
-            // Explode the Listener string.
+            // If the listener has an @ sign, we will assume it is being used to delimit
+            // the class name from the handle method name. This allows for handlers
+            // to run multiple handler methods in a single class for convenience.
             $segments = explode('@', $listener);
 
-            $className = array_shift($segments);
+            $method = (count($segments) == 2) ? $segments[1] : 'handle';
 
-            $method = ! empty($segments) ? reset($segments) : 'handle';
+            $className = $segments[0];
+
+            // We will make a callable of the listener instance and a method that should
+            // be called on that instance, then we will pass in the arguments that we
+            // received in this method into this listener class instance's methods.
+            $data = func_get_args();
 
             return call_user_func_array(array($className, $method), $data);
         };

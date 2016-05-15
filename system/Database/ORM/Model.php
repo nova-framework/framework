@@ -78,6 +78,11 @@ class Model implements \ArrayAccess
     public $exists = false;
 
     /**
+     * The Model Relations with other Models.
+     */
+    protected $relations = array();
+
+    /**
      * Create a new Model instance.
      *
      * @param  array  $attributes
@@ -104,6 +109,23 @@ class Model implements \ArrayAccess
     }
 
     /**
+     * Create a new Model instance, save it, then return the instance.
+     *
+     * @param  array  $attributes
+     * @return static
+     */
+    public static function create(array $attributes = array())
+    {
+        $model = new static();
+
+        $model->setRawAttributes($attributes);
+
+        $model->save();
+
+        return $model;
+    }
+
+    /**
      * Find a Model by its primary key.
      *
      * @param  mixed  $id
@@ -115,6 +137,59 @@ class Model implements \ArrayAccess
         $instance = new static();
 
         return $instance->newQuery()->where($instance->getKeyName(), $id)->first($columns);
+    }
+
+    protected function belongsTo($className, $foreignKey = null)
+    {
+        return new BelongsTo($className, $this, $foreignKey);
+    }
+
+    protected function hasOne($className, $foreignKey = null)
+    {
+        return new HasOne($className, $this, $foreignKey);
+    }
+
+    protected function hasMany($className, $foreignKey = null)
+    {
+        return new HasMany($className, $this, $foreignKey);
+    }
+
+    protected function belongsToMany($className, $joinTable = null, $foreignKey = null, $otherKey = null)
+    {
+        $joinTable = ($joinTable !== null) ? $joinTable : $this->joiningTable($className);
+
+        return new BelongsToMany($className, $this, $joinTable, $foreignKey, $otherKey);
+    }
+
+    protected function joiningTable($className)
+    {
+        $parent = class_basename($this->className);
+        $related = class_basename($className);
+
+        // Prepare an Models array.
+        $models = array(
+            Inflector::tableize($parent),
+            Inflector::tableize($related)
+        );
+
+        // Sort the Models.
+        sort($models);
+
+        return implode('_', $models);
+    }
+
+    /**
+     * Create a new Pivot model instance.
+     *
+     * @param  \Database\ORM\Model  $parent
+     * @param  array  $attributes
+     * @param  string  $table
+     * @param  bool  $exists
+     * @return \Nova\ORM\\Relation\Pivot
+     */
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        return new Pivot($parent, $attributes, $table, $exists);
     }
 
     /**
@@ -257,7 +332,7 @@ class Model implements \ArrayAccess
     }
 
     /**
-     * Get the primary key for the model.
+     * Get the primary key for the Model.
      *
      * @return string
      */
@@ -274,6 +349,18 @@ class Model implements \ArrayAccess
     public function getKey()
     {
         return $this->getAttribute($this->getKeyName());
+    }
+
+    /**
+     * Get the foreign key for the Model.
+     *
+     * @return string
+     */
+    public function getForeignKey()
+    {
+        $tableKey = Inflector::singularize($this->table);
+
+        return $tableKey .'_id';
     }
 
     /**

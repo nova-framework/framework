@@ -33,9 +33,11 @@ class Modules
             foreach (array('Config', 'Filters') as $file) {
                 $filePath = APPDIR .'Modules' .DS .$module .DS .$file .'.php';
 
-                if (is_readable($filePath)) {
-                    require $filePath;
+                if (! is_readable($filePath)) {
+                    continue;
                 }
+
+                require $filePath;
             }
         }
     }
@@ -49,9 +51,11 @@ class Modules
         foreach (static::$modules as $module) {
             $filePath = APPDIR .'Modules' .DS .$module .DS .'Routes.php';
 
-            if (is_readable($filePath)) {
-                require $filePath;
+            if (! is_readable($filePath)) {
+                continue;
             }
+
+            require $filePath;
         }
     }
 }

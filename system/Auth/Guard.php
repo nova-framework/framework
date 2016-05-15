@@ -283,10 +283,10 @@ class Guard
         $query = $this->model->newQuery();
 
         // Create a new Token and update it into Database.
-        $user->remember_token = str_random(100);
+        $user->{$this->rememberToken} = str_random(100);
 
         $query->where($keyName, $user->{$keyName})
-            ->update(array($this->rememberToken => $user->remember_token));
+            ->update(array($this->rememberToken => $user->{$this->rememberToken}));
     }
 
     /**
@@ -324,7 +324,7 @@ class Guard
         $keyName = $this->model->getKeyName();
 
         // Prepare the value and set the remembering Cookie.
-        $value = $user->{$keyName} .'|' .$user->remember_token;
+        $value = $user->{$keyName} .'|' .$user->{$this->rememberToken};
 
         Cookie::set($this->getRecallerName(), Encrypter::encrypt($value));
     }
@@ -340,14 +340,14 @@ class Guard
         if ($this->validRecaller($recaller) && ! $this->tokenRetrievalAttempted) {
             $this->tokenRetrievalAttempted = true;
 
-            list($id, $remember_token) = explode('|', $recaller, 2);
+            list($id, $token) = explode('|', $recaller, 2);
 
             // Prepare the requested User credentials.
             $keyName = $this->model->getKeyName();
 
             $credentials = array(
                 $keyName => $id,
-                $this->rememberToken => $remember_token
+                $this->rememberToken => $token
             );
 
             $this->viaRemember = ! is_null($user = $this->retrieveUser($credentials));

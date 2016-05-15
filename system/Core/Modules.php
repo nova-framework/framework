@@ -1,6 +1,6 @@
 <?php
 /**
- * Modules - A Class responsible to Modules management.
+ * Modules - A Class responsible for the Modules initialization.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

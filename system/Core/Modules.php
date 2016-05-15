@@ -28,7 +28,7 @@ class Modules
         // Load the the Modules configuration.
         static::$modules = Config::get('modules');
 
-        // Load the Config(uration) and Routes Filters for every specified Module.
+        // Load the Config(uration) and Routes Filters from every specified Module.
         foreach (static::$modules as $module) {
             foreach (array('Config', 'Filters') as $file) {
                 $filePath = APPDIR .'Modules' .DS .$module .DS .$file .'.php';
@@ -45,6 +45,7 @@ class Modules
      */
     public static function loadRoutes()
     {
+        // Load the Routes from every specified Module.
         foreach (static::$modules as $module) {
             $filePath = str_replace('/', DS, APPDIR.'Modules/'.$module.'/Routes.php');
 

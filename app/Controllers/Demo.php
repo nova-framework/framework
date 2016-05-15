@@ -53,7 +53,7 @@ class Demo extends Controller
         //
         echo '<h3 style="margin-top: 50px;">Events dispatching</h3>';
 
-        // Prepare a message.
+        // Prepare the Event payload.
         $payload = array(
             'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__),
             $params

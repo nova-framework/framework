@@ -108,6 +108,13 @@ define('ENCRYPT_KEY', '');
 define('CACHEPATH', APPDIR .'Cache');
 
 /**
+ * Setup the Active Modules
+ */
+Config::set('modules', array(
+    //'Users',
+));
+
+/**
  * Setup the Class Aliases configuration.
  */
 Config::set('classAliases', array(

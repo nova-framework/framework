@@ -122,9 +122,7 @@ class Model implements \ArrayAccess
      */
     public static function create(array $attributes = array())
     {
-        $model = new static();
-
-        $model->setRawAttributes($attributes);
+        $model = new static($attributes);
 
         $model->save();
 
@@ -779,8 +777,8 @@ class Model implements \ArrayAccess
         if($this->exists && array_key_exists($name, $this->relations) && method_exists($this, $name)) {
             $data = $this->relations[$name];
 
-            if(empty($data)) {
-                // If the current Relation data is empty, fetch the associated information.
+            if(is_null($data)) {
+                // If the current Relation data is null, fetch the associated information.
                 $relation = call_user_func(array($this, $name));
 
                 $data = $relation->get();

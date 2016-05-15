@@ -1,6 +1,6 @@
 <?php
 /**
- * Modules Manager - class responsible to Modules management.
+ * Modules - A Class responsible to Modules management.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

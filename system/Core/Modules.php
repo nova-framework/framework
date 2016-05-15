@@ -14,7 +14,7 @@ use Core\Config;
 class Modules
 {
     /**
-     * There we load the Modules configuration.
+     * The loaded Modules configuration.
      *
      * @var array
      */

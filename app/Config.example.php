@@ -142,6 +142,7 @@ Config::set('classAliases', array(
     'Url'           => '\Helpers\Url',
     'DB'            => '\Database\Facade',
     'Auth'          => '\Auth\Auth',
+    'Event'         => '\Events\Facade',
     // The Legacy Mailer
     'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',
 ));

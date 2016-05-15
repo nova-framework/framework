@@ -10,6 +10,7 @@ namespace Database\ORM;
 
 use Helpers\Inflector;
 use Database\ORM\Query;
+use Database\Connection;
 
 
 class Model implements \ArrayAccess
@@ -525,6 +526,18 @@ class Model implements \ArrayAccess
         return (in_array($key, $this->guarded) || ($this->guarded == array('*')));
     }
 
+    /**
+     * Get a new Base Query for the Model's table.
+     *
+     * @return \Database\Query
+     */
+    public function newBaseQuery()
+    {
+        $connection = Connection::getInstance($this->connection);
+
+        return $connection->table($this->table);
+    }
+    
     /**
      * Get a new Query for the Model's table.
      *

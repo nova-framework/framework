@@ -55,7 +55,7 @@ class Pivot extends Model
         // Init this pivot Model.
         $this->attributes = $attributes;
 
-        $this->initObject($exists);
+        $this->exists = $exists;
 
         // Setup the parent Model.
         $this->parent = $parent;
@@ -114,7 +114,7 @@ class Pivot extends Model
         $result = array();
 
         foreach($data as $row) {
-            $result[] = array_shift($row);
+            $result[] = reset($row);
         }
 
         return $result;

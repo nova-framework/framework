@@ -132,7 +132,7 @@ class BelongsToMany extends Relation
 
     public function attach($id, array $attributes = array())
     {
-        $query = $this->pivot->newBuilder();
+        $query = $this->pivot->newQuery();
 
         $otherId = $this->parent->getKey();
 
@@ -151,7 +151,7 @@ class BelongsToMany extends Relation
 
     public function dettach($ids = null)
     {
-        $query = $this->pivot->newBuilder();
+        $query = $this->pivot->newQuery();
 
         $otherId = $this->parent->getKey();
 
@@ -236,7 +236,7 @@ class BelongsToMany extends Relation
 
     protected function updateExistingPivot($id, array $attributes)
     {
-        $query = $this->pivot->newBuilder();
+        $query = $this->pivot->newQuery();
 
         $otherId = $this->parent->getKey();
 

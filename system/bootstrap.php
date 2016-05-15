@@ -9,6 +9,7 @@
 
 use Core\Aliases;
 use Core\Language;
+use Core\Modules;
 use Core\Router;
 use Helpers\Session;
 
@@ -41,11 +42,17 @@ Session::init();
 /** Initialize the Language. */
 Language::init();
 
+/** Initialize the active Modules */
+Modules::init();
+
 /** Get the Router instance. */
 $router = Router::getInstance();
 
 /** Load the Routes */
 require APPDIR .'Routes.php';
+
+/** Load the Routes from the active Modules */
+Modules::loadRoutes();
 
 /** Execute matched Routes. */
 $router->dispatch();

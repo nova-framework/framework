@@ -98,6 +98,18 @@ class Dispatcher
     }
 
     /**
+     * Fire an Event until the first non-null response is returned.
+     *
+     * @param  string  $event
+     * @param  array   $payload
+     * @return mixed
+     */
+    public function until($event, $payload = array())
+    {
+        return $this->fire($event, $payload, true);
+    }
+
+    /**
      * Fire an Event and call the listeners.
      *
      * @param  string  $event

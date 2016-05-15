@@ -29,18 +29,12 @@ class Modules
         static::$modules = Config::get('modules');
 
         foreach (static::$modules as $module) {
-            // Load the Configuration.
-            $filePath = str_replace('/', DS, APPDIR.'Modules/'.$module.'/Config.php');
+            foreach (array('Config', 'Filters') as $file) {
+                $filePath = APPDIR .'Modules' .DS .$module .DS .$file .'.php';
 
-            if (is_readable($filePath)) {
-                require $filePath;
-            }
-
-            // Load the Route Filters.
-            $filePath = str_replace('/', DS, APPDIR.'Modules/'.$module.'/Filters.php');
-
-            if (is_readable($filePath)) {
-                require $filePath;
+                if (is_readable($filePath)) {
+                    require $filePath;
+                }
             }
         }
     }

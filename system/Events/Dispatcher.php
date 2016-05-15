@@ -102,9 +102,10 @@ class Dispatcher
      *
      * @param  string  $event
      * @param  mixed   $payload
+     * @param  bool    $halt
      * @return array|null
      */
-    public function fire($event, $payload = array())
+    public function fire($event, $payload = array(), $halt = false)
     {
         $responses = array();
 
@@ -115,16 +116,16 @@ class Dispatcher
         foreach ($this->getListeners($event) as $listener) {
             $response = call_user_func_array($listener, $payload);
 
-            if (! is_null($response)) {
+            if (! is_null($response) && $halt) {
                 return $response;
-            } else if ($response === false) {
-                break;
             }
+
+            if ($response === false) break;
 
             $responses[] = $response;
         }
 
-        return $responses;
+        return $halt ? null : $responses;
     }
 
     /**

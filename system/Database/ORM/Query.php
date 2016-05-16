@@ -102,7 +102,11 @@ class Query extends BaseQuery
         $models = array();
 
         foreach ($results as $result) {
-            $models[] = $this->model->newModel($result);
+            $model = $this->model->newModel($result);
+
+            $id = $model->getKey();
+
+            $models[$id] = $model;
         }
 
         return $models;

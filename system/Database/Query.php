@@ -1060,11 +1060,16 @@ class Query
     {
         $this->aggregate = compact('function', 'columns');
 
+        $previousColumns = $this->columns;
+
         $results = $this->get($columns);
 
-        $this->columns = null;
-
+        // Once we have executed the query, we will reset the aggregate property so
+        // that more select queries can be executed against the database without
+        // the aggregate value getting in the way when the grammar builds it.
         $this->aggregate = null;
+
+        $this->columns = $previousColumns;
 
         if (count($results) > 0) {
             $result = (array) reset($results);
@@ -1074,44 +1079,37 @@ class Query
     }
 
     /**
-     * Increment the value of a column by a given amount.
+     * Increment a Column's value by a given amount.
      *
      * @param  string  $column
      * @param  int     $amount
+     * @param  array   $extra
      * @return int
      */
-    public function increment($column, $amount = 1)
-    {
-        return $this->adjust($column, $amount, ' + ');
-    }
-
-    /**
-     * Decrement the value of a column by a given amount.
-     *
-     * @param  string  $column
-     * @param  int     $amount
-     * @return int
-     */
-    public function decrement($column, $amount = 1)
-    {
-        return $this->adjust($column, $amount, ' - ');
-    }
-
-    /**
-     * Adjust the value of a column up or down by a given amount.
-     *
-     * @param  string  $column
-     * @param  int     $amount
-     * @param  string  $operator
-     * @return int
-     */
-    protected function adjust($column, $amount, $operator)
+    public function increment($column, $amount = 1, array $extra = array())
     {
         $wrapped = $this->wrap($column);
 
-        $value = new Expresssion($wrapped .$operator .$amount);
+        $columns = array_merge(array($column => $this->raw("$wrapped + $amount")), $extra);
 
-        return $this->update(array($column => $value));
+        return $this->update($columns);
+    }
+
+    /**
+     * Decrement a Column's value by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @param  array   $extra
+     * @return int
+     */
+    public function decrement($column, $amount = 1, array $extra = array())
+    {
+        $wrapped = $this->wrap($column);
+
+        $columns = array_merge(array($column => $this->raw("$wrapped - $amount")), $extra);
+
+        return $this->update($columns);
     }
 
     /**
@@ -1146,7 +1144,7 @@ class Query
     }
 
     /**
-     * Replace a new record into the database.
+     * Replace a new Record into the database.
      *
      * @param  array  $values
      * @return bool
@@ -1177,7 +1175,7 @@ class Query
     }
 
     /**
-     * Insert a new record and get the value of the primary key.
+     * Insert a new Record and get the value of the primary key.
      *
      * @param  array   $values
      * @return int
@@ -1196,7 +1194,7 @@ class Query
     }
 
     /**
-     * Update a record in the database.
+     * Update a Record in the database.
      *
      * @param  array  $values
      * @return int
@@ -1211,12 +1209,17 @@ class Query
     }
 
     /**
-     * Delete a record from the database.
+     * Delete a Record from the database.
      *
      * @return int
      */
-    public function delete()
+    public function delete($id = null)
     {
+        // If an ID is passed to the method, we will set the where clause to check
+        // the ID to allow developers to simply and quickly remove a single row
+        // from their database without manually specifying the where clauses.
+        if ( ! is_null($id)) $this->where('id', '=', $id);
+
         $sql = $this->compileDelete();
 
         return $this->db->delete($sql, $this->bindings);
@@ -1268,6 +1271,17 @@ class Query
         return array_values(array_filter($bindings, function($binding) {
             return true;
         }));
+    }
+
+    /**
+     * Create a raw Database Expression.
+     *
+     * @param  mixed  $value
+     * @return \Database\Expression
+     */
+    public function raw($value)
+    {
+        return new Expression($value);
     }
 
     /**

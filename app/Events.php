@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Event;
+use Events\Dispatcher as Event;
 
 
 /** Define Events. */

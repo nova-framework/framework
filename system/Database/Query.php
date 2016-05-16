@@ -663,6 +663,18 @@ class Query
     }
 
     /**
+     * Set the query limit and offset for a given page.
+     *
+     * @param  int    $page
+     * @param  int    $perPage
+     * @return Query
+     */
+    public function forPage($page, $perPage = 15)
+    {
+        return $this->skip(($page - 1) * $perPage)->take($perPage);
+    }
+
+    /**
      * Pluck a single column's value from the first result of a query.
      *
      * @param  string  $column
@@ -690,6 +702,26 @@ class Query
         $results = $this->take(1)->get($columns);
 
         return (count($results) > 0) ? reset($results) : null;
+    }
+
+    /**
+     * Chunk the results of the query.
+     *
+     * @param  int  $count
+     * @param  callable  $callback
+     * @return void
+     */
+    public function chunk($count, $callback)
+    {
+        $results = $this->forPage($page = 1, $count)->get();
+
+        while (count($results) > 0) {
+            call_user_func($callback, $results);
+
+            $page++;
+
+            $results = $this->forPage($page, $count)->get();
+        }
     }
 
     /**
@@ -736,7 +768,7 @@ class Query
     }
 
     /**
-     * Run the query as a "SELECT" statement against the connection.
+     * Run the query as a "SELECT" statement against the Connection.
      *
      * @return array
      */

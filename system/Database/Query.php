@@ -1773,9 +1773,9 @@ class Query
      * @param  Query   $query
      * @return string
      */
-    protected function compileGroups(Query $query)
+    protected function compileGroups(Query $query, $groups)
     {
-        return 'GROUP BY '.$this->columnize($query->groups);
+        return 'GROUP BY '.$this->columnize($groups);
     }
 
     /**

@@ -747,7 +747,7 @@ class Query
     }
 
     /**
-     * Add a raw "order by" clause to the query.
+     * Add a raw "ORDER BY" clause to the query.
      *
      * @param  string  $sql
      * @param  array  $bindings
@@ -762,6 +762,28 @@ class Query
         $this->bindings = array_merge($this->bindings, $bindings);
 
         return $this;
+    }
+
+    /**
+     * Add an "ORDER BY" clause for a timestamp to the query.
+     *
+     * @param  string  $column
+     * @return \Database\Query|static
+     */
+    public function latest($column = 'created_at')
+    {
+        return $this->orderBy($column, 'desc');
+    }
+
+    /**
+     * Add an "ORDER BY" clause for a timestamp to the query.
+     *
+     * @param  string  $column
+     * @return \Database\Query|static
+     */
+    public function oldest($column = 'created_at')
+    {
+        return $this->orderBy($column, 'asc');
     }
 
     /**

@@ -1225,8 +1225,8 @@ class Query
 
         $this->columns = $previousColumns;
 
-        if (count($results) > 0) {
-            $result = (array) reset($results);
+        if (isset($results[0])) {
+            $result = array_change_key_case((array) $results[0]);
 
             return $result['aggregate'];
         }

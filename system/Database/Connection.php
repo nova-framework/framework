@@ -160,6 +160,7 @@ class Connection
 
         $bindings = $this->prepareBindings($bindings);
 
+        // Execute the Statement.
         $statement->execute($bindings);
 
         return $statement->fetchAll($this->getFetchMode());
@@ -214,6 +215,7 @@ class Connection
 
         $bindings = $this->prepareBindings($bindings);
 
+        // Execute the Statement and return the result.
         return $statement->execute($bindings);
     }
 
@@ -230,6 +232,7 @@ class Connection
 
         $bindings = $this->prepareBindings($bindings);
 
+        // Execute the Statement.
         $statement->execute($bindings);
 
         return $statement->rowCount();

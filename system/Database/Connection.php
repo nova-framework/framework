@@ -181,7 +181,9 @@ class Connection
      */
     public function statement($query, array $bindings = array())
     {
-        return $this->getPdo()->prepare($query)->execute($bindings);
+        $statement = $this->getPdo()->prepare($query);
+
+        return $statement->execute($bindings);
     }
 
     /**

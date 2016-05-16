@@ -9,7 +9,7 @@
 namespace Database;
 
 use Database\Connection;
-use Database\JoinClause;
+use Database\Query\Join as JoinClause;
 
 use \PDO;
 use \Closure;
@@ -768,8 +768,8 @@ class Query
 
         $this->aggregate = null;
 
-        if (isset($results[0])) {
-            $result = (array) $results[0];
+        if (count($results) > 0) {
+            $result = (array) reset($results);
 
             return $result['aggregate'];
         }

@@ -29,7 +29,7 @@ class Aliases
             // Check if the Class already exists.
             if (class_exists($classAlias)) {
                 // Bail out, a Class already exists with the same name.
-                throw new RuntimeException('A class already exists with the same name!');
+                throw new RuntimeException('A class ('.$classAlias.') already exists with the same name!');
             }
 
             class_alias($className, $classAlias);

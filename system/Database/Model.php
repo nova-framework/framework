@@ -22,14 +22,14 @@ class Model
     protected $db;
 
     /**
-     * The table associated with the model.
+     * The table associated with the Model.
      *
      * @var string
      */
     protected $table = null;
 
     /**
-     * The primary key for the model.
+     * The primary key for the Model.
      *
      * @var string
      */
@@ -44,7 +44,7 @@ class Model
     public function __construct()
     {
         if(is_null($this->table)) {
-            // If there is not a table name specified, try to auto-calculate it.
+            // If there is not a Table name specified, try to auto-calculate it.
             $className = get_class($this);
 
             if($className != 'Database\Model') {

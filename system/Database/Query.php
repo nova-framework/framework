@@ -1236,7 +1236,7 @@ class Query
     }
 
     /**
-     * Get a new instance of the Query builder.
+     * Get a new instance of the QueryBuilder.
      *
      * @return \Database\Query
      */
@@ -1707,7 +1707,7 @@ class Query
      */
     protected function compileUnion(array $union)
     {
-        $joiner = $union['all'] ? ' UNION ALL ' : ' UNION ';
+        $joiner = isset($union['all']) ? ' UNION ALL ' : ' UNION ';
 
         return $joiner .$union['query']->toSql();
     }

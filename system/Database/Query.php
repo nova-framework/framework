@@ -1224,7 +1224,7 @@ class Query
     }
 
     /**
-     * Run a truncate statement on the table.
+     * Run a TRUNCATE statement on the table.
      *
      * @return void
      */

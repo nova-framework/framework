@@ -51,7 +51,7 @@ class Encrypter
     {
         self::$key = ENCRYPT_KEY;
 
-        if(empty(self::$key)) {
+        if (empty(self::$key)) {
             throw new \Exception('Please configure the ENCRYPT_KEY.');
         }
 
@@ -100,7 +100,7 @@ class Encrypter
 
         $json = json_encode(compact('iv', 'value', 'mac'));
 
-        if (! is_string($json)) {
+        if (!is_string($json)) {
             throw new \Exception('Could not encrypt the data.');
         }
 
@@ -144,7 +144,8 @@ class Encrypter
      * @param	int	$length	Output length
      * @return	string
      */
-   public static function randomBytes($length = 32) {
+    public static function randomBytes($length = 32)
+    {
         if (empty($length) OR ! ctype_digit((string) $length)) {
             return FALSE;
         }
@@ -152,8 +153,7 @@ class Encrypter
         if (function_exists('openssl_random_pseudo_bytes')) {
             return openssl_random_pseudo_bytes($length, self::$strong);
         }
-        return self::genRandomBytes($length);// fallback to "low security"
-
+        return self::genRandomBytes($length); // fallback to "low security"
     }
 
     /**
@@ -184,11 +184,11 @@ class Encrypter
         // If the payload is not valid JSON or does not have the proper keys set, we will
         // assume it is invalid and bail out of the routine since we will not be able
         // to decrypt the given value. We'll also check the MAC for this encryption.
-        if (! $payload || ! self::validPayload($payload)) {
+        if (!$payload || !self::validPayload($payload)) {
             throw new \Exception('The payload is invalid.');
         }
 
-        if (! self::validMac($payload)) {
+        if (!self::validMac($payload)) {
             throw new \Exception('The MAC is invalid.');
         }
 
@@ -221,12 +221,13 @@ class Encrypter
 
         return hash_equals($knowMac, $calcMac);
     }
-    
-      /**
+
+    /**
      * Generates a random png image with noise so we can extract binary data as a pool of bytes
      * @return void
      */
-    protected static function imageNoise() {
+    protected static function imageNoise()
+    {
         $data = "\0\0"; // wbmp starts with \0\0 
         //random with and size
         $width = mt_rand(50, 100);
@@ -244,9 +245,10 @@ class Encrypter
                 $data .= chr(mt_rand(0, 1 << $wj - 1) << (8 - $wj));
         }
 
-        imagepng(imagecreatefromstring($data), 'assets/image.png');
+        imagepng(imagecreatefromstring($data), ROOTDIR . 'assets/image.png');
     }
-     /**
+
+    /**
      * If No build-in crypto randomness function found like /dev/urandom. We collect any entropy 
      * available in the PHP core PRNGs along with some filesystem info and memory
      * stats.We gather more entropy by measuring the time needed to compute
@@ -256,14 +258,15 @@ class Encrypter
      * @param integer $lenght
      * @return Bytes
      */
-    protected static function genRandomBytes($lenght = 32) {
+    protected static function genRandomBytes($lenght = 32)
+    {
         self::imageNoise();
         $str = '';
         $bits_per_round = 2; // bits of entropy collected in each clock drift round
         $msec_per_round = 400; // expected running time of each round in microseconds
         $hash_len = 20; // SHA-1 Hash length
         $total = $lenght; // total bytes of entropy to collect
-        $handle = @fopen('assets/image.png', 'rb');
+        $handle = @fopen(ROOTDIR . 'assets/image.png', 'rb');
         if ($handle && function_exists('stream_set_read_buffer')) {
             @stream_set_read_buffer($handle, 0);
         }
@@ -311,6 +314,4 @@ class Encrypter
         }
         return substr($str, 0, $lenght);
     }
-
-
 }

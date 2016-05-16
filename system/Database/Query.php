@@ -932,6 +932,22 @@ class Query
     }
 
     /**
+     * Concatenate values of a given Column as a string.
+     *
+     * @param  string  $column
+     * @param  string  $glue
+     * @return string
+     */
+    public function implode($column, $glue = null)
+    {
+        if (is_null($glue)) {
+            return implode($this->lists($column));
+        }
+
+        return implode($glue, $this->lists($column));
+    }
+
+    /**
      * Execute the query as a "SELECT" statement.
      *
      * @param  array  $columns

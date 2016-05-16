@@ -144,26 +144,6 @@ class Query
     }
 
     /**
-     * Handle dynamic method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array   $params
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        if (str_starts_with($method, 'where')) {
-            return $this->dynamicWhere($method, $parameters);
-        }
-
-        $className = get_class($this);
-
-        throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
-    }
-
-    /**
      * Set the columns to be selected.
      *
      * @param  array  $columns
@@ -1272,6 +1252,30 @@ class Query
     }
 
     /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $params
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        if (str_starts_with($method, 'where')) {
+            return $this->dynamicWhere($method, $parameters);
+        }
+
+        $className = get_class($this);
+
+        throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
+    }
+    
+    //--------------------------------------------------------------------
+    // Clauses Compilation and Statements generation
+    //--------------------------------------------------------------------
+
+    /**
      * Compile a select query into SQL.
      *
      * @param  \Database\Query  $query
@@ -1607,7 +1611,7 @@ class Query
     {
         $sql = implode(' ', array_map(array($this, 'compileHaving'), $havings));
 
-        return 'HAVING '.preg_replace('/AND /', '', $sql, 1);
+        return 'HAVING ' .preg_replace('/AND /', '', $sql, 1);
     }
 
     /**
@@ -1831,6 +1835,10 @@ class Query
     {
         return array('TRUNCATE ' .$this->wrapTable($this->from) => array());
     }
+
+    //--------------------------------------------------------------------
+    // Utilities and Tools
+    //--------------------------------------------------------------------
 
     /**
      * Wrap a table in keyword identifiers.

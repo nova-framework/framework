@@ -164,18 +164,6 @@ class Query
     }
 
     /**
-     * Create a new Query instance.
-     *
-     * @return \Database\Query
-     */
-    public function newQuery()
-    {
-        $query = new Query($this->db);
-
-        return $query;
-    }
-
-    /**
      * Set the columns to be selected.
      *
      * @param  array  $columns
@@ -1248,7 +1236,7 @@ class Query
     }
 
     /**
-     * Get a new instance of the query builder.
+     * Get a new instance of the Query builder.
      *
      * @return \Database\Query
      */

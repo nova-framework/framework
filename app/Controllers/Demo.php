@@ -50,7 +50,10 @@ class Demo extends Controller
             'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__)
         );
 
-        // Fire the Event 'test'.
-        Event::fire('test', $payload);
+        // Fire the Event 'test' and store the results.
+        $results = Event::fire('test', $payload);
+
+        // Print out the non-empty results returned by Event firing.
+        echo implode('', array_filter($results, 'strlen'));
     }
 }

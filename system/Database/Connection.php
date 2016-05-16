@@ -9,9 +9,11 @@
 namespace Database;
 
 use Core\Config;
+use Database\Expression;
 use Database\Query;
 
 use \PDO;
+use \DateTime;
 
 
 class Connection
@@ -121,6 +123,31 @@ class Connection
     }
 
     /**
+     * Get a new raw query expression.
+     *
+     * @param  mixed  $value
+     * @return \Database\Expression
+     */
+    public function raw($value)
+    {
+        return new Expression($value);
+    }
+
+    /**
+     * Run a select statement and return a single result.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return mixed
+     */
+    public function selectOne($query, $bindings = array())
+    {
+        $records = $this->select($query, $bindings);
+
+        return (count($records) > 0) ? reset($records) : null;
+    }
+
+    /**
      * Run a select statement against the database.
      *
      * @param  string  $query
@@ -130,6 +157,8 @@ class Connection
     public function select($query, array $bindings = array())
     {
         $statement = $this->getPdo()->prepare($query);
+
+        $bindings = $this->prepareBindings($bindings);
 
         $statement->execute($bindings);
 
@@ -183,6 +212,8 @@ class Connection
     {
         $statement = $this->getPdo()->prepare($query);
 
+        $bindings = $this->prepareBindings($bindings);
+
         return $statement->execute($bindings);
     }
 
@@ -197,9 +228,42 @@ class Connection
     {
         $statement = $this->getPdo()->prepare($query);
 
+        $bindings = $this->prepareBindings($bindings);
+
         $statement->execute($bindings);
 
         return $statement->rowCount();
+    }
+
+    /**
+     * Run a raw, unprepared query against the PDO connection.
+     *
+     * @param  string  $query
+     * @return bool
+     */
+    public function unprepared($query)
+    {
+        return (bool) $me->getPdo()->exec($query);
+    }
+
+    /**
+     * Prepare the query bindings for execution.
+     *
+     * @param  array  $bindings
+     * @return array
+     */
+    public function prepareBindings(array $bindings)
+    {
+        foreach ($bindings as $key => $value) {
+            if ($value instanceof DateTime) {
+                // We need to transform all instances of the DateTime class into an actual Date string.
+                $bindings[$key] = $value->format('Y-m-d H:i:s');
+            } elseif ($value === false) {
+                $bindings[$key] = 0;
+            }
+        }
+
+        return $bindings;
     }
 
     /**

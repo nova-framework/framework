@@ -1350,7 +1350,7 @@ class Query
      */
     public function raw($value)
     {
-        return new Expression($value);
+        return $this->db->raw($value);
     }
 
     /**

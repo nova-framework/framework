@@ -1260,17 +1260,17 @@ class Query
      *
      * @throws \BadMethodCallException
      */
-    public function __call($method, $parameters)
+    public function __call($method, $params)
     {
         if (str_starts_with($method, 'where')) {
-            return $this->dynamicWhere($method, $parameters);
+            return $this->dynamicWhere($method, $params);
         }
 
         $className = get_class($this);
 
         throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
     }
-    
+
     //--------------------------------------------------------------------
     // Clauses Compilation and Statements generation
     //--------------------------------------------------------------------

@@ -408,7 +408,7 @@ class Query
      */
     public function whereBetween($column, array $values, $boolean = 'and', $not = false)
     {
-        $type = 'between';
+        $type = 'Between';
 
         $this->wheres[] = compact('column', 'type', 'boolean', 'not');
 
@@ -668,7 +668,7 @@ class Query
         $index = 0;
 
         foreach ($segments as $segment) {
-            if ($segment != 'And' && $segment != 'Or') {
+            if (($segment != 'And') && ($segment != 'Or')) {
                 $this->addDynamic($segment, $connector, $parameters, $index);
 
                 $index++;
@@ -691,9 +691,9 @@ class Query
     */
     protected function addDynamic($segment, $connector, $parameters, $index)
     {
-        $bool = strtolower($connector);
+        $boolean = strtolower($connector);
 
-        $this->where(Inflector::tableize($segment), '=', $parameters[$index], $bool);
+        $this->where(Inflector::tableize($segment), '=', $parameters[$index], $boolean);
     }
 
 

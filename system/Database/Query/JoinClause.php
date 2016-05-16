@@ -6,9 +6,9 @@
  * @version 3.0
  */
 
-namespace Database;
+namespace Database\Query;
 
-use Database\Query;
+use Database\Query\Builder;
 
 
 class JoinClause

@@ -9,8 +9,8 @@
 namespace Database;
 
 use Core\Config;
-use Database\Expression;
-use Database\Query;
+use Database\Query\Expression;
+use Database\Query\Builder;
 
 use \PDO;
 use \DateTime;
@@ -110,14 +110,14 @@ class Connection
     }
 
     /**
-     * Begin a fluent query against a database table.
+     * Begin a Fluent Query against a database table.
      *
      * @param  string  $table
-     * @return \Database\Query
+     * @return \Database\Query\Builder
      */
     public function table($table)
     {
-        $query = new Query($this);
+        $query = new Builder($this);
 
         return $query->from($table);
     }
@@ -126,7 +126,7 @@ class Connection
      * Get a new raw query expression.
      *
      * @param  mixed  $value
-     * @return \Database\Expression
+     * @return \Database\Query\Expression
      */
     public function raw($value)
     {

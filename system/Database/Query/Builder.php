@@ -214,9 +214,7 @@ class Builder
         } else {
             $join = new JoinClause($this, $type, $table);
 
-            $this->joins[] = $join->on(
-                $one, $operator, $two, 'and', $where
-            );
+            $this->joins[] = $join->on($one, $operator, $two, 'and', $where);
         }
 
         return $this;

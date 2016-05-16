@@ -246,7 +246,7 @@ class Connection
      */
     public function unprepared($query)
     {
-        return (bool) $me->getPdo()->exec($query);
+        return (bool) $this->getPdo()->exec($query);
     }
 
     /**

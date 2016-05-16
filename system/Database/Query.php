@@ -1233,40 +1233,6 @@ class Query
     }
 
     /**
-     * Increment a Column's value by a given amount.
-     *
-     * @param  string  $column
-     * @param  int     $amount
-     * @param  array   $extra
-     * @return int
-     */
-    public function increment($column, $amount = 1, array $extra = array())
-    {
-        $wrapped = $this->wrap($column);
-
-        $columns = array_merge(array($column => $this->raw("$wrapped + $amount")), $extra);
-
-        return $this->update($columns);
-    }
-
-    /**
-     * Decrement a Column's value by a given amount.
-     *
-     * @param  string  $column
-     * @param  int     $amount
-     * @param  array   $extra
-     * @return int
-     */
-    public function decrement($column, $amount = 1, array $extra = array())
-    {
-        $wrapped = $this->wrap($column);
-
-        $columns = array_merge(array($column => $this->raw("$wrapped - $amount")), $extra);
-
-        return $this->update($columns);
-    }
-
-    /**
      * Insert a new record into the database.
      *
      * @param  array  $values
@@ -1291,37 +1257,6 @@ class Query
         }
 
         $sql = $this->compileInsert($values);
-
-        $bindings = $this->cleanBindings($bindings);
-
-        return $this->db->insert($sql, $bindings);
-    }
-
-    /**
-     * Replace a new Record into the database.
-     *
-     * @param  array  $values
-     * @return bool
-     */
-    public function replace(array $values)
-    {
-        if (! is_array(reset($values))) {
-            $values = array($values);
-        } else {
-            foreach ($values as $key => $value) {
-                ksort($value);
-
-                $values[$key] = $value;
-            }
-        }
-
-        $bindings = array();
-
-        foreach ($values as $record) {
-            $bindings = array_merge($bindings, array_values($record));
-        }
-
-        $sql = $this->compileReplace($values);
 
         $bindings = $this->cleanBindings($bindings);
 
@@ -1360,6 +1295,41 @@ class Query
         $sql = $this->compileUpdate($values);
 
         return $this->db->update($sql, $this->cleanBindings($bindings));
+    }
+
+
+    /**
+     * Increment a Column's value by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @param  array   $extra
+     * @return int
+     */
+    public function increment($column, $amount = 1, array $extra = array())
+    {
+        $wrapped = $this->wrap($column);
+
+        $columns = array_merge(array($column => $this->raw("$wrapped + $amount")), $extra);
+
+        return $this->update($columns);
+    }
+
+    /**
+     * Decrement a Column's value by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @param  array   $extra
+     * @return int
+     */
+    public function decrement($column, $amount = 1, array $extra = array())
+    {
+        $wrapped = $this->wrap($column);
+
+        $columns = array_merge(array($column => $this->raw("$wrapped - $amount")), $extra);
+
+        return $this->update($columns);
     }
 
     /**
@@ -2026,31 +1996,6 @@ class Query
         $parameters = implode(', ', $value);
 
         return "INSERT INTO $table ($columns) VALUES $parameters";
-    }
-
-    /**
-     * Compile an replace statement into SQL.
-     *
-     * @param  array  $values
-     * @return string
-     */
-    public function compileReplace(array $values)
-    {
-        $table = $this->wrapTable($this->from);
-
-        if (! is_array(reset($values))) {
-            $values = array($values);
-        }
-
-        $columns = $this->columnize(array_keys(reset($values)));
-
-        $parameters = $this->parameterize(reset($values));
-
-        $value = array_fill(0, count($values), "($parameters)");
-
-        $parameters = implode(', ', $value);
-
-        return "REPLACE INTO $table ($columns) VALUES $parameters";
     }
 
     /**

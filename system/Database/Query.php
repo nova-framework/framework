@@ -9,7 +9,8 @@
 namespace Database;
 
 use Database\Connection;
-use Database\Query\Join as JoinClause;
+use Database\Expression;
+use Database\JoinClause;
 
 use \PDO;
 use \Closure;
@@ -78,7 +79,7 @@ class Query
      *
      * @var array
      */
-    public $groupings;
+    public $groups;
 
     /**
      * The HAVING constraints for the query.
@@ -92,7 +93,7 @@ class Query
      *
      * @var array
      */
-    public $orderings;
+    public $orders;
 
     /**
      * The maximum number of records to return.
@@ -107,6 +108,13 @@ class Query
      * @var int
      */
     public $offset;
+
+    /**
+     * The query union statements.
+     *
+     * @var array
+     */
+    public $unions;
 
     /**
      * The keyword identifier wrapper format.
@@ -135,6 +143,26 @@ class Query
     }
 
     /**
+     * Handle dynamic method calls into the method.
+     *
+     * @param  string  $method
+     * @param  array   $params
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        if (str_starts_with($method, 'where')) {
+            return $this->dynamicWhere($method, $parameters);
+        }
+
+        $className = get_class($this);
+
+        throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
+    }
+
+    /**
      * Set the columns to be selected.
      *
      * @param  array  $columns
@@ -145,6 +173,17 @@ class Query
         $this->columns = is_array($columns) ? $columns : func_get_args();
 
         return $this;
+    }
+
+    /**
+     * Add a new "raw" select expression to the query.
+     *
+     * @param  string  $expression
+     * @return \Database\Query|static
+     */
+    public function selectRaw($expression)
+    {
+        return $this->select(new Expression($expression));
     }
 
     /**
@@ -244,32 +283,34 @@ class Query
     }
 
     /**
-     * Add a grouping to the query.
+     * Add a raw "WHERE" condition to the query.
      *
-     * @param  string  $column
+     * @param  string  $where
+     * @param  array   $bindings
+     * @param  string  $boolean
      * @return Query
      */
-    public function groupBy($column)
+    public function whereRaw($where, $bindings = array(), $boolean = 'and')
     {
-        $this->groupings[] = $column;
+        $type = 'Raw';
+
+        $this->wheres[] = compact('type', 'sql', 'boolean');
+
+        $this->bindings = array_merge($this->bindings, $bindings);
 
         return $this;
     }
 
     /**
-     * Add a "HAVING" to the query.
+     * Add a raw "OR WHERE" condition to the query.
      *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  mixed   $value
+     * @param  string  $where
+     * @param  array   $bindings
+     * @return Query
      */
-    public function having($column, $operator, $value)
+    public function orWhereRaw($where, $bindings = array())
     {
-        $this->havings[] = compact('column', 'operator', 'value');
-
-        $this->bindings[] = $value;
-
-        return $this;
+        return $this->whereRaw($where, $bindings, 'or');
     }
 
     /**
@@ -597,6 +638,115 @@ class Query
     }
 
     /**
+     * Handles dynamic "WHERE" clauses to the query.
+     *
+     * @param  string  $method
+     * @param  string  $parameters
+     * @return \Database\Query|static
+     */
+    public function dynamicWhere($method, $parameters)
+    {
+        $finder = substr($method, 5);
+
+        $segments = preg_split('/(And|Or)(?=[A-Z])/', $finder, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        $connector = 'and';
+
+        $index = 0;
+
+        foreach ($segments as $segment) {
+            if ($segment != 'And' && $segment != 'Or') {
+                $this->addDynamic($segment, $connector, $parameters, $index);
+
+                $index++;
+            } else {
+                $connector = $segment;
+            }
+        }
+
+        return $this;
+   }
+
+   /**
+    * Add a single dynamic "WHERE" clause statement to the query.
+    *
+    * @param  string  $segment
+    * @param  string  $connector
+    * @param  array   $parameters
+    * @param  int     $index
+    * @return void
+    */
+    protected function addDynamic($segment, $connector, $parameters, $index)
+    {
+        $bool = strtolower($connector);
+
+        $this->where(Inflector::tableize($segment), '=', $parameters[$index], $bool);
+    }
+
+
+    /**
+     * Add a "HAVING" to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  mixed   $value
+     */
+    public function having($column, $operator, $value)
+    {
+        $type = 'Basic';
+
+        $this->havings[] = compact('type', 'column', 'operator', 'value');
+
+        $this->bindings[] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Add a raw "HAVING" clause to the query.
+     *
+     * @param  string  $sql
+     * @param  array   $bindings
+     * @param  string  $boolean
+     * @return \Database\Query|static
+     */
+    public function havingRaw($sql, array $bindings = array(), $boolean = 'and')
+    {
+        $type = 'Raw';
+
+        $this->havings[] = compact('type', 'sql', 'boolean');
+
+        $this->bindings = array_merge($this->bindings, $bindings);
+
+        return $this;
+    }
+
+    /**
+     * Add a raw "OR HAVING" clause to the query.
+     *
+     * @param  string  $sql
+     * @param  array   $bindings
+     * @return \Database\Query|static
+     */
+    public function orHavingRaw($sql, array $bindings = array())
+    {
+        return $this->havingRaw($sql, $bindings, 'or');
+    }
+
+    /**
+     * Add a grouping to the query.
+     *
+     * @param  string  $column
+     * @return Query
+     */
+    public function groupBy($column)
+    {
+        $this->groups = array_merge((array) $this->groups, func_get_args());
+
+        return $this;
+    }
+
+    /**
      * Add an "ORDER BY" clause to the query.
      *
      * @param  string  $column
@@ -607,7 +757,25 @@ class Query
     {
         $direction = (strtolower($direction) == 'asc') ? 'ASC' : 'DESC';
 
-        $this->orderings[] = compact('column', 'direction');
+        $this->orders[] = compact('column', 'direction');
+
+        return $this;
+    }
+
+    /**
+     * Add a raw "order by" clause to the query.
+     *
+     * @param  string  $sql
+     * @param  array  $bindings
+     * @return \Database\Query|static
+     */
+    public function orderByRaw($sql, $bindings = array())
+    {
+        $type = 'Raw';
+
+        $this->orders[] = compact('type', 'sql');
+
+        $this->bindings = array_merge($this->bindings, $bindings);
 
         return $this;
     }
@@ -672,6 +840,35 @@ class Query
     public function forPage($page, $perPage = 15)
     {
         return $this->skip(($page - 1) * $perPage)->take($perPage);
+    }
+
+    /**
+     * Add a union statement to the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder|\Closure  $query
+     * @param  bool $all
+     * @return \Illuminate\Database\Query\Builder|static
+     */
+    public function union($query, $all = false)
+    {
+        if ($query instanceof Closure) {
+            call_user_func($query, $query = $this->newQuery());
+        }
+
+        $this->unions[] = compact('query', 'all');
+
+        return $this->mergeBindings($query);
+    }
+
+    /**
+     * Add a union all statement to the query.
+     *
+     * @param  \Database\Query|\Closure  $query
+     * @return \Database\Query|static
+     */
+    public function unionAll($query)
+    {
+        return $this->union($query, true);
     }
 
     /**
@@ -877,6 +1074,47 @@ class Query
     }
 
     /**
+     * Increment the value of a column by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @return int
+     */
+    public function increment($column, $amount = 1)
+    {
+        return $this->adjust($column, $amount, ' + ');
+    }
+
+    /**
+     * Decrement the value of a column by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @return int
+     */
+    public function decrement($column, $amount = 1)
+    {
+        return $this->adjust($column, $amount, ' - ');
+    }
+
+    /**
+     * Adjust the value of a column up or down by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @param  string  $operator
+     * @return int
+     */
+    protected function adjust($column, $amount, $operator)
+    {
+        $wrapped = $this->wrap($column);
+
+        $value = new Expresssion($wrapped .$operator .$amount);
+
+        return $this->update(array($column => $value));
+    }
+
+    /**
      * Insert a new record into the database.
      *
      * @param  array  $values
@@ -1063,10 +1301,11 @@ class Query
             'from',
             'joins',
             'wheres',
-            'groupings',
+            'groups',
             'havings',
-            'orderings',
+            'orders',
             'limit',
+            'unions',
             'offset'
         );
 
@@ -1195,7 +1434,7 @@ class Query
         foreach ($query->wheres as $where) {
             $method = "compileWhere{$where['type']}";
 
-            $sql[] = strtoupper($where['boolean']) .' ' .$this->$method($where);
+            $sql[] = strtoupper($where['boolean']) .' ' .call_user_func(array($this, $method), $where);
         }
 
         if (count($sql) > 0) {
@@ -1334,41 +1573,70 @@ class Query
     }
 
     /**
+     * Compile a raw "WHERE" clause.
+     *
+     * @param  \Database\Query  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function compileWhereRaw($where)
+    {
+        return $where['sql'];
+    }
+
+    /**
      * Compile the GROUP BY clause for a query.
      *
      * @param  Query   $query
      * @return string
      */
-    protected function compileGroupings(Query $query)
+    protected function compileGroups(Query $query)
     {
-        return 'GROUP BY '.$this->columnize($query->groupings);
+        return 'GROUP BY '.$this->columnize($query->groups);
     }
 
     /**
-     * Compile a "HAVING" clause.
+     * Compile the "HAVING" portions of the query.
      *
-     * @param  Query  $query
+     * @param  \Database\Query  $query
+     * @param  array  $havings
      * @return string
      */
-    protected function compileHavings(Query $query)
+    protected function compileHavings(Query $query, $havings)
     {
-        $sql = array();
+        $sql = implode(' ', array_map(array($this, 'compileHaving'), $havings));
 
-        if (is_null($this->havings)) {
-            return '';
+        return 'having '.preg_replace('/AND /', '', $sql, 1);
+    }
+
+    /**
+     * Compile a single having clause.
+     *
+     * @param  array   $having
+     * @return string
+     */
+    protected function compileHaving(array $having)
+    {
+        if ($having['type'] === 'Raw') {
+            return $having['boolean'].' '.$having['sql'];
         }
 
-        foreach ($query->havings as $having) {
-            $sql[] = 'AND ' .$this->wrap($having['column']) .' ' .$having['operator'] .' ' .$this->parameter($having['value']);
-        }
+        return $this->compileBasicHaving($having);
+    }
 
-        if (count($sql) > 0) {
-            $sql = implode(' ', $sql);
+    /**
+     * Compile a basic having clause.
+     *
+     * @param  array   $having
+     * @return string
+     */
+    protected function compileBasicHaving($having)
+    {
+        $column = $this->wrap($having['column']);
 
-            return 'HAVING ' .preg_replace('/AND /', '', $sql, 1);
-        }
+        $parameter = $this->parameter($having['value']);
 
-        return '';
+        return 'AND ' .$column .' ' .$having['operator'] .' ' .$parameter;
     }
 
     /**
@@ -1378,14 +1646,12 @@ class Query
      * @param  array  $orders
      * @return string
      */
-    protected function compileOrderings(Query $query, $orders)
+    protected function compileOrders(Query $query, $orders)
     {
         $me = $this;
 
         return 'ORDER BY ' .implode(', ', array_map(function($order) use ($me) {
-            if (isset($order['sql'])) {
-                return $order['sql'];
-            }
+            if (isset($order['sql'])) return $order['sql'];
 
             return $me->wrap($order['column']).' '.$order['direction'];
         }, $orders));
@@ -1413,6 +1679,36 @@ class Query
     protected function compileOffset(Query $query, $offset)
     {
         return 'OFFSET ' .(int) $offset;
+    }
+
+    /**
+     * Compile the "UNION" queries attached to the main query.
+     *
+     * @param  \Database\Query  $query
+     * @return string
+     */
+    protected function compileUnions(Query $query)
+    {
+        $sql = '';
+
+        foreach ($query->unions as $union) {
+            $sql .= $this->compileUnion($union);
+        }
+
+        return ltrim($sql);
+    }
+
+    /**
+     * Compile a single "UNION" statement.
+     *
+     * @param  array  $union
+     * @return string
+     */
+    protected function compileUnion(array $union)
+    {
+        $joiner = $union['all'] ? ' UNION ALL ' : ' UNION ';
+
+        return $joiner .$union['query']->toSql();
     }
 
     /**
@@ -1493,8 +1789,8 @@ class Query
 
         $sql = trim("UPDATE {$table}{$joins} SET $columns $where");
 
-        if (isset($this->orderings)) {
-            $sql .= ' ' .$this->compileOrders($this, $this->orderings);
+        if (isset($this->orders)) {
+            $sql .= ' ' .$this->compileOrders($this, $this->orders);
         }
 
         if (isset($this->limit)) {
@@ -1629,7 +1925,7 @@ class Query
      */
     public function parameter($value)
     {
-        return '?';
+        return ($value instanceof Expression) ? $value->get() : '?';
     }
 
     /**

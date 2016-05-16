@@ -6,12 +6,12 @@
  * @version 3.0
  */
 
-namespace Database\Query;
+namespace Database;
 
 use Database\Query;
 
 
-class Join
+class JoinClause
 {
     /**
     * The QueryBuilder instance.

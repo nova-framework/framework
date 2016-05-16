@@ -487,6 +487,67 @@ class Query
     }
 
     /**
+     * Add an exists clause to the query.
+     *
+     * @param  \Closure $callback
+     * @param  string   $boolean
+     * @param  bool     $not
+     * @return \Database\Query|static
+     */
+    public function whereExists(Closure $callback, $boolean = 'and', $not = false)
+    {
+        $type = $not ? 'NotExists' : 'Exists';
+
+        $query = $this->newQuery();
+
+        // Similar to the sub-select clause, we will create a new query instance so
+        // the developer may cleanly specify the entire exists query and we will
+        // compile the whole thing in the grammar and insert it into the SQL.
+        call_user_func($callback, $query);
+
+        $this->wheres[] = compact('type', 'operator', 'query', 'boolean');
+
+        $this->mergeBindings($query);
+
+        return $this;
+    }
+
+    /**
+     * Add an or exists clause to the query.
+     *
+     * @param  \Closure $callback
+     * @param  bool     $not
+     * @return \Database\Query|static
+     */
+    public function orWhereExists(Closure $callback, $not = false)
+    {
+        return $this->whereExists($callback, 'or', $not);
+    }
+
+    /**
+     * Add a where not exists clause to the query.
+     *
+     * @param  \Closure $callback
+     * @param  string   $boolean
+     * @return \Database\Query|static
+     */
+    public function whereNotExists(Closure $callback, $boolean = 'and')
+    {
+        return $this->whereExists($callback, $boolean, true);
+    }
+
+    /**
+     * Add a where not exists clause to the query.
+     *
+     * @param  \Closure  $callback
+     * @return \Database\Query|static
+     */
+    public function orWhereNotExists(Closure $callback)
+    {
+        return $this->orWhereExists($callback, true);
+    }
+
+    /**
      * Add a "WHERE IN" clause to the query.
      *
      * @param  string  $column
@@ -675,7 +736,7 @@ class Query
      * @param  mixed   $value
      * @return \Database\Query|static
      */
-    public function having($column, $operator, $value)
+    public function having($column, $operator = null, $value = null)
     {
         $type = 'Basic';
 

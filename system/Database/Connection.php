@@ -256,9 +256,9 @@ class Connection
     {
         foreach ($bindings as $key => $value) {
             if ($value instanceof DateTime) {
-                // We need to transform all instances of the DateTime class into an actual Date string.
+                // We need to transform all DateTime instances into an actual Date string.
                 $bindings[$key] = $value->format('Y-m-d H:i:s');
-            } elseif ($value === false) {
+            } else if ($value === false) {
                 $bindings[$key] = 0;
             }
         }

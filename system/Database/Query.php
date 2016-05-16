@@ -650,6 +650,32 @@ class Query
     }
 
     /**
+     * Get an array with the values of a given column.
+     *
+     * @param  string  $column
+     * @param  string  $key
+     * @return array
+     */
+    public function lists($column, $key = null)
+    {
+        $columns = (is_null($key)) ? array($column) : array($column, $key);
+
+        $results = $this->get($columns);
+
+        $values = array_map(function($row) use ($column) {
+            return $row->{$column};
+        }, $results);
+
+        if (! is_null($key) && (count($results) > 0)) {
+            return array_combine(array_map(function($row) use ($key) {
+                return $row->{$key};
+            }, $results), $values);
+        }
+
+        return $values;
+    }
+
+    /**
      * Execute the query as a "SELECT" statement.
      *
      * @param  array  $columns

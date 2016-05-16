@@ -67,18 +67,32 @@ class Query
     public $joins;
 
     /**
-     * The where constraints for the query.
+     * The WHERE constraints for the query.
      *
      * @var array
      */
     public $wheres;
 
     /**
+     * The GROUP BY clauses.
+     *
+     * @var array
+     */
+    public $groupings;
+
+    /**
+     * The HAVING constraints for the query.
+     *
+     * @var array
+     */
+    public $havings;
+
+    /**
      * The orderings for the query.
      *
      * @var array
      */
-    public $orders;
+    public $orderings;
 
     /**
      * The maximum number of records to return.
@@ -227,6 +241,35 @@ class Query
     public function leftJoinWhere($table, $one, $operator, $two)
     {
         return $this->joinWhere($table, $one, $operator, $two, 'left');
+    }
+
+    /**
+     * Add a grouping to the query.
+     *
+     * @param  string  $column
+     * @return Query
+     */
+    public function groupBy($column)
+    {
+        $this->groupings[] = $column;
+
+        return $this;
+    }
+
+    /**
+     * Add a "HAVING" to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  mixed   $value
+     */
+    public function having($column, $operator, $value)
+    {
+        $this->havings[] = compact('column', 'operator', 'value');
+
+        $this->bindings[] = $value;
+
+        return $this;
     }
 
     /**
@@ -562,9 +605,9 @@ class Query
      */
     public function orderBy($column, $direction = 'asc')
     {
-        $direction = strtolower($direction) == 'asc' ? 'asc' : 'desc';
+        $direction = (strtolower($direction) == 'asc') ? 'ASC' : 'DESC';
 
-        $this->orders[] = compact('column', 'direction');
+        $this->orderings[] = compact('column', 'direction');
 
         return $this;
     }
@@ -650,7 +693,7 @@ class Query
     }
 
     /**
-     * Get an array with the values of a given column.
+     * Get an array with the values of a given Column.
      *
      * @param  string  $column
      * @param  string  $key
@@ -658,7 +701,7 @@ class Query
      */
     public function lists($column, $key = null)
     {
-        $columns = (is_null($key)) ? array($column) : array($column, $key);
+        $columns = is_null($key) ? array($column) : array($column, $key);
 
         $results = $this->get($columns);
 
@@ -988,16 +1031,18 @@ class Query
             'from',
             'joins',
             'wheres',
-            'orders',
+            'groupings',
+            'havings',
+            'orderings',
             'limit',
             'offset'
         );
 
         foreach ($selectComponents as $component) {
-            if (!is_null($query->$component)) {
+            if (! is_null($query->{$component})) {
                 $method = 'compile' .ucfirst($component);
 
-                $sql[$component] = $this->$method($query, $query->$component);
+                $sql[$component] = call_user_func(array($this, $method), $query, $query->{$component});
             }
         }
 
@@ -1257,13 +1302,51 @@ class Query
     }
 
     /**
+     * Compile the GROUP BY clause for a query.
+     *
+     * @param  Query   $query
+     * @return string
+     */
+    protected function compileGroupings(Query $query)
+    {
+        return 'GROUP BY '.$this->columnize($query->groupings);
+    }
+
+    /**
+     * Compile a "HAVING" clause.
+     *
+     * @param  Query  $query
+     * @return string
+     */
+    protected function compileHavings(Query $query)
+    {
+        $sql = array();
+
+        if (is_null($this->havings)) {
+            return '';
+        }
+
+        foreach ($query->havings as $having) {
+            $sql[] = 'AND ' .$this->wrap($having['column']) .' ' .$having['operator'] .' ' .$this->parameter($having['value']);
+        }
+
+        if (count($sql) > 0) {
+            $sql = implode(' ', $sql);
+
+            return 'HAVING ' .preg_replace('/AND /', '', $sql, 1);
+        }
+
+        return '';
+    }
+
+    /**
      * Compile the "ORDER BY" portions of the query.
      *
      * @param  \Database\Query  $query
      * @param  array  $orders
      * @return string
      */
-    protected function compileOrders(Query $query, $orders)
+    protected function compileOrderings(Query $query, $orders)
     {
         $me = $this;
 
@@ -1378,8 +1461,8 @@ class Query
 
         $sql = trim("UPDATE {$table}{$joins} SET $columns $where");
 
-        if (isset($this->orders)) {
-            $sql .= ' ' .$this->compileOrders($this, $this->orders);
+        if (isset($this->orderings)) {
+            $sql .= ' ' .$this->compileOrders($this, $this->orderings);
         }
 
         if (isset($this->limit)) {

@@ -111,7 +111,7 @@ class Query
     public $offset;
 
     /**
-     * The query union statements.
+     * The query UNION statements.
      *
      * @var array
      */

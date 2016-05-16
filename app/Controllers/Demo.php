@@ -43,6 +43,9 @@ class Demo extends Controller
         echo '<pre>' .var_export($params, true) .'</pre>';
 
         //
+        // Events dispatching.
+        //
+
         echo '<h3 style="margin-top: 50px;">Events dispatching</h3>';
 
         // Prepare the Event payload.
@@ -54,6 +57,9 @@ class Demo extends Controller
         $results = Event::fire('test', $payload);
 
         // Print out the non-empty results returned by Event firing.
-        echo implode('', array_filter($results, 'strlen'));
+        echo implode('', array_filter($results, 'strlen')) .'<br>';
+
+        // Fire the Event 'test' and echo the result.
+        echo Event::until('test', $payload);
     }
 }

@@ -6,6 +6,6 @@ class Test
 {
     public static function handle($data)
     {
-        return '<pre>' .__METHOD__ .' : ' .var_export($data, true) .'</pre>';
+        return '<pre>' .str_replace('::', '@', __METHOD__) .' : ' .var_export($data, true) .'</pre>';
     }
 }

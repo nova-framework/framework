@@ -682,6 +682,67 @@ class Query
     }
 
     /**
+     * Add a "WHERE DAY" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string   $operator
+     * @param  int   $value
+     * @param  string   $boolean
+     * @return \Database\Query|static
+     */
+    public function whereDay($column, $operator, $value, $boolean = 'and')
+    {
+        return $this->addDateBasedWhere('Day', $column, $operator, $value, $boolean);
+    }
+
+    /**
+     * Add a "WHERE MONTH" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string   $operator
+     * @param  int   $value
+     * @param  string   $boolean
+     * @return \Database\Query|static
+     */
+    public function whereMonth($column, $operator, $value, $boolean = 'and')
+    {
+        return $this->addDateBasedWhere('Month', $column, $operator, $value, $boolean);
+    }
+
+    /**
+     * Add a "WHERE YEAR" statement to the query.
+     *
+     * @param  string  $column
+     * @param  string   $operator
+     * @param  int   $value
+     * @param  string   $boolean
+     * @return \Database\Query|static
+     */
+    public function whereYear($column, $operator, $value, $boolean = 'and')
+    {
+        return $this->addDateBasedWhere('Year', $column, $operator, $value, $boolean);
+    }
+
+    /**
+     * Add a date based (year, month, day) statement to the query.
+     *
+     * @param  string  $type
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  int  $value
+     * @param  string  $boolean
+     * @return \Database\Query|static
+     */
+    protected function addDateBasedWhere($type, $column, $operator, $value, $boolean = 'and')
+    {
+        $this->wheres[] = compact('column', 'type', 'boolean', 'operator', 'value');
+
+        $this->bindings[] = $value;
+
+        return $this;
+    }
+
+    /**
      * Handles dynamic "WHERE" clauses to the query.
      *
      * @param  string  $method
@@ -1750,6 +1811,57 @@ class Query
     protected function compileWhereNotNull($where)
     {
         return $this->wrap($where['column']) .' IS NOT NULL';
+    }
+
+    /**
+     * Compile a "WHERE DAY" clause.
+     *
+     * @param  \Database\Query  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function compileWhereDay(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('day', $query, $where);
+    }
+
+    /**
+     * Compile a "WHERE MONTH" clause.
+     *
+     * @param  \Database\Query  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function compileWhereMonth(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('month', $query, $where);
+    }
+
+    /**
+     * Compile a "WHERE YEAR" clause.
+     *
+     * @param  \Database\Query  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function compileWhereYear(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('year', $query, $where);
+    }
+
+    /**
+     * Compile a date based where clause.
+     *
+     * @param  string  $type
+     * @param  \Database\Query  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function dateBasedWhere($type, $where)
+    {
+        $value = $this->parameter($where['value']);
+
+        return $type .'(' .$this->wrap($where['column']) .') ' .$where['operator'] .' ' .$value;
     }
 
     /**

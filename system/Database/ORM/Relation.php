@@ -37,7 +37,7 @@ abstract class Relation
     /**
      * The ORM query builder instance.
      *
-     * @var \Database\ORM\Builder
+     * @var \Database\ORM\Query
      */
     protected $query;
 

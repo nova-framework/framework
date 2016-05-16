@@ -4,7 +4,6 @@
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
- * @date April 19th, 2016
  */
 
 use Core\Route;

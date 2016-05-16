@@ -30,6 +30,9 @@ date_default_timezone_set(DEFAULT_TIMEZONE);
 /** Load the Framework wide functions. */
 require dirname(__FILE__) .DS .'functions.php';
 
+/** Load the Events */
+require APPDIR .'Events.php';
+
 /** Load the Route Filters */
 require APPDIR .'Filters.php';
 

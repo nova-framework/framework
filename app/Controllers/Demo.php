@@ -21,14 +21,6 @@ class Demo extends Controller
         parent::__construct();
     }
 
-    protected function before()
-    {
-        // Add a Listener to the Event 'test'.
-        Event::listen('test', 'App\Events\Test@handle');
-
-        return parent::before();
-    }
-
     /**
      * Define Index method
      */

@@ -1343,6 +1343,53 @@ class Query
     }
 
     /**
+     * Create a raw Database Expression.
+     *
+     * @param  mixed  $value
+     * @return \Database\Expression
+     */
+    public function raw($value)
+    {
+        return new Expression($value);
+    }
+
+    /**
+     * Get the current query value bindings.
+     *
+     * @return array
+     */
+    public function getBindings()
+    {
+        return $this->bindings;
+    }
+
+    /**
+     * Set the bindings on the query builder.
+     *
+     * @param  array  $bindings
+     * @return \Database\Query
+     */
+    public function setBindings(array $bindings)
+    {
+        $this->bindings = $bindings;
+
+        return $this;
+    }
+
+    /**
+     * Add a binding to the query.
+     *
+     * @param  mixed  $value
+     * @return \Database\Query
+     */
+    public function addBinding($value)
+    {
+        $this->bindings[] = $value;
+
+        return $this;
+    }
+
+    /**
      * Merge an array of bindings into our bindings.
      *
      * @param  \Database\Query  $query
@@ -1369,14 +1416,13 @@ class Query
     }
 
     /**
-     * Create a raw Database Expression.
+     * Get the Database Connection instance.
      *
-     * @param  mixed  $value
-     * @return \Database\Expression
+     * @return \Database\Connection
      */
-    public function raw($value)
+    public function getConnection()
     {
-        return new Expression($value);
+        return $this->db;
     }
 
     /**

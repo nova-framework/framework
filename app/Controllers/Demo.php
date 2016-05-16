@@ -47,8 +47,7 @@ class Demo extends Controller
 
         // Prepare the Event payload.
         $payload = array(
-            'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__),
-            $params
+            'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__)
         );
 
         // Fire the Event 'test'.

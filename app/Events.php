@@ -11,5 +11,10 @@ use Event;
 
 /** Define Events. */
 
-// Add a Listener to the Event 'test'.
+// Add a testing Listener Class to the Event 'test'.
 Event::listen('test', 'App\Events\Test@handle');
+
+// Add a testing Listener Closure to the Event 'test'.
+Event::listen('test', function($data) {
+    echo '<pre>' .var_export($data, true) .'</pre>';
+});

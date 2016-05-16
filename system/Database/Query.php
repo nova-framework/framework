@@ -939,6 +939,18 @@ class Query
     }
 
     /**
+     * Execute a query for a single Record by ID.
+     *
+     * @param  int    $id
+     * @param  array  $columns
+     * @return mixed|static
+     */
+    public function find($id, $columns = array('*'))
+    {
+        return $this->where('id', '=', $id)->first($columns);
+    }
+
+    /**
      * Pluck a single column's value from the first result of a query.
      *
      * @param  string  $column

@@ -16,5 +16,5 @@ Event::listen('test', 'App\Events\Test@handle');
 
 // Add a Listener Closure to the Event 'test'.
 Event::listen('test', function($data) {
-    return '<pre>' .var_export($data, true) .'</pre>';
+    return '<pre>Closure : ' .var_export($data, true) .'</pre>';
 });

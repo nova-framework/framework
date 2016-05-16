@@ -1332,7 +1332,7 @@ class Query
     {
         $column = $this->columnize($aggregate['columns']);
 
-        if ($query->distinct && $column !== '*') {
+        if ($query->distinct && ($column !== '*')) {
             $column = 'DISTINCT ' .$column;
         }
 

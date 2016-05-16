@@ -64,7 +64,7 @@ class JoinClause
     * @param  string  $second
     * @param  string  $boolean
     * @param  bool  $where
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function on($first, $operator, $second, $boolean = 'and', $where = false)
     {
@@ -83,7 +83,7 @@ class JoinClause
     * @param  string  $first
     * @param  string  $operator
     * @param  string  $second
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function orOn($first, $operator, $second)
     {
@@ -97,7 +97,7 @@ class JoinClause
     * @param  string  $operator
     * @param  string  $second
     * @param  string  $boolean
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function where($first, $operator, $second, $boolean = 'and')
     {
@@ -111,7 +111,7 @@ class JoinClause
     * @param  string  $operator
     * @param  string  $second
     * @param  string  $boolean
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function orWhere($first, $operator, $second)
     {

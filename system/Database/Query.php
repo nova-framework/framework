@@ -1607,7 +1607,7 @@ class Query
     {
         $sql = implode(' ', array_map(array($this, 'compileHaving'), $havings));
 
-        return 'having '.preg_replace('/AND /', '', $sql, 1);
+        return 'HAVING '.preg_replace('/AND /', '', $sql, 1);
     }
 
     /**

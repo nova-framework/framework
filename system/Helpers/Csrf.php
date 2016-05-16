@@ -11,6 +11,7 @@ namespace Helpers;
 
 use Helpers\Session;
 use Helpers\Encrypter;
+
 /**
  * Instructions:
  * At the top of the controller where the other "use" statements are, place:
@@ -31,7 +32,9 @@ use Helpers\Encrypter;
  *    }
  * And that's all.
  */
-class Csrf {
+class Csrf
+{
+
     /**
      * Retrieve the CSRF token and generate a new one if expired.
      *
@@ -39,7 +42,8 @@ class Csrf {
      * @static static method
      * @return string
      */
-    public static function makeToken($name = 'csrfToken') {
+    public static function makeToken($name = 'csrfToken')
+    {
         $max_time = 60 * 60 * 24; // token is valid for 1 day.
         $csrf_token = Session::get($name);
         $stored_time = Session::get($name . '_time');
@@ -60,7 +64,9 @@ class Csrf {
      * @static static method
      * @return bool
      */
-    public static function isTokenValid($name = 'csrfToken') {
+    public static function isTokenValid($name = 'csrfToken')
+    {
         return $_POST[$name] === Session::get($name);
     }
+
 }

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Expression - A Class which represent a Database Expression.
+ *
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ */
 namespace Database;
 
 

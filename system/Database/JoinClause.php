@@ -1,6 +1,6 @@
 <?php
 /**
- * Join - A Joining Clause helper class for the QueryBuilder.
+ * JoinCause - A Joining Clause helper class for the QueryBuilder.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

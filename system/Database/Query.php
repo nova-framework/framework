@@ -8,6 +8,7 @@
 
 namespace Database;
 
+use Helpers\Inflector;
 use Database\Connection;
 use Database\Expression;
 use Database\JoinClause;

@@ -102,6 +102,18 @@ class Model implements \ArrayAccess
     }
 
     /**
+     * Begin querying the Model.
+     *
+     * @return \Database\ORM\Builder
+     */
+    public static function query()
+    {
+        $instance = new static();
+
+        return $instance->newQuery();
+    }
+
+    /**
      * Get all of the models from the database.
      *
      * @param  array  $columns
@@ -618,6 +630,24 @@ class Model implements \ArrayAccess
      * Create a new Model instance that is existing.
      *
      * @param  array  $attributes
+     * @param  string|null  $connection
+     * @return static
+     */
+    public function newFromBuilder($attributes = array(), $connection = null)
+    {
+        $instance = $this->newInstance(array(), true);
+
+        $instance->setRawAttributes((array) $attributes, true);
+
+        $instance->setConnection($connection ? $connection: $this->connection);
+
+        return $instance;
+    }
+
+    /**
+     * Create a new Model instance that is existing.
+     *
+     * @param  array  $attributes
      * @return Model
      */
     public function newModel($attributes = array())
@@ -689,24 +719,22 @@ class Model implements \ArrayAccess
      *
      * @return array
      */
-    public function toArray($withRelations = true)
+    public function toArray()
     {
-        if(! $withRelations) {
-            return $this->attributes;
-        }
-
         $attributes = $this->attributes;
 
         foreach ($this->relations as $key => $value) {
             if ($value instanceof Model) {
                 // We have an associated Model.
-                $attributes[$key] = $value->toArray(false);
+                $attributes[$key] = $value->toArray();
             } else if (is_array($value)) {
                 // We have an array of associated Models.
                 $attributes[$key] = array();
 
-                foreach ($value as $id => $model) {
-                    $attributes[$key][$id] = $model->toArray(false);
+                foreach ($value as $model) {
+                    $id = $model->getKey();
+
+                    $attributes[$key][$id] = $model->toArray();
                 }
             } else if (is_null($value)) {
                 // We have an empty relationship.
@@ -725,7 +753,7 @@ class Model implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return isset($this->{$offset});
     }
 
     /**
@@ -736,7 +764,7 @@ class Model implements \ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return $this->$offset;
+        return $this->{$offset};
     }
 
     /**
@@ -748,7 +776,7 @@ class Model implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        $this->$offset = $value;
+        $this->{$offset} = $value;
     }
 
     /**
@@ -759,7 +787,7 @@ class Model implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        unset($this->$offset);
+        unset($this->{$offset});
     }
 
     /**

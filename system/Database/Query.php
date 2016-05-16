@@ -134,7 +134,7 @@ class Query
     );
 
     /**
-     * Create a new query instance.
+     * Create a new Query instance.
      *
      * @return void
      */
@@ -161,6 +161,18 @@ class Query
         $className = get_class($this);
 
         throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
+    }
+
+    /**
+     * Create a new Query instance.
+     *
+     * @return \Database\Query
+     */
+    public function newQuery()
+    {
+        $query = new Query($this->db);
+
+        return $query;
     }
 
     /**
@@ -846,9 +858,9 @@ class Query
     /**
      * Add a union statement to the query.
      *
-     * @param  \Illuminate\Database\Query\Builder|\Closure  $query
+     * @param  \Database\Query|\Closure  $query
      * @param  bool $all
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\Query|static
      */
     public function union($query, $all = false)
     {

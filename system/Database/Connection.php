@@ -47,7 +47,7 @@ class Connection
     protected $tablePrefix = '';
 
     /**
-     * Create a new connection instance.
+     * Create a new Connection instance.
      *
      * @param  array  $config
      * @return void
@@ -60,10 +60,10 @@ class Connection
     }
 
     /**
-     * Retrieve an instance of the Database Connection.
+     * Retrieve an instance of the Connection.
      *
-     * @param $name string Name of the connection provided in the configuration
-     * @return Connection|\PDO|null
+     * @param $name string Name of the Connection provided in the configuration
+     * @return \Database\Connection|null
      * @throws \Exception
      */
     public static function getInstance($name = 'default')

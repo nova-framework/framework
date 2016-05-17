@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Models;
+namespace App\Modules\Users\Models;
 
 use Auth\Model as BaseModel;
 

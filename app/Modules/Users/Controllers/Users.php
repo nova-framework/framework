@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Controllers;
+namespace App\Modules\Users\Controllers;
 
 use Core\Controller;
 use Core\Redirect;
@@ -30,7 +30,7 @@ class Users extends Controller
         parent::__construct();
 
         // Prepare the Users Model instance.
-        $this->model = new \App\Models\Users();
+        $this->model = new \App\Modules\Users\Models\Users();
     }
 
     protected function before()
@@ -42,7 +42,7 @@ class Users extends Controller
 
     public function dashboard()
     {
-        return View::make('Users/Dashboard')->shares('title', 'Dashboard');
+        return View::make('Users/Dashboard', array(), 'Users')->shares('title', 'Dashboard');
     }
 
     public function login()
@@ -75,7 +75,7 @@ class Users extends Controller
             }
         }
 
-        return View::make('Users/Login')
+        return View::make('Users/Login', array(), 'Users')
             ->shares('title', 'User Login')
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);
@@ -113,7 +113,7 @@ class Users extends Controller
             }
         }
 
-        return View::make('Users/Profile')
+        return View::make('Users/Profile', array(), 'Users')
             ->shares('title', 'User Profile')
             ->with('user', $user)
             ->with('csrfToken', Csrf::makeToken())

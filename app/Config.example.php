@@ -129,6 +129,7 @@ Config::set('languages', array(
  * Setup the Active Modules
  */
 Config::set('modules', array(
+    'Demos',
     'Users',
 ));
 

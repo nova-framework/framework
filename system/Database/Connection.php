@@ -70,7 +70,7 @@ class Connection
     /**
      * Retrieve an instance of the Connection.
      *
-     * @param $name string Name of the Connection provided in the configuration
+     * @param $name string|array Name of the Connection provided in the configuration or options array
      * @return \Database\Connection|null
      * @throws \Exception
      */

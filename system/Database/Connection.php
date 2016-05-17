@@ -456,11 +456,13 @@ class Connection
      * Set the default fetch mode for the Connection.
      *
      * @param  int  $fetchMode
-     * @return int
+     * @return \Database\Connection
      */
     public function setFetchMode($fetchMode)
     {
         $this->fetchMode = $fetchMode;
+
+        return $this;
     }
 
     /**

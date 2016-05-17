@@ -16,6 +16,10 @@ use Helpers\Hooks;
 Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');
 
+// Demo Routes
+Router::any('demo/events',   'App\Controllers\Demo@events');
+Router::any('demo/database', 'App\Controllers\Demo@database');
+
 Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
     'filters' => 'test',
     'uses'    => 'App\Controllers\Demo@test'

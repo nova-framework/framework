@@ -7,6 +7,8 @@ use Helpers\Url;
 
 use Event;
 
+use App\Models\ORM\User;
+
 /*
 *
 * Demo controller
@@ -38,15 +40,14 @@ class Demo extends Controller
             'param4' => $param4
         );
 
-        echo '<h3 style="margin-top: 50px;">Action parameters</h3>';
+        echo '<h3>Action parameters</h3>';
 
         echo '<pre>' .var_export($params, true) .'</pre>';
+    }
 
-        //
-        // Events dispatching.
-        //
-
-        echo '<h3 style="margin-top: 50px;">Events dispatching</h3>';
+    public function events()
+    {
+        echo '<h3>Events dispatching</h3>';
 
         // Prepare the Event payload.
         $payload = array(
@@ -61,5 +62,12 @@ class Demo extends Controller
 
         // Fire the Event 'test' and echo the result.
         echo Event::until('test', $payload);
+    }
+
+    public function database()
+    {
+        $user = user::find(1);
+
+        echo '<pre>' .var_export($user, true) .'</pre>';
     }
 }

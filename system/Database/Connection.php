@@ -9,6 +9,7 @@
 namespace Database;
 
 use Core\Config;
+use Core\Logger;
 use Database\Query\Expression;
 use Database\Query\Builder;
 
@@ -54,7 +55,14 @@ class Connection
      */
     public function __construct(array $config)
     {
-        $this->pdo = $this->createConnection($config);
+        try {
+            $this->pdo = $this->createConnection($config);
+        } catch (PDOException $e) {
+            // In the event of an error, record the error to Logs/error.log
+            Logger::newMessage($e);
+
+            Logger::customErrorMsg();
+        }
 
         $this->tablePrefix = $config['prefix'];
     }
@@ -66,16 +74,18 @@ class Connection
      * @return \Database\Connection|null
      * @throws \Exception
      */
-    public static function getInstance($config = 'default')
+    public static function getInstance($connection = 'default')
     {
-        if (is_array($config)) {
+        if (is_array($connection) && isset($connection['type'])) {
             // The Connection options are passed in the Legacy Style.
-            $connection = implode('.', array_values($config));
-        } else {
-            $connection = $config;
+            $config = $connection;
 
+            $connection = implode('.', array_values($connection));
+        } else {
             // Retrieve the requested Connection options.
             $config = Config::get('database');
+
+            $connection = is_string($connection) ? $connection : 'default';
         }
 
         // Prepare a Token for handling the Connection instances.

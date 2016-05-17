@@ -74,16 +74,16 @@ class Connection
      * @return \Database\Connection|null
      * @throws \Exception
      */
-    public static function getInstance($connection = 'default')
+    public static function getInstance($config = 'default')
     {
-        if (is_array($connection) && isset($connection['type'])) {
-            // A configuration on the Legacy Style.
+        if (is_array($config) && isset($config['type'])) {
+            // Was given as parameter a configuration in the Legacy Style.
             $config = array(
-                'driver'    => $connection['type'],
-                'hostname'  => $connection['host'],
-                'dbname'    => $connection['name'],
-                'username'  => $connection['user'],
-                'password'  => $connection['pass'],
+                'driver'    => $config['type'],
+                'hostname'  => $config['host'],
+                'dbname'    => $config['name'],
+                'username'  => $config['user'],
+                'password'  => $config['pass'],
                 'prefix'    => PREFIX,
                 'charset'   => 'utf8',
                 'collation' => 'utf8_general_ci',
@@ -91,13 +91,19 @@ class Connection
 
             $connection = implode('.', array_values($config));
         } else {
+            $connection = is_string($config) ? $config : 'default';
+
             // Retrieve the requested Connection options.
             $config = Config::get('database');
 
-            $connection = is_string($connection) ? $connection : 'default';
+            if (isset($config[$connection]) && ! empty($config[$connection])) {
+                $config = $config[$connection];
+            } else {
+                throw new \Exception("Connection name '$connection' is not defined in your configuration");
+            }
         }
 
-        // Prepare a Token for handling the Connection instances.
+        // Prepare a Token for handling the instances.
         $token = md5($connection);
 
         // If there is already a Connection instantiated, return it.
@@ -105,12 +111,8 @@ class Connection
             return static::$instances[$token];
         }
 
-        if (isset($config[$connection]) && ! empty($config[$connection])) {
-            // Create the Connection instance and return it.
-            return static::$instances[$token] = new static($config[$connection]);
-        }
-
-        throw new \Exception("Connection name '$connection' is not defined in your configuration");
+        // Create the Connection instance and return it.
+        return static::$instances[$token] = new static($config);
     }
 
     /**

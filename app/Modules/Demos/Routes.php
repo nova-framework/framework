@@ -10,4 +10,3 @@ use Core\Router;
 
 
 /** Define static routes. */
-y

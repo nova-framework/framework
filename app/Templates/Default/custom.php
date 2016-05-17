@@ -39,17 +39,17 @@ echo $css; // Place to pass data / plugable hook zone
             <ul class="nav navbar-nav">
                 <?php if (Auth::check()) { ?>
                 <li <?php if($currentUri == 'dashboard') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-dashboard'></i> Dashboard</a>
+                    <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-dashboard'></i> <?= __d('default', 'Dashboard'); ?></a>
                 </li>
                 <?php } ?>
             </ul>
             <ul class="nav navbar-nav navbar-right" style="margin-right: 5px;">
                 <?php if (Auth::check()) { ?>
                 <li <?php if($currentUri == 'profile') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> Profile</a>
+                    <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> <?= __d('default', 'Profile'); ?></a>
                 </li>
                 <li>
-                    <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> Logout</a>
+                    <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'Logout'); ?></a>
                 </li>
                 <?php } ?>
             </ul>

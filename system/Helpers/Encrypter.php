@@ -11,7 +11,6 @@ namespace Helpers;
 
 class Encrypter
 {
-    protected static $ivSize = 16;
     protected static $randomBytesLength = 16;
     protected static $algo;
     protected static $hashAlgo = 'sha512';
@@ -85,7 +84,7 @@ class Encrypter
             throw new \Exception('Supported algorithm not found.');
         }
 
-        $iv = self::randomBytes(self::$ivSize);
+        $iv = self::randomBytes(self::$randomBytesLength);
         $value = openssl_encrypt(serialize($value), self::$algo, self::$key, 0, $iv);
 
         if ($value === false) {

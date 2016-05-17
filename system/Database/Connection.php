@@ -77,10 +77,19 @@ class Connection
     public static function getInstance($connection = 'default')
     {
         if (is_array($connection) && isset($connection['type'])) {
-            // The Connection options are passed in the Legacy Style.
-            $config = $connection;
+            // A configuration on the Legacy Style.
+            $config = array(
+                'driver'    => $connection['type'],
+                'hostname'  => $connection['host'],
+                'dbname'    => $connection['name'],
+                'username'  => $connection['user'],
+                'password'  => $connection['pass'],
+                'prefix'    => PREFIX,
+                'charset'   => 'utf8',
+                'collation' => 'utf8_general_ci',
+            );
 
-            $connection = implode('.', array_values($connection));
+            $connection = implode('.', array_values($config));
         } else {
             // Retrieve the requested Connection options.
             $config = Config::get('database');

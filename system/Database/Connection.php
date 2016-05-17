@@ -382,7 +382,17 @@ class Connection
     }
 
     /**
-     * Get the table prefix for the connection.
+     * Get the current configuration for the Connection.
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Get the table prefix for the Connection.
      *
      * @return string
      */
@@ -392,7 +402,7 @@ class Connection
     }
 
     /**
-     * Set the table prefix in use by the connection.
+     * Set the table prefix in use by the Connection.
      *
      * @param  string  $prefix
      * @return void
@@ -413,7 +423,7 @@ class Connection
     }
 
     /**
-     * Get the default fetch mode for the connection.
+     * Get the default fetch mode for the Connection.
      *
      * @return int
      */
@@ -423,7 +433,7 @@ class Connection
     }
 
     /**
-     * Set the default fetch mode for the connection.
+     * Set the default fetch mode for the Connection.
      *
      * @param  int  $fetchMode
      * @return int

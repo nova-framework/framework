@@ -1113,9 +1113,7 @@ class Builder
             $this->columns = $columns;
         }
 
-        $results = $this->runSelect();
-
-        return $results;
+        return $this->runSelect();
     }
 
     /**

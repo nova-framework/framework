@@ -412,17 +412,6 @@ class Connection
     }
 
     /**
-     * Set the name of the connected Database.
-     *
-     * @param  string  $database
-     * @return string
-     */
-    public function setDatabaseName($database)
-    {
-        $this->database = $database;
-    }
-
-    /**
      * Get the table prefix for the Connection.
      *
      * @return string

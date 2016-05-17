@@ -95,9 +95,10 @@ class Connection
     public static function getInstance($config = 'default')
     {
         if (is_array($config) && isset($config['type'])) {
-            // Was given as parameter a configuration in the Legacy Style.
+            // The parameter is a configuration in the Legacy Style.
             $connection = implode('.', array_values($config));
 
+            // Prepare a compatible configuration from the Legacy Config.
             $config = array(
                 'driver'    => $config['type'],
                 'hostname'  => $config['host'],
@@ -111,7 +112,7 @@ class Connection
         } else {
             $connection = is_string($config) ? $config : 'default';
 
-            // Retrieve the requested Connection options.
+            // Retrieve the configuration with the specified name.
             $config = Config::get('database');
 
             if (isset($config[$connection]) && ! empty($config[$connection])) {

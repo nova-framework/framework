@@ -46,13 +46,20 @@ class Connection
      * @var int
      */
     protected $transactions = 0;
-    
+
     /**
      * The table prefix for the Connection.
      *
      * @var string
      */
     protected $tablePrefix = '';
+
+    /**
+     * The database connection configuration options.
+     *
+     * @var array
+     */
+    protected $config = array();
 
     /**
      * Create a new Connection instance.
@@ -65,6 +72,8 @@ class Connection
         $this->pdo = $this->createConnection($config);
 
         $this->tablePrefix = $config['prefix'];
+
+        $this->config = $config;
     }
 
     /**

@@ -10,6 +10,7 @@
 namespace Helpers;
 
 use Helpers\Session;
+use Helpers\Encrypter;
 
 /**
  * Instructions:
@@ -31,7 +32,9 @@ use Helpers\Session;
  *    }
  * And that's all.
  */
-class Csrf {
+class Csrf
+{
+
     /**
      * Retrieve the CSRF token and generate a new one if expired.
      *
@@ -39,13 +42,14 @@ class Csrf {
      * @static static method
      * @return string
      */
-    public static function makeToken($name = 'csrfToken') {
+    public static function makeToken($name = 'csrfToken')
+    {
         $max_time = 60 * 60 * 24; // token is valid for 1 day.
         $csrf_token = Session::get($name);
         $stored_time = Session::get($name . '_time');
 
         if ($max_time + $stored_time <= time() || empty($csrf_token)) {
-            $hash = hash('sha512', self::genRandomNumber());
+            $hash = hash('sha512', Encrypter::randomBytes());
             Session::set($name, $hash);
             Session::set($name . '_time', time());
         }
@@ -60,29 +64,9 @@ class Csrf {
      * @static static method
      * @return bool
      */
-    public static function isTokenValid($name = 'csrfToken') {
+    public static function isTokenValid($name = 'csrfToken')
+    {
         return $_POST[$name] === Session::get($name);
-    }
-    /**
-     * Generate a random number using any available function on the system.
-     *
-     * @access public
-     * @static static method
-     * @return integer
-     */
-
-    public static function genRandomNumber($size = 32) {
-        if (extension_loaded('openssl')) {
-            return openssl_random_pseudo_bytes($size);
-        }
-        if (extension_loaded('mcrypt')) {
-            return mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);
-        }
-        if (function_exists('random_bytes')) {
-            return random_bytes($size);
-        }
-        return mt_rand(0,mt_getrandmax());
-
     }
 
 }

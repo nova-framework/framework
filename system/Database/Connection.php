@@ -94,7 +94,7 @@ class Connection
      */
     public static function getInstance($config = 'default')
     {
-        if (is_array($config) && isset($config['type'])) {
+        if (is_array($config)) {
             // The parameter is a configuration in the Legacy Style.
             $connection = implode('.', array_values($config));
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Join - A Joining Clause helper class for the QueryBuilder.
+ * JoinCause - A Joining Clause helper class for the QueryBuilder.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -8,10 +8,10 @@
 
 namespace Database\Query;
 
-use Database\Query;
+use Database\Query\Builder;
 
 
-class Join
+class JoinClause
 {
     /**
     * The QueryBuilder instance.
@@ -64,7 +64,7 @@ class Join
     * @param  string  $second
     * @param  string  $boolean
     * @param  bool  $where
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function on($first, $operator, $second, $boolean = 'and', $where = false)
     {
@@ -83,7 +83,7 @@ class Join
     * @param  string  $first
     * @param  string  $operator
     * @param  string  $second
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function orOn($first, $operator, $second)
     {
@@ -97,7 +97,7 @@ class Join
     * @param  string  $operator
     * @param  string  $second
     * @param  string  $boolean
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function where($first, $operator, $second, $boolean = 'and')
     {
@@ -111,7 +111,7 @@ class Join
     * @param  string  $operator
     * @param  string  $second
     * @param  string  $boolean
-    * @return \Database\Query\Join
+    * @return \Database\JoinClause
     */
     public function orWhere($first, $operator, $second)
     {

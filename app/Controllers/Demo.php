@@ -21,14 +21,6 @@ class Demo extends Controller
         parent::__construct();
     }
 
-    protected function before()
-    {
-        // Add a Listener to the Event 'test'.
-        Event::listen('test', 'App\Events\Test@handle');
-
-        return parent::before();
-    }
-
     /**
      * Define Index method
      */
@@ -51,15 +43,23 @@ class Demo extends Controller
         echo '<pre>' .var_export($params, true) .'</pre>';
 
         //
+        // Events dispatching.
+        //
+
         echo '<h3 style="margin-top: 50px;">Events dispatching</h3>';
 
         // Prepare the Event payload.
         $payload = array(
-            'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__),
-            $params
+            'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__)
         );
 
-        // Fire the Event 'test'.
-        Event::fire('test', $payload);
+        // Fire the Event 'test' and store the results.
+        $results = Event::fire('test', $payload);
+
+        // Print out the non-empty results returned by Event firing.
+        echo implode('', array_filter($results, 'strlen')) .'<br>';
+
+        // Fire the Event 'test' and echo the result.
+        echo Event::until('test', $payload);
     }
 }

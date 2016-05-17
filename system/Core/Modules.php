@@ -30,7 +30,7 @@ class Modules
 
         // Load the Config(uration) and Routes Filters from every specified Module.
         foreach (static::$modules as $module) {
-            foreach (array('Config', 'Filters') as $file) {
+            foreach (array('Config', 'Events', 'Filters') as $file) {
                 $filePath = APPDIR .'Modules' .DS .$module .DS .$file .'.php';
 
                 if (! is_readable($filePath)) {

@@ -9,9 +9,12 @@
 namespace Database;
 
 use Core\Config;
-use Database\Query;
+use Core\Logger;
+use Database\Query\Expression;
+use Database\Query\Builder;
 
 use \PDO;
+use \DateTime;
 
 
 class Connection
@@ -24,28 +27,49 @@ class Connection
     private static $instances = array();
 
     /**
-     * The active PDO connection.
+     * The active PDO Connection.
      *
      * @var PDO
      */
     protected $pdo;
 
     /**
-     * The default fetch mode of the connection.
+     * The default fetch mode of the Connection.
      *
      * @var int
      */
     protected $fetchMode = PDO::FETCH_OBJ;
 
     /**
-     * The table prefix for the connection.
+     * The number of active transactions.
+     *
+     * @var int
+     */
+    protected $transactions = 0;
+
+    /**
+     * The name of the connected Database.
+     *
+     * @var string
+     */
+    protected $database;
+
+    /**
+     * The table prefix for the Connection.
      *
      * @var string
      */
     protected $tablePrefix = '';
 
     /**
-     * Create a new connection instance.
+     * The database connection configuration options.
+     *
+     * @var array
+     */
+    protected $config = array();
+
+    /**
+     * Create a new Connection instance.
      *
      * @param  array  $config
      * @return void
@@ -54,37 +78,60 @@ class Connection
     {
         $this->pdo = $this->createConnection($config);
 
+        $this->database = $config['dbname'];
+
         $this->tablePrefix = $config['prefix'];
+
+        $this->config = $config;
     }
 
     /**
-     * Retrieve an instance of the Database Connection.
+     * Retrieve an instance of the Connection.
      *
-     * @param $name string Name of the connection provided in the configuration
-     * @return Connection|\PDO|null
+     * @param $name string|array Name of the Connection provided in the configuration or options array
+     * @return \Database\Connection|null
      * @throws \Exception
      */
-    public static function getInstance($name = 'default')
+    public static function getInstance($config = 'default')
     {
-        if (isset(static::$instances[$name])) {
-            // If there is already a Connection instance, return it.
-            return static::$instances[$name];
+        if (is_array($config)) {
+            // The parameter is a configuration in the Legacy Style.
+            $connection = implode('.', array_values($config));
+
+            // Prepare a compatible configuration from the Legacy Config.
+            $config = array(
+                'driver'    => $config['type'],
+                'hostname'  => $config['host'],
+                'dbname'    => $config['name'],
+                'username'  => $config['user'],
+                'password'  => $config['pass'],
+                'prefix'    => PREFIX,
+                'charset'   => 'utf8',
+                'collation' => 'utf8_general_ci',
+            );
+        } else {
+            $connection = is_string($config) ? $config : 'default';
+
+            // Retrieve the configuration with the specified name.
+            $config = Config::get('database');
+
+            if (isset($config[$connection]) && ! empty($config[$connection])) {
+                $config = $config[$connection];
+            } else {
+                throw new \Exception("Connection name '$connection' is not defined in your configuration");
+            }
         }
 
-        // Retrieve the requested Connection options.
-        $config = Config::get('database');
+        // Prepare a Token for handling the instances.
+        $token = md5($connection);
 
-        if (isset($config[$name])) {
-            $options = $config[$name];
-
-            // Create the Connection instance.
-            static::$instances[$name] = new static($options);
-
-            // Return the Connection instance.
-            return static::$instances[$name];
+        // If there is already a Connection instantiated, return it.
+        if (isset(static::$instances[$token])) {
+            return static::$instances[$token];
         }
 
-        throw new \Exception("Connection name '$name' is not defined in your configuration");
+        // Create the Connection instance and return it.
+        return static::$instances[$token] = new static($config);
     }
 
     /**
@@ -108,16 +155,41 @@ class Connection
     }
 
     /**
-     * Begin a fluent query against a database table.
+     * Begin a Fluent Query against a database table.
      *
      * @param  string  $table
-     * @return \Database\Query
+     * @return \Database\Query\Builder
      */
     public function table($table)
     {
-        $query = new Query($this);
+        $query = new Builder($this);
 
         return $query->from($table);
+    }
+
+    /**
+     * Get a new raw query expression.
+     *
+     * @param  mixed  $value
+     * @return \Database\Query\Expression
+     */
+    public function raw($value)
+    {
+        return new Expression($value);
+    }
+
+    /**
+     * Run a select statement and return a single result.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return mixed
+     */
+    public function selectOne($query, $bindings = array())
+    {
+        $records = $this->select($query, $bindings);
+
+        return (count($records) > 0) ? reset($records) : null;
     }
 
     /**
@@ -131,6 +203,9 @@ class Connection
     {
         $statement = $this->getPdo()->prepare($query);
 
+        $bindings = $this->prepareBindings($bindings);
+
+        // Execute the Statement.
         $statement->execute($bindings);
 
         return $statement->fetchAll($this->getFetchMode());
@@ -181,7 +256,12 @@ class Connection
      */
     public function statement($query, array $bindings = array())
     {
-        return $this->getPdo()->prepare($query)->execute($bindings);
+        $statement = $this->getPdo()->prepare($query);
+
+        $bindings = $this->prepareBindings($bindings);
+
+        // Execute the Statement and return the result.
+        return $statement->execute($bindings);
     }
 
     /**
@@ -195,13 +275,144 @@ class Connection
     {
         $statement = $this->getPdo()->prepare($query);
 
+        $bindings = $this->prepareBindings($bindings);
+
+        // Execute the Statement.
         $statement->execute($bindings);
 
         return $statement->rowCount();
     }
 
     /**
-     * Get the table prefix for the connection.
+     * Run a raw, unprepared query against the PDO connection.
+     *
+     * @param  string  $query
+     * @return bool
+     */
+    public function unprepared($query)
+    {
+        return (bool) $this->getPdo()->exec($query);
+    }
+
+    /**
+     * Prepare the query bindings for execution.
+     *
+     * @param  array  $bindings
+     * @return array
+     */
+    public function prepareBindings(array $bindings)
+    {
+        foreach ($bindings as $key => $value) {
+            if ($value instanceof DateTime) {
+                // We need to transform all DateTime instances into an actual date string.
+                $bindings[$key] = $value->format($this->getDateFormat());
+            } else if ($value === false) {
+                $bindings[$key] = 0;
+            }
+        }
+
+        return $bindings;
+    }
+
+    /**
+     * Execute a Closure within a transaction.
+     *
+     * @param  Closure  $callback
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function transaction(Closure $callback)
+    {
+        $this->beginTransaction();
+
+        try {
+            $result = $callback($this);
+
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->rollBack();
+
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Start a new database transaction.
+     *
+     * @return void
+     */
+    public function beginTransaction()
+    {
+        ++$this->transactions;
+
+        if ($this->transactions == 1) {
+            $this->pdo->beginTransaction();
+        }
+    }
+
+    /**
+     * Commit the active database transaction.
+     *
+     * @return void
+     */
+    public function commit()
+    {
+        if ($this->transactions == 1) $this->pdo->commit();
+
+        --$this->transactions;
+    }
+
+    /**
+     * Rollback the active database transaction.
+     *
+     * @return void
+     */
+    public function rollBack()
+    {
+        if ($this->transactions == 1) {
+            $this->transactions = 0;
+
+            $this->pdo->rollBack();
+        } else {
+            --$this->transactions;
+        }
+    }
+
+    /**
+     * Get the number of active transactions.
+     *
+     * @return int
+     */
+    public function transactionLevel()
+    {
+        return $this->transactions;
+    }
+
+    /**
+     * Get the current configuration for the Connection.
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Get the name of the connected Database.
+     *
+     * @return string
+     */
+    public function getDatabaseName()
+    {
+        return $this->database;
+    }
+
+    /**
+     * Get the table prefix for the Connection.
      *
      * @return string
      */
@@ -211,7 +422,7 @@ class Connection
     }
 
     /**
-     * Set the table prefix in use by the connection.
+     * Set the table prefix in use by the Connection.
      *
      * @param  string  $prefix
      * @return void
@@ -232,7 +443,7 @@ class Connection
     }
 
     /**
-     * Get the default fetch mode for the connection.
+     * Get the default fetch mode for the Connection.
      *
      * @return int
      */
@@ -242,7 +453,7 @@ class Connection
     }
 
     /**
-     * Set the default fetch mode for the connection.
+     * Set the default fetch mode for the Connection.
      *
      * @param  int  $fetchMode
      * @return int
@@ -250,5 +461,15 @@ class Connection
     public function setFetchMode($fetchMode)
     {
         $this->fetchMode = $fetchMode;
+    }
+
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return 'Y-m-d H:i:s';
     }
 }

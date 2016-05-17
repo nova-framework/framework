@@ -193,7 +193,7 @@ Config::set('database', array(
  */
 Config::set('authentication', array(
     //'model'      => 'Auth\Model',
-    'model'      => 'App\Models\Users',
+    'model'      => 'App\Modules\Users\Models\Users',
     // The used Table name and its primary key.
     'table'      => 'users',
     'primaryKey' => 'id',

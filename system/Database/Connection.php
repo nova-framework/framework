@@ -55,14 +55,7 @@ class Connection
      */
     public function __construct(array $config)
     {
-        try {
-            $this->pdo = $this->createConnection($config);
-        } catch (PDOException $e) {
-            // In the event of an error, record the error to Logs/error.log
-            Logger::newMessage($e);
-
-            Logger::customErrorMsg();
-        }
+        $this->pdo = $this->createConnection($config);
 
         $this->tablePrefix = $config['prefix'];
     }

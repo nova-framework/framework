@@ -41,6 +41,13 @@ class Connection
     protected $fetchMode = PDO::FETCH_OBJ;
 
     /**
+     * The number of active transactions.
+     *
+     * @var int
+     */
+    protected $transactions = 0;
+    
+    /**
      * The table prefix for the Connection.
      *
      * @var string
@@ -286,6 +293,83 @@ class Connection
         }
 
         return $bindings;
+    }
+
+    /**
+     * Execute a Closure within a transaction.
+     *
+     * @param  Closure  $callback
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function transaction(Closure $callback)
+    {
+        $this->beginTransaction();
+
+        try {
+            $result = $callback($this);
+
+            $this->commit();
+        } catch (\Exception $e) {
+            $this->rollBack();
+
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Start a new database transaction.
+     *
+     * @return void
+     */
+    public function beginTransaction()
+    {
+        ++$this->transactions;
+
+        if ($this->transactions == 1) {
+            $this->pdo->beginTransaction();
+        }
+    }
+
+    /**
+     * Commit the active database transaction.
+     *
+     * @return void
+     */
+    public function commit()
+    {
+        if ($this->transactions == 1) $this->pdo->commit();
+
+        --$this->transactions;
+    }
+
+    /**
+     * Rollback the active database transaction.
+     *
+     * @return void
+     */
+    public function rollBack()
+    {
+        if ($this->transactions == 1) {
+            $this->transactions = 0;
+
+            $this->pdo->rollBack();
+        } else {
+            --$this->transactions;
+        }
+    }
+
+    /**
+     * Get the number of active transactions.
+     *
+     * @return int
+     */
+    public function transactionLevel()
+    {
+        return $this->transactions;
     }
 
     /**

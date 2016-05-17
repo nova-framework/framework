@@ -112,6 +112,8 @@ class Language
      */
     public static function &getInstance($domain = 'app', $code = LANGUAGE_CODE)
     {
+        $code = self::getCurrentLanguage($code);
+
         // The ID code is something like: 'en/system', 'en/app', 'en/file_manager' or 'en/template/admin'
         $id = $code.'/'.$domain;
 

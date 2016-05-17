@@ -153,7 +153,7 @@ class Encrypter
         if (function_exists('openssl_random_pseudo_bytes')) {
             return openssl_random_pseudo_bytes($length, self::$strong);
         }
-        return self::genRandomBytes($length); // fallback to "low security"
+        return mcrypt_create_iv($length, 'MCRYPT_DEV_RANDOM'); // fallback to "low security"
     }
 
     /**
@@ -214,7 +214,7 @@ class Encrypter
      */
     protected static function validMac(array $payload)
     {
-        $bytes = self::getRandomBytes(self::$randomBytesLength);
+        $bytes = self::randomBytes(self::$randomBytesLength);
 
         $calcMac = hash_hmac(self::$hashAlgo, self::hash($payload['iv'], $payload['value']), $bytes, true);
         $knowMac = hash_hmac(self::$hashAlgo, $payload['mac'], $bytes, true);
@@ -222,96 +222,5 @@ class Encrypter
         return hash_equals($knowMac, $calcMac);
     }
 
-    /**
-     * Generates a random png image with noise so we can extract binary data as a pool of bytes
-     * @return void
-     */
-    protected static function imageNoise()
-    {
-        $data = "\0\0"; // wbmp starts with \0\0 
-        //random with and size
-        $width = mt_rand(50, 100);
-        $height = mt_rand(50, 100);
-
-        $data .= chr($width); // next the width 
-        $data .= chr($height); // and height 
-// and then image data 
-        $wi = floor($width / 8);
-        $wj = $width - $wi * 8;
-        for ($i = 0; $i < $height; $i++) {
-            for ($j = 0; $j < $wi; $j++)
-                $data .= chr(mt_rand(0, 255));
-            if ($wj)
-                $data .= chr(mt_rand(0, 1 << $wj - 1) << (8 - $wj));
-        }
-
-        imagepng(imagecreatefromstring($data), ROOTDIR . 'assets/image.png');
-    }
-
-    /**
-     * If No build-in crypto randomness function found like /dev/urandom. We collect any entropy 
-     * available in the PHP core PRNGs along with some filesystem info and memory
-     * stats.We gather more entropy by measuring the time needed to compute
-     * a number of SHA-1 hashes.  We get the data from an random generated image
-     * This function will not be used for encryption but as a fallback for other
-     * functions inside the framework.
-     * @param integer $lenght
-     * @return Bytes
-     */
-    protected static function genRandomBytes($lenght = 32)
-    {
-        self::imageNoise();
-        $str = '';
-        $bits_per_round = 2; // bits of entropy collected in each clock drift round
-        $msec_per_round = 400; // expected running time of each round in microseconds
-        $hash_len = 20; // SHA-1 Hash length
-        $total = $lenght; // total bytes of entropy to collect
-        $handle = @fopen(ROOTDIR . 'assets/image.png', 'rb');
-        if ($handle && function_exists('stream_set_read_buffer')) {
-            @stream_set_read_buffer($handle, 0);
-        }
-
-        do {
-            $bytes = ($total > $hash_len) ? $hash_len : $total;
-            $total -= $bytes;
-            //collect any entropy available from the PHP system and filesystem
-            $entropy = rand() . uniqid(mt_rand(), true) . $SSLstr;
-            $entropy .= implode('', @fstat(@fopen(__FILE__, 'r')));
-            $entropy .= memory_get_usage() . getmypid();
-            $entropy .= serialize($_ENV) . serialize($_SERVER);
-            if ($handle) {
-                $entropy .= @fread($handle, $bytes);
-            }
-            for ($i = 0; $i < 3; $i++) {
-                $c1 = microtime(true);
-                $var = sha1(mt_rand());
-                for ($j = 0; $j < 50; $j++) {
-                    $var = sha1($var);
-                }
-                $c2 = microtime(true);
-                $entropy .= $c1 . $c2;
-            }
-            $rounds = (int) ($msec_per_round * 50 / (int) (($c2 - $c1) * 1000000));
-
-            // Take the additional measurements. On average we can expect
-            // at least $bits_per_round bits of entropy from each measurement.
-            $iter = $bytes * (int) (ceil(8 / $bits_per_round));
-            for ($i = 0; $i < $iter; $i++) {
-                $c1 = microtime();
-                $var = sha1(mt_rand());
-                for ($j = 0; $j < $rounds; $j++) {
-                    $var = sha1($var);
-                }
-                $c2 = microtime();
-                $entropy .= $c1 . $c2;
-            }
-            // We assume sha1 is a deterministic extractor for the $entropy variable.
-            $str .= sha1($entropy, true);
-        } while ($lenght > strlen($str));
-
-        if ($handle) {
-            @fclose($handle);
-        }
-        return substr($str, 0, $lenght);
-    }
+    
 }

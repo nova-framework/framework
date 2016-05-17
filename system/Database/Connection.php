@@ -26,21 +26,21 @@ class Connection
     private static $instances = array();
 
     /**
-     * The active PDO connection.
+     * The active PDO Connection.
      *
      * @var PDO
      */
     protected $pdo;
 
     /**
-     * The default fetch mode of the connection.
+     * The default fetch mode of the Connection.
      *
      * @var int
      */
     protected $fetchMode = PDO::FETCH_OBJ;
 
     /**
-     * The table prefix for the connection.
+     * The table prefix for the Connection.
      *
      * @var string
      */
@@ -66,27 +66,32 @@ class Connection
      * @return \Database\Connection|null
      * @throws \Exception
      */
-    public static function getInstance($name = 'default')
+    public static function getInstance($config = 'default')
     {
-        if (isset(static::$instances[$name])) {
-            // If there is already a Connection instance, return it.
-            return static::$instances[$name];
+        if (is_array($config)) {
+            // The Connection options are passed in the Legacy Style.
+            $connection = implode('.', array_values($config));
+        } else {
+            $connection = $config;
+
+            // Retrieve the requested Connection options.
+            $config = Config::get('database');
         }
 
-        // Retrieve the requested Connection options.
-        $config = Config::get('database');
+        // Prepare a Token for handling the Connection instances.
+        $token = md5($connection);
 
-        if (isset($config[$name])) {
-            $options = $config[$name];
-
-            // Create the Connection instance.
-            static::$instances[$name] = new static($options);
-
-            // Return the Connection instance.
-            return static::$instances[$name];
+        // If there is already a Connection instantiated, return it.
+        if (isset(static::$instances[$token])) {
+            return static::$instances[$token];
         }
 
-        throw new \Exception("Connection name '$name' is not defined in your configuration");
+        if (isset($config[$connection]) && ! empty($config[$connection])) {
+            // Create the Connection instance and return it.
+            return static::$instances[$token] = new static($config[$connection]);
+        }
+
+        throw new \Exception("Connection name '$connection' is not defined in your configuration");
     }
 
     /**
@@ -260,7 +265,7 @@ class Connection
         foreach ($bindings as $key => $value) {
             if ($value instanceof DateTime) {
                 // We need to transform all DateTime instances into an actual date string.
-                $bindings[$key] = $value->format('Y-m-d H:i:s');
+                $bindings[$key] = $value->format($this->getDateFormat());
             } else if ($value === false) {
                 $bindings[$key] = 0;
             }
@@ -319,5 +324,15 @@ class Connection
     public function setFetchMode($fetchMode)
     {
         $this->fetchMode = $fetchMode;
+    }
+
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return 'Y-m-d H:i:s';
     }
 }

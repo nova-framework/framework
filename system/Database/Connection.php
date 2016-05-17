@@ -48,6 +48,13 @@ class Connection
     protected $transactions = 0;
 
     /**
+     * The name of the connected Database.
+     *
+     * @var string
+     */
+    protected $database;
+
+    /**
      * The table prefix for the Connection.
      *
      * @var string
@@ -70,6 +77,8 @@ class Connection
     public function __construct(array $config)
     {
         $this->pdo = $this->createConnection($config);
+
+        $this->database = $config['dbname'];
 
         $this->tablePrefix = $config['prefix'];
 
@@ -389,6 +398,27 @@ class Connection
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Get the name of the connected Database.
+     *
+     * @return string
+     */
+    public function getDatabaseName()
+    {
+        return $this->database;
+    }
+
+    /**
+     * Set the name of the connected Database.
+     *
+     * @param  string  $database
+     * @return string
+     */
+    public function setDatabaseName($database)
+    {
+        $this->database = $database;
     }
 
     /**

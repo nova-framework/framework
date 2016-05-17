@@ -96,6 +96,8 @@ class Connection
     {
         if (is_array($config) && isset($config['type'])) {
             // Was given as parameter a configuration in the Legacy Style.
+            $connection = implode('.', array_values($config));
+
             $config = array(
                 'driver'    => $config['type'],
                 'hostname'  => $config['host'],
@@ -106,8 +108,6 @@ class Connection
                 'charset'   => 'utf8',
                 'collation' => 'utf8_general_ci',
             );
-
-            $connection = implode('.', array_values($config));
         } else {
             $connection = is_string($config) ? $config : 'default';
 

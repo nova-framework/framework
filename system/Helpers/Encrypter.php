@@ -85,6 +85,7 @@ class Encrypter
         }
 
         $iv = self::randomBytes(self::$randomBytesLength);
+
         $value = openssl_encrypt(serialize($value), self::$algo, self::$key, 0, $iv);
 
         if ($value === false) {
@@ -99,7 +100,7 @@ class Encrypter
 
         $json = json_encode(compact('iv', 'value', 'mac'));
 
-        if (!is_string($json)) {
+        if (! is_string($json)) {
             throw new \Exception('Could not encrypt the data.');
         }
 
@@ -140,7 +141,7 @@ class Encrypter
     /**
      * Get random bytes.
      *
-     * @param	int	$length	Output length
+     * @param	int	$length  Output length
      * @return	string
      */
     public static function randomBytes($length = 32)
@@ -152,7 +153,8 @@ class Encrypter
         if (function_exists('openssl_random_pseudo_bytes')) {
             return openssl_random_pseudo_bytes($length, self::$strong);
         }
-        return mcrypt_create_iv($length, 'MCRYPT_DEV_RANDOM'); // fallback to "low security"
+
+        return mcrypt_create_iv($length, 'MCRYPT_DEV_RANDOM'); // Fallback to "low security"
     }
 
     /**
@@ -221,5 +223,5 @@ class Encrypter
         return hash_equals($knowMac, $calcMac);
     }
 
-    
+
 }

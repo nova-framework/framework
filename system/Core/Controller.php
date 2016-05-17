@@ -55,7 +55,7 @@ abstract class Controller
         }
 
         // Initialise the Language object.
-        $this->language = new Language();
+        $this->language = Language::getInstance();
     }
 
     /**

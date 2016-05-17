@@ -66,7 +66,7 @@ class Demo extends Controller
 
     public function database()
     {
-        $user = user::find(1);
+        $user = User::find(1);
 
         echo '<pre>' .var_export($user, true) .'</pre>';
     }

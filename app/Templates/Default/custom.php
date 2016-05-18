@@ -17,8 +17,6 @@ Assets::css([
     
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css',
     Language::direction() == 'ltr' ? Url::templatePath() .'css/style.css' : Url::templatePath() .'css/style.rtl.css',
-    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css',
-    template_url('css/style.css', 'Default'),
 ]);
 
 echo $css; // Place to pass data / plugable hook zone

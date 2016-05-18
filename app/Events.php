@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Event;
+use Events\Facade as Event;
 
 
 /** Define Events. */

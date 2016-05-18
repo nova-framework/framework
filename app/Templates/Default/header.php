@@ -10,10 +10,6 @@ Assets::css([
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
     template_url('css/style.css', 'Default'),
-    
-    //Right to left styles
-    Language::direction() == 'rtl' ? 'https://cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css' : '',
-    Language::direction() == 'rtl' ? template_url('css/style.rtl.css', 'Default') : '',
 ]);
 
 echo $css; // Place to pass data / plugable hook zone

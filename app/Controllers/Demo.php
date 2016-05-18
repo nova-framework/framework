@@ -6,6 +6,7 @@ use Core\Controller;
 use Helpers\Url;
 
 use Event;
+use Validator;
 
 use App\Models\ORM\User;
 
@@ -69,5 +70,32 @@ class Demo extends Controller
         $user = User::find(1);
 
         echo '<pre>' .var_export($user, true) .'</pre>';
+    }
+
+    public function validate()
+    {
+        $data = array(
+            'username' => 'admin',
+            'password' => 'michael',
+            'email'    => 'michael@novaframework.dev'
+        );
+
+        $rules = array(
+            'username' => 'required|min:3|max:50|alpha_dash|unique:users',
+            'password' => 'required|between:4,30',
+            'email'    => 'required|email|max:100|unique:users',
+        );
+
+        echo '<pre>';
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->passes()) {
+            echo 'Data validated with success!';
+        } else {
+            $errors = $validator->errors()->all();
+
+            echo '<pre>' .var_export($errors, true) .'</pre>';
+        }
     }
 }

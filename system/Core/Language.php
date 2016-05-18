@@ -77,19 +77,16 @@ class Language
         $pathName = Inflector::classify($domain);
 
         if ($pathName == 'System') {
-            $langPath = SYSTEMDIR;
-        } else if ($pathName == 'App') {
-            $langPath = APPDIR;
-        } else if (is_dir(APPDIR .'Modules' .DS .$pathName )) {
-            $langPath = APPDIR .'Modules/' .$pathName .DS;
+            $basePath = SYSTEMDIR;
+        } else if (is_dir(APPDIR .'Modules' .DS .$pathName)) {
+            $basePath = APPDIR .'Modules/' .$pathName .DS;
         } else if (is_dir(APPDIR .'Templates' .DS .$pathName)) {
-            $langPath = APPDIR .'Templates/' .$pathName .DS;
+            $basePath = APPDIR .'Templates/' .$pathName .DS;
         } else {
-            // No Language files path found; go out.
-            return;
+            $basePath = APPDIR;
         }
 
-        $filePath = $langPath .'Language' .DS .ucfirst($code) .DS .'messages.php';
+        $filePath = $basePath .'Language' .DS .ucfirst($code) .DS .'messages.php';
 
         // Check if the language file is readable.
         if (! is_readable($filePath)) {
@@ -240,22 +237,20 @@ class Language
      *
      * @param string $name
      * @param string $code
-     * @return \Core\Language|static
+     * @return void
      */
     public function load($name, $code = LANGUAGE_CODE)
     {
         $code = self::getCurrentLanguage($code);
 
         // Language file.
-        $file = APPDIR ."Language/" .ucfirst($code) ."/$name.php";
+        $file = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
 
         // Check if it is readable.
         if (is_readable($file)) {
             // Require the file.
             $this->legacyMessages[$code] = include $file;
         }
-
-        return $this;
     }
 
     /**
@@ -289,9 +284,12 @@ class Language
      */
     public static function show($value, $name, $code = LANGUAGE_CODE)
     {
-        // Use a fake Domain 'legacy', to disable standard messages loading.
+        // Use a fake Domain 'legacy', to avoid the standard Messages loading.
         $instance = static::getInstance('legacy', $code);
 
-        return $instance->load($name, $code)->get($value, $code);
+        // Load the specified Language file.
+        $instance->load($name, $code);
+
+        return $instance->get($value, $code);
     }
 }

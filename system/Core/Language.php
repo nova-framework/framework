@@ -39,11 +39,11 @@ class Language
     /**
      * The current Language information.
      */
-    private $code   = 'en';
-    private $info   = 'English';
-    private $name   = 'English';
-    private $locale = 'en-US';
-    private $dir    = 'ltr';
+    private $code      = 'en';
+    private $info      = 'English';
+    private $name      = 'English';
+    private $locale    = 'en-US';
+    private $direction = 'ltr';
 
     /**
      * Holds an array with the Legacy Messages.
@@ -67,10 +67,10 @@ class Language
 
             $this->code = $code;
 
-            $this->info   = $info['info'];
-            $this->name   = $info['name'];
-            $this->locale = $info['locale'];
-            $this->dir    = $info['dir'];
+            $this->info      = $info['info'];
+            $this->name      = $info['name'];
+            $this->locale    = $info['locale'];
+            $this->direction = $info['dir'];
         } else {
             $code = 'en';
         }
@@ -137,7 +137,7 @@ class Language
             $cookie = Cookie::get(PREFIX .'language');
 
             if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, array_keys($languages))) {
-                Session::set('language', ucfirst($cookie));
+                Session::set('language', $cookie);
             }
         }
     }
@@ -214,19 +214,26 @@ class Language
     {
         return $this->messages;
     }
-    
+
     /**
      * Get direction of current getCurrentLanguage
+     *
      * @param string $code Optional custom language code.
-     * @return rtl or ltr
+     * @return string rtl or ltr
      */
     public static function direction($code = LANGUAGE_CODE)
     {
-        $code = stl(self::getCurrentLanguage($code));
-        $languages = Config::get('languages');
-        $info = $languages[$code];
-        return $info['dir'];
+        $code = self::getCurrentLanguage($code);
 
+        $languages = Config::get('languages');
+
+        if (isset($languages[$code])) {
+            $info = $languages[$code];
+
+            return $info['dir'];
+        }
+
+        return 'ltr';
     }
 
     /**

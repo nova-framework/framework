@@ -29,7 +29,7 @@ class Language extends Controller
 
         // Only set language if it's in the Languages array
         if (preg_match ('/[a-z]/', $language) && in_array($language, array_keys($languages))) {
-            Session::set('language', ucfirst($language));
+            Session::set('language', $language);
 
             // Store the current Language into Cookie.
             Cookie::set(PREFIX .'language', $language);

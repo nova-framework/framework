@@ -115,7 +115,7 @@ Config::set('languages', array(
     'de' => array('info' => 'German',    'name' => 'Deutsch',    'locale' => 'de_DE'),
     'en' => array('info' => 'English',   'name' => 'English',    'locale' => 'en_US'),
     'es' => array('info' => 'Spanish',   'name' => 'Español',    'locale' => 'es_ES'),
-    'fa' => array('info' => 'Persian',   'name' => 'Persian',    'locale' => 'fa_FA'),
+    'fa' => array('info' => 'Persian',   'name' => 'Persian',    'locale' => 'fa_IR'),
     'fr' => array('info' => 'French',    'name' => 'Français',   'locale' => 'fr_FR'),
     'it' => array('info' => 'Italian',   'name' => 'italiano',   'locale' => 'it_IT'),
     'ja' => array('info' => 'Japanesse', 'name' => 'Japanesse',  'locale' => 'ja_JA'),

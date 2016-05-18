@@ -23,7 +23,7 @@ use MessageFormatter;
 class Language
 {
     /**
-     * Variable holds array with Language.
+     * This variable holds an array with the Messages.
      *
      * @var array
      */
@@ -36,17 +36,21 @@ class Language
      */
     private static $instances = array();
 
+    /**
+     * The current Language information.
+     */
     private $code   = 'en';
     private $info   = 'English';
     private $name   = 'English';
     private $locale = 'en-US';
 
     /**
-     * This variable holds an array with the legacy messages.
+     * This variable holds an array with the Legacy Messages.
      *
      * @var array
      */
     private $legacyMessages;
+
 
     /**
      * Language constructor.
@@ -57,7 +61,7 @@ class Language
     {
         $languages = Config::get('languages');
 
-        if (isset($code, $languages)) {
+        if (isset($languages[$code]) && ! empty($languages[$code])) {
             $info = $languages[$code];
 
             $this->code = $code;
@@ -72,8 +76,6 @@ class Language
         //
         $pathName = Inflector::classify($domain);
 
-        $langPath = '';
-
         if ($pathName == 'System') {
             $langPath = SYSTEMDIR;
         } else if ($pathName == 'App') {
@@ -82,9 +84,8 @@ class Language
             $langPath = APPDIR .'Modules/' .$pathName;
         } else if (is_dir(APPDIR .'Templates' .DS .$pathName)) {
             $langPath = APPDIR .'Templates/' .$pathName;
-        }
-
-        if (empty($langPath)) {
+        } else {
+            // No Language path found; go out.
             return;
         }
 
@@ -115,7 +116,7 @@ class Language
         $code = self::getCurrentLanguage($code);
 
         // The ID code is something like: 'en/system', 'en/app', 'en/file_manager' or 'en/template/admin'
-        $id = $code.'/'.$domain;
+        $id = $code .'/' .$domain;
 
         // Initialize the domain instance, if not already exists.
         if (! isset(self::$instances[$id])) {
@@ -168,17 +169,6 @@ class Language
         //return vsprintf($message, $arguments);
     }
 
-    protected static function getCurrentLanguage($code)
-    {
-        if ($code != LANGUAGE_CODE) {
-            // User defined Language Code; nothing to do.
-        } else if (Session::exists('language')) {
-            return Session::get('language');
-        }
-
-        return ucfirst($code);
-    }
-
     // Public Getters
 
     /**
@@ -226,6 +216,21 @@ class Language
         return $this->messages;
     }
 
+    /**
+     * Get current Language
+     * @return string
+     */
+    protected static function getCurrentLanguage($code)
+    {
+        if ($code != LANGUAGE_CODE) {
+            // User defined Language Code; nothing to do.
+        } else if (Session::exists('language')) {
+            return Session::get('language');
+        }
+
+        return $code;
+    }
+
     //--------------------------------------------------------------------
     // Legacy API Methods
     //--------------------------------------------------------------------
@@ -241,7 +246,7 @@ class Language
         $code = self::getCurrentLanguage($code);
 
         // Language file.
-        $file = APPDIR."Language/$code/$name.php";
+        $file = APPDIR ."Language/" .ucfirst($code) ."/$name.php";
 
         // Check if it is readable.
         if (is_readable($file)) {
@@ -249,7 +254,8 @@ class Language
             $this->legacyMessages[$code] = include $file;
         } else {
             // Display an error.
-            echo Error::display("Could not load the language file: '$code/$name.php'");
+            echo Error::display("Could not load the language file: '" .ucfirst($code) .DS ."$name.php'");
+
             die;
         }
     }
@@ -288,7 +294,7 @@ class Language
         $code = self::getCurrentLanguage($code);
 
         // Language file.
-        $file = APPDIR."Language/$code/$name.php";
+        $file = APPDIR ."Language/" .ucfirst($code) ."/$name.php";
 
         // Check if it is readable.
         if (is_readable($file)) {
@@ -296,7 +302,8 @@ class Language
             $messages = include($file);
         } else {
             // Display an error.
-            echo Error::display("Could not load the language file: '$code/$name.php'");
+            echo Error::display("Could not load the language file: '" .ucfirst($code) . DS ."$name.php'");
+
             die;
         }
 

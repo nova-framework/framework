@@ -23,14 +23,14 @@ use MessageFormatter;
 class Language
 {
     /**
-     * This variable holds an array with the Messages.
+     * Holds an array with the Domain's Messages.
      *
      * @var array
      */
     private $messages = array();
 
     /**
-     * The Domain instances.
+     * The Language instances.
      *
      * @var array
      */
@@ -45,11 +45,11 @@ class Language
     private $locale = 'en-US';
 
     /**
-     * This variable holds an array with the Legacy Messages.
+     * Holds an array with the Legacy Messages.
      *
      * @var array
      */
-    private $legacyMessages;
+    private $legacyMessages = array();
 
 
     /**
@@ -85,7 +85,7 @@ class Language
         } else if (is_dir(APPDIR .'Templates' .DS .$pathName)) {
             $langPath = APPDIR .'Templates/' .$pathName .DS;
         } else {
-            // No Language path found; go out.
+            // No Language files path found; go out.
             return;
         }
 
@@ -96,10 +96,10 @@ class Language
             return;
         }
 
-        // Get the domain messages from the language file.
+        // Get the Domain's messages from the Language file.
         $messages = include($filePath);
 
-        // Final Consistency check.
+        // A final consistency check.
         if (is_array($messages) && ! empty($messages)) {
             $this->messages = $messages;
         }
@@ -149,7 +149,7 @@ class Language
      * @param array $params Optional params for formatting.
      * @return string
      */
-    public function translate($message, $params = array())
+    public function translate($message, array $params = array())
     {
         // Update the current message with the domain translation, if we have one.
         if (isset($this->messages[$message]) && ! empty($this->messages[$message])) {
@@ -240,6 +240,7 @@ class Language
      *
      * @param string $name
      * @param string $code
+     * @return \Core\Language|static
      */
     public function load($name, $code = LANGUAGE_CODE)
     {
@@ -252,12 +253,9 @@ class Language
         if (is_readable($file)) {
             // Require the file.
             $this->legacyMessages[$code] = include $file;
-        } else {
-            // Display an error.
-            echo Error::display("Could not load the language file: '" .ucfirst($code) .DS . $name .".php'");
-
-            die();
         }
+
+        return $this;
     }
 
     /**
@@ -281,7 +279,7 @@ class Language
     }
 
     /**
-     * Get the language for the views.
+     * Get the language for the Views.
      *
      * @param  string $value this is a "word" value from the language file
      * @param  string $name  name of the file with the language
@@ -291,26 +289,9 @@ class Language
      */
     public static function show($value, $name, $code = LANGUAGE_CODE)
     {
-        $code = self::getCurrentLanguage($code);
+        // Use a fake Domain 'legacy', to disable standard messages loading.
+        $instance = static::getInstance('legacy', $code);
 
-        // Language file.
-        $file = APPDIR ."Language/" .ucfirst($code) ."/$name.php";
-
-        // Check if it is readable.
-        if (is_readable($file)) {
-            // Require the file.
-            $messages = include($file);
-        } else {
-            // Display an error.
-            echo Error::display("Could not load the language file: '" .ucfirst($code) . DS .$name .".php'");
-
-            die();
-        }
-
-        if (!empty($messages[$value])) {
-            return $messages[$value];
-        } else {
-            return $value;
-        }
+        return $instance->load($name, $code)->get($value, $code);
     }
 }

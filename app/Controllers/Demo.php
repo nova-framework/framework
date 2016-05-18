@@ -75,8 +75,8 @@ class Demo extends Controller
     public function validate()
     {
         $data = array(
-            'username' => 'admin',
-            'password' => 'michael',
+            'username' => 'michael',
+            'password' => 'password',
             'email'    => 'michael@novaframework.dev'
         );
 
@@ -86,12 +86,12 @@ class Demo extends Controller
             'email'    => 'required|email|max:100|unique:users',
         );
 
-        echo '<pre>';
-
         $validator = Validator::make($data, $rules);
 
         if ($validator->passes()) {
-            echo 'Data validated with success!';
+            echo '<h3>Data validated with success!</h3>';
+
+            echo '<pre>' .var_export($data, true) .'</pre>';
         } else {
             $errors = $validator->errors()->all();
 

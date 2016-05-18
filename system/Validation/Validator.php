@@ -1189,7 +1189,7 @@ class Validator
      */
     protected function getSizeMessage($attribute, $rule)
     {
-        $lowerRule = snake_case($rule);
+        $lowerRule = Inflector::tableize($rule);
 
         $type = $this->getAttributeType($attribute);
 
@@ -1651,7 +1651,9 @@ class Validator
      */
     public function addExtension($rule, $extension)
     {
-        $this->extensions[snake_case($rule)] = $extension;
+        $rule = Inflector::tableize($rule);
+
+        $this->extensions[$rule] = $extension;
     }
 
     /**
@@ -1687,7 +1689,7 @@ class Validator
     public function addReplacers(array $replacers)
     {
         if ($replacers) {
-            $keys = array_map('snake_case', array_keys($replacers));
+            $keys = array_map(array('\Helpers\Inflector', 'tableize'), array_keys($replacers));
 
             $replacers = array_combine($keys, array_values($replacers));
         }
@@ -1704,7 +1706,9 @@ class Validator
      */
     public function addReplacer($rule, $replacer)
     {
-        $this->replacers[snake_case($rule)] = $replacer;
+        $rule = Inflector::tableize($rule);
+
+        $this->replacers[$rule] = $replacer;
     }
 
     /**

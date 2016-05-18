@@ -48,7 +48,7 @@ function template_url($path, $template = TEMPLATE, $folder = '/assets/')
 // I18N functions
 
 /**
- * Get formatted translated message back.
+ * Get the formatted and translated message back.
  *
  * @param string $message English default message
  * @param mixed $args
@@ -56,10 +56,9 @@ function template_url($path, $template = TEMPLATE, $folder = '/assets/')
  */
 function __($message, $args = null)
 {
-    if (! $message) {
-        return '';
-    }
+    if (! $message) return '';
 
+    //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
     $instance =& Language::getInstance();
@@ -68,7 +67,7 @@ function __($message, $args = null)
 }
 
 /**
- * Get formatted translated message back with domain.
+ * Get the formatted and translated message back with Domain.
  *
  * @param string $domain
  * @param string $message
@@ -77,10 +76,9 @@ function __($message, $args = null)
  */
 function __d($domain, $message, $args = null)
 {
-    if (! $message) {
-        return '';
-    }
+    if (! $message) return '';
 
+    //
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
 
     $instance =& Language::getInstance($domain);

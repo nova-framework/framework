@@ -37,12 +37,23 @@ class Redirect extends Response
         // The Content is a workaround for when the HTTP Headers are already sent.
         $content = '
 <html>
-<body onload="redirect_to(\'' .$url .'\');"></body>
+<body onload="redirect_to(\'' .site_url($url) .'\');"></body>
 <script type="text/javascript">function redirect_to(url) { window.location.href = url; }</script>
 </body>
 </html>';
 
         return static::make($content, $status)->header('Location', site_url($url));
+    }
+
+    /**
+     * Create a Redirect Response with URL pointing to Homepage.
+     *
+     * @param  int       $status
+     * @return Redirect
+     */
+    public static function toHome($status = 302)
+    {
+        return static::make($content, $status)->header('Location', site_url());
     }
 
     /**
@@ -79,5 +90,25 @@ class Redirect extends Response
         }
 
         parent::send();
+    }
+
+    /**
+     * Dynamically bind flash data in the Session.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return \Core\Redirect|static
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $params)
+    {
+        if (str_starts_with($method, 'with')) {
+            $name = lcfirst(substr($method, 4));
+
+            return $this->with($name, array_shift($params));
+        }
+
+        throw new \BadMethodCallException("Method [$method] does not exist on Redirect");
     }
 }

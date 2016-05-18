@@ -128,29 +128,18 @@ class Language
 
     public static function init()
     {
+        $languages = Config::get('languages');
+
         if (Session::exists('language')) {
             // The Language was already set; nothing to do.
             return;
         } else if(Cookie::exists(PREFIX .'language')) {
             $cookie = Cookie::get(PREFIX .'language');
 
-            $languages = Config::get('languages');
-
             if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, array_keys($languages))) {
                 Session::set('language', ucfirst($cookie));
             }
         }
-    }
-
-    protected static function getCurrentLanguage($code)
-    {
-        if ($code != LANGUAGE_CODE) {
-            // User defined Language Code; nothing to do.
-        } else if (Session::exists('language')) {
-            return Session::get('language');
-        }
-
-        return ucfirst($code);
     }
 
     /**
@@ -177,6 +166,17 @@ class Language
         // The VSPRINTF alternative for Message formatting, for those die-hard against ICU.
         // The message string should be formatted using the standard PRINTF commands.
         //return vsprintf($message, $arguments);
+    }
+
+    protected static function getCurrentLanguage($code)
+    {
+        if ($code != LANGUAGE_CODE) {
+            // User defined Language Code; nothing to do.
+        } else if (Session::exists('language')) {
+            return Session::get('language');
+        }
+
+        return ucfirst($code);
     }
 
     // Public Getters

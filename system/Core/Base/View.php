@@ -310,7 +310,11 @@ abstract class View implements ArrayAccess
      /**
      * Magic Method for handling dynamic functions.
      *
-     * This method handles calls to dynamic with helpers.
+     * @param  string  $method
+     * @param  array   $parames
+     * @return \Core\Base\View|static|void
+     *
+     * @throws \BadMethodCallException
      */
     public function __call($method, $params)
     {
@@ -325,12 +329,12 @@ abstract class View implements ArrayAccess
         }
 
         // Add the support for the dynamic withX Methods.
-        if ((strpos($method, 'with') === 0) && (strlen($method) > 4)) {
+        if (str_starts_with($method, 'with')) {
             $name = lcfirst(substr($method, 4));
 
             return $this->with($name, array_shift($params));
         }
 
-        return null;
+        throw new \BadMethodCallException("Method [$method] does not exist on " .get_class($this));
     }
 }

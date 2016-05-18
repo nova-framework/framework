@@ -42,7 +42,7 @@ class Users extends Controller
 
     public function dashboard()
     {
-        return View::make('Users/Dashboard', array(), 'Users')->shares('title', 'Dashboard');
+        return View::make('Users/Dashboard', array(), 'Users')->shares('title', __d('users', 'Dashboard'));
     }
 
     public function login()
@@ -65,18 +65,18 @@ class Users extends Controller
                 $user = Auth::user();
 
                 // Prepare the flash message.
-                $message = sprintf('<b>%s</b>, you have successfully logged in.', $user->realname);
+                $message = __d('users', '<b>%s</b>, you have successfully logged in.', $user->realname);
 
                 // Redirect to the User's Dashboard.
                 return Redirect::to('dashboard')->with('message', $message);
             } else {
                 // An error has happened on authentication; add a message into $error array.
-                $error[] = 'Wrong username or password.';
+                $error[] = __d('users', 'Wrong username or password.');
             }
         }
 
         return View::make('Users/Login', array(), 'Users')
-            ->shares('title', 'User Login')
+            ->shares('title', __d('users', 'User Login'))
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);
     }
@@ -85,7 +85,7 @@ class Users extends Controller
     {
         Auth::logout();
 
-        return Redirect::to('login')->with('message', 'You have successfully logged out.');
+        return Redirect::to('login')->with('message', __d('users', 'You have successfully logged out.'));
     }
 
     public function profile()
@@ -109,7 +109,7 @@ class Users extends Controller
                 $this->model->updateUser($user, array('password' => Password::make($password)));
 
                 // Use a Redirect to avoid the reposting the data.
-                return Redirect::to('profile')->with('message', 'You have successfully updated your Password.');
+                return Redirect::to('profile')->with('message', __d('users', 'You have successfully updated your Password.'));
             }
         }
 

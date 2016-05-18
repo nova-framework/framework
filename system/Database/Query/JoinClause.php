@@ -8,7 +8,7 @@
 
 namespace Database\Query;
 
-use Database\Query\Builder;
+use Database\Query\Builder as QueryBuilder;
 
 
 class JoinClause
@@ -16,7 +16,7 @@ class JoinClause
     /**
     * The QueryBuilder instance.
     *
-    * @var \Database\Query
+    * @var \Database\Query\Builder
     */
     public $query;
 
@@ -49,7 +49,7 @@ class JoinClause
     * @param  string  $table
     * @return void
     */
-    public function __construct(Query $query, $type, $table)
+    public function __construct(QueryBuilder $query, $type, $table)
     {
         $this->type  = $type;
         $this->query = $query;

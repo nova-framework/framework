@@ -213,9 +213,9 @@ class Language
      * Get current direction
      * @return string ltr for left to right languages and rtl for right to left languages
      */
-    public function direction()
+    public static function direction($code = LANGUAGE_CODE)
     {
-        return $this->direction;
+        return 'ltr';
     }
 
     /**

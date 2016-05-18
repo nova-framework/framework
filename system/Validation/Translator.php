@@ -2,7 +2,7 @@
 /**
  * Translator - Class to handle a Laravel-esque style Translations.
  *
- * Note that the real strings translation is made by the \Core\Language new API.
+ * NOTE: The real strings translation is made via the new \Core\Language API.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

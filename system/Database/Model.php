@@ -9,6 +9,7 @@
 namespace Database;
 
 use Database\Connection;
+use Database\Query\Builder;
 use Helpers\Inflector;
 
 

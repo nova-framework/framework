@@ -18,61 +18,51 @@ class Translator
      *
      * @var array
      */
-    protected $loaded = array();
+    protected $messages = array();
 
     /**
      * Create a new Translator instance.
-     *
-     * @param array $lines
      */
-    public function __construct(array $lines = array())
+    public function __construct()
     {
-        if (! empty($lines)) {
-            $this->setLines($lines);
-        }
-    }
-
-    /**
-     * Set the Language lines used by the Translator.
-     *
-     * @param  array $lines
-     * @return void
-     */
-    public function setLines(array $lines)
-    {
-        $this->loaded = array('validation' => $lines);
     }
 
     /**
      * Get the translation for a given key.
      *
      * @param  string $id
-     * @param  array  $parameters
+     * @param  array  $params
      * @param  string $domain
      * @param  string $locale
      * @return string
      */
-    public function trans($id, array $parameters = array(), $domain = 'messages', $locale = null)
+    public function trans($id, array $params = array(), $domain = 'messages', $locale = null)
     {
-        $line = array_get($this->loaded, $id);
+        if(! isset($this->messages['validation'])) {
+            $lines = require __DIR__ .DS .'messages.php';
 
-        if (is_null($line)) {
-            return $id;
+            $this->messages = array('validation' => $lines);
         }
 
-        return $this->makeReplacements($line, $parameters);
+        $line = array_get($this->messages, $id);
+
+        if (! is_null($line)) {
+            return $this->makeReplacements($line, $parameters);
+        }
+
+        return $id;
     }
 
     /**
      * Make the place-holder replacements on a line.
      *
      * @param  string $line
-     * @param  array  $replace
+     * @param  array  $replaces
      * @return string
      */
-    protected function makeReplacements($line, array $replace)
+    protected function makeReplacements($line, array $replaces)
     {
-        foreach ($replace as $key => $value) {
+        foreach ($replaces as $key => $value) {
             $line = str_replace(':' .$key, $value, $line);
         }
 

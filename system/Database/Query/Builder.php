@@ -1363,7 +1363,7 @@ class Builder
      */
     public function newQuery()
     {
-        return new Query($this->db);
+        return new Builder($this->db);
     }
 
     /**
@@ -1419,7 +1419,7 @@ class Builder
      * @param  \Database\Query\Builder  $query
      * @return \Database\Query\Builder|static
      */
-    public function mergeBindings(Query $query)
+    public function mergeBindings(Builder $query)
     {
         $this->bindings = array_values(array_merge($this->bindings, $query->bindings));
 
@@ -1483,7 +1483,7 @@ class Builder
      * @param  \Database\Query\Builder  $query
      * @return string
      */
-    public function compileSelect(Query $query)
+    public function compileSelect(Builder $query)
     {
         if (is_null($query->columns)) {
             $query->columns = array('*');
@@ -1498,7 +1498,7 @@ class Builder
      * @param  \Database\Query\Builder  $query
      * @return array
      */
-    protected function compileComponents(Query $query)
+    protected function compileComponents(Builder $query)
     {
         $sql = array();
 
@@ -1534,7 +1534,7 @@ class Builder
      * @param  array  $aggregate
      * @return string
      */
-    protected function compileAggregate(Query $query, $aggregate)
+    protected function compileAggregate(Builder $query, $aggregate)
     {
         $column = $this->columnize($aggregate['columns']);
 
@@ -1552,7 +1552,7 @@ class Builder
      * @param  array  $columns
      * @return string
      */
-    protected function compileColumns(Query $query, $columns)
+    protected function compileColumns(Builder $query, $columns)
     {
         if (is_null($query->aggregate)) {
             $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
@@ -1570,7 +1570,7 @@ class Builder
      * @param  string  $table
      * @return string
      */
-    protected function compileFrom(Query $query, $table)
+    protected function compileFrom(Builder $query, $table)
     {
         return 'FROM ' .$this->wrapTable($table);
     }
@@ -1582,7 +1582,7 @@ class Builder
      * @param  array  $joins
      * @return string
      */
-    protected function compileJoins(Query $query, $joins)
+    protected function compileJoins(Builder $query, $joins)
     {
         $sql = array();
 
@@ -1630,7 +1630,7 @@ class Builder
      * @param  \Database\Query\Builder  $query
      * @return string
      */
-    protected function compileWheres(Query $query)
+    protected function compileWheres(Builder $query)
     {
         $sql = array();
 
@@ -1848,7 +1848,7 @@ class Builder
      * @param  Query   $query
      * @return string
      */
-    protected function compileGroups(Query $query, $groups)
+    protected function compileGroups(Builder $query, $groups)
     {
         return 'GROUP BY '.$this->columnize($groups);
     }
@@ -1860,7 +1860,7 @@ class Builder
      * @param  array  $havings
      * @return string
      */
-    protected function compileHavings(Query $query, $havings)
+    protected function compileHavings(Builder $query, $havings)
     {
         $sql = implode(' ', array_map(array($this, 'compileHaving'), $havings));
 
@@ -1904,7 +1904,7 @@ class Builder
      * @param  array  $orders
      * @return string
      */
-    protected function compileOrders(Query $query, $orders)
+    protected function compileOrders(Builder $query, $orders)
     {
         $me = $this;
 
@@ -1922,7 +1922,7 @@ class Builder
      * @param  int  $limit
      * @return string
      */
-    protected function compileLimit(Query $query, $limit)
+    protected function compileLimit(Builder $query, $limit)
     {
         return 'LIMIT ' .(int) $limit;
     }
@@ -1934,7 +1934,7 @@ class Builder
      * @param  int  $offset
      * @return string
      */
-    protected function compileOffset(Query $query, $offset)
+    protected function compileOffset(Builder $query, $offset)
     {
         return 'OFFSET ' .(int) $offset;
     }
@@ -1945,7 +1945,7 @@ class Builder
      * @param  \Database\Query\Builder  $query
      * @return string
      */
-    protected function compileUnions(Query $query)
+    protected function compileUnions(Builder $query)
     {
         $sql = '';
 

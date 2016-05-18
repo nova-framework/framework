@@ -343,10 +343,10 @@ class Model implements \ArrayAccess
     /**
      * Perform a Model update operation.
      *
-     * @param  \Database\Query  $query
+     * @param  \Database\ORM\Builder  $query
      * @return bool
      */
-    protected function performUpdate(Query $query)
+    protected function performUpdate(Builder $query)
     {
         $dirty = $this->getDirty();
 
@@ -360,10 +360,10 @@ class Model implements \ArrayAccess
     /**
      * Perform a model insert operation.
      *
-     * @param  \Database\Query  $query
+     * @param  \Database\ORM\Builder  $query
      * @return bool
      */
-    protected function performInsert(Query $query)
+    protected function performInsert(Builder $query)
     {
         $attributes = $this->attributes;
 

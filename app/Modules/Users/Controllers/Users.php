@@ -65,7 +65,7 @@ class Users extends Controller
                 $user = Auth::user();
 
                 // Prepare the flash message.
-                $message = __d('users', '<b>%s</b>, you have successfully logged in.', $user->realname);
+                $message = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->realname);
 
                 // Redirect to the User's Dashboard.
                 return Redirect::to('dashboard')->with('message', $message);

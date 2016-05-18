@@ -52,8 +52,6 @@ class Facade
             // Setup the local Translator.
             $translator = new Translator();
 
-            $translator->setLines(require __DIR__ .'/messages.php');
-
             // Setup the Factory instance.
             static::$factory = new Factory($translator);
 

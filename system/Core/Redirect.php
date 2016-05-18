@@ -53,7 +53,7 @@ class Redirect extends Response
      */
     public static function toHome($status = 302)
     {
-        return static::make($content, $status)->header('Location', site_url());
+        return static::to('', $status);
     }
 
     /**

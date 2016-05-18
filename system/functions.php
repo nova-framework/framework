@@ -7,6 +7,7 @@
  * @date April 12th, 2016
  */
 
+use Core\Language;
 use Helpers\Url;
 use Helpers\Encrypter;
 
@@ -41,6 +42,48 @@ function resource_url($path, $module = null)
 function template_url($path, $template = TEMPLATE, $folder = '/assets/')
 {
     return Url::templatePath($template, $folder) .ltrim($path, '/');
+}
+
+//
+// I18N functions
+
+/**
+ * Get the formatted and translated message back.
+ *
+ * @param string $message English default message
+ * @param mixed $args
+ * @return string|void
+ */
+function __($message, $args = null)
+{
+    if (! $message) return '';
+
+    //
+    $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
+
+    $instance =& Language::getInstance();
+
+    return $instance->translate($message, $params);
+}
+
+/**
+ * Get the formatted and translated message back with Domain.
+ *
+ * @param string $domain
+ * @param string $message
+ * @param mixed $args
+ * @return string|void
+ */
+function __d($domain, $message, $args = null)
+{
+    if (! $message) return '';
+
+    //
+    $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
+
+    $instance =& Language::getInstance($domain);
+
+    return $instance->translate($message, $params);
 }
 
 /** String helpers. */
@@ -134,9 +177,10 @@ function str_object($value)
  */
 function str_random($length = 16)
 {
-         // Generate a more truly "random" alpha-numeric string.
-        $bytes = Encrypter::randomBytes($length*2);
-        return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
+    // Generate a more truly "random" alpha-numeric string.
+    $bytes = Encrypter::randomBytes($length * 2);
+
+    return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
 }
 
 /** Common data lookup methods. */

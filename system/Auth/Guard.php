@@ -12,7 +12,6 @@ namespace Auth;
 use Core\Config;
 use Helpers\Session;
 use Helpers\Cookie;
-use Helpers\Encrypter;
 use Helpers\Password;
 use Auth\Model;
 
@@ -326,7 +325,7 @@ class Guard
         // Prepare the value and set the remembering Cookie.
         $value = $user->{$keyName} .'|' .$user->{$this->rememberToken};
 
-        Cookie::set($this->getRecallerName(), Encrypter::encrypt($value));
+        Cookie::set($this->getRecallerName(), $value);
     }
 
     /**
@@ -380,18 +379,7 @@ class Guard
      */
     protected function getRecaller()
     {
-        $cookie = Cookie::get($this->getRecallerName());
-
-        try {
-            $recaller = Encrypter::decrypt($cookie);
-        } catch (\Exception $e) {
-            $recaller = null;
-
-            // That's not a valid Cookie; destroy it.
-            Cookie::destroy($this->getRecallerName());
-        }
-
-        return $recaller;
+        return Cookie::get($this->getRecallerName());
     }
 
     /**

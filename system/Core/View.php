@@ -54,7 +54,9 @@ class View extends BaseView
     /**
      * Magic Method for handling dynamic functions.
      *
-     * This method handles calls to dynamic with helpers.
+     * @param  string  $method
+     * @param  array   $params
+     * @return void|mixed
      */
     public static function __callStatic($method, $params)
     {

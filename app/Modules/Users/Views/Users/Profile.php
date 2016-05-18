@@ -1,5 +1,5 @@
 <div class='row-responsive'>
-    <h2>User Profile : <?= $user->realname; ?></h2>
+    <h2><?= __d('users', 'User Profile : {0}', $user->realname); ?></h2>
     <hr>
 </div>
 
@@ -11,22 +11,22 @@
     <div class="col-md-4 col-md-offset-4">
         <div class="login-panel panel panel-primary" style="margin-top:40px">
             <div class="panel-heading text-center">
-                <h3 class="panel-title">Change Password</h3>
+                <h3 class="panel-title"><?= __d('users', 'Change Password'); ?></h3>
             </div>
             <div class="panel-body">
                 <form style="margin: 0;" method="post">
                     <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="password" placeholder="Insert the current Password" title="Insert the current Password">
+                        <input type="password" class="input-medium input-block-level form-control" name="password" placeholder="<?= __d('users', 'Insert the current Password'); ?>" title="<?= __d('users', 'Insert the current Password'); ?>">
                     </div>
                     <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="newPassword" placeholder="Insert the new Password" title="Insert the new Password">
+                        <input type="password" class="input-medium input-block-level form-control" name="newPassword" placeholder="<?= __d('users', 'Insert the new Password'); ?>" title="<?= __d('users', 'Insert the new Password'); ?>">
                     </div>
                     <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="confirmPass" placeholder="Verify the new Password" title="Verify the new Password">
+                        <input type="password" class="input-medium input-block-level form-control" name="confirmPass" placeholder="<?= __d('users', 'Verify the new Password'); ?>" title="<?= __d('users', 'Verify the new Password'); ?>">
                     </div>
                     <hr>
                     <div>
-                        <button type="submit" class="btn btn-success col-lg-6 pull-right"><i class='fa fa-check'></i> Save</button>
+                        <button type="submit" class="btn btn-success col-lg-6 pull-right"><i class='fa fa-check'></i> <?= __d('users', 'Save'); ?></button>
                     </div>
                     <div class="clearfix"></div>
                     <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />

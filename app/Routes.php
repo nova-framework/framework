@@ -19,6 +19,7 @@ Router::any('subpage', 'App\Controllers\Welcome@subPage');
 // Demo Routes
 Router::any('demo/events',   'App\Controllers\Demo@events');
 Router::any('demo/database', 'App\Controllers\Demo@database');
+Router::any('demo/validate', 'App\Controllers\Demo@validate');
 
 Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
     'filters' => 'test',

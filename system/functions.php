@@ -86,6 +86,99 @@ function __d($domain, $message, $args = null)
     return $instance->translate($message, $params);
 }
 
+/** Array helpers. */
+
+/**
+ * Get an item from an array using "dot" notation.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @param  mixed   $default
+ * @return mixed
+ */
+function array_get($array, $key, $default = null)
+{
+    if (is_null($key)) return $array;
+
+    if (isset($array[$key])) return $array[$key];
+
+    foreach (explode('.', $key) as $segment) {
+        if (! is_array($array) || ! array_key_exists($segment, $array)) {
+            return $default;
+        }
+
+        $array = $array[$segment];
+    }
+
+    return $array;
+}
+
+/**
+ * Set an array item to a given value using "dot" notation.
+ *
+ * If no key is given to the method, the entire array will be replaced.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @param  mixed   $value
+ * @return array
+ */
+function array_set(&$array, $key, $value)
+{
+    if (is_null($key)) return $array = $value;
+
+    $keys = explode('.', $key);
+
+    while (count($keys) > 1) {
+        $key = array_shift($keys);
+
+        if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+            $array[$key] = array();
+        }
+
+        $array =& $array[$key];
+    }
+
+    $array[array_shift($keys)] = $value;
+
+    return $array;
+}
+
+/**
+ * Remove an array item from a given array using "dot" notation.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @return void
+ */
+function array_forget(&$array, $key)
+{
+    $keys = explode('.', $key);
+
+    while (count($keys) > 1) {
+        $key = array_shift($keys);
+
+        if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+            return;
+        }
+
+        $array =& $array[$key];
+    }
+
+    unset($array[array_shift($keys)]);
+}
+
+/**
+ * Get the first element of an array.
+ *
+ * @param  array  $array
+ * @return mixed
+ */
+function head($array)
+{
+    return reset($array);
+}
+
 /** String helpers. */
 
 /**
@@ -147,27 +240,6 @@ function str_ends_with($haystack, $needle)
 }
 
 /**
- * Class name helper
- * @param string $className
- * @return string
- */
-function class_basename($className)
-{
-    return basename(str_replace('\\', '/', $className));
-}
-
-/**
- * Determine if the given object has a toString method.
- *
- * @param  object  $value
- * @return bool
- */
-function str_object($value)
-{
-    return (is_object($value) && method_exists($value, '__toString'));
-}
-
-/**
  * Generate a random alpha-numeric string.
  *
  * @param  int     $length
@@ -181,6 +253,38 @@ function str_random($length = 16)
     $bytes = Encrypter::randomBytes($length * 2);
 
     return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
+}
+
+/**
+ * Class name helper
+ * @param string $className
+ * @return string
+ */
+function class_basename($className)
+{
+    return basename(str_replace('\\', '/', $className));
+}
+
+/**
+ * Determine if the given object has a toString method.
+ *
+ * @param  object  $object
+ * @return bool
+ */
+function str_object($object)
+{
+    return (is_object($object) && method_exists($object, '__toString'));
+}
+
+/**
+ * Return the given object.
+ *
+ * @param  mixed  $object
+ * @return mixed
+ */
+function with($object)
+{
+        return $object;
 }
 
 /** Common data lookup methods. */

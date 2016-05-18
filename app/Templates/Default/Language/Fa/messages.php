@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'Dashboard' => '',
-  'Logout' => '',
-  'Profile' => '',
+  'Dashboard' => 'داشبورد',
+  'Logout' => 'خروج',
+  'Profile' => 'پروفایل',
 );

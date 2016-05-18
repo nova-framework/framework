@@ -11,7 +11,7 @@ namespace Database;
 use Core\Config;
 use Core\Logger;
 use Database\Query\Expression;
-use Database\Query\Builder;
+use Database\Query\Builder as QueryBuilder;
 
 use \PDO;
 use \DateTime;
@@ -162,7 +162,7 @@ class Connection
      */
     public function table($table)
     {
-        $query = new Builder($this);
+        $query = new QueryBuilder($this);
 
         return $query->from($table);
     }

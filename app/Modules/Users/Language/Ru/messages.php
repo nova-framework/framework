@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  '<b>%s</b>, you have successfully logged in.' => '',
+  '<b>{0}</b>, you have successfully logged in.' => '',
   'Change Password' => '',
   'Dashboard' => '',
   'Insert the current Password' => '',

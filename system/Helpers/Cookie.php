@@ -8,6 +8,9 @@
 
 namespace Helpers;
 
+use Helpers\Encrypter;
+
+
 /**
  * Class Cookie.
  */
@@ -40,6 +43,9 @@ class Cookie
     {
         $retval = false;
 
+        // Encrypt the value
+        $value = Encrypter::encrypt($value);
+
         // Ensure to have a valid domain.
         $domain = ($domain !== false) ? $domain : $_SERVER['HTTP_HOST'];
 
@@ -71,7 +77,22 @@ class Cookie
      */
     public static function get($key, $default = '')
     {
-        return (isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default);
+        if(! isset($_COOKIE[$key])) {
+            return $default;
+        }
+
+        $cookie = $_COOKIE[$key];
+
+        try {
+            $result = Encrypter::decrypt($cookie);
+        } catch (\Exception $e) {
+            // That's not a valid Cookie; destroy it.
+            static::destroy($key);
+
+            $result = null;
+        }
+
+        return $result;
     }
 
     /**

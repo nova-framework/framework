@@ -43,6 +43,7 @@ class Language
     private $info   = 'English';
     private $name   = 'English';
     private $locale = 'en-US';
+    private $dir    = 'ltr';
 
     /**
      * Holds an array with the Legacy Messages.
@@ -69,6 +70,7 @@ class Language
             $this->info   = $info['info'];
             $this->name   = $info['name'];
             $this->locale = $info['locale'];
+            $this->dir    = $info['dir'];
         } else {
             $code = 'en';
         }
@@ -211,6 +213,20 @@ class Language
     public function messages()
     {
         return $this->messages;
+    }
+    
+    /**
+     * Get direction of current getCurrentLanguage
+     * @param string $code Optional custom language code.
+     * @return rtl or ltr
+     */
+    public static function direction($code = LANGUAGE_CODE)
+    {
+        $code = stl(self::getCurrentLanguage($code));
+        $languages = Config::get('languages');
+        $info = $languages[$code];
+        return $info['dir'];
+
     }
 
     /**

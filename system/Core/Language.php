@@ -80,16 +80,16 @@ class Language
             $langPath = SYSTEMDIR;
         } else if ($pathName == 'App') {
             $langPath = APPDIR;
-        } else if (is_dir(APPDIR .'Modules' .DS .$pathName)) {
-            $langPath = APPDIR .'Modules/' .$pathName;
+        } else if (is_dir(APPDIR .'Modules' .DS .$pathName )) {
+            $langPath = APPDIR .'Modules/' .$pathName .DS;
         } else if (is_dir(APPDIR .'Templates' .DS .$pathName)) {
-            $langPath = APPDIR .'Templates/' .$pathName;
+            $langPath = APPDIR .'Templates/' .$pathName .DS;
         } else {
             // No Language path found; go out.
             return;
         }
 
-        $filePath = str_replace('/', DS, $langPath .'/Language/' .ucfirst($code) .'/messages.php');
+        $filePath = $langPath .'Language' .DS .ucfirst($code) .DS .'messages.php';
 
         // Check if the language file is readable.
         if (! is_readable($filePath)) {
@@ -254,9 +254,9 @@ class Language
             $this->legacyMessages[$code] = include $file;
         } else {
             // Display an error.
-            echo Error::display("Could not load the language file: '" .ucfirst($code) .DS ."$name.php'");
+            echo Error::display("Could not load the language file: '" .ucfirst($code) .DS . $name .".php'");
 
-            die;
+            die();
         }
     }
 
@@ -302,9 +302,9 @@ class Language
             $messages = include($file);
         } else {
             // Display an error.
-            echo Error::display("Could not load the language file: '" .ucfirst($code) . DS ."$name.php'");
+            echo Error::display("Could not load the language file: '" .ucfirst($code) . DS .$name .".php'");
 
-            die;
+            die();
         }
 
         if (!empty($messages[$value])) {

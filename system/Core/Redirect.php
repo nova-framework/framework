@@ -46,17 +46,6 @@ class Redirect extends Response
     }
 
     /**
-     * Create a Redirect Response with URL pointing to Homepage.
-     *
-     * @param  int       $status
-     * @return Redirect
-     */
-    public static function toHome($status = 302)
-    {
-        return static::to('', $status);
-    }
-
-    /**
      * Add an item to the Session flash data.
      *
      * This is useful for "passing" status messages or other data to the next request.

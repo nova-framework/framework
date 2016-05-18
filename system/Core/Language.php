@@ -216,7 +216,7 @@ class Language
     }
 
     /**
-     * Get direction of current getCurrentLanguage
+     * Get the direction of current Language
      *
      * @param string $code Optional custom language code.
      * @return string rtl or ltr

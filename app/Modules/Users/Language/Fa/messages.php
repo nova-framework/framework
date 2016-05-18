@@ -1,6 +1,6 @@
 <?php
 return array (
-  '<b>%s</b>, you have successfully logged in.' => '<b>%s</b>, شما با موفقیت وارد سیستم شدید.',
+  '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, شما با موفقیت وارد سیستم شدید.',
   'Change Password' => 'ویرایش رمزعبور',
   'Dashboard' => 'داشبورد',
   'Insert the current Password' => 'رمزعبور فعلی را وارد کنید',

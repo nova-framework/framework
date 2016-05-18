@@ -39,10 +39,11 @@ class Language
     /**
      * The current Language information.
      */
-    private $code   = 'en';
-    private $info   = 'English';
-    private $name   = 'English';
-    private $locale = 'en-US';
+    private $code       = 'en';
+    private $info       = 'English';
+    private $name       = 'English';
+    private $locale     = 'en-US';
+    private $directon   = 'ltr'; // for template style
 
     /**
      * Holds an array with the Legacy Messages.
@@ -66,9 +67,10 @@ class Language
 
             $this->code = $code;
 
-            $this->info   = $info['info'];
-            $this->name   = $info['name'];
-            $this->locale = $info['locale'];
+            $this->info         = $info['info'];
+            $this->name         = $info['name'];
+            $this->locale       = $info['locale'];
+            $this->direction    = $info['direction'];
         } else {
             $code = 'en';
         }
@@ -202,6 +204,15 @@ class Language
     public function locale()
     {
         return $this->locale;
+    }
+    
+    /**
+     * Get current direction
+     * @return string ltr for left to right languages and rtl for right to left languages
+     */
+    public static function direction()
+    {
+        return 'ltr';
     }
 
     /**

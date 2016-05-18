@@ -12,10 +12,10 @@
 echo $meta; // Place to pass data / plugable hook zone
 
 Assets::css([
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css',
+    Language::direction() == 'ltr' ? 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' : 'https://raw.githubusercontent.com/AbdullahDiaa/Bootstrap-RTL/master/bootstrap.rtl.min.css',
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css',
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css',
-    template_url('css/style.css', 'Default'),
+    template_url(Language::direction() == 'ltr' ? 'css/style.css' : 'css/style.rtl.css', 'Default'),
 ]);
 
 echo $css; // Place to pass data / plugable hook zone

@@ -26,20 +26,17 @@ echo $css; // Place to pass data / plugable hook zone
 
 <div class="container">
     <p class="pull-right">
-        <a href='<?= site_url('language/cs'); ?>'>Czech</a> |
-        <a href='<?= site_url('language/en'); ?>'>English</a> |
-        <a href='<?= site_url('language/de'); ?>'>German</a> |
-        <a href='<?= site_url('language/fr'); ?>'>French</a> |
-        <a href='<?= site_url('language/it'); ?>'>Italian</a> |
-        <a href='<?= site_url('language/ja'); ?>'>Japanese</a> |
-        <a href='<?= site_url('language/nl'); ?>'>Dutch</a> |
-        <a href='<?= site_url('language/fa'); ?>'>Persian</a> |
-        <a href='<?= site_url('language/pl'); ?>'>Polish</a> |
-        <a href='<?= site_url('language/ro'); ?>'>Romanian</a> |
-        <a href='<?= site_url('language/ru'); ?>'>Russian</a> |
-        <a href='<?= site_url('language/es'); ?>'>Spanish</a>
-    </p>
-    <div class="clearfix"></div>
+<?php
+$html = '';
+
+foreach ($languages as $code => $info) {
+    $html .= '<a href="' .site_url('language/' .$code) .'">' .$info['name'] .'</a> | ' .PHP_EOL;
+}
+
+echo rtrim(trim($html), ' |') .PHP_EOL;
+?>
+        </p>
+        <div class="clearfix"></div>
     <p>
         <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>'>
     </p>

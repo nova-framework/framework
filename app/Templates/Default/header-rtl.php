@@ -1,5 +1,12 @@
+<?php
+/**
+ * Default Header.
+ */
+
+$languages = Config::get('languages');
+?>
 <!DOCTYPE html>
-<html lang="<?php echo LANGUAGE_CODE; ?>" dir="rtl">
+<html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
     <meta charset="utf-8">
     <title><?= $title .' - ' .SITETITLE; ?></title>
@@ -21,13 +28,15 @@ echo $css; // Place to pass data / plugable hook zone
 <div class="container">
 
 <p class="pull-right">
-        <?php
+<?php
 $html = '';
+
 foreach ($languages as $code => $info) {
     $html .= '<a href="' .site_url('language/' .$code) .'">' .$info['name'] .'</a> | ' .PHP_EOL;
 }
+
 echo rtrim(trim($html), ' |') .PHP_EOL;
-        ?>
+?>
 </p>
 <div class="clearfix"></div>
 

@@ -2,6 +2,8 @@
 /**
  * Default RTL Layout - a Layout similar with the classic Header and Footer files.
  */
+
+$languages = Config::get('languages');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>" dir="rtl">
@@ -35,8 +37,8 @@ foreach ($languages as $code => $info) {
 
 echo rtrim(trim($html), ' |') .PHP_EOL;
 ?>
-        </p>
-        <div class="clearfix"></div>
+    </p>
+    <div class="clearfix"></div>
     <p>
         <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>'>
     </p>

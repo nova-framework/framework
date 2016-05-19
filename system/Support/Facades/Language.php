@@ -14,7 +14,7 @@ use Core\Language as CoreLanguage;
 class Language
 {
     /**
-     * Magic Method for calling the methods on the default Connection instance.
+     * Magic Method for calling the methods on the default Language instance.
      *
      * @param $method
      * @param $params
@@ -36,7 +36,7 @@ class Language
         // Get a Core\Language instance.
         $instance = CoreLanguage::getInstance();
 
-        // Call the non-static method from the Core\Language instance.
+        // Call the non-static method from the Language instance.
         return call_user_func_array(array($instance, $method), $params);
     }
 }

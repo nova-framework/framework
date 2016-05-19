@@ -38,8 +38,8 @@ class Template extends BaseView
      */
     public static function make($view, $data = array(), $template = TEMPLATE)
     {
-        if(is_string($data)) {
-            if(! empty($data) && ($template === null)) {
+        if (is_string($data)) {
+            if (! empty($data) && ($template === null)) {
                 // The Module name given as second parameter; adjust the information.
                 $template = $data;
             }

@@ -41,8 +41,8 @@ class View extends BaseView
      */
     public static function make($view, $data = array(), $module = null)
     {
-        if(is_string($data)) {
-            if(! empty($data) && ($module === null)) {
+        if (is_string($data)) {
+            if (! empty($data) && ($module === null)) {
                 // The Module name given as second parameter; adjust the information.
                 $module = $data;
             }

@@ -2,6 +2,8 @@
 /**
  * Default Layout - a Layout similar with the classic Header and Footer files.
  */
+
+$languages = Config::get('languages');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">
@@ -26,18 +28,15 @@ echo $css; // Place to pass data / plugable hook zone
 
 <div class="container">
     <p class="pull-right">
-        <a href='<?= site_url('language/cs'); ?>'>Czech</a> |
-        <a href='<?= site_url('language/en'); ?>'>English</a> |
-        <a href='<?= site_url('language/de'); ?>'>German</a> |
-        <a href='<?= site_url('language/fr'); ?>'>French</a> |
-        <a href='<?= site_url('language/it'); ?>'>Italian</a> |
-        <a href='<?= site_url('language/ja'); ?>'>Japanese</a> |
-        <a href='<?= site_url('language/nl'); ?>'>Dutch</a> |
-        <a href='<?= site_url('language/fa'); ?>'>Persian</a> |
-        <a href='<?= site_url('language/pl'); ?>'>Polish</a> |
-        <a href='<?= site_url('language/ro'); ?>'>Romanian</a> |
-        <a href='<?= site_url('language/ru'); ?>'>Russian</a> |
-        <a href='<?= site_url('language/es'); ?>'>Spanish</a>
+<?php
+$html = '';
+
+foreach ($languages as $code => $info) {
+    $html .= '<a href="' .site_url('language/' .$code) .'">' .$info['name'] .'</a> | ' .PHP_EOL;
+}
+
+echo rtrim(trim($html), ' |') .PHP_EOL;
+?>
     </p>
     <div class="clearfix"></div>
     <p>

@@ -1,3 +1,10 @@
+<?php
+/**
+ * Default Header.
+ */
+
+$languages = Config::get('languages');
+?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
@@ -21,18 +28,15 @@ echo $css; // Place to pass data / plugable hook zone
 <div class="container">
 
 <p class="pull-right">
-<a href='<?=DIR;?>language/cs'>Czech</a> |
-<a href='<?=DIR;?>language/en'>English</a> |
-<a href='<?=DIR;?>language/de'>German</a> |
-<a href='<?=DIR;?>language/fr'>French</a> |
-<a href='<?=DIR;?>language/it'>Italian</a> |
-<a href='<?=DIR;?>language/ja'>Japanese</a> |
-<a href='<?=DIR;?>language/nl'>Dutch</a> |
-<a href='<?=DIR;?>language/fa'>Persian</a> |
-<a href='<?=DIR;?>language/pl'>Polish</a> |
-<a href='<?=DIR;?>language/ro'>Romanian</a> |
-<a href='<?=DIR;?>language/ru'>Russian</a> |
-<a href='<?=DIR;?>language/es'>Spanish</a>
+<?php
+$html = '';
+
+foreach ($languages as $code => $info) {
+    $html .= '<a href="' .site_url('language/' .$code) .'">' .$info['name'] .'</a> | ' .PHP_EOL;
+}
+
+echo rtrim(trim($html), ' |') .PHP_EOL;
+?>
 </p>
 <div class="clearfix"></div>
 

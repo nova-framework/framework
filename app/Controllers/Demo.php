@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
+use Helpers\Password;
 use Helpers\Url;
 
 use Event;
@@ -30,6 +31,11 @@ class Demo extends Controller
     public function index()
     {
         echo 'hello';
+    }
+
+    public function password($password)
+    {
+        echo Password::make($password);
     }
 
     public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')

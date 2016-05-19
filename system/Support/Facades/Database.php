@@ -1,20 +1,20 @@
 <?php
 /**
- * Facade - A Facade to Events Dispatcher.
+ * Database - A Facade to the Database Connection.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
-namespace Events;
+namespace Support\Facades;
 
-use Events\Dispatcher;
+use Database\Connection;
 
 
-class Facade
+class Database
 {
     /**
-     * Magic Method for calling the methods on the default Dispatcher instance.
+     * Magic Method for calling the methods on the default Connection instance.
      *
      * @param $method
      * @param $params
@@ -23,9 +23,9 @@ class Facade
      */
     public static function __callStatic($method, $params)
     {
-        $instance = Dispatcher::getInstance();
+        $instance = Connection::getInstance();
 
-        // Call the non-static method from the Dispatcher instance.
+        // Call the non-static method from the Connection instance.
         return call_user_func_array(array($instance, $method), $params);
     }
 }

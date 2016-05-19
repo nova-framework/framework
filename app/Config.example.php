@@ -140,7 +140,6 @@ Config::set('modules', array(
 Config::set('classAliases', array(
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
-    'Language'      => '\Core\Language',
     'Response'      => '\Core\Response',
     'Redirect'      => '\Core\Redirect',
     'Mail'          => '\Helpers\Mailer',
@@ -172,6 +171,7 @@ Config::set('classAliases', array(
     'Auth'          => '\Auth\Auth',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',
+    'Language'      => '\Support\Facades\Language',
     'Validator'     => '\Support\Facades\Validator',
     // The Legacy Mailer
     'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',

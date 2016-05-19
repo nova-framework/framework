@@ -3,7 +3,24 @@
  * Default Layout - a Layout similar with the classic Header and Footer files.
  */
 
+// Generate the Language Changer menu.
+$language = Language::code();
+
 $languages = Config::get('languages');
+
+$html = '';
+
+foreach ($languages as $code => $info) {
+    if($language == $code) {
+        $linkName = '<b>' .$info['name'] .'</b>';
+    } else {
+        $linkName = $info['name'];
+    }
+
+    $html .= '<a href="' .site_url('language/' .$code) .'">' .$linkName .'</a> | ' .PHP_EOL;
+}
+
+$langMenu = rtrim(trim($html), ' |') .PHP_EOL;
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">
@@ -28,15 +45,7 @@ echo $css; // Place to pass data / plugable hook zone
 
 <div class="container">
     <p class="pull-right">
-<?php
-$html = '';
-
-foreach ($languages as $code => $info) {
-    $html .= '<a href="' .site_url('language/' .$code) .'">' .$info['name'] .'</a> | ' .PHP_EOL;
-}
-
-echo rtrim(trim($html), ' |') .PHP_EOL;
-?>
+        <?= $langMenu; ?>
     </p>
     <div class="clearfix"></div>
     <p>

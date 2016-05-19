@@ -216,24 +216,13 @@ class Language
     }
 
     /**
-     * Get the direction of current Language
+     * Get the current direction
      *
-     * @param string $code Optional custom language code.
      * @return string rtl or ltr
      */
-    public static function direction($code = LANGUAGE_CODE)
+    public function direction()
     {
-        $code = self::getCurrentLanguage($code);
-
-        $languages = Config::get('languages');
-
-        if (isset($languages[$code])) {
-            $info = $languages[$code];
-
-            return $info['dir'];
-        }
-
-        return 'ltr';
+        return $this->direction;
     }
 
     /**
@@ -305,14 +294,11 @@ class Language
      *
      * @return string
      */
-    public static function show($value, $name, $code = LANGUAGE_CODE)
+    public function show($value, $name, $code = LANGUAGE_CODE)
     {
-        // Use a fake Domain 'legacy', to avoid the standard Messages loading.
-        $instance = static::getInstance('legacy', $code);
-
         // Load the specified Language file.
-        $instance->load($name, $code);
+        $this->load($name, $code);
 
-        return $instance->get($value, $code);
+        return $this->get($value, $code);
     }
 }

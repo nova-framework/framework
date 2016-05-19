@@ -8,14 +8,12 @@ $language = Language::code();
 
 $languages = Config::get('languages');
 
+//
 $html = '';
 
 foreach ($languages as $code => $info) {
-    if($language == $code) {
-        $linkName = '<b>' .$info['name'] .'</b>';
-    } else {
-        $linkName = $info['name'];
-    }
+    // Make bold the name of curent Language
+    $linkName = ($language == $code) ? '<b>' .$info['name'] .'</b>' : $info['name'];
 
     $html .= '<a href="' .site_url('language/' .$code) .'">' .$linkName .'</a> | ' .PHP_EOL;
 }

@@ -19,7 +19,7 @@ The base framework comes with a range of [helper classes](https://github.com/nov
 
 ## Documentation
 
-Full docs & tutorials are available at [novaframework.com](http://novaframework.com).
+Full docs & tutorials are available on [novaframework.com](http://novaframework.com) and the [Github Wiki](https://github.com/nova-framework/framework/wiki).
 
 Offline docs are available in PDF, EPUB and MOBI formats on [Leanpub](https://leanpub.com/novaframeworkmanual22)
 

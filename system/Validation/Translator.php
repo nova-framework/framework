@@ -47,7 +47,7 @@ class Translator
         $line = array_get($this->messages, $id);
 
         if (! is_null($line)) {
-            return $this->makeReplacements($line, $parameters);
+            return $this->makeReplacements($line, $params);
         }
 
         return $id;

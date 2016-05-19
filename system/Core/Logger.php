@@ -197,4 +197,13 @@ class Logger
             $mail->send();
         }
     }
+
+    /**
+     * Set the display error status.
+     * 
+     * @param bool $status
+     */
+    public static function setDisplay($status = false) {
+        self::$display = $status;
+    }
 }

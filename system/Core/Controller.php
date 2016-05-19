@@ -123,7 +123,7 @@ abstract class Controller
 
         if ((! $result instanceof Template) && ($this->layout !== false)) {
             // A View instance, having a Layout specified; create a Template instance.
-            $result = Template::make($this->layout, $result->localData(), $this->template)
+            $result = Template::make($this->layout, $this->template)
                 ->with('content', $result->fetch());
         }
 

@@ -94,23 +94,11 @@ class Connection
      */
     public static function getInstance($config = 'default')
     {
-        if (is_array($config)) {
-            // The parameter is a configuration in the Legacy Style.
+        if (is_array($config) && ! empty($config)) {
+            // The given parameter is a configuration array.
             $connection = implode('.', array_values($config));
-
-            // Prepare a compatible configuration from the Legacy Config.
-            $config = array(
-                'driver'    => $config['type'],
-                'hostname'  => $config['host'],
-                'dbname'    => $config['name'],
-                'username'  => $config['user'],
-                'password'  => $config['pass'],
-                'prefix'    => PREFIX,
-                'charset'   => 'utf8',
-                'collation' => 'utf8_general_ci',
-            );
         } else {
-            $connection = is_string($config) ? $config : 'default';
+            $connection = (is_string($config) && ! empty($config)) ? $config : 'default';
 
             // Retrieve the configuration with the specified name.
             $config = Config::get('database');
@@ -122,7 +110,7 @@ class Connection
             }
         }
 
-        // Prepare a Token for handling the instances.
+        // Prepare a Token for handling the Connection instances.
         $token = md5($connection);
 
         // If there is already a Connection instantiated, return it.

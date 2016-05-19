@@ -1,5 +1,5 @@
 <div class='row-responsive'>
-    <h2><?= __d('users', 'User Profile : {0}', $user->realname); ?></h2>
+    <h2><?= __d('users', 'User Profile : {0}', $user->username); ?></h2>
     <hr>
 </div>
 

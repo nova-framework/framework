@@ -7,6 +7,7 @@ define("BASEPATH", dirname(dirname(__FILE__)) .DS);
 
 $languages = array(
     'cs',
+    'da',
     'de',
     'en',
     'es',

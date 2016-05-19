@@ -1,12 +1,12 @@
 <?php
 /**
- * Facade - A Facade to Validator Factory.
+ * Validator - A Facade to the Validator's Factory.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
-namespace Validation;
+namespace Support\Facades;
 
 use Database\Connection;
 use Validation\Translator;
@@ -14,7 +14,7 @@ use Validation\DatabasePresenceVerifier;
 use Validation\Factory;
 
 
-class Facade
+class Validator
 {
     /**
      * The Factory instance being handled.

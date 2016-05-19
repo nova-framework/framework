@@ -259,9 +259,17 @@ class Language
         $file = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
 
         // Check if it is readable.
-        if (is_readable($file)) {
-            // Require the file.
-            $this->legacyMessages[$code] = include $file;
+        if (! is_readable($file)) {
+            return;
+        }
+
+        // Require the file.
+        $messages = include $file;
+
+        if(is_array($this->legacyMessages[$code])) {
+            $this->legacyMessages[$code] = array_merge($this->legacyMessages[$code], $messages);
+        } else {
+            $this->legacyMessages[$code] = $messages;
         }
     }
 

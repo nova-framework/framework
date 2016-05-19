@@ -4,7 +4,6 @@
  */
 
 $languages = Config::get('languages');
-
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">

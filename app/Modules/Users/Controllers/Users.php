@@ -115,7 +115,7 @@ class Users extends Controller
         }
 
         return View::make('Users/Profile', 'Users')
-            ->shares('title', 'User Profile')
+            ->shares('title',  __d('users', 'User Profile'))
             ->with('user', $user)
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);

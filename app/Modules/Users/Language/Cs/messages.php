@@ -12,6 +12,7 @@ return array (
   'Sign In' => '',
   'Someday, we\'ll have widgets and stuff on here...' => '',
   'User Login' => '',
+  'User Profile' => '',
   'User Profile : {0}' => '',
   'Username' => '',
   'Verify the new Password' => '',

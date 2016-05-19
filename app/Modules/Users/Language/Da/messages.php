@@ -12,6 +12,7 @@ return array (
   'Sign In' => 'Log ind',
   'Someday, we\'ll have widgets and stuff on here...' => 'En dag vil vi have en masse fede ting her...',
   'User Login' => 'Burger Login',
+  'User Profile' => '',
   'User Profile : {0}' => 'Bruger : {0}',
   'Username' => 'Brugernavn',
   'Verify the new Password' => 'Bekræft det nye kodeord.',

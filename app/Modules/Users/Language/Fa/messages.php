@@ -12,6 +12,7 @@ return array (
   'Sign In' => 'ورود',
   'Someday, we\'ll have widgets and stuff on here...' => 'یک روز، ما در اینجا ابزار ها و امکاناتی در خواهیم داشت...',
   'User Login' => 'ورود کاربر',
+  'User Profile' => '',
   'User Profile : {0}' => 'پروفایل کاربر : {0}',
   'Username' => 'نام کاربری',
   'Verify the new Password' => 'رمز عبور جدید را بررسی کنید',

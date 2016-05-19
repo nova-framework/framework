@@ -168,10 +168,11 @@ Config::set('classAliases', array(
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
-    'DB'            => '\Database\Facade',
+    // The Facades
     'Auth'          => '\Auth\Auth',
-    'Event'         => '\Events\Facade',
-    'Validator'     => '\Validation\Facade',
+    'DB'            => '\Support\Facades\Database',
+    'Event'         => '\Support\Facades\Event',
+    'Validator'     => '\Support\Facades\Validator',
     // The Legacy Mailer
     'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',
 ));

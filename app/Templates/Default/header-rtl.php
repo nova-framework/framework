@@ -7,7 +7,7 @@
 echo $meta; // Place to pass data / plugable hook zone
 
 Assets::css([
-    'http://amiroperator.github.io/bootstrap-3-arabic/dist/css/bootstrap-arabic.min.css',
+    template_url('css/bootstrap-arabic.min.css', 'Default'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
     Url::templatePath() .'css/style-rtl.css',
 ]);

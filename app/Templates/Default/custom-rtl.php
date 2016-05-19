@@ -12,8 +12,8 @@
 echo $meta; // Place to pass data / plugable hook zone
 
 Assets::css([
-    'http://amiroperator.github.io/bootstrap-3-arabic/dist/css/bootstrap-arabic.min.css',
-    'http://amiroperator.github.io/bootstrap-3-arabic/dist/css/bootstrap-arabic-theme.min.css',
+    template_url('css/bootstrap-arabic.min.css', 'Default'),
+    template_url('css/bootstrap-arabic-theme.min.css', 'Default'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
     template_url('css/style-rtl.css', 'Default'),
 ]);
@@ -68,7 +68,7 @@ echo $css; // Place to pass data / plugable hook zone
 <?php
 Assets::js([
     'https://code.jquery.com/jquery-1.12.1.min.js',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
+    template_url('js/bootstrap-rtl.min.js', 'Default'),
 ]);
 
 echo $js; // Place to pass data / plugable hook zone

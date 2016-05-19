@@ -266,7 +266,7 @@ class Language
         // Require the file.
         $messages = include $file;
 
-        if(is_array($this->legacyMessages[$code])) {
+        if(isset($this->legacyMessages[$code]) && is_array($this->legacyMessages[$code])) {
             $this->legacyMessages[$code] = array_merge($this->legacyMessages[$code], $messages);
         } else {
             $this->legacyMessages[$code] = $messages;

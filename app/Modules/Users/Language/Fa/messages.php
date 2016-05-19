@@ -1,4 +1,5 @@
 <?php
+
 return array (
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, شما با موفقیت وارد سیستم شدید.',
   'Change Password' => 'ویرایش رمزعبور',
@@ -17,5 +18,5 @@ return array (
   'Wrong username or password.' => 'نام کاربری یا رمز عبور اشتباه میباشد',
   'You have successfully logged out.' => 'شما با موفقیت از سیستم خارج شدید.',
   'You have successfully updated your Password.' => 'شما با موفقیت رمزعبور خود را بروز کردید.',
-  'Yup. This is the Dashboard.' => 'آره. این داشبورد هست.'
+  'Yup. This is the Dashboard.' => 'آره. این داشبورد هست.',
 );

@@ -1,3 +1,8 @@
+<?php
+/**
+ * Default Footer.
+ */
+?>
 </div>
 
 <?php

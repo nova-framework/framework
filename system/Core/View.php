@@ -39,8 +39,17 @@ class View extends BaseView
      * @param string|null $module
      * @return View
      */
-    public static function make($view, array $data = array(), $module = null)
+    public static function make($view, $data = array(), $module = null)
     {
+        if(is_string($data)) {
+            if(! empty($data) && ($module === null)) {
+                // The Module name given as second parameter; adjust the information.
+                $module = $data;
+            }
+
+            $data = array();
+        }
+
         // Prepare the (relative) file path according with Module parameter presence.
         if ($module !== null) {
             $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");

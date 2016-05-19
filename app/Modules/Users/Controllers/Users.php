@@ -42,7 +42,7 @@ class Users extends Controller
 
     public function dashboard()
     {
-        return View::make('Users/Dashboard', array(), 'Users')->shares('title', __d('users', 'Dashboard'));
+        return View::make('Users/Dashboard', 'Users')->shares('title', __d('users', 'Dashboard'));
     }
 
     public function login()
@@ -65,7 +65,7 @@ class Users extends Controller
                 $user = Auth::user();
 
                 // Prepare the flash message.
-                $message = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->realname);
+                $message = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
                 // Redirect to the User's Dashboard.
                 return Redirect::to('dashboard')->with('message', $message);
@@ -75,7 +75,7 @@ class Users extends Controller
             }
         }
 
-        return View::make('Users/Login', array(), 'Users')
+        return View::make('Users/Login', 'Users')
             ->shares('title', __d('users', 'User Login'))
             ->with('csrfToken', Csrf::makeToken())
             ->with('error', $error);
@@ -113,7 +113,7 @@ class Users extends Controller
             }
         }
 
-        return View::make('Users/Profile', array(), 'Users')
+        return View::make('Users/Profile', 'Users')
             ->shares('title', 'User Profile')
             ->with('user', $user)
             ->with('csrfToken', Csrf::makeToken())

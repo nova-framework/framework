@@ -1,23 +1,22 @@
 <?php
 /**
- * English language
+ * Danish language
  */
 return [
-	// Index method
-	'welcomeText' => 'Welcome',
-	'welcomeMessage' => '
-		Hello, welcome from the welcome controller! <br/>
-		This content can be changed in <code>/app/Views/Welcome/Welcome.php</code>
-	',
-
-	// Subpage method
-	'subpageText' => 'Subpage',
-	'subpageMessage' => '
-		Hello, welcome from the welcome controller and subpage method! <br/>
-		This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>
-	',
-
-	// Buttons
-	'openSubPage' => 'Open subpage',
-	'backHome' => 'Home',
+    // Index method
+    'welcomeText' => 'Velkommen',
+    'welcomeMessage' => '
+        Hej og velkommen fra welcome controller! <br/>
+        Indholdet kan ændres i <code>/app/Views/Welcome/Welcome.php</code>
+    ',
+    // Subpage method
+    'subpageText' => 'Under side',
+    'subpageMessage' => '
+        Hej og velkommen fra  welcome controlleren and subpage method! <br/>
+        Indeholdet kan ændres i <code>/app/Views/Welcome/SubPage.php</code>
+    ',
+    // Buttons
+    'openSubPage' => 'Åben undersiden ',
+    'backHome' => 'Hjem',
 ];
+

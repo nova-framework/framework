@@ -35,7 +35,7 @@ class View extends BaseView
      * Create a View instance
      *
      * @param string $path
-     * @param array $data
+     * @param array|string $data
      * @param string|null $module
      * @return View
      */

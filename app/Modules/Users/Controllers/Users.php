@@ -42,7 +42,8 @@ class Users extends Controller
 
     public function dashboard()
     {
-        return View::make('Users/Dashboard', 'Users')->shares('title', __d('users', 'Dashboard'));
+        return View::make('Users/Dashboard', 'Users')
+            ->shares('title', __d('users', 'Dashboard'));
     }
 
     public function login()

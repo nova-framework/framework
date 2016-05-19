@@ -36,7 +36,7 @@ class Template extends BaseView
      * @param string $custom
      * @return Template
      */
-    public static function make($view, array $data = array(), $template = TEMPLATE)
+    public static function make($view, $data = array(), $template = TEMPLATE)
     {
         if(is_string($data)) {
             if(! empty($data) && ($template === null)) {

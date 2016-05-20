@@ -9,6 +9,7 @@
 namespace Core;
 
 use Core\Base\View as BaseView;
+use Core\Language as CoreLanguage;
 
 
 /**
@@ -47,9 +48,18 @@ class Template extends BaseView
             $data = array();
         }
 
-        // Prepare the file path.
-        $path = str_replace('/', DS, APPDIR ."Templates/$template/$view.php");
+		$direction = CoreLanguage::direction();
 
+        $ltrPath = str_replace('/', DS, APPDIR ."Templates/$template/$view.php");
+        $rtlPath = str_replace('/', DS, APPDIR ."Templates/$template/$view-rtl.php");
+
+        //Prepare the file path
+        $path = $ltrPath;
+        
+        //Prepare the file path if exists for rtl layouts
+        if (file_exists($rtlPath) && $direction == 'rtl')
+            $path = $rtlPath;
+		
         return new Template($view, $path, $data);
     }
 }

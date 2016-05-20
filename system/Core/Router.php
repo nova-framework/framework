@@ -9,10 +9,10 @@
 namespace Core;
 
 use Core\Base\Router as BaseRouter;
+use Core\Request;
 use Core\Response;
 use Core\Route;
 use Helpers\Inflector;
-use Helpers\Request;
 use Helpers\Url;
 
 /**

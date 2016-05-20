@@ -7,9 +7,9 @@
  * @date April 12th, 2016
  */
 
-use Core\Language;
 use Helpers\Url;
 use Helpers\Encrypter;
+use Support\Facades\Language;
 
 /**
  * Site URL helper
@@ -61,9 +61,7 @@ function __($message, $args = null)
     //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
-    $instance =& Language::getInstance();
-
-    return $instance->translate($message, $params);
+    return Language::translate($message, $params);
 }
 
 /**
@@ -81,9 +79,7 @@ function __d($domain, $message, $args = null)
     //
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
 
-    $instance =& Language::getInstance($domain);
-
-    return $instance->translate($message, $params);
+    return Language::translate($message, $params);
 }
 
 /** Array helpers. */

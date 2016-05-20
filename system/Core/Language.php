@@ -216,24 +216,13 @@ class Language
     }
 
     /**
-     * Get the direction of current Language
+     * Get the current direction
      *
-     * @param string $code Optional custom language code.
      * @return string rtl or ltr
      */
-    public static function direction($code = LANGUAGE_CODE)
+    public function direction()
     {
-        $code = self::getCurrentLanguage($code);
-
-        $languages = Config::get('languages');
-
-        if (isset($languages[$code])) {
-            $info = $languages[$code];
-
-            return $info['dir'];
-        }
-
-        return 'ltr';
+        return $this->direction;
     }
 
     /**
@@ -270,9 +259,17 @@ class Language
         $file = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
 
         // Check if it is readable.
-        if (is_readable($file)) {
-            // Require the file.
-            $this->legacyMessages[$code] = include $file;
+        if (! is_readable($file)) {
+            return;
+        }
+
+        // Require the file.
+        $messages = include $file;
+
+        if(isset($this->legacyMessages[$code]) && is_array($this->legacyMessages[$code])) {
+            $this->legacyMessages[$code] = array_merge($this->legacyMessages[$code], $messages);
+        } else {
+            $this->legacyMessages[$code] = $messages;
         }
     }
 
@@ -305,14 +302,11 @@ class Language
      *
      * @return string
      */
-    public static function show($value, $name, $code = LANGUAGE_CODE)
+    public function show($value, $name, $code = LANGUAGE_CODE)
     {
-        // Use a fake Domain 'legacy', to avoid the standard Messages loading.
-        $instance = static::getInstance('legacy', $code);
-
         // Load the specified Language file.
-        $instance->load($name, $code);
+        $this->load($name, $code);
 
-        return $instance->get($value, $code);
+        return $this->get($value, $code);
     }
 }

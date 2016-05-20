@@ -140,7 +140,7 @@ Config::set('modules', array(
 Config::set('classAliases', array(
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
-    'Language'      => '\Core\Language',
+    'Request'       => '\Core\Request',
     'Response'      => '\Core\Response',
     'Redirect'      => '\Core\Redirect',
     'Mail'          => '\Helpers\Mailer',
@@ -161,7 +161,6 @@ Config::set('classAliases', array(
     'Paginator'     => '\Helpers\Paginator',
     'Password'      => '\Helpers\Password',
     'RainCaptcha'   => '\Helpers\RainCaptcha',
-    'Request'       => '\Helpers\Request',
     'ReservedWords' => '\Helpers\ReservedWords',
     'Session'       => '\Helpers\Session',
     'SimpleCurl'    => '\Helpers\SimpleCurl',
@@ -172,6 +171,7 @@ Config::set('classAliases', array(
     'Auth'          => '\Auth\Auth',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',
+    'Language'      => '\Support\Facades\Language',
     'Validator'     => '\Support\Facades\Validator',
     // The Legacy Mailer
     'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',

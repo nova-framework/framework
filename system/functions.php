@@ -61,7 +61,7 @@ function __($message, $args = null)
     //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
-    return Language::domain('app')->translate($message, $params);
+    return Language::translate($message, $params);
 }
 
 /**

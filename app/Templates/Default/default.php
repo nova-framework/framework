@@ -41,7 +41,7 @@ Assets::css([
 echo $css; // Place to pass data / plugable hook zone
 ?>
 </head>
-<body style='padding-top: 60px;'>
+<body style='padding-top: 28px;'>
 
 <nav class="navbar navbar-default navbar-xs navbar-fixed-top" role="navigation">
     <div class="container-fluid">

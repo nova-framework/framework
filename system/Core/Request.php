@@ -295,6 +295,18 @@ class Request
     }
 
     /**
+     * Detect if HTTP Request is PATCH request.
+     *
+     * @static static method
+     *
+     * @return boolean
+     */
+    public static function isPatch()
+    {
+        return $_SERVER["REQUEST_METHOD"] === "PATCH";
+    }
+
+    /**
      * Detect if HTTP Request is DELETE request.
      *
      * @static static method

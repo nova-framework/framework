@@ -10,7 +10,7 @@ namespace Validation;
 
 use Helpers\Inflector;
 use Support\MessageBag;
-use Translation\Translator;
+use Validation\Translator;
 use Validation\DatabasePresenceVerifier;
 
 use Closure;

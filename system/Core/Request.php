@@ -1,6 +1,6 @@
 <?php
 /**
- * Request Class.
+ * Request - Manage the HTTP Requests.
  *
  * @version 3.0
  */

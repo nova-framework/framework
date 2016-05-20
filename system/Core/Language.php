@@ -143,6 +143,16 @@ class Language
     }
 
     /**
+     * Return a Language instance for the specified Domain.
+     *
+     * @return \Core\Language|static
+     */
+    public static function domain($domain, $code = LANGUAGE_CODE)
+    {
+        return static::getInstance($domain, $code);
+    }
+
+    /**
      * Translate a message with optional formatting
      * @param string $message Original message.
      * @param array $params Optional params for formatting.
@@ -166,16 +176,6 @@ class Language
         // The VSPRINTF alternative for Message formatting, for those die-hard against ICU.
         // The message string should be formatted using the standard PRINTF commands.
         //return vsprintf($message, $arguments);
-    }
-
-    /**
-     * Return a Language instance for the specified Domain.
-     *
-     * @return \Core\Language|static
-     */
-    public static function domain($domain, $code = LANGUAGE_CODE)
-    {
-        return static::getInstance($domain, $code);
     }
 
     // Public Getters

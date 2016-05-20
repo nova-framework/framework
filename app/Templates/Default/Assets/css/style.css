@@ -1,7 +1,5 @@
 /* Your styles here */
 
-.navbar-nav > li > a, .navbar-brand {
-    padding-top: 5px !important; padding-bottom: 0 !important;
-    height: 30px;
-}
-.navbar {min-height: 30px !important;}
+.navbar-xs { min-height:28px; height: 28px; }
+.navbar-xs .navbar-brand { padding: 0px 12px;font-size: 16px;line-height: 28px; }
+.navbar-xs .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 28px; }

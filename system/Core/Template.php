@@ -9,7 +9,7 @@
 namespace Core;
 
 use Core\Base\View as BaseView;
-use Core\Language as CoreLanguage;
+use Support\Facades\Language;
 
 
 /**
@@ -48,18 +48,19 @@ class Template extends BaseView
             $data = array();
         }
 
-		$direction = CoreLanguage::direction();
+        // Get the base path for the current Template files.
+        $basePath = APPDIR .'Templates' .DS .$template .DS;
 
-        $ltrPath = str_replace('/', DS, APPDIR ."Templates/$template/$view.php");
-        $rtlPath = str_replace('/', DS, APPDIR ."Templates/$template/$view-rtl.php");
+        // Get the current Language direction.
+        $direction = Language::direction();
 
-        //Prepare the file path
-        $path = $ltrPath;
-        
-        //Prepare the file path if exists for rtl layouts
-        if (file_exists($rtlPath) && $direction == 'rtl')
-            $path = $rtlPath;
-		
-        return new Template($view, $path, $data);
+        // Prepare the Template file names.
+        $ltrFile = $view .'.php';
+        $rtlFile = $view .'-rtl.php';
+
+        // Get the right file for the current Layout, considering the Language directions.
+        $viewFile = (($direction == 'rtl') && file_exists($basePath .$rtlFile)) ? $rtlFile : $ltrFile;
+
+        return new Template($view, $basePath .$viewFile, $data);
     }
 }

@@ -69,7 +69,7 @@ class Request
     public static function headers($key = null)
     {
         if(static::$headers === null) {
-            // Cache the Reqest Headers, avoiding to process them every time.
+            // Cache the Request Headers, avoiding to process them every time.
             $headers = apache_request_headers();
 
             if($headers !== false) {

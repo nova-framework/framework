@@ -19,7 +19,7 @@ foreach ($languages as $code => $info) {
 <?php
 }
 
-$langMenu = ob_get_clean();
+$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">
@@ -45,7 +45,7 @@ echo $css; // Place to pass data / plugable hook zone
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <?= $langMenu; ?>
+                <?= $langMenuLinks; ?>
             </ul>
         </div>
     </div>

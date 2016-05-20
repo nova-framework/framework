@@ -37,6 +37,11 @@ class Language
     private static $instances = array();
 
     /**
+     * The current Language Domain.
+     */
+    private $domain = null;
+
+    /**
      * The current Language information.
      */
     private $code      = 'en';
@@ -74,6 +79,8 @@ class Language
         } else {
             $code = 'en';
         }
+
+        $this->domain = $domain;
 
         //
         $pathName = Inflector::classify($domain);
@@ -114,7 +121,7 @@ class Language
     {
         $code = self::getCurrentLanguage($code);
 
-        // The ID code is something like: 'en/system', 'en/app', 'en/file_manager' or 'en/template/admin'
+        // The ID code is something like: 'en/system', 'en/app' or 'en/file_manager'
         $id = $code .'/' .$domain;
 
         // Initialize the domain instance, if not already exists.
@@ -140,16 +147,6 @@ class Language
                 Session::set('language', $cookie);
             }
         }
-    }
-
-    /**
-     * Return a Language instance for the specified Domain.
-     *
-     * @return \Core\Language|static
-     */
-    public static function domain($domain, $code = LANGUAGE_CODE)
-    {
-        return static::getInstance($domain, $code);
     }
 
     /**
@@ -179,6 +176,15 @@ class Language
     }
 
     // Public Getters
+
+    /**
+     * Get current domain
+     * @return string
+     */
+    public function domain()
+    {
+        return $this->domain;
+    }
 
     /**
      * Get current code

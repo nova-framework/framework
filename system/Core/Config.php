@@ -17,6 +17,17 @@ class Config
      */
     protected static $settings = array();
 
+
+    /**
+     * Return true if the key exists.
+     * @param string $key
+     * @return bool
+     */
+    public static function exists($key)
+    {
+        return isset(static::$settings[$key]);
+    }
+
     /**
      * Get the value.
      * @param string $key
@@ -24,7 +35,7 @@ class Config
      */
     public static function get($key)
     {
-        return isset(self::$settings[$key]) ? self::$settings[$key] : null;
+        return isset(static::$settings[$key]) ? static::$settings[$key] : null;
     }
 
     /**
@@ -34,6 +45,6 @@ class Config
      */
     public static function set($key, $value)
     {
-        self::$settings[$key] = $value;
+        static::$settings[$key] = $value;
     }
 }

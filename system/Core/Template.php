@@ -9,7 +9,7 @@
 namespace Core;
 
 use Core\Base\View as BaseView;
-use Support\Facades\Language;
+use Support\Facades\Language as CoreLanguage;
 
 
 /**
@@ -52,7 +52,7 @@ class Template extends BaseView
         $basePath = APPDIR .'Templates' .DS .$template .DS;
 
         // Get the current Language direction.
-        $direction = Language::direction();
+        $direction = CoreLanguage::direction();
 
         // Prepare the Template file names.
         $ltrFile = $view .'.php';

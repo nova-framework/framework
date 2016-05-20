@@ -26,7 +26,7 @@ class Request
      */
     private static $cache = null;
 
-    
+
     /**
      * Retrieve the request method.
      *
@@ -78,6 +78,10 @@ class Request
                 // Error on retrieving the Request Headers; use a empty array.
                 static::$headers = array();
             }
+        }
+
+        if ($key === null) {
+            return ! empty(static::$headers) ? static::$headers : null;
         }
 
         return array_key_exists($key, static::$headers) ? static::$headers[$key] : null;

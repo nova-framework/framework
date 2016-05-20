@@ -12,6 +12,8 @@ namespace Core;
  */
 class Request
 {
+    private static $headers = null; // There will be cached the Headers.
+
     private static $cache = null; // There will be cached the PUT data if exists.
 
     /**
@@ -46,6 +48,29 @@ class Request
     }
 
     /**
+     * Safer and better access to HTTP Request Headers.
+     *
+     * @param  string   $key
+     * @static static method
+     *
+     * @return mixed
+     */
+    public static function headers($key = null)
+    {
+        if(static::$headers === null) {
+            $headers = apache_request_headers();
+
+            if($headers !== false) {
+                static::$headers = array_change_key_case($headers);
+            } else {
+                static::$headers = array();
+            }
+        }
+
+        return array_key_exists($key, static::$headers) ? static::$headers[$key] : null;
+    }
+
+    /**
      * Safer and better access to $_POST.
      *
      * @param  string   $key
@@ -53,8 +78,12 @@ class Request
      *
      * @return mixed
      */
-    public static function post($key)
+    public static function post($key = null)
     {
+        if ($key === null) {
+            return isset($_POST) ? $_POST : null;
+        }
+
         return array_key_exists($key, $_POST) ? $_POST[$key] : null;
     }
 
@@ -66,8 +95,12 @@ class Request
      *
      * @return mixed
      */
-    public static function files($key)
+    public static function files($key = null)
     {
+        if ($key === null) {
+            return isset($_FILES) ? $_FILES : null;
+        }
+
         return array_key_exists($key, $_FILES) ? $_FILES[$key] : null;
     }
 
@@ -79,7 +112,7 @@ class Request
      *
      * @return mixed
      */
-    public static function query($key)
+    public static function query($key = null)
     {
         return self::get($key);
     }
@@ -92,8 +125,12 @@ class Request
      *
      * @return mixed
      */
-    public static function get($key)
+    public static function get($key = null)
     {
+        if ($key === null) {
+            return isset($_GET) ? $_GET : null;
+        }
+
         return array_key_exists($key, $_GET) ? $_GET[$key] : null;
     }
 

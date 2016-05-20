@@ -9,7 +9,7 @@
 namespace Core;
 
 use Core\Base\View as BaseView;
-use Support\Facades\Language as LanguageManager;
+use Support\Facades\Language as Translator;
 
 
 /**
@@ -59,7 +59,7 @@ class Template extends BaseView
         $path = $basePath .$ltrFile;
 
         // Depending on the Language direction, adjust to RTL Template file, if case.
-        if ((LanguageManager::direction() == 'rtl') && file_exists($basePath .$rtlFile)) {
+        if ((Translator::direction() == 'rtl') && file_exists($basePath .$rtlFile)) {
             $path = $basePath .$rtlFile;
         }
 

@@ -121,6 +121,33 @@ class Request
         return array_key_exists($key, $_POST) ? $_POST[$key] : null;
     }
 
+    protected static function multiple(array $files, $top = true)
+    {
+        $result = array();
+
+        foreach($files as $name => $file) {
+            $subName = $top ? $file['name'] : $name;
+
+            if(is_array($subName)) {
+                foreach(array_keys($subName) as $key) {
+                    $result[$name][$key] = array(
+                        'name'     => $file['name'][$key],
+                        'type'     => $file['type'][$key],
+                        'tmp_name' => $file['tmp_name'][$key],
+                        'error'    => $file['error'][$key],
+                        'size'     => $file['size'][$key],
+                    );
+
+                    $result[$name] = static::multiple($files[$name], false);
+                }
+            } else {
+                $result[$name] = $file;
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Safer and better access to $_FILES.
      *

@@ -27,6 +27,7 @@ class Language
         switch ($method) {
             case 'init':
             case 'getInstance':
+            case 'domain':
                 return call_user_func_array(array(CoreLanguage::class, $method), $params);
 
             default:

@@ -168,6 +168,16 @@ class Language
         //return vsprintf($message, $arguments);
     }
 
+    /**
+     * Return a Language instance for the specified Domain.
+     *
+     * @return \Core\Language|static
+     */
+    public static function domain($domain, $code = LANGUAGE_CODE)
+    {
+        return static::getInstance($domain, $code);
+    }
+
     // Public Getters
 
     /**

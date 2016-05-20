@@ -88,6 +88,23 @@ class Request
     }
 
     /**
+     * Safer and better access to $_SERVER.
+     *
+     * @param  string   $key
+     * @static static method
+     *
+     * @return mixed
+     */
+    public static function server($key = null)
+    {
+        if ($key === null) {
+            return $_SERVER;
+        }
+
+        return array_key_exists($key, $_SERVER) ? $_SERVER[$key] : null;
+    }
+
+    /**
      * Safer and better access to $_POST.
      *
      * @param  string   $key

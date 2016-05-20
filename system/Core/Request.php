@@ -12,10 +12,21 @@ namespace Core;
  */
 class Request
 {
-    private static $headers = null; // There will be cached the Headers.
+    /**
+     * There will be cached the Headers.
+     *
+     * @var array|null
+     */
+    private static $headers = null;
 
-    private static $cache = null; // There will be cached the PUT data if exists.
+    /**
+     * There will be cached the PUT data if exists.
+     *
+     * @var array|null
+     */
+    private static $cache = null;
 
+    
     /**
      * Retrieve the request method.
      *
@@ -58,11 +69,13 @@ class Request
     public static function headers($key = null)
     {
         if(static::$headers === null) {
+            // Cache the Reqest Headers, avoiding to process them every time.
             $headers = apache_request_headers();
 
             if($headers !== false) {
                 static::$headers = array_change_key_case($headers);
             } else {
+                // Error on retrieving the Request Headers; use a empty array.
                 static::$headers = array();
             }
         }

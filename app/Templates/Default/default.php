@@ -46,7 +46,7 @@ echo $css; // Place to pass data / plugable hook zone
 <nav class="navbar navbar-default navbar-xs navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right" style="margin-right: 5px;">
+            <ul class="nav navbar-nav navbar-right">
                 <?= $langMenu; ?>
             </ul>
         </div>

@@ -9,16 +9,17 @@ $language = Language::code();
 $languages = Config::get('languages');
 
 //
-$html = '';
+ob_start();
 
 foreach ($languages as $code => $info) {
-    // Make bold the name of curent Language
-    $linkName = ($language == $code) ? '<b>' .$info['name'] .'</b>' : $info['name'];
-
-    $html .= '<a href="' .site_url('language/' .$code) .'">' .$linkName .'</a> | ' .PHP_EOL;
+?>
+<li <?php if($language == $code) echo 'class="active"'; ?>>
+    <a href='<?= site_url('language/' .$code); ?>'><?= $info['name']; ?></a>
+</li>
+<?php
 }
 
-$langMenu = rtrim(trim($html), ' |') .PHP_EOL;
+$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">
@@ -37,14 +38,20 @@ Assets::css([
 echo $css; // Place to pass data / plugable hook zone
 ?>
 </head>
-<body>
+<body style='padding-top: 28px;'>
+
+<nav class="navbar navbar-default navbar-xs navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <?= $langMenuLinks; ?>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <?= $afterBody; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
-
-<p class="pull-right">
-<?= $langMenu; ?>
-</p>
-<div class="clearfix"></div>
 
 <p><img src='<?= Url::templatePath(); ?>images/nova.png' alt='<?= SITETITLE; ?>'></p>

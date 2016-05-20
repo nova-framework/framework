@@ -10,6 +10,8 @@
 
 namespace Validation;
 
+use Core\Config;
+
 
 class Translator
 {
@@ -25,6 +27,17 @@ class Translator
      */
     public function __construct()
     {
+        $lines = array();
+
+        if (Config::exists('validation')) {
+            // The Error Messages are specified in configuration.
+            $lines = Config::get('validation');
+        } else {
+            // Fallback to the default Error Messages.
+            $lines = require __DIR__ .DS .'messages.php';
+        }
+
+        $this->messages = array('validation' => $lines);
     }
 
     /**
@@ -38,12 +51,6 @@ class Translator
      */
     public function trans($id, array $params = array(), $domain = 'messages', $locale = null)
     {
-        if(! isset($this->messages['validation'])) {
-            $lines = require __DIR__ .DS .'messages.php';
-
-            $this->messages = array('validation' => $lines);
-        }
-
         $line = array_get($this->messages, $id);
 
         if (! is_null($line)) {

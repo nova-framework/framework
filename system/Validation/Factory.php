@@ -9,7 +9,7 @@
 namespace Validation;
 
 use Helpers\Inflector;
-use Translation\Translator;
+use Validation\Translator;
 
 use Closure;
 

@@ -171,7 +171,9 @@ Config::set('classAliases', array(
     'Auth'          => '\Auth\Auth',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',
+    'Input'         => '\Support\Facades\Input',
     'Language'      => '\Support\Facades\Language',
+    'Request'       => '\Support\Facades\Request',
     'Validator'     => '\Support\Facades\Validator',
     // The Legacy Mailer
     'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',

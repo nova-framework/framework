@@ -1,0 +1,73 @@
+<?php
+/**
+ * Request - A Facade to the \Http\Request.
+ *
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ */
+
+namespace Support\Facades;
+
+use Http\Request as HttpRequest;
+
+
+class Request
+{
+    /**
+     * The \Http\Request instance being handled.
+     *
+     * @var \Validation\Factory|null
+     */
+    protected static $request;
+
+    /**
+     * Return a \Http\Request instance
+     *
+     * @return \Http\Request
+     */
+    protected static function getRequest()
+    {
+        if (isset(static::$request)) {
+            return static::$request;
+        }
+
+        return static::$request = HttpRequest::createFromGlobals();
+    }
+
+    /**
+     * Magic Method for calling the methods on the default Request instance.
+     *
+     * @param $method
+     * @param $params
+     *
+     * @return mixed
+     */
+    public static function __callStatic($method, $params)
+    {
+        // First handle the static Methods from Http\Request.
+        switch ($method) {
+            case 'createFromGlobals':
+            case 'create':
+            case 'setFactory':
+            case 'setTrustedProxies':
+            case 'getTrustedProxies' :
+            case 'setTrustedHosts':
+            case 'getTrustedHosts':
+            case 'setTrustedHeaderName':
+            case 'getTrustedHeaderName':
+            case 'normalizeQueryString':
+            case 'enableHttpMethodParameterOverride':
+            case 'getHttpMethodParameterOverride':
+                return call_user_func_array(array(HttpRequest::class, $method), $params);
+
+            default:
+                break;
+        }
+
+        // Get a \Http\Request instance.
+        $instance = static::getRequest();
+
+        // Call the non-static method from the Request instance.
+        return call_user_func_array(array($instance, $method), $params);
+    }
+}

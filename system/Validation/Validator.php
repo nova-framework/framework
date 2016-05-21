@@ -327,7 +327,7 @@ class Validator
     protected function passesOptionalCheck($attribute)
     {
         if ($this->hasRule($attribute, array('Sometimes'))) {
-            return (array_key_exists($attribute, $this->data) ||  || array_key_exists($attribute, $this->files));
+            return (array_key_exists($attribute, $this->data) || array_key_exists($attribute, $this->files));
         } else {
             return true;
         }
@@ -776,7 +776,7 @@ class Validator
             return count($value);
         } else if ($value instanceof File) {
             return $value->getSize() / 1024;
-        }  else {
+        } else {
             return $this->getStringSize($value);
         }
     }

@@ -16,7 +16,7 @@ class EncryptionCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('make:encryptionKey')
+            ->setName('make:key')
             ->setDescription('Generate an encryption key for the config file')
         ;
     }

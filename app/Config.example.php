@@ -140,7 +140,6 @@ Config::set('modules', array(
 Config::set('classAliases', array(
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
-    'Request'       => '\Core\Request',
     'Response'      => '\Core\Response',
     'Redirect'      => '\Core\Redirect',
     'Mail'          => '\Helpers\Mailer',

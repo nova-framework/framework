@@ -28,7 +28,7 @@ class EncryptionCommand extends Command
         $error = null;
         if (file_exists("app/Config.php")) {
             $this->makeKey($this->length);
-            $output->writeln("<info>An Encryption has been generated.</>");
+            $output->writeln("<info>An Encryption key has been generated.</>");
         } else {
             $output->writeln("<error>No Config.php found, configure and rename Config.example.php to Config.php in app.</>");
             $error = true;

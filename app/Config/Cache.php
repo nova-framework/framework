@@ -9,11 +9,6 @@
 
 use Core\Config;
 
-/**
- * Set the Cache files Path.
- */
-define('CACHEPATH', APPDIR .'Cache');
-
 Config::set('cache', array(
     'storage'       => 'files', // Blank for auto
     'default_chmod' => 0777,    // 0777, 0666, 0644

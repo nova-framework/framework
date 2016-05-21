@@ -104,6 +104,11 @@ define('SITETITLE', 'Nova V3.0');
 define('ENCRYPT_KEY', '');
 
 /**
+ * Set the Cache files Path.
+ */
+define('CACHEPATH', APPDIR .'Cache');
+
+/**
  * Setup the Language configuration
  */
 require 'Config/Languages.php';

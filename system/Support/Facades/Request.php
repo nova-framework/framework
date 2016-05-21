@@ -47,19 +47,19 @@ class Request
      */
     public static function __callStatic($method, $params)
     {
-        // First handle the static Methods from Http\Request.
+        // First handle the static Methods from HttpRequest.
         try {
             $reflection = new ReflectionMethod(HttpRequest::class, $method);
 
             if ($reflection->isStatic()) {
-                // Method is static.
+                // The Method is static.
                 return call_user_func_array(array(HttpRequest::class, $method), $params);
             }
         } catch ( ReflectionException $e ) {
             // Nothing to do.
         }
 
-        // Get a \Http\Request instance.
+        // Get a HttpRequest instance.
         $instance = static::getRequest();
 
         // Support for checking the HTTP Method via isX.

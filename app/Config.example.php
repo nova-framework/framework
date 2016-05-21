@@ -5,6 +5,7 @@
  *
  * @author David Carr - dave@daveismyname.com
  * @author Edwin Hoksberg - info@edwinhoksberg.nl
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
@@ -65,7 +66,7 @@ define('DB_HOST', 'localhost');
 /**
  * Database name.
  */
-define('DB_NAME', 'dbname');
+define('DB_NAME', 'nova');
 
 /**
  * Database username.
@@ -75,7 +76,7 @@ define('DB_USER', 'root');
 /**
  * Database password.
  */
-define('DB_PASS', 'password');
+define('DB_PASS', '');
 
 /**
  * PREFER to be used in database calls, default is nova_
@@ -99,7 +100,6 @@ define('SITETITLE', 'Nova V3.0');
 
 /**
  * Define a 32 bit Encryption Key.
- * This tool can be used to generate key - http://jeffreybarke.net/tools/codeigniter-encryption-key-generator
  */
 define('ENCRYPT_KEY', '');
 
@@ -109,140 +109,31 @@ define('ENCRYPT_KEY', '');
 define('CACHEPATH', APPDIR .'Cache');
 
 /**
- * All known Languages
+ * Setup the Language configuration
  */
-Config::set('languages', array(
-    'cz' => array('info' => 'Czech',     'name' => 'čeština',    'locale' => 'cz_CZ', 'dir' => 'ltr'),
-    'da' => array('info' => 'Danish',    'name' => 'Dansk',      'locale' => 'da_DK', 'dir' => 'ltr'),
-    'de' => array('info' => 'German',    'name' => 'Deutsch',    'locale' => 'de_DE', 'dir' => 'ltr'),
-    'en' => array('info' => 'English',   'name' => 'English',    'locale' => 'en_US', 'dir' => 'ltr'),
-    'es' => array('info' => 'Spanish',   'name' => 'Español',    'locale' => 'es_ES', 'dir' => 'ltr'),
-    'fa' => array('info' => 'Persian',   'name' => 'پارسی',      'locale' => 'fa_IR', 'dir' => 'rtl'),
-    'fr' => array('info' => 'French',    'name' => 'Français',   'locale' => 'fr_FR', 'dir' => 'ltr'),
-    'it' => array('info' => 'Italian',   'name' => 'italiano',   'locale' => 'it_IT', 'dir' => 'ltr'),
-    'ja' => array('info' => 'Japanesse', 'name' => '日本語',      'locale' => 'ja_JA', 'dir' => 'ltr'),
-    'nl' => array('info' => 'Dutch',     'name' => 'Nederlands', 'locale' => 'nl_NL', 'dir' => 'ltr'),
-    'pl' => array('info' => 'Polish',    'name' => 'polski',     'locale' => 'pl_PL', 'dir' => 'ltr'),
-    'ro' => array('info' => 'Romanian',  'name' => 'Română',     'locale' => 'ro_RO', 'dir' => 'ltr'),
-    'ru' => array('info' => 'Russian',   'name' => 'ру́сский',    'locale' => 'ru_RU', 'dir' => 'ltr'),
-));
+require 'Config/Languages.php';
 
 /**
- * Setup the Active Modules
+ * Setup the Module cnfiguration
  */
-Config::set('modules', array(
-    'Demos',
-    'Users',
-));
+require 'Config/Modules.php';
 
 /**
- * Setup the Class Aliases configuration.
+ * Setup the Database configuration
  */
-Config::set('classAliases', array(
-    'Config'        => '\Core\Config',
-    'Errors'        => '\Core\Error',
-    'Response'      => '\Core\Response',
-    'Redirect'      => '\Core\Redirect',
-    'Mail'          => '\Helpers\Mailer',
-    'Assets'        => '\Helpers\Assets',
-    'Arr'           => '\Helpers\Arr',
-    'Cookie'        => '\Helpers\Cookie',
-    'Csrf'          => '\Helpers\Csrf',
-    'Date'          => '\Helpers\Date',
-    'Document'      => '\Helpers\Document',
-    'Encrypter'     => '\Helpers\Encrypter',
-    'FastCache'     => '\Helpers\FastCache',
-    'Form'          => '\Helpers\Form',
-    'Ftp'           => '\Helpers\Ftp',
-    'GeoCode'       => '\Helpers\GeoCode',
-    'Hooks'         => '\Helpers\Hooks',
-    'Inflector'     => '\Helpers\Inflector',
-    'Number'        => '\Helpers\Number',
-    'Paginator'     => '\Helpers\Paginator',
-    'Password'      => '\Helpers\Password',
-    'RainCaptcha'   => '\Helpers\RainCaptcha',
-    'ReservedWords' => '\Helpers\ReservedWords',
-    'Session'       => '\Helpers\Session',
-    'SimpleCurl'    => '\Helpers\SimpleCurl',
-    'TableBuilder'  => '\Helpers\TableBuilder',
-    'Tags'          => '\Helpers\Tags',
-    'Url'           => '\Helpers\Url',
-    // The Support Facades
-    'Auth'          => '\Auth\Auth',
-    'DB'            => '\Support\Facades\Database',
-    'Event'         => '\Support\Facades\Event',
-    'Input'         => '\Support\Facades\Input',
-    'Language'      => '\Support\Facades\Language',
-    'Request'       => '\Support\Facades\Request',
-    'Validator'     => '\Support\Facades\Validator',
-    // The Legacy Mailer
-    'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',
-));
+require 'Config/ClassAliases.php';
 
 /**
- * Setup the Database configuration.
+ * Setup the Class Aliases configuration
  */
-Config::set('database', array(
-    'default' => array(
-        'driver'    => DB_TYPE,
-        'hostname'  => DB_HOST,
-        'database'  => DB_NAME,
-        'username'  => DB_USER,
-        'password'  => DB_PASS,
-        'prefix'    => PREFIX,
-        'charset'   => 'utf8',
-        'collation' => 'utf8_general_ci',
-    ),
-));
+require 'Config/Database.php';
 
 /**
  * Setup the Auth configuration.
  */
-Config::set('authentication', array(
-    //'model'      => 'Auth\Model',
-    'model'      => 'App\Modules\Users\Models\Users',
-    // The used Table name and its primary key.
-    'table'      => 'users',
-    'primaryKey' => 'id',
-    // The used Table columns.
-    'columns' => array(
-        'password'      => 'password',
-        'rememberToken' => 'remember_token'
-    ),
-));
+require 'Config/Auth.php';
 
 /**
  * Setup the FastCache configuration.
  */
-Config::set('cache', array(
-    'storage'       => 'files', // Blank for auto
-    'default_chmod' => 0777,    // 0777, 0666, 0644
-
-    /*
-     * Fall back when Driver is not supported.
-     */
-    'fallback'    => "files",
-
-    'securityKey' => 'auto',
-    'htaccess'    => true,
-    'path'        => CACHEPATH,
-
-    'memcache' => array(
-        array("127.0.0.1",11211,1),
-    ),
-    'redis' => array(
-        'host'     => '127.0.0.1',
-        'port'     => '',
-        'password' => '',
-        'database' => '',
-        'timeout'  => ''
-    ),
-    'ssdb' => array(
-        'host'     => '127.0.0.1',
-        'port'     => 8888,
-        'password' => '',
-        'timeout'  => ''
-    ),
-    'extensions' => array(),
-));
-
+require 'Config/Cache.php';

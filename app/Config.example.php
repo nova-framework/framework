@@ -106,7 +106,7 @@ define('ENCRYPT_KEY', '');
 /**
  * Setup the Language configuration
  */
-require 'Configs/Language.php';
+require 'Configs/Languages.php';
 
 /**
  * Setup the Module cnfiguration
@@ -121,7 +121,7 @@ require 'Configs/ClassAliases.php';
 /**
  * Setup the Class Aliases configuration
  */
-require 'Configs/Database.php';
+require 'Configs/Databases.php';
 
 /**
  * Setup the Auth configuration.

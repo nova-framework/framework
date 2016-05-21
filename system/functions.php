@@ -66,23 +66,6 @@ function __($message, $args = null)
 }
 
 /**
- * Output the formatted and translated message.
- *
- * @param string $message English default message
- * @param mixed $args
- * @return string|void
- */
-function _e($message, $args = null)
-{
-    if ($message) {
-        $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
-
-        echo Language::getInstance()
-            ->translate($message, $params);
-    }
-}
-
-/**
  * Get the formatted and translated message back with Domain.
  *
  * @param string $domain

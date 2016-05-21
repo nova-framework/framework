@@ -99,6 +99,7 @@ define('SITETITLE', 'Nova V3.0');
 
 /**
  * Define a 32 bit Encryption Key.
+ * This tool can be used to generate key - http://jeffreybarke.net/tools/codeigniter-encryption-key-generator
  */
 define('ENCRYPT_KEY', '');
 

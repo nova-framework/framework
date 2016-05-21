@@ -5,6 +5,7 @@ namespace Http;
 use ArrayObject;
 use Symfony\Component\HttpFoundation\Cookie;
 
+use Core\Bse\View;
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
 
@@ -18,7 +19,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
      */
     public $original;
 
-    
+
     /**
      * Set a header on the Response.
      *
@@ -61,7 +62,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
             $this->headers->set('Content-Type', 'application/json');
 
             $content = $this->morphToJson($content);
-        } else if ($content instanceof RenderableInterface) {
+        } else if (($content instanceof RenderableInterface) || ($content instanceof View)) {
             $content = $content->render();
         }
 
@@ -76,7 +77,9 @@ class Response extends \Symfony\Component\HttpFoundation\Response
      */
     protected function morphToJson($content)
     {
-        if ($content instanceof JsonableInterface) return $content->toJson();
+        if ($content instanceof JsonableInterface) {
+            return $content->toJson();
+        }
 
         return json_encode($content);
     }
@@ -89,9 +92,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
      */
     protected function shouldBeJson($content)
     {
-        return ($content instanceof JsonableInterface) ||
-               ($content instanceof ArrayObject) ||
-               is_array($content);
+        return (($content instanceof JsonableInterface) || ($content instanceof ArrayObject) || is_array($content));
     }
 
     /**

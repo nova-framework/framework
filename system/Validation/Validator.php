@@ -775,7 +775,7 @@ class Validator
         } else if (is_array($value)) {
             return count($value);
         } else if ($value instanceof File) {
-            return $value->getSize() / 1024;
+            return ($value->getSize() / 1024);
         } else {
             return $this->getStringSize($value);
         }

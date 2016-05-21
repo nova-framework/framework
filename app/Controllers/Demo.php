@@ -69,6 +69,9 @@ class Demo extends Controller
 
         echo '<pre>' .var_export(Request::segment(1), true).'</pre>';
 
+        echo '<pre>' .var_export(Request::isGet(), true).'</pre>';
+        echo '<pre>' .var_export(Request::isPost(), true).'</pre>';
+
         echo '<pre>' .var_export(Input::all(), true).'</pre>';
     }
 

@@ -67,6 +67,11 @@ class Request
         // Get a \Http\Request instance.
         $instance = static::getRequest();
 
+        // Support for checking the HTTP Method via isX.
+        if (str_starts_with($method, 'is') && (strlen($method) > 4)) {
+            return ($instance->method() == strtoupper(substr($method, 2)));
+        }
+
         // Call the non-static method from the Request instance.
         return call_user_func_array(array($instance, $method), $params);
     }

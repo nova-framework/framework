@@ -16,6 +16,13 @@ use Helpers\Inflector;
 class Model
 {
     /**
+     * The Database Connection name.
+     *
+     * @var string
+     */
+    protected $connection = 'default';
+
+    /**
      * The database connection instance.
      *
      * @var \Database\Connection
@@ -42,8 +49,13 @@ class Model
      * @param  array  $attributes
      * @return void
      */
-    public function __construct()
+    public function __construct($connection = null)
     {
+        if (! is_null($connection)) {
+            // Store the requested Connection name.
+            $this->connection = $connection;
+        }
+
         if(is_null($this->table)) {
             // If there is not a Table name specified, try to auto-calculate it.
             $className = get_class($this);
@@ -54,7 +66,8 @@ class Model
             }
         }
 
-        $this->db = Connection::getInstance();
+        // Setup the Connection instance.
+        $this->db = Connection::getInstance($this->connection);
     }
 
     /**
@@ -75,6 +88,39 @@ class Model
     public function getKeyName()
     {
         return $this->primaryKey;
+    }
+
+    /**
+     * Get the database Connection instance.
+     *
+     * @return \Database\Connection
+     */
+    public function getConnection()
+    {
+        return Connection::getInstance($this->connection);
+    }
+
+    /**
+     * Get the current Connection name for the Model.
+     *
+     * @return string
+     */
+    public function getConnectionName()
+    {
+        return $this->connection;
+    }
+
+    /**
+     * Set the Connection associated with the Model.
+     *
+     * @param  string  $name
+     * @return \Database\ORM\Model
+     */
+    public function setConnection($name)
+    {
+        $this->connection = $name;
+
+        return $this;
     }
 
     /**

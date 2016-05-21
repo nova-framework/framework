@@ -98,11 +98,16 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @param  array  $attributes
      * @return void
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = array(), $connection = null)
     {
-        $this->syncOriginal();
+        if (! is_null($connection)) {
+            // Store the requested Connection name.
+            $this->connection = $connection;
+        }
 
         $this->fill($attributes);
+
+        $this->syncOriginal();
     }
 
     /**

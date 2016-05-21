@@ -13,10 +13,14 @@ use Database\Connection;
 use Database\Query\Builder as QueryBuilder;
 use Database\ORM\Builder;
 
+use Support\Contracts\ArrayableInterface;
+use Support\Contracts\JsonableInterface;
+
 use \PDO;
+use ArrayAccess;
 
 
-class Model implements \ArrayAccess
+class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
 {
     /**
      * The Database Connection name.

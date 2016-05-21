@@ -13,13 +13,15 @@ use Core\Response;
 use Core\View as CoreView;
 use Helpers\Inflector;
 
+use Support\Contracts\RenderableInterface;
+
 use ArrayAccess;
 
 
 /**
  * View class to load template and views files.
  */
-abstract class View implements ArrayAccess
+abstract class View implements RenderableInterface, ArrayAccess
 {
     /**
      * @var array Array of shared data

@@ -31,11 +31,11 @@ class Store implements \ArrayAccess
      */
     public function start()
     {
-        if (!$this->getId()) {
+        if (! $this->getId()) {
             session_start();
         }
 
-        if (!$this->has('_token')) {
+        if (! $this->has('csrfToken')) {
             $this->regenerateToken();
         }
 
@@ -53,7 +53,7 @@ class Store implements \ArrayAccess
     }
 
     /**
-     * Set the current Session id.
+     * Set the current Session ID.
      *
      * @param  string  $id
      * @return void
@@ -88,7 +88,7 @@ class Store implements \ArrayAccess
      * Set a key / value pair or array of key / value pairs in the Session.
      *
      * @param  string|array  $key
-     * @param  mixed|null       $value
+     * @param  mixed|null    $value
      * @return void
      */
     public function set($key, $value = null)

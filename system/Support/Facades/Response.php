@@ -11,7 +11,7 @@ use Support\Contracts\ArrayableInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-use Patchwork\Utf8;
+use Patchwork\Utf8 as Patchwork;
 
 
 class Response
@@ -82,7 +82,7 @@ class Response
     }
 
     /**
-     * Create a new File Download response.
+     * Create a new file Download Response.
      *
      * @param  \SplFileInfo|string  $file
      * @param  string  $name
@@ -95,7 +95,7 @@ class Response
         $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
 
         if ( ! is_null($name)) {
-            return $response->setContentDisposition($disposition, $name, Utf8::toAscii($name));
+            return $response->setContentDisposition($disposition, $name, Patchwork::toAscii($name));
         }
 
         return $response;

@@ -111,7 +111,7 @@ require 'Config/Languages.php';
 /**
  * Setup the Module cnfiguration
  */
-require 'Config/Module.php';
+require 'Config/Modules.php';
 
 /**
  * Setup the Database configuration
@@ -121,7 +121,7 @@ require 'Config/ClassAliases.php';
 /**
  * Setup the Class Aliases configuration
  */
-require 'Config/Databases.php';
+require 'Config/Database.php';
 
 /**
  * Setup the Auth configuration.

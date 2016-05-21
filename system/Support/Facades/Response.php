@@ -4,7 +4,7 @@ namespace Support\Facades;
 
 use Core\View;
 use Http\JsonResponse;
-use Http\Response as IlluminateResponse;
+use Http\Response as HttpResponse;
 use Support\Contracts\ArrayableInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -22,7 +22,7 @@ class Response
     protected static $macros = array();
 
     /**
-     * Return a new response from the application.
+     * Return a new Response from the application.
      *
      * @param  string  $content
      * @param  int     $status
@@ -31,11 +31,11 @@ class Response
      */
     public static function make($content = '', $status = 200, array $headers = array())
     {
-        return new IlluminateResponse($content, $status, $headers);
+        return new HttpResponse($content, $status, $headers);
     }
 
     /**
-     * Return a new View response from the application.
+     * Return a new View Response from the application.
      *
      * @param  string  $view
      * @param  array   $data
@@ -49,7 +49,7 @@ class Response
     }
 
     /**
-     * Return a new JSON response from the application.
+     * Return a new JSON Response from the application.
      *
      * @param  string|array  $data
      * @param  int    $status
@@ -67,7 +67,7 @@ class Response
     }
 
     /**
-     * Return a new streamed response from the application.
+     * Return a new Streamed Response from the application.
      *
      * @param  \Closure  $callback
      * @param  int      $status
@@ -80,7 +80,7 @@ class Response
     }
 
     /**
-     * Create a new file download response.
+     * Create a new File Download response.
      *
      * @param  \SplFileInfo|string  $file
      * @param  string  $name

@@ -12,6 +12,7 @@ use Core\Language;
 use Core\Modules;
 use Core\Router;
 use Helpers\Session;
+use Patchwork\Utf8\Bootup as PatchworkBootup;
 
 
 /** Turn on the custom error handling. */
@@ -44,6 +45,9 @@ Session::init();
 
 /** Initialize the Language. */
 Language::init();
+
+/** Initialize the Patchwork Utf8. */
+PatchworkBootup::initAll();
 
 /** Initialize the active Modules */
 Modules::init();

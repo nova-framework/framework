@@ -9,8 +9,11 @@ use Support\Contracts\ArrayableInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class Response {
+use Patchwork\Utf8;
 
+
+class Response
+{
     /**
      * An array of registered Response macros.
      *
@@ -90,7 +93,7 @@ class Response {
         $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
 
         if ( ! is_null($name)) {
-            return $response->setContentDisposition($disposition, $name, Str::ascii($name));
+            return $response->setContentDisposition($disposition, $name, Utf8::toAscii($name));
         }
 
         return $response;
@@ -119,8 +122,7 @@ class Response {
      */
     public static function __callStatic($method, $parameters)
     {
-        if (isset(static::$macros[$method]))
-        {
+        if (isset(static::$macros[$method])) {
             return call_user_func_array(static::$macros[$method], $parameters);
         }
 

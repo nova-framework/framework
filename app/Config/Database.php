@@ -10,39 +10,6 @@
 
 use Core\Config;
 
-//
-// database details ONLY NEEDED IF USING A DATABASE
-
-/**
- * Database engine, default is mysql.
- */
-define('DB_TYPE', 'mysql');
-
-/**
- * Database host, default is localhost.
- */
-define('DB_HOST', 'localhost');
-
-/**
- * Database name.
- */
-define('DB_NAME', 'nova');
-
-/**
- * Database username.
- */
-define('DB_USER', 'root');
-
-/**
- * Database password.
- */
-define('DB_PASS', '');
-
-/**
- * PREFER to be used in database calls, default is nova_
- */
-define('PREFIX', 'nova_');
-
 /**
  * Setup the Database configuration.
  */

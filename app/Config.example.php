@@ -166,7 +166,7 @@ Config::set('classAliases', array(
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
-    // The Facades
+    // The Support Facades
     'Auth'          => '\Auth\Auth',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',

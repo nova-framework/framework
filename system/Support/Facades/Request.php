@@ -10,6 +10,9 @@ namespace Support\Facades;
 
 use Http\Request as HttpRequest;
 
+use ReflectionMethod;
+use ReflectionException;
+
 
 class Request
 {
@@ -45,23 +48,15 @@ class Request
     public static function __callStatic($method, $params)
     {
         // First handle the static Methods from Http\Request.
-        switch ($method) {
-            case 'createFromGlobals':
-            case 'create':
-            case 'setFactory':
-            case 'setTrustedProxies':
-            case 'getTrustedProxies' :
-            case 'setTrustedHosts':
-            case 'getTrustedHosts':
-            case 'setTrustedHeaderName':
-            case 'getTrustedHeaderName':
-            case 'normalizeQueryString':
-            case 'enableHttpMethodParameterOverride':
-            case 'getHttpMethodParameterOverride':
-                return call_user_func_array(array(HttpRequest::class, $method), $params);
+        try {
+            $reflection = new ReflectionMethod(HttpRequest::class, $method);
 
-            default:
-                break;
+            if ($reflection->isStatic()) {
+                // Method is static.
+                return call_user_func_array(array(HttpRequest::class, $method), $params);
+            }
+        } catch ( ReflectionException $e ) {
+            // Nothing to do.
         }
 
         // Get a \Http\Request instance.

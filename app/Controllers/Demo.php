@@ -57,7 +57,7 @@ class Demo extends Controller
 
     public function request($param1 = '', $param2 = '', $param3 = '', $param4 = '')
     {
-        echo '<h3>Request</h3>';
+        echo '<h3>HTTP Request</h3>';
 
         echo '<pre>' .var_export(Request::root(), true).'</pre>';
 
@@ -70,9 +70,12 @@ class Demo extends Controller
         echo '<pre>' .var_export(Request::segment(1), true).'</pre>';
 
         echo '<pre>' .var_export(Request::isGet(), true).'</pre>';
+
         echo '<pre>' .var_export(Request::isPost(), true).'</pre>';
 
         echo '<pre>' .var_export(Input::all(), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::createFromGlobals(), true).'</pre>';
     }
 
     public function events()

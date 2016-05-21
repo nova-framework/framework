@@ -106,29 +106,29 @@ define('ENCRYPT_KEY', '');
 /**
  * Setup the Language configuration
  */
-require 'Configs/Languages.php';
+require 'Config/Languages.php';
 
 /**
  * Setup the Module cnfiguration
  */
-require 'Configs/Module.php';
+require 'Config/Module.php';
 
 /**
  * Setup the Database configuration
  */
-require 'Configs/ClassAliases.php';
+require 'Config/ClassAliases.php';
 
 /**
  * Setup the Class Aliases configuration
  */
-require 'Configs/Databases.php';
+require 'Config/Databases.php';
 
 /**
  * Setup the Auth configuration.
  */
-require 'Configs/Auth.php';
+require 'Config/Auth.php';
 
 /**
  * Setup the FastCache configuration.
  */
-require 'Configs/Cache.php';
+require 'Config/Cache.php';

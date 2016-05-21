@@ -79,9 +79,9 @@ class Validator
      */
     public static function __callStatic($method, $params)
     {
-        $factory = static::getFactory();
+        $instance = static::getFactory();
 
         // Call the non-static method from the Dispatcher instance.
-        return call_user_func_array(array($factory, $method), $params);
+        return call_user_func_array(array($instance, $method), $params);
     }
 }

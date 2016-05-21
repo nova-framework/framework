@@ -22,6 +22,8 @@ Router::any('demo/database',        'App\Controllers\Demo@database');
 Router::any('demo/events',          'App\Controllers\Demo@events');
 Router::any('demo/validate',        'App\Controllers\Demo@validate');
 
+Router::any('demo/request(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@request');
+
 Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
     'filters' => 'test',
     'uses'    => 'App\Controllers\Demo@test'

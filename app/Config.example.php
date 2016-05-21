@@ -140,7 +140,6 @@ Config::set('modules', array(
 Config::set('classAliases', array(
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
-    'Request'       => '\Core\Request',
     'Response'      => '\Core\Response',
     'Redirect'      => '\Core\Redirect',
     'Mail'          => '\Helpers\Mailer',
@@ -167,11 +166,13 @@ Config::set('classAliases', array(
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
-    // The Facades
+    // The Support Facades
     'Auth'          => '\Auth\Auth',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',
+    'Input'         => '\Support\Facades\Input',
     'Language'      => '\Support\Facades\Language',
+    'Request'       => '\Support\Facades\Request',
     'Validator'     => '\Support\Facades\Validator',
     // The Legacy Mailer
     'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',

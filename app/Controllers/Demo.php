@@ -8,8 +8,11 @@ use Helpers\Url;
 
 use Event;
 use Validator;
+use Input;
+use Request;
 
 use App\Models\ORM\User;
+
 
 /*
 *
@@ -50,6 +53,29 @@ class Demo extends Controller
         echo '<h3>Action parameters</h3>';
 
         echo '<pre>' .var_export($params, true) .'</pre>';
+    }
+
+    public function request($param1 = '', $param2 = '', $param3 = '', $param4 = '')
+    {
+        echo '<h3>HTTP Request</h3>';
+
+        echo '<pre>' .var_export(Request::root(), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::url(), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::path(), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::segments(), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::segment(1), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::isGet(), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::isPost(), true).'</pre>';
+
+        echo '<pre>' .var_export(Input::all(), true).'</pre>';
+
+        echo '<pre>' .var_export(Request::createFromGlobals(), true).'</pre>';
     }
 
     public function events()

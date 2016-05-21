@@ -35,9 +35,8 @@ class Auth
      * @param  string  $guard
      * @return Guard
      */
-    public static function guard($guard = null)
+    public static function guard($guard = 'default')
     {
-        $guard = ($guard !== null) ? $guard : 'default';
 
         if ( ! isset(static::$guards[$guard])) {
             static::$guards[$guard] = static::factory($guard);

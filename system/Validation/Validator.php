@@ -13,6 +13,9 @@ use Support\MessageBag;
 use Validation\Translator;
 use Validation\DatabasePresenceVerifier;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Closure;
 use DateTime;
 
@@ -53,6 +56,13 @@ class Validator
      * @var array
      */
     protected $data;
+
+    /**
+     * The files under validation.
+     *
+     * @var array
+     */
+    protected $files = array();
 
     /**
      * The rules to be applied to the data.
@@ -135,11 +145,32 @@ class Validator
 
         $this->customMessages = $messages;
 
-        $this->data = $data;
+        $this->data = $this->parseData($data);
 
         $this->rules = $this->explodeRules($rules);
 
         $this->customAttributes = $customAttributes;
+    }
+
+    /**
+     * Parse the data and hydrate the files array.
+     *
+     * @param  array  $data
+     * @return array
+     */
+    protected function parseData(array $data)
+    {
+        $this->files = array();
+
+        foreach ($data as $key => $value) {
+            if ($value instanceof File) {
+                $this->files[$key] = $value;
+
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -167,7 +198,7 @@ class Validator
      */
     public function sometimes($attribute, $rules, $callback)
     {
-        $payload = $this->data;
+        $payload = array_merge($this->data, $this->files);
 
         if (call_user_func($callback, $payload)) {
             foreach ((array) $attribute as $key) {
@@ -255,6 +286,8 @@ class Validator
     {
         if (! is_null($value = array_get($this->data, $attribute))) {
             return $value;
+        } else if (! is_null($value = array_get($this->files, $attribute))) {
+            return $value;
         }
     }
 
@@ -294,7 +327,7 @@ class Validator
     protected function passesOptionalCheck($attribute)
     {
         if ($this->hasRule($attribute, array('Sometimes'))) {
-            return array_key_exists($attribute, $this->data);
+            return (array_key_exists($attribute, $this->data) ||  || array_key_exists($attribute, $this->files));
         } else {
             return true;
         }
@@ -366,8 +399,10 @@ class Validator
     {
         if (is_null($value)) {
             return false;
-        } elseif (is_string($value) && (trim($value) === '')) {
+        } else if (is_string($value) && (trim($value) === '')) {
             return false;
+        } else if ($value instanceof File) {
+            return ((string) $value->getPath() != '');
         }
 
         return true;
@@ -382,7 +417,7 @@ class Validator
      */
     protected function validateFilled($attribute, $value)
     {
-        if (array_key_exists($attribute, $this->data)) {
+        if (array_key_exists($attribute, $this->data) || array_key_exists($attribute, $this->files)) {
             return $this->validateRequired($attribute, $value);
         } else {
             return true;
@@ -521,7 +556,7 @@ class Validator
         $count = 0;
 
         foreach ($attributes as $key) {
-            if (array_get($this->data, $key)) {
+            if (array_get($this->data, $key) || array_get($this->files, $key)) {
                 $count++;
             }
         }
@@ -719,6 +754,8 @@ class Validator
     {
         $this->requireParameterCount(1, $parameters, 'max');
 
+        if (($value instanceof UploadedFile) && ! $value->isValid()) return false;
+
         return ($this->getSize($attribute, $value) <= $parameters[0]);
     }
 
@@ -735,9 +772,11 @@ class Validator
 
         if (is_numeric($value) && $hasNumeric) {
             return array_get($this->data, $attribute);
-        } elseif (is_array($value)) {
+        } else if (is_array($value)) {
             return count($value);
-        } else {
+        } else if ($value instanceof File) {
+            return $value->getSize() / 1024;
+        }  else {
             return $this->getStringSize($value);
         }
     }
@@ -982,6 +1021,23 @@ class Validator
     }
 
     /**
+     * Validate the MIME type of a file upload attribute is in a set of MIME types.
+     *
+     * @param  string  $attribute
+     * @param  array   $value
+     * @param  array   $parameters
+     * @return bool
+     */
+    protected function validateMimes($attribute, $value, $parameters)
+    {
+        if ((! $value instanceof File) || ($value->getPath() == '')) {
+            return true;
+        }
+
+        return in_array($value->guessExtension(), $parameters);
+    }
+
+    /**
      * Validate that an attribute contains only alphabetic characters.
      *
      * @param  string  $attribute
@@ -1208,8 +1264,10 @@ class Validator
     {
         if ($this->hasRule($attribute, $this->numericRules)) {
             return 'numeric';
-        } elseif ($this->hasRule($attribute, array('Array'))) {
+        } else if ($this->hasRule($attribute, array('Array'))) {
             return 'array';
+        } else if (array_key_exists($attribute, $this->files)) {
+            return 'file';
         }
 
         return 'string';
@@ -1764,6 +1822,29 @@ class Validator
     public function setAttributeNames(array $attributes)
     {
         $this->customAttributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * Get the files under validation.
+     *
+     * @return array
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Set the files under validation.
+     *
+     * @param  array  $files
+     * @return \Validation\Validator
+     */
+    public function setFiles(array $files)
+    {
+        $this->files = $files;
 
         return $this;
     }

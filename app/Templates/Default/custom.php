@@ -67,7 +67,7 @@ echo $css; // Place to pass data / plugable hook zone
 
 <?php
 Assets::js([
-    'https://code.jquery.com/jquery-1.12.1.min.js',
+    'https://code.jquery.com/jquery-1.12.4.min.js',
     'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
 ]);
 

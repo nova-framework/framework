@@ -2,7 +2,7 @@
 
 <?php
 Assets::js([
-	'https://code.jquery.com/jquery-1.12.1.min.js',
+	'https://code.jquery.com/jquery-1.12.4.min.js',
     template_url('js/bootstrap-rtl.min.js', 'Default'),
 ]);
 

@@ -55,6 +55,7 @@ Option 1 - files above document root:
 * navigate to your project in terminal and type composer install to initiate the composer install.
 * edit public/.htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
 * edit app/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
+* set ENCRYPT_KEY to a 32 chars a useful tool to generate a kay is to use http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/
 
 Option 2 - everything inside your public folder
 
@@ -71,6 +72,7 @@ define('ROOTDIR', realpath(__DIR__).'/');
 
 * edit .htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
 * edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
+* set ENCRYPT_KEY to a 32 chars a useful tool to generate a kay is to use http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/
 
 ---
 
@@ -134,8 +136,8 @@ For IIS the htaccess needs to be converted to web.config:
 
 ##Setting up a VirtualHost (Optional but recommended)
 
-Navigate to: 
-```` 
+Navigate to:
+````
 <path to your xampp installation>\apache\conf\extra\httpd-vhosts.conf
 ````
 

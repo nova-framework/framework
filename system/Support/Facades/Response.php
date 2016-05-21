@@ -2,6 +2,7 @@
 
 namespace Support\Facades;
 
+use Core\Template;
 use Core\View;
 use Http\JsonResponse;
 use Http\Response as HttpResponse;
@@ -99,6 +100,34 @@ class Response
         }
 
         return $response;
+    }
+
+    /**
+     * Create a new Error Response instance.
+     *
+     * The Response Status code will be set using the specified code.
+     *
+     * The specified error should match a View in your Views/Error directory.
+     *
+     * <code>
+     *      // Create a 404 response.
+     *      return Response::error('404');
+     *
+     *      // Create a 404 response with data.
+     *      return Response::error('404', array('message' => 'Not Found'));
+     * </code>
+     *
+     * @param  int       $code
+     * @param  array     $data
+     * @return Response
+     */
+    public static function error($status, array $data = array(), $headers = array())
+    {
+        $view = Template::make('default')
+            ->shares('title', 'Error ' .$code)
+            ->nest('content', 'Error/' .$code, $data);
+
+        return static::make($view, $status, $headers);
     }
 
     /**

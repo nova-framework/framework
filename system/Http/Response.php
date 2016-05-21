@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
 
+
 class Response extends \Symfony\Component\HttpFoundation\Response
 {
     /**

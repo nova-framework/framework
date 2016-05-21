@@ -5,7 +5,9 @@ namespace Support\Facades;
 use Core\View;
 use Http\JsonResponse;
 use Http\Response as HttpResponse;
+
 use Support\Contracts\ArrayableInterface;
+
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 

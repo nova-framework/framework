@@ -12,12 +12,13 @@ use Support\Contracts\RenderableInterface;
 class Response extends \Symfony\Component\HttpFoundation\Response
 {
     /**
-     * The original content of the response.
+     * The original content of the Response.
      *
      * @var mixed
      */
     public $original;
 
+    
     /**
      * Set a header on the Response.
      *

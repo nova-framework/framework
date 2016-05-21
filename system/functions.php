@@ -143,6 +143,18 @@ function array_set(&$array, $key, $value)
 }
 
 /**
+ * Get a subset of the items from the given array.
+ *
+ * @param  array  $array
+ * @param  array  $keys
+ * @return array
+ */
+function array_only($array, $keys)
+{
+    return array_intersect_key($array, array_flip((array) $keys));
+}
+
+/**
  * Remove an array item from a given array using "dot" notation.
  *
  * @param  array   $array

@@ -47,6 +47,4 @@ Config::set('classAliases', array(
     'Request'       => '\Support\Facades\Request',
     'Session'       => '\Support\Facades\Session',
     'Validator'     => '\Support\Facades\Validator',
-    // The Legacy Mailer
-    'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',
 ));

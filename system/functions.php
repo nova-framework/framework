@@ -371,12 +371,5 @@ function ucw($data)
  */
 function createKey($length = 32)
 {
-    $chars = "!@#$%^&*()_+-=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-    $key = "";
-
-    for ($i = 0; $i < $length; $i++) {
-        $key .= $chars{rand(0, strlen($chars) - 1)};
-    }
-
-    return $key;
+    return str_random($length);
 }

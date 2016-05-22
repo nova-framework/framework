@@ -57,17 +57,78 @@ class Model
         }
 
         if(is_null($this->table)) {
-            // If there is not a Table name specified, try to auto-calculate it.
+            // There is not a Table name specified; try to auto-calculate it.
             $className = get_class($this);
 
-            if($className != 'Database\Model') {
-                // A child Class with no Table specified; try to auto-configure.
-                $this->table = Inflector::tableize(class_basename($className));
-            }
+            $this->table = Inflector::tableize(class_basename($className));
         }
 
         // Setup the Connection instance.
         $this->db = Connection::getInstance($this->connection);
+    }
+
+    /**
+     * Get all of the Records from the database.
+     *
+     * @param  array  $columns
+     * @return array
+     */
+    public static function all($columns = array('*'))
+    {
+        return $this->newQuery()->get($columns);
+    }
+
+    /**
+     * Find a Record by its primary key.
+     *
+     * @param  mixed  $id
+     * @param  array  $columns
+     * @return Model
+     */
+    public function find($id, $columns = array('*'))
+    {
+        return $this->newQuery()
+            ->where($this->getKeyName(), $id)
+            ->first($columns);
+    }
+
+    /**
+     * Insert a new Record and get the value of the primary key.
+     *
+     * @param  array   $values
+     * @return int
+     */
+    public function insert(array $values)
+    {
+        return $this->newQuery()->insertGetId($values);
+    }
+
+    /**
+     * Update the Model in the database.
+     *
+     * @param  mixed  $id
+     * @param  array  $attributes
+     * @return mixed
+     */
+    public function update($id, array $attributes = array())
+    {
+        return $this->newQuery()
+            ->where($this->getKeyName(), $id)
+            ->update($attributes);
+    }
+
+    /**
+     * Delete the Record from the database.
+     *
+     * @return bool|null
+     */
+    public function delete($id)
+    {
+        $this->newQuery()
+            ->where($this->getKeyName(), $id)
+            ->delete();
+
+        return true;
     }
 
     /**
@@ -114,7 +175,7 @@ class Model
      * Set the Connection associated with the Model.
      *
      * @param  string  $name
-     * @return \Database\ORM\Model
+     * @return \Database\Model
      */
     public function setConnection($name)
     {

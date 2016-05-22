@@ -7,7 +7,8 @@ use Core\Language as CoreLanguage;
 use Core\Redirect;
 use Helpers\Url;
 use Helpers\Cookie;
-use Helpers\Session;
+
+use Session;
 
 
 class Language extends Controller

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Core\Route;
+use Routing\Route;
 use Core\Response;
 use Core\Redirect;
 use Helpers\Csrf;

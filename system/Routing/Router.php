@@ -6,14 +6,14 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Routing;
 
-use Core\Base\Router as BaseRouter;
 use Core\Request;
 use Core\Response;
-use Core\Route;
 use Helpers\Inflector;
 use Helpers\Url;
+use Routing\BaseRouter;
+use Routing\Route;
 
 /**
  * Router class will load requested controller / closure based on url.

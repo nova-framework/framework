@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Core\Router;
+use Routing\Router;
 use Helpers\Hooks;
 
 

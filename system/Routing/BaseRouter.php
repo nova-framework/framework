@@ -6,19 +6,20 @@
  * @version 3.0
  */
 
-namespace Core\Base;
+namespace Routing;
 
-use Core\Base\View;
+use Core\BaseView as View;
 use Core\Controller;
 use Core\Response;
-use Core\Route;
 use Helpers\Inflector;
+
+use Routing\Route;
 
 
 /**
  * Router class will load requested Controller / Closure based on URL.
  */
-abstract class Router
+abstract class BaseRouter
 {
     /**
      * The Router instance.
@@ -125,7 +126,7 @@ abstract class Router
      */
     protected static function register($method, $route, $callback = null)
     {
-        // Nothing to do there. 
+        // Nothing to do there.
     }
 
     /**

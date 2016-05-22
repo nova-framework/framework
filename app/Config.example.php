@@ -25,9 +25,9 @@ define('DIR', '/');
  * Set the Application Router.
  */
 // Default Routing
-define('APPROUTER', '\Core\Router');
+define('APPROUTER', '\Routing\Router');
 // Classic Routing
-// define('APPROUTER', '\Core\ClassicRouter');
+// define('APPROUTER', '\Routing\ClassicRouter');
 
 /**
  * Set timezone.

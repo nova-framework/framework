@@ -10,8 +10,7 @@
 use Core\Aliases;
 use Core\Language;
 use Core\Modules;
-use Core\Router;
-
+use Routing\Router;
 use Support\Facades\Session;
 
 use Patchwork\Utf8\Bootup as Patchwork;

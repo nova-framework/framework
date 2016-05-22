@@ -5,7 +5,8 @@ namespace Http;
 use ArrayObject;
 use Symfony\Component\HttpFoundation\Cookie;
 
-use Core\Base\View;
+use Core\BaseView as View;
+
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
 

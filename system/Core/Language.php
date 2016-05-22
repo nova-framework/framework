@@ -248,10 +248,9 @@ class Language
      */
     protected static function getCurrentLanguage($code)
     {
-        if ($code != LANGUAGE_CODE) {
-            // User defined Language Code; nothing to do.
-        } else if (Session::has('language')) {
-            return Session::get('language');
+        // Check if the end-user do not ask for a custom code.
+        if ($code == LANGUAGE_CODE) {
+            return Session::get('language', $code);
         }
 
         return $code;

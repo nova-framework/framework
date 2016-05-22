@@ -57,7 +57,6 @@ class Request
             }
         } catch ( ReflectionException $e ) {
             // Method not found.
-            return;
         }
 
         // Get a HttpRequest instance.

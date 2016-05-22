@@ -10,13 +10,14 @@ namespace App\Modules\Users\Controllers;
 
 use Core\Controller;
 use Core\Redirect;
-use Core\Request;
 use Core\View;
 use Helpers\Csrf;
 use Helpers\Password;
 use Helpers\Url;
 
 use Auth;
+use Input;
+use Request;
 
 
 class Users extends Controller
@@ -54,12 +55,12 @@ class Users extends Controller
         if(Request::isPost()) {
             // Prepare the Authentication credentials.
             $credentials = array(
-                'username' => Request::post('username'),
-                'password' => Request::post('password')
+                'username' => Input::get('username'),
+                'password' => Input::get('password')
             );
 
             // Prepare the 'remember' parameter.
-            $remember = (Request::post('remember') == 'on');
+            $remember = (Input::get('remember') == 'on');
 
             // Make an attempt to login the Guest with the given credentials.
             if(Auth::attempt($credentials, $remember)) {
@@ -98,10 +99,10 @@ class Users extends Controller
 
         if(Request::isPost()) {
             // The requested new Password information.
-            $password = Request::post('newPassword');
-            $confirm  = Request::post('confirmPass');
+            $password = Input::get('newPassword');
+            $confirm  = Input::get('confirmPass');
 
-            if (! Password::verify(Request::post('password'), $user->password)) {
+            if (! Password::verify(Input::get('password'), $user->password)) {
                 $error[] = __d('users', 'The current Password is invalid.');
             } else if ($password != $confirm) {
                 $error[] = __d('users', 'The new Password and its verification are not equals.');

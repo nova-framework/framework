@@ -8,7 +8,7 @@
 
 namespace Helpers;
 
-use Helpers\Encrypter;
+use Crypt;
 
 
 /**
@@ -44,7 +44,7 @@ class Cookie
         $retval = false;
 
         // Encrypt the value
-        $value = Encrypter::encrypt($value);
+        $value = Crypt::encrypt($value);
 
         // Ensure to have a valid domain.
         $domain = ($domain !== false) ? $domain : $_SERVER['HTTP_HOST'];
@@ -84,7 +84,7 @@ class Cookie
         $cookie = $_COOKIE[$key];
 
         try {
-            $result = Encrypter::decrypt($cookie);
+            $result = Crypt::decrypt($cookie);
         } catch (\Exception $e) {
             // That's not a valid Cookie; destroy it.
             static::destroy($key);

@@ -10,8 +10,7 @@ namespace Helpers;
 
 use Core\Config;
 
-use \phpFastCache;
-
+use phpFastCache\CacheManager;
 
 /**
  * FastCache
@@ -36,13 +35,8 @@ class FastCache
 
         $config['storage'] = $storage;
 
-        $storage = strtolower($storage);
-
-        if (empty($storage) || ($storage == 'auto')) {
-            $storage = phpFastCache::getAutoClass($config);
-        }
-
-        $this->cache = phpFastCache($storage, $config);
+        // Initialize the PhpFastCache instance.
+        $this->cache = CacheManager::getInstance($storage, $config);
     }
 
     /**

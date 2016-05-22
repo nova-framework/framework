@@ -37,7 +37,7 @@ class Template extends BaseView
      * @param string $custom
      * @return Template
      */
-    public static function make($view, $data = array(), $template = TEMPLATE)
+    public static function make($view, $data = array(), $template = null)
     {
         if (is_string($data)) {
             if (! empty($data) && ($template === null)) {
@@ -47,6 +47,9 @@ class Template extends BaseView
 
             $data = array();
         }
+
+        // Adjust the current Template.
+        $template = ($template !== null) ? $template : TEMPLATE;
 
         // Get the base path for the current Template files.
         $basePath = APPDIR .'Templates' .DS .$template .DS;

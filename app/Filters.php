@@ -10,7 +10,7 @@ use Core\Route;
 use Core\Response;
 use Core\Redirect;
 use Helpers\Csrf;
-use Auth\Auth;
+use Support\Facades\Auth;
 
 
 /** Define Route Filters. */

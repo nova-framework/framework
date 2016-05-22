@@ -45,7 +45,10 @@ class Cookie
      */
     public static function has($key)
     {
-        return ! is_null(Request::instance()->cookie($key, null));
+        // Get the Request instance.
+        $request = Request::instance();
+
+        return ! is_null($request->cookie($key, null));
     }
 
     /**
@@ -57,7 +60,10 @@ class Cookie
      */
     public static function get($key = null, $default = null)
     {
-        return Request::instance()->cookie($key, $default);
+        // Get the Request instance.
+        $request = Request::instance();
+
+        return $request->cookie($key, $default);
     }
 
     /**

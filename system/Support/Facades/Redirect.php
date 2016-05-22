@@ -9,15 +9,37 @@
 namespace Support\Facades;
 
 use Routing\Redirector;
-
-use ReflectionMethod;
-use ReflectionException;
+use Support\Facades\Request;
 
 
 class Redirect
 {
     /**
-     * Magic Method for calling the methods on a RedirectResponse instance.
+     * The Session Store instance being handled.
+     *
+     * @var \Routing\Redirector|null
+     */
+    protected static $redirector;
+
+    /**
+     * Return a Session Store instance
+     *
+     * @return \Routing\Redirector
+     */
+    protected static function getRedirector()
+    {
+        if (isset(static::$redirector)) {
+            return static::$redirector;
+        }
+
+        // Get the Request instance.
+        $request = Request::instance();
+
+        return static::$sessionStore = new Redirector($request);
+    }
+
+    /**
+     * Magic Method for calling the methods on a Redirector instance.
      *
      * @param $method
      * @param $params
@@ -26,10 +48,10 @@ class Redirect
      */
     public static function __callStatic($method, $params)
     {
-        // Get a RedirectResponse instance.
-        $instance = new Redirector();
+        // Get a Redirector instance.
+        $instance = static::getRedirector();
 
-        // Call the non-static method from the Request instance.
+        // Call the non-static method from the Redirector instance.
         return call_user_func_array(array($instance, $method), $params);
     }
 }

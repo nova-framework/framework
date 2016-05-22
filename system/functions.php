@@ -303,22 +303,33 @@ function with($object)
  * print_r call wrapped in pre tags
  *
  * @param  string or array $data
+ * @param  boolean $exit
  */
-function pr($data)
+function pr($data, $exit = false)
 {
     echo "<pre>";
     print_r($data);
     echo "</pre>";
+
+    if ($exit == true) {
+        exit;
+    }
 }
 
 /**
  * var_dump call
  *
  * @param  string or array $data
+ * @param  boolean $exit
+ *
  */
-function vd($data)
+function vd($data, $exit = false)
 {
     var_dump($data);
+
+    if ($exit == true) {
+        exit;
+    }
 }
 
 /**

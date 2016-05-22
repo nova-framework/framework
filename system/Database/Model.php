@@ -73,7 +73,7 @@ class Model
      * @param  array  $columns
      * @return array
      */
-    public static function all($columns = array('*'))
+    public function all($columns = array('*'))
     {
         return $this->newQuery()->get($columns);
     }

@@ -32,7 +32,7 @@ class Session
             return static::$sessionStore;
         }
 
-        return static::$sessionStore = new SessionStore(PREFIX .'_session');
+        return static::$sessionStore = new SessionStore(PREFIX .'session');
     }
 
     /**

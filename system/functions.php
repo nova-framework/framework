@@ -8,7 +8,7 @@
  */
 
 use Helpers\Url;
-use Helpers\Encrypter;
+use Support\Facades\Crypt;
 use Support\Facades\Language;
 
 /**
@@ -260,7 +260,7 @@ function str_ends_with($haystack, $needle)
 function str_random($length = 16)
 {
     // Generate a more truly "random" alpha-numeric string.
-    $bytes = Encrypter::randomBytes($length * 2);
+    $bytes = Crypt::getRandomBytes($length * 2);
 
     return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
 }

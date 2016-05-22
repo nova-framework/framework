@@ -52,6 +52,17 @@ class Encrypter
     }
 
     /**
+     * Get random bytes.
+     *
+     * @param   int $length  Output length
+     * @return  string
+     */
+    public function getRandomBytes($length = 32)
+    {
+        return mcrypt_create_iv($length, $this->getRandomizer());
+    }
+
+    /**
      * Encrypt the given value.
      *
      * @param  string  $value

@@ -251,7 +251,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
-     * Delete the model from the database.
+     * Delete the Model from the database.
      *
      * @return bool|null
      */

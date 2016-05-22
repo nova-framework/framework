@@ -17,7 +17,7 @@
         "symfony/console": "3.0.*",
         "doctrine/inflector": "1.0.*",
         "phpmailer/phpmailer": "5.2.*",
-        "phpfastcache/phpfastcache": "3.0.*",
+        "phpfastcache/phpfastcache": "4.0.*",
         "symfony/http-foundation": "^3.0",
         "patchwork/utf8": "~1.2"
     },

@@ -39,6 +39,7 @@ Config::set('classAliases', array(
     'Url'           => '\Helpers\Url',
     // The Support Facades
     'Auth'          => '\Support\Facades\Auth',
+    'Crypt'         => '\Support\Facades\Crypt',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',
     'Input'         => '\Support\Facades\Input',

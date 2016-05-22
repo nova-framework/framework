@@ -46,7 +46,7 @@ class Encrypter
      * @param  string  $key
      * @return void
      */
-    public function __construct($key = ENCRYPT_KEY)
+    public function __construct($key)
     {
         $this->key = $key;
     }

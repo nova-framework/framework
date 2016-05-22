@@ -10,10 +10,11 @@
 namespace Auth;
 
 use Core\Config;
-use Helpers\Session;
 use Helpers\Cookie;
 use Helpers\Password;
 use Auth\Model;
+
+use Session;
 
 use \stdClass;
 
@@ -214,7 +215,7 @@ class Guard
         }
 
         // Destroy the Session and Cookie variables.
-        Session::destroy($this->getName());
+        Session::delete($this->getName());
 
         Cookie::destroy($this->getRecallerName());
 

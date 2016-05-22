@@ -11,7 +11,9 @@ use Core\Aliases;
 use Core\Language;
 use Core\Modules;
 use Core\Router;
-use Helpers\Session;
+
+use Support\Facades\Session;
+
 use Patchwork\Utf8\Bootup as Patchwork;
 
 
@@ -41,7 +43,7 @@ require APPDIR .'Events.php';
 require APPDIR .'Filters.php';
 
 /** Start the Session. */
-Session::init();
+Session::start();
 
 /** Initialize the Language. */
 Language::init();

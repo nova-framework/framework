@@ -25,6 +25,16 @@ class Store implements \ArrayAccess
     }
 
     /**
+     * Return the Store instance.
+     *
+     * @return \Session\Store
+     */
+    public function instance()
+    {
+        return $this;
+    }
+
+    /**
      * Start the Session.
      *
      * @return \Session\Store
@@ -35,7 +45,7 @@ class Store implements \ArrayAccess
             session_start();
         }
 
-        if (! $this->has('csrfToken')) {
+        if (! $this->has('_token')) {
             $this->regenerateToken();
         }
 
@@ -177,7 +187,7 @@ class Store implements \ArrayAccess
      */
     public function has($name)
     {
-        return $this->get($name);
+        return ($this->get($name) !== null);
     }
 
     /**
@@ -220,7 +230,7 @@ class Store implements \ArrayAccess
      */
     public function token()
     {
-        return $this->get('csrfToken');
+        return $this->get('_token');
     }
 
     /**
@@ -230,7 +240,7 @@ class Store implements \ArrayAccess
      */
     public function regenerateToken()
     {
-        $this->set('csrfToken', hash('sha512', Encrypter::randomBytes()));
+        $this->set('_token', hash('sha512', Encrypter::randomBytes()));
     }
 
     /**

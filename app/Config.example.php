@@ -14,7 +14,7 @@ use Core\Config;
 /**
  * Define the complete site URL.
  */
-define('SITEURL', 'http://novaframework.dev/');
+define('SITEURL', 'http://www.novaframework.dev/');
 
 /**
  * Define relative base path.

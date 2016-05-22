@@ -56,7 +56,8 @@ class Request
                 return call_user_func_array(array(HttpRequest::class, $method), $params);
             }
         } catch ( ReflectionException $e ) {
-            // Nothing to do.
+            // Method not found.
+            return;
         }
 
         // Get a HttpRequest instance.

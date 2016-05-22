@@ -8,7 +8,7 @@
 
 namespace Support\Facades;
 
-use Http\RedirectResponse;
+use Routing\Redirector;
 
 use ReflectionMethod;
 use ReflectionException;
@@ -26,20 +26,8 @@ class Redirect
      */
     public static function __callStatic($method, $params)
     {
-        // First handle the static Methods from Http\Request.
-        try {
-            $reflection = new ReflectionMethod(RedirectResponse::class, $method);
-
-            if ($reflection->isStatic()) {
-                // The Method is static.
-                return call_user_func_array(array(RedirectResponse::class, $method), $params);
-            }
-        } catch ( ReflectionException $e ) {
-            // Nothing to do.
-        }
-
         // Get a RedirectResponse instance.
-        $instance = new RedirectResponse();
+        $instance = new Redirector();
 
         // Call the non-static method from the Request instance.
         return call_user_func_array(array($instance, $method), $params);

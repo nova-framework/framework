@@ -11,8 +11,9 @@ namespace Core;
 use Core\Config;
 use Core\Error;
 use Helpers\Inflector;
-use Helpers\Session;
 use Helpers\Cookie;
+
+use Session;
 
 use MessageFormatter;
 
@@ -137,7 +138,7 @@ class Language
     {
         $languages = Config::get('languages');
 
-        if (Session::exists('language')) {
+        if (Session::has('language')) {
             // The Language was already set; nothing to do.
             return;
         } else if(Cookie::exists(PREFIX .'language')) {
@@ -249,7 +250,7 @@ class Language
     {
         if ($code != LANGUAGE_CODE) {
             // User defined Language Code; nothing to do.
-        } else if (Session::exists('language')) {
+        } else if (Session::has('language')) {
             return Session::get('language');
         }
 

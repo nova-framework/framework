@@ -33,7 +33,6 @@ Config::set('classAliases', array(
     'Password'      => '\Helpers\Password',
     'RainCaptcha'   => '\Helpers\RainCaptcha',
     'ReservedWords' => '\Helpers\ReservedWords',
-    'Session'       => '\Helpers\Session',
     'SimpleCurl'    => '\Helpers\SimpleCurl',
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
@@ -45,6 +44,7 @@ Config::set('classAliases', array(
     'Input'         => '\Support\Facades\Input',
     'Language'      => '\Support\Facades\Language',
     'Request'       => '\Support\Facades\Request',
+    'Session'       => '\Support\Facades\Session',
     'Validator'     => '\Support\Facades\Validator',
     // The Legacy Mailer
     'Helpers\PhpMailer\Mail' => '\Helpers\Mailer',

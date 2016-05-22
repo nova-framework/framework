@@ -27,14 +27,16 @@ class Users extends BaseModel
 
     public function updateUser($user, array $data)
     {
+        $keyName = $this->getKeyName();
+
         if($user instanceof stdClass) {
             // We have a stdClass instance; extract the userId from it.
-            $userId = $user->{$this->primaryKey};
+            $userId = $user->{$keyName};
         } else {
             // We have an ID; just use it for userId.
             $userId = intval($user);
         }
 
-        $this->where($this->primaryKey, $userId)->update($data);
+        $this->where($keyName, $userId)->update($data);
     }
 }

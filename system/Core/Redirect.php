@@ -9,7 +9,8 @@
 namespace Core;
 
 use Core\Response;
-use Helpers\Session;
+
+use Session;
 
 
 /**

@@ -9,8 +9,11 @@
 
 namespace Helpers;
 
-use Helpers\Session;
 use Helpers\Encrypter;
+
+use Input;
+use Session;
+
 
 /**
  * Instructions:
@@ -45,13 +48,17 @@ class Csrf
     public static function makeToken($name = 'csrfToken')
     {
         $max_time = 60 * 60 * 24; // token is valid for 1 day.
-        $csrf_token = Session::get($name);
+
+        $csrf_token  = Session::get($name);
         $stored_time = Session::get($name . '_time');
 
-        if ($max_time + $stored_time <= time() || empty($csrf_token)) {
+        $timestamp = time();
+
+        if ((($max_time + $stored_time) <= $timestamp) || empty($csrf_token)) {
             $hash = hash('sha512', Encrypter::randomBytes());
+
             Session::set($name, $hash);
-            Session::set($name . '_time', time());
+            Session::set($name . '_time', $timestamp);
         }
 
         return Session::get($name);
@@ -66,7 +73,7 @@ class Csrf
      */
     public static function isTokenValid($name = 'csrfToken')
     {
-        return $_POST[$name] === Session::get($name);
+        return Input::get($name) === Session::get($name);
     }
 
 }

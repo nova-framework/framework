@@ -8,6 +8,7 @@
 
 namespace Support\Facades;
 
+use Core\Config;
 use Core\Template;
 use Helpers\Cookie as LegacyCookie;
 
@@ -44,16 +45,23 @@ class Session
             return static::$sessionStore;
         }
 
-        if (LegacyCookie::exists(PREFIX .'session')) {
-            $id = LegacyCookie::get(PREFIX .'session');
+        // Load the configuration.
+        $config = Config::get('session');
+
+        $cookie = $config['cookie'];
+
+        $domain = isset($config['cookie']) ? $config['cookie'] : false;
+
+        if (LegacyCookie::exists($cookie)) {
+            $id = LegacyCookie::get($cookie);
         } else {
             $id = null;
         }
 
-        static::$sessionStore = $store = new SessionStore(PREFIX .'session', static::$sessionHandler, $id);
+        static::$sessionStore = $store = new SessionStore($cookie, static::$sessionHandler, $id);
 
         if ($id === null) {
-            LegacyCookie::set(PREFIX .'session', $store->getId());
+            LegacyCookie::set($cookie, $store->getId(), -1, $config['path'], $domain);
         }
 
         return $store;
@@ -61,8 +69,15 @@ class Session
 
     public static function init()
     {
+        // Load the configuration.
+        $config = Config::get('session');
+
+        $path = $config['files'];
+
+        $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
+
         // Get a Session Handler instance.
-        static::$sessionHandler = $handler = new FileSessionHandler(SESSION_PATH, 3 * 3600);
+        static::$sessionHandler = $handler = new FileSessionHandler($path, $lifeTime);
 
         //
         ini_set('session.save_handler', 'files');

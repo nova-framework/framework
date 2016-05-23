@@ -11,7 +11,7 @@ namespace Helpers;
 use Helpers\Session;
 use Helpers\Inflector;
 
-use Session;
+use Support\Facades\Session as SessionStore;
 
 
 /**
@@ -36,7 +36,8 @@ class Url
             header('Location: '.$url, true, $code);
         }
 
-        Session::save();
+        // Save the Session Store before exit.
+        SessionStore::save();
 
         exit;
     }

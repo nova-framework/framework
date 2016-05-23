@@ -35,6 +35,6 @@ class Language extends Controller
             Cookie::set(PREFIX .'language', $language);
         }
 
-        return Redirect::to('');
+        return Redirect::back();
     }
 }

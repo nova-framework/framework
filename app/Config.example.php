@@ -107,7 +107,7 @@ define('ENCRYPT_KEY', '');
 /**
  * Set the Cache files Path.
  */
-define('CACHEPATH', APPDIR .'Cache');
+define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
 
 /**
  * Setup the Language configuration

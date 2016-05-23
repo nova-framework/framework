@@ -9,6 +9,9 @@
 namespace Support\Facades;
 
 use Core\Template;
+use Helpers\Cookie as HelperCookie;
+
+use Session\FileSessionHandler;
 use Session\NativeSessionHandler;
 use Session\Store as SessionStore;
 
@@ -34,16 +37,29 @@ class Session
         }
 
         // Get a Session Handler instance.
-        $sessionHandler = new NativeSessionHandler;
+        $sessionHandler = new FileSessionHandler(APPDIR .'Storage/Session', 24 * 3600);
 
         //
-        ini_set('session.save_handler', 'files');
+        //ini_set('session.save_handler', 'files');
 
-        session_set_save_handler($sessionHandler, true);
+        //session_set_save_handler($sessionHandler, true);
 
         session_start();
 
-        return static::$sessionStore = new SessionStore(PREFIX .'session', $sessionHandler);
+        if (HelperCookie::exists(PREFIX .'session')) {
+            $id = HelperCookie::get(PREFIX .'session');
+        } else {
+            $id = null;
+        }
+
+
+        static::$sessionStore = $store = new SessionStore(PREFIX .'session', $sessionHandler, $id);
+
+        if ($id === null) {
+            HelperCookie::set(PREFIX .'session', $store->getId());
+        }
+
+        return $store;
     }
 
     /**

@@ -562,7 +562,7 @@ class Store implements SessionInterface
      */
     public function regenerateToken()
     {
-        $this->put('_token', str_random(40));
+        $this->put('_token', str_random(100));
     }
 
     /**

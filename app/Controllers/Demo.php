@@ -10,6 +10,7 @@ use Event;
 use Validator;
 use Input;
 use Request;
+use Session;
 
 use App\Models\ORM\User;
 
@@ -102,6 +103,13 @@ class Demo extends Controller
         $user = User::find(1);
 
         echo '<pre>' .var_export($user, true) .'</pre>';
+    }
+
+    public function session()
+    {
+        $data = Session::all();
+
+        echo '<pre>' .var_export($data, true) .'</pre>';
     }
 
     public function validate()

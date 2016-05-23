@@ -20,6 +20,7 @@ Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('demo/database',        'App\Controllers\Demo@database');
 //Router::any('demo/password/(:any)', 'App\Controllers\Demo@password');
 Router::any('demo/events',          'App\Controllers\Demo@events');
+Router::any('demo/session',         'App\Controllers\Demo@session');
 Router::any('demo/validate',        'App\Controllers\Demo@validate');
 
 Router::any('demo/request(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@request');

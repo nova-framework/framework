@@ -117,6 +117,11 @@ define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
 /**
  * Setup the Language configuration
  */
+require 'Config/Session.php';
+
+/**
+ * Setup the Language configuration
+ */
 require 'Config/Languages.php';
 
 /**

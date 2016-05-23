@@ -50,8 +50,6 @@ class Session
 
         $cookie = $config['cookie'];
 
-        $domain = isset($config['cookie']) ? $config['cookie'] : false;
-
         if (LegacyCookie::exists($cookie)) {
             $id = LegacyCookie::get($cookie);
         } else {
@@ -61,6 +59,8 @@ class Session
         static::$sessionStore = $store = new SessionStore($cookie, static::$sessionHandler, $id);
 
         if ($id === null) {
+            $domain = isset($config['domain']) ? $config['domain'] : false;
+
             LegacyCookie::set($cookie, $store->getId(), -1, $config['path'], $domain);
         }
 

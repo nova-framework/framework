@@ -12,8 +12,6 @@ use Core\Config;
 Config::set('classAliases', array(
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
-    'Response'      => '\Core\Response',
-    'Redirect'      => '\Core\Redirect',
     'Mail'          => '\Helpers\Mailer',
     'Assets'        => '\Helpers\Assets',
     'Cookie'        => '\Helpers\Cookie',

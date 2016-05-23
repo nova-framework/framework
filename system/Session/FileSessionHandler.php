@@ -83,6 +83,8 @@ class FileSessionHandler implements SessionHandlerInterface
         $filePath = $this->path .'/' .$id;
 
         file_put_contents($filePath, $data);
+
+        return true;
     }
 
     /**
@@ -98,6 +100,8 @@ class FileSessionHandler implements SessionHandlerInterface
         if (file_exists($filePath)) {
             unlink($filePath);
         }
+
+        return true;
     }
 
     /**
@@ -127,5 +131,7 @@ class FileSessionHandler implements SessionHandlerInterface
                 unlink($this->path .'/' .$file);
             }
         }
+
+        return true;
     }
 }

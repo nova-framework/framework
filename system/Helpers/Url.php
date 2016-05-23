@@ -11,6 +11,9 @@ namespace Helpers;
 use Helpers\Session;
 use Helpers\Inflector;
 
+use Session;
+
+
 /**
  * Collection of methods for working with urls.
  */
@@ -32,6 +35,9 @@ class Url
         } else {
             header('Location: '.$url, true, $code);
         }
+
+        Session::save();
+
         exit;
     }
 

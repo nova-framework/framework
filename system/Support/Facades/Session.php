@@ -59,6 +59,11 @@ class Session
         return static::$sessionStore = new SessionStore($name, static::$sessionHandler, $id);
     }
 
+    /**
+     * Intialize a Session Store instance
+     *
+     * @return void
+     */
     public static function init()
     {
         // Load the configuration.
@@ -83,6 +88,13 @@ class Session
         $instance->start();
     }
 
+    /**
+     * Finalize the Session Store and send the Response
+     *
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *
+     * @return void
+     */
     public static function finish(SymfonyResponse $response)
     {
         // Get the Session Store configuration.

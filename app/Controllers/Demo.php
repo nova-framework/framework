@@ -113,7 +113,12 @@ class Demo extends Controller
 
         $data = Session::all();
 
+        echo '<pre>' .var_export($data, true) .'</pre>';
+
+        //
         Session::forget('test');
+
+        $data = Session::all();
 
         echo '<pre>' .var_export($data, true) .'</pre>';
     }

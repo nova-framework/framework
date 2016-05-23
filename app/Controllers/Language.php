@@ -4,8 +4,8 @@ namespace App\Controllers;
 use Core\Config;
 use Core\Controller;
 use Helpers\Url;
-use Helpers\Cookie;
 
+use Cookie;
 use Redirect;
 use Session;
 
@@ -31,8 +31,11 @@ class Language extends Controller
         if (preg_match ('/[a-z]/', $language) && in_array($language, array_keys($languages))) {
             Session::set('language', $language);
 
-            // Store the current Language into Cookie.
-            Cookie::set(PREFIX .'language', $language);
+            // Store the current Language into Cookie instance.
+            $cookie = Cookie::forever(PREFIX .'language', $language);
+
+            // Queue the Cookie instance.
+            Cookie::queue($cookie);
         }
 
         return Redirect::back();

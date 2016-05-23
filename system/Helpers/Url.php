@@ -11,6 +11,7 @@ namespace Helpers;
 use Helpers\Session;
 use Helpers\Inflector;
 
+use Support\Facades\Redirect;
 use Support\Facades\Session as SessionStore;
 
 
@@ -28,18 +29,19 @@ class Url
      */
     public static function redirect($url = null, $fullpath = false, $code = 200)
     {
-        $url = ($fullpath === false) ? DIR.$url : $url;
+        $url = ($fullpath === false) ? DIR .$url : $url;
 
-        if ($code == 200) {
-            header('Location: '.$url);
-        } else {
-            header('Location: '.$url, true, $code);
-        }
+        // Create a Redirect instance.
+        $response = Redirect::to($url, $code);
 
-        // Save the Session Store before exit.
-        SessionStore::save();
+        // Finish the Session Store.
+        SessionStore::finish($response);
 
-        exit;
+        // Send the Response.
+        $response->send();
+
+        // Quit the application.
+        exit();
     }
 
     /**

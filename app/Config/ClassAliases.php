@@ -14,7 +14,6 @@ Config::set('classAliases', array(
     'Errors'        => '\Core\Error',
     'Mail'          => '\Helpers\Mailer',
     'Assets'        => '\Helpers\Assets',
-    'Cookie'        => '\Helpers\Cookie',
     'Csrf'          => '\Helpers\Csrf',
     'Date'          => '\Helpers\Date',
     'Document'      => '\Helpers\Document',
@@ -39,6 +38,7 @@ Config::set('classAliases', array(
     'Str'           => '\Support\Str',
     // The Support Facades
     'Auth'          => '\Support\Facades\Auth',
+    'Cookie'        => '\Support\Facades\Cookie',
     'Crypt'         => '\Support\Facades\Crypt',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',

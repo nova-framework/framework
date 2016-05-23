@@ -2,7 +2,6 @@
 
 namespace Session;
 
-use Core\Config;
 use Session\SessionInterface;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -233,13 +232,6 @@ class Store implements SessionInterface
         $this->handler->write($this->getId(), serialize($this->attributes));
 
         $this->started = false;
-
-        // Cleanup the stalled Session files.
-        $config = Config::get('session');
-
-        $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
-
-        $this->handler->gc($lifeTime);
     }
 
     /**

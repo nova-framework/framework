@@ -10,11 +10,13 @@ namespace Support\Facades;
 
 use Core\Config;
 use Core\Template;
-use Helpers\Cookie as LegacyCookie;
 
 use Session\FileSessionHandler;
 use Session\NativeSessionHandler;
 use Session\Store as SessionStore;
+use Support\Facades\Cookie;
+
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
 class Session
@@ -51,17 +53,9 @@ class Session
         $name = $config['cookie'];
 
         // Get the Session ID from Cookie, fallback to null.
-        $id = LegacyCookie::get($name, null);
+        $id = Cookie::get($name);
 
-        static::$sessionStore = $store = new SessionStore($name, static::$sessionHandler, $id);
-
-        if ($id === null) {
-            $domain = isset($config['domain']) ? $config['domain'] : false;
-
-            LegacyCookie::set($name, $store->getId(), -1, $config['path'], $domain);
-        }
-
-        return $store;
+        return static::$sessionStore = new SessionStore($name, static::$sessionHandler, $id);
     }
 
     public static function init()
@@ -86,6 +80,35 @@ class Session
         $instance = static::getSessionStore();
 
         $instance->start();
+    }
+
+    public static function finish(SymfonyResponse $response)
+    {
+        // Get the Session Store configuration.
+        $config = Config::get('session');
+
+        $name = $config['cookie'];
+
+        $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
+
+        // Get the Session Store instance.
+        $instance = static::getSessionStore();
+
+        // Save the Session Store data.
+        $instance->save();
+
+        // Cleanup the stalled Session files.
+        $instance->getHandler()->gc($lifeTime);
+
+        // Queue a associated Cookie, lasting five years.
+        $cookie = Cookie::forever($name, $instance->getId());
+
+        Cookie::queue($cookie);
+
+        // Finally, add all queued Cookies to the Response instance.
+        foreach (Cookie::getQueuedCookies() as $cookie) {
+            $response->headers->setCookie($cookie);
+        }
     }
 
     /**

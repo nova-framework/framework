@@ -41,31 +41,21 @@ class Cookie
      */
     public static function set($key, $value, $expiry = self::FOURYEARS, $path = '/', $domain = false)
     {
-        $retval = false;
-
         // Encrypt the value
         $value = Crypt::encrypt($value);
 
         // Ensure to have a valid domain.
         $domain = ($domain !== false) ? $domain : $_SERVER['HTTP_HOST'];
 
-        if (! headers_sent()) {
-            if ($expiry === -1) {
-                $expiry = 1893456000; // Lifetime = 2030-01-01 00:00:00
-            } else if (is_numeric($expiry)) {
-                $expiry += time();
-            } else {
-                $expiry = strtotime($expiry);
-            }
-
-            $retval = @setcookie($key, $value, $expiry, $path, $domain);
-
-            if ($retval) {
-                $_COOKIE[$key] = $value;
-            }
+        if ($expiry === -1) {
+            $expiry = 1893456000; // Lifetime = 2030-01-01 00:00:00
+        } else if (is_numeric($expiry)) {
+            $expiry += time();
+        } else {
+            $expiry = strtotime($expiry);
         }
 
-        return $retval;
+        return @setcookie($key, $value, $expiry, $path, $domain);
     }
 
     /**

@@ -13,8 +13,9 @@ use Core\Controller;
 use Helpers\Inflector;
 use Routing\Route;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use Response;
 use Session;
 
 
@@ -152,16 +153,22 @@ abstract class BaseRouter
     {
         $result = call_user_func_array($callback, $params);
 
-        if($result instanceof Response) {
+        if($result instanceof SymfonyResponse) {
+            // Finsih the Session Store.
+            Session::finish($result);
+
+            // Send the Response.
             $result->send();
         }  else if($result instanceof View) {
-            // Create and send a Response.
-            Response::make($result)->send();
+            // Create a Response instance.
+            $response = Response::make($result);
 
+            // Finish the Session Store.
+            Session::finish($response);
+
+            // Send the Response.
+            $response->send();
         }
-
-        // Save the Session Store.
-        Session::save();
 
         return true;
     }
@@ -192,9 +199,6 @@ abstract class BaseRouter
         if (in_array(strtolower($method), $methods)) {
             // Execute the Controller's Method with the given arguments.
             $controller->execute($method, $params);
-
-            // Save the Session Store.
-            Session::save();
 
             return true;
         }

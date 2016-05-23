@@ -17,16 +17,16 @@ use Support\Facades\Request;
 class Cookie
 {
     /**
-     * The \Cookie\CookieJar instance being handled.
+     * The CookieJar instance being handled.
      *
      * @var \Cookie\CookieJar|null
      */
     protected static $cookieJar;
 
     /**
-     * Return a \Http\Request instance
+     * Return a CookieJar instance
      *
-     * @return \Http\Request
+     * @return \Cookie\CookieJar
      */
     protected static function getCookieJar()
     {
@@ -64,6 +64,27 @@ class Cookie
         $request = Request::instance();
 
         return $request->cookie($key, $default);
+    }
+
+    /**
+     * Add a new Cookie to CookieJar, lasting five years by default.
+     *
+     * @param  string  $name
+     * @param  string  $value
+     * @param  int     $minutes
+     * @param  string  $path
+     * @param  string  $domain
+     * @param  bool    $secure
+     * @param  bool    $httpOnly
+     * @return void
+     */
+    public static function set($name, $value, $minutes = 2628000, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    {
+        $instance = static::getCookieJar();
+
+        $cookie = call_user_func_array(array($instance, 'make'), func_get_args());
+
+        $instance->queue($cookie);
     }
 
     /**

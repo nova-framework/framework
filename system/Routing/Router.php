@@ -251,11 +251,11 @@ class Router extends BaseRouter
                 $result = $route->applyFilters();
 
                 if($result instanceof SymfonyResponse) {
+                    // Finish the Session Store.
+                    Session::finish($result);
+
                     // The Filters returned a Response instance; send it and quit processing.
                     $result->send();
-
-                    // Save the Session Store.
-                    Session::save();
 
                     return true;
                 }
@@ -275,7 +275,13 @@ class Router extends BaseRouter
         // No valid Route found; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        Response::error(404, $data)->send();
+        $response = Response::error(404, $data);
+
+        // Finish the Session Store.
+        Session::finish($result);
+
+        // Send the Response.
+        $response->send();
 
         return false;
     }

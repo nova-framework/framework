@@ -84,9 +84,14 @@ define('DB_PASS', '');
 define('PREFIX', 'nova_');
 
 /**
- * Set a prefix for sessions.
+ * Set a prefix for Sessions.
  */
 define('SESSION_PREFIX', 'nova_');
+
+/**
+ * Set where the Framework store the Session files.
+ */
+define('SESSION_PATH', APPDIR .'Storage' .DS .'Sessions');
 
 /**
  * OPTIONAL, create a constant for the name of the site.

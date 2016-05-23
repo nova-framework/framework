@@ -83,14 +83,7 @@ class Cookie
 
         $cookie = $_COOKIE[$key];
 
-        try {
-            $result = Crypt::decrypt($cookie);
-        } catch (\Exception $e) {
-            // That's not a valid Cookie.
-            $result = null;
-        }
-
-        return $result;
+        return Crypt::decrypt($cookie);
     }
 
     /**

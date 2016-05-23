@@ -118,18 +118,12 @@ class FileSessionHandler implements SessionHandlerInterface
             $this->lifetime = $lifetime;
         }
 
-        $time = time() - $this->lifetime;
+        $lifeTime = time() - $this->lifetime;
 
-        foreach (scandir($this->path) as $file) {
-            if(($file == '.') || ($file == '..') || ($file == '.gitignore')) {
-                continue;
-            }
-
-            $file = $this->path .'/' .$file;
-
+        foreach (glob($this->path .'/*') as $file) {
             $mtime  = filemtime($file);
 
-            if (file_exists($file) && ($mtime < $time)) {
+            if (is_writable($file) && ($mtime < $lifeTime)) {
                 unlink($this->path .'/' .$file);
             }
         }

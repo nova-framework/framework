@@ -40,7 +40,7 @@ class Crypt
             throw new \Exception('Please configure the ENCRYPT_KEY.');
         }
 
-        return static::$encrypter = new Encrypter(ENCRYPT_KEY);
+        return static::$encrypter = new Encrypter($encryptKey);
     }
 
     /**

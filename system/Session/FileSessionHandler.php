@@ -99,9 +99,11 @@ class FileSessionHandler implements SessionHandlerInterface
 
         if (file_exists($filePath)) {
             unlink($filePath);
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

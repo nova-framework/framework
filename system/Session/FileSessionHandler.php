@@ -122,7 +122,7 @@ class FileSessionHandler implements SessionHandlerInterface
             $timestamp  = filemtime($file);
 
             if (is_writable($file) && ($timestamp < $timeout)) {
-                unlink($this->path .'/' .$file);
+                unlink($file);
             }
         }
 

@@ -232,6 +232,9 @@ class Store implements SessionInterface
         $this->handler->write($this->getId(), serialize($this->attributes));
 
         $this->started = false;
+
+        // Cleanup the stalled Session files.
+        $this->handler->gc();
     }
 
     /**

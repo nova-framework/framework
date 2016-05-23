@@ -16,7 +16,6 @@ Config::set('classAliases', array(
     'Redirect'      => '\Core\Redirect',
     'Mail'          => '\Helpers\Mailer',
     'Assets'        => '\Helpers\Assets',
-    'Arr'           => '\Helpers\Arr',
     'Cookie'        => '\Helpers\Cookie',
     'Csrf'          => '\Helpers\Csrf',
     'Date'          => '\Helpers\Date',
@@ -37,6 +36,9 @@ Config::set('classAliases', array(
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
+    // The Support Classes
+    'Arr'           => '\Support\Arr',
+    'Str'           => '\Support\Str',
     // The Support Facades
     'Auth'          => '\Support\Facades\Auth',
     'Crypt'         => '\Support\Facades\Crypt',

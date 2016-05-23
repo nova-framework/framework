@@ -48,20 +48,17 @@ class Session
         // Load the configuration.
         $config = Config::get('session');
 
-        $cookie = $config['cookie'];
+        $name = $config['cookie'];
 
-        if (LegacyCookie::exists($cookie)) {
-            $id = LegacyCookie::get($cookie);
-        } else {
-            $id = null;
-        }
+        // Get the Session ID from Cookie, fallback to null.
+        $id = LegacyCookie::get($name, null);
 
-        static::$sessionStore = $store = new SessionStore($cookie, static::$sessionHandler, $id);
+        static::$sessionStore = $store = new SessionStore($name, static::$sessionHandler, $id);
 
         if ($id === null) {
             $domain = isset($config['domain']) ? $config['domain'] : false;
 
-            LegacyCookie::set($cookie, $store->getId(), -1, $config['path'], $domain);
+            LegacyCookie::set($name, $store->getId(), -1, $config['path'], $domain);
         }
 
         return $store;

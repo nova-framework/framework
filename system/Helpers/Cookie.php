@@ -86,9 +86,7 @@ class Cookie
         try {
             $result = Crypt::decrypt($cookie);
         } catch (\Exception $e) {
-            // That's not a valid Cookie; destroy it.
-            static::destroy($key);
-
+            // That's not a valid Cookie.
             $result = null;
         }
 

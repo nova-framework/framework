@@ -13,9 +13,11 @@ use Helpers\Url;
 use Routing\BaseRouter;
 use Routing\Route;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use Response;
 use Request;
+
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -247,7 +249,7 @@ class Router extends BaseRouter
                 // Apply the (specified) Filters on matched Route.
                 $result = $route->applyFilters();
 
-                if($result instanceof Response) {
+                if($result instanceof SymfonyResponse) {
                     // The Filters returned a Response instance; send it and quit processing.
                     $result->send();
 
@@ -269,7 +271,7 @@ class Router extends BaseRouter
         // No valid Route found; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        Response::error('404', $data)->send();
+        Response::error(404, $data)->send();
 
         return false;
     }

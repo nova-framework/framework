@@ -9,6 +9,7 @@
 namespace Support\Facades;
 
 use Core\Template;
+use Session\NativeSessionHandler;
 use Session\Store as SessionStore;
 
 
@@ -32,7 +33,27 @@ class Session
             return static::$sessionStore;
         }
 
-        return static::$sessionStore = new SessionStore(PREFIX .'session');
+        // Get a Session Handler instance.
+        $sessionHandler = new NativeSessionHandler;
+
+        //
+        ini_set('session.save_handler', 'files');
+
+        session_set_save_handler($sessionHandler, true);
+
+        session_start();
+
+        return static::$sessionStore = new SessionStore(PREFIX .'session', $sessionHandler);
+    }
+
+    /**
+     * Return a Session Store instance
+     *
+     * @return \Session\Store
+     */
+    public static function instance()
+    {
+        return static::getSessionStore();
     }
 
     /**
@@ -54,7 +75,7 @@ class Session
         $message = $instance->get($name);
 
         // Delete the message from the Session Store.
-        $instance->delete($name);
+        $instance->forget($name);
 
         if (is_array($message)) {
             // The Message is structured in the New Style.

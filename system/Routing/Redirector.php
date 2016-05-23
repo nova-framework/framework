@@ -101,7 +101,7 @@ class Redirector
     {
         $path = $this->session->get('url.intended', $default);
 
-        $this->session->delete('url.intended');
+        $this->session->forget('url.intended');
 
         return $this->to($path, $status, $headers, $secure);
     }

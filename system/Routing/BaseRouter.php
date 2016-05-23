@@ -10,10 +10,11 @@ namespace Routing;
 
 use Core\BaseView as View;
 use Core\Controller;
-use Core\Response;
 use Helpers\Inflector;
 
 use Routing\Route;
+
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**

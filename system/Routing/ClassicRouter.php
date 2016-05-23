@@ -8,14 +8,15 @@
 
 namespace Core;
 
-use Core\Response;
 use Helpers\Inflector;
 use Helpers\Url;
 
 use Routing\BaseRouter;
 use Routing\Route;
 
+use Response;
 use Request;
+
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -121,7 +122,7 @@ class ClassicRouter extends BaseRouter
         // The dispatching failed; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        Response::error('404', $data)->send();
+        Response::error(404, $data)->send();
 
         return false;
     }

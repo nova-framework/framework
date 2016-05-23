@@ -215,7 +215,7 @@ class Guard
         }
 
         // Destroy the Session and Cookie variables.
-        Session::delete($this->getName());
+        Session::forget($this->getName());
 
         Cookie::destroy($this->getRecallerName());
 

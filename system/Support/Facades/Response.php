@@ -150,8 +150,8 @@ class Response
         static::$legacyHeaders = array();
 
         $view = Template::make('default')
-            ->shares('title', 'Error ' .$code)
-            ->nest('content', 'Error/' .$code, $data);
+            ->shares('title', 'Error ' .$status)
+            ->nest('content', 'Error/' .$status, $data);
 
         return static::make($view, $status, $headers);
     }

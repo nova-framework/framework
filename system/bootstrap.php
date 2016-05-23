@@ -35,14 +35,14 @@ require dirname(__FILE__) .DS .'functions.php';
 /** Initialize the Aliases. */
 Aliases::init();
 
+/** Start the Session. */
+Session::start();
+
 /** Load the Events */
 require APPDIR .'Events.php';
 
 /** Load the Route Filters */
 require APPDIR .'Filters.php';
-
-/** Start the Session. */
-Session::start();
 
 /** Initialize the Language. */
 Language::init();

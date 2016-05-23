@@ -179,6 +179,23 @@ function array_forget(&$array, $key)
 }
 
 /**
+ * Get a value from the array, and remove it.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @param  mixed   $default
+ * @return mixed
+ */
+function array_pull(&$array, $key, $default = null)
+{
+    $value = array_get($array, $key, $default);
+
+    array_forget($array, $key);
+
+    return $value;
+}
+
+/**
  * Get the first element of an array.
  *
  * @param  array  $array

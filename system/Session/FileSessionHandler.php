@@ -114,16 +114,14 @@ class FileSessionHandler implements SessionHandlerInterface
      */
     public function gc($lifetime)
     {
-        if (empty($this->lifetime)) {
-            $this->lifetime = $lifetime;
-        }
+        $lifetime = empty($this->lifetime) ? $lifetime : $this->lifetime;
 
-        $lifeTime = time() - $this->lifetime;
+        $timeout = time() - $this->lifetime;
 
         foreach (glob($this->path .'/*') as $file) {
-            $mtime  = filemtime($file);
+            $timestamp  = filemtime($file);
 
-            if (is_writable($file) && ($mtime < $lifeTime)) {
+            if (is_writable($file) && ($timestamp < $timeout)) {
                 unlink($this->path .'/' .$file);
             }
         }

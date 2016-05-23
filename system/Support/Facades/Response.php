@@ -39,6 +39,9 @@ class Response
      */
     public static function make($content = '', $status = 200, array $headers = array())
     {
+        // Merge the Legacy Headers on given Headers.
+        $headers = array_merge($headers, static::$legacyHeaders);
+
         return new HttpResponse($content, $status, $headers);
     }
 
@@ -53,6 +56,9 @@ class Response
      */
     public static function view($view, $data = array(), $status = 200, array $headers = array())
     {
+        // Merge the Legacy Headers on given Headers.
+        $headers = array_merge($headers, static::$legacyHeaders);
+
         return static::make(View::make($view, $data), $status, $headers);
     }
 
@@ -67,6 +73,9 @@ class Response
      */
     public static function json($data = array(), $status = 200, array $headers = array(), $options = 0)
     {
+        // Merge the Legacy Headers on given Headers.
+        $headers = array_merge($headers, static::$legacyHeaders);
+
         if ($data instanceof ArrayableInterface) {
             $data = $data->toArray();
         }
@@ -84,6 +93,9 @@ class Response
      */
     public static function stream($callback, $status = 200, array $headers = array())
     {
+        // Merge the Legacy Headers on given Headers.
+        $headers = array_merge($headers, static::$legacyHeaders);
+
         return new StreamedResponse($callback, $status, $headers);
     }
 
@@ -98,6 +110,9 @@ class Response
      */
     public static function download($file, $name = null, array $headers = array(), $disposition = 'attachment')
     {
+        // Merge the Legacy Headers on given Headers.
+        $headers = array_merge($headers, static::$legacyHeaders);
+
         $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
 
         if ( ! is_null($name)) {
@@ -128,6 +143,12 @@ class Response
      */
     public static function error($status, array $data = array(), $headers = array())
     {
+        // Merge the Legacy Headers on given Headers.
+        $headers = array_merge($headers, static::$legacyHeaders);
+
+        // Clear the Legacy Headers ist.
+        static::$legacyHeaders = array();
+
         $view = Template::make('default')
             ->shares('title', 'Error ' .$code)
             ->nest('content', 'Error/' .$code, $data);
@@ -176,7 +197,11 @@ class Response
      */
     public static function addHeader($header)
     {
-        self::$legacyHeaders[] = $header;
+        list($key, $value) = explode(' ', $header, 1);
+
+        $key = ltrim($key, ':');
+
+        self::$legacyHeaders[$key] = trim($value);
     }
 
     /**
@@ -186,11 +211,9 @@ class Response
      */
     public static function addHeaders(array $headers)
     {
-        if(empty($headers)) {
-            return;
+        foreach ($headers as $header) {
+            static::addHeader($header);
         }
-
-        self::$legacyHeaders = array_merge(self::$legacyHeaders, $headers);
     }
 
     /**
@@ -198,7 +221,13 @@ class Response
      */
     public static function sendHeaders()
     {
-        // Nothing to do.
+        if (headers_sent()) {
+            return;
+        }
+
+        foreach (self::$legacyHeaders as $header => $value) {
+            header("$header: $value", true);
+        }
     }
 
 }

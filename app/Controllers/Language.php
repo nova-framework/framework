@@ -3,11 +3,10 @@ namespace App\Controllers;
 
 use Core\Config;
 use Core\Controller;
-use Core\Language as CoreLanguage;
-use Core\Redirect;
 use Helpers\Url;
 use Helpers\Cookie;
 
+use Redirect;
 use Session;
 
 

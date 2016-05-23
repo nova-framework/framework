@@ -26,6 +26,14 @@ class Session
     protected static $sessionStore;
 
     /**
+     * The Session Handler instance being handled.
+     *
+     * @var \Session\FileSessionHandler|null
+     */
+    protected static $sessionHandler;
+
+
+    /**
      * Return a Session Store instance
      *
      * @return \Session\Store
@@ -36,30 +44,36 @@ class Session
             return static::$sessionStore;
         }
 
-        // Get a Session Handler instance.
-        $sessionHandler = new FileSessionHandler(APPDIR .'Storage/Session', 24 * 3600);
-
-        //
-        //ini_set('session.save_handler', 'files');
-
-        //session_set_save_handler($sessionHandler, true);
-
-        session_start();
-
         if (HelperCookie::exists(PREFIX .'session')) {
             $id = HelperCookie::get(PREFIX .'session');
         } else {
             $id = null;
         }
 
-
-        static::$sessionStore = $store = new SessionStore(PREFIX .'session', $sessionHandler, $id);
+        static::$sessionStore = $store = new SessionStore(PREFIX .'session', static::$sessionHandler, $id);
 
         if ($id === null) {
             HelperCookie::set(PREFIX .'session', $store->getId());
         }
 
         return $store;
+    }
+
+    public static function init()
+    {
+        // Get a Session Handler instance.
+        static::$sessionHandler = $handler = new FileSessionHandler(APPDIR .'Storage/Session', 120 * 60);
+
+        //
+        ini_set('session.save_handler', 'files');
+
+        session_set_save_handler($handler, true);
+
+        session_start();
+
+        $instance = static::getSessionStore();
+
+        $instance->start();
     }
 
     /**

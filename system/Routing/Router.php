@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use Response;
 use Request;
+use Session;
 
 
 /**
@@ -252,6 +253,9 @@ class Router extends BaseRouter
                 if($result instanceof SymfonyResponse) {
                     // The Filters returned a Response instance; send it and quit processing.
                     $result->send();
+
+                    // Save the Session Store.
+                    Session::save();
 
                     return true;
                 }

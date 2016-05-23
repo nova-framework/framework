@@ -11,10 +11,11 @@ namespace Routing;
 use Core\BaseView as View;
 use Core\Controller;
 use Helpers\Inflector;
-
 use Routing\Route;
 
 use Symfony\Component\HttpFoundation\Response;
+
+use Session;
 
 
 /**
@@ -156,7 +157,11 @@ abstract class BaseRouter
         }  else if($result instanceof View) {
             // Create and send a Response.
             Response::make($result)->send();
+
         }
+
+        // Save the Session Store.
+        Session::save();
 
         return true;
     }
@@ -187,6 +192,9 @@ abstract class BaseRouter
         if (in_array(strtolower($method), $methods)) {
             // Execute the Controller's Method with the given arguments.
             $controller->execute($method, $params);
+
+            // Save the Session Store.
+            Session::save();
 
             return true;
         }

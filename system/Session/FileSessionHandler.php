@@ -2,8 +2,10 @@
 
 namespace Session;
 
+use SessionHandlerInterface;
 
-class FileSessionHandler
+
+class FileSessionHandler implements SessionHandlerInterface
 {
     /**
      * The path where sessions should be stored.
@@ -28,18 +30,8 @@ class FileSessionHandler
      */
     function __construct($path, $lifetime)
     {
-        $this->path = $path;
-
+        $this->path     = $path;
         $this->lifetime = $lifetime;
-
-        session_set_save_handler(
-            array($this, 'open'),
-            array($this, 'close'),
-            array($this, 'read'),
-            array($this, 'write'),
-            array($this, 'destroy'),
-            array($this, 'gc')
-        );
     }
 
     /**
@@ -47,7 +39,7 @@ class FileSessionHandler
      *
      * @return bool
      */
-    public function open()
+    public function open($save_path, $session_name)
     {
         return true;
     }

@@ -36,7 +36,7 @@ require dirname(__FILE__) .DS .'functions.php';
 Aliases::init();
 
 /** Start the Session. */
-Session::start();
+Session::init();
 
 /** Load the Events */
 require APPDIR .'Events.php';

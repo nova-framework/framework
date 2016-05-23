@@ -72,12 +72,6 @@ class Csrf
      */
     public static function isTokenValid($name = 'csrfToken')
     {
-        echo '<pre>' .var_export($_SESSION, true) .'</pre>';
-
-        echo '<pre>' .var_export(Input::get($name), true) .'</pre>';
-        echo '<pre>' .var_export(Session::get($name), true) .'</pre>';
-        echo '<pre>' .var_export(Session::getToken(), true) .'</pre>';
-
         return (Input::get($name) == Session::get($name));
     }
 

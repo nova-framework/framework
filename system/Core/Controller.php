@@ -17,6 +17,7 @@ use Helpers\Hooks;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use Response;
+use Session;
 
 
 /**

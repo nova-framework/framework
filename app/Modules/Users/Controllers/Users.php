@@ -18,6 +18,7 @@ use Auth;
 use Input;
 use Redirect;
 use Request;
+use Session;
 
 
 class Users extends Controller

@@ -14,7 +14,7 @@ ob_start();
 foreach ($languages as $code => $info) {
 ?>
 <li <?php if($language == $code) echo 'class="active"'; ?>>
-    <a href='<?= site_url('language/' .$code); ?>'><?= $info['name']; ?></a>
+    <a href='<?= site_url('language/' .$code); ?>' title="<?= $info['info']; ?>"><?= $info['name']; ?></a>
 </li>
 <?php
 }

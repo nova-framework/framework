@@ -52,7 +52,7 @@ class Request
             $reflection = new ReflectionMethod(HttpRequest::class, $method);
 
             if ($reflection->isStatic()) {
-                // The Method is static.
+                // The requested Method is static.
                 return call_user_func_array(array(HttpRequest::class, $method), $params);
             }
         } catch ( ReflectionException $e ) {

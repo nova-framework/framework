@@ -31,11 +31,8 @@ class Language extends Controller
         if (preg_match ('/[a-z]/', $language) && in_array($language, array_keys($languages))) {
             Session::set('language', $language);
 
-            // Store the current Language into Cookie instance.
-            $cookie = Cookie::forever(PREFIX .'language', $language);
-
-            // Queue the Cookie instance.
-            Cookie::queue($cookie);
+            // Store the current Language in a Cookie lasting five years.
+            Cookie::set(PREFIX .'language', $language, 2628000, null, null, false, false);
         }
 
         return Redirect::back();

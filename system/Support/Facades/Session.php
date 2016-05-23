@@ -15,6 +15,7 @@ use Session\FileSessionHandler;
 use Session\NativeSessionHandler;
 use Session\Store as SessionStore;
 use Support\Facades\Cookie;
+use Support\Facades\Request;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -100,15 +101,21 @@ class Session
         // Cleanup the stalled Session files.
         $instance->getHandler()->gc($lifeTime);
 
-        // Queue a associated Cookie, lasting five years.
-        $cookie = Cookie::forever($name, $instance->getId());
+        // Store the Session ID in a Cookie.
+        Cookie::set($name, $instance->getId());
 
-        Cookie::queue($cookie);
-
-        // Finally, add all queued Cookies to the Response instance.
+        // Finally, add all Request and queued Cookies on Response instance.
         foreach (Cookie::getQueuedCookies() as $cookie) {
             $response->headers->setCookie($cookie);
         }
+
+        // Prepare the Response.
+        $request = Request::instance();
+
+        $response->prepare($request);
+
+        // Send the Response.
+        $response->send();
     }
 
     /**

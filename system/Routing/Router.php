@@ -251,11 +251,8 @@ class Router extends BaseRouter
                 $result = $route->applyFilters();
 
                 if($result instanceof SymfonyResponse) {
-                    // Finish the Session Store.
+                    // Finish the Session and send the Response.
                     Session::finish($result);
-
-                    // The Filters returned a Response instance; send it and quit processing.
-                    $result->send();
 
                     return true;
                 }
@@ -277,11 +274,8 @@ class Router extends BaseRouter
 
         $response = Response::error(404, $data);
 
-        // Finish the Session Store.
-        Session::finish($result);
-
-        // Send the Response.
-        $response->send();
+        // Finish the Session and send the Response.
+        Session::finish($response);
 
         return false;
     }

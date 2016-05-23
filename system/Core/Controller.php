@@ -84,11 +84,8 @@ abstract class Controller
 
         // The Method returned a Response instance; send it and stop the processing.
         if ($result instanceof SymfonyResponse) {
-            // Finish the Session Store.
+            // Finish the Session and send the Response.
             Session::finish($result);
-
-            // Send the Response.
-            $result->send();
 
             return true;
         }
@@ -139,11 +136,8 @@ abstract class Controller
         // Create a Response instance.
         $response = Response::make($result);
 
-        // Finish the Session Store.
+        // Finish the Session and send the Response.
         Session::finish($response);
-
-        // Send the Response.
-        $response->send();
 
         return true;
     }

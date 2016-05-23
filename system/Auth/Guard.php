@@ -329,10 +329,8 @@ class Guard
         // Prepare the value and set the remembering Cookie.
         $value = $user->{$keyName} .'|' .$user->{$this->rememberToken};
 
-        // Create and queue a Forever Cookie.
-        $cookie = Cookie::forever($this->getRecallerName(), $value);
-
-        Cookie::queue($cookie);
+        // Store the current information in a Cookie lasting five years.
+        Cookie::set($this->getRecallerName(), $value, 2628000, null, null, false, false);
     }
 
     /**

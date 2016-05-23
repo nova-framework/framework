@@ -34,11 +34,8 @@ class Url
         // Create a Redirect instance.
         $response = Redirect::to($url, $code);
 
-        // Finish the Session Store.
+        // Finish the Session and send the Response.
         SessionStore::finish($response);
-
-        // Send the Response.
-        $response->send();
 
         // Quit the application.
         exit();

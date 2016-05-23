@@ -16,6 +16,7 @@ use Routing\Route;
 
 use Response;
 use Request;
+use Session;
 
 
 /**
@@ -122,7 +123,10 @@ class ClassicRouter extends BaseRouter
         // The dispatching failed; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        Response::error(404, $data)->send();
+        $response = Response::error(404, $data);
+
+        // Finish the Session and send the Response.
+        Session::finish($response);
 
         return false;
     }

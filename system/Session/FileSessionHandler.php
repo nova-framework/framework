@@ -121,7 +121,7 @@ class FileSessionHandler implements SessionHandlerInterface
         $time = time() - $this->lifetime;
 
         foreach (scandir($this->path) as $file) {
-            if($file == '.gitignore') {
+            if(($file == '.') || ($file == '..') || ($file == '.gitignore')) {
                 continue;
             }
 

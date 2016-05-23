@@ -8,7 +8,7 @@
 
 namespace Routing;
 
-use Core\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**

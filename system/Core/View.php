@@ -10,8 +10,9 @@
 namespace Core;
 
 use Core\BaseView;
-use Core\Response;
 use Core\Template;
+
+use Response;
 
 
 /**

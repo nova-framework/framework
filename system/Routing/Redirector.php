@@ -5,6 +5,7 @@ namespace Routing;
 use Http\Request;
 use Http\RedirectResponse;
 use Session\Store as SessionStore;
+use Support\Str;
 
 class Redirector
 {
@@ -28,9 +29,10 @@ class Redirector
      * @param  \Http\Request  $request
      * @return void
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, SessionStore $session)
     {
         $this->request = $request;
+        $this->session = $session;
     }
 
     /**
@@ -99,7 +101,7 @@ class Redirector
     {
         $path = $this->session->get('url.intended', $default);
 
-        $this->session->forget('url.intended');
+        $this->session->delete('url.intended');
 
         return $this->to($path, $status, $headers, $secure);
     }
@@ -115,7 +117,7 @@ class Redirector
      */
     public function to($path, $status = 302, $headers = array(), $secure = null)
     {
-        $path = $this->createUrl($path, arrray(), $secure);
+        $path = $this->createUrl($path, array(), $secure);
 
         return $this->createRedirect($path, $status, $headers);
     }
@@ -222,7 +224,7 @@ class Redirector
     {
         $root = $root ?: $this->request->root();
 
-        $start = str_starts_with($root, 'http://') ? 'http://' : 'https://';
+        $start = Str::startsWith($root, 'http://') ? 'http://' : 'https://';
 
         return preg_replace('~'.$start.'~', $scheme, $root, 1);
     }
@@ -235,7 +237,7 @@ class Redirector
      */
     protected function isValidUrl($path)
     {
-        if (str_starts_with($path, array('#', '//', 'mailto:', 'tel:'))) return true;
+        if (Str::startsWith($path, array('#', '//', 'mailto:', 'tel:'))) return true;
 
         return (filter_var($path, FILTER_VALIDATE_URL) !== false);
     }

@@ -10,6 +10,7 @@ namespace Support\Facades;
 
 use Routing\Redirector;
 use Support\Facades\Request;
+use Support\Facades\Session;
 
 
 class Redirect
@@ -32,10 +33,13 @@ class Redirect
             return static::$redirector;
         }
 
+        // Get the Session instance.
+        $session = Session::instance();
+
         // Get the Request instance.
         $request = Request::instance();
 
-        return static::$sessionStore = new Redirector($request);
+        return static::$redirector = new Redirector($request, $session);
     }
 
     /**

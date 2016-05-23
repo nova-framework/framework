@@ -10,10 +10,14 @@ namespace Core;
 
 use Core\BaseView;
 use Core\Language;
-use Core\Response;
 use Core\Template;
 use Core\View;
 use Helpers\Hooks;
+
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
+use Response;
+
 
 /**
  * Core controller, all other controllers extend this base controller.
@@ -78,7 +82,7 @@ abstract class Controller
         $result = call_user_func_array(array($this, $method), $params);
 
         // The Method returned a Response instance; send it and stop the processing.
-        if ($result instanceof Response) {
+        if ($result instanceof SymfonyResponse) {
             $result->send();
 
             return true;

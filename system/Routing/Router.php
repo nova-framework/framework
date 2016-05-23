@@ -8,11 +8,12 @@
 
 namespace Routing;
 
-use Core\Response;
 use Helpers\Inflector;
 use Helpers\Url;
 use Routing\BaseRouter;
 use Routing\Route;
+
+use Symfony\Component\HttpFoundation\Response;
 
 use Request;
 

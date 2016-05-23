@@ -9,7 +9,6 @@
 namespace App\Modules\Users\Controllers;
 
 use Core\Controller;
-use Core\Redirect;
 use Core\View;
 use Helpers\Csrf;
 use Helpers\Password;
@@ -17,6 +16,7 @@ use Helpers\Url;
 
 use Auth;
 use Input;
+use Redirect;
 use Request;
 
 

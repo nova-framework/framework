@@ -46,7 +46,9 @@ Config::set('classAliases', array(
     'Event'         => '\Support\Facades\Event',
     'Input'         => '\Support\Facades\Input',
     'Language'      => '\Support\Facades\Language',
+    'Redirect'      => '\Support\Facades\Redirect',
     'Request'       => '\Support\Facades\Request',
+    'Response'      => '\Support\Facades\Response',
     'Session'       => '\Support\Facades\Session',
     'Validator'     => '\Support\Facades\Validator',
 ));

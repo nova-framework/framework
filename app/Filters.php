@@ -7,10 +7,11 @@
  */
 
 use Routing\Route;
-use Core\Response;
-use Core\Redirect;
 use Helpers\Csrf;
+
 use Support\Facades\Auth;
+use Support\Facades\Redirect;
+use Support\Facades\Response;
 
 
 /** Define Route Filters. */
@@ -32,13 +33,13 @@ Route::filter('csrf', function($route) {
 Route::filter('auth', function($route) {
     if (! Auth::check()) {
          // User is not logged in, respond with a Redirect code 401 (Unauthorized)
-         return Redirect::to('login', 401);
+         return Redirect::to('login');
     }
 });
 
 Route::filter('guest', function($route) {
     if (! Auth::guest()) {
         // User is authenticated, respond with a Redirect code 401 (Unauthorized)
-        return Redirect::to('dashboard', 401);
+        return Redirect::to('dashboard');
     }
 });

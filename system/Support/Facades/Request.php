@@ -9,6 +9,7 @@
 namespace Support\Facades;
 
 use Http\Request as HttpRequest;
+use Support\Facades\Session;
 
 use ReflectionMethod;
 use ReflectionException;
@@ -34,7 +35,14 @@ class Request
             return static::$request;
         }
 
-        return static::$request = HttpRequest::createFromGlobals();
+        static::$request = $request = HttpRequest::createFromGlobals();
+
+        // Get the Session instance.
+        $session = Session::instance();
+
+        $request->setSession($session);
+
+        return $request;
     }
 
     /**

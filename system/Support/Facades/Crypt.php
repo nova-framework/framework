@@ -24,11 +24,20 @@ class Crypt
      * Return a default Encrypter instance
      *
      * @return \Routing\Redirector
+     *
+     * @throws Exception
      */
     protected static function getEncrypter()
     {
         if (isset(static::$encrypter)) {
             return static::$encrypter;
+        }
+
+        // Prepare a new Encrypter instance.
+        $encryptKey = ENCRYPT_KEY;
+
+        if (empty($encryptKey)) {
+            throw new \Exception('Please configure the ENCRYPT_KEY.');
         }
 
         return static::$encrypter = new Encrypter(ENCRYPT_KEY);

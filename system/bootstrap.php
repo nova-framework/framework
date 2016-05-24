@@ -11,7 +11,6 @@ use Core\Aliases;
 use Core\Language;
 use Core\Modules;
 use Routing\Router;
-use Support\Facades\Request;
 use Support\Facades\Session;
 
 use Patchwork\Utf8\Bootup as Patchwork;

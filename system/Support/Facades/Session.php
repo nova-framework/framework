@@ -116,7 +116,7 @@ class Session
         // Save the Session Store data.
         $session->save();
 
-        // Cleanup the stalled Session files.
+        // Collect the garbage for the Session Store instance.
         static::collectGarbage($session, $config);
 
         // Store the Session ID in a Cookie, lasting five years.

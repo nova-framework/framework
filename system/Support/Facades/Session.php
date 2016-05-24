@@ -12,7 +12,6 @@ use Core\Config;
 use Core\Template;
 
 use Session\FileSessionHandler;
-use Session\NativeSessionHandler;
 use Session\SessionInterface;
 use Session\Store as SessionStore;
 use Support\Facades\Cookie;
@@ -76,13 +75,14 @@ class Session
         // Load the configuration.
         $config = Config::get('session');
 
-        $name = $config['cookie'];
-        $path = $config['files'];
+        $savePath = $config['files'];
 
         $lifeTime = $config['lifetime'] * 60; // This option is in minutes.
 
         // Get a Session Handler instance.
-        static::$sessionHandler = new FileSessionHandler($path);
+        $className = $config['handler'];
+
+        static::$sessionHandler = new $className($savePath);
 
         //
         ini_set('session.save_handler', 'files');
@@ -93,7 +93,7 @@ class Session
         register_shutdown_function('session_write_close');
 
         // Start the Session.
-        session_set_cookie_params($lifeTime);
+        session_set_cookie_params($lifeTime, $config['path'], $config['domain']);
 
         session_start();
 
@@ -101,7 +101,11 @@ class Session
         $cookie = Cookie::make(
             session_name(),
             session_id(),
-            $config['lifetime']
+            $config['lifetime'],
+            $config['path'],
+            $config['domain'],
+            $config['secure'],
+            false
         );
 
         Cookie::queue($cookie);
@@ -125,11 +129,15 @@ class Session
         // Get the Session Store instance.
         $session = static::getSessionStore();
 
-        // Store the Session ID in a Cookie, lasting five years.
+        // Store the Session ID in a Cookie.
         $cookie = Cookie::make(
-            $config['cookie'],
+            $config['name'],
             $session->getId(),
-            Cookie::FIVEYEARS
+            $config['lifetime'],
+            $config['path'],
+            $config['domain'],
+            $config['secure'],
+            false
         );
 
         Cookie::queue($cookie);

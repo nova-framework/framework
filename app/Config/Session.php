@@ -10,11 +10,15 @@ use Core\Config;
 
 
 Config::set('session', array(
-    'lifetime' => 180,          // The number of minutes the session is allowed to remain idle before it expires.
-    'files'    => SESSION_PATH, // The location where the session files may be stored.
-    'lottery' => array(2, 100),
-    // Cookie configuration
-    'cookie'   => PREFIX .'session',
+    'handler'  => '\Session\FileSessionHandler', // Default Session Handler, using files for Session caching.
+
+    // Storage configuration.
+    'lifetime' => 180,          // Number of minutes the Session is allowed to remain idle before it expires.
+    'files'    => SESSION_PATH, // File Session Handler - the location where the Session files may be stored.
+    'lottery' => array(2, 100), // Option used by the Garbage Collector, to remove the stalled Session files.
+
+    // Cookie configuration.
+    'name'     => PREFIX .'session',
     'path'     => '/',
     'domain'   => null,
     'secure'   => false,

@@ -4,7 +4,7 @@
 
             <h1>400</h1>
 
-            Referer: <?= Request::header('referer'); ?>
+            Referrer: <?= Request::header('referer'); ?>
 
             <hr />
 

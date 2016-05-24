@@ -97,7 +97,7 @@ class Session
 
         session_start();
 
-        // Store / queue a Cookie with the proper Session information.
+        // Store / queue a Cookie with the proper Session's information.
         Cookie::queue(session_name() ,session_id(), $config['lifetime'], null, null, false, false);
     }
 

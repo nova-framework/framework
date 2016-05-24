@@ -53,7 +53,7 @@ class Session
         // Load the configuration.
         $config = Config::get('session');
 
-        $name = $config['cookie'];
+        $name = $config['name'];
 
         // Get the Session ID from Cookie, fallback to null.
         $id = Cookie::get($name);

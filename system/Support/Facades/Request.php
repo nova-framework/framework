@@ -46,6 +46,20 @@ class Request
     }
 
     /**
+     * Intialize a Request instance
+     *
+     * @return void
+     */
+    public static function init()
+    {
+        // Get a HttpRequest instance.
+        $instance = static::getRequest();
+
+        //
+        // There we will decrypt the Cookies.
+    }
+
+    /**
      * Magic Method for calling the methods on the default Request instance.
      *
      * @param $method

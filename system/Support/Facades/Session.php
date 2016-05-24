@@ -158,11 +158,8 @@ class Session
             return null;
         }
 
-        // Get the Message from the Session Store.
-        $message = $instance->get($name);
-
-        // Delete the message from the Session Store.
-        $instance->forget($name);
+        // Pull the Message from the Session Store.
+        $message = $instance->remove($name);
 
         if (is_array($message)) {
             // The Message is structured in the New Style.

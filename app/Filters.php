@@ -36,7 +36,7 @@ Route::filter('referer', function($route) {
     $referer = Request::header('referer');
 
     if(($referer !== null) && ! str_starts_with($referer, SITEURL)) {
-        return Redirect::home();
+        return Redirect::error(400);
     }
 });
 

@@ -84,9 +84,7 @@ class Cookie
     {
         $instance = static::getCookieJar();
 
-        $cookie = call_user_func_array(array($instance, 'make'), func_get_args());
-
-        $instance->queue($cookie);
+        return call_user_func_array(array($instance, 'queue'), func_get_args());
     }
 
     /**

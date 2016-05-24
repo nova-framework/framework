@@ -38,7 +38,7 @@ class Encrypter
      * @param  string $cipher
      * @return void
      */
-    public function __construct($key, $cipher = 'AES-256-CBC')
+    public function __construct($key = ENCRYPT_KEY, $cipher = 'AES-256-CBC')
     {
         $key = (string) $key;
 

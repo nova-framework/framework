@@ -6,13 +6,12 @@ use Core\Template;
 use Core\View;
 use Http\JsonResponse;
 use Http\Response as HttpResponse;
-
 use Support\Contracts\ArrayableInterface;
+
+use Str;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
-use Patchwork\Utf8 as Patchwork;
 
 
 class Response
@@ -39,9 +38,6 @@ class Response
      */
     public static function make($content = '', $status = 200, array $headers = array())
     {
-        // Merge the Legacy Headers on given Headers.
-        $headers = array_merge(static::$legacyHeaders, $headers);
-
         return new HttpResponse($content, $status, $headers);
     }
 
@@ -70,11 +66,6 @@ class Response
      */
     public static function json($data = array(), $status = 200, array $headers = array(), $options = 0)
     {
-        if (! empty(static::$legacyHeaders)) {
-            // Merge the Legacy Headers on given Headers.
-            $headers = array_merge(static::$legacyHeaders, $headers);
-        }
-
         if ($data instanceof ArrayableInterface) {
             $data = $data->toArray();
         }
@@ -92,11 +83,6 @@ class Response
      */
     public static function stream($callback, $status = 200, array $headers = array())
     {
-        if (! empty(static::$legacyHeaders)) {
-            // Merge the Legacy Headers on given Headers.
-            $headers = array_merge(static::$legacyHeaders, $headers);
-        }
-
         return new StreamedResponse($callback, $status, $headers);
     }
 
@@ -111,15 +97,10 @@ class Response
      */
     public static function download($file, $name = null, array $headers = array(), $disposition = 'attachment')
     {
-        if (! empty(static::$legacyHeaders)) {
-            // Merge the Legacy Headers on given Headers.
-            $headers = array_merge(static::$legacyHeaders, $headers);
-        }
-
         $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
 
         if ( ! is_null($name)) {
-            return $response->setContentDisposition($disposition, $name, Patchwork::toAscii($name));
+            return $response->setContentDisposition($disposition, $name, Str::ascii($name));
         }
 
         return $response;
@@ -191,7 +172,7 @@ class Response
     //--------------------------------------------------------------------
 
     /**
-     * Add the HTTP header to the headers array.
+     * Add the HTTP header to the Headers array.
      *
      * @param  string  $header HTTP header text
      */
@@ -205,7 +186,7 @@ class Response
     }
 
     /**
-     * Add an array with headers to the view.
+     * Add an array with Headers to the view.
      *
      * @param array $headers
      */
@@ -217,16 +198,14 @@ class Response
     }
 
     /**
-     * Send headers.
+     * Send the (legacy) Headers.
      */
     public static function sendHeaders()
     {
-        if (empty(static::$legacyHeaders) || headers_sent()) {
-            return;
-        }
-
-        foreach (self::$legacyHeaders as $header => $value) {
-            header("$header: $value", true);
+        if (! headers_sent()) {
+            foreach (self::$legacyHeaders as $header => $value) {
+                header("$header: $value", true);
+            }
         }
 
         // Clear the Legacy Headers.

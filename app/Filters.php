@@ -11,6 +11,7 @@ use Helpers\Csrf;
 
 use Support\Facades\Auth;
 use Support\Facades\Redirect;
+use Support\Facades\Request;
 use Support\Facades\Response;
 
 
@@ -29,17 +30,27 @@ Route::filter('csrf', function($route) {
     }
 });
 
+// Referer checking Filter.
+Route::filter('referer', function($route) {
+    // Check if the visitor come to this Route from another site.
+    $referer = Request::header('referer');
+
+    if(($referer !== null) && ! str_starts_with($referer, SITEURL)) {
+        return Redirect::home()->with('error', 'You are not allowed to come directly there');
+    }
+});
+
 // Authentication Filters.
 Route::filter('auth', function($route) {
     if (! Auth::check()) {
-         // User is not logged in, respond with a Redirect code 401 (Unauthorized)
+         // User is not logged in, redirect him to Login Page.
          return Redirect::to('login');
     }
 });
 
 Route::filter('guest', function($route) {
     if (! Auth::guest()) {
-        // User is authenticated, respond with a Redirect code 401 (Unauthorized)
+        // User is authenticated, redirect him to Dashboard Page.
         return Redirect::to('dashboard');
     }
 });

@@ -31,7 +31,10 @@ Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
 ));
 
 // The Framework's Language Changer.
-Router::any('language/(:any)', 'App\Controllers\Language@change');
+Router::any('language/(:any)', array(
+    'filters' => 'referer',
+    'uses'    => 'App\Controllers\Language@change'
+));
 /** End default Routes */
 
 /** Module Routes. */

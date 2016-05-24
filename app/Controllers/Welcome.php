@@ -12,6 +12,8 @@ use Core\View;
 use Core\Controller;
 use Helpers\Session;
 
+use Request;
+
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.
  */
@@ -46,6 +48,8 @@ class Welcome extends Controller
      */
     public function subPage()
     {
+        file_put_contents(APPDIR .'Storage/Logs/responses.txt', var_export(Request::instance()->headers, true) .PHP_EOL .PHP_EOL, FILE_APPEND);
+
         return View::make('Welcome/SubPage')
             ->shares('title', $this->trans('subpageText'))
             ->withWelcomeMessage($this->trans('subpageMessage'));

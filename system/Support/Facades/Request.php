@@ -44,6 +44,7 @@ class Request
 
         foreach ($request->cookies as $key => $cookie) {
             if($key === 'PHPSESSID') {
+                // Leave alone the PHPSESSID.
                 continue;
             }
 

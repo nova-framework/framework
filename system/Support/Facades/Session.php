@@ -130,6 +130,7 @@ class Session
         // Encrypt all Cookies present on the Response instance.
         foreach ($response->headers->getCookies() as $key => $cookie)  {
             if($key === 'PHPSESSID') {
+                // Leave alone the PHPSESSID.
                 continue;
             }
 

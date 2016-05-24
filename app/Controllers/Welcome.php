@@ -48,8 +48,6 @@ class Welcome extends Controller
      */
     public function subPage()
     {
-        file_put_contents(APPDIR .'Storage/Logs/responses.txt', var_export(Request::instance()->headers, true) .PHP_EOL .PHP_EOL, FILE_APPEND);
-
         return View::make('Welcome/SubPage')
             ->shares('title', $this->trans('subpageText'))
             ->withWelcomeMessage($this->trans('subpageMessage'));

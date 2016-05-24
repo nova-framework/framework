@@ -40,7 +40,7 @@ class Response
     public static function make($content = '', $status = 200, array $headers = array())
     {
         // Merge the Legacy Headers on given Headers.
-        $headers = array_merge($headers, static::$legacyHeaders);
+        $headers = array_merge(static::$legacyHeaders, $headers);
 
         return new HttpResponse($content, $status, $headers);
     }
@@ -57,7 +57,7 @@ class Response
     public static function view($view, $data = array(), $status = 200, array $headers = array())
     {
         // Merge the Legacy Headers on given Headers.
-        $headers = array_merge($headers, static::$legacyHeaders);
+        $headers = array_merge(static::$legacyHeaders, $headers);
 
         return static::make(View::make($view, $data), $status, $headers);
     }
@@ -74,7 +74,7 @@ class Response
     public static function json($data = array(), $status = 200, array $headers = array(), $options = 0)
     {
         // Merge the Legacy Headers on given Headers.
-        $headers = array_merge($headers, static::$legacyHeaders);
+        $headers = array_merge(static::$legacyHeaders, $headers);
 
         if ($data instanceof ArrayableInterface) {
             $data = $data->toArray();
@@ -94,7 +94,7 @@ class Response
     public static function stream($callback, $status = 200, array $headers = array())
     {
         // Merge the Legacy Headers on given Headers.
-        $headers = array_merge($headers, static::$legacyHeaders);
+        $headers = array_merge(static::$legacyHeaders, $headers);
 
         return new StreamedResponse($callback, $status, $headers);
     }
@@ -111,7 +111,7 @@ class Response
     public static function download($file, $name = null, array $headers = array(), $disposition = 'attachment')
     {
         // Merge the Legacy Headers on given Headers.
-        $headers = array_merge($headers, static::$legacyHeaders);
+        $headers = array_merge(static::$legacyHeaders, $headers);
 
         $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
 
@@ -144,7 +144,7 @@ class Response
     public static function error($status, array $data = array(), $headers = array())
     {
         // Merge the Legacy Headers on given Headers.
-        $headers = array_merge($headers, static::$legacyHeaders);
+        $headers = array_merge(static::$legacyHeaders, $headers);
 
         // Clear the Legacy Headers ist.
         static::$legacyHeaders = array();

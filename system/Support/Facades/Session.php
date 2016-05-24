@@ -13,6 +13,7 @@ use Core\Template;
 
 use Session\FileSessionHandler;
 use Session\NativeSessionHandler;
+use Session\SessionInterface;
 use Session\Store as SessionStore;
 use Support\Facades\Cookie;
 use Support\Facades\Crypt;
@@ -44,7 +45,7 @@ class Session
      *
      * @return \Session\Store
      */
-    protected static function &getSessionStore()
+    protected static function getSessionStore()
     {
         if (isset(static::$sessionStore)) {
             return static::$sessionStore;
@@ -54,29 +55,15 @@ class Session
         $config = Config::get('session');
 
         $name = $config['cookie'];
-        $path = $config['files'];
-
-        $lifeTime = $config['lifetime'] * 60; // This option is in minutes.
-
-        // Get a Session Handler instance.
-        static::$sessionHandler = $handler = new FileSessionHandler($path, $lifeTime);
-
-        //
-        //ini_set('session.save_handler', 'files');
-
-        session_set_save_handler($handler, true);
-
-        // Start the Session.
-        session_start();
 
         // Get the Session ID from Cookie, fallback to null.
         $id = Cookie::get($name);
 
-        static::$sessionStore = $store = new SessionStore($name, $handler, $id);
+        static::$sessionStore = $session = new SessionStore($name, static::$sessionHandler, $id);
 
-        $store->start();
+        $session->start();
 
-        return $store;
+        return $session;
     }
 
     /**
@@ -86,7 +73,27 @@ class Session
      */
     public static function init()
     {
-        return static::getSessionStore();
+        // Load the configuration.
+        $config = Config::get('session');
+
+        $name = $config['cookie'];
+        $path = $config['files'];
+
+        $lifeTime = $config['lifetime'] * 60; // This option is in minutes.
+
+        // Get a Session Handler instance.
+        static::$sessionHandler = new FileSessionHandler($path, $lifeTime);
+
+        //
+        ini_set('session.save_handler', 'files');
+
+        session_set_save_handler(static::$sessionHandler, true);
+
+        // The following prevents unexpected effects when using objects as save handlers
+        register_shutdown_function('session_write_close');
+
+        // Start the Session.
+        session_start();
     }
 
     /**
@@ -103,19 +110,17 @@ class Session
 
         $name = $config['cookie'];
 
-        $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
-
         // Get the Session Store instance.
-        $instance = static::getSessionStore();
+        $session = static::getSessionStore();
 
         // Save the Session Store data.
-        $instance->save();
+        $session->save();
 
         // Cleanup the stalled Session files.
-        $instance->getHandler()->gc($lifeTime);
+        static::collectGarbage($session, $config);
 
         // Store the Session ID in a Cookie, lasting five years.
-        Cookie::queue($name, $instance->getId(), Cookie::FIVEYEARS, null, null, false, false);
+        Cookie::queue($name, $session->getId(), Cookie::FIVEYEARS, null, null, false, false);
 
         // Finally, add all Request and queued Cookies on Response instance.
         foreach (Cookie::getQueuedCookies() as $cookie) {
@@ -149,6 +154,35 @@ class Session
 
         // Send the Response.
         $response->send();
+    }
+
+    /**
+     * Remove the garbage from the session if necessary.
+     *
+     * @param  \Illuminate\Session\SessionInterface  $session
+     * @return void
+     */
+    protected static function collectGarbage(SessionInterface $session, array $config)
+    {
+        $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
+
+        // Here we will see if this request hits the garbage collection lottery by hitting
+        // the odds needed to perform garbage collection on any given request. If we do
+        // hit it, we'll call this handler to let it delete all the expired sessions.
+        if (static::configHitsLottery($config))  {
+            $session->getHandler()->gc($lifeTime);
+        }
+    }
+
+    /**
+     * Determine if the configuration odds hit the lottery.
+     *
+     * @param  array  $config
+     * @return bool
+     */
+    protected static function configHitsLottery(array $config)
+    {
+        return (mt_rand(1, $config['lottery'][1]) <= $config['lottery'][0]);
     }
 
     /**

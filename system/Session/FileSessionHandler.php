@@ -21,9 +21,9 @@ class FileSessionHandler implements SessionHandlerInterface
      * @param  int         $lifetime
      * @return void
      */
-    function __construct($path)
+    function __construct($savePath)
     {
-        $this->savePath = rtrim($path, '/') .DS;
+        $this->savePath = rtrim($savePath, '/') .DS;
     }
 
     /**
@@ -31,7 +31,7 @@ class FileSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function open($save_path, $name)
+    public function open($savePath, $sessionName)
     {
         return true;
     }
@@ -49,39 +49,43 @@ class FileSessionHandler implements SessionHandlerInterface
     /**
      * File read handler.
      *
-     * @param  string  $session_id
+     * @param  string  $sessionId
      * @return string
      */
-    public function read($session_id)
+    public function read($sessionId)
     {
-        $filePath = $this->savePath .'sess_' .$session_id;
+        $filePath = $this->savePath .'sess_' .$sessionId;
 
-        return is_readable($filePath) ? (string) @file_get_contents($filePath) : '';
+        if(is_readable($filePath)) {
+            return file_get_contents($filePath);
+        } else {
+            return '';
+        }
     }
 
     /**
      * File write handler.
      *
-     * @param  string     $session_id
-     * @param  string     $session_data
+     * @param  string     $sessionId
+     * @param  string     $sessionData
      * @return string
      */
-    public function write($session_id , $session_data)
+    public function write($sessionId , $sessionData)
     {
-        $filePath = $this->savePath .'sess_' .$session_id;
+        $filePath = $this->savePath .'sess_' .$sessionId;
 
-        return (file_put_contents($filePath, $session_data) !== false);
+        return (file_put_contents($filePath, $sessionData) !== false);
     }
 
     /**
      * File destroy handler.
      *
-     * @param  string  $session_id
+     * @param  string  $sessionId
      * @return string
      */
-    public function destroy($session_id)
+    public function destroy($sessionId)
     {
-        $filePath = $this->savePath .'sess_' .$session_id;
+        $filePath = $this->savePath .'sess_' .$sessionId;
 
         if (file_exists($filePath)) {
             unlink($filePath);
@@ -93,15 +97,15 @@ class FileSessionHandler implements SessionHandlerInterface
     /**
      * File Garbage Collector handler.
      *
-     * @param  int  $maxlifetime
+     * @param  int  $lifeTime
      * @return bool
      */
-    public function gc($maxlifetime)
+    public function gc($lifeTime)
     {
         foreach (glob($this->savePath .'sess_*') as $file) {
             clearstatcache(true, $file);
 
-            if (((filemtime($file) + $maxlifetime) < time()) && file_exists($file)) {
+            if (((filemtime($file) + $lifeTime) < time()) && file_exists($file)) {
                 unlink($file);
             }
         }

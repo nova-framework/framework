@@ -97,8 +97,8 @@ class Session
 
         session_start();
 
-        // Store a Cookie with the proper Session information.
-        Cookie::queue(session_name() ,session_id(), $config['lifetime']);
+        // Store / queue a Cookie with the proper Session information.
+        Cookie::queue(session_name() ,session_id(), $config['lifetime'], null, null, false, false);
     }
 
     /**
@@ -121,11 +121,11 @@ class Session
         // Save the Session Store data.
         $session->save();
 
-        // Collect the garbage for the Session Store instance.
-        static::collectGarbage($session, $config);
-
         // Store the Session ID in a Cookie, lasting five years.
         Cookie::queue($name, $session->getId(), Cookie::FIVEYEARS, null, null, false, false);
+
+        // Collect the garbage for the Session Store instance.
+        static::collectGarbage($session, $config);
 
         // Finally, add all Request and queued Cookies on Response instance.
         static::processCookies($response);

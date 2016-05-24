@@ -56,7 +56,7 @@ class Request
         $instance = static::getRequest();
 
         //
-        // There we will decrypt the Cookies.
+        // There we will decrypt the Request's Cookies.
     }
 
     /**

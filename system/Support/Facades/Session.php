@@ -121,6 +121,9 @@ class Session
             $response->headers->setCookie($cookie);
         }
 
+        //
+        // There we encrypt the Response's Cookies.
+
         // Prepare the Response.
         $request = Request::instance();
 

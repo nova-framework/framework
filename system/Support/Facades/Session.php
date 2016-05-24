@@ -82,7 +82,7 @@ class Session
         $lifeTime = $config['lifetime'] * 60; // This option is in minutes.
 
         // Get a Session Handler instance.
-        static::$sessionHandler = new FileSessionHandler($path, $lifeTime);
+        static::$sessionHandler = new FileSessionHandler($path);
 
         //
         ini_set('session.save_handler', 'files');
@@ -93,7 +93,12 @@ class Session
         register_shutdown_function('session_write_close');
 
         // Start the Session.
+        session_set_cookie_params($lifeTime);
+
         session_start();
+
+        // Store a Cookie with the proper Session information.
+        Cookie::queue(session_name() ,session_id() , time() + $lifeTime);
     }
 
     /**

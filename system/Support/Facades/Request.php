@@ -13,6 +13,8 @@ use Http\Request as HttpRequest;
 use Support\Facades\Crypt;
 use Support\Facades\Session;
 
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+
 use ReflectionMethod;
 use ReflectionException;
 
@@ -37,13 +39,25 @@ class Request
             return static::$request;
         }
 
+        // Create the Request instance.
         static::$request = $request = HttpRequest::createFromGlobals();
 
-        //
         // Decrypt all Cookies present on the Request instance.
+        static::decryptCookies($request);
 
-        foreach ($request->cookies as $key => $cookie) {
-            if($key == 'PHPSESSID') {
+        // Configure the Session instance.
+        $session = Session::instance();
+
+        $request->setSession($session);
+
+        // Return the Request instance.
+        return $request;
+    }
+
+    protected static function decryptCookies(SymfonyRequest $request)
+    {
+        foreach ($request->cookies as $name => $cookie) {
+            if($name == 'PHPSESSID') {
                 // Leave alone the PHPSESSID.
                 continue;
             }
@@ -59,18 +73,11 @@ class Request
                     $decrypted = Crypt::decrypt($cookie);
                 }
 
-                $request->cookies->set($key, $decrypted);
+                $request->cookies->set($name, $decrypted);
             } catch (DecryptException $e) {
-                $request->cookies->set($key, null);
+                $request->cookies->set($name, null);
             }
         }
-
-        // Configure the Session instance.
-        $session = Session::instance();
-
-        $request->setSession($session);
-
-        return $request;
     }
 
     /**

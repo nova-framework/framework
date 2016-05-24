@@ -123,19 +123,27 @@ class Session
         // Get the Session Store configuration.
         $config = Config::get('session');
 
-        $name = $config['cookie'];
-
         // Get the Request instance.
         $request = Request::instance();
 
         // Get the Session Store instance.
         $session = static::getSessionStore();
 
+        // Store the Session ID in a Cookie, lasting five years.
+        $cookie = Cookie::make(
+            $config['cookie'],
+            $session->getId(),
+            Cookie::FIVEYEARS,
+            null,
+            null,
+            false,
+            false
+        );
+
+        Cookie::queue($cookie);
+
         // Save the Session Store data.
         $session->save();
-
-        // Store the Session ID in a Cookie, lasting five years.
-        Cookie::queue($name, $session->getId(), Cookie::FIVEYEARS, null, null, false, false);
 
         // Collect the garbage for the Session Store instance.
         static::collectGarbage($session, $config);

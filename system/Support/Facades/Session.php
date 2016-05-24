@@ -122,7 +122,7 @@ class Session
         }
 
         //
-        // There we encrypt the Response's Cookies.
+        // There we will encrypt the Response's Cookies.
 
         // Prepare the Response.
         $request = Request::instance();

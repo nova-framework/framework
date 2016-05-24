@@ -39,9 +39,6 @@ Aliases::init();
 /** Start the Session. */
 Session::init();
 
-/** Initialize the current Request. */
-Request::init();
-
 /** Initialize the Language. */
 Language::init();
 

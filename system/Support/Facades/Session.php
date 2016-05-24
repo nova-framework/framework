@@ -15,8 +15,10 @@ use Session\FileSessionHandler;
 use Session\NativeSessionHandler;
 use Session\Store as SessionStore;
 use Support\Facades\Cookie;
+use Support\Facades\Crypt;
 use Support\Facades\Request;
 
+use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
@@ -121,8 +123,25 @@ class Session
             $response->headers->setCookie($cookie);
         }
 
-        //
-        // There we will encrypt the Response's Cookies.
+        // Encrypt all Cookies present on the Response instance.
+        foreach ($response->headers->getCookies() as $key => $cookie)  {
+            if($key === 'PHPSESSID') {
+                continue;
+            }
+            
+            // Create a new Cookie with the content encrypted.
+            $cookie = new SymfonyCookie(
+                $cookie->getName(),
+                Crypt::encrypt($cookie->getValue()),
+                $cookie->getExpiresTime(),
+                $cookie->getPath(),
+                $cookie->getDomain(),
+                $cookie->isSecure(),
+                $cookie->isHttpOnly()
+            );
+
+            $response->headers->setCookie($cookie);
+        }
 
         // Prepare the Response.
         $request = Request::instance();

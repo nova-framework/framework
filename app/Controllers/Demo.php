@@ -76,7 +76,7 @@ class Demo extends Controller
 
         echo '<pre>' .var_export(Input::all(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::createFromGlobals(), true).'</pre>';
+        echo '<pre>' .var_export(Request::instance(), true).'</pre>';
     }
 
     public function events()

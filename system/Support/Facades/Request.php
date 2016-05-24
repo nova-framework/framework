@@ -9,6 +9,7 @@
 namespace Support\Facades;
 
 use Http\Request as HttpRequest;
+use Support\Facades\Crypt;
 use Support\Facades\Session;
 
 use ReflectionMethod;
@@ -42,21 +43,42 @@ class Request
 
         $request->setSession($session);
 
+        //
+        // Decrypt all Cookies present on the Request instance.
+
+        foreach ($request->cookies as $key => $cookie) {
+            if($key === 'PHPSESSID') {
+                continue;
+            }
+
+            try {
+                if(is_array($cookie)) {
+                    $decrypted = array();
+
+                    foreach ($cookie as $key => $value) {
+                        $decrypted[$key] = Crypt::decrypt($value);
+                    }
+                } else {
+                    $decrypted = Crypt::decrypt($cookie);
+                }
+
+                $request->cookies->set($key, $decrypted);
+            } catch (DecryptException $e) {
+                $request->cookies->set($key, null);
+            }
+        }
+
         return $request;
     }
 
     /**
-     * Initialize a Request instance
+     * Return a \Http\Request instance
      *
-     * @return void
+     * @return \Http\Request
      */
-    public static function init()
+    public static function instance()
     {
-        // Get a HttpRequest instance.
-        $instance = static::getRequest();
-
-        //
-        // There we will decrypt the Request's Cookies.
+        return static::getRequest();
     }
 
     /**

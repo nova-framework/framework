@@ -12,6 +12,7 @@ namespace Helpers;
 use Crypt;
 use Input;
 use Session;
+use Str;
 
 
 /**
@@ -54,7 +55,7 @@ class Csrf
         $timestamp = time();
 
         if ((($max_time + $stored_time) <= $timestamp) || empty($csrf_token)) {
-            $hash = hash('sha512', Crypt::getRandomBytes());
+            $hash = hash('sha512', Str::randomBytes());
 
             Session::set($name, $hash);
             Session::set($name . '_time', $timestamp);

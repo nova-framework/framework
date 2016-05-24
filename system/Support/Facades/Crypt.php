@@ -21,9 +21,9 @@ class Crypt
     protected static $encrypter;
 
     /**
-     * Return a default Encrypter instance
+     * Return the default Encrypter instance.
      *
-     * @return \Routing\Redirector
+     * @return \Encryption\Encrypter
      *
      * @throws Exception
      */
@@ -41,6 +41,16 @@ class Crypt
         }
 
         return static::$encrypter = new Encrypter($encryptKey);
+    }
+
+    /**
+     * Return the default Encrypter instance.
+     *
+     * @return \Encryption\Encrypter
+     */
+    public static function instance()
+    {
+        return static::getEncrypter();
     }
 
     /**

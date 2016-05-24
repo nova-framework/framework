@@ -125,6 +125,9 @@ class Session
 
         $name = $config['cookie'];
 
+        // Get the Request instance.
+        $request = Request::instance();
+
         // Get the Session Store instance.
         $session = static::getSessionStore();
 
@@ -140,9 +143,7 @@ class Session
         // Finally, add all Request and queued Cookies on Response instance.
         static::processCookies($response);
 
-        // Prepare the Response.
-        $request = Request::instance();
-
+        // Prepare the Response instance for sending.
         $response->prepare($request);
 
         // Send the Response.

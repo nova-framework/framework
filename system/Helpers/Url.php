@@ -29,11 +29,9 @@ class Url
      */
     public static function redirect($url = null, $fullPath = false, $code = 200)
     {
-        $url = ($fullPath === false) ? SITEURL .$url : $url;
-
         // Create a Response instance.
         if ($fullPath === false) {
-            $response = Redirect::to($url, $code);
+            $response = Redirect::to(SITEURL .$url, $code);
         } else {
             $response = Redirect::away($url, $code);
         }

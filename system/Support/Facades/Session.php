@@ -183,6 +183,7 @@ class Session
      */
     protected static function processCookies(SymfonyResponse $response)
     {
+        // Insert all queued Cookies on the Response instance.
         foreach (Cookie::getQueuedCookies() as $cookie) {
             $response->headers->setCookie($cookie);
         }

@@ -8,7 +8,8 @@
 
 namespace Helpers;
 
-use Crypt;
+use Encryption\DecryptException;
+use Support\Facades\Crypt;
 
 
 /**
@@ -65,7 +66,7 @@ class Cookie
      * @param string $default
      * @return string|mixed
      */
-    public static function get($key, $default = '')
+    public static function get($key, $default = null)
     {
         if(! isset($_COOKIE[$key])) {
             return $default;
@@ -73,7 +74,11 @@ class Cookie
 
         $cookie = $_COOKIE[$key];
 
-        return Crypt::decrypt($cookie);
+        try {
+            return Crypt::decrypt($cookie);
+        } catch (DecryptException $e) {
+            return $default;
+        }
     }
 
     /**

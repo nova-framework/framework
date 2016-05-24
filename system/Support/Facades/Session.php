@@ -54,11 +54,29 @@ class Session
         $config = Config::get('session');
 
         $name = $config['cookie'];
+        $path = $config['files'];
+
+        $lifeTime = $config['lifetime'] * 60; // This option is in minutes.
+
+        // Get a Session Handler instance.
+        static::$sessionHandler = $handler = new FileSessionHandler($path, $lifeTime);
+
+        //
+        //ini_set('session.save_handler', 'files');
+
+        session_set_save_handler($handler, true);
+
+        // Start the Session.
+        session_start();
 
         // Get the Session ID from Cookie, fallback to null.
         $id = Cookie::get($name);
 
-        return static::$sessionStore = new SessionStore($name, static::$sessionHandler, $id);
+        static::$sessionStore = $store = new SessionStore($name, $handler, $id);
+
+        $store->start();
+
+        return $store;
     }
 
     /**
@@ -68,26 +86,7 @@ class Session
      */
     public static function init()
     {
-        // Load the configuration.
-        $config = Config::get('session');
-
-        $path = $config['files'];
-
-        $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
-
-        // Get a Session Handler instance.
-        static::$sessionHandler = $handler = new FileSessionHandler($path, $lifeTime);
-
-        //
-        ini_set('session.save_handler', 'files');
-
-        session_set_save_handler($handler, true);
-
-        session_start();
-
-        $instance =& static::getSessionStore();
-
-        $instance->start();
+        return static::getSessionStore();
     }
 
     /**

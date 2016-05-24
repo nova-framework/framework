@@ -101,11 +101,7 @@ class Session
         $cookie = Cookie::make(
             session_name(),
             session_id(),
-            $config['lifetime'],
-            null,
-            null,
-            false,
-            false
+            $config['lifetime']
         );
 
         Cookie::queue($cookie);
@@ -133,11 +129,7 @@ class Session
         $cookie = Cookie::make(
             $config['cookie'],
             $session->getId(),
-            Cookie::FIVEYEARS,
-            null,
-            null,
-            false,
-            false
+            Cookie::FIVEYEARS
         );
 
         Cookie::queue($cookie);

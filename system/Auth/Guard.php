@@ -330,7 +330,7 @@ class Guard
         $value = $user->{$keyName} .'|' .$user->{$this->rememberToken};
 
         // Store the current information in a Cookie lasting five years.
-        Cookie::queue($this->getRecallerName(), $value, 2628000, null, null, false, false);
+        Cookie::queue($this->getRecallerName(), $value, Cookie::FIVEYEARS, null, null, false, false);
     }
 
     /**

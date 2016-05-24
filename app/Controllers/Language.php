@@ -32,7 +32,7 @@ class Language extends Controller
             Session::set('language', $language);
 
             // Store the current Language in a Cookie lasting five years.
-            Cookie::queue(PREFIX .'language', $language, 2628000, null, null, false, false);
+            Cookie::queue(PREFIX .'language', $language, Cookie::FIVEYEARS, null, null, false, false);
         }
 
         return Redirect::back();

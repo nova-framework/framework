@@ -114,7 +114,7 @@ class Session
         $instance->getHandler()->gc($lifeTime);
 
         // Store the Session ID in a Cookie, lasting five years.
-        Cookie::queue($name, $instance->getId(), 2628000, null, null, false, false);
+        Cookie::queue($name, $instance->getId(), Cookie::FIVEYEARS, null, null, false, false);
 
         // Finally, add all Request and queued Cookies on Response instance.
         foreach (Cookie::getQueuedCookies() as $cookie) {

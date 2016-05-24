@@ -16,6 +16,8 @@ use Support\Facades\Request;
  */
 class Cookie
 {
+    const FIVEYEARS = 2628000;
+
     /**
      * The CookieJar instance being handled.
      *

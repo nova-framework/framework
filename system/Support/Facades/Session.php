@@ -128,30 +128,7 @@ class Session
         Cookie::queue($name, $session->getId(), Cookie::FIVEYEARS, null, null, false, false);
 
         // Finally, add all Request and queued Cookies on Response instance.
-        foreach (Cookie::getQueuedCookies() as $cookie) {
-            $response->headers->setCookie($cookie);
-        }
-
-        // Encrypt all Cookies present on the Response instance.
-        foreach ($response->headers->getCookies() as $key => $cookie)  {
-            if($key === 'PHPSESSID') {
-                // Leave alone the PHPSESSID.
-                continue;
-            }
-
-            // Create a new Cookie with the content encrypted.
-            $cookie = new SymfonyCookie(
-                $cookie->getName(),
-                Crypt::encrypt($cookie->getValue()),
-                $cookie->getExpiresTime(),
-                $cookie->getPath(),
-                $cookie->getDomain(),
-                $cookie->isSecure(),
-                $cookie->isHttpOnly()
-            );
-
-            $response->headers->setCookie($cookie);
-        }
+        static::processCookies($response);
 
         // Prepare the Response.
         $request = Request::instance();
@@ -177,6 +154,39 @@ class Session
         // hit it, we'll call this handler to let it delete all the expired sessions.
         if (static::configHitsLottery($config))  {
             $session->getHandler()->gc($lifeTime);
+        }
+    }
+
+    /**
+     * Add all the queued Cookies to Response instance and encrypt all Cookies.
+     *
+     * @return void
+     */
+    protected static function processCookies(SymfonyResponse $response)
+    {
+        foreach (Cookie::getQueuedCookies() as $cookie) {
+            $response->headers->setCookie($cookie);
+        }
+
+        // Encrypt all Cookies present on the Response instance.
+        foreach ($response->headers->getCookies() as $key => $cookie)  {
+            if($key == 'PHPSESSID') {
+                // Leave alone the PHPSESSID.
+                continue;
+            }
+
+            // Create a new Cookie with the content encrypted.
+            $cookie = new SymfonyCookie(
+                $cookie->getName(),
+                Crypt::encrypt($cookie->getValue()),
+                $cookie->getExpiresTime(),
+                $cookie->getPath(),
+                $cookie->getDomain(),
+                $cookie->isSecure(),
+                $cookie->isHttpOnly()
+            );
+
+            $response->headers->setCookie($cookie);
         }
     }
 

@@ -43,7 +43,7 @@ class Cookie
     public static function set($key, $value, $expiry = self::FOURYEARS, $path = '/', $domain = false)
     {
         // Encrypt the value
-        if ($key !== 'PHPSESSID') {
+        if ($key != 'PHPSESSID') {
             // Just to be safe; when the end-user wants to manipulate the PHPSESSID.
             $value = Crypt::encrypt($value);
         }
@@ -77,7 +77,7 @@ class Cookie
 
         $cookie = $_COOKIE[$key];
 
-        if ($key === 'PHPSESSID') {
+        if ($key == 'PHPSESSID') {
             // Just to be safe; when the end-user wants to retrieve the PHPSESSID.
             return $cookie;
         }

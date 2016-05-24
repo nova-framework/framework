@@ -43,7 +43,7 @@ class Request
         // Decrypt all Cookies present on the Request instance.
 
         foreach ($request->cookies as $key => $cookie) {
-            if($key === 'PHPSESSID') {
+            if($key == 'PHPSESSID') {
                 // Leave alone the PHPSESSID.
                 continue;
             }

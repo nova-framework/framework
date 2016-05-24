@@ -69,25 +69,6 @@ class Cookie
     }
 
     /**
-     * Add a new Cookie to CookieJar, lasting five years by default.
-     *
-     * @param  string  $name
-     * @param  string  $value
-     * @param  int     $minutes
-     * @param  string  $path
-     * @param  string  $domain
-     * @param  bool    $secure
-     * @param  bool    $httpOnly
-     * @return void
-     */
-    public static function set($name, $value, $minutes = 2628000, $path = null, $domain = null, $secure = false, $httpOnly = true)
-    {
-        $instance = static::getCookieJar();
-
-        return call_user_func_array(array($instance, 'queue'), func_get_args());
-    }
-
-    /**
      * Magic Method for calling the methods on the default CookieJar instance.
      *
      * @param $method

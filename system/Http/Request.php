@@ -366,7 +366,7 @@ class Request extends SymfonyRequest
      */
     public function flash($filter = null, $keys = array())
     {
-        $flash = ( ! is_null($filter)) ? $this->$filter($keys) : $this->input();
+        $flash = (! is_null($filter)) ? call_user_func(array($this, $filter), $keys) : $this->input();
 
         $this->session()->flashInput($flash);
     }

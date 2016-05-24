@@ -12,7 +12,7 @@ use Helpers\Session;
 use Helpers\Inflector;
 
 use Support\Facades\Redirect;
-use Support\Facades\Session as SessionStore;
+use Support\Facades\Session as SessionManager;
 
 
 /**
@@ -37,7 +37,7 @@ class Url
         }
 
         // Finish the Session and send the Response.
-        SessionStore::finish($response);
+        SessionManager::finish($response);
 
         // Quit the Nova.
         exit();

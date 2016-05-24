@@ -46,7 +46,7 @@ class Request
     }
 
     /**
-     * Intialize a Request instance
+     * Initialize a Request instance
      *
      * @return void
      */

@@ -44,7 +44,7 @@ class Session
      *
      * @return \Session\Store
      */
-    protected static function getSessionStore()
+    protected static function &getSessionStore()
     {
         if (isset(static::$sessionStore)) {
             return static::$sessionStore;
@@ -85,7 +85,7 @@ class Session
 
         session_start();
 
-        $instance = static::getSessionStore();
+        $instance =& static::getSessionStore();
 
         $instance->start();
     }
@@ -128,7 +128,7 @@ class Session
             if($key === 'PHPSESSID') {
                 continue;
             }
-            
+
             // Create a new Cookie with the content encrypted.
             $cookie = new SymfonyCookie(
                 $cookie->getName(),

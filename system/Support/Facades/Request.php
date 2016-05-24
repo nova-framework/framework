@@ -39,11 +39,6 @@ class Request
 
         static::$request = $request = HttpRequest::createFromGlobals();
 
-        // Get the Session instance.
-        $session = Session::instance();
-
-        $request->setSession($session);
-
         //
         // Decrypt all Cookies present on the Request instance.
 
@@ -68,6 +63,11 @@ class Request
                 $request->cookies->set($key, null);
             }
         }
+
+        // Configure the Session instance.
+        $session = Session::instance();
+
+        $request->setSession($session);
 
         return $request;
     }

@@ -193,11 +193,11 @@ class Redirector
     }
 
     /**
-     * Get the URL generator instance.
+     * Get the Request instance.
      *
      * @return  \Http\Request
      */
-    public function getUrlRequest()
+    public function getRequest()
     {
         return $this->request;
     }

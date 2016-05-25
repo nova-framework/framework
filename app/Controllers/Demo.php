@@ -158,7 +158,7 @@ class Demo extends Controller
 
         $paginate->appends(array(
             'testing'  => 1,
-            'validate' => 7,
+            'example' => 'the_example_string',
         ));
 
         $content = $paginate->links();

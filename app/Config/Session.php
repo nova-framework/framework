@@ -22,4 +22,7 @@ Config::set('session', array(
     'path'     => '/',
     'domain'   => null,
     'secure'   => false,
+
+    // Wheter or not will be used the Cookies encryption.
+    'encrypt'  => true
 ));

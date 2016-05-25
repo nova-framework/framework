@@ -1136,18 +1136,6 @@ class Builder
     {
         $results = $this->get($columns);
 
-        return $this->buildRawPaginator($results, $perPage);
-    }
-
-    /**
-     * Build a paginator instance from a raw result array.
-     *
-     * @param  array  $results
-     * @param  int    $perPage
-     * @return \Illuminate\Pagination\Paginator
-     */
-    public function buildRawPaginator($results, $perPage)
-    {
         $total = count($results);
 
         // For queries which have a GROUP BY, we will actually retrieve the entire set

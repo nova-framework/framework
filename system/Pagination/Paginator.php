@@ -163,11 +163,11 @@ class Paginator
      * explore some of the other public methods available on the instance.
      *
      * <code>
-     *        // Render the pagination links
-     *        echo $paginator->links();
+     *      // Render the Pagination links
+     *      echo $paginator->links();
      *
-     *        // Render the pagination links using a given window size
-     *        echo $paginator->links(5);
+     *      // Render the Pagination links using a given window size
+     *      echo $paginator->links(5);
      * </code>
      *
      * @param  int     $adjacent
@@ -177,13 +177,6 @@ class Paginator
     {
         if ($this->lastPage <= 1) return '';
 
-        // The hard-coded seven is to account for all of the constant elements in a
-        // sliding range, such as the current page, the two ellipses, and the two
-        // beginning and ending pages.
-        //
-        // If there are not enough pages to make the creation of a slider possible
-        // based on the adjacent pages, we will simply display all of the pages.
-        // Otherwise, we will create a "truncating" sliding window.
         if (($this->lastPage < 7) + ($adjacent * 2)) {
             $links = $this->range(1, $this->lastPage);
         } else {
@@ -202,11 +195,11 @@ class Paginator
      * render the "first" and "last" pagination links, but only the pages.
      *
      * <code>
-     *        // Render the pagination slider
-     *        echo $paginator->slider();
+     *      // Render the pagination slider
+     *      echo $paginator->slider();
      *
-     *        // Render the pagination slider using a given window size
-     *        echo $paginator->slider(5);
+     *      // Render the pagination slider using a given window size
+     *      echo $paginator->slider(5);
      * </code>
      *
      * @param  int     $adjacent
@@ -216,14 +209,6 @@ class Paginator
     {
         $window = $adjacent * 2;
 
-        // If the current page is so close to the beginning that we do not have
-        // room to create a full sliding window, we will only show the first
-        // several pages, followed by the ending of the slider.
-        //
-        // Likewise, if the page is very close to the end, we will create the
-        // beginning of the slider, but just show the last several pages at
-        // the end of the slider. Otherwise, we'll build the range.
-        //
         // Example: 1 [2] 3 4 5 6 ... 23 24
         if ($this->currentPage <= $window) {
             return $this->range(1, $window + 2).' '.$this->ending();
@@ -335,11 +320,11 @@ class Paginator
      * Generate the "previous" HTML link.
      *
      * <code>
-     *        // Create the "previous" pagination element
-     *        echo $paginator->previous();
+     *      // Create the "previous" pagination element
+     *      echo $paginator->previous();
      *
-     *        // Create the "previous" pagination element with custom text
-     *        echo $paginator->previous('Go Back');
+     *      // Create the "previous" pagination element with custom text
+     *      echo $paginator->previous('Go Back');
      * </code>
      *
      * @param  string  $text
@@ -364,11 +349,11 @@ class Paginator
      * Generate the "next" HTML link.
      *
      * <code>
-     *        // Create the "next" pagination element
-     *        echo $paginator->next();
+     *      // Create the "next" pagination element
+     *      echo $paginator->next();
      *
-     *        // Create the "next" pagination element with custom text
-     *        echo $paginator->next('Skip Forwards');
+     *      // Create the "next" pagination element with custom text
+     *      echo $paginator->next('Skip Forwards');
      * </code>
      *
      * @param  string  $text

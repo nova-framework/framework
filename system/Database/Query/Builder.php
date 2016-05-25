@@ -1113,7 +1113,7 @@ class Builder
     {
         if (isset($this->groups)) {
             // A query which contains a GROUP BY; use the alternative paginate.
-            return $this->groupedPaginate($perPage, $columns);
+            return $this->groupedPaginate($perPage, $columns, $pageName);
         }
 
         // Move the orders, limit and offset properties to local variables.

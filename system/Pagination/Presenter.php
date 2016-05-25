@@ -52,9 +52,9 @@ class Presenter
     {
         $this->paginator = $paginator;
 
-        $this->currentPage = $paginator->getCurrentPage();
+        $this->currentPage = $presenter->getCurrentPage();
 
-        $this->lastPage = $paginator->getLastPage();
+        $this->lastPage = $presenter->getLastPage();
     }
 
     /**
@@ -120,10 +120,10 @@ class Presenter
      *
      * <code>
      *      // Render the Pagination links
-     *      echo $paginator->links();
+     *      echo $presenter->links();
      *
      *      // Render the Pagination links using a given window size
-     *      echo $paginator->links(5);
+     *      echo $presenter->links(5);
      * </code>
      *
      * @param  int     $adjacent
@@ -152,10 +152,10 @@ class Presenter
      *
      * <code>
      *      // Render the pagination slider
-     *      echo $paginator->slider();
+     *      echo $presenter->slider();
      *
      *      // Render the pagination slider using a given window size
-     *      echo $paginator->slider(5);
+     *      echo $presenter->slider(5);
      * </code>
      *
      * @param  int     $adjacent
@@ -185,10 +185,10 @@ class Presenter
      *
      * <code>
      *      // Create the "previous" pagination element
-     *      echo $paginator->previous();
+     *      echo $presenter->previous();
      *
      *      // Create the "previous" pagination element with custom text
-     *      echo $paginator->previous('Go Back');
+     *      echo $presenter->previous('Go Back');
      * </code>
      *
      * @param  string  $text
@@ -213,10 +213,10 @@ class Presenter
      *
      * <code>
      *      // Create the "next" pagination element
-     *      echo $paginator->next();
+     *      echo $presenter->next();
      *
      *      // Create the "next" pagination element with custom text
-     *      echo $paginator->next('Skip Forwards');
+     *      echo $presenter->next('Skip Forwards');
      * </code>
      *
      * @param  string  $text

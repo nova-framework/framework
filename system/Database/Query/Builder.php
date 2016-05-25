@@ -12,9 +12,10 @@ use Helpers\Inflector;
 use Database\Connection;
 use Database\Query\Expression;
 use Database\Query\JoinClause;
+use Pagination\Paginator;
 
-use \PDO;
-use \Closure;
+use PDO;
+use Closure;
 
 
 class Builder
@@ -116,6 +117,13 @@ class Builder
      * @var array
      */
     public $unions;
+
+    /**
+     * The backups of fields while doing a pagination count.
+     *
+     * @var array
+     */
+    protected $backups = array();
 
     /**
      * The keyword identifier wrapper format.
@@ -1099,6 +1107,122 @@ class Builder
         }
 
         return implode($glue, $this->lists($column));
+    }
+
+    /**
+     * Get a paginator for the "SELECT" statement.
+     *
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    public function paginate($perPage = 15, $columns = array('*'))
+    {
+        if (isset($this->groups)) {
+            return $this->groupedPaginate($perPage, $columns);
+        } else {
+            return $this->ungroupedPaginate($perPage, $columns);
+        }
+    }
+
+    /**
+     * Create a Paginator for a grouped pagination statement.
+     *
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    protected function groupedPaginate($perPage, $columns)
+    {
+        $results = $this->get($columns);
+
+        return $this->buildRawPaginator($results, $perPage);
+    }
+
+    /**
+     * Build a paginator instance from a raw result array.
+     *
+     * @param  array  $results
+     * @param  int    $perPage
+     * @return \Illuminate\Pagination\Paginator
+     */
+    public function buildRawPaginator($results, $perPage)
+    {
+        $total = count($results);
+
+        // For queries which have a GROUP BY, we will actually retrieve the entire set
+        // of rows from the table and "slice" them via PHP. This is inefficient and
+        // the developer must be aware of this behavior; however, it's an option.
+        $page = Paginator::page($total, $perPage);
+
+        $sliced = array_slice($results, ($page - 1) * $perPage, $perPage);
+
+        return Paginator::make($sliced, count($results), $perPage);
+    }
+
+    /**
+     * Create a Paginator for an un-grouped pagination statement.
+     *
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    protected function ungroupedPaginate($perPage, $columns)
+    {
+        $total = $this->getPaginationCount();
+
+        // Once we have the total number of records to be paginated, we can grab the
+        // current page and the result array. Then we are ready to create a brand
+        // new Paginator instances for the results which will create the links.
+        $page = Paginator::page($total, $perPage);
+
+        $results = $this->forPage($page, $perPage)->get($columns);
+
+        return Paginator::make($results, $total, $perPage);
+    }
+
+    /**
+     * Get the count of the total records for pagination.
+     *
+     * @return int
+     */
+    public function getPaginationCount()
+    {
+        $this->backupFieldsForCount();
+
+        $total = $this->count();
+
+        $this->restoreFieldsForCount();
+
+        return $total;
+    }
+
+    /**
+     * Backup certain fields for a pagination count.
+     *
+     * @return void
+     */
+    protected function backupFieldsForCount()
+    {
+        foreach (array('orders', 'limit', 'offset') as $field) {
+            $this->backups[$field] = $this->{$field};
+
+            $this->{$field} = null;
+        }
+    }
+
+    /**
+     * Restore certain fields for a pagination count.
+     *
+     * @return void
+     */
+    protected function restoreFieldsForCount()
+    {
+        foreach (array('orders', 'limit', 'offset') as $field) {
+            $this->{$field} = $this->backups[$field];
+        }
+
+        $this->backups = array();
     }
 
     /**

@@ -262,7 +262,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     {
         $this->baseUrl = $baseUrl;
     }
-    
+
     /**
      * Get the root URL for the request.
      *
@@ -327,7 +327,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * Get a collection instance containing the items.
      *
-     * @return \Illuminate\Support\Collection
+     * @return \Support\Collection
      */
     public function getCollection()
     {

@@ -8,7 +8,7 @@
 
 namespace Core;
 
-use Core\Base\View as BaseView;
+use Core\BaseView;
 use Support\Facades\Language as Translator;
 
 

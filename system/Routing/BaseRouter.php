@@ -6,19 +6,23 @@
  * @version 3.0
  */
 
-namespace Core\Base;
+namespace Routing;
 
-use Core\Base\View;
+use Core\BaseView as View;
 use Core\Controller;
-use Core\Response;
-use Core\Route;
 use Helpers\Inflector;
+use Routing\Route;
+
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
+use Response;
+use Session;
 
 
 /**
  * Router class will load requested Controller / Closure based on URL.
  */
-abstract class Router
+abstract class BaseRouter
 {
     /**
      * The Router instance.
@@ -125,7 +129,7 @@ abstract class Router
      */
     protected static function register($method, $route, $callback = null)
     {
-        // Nothing to do there. 
+        // Nothing to do there.
     }
 
     /**
@@ -149,11 +153,21 @@ abstract class Router
     {
         $result = call_user_func_array($callback, $params);
 
-        if($result instanceof Response) {
+        if($result instanceof SymfonyResponse) {
+            // Finsih the Session Store.
+            Session::finish($result);
+
+            // Send the Response.
             $result->send();
         }  else if($result instanceof View) {
-            // Create and send a Response.
-            Response::make($result)->send();
+            // Create a Response instance.
+            $response = Response::make($result);
+
+            // Finish the Session Store.
+            Session::finish($response);
+
+            // Send the Response.
+            $response->send();
         }
 
         return true;
@@ -252,11 +266,95 @@ abstract class Router
 
         if (! empty($filePath)) {
             // Serve the specified Asset File.
-            Response::serveFile($filePath);
+            static::serveFile($filePath);
 
             return true;
         }
 
         return false;
     }
+
+    /**
+     * Serve a File.
+     *
+     * @param string $filePath
+     * @return bool
+     */
+    public static function serveFile($filePath)
+    {
+        $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
+
+        $expires = 60 * 60 * 24 * 365; // Cache for one year
+
+        if (! file_exists($filePath)) {
+            header("$httpProtocol 404 Not Found");
+
+            return false;
+        } else if (! is_readable($filePath)) {
+            header("$httpProtocol 403 Forbidden");
+
+            return false;
+        }
+
+        // Collect the current file information.
+
+        $finfo = \finfo_open(FILEINFO_MIME_TYPE); // Return mime type a la mimetype extension
+
+        $contentType = \finfo_file($finfo, $filePath);
+
+        \finfo_close($finfo);
+
+        // There is a bug with finfo_file();
+        // https://bugs.php.net/bug.php?id=53035
+        //
+        // Hard coding the correct mime types for presently needed file extensions.
+        switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
+            case 'css':
+                $contentType = 'text/css';
+                break;
+            case 'js':
+                $contentType = 'application/javascript';
+                break;
+            default:
+                break;
+        }
+
+        // Prepare and send the headers with browser-side caching support.
+
+        // Get the last-modified-date of this very file.
+        $lastModified = filemtime($filePath);
+
+        // Get the HTTP_IF_MODIFIED_SINCE header if set.
+        $ifModifiedSince = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
+
+        // Firstly, we finalize the output buffering.
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        header('Access-Control-Allow-Origin: *');
+        header('Content-type: ' .$contentType);
+        header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s', $lastModified).' GMT');
+        // header('Etag: '.$etagFile);
+        header('Cache-Control: max-age='.$expires);
+
+        // Check if the page has changed. If not, send 304 and exit.
+        if (@strtotime($ifModifiedSince) == $lastModified) {
+            header("$httpProtocol 304 Not Modified");
+
+            return true;
+        }
+
+        // Send the current file.
+
+        header("$httpProtocol 200 OK");
+        header('Content-Length: ' .filesize($filePath));
+
+        // Send the current file content.
+        readfile($filePath);
+
+        return true;
+    }
+
 }

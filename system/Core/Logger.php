@@ -41,7 +41,7 @@ class Logger
     *
     * @var string
     */
-    public static $errorFile = 'Logs/error.log';
+    public static $errorFile = 'Storage/Logs/error.log';
 
     /**
     * Store errors for output.
@@ -200,10 +200,10 @@ class Logger
 
     /**
      * Set the display error status.
-     * 
+     *
      * @param bool $status display errors true|false
      */
-    public static function setDisplay($status = false) 
+    public static function setDisplay($status = false)
     {
         self::$display = $status;
     }

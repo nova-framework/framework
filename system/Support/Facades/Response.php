@@ -6,13 +6,12 @@ use Core\Template;
 use Core\View;
 use Http\JsonResponse;
 use Http\Response as HttpResponse;
-
 use Support\Contracts\ArrayableInterface;
+
+use Str;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
-use Patchwork\Utf8 as Patchwork;
 
 
 class Response
@@ -23,6 +22,11 @@ class Response
      * @var array
      */
     protected static $macros = array();
+
+    /**
+     * @var array Array of legacy HTTP headers
+     */
+    protected static $legacyHeaders = array();
 
     /**
      * Return a new Response from the application.
@@ -96,7 +100,7 @@ class Response
         $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
 
         if ( ! is_null($name)) {
-            return $response->setContentDisposition($disposition, $name, Patchwork::toAscii($name));
+            return $response->setContentDisposition($disposition, $name, Str::ascii($name));
         }
 
         return $response;
@@ -123,9 +127,12 @@ class Response
      */
     public static function error($status, array $data = array(), $headers = array())
     {
+        // Clear the Legacy Headers first.
+        static::$legacyHeaders = array();
+
         $view = Template::make('default')
-            ->shares('title', 'Error ' .$code)
-            ->nest('content', 'Error/' .$code, $data);
+            ->shares('title', 'Error ' .$status)
+            ->nest('content', 'Error/' .$status, $data);
 
         return static::make($view, $status, $headers);
     }
@@ -158,6 +165,51 @@ class Response
         }
 
         throw new \BadMethodCallException("Call to undefined method $method");
+    }
+
+    //--------------------------------------------------------------------
+    // Legacy API Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Add the HTTP header to the Headers array.
+     *
+     * @param  string  $header HTTP header text
+     */
+    public static function addHeader($header)
+    {
+        list($key, $value) = explode(' ', $header, 1);
+
+        $key = ltrim($key, ':');
+
+        self::$legacyHeaders[$key] = trim($value);
+    }
+
+    /**
+     * Add an array with Headers to the view.
+     *
+     * @param array $headers
+     */
+    public static function addHeaders(array $headers)
+    {
+        foreach ($headers as $header) {
+            static::addHeader($header);
+        }
+    }
+
+    /**
+     * Send the (legacy) Headers.
+     */
+    public static function sendHeaders()
+    {
+        if (! headers_sent()) {
+            foreach (self::$legacyHeaders as $header => $value) {
+                header("$header: $value", true);
+            }
+        }
+
+        // Clear the Legacy Headers.
+        static::$legacyHeaders = array();
     }
 
 }

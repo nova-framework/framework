@@ -14,7 +14,7 @@ use Core\Config;
 /**
  * Define the complete site URL.
  */
-define('SITEURL', 'http://novaframework.dev/');
+define('SITEURL', 'http://www.novaframework.dev/');
 
 /**
  * Define relative base path.
@@ -25,9 +25,9 @@ define('DIR', '/');
  * Set the Application Router.
  */
 // Default Routing
-define('APPROUTER', '\Core\Router');
+define('APPROUTER', '\Routing\Router');
 // Classic Routing
-// define('APPROUTER', '\Core\ClassicRouter');
+// define('APPROUTER', '\Routing\ClassicRouter');
 
 /**
  * Set timezone.
@@ -84,9 +84,14 @@ define('DB_PASS', '');
 define('PREFIX', 'nova_');
 
 /**
- * Set a prefix for sessions.
+ * Set a prefix for Sessions.
  */
 define('SESSION_PREFIX', 'nova_');
+
+/**
+ * Set where the Framework store the Session files.
+ */
+define('SESSION_PATH', APPDIR .'Storage' .DS .'Sessions');
 
 /**
  * OPTIONAL, create a constant for the name of the site.
@@ -107,7 +112,12 @@ define('ENCRYPT_KEY', '');
 /**
  * Set the Cache files Path.
  */
-define('CACHEPATH', APPDIR .'Cache');
+define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
+
+/**
+ * Setup the Language configuration
+ */
+require 'Config/Session.php';
 
 /**
  * Setup the Language configuration

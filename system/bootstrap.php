@@ -10,8 +10,9 @@
 use Core\Aliases;
 use Core\Language;
 use Core\Modules;
-use Core\Router;
-use Helpers\Session;
+use Routing\Router;
+use Support\Facades\Session;
+
 use Patchwork\Utf8\Bootup as Patchwork;
 
 
@@ -31,14 +32,8 @@ date_default_timezone_set(DEFAULT_TIMEZONE);
 /** Load the Framework wide functions. */
 require dirname(__FILE__) .DS .'functions.php';
 
-/** Initialize the Aliases. */
+/** Initialize the Class Aliases. */
 Aliases::init();
-
-/** Load the Events */
-require APPDIR .'Events.php';
-
-/** Load the Route Filters */
-require APPDIR .'Filters.php';
 
 /** Start the Session. */
 Session::init();
@@ -49,7 +44,13 @@ Language::init();
 /** Initialize the Patchwork Utf8. */
 Patchwork::initAll();
 
-/** Initialize the active Modules */
+/** Load the Events. */
+require APPDIR .'Events.php';
+
+/** Load the Route Filters */
+require APPDIR .'Filters.php';
+
+/** Initialize the active Modules. */
 Modules::init();
 
 /** Get the Router instance. */

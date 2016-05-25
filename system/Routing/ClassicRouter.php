@@ -8,12 +8,16 @@
 
 namespace Core;
 
-use Core\Base\Router as BaseRouter;
-use Core\Request;
-use Core\Response;
-use Core\Route;
 use Helpers\Inflector;
 use Helpers\Url;
+
+use Routing\BaseRouter;
+use Routing\Route;
+
+use Response;
+use Request;
+use Session;
+
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -75,12 +79,12 @@ class ClassicRouter extends BaseRouter
         $uri = Url::detectUri();
 
         // First, we will supose that URI is associated with an Asset File.
-        if (Request::isGet() && $this->dispatchFile($uri)) {
+        if ((Request::method() == 'GET') && $this->dispatchFile($uri)) {
             return true;
         }
 
         // Not an Asset File URI? Route the current request.
-        $method = Request::getMethod();
+        $method = Request::method();
 
         // Search the defined Routes for any matches; invoke the associated Callback, if any.
         foreach ($this->routes as $route) {
@@ -119,7 +123,10 @@ class ClassicRouter extends BaseRouter
         // The dispatching failed; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        Response::error('404', $data)->send();
+        $response = Response::error(404, $data);
+
+        // Finish the Session and send the Response.
+        Session::finish($response);
 
         return false;
     }

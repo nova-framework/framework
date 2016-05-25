@@ -4,6 +4,8 @@
 
             <h1>400</h1>
 
+            Referrer: <?= Request::header('referer'); ?>
+
             <hr />
 
             <h3>Bad Request</h3>

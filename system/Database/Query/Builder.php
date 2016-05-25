@@ -1111,6 +1111,9 @@ class Builder
      */
     public function paginate($perPage = 15, $columns = array('*'), $pageName = 'offset')
     {
+        // Ensure that the columns are properly specified.
+        if (! is_array($columns)) $columns = array($columns);
+
         if (isset($this->groups)) {
             // A query which contains a GROUP BY; use the alternative paginate.
             return $this->groupedPaginate($perPage, $columns, $pageName);

@@ -1109,14 +1109,14 @@ class Builder
      * @param  array  $columns
      * @return \Pagination\Paginator
      */
-    public function paginate($perPage = 15, $columns = array('*'), $pageName = 'offset')
+    public function paginate($perPage = 15, $columns = array('*'))
     {
         // Ensure that the columns are properly specified.
         if (! is_array($columns)) $columns = array($columns);
 
         if (isset($this->groups)) {
             // A query which contains a GROUP BY; use the alternative paginate.
-            return $this->groupedPaginate($perPage, $columns, $pageName);
+            return $this->groupedPaginate($perPage, $columns);
         }
 
         // Move the orders, limit and offset properties to local variables.
@@ -1129,7 +1129,7 @@ class Builder
         $total = $this->count(reset($columns));
 
         // Get the current Page from Paginator.
-        $page = Paginator::page($total, $perPage, $pageName);
+        $page = Paginator::page($total, $perPage);
 
         // Restore the orders, limit and offset properties.
         list($this->orders, $this->limit, $this->offset) = array($orders, $limit, $offset);
@@ -1137,7 +1137,7 @@ class Builder
         // Retrieve the results for the current page.
         $results = $this->forPage($page, $perPage)->get($columns);
 
-        return Paginator::make($results, $total, $perPage, $pageName);
+        return Paginator::make($results, $total, $perPage);
     }
 
     /**
@@ -1147,7 +1147,7 @@ class Builder
      * @param  array  $columns
      * @return \Pagination\Paginator
      */
-    protected function groupedPaginate($perPage, $columns, $pageName)
+    protected function groupedPaginate($perPage, $columns)
     {
         // Retrieve all results.
         $results = $this->get($columns);
@@ -1155,12 +1155,12 @@ class Builder
         $total = count($results);
 
         // Get the current Page from Paginator.
-        $page = Paginator::page($total, $perPage, $pageName);
+        $page = Paginator::page($total, $perPage);
 
         // Slice the results for the current Page.
         $sliced = array_slice($results, ($page - 1) * $perPage, $perPage);
 
-        return Paginator::make($sliced, $total, $perPage, $pageName);
+        return Paginator::make($sliced, $total, $perPage);
     }
 
     /**

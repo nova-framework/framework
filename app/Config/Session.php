@@ -18,7 +18,7 @@ Config::set('session', array(
     'lottery'  => array(2, 100), // Option used by the Garbage Collector, to remove the stalled Session files.
 
     // Cookie configuration.
-    'name'     => PREFIX .'session',
+    'cookie'   => PREFIX .'session',
     'path'     => '/',
     'domain'   => null,
     'secure'   => false,

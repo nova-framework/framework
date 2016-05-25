@@ -3,6 +3,7 @@
 namespace Support;
 
 use Helpers\Inflector;
+use \RuntimeException;
 
 
 class Str

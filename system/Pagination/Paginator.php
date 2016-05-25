@@ -108,7 +108,7 @@ class Paginator
      * @param  int        $perPage
      * @return Paginator
      */
-    public static function make($results, $total, $perPage, $pageName = 'page')
+    public static function make($results, $total, $perPage, $pageName = 'offset')
     {
         $page = static::page($total, $perPage, $pageName);
 
@@ -124,7 +124,7 @@ class Paginator
      * @param  int  $perPage
      * @return int
      */
-    public static function page($total, $perPage, $pageName = 'page')
+    public static function page($total, $perPage, $pageName = 'offset')
     {
         $page = Input::get($pageName, 1);
 
@@ -146,7 +146,7 @@ class Paginator
      */
     protected static function isValidPageNumber($page)
     {
-        return (($page >= 1) && (filter_var($page, FILTER_VALIDATE_INT) !== false);
+        return (($page >= 1) && (filter_var($page, FILTER_VALIDATE_INT) !== false));
     }
 
     /**
@@ -190,9 +190,9 @@ class Paginator
             $links = $this->slider($adjacent);
         }
 
-        $content = '<ul>' .$this->previous() . $links .$this->next() .'</ul>';
+        $content = '<ul class="pagination">' .$this->previous() . $links .$this->next() .'</ul>';
 
-        return '<div class="pagination">' .$content .'</div>';
+        return '<nav>' .$content .'</nav>';
     }
 
     /**
@@ -471,12 +471,14 @@ class Paginator
      */
     protected function link($page, $title, $text, $class)
     {
-        $query = '?page='.$page .$this->appendage($this->appends);
+        $baseUrl = $this->baseUrl ?: $this->getCurrentUrl();
 
-        $class = $class ? 'class="' .$class .'"' ? '';
+        $query = '?' .$this->pageName .'=' .$page .$this->appendage($this->appends);
+
+        $class = $class ? 'class="' .$class .'"' : '';
         $title = $title ? 'title="' .$title .'"' : '';
 
-        return '<li ' .$class .'><a href="' .Request::url() .$query .'" ' .$title .'>' .$text .'</a></li>';
+        return '<li ' .$class .'><a href="' .$baseUrl .$query .'" ' .$title .'>' .$text .'</a></li>';
     }
 
     /**

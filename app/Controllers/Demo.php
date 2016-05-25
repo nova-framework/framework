@@ -5,6 +5,7 @@ use Core\View;
 use Core\Controller;
 use Helpers\Password;
 use Helpers\Url;
+use Pagination\Paginator;
 
 use Event;
 use Validator;
@@ -14,6 +15,7 @@ use Session;
 
 use App\Models\ORM\User;
 
+use DB;
 
 /*
 *
@@ -148,5 +150,24 @@ class Demo extends Controller
 
             echo '<pre>' .var_export($errors, true) .'</pre>';
         }
+    }
+
+    public function paginate()
+    {
+        $paginator = DB::table('posts')->paginate(3);
+
+        $content = $paginator ->links();
+
+        foreach ($paginator->results() as $post) {
+            $content .= '<h3>' .$post->title .'</h3>';
+
+            $content .= $post->content;
+
+            $content .= '<br><br>';
+        }
+
+        return View::make('Default')
+            ->shares('title', __('Pagination Test'))
+            ->with('content', $content);
     }
 }

@@ -163,7 +163,7 @@ class Demo extends Controller
 
         $content = $paginator ->links();
 
-        foreach ($paginator->results() as $post) {
+        foreach ($paginator->getItems() as $post) {
             $content .= '<h3>' .$post->title .'</h3>';
 
             $content .= $post->content;

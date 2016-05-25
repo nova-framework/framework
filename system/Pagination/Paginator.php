@@ -1,31 +1,47 @@
 <?php
+/**
+ * Paginator - Implements a simple but efficient Paginator.
+ *
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ */
 
 namespace Pagination;
+
+use Pagination\Presenter;
+use Support\Collection;
+use Support\Contracts\JsonableInterface;
+use Support\Contracts\ArrayableInterface;
 
 use Input;
 use Request;
 
+use Countable;
+use ArrayAccess;
+use ArrayIterator;
+use IteratorAggregate;
 
-class Paginator
+
+class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorAggregate, JsonableInterface
 {
     /**
      * The results for the current page.
      *
      * @var array
      */
-    protected $results;
+    protected $items;
 
     /**
-     * The current page.
+     * Get the current page for the request.
      *
      * @var int
      */
     protected $currentPage;
 
     /**
-     * The last page available for the result set.
+     * Get the last available page number.
      *
-     * @var int
+     * @return int
      */
     protected $lastPage;
 
@@ -58,44 +74,36 @@ class Paginator
     protected $pageName;
 
     /**
-     * The values that should be appended to the end of the link query strings.
+     * All of the additional query string values.
      *
      * @var array
      */
-    protected $appends;
+    protected $query = array();
 
     /**
-     * The compiled appendage that will be appended to the links.
+     * The Presenter instance.
      *
-     * This consists of a sprintf format with a page place-holder and query string.
-     *
-     * @var string
+     * @var \Pagination\Presenter
      */
-    protected $appendage;
+    protected $presenter;
 
-    /**
-     * The "dots" element used in the pagination slider.
-     *
-     * @var string
-     */
-    protected $dots = '<li class="dots disabled"><a href="#">...</a></li>';
 
     /**
      * Create a new Paginator instance.
      *
-     * @param  array  $results
+     * @param  array  $items
      * @param  int    $page
      * @param  int    $total
      * @param  int    $perPage
      * @param  int    $last
      * @return void
      */
-    protected function __construct($results, $page, $total, $perPage, $lastPage, $pageName)
+    protected function __construct($items, $page, $total, $perPage, $lastPage, $pageName)
     {
         $this->currentPage = $page;
         $this->lastPage    = $lastPage;
         $this->total       = $total;
-        $this->results     = $results;
+        $this->items       = $items;
         $this->perPage     = $perPage;
         $this->pageName    = $pageName;
     }
@@ -175,103 +183,73 @@ class Paginator
      */
     public function links($adjacent = 3)
     {
-        if ($this->lastPage <= 1) return '';
+        $presenter = $this->getPresenter();
 
-        if (($this->lastPage < 7) + ($adjacent * 2)) {
-            $links = $this->range(1, $this->lastPage);
-        } else {
-            $links = $this->slider($adjacent);
-        }
-
-        $content = '<ul class="pagination">' .$this->previous() . $links .$this->next() .'</ul>';
-
-        return '<nav>' .$content .'</nav>';
+        return $presenter->links($adjacent);
     }
 
     /**
-     * Build sliding list of HTML numeric page links.
+     * Get a URL for a given page number.
      *
-     * This method is very similar to the "links" method, only it does not
-     * render the "first" and "last" pagination links, but only the pages.
-     *
-     * <code>
-     *      // Render the pagination slider
-     *      echo $paginator->slider();
-     *
-     *      // Render the pagination slider using a given window size
-     *      echo $paginator->slider(5);
-     * </code>
-     *
-     * @param  int     $adjacent
+     * @param  int     $page
      * @return string
      */
-    public function slider($adjacent = 3)
+    public function getUrl($page)
     {
-        $window = $adjacent * 2;
+        $params = array(
+            $this->pageName => $page,
+        );
 
-        // Example: 1 [2] 3 4 5 6 ... 23 24
-        if ($this->currentPage <= $window) {
-            return $this->range(1, $window + 2).' '.$this->ending();
-        }
-        // Example: 1 2 ... 32 33 34 35 [36] 37
-        else if ($this->currentPage >= $this->lastPage - $window) {
-            return $this->beginning() .' ' .$this->range($this->lastPage - $window - 2, $this->lastPage);
+        if (count($this->query) > 0) {
+            $params = array_merge($this->query, $params);
         }
 
-        // Example: 1 2 ... 23 24 25 [26] 27 28 29 ... 51 52
-        $content = $this->range($this->currentPage - $adjacent, $this->currentPage + $adjacent);
-
-        return $this->beginning() .' ' .$content .' ' .$this->ending();
+        return $this->getCurrentUrl() .'?' .http_build_query($params, null, '&');
     }
 
     /**
-     * Get the Items being paginated.
+     * Add a query string value to the paginator.
      *
-     * @return array
+     * @param  string  $key
+     * @param  string  $value
+     * @return \Pagination\Paginator
      */
-    public function results()
+    public function appends($key, $value = null)
     {
-        return $this->results;
+        if (is_array($key)) {
+            return $this->appendArray($key);
+        }
+
+        return $this->addQuery($key, $value);
     }
 
     /**
-     * Get the number of the current page.
+     * Add an array of query string values.
      *
-     * @return int
+     * @param  array  $keys
+     * @return \Pagination\Paginator
      */
-    public function getCurrentPage()
+    protected function appendArray(array $keys)
     {
-        return $this->currentPage;
+        foreach ($keys as $key => $value) {
+            $this->addQuery($key, $value);
+        }
+
+        return $this;
     }
 
     /**
-     * Get the last page that should be available.
+     * Add a query string value to the paginator.
      *
-     * @return int
+     * @param  string  $key
+     * @param  string  $value
+     * @return \Pagination\Paginator
      */
-    public function getLastPage()
+    public function addQuery($key, $value)
     {
-        return $this->lastPage;
-    }
+        $this->query[$key] = $value;
 
-    /**
-     * Get the total number of Items in the collection.
-     *
-     * @return int
-     */
-    public function getTotal()
-    {
-        return $this->total;
-    }
-
-    /**
-     * Get the number of Items to be displayed per page.
-     *
-     * @return int
-     */
-    public function getPerPage()
-    {
-        return $this->perPage;
+        return $this;
     }
 
     /**
@@ -282,17 +260,6 @@ class Paginator
     public function getCurrentUrl()
     {
         return $this->baseUrl ?: Request::url();
-    }
-
-    /**
-     * Set the base URL in use by the paginator.
-     *
-     * @param  string  $baseUrl
-     * @return void
-     */
-    public function setBaseUrl($baseUrl)
-    {
-        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -317,186 +284,227 @@ class Paginator
     }
 
     /**
-     * Generate the "previous" HTML link.
+     * Get the number of the current page.
      *
-     * <code>
-     *      // Create the "previous" pagination element
-     *      echo $paginator->previous();
-     *
-     *      // Create the "previous" pagination element with custom text
-     *      echo $paginator->previous('Go Back');
-     * </code>
-     *
-     * @param  string  $text
-     * @return string
+     * @return int
      */
-    public function previous($text = null)
+    public function getCurrentPage()
     {
-        $text = $text ?: '&laquo;';
-
-        $callback = function($page, $lastPage) { return ($page <= 1); };
-
-        return $this->element(
-            __FUNCTION__,
-            $this->currentPage - 1,
-            __d('system', 'Previous page'),
-            $text,
-            $callback
-        );
+        return $this->currentPage;
     }
 
     /**
-     * Generate the "next" HTML link.
+     * Get the last page that should be available.
      *
-     * <code>
-     *      // Create the "next" pagination element
-     *      echo $paginator->next();
-     *
-     *      // Create the "next" pagination element with custom text
-     *      echo $paginator->next('Skip Forwards');
-     * </code>
-     *
-     * @param  string  $text
-     * @return string
+     * @return int
      */
-    public function next($text = null)
+    public function getLastPage()
     {
-        $text = $text ?: '&raquo;';
-
-        $callback = function($page, $lastPage) { return ($page >= $lastPage); };
-
-        return $this->element(
-            __FUNCTION__,
-            $this->currentPage + 1,
-            __d('system', 'Next page'),
-            $text,
-            $callback
-        );
+        return $this->lastPage;
     }
 
     /**
-     * Create a chronological pagination element, such as a "previous" or "next" link.
+     * Get the number of Items to be displayed per page.
      *
-     * @param  string   $element
-     * @param  int      $page
-     * @param  string   $text
-     * @param  Closure  $callback
-     * @return string
+     * @return int
      */
-    protected function element($element, $page, $title, $text, $callback)
+    public function getPerPage()
     {
-        $class = "{$element}_page";
-
-        // Each consumer of this method provides a "disabled" Closure which can
-        // be used to determine if the element should be a span element or an
-        // actual link. For example, if the current page is the first page,
-        // the "first" element should be a span instead of a link.
-        if (call_user_func($callback, $this->currentPage, $this->lastPage)) {
-            return '<li class="' .$class .' disabled" title="' .$title .'"><a href="#">' .$text.'</a></li>';
-        } else {
-            return $this->link($page, $title, $text, $class);
-        }
+        return $this->perPage;
     }
 
     /**
-     * Build the first two page links for a sliding page range.
+     * Get a collection instance containing the items.
      *
-     * @return string
+     * @return \Illuminate\Support\Collection
      */
-    protected function beginning()
+    public function getCollection()
     {
-        return $this->range(1, 2) .' ' .$this->dots;
+        return new Collection($this->items);
     }
 
     /**
-     * Build the last two page links for a sliding page range.
+     * Get the items being paginated.
      *
-     * @return string
+     * @return array
      */
-    protected function ending()
+    public function getItems()
     {
-        return $this->dots .' ' .$this->range($this->lastPage - 1, $this->lastPage);
+        return $this->items;
     }
 
     /**
-     * Build a range of numeric pagination links.
+     * Set the items being paginated.
      *
-     * For the current page, an HTML span element will be generated instead of a link.
-     *
-     * @param  int     $start
-     * @param  int     $end
-     * @return string
+     * @param  mixed  $items
+     * @return void
      */
-    protected function range($start, $end)
+    public function setItems($items)
     {
-        $pages = array();
+        $this->items = $items;
+    }
 
-        // To generate the range of page links, we will iterate through each page
-        // and, if the current page matches the page, we will generate a span,
-        // otherwise we will generate a link for the page. The span elements
-        // will be assigned the "current" CSS class for convenient styling.
-        for ($page = $start; $page <= $end; $page++) {
-            if ($this->currentPage == $page) {
-                $pages[] = '<li class="active" title="' .__d('system', 'Current page') .'"><a href="#">' .$page .'</a></li>';
-            } else {
-                $pages[] = $this->link($page, null, $page, null);
-            }
+    /**
+     * Get the total number of items in the collection.
+     *
+     * @return int
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * Set the base URL in use by the paginator.
+     *
+     * @param  string  $baseUrl
+     * @return void
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
+    /**
+     * Get a Presenter instance.
+     *
+     * @return \Pagination\Presenter
+     */
+    public function getPresenter()
+    {
+        if (isset($this->presenter)) {
+            return $this->presenter;
         }
 
-        return implode(' ', $pages);
+        return $this->presenter = new Presenter($this);
     }
 
     /**
-     * Create a HTML page link.
+     * Set the Presenter instance.
      *
-     * @param  int     $page
-     * @param  string  $text
-     * @param  string  $class
-     * @return string
+     * @param \Pagination\Presenter $presenter
+     * @return \Pagination\Paginator
      */
-    protected function link($page, $title, $text, $class)
+    public function setPresenter(Presenter $presenter)
     {
-        $baseUrl = $this->baseUrl ?: $this->getCurrentUrl();
-
-        $query = '?' .$this->pageName .'=' .$page .$this->appendage($this->appends);
-
-        $class = $class ? 'class="' .$class .'"' : '';
-        $title = $title ? 'title="' .$title .'"' : '';
-
-        return '<li ' .$class .'><a href="' .$baseUrl .$query .'" ' .$title .'>' .$text .'</a></li>';
-    }
-
-    /**
-     * Create the "appendage" to be attached to every pagination link.
-     *
-     * @param  array   $appends
-     * @return string
-     */
-    protected function appendage($appends)
-    {
-         // The developer may assign an array of values that will be converted to a
-         // query string and attached to every pagination link. This allows simple
-         // implementation of sorting or other things the developer may need.
-        if ( ! is_null($this->appendage)) return $this->appendage;
-
-        if (count($appends) <= 0) {
-            return $this->appendage = '';
-        }
-
-        return $this->appendage = '&' .http_build_query($appends);
-    }
-
-    /**
-     * Set the items that should be appended to the link query strings.
-     *
-     * @param  array      $values
-     * @return Paginator
-     */
-    public function appends($values)
-    {
-        $this->appends = $values;
+        $this->presenter = $presenter;
 
         return $this;
     }
 
+    /**
+     * Get an iterator for the items.
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->items);
+    }
+
+    /**
+     * Determine if the list of items is empty or not.
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->items);
+    }
+
+    /**
+     * Get the number of items for the current page.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->items);
+    }
+
+    /**
+     * Determine if the given item exists.
+     *
+     * @param  mixed  $key
+     * @return bool
+     */
+    public function offsetExists($key)
+    {
+        return array_key_exists($key, $this->items);
+    }
+
+    /**
+     * Get the item at the given offset.
+     *
+     * @param  mixed  $key
+     * @return mixed
+     */
+    public function offsetGet($key)
+    {
+        return $this->items[$key];
+    }
+
+    /**
+     * Set the item at the given offset.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        $this->items[$key] = $value;
+    }
+
+    /**
+     * Unset the item at the given key.
+     *
+     * @param  mixed  $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->items[$key]);
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'total' => $this->total,
+            'per_page' => $this->perPage,
+            'current_page' => $this->currentPage,
+            'last_page' => $this->lastPage,
+            'data' => $this->getCollection()->toArray(),
+        );
+    }
+
+    /**
+     * Convert the object to its JSON representation.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->toArray(), $options);
+    }
+
+    /**
+     * Call a method on the underlying Collection
+     *
+     * @param  string  $method
+     * @param  array   $arguments
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        $collection = $this->getCollection();
+
+        return call_user_func_array(array($collection, $method), $arguments);
+    }
 }

@@ -154,16 +154,16 @@ class Demo extends Controller
 
     public function paginate()
     {
-        $paginator = DB::table('posts')->paginate(3);
+        $paginate = DB::table('posts')->paginate(3);
 
-        $paginator->appends(array(
+        $paginate->appends(array(
             'testing'  => 1,
             'validate' => 7,
         ));
 
-        $content = $paginator ->links();
+        $content = $paginate->links();
 
-        foreach ($paginator->getItems() as $post) {
+        foreach ($paginate as $post) {
             $content .= '<h3>' .$post->title .'</h3>';
 
             $content .= $post->content;
@@ -172,7 +172,7 @@ class Demo extends Controller
         }
 
         return View::make('Default')
-            ->shares('title', __('Pagination Test'))
+            ->shares('title', __('Pagination'))
             ->with('content', $content);
     }
 }

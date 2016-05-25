@@ -6,11 +6,13 @@
  * @version 3.0
  */
 
-use Core\Route;
-use Core\Response;
-use Core\Redirect;
+use Routing\Route;
 use Helpers\Csrf;
-use Auth\Auth;
+
+use Support\Facades\Auth;
+use Support\Facades\Redirect;
+use Support\Facades\Request;
+use Support\Facades\Response;
 
 
 /** Define Route Filters. */
@@ -28,17 +30,27 @@ Route::filter('csrf', function($route) {
     }
 });
 
+// Referer checking Filter.
+Route::filter('referer', function($route) {
+    // Check if the visitor come to this Route from another site.
+    $referer = Request::header('referer');
+
+    if(($referer !== null) && ! str_starts_with($referer, SITEURL)) {
+        return Redirect::error(400);
+    }
+});
+
 // Authentication Filters.
 Route::filter('auth', function($route) {
     if (! Auth::check()) {
-         // User is not logged in, respond with a Redirect code 401 (Unauthorized)
-         return Redirect::to('login', 401);
+         // User is not logged in, redirect him to Login Page.
+         return Redirect::to('login');
     }
 });
 
 Route::filter('guest', function($route) {
     if (! Auth::guest()) {
-        // User is authenticated, respond with a Redirect code 401 (Unauthorized)
-        return Redirect::to('dashboard', 401);
+        // User is authenticated, redirect him to Dashboard Page.
+        return Redirect::to('dashboard');
     }
 });

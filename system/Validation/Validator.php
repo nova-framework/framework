@@ -9,6 +9,7 @@
 namespace Validation;
 
 use Helpers\Inflector;
+use Support\Contracts\MessageProviderInterface;
 use Support\MessageBag;
 use Validation\Translator;
 use Validation\DatabasePresenceVerifier;
@@ -20,7 +21,7 @@ use Closure;
 use DateTime;
 
 
-class Validator
+class Validator implements MessageProviderInterface
 {
     /**
      * The Translator instance.

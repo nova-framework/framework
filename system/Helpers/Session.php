@@ -29,7 +29,8 @@ class Session
     public static function init()
     {
         if (self::$sessionStarted == false) {
-            session_start();
+            if (! session_id()) session_start();
+
             self::$sessionStarted = true;
         }
     }

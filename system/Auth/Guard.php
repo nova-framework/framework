@@ -10,10 +10,11 @@
 namespace Auth;
 
 use Core\Config;
-use Helpers\Session;
-use Helpers\Cookie;
 use Helpers\Password;
 use Auth\Model;
+
+use Cookie;
+use Session;
 
 use \stdClass;
 
@@ -214,9 +215,12 @@ class Guard
         }
 
         // Destroy the Session and Cookie variables.
-        Session::destroy($this->getName());
+        Session::forget($this->getName());
 
-        Cookie::destroy($this->getRecallerName());
+        // Create and queue a Forget Cookie.
+        $cookie = Cookie::forget($this->getRecallerName());
+
+        Cookie::queue($cookie);
 
         // Reset the instance information.
         $this->user = null;
@@ -325,7 +329,10 @@ class Guard
         // Prepare the value and set the remembering Cookie.
         $value = $user->{$keyName} .'|' .$user->{$this->rememberToken};
 
-        Cookie::set($this->getRecallerName(), $value);
+        // Store the current information in a Cookie lasting five years.
+        $cookie = Cookie::make($this->getRecallerName(), $value, Cookie::FIVEYEARS);
+
+        Cookie::queue($cookie);
     }
 
     /**

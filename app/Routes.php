@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Core\Router;
+use Routing\Router;
 use Helpers\Hooks;
 
 
@@ -20,6 +20,7 @@ Router::any('subpage', 'App\Controllers\Welcome@subPage');
 Router::any('demo/database',        'App\Controllers\Demo@database');
 //Router::any('demo/password/(:any)', 'App\Controllers\Demo@password');
 Router::any('demo/events',          'App\Controllers\Demo@events');
+Router::any('demo/session',         'App\Controllers\Demo@session');
 Router::any('demo/validate',        'App\Controllers\Demo@validate');
 
 Router::any('demo/request(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@request');
@@ -30,7 +31,10 @@ Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
 ));
 
 // The Framework's Language Changer.
-Router::any('language/(:any)', 'App\Controllers\Language@change');
+Router::any('language/(:any)', array(
+    'filters' => 'referer',
+    'uses'    => 'App\Controllers\Language@change'
+));
 /** End default Routes */
 
 /** Module Routes. */

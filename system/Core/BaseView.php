@@ -7,10 +7,10 @@
  * @version 3.0
  */
 
-namespace Core\Base;
+namespace Core;
 
 use Core\Response;
-use Core\View as CoreView;
+use Core\View;
 use Helpers\Inflector;
 
 use ArrayAccess;
@@ -19,7 +19,7 @@ use ArrayAccess;
 /**
  * View class to load template and views files.
  */
-abstract class View implements ArrayAccess
+abstract class BaseView implements ArrayAccess
 {
     /**
      * @var array Array of shared data
@@ -184,7 +184,7 @@ abstract class View implements ArrayAccess
             $data = $this->data;
         }
 
-        return $this->with($key, CoreView::make($view, $data, $module));
+        return $this->with($key, View::make($view, $data, $module));
     }
 
     /**
@@ -312,7 +312,7 @@ abstract class View implements ArrayAccess
      *
      * @param  string  $method
      * @param  array   $parames
-     * @return \Core\Base\View|static|void
+     * @return \Core\BaseView|static|void
      *
      * @throws \BadMethodCallException
      */

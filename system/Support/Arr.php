@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Helpers;
+namespace Support;
 
 /**
  * Collection of array methods.

@@ -3,11 +3,11 @@ namespace App\Controllers;
 
 use Core\Config;
 use Core\Controller;
-use Core\Language as CoreLanguage;
-use Core\Redirect;
 use Helpers\Url;
-use Helpers\Cookie;
-use Helpers\Session;
+
+use Cookie;
+use Redirect;
+use Session;
 
 
 class Language extends Controller
@@ -31,10 +31,10 @@ class Language extends Controller
         if (preg_match ('/[a-z]/', $language) && in_array($language, array_keys($languages))) {
             Session::set('language', $language);
 
-            // Store the current Language into Cookie.
-            Cookie::set(PREFIX .'language', $language);
+            // Store the current Language in a Cookie lasting five years.
+            Cookie::queue(PREFIX .'language', $language, Cookie::FIVEYEARS);
         }
 
-        return Redirect::to('');
+        return Redirect::back();
     }
 }

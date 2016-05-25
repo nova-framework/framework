@@ -6,9 +6,9 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Routing;
 
-use Core\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**

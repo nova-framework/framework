@@ -8,7 +8,8 @@
  */
 
 use Helpers\Url;
-use Helpers\Encrypter;
+use Support\Str;
+use Support\Facades\Crypt;
 use Support\Facades\Language;
 
 /**
@@ -179,6 +180,23 @@ function array_forget(&$array, $key)
 }
 
 /**
+ * Get a value from the array, and remove it.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @param  mixed   $default
+ * @return mixed
+ */
+function array_pull(&$array, $key, $default = null)
+{
+    $value = array_get($array, $key, $default);
+
+    array_forget($array, $key);
+
+    return $value;
+}
+
+/**
  * Get the first element of an array.
  *
  * @param  array  $array
@@ -200,13 +218,7 @@ function head($array)
  */
 function str_is($pattern, $value)
 {
-    if ($pattern != $value) {
-        $pattern = str_replace('\*', '.*', preg_quote($pattern, '#')) .'\z';
-
-        return (bool) preg_match('#^' .$pattern .'#', $value);
-    }
-
-    return true;
+    return Str::is($pattern, $value);
 }
 
 /**
@@ -218,13 +230,7 @@ function str_is($pattern, $value)
  */
 function str_contains($haystack, $needles)
 {
-    foreach ((array) $needles as $needle) {
-        if (($needle != '') && (strpos($haystack, $needle) !== false)) {
-            return true;
-        }
-    }
-
-    return false;
+    return Str::contains($haystack, $needles);
 }
 
 /**
@@ -235,7 +241,7 @@ function str_contains($haystack, $needles)
  */
 function str_starts_with($haystack, $needle)
 {
-    return (($needle === '') || (strpos($haystack, $needle) === 0));
+    return Str::startsWith($haystack, $needle);
 }
 
 /**
@@ -246,7 +252,7 @@ function str_starts_with($haystack, $needle)
  */
 function str_ends_with($haystack, $needle)
 {
-    return (($needle === '') || (substr($haystack, - strlen($needle)) === $needle));
+    return Str::endsWith($haystack, $needle);
 }
 
 /**
@@ -259,10 +265,7 @@ function str_ends_with($haystack, $needle)
  */
 function str_random($length = 16)
 {
-    // Generate a more truly "random" alpha-numeric string.
-    $bytes = Encrypter::randomBytes($length * 2);
-
-    return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
+    return Str::random($length);
 }
 
 /**

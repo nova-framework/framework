@@ -11,6 +11,10 @@ namespace Helpers;
 use Helpers\Session;
 use Helpers\Inflector;
 
+use Support\Facades\Redirect;
+use Support\Facades\Session as SessionManager;
+
+
 /**
  * Collection of methods for working with urls.
  */
@@ -20,19 +24,23 @@ class Url
      * Redirect to a chosen url.
      *
      * @param string $url      the url to redirect to
-     * @param bool   $fullpath if true use only url in redirect instead of using DIR
+     * @param bool   $fullPath if true use only url in redirect instead of using DIR
      * @param int $code the server status code for the redirection
      */
-    public static function redirect($url = null, $fullpath = false, $code = 200)
+    public static function redirect($url = null, $fullPath = false, $code = 200)
     {
-        $url = ($fullpath === false) ? DIR.$url : $url;
-
-        if ($code == 200) {
-            header('Location: '.$url);
+        // Create a Response instance.
+        if ($fullPath === false) {
+            $response = Redirect::to(SITEURL .$url, $code);
         } else {
-            header('Location: '.$url, true, $code);
+            $response = Redirect::away($url, $code);
         }
-        exit;
+
+        // Finish the Session and send the Response.
+        SessionManager::finish($response);
+
+        // Quit the Nova.
+        exit();
     }
 
     /**

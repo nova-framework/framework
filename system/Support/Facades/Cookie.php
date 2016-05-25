@@ -16,17 +16,19 @@ use Support\Facades\Request;
  */
 class Cookie
 {
+    const FIVEYEARS = 2628000;
+
     /**
-     * The \Cookie\CookieJar instance being handled.
+     * The CookieJar instance being handled.
      *
      * @var \Cookie\CookieJar|null
      */
     protected static $cookieJar;
 
     /**
-     * Return a \Http\Request instance
+     * Return a CookieJar instance
      *
-     * @return \Http\Request
+     * @return \Cookie\CookieJar
      */
     protected static function getCookieJar()
     {
@@ -45,7 +47,10 @@ class Cookie
      */
     public static function has($key)
     {
-        return ! is_null(Request::instance()->cookie($key, null));
+        // Get the Request instance.
+        $request = Request::instance();
+
+        return ! is_null($request->cookie($key, null));
     }
 
     /**
@@ -57,7 +62,10 @@ class Cookie
      */
     public static function get($key = null, $default = null)
     {
-        return Request::instance()->cookie($key, $default);
+        // Get the Request instance.
+        $request = Request::instance();
+
+        return $request->cookie($key, $default);
     }
 
     /**

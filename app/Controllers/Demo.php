@@ -10,6 +10,7 @@ use Event;
 use Validator;
 use Input;
 use Request;
+use Session;
 
 use App\Models\ORM\User;
 
@@ -75,7 +76,7 @@ class Demo extends Controller
 
         echo '<pre>' .var_export(Input::all(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::createFromGlobals(), true).'</pre>';
+        echo '<pre>' .var_export(Request::instance(), true).'</pre>';
     }
 
     public function events()
@@ -102,6 +103,24 @@ class Demo extends Controller
         $user = User::find(1);
 
         echo '<pre>' .var_export($user, true) .'</pre>';
+    }
+
+    public function session()
+    {
+        echo '<pre>' .var_export(Session::get('language'), true) .'</pre>';
+
+        Session::set('test', 'This is a Test!');
+
+        $data = Session::all();
+
+        echo '<pre>' .var_export($data, true) .'</pre>';
+
+        //
+        Session::forget('test');
+
+        $data = Session::all();
+
+        echo '<pre>' .var_export($data, true) .'</pre>';
     }
 
     public function validate()

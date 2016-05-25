@@ -5,7 +5,7 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Helpers;
 
 /**
  * Contains the Request information and provides methods to fetch the HTTP Request body.

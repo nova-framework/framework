@@ -6,14 +6,19 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Routing;
 
-use Core\Base\Router as BaseRouter;
-use Core\Request;
-use Core\Response;
-use Core\Route;
 use Helpers\Inflector;
 use Helpers\Url;
+use Routing\BaseRouter;
+use Routing\Route;
+
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
+use Response;
+use Request;
+use Session;
+
 
 /**
  * Router class will load requested controller / closure based on url.
@@ -225,12 +230,12 @@ class Router extends BaseRouter
         $uri = Url::detectUri();
 
         // First, we will supose that URI is associated with an Asset File.
-        if (Request::isGet() && $this->dispatchFile($uri)) {
+        if ((Request::method() == 'GET') && $this->dispatchFile($uri)) {
             return true;
         }
 
         // Not an Asset File URI? Route the current request.
-        $method = Request::getMethod();
+        $method = Request::method();
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
         if ($this->defaultRoute !== null) {
@@ -245,9 +250,9 @@ class Router extends BaseRouter
                 // Apply the (specified) Filters on matched Route.
                 $result = $route->applyFilters();
 
-                if($result instanceof Response) {
-                    // The Filters returned a Response instance; send it and quit processing.
-                    $result->send();
+                if($result instanceof SymfonyResponse) {
+                    // Finish the Session and send the Response.
+                    Session::finish($result);
 
                     return true;
                 }
@@ -267,7 +272,10 @@ class Router extends BaseRouter
         // No valid Route found; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
-        Response::error('404', $data)->send();
+        $response = Response::error(404, $data);
+
+        // Finish the Session and send the Response.
+        Session::finish($response);
 
         return false;
     }

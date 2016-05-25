@@ -31,6 +31,21 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
      */
     protected $items;
 
+
+    /**
+     * The total number of results.
+     *
+     * @var int
+     */
+    protected $total;
+
+    /**
+     * The number of items per page.
+     *
+     * @var int
+     */
+    protected $perPage;
+
     /**
      * Get the current page for the request.
      *
@@ -46,18 +61,18 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     protected $lastPage;
 
     /**
-     * The total number of results.
+     * The number of the first item in this range.
      *
      * @var int
      */
-    protected $total;
+    protected $from;
 
     /**
-     * The number of items per page.
+     * The number of the last item in this range.
      *
      * @var int
      */
-    protected $perPage;
+    protected $to;
 
     /**
      * The base URL in use by the paginator.
@@ -100,12 +115,15 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
      */
     protected function __construct($items, $page, $total, $perPage, $lastPage, $pageName)
     {
-        $this->currentPage = $page;
-        $this->lastPage    = $lastPage;
-        $this->total       = $total;
         $this->items       = $items;
+        $this->currentPage = $page;
+        $this->total       = $total;
         $this->perPage     = $perPage;
+        $this->lastPage    = $lastPage;
         $this->pageName    = $pageName;
+
+        // Calculate the Item ranges.
+        $this->calculateItemRanges();
     }
 
     /**
@@ -155,6 +173,18 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     protected static function isValidPageNumber($page)
     {
         return (($page >= 1) && (filter_var($page, FILTER_VALIDATE_INT) !== false));
+    }
+
+    /**
+     * Calculate the first and last item number for this instance.
+     *
+     * @return void
+     */
+    protected function calculateItemRanges()
+    {
+        $this->from = $this->total ? ($this->currentPage - 1) * $this->perPage + 1 : 0;
+
+        $this->to = min($this->total, $this->currentPage * $this->perPage);
     }
 
     /**
@@ -294,6 +324,26 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     public function getLastPage()
     {
         return $this->lastPage;
+    }
+
+    /**
+     * Get the number of the first item on the paginator.
+     *
+     * @return int
+     */
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    /**
+     * Get the number of the last item on the paginator.
+     *
+     * @return int
+     */
+    public function getTo()
+    {
+        return $this->to;
     }
 
     /**
@@ -457,11 +507,13 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     public function toArray()
     {
         return array(
-            'total' => $this->total,
-            'per_page' => $this->perPage,
+            'total'        => $this->total,
+            'per_page'     => $this->perPage,
             'current_page' => $this->currentPage,
-            'last_page' => $this->lastPage,
-            'data' => $this->getCollection()->toArray(),
+            'last_page'    => $this->lastPage,
+            'from'         => $this->from,
+            'to'           => $this->to,
+            'data'         => $this->getCollection()->toArray(),
         );
     }
 

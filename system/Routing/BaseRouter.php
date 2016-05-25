@@ -306,15 +306,12 @@ abstract class BaseRouter
         switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
             case 'css':
                 $contentType = 'text/css';
-
                 break;
             case 'js':
                 $contentType = 'application/javascript';
-
                 break;
             default:
                 $contentType = $guesser->guess($filePath);
-
                 break;
         }
 

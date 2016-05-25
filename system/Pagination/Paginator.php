@@ -253,6 +253,17 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     }
 
     /**
+     * Set the base URL in use by the paginator.
+     *
+     * @param  string  $baseUrl
+     * @return void
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+    
+    /**
      * Get the root URL for the request.
      *
      * @return string
@@ -352,17 +363,6 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     public function getTotal()
     {
         return $this->total;
-    }
-
-    /**
-     * Set the base URL in use by the paginator.
-     *
-     * @param  string  $baseUrl
-     * @return void
-     */
-    public function setBaseUrl($baseUrl)
-    {
-        $this->baseUrl = $baseUrl;
     }
 
     /**

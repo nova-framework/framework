@@ -160,25 +160,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * Create the HTML pagination links.
      *
-     * Typically, an intelligent, "sliding" window of links will be rendered based
-     * on the total number of pages, the current page, and the number of adjacent
-     * pages that should rendered. This creates a beautiful paginator similar to
-     * that of Google's.
-     *
-     * Example: 1 2 ... 23 24 25 [26] 27 28 29 ... 51 52
-     *
-     * If you wish to render only certain elements of the pagination control,
-     * explore some of the other public methods available on the instance.
-     *
-     * <code>
-     *      // Render the Pagination links
-     *      echo $paginator->links();
-     *
-     *      // Render the Pagination links using a given window size
-     *      echo $paginator->links(5);
-     * </code>
-     *
-     * @param  int     $adjacent
+     * @param  int  $adjacent
      * @return string
      */
     public function links($adjacent = 3)

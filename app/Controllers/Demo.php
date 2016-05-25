@@ -156,6 +156,11 @@ class Demo extends Controller
     {
         $paginator = DB::table('posts')->paginate(3);
 
+        $paginator->appends(array(
+            'testing'  => 1,
+            'validate' => 7,
+        ));
+
         $content = $paginator ->links();
 
         foreach ($paginator->results() as $post) {

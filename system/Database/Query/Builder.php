@@ -1109,7 +1109,7 @@ class Builder
      * @param  array  $columns
      * @return \Pagination\Paginator
      */
-    public function paginate($perPage = 15, $columns = array('*'))
+    public function paginate($perPage = 15, $columns = array('*'), $pageName = 'offset')
     {
         if (isset($this->groups)) {
             // A query which contains a GROUP BY; use the alternative paginate.
@@ -1126,7 +1126,7 @@ class Builder
         $total = $this->count(reset($columns));
 
         // Get the current Page from Paginator.
-        $page = Paginator::page($total, $perPage);
+        $page = Paginator::page($total, $perPage, $pageName);
 
         // Restore the orders, limit and offset properties.
         list($this->orders, $this->limit, $this->offset) = array($orders, $limit, $offset);
@@ -1134,7 +1134,7 @@ class Builder
         // Retrieve the results for the current page.
         $results = $this->forPage($page, $perPage)->get($columns);
 
-        return Paginator::make($results, $total, $perPage);
+        return Paginator::make($results, $total, $perPage, $pageName);
     }
 
     /**
@@ -1144,7 +1144,7 @@ class Builder
      * @param  array  $columns
      * @return \Pagination\Paginator
      */
-    protected function groupedPaginate($perPage, $columns)
+    protected function groupedPaginate($perPage, $columns, $pageName)
     {
         // Retrieve all results.
         $results = $this->get($columns);
@@ -1152,12 +1152,12 @@ class Builder
         $total = count($results);
 
         // Get the current Page from Paginator.
-        $page = Paginator::page($total, $perPage);
+        $page = Paginator::page($total, $perPage, $pageName);
 
         // Slice the results for the current Page.
         $sliced = array_slice($results, ($page - 1) * $perPage, $perPage);
 
-        return Paginator::make($sliced, $total, $perPage);
+        return Paginator::make($sliced, $total, $perPage, $pageName);
     }
 
     /**

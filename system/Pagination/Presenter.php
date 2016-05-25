@@ -41,7 +41,7 @@ class Presenter
      */
     protected $dots = '<li class="dots disabled"><a href="#">...</a></li>';
 
-    
+
     /**
      * Create a new Presenter instance.
      *
@@ -97,7 +97,7 @@ class Presenter
     /**
      * Get HTML wrapper for the entire paginator.
      *
-     * @param  string  $items
+     * @param  string  $content
      * @return string
      */
     public function getPaginationWrapper($content)

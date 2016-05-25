@@ -5,7 +5,6 @@ use Core\View;
 use Core\Controller;
 use Helpers\Password;
 use Helpers\Url;
-use Pagination\Paginator;
 
 use Event;
 use Validator;
@@ -154,7 +153,7 @@ class Demo extends Controller
 
     public function paginate()
     {
-        $paginate = DB::table('posts')->paginate(3);
+        $paginate = DB::table('posts')->paginate(2);
 
         $paginate->appends(array(
             'testing'  => 1,

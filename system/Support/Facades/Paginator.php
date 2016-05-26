@@ -21,7 +21,6 @@ class Paginator
      */
     protected static $factory;
 
-
     /**
      * Return a Pagination Factory instance
      *
@@ -29,15 +28,15 @@ class Paginator
      */
     public static function getFactory()
     {
-        if (! isset(static::$factory)) {
-            $request = Request::instance();
-
-            // Setup the Factory instance.
-            static::$factory = new Factory($request);
+        if (isset(static::$factory)) {
+            return static::$factory;
         }
 
-        // Return the Factory instance.
-        return static::$factory;
+        // Get the Request instance.
+        $request = Request::instance();
+
+        // Setup and return the Factory instance.
+        return static::$factory = new Factory($request);
     }
 
     /**

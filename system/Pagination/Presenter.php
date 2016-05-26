@@ -34,13 +34,6 @@ class Presenter
      */
     protected $lastPage;
 
-    /**
-     * The "dots" element used in the pagination slider.
-     *
-     * @var string
-     */
-    protected $dots = '<li class="dots disabled"><a href="#">...</a></li>';
-
 
     /**
      * Create a new Presenter instance.
@@ -52,9 +45,9 @@ class Presenter
     {
         $this->paginator = $paginator;
 
-        $this->currentPage = $presenter->getCurrentPage();
+        $this->currentPage = $paginator->getCurrentPage();
 
-        $this->lastPage = $presenter->getLastPage();
+        $this->lastPage = $paginator->getLastPage();
     }
 
     /**
@@ -106,174 +99,23 @@ class Presenter
     }
 
     /**
-     * Create the HTML pagination links.
+     * Render the Pagination contents.
      *
-     * Typically, an intelligent, "sliding" window of links will be rendered based
-     * on the total number of pages, the current page, and the number of adjacent
-     * pages that should rendered. This creates a beautiful paginator similar to
-     * that of Google's.
-     *
-     * Example: 1 2 ... 23 24 25 [26] 27 28 29 ... 51 52
-     *
-     * If you wish to render only certain elements of the pagination control,
-     * explore some of the other public methods available on the instance.
-     *
-     * <code>
-     *      // Render the Pagination links
-     *      echo $presenter->links();
-     *
-     *      // Render the Pagination links using a given window size
-     *      echo $presenter->links(5);
-     * </code>
-     *
-     * @param  int     $adjacent
      * @return string
      */
-    public function links($adjacent = 3)
+    public function render()
     {
         if ($this->lastPage <= 1) return '';
 
-        if (($this->lastPage < 7) + ($adjacent * 2)) {
-            $links = $this->range(1, $this->lastPage);
+        if ($this->lastPage < 13) {
+            $content = $this->getPageRange(1, $this->lastPage);
         } else {
-            $links = $this->slider($adjacent);
+            $content = $this->getPageSlider($adjacent);
         }
 
-        $content = $this->previous() . $links .$this->next();
+        $content = $this->getPrevious() .$content .$this->getNext();
 
         return $this->getPaginationWrapper($content);
-    }
-
-    /**
-     * Build sliding list of HTML numeric page links.
-     *
-     * This method is very similar to the "links" method, only it does not
-     * render the "first" and "last" pagination links, but only the pages.
-     *
-     * <code>
-     *      // Render the pagination slider
-     *      echo $presenter->slider();
-     *
-     *      // Render the pagination slider using a given window size
-     *      echo $presenter->slider(5);
-     * </code>
-     *
-     * @param  int     $adjacent
-     * @return string
-     */
-    public function slider($adjacent = 3)
-    {
-        $window = $adjacent * 2;
-
-        // Example: 1 [2] 3 4 5 6 ... 23 24
-        if ($this->currentPage <= $window) {
-            return $this->range(1, $window + 2).' '.$this->ending();
-        }
-        // Example: 1 2 ... 32 33 34 35 [36] 37
-        else if ($this->currentPage >= $this->lastPage - $window) {
-            return $this->beginning() .' ' .$this->range($this->lastPage - $window - 2, $this->lastPage);
-        }
-
-        // Example: 1 2 ... 23 24 25 [26] 27 28 29 ... 51 52
-        $content = $this->range($this->currentPage - $adjacent, $this->currentPage + $adjacent);
-
-        return $this->beginning() .' ' .$content .' ' .$this->ending();
-    }
-
-    /**
-     * Generate the "previous" HTML link.
-     *
-     * <code>
-     *      // Create the "previous" pagination element
-     *      echo $presenter->previous();
-     *
-     *      // Create the "previous" pagination element with custom text
-     *      echo $presenter->previous('Go Back');
-     * </code>
-     *
-     * @param  string  $text
-     * @return string
-     */
-    public function previous($text = null)
-    {
-        $text = $text ?: '&laquo;';
-
-        $callback = function($page, $lastPage) { return ($page <= 1); };
-
-        return $this->element(
-            __FUNCTION__,
-            $this->currentPage - 1,
-            $text,
-            $callback
-        );
-    }
-
-    /**
-     * Generate the "next" HTML link.
-     *
-     * <code>
-     *      // Create the "next" pagination element
-     *      echo $presenter->next();
-     *
-     *      // Create the "next" pagination element with custom text
-     *      echo $presenter->next('Skip Forwards');
-     * </code>
-     *
-     * @param  string  $text
-     * @return string
-     */
-    public function next($text = null)
-    {
-        $text = $text ?: '&raquo;';
-
-        $callback = function($page, $lastPage) { return ($page >= $lastPage); };
-
-        return $this->element(
-            __FUNCTION__,
-            $this->currentPage + 1,
-            $text,
-            $callback
-        );
-    }
-
-    /**
-     * Create a chronological pagination element, such as a "previous" or "next" link.
-     *
-     * @param  string   $element
-     * @param  int      $page
-     * @param  string   $text
-     * @param  Closure  $callback
-     * @return string
-     */
-    protected function element($element, $page, $text, $disabled)
-    {
-        if (call_user_func($disabled, $this->currentPage, $this->lastPage)) {
-            return $this->getDisabledTextWrapper($text);
-        }
-
-        $rel = "{$element}_page";
-
-        return $this->link($page, $text, $rel);
-    }
-
-    /**
-     * Build the first two page links for a sliding page range.
-     *
-     * @return string
-     */
-    protected function beginning()
-    {
-        return $this->range(1, 2) .' ' .$this->dots;
-    }
-
-    /**
-     * Build the last two page links for a sliding page range.
-     *
-     * @return string
-     */
-    protected function ending()
-    {
-        return $this->dots .' ' .$this->range($this->lastPage - 1, $this->lastPage);
     }
 
     /**
@@ -285,23 +127,137 @@ class Presenter
      * @param  int     $end
      * @return string
      */
-    protected function range($start, $end)
+    protected function getPageRange($start, $end)
     {
         $pages = array();
 
-        // To generate the range of page links, we will iterate through each page
-        // and, if the current page matches the page, we will generate a span,
-        // otherwise we will generate a link for the page. The span elements
-        // will be assigned the "current" CSS class for convenient styling.
         for ($page = $start; $page <= $end; $page++) {
             if ($this->currentPage == $page) {
                 $pages[] = $this->getActivePageWrapper($page);
             } else {
-                $pages[] = $this->link($page, $page, null);
+                $pages[] = $this->getLink($page);
             }
         }
 
         return implode(' ', $pages);
+    }
+
+    /**
+     * Create a pagination slider link window.
+     *
+     * @return string
+     */
+    protected function getPageSlider()
+    {
+        $window = 6;
+
+        if ($this->currentPage <= $window) {
+            $ending = $this->getFinish();
+
+            return $this->getPageRange(1, $window + 2) .$ending;
+        } else if ($this->currentPage >= $this->lastPage - $window) {
+            $start = $this->lastPage - 8;
+
+            $content = $this->getPageRange($start, $this->lastPage);
+
+            return $this->getStart() .$content;
+        }
+
+        $content = $this->getAdjacentRange();
+
+        return $this->getStart() .$content .$this->getFinish();
+    }
+
+    /**
+     * Get the page range for the current page window.
+     *
+     * @return string
+     */
+    public function getAdjacentRange()
+    {
+        return $this->getPageRange($this->currentPage - 3, $this->currentPage + 3);
+    }
+
+    /**
+     * Build the first two page links for a sliding page range.
+     *
+     * @return string
+     */
+    protected function getStart()
+    {
+        return $this->getPageRange(1, 2) .$this->getDots();
+    }
+
+    /**
+     * Build the last two page links for a sliding page range.
+     *
+     * @return string
+     */
+    protected function getFinish()
+    {
+        $content = $this->getPageRange($this->lastPage - 1, $this->lastPage);
+
+        return $this->getDots() .$content;
+    }
+
+    /**
+     * Generate the "previous" HTML link.
+     *
+     * <code>
+     *      // Create the "previous" pagination element
+     *      echo $presenter->getPrevious();
+     *
+     *      // Create the "previous" pagination element with custom text
+     *      echo $presenter->getPrevious('Go Back');
+     * </code>
+     *
+     * @param  string  $text
+     * @return string
+     */
+    public function getPrevious($text = '&laquo;')
+    {
+        if ($this->currentPage <= 1) {
+            return $this->getDisabledTextWrapper($text);
+        }
+
+        $url = $this->paginator->getUrl($this->currentPage - 1);
+
+        return $this->getPageLinkWrapper($url, $text, 'prev');
+    }
+
+    /**
+     * Generate the "next" HTML link.
+     *
+     * <code>
+     *      // Create the "next" pagination element
+     *      echo $presenter->getNext();
+     *
+     *      // Create the "next" pagination element with custom text
+     *      echo $presenter->getNext('Skip Forwards');
+     * </code>
+     *
+     * @param  string  $text
+     * @return string
+     */
+    public function getNext($text = '&raquo;')
+    {
+        if ($this->currentPage >= $this->lastPage) {
+            return $this->getDisabledTextWrapper($text);
+        }
+
+        $url = $this->paginator->getUrl($this->currentPage + 1);
+
+        return $this->getPageLinkWrapper($url, $text, 'next');
+    }
+
+    /**
+     * Get a pagination "dot" element.
+     *
+     * @return string
+     */
+    public function getDots()
+    {
+        return $this->getDisabledTextWrapper('...');
     }
 
     /**
@@ -312,10 +268,32 @@ class Presenter
      * @param  string  $class
      * @return string
      */
-    protected function link($page, $text, $rel)
+    protected function getLink($page)
     {
         $url = $this->paginator->getUrl($page);
 
-        return $this->getPageLinkWrapper($url, $text, $rel);
+        return $this->getPageLinkWrapper($url, $page);
+    }
+
+    /**
+     * Set the value of the current page.
+     *
+     * @param  int   $page
+     * @return void
+     */
+    public function setCurrentPage($page)
+    {
+        $this->currentPage = $page;
+    }
+
+    /**
+     * Set the value of the last page.
+     *
+     * @param  int   $page
+     * @return void
+     */
+    public function setLastPage($page)
+    {
+        $this->lastPage = $page;
     }
 }

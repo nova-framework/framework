@@ -197,7 +197,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     {
         $presenter = $this->getPresenter();
 
-        return $presenter->links($adjacent);
+        return $presenter->render();
     }
 
     /**

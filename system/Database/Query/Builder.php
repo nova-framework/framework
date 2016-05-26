@@ -1124,7 +1124,7 @@ class Builder
         $paginator = Paginator::instance();
 
         if(is_null($perPage)) {
-            // Adjust the perPage value depending on Model instance.
+            // Get the perPage value, according on the Model instance.
             $perPage = isset($this->model) ? $this->model->getPerPage() : 15;
         }
 

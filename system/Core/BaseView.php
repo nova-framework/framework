@@ -9,7 +9,7 @@
 
 namespace Core;
 
-use Core\Response;
+use Response;
 use Core\View;
 use Helpers\Inflector;
 

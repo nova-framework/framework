@@ -139,9 +139,6 @@ class Builder
     {
         $models = $this->getModels($columns);
 
-        // If we actually found models we will also eager load any relationships that
-        // have been specified as needing to be eager loaded, which will solve the
-        // n+1 query issue for the developers to avoid running a lot of queries.
         if (count($models) > 0) {
             $models = $this->eagerLoadRelations($models);
         }
@@ -322,7 +319,93 @@ class Builder
      */
     public function delete()
     {
+        if ($this->model->isSoftDeleting()) {
+            return $this->softDelete();
+        } else {
+            return $this->query->delete();
+        }
+    }
+
+    /**
+     * Soft delete the record in the database.
+     *
+     * @return int
+     */
+    protected function softDelete()
+    {
+        $column = $this->model->getDeletedAtColumn();
+
+        return $this->update(array($column => $this->model->freshTimestampString()));
+    }
+
+    /**
+     * Force a delete on a set of soft deleted models.
+     *
+     * @return int
+     */
+    public function forceDelete()
+    {
         return $this->query->delete();
+    }
+
+    /**
+     * Restore the soft-deleted model instances.
+     *
+     * @return int
+     */
+    public function restore()
+    {
+        if ($this->model->isSoftDeleting()) {
+            $column = $this->model->getDeletedAtColumn();
+
+            return $this->update(array($column => null));
+        }
+    }
+
+    /**
+     * Include the soft deleted models in the results.
+     *
+     * @return \Database\ORM\Builder|static
+     */
+    public function withTrashed()
+    {
+        $column = $this->model->getQualifiedDeletedAtColumn();
+
+        foreach ((array) $this->query->wheres as $key => $where) {
+            if ($this->isSoftDeleteConstraint($where, $column)) {
+                unset($this->query->wheres[$key]);
+
+                $this->query->wheres = array_values($this->query->wheres);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Force the result set to only included soft deletes.
+     *
+     * @return \Database\ORM\Builder|static
+     */
+    public function onlyTrashed()
+    {
+        $this->withTrashed();
+
+        $this->query->whereNotNull($this->model->getQualifiedDeletedAtColumn());
+
+        return $this;
+    }
+
+    /**
+     * Determine if the given where clause is a soft delete constraint.
+     *
+     * @param  array   $where
+     * @param  string  $column
+     * @return bool
+     */
+    protected function isSoftDeleteConstraint(array $where, $column)
+    {
+        return $where['type'] == 'Null' && $where['column'] == $column;
     }
 
     /**
@@ -358,9 +441,6 @@ class Builder
     public function eagerLoadRelations(array $models)
     {
         foreach ($this->eagerLoad as $name => $constraints) {
-            // For nested eager loads we'll skip loading them here and they will be set as an
-            // eager load on the query to retrieve the relation so that they will be eager
-            // loaded on that query, because that is where they get hydrated as models.
             if (strpos($name, '.') === false) {
                 $models = $this->loadRelation($models, $name, $constraints);
             }
@@ -379,9 +459,6 @@ class Builder
      */
     protected function loadRelation(array $models, $name, Closure $constraints)
     {
-        // First we will "back up" the existing where conditions on the query so we can
-        // add our eager constraints. Then we will merge the wheres that were on the
-        // query back to it in order that any where conditions might be specified.
         $relation = $this->getRelation($name);
 
         $relation->addEagerConstraints($models);
@@ -390,9 +467,6 @@ class Builder
 
         $models = $relation->initRelation($models, $name);
 
-        // Once we have the results, we just match those back up to their parent models
-        // using the relationship instance. Then we just return the finished arrays
-        // of models which have been eagerly hydrated and are readied for return.
         $results = $relation->getEager();
 
         return $relation->match($models, $results, $name);
@@ -408,9 +482,6 @@ class Builder
     {
         $me = $this;
 
-        // We want to do a relationship query without any constraints so that we will
-        // not have to remove these where clauses manually which gets really hacky
-        // and is error prone while we remove the developer's own where clauses.
         $query = Relation::noConstraints(function() use ($me, $relation)
         {
             return $me->getModel()->$relation();
@@ -418,9 +489,6 @@ class Builder
 
         $nested = $this->nestedRelations($relation);
 
-        // If there are nested relationships set on the query, we will put those onto
-        // the query instances so that they can be handled after this relationship
-        // is loaded. In this way they will all trickle down as they are loaded.
         if (count($nested) > 0) {
             $query->getQuery()->with($nested);
         }
@@ -438,9 +506,6 @@ class Builder
     {
         $nested = array();
 
-        // We are basically looking for any relationships that are nested deeper than
-        // the given top-level relationship. We will just check for any relations
-        // that start with the given top relations and adds them to our arrays.
         foreach ($this->eagerLoad as $name => $constraints) {
             if ($this->isNested($name, $relation)) {
                 $nested[substr($name, strlen($relation .'.'))] = $constraints;
@@ -593,9 +658,6 @@ class Builder
      */
     protected function mergeWheresToHas(Builder $hasQuery, Relation $relation)
     {
-        // Here we have the "has" query and the original relation. We need to copy over any
-        // where clauses the developer may have put in the relationship function over to
-        // the has query, and then copy the bindings from the "has" query to the main.
         $relationQuery = $relation->getBaseQuery();
 
         $hasQuery->mergeWheres(
@@ -649,18 +711,12 @@ class Builder
         $results = array();
 
         foreach ($relations as $name => $constraints) {
-            // If the "relation" value is actually a numeric key, we can assume that no
-            // constraints have been specified for the eager load and we'll just put
-            // an empty Closure with the loader so that we can treat all the same.
             if (is_numeric($name)) {
                 $f = function() {};
 
                 list($name, $constraints) = array($constraints, $f);
             }
 
-            // We need to separate out any nested includes. Which allows the developers
-            // to load deep relationships using "dots" without stating each level of
-            // the relationship with its own key in the array of eager load names.
             $results = $this->parseNested($name, $results);
 
             $results[$name] = $constraints;
@@ -680,9 +736,6 @@ class Builder
     {
         $progress = array();
 
-        // If the relation has already been set on the result array, we will not set it
-        // again, since that would override any constraints that were already placed
-        // on the relationships. We will only set the ones that are not specified.
         foreach (explode('.', $name) as $segment) {
             $progress[] = $segment;
 
@@ -784,7 +837,7 @@ class Builder
      */
     public function __call($method, $parameters)
     {
-        if (method_exists($this->model, $scope = 'scope'.ucfirst($method))) {
+        if (method_exists($this->model, $scope = 'scope' .ucfirst($method))) {
             return $this->callScope($scope, $parameters);
         } else {
             $result = call_user_func_array(array($this->query, $method), $parameters);

@@ -174,6 +174,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public $exists = false;
 
     /**
+     * Indicates if the model should soft delete.
+     *
+     * @var bool
+     */
+    protected $softDelete = false;
+
+    /**
      * Indicates whether attributes are snake cased on arrays.
      *
      * @var bool
@@ -223,6 +230,14 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     const UPDATED_AT = 'updated_at';
 
     /**
+     * The name of the "deleted at" column.
+     *
+     * @var string
+     */
+    const DELETED_AT = 'deleted_at';
+
+
+    /**
      * Create a new Model instance.
      *
      * @param  array  $attributes
@@ -267,9 +282,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
 
         static::$mutatorCache[$class] = array();
 
-        // Here we will extract all of the mutated attributes so that we can quickly
-        // spin through them after we export models to their array form, which we
-        // need to be fast. This will let us always know the attributes mutate.
         foreach (get_class_methods($class) as $method) {
             if (preg_match('/^get(.+)Attribute$/', $method, $matches)) {
                 if (static::$snakeAttributes) {
@@ -289,9 +301,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function fill(array $attributes)
     {
+        $totallyGuarded = $this->totallyGuarded();
+
         foreach ($this->fillableFromArray($attributes) as $key => $value) {
             if ($this->isFillable($key)) {
                 $this->setAttribute($key, $value);
+            } else if ($totallyGuarded) {
+                throw new MassAssignmentException($key);
             }
         }
 
@@ -620,27 +636,18 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
     {
-        // If no relation name was given, we will use this debug backtrace to extract
-        // the calling method's name and use that as the relationship name as most
-        // of the time this will be what we desire to use for the relationships.
         if (is_null($relation)) {
-            list(, $caller) = debug_backtrace(false);
+            list(, $caller) = debug_backtrace(false, 2);
 
             $relation = $caller['function'];
         }
 
-        // If no foreign key was supplied, we can use a backtrace to guess the proper
-        // foreign key name by using the name of the relationship function, which
-        // when combined with an "_id" should conventionally match the columns.
         if (is_null($foreignKey)) {
             $foreignKey = Inflector::tableize($relation).'_id';
         }
 
         $instance = new $related;
 
-        // Once we have the foreign key names, we'll just create a new Eloquent query
-        // for the related models and returns the relationship instance which will
-        // actually be responsible for retrieving and hydrating every relations.
         $query = $instance->newQuery();
 
         $otherKey = $otherKey ?: $instance->getKeyName();
@@ -658,28 +665,17 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function morphTo($name = null, $type = null, $id = null)
     {
-        // If no name is provided, we will use the backtrace to get the function name
-        // since that is most likely the name of the polymorphic interface. We can
-        // use that to get both the class and foreign key that will be utilized.
         if (is_null($name)) {
-            list(, $caller) = debug_backtrace(false);
+            list(, $caller) = debug_backtrace(false, 2);
 
             $name = Inflector::tableize($caller['function']);
         }
 
         list($type, $id) = $this->getMorphs($name, $type, $id);
 
-        // If the type value is null it is probably safe to assume we're eager loading
-        // the relationship. When that is the case we will pass in a dummy query as
-        // there are multiple types in the morph and we can't use single queries.
         if (is_null($class = $this->$type)) {
             return new MorphTo($this->newQuery(), $this, $id, null, $type, $name);
-        }
-
-        // If we are not eager loading the relationship we will essentially treat this
-        // as a belongs-to style relationship since morph-to extends that class and
-        // we will pass in the appropriate values so that it behaves as expected.
-        else {
+        } else {
             $instance = new $class;
 
             return new MorphTo(with($instance)->newQuery(), $this, $id, $instance->getKeyName(), $type, $name);
@@ -719,9 +715,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $instance = new $related;
 
-        // Here we will gather up the morph type and ID for the relationship so that we
-        // can properly query the intermediate table of a relation. Finally, we will
-        // get the table and create the relationship instances for the developers.
         list($type, $id) = $this->getMorphs($name, $type, $id);
 
         $table = $instance->getTable();
@@ -763,32 +756,20 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null)
     {
-        // If no relationship name was passed, we will pull backtraces to get the
-        // name of the calling function. We will use that function name as the
-        // title of this relation since that is a great convention to apply.
         if (is_null($relation)) {
             $relation = $this->getBelongsToManyCaller();
         }
 
-        // First, we'll need to determine the foreign key and "other key" for the
-        // relationship. Once we have determined the keys we'll make the query
-        // instances as well as the relationship instances we need for this.
         $foreignKey = $foreignKey ?: $this->getForeignKey();
 
         $instance = new $related;
 
         $otherKey = $otherKey ?: $instance->getForeignKey();
 
-        // If no table name was provided, we can guess it by concatenating the two
-        // models using underscores in alphabetical order. The two model names
-        // are transformed to snake case from their default CamelCase also.
         if (is_null($table)) {
             $table = $this->joiningTable($related);
         }
 
-        // Now we're ready to create a new query builder for the related model and
-        // the relationship instances for the relation. The relations will set
-        // appropriate query constraint and entirely manages the hydrations.
         $query = $instance->newQuery();
 
         return new BelongsToMany($query, $this, $table, $foreignKey, $otherKey, $relation);
@@ -809,18 +790,12 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $caller = $this->getBelongsToManyCaller();
 
-        // First, we will need to determine the foreign key and "other key" for the
-        // relationship. Once we have determined the keys we will make the query
-        // instances, as well as the relationship instances we need for these.
         $foreignKey = $foreignKey ?: $name.'_id';
 
         $instance = new $related;
 
         $otherKey = $otherKey ?: $instance->getForeignKey();
 
-        // Now we're ready to create a new query builder for this related model and
-        // the relationship instances for this relation. This relations will set
-        // appropriate query constraints then entirely manages the hydrations.
         $query = $instance->newQuery();
 
         $table = $table ?: Inflector::pluralize($name);
@@ -842,9 +817,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $foreignKey = $foreignKey ?: $this->getForeignKey();
 
-        // For the inverse of the polymorphic many-to-many relations, we will change
-        // the way we determine the foreign and other keys, as it is the opposite
-        // of the morph-to-many method since we're figuring out these inverses.
         $otherKey = $otherKey ?: $name.'_id';
 
         return $this->morphToMany($related, $name, $table, $foreignKey, $otherKey, true);
@@ -877,18 +849,12 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function joiningTable($related)
     {
-        // The joining table name, by convention, is simply the snake cased models
-        // sorted alphabetically and concatenated with an underscore, so we can
-        // just sort the models and join them together to get the table name.
         $base = Inflector::tableize(class_basename($this));
 
         $related = Inflector::tableize(class_basename($related));
 
         $models = array($related, $base);
 
-        // Now that we have the model names in an array we can just sort them and
-        // use the implode function to join them together with an underscores,
-        // which is typically used by convention within the database system.
         sort($models);
 
         return strtolower(implode('_', $models));
@@ -924,21 +890,70 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function delete()
     {
-        if ($this->exists) {
-            // Here, we'll touch the owning models, verifying these timestamps get updated
-            // for the models. This will allow any caching to get broken on the parents
-            // by the timestamp. Then we will go ahead and delete the model instance.
-            $this->touchOwners();
-
-            //
-            $query = $this->newQuery();
-
-            $query->where($this->getKeyName(), $this->getKey())->delete();
-
-            $this->exists = false;
+        if (is_null($this->primaryKey)) {
+            throw new \Exception("No primary key defined on model.");
         }
 
-        return true;
+        if ($this->exists) {
+            $this->touchOwners();
+
+            $this->performDeleteOnModel();
+
+            $this->exists = false;
+
+            return true;
+        }
+    }
+
+    /**
+     * Force a hard delete on a soft deleted model.
+     *
+     * @return void
+     */
+    public function forceDelete()
+    {
+        $softDelete = $this->softDelete;
+
+        //
+        $this->softDelete = false;
+
+        $this->delete();
+
+        $this->softDelete = $softDelete;
+    }
+
+    /**
+     * Perform the actual delete query on this Model instance.
+     *
+     * @return void
+     */
+    protected function performDeleteOnModel()
+    {
+        $query = $this->newQuery()->where($this->getKeyName(), $this->getKey());
+
+        if ($this->softDelete) {
+            $this->{static::DELETED_AT} = $time = $this->freshTimestamp();
+
+            $query->update(array(static::DELETED_AT => $this->fromDateTime($time)));
+        } else {
+            $query->delete();
+        }
+    }
+
+    /**
+     * Restore a soft-deleted model instance.
+     *
+     * @return bool|null
+     */
+    public function restore()
+    {
+        if ($this->softDelete) {
+            $this->{static::DELETED_AT} = null;
+
+            $result = $this->save();
+
+            return $result;
+        }
     }
 
     /**
@@ -992,7 +1007,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function update(array $attributes = array())
     {
-        if ( ! $this->exists) {
+        if (! $this->exists) {
             return $this->newQuery()->update($attributes);
         }
 
@@ -1006,11 +1021,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function push()
     {
-        if ( ! $this->save()) return false;
+        if (! $this->save()) return false;
 
-        // To sync all of the relationships to the database, we will simply spin through
-        // the relationships and save each model via this "push" method, which allows
-        // us to recurs into all of these nested relations for this model instance.
         foreach ($this->relations as $models) {
             foreach (Collection::make($models) as $model) {
                 if ( ! $model->push()) return false;
@@ -1028,7 +1040,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function save()
     {
-        $query = $this->newQuery();
+        $query = $this->newQueryWithDeleted();
 
         if ($this->exists) {
             $saved = $this->performUpdate($query);
@@ -1036,13 +1048,23 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
             $saved = $this->performInsert($query);
         }
 
-        if ($saved) {
-            $this->syncOriginal();
-
-            if (array_get($options, 'touch', true)) $this->touchOwners();
-        }
+        if ($saved) $this->finishSave($options);
 
         return $saved;
+    }
+
+    /**
+     * Finish processing on a successful save operation.
+     *
+     * @param  array  $options
+     * @return void
+     */
+    protected function finishSave(array $options)
+    {
+        $this->syncOriginal();
+
+
+        if (array_get($options, 'touch', true)) $this->touchOwners();
     }
 
     /**
@@ -1056,9 +1078,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         $dirty = $this->getDirty();
 
         if (count($dirty) > 0) {
-            // First we need to create a fresh query instance and touch the creation and
-            // update timestamp on the model which are maintained by us for developer
-            // convenience. Then we will just continue saving the model instances.
             if ($this->timestamps) {
                 $this->updateTimestamps();
             }
@@ -1235,6 +1254,26 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Get the name of the "deleted at" column.
+     *
+     * @return string
+     */
+    public function getDeletedAtColumn()
+    {
+        return static::DELETED_AT;
+    }
+
+    /**
+     * Get the fully qualified "deleted at" column.
+     *
+     * @return string
+     */
+    public function getQualifiedDeletedAtColumn()
+    {
+        return $this->getTable().'.'.$this->getDeletedAtColumn();
+    }
+
+    /**
      * Get a fresh timestamp for the model.
      *
      * @return \Carbon\Carbon
@@ -1259,18 +1298,31 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      *
      * @return \Database\ORM\Builder
      */
-    public function newQuery()
+    public function newQuery($excludeDeleted = true)
     {
         $builder = $this->newBuilder($this->newBaseQueryBuilder());
 
-        // Once we have the query builders, we will set the model instances so the
-        // builder can easily access any information it may need from the model
-        // while it is constructing and executing various queries against it.
-        return $builder->setModel($this)->with($this->with);
+        $builder->setModel($this)->with($this->with);
+
+        if ($excludeDeleted && $this->softDelete) {
+            $builder->whereNull($this->getQualifiedDeletedAtColumn());
+        }
+
+        return $builder;
     }
 
     /**
-     * Create a new Eloquent query builder for the model.
+     * Get a new query builder that includes soft deletes.
+     *
+     * @return \Database\ORM\Builder|static
+     */
+    public function newQueryWithDeleted()
+    {
+        return $this->newQuery(false);
+    }
+
+    /**
+     * Create a new ORM query builder for the Model.
      *
      * @param  \Database\Query\Builder $query
      * @return \Database\ORM\Builder|static
@@ -1278,6 +1330,40 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function newBuilder($query)
     {
         return new Builder($query);
+    }
+
+    /**
+     * Determine if the model instance has been soft-deleted.
+     *
+     * @return bool
+     */
+    public function trashed()
+    {
+        return ($this->softDelete && ! is_null($this->{static::DELETED_AT}));
+    }
+
+    /**
+     * Get a new query builder that includes soft deletes.
+     *
+     * @return \Database\ORM\Builder|static
+     */
+    public static function withTrashed()
+    {
+        return with(new static())->newQueryWithDeleted();
+    }
+
+    /**
+     * Get a new query builder that only includes soft deletes.
+     *
+     * @return \Database\ORM\Builder|static
+     */
+    public static function onlyTrashed()
+    {
+        $instance = new static;
+
+        $column = $instance->getQualifiedDeletedAtColumn();
+
+        return $instance->newQueryWithDeleted()->whereNotNull($column);
     }
 
     /**
@@ -1375,6 +1461,27 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function usesTimestamps()
     {
         return $this->timestamps;
+    }
+
+    /**
+     * Determine if the model instance uses soft deletes.
+     *
+     * @return bool
+     */
+    public function isSoftDeleting()
+    {
+        return $this->softDelete;
+    }
+
+    /**
+     * Set the soft deleting property on the model.
+     *
+     * @param  bool  $enabled
+     * @return void
+     */
+    public function setSoftDeleting($enabled)
+    {
+        $this->softDelete = $enabled;
     }
 
     /**
@@ -1670,18 +1777,12 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $attributes = $this->getArrayableAttributes();
 
-        // If an attribute is a date, we will cast it to a string after converting it
-        // to a DateTime / Carbon instance. This is so we will get some consistent
-        // formatting while accessing attributes vs. arraying / JSONing a model.
         foreach ($this->getDates() as $key) {
             if (! isset($attributes[$key])) continue;
 
             $attributes[$key] = (string) $this->asDateTime($attributes[$key]);
         }
 
-        // We want to spin through all the mutated attributes for this model and call
-        // the mutator for the attribute. We cache off every mutated attributes so
-        // we don't have to constantly check on attributes that actually change.
         foreach ($this->getMutatedAttributes() as $key) {
             if (! array_key_exists($key, $attributes)) continue;
 
@@ -1690,9 +1791,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
             );
         }
 
-        // Here we will grab all of the appended, calculated attributes to this model
-        // as these attributes are not really in the attributes array, but are run
-        // when we need to array or JSON the model for convenience to the coder.
         foreach ($this->appends as $key) {
             $attributes[$key] = $this->mutateAttributeForArray($key, null);
         }
@@ -1722,30 +1820,16 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         foreach ($this->getArrayableRelations() as $key => $value) {
             if (in_array($key, $this->hidden)) continue;
 
-            // If the values implements the Arrayable interface we can just call this
-            // toArray method on the instances which will convert both models and
-            // collections to their proper array form and we'll set the values.
             if ($value instanceof ArrayableInterface) {
                 $relation = $value->toArray();
-            }
-
-            // If the value is null, we'll still go ahead and set it in this list of
-            // attributes since null is used to represent empty relationships if
-            // if it a has one or belongs to type relationships on the models.
-            else if (is_null($value)) {
+            } else if (is_null($value)) {
                 $relation = $value;
             }
 
-            // If the relationships snake-casing is enabled, we will snake case this
-            // key so that the relation attribute is snake cased in this returned
-            // array to the developers, making this consistent with attributes.
             if (static::$snakeAttributes) {
-                $key = snake_case($key);
+                $key = Inflector::tableize($key);
             }
 
-            // If the relation value has been set, we will set it on this attributes
-            // list for returning. If it was not arrayable or null, we'll not set
-            // the value on the array because it is some type of invalid value.
             if (isset($relation) || is_null($value)) {
                 $attributes[$key] = $relation;
             }
@@ -1873,103 +1957,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
-     * Get the attributes that should be converted to dates.
-     *
-     * @return array
-     */
-    public function getDates()
-    {
-        $defaults = array(static::CREATED_AT, static::UPDATED_AT);
-
-        return array_merge($this->dates, $defaults);
-    }
-
-    /**
-     * Convert a DateTime to a storable string.
-     *
-     * @param  \DateTime|int  $value
-     * @return string
-     */
-    public function fromDateTime($value)
-    {
-        $format = $this->getDateFormat();
-
-        // If the value is already a DateTime instance, we will just skip the rest of
-        // these checks since they will be a waste of time, and hinder performance
-        // when checking the field. We will just return the DateTime right away.
-        if ($value instanceof DateTime) {
-            //
-        }
-
-        // If the value is totally numeric, we will assume it is a UNIX timestamp and
-        // format the date as such. Once we have the date in DateTime form we will
-        // format it according to the proper format for the database connection.
-        else if (is_numeric($value)) {
-            $value = Carbon::createFromTimestamp($value);
-        }
-
-        // If the value is in simple year, month, day format, we will format it using
-        // that setup. This is for simple "date" fields which do not have hours on
-        // the field. This conveniently picks up those dates and format correct.
-        elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
-            $value = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
-        }
-
-        // If this value is some other type of string, we'll create the DateTime with
-        // the format used by the database connection. Once we get the instance we
-        // can return back the finally formatted DateTime instances to the devs.
-        elseif (! $value instanceof DateTime) {
-            $value = Carbon::createFromFormat($format, $value);
-        }
-
-        return $value->format($format);
-    }
-
-    /**
-     * Return a timestamp as DateTime object.
-     *
-     * @param  mixed  $value
-     * @return \Carbon\Carbon
-     */
-    protected function asDateTime($value)
-    {
-        // If this value is an integer, we will assume it is a UNIX timestamp's value
-        // and format a Carbon object from this timestamp. This allows flexibility
-        // when defining your date fields as they might be UNIX timestamps here.
-        if (is_numeric($value)) {
-            return Carbon::createFromTimestamp($value);
-        }
-
-        // If the value is in simply year, month, day format, we will instantiate the
-        // Carbon instances from that format. Again, this provides for simple date
-        // fields on the database, while still supporting Carbonized conversion.
-        else if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
-            return Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
-        }
-
-        // Finally, we will just assume this date is in the format used by default on
-        // the database connection and use that format to create the Carbon object
-        // that is returned back out to the developers after we convert it here.
-        else if ( ! $value instanceof DateTime) {
-            $format = $this->getDateFormat();
-
-            return Carbon::createFromFormat($format, $value);
-        }
-
-        return Carbon::instance($value);
-    }
-
-    /**
-     * Get the format for database stored dates.
-     *
-     * @return string
-     */
-    protected function getDateFormat()
-    {
-        return $this->getConnection()->getDateFormat();
-    }
-
-    /**
      * Get the value of an attribute using its mutator.
      *
      * @param  string  $key
@@ -2030,6 +2017,72 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         $method = 'set' .Inflector::classify($key) .'Attribute';
 
         return method_exists($this, $method);
+    }
+
+    /**
+     * Get the attributes that should be converted to dates.
+     *
+     * @return array
+     */
+    public function getDates()
+    {
+        $defaults = array(static::CREATED_AT, static::UPDATED_AT);
+
+        return array_merge($this->dates, $defaults);
+    }
+
+    /**
+     * Convert a DateTime to a storable string.
+     *
+     * @param  \DateTime|int  $value
+     * @return string
+     */
+    public function fromDateTime($value)
+    {
+        $format = $this->getDateFormat();
+
+        if ($value instanceof DateTime) {
+            //
+        } else if (is_numeric($value)) {
+            $value = Carbon::createFromTimestamp($value);
+        } else if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
+            $value = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
+        } else if (! $value instanceof DateTime) {
+            $value = Carbon::createFromFormat($format, $value);
+        }
+
+        return $value->format($format);
+    }
+
+    /**
+     * Return a timestamp as DateTime object.
+     *
+     * @param  mixed  $value
+     * @return \Carbon\Carbon
+     */
+    protected function asDateTime($value)
+    {
+        if (is_numeric($value)) {
+            return Carbon::createFromTimestamp($value);
+        } else if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
+            return Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
+        } else if ( ! $value instanceof DateTime) {
+            $format = $this->getDateFormat();
+
+            return Carbon::createFromFormat($format, $value);
+        }
+
+        return Carbon::instance($value);
+    }
+
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    protected function getDateFormat()
+    {
+        return $this->getConnection()->getDateFormat();
     }
 
     /**

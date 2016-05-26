@@ -1,6 +1,6 @@
 <?php
 /**
- * Presenter - Implements a Pagination Presenter using Bootstrap 3.x.
+ * Presenter - Implements the Pagination Presenter.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

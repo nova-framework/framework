@@ -626,7 +626,7 @@ class BelongsToMany extends Relation
             // If the ID is not in the list of existing pivot IDs, we will insert a new pivot
             // record, otherwise, we will just update this existing record on this joining
             // table, so that the developers will easily update these records pain free.
-            if ( ! in_array($id, $current)) {
+            if (! in_array($id, $current)) {
                 $this->attach($id, $attributes, $touch);
 
                 $changes['attached'][] = (int) $id;
@@ -641,6 +641,7 @@ class BelongsToMany extends Relation
                 }
             }
         }
+
         return $changes;
     }
 
@@ -699,8 +700,7 @@ class BelongsToMany extends Relation
         // To create the attachment records, we will simply spin through the IDs given
         // and create a new record to insert for each ID. Each ID may actually be a
         // key in the array, with extra attributes to be placed in other columns.
-        foreach ($ids as $key => $value)
-        {
+        foreach ($ids as $key => $value) {
             $records[] = $this->attacher($key, $value, $attributes, $timed);
         }
 

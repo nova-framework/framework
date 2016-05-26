@@ -82,6 +82,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     protected $relations = array();
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+//     protected $appends = array();
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -101,6 +108,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @var bool
      */
     protected static $unguarded = true;
+
+    /**
+     * The many to many relationship methods.
+     *
+     * @var array
+     */
+    public static $manyMethods = array('belongsToMany');
 
     /**
      * Indicates if the Model exists.
@@ -198,29 +212,27 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
-     * Create a collection of Models from plain arrays.
+     * Create a collection of models from plain arrays.
      *
      * @param  array  $items
      * @param  string  $connection
-     * @return array
+     * @return \Database\ORM\Collection
      */
     public static function hydrate(array $items, $connection = null)
     {
-        $models = array();
+        $collection = with($instance = new static)->newCollection();
 
         foreach ($items as $item) {
-            $item = (array) $item;
-
             $model = $instance->newFromBuilder($item);
 
             if (! is_null($connection)) {
                 $model->setConnection($connection);
             }
 
-            array_push($models, $model);
+            $collection->push($model);
         }
 
-        return $models;
+        return $collection;
     }
 
     /**
@@ -229,7 +241,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @param  string  $query
      * @param  array  $bindings
      * @param  string  $connection
-     * @return \Database\ORM\Model|static[]
+     * @return \Database\ORM\Collection
      */
     public static function hydrateRaw($query, $bindings = array(), $connection = null)
     {
@@ -337,7 +349,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * Get all of the models from the database.
      *
      * @param  array  $columns
-     * @return array
+     * @return \Database\ORM\Collection|static[]
      */
     public static function all($columns = array('*'))
     {
@@ -351,7 +363,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return Model
+     * @return \Database\ORM\Model|Collection|static
      */
     public static function find($id, $columns = array('*'))
     {
@@ -365,7 +377,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Database\ORM\Model|static
+     * @return \Database\ORM\Model|Collection|static
      */
     public static function findOrNew($id, $columns = array('*'))
     {
@@ -379,7 +391,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Database\ORM\Model|static
+     * @return \Database\ORM\Model|Collection|static
      *
      * @throws \Exception
      */
@@ -607,39 +619,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
-     * Set a given attribute on the Model.
-     *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @return void
-     */
-    public function setAttribute($key, $value)
-    {
-        if ($this->hasSetMutator($key)) {
-            $method = 'set' .Inflector::classify($key) .'Attribute';
-
-            call_user_func(array($this, $method), $value);
-        } else {
-            $this->attributes[$key] = $value;
-        }
-    }
-
-    /**
-     * Get an attribute from the Model.
-     *
-     * @param  string  $key
-     * @return mixed
-     */
-    public function getAttribute($key)
-    {
-        $inAttributes = array_key_exists($key, $this->attributes);
-
-        if ($inAttributes || $this->hasGetMutator($key)) {
-            return $this->getAttributeValue($key);
-        }
-    }
-
-    /**
      * Destroy the Models for the given IDs.
      *
      * @param  array|int  $ids
@@ -845,106 +824,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         }
 
         return $this->getAttribute($this->getKeyName());
-    }
-
-    /**
-     * Get the attributes that have been changed since last sync.
-     *
-     * @return array
-     */
-    public function getDirty()
-    {
-        $dirty = array();
-
-        foreach ($this->attributes as $key => $value) {
-            if (! array_key_exists($key, $this->original) || ($value !== $this->original[$key])) {
-                $dirty[$key] = $value;
-            }
-        }
-
-        return $dirty;
-    }
-
-    /**
-     * Get a plain attribute.
-     *
-     * @param  string  $key
-     * @return mixed
-     */
-    protected function getAttributeValue($key)
-    {
-        $value = $this->getAttributeFromArray($key);
-
-        if ($this->hasGetMutator($key)) {
-            return $this->mutateAttribute($key, $value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Get an attribute from the $attributes array.
-     *
-     * @param  string  $key
-     * @return mixed
-     */
-    protected function getAttributeFromArray($key)
-    {
-        if (array_key_exists($key, $this->attributes)) {
-            return $this->attributes[$key];
-        }
-    }
-
-    /**
-     * Get the value of an attribute using its mutator.
-     *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @return mixed
-     */
-    protected function mutateAttribute($key, $value)
-    {
-        $method = 'get' .Inflector::classify($key) .'Attribute';
-
-        return call_user_func(array($this, $method), $value);
-    }
-
-    /**
-     * Determine if a set mutator exists for an attribute.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function hasSetMutator($key)
-    {
-        $method = 'set' .Inflector::classify($key) .'Attribute';
-
-        return method_exists($this, $method);
-    }
-
-    /**
-     * Determine if a get mutator exists for an attribute.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function hasGetMutator($key)
-    {
-        $method = 'get' .Inflector::classify($key) .'Attribute';
-
-        return method_exists($this, $method);
-    }
-
-    /**
-     * Sync the original attributes with the current.
-     *
-     * @return Model
-     */
-    public function syncOriginal()
-    {
-        $this->original = $this->attributes;
-
-        return $this;
     }
 
     public function getTable()
@@ -1188,6 +1067,312 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Convert the Model instance to JSON.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->toArray(), $options);
+    }
+
+    /**
+     * Convert the model instance to an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $attributes = $this->attributesToArray();
+
+        return array_merge($attributes, $this->relationsToArray());
+    }
+
+    /**
+     * Convert the model's attributes to an array.
+     *
+     * @return array
+     */
+    public function attributesToArray()
+    {
+        $attributes = $this->getArrayableAttributes();
+
+        // We want to spin through all the mutated attributes for this model and call
+        // the mutator for the attribute. We cache off every mutated attributes so
+        // we don't have to constantly check on attributes that actually change.
+        foreach ($this->getMutatedAttributes() as $key) {
+            if (! array_key_exists($key, $attributes)) continue;
+
+            $attributes[$key] = $this->mutateAttributeForArray(
+                $key, $attributes[$key]
+            );
+        }
+
+        // Here we will grab all of the appended, calculated attributes to this model
+        // as these attributes are not really in the attributes array, but are run
+        // when we need to array or JSON the model for convenience to the coder.
+        foreach ($this->appends as $key) {
+            $attributes[$key] = $this->mutateAttributeForArray($key, null);
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Get an attribute array of all arrayable attributes.
+     *
+     * @return array
+     */
+    protected function getArrayableAttributes()
+    {
+        return $this->getArrayableItems($this->attributes);
+    }
+
+    /**
+     * Get the model's relationships in array form.
+     *
+     * @return array
+     */
+    public function relationsToArray()
+    {
+        $attributes = array();
+
+        foreach ($this->getArrayableRelations() as $key => $value) {
+            if (in_array($key, $this->hidden)) continue;
+
+            // If the values implements the Arrayable interface we can just call this
+            // toArray method on the instances which will convert both models and
+            // collections to their proper array form and we'll set the values.
+            if ($value instanceof ArrayableInterface) {
+                $relation = $value->toArray();
+            }
+
+            // If the value is null, we'll still go ahead and set it in this list of
+            // attributes since null is used to represent empty relationships if
+            // if it a has one or belongs to type relationships on the models.
+            else if (is_null($value)) {
+                $relation = $value;
+            }
+
+            // If the relationships snake-casing is enabled, we will snake case this
+            // key so that the relation attribute is snake cased in this returned
+            // array to the developers, making this consistent with attributes.
+            if (static::$snakeAttributes) {
+                $key = snake_case($key);
+            }
+
+            // If the relation value has been set, we will set it on this attributes
+            // list for returning. If it was not arrayable or null, we'll not set
+            // the value on the array because it is some type of invalid value.
+            if (isset($relation) || is_null($value)) {
+                $attributes[$key] = $relation;
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Get an attribute array of all arrayable relations.
+     *
+     * @return array
+     */
+    protected function getArrayableRelations()
+    {
+        return $this->getArrayableItems($this->relations);
+    }
+
+    /**
+     * Get an attribute array of all arrayable values.
+     *
+     * @param  array  $values
+     * @return array
+     */
+    protected function getArrayableItems(array $values)
+    {
+        if (count($this->visible) > 0) {
+            return array_intersect_key($values, array_flip($this->visible));
+        }
+
+        return array_diff_key($values, array_flip($this->hidden));
+    }
+
+    /**
+     * Get an attribute from the Model.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function getAttribute($key)
+    {
+        $inAttributes = array_key_exists($key, $this->attributes);
+
+        if ($inAttributes || $this->hasGetMutator($key)) {
+            return $this->getAttributeValue($key);
+        }
+
+        if (array_key_exists($key, $this->relations)) {
+            return $this->relations[$key];
+        }
+
+        // If the "attribute" exists as a method on the model, we will just assume
+        // it is a relationship and will load and return results from the query
+        // and hydrate the relationship's value on the "relationships" array.
+        $camelKey = Inflector::camelize($key);
+
+        if (method_exists($this, $camelKey)) {
+            return $this->getRelationshipFromMethod($key, $camelKey);
+        }
+    }
+
+    /**
+     * Get a plain attribute.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    protected function getAttributeValue($key)
+    {
+        $value = $this->getAttributeFromArray($key);
+
+        if ($this->hasGetMutator($key)) {
+            return $this->mutateAttribute($key, $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get an attribute from the $attributes array.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    protected function getAttributeFromArray($key)
+    {
+        if (array_key_exists($key, $this->attributes)) {
+            return $this->attributes[$key];
+        }
+    }
+
+    /**
+     * Get a relationship value from a method.
+     *
+     * @param  string  $key
+     * @param  string  $camelKey
+     * @return mixed
+     *
+     * @throws \LogicException
+     */
+    protected function getRelationshipFromMethod($key, $camelKey)
+    {
+        $relations = $this->$camelKey();
+
+        if (! $relations instanceof Relation) {
+            throw new LogicException('Relationship method must return an object of type Database\ORM\Relations\Relation');
+        }
+
+        return $this->relations[$key] = $relations->getResults();
+    }
+
+    /**
+     * Determine if a get mutator exists for an attribute.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function hasGetMutator($key)
+    {
+        $method = 'get' .Inflector::classify($key) .'Attribute';
+
+        return method_exists($this, $method);
+    }
+
+    /**
+     * Get the value of an attribute using its mutator.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return mixed
+     */
+    protected function mutateAttribute($key, $value)
+    {
+        $method = 'get' .Inflector::classify($key) .'Attribute';
+
+        return call_user_func(array($this, $method), $value);
+    }
+
+    /**
+     * Get the value of an attribute using its mutator for array conversion.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return mixed
+     */
+    protected function mutateAttributeForArray($key, $value)
+    {
+        $value = $this->mutateAttribute($key, $value);
+
+        return ($value instanceof ArrayableInterface) ? $value->toArray() : $value;
+    }
+
+    /**
+     * Set a given attribute on the Model.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return void
+     */
+    public function setAttribute($key, $value)
+    {
+        if ($this->hasSetMutator($key)) {
+            $method = 'set' .Inflector::classify($key) .'Attribute';
+
+            return call_user_func(array($this, $method), $value);
+        }
+
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * Determine if a set mutator exists for an attribute.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function hasSetMutator($key)
+    {
+        $method = 'set' .Inflector::classify($key) .'Attribute';
+
+        return method_exists($this, $method);
+    }
+
+    /**
+     * Clone the model into a new, non-existing instance.
+     *
+     * @return \Database\ORM\Model
+     */
+    public function replicate()
+    {
+        $attributes = array_except($this->attributes, array($this->getKeyName()));
+
+        with($instance = new static)->setRawAttributes($attributes);
+
+        return $instance->setRelations($this->relations);
+    }
+
+    /**
+     * Get all of the current attributes on the model.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
      * Set the array of model attributes. No checking is done.
      *
      * @param  array  $attributes
@@ -1198,9 +1383,125 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $this->attributes = $attributes;
 
-        if ($sync) {
-            $this->syncOriginal();
+        if ($sync) $this->syncOriginal();
+    }
+
+    /**
+     * Get the model's original attribute values.
+     *
+     * @param  string  $key
+     * @param  mixed   $default
+     * @return array
+     */
+    public function getOriginal($key = null, $default = null)
+    {
+        return array_get($this->original, $key, $default);
+    }
+
+    /**
+     * Sync the original attributes with the current.
+     *
+     * @return Model
+     */
+    public function syncOriginal()
+    {
+        $this->original = $this->attributes;
+
+        return $this;
+    }
+
+    /**
+     * Determine if a given attribute is dirty.
+     *
+     * @param  string  $attribute
+     * @return bool
+     */
+    public function isDirty($attribute)
+    {
+        return array_key_exists($attribute, $this->getDirty());
+    }
+
+    /**
+     * Get the attributes that have been changed since last sync.
+     *
+     * @return array
+     */
+    public function getDirty()
+    {
+        $dirty = array();
+
+        foreach ($this->attributes as $key => $value) {
+            if ( ! array_key_exists($key, $this->original)) {
+                $dirty[$key] = $value;
+            } else if (($value !== $this->original[$key]) && ! $this->originalIsNumericallyEquivalent($key)) {
+                $dirty[$key] = $value;
+            }
         }
+
+        return $dirty;
+    }
+
+    /**
+     * Determine if the new and old values for a given key are numerically equivalent.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function originalIsNumericallyEquivalent($key)
+    {
+        $current = $this->attributes[$key];
+
+        $original = $this->original[$key];
+
+        return (is_numeric($current) && is_numeric($original) && (strcmp((string) $current, (string) $original) === 0));
+    }
+
+    /**
+     * Get all the loaded relations for the instance.
+     *
+     * @return array
+     */
+    public function getRelations()
+    {
+        return $this->relations;
+    }
+
+    /**
+     * Get a specified relationship.
+     *
+     * @param  string  $relation
+     * @return mixed
+     */
+    public function getRelation($relation)
+    {
+        return $this->relations[$relation];
+    }
+
+    /**
+     * Set the specific relationship in the model.
+     *
+     * @param  string  $relation
+     * @param  mixed   $value
+     * @return Database\ORM\Model
+     */
+    public function setRelation($relation, $value)
+    {
+        $this->relations[$relation] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the entire relations array on the model.
+     *
+     * @param  array  $relations
+     * @return Database\ORM\Model
+     */
+    public function setRelations(array $relations)
+    {
+        $this->relations = $relations;
+
+        return $this;
     }
 
     /**
@@ -1234,27 +1535,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         $this->connection = $name;
 
         return $this;
-    }
-
-    /**
-     * Convert the Model instance to JSON.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0)
-    {
-        return json_encode($this->toArray(), $options);
-    }
-
-    /**
-     * Convert the Model instance to an array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->attributes;
     }
 
     /**
@@ -1333,7 +1613,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function __isset($key)
     {
-        return (isset($this->attributes[$key]) ||
+        return (isset($this->attributes[$key]) || isset($this->relations[$key]) ||
             ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key))));
     }
 
@@ -1346,6 +1626,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function __unset($key)
     {
         unset($this->attributes[$key]);
+
+        unset($this->relations[$key]);
     }
 
     /**
@@ -1357,6 +1639,10 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function __call($method, $parameters)
     {
+        if (in_array($method, array('increment', 'decrement'))) {
+            return call_user_func_array(array($this, $method), $parameters);
+        }
+
         $query = $this->newQuery();
 
         return call_user_func_array(array($query, $method), $params);
@@ -1375,4 +1661,15 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
 
         return call_user_func_array(array($instance, $method), $params);
     }
+
+    /**
+     * Convert the model to its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
+    }
+
 }

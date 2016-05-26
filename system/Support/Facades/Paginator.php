@@ -26,7 +26,7 @@ class Paginator
      *
      * @return \Pagination\Factory
      */
-    public static function getFactory()
+    protected static function getFactory()
     {
         if (isset(static::$factory)) {
             return static::$factory;
@@ -37,6 +37,16 @@ class Paginator
 
         // Setup and return the Factory instance.
         return static::$factory = new Factory($request);
+    }
+
+    /**
+     * Return the default Encrypter instance.
+     *
+     * @return \Encryption\Encrypter
+     */
+    public static function instance()
+    {
+        return static::getFactory();
     }
 
     /**

@@ -46,7 +46,7 @@ class Validator
      *
      * @return \Validation\Factory
      */
-    public static function getFactory()
+    protected static function getFactory()
     {
         if (! isset(static::$factory)) {
             // Setup the local Translator.

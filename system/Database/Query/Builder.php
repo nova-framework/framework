@@ -12,7 +12,7 @@ use Helpers\Inflector;
 use Database\Connection;
 use Database\Query\Expression;
 use Database\Query\JoinClause;
-use Pagination\Paginator;
+use Support\Facades\Paginator;
 
 use PDO;
 use Closure;
@@ -1111,33 +1111,14 @@ class Builder
      */
     public function paginate($perPage = 15, $columns = array('*'))
     {
-        // Ensure that the columns are properly specified.
-        if (! is_array($columns)) $columns = array($columns);
+        // Get the Pagination Factory instance.
+        $paginator = Paginator::instance();
 
         if (isset($this->groups)) {
-            // A query which contains a GROUP BY; use the alternative paginate.
-            return $this->groupedPaginate($perPage, $columns);
+            return $this->groupedPaginate($paginator, $perPage, $columns);
+        } else {
+            return $this->ungroupedPaginate($paginator, $perPage, $columns);
         }
-
-        // Move the orders, limit and offset properties to local variables.
-        list($orders, $limit, $offset, $this->orders, $this->limit, $this->offset) = array(
-            $this->orders, $this->limit, $this->offset,
-            null, null, null
-        );
-
-        // Get the total number of records from table.
-        $total = $this->count(reset($columns));
-
-        // Get the current Page from Paginator.
-        $page = Paginator::page($total, $perPage);
-
-        // Restore the orders, limit and offset properties.
-        list($this->orders, $this->limit, $this->offset) = array($orders, $limit, $offset);
-
-        // Retrieve the results for the current page.
-        $results = $this->forPage($page, $perPage)->get($columns);
-
-        return Paginator::make($results, $total, $perPage);
     }
 
     /**
@@ -1147,20 +1128,97 @@ class Builder
      * @param  array  $columns
      * @return \Pagination\Paginator
      */
-    protected function groupedPaginate($perPage, $columns)
+    protected function groupedPaginate($paginator, $perPage, $columns)
     {
-        // Retrieve all results.
         $results = $this->get($columns);
 
-        $total = count($results);
+        return $this->buildRawPaginator($paginator, $results, $perPage);
+    }
 
-        // Get the current Page from Paginator.
-        $page = Paginator::page($total, $perPage);
+    /**
+     * Build a paginator instance from a raw result array.
+     *
+     * @param  \Illuminate\Pagination\Factory  $paginator
+     * @param  array  $results
+     * @param  int    $perPage
+     * @return \Pagination\Paginator
+     */
+    public function buildRawPaginator($paginator, $results, $perPage)
+    {
+        // For queries which have a group by, we will actually retrieve the entire set
+        // of rows from the table and "slice" them via PHP. This is inefficient and
+        // the developer must be aware of this behavior; however, it's an option.
+        $start = ($paginator->getCurrentPage() - 1) * $perPage;
 
-        // Slice the results for the current Page.
-        $sliced = array_slice($results, ($page - 1) * $perPage, $perPage);
+        $sliced = array_slice($results, $start, $perPage);
 
-        return Paginator::make($sliced, $total, $perPage);
+        return $paginator->make($sliced, count($results), $perPage);
+    }
+
+    /**
+     * Create a paginator for an un-grouped pagination statement.
+     *
+     * @param  \Pagination\Environment  $paginator
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    protected function ungroupedPaginate($paginator, $perPage, $columns)
+    {
+        $total = $this->getPaginationCount();
+
+        // Once we have the total number of records to be paginated, we can grab the
+        // current page and the result array. Then we are ready to create a brand
+        // new Paginator instances for the results which will create the links.
+        $page = $paginator->getCurrentPage($total, $perPage);
+
+        $results = $this->forPage($page, $perPage)->get($columns);
+
+        return $paginator->make($results, $total, $perPage);
+    }
+
+    /**
+     * Get the count of the total records for pagination.
+     *
+     * @return int
+     */
+    public function getPaginationCount()
+    {
+        $this->backupFieldsForCount();
+
+        $total = $this->count();
+
+        $this->restoreFieldsForCount();
+
+        return $total;
+    }
+
+    /**
+     * Backup certain fields for a pagination count.
+     *
+     * @return void
+     */
+    protected function backupFieldsForCount()
+    {
+        foreach (array('orders', 'limit', 'offset') as $field) {
+            $this->backups[$field] = $this->{$field};
+
+            $this->{$field} = null;
+        }
+    }
+
+    /**
+     * Restore certain fields for a pagination count.
+     *
+     * @return void
+     */
+    protected function restoreFieldsForCount()
+    {
+        foreach (array('orders', 'limit', 'offset') as $field) {
+            $this->{$field} = $this->backups[$field];
+        }
+
+        $this->backups = array();
     }
 
     /**

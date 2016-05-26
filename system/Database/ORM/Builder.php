@@ -2,11 +2,12 @@
 
 namespace Database\ORM;
 
-use Closure;
 use Database\Query\Expression;
 use Database\ORM\Relations\Relation;
 use Database\Query\Builder as QueryBuilder;
 use Support\Facades\Paginator;
+
+use Closure;
 
 
 class Builder

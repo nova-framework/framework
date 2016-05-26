@@ -1,6 +1,6 @@
 <?php
 /**
- * Model - A simple ORM Model class with no Relations (yet).
+ * Model - Implements a Object Relational Model class.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -12,24 +12,19 @@ use Helpers\Inflector;
 use Database\Connection;
 use Database\Query\Builder as QueryBuilder;
 use Database\ORM\Builder;
-
-use Database\ORM\Relations\Pivot;
-use Database\ORM\Relations\Relation;
-
 use Database\ORM\Relations\BelongsTo;
 use Database\ORM\Relations\BelongsToMany;
 use Database\ORM\Relations\HasOne;
 use Database\ORM\Relations\HasMany;
 use Database\ORM\Relations\HasManyThrough;
-
 use Database\ORM\Relations\MorphTo;
 use Database\ORM\Relations\MorphToMany;
 use Database\ORM\Relations\MorphOne;
 use Database\ORM\Relations\MorphMany;
-
+use Database\ORM\Relations\Pivot;
+use Database\ORM\Relations\Relation;
 use Support\Contracts\ArrayableInterface;
 use Support\Contracts\JsonableInterface;
-
 use Carbon\Carbon;
 
 use ArrayAccess;
@@ -835,7 +830,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         {
             $caller = $trace['function'];
 
-            return (! in_array($caller, Model::$manyMethods) && $caller != $self);
+            return (! in_array($caller, Model::$manyMethods) && ($caller != $self));
         });
 
         return ! is_null($caller) ? $caller['function'] : null;
@@ -891,7 +886,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function delete()
     {
         if (is_null($this->primaryKey)) {
-            throw new \Exception("No primary key defined on model.");
+            throw new \Exception("No primary key defined on Model.");
         }
 
         if ($this->exists) {

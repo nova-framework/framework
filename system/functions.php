@@ -393,7 +393,7 @@ function createKey($length = 32)
  * @param string $buffer
  * @return string
  */
-function sanitize_output($buffer) 
+function minifyHTML($buffer) 
 {
 
     $search = array(

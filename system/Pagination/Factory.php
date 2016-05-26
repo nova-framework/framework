@@ -75,7 +75,7 @@ class Factory
      *
      * @return int
      */
-    public function getCurrentPage()
+    public function getCurrentPage($total = null, $perPage = 15)
     {
         $page = (int) $this->currentPage ?: $this->request->input($this->pageName, 1);
 
@@ -83,7 +83,11 @@ class Factory
             return 1;
         }
 
-        return $page;
+        if (is_null($total)) {
+            return $page;
+        }
+
+        return min($page, (int) ceil($total / $perPage));
     }
 
     /**

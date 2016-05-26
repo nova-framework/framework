@@ -115,7 +115,7 @@ define('ENCRYPT_KEY', '');
 define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
 
 /**
- * Setup the Language configuration
+ * Setup the Session configuration
  */
 require 'Config/Session.php';
 

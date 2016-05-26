@@ -10,9 +10,7 @@ namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
-use Helpers\Session;
 
-use Request;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.

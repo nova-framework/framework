@@ -1,6 +1,6 @@
 <?php
 /**
- * Presenter - Implements a Pagination Presenter using Bootstrap 3.x.
+ * Presenter - Implements the Pagination Presenter.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -11,7 +11,7 @@ namespace Pagination;
 use Pagination\Paginator;
 
 
-class Presenter
+abstract class Presenter
 {
     /**
      * The Paginator instance.
@@ -58,12 +58,7 @@ class Presenter
      * @param  string  $rel
      * @return string
      */
-    public function getPageLinkWrapper($url, $page, $rel = null)
-    {
-        $rel = is_null($rel) ? '' : ' class="'.$rel.'"';
-
-        return '<li><a href="'.$url.'"'.$rel.'>'.$page.'</a></li>';
-    }
+    abstract public function getPageLinkWrapper($url, $page, $rel = null);
 
     /**
      * Get HTML wrapper for disabled text.
@@ -71,10 +66,7 @@ class Presenter
      * @param  string  $text
      * @return string
      */
-    public function getDisabledTextWrapper($text)
-    {
-        return '<li class="disabled"><span>'.$text.'</span></li>';
-    }
+    abstract public function getDisabledTextWrapper($text);
 
     /**
      * Get HTML wrapper for active text.
@@ -82,10 +74,7 @@ class Presenter
      * @param  string  $text
      * @return string
      */
-    public function getActivePageWrapper($text)
-    {
-        return '<li class="active"><span>'.$text.'</span></li>';
-    }
+    abstract public function getActivePageWrapper($text);
 
     /**
      * Get HTML wrapper for the entire paginator.
@@ -93,10 +82,7 @@ class Presenter
      * @param  string  $content
      * @return string
      */
-    public function getPaginationWrapper($content)
-    {
-        return '<nav><ul class="pagination">' .$content .'</ul></nav>';
-    }
+    abstract public function getPaginationWrapper($content);
 
     /**
      * Render the Pagination contents.

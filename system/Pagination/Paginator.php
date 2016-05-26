@@ -8,6 +8,8 @@
 
 namespace Pagination;
 
+use Pagination\Factory;
+use Pagination\BootstrapPresenter;
 use Pagination\Presenter;
 use Support\Collection;
 use Support\Contracts\JsonableInterface;
@@ -25,6 +27,20 @@ use IteratorAggregate;
 class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorAggregate, JsonableInterface
 {
     /**
+     * The pagination factory.
+     *
+     * @var \Pagination\Factory
+     */
+    protected $factory;
+
+    /**
+     * The Presenter instance.
+     *
+     * @var \Pagination\Presenter
+     */
+    protected $presenter;
+
+    /**
      * The results for the current page.
      *
      * @var array
@@ -38,6 +54,13 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
      * @var int
      */
     protected $total;
+
+    /**
+     * Indicates if a pagination doing "quick" pagination has more items.
+     *
+     * @var bool
+     */
+    protected $hasMore;
 
     /**
      * The number of items per page.
@@ -96,83 +119,67 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     protected $query = array();
 
     /**
-     * The Presenter instance.
+     * The fragment to be appended to all URLs.
      *
-     * @var \Pagination\Presenter
+     * @var string
      */
-    protected $presenter;
+    protected $fragment;
 
 
     /**
      * Create a new Paginator instance.
      *
-     * @param  array  $items
-     * @param  int    $page
-     * @param  int    $total
-     * @param  int    $perPage
-     * @param  int    $last
+     * @param  \Pagination\Factory  $factory
+     * @param  array     $items
+     * @param  int       $total
+     * @param  int|null  $perPage
      * @return void
      */
-    protected function __construct($items, $page, $total, $perPage, $lastPage, $pageName)
+    public function __construct(Factory $factory, $items, $total, $perPage = null)
     {
-        $this->items       = $items;
-        $this->currentPage = $page;
-        $this->total       = $total;
-        $this->perPage     = $perPage;
-        $this->lastPage    = $lastPage;
-        $this->pageName    = $pageName;
+        $this->factory = $factory;
 
-        // Calculate the Item ranges.
-        $this->calculateItemRanges();
-    }
-
-    /**
-     * Create a new Paginator instance.
-     *
-     * @param  array      $results
-     * @param  int        $total
-     * @param  int        $perPage
-     * @return Paginator
-     */
-    public static function make($results, $total, $perPage, $pageName = 'offset')
-    {
-        $page = static::page($total, $perPage, $pageName);
-
-        $lastPage = ceil($total / $perPage);
-
-        return new static($results, $page, $total, $perPage, $lastPage, $pageName);
-    }
-
-    /**
-     * Get the current page from the request query string.
-     *
-     * @param  int  $total
-     * @param  int  $perPage
-     * @return int
-     */
-    public static function page($total, $perPage, $pageName = 'offset')
-    {
-        $page = Input::get($pageName, 1);
-
-        // Validate and adjust page if it is less than one or greater than the last page.
-        if (is_numeric($page) && ($page > ($last = ceil($total / $perPage)))) {
-            return ($last > 0) ? $last : 1;
+        if (is_null($perPage)) {
+            $this->perPage = (int) $total;
+            $this->hasMore = count($items) > $this->perPage;
+            $this->items = array_slice($items, 0, $this->perPage);
+        } else {
+            $this->items = $items;
+            $this->total = (int) $total;
+            $this->perPage = (int) $perPage;
         }
-
-        return static::isValidPageNumber($page) ? $page : 1;
     }
 
     /**
-     * Determine if a given page number is a valid page.
+     * Setup the pagination context (current and last page).
      *
-     * A valid page must be greater than or equal to one and a valid integer.
-     *
-     * @param  int   $page
-     * @return bool
+     * @return $this
      */
-    protected static function isValidPageNumber($page)
+    public function setupPaginationContext()
     {
-        return (($page >= 1) && (filter_var($page, FILTER_VALIDATE_INT) !== false));
+        $this->calculateCurrentAndLastPages();
+
+        $this->calculateItemRanges();
+
+        return $this;
+    }
+
+    /**
+     * Calculate the current and last pages for this instance.
+     *
+     * @return void
+     */
+    protected function calculateCurrentAndLastPages()
+    {
+        if ($this->isQuickPaginating()) {
+            $this->currentPage = $this->factory->getCurrentPage();
+
+            $this->lastPage = $this->hasMore ? $this->currentPage + 1 : $this->currentPage;
+        } else {
+            $this->lastPage = max((int) ceil($this->total / $this->perPage), 1);
+
+            $this->currentPage = $this->calculateCurrentPage($this->lastPage);
+        }
     }
 
     /**
@@ -185,6 +192,36 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
         $this->from = $this->total ? ($this->currentPage - 1) * $this->perPage + 1 : 0;
 
         $this->to = min($this->total, $this->currentPage * $this->perPage);
+    }
+
+    /**
+     * Get the current page for the request.
+     *
+     * @param  int  $lastPage
+     * @return int
+     */
+    protected function calculateCurrentPage($lastPage)
+    {
+        $page = $this->factory->getCurrentPage();
+
+        if (is_numeric($page) && $page > $lastPage) {
+            return ($lastPage > 0) ? $lastPage : 1;
+        }
+
+        return $this->isValidPageNumber($page) ? (int) $page : 1;
+    }
+
+    /**
+     * Determine if a given page number is a valid page.
+     *
+     * A valid page must be greater than or equal to one and a valid integer.
+     *
+     * @param  int   $page
+     * @return bool
+     */
+    protected function isValidPageNumber($page)
+    {
+        return (($page >= 1) && (filter_var($page, FILTER_VALIDATE_INT) !== false));
     }
 
     /**
@@ -208,14 +245,41 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     public function getUrl($page)
     {
         $params = array(
-            $this->pageName => $page,
+            $this->factory->getPageName() => $page,
         );
 
         if (count($this->query) > 0) {
             $params = array_merge($this->query, $params);
         }
 
-        return $this->getCurrentUrl() .'?' .http_build_query($params, null, '&');
+        $fragment = $this->buildFragment();
+
+        return $this->factory->getCurrentUrl() .'?' .http_build_query($params, null, '&') .$fragment;
+    }
+
+    /**
+     * Get / set the URL fragment to be appended to URLs.
+     *
+     * @param  string|null  $fragment
+     * @return $this|string
+     */
+    public function fragment($fragment = null)
+    {
+        if (is_null($fragment)) return $this->fragment;
+
+        $this->fragment = $fragment;
+
+        return $this;
+    }
+
+    /**
+     * Build the full fragment portion of a URL.
+     *
+     * @return string
+     */
+    protected function buildFragment()
+    {
+        return $this->fragment ? '#' .$this->fragment : '';
     }
 
     /**
@@ -264,55 +328,28 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     }
 
     /**
-     * Set the base URL in use by the paginator.
+     * Determine if the paginator is doing "quick" pagination.
      *
-     * @param  string  $baseUrl
-     * @return void
+     * @return bool
      */
-    public function setBaseUrl($baseUrl)
+    public function isQuickPaginating()
     {
-        $this->baseUrl = $baseUrl;
+        return is_null($this->total);
     }
 
     /**
-     * Get the root URL for the request.
+     * Get the current page for the request.
      *
-     * @return string
-     */
-    public function getCurrentUrl()
-    {
-        return $this->baseUrl ?: Request::url();
-    }
-
-    /**
-     * Set the input page parameter name used by the paginator.
-     *
-     * @param  string  $pageName
-     * @return void
-     */
-    public function setPageName($pageName)
-    {
-        $this->pageName = $pageName;
-    }
-
-    /**
-     * Get the input page parameter name used by the paginator.
-     *
-     * @return string
-     */
-    public function getPageName()
-    {
-        return $this->pageName;
-    }
-
-    /**
-     * Get the number of the current page.
-     *
+     * @param  int|null  $total
      * @return int
      */
-    public function getCurrentPage()
+    public function getCurrentPage($total = null)
     {
-        return $this->currentPage;
+        if (is_null($total)) {
+            return $this->currentPage;
+        }
+
+        return min($this->currentPage, (int) ceil($total / $this->perPage));
     }
 
     /**
@@ -397,6 +434,27 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     }
 
     /**
+     * Set the base URL in use by the paginator.
+     *
+     * @param  string  $baseUrl
+     * @return void
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->factory->setBaseUrl($baseUrl);
+    }
+
+    /**
+     * Get the pagination factory.
+     *
+     * @return \Pagination\Factory
+     */
+    public function getFactory()
+    {
+        return $this->factory;
+    }
+
+    /**
      * Get a Presenter instance.
      *
      * @return \Pagination\Presenter
@@ -407,7 +465,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
             return $this->presenter;
         }
 
-        return $this->presenter = new Presenter($this);
+        return $this->presenter = new BootstrapPresenter($this);
     }
 
     /**

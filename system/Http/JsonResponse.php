@@ -46,9 +46,11 @@ class JsonResponse extends \Symfony\Component\HttpFoundation\JsonResponse {
      */
     public function setData($data = array())
     {
-        $this->data = ($data instanceof JsonableInterface)
-                                   ? $data->toJson($this->jsonOptions)
-                                   : json_encode($data, $this->jsonOptions);
+        if ($data instanceof JsonableInterface) {
+            $this->data = $data->toJson($this->jsonOptions)
+        } else {
+            $this->data = json_encode($data, $this->jsonOptions);
+        }
 
         return $this->update();
     }

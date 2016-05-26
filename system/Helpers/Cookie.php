@@ -8,6 +8,7 @@
 
 namespace Helpers;
 
+use Core\Config;
 use Encryption\DecryptException;
 use Support\Facades\Crypt;
 
@@ -42,9 +43,12 @@ class Cookie
      */
     public static function set($key, $value, $expiry = self::FOURYEARS, $path = '/', $domain = false)
     {
+        // Retrieve the Session configuration.
+        $config = Config::get('session');
+
         // Encrypt the value
-        if ($key != 'PHPSESSID') {
-            // Just to be safe; when the end-user wants to manipulate the PHPSESSID.
+        if (($key != 'PHPSESSID') && ($config['encrypt'] == true)) {
+            // // No PHPSESSID and end-user want the Cookie encryption.
             $value = Crypt::encrypt($value);
         }
 
@@ -77,8 +81,11 @@ class Cookie
 
         $cookie = $_COOKIE[$key];
 
-        if ($key == 'PHPSESSID') {
-            // Just to be safe; when the end-user wants to retrieve the PHPSESSID.
+        // Retrieve the Session configuration.
+        $config = Config::get('session');
+
+        if (($key == 'PHPSESSID') || ($config['encrypt'] == false)) {
+            // A PHPSESSID or when end-user want not Cookie encryption.
             return $cookie;
         }
 

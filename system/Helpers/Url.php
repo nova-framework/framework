@@ -12,7 +12,7 @@ use Helpers\Session;
 use Helpers\Inflector;
 
 use Support\Facades\Redirect;
-use Support\Facades\Session as SessionManager;
+use Support\Facades\Session as SessionStore;
 
 
 /**
@@ -23,21 +23,20 @@ class Url
     /**
      * Redirect to a chosen url.
      *
-     * @param string $url      the url to redirect to
-     * @param bool   $fullPath if true use only url in redirect instead of using DIR
-     * @param int $code the server status code for the redirection
+     * @param string $url      the URL to redirect to
+     * @param bool   $fullPath if true use only url in redirect instead of preparing a local URL
+     * @param int $code the Server Status code for the redirection
      */
-    public static function redirect($url = null, $fullPath = false, $code = 200)
+    public static function redirect($url = null, $fullPath = false, $code = 302)
     {
-        // Create a Response instance.
-        if ($fullPath === false) {
-            $response = Redirect::to(SITEURL .$url, $code);
-        } else {
-            $response = Redirect::away($url, $code);
-        }
+        // Process the URL according with fullPath.
+        $url = ($fullPath === false) ? $url : site_url($url);
 
-        // Finish the Session and send the Response.
-        SessionManager::finish($response);
+        // Create a Response instance.
+        $response = Redirect::to($url, $code);
+
+        // Finish the Session (and send the Response).
+        SessionStore::finish($response);
 
         // Quit the Nova.
         exit();

@@ -16,13 +16,6 @@ use Database\ORM\Model;
 class Builder extends BaseBuilder
 {
     /**
-     * The Model being queried.
-     *
-     * @var \Database\ORM\Model
-     */
-    protected $model = null;
-
-    /**
      * Create a new Builder instance.
      *
      * @return void
@@ -163,29 +156,6 @@ class Builder extends BaseBuilder
     public function delete()
     {
         return parent::delete();
-    }
-
-    /**
-     * Get the Model instance being queried.
-     *
-     * @return \Database\ORM\Model
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    /**
-     * Set a Model instance for the Model being queried.
-     *
-     * @param  \Database\ORM\Model|null  $model
-     * @return \Database\ORM\Builder
-     */
-    public function setModel($model)
-    {
-        $this->model = $model;
-
-        return $this;
     }
 }
 

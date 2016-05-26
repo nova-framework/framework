@@ -9,7 +9,7 @@ use Database\ORM\Builder;
 class Pivot extends Model
 {
     /**
-     * The parent model of the relationship.
+     * The parent Model of the relationship.
      *
      * @var \Database\ORM\Model
      */
@@ -35,6 +35,7 @@ class Pivot extends Model
      * @var array
      */
     protected $guarded = array();
+
 
     /**
      * Create a new pivot model instance.

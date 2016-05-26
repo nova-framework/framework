@@ -9,6 +9,7 @@
 
 use Core\Config;
 
+
 Config::set('languages', array(
     'cz' => array('info' => 'Czech',     'name' => 'čeština',    'locale' => 'cz_CZ', 'dir' => 'ltr'),
     'da' => array('info' => 'Danish',    'name' => 'Dansk',      'locale' => 'da_DK', 'dir' => 'ltr'),

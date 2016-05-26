@@ -58,9 +58,9 @@ class BelongsToMany extends Relation
      */
     public function __construct(Builder $query, Model $parent, $table, $foreignKey, $otherKey, $relationName = null)
     {
-        $this->table = $table;
-        $this->otherKey = $otherKey;
-        $this->foreignKey = $foreignKey;
+        $this->table        = $table;
+        $this->otherKey     = $otherKey;
+        $this->foreignKey   = $foreignKey;
         $this->relationName = $relationName;
 
         parent::__construct($query, $parent);
@@ -191,8 +191,7 @@ class BelongsToMany extends Relation
         // To hydrate the pivot relationship, we will just gather the pivot attributes
         // and create a new Pivot model, which is basically a dynamic model that we
         // will set the attributes, table, and connections on so it they be used.
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $pivot = $this->newExistingPivot($this->cleanPivotAttributes($model));
 
             $model->setRelation('pivot', $pivot);
@@ -209,13 +208,11 @@ class BelongsToMany extends Relation
     {
         $values = array();
 
-        foreach ($model->getAttributes() as $key => $value)
-        {
+        foreach ($model->getAttributes() as $key => $value) {
             // To get the pivots attributes we will just take any of the attributes which
             // begin with "pivot_" and add those to this arrays, as well as unsetting
             // them from the parent's models since they exist in a different table.
-            if (strpos($key, 'pivot_') === 0)
-            {
+            if (strpos($key, 'pivot_') === 0) {
                 $values[substr($key, 6)] = $value;
 
                 unset($model->$key);
@@ -246,12 +243,9 @@ class BelongsToMany extends Relation
      */
     public function getRelationCountQuery(Builder $query, Builder $parent)
     {
-        if ($parent->getQuery()->from == $query->getQuery()->from)
-        {
+        if ($parent->getQuery()->from == $query->getQuery()->from) {
             return $this->getRelationCountQueryForSelfJoin($query, $parent);
-        }
-        else
-        {
+        } else {
             $this->setJoin($query);
 
             return parent::getRelationCountQuery($query, $parent);
@@ -316,8 +310,7 @@ class BelongsToMany extends Relation
         // relationships when they are retrieved and hydrated into the models.
         $columns = array();
 
-        foreach (array_merge($defaults, $this->pivotColumns) as $column)
-        {
+        foreach (array_merge($defaults, $this->pivotColumns) as $column) {
             $columns[] = $this->table.'.'.$column.' as pivot_'.$column;
         }
 
@@ -380,8 +373,7 @@ class BelongsToMany extends Relation
      */
     public function initRelation(array $models, $relation)
     {
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             $model->setRelation($relation, $this->related->newCollection());
         }
 
@@ -577,8 +569,7 @@ class BelongsToMany extends Relation
         // Next, we will take the differences of the currents and given IDs and detach
         // all of the entities that exist in the "current" array but are not in the
         // the array of the IDs given to the method which will complete the sync.
-        if ($detaching && count($detach) > 0)
-        {
+        if ($detaching && count($detach) > 0) {
             $this->detach($detach);
 
             $changes['detached'] = (array) array_map('intval', $detach);
@@ -644,7 +635,7 @@ class BelongsToMany extends Relation
             // Now we'll try to update an existing pivot record with the attributes that were
             // given to the method. If the model is actually updated we will add it to the
             // list of updated pivot records so we return them back out to the consumer.
-            elseif (count($attributes) > 0) {
+            else if (count($attributes) > 0) {
                 if ($this->updateExistingPivot($id, $attributes, $touch)) {
                     $changes['updated'][] = (int) $id;
                 }
@@ -788,7 +779,7 @@ class BelongsToMany extends Relation
     {
         $fresh = $this->parent->freshTimestamp();
 
-        if ( ! $exists) $record[$this->createdAt()] = $fresh;
+        if (! $exists) $record[$this->createdAt()] = $fresh;
 
         $record[$this->updatedAt()] = $fresh;
 

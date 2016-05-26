@@ -9,6 +9,7 @@
 
 use Core\Config;
 
+
 Config::set('authentication', array(
     //'model'      => 'Auth\Model',
     'model'      => 'App\Modules\Users\Models\Users',

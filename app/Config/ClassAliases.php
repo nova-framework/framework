@@ -9,6 +9,7 @@
 
 use Core\Config;
 
+
 Config::set('classAliases', array(
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',

@@ -11,6 +11,7 @@ namespace App\Controllers;
 use Core\View;
 use Core\Controller;
 
+use Session;
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.
@@ -46,6 +47,8 @@ class Welcome extends Controller
      */
     public function subPage()
     {
+        echo '<pre>' .var_export(Session::all(), true) .'</pre>';
+
         return View::make('Welcome/SubPage')
             ->shares('title', $this->trans('subpageText'))
             ->withWelcomeMessage($this->trans('subpageMessage'));

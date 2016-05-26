@@ -19,7 +19,8 @@
         "phpmailer/phpmailer": "5.2.*",
         "phpfastcache/phpfastcache": "4.0.*",
         "symfony/http-foundation": "^3.0",
-        "patchwork/utf8": "~1.2"
+        "patchwork/utf8": "~1.2",
+        "nesbot/carbon": "^1.21"
     },
     "autoload": {
         "psr-4": {

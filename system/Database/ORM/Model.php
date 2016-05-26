@@ -13,20 +13,24 @@ use Database\Connection;
 use Database\Query\Builder as QueryBuilder;
 use Database\ORM\Builder;
 
+use Database\ORM\Relations\Pivot;
+use Database\ORM\Relations\Relation;
+
 use Database\ORM\Relations\BelongsTo;
 use Database\ORM\Relations\BelongsToMany;
 use Database\ORM\Relations\HasOne;
 use Database\ORM\Relations\HasMany;
 use Database\ORM\Relations\HasManyThrough;
+
 use Database\ORM\Relations\MorphTo;
 use Database\ORM\Relations\MorphToMany;
 use Database\ORM\Relations\MorphOne;
 use Database\ORM\Relations\MorphMany;
-use Database\ORM\Relations\Pivot;
-use Database\ORM\Relations\Relation;
 
 use Support\Contracts\ArrayableInterface;
 use Support\Contracts\JsonableInterface;
+
+use Carbon\Carbon;
 
 use ArrayAccess;
 use DateTime;
@@ -65,6 +69,20 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     protected $perPage = 15;
 
     /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = true;
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
      * The Model's attributes.
      *
      * @var array
@@ -84,6 +102,20 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @var array
      */
     protected $relations = array();
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = array();
+
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array
+     */
+    protected $visible = array();
 
     /**
      * The accessors to append to the model's array form.
@@ -107,6 +139,20 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     protected $guarded = array('*');
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = array();
+
+    /**
+     * The relationships that should be touched on save.
+     *
+     * @var array
+     */
+    protected $touches = array();
+
+    /**
      * The relations to eager load on every query.
      *
      * @var array
@@ -127,6 +173,19 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public $exists = false;
 
+    /**
+     * Indicates whether attributes are snake cased on arrays.
+     *
+     * @var bool
+     */
+    public static $snakeAttributes = true;
+
+    /**
+     * The array of booted models.
+     *
+     * @var array
+     */
+    protected static $booted = array();
 
     /**
      * Indicates if all mass assignment is enabled.
@@ -136,12 +195,32 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     protected static $unguarded = true;
 
     /**
+     * The cache of the mutated attributes for each class.
+     *
+     * @var array
+     */
+    protected static $mutatorCache = array();
+
+    /**
      * The many to many relationship methods.
      *
      * @var array
      */
     public static $manyMethods = array('belongsToMany', 'morphToMany', 'morphedByMany');
 
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'created_at';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'updated_at';
 
     /**
      * Create a new Model instance.
@@ -156,9 +235,50 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
             $this->connection = $connection;
         }
 
-        $this->fill($attributes);
+        $this->bootIfNotBooted();
 
         $this->syncOriginal();
+
+        $this->fill($attributes);
+    }
+
+    /**
+     * Check if the Model needs to be booted and if so, do it.
+     *
+     * @return void
+     */
+    protected function bootIfNotBooted()
+    {
+        if (! isset(static::$booted[get_class($this)])) {
+            static::$booted[get_class($this)] = true;
+
+            static::boot();
+        }
+    }
+
+    /**
+     * The "booting" method of the Model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        $class = get_called_class();
+
+        static::$mutatorCache[$class] = array();
+
+        // Here we will extract all of the mutated attributes so that we can quickly
+        // spin through them after we export models to their array form, which we
+        // need to be fast. This will let us always know the attributes mutate.
+        foreach (get_class_methods($class) as $method) {
+            if (preg_match('/^get(.+)Attribute$/', $method, $matches)) {
+                if (static::$snakeAttributes) {
+                    $matches[1] = Inflector::tableize($matches[1]);
+                }
+
+                static::$mutatorCache[$class][] = lcfirst($matches[1]);
+            }
+        }
     }
 
     /**
@@ -805,6 +925,12 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function delete()
     {
         if ($this->exists) {
+            // Here, we'll touch the owning models, verifying these timestamps get updated
+            // for the models. This will allow any caching to get broken on the parents
+            // by the timestamp. Then we will go ahead and delete the model instance.
+            $this->touchOwners();
+
+            //
             $query = $this->newQuery();
 
             $query->where($this->getKeyName(), $this->getKey())->delete();
@@ -912,6 +1038,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
 
         if ($saved) {
             $this->syncOriginal();
+
+            if (array_get($options, 'touch', true)) $this->touchOwners();
         }
 
         return $saved;
@@ -928,7 +1056,18 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         $dirty = $this->getDirty();
 
         if (count($dirty) > 0) {
-            $this->setKeysForSaveQuery($query)->update($dirty);
+            // First we need to create a fresh query instance and touch the creation and
+            // update timestamp on the model which are maintained by us for developer
+            // convenience. Then we will just continue saving the model instances.
+            if ($this->timestamps) {
+                $this->updateTimestamps();
+            }
+
+            $dirty = $this->getDirty();
+
+            if (count($dirty) > 0) {
+                $this->setKeysForSaveQuery($query)->update($dirty);
+            }
         }
 
         return true;
@@ -942,17 +1081,58 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     protected function performInsert(Builder $query)
     {
+        if ($this->timestamps) {
+            $this->updateTimestamps();
+        }
+
         $attributes = $this->attributes;
 
-        $keyName = $this->getKeyName();
-
-        $id = $query->insertGetId($attributes);
-
-        $this->setAttribute($keyName, $id);
+        if ($this->incrementing) {
+            $this->insertAndSetId($query, $attributes);
+        } else {
+            $query->insert($attributes);
+        }
 
         $this->exists = true;
 
         return true;
+    }
+
+    /**
+     * Insert the given attributes and set the ID on the Model.
+     *
+     * @param  \Database\ORM\Builder  $query
+     * @param  array  $attributes
+     * @return void
+     */
+    protected function insertAndSetId(Builder $query, $attributes)
+    {
+        $id = $query->insertGetId($attributes, $keyName = $this->getKeyName());
+
+        $this->setAttribute($keyName, $id);
+    }
+
+    /**
+     * Touch the owning relations of the Model.
+     *
+     * @return void
+     */
+    public function touchOwners()
+    {
+        foreach ($this->touches as $relation) {
+            $this->$relation()->touch();
+        }
+    }
+
+    /**
+     * Determine if the model touches a given relation.
+     *
+     * @param  string  $relation
+     * @return bool
+     */
+    public function touches($relation)
+    {
+        return in_array($relation, $this->touches);
     }
 
     /**
@@ -982,6 +1162,161 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         return $this->getAttribute($this->getKeyName());
     }
 
+    /**
+     * Update the model's update timestamp.
+     *
+     * @return bool
+     */
+    public function touch()
+    {
+        $this->updateTimestamps();
+
+        return $this->save();
+    }
+
+    /**
+     * Update the creation and update timestamps.
+     *
+     * @return void
+     */
+    protected function updateTimestamps()
+    {
+        $time = $this->freshTimestamp();
+
+        if ( ! $this->isDirty(static::UPDATED_AT)) {
+            $this->setUpdatedAt($time);
+        }
+
+        if ( ! $this->exists && ! $this->isDirty(static::CREATED_AT)) {
+            $this->setCreatedAt($time);
+        }
+    }
+
+    /**
+     * Set the value of the "created at" attribute.
+     *
+     * @param  mixed  $value
+     * @return void
+     */
+    public function setCreatedAt($value)
+    {
+        $this->{static::CREATED_AT} = $value;
+    }
+
+    /**
+     * Set the value of the "updated at" attribute.
+     *
+     * @param  mixed  $value
+     * @return void
+     */
+    public function setUpdatedAt($value)
+    {
+        $this->{static::UPDATED_AT} = $value;
+    }
+
+    /**
+     * Get the name of the "created at" column.
+     *
+     * @return string
+     */
+    public function getCreatedAtColumn()
+    {
+        return static::CREATED_AT;
+    }
+
+    /**
+     * Get the name of the "updated at" column.
+     *
+     * @return string
+     */
+    public function getUpdatedAtColumn()
+    {
+        return static::UPDATED_AT;
+    }
+
+    /**
+     * Get a fresh timestamp for the model.
+     *
+     * @return \Carbon\Carbon
+     */
+    public function freshTimestamp()
+    {
+        return new Carbon();
+    }
+
+    /**
+     * Get a fresh timestamp for the model.
+     *
+     * @return string
+     */
+    public function freshTimestampString()
+    {
+        return $this->fromDateTime($this->freshTimestamp());
+    }
+
+    /**
+     * Get a new Query for the Model's table.
+     *
+     * @return \Database\ORM\Builder
+     */
+    public function newQuery()
+    {
+        $builder = $this->newBuilder($this->newBaseQueryBuilder());
+
+        // Once we have the query builders, we will set the model instances so the
+        // builder can easily access any information it may need from the model
+        // while it is constructing and executing various queries against it.
+        return $builder->setModel($this)->with($this->with);
+    }
+
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param  \Database\Query\Builder $query
+     * @return \Database\ORM\Builder|static
+     */
+    public function newBuilder($query)
+    {
+        return new Builder($query);
+    }
+
+    /**
+     * Get a new QueryBuilder instance for the Connection.
+     *
+     * @return \Database\Query\Builder
+     */
+    protected function newBaseQueryBuilder()
+    {
+        $connection = $this->getConnection();
+
+        return new QueryBuilder($connection);
+    }
+
+    /**
+     * Create a new ORM Collection instance.
+     *
+     * @param  array  $models
+     * @return \Database\ORM\Collection
+     */
+    public function newCollection(array $models = array())
+    {
+        return new Collection($models);
+    }
+
+    /**
+     * Create a new pivot model instance.
+     *
+     * @param  \Database\ORM\Model  $parent
+     * @param  array   $attributes
+     * @param  string  $table
+     * @param  bool    $exists
+     * @return \Database\ORM\Relations\Pivot
+     */
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    {
+        return new Pivot($parent, $attributes, $table, $exists);
+    }
+
     public function getTable()
     {
        if (isset($this->table)) return $this->table;
@@ -989,6 +1324,17 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
        $baseName = Inflector::pluralize(class_basename($this));
 
        return str_replace('\\', '', Inflector::tableize($baseName));
+    }
+
+    /**
+     * Set the table associated with the model.
+     *
+     * @param  string  $table
+     * @return void
+     */
+    public function setTable($table)
+    {
+        $this->table = $table;
     }
 
     /**
@@ -1019,6 +1365,16 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function getQualifiedKeyName()
     {
         return $this->getTable() .'.' .$this->getKeyName();
+    }
+
+    /**
+     * Determine if the model uses timestamps.
+     *
+     * @return bool
+     */
+    public function usesTimestamps()
+    {
+        return $this->timestamps;
     }
 
     /**
@@ -1077,6 +1433,49 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function getForeignKey()
     {
         return Inflector::tableize(class_basename($this)).'_id';
+    }
+
+    /**
+     * Get the hidden attributes for the model.
+     *
+     * @return array
+     */
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * Set the hidden attributes for the model.
+     *
+     * @param  array  $hidden
+     * @return void
+     */
+    public function setHidden(array $hidden)
+    {
+        $this->hidden = $hidden;
+    }
+
+    /**
+     * Set the visible attributes for the model.
+     *
+     * @param  array  $visible
+     * @return void
+     */
+    public function setVisible(array $visible)
+    {
+        $this->visible = $visible;
+    }
+
+    /**
+     * Set the accessors to append to model arrays.
+     *
+     * @param  array  $appends
+     * @return void
+     */
+    public function setAppends(array $appends)
+    {
+        $this->appends = $appends;
     }
 
     /**
@@ -1154,13 +1553,11 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function isFillable($key)
     {
-        if (static::$unguarded) {
-            return true;
-        } else if (in_array($key, $this->fillable)) {
-            return true;
-        } else if ($this->isGuarded($key)) {
-            return false;
-        }
+        if (static::$unguarded)  return true;
+
+        if (in_array($key, $this->fillable)) return true;
+
+        if ($this->isGuarded($key)) return false;
 
         return (empty($this->fillable) && ! str_starts_with($key, '_'));
     }
@@ -1187,66 +1584,58 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
-     * Get a new Query for the Model's table.
+     * Remove the table name from a given key.
      *
-     * @return \Database\ORM\Builder
+     * @param  string  $key
+     * @return string
      */
-    public function newQuery()
+    protected function removeTableFromKey($key)
     {
-        $builder = $this->newBuilder($this->newBaseQueryBuilder());
+        if (! str_contains($key, '.')) return $key;
 
-        // Once we have the query builders, we will set the model instances so the
-        // builder can easily access any information it may need from the model
-        // while it is constructing and executing various queries against it.
-        return $builder->setModel($this)->with($this->with);
+        return last(explode('.', $key));
     }
 
     /**
-     * Create a new Eloquent query builder for the model.
+     * Get the relationships that are touched on save.
      *
-     * @param  \Database\Query\Builder $query
-     * @return \Database\ORM\Builder|static
+     * @return array
      */
-    public function newBuilder($query)
+    public function getTouchedRelations()
     {
-        return new Builder($query);
+        return $this->touches;
     }
 
     /**
-     * Get a new QueryBuilder instance for the Connection.
+     * Set the relationships that are touched on save.
      *
-     * @return \Database\Query\Builder
+     * @param  array  $touches
+     * @return void
      */
-    protected function newBaseQueryBuilder()
+    public function setTouchedRelations(array $touches)
     {
-        $connection = $this->getConnection();
-
-        return new QueryBuilder($connection);
+        $this->touches = $touches;
     }
 
     /**
-     * Create a new ORM Collection instance.
+     * Get the value indicating whether the IDs are incrementing.
      *
-     * @param  array  $models
-     * @return \Database\ORM\Collection
+     * @return bool
      */
-    public function newCollection(array $models = array())
+    public function getIncrementing()
     {
-        return new Collection($models);
+        return $this->incrementing;
     }
 
     /**
-     * Create a new pivot model instance.
+     * Set whether IDs are incrementing.
      *
-     * @param  \Database\ORM\Model  $parent
-     * @param  array   $attributes
-     * @param  string  $table
-     * @param  bool    $exists
-     * @return \Database\ORM\Relations\Pivot
+     * @param  bool  $value
+     * @return void
      */
-    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    public function setIncrementing($value)
     {
-        return new Pivot($parent, $attributes, $table, $exists);
+        $this->incrementing = $value;
     }
 
     /**
@@ -1280,6 +1669,15 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function attributesToArray()
     {
         $attributes = $this->getArrayableAttributes();
+
+        // If an attribute is a date, we will cast it to a string after converting it
+        // to a DateTime / Carbon instance. This is so we will get some consistent
+        // formatting while accessing attributes vs. arraying / JSONing a model.
+        foreach ($this->getDates() as $key) {
+            if (! isset($attributes[$key])) continue;
+
+            $attributes[$key] = (string) $this->asDateTime($attributes[$key]);
+        }
 
         // We want to spin through all the mutated attributes for this model and call
         // the mutator for the attribute. We cache off every mutated attributes so
@@ -1421,6 +1819,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
 
         if ($this->hasGetMutator($key)) {
             return $this->mutateAttribute($key, $value);
+        } else if (in_array($key, $this->getDates())) {
+            if ($value) return $this->asDateTime($value);
         }
 
         return $value;
@@ -1473,6 +1873,103 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Get the attributes that should be converted to dates.
+     *
+     * @return array
+     */
+    public function getDates()
+    {
+        $defaults = array(static::CREATED_AT, static::UPDATED_AT);
+
+        return array_merge($this->dates, $defaults);
+    }
+
+    /**
+     * Convert a DateTime to a storable string.
+     *
+     * @param  \DateTime|int  $value
+     * @return string
+     */
+    public function fromDateTime($value)
+    {
+        $format = $this->getDateFormat();
+
+        // If the value is already a DateTime instance, we will just skip the rest of
+        // these checks since they will be a waste of time, and hinder performance
+        // when checking the field. We will just return the DateTime right away.
+        if ($value instanceof DateTime) {
+            //
+        }
+
+        // If the value is totally numeric, we will assume it is a UNIX timestamp and
+        // format the date as such. Once we have the date in DateTime form we will
+        // format it according to the proper format for the database connection.
+        else if (is_numeric($value)) {
+            $value = Carbon::createFromTimestamp($value);
+        }
+
+        // If the value is in simple year, month, day format, we will format it using
+        // that setup. This is for simple "date" fields which do not have hours on
+        // the field. This conveniently picks up those dates and format correct.
+        elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
+            $value = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
+        }
+
+        // If this value is some other type of string, we'll create the DateTime with
+        // the format used by the database connection. Once we get the instance we
+        // can return back the finally formatted DateTime instances to the devs.
+        elseif (! $value instanceof DateTime) {
+            $value = Carbon::createFromFormat($format, $value);
+        }
+
+        return $value->format($format);
+    }
+
+    /**
+     * Return a timestamp as DateTime object.
+     *
+     * @param  mixed  $value
+     * @return \Carbon\Carbon
+     */
+    protected function asDateTime($value)
+    {
+        // If this value is an integer, we will assume it is a UNIX timestamp's value
+        // and format a Carbon object from this timestamp. This allows flexibility
+        // when defining your date fields as they might be UNIX timestamps here.
+        if (is_numeric($value)) {
+            return Carbon::createFromTimestamp($value);
+        }
+
+        // If the value is in simply year, month, day format, we will instantiate the
+        // Carbon instances from that format. Again, this provides for simple date
+        // fields on the database, while still supporting Carbonized conversion.
+        else if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
+            return Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
+        }
+
+        // Finally, we will just assume this date is in the format used by default on
+        // the database connection and use that format to create the Carbon object
+        // that is returned back out to the developers after we convert it here.
+        else if ( ! $value instanceof DateTime) {
+            $format = $this->getDateFormat();
+
+            return Carbon::createFromFormat($format, $value);
+        }
+
+        return Carbon::instance($value);
+    }
+
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    protected function getDateFormat()
+    {
+        return $this->getConnection()->getDateFormat();
+    }
+
+    /**
      * Get the value of an attribute using its mutator.
      *
      * @param  string  $key
@@ -1513,6 +2010,10 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
             $method = 'set' .Inflector::classify($key) .'Attribute';
 
             return call_user_func(array($this, $method), $value);
+        } else if (in_array($key, $this->getDates())) {
+            if ($value) {
+                $value = $this->fromDateTime($value);
+            }
         }
 
         $this->attributes[$key] = $value;
@@ -1718,6 +2219,22 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         $this->connection = $name;
 
         return $this;
+    }
+
+    /**
+     * Get the mutated attributes for a given instance.
+     *
+     * @return array
+     */
+    public function getMutatedAttributes()
+    {
+        $class = get_class($this);
+
+        if (isset(static::$mutatorCache[$class])) {
+            return static::$mutatorCache[get_class($this)];
+        }
+
+        return array();
     }
 
     /**

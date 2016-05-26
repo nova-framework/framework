@@ -9,6 +9,7 @@ use Helpers\Url;
 use Event;
 use Validator;
 use Input;
+use Redirect;
 use Request;
 use Session;
 
@@ -36,6 +37,10 @@ class Demo extends Controller
     public function index()
     {
         echo 'hello';
+
+        Session::set('the_test', 'this is a test!!!');
+
+        return Redirect::to('subpage');
     }
 
     public function password($password)

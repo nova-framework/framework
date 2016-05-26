@@ -1,4 +1,10 @@
 <?php
+/**
+ * Factory - Implements the Pagination Factory.
+ *
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ */
 
 namespace Pagination;
 

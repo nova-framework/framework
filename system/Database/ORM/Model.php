@@ -13,11 +13,21 @@ use Database\Connection;
 use Database\Query\Builder as QueryBuilder;
 use Database\ORM\Builder;
 
+use Database\ORM\Relations\BelongsTo;
+use Database\ORM\Relations\BelongsToMany;
+use Database\ORM\Relations\HasOne;
+use Database\ORM\Relations\HasMany;
+use Database\ORM\Relations\HasManyThrough;
+use Database\ORM\Relations\Pivot;
+use Database\ORM\Relations\Relation;
+
 use Support\Contracts\ArrayableInterface;
 use Support\Contracts\JsonableInterface;
 
-use \PDO;
 use ArrayAccess;
+use DateTime;
+use LogicException;
+use PDO;
 
 
 class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
@@ -65,6 +75,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     protected $original = array();
 
     /**
+     * The loaded relationships for the model.
+     *
+     * @var array
+     */
+    protected $relations = array();
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -93,6 +110,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public $exists = false;
 
     /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = array();
+
+    /**
      * Create a new Model instance.
      *
      * @param  array  $attributes
@@ -111,6 +135,116 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Fill the Model with an array of attributes.
+     *
+     * @param  array  $attributes
+     * @return Model
+     */
+    public function fill(array $attributes)
+    {
+        foreach ($this->fillableFromArray($attributes) as $key => $value) {
+            if ($this->isFillable($key)) {
+                $this->setAttribute($key, $value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the fillable attributes of a given array.
+     *
+     * @param  array  $attributes
+     * @return array
+     */
+    protected function fillableFromArray(array $attributes)
+    {
+        if ((count($this->fillable) > 0) && ! static::$unguarded) {
+            return array_intersect_key($attributes, array_flip($this->fillable));
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Create a new instance of the given Model.
+     *
+     * @param  array  $attributes
+     * @param  bool   $exists
+     * @return Model
+     */
+    public function newInstance($attributes = array(), $exists = false)
+    {
+        $model = new static((array) $attributes);
+
+        $model->exists = $exists;
+
+        return $model;
+    }
+
+    /**
+     * Create a new Model instance that is existing.
+     *
+     * @param  array  $attributes
+     * @return \Database\ORM\Model|static
+     */
+    public function newFromBuilder($attributes = array())
+    {
+        $instance = $this->newInstance(array(), true);
+
+        $instance->setRawAttributes((array) $attributes, true);
+
+        return $instance;
+    }
+
+    /**
+     * Create a collection of Models from plain arrays.
+     *
+     * @param  array  $items
+     * @param  string  $connection
+     * @return array
+     */
+    public static function hydrate(array $items, $connection = null)
+    {
+        $models = array();
+
+        foreach ($items as $item) {
+            $item = (array) $item;
+
+            $model = $instance->newFromBuilder($item);
+
+            if (! is_null($connection)) {
+                $model->setConnection($connection);
+            }
+
+            array_push($models, $model);
+        }
+
+        return $models;
+    }
+
+    /**
+     * Create a collection of Models from a raw query.
+     *
+     * @param  string  $query
+     * @param  array  $bindings
+     * @param  string  $connection
+     * @return \Database\ORM\Model|static[]
+     */
+    public static function hydrateRaw($query, $bindings = array(), $connection = null)
+    {
+        $instance = new static();
+
+        if (! is_null($connection)) {
+            $instance->setConnection($connection);
+        }
+
+        $items = $instance->getConnection()->select($query, $bindings);
+
+        return static::hydrate($items, $connection);
+    }
+
+    /**
      * Create a new Model instance, save it, then return the instance.
      *
      * @param  array  $attributes
@@ -126,6 +260,53 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Get the first record matching the attributes or create it.
+     *
+     * @param  array  $attributes
+     * @return \Database\ORM\Model
+     */
+    public static function firstOrCreate(array $attributes)
+    {
+        if (! is_null($instance = static::firstByAttributes($attributes))) {
+            return $instance;
+        }
+
+        return static::create($attributes);
+    }
+
+    /**
+     * Get the first record matching the attributes or instantiate it.
+     *
+     * @param  array  $attributes
+     * @return \Database\ORM\Model
+     */
+    public static function firstOrNew(array $attributes)
+    {
+        if (! is_null($instance = static::firstByAttributes($attributes))) {
+            return $instance;
+        }
+
+        return new static($attributes);
+    }
+
+    /**
+     * Get the first model for the given attributes.
+     *
+     * @param  array  $attributes
+     * @return \Database\ORM\Model|null
+     */
+    protected static function firstByAttributes($attributes)
+    {
+        $query = static::query();
+
+        foreach ($attributes as $key => $value) {
+            $query->where($key, $value);
+        }
+
+        return $query->first() ?: null;
+    }
+
+    /**
      * Begin querying the Model.
      *
      * @return \Database\ORM\Builder|static
@@ -133,6 +314,21 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public static function query()
     {
         $instance = new static();
+
+        return $instance->newQuery();
+    }
+
+    /**
+     * Begin querying the Model on a given connection.
+     *
+     * @param  string  $connection
+     * @return \Database\ORM\Builder|static
+     */
+    public static function on($connection = null)
+    {
+        $instance = new static();
+
+        $instance->setConnection($connection);
 
         return $instance->newQuery();
     }
@@ -192,6 +388,222 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         if (! is_null($model = static::find($id, $columns))) return $model;
 
         throw new \Exception('No query results for Model [' .get_called_class() .']');
+    }
+
+    /**
+     * Eager load relations on the Model.
+     *
+     * @param  array|string  $relations
+     * @return \Database\ORM\Model
+     */
+    public function load($relations)
+    {
+        if (is_string($relations)) $relations = func_get_args();
+
+        $query = $this->newQuery()->with($relations);
+
+        $query->eagerLoadRelations(array($this));
+
+        return $this;
+    }
+
+    /**
+     * Being querying a Model with eager loading.
+     *
+     * @param  array|string  $relations
+     * @return \Database\ORM\Builder|static
+     */
+    public static function with($relations)
+    {
+        if (is_string($relations)) $relations = func_get_args();
+
+        $instance = new static();
+
+        return $instance->newQuery()->with($relations);
+    }
+
+    /**
+     * Define a one-to-one relationship.
+     *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+     * @return \Database\ORM\Relations\HasOne
+     */
+    public function hasOne($related, $foreignKey = null, $localKey = null)
+    {
+        $foreignKey = $foreignKey ?: $this->getForeignKey();
+
+        $instance = new $related;
+
+        $localKey = $localKey ?: $this->getKeyName();
+
+        return new HasOne($instance->newQuery(), $this, $instance->getTable() .'.' .$foreignKey, $localKey);
+    }
+
+    /**
+     * Define an inverse one-to-one or many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $otherKey
+     * @param  string  $relation
+     * @return \Database\ORM\Relations\BelongsTo
+     */
+    public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
+    {
+        // If no relation name was given, we will use this debug backtrace to extract
+        // the calling method's name and use that as the relationship name as most
+        // of the time this will be what we desire to use for the relationships.
+        if (is_null($relation)) {
+            list(, $caller) = debug_backtrace(false);
+
+            $relation = $caller['function'];
+        }
+
+        // If no foreign key was supplied, we can use a backtrace to guess the proper
+        // foreign key name by using the name of the relationship function, which
+        // when combined with an "_id" should conventionally match the columns.
+        if (is_null($foreignKey)) {
+            $foreignKey = snake_case($relation).'_id';
+        }
+
+        $instance = new $related;
+
+        // Once we have the foreign key names, we'll just create a new Eloquent query
+        // for the related models and returns the relationship instance which will
+        // actually be responsible for retrieving and hydrating every relations.
+        $query = $instance->newQuery();
+
+        $otherKey = $otherKey ?: $instance->getKeyName();
+
+        return new BelongsTo($query, $this, $foreignKey, $otherKey, $relation);
+    }
+
+    /**
+     * Define a one-to-many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+     * @return \Database\ORM\Relations\HasMany
+     */
+    public function hasMany($related, $foreignKey = null, $localKey = null)
+    {
+        $foreignKey = $foreignKey ?: $this->getForeignKey();
+
+        $instance = new $related;
+
+        $localKey = $localKey ?: $this->getKeyName();
+
+        return new HasMany($instance->newQuery(), $this, $instance->getTable() .'.' .$foreignKey, $localKey);
+    }
+
+    /**
+     * Define a has-many-through relationship.
+     *
+     * @param  string  $related
+     * @param  string  $through
+     * @param  string|null  $firstKey
+     * @param  string|null  $secondKey
+     * @return \Database\ORM\Relations\HasManyThrough
+     */
+    public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null)
+    {
+        $through = new $through;
+
+        $firstKey = $firstKey ?: $this->getForeignKey();
+
+        $secondKey = $secondKey ?: $through->getForeignKey();
+
+        return new HasManyThrough(with(new $related)->newQuery(), $this, $through, $firstKey, $secondKey);
+    }
+
+    /**
+     * Define a many-to-many relationship.
+     *
+     * @param  string  $related
+     * @param  string  $table
+     * @param  string  $foreignKey
+     * @param  string  $otherKey
+     * @param  string  $relation
+     * @return \Database\ORM\Relations\BelongsToMany
+     */
+    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null)
+    {
+        // If no relationship name was passed, we will pull backtraces to get the
+        // name of the calling function. We will use that function name as the
+        // title of this relation since that is a great convention to apply.
+        if (is_null($relation)) {
+            $relation = $this->getBelongsToManyCaller();
+        }
+
+        // First, we'll need to determine the foreign key and "other key" for the
+        // relationship. Once we have determined the keys we'll make the query
+        // instances as well as the relationship instances we need for this.
+        $foreignKey = $foreignKey ?: $this->getForeignKey();
+
+        $instance = new $related;
+
+        $otherKey = $otherKey ?: $instance->getForeignKey();
+
+        // If no table name was provided, we can guess it by concatenating the two
+        // models using underscores in alphabetical order. The two model names
+        // are transformed to snake case from their default CamelCase also.
+        if (is_null($table)) {
+            $table = $this->joiningTable($related);
+        }
+
+        // Now we're ready to create a new query builder for the related model and
+        // the relationship instances for the relation. The relations will set
+        // appropriate query constraint and entirely manages the hydrations.
+        $query = $instance->newQuery();
+
+        return new BelongsToMany($query, $this, $table, $foreignKey, $otherKey, $relation);
+    }
+
+    /**
+     * Get the relationship name of the belongs to many.
+     *
+     * @return  string
+     */
+    protected function getBelongsToManyCaller()
+    {
+        $self = __FUNCTION__;
+
+        $caller = array_first(debug_backtrace(false), function($key, $trace) use ($self)
+        {
+            $caller = $trace['function'];
+
+            return ( ! in_array($caller, Model::$manyMethods) && $caller != $self);
+        });
+
+        return ! is_null($caller) ? $caller['function'] : null;
+    }
+
+    /**
+     * Get the joining table name for a many-to-many relation.
+     *
+     * @param  string  $related
+     * @return string
+     */
+    public function joiningTable($related)
+    {
+        // The joining table name, by convention, is simply the snake cased models
+        // sorted alphabetically and concatenated with an underscore, so we can
+        // just sort the models and join them together to get the table name.
+        $base = Inflector::tableize(class_basename($this));
+
+        $related = Inflector::tableize(class_basename($related));
+
+        $models = array($related, $base);
+
+        // Now that we have the model names in an array we can just sort them and
+        // use the implode function to join them together with an underscores,
+        // which is typically used by convention within the database system.
+        sort($models);
+
+        return strtolower(implode('_', $models));
     }
 
     /**
@@ -327,6 +739,27 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Save the model and all of its relationships.
+     *
+     * @return bool
+     */
+    public function push()
+    {
+        if ( ! $this->save()) return false;
+
+        // To sync all of the relationships to the database, we will simply spin through
+        // the relationships and save each model via this "push" method, which allows
+        // us to recurs into all of these nested relations for this model instance.
+        foreach ($this->relations as $models) {
+            foreach (Collection::make($models) as $model) {
+                if ( ! $model->push()) return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Save the Model to the database.
      *
      * @param  array  $options
@@ -411,26 +844,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
             return $this->original[$this->getKeyName()];
         }
 
-        return $this->getAttribute($this->getKeyName());
-    }
-
-    /**
-     * Get the primary key for the model.
-     *
-     * @return string
-     */
-    public function getKeyName()
-    {
-        return $this->primaryKey;
-    }
-
-    /**
-     * Get the value of the model's primary key.
-     *
-     * @return mixed
-     */
-    public function getKey()
-    {
         return $this->getAttribute($this->getKeyName());
     }
 
@@ -534,55 +947,43 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         return $this;
     }
 
-    /**
-     * Fill the Model with an array of attributes.
-     *
-     * @param  array  $attributes
-     * @return Model
-     */
-    public function fill(array $attributes)
+    public function getTable()
     {
-        foreach ($this->fillableFromArray($attributes) as $key => $value) {
-            if ($this->isFillable($key)) {
-                $this->setAttribute($key, $value);
-            }
-        }
+       if (isset($this->table)) return $this->table;
 
-        return $this;
+       $baseName = Inflector::pluralize(class_basename($this));
+
+       return str_replace('\\', '', Inflector::tableize($baseName));
     }
 
     /**
-     * Get the fillable attributes of a given array.
+     * Get the value of the model's primary key.
      *
-     * @param  array  $attributes
-     * @return array
+     * @return mixed
      */
-    protected function fillableFromArray(array $attributes)
+    public function getKey()
     {
-        if ((count($this->fillable) > 0) && ! static::$unguarded) {
-            return array_intersect_key($attributes, array_flip($this->fillable));
-        }
-
-        return $attributes;
+        return $this->getAttribute($this->getKeyName());
     }
 
     /**
-     * Determine if the given attribute may be mass assigned.
+     * Get the primary key for the model.
      *
-     * @param  string  $key
-     * @return bool
+     * @return string
      */
-    public function isFillable($key)
+    public function getKeyName()
     {
-        if (static::$unguarded) {
-            return true;
-        } else if (in_array($key, $this->fillable)) {
-            return true;
-        } else if ($this->isGuarded($key)) {
-            return false;
-        }
+        return $this->primaryKey;
+    }
 
-        return (empty($this->fillable) && ! str_starts_with($key, '_'));
+    /**
+     * Get the table qualified key name.
+     *
+     * @return string
+     */
+    public function getQualifiedKeyName()
+    {
+        return $this->getTable() .'.' .$this->getKeyName();
     }
 
     /**
@@ -684,6 +1085,25 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Determine if the given attribute may be mass assigned.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function isFillable($key)
+    {
+        if (static::$unguarded) {
+            return true;
+        } else if (in_array($key, $this->fillable)) {
+            return true;
+        } else if ($this->isGuarded($key)) {
+            return false;
+        }
+
+        return (empty($this->fillable) && ! str_starts_with($key, '_'));
+    }
+
+    /**
      * Determine if the given key is guarded.
      *
      * @param  string  $key
@@ -711,9 +1131,23 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function newQuery()
     {
-        $query = new Builder($this);
+        $builder = $this->newBuilder($this->newBaseQueryBuilder());
 
-        return $query->from($this->table);
+        // Once we have the query builders, we will set the model instances so the
+        // builder can easily access any information it may need from the model
+        // while it is constructing and executing various queries against it.
+        return $builder->setModel($this)->with($this->with);
+    }
+
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param  \Database\Query\Builder $query
+     * @return \Database\ORM\Builder|static
+     */
+    public function newBuilder($query)
+    {
+        return new Builder($query);
     }
 
     /**
@@ -729,81 +1163,28 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
-     * Create a new instance of the given Model.
+     * Create a new ORM Collection instance.
      *
-     * @param  array  $attributes
-     * @param  bool   $exists
-     * @return Model
+     * @param  array  $models
+     * @return \Database\ORM\Collection
      */
-    public function newInstance($attributes = array(), $exists = false)
+    public function newCollection(array $models = array())
     {
-        $model = new static((array) $attributes);
-
-        $model->exists = $exists;
-
-        return $model;
+        return new Collection($models);
     }
 
     /**
-     * Create a new Model instance that is existing.
+     * Create a new pivot model instance.
      *
-     * @param  array  $attributes
-     * @return \Database\ORM\Model|static
+     * @param  \Database\ORM\Model  $parent
+     * @param  array   $attributes
+     * @param  string  $table
+     * @param  bool    $exists
+     * @return \Database\ORM\Relations\Pivot
      */
-    public function newFromBuilder($attributes = array())
+    public function newPivot(Model $parent, array $attributes, $table, $exists)
     {
-        $instance = $this->newInstance(array(), true);
-
-        $instance->setRawAttributes((array) $attributes, true);
-
-        return $instance;
-    }
-
-    /**
-     * Create a collection of Models from plain arrays.
-     *
-     * @param  array  $items
-     * @param  string  $connection
-     * @return array
-     */
-    public static function hydrate(array $items, $connection = null)
-    {
-        $models = array();
-
-        foreach ($items as $item) {
-            $item = (array) $item;
-
-            $model = $instance->newFromBuilder($item);
-
-            if (! is_null($connection)) {
-                $model->setConnection($connection);
-            }
-
-            array_push($models, $model);
-        }
-
-        return $models;
-    }
-
-    /**
-     * Create a collection of Models from a raw query.
-     *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  string  $connection
-     * @return \Database\ORM\Model|static[]
-     */
-    public static function hydrateRaw($query, $bindings = array(), $connection = null)
-    {
-        $instance = new static();
-
-        if (! is_null($connection)) {
-            $instance->setConnection($connection);
-        }
-
-        $items = $instance->getConnection()->select($query, $bindings);
-
-        return static::hydrate($items, $connection);
+        return new Pivot($parent, $attributes, $table, $exists);
     }
 
     /**
@@ -820,13 +1201,6 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         if ($sync) {
             $this->syncOriginal();
         }
-    }
-
-    public static function getTable()
-    {
-        $instance = new static();
-
-        return $instance->table;
     }
 
     /**

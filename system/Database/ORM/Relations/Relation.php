@@ -49,7 +49,8 @@ abstract class Relation
     public function __construct(Builder $query, Model $parent)
     {
         $this->query = $query;
-        $this->parent = $parent;
+
+        $this->parent  = $parent;
         $this->related = $query->getModel();
 
         $this->addConstraints();

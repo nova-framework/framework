@@ -87,7 +87,7 @@ class BelongsToMany extends Relation
      */
     public function wherePivot($column, $operator = null, $value = null, $boolean = 'and')
     {
-        return $this->where($this->table.'.'.$column, $operator, $value, $boolean);
+        return $this->where($this->table .'.' .$column, $operator, $value, $boolean);
     }
 
     /**

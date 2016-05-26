@@ -10,14 +10,14 @@ use Database\ORM\Collection;
 abstract class HasOneOrMany extends Relation
 {
     /**
-     * The foreign key of the parent model.
+     * The foreign key of the parent Model.
      *
      * @var string
      */
     protected $foreignKey;
 
     /**
-     * The local key of the parent model.
+     * The local key of the parent Model.
      *
      * @var string
      */
@@ -33,7 +33,7 @@ abstract class HasOneOrMany extends Relation
      */
     public function __construct(Builder $query, Model $parent, $foreignKey, $localKey)
     {
-        $this->localKey = $localKey;
+        $this->localKey   = $localKey;
         $this->foreignKey = $foreignKey;
 
         parent::__construct($query, $parent);
@@ -285,7 +285,7 @@ abstract class HasOneOrMany extends Relation
      */
     public function getQualifiedParentKeyName()
     {
-        return $this->parent->getTable().'.'.$this->localKey;
+        return $this->parent->getTable() .'.' .$this->localKey;
     }
 
 }

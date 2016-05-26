@@ -1,69 +1,156 @@
 <?php
-/**
- * Query - A QueryBuilder with support for the ORM Models.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Database\ORM;
 
-use Database\Connection;
-use Database\Query\Builder as BaseBuilder;
-use Database\ORM\Model;
+use Closure;
+use Database\Query\Expression;
+use Database\ORM\Relations\Relation;
+use Database\Query\Builder as QueryBuilder;
+use Support\Facades\Paginator;
 
 
-class Builder extends BaseBuilder
+class Builder
 {
     /**
-     * Create a new Builder instance.
+     * The base query builder instance.
      *
+     * @var \Database\Query\Builder
+     */
+    protected $query;
+
+    /**
+     * The model being queried.
+     *
+     * @var \Database\ORM\Model
+     */
+    protected $model;
+
+    /**
+     * The relationships that should be eager loaded.
+     *
+     * @var array
+     */
+    protected $eagerLoad = array();
+
+    /**
+     * The methods that should be returned from query builder.
+     *
+     * @var array
+     */
+    protected $passthru = array(
+        'toSql', 'lists', 'insert', 'insertGetId', 'pluck', 'count',
+        'min', 'max', 'avg', 'sum', 'exists', 'getBindings',
+    );
+
+    /**
+     * Create a new Eloquent query builder instance.
+     *
+     * @param  \Database\Query\Builder  $query
      * @return void
      */
-    public function __construct(Model $model)
+    public function __construct(QueryBuilder $query)
     {
-        // Set the Model being queried.
-        $this->model = $model;
-
-        // Get a Connection instance from the Model being queried.
-        $connection = $model->getConnection();
-
-        // Finally, execute the parent's Constructor.
-        parent::__construct($connection);
+        $this->query = $query;
     }
 
     /**
-     * Execute a query for a single record by ID.
+     * Find a model by its primary key.
      *
-     * @param  int    $id
+     * @param  mixed  $id
      * @param  array  $columns
-     * @return mixed
+     * @return \Database\ORM\Model|static|null
      */
     public function find($id, $columns = array('*'))
     {
-        $keyName = $this->model->getKeyName();
+        if (is_array($id)) {
+            return $this->findMany($id, $columns);
+        }
 
-        return $this->where($keyName, '=', $id)->first($columns);
+        $this->query->where($this->model->getKeyName(), '=', $id);
+
+        return $this->first($columns);
     }
 
     /**
-     * Find a Model by its primary key.
+     * Find a model by its primary key.
      *
      * @param  array  $id
      * @param  array  $columns
-     * @return array|static
+     * @return \Database\ORM\Model|Collection|static
      */
-    public function findMany($ids, $columns = array('*'))
+    public function findMany($id, $columns = array('*'))
     {
-        if (empty($ids)) return array();
+        if (empty($id)) return $this->model->newCollection();
 
-        $this->query->whereIn($this->model->getKeyName(), $ids);
+        $this->query->whereIn($this->model->getKeyName(), $id);
 
         return $this->get($columns);
     }
 
     /**
-     * Pluck a single column's value from the first result of a query.
+     * Find a model by its primary key or throw an exception.
+     *
+     * @param  mixed  $id
+     * @param  array  $columns
+     * @return \Database\ORM\Model|static
+     *
+     * @throws ModelNotFoundException
+     */
+    public function findOrFail($id, $columns = array('*'))
+    {
+        if (! is_null($model = $this->find($id, $columns))) return $model;
+
+        throw with(new ModelNotFoundException)->setModel(get_class($this->model));
+    }
+
+    /**
+     * Execute the query and get the first result.
+     *
+     * @param  array  $columns
+     * @return \Database\ORM\Model|static|null
+     */
+    public function first($columns = array('*'))
+    {
+        return $this->take(1)->get($columns)->first();
+    }
+
+    /**
+     * Execute the query and get the first result or throw an exception.
+     *
+     * @param  array  $columns
+     * @return \Database\ORM\Model|static
+     *
+     * @throws ModelNotFoundException
+     */
+    public function firstOrFail($columns = array('*'))
+    {
+        if (! is_null($model = $this->first($columns))) return $model;
+
+        throw with(new ModelNotFoundException)->setModel(get_class($this->model));
+    }
+
+    /**
+     * Execute the query as a "select" statement.
+     *
+     * @param  array  $columns
+     * @return \Database\ORM\Collection|static[]
+     */
+    public function get($columns = array('*'))
+    {
+        $models = $this->getModels($columns);
+
+        // If we actually found models we will also eager load any relationships that
+        // have been specified as needing to be eager loaded, which will solve the
+        // n+1 query issue for the developers to avoid running a lot of queries.
+        if (count($models) > 0) {
+            $models = $this->eagerLoadRelations($models);
+        }
+
+        return $this->model->newCollection($models);
+    }
+
+    /**
+     * Pluck a single column from the database.
      *
      * @param  string  $column
      * @return mixed
@@ -72,43 +159,188 @@ class Builder extends BaseBuilder
     {
         $result = $this->first(array($column));
 
-        if (! is_null($result)) {
-            // Convert the Model instance to array.
-            $result = $result->toArray();
+        if ($result) return $result->{$column};
+    }
+
+    /**
+     * Chunk the results of the query.
+     *
+     * @param  int  $count
+     * @param  callable  $callback
+     * @return void
+     */
+    public function chunk($count, $callback)
+    {
+        $results = $this->forPage($page = 1, $count)->get();
+
+        while (count($results) > 0) {
+            call_user_func($callback, $results);
+
+            $page++;
+
+            $results = $this->forPage($page, $count)->get();
+        }
+    }
+
+    /**
+     * Get an array with the values of a given column.
+     *
+     * @param  string  $column
+     * @param  string  $key
+     * @return array
+     */
+    public function lists($column, $key = null)
+    {
+        $results = $this->query->lists($column, $key);
+
+        if ($this->model->hasGetMutator($column)) {
+            foreach ($results as $key => &$value) {
+                $fill = array($column => $value);
+
+                $value = $this->model->newFromBuilder($fill)->$column;
+            }
         }
 
-        return (count($result) > 0) ? reset($result) : null;
+        return $results;
     }
 
     /**
-     * Execute the query as a "SELECT" statement.
+     * Get a paginator for the "select" statement.
      *
+     * @param  int    $perPage
      * @param  array  $columns
-     * @return \Database\ORM\Model|static[]
+     * @return \Pagination\Paginator
      */
-    public function get($columns = array('*'))
+    public function paginate($perPage = null, $columns = array('*'))
     {
-        return $this->getModels($columns);
+        // Get the Pagination Factory instance.
+        $paginator = Paginator::instance();
+
+        $perPage = $perPage ?: $this->model->getPerPage();
+
+        if (isset($this->query->groups)) {
+            return $this->groupedPaginate($paginator, $perPage, $columns);
+        } else {
+            return $this->ungroupedPaginate($paginator, $perPage, $columns);
+        }
     }
 
     /**
-     + Get the hydrated Models without eager loading.
+     * Get a paginator for a grouped statement.
+     *
+     * @param  \Pagination\Environment  $paginator
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    protected function groupedPaginate($paginator, $perPage, $columns)
+    {
+        $results = $this->get($columns)->all();
+
+        return $this->query->buildRawPaginator($paginator, $results, $perPage);
+    }
+
+    /**
+     * Get a paginator for an ungrouped statement.
+     *
+     * @param  \Pagination\Environment  $paginator
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    protected function ungroupedPaginate($paginator, $perPage, $columns)
+    {
+        $total = $this->query->getPaginationCount();
+
+        $page = $paginator->getCurrentPage($total);
+
+        $this->query->forPage($page, $perPage);
+
+        return $paginator->make($this->get($columns)->all(), $total, $perPage);
+    }
+
+    /**
+     * Update a record in the database.
+     *
+     * @param  array  $values
+     * @return int
+     */
+    public function update(array $values)
+    {
+        return $this->query->update($this->addUpdatedAtColumn($values));
+    }
+
+    /**
+     * Increment a column's value by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @param  array   $extra
+     * @return int
+     */
+    public function increment($column, $amount = 1, array $extra = array())
+    {
+        $extra = $this->addUpdatedAtColumn($extra);
+
+        return $this->query->increment($column, $amount, $extra);
+    }
+
+    /**
+     * Decrement a column's value by a given amount.
+     *
+     * @param  string  $column
+     * @param  int     $amount
+     * @param  array   $extra
+     * @return int
+     */
+    public function decrement($column, $amount = 1, array $extra = array())
+    {
+        $extra = $this->addUpdatedAtColumn($extra);
+
+        return $this->query->decrement($column, $amount, $extra);
+    }
+
+    /**
+     * Add the "updated at" column to an array of values.
+     *
+     * @param  array  $values
+     * @return array
+     */
+    protected function addUpdatedAtColumn(array $values)
+    {
+        if (! $this->model->usesTimestamps()) return $values;
+
+        $column = $this->model->getUpdatedAtColumn();
+
+        return array_add($values, $column, $this->model->freshTimestampString());
+    }
+
+    /**
+     * Delete a record from the database.
+     *
+     * @return int
+     */
+    public function delete()
+    {
+        return $this->query->delete();
+    }
+
+    /**
+     * Get the hydrated models without eager loading.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Model|static[]
+     * @return array|static[]
      */
     public function getModels($columns = array('*'))
     {
-        $results = parent::get($columns);
+        $results = $this->query->get($columns);
 
         $connection = $this->model->getConnectionName();
 
-        // Create an array of Models.
+        //
         $models = array();
 
         foreach ($results as $result) {
-            $result = (array) $result;
-
             $models[] = $model = $this->model->newFromBuilder($result);
 
             $model->setConnection($connection);
@@ -118,44 +350,457 @@ class Builder extends BaseBuilder
     }
 
     /**
-     * Execute an aggregate function on the database.
+     * Eager load the relationships for the models.
      *
-     * @param  string  $function
-     * @param  array   $columns
-     * @return mixed
+     * @param  array  $models
+     * @return array
      */
-    public function aggregate($function, $columns = array('*'))
+    public function eagerLoadRelations(array $models)
     {
-        $this->aggregate = compact('function', 'columns');
-
-        $previousColumns = $this->columns;
-
-        $results = $this->get($columns);
-
-        $this->aggregate = null;
-
-        $this->columns = $previousColumns;
-
-        if (isset($results[0])) {
-            $result = $results[0];
-
-            // Convert the Model instance to array.
-            $result = $result->toArray();
-
-            $result = (array) $result;
-
-            return $result['aggregate'];
+        foreach ($this->eagerLoad as $name => $constraints) {
+            // For nested eager loads we'll skip loading them here and they will be set as an
+            // eager load on the query to retrieve the relation so that they will be eager
+            // loaded on that query, because that is where they get hydrated as models.
+            if (strpos($name, '.') === false) {
+                $models = $this->loadRelation($models, $name, $constraints);
+            }
         }
+
+        return $models;
     }
 
     /**
-     * Delete a Record from the database.
+     * Eagerly load the relationship on a set of models.
      *
-     * @return int
+     * @param  array     $models
+     * @param  string    $name
+     * @param  \Closure  $constraints
+     * @return array
      */
-    public function delete()
+    protected function loadRelation(array $models, $name, Closure $constraints)
     {
-        return parent::delete();
-    }
-}
+        // First we will "back up" the existing where conditions on the query so we can
+        // add our eager constraints. Then we will merge the wheres that were on the
+        // query back to it in order that any where conditions might be specified.
+        $relation = $this->getRelation($name);
 
+        $relation->addEagerConstraints($models);
+
+        call_user_func($constraints, $relation);
+
+        $models = $relation->initRelation($models, $name);
+
+        // Once we have the results, we just match those back up to their parent models
+        // using the relationship instance. Then we just return the finished arrays
+        // of models which have been eagerly hydrated and are readied for return.
+        $results = $relation->getEager();
+
+        return $relation->match($models, $results, $name);
+    }
+
+    /**
+     * Get the relation instance for the given relation name.
+     *
+     * @param  string  $relation
+     * @return \Database\ORM\Relations\Relation
+     */
+    public function getRelation($relation)
+    {
+        $me = $this;
+
+        // We want to do a relationship query without any constraints so that we will
+        // not have to remove these where clauses manually which gets really hacky
+        // and is error prone while we remove the developer's own where clauses.
+        $query = Relation::noConstraints(function() use ($me, $relation)
+        {
+            return $me->getModel()->$relation();
+        });
+
+        $nested = $this->nestedRelations($relation);
+
+        // If there are nested relationships set on the query, we will put those onto
+        // the query instances so that they can be handled after this relationship
+        // is loaded. In this way they will all trickle down as they are loaded.
+        if (count($nested) > 0) {
+            $query->getQuery()->with($nested);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Get the deeply nested relations for a given top-level relation.
+     *
+     * @param  string  $relation
+     * @return array
+     */
+    protected function nestedRelations($relation)
+    {
+        $nested = array();
+
+        // We are basically looking for any relationships that are nested deeper than
+        // the given top-level relationship. We will just check for any relations
+        // that start with the given top relations and adds them to our arrays.
+        foreach ($this->eagerLoad as $name => $constraints) {
+            if ($this->isNested($name, $relation)) {
+                $nested[substr($name, strlen($relation .'.'))] = $constraints;
+            }
+        }
+
+        return $nested;
+    }
+
+    /**
+     * Determine if the relationship is nested.
+     *
+     * @param  string  $name
+     * @param  string  $relation
+     * @return bool
+     */
+    protected function isNested($name, $relation)
+    {
+        $dots = str_contains($name, '.');
+
+        return $dots && str_starts_with($name, $relation .'.');
+    }
+
+    /**
+     * Add a basic where clause to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  mixed   $value
+     * @param  string  $boolean
+     * @return \Database\ORM\Builder|static
+     */
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        if ($column instanceof Closure) {
+            $query = $this->model->newQuery(false);
+
+            call_user_func($column, $query);
+
+            $this->query->addNestedWhereQuery($query->getQuery(), $boolean);
+        } else {
+            call_user_func_array(array($this->query, 'where'), func_get_args());
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add an "or where" clause to the query.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  mixed   $value
+     * @return \Database\ORM\Builder|static
+     */
+    public function orWhere($column, $operator = null, $value = null)
+    {
+        return $this->where($column, $operator, $value, 'or');
+    }
+
+    /**
+     * Add a relationship count condition to the query.
+     *
+     * @param  string  $relation
+     * @param  string  $operator
+     * @param  int     $count
+     * @param  string  $boolean
+     * @param  \Closure  $callback
+     * @return \Database\ORM\Builder|static
+     */
+    public function has($relation, $operator = '>=', $count = 1, $boolean = 'and', $callback = null)
+    {
+        $relation = $this->getHasRelationQuery($relation);
+
+        $query = $relation->getRelationCountQuery($relation->getRelated()->newQuery(), $this);
+
+        if ($callback) call_user_func($callback, $query);
+
+        return $this->addHasWhere($query, $relation, $operator, $count, $boolean);
+    }
+
+    /**
+     * Add a relationship count condition to the query with where clauses.
+     *
+     * @param  string  $relation
+     * @param  \Closure  $callback
+     * @param  string  $operator
+     * @param  int     $count
+     * @return \Database\ORM\Builder|static
+     */
+    public function whereHas($relation, Closure $callback, $operator = '>=', $count = 1)
+    {
+        return $this->has($relation, $operator, $count, 'and', $callback);
+    }
+
+    /**
+     * Add a relationship count condition to the query with an "or".
+     *
+     * @param  string  $relation
+     * @param  string  $operator
+     * @param  int     $count
+     * @return \Database\ORM\Builder|static
+     */
+    public function orHas($relation, $operator = '>=', $count = 1)
+    {
+        return $this->has($relation, $operator, $count, 'or');
+    }
+
+    /**
+     * Add a relationship count condition to the query with where clauses and an "or".
+     *
+     * @param  string  $relation
+     * @param  \Closure  $callback
+     * @param  string  $operator
+     * @param  int     $count
+     * @return \Database\ORM\Builder|static
+     */
+    public function orWhereHas($relation, Closure $callback, $operator = '>=', $count = 1)
+    {
+        return $this->has($relation, $operator, $count, 'or', $callback);
+    }
+
+    /**
+     * Add the "has" condition where clause to the query.
+     *
+     * @param  \Database\ORM\Builder  $hasQuery
+     * @param  \Database\ORM\Relations\Relation  $relation
+     * @param  string  $operator
+     * @param  int  $count
+     * @param  string  $boolean
+     * @return \Database\ORM\Builder
+     */
+    protected function addHasWhere(Builder $hasQuery, Relation $relation, $operator, $count, $boolean)
+    {
+        $this->mergeWheresToHas($hasQuery, $relation);
+
+        if (is_numeric($count)) {
+            $count = new Expression($count);
+        }
+
+        return $this->where(new Expression('('.$hasQuery->toSql().')'), $operator, $count, $boolean);
+    }
+
+    /**
+     * Merge the "wheres" from a relation query to a has query.
+     *
+     * @param  \Database\ORM\Builder  $hasQuery
+     * @param  \Database\ORM\Relations\Relation  $relation
+     * @return void
+     */
+    protected function mergeWheresToHas(Builder $hasQuery, Relation $relation)
+    {
+        // Here we have the "has" query and the original relation. We need to copy over any
+        // where clauses the developer may have put in the relationship function over to
+        // the has query, and then copy the bindings from the "has" query to the main.
+        $relationQuery = $relation->getBaseQuery();
+
+        $hasQuery->mergeWheres(
+            $relationQuery->wheres, $relationQuery->getBindings()
+        );
+
+        $this->query->mergeBindings($hasQuery->getQuery());
+    }
+
+    /**
+     * Get the "has relation" base query instance.
+     *
+     * @param  string  $relation
+     * @return \Database\ORM\Builder
+     */
+    protected function getHasRelationQuery($relation)
+    {
+        $me = $this;
+
+        return Relation::noConstraints(function() use ($me, $relation)
+        {
+            return $me->getModel()->$relation();
+        });
+    }
+
+    /**
+     * Set the relationships that should be eager loaded.
+     *
+     * @param  dynamic  $relations
+     * @return \Database\ORM\Builder|static
+     */
+    public function with($relations)
+    {
+        if (is_string($relations)) $relations = func_get_args();
+
+        $eagers = $this->parseRelations($relations);
+
+        $this->eagerLoad = array_merge($this->eagerLoad, $eagers);
+
+        return $this;
+    }
+
+    /**
+     * Parse a list of relations into individuals.
+     *
+     * @param  array  $relations
+     * @return array
+     */
+    protected function parseRelations(array $relations)
+    {
+        $results = array();
+
+        foreach ($relations as $name => $constraints) {
+            // If the "relation" value is actually a numeric key, we can assume that no
+            // constraints have been specified for the eager load and we'll just put
+            // an empty Closure with the loader so that we can treat all the same.
+            if (is_numeric($name)) {
+                $f = function() {};
+
+                list($name, $constraints) = array($constraints, $f);
+            }
+
+            // We need to separate out any nested includes. Which allows the developers
+            // to load deep relationships using "dots" without stating each level of
+            // the relationship with its own key in the array of eager load names.
+            $results = $this->parseNested($name, $results);
+
+            $results[$name] = $constraints;
+        }
+
+        return $results;
+    }
+
+    /**
+     * Parse the nested relationships in a relation.
+     *
+     * @param  string  $name
+     * @param  array   $results
+     * @return array
+     */
+    protected function parseNested($name, $results)
+    {
+        $progress = array();
+
+        // If the relation has already been set on the result array, we will not set it
+        // again, since that would override any constraints that were already placed
+        // on the relationships. We will only set the ones that are not specified.
+        foreach (explode('.', $name) as $segment) {
+            $progress[] = $segment;
+
+            if ( ! isset($results[$last = implode('.', $progress)])) {
+                 $results[$last] = function() {};
+             }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Call the given model scope on the underlying model.
+     *
+     * @param  string  $scope
+     * @param  array  $parameters
+     * @return \Database\Query\Builder
+     */
+    protected function callScope($scope, $parameters)
+    {
+        array_unshift($parameters, $this);
+
+        return call_user_func_array(array($this->model, $scope), $parameters) ?: $this;
+    }
+
+    /**
+     * Get the underlying query builder instance.
+     *
+     * @return \Database\Query\Builder|static
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * Set the underlying query builder instance.
+     *
+     * @param  \Database\Query\Builder  $query
+     * @return void
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Get the relationships being eagerly loaded.
+     *
+     * @return array
+     */
+    public function getEagerLoads()
+    {
+        return $this->eagerLoad;
+    }
+
+    /**
+     * Set the relationships being eagerly loaded.
+     *
+     * @param  array  $eagerLoad
+     * @return void
+     */
+    public function setEagerLoads(array $eagerLoad)
+    {
+        $this->eagerLoad = $eagerLoad;
+    }
+
+    /**
+     * Get the model instance being queried.
+     *
+     * @return \Database\ORM\Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set a model instance for the model being queried.
+     *
+     * @param  \Database\ORM\Model  $model
+     * @return \Database\ORM\Builder
+     */
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+
+        $this->query->from($model->getTable());
+
+        return $this;
+    }
+
+    /**
+     * Dynamically handle calls into the query instance.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        if (method_exists($this->model, $scope = 'scope'.ucfirst($method))) {
+            return $this->callScope($scope, $parameters);
+        } else {
+            $result = call_user_func_array(array($this->query, $method), $parameters);
+        }
+
+        return in_array($method, $this->passthru) ? $result : $this;
+    }
+
+    /**
+     * Force a clone of the underlying query builder when cloning.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->query = clone $this->query;
+    }
+
+}

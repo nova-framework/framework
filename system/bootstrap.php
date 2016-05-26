@@ -32,6 +32,9 @@ date_default_timezone_set(DEFAULT_TIMEZONE);
 /** Load the Framework wide functions. */
 require dirname(__FILE__) .DS .'functions.php';
 
+/** remove white-spaces from the HTML with the help ob_start's buffer */
+ob_start("minifyHTML");
+
 /** Initialize the Class Aliases. */
 Aliases::init();
 

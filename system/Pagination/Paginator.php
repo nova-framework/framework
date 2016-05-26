@@ -190,10 +190,9 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * Create the HTML pagination links.
      *
-     * @param  int  $adjacent
      * @return string
      */
-    public function links($adjacent = 3)
+    public function links()
     {
         $presenter = $this->getPresenter();
 

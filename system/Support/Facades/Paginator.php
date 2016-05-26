@@ -42,7 +42,7 @@ class Paginator
     /**
      * Return the default Pagination Factory instance.
      *
-     * @return \Encryption\Encrypter
+     * @return \Pagination\Factory
      */
     public static function instance()
     {

@@ -75,7 +75,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      *
      * @var bool
      */
-    public $timestamps = true;
+    public $timestamps = false;
 
     /**
      * The Model's attributes.

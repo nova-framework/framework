@@ -53,7 +53,7 @@ class Session
         // Load the configuration.
         $config = Config::get('session');
 
-        $name = $config['name'];
+        $name = $config['cookie'];
 
         // Get the Session ID from Cookie, fallback to null.
         $id = Cookie::get($name);
@@ -131,7 +131,7 @@ class Session
 
         // Store the Session ID in a Cookie.
         $cookie = Cookie::make(
-            $config['name'],
+            $config['cookie'],
             $session->getId(),
             $config['lifetime'],
             $config['path'],
@@ -149,7 +149,7 @@ class Session
         static::collectGarbage($session, $config);
 
         // Finally, add all Request and queued Cookies on Response instance.
-        static::processCookies($response);
+        static::processCookies($response, $config);
 
         // Prepare the Response instance for sending.
         $response->prepare($request);
@@ -181,11 +181,16 @@ class Session
      *
      * @return void
      */
-    protected static function processCookies(SymfonyResponse $response)
+    protected static function processCookies(SymfonyResponse $response, array $config)
     {
         // Insert all queued Cookies on the Response instance.
         foreach (Cookie::getQueuedCookies() as $cookie) {
             $response->headers->setCookie($cookie);
+        }
+
+        if($config['encrypt'] == false) {
+            // The Cookies encryption is disabled.
+            return;
         }
 
         // Encrypt all Cookies present on the Response instance.

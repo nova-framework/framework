@@ -44,6 +44,14 @@ class Model
     protected $primaryKey = 'id';
 
     /**
+     * The number of Records to return for pagination.
+     *
+     * @var int
+     */
+    protected $perPage = 15;
+
+
+    /**
      * Create a new Model instance.
      *
      * @param  array  $attributes
@@ -152,6 +160,27 @@ class Model
     }
 
     /**
+     * Get the number of models to return per page.
+     *
+     * @return int
+     */
+    public function getPerPage()
+    {
+        return $this->perPage;
+    }
+
+    /**
+     * Set the number of models to return per page.
+     *
+     * @param  int   $perPage
+     * @return void
+     */
+    public function setPerPage($perPage)
+    {
+        $this->perPage = $perPage;
+    }
+
+    /**
      * Get the database Connection instance.
      *
      * @return \Database\Connection
@@ -191,7 +220,7 @@ class Model
      */
     public function newQuery()
     {
-        return $this->db->table($this->table);
+        return $this->db->table($this->table)->setModel($this);
     }
 
     /**

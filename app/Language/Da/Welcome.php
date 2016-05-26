@@ -16,7 +16,7 @@ return [
         Indeholdet kan ændres i <code>/app/Views/Welcome/SubPage.php</code>
     ',
     // Buttons
-    'openSubPage' => 'Åben undersiden ',
+    'openSubPage' => 'Åben undersiden',
     'backHome' => 'Hjem',
 ];
 

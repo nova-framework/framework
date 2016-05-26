@@ -8,6 +8,7 @@
 
 namespace Support\Facades;
 
+use Core\Config;
 use Encryption\DecryptException;
 use Http\Request as HttpRequest;
 use Support\Facades\Crypt;
@@ -43,7 +44,7 @@ class Request
         static::$request = $request = HttpRequest::createFromGlobals();
 
         // Decrypt all Cookies present on the Request instance.
-        static::decryptCookies($request);
+        static::processCookies($request);
 
         // Configure the Session instance.
         $session = Session::instance();
@@ -54,8 +55,16 @@ class Request
         return $request;
     }
 
-    protected static function decryptCookies(SymfonyRequest $request)
+    protected static function processCookies(SymfonyRequest $request)
     {
+        // Retrieve the Session configuration.
+        $config = Config::get('session');
+
+        if($config['encrypt'] == false) {
+            // The Cookies encryption is disabled.
+            return;
+        }
+
         foreach ($request->cookies as $name => $cookie) {
             if($name == 'PHPSESSID') {
                 // Leave alone the PHPSESSID.

@@ -12,9 +12,10 @@ use Helpers\Inflector;
 use Database\Connection;
 use Database\Query\Expression;
 use Database\Query\JoinClause;
+use Support\Facades\Paginator;
 
-use \PDO;
-use \Closure;
+use PDO;
+use Closure;
 
 
 class Builder
@@ -25,6 +26,13 @@ class Builder
      * @var \Database\Connection
      */
     protected $db;
+
+    /**
+     * The Model being queried.
+     *
+     * @var \Database\Model|Database\ORM\Model
+     */
+    protected $model = null;
 
     /**
      * The current query value bindings.
@@ -1006,7 +1014,9 @@ class Builder
      */
     public function find($id, $columns = array('*'))
     {
-        return $this->where('id', '=', $id)->first($columns);
+        $keyName = isset($this->model) ? $this->model->getKeyName() : 'id';
+
+        return $this->where($keyName, '=', $id)->first($columns);
     }
 
     /**
@@ -1099,6 +1109,130 @@ class Builder
         }
 
         return implode($glue, $this->lists($column));
+    }
+
+    /**
+     * Get a paginator for the "SELECT" statement.
+     *
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    public function paginate($perPage = null, $columns = array('*'))
+    {
+        // Get the Pagination Factory instance.
+        $paginator = Paginator::instance();
+
+        if(is_null($perPage)) {
+            // Get the perPage value, according on the Model instance.
+            $perPage = isset($this->model) ? $this->model->getPerPage() : 15;
+        }
+
+        if (isset($this->groups)) {
+            return $this->groupedPaginate($paginator, $perPage, $columns);
+        } else {
+            return $this->ungroupedPaginate($paginator, $perPage, $columns);
+        }
+    }
+
+    /**
+     * Create a Paginator for a grouped pagination statement.
+     *
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    protected function groupedPaginate($paginator, $perPage, $columns)
+    {
+        $results = $this->get($columns);
+
+        return $this->buildRawPaginator($paginator, $results, $perPage);
+    }
+
+    /**
+     * Build a paginator instance from a raw result array.
+     *
+     * @param  \Illuminate\Pagination\Factory  $paginator
+     * @param  array  $results
+     * @param  int    $perPage
+     * @return \Pagination\Paginator
+     */
+    public function buildRawPaginator($paginator, $results, $perPage)
+    {
+        // For queries which have a group by, we will actually retrieve the entire set
+        // of rows from the table and "slice" them via PHP. This is inefficient and
+        // the developer must be aware of this behavior; however, it's an option.
+        $start = ($paginator->getCurrentPage() - 1) * $perPage;
+
+        $sliced = array_slice($results, $start, $perPage);
+
+        return $paginator->make($sliced, count($results), $perPage);
+    }
+
+    /**
+     * Create a paginator for an un-grouped pagination statement.
+     *
+     * @param  \Pagination\Environment  $paginator
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    protected function ungroupedPaginate($paginator, $perPage, $columns)
+    {
+        $total = $this->getPaginationCount();
+
+        // Once we have the total number of records to be paginated, we can grab the
+        // current page and the result array. Then we are ready to create a brand
+        // new Paginator instances for the results which will create the links.
+        $page = $paginator->getCurrentPage($total, $perPage);
+
+        $results = $this->forPage($page, $perPage)->get($columns);
+
+        return $paginator->make($results, $total, $perPage);
+    }
+
+    /**
+     * Get the count of the total records for pagination.
+     *
+     * @return int
+     */
+    public function getPaginationCount()
+    {
+        $this->backupFieldsForCount();
+
+        $total = $this->count();
+
+        $this->restoreFieldsForCount();
+
+        return $total;
+    }
+
+    /**
+     * Backup certain fields for a pagination count.
+     *
+     * @return void
+     */
+    protected function backupFieldsForCount()
+    {
+        foreach (array('orders', 'limit', 'offset') as $field) {
+            $this->backups[$field] = $this->{$field};
+
+            $this->{$field} = null;
+        }
+    }
+
+    /**
+     * Restore certain fields for a pagination count.
+     *
+     * @return void
+     */
+    protected function restoreFieldsForCount()
+    {
+        foreach (array('orders', 'limit', 'offset') as $field) {
+            $this->{$field} = $this->backups[$field];
+        }
+
+        $this->backups = array();
     }
 
     /**
@@ -1447,6 +1581,29 @@ class Builder
     public function getConnection()
     {
         return $this->db;
+    }
+
+    /**
+     * Get the Model instance being queried.
+     *
+     * @return \Database\Model|\Database\ORM\Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set a Model instance for the Model being queried.
+     *
+     * @param  \Database\Model|\Database\ORM\Model|null  $model
+     * @return \Database\Builder
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+
+        return $this;
     }
 
     //--------------------------------------------------------------------

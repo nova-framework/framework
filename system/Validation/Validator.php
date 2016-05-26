@@ -11,6 +11,7 @@ namespace Validation;
 use Helpers\Inflector;
 use Support\Contracts\MessageProviderInterface;
 use Support\MessageBag;
+
 use Validation\Translator;
 use Validation\DatabasePresenceVerifier;
 

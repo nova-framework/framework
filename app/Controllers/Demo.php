@@ -14,6 +14,7 @@ use Session;
 
 use App\Models\ORM\User;
 
+use DB;
 
 /*
 *
@@ -148,5 +149,29 @@ class Demo extends Controller
 
             echo '<pre>' .var_export($errors, true) .'</pre>';
         }
+    }
+
+    public function paginate()
+    {
+        $paginate = DB::table('posts')->paginate(2);
+
+        $paginate->appends(array(
+            'testing'  => 1,
+            'example' => 'the_example_string',
+        ));
+
+        $content = $paginate->links();
+
+        foreach ($paginate as $post) {
+            $content .= '<h3>' .$post->title .'</h3>';
+
+            $content .= $post->content;
+
+            $content .= '<br><br>';
+        }
+
+        return View::make('Default')
+            ->shares('title', __('Pagination'))
+            ->with('content', $content);
     }
 }

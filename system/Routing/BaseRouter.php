@@ -14,6 +14,7 @@ use Helpers\Inflector;
 use Routing\Route;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 use Response;
 use Session;
@@ -297,15 +298,9 @@ abstract class BaseRouter
         }
 
         // Collect the current file information.
+        $guesser = MimeTypeGuesser::getInstance();
 
-        $finfo = \finfo_open(FILEINFO_MIME_TYPE); // Return mime type a la mimetype extension
-
-        $contentType = \finfo_file($finfo, $filePath);
-
-        \finfo_close($finfo);
-
-        // There is a bug with finfo_file();
-        // https://bugs.php.net/bug.php?id=53035
+        // Even the Symfony's HTTP Foundation have troubles with the CSS and JS files?
         //
         // Hard coding the correct mime types for presently needed file extensions.
         switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
@@ -316,6 +311,7 @@ abstract class BaseRouter
                 $contentType = 'application/javascript';
                 break;
             default:
+                $contentType = $guesser->guess($filePath);
                 break;
         }
 

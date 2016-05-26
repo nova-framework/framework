@@ -632,7 +632,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
     {
         if (is_null($relation)) {
-            list(, $caller) = debug_backtrace(false, 2);
+            list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
             $relation = $caller['function'];
         }
@@ -661,7 +661,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function morphTo($name = null, $type = null, $id = null)
     {
         if (is_null($name)) {
-            list(, $caller) = debug_backtrace(false, 2);
+            list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
             $name = Inflector::tableize($caller['function']);
         }
@@ -826,7 +826,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $self = __FUNCTION__;
 
-        $caller = array_first(debug_backtrace(false), function($key, $trace) use ($self)
+        $caller = array_first(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), function($key, $trace) use ($self)
         {
             $caller = $trace['function'];
 

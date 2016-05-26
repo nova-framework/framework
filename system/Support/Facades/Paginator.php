@@ -35,12 +35,12 @@ class Paginator
         // Get the Request instance.
         $request = Request::instance();
 
-        // Setup and return the Factory instance.
+        // Setup and return the Pagination Factory instance.
         return static::$factory = new Factory($request);
     }
 
     /**
-     * Return the default Encrypter instance.
+     * Return the default Pagination Factory instance.
      *
      * @return \Encryption\Encrypter
      */

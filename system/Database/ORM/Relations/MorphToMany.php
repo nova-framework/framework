@@ -32,6 +32,7 @@ class MorphToMany extends BelongsToMany
      */
     protected $inverse;
 
+    
     /**
      * Create a new has many relationship instance.
      *

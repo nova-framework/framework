@@ -39,6 +39,7 @@ abstract class Relation
      */
     protected static $constraints = true;
 
+    
     /**
      * Create a new relation instance.
      *

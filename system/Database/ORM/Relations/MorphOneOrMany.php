@@ -23,6 +23,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
      */
     protected $morphClass;
 
+    
     /**
      * Create a new has many relationship instance.
      *

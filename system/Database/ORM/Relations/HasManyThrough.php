@@ -31,6 +31,7 @@ class HasManyThrough extends Relation
      */
     protected $secondKey;
 
+    
     /**
      * Create a new has many relationship instance.
      *

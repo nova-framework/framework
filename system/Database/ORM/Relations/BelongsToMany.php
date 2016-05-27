@@ -45,6 +45,7 @@ class BelongsToMany extends Relation
      */
     protected $pivotColumns = array();
 
+    
     /**
      * Create a new has many relationship instance.
      *

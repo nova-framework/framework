@@ -29,6 +29,7 @@ class BelongsTo extends Relation
      */
     protected $relation;
 
+    
     /**
      * Create a new belongs to relationship instance.
      *

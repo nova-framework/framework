@@ -23,6 +23,7 @@ abstract class HasOneOrMany extends Relation
      */
     protected $localKey;
 
+    
     /**
      * Create a new has many relationship instance.
      *

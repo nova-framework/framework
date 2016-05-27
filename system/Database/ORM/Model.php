@@ -8,6 +8,7 @@
 
 namespace Database\ORM;
 
+use Events\Dispatcher;
 use Helpers\Inflector;
 use Database\Connection;
 use Database\Query\Builder as QueryBuilder;
@@ -148,6 +149,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     protected $touches = array();
 
     /**
+     * User exposed observable events
+     *
+     * @var array
+     */
+    protected $observables = array();
+
+    /**
      * The relations to eager load on every query.
      *
      * @var array
@@ -181,6 +189,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @var bool
      */
     public static $snakeAttributes = true;
+
+    /**
+     * The event dispatcher instance.
+     *
+     * @var \Events\Dispatcher
+     */
+    protected static $dispatcher;
 
     /**
      * The array of booted models.
@@ -262,7 +277,11 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         if (! isset(static::$booted[get_class($this)])) {
             static::$booted[get_class($this)] = true;
 
+            $this->fireModelEvent('booting', false);
+
             static::boot();
+
+            $this->fireModelEvent('booted', false);
         }
     }
 
@@ -890,11 +909,15 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         }
 
         if ($this->exists) {
+            if ($this->fireModelEvent('deleting') === false) return false;
+
             $this->touchOwners();
 
             $this->performDeleteOnModel();
 
             $this->exists = false;
+
+            $this->fireModelEvent('deleted', false);
 
             return true;
         }
@@ -943,12 +966,177 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function restore()
     {
         if ($this->softDelete) {
+            if ($this->fireModelEvent('restoring') === false) {
+                return false;
+            }
+
             $this->{static::DELETED_AT} = null;
 
             $result = $this->save();
 
+            $this->fireModelEvent('restored', false);
+
             return $result;
         }
+    }
+
+    /**
+     * Register a saving model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function saving($callback)
+    {
+        static::registerModelEvent('saving', $callback);
+    }
+
+    /**
+     * Register a saved model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function saved($callback)
+    {
+        static::registerModelEvent('saved', $callback);
+    }
+
+    /**
+     * Register an updating model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function updating($callback)
+    {
+        static::registerModelEvent('updating', $callback);
+    }
+
+    /**
+     * Register an updated model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function updated($callback)
+    {
+        static::registerModelEvent('updated', $callback);
+    }
+
+    /**
+     * Register a creating model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function creating($callback)
+    {
+        static::registerModelEvent('creating', $callback);
+    }
+
+    /**
+     * Register a created model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function created($callback)
+    {
+        static::registerModelEvent('created', $callback);
+    }
+
+    /**
+     * Register a deleting model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function deleting($callback)
+    {
+        static::registerModelEvent('deleting', $callback);
+    }
+
+    /**
+     * Register a deleted model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function deleted($callback)
+    {
+        static::registerModelEvent('deleted', $callback);
+    }
+
+    /**
+     * Register a restoring model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function restoring($callback)
+    {
+        static::registerModelEvent('restoring', $callback);
+    }
+
+    /**
+     * Register a restored model event with the dispatcher.
+     *
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    public static function restored($callback)
+    {
+        static::registerModelEvent('restored', $callback);
+    }
+
+    /**
+     * Remove all of the event listeners for the model.
+     *
+     * @return void
+     */
+    public static function flushEventListeners()
+    {
+        if ( ! isset(static::$dispatcher)) return;
+
+        $instance = new static;
+
+        foreach ($instance->getObservableEvents() as $event) {
+            static::$dispatcher->forget("eloquent.{$event}: ".get_called_class());
+        }
+    }
+
+    /**
+     * Register a model event with the dispatcher.
+     *
+     * @param  string  $event
+     * @param  \Closure|string  $callback
+     * @return void
+     */
+    protected static function registerModelEvent($event, $callback)
+    {
+        if (isset(static::$dispatcher)) {
+            $name = get_called_class();
+
+            static::$dispatcher->listen("orm.{$event}: {$name}", $callback);
+        }
+    }
+
+    /**
+     * Get the observable event names.
+     *
+     * @return array
+     */
+    public function getObservableEvents()
+    {
+        return array_merge(
+            array(
+                'creating', 'created', 'updating', 'updated',
+                'deleting', 'deleted', 'saving', 'saved',
+                'restoring', 'restored',
+            ),
+            $this->observables
+        );
     }
 
     /**
@@ -1037,6 +1225,10 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $query = $this->newQueryWithDeleted();
 
+        if ($this->fireModelEvent('saving') === false) {
+            return false;
+        }
+
         if ($this->exists) {
             $saved = $this->performUpdate($query);
         } else {
@@ -1058,6 +1250,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $this->syncOriginal();
 
+        $this->fireModelEvent('saved', false);
 
         if (array_get($options, 'touch', true)) $this->touchOwners();
     }
@@ -1073,6 +1266,10 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         $dirty = $this->getDirty();
 
         if (count($dirty) > 0) {
+            if ($this->fireModelEvent('updating') === false) {
+                return false;
+            }
+
             if ($this->timestamps) {
                 $this->updateTimestamps();
             }
@@ -1081,6 +1278,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
 
             if (count($dirty) > 0) {
                 $this->setKeysForSaveQuery($query)->update($dirty);
+
+                $this->fireModelEvent('updated', false);
             }
         }
 
@@ -1095,6 +1294,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     protected function performInsert(Builder $query)
     {
+        if ($this->fireModelEvent('creating') === false) return false;
+
         if ($this->timestamps) {
             $this->updateTimestamps();
         }
@@ -1108,6 +1309,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         }
 
         $this->exists = true;
+
+        $this->fireModelEvent('created', false);
 
         return true;
     }
@@ -1147,6 +1350,24 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     public function touches($relation)
     {
         return in_array($relation, $this->touches);
+    }
+
+    /**
+     * Fire the given event for the model.
+     *
+     * @param  string  $event
+     * @param  bool    $halt
+     * @return mixed
+     */
+    protected function fireModelEvent($event, $halt = true)
+    {
+        if ( ! isset(static::$dispatcher)) return true;
+
+        $event = "orm.{$event}: ".get_class($this);
+
+        $method = $halt ? 'until' : 'fire';
+
+        return static::$dispatcher->$method($event, $this);
     }
 
     /**
@@ -2270,6 +2491,37 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     }
 
     /**
+     * Get the event dispatcher instance.
+     *
+     * @return \Events\Dispatcher
+     */
+    public static function getEventDispatcher()
+    {
+        return static::$dispatcher;
+    }
+
+    /**
+     * Set the event dispatcher instance.
+     *
+     * @param  \Events\Dispatcher  $dispatcher
+     * @return void
+     */
+    public static function setEventDispatcher(Dispatcher $dispatcher)
+    {
+        static::$dispatcher = $dispatcher;
+    }
+
+    /**
+     * Unset the event dispatcher for models.
+     *
+     * @return void
+     */
+    public static function unsetEventDispatcher()
+    {
+        static::$dispatcher = null;
+    }
+
+    /**
      * Get the mutated attributes for a given instance.
      *
      * @return array
@@ -2420,4 +2672,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         return $this->toJson();
     }
 
+    /**
+     * When a Model is being unserialized, check if it needs to be booted.
+     *
+     * @return void
+     */
+    public function __wakeup()
+    {
+        $this->bootIfNotBooted();
+    }
 }

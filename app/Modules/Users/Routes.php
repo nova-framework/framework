@@ -56,7 +56,7 @@ Router::post('password/remind', array(
 ));
 
 // The Password Reset.
-Router::get('password/reset', array(
+Router::get('password/reset(/(:any))', array(
     'filters' => 'guest',
     'uses' => 'App\Modules\Users\Controllers\Reminders@reset'
 ));

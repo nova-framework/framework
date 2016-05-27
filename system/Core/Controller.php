@@ -55,9 +55,7 @@ abstract class Controller
     public function __construct()
     {
         // Adjust to the default Template, if it is not defined.
-        if ($this->template === null) {
-            $this->template = TEMPLATE;
-        }
+        $this->template = $this->template ?: TEMPLATE;
 
         // Initialise the Language object.
         $this->language = Language::getInstance();
@@ -132,6 +130,12 @@ abstract class Controller
         return true;
     }
 
+    /**
+     * Create a proper Response instance and send it.
+     *
+     * @param mixed  $result
+     * @return bool
+     */
     protected function createResponse($result)
     {
         if ($result === null) {

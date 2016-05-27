@@ -29,6 +29,45 @@ class Mailer
 
 
     /**
+     * Create a proper Swift Transport instance.
+     *
+     * @param array $config
+     * @return \Swift_Transport
+     */
+    protected static function getSwiftTransport(array $config)
+    {
+        extract($config);
+
+        // Get a default Swift Transport instance.
+        if ($driver == 'smtp') {
+            $instance = SmtpTransport::newInstance($host, $port);
+
+            if (isset($encryption)) {
+                $instance->setEncryption($encryption);
+            }
+
+            if (isset($username)) {
+                $instance->setUsername($username);
+                $instance->setPassword($password);
+            }
+
+            return $instance;
+        } else if ($driver == 'sendmail') {
+            return SendmailTransport::newInstance($sendmail);
+        } else if ($driver == 'mail') {
+            return MailTransport::newInstance();
+        } else if ($driver != 'custom') {
+            throw new \InvalidArgumentException('Invalid mail driver.');
+        }
+
+        if(class_exists($transport)) {
+            return call_user_func(array($transport, 'newInstance'));
+        }
+
+        throw new \InvalidArgumentException('Invalid class specified for the mail driver.');
+    }
+
+    /**
      * Return the default \Mail\Mailer instance.
      *
      * @return \Mail\Mailer
@@ -44,39 +83,14 @@ class Mailer
         // Get the Mailer configuration.
         $config = Config::get('mail');
 
+        // Get the pretending mode.
         $pretend = $config['pretend'];
 
-        // Get a Swift Transport instance.
-        switch ($config['driver']) {
-            case 'smtp':
-                extract($config);
-
-                $transport = SmtpTransport::newInstance($host, $port);
-
-                if (isset($encryption)) {
-                    $transport->setEncryption($encryption);
-                }
-
-                if (isset($username)) {
-                    $transport->setUsername($username);
-                    $transport->setPassword($password);
-                }
-
-                break;
-            case 'sendmail':
-                $transport = SendmailTransport::newInstance($config['sendmail']);
-
-                break;
-            case 'mail':
-                $transport = MailTransport::newInstance();
-
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid mail driver.');
-        }
+        // Get the specified Swift Transport instance.
+        $transport = static::getSwiftTransport($config);
 
         // Get a Swift Mailer instance.
-        $swift = SwiftMailer($transport);
+        $swift = new SwiftMailer($transport);
 
         // Get the Events Dispatcher instance.
         $events = Events::getInstance();

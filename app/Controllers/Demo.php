@@ -121,8 +121,6 @@ class Demo extends Controller
     {
         echo '<pre>' .var_export(Session::get('language'), true) .'</pre>';
 
-        Session::set('test', 'This is a Test!');
-
         $data = Session::all();
 
         echo '<pre>' .var_export($data, true) .'</pre>';

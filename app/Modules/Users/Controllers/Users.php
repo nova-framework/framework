@@ -17,7 +17,6 @@ use Helpers\Url;
 use Auth;
 use Input;
 use Redirect;
-use Request;
 use Session;
 
 
@@ -25,15 +24,10 @@ class Users extends Controller
 {
     protected $layout = 'custom';
 
-    protected $model;
-
 
     public function __construct()
     {
         parent::__construct();
-
-        // Prepare the Users Model instance.
-        $this->model = new \App\Models\ORM\User();
     }
 
     protected function before()

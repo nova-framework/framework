@@ -136,11 +136,11 @@ class PasswordBroker
     {
         $view = $this->reminderView;
 
-        return $this->mailer->send($view, compact('token', 'user'), function($m) use ($user, $token, $callback)
+        return $this->mailer->send($view, compact('token', 'user'), function($message) use ($user, $token, $callback)
         {
-            $m->to($user->getReminderEmail());
+            $message->to($user->getReminderEmail());
 
-            if ( ! is_null($callback)) call_user_func($callback, $m, $user, $token);
+            if ( ! is_null($callback)) call_user_func($callback, $message, $user, $token);
         });
     }
 
@@ -213,7 +213,7 @@ class PasswordBroker
         list($password, $confirm) = array($credentials['password'], $credentials['password_confirmation']);
 
         if (isset($this->passwordValidator)) {
-            return call_user_func($this->passwordValidator, $credentials) && $password == $confirm;
+            return (call_user_func($this->passwordValidator, $credentials) && ($password == $confirm));
         } else {
             return $this->validatePasswordWithDefaults($credentials);
         }
@@ -229,7 +229,7 @@ class PasswordBroker
     {
         $matches = $credentials['password'] == $credentials['password_confirmation'];
 
-        return $matches && $credentials['password'] && strlen($credentials['password']) >= 6;
+        return ($matches && $credentials['password'] && (strlen($credentials['password']) >= 6));
     }
 
     /**

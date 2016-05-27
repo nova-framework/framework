@@ -122,7 +122,34 @@ abstract class Controller
      */
     protected function after($result)
     {
-        if (! $result instanceof BaseView) {
+        if($result === null) {
+            // Retrieve the legacy View instances.
+            $items = View::getLegacyItems();
+
+            if(empty($items)) {
+                // There are no legacy View instances; quit processing.
+                return true;
+            }
+
+            // Prepare the Response's Content.
+            $content = '';
+
+            foreach ($items as $item) {
+                // Fetch the current View instance to content.
+                $content .= $item->fetch();
+            }
+
+            // Retrieve also the legacy Headers.
+            $headers = View::getLegacyHeaders();
+
+            // Create a Response instance.
+            $response = Response::make($content, 200, $headers);
+
+            // Finish the Session and send the Response.
+            Session::finish($response);
+
+            return true;
+        } else if (! $result instanceof BaseView) {
             // If the result is neither a View or Template instance; no processing is required.
             return true;
         }

@@ -23,11 +23,7 @@ class Response
      */
     protected static $macros = array();
 
-    /**
-     * @var array Array of legacy HTTP headers
-     */
-    protected static $legacyHeaders = array();
-
+    
     /**
      * Return a new Response from the application.
      *
@@ -165,51 +161,6 @@ class Response
         }
 
         throw new \BadMethodCallException("Call to undefined method $method");
-    }
-
-    //--------------------------------------------------------------------
-    // Legacy API Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Add the HTTP header to the Headers array.
-     *
-     * @param  string  $header HTTP header text
-     */
-    public static function addHeader($header)
-    {
-        list($key, $value) = explode(' ', $header, 1);
-
-        $key = ltrim($key, ':');
-
-        self::$legacyHeaders[$key] = trim($value);
-    }
-
-    /**
-     * Add an array with Headers to the view.
-     *
-     * @param array $headers
-     */
-    public static function addHeaders(array $headers)
-    {
-        foreach ($headers as $header) {
-            static::addHeader($header);
-        }
-    }
-
-    /**
-     * Send the (legacy) Headers.
-     */
-    public static function sendHeaders()
-    {
-        if (! headers_sent()) {
-            foreach (self::$legacyHeaders as $header => $value) {
-                header("$header: $value", true);
-            }
-        }
-
-        // Clear the Legacy Headers.
-        static::$legacyHeaders = array();
     }
 
 }

@@ -61,7 +61,7 @@ class Mailer
         }
 
         if(class_exists($transport)) {
-            return call_user_func(array($transport, 'newInstance'));
+            return call_user_func(array($transport, 'newInstance'), $config);
         }
 
         throw new \InvalidArgumentException('Invalid class specified for the mail driver.');

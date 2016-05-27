@@ -54,32 +54,38 @@ class Demo extends Controller
             'param4' => $param4
         );
 
-        echo '<h3>Action parameters</h3>';
+        $content = '<pre>' .var_export($params, true) .'</pre>';
 
-        echo '<pre>' .var_export($params, true) .'</pre>';
+        return View::make('Default')
+            ->shares('title', __('Test'))
+            ->with('content', $content);
     }
 
     public function request($param1 = '', $param2 = '', $param3 = '', $param4 = '')
     {
-        echo '<h3>HTTP Request</h3>';
+        $content = '';
 
-        echo '<pre>' .var_export(Request::root(), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::root(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::url(), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::url(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::path(), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::path(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::segments(), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::segments(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::segment(1), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::segment(1), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::isGet(), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::isGet(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::isPost(), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::isPost(), true).'</pre>';
 
-        echo '<pre>' .var_export(Input::all(), true).'</pre>';
+        $content .= '<pre>' .var_export(Input::all(), true).'</pre>';
 
-        echo '<pre>' .var_export(Request::instance(), true).'</pre>';
+        $content .= '<pre>' .var_export(Request::instance(), true).'</pre>';
+
+        return View::make('Default')
+            ->shares('title', __('Request API'))
+            ->with('content', $content);
     }
 
     public function events()
@@ -103,19 +109,25 @@ class Demo extends Controller
 
     public function database()
     {
+        $content = '';
+
         $user = User::find(1);
 
-        echo '<pre>' .var_export($user->toArray(), true) .'</pre>';
+        $content .= '<pre>' .var_export($user->toArray(), true) .'</pre>';
 
         //
         $users = User::all();
 
-        echo '<pre>' .var_export($users->toArray(), true) .'</pre>';
+        $content .= '<pre>' .var_export($users->toArray(), true) .'</pre>';
 
         //
         $users = User::where('username', '!=', 'admin')->orderBy('username', 'desc')->get();
 
-        echo '<pre>' .var_export($users->toArray(), true) .'</pre>';
+        $content .= '<pre>' .var_export($users->toArray(), true) .'</pre>';
+
+        return View::make('Default')
+            ->shares('title', __('Database API'))
+            ->with('content', $content);
     }
 
     public function mailer()
@@ -144,16 +156,17 @@ class Demo extends Controller
 
     public function session()
     {
-        echo '<pre>' .var_export(Session::get('language'), true) .'</pre>';
+        $content = '';
+
+        $content .= '<pre>' .var_export(Session::get('language'), true) .'</pre>';
 
         $data = Session::all();
 
-        echo '<pre>' .var_export($data, true) .'</pre>';
+        $content .= '<pre>' .var_export($data, true) .'</pre>';
 
-        //
-        $data = Session::all();
-
-        echo '<pre>' .var_export($data, true) .'</pre>';
+        return View::make('Default')
+            ->shares('title', __('Session API'))
+            ->with('content', $content);
     }
 
     public function validate()
@@ -172,15 +185,22 @@ class Demo extends Controller
 
         $validator = Validator::make($data, $rules);
 
-        if ($validator->passes()) {
-            echo '<h3>Data validated with success!</h3>';
+        //
+        $content = '';
 
-            echo '<pre>' .var_export($data, true) .'</pre>';
+        if ($validator->passes()) {
+            $content .= '<h3>Data validated with success!</h3>';
+
+            $content .= '<pre>' .var_export($data, true) .'</pre>';
         } else {
             $errors = $validator->errors()->all();
 
-            echo '<pre>' .var_export($errors, true) .'</pre>';
+            $content .= '<pre>' .var_export($errors, true) .'</pre>';
         }
+
+        return View::make('Default')
+            ->shares('title', __('Validation API'))
+            ->with('content', $content);
     }
 
     public function paginate()

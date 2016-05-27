@@ -23,7 +23,7 @@ class Response
      */
     protected static $macros = array();
 
-    
+
     /**
      * Return a new Response from the application.
      *
@@ -123,9 +123,6 @@ class Response
      */
     public static function error($status, array $data = array(), $headers = array())
     {
-        // Clear the Legacy Headers first.
-        static::$legacyHeaders = array();
-
         $view = Template::make('default')
             ->shares('title', 'Error ' .$status)
             ->nest('content', 'Error/' .$status, $data);

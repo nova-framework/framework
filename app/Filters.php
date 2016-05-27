@@ -19,7 +19,7 @@ use Support\Facades\Response;
 
 // A Testing Filter which dump the matched Route.
 Route::filter('test', function($route) {
-    echo '<pre>' .var_export($route, true) .'</pre>';
+    echo '<pre style="margin: 10px;">' .var_export($route, true) .'</pre>';
 });
 
 // A simple CSRF Filter.

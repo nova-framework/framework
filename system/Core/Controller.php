@@ -88,10 +88,17 @@ abstract class Controller
             Session::finish($result);
 
             return true;
+        } else {
+            // After the Action execution stage.
+            $retval = $this->after($result);
         }
 
-        // After the Action execution stage.
-        return $this->after($result);
+        if($retval !== false) {
+            // Create the Response and send it.
+            return $this->createResponse($result);
+        }
+
+        return true;
     }
 
     /**
@@ -122,7 +129,12 @@ abstract class Controller
      */
     protected function after($result)
     {
-        if($result === null) {
+        return true;
+    }
+
+    protected function createResponse($result)
+    {
+        if (! $result instanceof BaseView) {
             // Retrieve the legacy View instances.
             $items = View::getLegacyItems();
 
@@ -148,9 +160,6 @@ abstract class Controller
             // Finish the Session and send the Response.
             Session::finish($response);
 
-            return true;
-        } else if (! $result instanceof BaseView) {
-            // If the result is neither a View or Template instance; no processing is required.
             return true;
         }
 

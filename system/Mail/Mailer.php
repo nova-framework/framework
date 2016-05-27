@@ -34,6 +34,13 @@ class Mailer
     protected $from;
 
     /**
+     * Indicates if the actual sending is disabled.
+     *
+     * @var bool
+     */
+    protected $pretending = false;
+
+    /**
      * Array of failed recipients.
      *
      * @var array
@@ -51,6 +58,19 @@ class Mailer
     {
         $this->swift  = $swift;
         $this->events = $events;
+    }
+
+    /**
+     * Send a new message when only a plain part.
+     *
+     * @param  string  $view
+     * @param  array   $data
+     * @param  mixed   $callback
+     * @return int
+     */
+    public function plain($view, array $data, $callback)
+    {
+        return $this->send(array('text' => $view), $data, $callback);
     }
 
     /**
@@ -143,7 +163,13 @@ class Mailer
             $this->events->fire('mailer.sending', array($message));
         }
 
-        $this->swift->send($message, $this->failedRecipients);
+        if (! $this->pretending) {
+            return $this->swift->send($message, $this->failedRecipients);
+        }
+
+        $this->logMessage($message);
+
+        return 1;
     }
 
     /**
@@ -187,6 +213,27 @@ class Mailer
     }
 
     /**
+     * Tell the mailer to not really send messages.
+     *
+     * @param  bool  $value
+     * @return void
+     */
+    public function pretend($value = true)
+    {
+        $this->pretending = $value;
+    }
+
+    /**
+     * Get the Swift Mailer instance.
+     *
+     * @return \Swift_Mailer
+     */
+    public function getSwiftMailer()
+    {
+        return $this->swift;
+    }
+
+    /**
      * Get the array of failed recipients.
      *
      * @return array
@@ -196,4 +243,35 @@ class Mailer
         return $this->failedRecipients;
     }
 
+    /**
+     * Set the Swift Mailer instance.
+     *
+     * @param  \Swift_Mailer  $swift
+     * @return void
+     */
+    public function setSwiftMailer($swift)
+    {
+        $this->swift = $swift;
+    }
+
+    /**
+     * Log that a message was sent.
+     *
+     * @param  \Swift_Message  $message
+     * @return void
+     */
+    protected function logMessage($message)
+    {
+        $filePath = str_replace('/', DS, APPDIR .'Storage/Logs/messages.log');
+
+        $emails = implode(', ', array_keys((array) $message->getTo()));
+
+        $content = "Pretending to mail message to: {$emails}"
+            .PHP_EOL
+            .PHP_EOL
+            .$message->toString()
+            .PHP_EOL;
+
+        file_puts_content($filePath, $content, FILE_APPEND);
+    }
 }

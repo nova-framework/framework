@@ -104,10 +104,15 @@ class Demo extends Controller
     {
         $user = User::find(1);
 
-        echo '<pre>' .var_export($user, true) .'</pre>';
+        echo '<pre>' .var_export($user->toArray(), true) .'</pre>';
 
         //
-        $users = User::where('username', '!=', 'admin')->orderBy('username', 'asc')->get();
+        $users = User::all();
+
+        echo '<pre>' .var_export($users->toArray(), true) .'</pre>';
+
+        //
+        $users = User::where('username', '!=', 'admin')->orderBy('username', 'desc')->get();
 
         echo '<pre>' .var_export($users->toArray(), true) .'</pre>';
     }
@@ -123,8 +128,6 @@ class Demo extends Controller
         echo '<pre>' .var_export($data, true) .'</pre>';
 
         //
-        Session::forget('test');
-
         $data = Session::all();
 
         echo '<pre>' .var_export($data, true) .'</pre>';

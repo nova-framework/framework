@@ -11,8 +11,11 @@ use Core\Config;
 
 
 Config::set('classAliases', array(
+    // The Core Tools
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
+
+    // The Helpers
     'Mail'          => '\Helpers\Mailer',
     'Assets'        => '\Helpers\Assets',
     'Csrf'          => '\Helpers\Csrf',
@@ -33,9 +36,11 @@ Config::set('classAliases', array(
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
+
     // The Support Classes
     'Arr'           => '\Support\Arr',
     'Str'           => '\Support\Str',
+
     // The Support Facades
     'Auth'          => '\Support\Facades\Auth',
     'Cookie'        => '\Support\Facades\Cookie',
@@ -44,6 +49,7 @@ Config::set('classAliases', array(
     'Event'         => '\Support\Facades\Event',
     'Input'         => '\Support\Facades\Input',
     'Language'      => '\Support\Facades\Language',
+    'Mailer'        => '\Support\Facades\Mailer',
     'Paginator'     => '\Support\Facades\Paginator',
     'Redirect'      => '\Support\Facades\Redirect',
     'Request'       => '\Support\Facades\Request',

@@ -42,7 +42,11 @@ class Demo extends Controller
 
     public function password($password)
     {
-        echo Password::make($password);
+        $content = Password::make($password);
+
+        return View::make('Default')
+            ->shares('title', __('Password Sample'))
+            ->with('content', $content);
     }
 
     public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')
@@ -90,8 +94,8 @@ class Demo extends Controller
 
     public function events()
     {
-        echo '<h3>Events dispatching</h3>';
-
+        $content = '';
+        
         // Prepare the Event payload.
         $payload = array(
             'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__)
@@ -101,10 +105,14 @@ class Demo extends Controller
         $results = Event::fire('test', $payload);
 
         // Print out the non-empty results returned by Event firing.
-        echo implode('', array_filter($results, 'strlen')) .'<br>';
+        $content .= implode('', array_filter($results, 'strlen')) .'<br>';
 
         // Fire the Event 'test' and echo the result.
-        echo Event::until('test', $payload);
+        $content .= Event::until('test', $payload);
+
+        return View::make('Default')
+            ->shares('title', __('Events API'))
+            ->with('content', $content);
     }
 
     public function database()

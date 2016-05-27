@@ -9,6 +9,7 @@ use Helpers\Url;
 use Event;
 use Validator;
 use Input;
+use Mailer;
 use Redirect;
 use Request;
 use Session;
@@ -115,6 +116,30 @@ class Demo extends Controller
         $users = User::where('username', '!=', 'admin')->orderBy('username', 'desc')->get();
 
         echo '<pre>' .var_export($users->toArray(), true) .'</pre>';
+    }
+
+    public function mailer()
+    {
+        $data = array(
+            'title'   => __('Welcome to {0}!', SITETITLE),
+            'content' => __('This is a test!!!'),
+        );
+
+        Mailer::pretend(true);
+
+        Mailer::send('Emails/Welcome', $data, function($message)
+        {
+            $message->from('admin@novaframework', 'Administrator')
+                ->to('john@novaframework', 'John Smith')
+                ->subject('Welcome!');
+        });
+
+        // Prepare and return the View instance.
+        $content = __('Message sent while pretending. Please, look on <code>{0}</code>', 'app/Storage/Logs/messages.log');
+
+        return View::make('Default')
+            ->shares('title', __('Mailing API'))
+            ->with('content', $content);
     }
 
     public function session()

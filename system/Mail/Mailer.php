@@ -272,6 +272,6 @@ class Mailer
             .PHP_EOL;
 
         // Append the text to the messages.log
-        file_puts_content($filePath, $content, FILE_APPEND);
+        file_put_contents($filePath, $content, FILE_APPEND);
     }
 }

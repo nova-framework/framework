@@ -13,10 +13,10 @@ Config::set('auth', array(
     // The default Authentication Driver
     'driver' => 'extended',               // Supported: "database", "extended"
 
-    // The Authentication Model for the Extended Driver.
+    // The Authentication Model, for the Extended Driver.
     'model' => 'App\Models\ORM\User',
 
-    // The Authentication Table
+    // The Authentication Table, for the Database Driver.
     'table' => 'users',
 
     /*
@@ -37,6 +37,5 @@ Config::set('auth', array(
         'email'  => 'Emails/Auth/Reminder',
         'table'  => 'password_reminders',
         'expire' => 60,
-
     )
 ));

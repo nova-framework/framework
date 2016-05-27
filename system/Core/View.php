@@ -127,7 +127,7 @@ class View extends BaseView
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
-                return call_user_func_array(array(static::class, $method), $params);
+                return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
 
             case 'sendHeaders':
                 return null;

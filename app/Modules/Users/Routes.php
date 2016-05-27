@@ -13,7 +13,7 @@ use Routing\Router;
 
 // The default Auth Routes.
 Router::get('login',  array(
-    'filters' => 'guest|csrf',
+    'filters' => 'guest',
     'uses' => 'App\Modules\Users\Controllers\Users@login'
 ));
 
@@ -35,12 +35,34 @@ Router::get('dashboard', array(
 
 // The User's Profile.
 Router::get('profile', array(
-    'filters' => 'auth|csrf',
+    'filters' => 'auth',
     'uses' => 'App\Modules\Users\Controllers\Users@profile'
 ));
 
 Router::post('profile', array(
     'filters' => 'auth|csrf',
     'uses' => 'App\Modules\Users\Controllers\Users@postProfile'
+));
+
+// The Password Remind.
+Router::get('password/remind', array(
+    'filters' => 'guest',
+    'uses' => 'App\Modules\Users\Controllers\Reminders@remind'
+));
+
+Router::post('password/remind', array(
+    'filters' => 'guest|csrf',
+    'uses' => 'App\Modules\Users\Controllers\Reminders@postRemind'
+));
+
+// The Password Reset.
+Router::get('password/reset', array(
+    'filters' => 'guest',
+    'uses' => 'App\Modules\Users\Controllers\Reminders@reset'
+));
+
+Router::post('password/reset', array(
+    'filters' => 'guest|csrf',
+    'uses' => 'App\Modules\Users\Controllers\Reminders@postReset'
 ));
 

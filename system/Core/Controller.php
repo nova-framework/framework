@@ -88,10 +88,10 @@ abstract class Controller
             Session::finish($result);
 
             return true;
-        } else {
-            // After the Action execution stage.
-            $retval = $this->after($result);
         }
+
+        // After the Action execution stage.
+        $retval = $this->after($result);
 
         if($retval !== false) {
             // Create the Response and send it.
@@ -134,7 +134,7 @@ abstract class Controller
 
     protected function createResponse($result)
     {
-        if (! $result instanceof BaseView) {
+        if ($result === null) {
             // Retrieve the legacy View instances.
             $items = View::getLegacyItems();
 
@@ -160,6 +160,9 @@ abstract class Controller
             // Finish the Session and send the Response.
             Session::finish($response);
 
+            return true;
+        } else if (! $result instanceof BaseView) {
+            // The result is not a BaseView instance; quit the processing.
             return true;
         }
 

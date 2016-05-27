@@ -100,38 +100,7 @@ abstract class Controller
     }
 
     /**
-     * Method automatically invoked before the current Action, stopping the flight
-     * when it returns false. This Method is supposed to be overriden for using it.
-     */
-    protected function before()
-    {
-        // Run the Hooks associated to the Views.
-        $hooks = Hooks::get();
-
-        foreach (array('afterBody', 'css', 'js') as $hook) {
-            $result = $hooks->run($hook);
-
-            // Share the result into Views.
-            View::share($hook, $result);
-        }
-
-        // Return true to continue the processing.
-        return true;
-    }
-
-    /**
-     * This method automatically invokes after the current Action, when it does not return a
-     * null or boolean value. This Method is supposed to be overriden for using it.
-     *
-     * Note that the Action's returned value is passed to this Method as parameter.
-     */
-    protected function after($result)
-    {
-        return true;
-    }
-
-    /**
-     * Create a proper Response instance and send it.
+     * Create from the given result a Response instance and send it.
      *
      * @param mixed  $result
      * @return bool
@@ -182,6 +151,37 @@ abstract class Controller
         // Finish the Session and send the Response.
         Session::finish($response);
 
+        return true;
+    }
+
+    /**
+     * Method automatically invoked before the current Action, stopping the flight
+     * when it returns false. This Method is supposed to be overriden for using it.
+     */
+    protected function before()
+    {
+        // Run the Hooks associated to the Views.
+        $hooks = Hooks::get();
+
+        foreach (array('afterBody', 'css', 'js') as $hook) {
+            $result = $hooks->run($hook);
+
+            // Share the result into Views.
+            View::share($hook, $result);
+        }
+
+        // Return true to continue the processing.
+        return true;
+    }
+
+    /**
+     * This method automatically invokes after the current Action, when it does not return a
+     * null or boolean value. This Method is supposed to be overriden for using it.
+     *
+     * Note that the Action's returned value is passed to this Method as parameter.
+     */
+    protected function after($result)
+    {
         return true;
     }
 

@@ -164,12 +164,10 @@ class Mailer
         }
 
         if (! $this->pretending) {
-            return $this->swift->send($message, $this->failedRecipients);
+            $this->swift->send($message, $this->failedRecipients);
+        } else {
+            $this->logMessage($message);
         }
-
-        $this->logMessage($message);
-
-        return 1;
     }
 
     /**
@@ -264,6 +262,7 @@ class Mailer
     {
         $filePath = str_replace('/', DS, APPDIR .'Storage/Logs/messages.log');
 
+        // Prepare the content of the log.
         $emails = implode(', ', array_keys((array) $message->getTo()));
 
         $content = "Pretending to mail message to: {$emails}"
@@ -272,6 +271,7 @@ class Mailer
             .$message->toString()
             .PHP_EOL;
 
+        // Append the text to the messages.log
         file_puts_content($filePath, $content, FILE_APPEND);
     }
 }

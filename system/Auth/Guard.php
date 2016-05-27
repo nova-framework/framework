@@ -214,7 +214,7 @@ class Guard
 
         $segments = explode('|', $recaller);
 
-        return count($segments) == 2 && trim($segments[0]) !== '' && trim($segments[1]) !== '';
+        return ((count($segments) == 2) && (trim($segments[0]) !== '') && (trim($segments[1]) !== ''));
     }
 
     /**
@@ -278,8 +278,7 @@ class Guard
     {
         $request = $request ?: $this->getRequest();
 
-        if ( ! $this->once($this->getBasicCredentials($request, $field)))
-        {
+        if (! $this->once($this->getBasicCredentials($request, $field))) {
             return $this->getBasicResponse();
         }
     }
@@ -293,7 +292,7 @@ class Guard
      */
     protected function attemptBasic(Request $request, $field)
     {
-        if ( ! $request->getUser()) return false;
+        if (! $request->getUser()) return false;
 
         return $this->attempt($this->getBasicCredentials($request, $field));
     }
@@ -450,7 +449,7 @@ class Guard
     {
         $this->setUser($this->provider->retrieveById($id));
 
-        return $this->user instanceof UserInterface;
+        return ($this->user instanceof UserInterface);
     }
 
     /**
@@ -488,13 +487,11 @@ class Guard
 
         $this->clearUserDataFromStorage();
 
-        if ( ! is_null($this->user))
-        {
+        if ( ! is_null($this->user)) {
             $this->refreshRememberToken($user);
         }
 
-        if (isset($this->events))
-        {
+        if (isset($this->events)) {
             $this->events->fire('auth.logout', array($user));
         }
 

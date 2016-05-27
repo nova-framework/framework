@@ -33,7 +33,7 @@ class Users extends Controller
         parent::__construct();
 
         // Prepare the Users Model instance.
-        $this->model = new \App\Modules\Users\Models\Users();
+        $this->model = new \App\Models\ORM\User();
     }
 
     protected function before()

@@ -44,6 +44,8 @@ class Mailer
         // Get the Mailer configuration.
         $config = Config::get('mail');
 
+        $pretend = $config['pretend'];
+
         // Get a Swift Transport instance.
         switch ($config['driver']) {
             case 'smtp':
@@ -79,7 +81,11 @@ class Mailer
         // Get the Events Dispatcher instance.
         $events = Events::getInstance();
 
-        return static::$mailer = new NovaMailer($swift, $events);
+        static::$mailer = $mailer = new NovaMailer($swift, $events);
+
+        $mailer->pretend($pretend);
+
+        return $mailer;
     }
 
     /**

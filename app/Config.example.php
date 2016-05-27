@@ -145,6 +145,11 @@ require 'Config/Database.php';
 require 'Config/Auth.php';
 
 /**
+ * Setup the Mailing API configuration.
+ */
+require 'Config/Mail.php';
+
+/**
  * Setup the FastCache configuration.
  */
 require 'Config/Cache.php';

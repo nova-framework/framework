@@ -16,4 +16,6 @@ class User extends BaseModel
     protected $table = 'users';
 
     protected $primaryKey = 'id';
+
+    protected $hidden = array('password', 'remember_token');
 }

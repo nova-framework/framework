@@ -2021,7 +2021,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function getDates()
     {
-        $defaults = array(static::CREATED_AT, static::UPDATED_AT);
+        $defaults = array(static::CREATED_AT, static::UPDATED_AT, static::DELETED_AT);
 
         return array_merge($this->dates, $defaults);
     }
@@ -2385,10 +2385,10 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @param  array   $params
      * @return mixed
      */
-    public function __call($method, $parameters)
+    public function __call($method, $params)
     {
         if (in_array($method, array('increment', 'decrement'))) {
-            return call_user_func_array(array($this, $method), $parameters);
+            return call_user_func_array(array($this, $method), $params);
         }
 
         $query = $this->newQuery();

@@ -105,6 +105,11 @@ class Demo extends Controller
         $user = User::find(1);
 
         echo '<pre>' .var_export($user, true) .'</pre>';
+
+        //
+        $users = User::where('username', '!=', 'admin')->orderBy('username', 'asc')->get();
+
+        echo '<pre>' .var_export($users->toArray(), true) .'</pre>';
     }
 
     public function session()

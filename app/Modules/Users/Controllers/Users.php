@@ -59,11 +59,8 @@ class Users extends Controller
     {
         $error = array();
 
-        // Prepare the Authentication credentials.
-        $credentials = array(
-            'username' => Input::get('username'),
-            'password' => Input::get('password')
-        );
+        // Retrieve the Authentication credentials.
+        $credentials = Input::only('username', 'password');
 
         // Prepare the 'remember' parameter.
         $remember = (Input::get('remember') == 'on');
@@ -83,7 +80,7 @@ class Users extends Controller
         // An error has happened on authentication; add a message into $error array.
         $error[] = __d('users', 'Wrong username or password.');
 
-        return Redirect::to('login')->with('error', $error);
+        return Redirect::back()->with('error', $error);
     }
 
     public function logout()
@@ -132,9 +129,9 @@ class Users extends Controller
             //$this->model->updateGenericUser($user);
 
             // Use a Redirect to avoid the reposting the data.
-            return Redirect::to('profile')->with('message', __d('users', 'You have successfully updated your Password.'));
+            return Redirect::back()->with('message', __d('users', 'You have successfully updated your Password.'));
         }
 
-        return Redirect::to('profile')->with('error', $error);
+        return Redirect::back()->with('error', $error);
     }
 }

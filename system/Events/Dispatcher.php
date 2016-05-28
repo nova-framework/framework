@@ -104,8 +104,6 @@ class Dispatcher
      *
      * @param  string  $subscriber
      * @return void
-     *
-     * @throw \InvalidArgumentException
      */
     public function subscribe($subscriber)
     {
@@ -119,6 +117,8 @@ class Dispatcher
      *
      * @param  mixed  $subscriber
      * @return \Events\Subscriber
+     *
+     * @throw \InvalidArgumentException
      */
     protected function resolveSubscriber($subscriber)
     {

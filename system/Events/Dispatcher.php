@@ -104,10 +104,16 @@ class Dispatcher
      *
      * @param  string  $subscriber
      * @return void
+     *
+     * @throw \InvalidArgumentException
      */
     public function subscribe($subscriber)
     {
         $subscriber = $this->resolveSubscriber($subscriber);
+
+        if (! $subscriber instanceof Subscriber) {
+            throw new \InvalidArgumentException('Invalid subscriber.');
+        }
 
         $subscriber->subscribe($this);
     }
@@ -117,17 +123,11 @@ class Dispatcher
      *
      * @param  mixed  $subscriber
      * @return \Events\Subscriber
-     *
-     * @throw \InvalidArgumentException
      */
     protected function resolveSubscriber($subscriber)
     {
         if (is_string($subscriber) && class_exists($subscriber)) {
-            $subscriber = new $subscriber();
-        }
-
-        if (! $subscriber instanceof Subscriber) {
-            throw new \InvalidArgumentException('Invalid subscriber.');
+            return new $subscriber();
         }
 
         return $subscriber;

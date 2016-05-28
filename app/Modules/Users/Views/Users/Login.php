@@ -24,13 +24,13 @@
                 </div>
                 <div class="row" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <input type="submit" name="submit" class="btn btn-success col-sm-4" value="<?= __d('users', 'Login'); ?>">
+                        <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Login'); ?>">
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <a href="<?= site_url('password/remind'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Forgot Password?'); ?></a>
                     </div>
                 </div>
-                
+
                 <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
 
                 </form>

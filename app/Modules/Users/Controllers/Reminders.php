@@ -47,7 +47,7 @@ class Reminders extends Controller
         $error = Session::remove('error', array());
 
         return View::make('Reminders/Remind', 'Users')
-            ->shares('title', __d('users', 'Password Reminder'))
+            ->shares('title', __d('users', 'Password Recovery'))
             ->with('csrfToken', Session::token())
             ->with('error', $error);
     }
@@ -68,7 +68,7 @@ class Reminders extends Controller
                 return Redirect::back()->with('error', $error[] = __d('users', 'We can\'t find a User with that e-mail address.'));
 
             case Password::REMINDER_SENT:
-                return Redirect::back()->with('message', __d('users', 'Password reminder sent!'));
+                return Redirect::back()->with('message', __d('users', 'Reset instructions have been sent to your email address'));
         }
     }
 

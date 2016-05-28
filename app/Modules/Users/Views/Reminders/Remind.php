@@ -20,7 +20,7 @@
                     </div>
                     <hr>
                     <div>
-                        <button type="submit" class="btn btn-success col-lg-8 pull-right"><i class='fa fa-sign-in'></i> <?= __d('users', 'Send the Reminder'); ?></button>
+                        <button type="submit" class="btn btn-success col-lg-8 pull-right"><i class='fa fa-sign-in'></i> <?= __d('users', 'Send reset link'); ?></button>
                     </div>
                     <div class="clearfix"></div>
                     <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />

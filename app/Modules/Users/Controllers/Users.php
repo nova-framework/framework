@@ -129,7 +129,7 @@ class Users extends Controller
             $user->save();
 
             // Save the User Model instance - used with the Database Auth Driver.
-            //$this->model->updateUser($user);
+            //$this->model->updateGenericUser($user);
 
             // Use a Redirect to avoid the reposting the data.
             return Redirect::to('profile')->with('message', __d('users', 'You have successfully updated your Password.'));

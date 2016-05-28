@@ -8,7 +8,7 @@
 
 namespace App\Modules\Users\Models;
 
-use Auth\GenericModel;
+use Auth\GenericUser;
 use Database\Model as BaseModel;
 
 
@@ -24,7 +24,7 @@ class Users extends BaseModel
         parent::__construct();
     }
 
-    public function updateUser(GenericModel $user)
+    public function updateGenericUser(GenericUser $user)
     {
         $keyName = $this->getKeyName();
 

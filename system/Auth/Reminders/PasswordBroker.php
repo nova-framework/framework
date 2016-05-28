@@ -3,7 +3,7 @@
 namespace Auth\Reminders;
 
 use Auth\Reminders\ReminderRepository;
-use Auth\UserProvider;
+use Auth\UserProviderInterface;
 use Mail\Mailer;
 
 use Closure;
@@ -91,7 +91,7 @@ class PasswordBroker
      * @return void
      */
     public function __construct(ReminderRepository $reminders,
-                                UserProvider $users,
+                                UserProviderInterface $users,
                                 Mailer $mailer,
                                 $reminderView)
     {

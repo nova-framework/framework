@@ -1221,7 +1221,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @param  array  $options
      * @return bool
      */
-    public function save()
+    public function save(array $options = array())
     {
         $query = $this->newQueryWithDeleted();
 

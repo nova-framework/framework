@@ -10,7 +10,6 @@ namespace App\Modules\Users\Controllers;
 
 use Core\Controller;
 use Core\View;
-use Helpers\Csrf;
 use Helpers\Url;
 
 use Auth;
@@ -49,7 +48,7 @@ class Users extends Controller
 
         return View::make('Users/Login', 'Users')
             ->shares('title', __d('users', 'User Login'))
-            ->with('csrfToken', Csrf::makeToken())
+            ->with('csrfToken', Session::token())
             ->with('error', $error);
     }
 
@@ -100,7 +99,7 @@ class Users extends Controller
         return View::make('Users/Profile', 'Users')
             ->shares('title',  __d('users', 'User Profile'))
             ->with('user', $user)
-            ->with('csrfToken', Csrf::makeToken())
+            ->with('csrfToken', Session::token())
             ->with('error', $error);
     }
 

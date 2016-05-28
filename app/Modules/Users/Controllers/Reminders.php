@@ -10,7 +10,6 @@ namespace App\Modules\Users\Controllers;
 
 use Core\Controller;
 use Core\View;
-use Helpers\Csrf;
 use Helpers\Url;
 
 use Hash;
@@ -49,7 +48,7 @@ class Reminders extends Controller
 
         return View::make('Reminders/Remind', 'Users')
             ->shares('title', __d('users', 'Password Reminder'))
-            ->with('csrfToken', Csrf::makeToken())
+            ->with('csrfToken', Session::token())
             ->with('error', $error);
     }
 
@@ -87,7 +86,7 @@ class Reminders extends Controller
 
         return View::make('Reminders/Reset', 'Users')
             ->shares('title', __d('users', 'Password Reset'))
-            ->with('csrfToken', Csrf::makeToken())
+            ->with('csrfToken', Session::token())
             ->with('error', $error)
             ->with('token', $token);
     }

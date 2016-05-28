@@ -68,7 +68,7 @@ class Users extends Controller
 
         // Make an attempt to login the Guest with the given credentials.
         if(Auth::attempt($credentials, $remember)) {
-            // The User is authenticated now; retrieve his data as an stdClass instance.
+            // The User is authenticated now; retrieve his Model instance.
             $user = Auth::user();
 
             // Prepare the flash message.

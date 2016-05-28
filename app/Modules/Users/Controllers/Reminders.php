@@ -60,9 +60,11 @@ class Reminders extends Controller
     {
         $credentials = Input::only('email');
 
+        $error = array();
+
         switch ($response = Password::remind($credentials)) {
             case Password::INVALID_USER:
-                return Redirect::to('remind')->with('error', __('users', 'We can\'t find a User with that e-mail address.'));
+                return Redirect::to('remind')->with('error', $error[] = __('users', 'We can\'t find a User with that e-mail address.'));
 
             case Password::REMINDER_SENT:
                 return Redirect::to('remind')->with('status', __('users', 'Password reminder sent!'));
@@ -106,17 +108,19 @@ class Reminders extends Controller
             $user->save();
         });
 
+        $error = array();
+
         switch ($response) {
             case Password::INVALID_PASSWORD:
-                $error = __('users', 'Passwords must be at least six characters and match the confirmation.');
+                $error[] = __('users', 'Passwords must be at least six characters and match the confirmation.');
 
                 break;
             case Password::INVALID_TOKEN:
-                $error = __('users', 'This password reset token is invalid.');
+                $error[] = __('users', 'This password reset token is invalid.');
 
                 break;
             case Password::INVALID_USER:
-                $error = __('users', 'We can\'t find a User with that e-mail address.');
+                $error[] = __('users', 'We can\'t find a User with that e-mail address.');
 
                 break;
             case Password::PASSWORD_RESET:

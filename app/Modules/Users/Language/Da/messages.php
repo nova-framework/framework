@@ -6,7 +6,6 @@ return array (
   'Dashboard' => 'Skrivebord',
   'Insert the current E-mail' => '',
   'Insert the current Password' => 'Indtast den nuværende kodeord',
-  'Insert the current e-mail' => '',
   'Insert the new Password' => 'Indtast det nye kodeord',
   'Password' => 'Kodeord',
   'Password Recovery' => '',

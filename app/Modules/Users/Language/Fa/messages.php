@@ -6,7 +6,6 @@ return array (
   'Dashboard' => 'داشبورد',
   'Insert the current E-mail' => '',
   'Insert the current Password' => 'رمزعبور فعلی را وارد کنید',
-  'Insert the current e-mail' => '',
   'Insert the new Password' => 'رمزعبور جدید را وارد کنید',
   'Password' => 'رمزعبور',
   'Password Recovery' => '',

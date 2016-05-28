@@ -6,7 +6,6 @@ return array (
   'Dashboard' => '',
   'Insert the current E-mail' => '',
   'Insert the current Password' => '',
-  'Insert the current e-mail' => '',
   'Insert the new Password' => '',
   'Password' => '',
   'Password Recovery' => '',

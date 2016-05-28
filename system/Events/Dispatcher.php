@@ -111,10 +111,6 @@ class Dispatcher
     {
         $subscriber = $this->resolveSubscriber($subscriber);
 
-        if (! $subscriber instanceof Subscriber) {
-            throw new \InvalidArgumentException('Invalid subscriber.');
-        }
-
         $subscriber->subscribe($this);
     }
 
@@ -126,11 +122,22 @@ class Dispatcher
      */
     protected function resolveSubscriber($subscriber)
     {
-        if (is_string($subscriber) && class_exists($subscriber)) {
-            return new $subscriber();
+        if (! is_string($subscriber)) {
+            return $subscriber;
         }
 
-        return $subscriber;
+        if (! class_exists($subscriber)) {
+            throw new \InvalidArgumentException('Invalid subscriber requested.');
+        }
+
+        // Get a instance of the requested Subscriber.
+        $instance = new $subscriber();
+
+        if ($instance instanceof Subscriber) {
+            return $instance;
+        }
+
+        throw new \InvalidArgumentException('Invalid subscriber requested.');
     }
 
     /**

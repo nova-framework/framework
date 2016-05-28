@@ -2,8 +2,11 @@
 
 namespace Auth;
 
+use Auth\UserInterface;
+use Support\Contracts\ArrayableInterface;
 
-class GenericUser implements UserInterface
+
+class GenericUser implements UserInterface, ArrayableInterface
 {
     /**
      * All of the User's attributes.
@@ -21,6 +24,16 @@ class GenericUser implements UserInterface
     public function __construct(array $attributes)
     {
         $this->attributes = $attributes;
+    }
+
+    /**
+     * Convert the Model instance to an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->attributes;
     }
 
     /**

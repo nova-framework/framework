@@ -27,6 +27,9 @@ class Users extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        // Prepare the Users Model instance - while using the Database Auth Driver.
+        //$this->model = new \App\Modules\Users\Models\Users();
     }
 
     protected function before()
@@ -122,8 +125,11 @@ class Users extends Controller
         } else {
             $user->password = Hash::make($password);
 
-            // Save the User Model instance.
+            // Save the User Model instance - used with the Extended Auth Driver.
             $user->save();
+
+            // Save the User Model instance - used with the Database Auth Driver.
+            //$this->model->updateUser($user);
 
             // Use a Redirect to avoid the reposting the data.
             return Redirect::to('profile')->with('message', __d('users', 'You have successfully updated your Password.'));

@@ -2,6 +2,8 @@
 
 namespace Auth;
 
+use Support\Facades\Hash;
+
 
 class ExtendedUserProvider implements UserProviderInterface
 {
@@ -97,7 +99,7 @@ class ExtendedUserProvider implements UserProviderInterface
     {
         $plain = $credentials['password'];
 
-        return password_verify($plain, $user->getAuthPassword());
+        return Hash::check($plain, $user->getAuthPassword());
     }
 
     /**

@@ -42,7 +42,11 @@ class Demo extends Controller
 
     public function password($password)
     {
-        $content = Password::make($password);
+        $content = '';
+
+        $content .= '<p><b>' .__('Password:') .'</b> : <code>'. Password::make($password) .'</code></p>';
+
+        $content .= '<p><b>' .__('Timestamp:') .'</b> : <code>'.time() .'<b></code>';
 
         return View::make('Default')
             ->shares('title', __('Password Sample'))

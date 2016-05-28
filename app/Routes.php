@@ -18,7 +18,7 @@ Router::any('subpage', 'App\Controllers\Welcome@subPage');
 
 // Demo Routes
 Router::any('demo/database',        'App\Controllers\Demo@database');
-//Router::any('demo/password/(:any)', 'App\Controllers\Demo@password');
+Router::any('demo/password/(:any)', 'App\Controllers\Demo@password');
 Router::any('demo/events',          'App\Controllers\Demo@events');
 Router::any('demo/mailer',          'App\Controllers\Demo@mailer');
 Router::any('demo/session',         'App\Controllers\Demo@session');

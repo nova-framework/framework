@@ -14,7 +14,7 @@
                 <h3 class="panel-title"><?= __d('users', 'Password Reset'); ?></h3>
             </div>
             <div class="panel-body">
-                <form style="margin: 0;" method="post">
+                <form style="margin: 0;" action="<?= site_url('password/reset'); ?>" method="post">
                     <div class="form-control-container" style="margin-bottom: 10px;">
                         <input type="text" class="input-medium input-block-level form-control" name="email" placeholder="<?= __d('users', 'Insert the current e-mail'); ?>" title="<?= __d('users', 'Insert the current E-mail'); ?>">
                     </div>

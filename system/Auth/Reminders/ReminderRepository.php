@@ -99,7 +99,7 @@ class ReminderRepository
 
         $reminder = (array) $this->getTable()->where('email', $email)->where('token', $token)->first();
 
-        return $reminder && ! $this->reminderExpired($reminder);
+        return ($reminder && ! $this->reminderExpired($reminder));
     }
 
     /**
@@ -112,7 +112,7 @@ class ReminderRepository
     {
         $createdPlusHour = strtotime($reminder['created_at']) + $this->expires;
 
-        return $createdPlusHour < $this->getCurrentTime();
+        return ($createdPlusHour < $this->getCurrentTime());
     }
 
     /**
@@ -158,7 +158,7 @@ class ReminderRepository
     {
         $email = $user->getReminderEmail();
 
-        $value = str_shuffle(sha1($email.spl_object_hash($this).microtime(true)));
+        $value = str_shuffle(sha1($email .spl_object_hash($this) .microtime(true)));
 
         return hash_hmac('sha256', $value, $this->hashKey);
     }

@@ -65,4 +65,3 @@ Router::post('password/reset', array(
     'filters' => 'guest|csrf',
     'uses' => 'App\Modules\Users\Controllers\Reminders@postReset'
 ));
-

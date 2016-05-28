@@ -11,10 +11,10 @@ namespace App\Modules\Users\Controllers;
 use Core\Controller;
 use Core\View;
 use Helpers\Csrf;
-use Helpers\Password as Hash;
 use Helpers\Url;
 
 use Auth;
+use Hash;
 use Input;
 use Redirect;
 use Session;
@@ -114,7 +114,7 @@ class Users extends Controller
         $password = Input::get('newPassword');
         $confirm  = Input::get('confirmPass');
 
-        if (! Password::verify(Input::get('password'), $user->password)) {
+        if (! Hash::check(Input::get('password'), $user->password)) {
             $error[] = __d('users', 'The current Password is invalid.');
         } else if ($password != $confirm) {
             $error[] = __d('users', 'The new Password and its verification are not equals.');

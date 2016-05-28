@@ -11,11 +11,13 @@ namespace App\Modules\Users\Controllers;
 use Core\Controller;
 use Core\View;
 use Helpers\Csrf;
-use Helpers\Password as Hash;
 use Helpers\Url;
 
+use Hash;
 use Input;
+use Password;
 use Redirect;
+use Response;
 use Session;
 
 
@@ -64,10 +66,10 @@ class Reminders extends Controller
 
         switch ($response = Password::remind($credentials)) {
             case Password::INVALID_USER:
-                return Redirect::to('remind')->with('error', $error[] = __('users', 'We can\'t find a User with that e-mail address.'));
+                return Redirect::back()->with('error', $error[] = __d('users', 'We can\'t find a User with that e-mail address.'));
 
             case Password::REMINDER_SENT:
-                return Redirect::to('remind')->with('status', __('users', 'Password reminder sent!'));
+                return Redirect::back()->with('message', __d('users', 'Password reminder sent!'));
         }
     }
 
@@ -101,6 +103,18 @@ class Reminders extends Controller
             'email', 'password', 'password_confirmation', 'token'
         );
 
+        // Add to Password Broker a custom validation.
+        Password::validator(function($credentials)
+        {
+            $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
+
+            if(preg_match($pattern, $credentials['password']) !== 1) {
+                return false;
+            }
+
+            return true;
+        });
+
         $response = Password::reset($credentials, function($user, $password)
         {
             $user->password = Hash::make($password);
@@ -108,26 +122,27 @@ class Reminders extends Controller
             $user->save();
         });
 
+        // Parse the response.
         $error = array();
 
         switch ($response) {
             case Password::INVALID_PASSWORD:
-                $error[] = __('users', 'Passwords must be at least six characters and match the confirmation.');
+                $error[] = __d('users', 'Passwords must be at least six characters and match the confirmation.');
 
                 break;
             case Password::INVALID_TOKEN:
-                $error[] = __('users', 'This password reset token is invalid.');
+                $error[] = __d('users', 'This password reset token is invalid.');
 
                 break;
             case Password::INVALID_USER:
-                $error[] = __('users', 'We can\'t find a User with that e-mail address.');
+                $error[] = __d('users', 'We can\'t find a User with that e-mail address.');
 
                 break;
             case Password::PASSWORD_RESET:
-                return Redirect::to('login');
+                return Redirect::to('login')->with('message', __d('users', 'You have successfully reset your Password.'));
         }
 
-        return Redirect::to('password/reset')->with('error', $error);
+        return Redirect::back()->with('error', $error);
     }
 
 }

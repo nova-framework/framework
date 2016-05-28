@@ -4,6 +4,8 @@ namespace Auth;
 
 use Database\Connection;
 
+use Support\Facades\Hash;
+
 
 class DatabaseUserProvider implements UserProviderInterface
 {
@@ -125,7 +127,7 @@ class DatabaseUserProvider implements UserProviderInterface
     {
         $plain = $credentials['password'];
 
-        return password_verify($plain, $user->getAuthPassword());
+        return Hash::check($plain, $user->getAuthPassword());
     }
 
     /**

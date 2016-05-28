@@ -123,6 +123,16 @@ class Connection
     }
 
     /**
+     * Return the current Connection instance.
+     *
+     * @return \Database\Connection
+     */
+    public function connection()
+    {
+        return $this;
+    }
+
+    /**
      * Create a new PDO connection.
      *
      * @param  array   $config

@@ -2,9 +2,19 @@
 
 namespace Events;
 
+use Events\Dispatcher;
 
-class Subscriber
+
+abstract class Subscriber
 {
+    /**
+     * Register the Event Subscriber with the Dispatcher.
+     *
+     * @param  string  $subscriber
+     * @return void
+     */
+    abstract public function subscribe(Dispatcher $dispatcher);
+
     /**
      * Get the events listened to by the subscriber.
      *

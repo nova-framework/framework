@@ -115,9 +115,9 @@ define('ENCRYPT_KEY', '');
 define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
 
 /**
- * Setup the Session configuration
+ * Setup the Application configuration
  */
-require 'Config/Session.php';
+require 'Config/App.php';
 
 /**
  * Setup the Language configuration
@@ -125,19 +125,19 @@ require 'Config/Session.php';
 require 'Config/Languages.php';
 
 /**
- * Setup the Module cnfiguration
- */
-require 'Config/Modules.php';
-
-/**
- * Setup the Database configuration
- */
-require 'Config/ClassAliases.php';
-
-/**
  * Setup the Class Aliases configuration
  */
 require 'Config/Database.php';
+
+/**
+ * Setup the Session configuration
+ */
+require 'Config/Session.php';
+
+/**
+ * Setup the Module cnfiguration
+ */
+require 'Config/Modules.php';
 
 /**
  * Setup the Auth configuration.

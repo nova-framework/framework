@@ -123,7 +123,7 @@ class Reminders extends Controller
 
         switch ($response) {
             case Password::INVALID_PASSWORD:
-                $error[] = __d('users', 'Passwords must be at least six characters and match the confirmation.');
+                $error[] = __d('users', 'Passwords must be strong enough and match the confirmation.');
 
                 break;
             case Password::INVALID_TOKEN:

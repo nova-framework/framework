@@ -12,7 +12,7 @@ return array (
   'Password Reminder' => '',
   'Password Reset' => '',
   'Password reminder sent!' => '',
-  'Passwords must be at least six characters and match the confirmation.' => '',
+  'Passwords must be strong enough and match the confirmation.' => '',
   'Remember me' => 'مرا بخاطر بسپار',
   'Save' => 'ذخیره',
   'Send the Reminder' => '',

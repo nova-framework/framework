@@ -1,29 +1,40 @@
 <div class='row-responsive'>
-    <h2><?= __d('users', 'Password Reminder'); ?></h2>
+    <h2><?= __d('users', 'Password Recovery'); ?></h2>
     <hr>
 </div>
 
 <div class="row">
-    <?php echo Errors::display($error); ?>
-    <?php echo Session::message('message'); ?>
-    <div class="clearfix"></div>
-
-    <div class="col-md-4 col-md-offset-4">
-        <div class="login-panel panel panel-primary" style="margin-top:40px">
-            <div class="panel-heading text-center">
-                <h3 class="panel-title"><?= __d('users', 'Password Reminder'); ?></h3>
+    <div style="margin-top:50px;" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-primary" >
+            <div class="panel-heading">
+                <div class="panel-title"><?= __d('users', 'Reset your password for <b>{0}</b>', SITETITLE); ?></div>
             </div>
-            <div class="panel-body">
-                <form style="margin: 0;" method="post">
-                    <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="text" class="input-medium input-block-level form-control" name="email" placeholder="<?= __d('users', 'Insert the current E-mail'); ?>" title="<?= __d('users', 'Insert the current E-mail'); ?>">
+
+            <div style="padding-top: 30px" class="panel-body" >
+                <form method='post' role="form">
+
+                <fieldset>
+                    <?= Errors::display($error); ?>
+                    <?= Session::message('message'); ?>
+
+                    <p><?= __d('users', 'Please enter your e-mail address to be sent a link to reset your password.'); ?></p>
+
+                    <div class="form-group">
+                        <p><input type="email" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'E-mail'); ?>"><br><br></p>
                     </div>
-                    <hr>
-                    <div>
-                        <button type="submit" class="btn btn-success col-lg-8 pull-right"><i class='fa fa-sign-in'></i> <?= __d('users', 'Send reset link'); ?></button>
+
+                    <div class="row" style="margin-top: 22px;">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <input type="submit" name="submit" class="btn btn-success col-sm-10" value="<?= __d('users', 'Send Reset Link'); ?>">
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <a href="<?= site_url('login'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Login'); ?></a>
+                        </div>
                     </div>
-                    <div class="clearfix"></div>
-                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                </fieldset>
+                
+                <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+
                 </form>
             </div>
         </div>

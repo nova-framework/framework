@@ -110,10 +110,10 @@ class Users extends Controller
         $error = array();
 
         // The requested new Password information.
-        $password = Input::get('newPassword');
-        $confirm  = Input::get('confirmPass');
+        $password = Input::get('password');
+        $confirm  = Input::get('password_confirmation');
 
-        if (! Hash::check(Input::get('password'), $user->password)) {
+        if (! Hash::check(Input::get('current_password'), $user->password)) {
             $error[] = __d('users', 'The current Password is invalid.');
         } else if ($password != $confirm) {
             $error[] = __d('users', 'The new Password and its verification are not equals.');

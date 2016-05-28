@@ -14,7 +14,7 @@ Config::set('auth', array(
     'driver' => 'extended',               // Supported: "database", "extended"
 
     // The Authentication Model, for the Extended Driver.
-    'model' => 'App\Models\ORM\User',
+    'model' => 'App\Models\User',
 
     // The Authentication Table, for the Database Driver.
     'table' => 'users',

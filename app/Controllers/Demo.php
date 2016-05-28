@@ -14,7 +14,7 @@ use Redirect;
 use Request;
 use Session;
 
-use App\Models\ORM\User;
+use App\Models\User;
 
 use DB;
 
@@ -95,7 +95,7 @@ class Demo extends Controller
     public function events()
     {
         $content = '';
-        
+
         // Prepare the Event payload.
         $payload = array(
             'Hello, this is Event sent from ' .str_replace('::', '@', __METHOD__)

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Models\ORM;
+namespace App\Models;
 
 use Auth\UserInterface;
 use Auth\Reminders\RemindableInterface;
@@ -82,5 +82,5 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     {
         return $this->email;
     }
-    
+
 }

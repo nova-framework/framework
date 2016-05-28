@@ -108,11 +108,7 @@ class Reminders extends Controller
         {
             $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
 
-            if(preg_match($pattern, $credentials['password']) !== 1) {
-                return false;
-            }
-
-            return true;
+            return (preg_match($pattern, $credentials['password']) === 1);
         });
 
         $response = Password::reset($credentials, function($user, $password)

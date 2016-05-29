@@ -24,4 +24,11 @@ Config::set('database', array(
         'charset'   => 'utf8',
         'collation' => 'utf8_general_ci',
     ),
+    'custom' => array(
+        'driver'    => 'sqlite',
+        'database'  => APPDIR .'Storage' .DS .'database.sqlite',
+        'prefix'    => PREFIX,
+        'charset'   => 'utf8',
+        'collation' => 'utf8_general_ci',
+    ),
 ));

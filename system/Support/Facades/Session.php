@@ -88,7 +88,7 @@ class Session
         static::$sessionHandler = new $className($savePath);
 
         //
-        ini_set('session.save_handler', 'files');
+        //ini_set('session.save_handler', 'files');
 
         session_set_save_handler(static::$sessionHandler, true);
 

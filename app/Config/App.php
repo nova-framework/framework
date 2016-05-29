@@ -9,9 +9,13 @@
 
 use Core\Config;
 
+
 Config::set('classAliases', array(
+    // The Core Tools
     'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
+
+    // The Helpers
     'Mail'          => '\Helpers\Mailer',
     'Assets'        => '\Helpers\Assets',
     'Csrf'          => '\Helpers\Csrf',
@@ -25,25 +29,29 @@ Config::set('classAliases', array(
     'Hooks'         => '\Helpers\Hooks',
     'Inflector'     => '\Helpers\Inflector',
     'Number'        => '\Helpers\Number',
-    'Password'      => '\Helpers\Password',
     'RainCaptcha'   => '\Helpers\RainCaptcha',
     'ReservedWords' => '\Helpers\ReservedWords',
     'SimpleCurl'    => '\Helpers\SimpleCurl',
     'TableBuilder'  => '\Helpers\TableBuilder',
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
+
     // The Support Classes
     'Arr'           => '\Support\Arr',
     'Str'           => '\Support\Str',
+
     // The Support Facades
     'Auth'          => '\Support\Facades\Auth',
     'Cookie'        => '\Support\Facades\Cookie',
     'Crypt'         => '\Support\Facades\Crypt',
     'DB'            => '\Support\Facades\Database',
     'Event'         => '\Support\Facades\Event',
+    'Hash'          => '\Support\Facades\Hash',
     'Input'         => '\Support\Facades\Input',
     'Language'      => '\Support\Facades\Language',
+    'Mailer'        => '\Support\Facades\Mailer',
     'Paginator'     => '\Support\Facades\Paginator',
+    'Password'      => '\Support\Facades\Password',
     'Redirect'      => '\Support\Facades\Redirect',
     'Request'       => '\Support\Facades\Request',
     'Response'      => '\Support\Facades\Response',

@@ -21,6 +21,17 @@ use Response;
 class View extends BaseView
 {
     /**
+     * @var array Array of legacy BaseView instances
+     */
+    private static $legacyItems = array();
+
+    /**
+     * @var array Array of legacy HTTP headers
+     */
+    private static $legacyHeaders = array();
+
+
+    /**
      * Constructor
      * @param mixed $path
      * @param array $data
@@ -61,6 +72,48 @@ class View extends BaseView
         return new View($view, $path, $data);
     }
 
+    //--------------------------------------------------------------------
+    // Legacy API Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Return the stored (legacy) instances.
+     *
+     * @return array
+     */
+    public static function getLegacyItems()
+    {
+        return static::$legacyItems;
+    }
+
+    /**
+     * Return the legacy Headers.
+     *
+     * @return array
+     */
+    public static function getLegacyHeaders()
+    {
+        return static::$legacyHeaders;
+    }
+
+    /**
+     * Add the HTTP header(s) to the legacy Headers array.
+     *
+     * @param  string  $header HTTP header text
+     */
+    protected static function addLegacyHeaders($headers)
+    {
+        if(! is_array($headers)) $headers = array($headers);
+
+        foreach ($headers as $header) {
+            list($key, $value) = explode(' ', $header, 1);
+
+            $key = ltrim($key, ':');
+
+            static::$legacyHeaders[$key] = trim($value);
+        }
+    }
+
     /**
      * Magic Method for handling dynamic functions.
      *
@@ -70,12 +123,14 @@ class View extends BaseView
      */
     public static function __callStatic($method, $params)
     {
-        // Process the compat Methods associated to Headers management.
+        // Process the legacy Headers management.
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
+                return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
+
             case 'sendHeaders':
-                return call_user_func_array(array(Response::class, $method), $params);
+                return null;
 
             default:
                 break;
@@ -87,17 +142,11 @@ class View extends BaseView
         // Flag for fetching the View rendering output.
         $shouldFetch = false;
 
-        // Flag for sending, or not, the HTTP Headers before rendering.
-        $withHeaders = true;
-
         // Prepare the required information.
         if ($method == 'fetch') {
             $shouldFetch = true;
         } else if ($method == 'render') {
-            if (count($params) == 4) {
-                // There is a withHeaders parameter.
-                $withHeaders = array_pop($params);
-            }
+            // Nothing to do; there is no Headers sending.
         } else if ($method == 'renderTemplate') {
             $className = Template::class;
         } else {
@@ -113,12 +162,7 @@ class View extends BaseView
             return $instance->fetch();
         }
 
-        if ($withHeaders) {
-            // Send the HTTP Headers first.
-            Response::sendHeaders();
-        }
-
-        // Render the View object.
-        return $instance->render();
+        array_push(static::$legacyItems, $instance);
     }
+
 }

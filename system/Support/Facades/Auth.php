@@ -9,8 +9,15 @@
 namespace Support\Facades;
 
 use Core\Config;
+use Database\Connection;
+use Auth\DatabaseUserProvider;
+use Auth\ExtendedUserProvider;
+use Auth\Guard as AuthGuard;
+use Support\Facades\Cookie;
+use Support\Facades\Request;
+use Support\Facades\Session;
 
-use \Closure;
+use Closure;
 
 
 class Auth
@@ -37,13 +44,46 @@ class Auth
      */
     public static function guard($guard = null)
     {
-        $guard = ($guard !== null) ? $guard : 'default';
+        $guard = $guard ?: 'default';
 
-        if ( ! isset(static::$guards[$guard])) {
-            static::$guards[$guard] = static::factory($guard);
+        if (isset(static::$guards[$guard])) {
+            return static::$guards[$guard];
         }
 
-        return static::$guards[$guard];
+        return static::$guards[$guard] = static::factory($guard);
+    }
+
+    /**
+     * Create a proper Auth User Provider instance.
+     *
+     * @param array $config
+     * @return \Auth\UserProviderInterface
+     *
+     * @throw \InvalidArgumentException
+     */
+    protected static function getUserProvider(array $config)
+    {
+        // Get the current Authentication Driver.
+        $driver = $config['driver'];
+
+        if ($driver == 'database') {
+            $table = $config['table'];
+
+            // Get a Database Connection instance.
+            $connection = Connection::getInstance();
+
+            return new DatabaseUserProvider($connection, $table);
+        } else if ($driver == 'extended') {
+            $model = '\\'.ltrim($config['model'], '\\');
+
+            if(! class_exists($model)) {
+                throw new \InvalidArgumentException('Invalid Auth Model.');
+            }
+
+            return new ExtendedUserProvider($model);
+        }
+
+        throw new \InvalidArgumentException('Invalid Auth Driver.');
     }
 
     /**
@@ -54,14 +94,31 @@ class Auth
      */
     protected static function factory($guard)
     {
-        $config = Config::get('authentication');
+        $config = Config::get('auth');
 
         if (isset(static::$registrar[$guard])) {
             $resolver = static::$registrar[$guard];
 
             return call_user_func($resolver, $config);
         } else if($guard == 'default') {
-            return new \Auth\Guard($config);
+            $provider = static::getUserProvider($config);
+
+            // Get the CookieJar instance.
+            $cookie = Cookie::instance();
+
+            // Get the Session instance.
+            $session = Session::instance();
+
+            // Get the Request instance.
+            $request = Request::instance();
+
+            // Get the Auth Guard instance.
+            $guard = new AuthGuard($provider, $session, $request);
+
+            // Set the CookieJar instance.
+            $guard->setCookieJar($cookie);
+
+            return $guard;
         }
 
         throw new \Exception("Auth Guard {$guard} is not supported.");

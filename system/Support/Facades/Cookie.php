@@ -40,6 +40,16 @@ class Cookie
     }
 
     /**
+     * Return the CookieJar instance.
+     *
+     * @return \Cookie\CookieJar
+     */
+    public static function instance()
+    {
+        return static::getCookieJar();
+    }
+
+    /**
      * Determine if a cookie exists on the request.
      *
      * @param  string  $key

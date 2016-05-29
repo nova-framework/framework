@@ -14,7 +14,7 @@ use Database\Query\Expression;
 use Database\Query\Builder as QueryBuilder;
 
 use \PDO;
-use \DateTime;
+use \DateTimeInterface;
 
 
 class Connection
@@ -120,6 +120,16 @@ class Connection
 
         // Create the Connection instance and return it.
         return static::$instances[$token] = new static($config);
+    }
+
+    /**
+     * Return the current Connection instance.
+     *
+     * @return \Database\Connection
+     */
+    public function connection()
+    {
+        return $this;
     }
 
     /**
@@ -291,7 +301,7 @@ class Connection
     public function prepareBindings(array $bindings)
     {
         foreach ($bindings as $key => $value) {
-            if ($value instanceof DateTime) {
+            if ($value instanceof DateTimeInterface) {
                 // We need to transform all DateTime instances into an actual date string.
                 $bindings[$key] = $value->format($this->getDateFormat());
             } else if ($value === false) {

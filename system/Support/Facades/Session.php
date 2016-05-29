@@ -10,7 +10,9 @@ namespace Support\Facades;
 
 use Core\Config;
 use Core\Template;
+use Core\BaseView as View;
 
+use Http\Response as HttpResponse;
 use Session\FileSessionHandler;
 use Session\SessionInterface;
 use Session\Store as SessionStore;
@@ -20,6 +22,7 @@ use Support\Facades\Request;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
 
 
 class Session
@@ -115,7 +118,6 @@ class Session
      * Finalize the Session Store and send the Response
      *
      * @param \Symfony\Component\HttpFoundation\Response $response
-     *
      * @return void
      */
     public static function finish(SymfonyResponse $response)
@@ -148,14 +150,40 @@ class Session
         // Collect the garbage for the Session Store instance.
         static::collectGarbage($session, $config);
 
-        // Finally, add all Request and queued Cookies on Response instance.
+        // Add all Request and queued Cookies.
         static::processCookies($response, $config);
+
+        // Finally, minify the Response's Content.
+        static::minifyContents($response);
 
         // Prepare the Response instance for sending.
         $response->prepare($request);
 
         // Send the Response.
         $response->send();
+    }
+
+    /**
+     * Minify the Response instance Content.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Response $response
+     * @return void
+     */
+    protected static function minifyContents(SymfonyResponse $response)
+    {
+        $search = array(
+            '/\>[^\S ]+/s', // Strip whitespaces after tags, except space.
+            '/[^\S ]+\</s', // Strip whitespaces before tags, except space.
+            '/(\s)+/s'      // Shorten multiple whitespace sequences.
+        );
+
+        $replace = array('>', '<', '\\1');
+
+        if(($response instanceof HttpResponse) && (ENVIRONMENT == 'production')) {
+            $content = preg_replace($search, $replace, $response->getContent());
+
+            $response->setContent($content);
+        }
     }
 
     /**

@@ -8,6 +8,8 @@
 
 namespace Events;
 
+use Events\Subscriber;
+
 
 class Dispatcher
 {
@@ -95,6 +97,47 @@ class Dispatcher
     public function hasListeners($eventName)
     {
         return isset($this->listeners[$eventName]);
+    }
+
+    /**
+     * Register an Event Subscriber with the Dispatcher.
+     *
+     * @param  string  $subscriber
+     * @return void
+     */
+    public function subscribe($subscriber)
+    {
+        $subscriber = $this->resolveSubscriber($subscriber);
+
+        $subscriber->subscribe($this);
+    }
+
+    /**
+     * Resolve the Subscriber instance.
+     *
+     * @param  mixed  $subscriber
+     * @return \Events\Subscriber
+     *
+     * @throw \InvalidArgumentException
+     */
+    protected function resolveSubscriber($subscriber)
+    {
+        if (! is_string($subscriber)) {
+            return $subscriber;
+        }
+
+        if (! class_exists($subscriber)) {
+            throw new \InvalidArgumentException('Invalid subscriber requested.');
+        }
+
+        // Get a instance of the requested Subscriber.
+        $instance = new $subscriber();
+
+        if ($instance instanceof Subscriber) {
+            return $instance;
+        }
+
+        throw new \InvalidArgumentException('Invalid subscriber requested.');
     }
 
     /**

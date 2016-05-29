@@ -9,6 +9,7 @@
 
 use Core\Config;
 
+
 Config::set('cache', array(
     'storage'       => 'files', // Blank for auto
     'default_chmod' => 0777,    // 0777, 0666, 0644

@@ -4,34 +4,35 @@
 </div>
 
 <div class="row">
-    <?php echo Errors::display($error); ?>
-    <?php echo Session::message('message'); ?>
-    <div class="clearfix"></div>
+    <?php echo Session::message('message');?>
 
-    <div class="col-md-4 col-md-offset-4">
-        <div class="login-panel panel panel-primary" style="margin-top:40px">
-            <div class="panel-heading text-center">
-                <h3 class="panel-title"><?= __d('users', 'User Login'); ?></h3>
+    <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-primary" >
+            <div class="panel-heading">
+                <div class="panel-title"><?= __d('users', 'Login to <b>{0}</b>', SITETITLE); ?></div>
             </div>
             <div class="panel-body">
-                <form style="margin: 0;" method="post">
-                    <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="text" class="input-medium input-block-level form-control" name="username" placeholder="<?= __d('users', 'Username'); ?>" title="<?= __d('users', 'Username'); ?>">
+                <form method='post' role="form">
+
+                <?php echo Errors::display($error);?>
+
+                <div class="form-group">
+                    <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Username'); ?>"><br><br></p>
+                </div>
+                <div class="form-group">
+                    <p><input type="password" name="password" id="password" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Password'); ?>"><br><br></p>
+                </div>
+                <div class="row" style="margin-top: 22px;">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Login'); ?>">
                     </div>
-                    <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="password" placeholder="<?= __d('users', 'Password'); ?>" title="<?= __d('users', 'Password'); ?>">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <a href="<?= site_url('password/remind'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Forgot Password?'); ?></a>
                     </div>
-                    <div class="form-control-container">
-                        <label>
-                            <input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?>
-                        </label>
-                    </div>
-                    <hr>
-                    <div>
-                        <button type="submit" class="btn btn-success col-lg-6 pull-right"><i class='fa fa-sign-in'></i> <?= __d('users', 'Sign In'); ?></button>
-                    </div>
-                    <div class="clearfix"></div>
-                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                </div>
+
+                <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+
                 </form>
             </div>
         </div>

@@ -51,6 +51,13 @@ echo $css; // Place to pass data / plugable hook zone
                 <li>
                     <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'Logout'); ?></a>
                 </li>
+                <?php } else { ?>
+                <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'User Login'); ?></a>
+                </li>
+                <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('default', 'Forgot Password?'); ?></a>
+                </li>
                 <?php } ?>
             </ul>
         </div>

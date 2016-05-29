@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 19, 2016 at 08:20 AM
+-- Generation Time: May 28, 2016 at 10:27 AM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.21
 
@@ -39,11 +39,7 @@ CREATE TABLE `nova_users` (
 --
 
 INSERT INTO `nova_users` (`id`, `username`, `password`, `email`, `remember_token`) VALUES
-(1, 'admin', '$2y$10$r4pnT4d0jRJRjs9ICpoRVe00Jz1IJFxE.pZTA553R7ThsZJGoGrcq', 'admin@novaframework.dev', NULL),
-(2, 'marcus', '$2y$10$yfffkOK3sqZy81eQituydeZE1bPuSkcZpLGT0aJFfFk7dmi5KpCFq', 'marcus@novaframework.dev', NULL),
-(3, 'michael', '$2y$10$klop7YxFoZOVqDq3hA7efeKEz4csFhAelfwP8M4s1ROlgpkBx9qVW', 'michael@novaframework.dev', NULL),
-(4, 'john', '$2y$10$WzBPFMiFeJ2XK9eW34zEgelSJI3R1TVrOWbjVDxFXDeMQxoh8asYK', 'john@novaframework.dev', NULL),
-(5, 'mark', '$2y$10$z4bRYEcnoHOR.GuObWTATuH/x1lto.2wUJ1RxCYWOmfjay2LnTd8W', 'mark@novaframework.dev', NULL);
+(1, 'admin', '$2y$10$r4pnT4d0jRJRjs9ICpoRVe00Jz1IJFxE.pZTA553R7ThsZJGoGrcq', 'admin@novaframework.dev', NULL);
 
 --
 -- Indexes for dumped tables
@@ -63,7 +59,7 @@ ALTER TABLE `nova_users`
 -- AUTO_INCREMENT for table `nova_users`
 --
 ALTER TABLE `nova_users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -13,18 +13,21 @@ use Support\Facades\Auth;
 use Support\Facades\Redirect;
 use Support\Facades\Request;
 use Support\Facades\Response;
+use Support\Facades\Session;
 
 
 /** Define Route Filters. */
 
 // A Testing Filter which dump the matched Route.
 Route::filter('test', function($route) {
-    echo '<pre>' .var_export($route, true) .'</pre>';
+    echo '<pre style="margin: 10px;">' .var_export($route, true) .'</pre>';
 });
 
 // A simple CSRF Filter.
 Route::filter('csrf', function($route) {
-    if (($route->method() == 'POST') && ! Csrf::isTokenValid()) {
+    $token = Request::input('csrfToken');
+
+    if (($route->method() == 'POST') && ($token != Session::token())) {
         // When CSRF Token is invalid, respond with Error 400 Page (Bad Request)
         return Response::error(400);
     }

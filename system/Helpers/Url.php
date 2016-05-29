@@ -38,7 +38,7 @@ class Url
         // Finish the Session (and send the Response).
         SessionStore::finish($response);
 
-        // Quit the Nova.
+        // Quit the Nova Framework's execution.
         exit();
     }
 

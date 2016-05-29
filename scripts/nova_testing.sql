@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 19, 2016 at 08:24 AM
+-- Generation Time: May 28, 2016 at 10:23 AM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.21
 
@@ -96,7 +96,7 @@ INSERT INTO `nova_course_student` (`id`, `student_id`, `course_id`) VALUES
 CREATE TABLE `nova_password_reminders` (
   `email` varchar(100) NOT NULL,
   `token` varchar(100) NOT NULL,
-  `created_at` int(11) UNSIGNED NOT NULL
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

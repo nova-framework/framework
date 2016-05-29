@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 13, 2016 at 04:01 PM
+-- Generation Time: May 28, 2016 at 10:21 AM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.21
 
@@ -27,10 +27,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `nova_password_reminders` (
-  `email` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `token` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `created_at` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `email` varchar(100) NOT NULL,
+  `token` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables

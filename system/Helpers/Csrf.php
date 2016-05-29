@@ -9,9 +9,11 @@
 
 namespace Helpers;
 
+use Helpers\Request;
+use Helpers\Session;
+
 use Crypt;
 use Input;
-use Session;
 use Str;
 
 
@@ -73,7 +75,7 @@ class Csrf
      */
     public static function isTokenValid($name = 'csrfToken')
     {
-        return (Input::get($name) == Session::get($name));
+        return (Request::post($name) == Session::get($name));
     }
 
 }

@@ -55,9 +55,7 @@ abstract class Controller
     public function __construct()
     {
         // Adjust to the default Template, if it is not defined.
-        if ($this->template === null) {
-            $this->template = TEMPLATE;
-        }
+        $this->template = $this->template ?: TEMPLATE;
 
         // Initialise the Language object.
         $this->language = Language::getInstance();
@@ -91,7 +89,69 @@ abstract class Controller
         }
 
         // After the Action execution stage.
-        return $this->after($result);
+        $retval = $this->after($result);
+
+        if($retval !== false) {
+            // Create the Response and send it.
+            return $this->createResponse($result);
+        }
+
+        return true;
+    }
+
+    /**
+     * Create from the given result a Response instance and send it.
+     *
+     * @param mixed  $result
+     * @return bool
+     */
+    protected function createResponse($result)
+    {
+        if ($result === null) {
+            // Retrieve the legacy View instances.
+            $items = View::getLegacyItems();
+
+            if(empty($items)) {
+                // There are no legacy View instances; quit processing.
+                return true;
+            }
+
+            // Prepare the Response's Content.
+            $content = '';
+
+            foreach ($items as $item) {
+                // Fetch the current View instance to content.
+                $content .= $item->fetch();
+            }
+
+            // Retrieve also the legacy Headers.
+            $headers = View::getLegacyHeaders();
+
+            // Create a Response instance.
+            $response = Response::make($content, 200, $headers);
+
+            // Finish the Session and send the Response.
+            Session::finish($response);
+
+            return true;
+        } else if (! $result instanceof BaseView) {
+            // The result is not a BaseView instance; quit the processing.
+            return true;
+        }
+
+        if ((! $result instanceof Template) && ($this->layout !== false)) {
+            // A View instance, having a Layout specified; create a Template instance.
+            $result = Template::make($this->layout, $this->template)
+                ->with('content', $result->fetch());
+        }
+
+        // Create a Response instance.
+        $response = Response::make($result);
+
+        // Finish the Session and send the Response.
+        Session::finish($response);
+
+        return true;
     }
 
     /**
@@ -122,23 +182,6 @@ abstract class Controller
      */
     protected function after($result)
     {
-        if (! $result instanceof BaseView) {
-            // If the result is neither a View or Template instance; no processing is required.
-            return true;
-        }
-
-        if ((! $result instanceof Template) && ($this->layout !== false)) {
-            // A View instance, having a Layout specified; create a Template instance.
-            $result = Template::make($this->layout, $this->template)
-                ->with('content', $result->fetch());
-        }
-
-        // Create a Response instance.
-        $response = Response::make($result);
-
-        // Finish the Session and send the Response.
-        Session::finish($response);
-
         return true;
     }
 

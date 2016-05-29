@@ -4,32 +4,34 @@
 </div>
 
 <div class="row">
-    <?php echo Errors::display($error); ?>
-    <?php echo Session::message('message'); ?>
-    <div class="clearfix"></div>
-
-    <div class="col-md-4 col-md-offset-4">
-        <div class="login-panel panel panel-primary" style="margin-top:40px">
-            <div class="panel-heading text-center">
-                <h3 class="panel-title"><?= __d('users', 'Change Password'); ?></h3>
+    <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-primary" >
+            <div class="panel-heading">
+                <div class="panel-title"><?= __d('users', 'Change Password'); ?></div>
             </div>
             <div class="panel-body">
-                <form style="margin: 0;" method="post">
-                    <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="password" placeholder="<?= __d('users', 'Insert the current Password'); ?>" title="<?= __d('users', 'Insert the current Password'); ?>">
+                <form method='post' role="form">
+
+                <?= Errors::display($error); ?>
+                <?= Session::message('message'); ?>
+
+                <div class="form-group">
+                    <p><input type="password" name="current_password" id="current_password" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Insert the current Password'); ?>"><br><br></p>
+                </div>
+                <div class="form-group">
+                    <p><input type="password" name="password" id="password" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Insert the new Password'); ?>"><br><br></p>
+                </div>
+                <div class="form-group">
+                    <p><input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Verify the new Password'); ?>"><br><br></p>
+                </div>
+                <div class="row" style="margin-top: 22px;">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <input type="submit" name="submit" class="btn btn-success col-sm-4 pull-right" value="<?= __d('users', 'Save'); ?>">
                     </div>
-                    <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="newPassword" placeholder="<?= __d('users', 'Insert the new Password'); ?>" title="<?= __d('users', 'Insert the new Password'); ?>">
-                    </div>
-                    <div class="form-control-container" style="margin-bottom: 10px;">
-                        <input type="password" class="input-medium input-block-level form-control" name="confirmPass" placeholder="<?= __d('users', 'Verify the new Password'); ?>" title="<?= __d('users', 'Verify the new Password'); ?>">
-                    </div>
-                    <hr>
-                    <div>
-                        <button type="submit" class="btn btn-success col-lg-6 pull-right"><i class='fa fa-check'></i> <?= __d('users', 'Save'); ?></button>
-                    </div>
-                    <div class="clearfix"></div>
-                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                </div>
+
+                <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+
                 </form>
             </div>
         </div>

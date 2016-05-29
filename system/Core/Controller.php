@@ -196,11 +196,11 @@ abstract class Controller
         return $this->language->get($str, $code);
     }
 
-
     /**
-     * @return array
+     * Return a implicit View instance.
+     * @return \Core\View
      */
-    protected function getViewAndModule()
+    protected function view()
     {
         // Setup the Controller's properties.
         $className = get_class($this);
@@ -224,17 +224,6 @@ abstract class Controller
         } else {
             throw new \Exception('Failed to calculate the view and module, for the Class: ' .$className);
         }
-
-        return array($view, $module);
-    }
-
-    /**
-     * Return a implicit View instance.
-     * @return \Core\View
-     */
-    protected function view()
-    {
-        list($view, $module) = $this->getViewAndModule();
 
         return View::make($view, array(), $module);
     }

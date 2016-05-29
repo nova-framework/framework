@@ -255,9 +255,9 @@ abstract class Controller
      *
      * @return \Core\View
      */
-    protected function getView()
+    protected function getView(array $data = array())
     {
-        return View::make($this->defaultView, array(), $this->module);
+        return View::make($this->defaultView, $data, $this->module);
     }
 
     /**

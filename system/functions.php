@@ -12,6 +12,9 @@ use Support\Str;
 use Support\Facades\Crypt;
 use Support\Facades\Language;
 
+use Closure;
+
+
 /**
  * Site URL helper
  * @param string $path
@@ -416,6 +419,17 @@ function head($array)
     return reset($array);
 }
 
+/**
+ * Get the last element from an array.
+ *
+ * @param  array  $array
+ * @return mixed
+ */
+function last($array)
+{
+    return end($array);
+}
+
 /** String helpers. */
 
 /**
@@ -478,6 +492,17 @@ function str_random($length = 16)
 }
 
 /**
+ * Escape HTML entities in a string.
+ *
+ * @param  string  $value
+ * @return string
+ */
+function e($value)
+{
+    return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
+}
+
+/**
  * Class name helper
  * @param string $className
  * @return string
@@ -499,6 +524,17 @@ function str_object($object)
 }
 
 /**
+ * Return the default value of the given value.
+ *
+ * @param  mixed  $value
+ * @return mixed
+ */
+function value($value)
+{
+    return $value instanceof Closure ? $value() : $value;
+}
+
+/**
  * Return the given object.
  *
  * @param  mixed  $object
@@ -510,6 +546,73 @@ function with($object)
 }
 
 /** Common data lookup methods. */
+
+/**
+ * Get an item from an array or object using "dot" notation.
+ *
+ * @param  mixed   $target
+ * @param  string  $key
+ * @param  mixed   $default
+ * @return mixed
+ */
+function data_get($target, $key, $default = null)
+{
+    if (is_null($key)) return $target;
+
+    foreach (explode('.', $key) as $segment) {
+        if (is_array($target)) {
+            if (! array_key_exists($segment, $target)) {
+                return value($default);
+            }
+
+            $target = $target[$segment];
+        } elseif (is_object($target)) {
+            if ( ! isset($target->{$segment})) {
+                return value($default);
+            }
+
+            $target = $target->{$segment};
+        } else  {
+            return value($default);
+        }
+    }
+
+    return $target;
+}
+
+/**
+ * Get an item from an object using "dot" notation.
+ *
+ * @param  object  $object
+ * @param  string  $key
+ * @param  mixed   $default
+ * @return mixed
+ */
+function object_get($object, $key, $default = null)
+{
+    if (is_null($key) || trim($key) == '') return $object;
+
+    foreach (explode('.', $key) as $segment) {
+        if ( ! is_object($object) || ! isset($object->{$segment})) {
+            return value($default);
+        }
+
+        $object = $object->{$segment};
+    }
+
+    return $object;
+}
+
+/**
+ * Dump the passed variables and end the script.
+ *
+ * @param  dynamic  mixed
+ * @return void
+ */
+function dd()
+{
+    array_map(function($x) { var_dump($x); }, func_get_args()); die;
+}
 
 /**
  * print_r call wrapped in pre tags

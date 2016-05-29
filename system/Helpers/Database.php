@@ -8,17 +8,39 @@
 
 namespace Helpers;
 
+use Database\Connection;
+
 use PDO;
 
+
 /**
- * Extend PDO to use custom methods.
+ * Implements a Database helper.
  */
-class Database extends PDO
+class Database
 {
+    /**
+     * The Database Connection name.
+     *
+     * @var string
+     */
+    protected $connection;
+
     /**
      * @var array Array of saved databases for reusing
      */
     protected static $instances = array();
+
+
+    /**
+     * Constructor
+     *
+     * @param  string $connection
+     * @return void
+     */
+    protected function __construct($connection)
+    {
+        $this->connection = $connection;
+    }
 
     /**
      * Static method get
@@ -26,48 +48,15 @@ class Database extends PDO
      * @param  array $group
      * @return Helpers\Database
      */
-    public static function get($group = false)
+    public static function get($config = 'default')
     {
-        // Determine if the group exists or it is not empty, then use the default group defined in config.
-        $group = !$group ? array (
-            'type' => DB_TYPE,
-            'host' => DB_HOST,
-            'name' => DB_NAME,
-            'user' => DB_USER,
-            'pass' => DB_PASS
-        ) : $group;
-
-        // Group information.
-        $type = $group['type'];
-        $host = $group['host'];
-        $name = $group['name'];
-        $user = $group['user'];
-        $pass = $group['pass'];
-
-        // ID for the database, based on the group information.
-        $id = "$type.$host.$name.$user.$pass";
-
         // Check if the instance is the same.
-        if (isset(self::$instances[$id])) {
-            return self::$instances[$id];
+        if (isset(self::$instances[$config])) {
+            return self::$instances[$config];
         }
 
-        try {
-            // I've run into problem where
-            // SET NAMES "UTF8" not working on some hostings.
-            // Specifiying charset in DSN fixes the charset problem perfectly!
-            $instance = new Database("$type:host=$host;dbname=$name;charset=utf8", $user, $pass);
-            $instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            // Set the Database into $instances to avoid any potential duplication.
-            self::$instances[$id] = $instance;
-
-            return $instance;
-        } catch (PDOException $e) {
-            // In the event of an error, record the error to Logs/error.log
-            Logger::newMessage($e);
-            Logger::customErrorMsg();
-        }
+        // Set the Database into $instances to avoid any potential duplication.
+        return self::$instances[$config] = new static($config);
     }
 
     /**
@@ -78,7 +67,7 @@ class Database extends PDO
      */
     public function raw($sql)
     {
-        return $this->query($sql);
+        return $this->getPdo()->query($sql);
     }
 
     /**
@@ -92,7 +81,8 @@ class Database extends PDO
      */
     public function select($sql, $array = array(), $fetchMode = PDO::FETCH_OBJ, $class = '')
     {
-        $stmt = $this->prepare($sql);
+        $stmt = $this->getPdo()->prepare($sql);
+
         foreach ($array as $key => $value) {
             if (is_int($value)) {
                 $stmt->bindValue("$key", $value, PDO::PARAM_INT);
@@ -123,13 +113,14 @@ class Database extends PDO
         $fieldNames = implode(',', array_keys($data));
         $fieldValues = ':'.implode(', :', array_keys($data));
 
-        $stmt = $this->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
+        $stmt = $this->getPdo()->prepare("INSERT INTO $table ($fieldNames) VALUES ($fieldValues)");
 
         foreach ($data as $key => $value) {
             $stmt->bindValue(":$key", $value);
         }
 
         $stmt->execute();
+
         return $this->lastInsertId();
     }
 
@@ -145,13 +136,17 @@ class Database extends PDO
         ksort($data);
 
         $fieldDetails = null;
+
         foreach ($data as $key => $value) {
             $fieldDetails .= "$key = :field_$key,";
         }
+
         $fieldDetails = rtrim($fieldDetails, ',');
 
         $whereDetails = null;
+
         $i = 0;
+
         foreach ($where as $key => $value) {
             if ($i == 0) {
                 $whereDetails .= "$key = :where_$key";
@@ -160,9 +155,10 @@ class Database extends PDO
             }
             $i++;
         }
+
         $whereDetails = ltrim($whereDetails, ' AND ');
 
-        $stmt = $this->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
+        $stmt = $this->getPdo()->prepare("UPDATE $table SET $fieldDetails WHERE $whereDetails");
 
         foreach ($data as $key => $value) {
             $stmt->bindValue(":field_$key", $value);
@@ -173,6 +169,7 @@ class Database extends PDO
         }
 
         $stmt->execute();
+
         return $stmt->rowCount();
     }
 
@@ -188,7 +185,9 @@ class Database extends PDO
         ksort($where);
 
         $whereDetails = null;
+
         $i = 0;
+
         foreach ($where as $key => $value) {
             if ($i == 0) {
                 $whereDetails .= "$key = :$key";
@@ -197,6 +196,7 @@ class Database extends PDO
             }
             $i++;
         }
+
         $whereDetails = ltrim($whereDetails, ' AND ');
 
         // If the limit is a number, use a limit on the query.
@@ -204,13 +204,14 @@ class Database extends PDO
             $uselimit = "LIMIT $limit";
         }
 
-        $stmt = $this->prepare("DELETE FROM $table WHERE $whereDetails $uselimit");
+        $stmt = $this->getPdo()->prepare("DELETE FROM $table WHERE $whereDetails $uselimit");
 
         foreach ($where as $key => $value) {
             $stmt->bindValue(":$key", $value);
         }
 
         $stmt->execute();
+
         return $stmt->rowCount();
     }
 
@@ -221,6 +222,32 @@ class Database extends PDO
      */
     public function truncate($table)
     {
-        return $this->exec("TRUNCATE TABLE $table");
+        return $this->getPdo()->exec("TRUNCATE TABLE $table");
+    }
+
+    /**
+     * Get a PDO instance from Database API.
+     *
+     * @return PDO
+     */
+    public function getPdo()
+    {
+        $connection = Connection::getInstance($this->connection);
+
+        return $connection->getPdo();
+    }
+
+     /**
+     * Magic Method for handling dynamic functions.
+     *
+     * @param  string  $method
+     * @param  array   $params
+     * @return mixed|void
+     */
+    public function __call($method, $params)
+    {
+        $instance = $this->getPdo();
+
+        return call_user_func_array(array($instance, $method), $params);
     }
 }

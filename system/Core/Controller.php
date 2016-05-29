@@ -205,12 +205,12 @@ abstract class Controller
     {
         View::share('title', $title);
     }
-    
+
     /**
      * Return a implicit View instance.
      * @return \Core\View
      */
-    protected function view()
+    protected function makeView()
     {
         // Setup the Controller's properties.
         $className = get_class($this);

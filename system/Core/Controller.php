@@ -25,11 +25,32 @@ use Session;
  */
 abstract class Controller
 {
+    /**
+     * The requested Method by Router.
+     *
+     * @var string|null
+     */
     private $method = null;
+
+    /**
+     * The parameters given by Router.
+     *
+     * @var array
+     */
     private $params = array();
 
+    /**
+     * The Module name.
+     *
+     * @var string|null
+     */
     private $module = null;
 
+    /**
+     * The Default View.
+     *
+     * @var string
+     */
     private $defaultView;
 
     /**
@@ -240,9 +261,17 @@ abstract class Controller
     }
 
     /**
+     * @return string
+     */
+    protected function getViewName()
+    {
+        return $this->defaultView;
+    }
+
+    /**
      * @return string|null
      */
-    protected function module()
+    protected function getModule()
     {
         return $this->module;
     }
@@ -250,7 +279,7 @@ abstract class Controller
     /**
      * @return mixed
      */
-    protected function template()
+    protected function getTemplate()
     {
         return $this->template;
     }
@@ -258,7 +287,7 @@ abstract class Controller
     /**
      * @return mixed
      */
-    protected function layout()
+    protected function getLayout()
     {
         return $this->layout;
     }
@@ -266,7 +295,7 @@ abstract class Controller
     /**
      * @return mixed
      */
-    protected function method()
+    protected function getMethod()
     {
         return $this->method;
     }
@@ -274,7 +303,7 @@ abstract class Controller
     /**
      * @return array
      */
-    protected function params()
+    protected function getParams()
     {
         return $this->params;
     }

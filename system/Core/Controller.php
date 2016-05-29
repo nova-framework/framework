@@ -196,6 +196,49 @@ abstract class Controller
         return $this->language->get($str, $code);
     }
 
+
+    /**
+     * @return array
+     */
+    protected function getViewAndModule()
+    {
+        // Setup the Controller's properties.
+        $className = get_class($this);
+
+        $method = ucfirst($this->method());
+
+        // Prepare the View Path using the Controller's full Name including its namespace.
+        $classPath = str_replace('\\', '/', ltrim($className, '\\'));
+
+        // First, check on the App path.
+        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
+            $module = null;
+
+            $view = $matches[1] .DS .$method;
+            // Secondly, check on the Modules path.
+        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
+            $module = $matches[1];
+
+            // The View is in Module sub-directories.
+            $view = $matches[2] .DS .$method;
+        } else {
+            throw new \Exception('Failed to calculate the view and module, for the Class: ' .$className);
+        }
+
+        return array($view, $module);
+    }
+
+    /**
+     * Return a implicit View instance.
+     * @return \Core\View
+     */
+    protected function view()
+    {
+        list($view, $module) = $this->getViewAndModule();
+
+        return View::make($view, array(), $module);
+    }
+
     /**
      * @param  string $title
      *
@@ -238,52 +281,4 @@ abstract class Controller
         return $this->params;
     }
 
-    /**
-     * @return array
-     */
-    protected function getViewAndModule()
-    {
-        // Setup the Controller's properties.
-        $className = get_class($this);
-
-        $method = ucfirst($this->method());
-
-        // Prepare the View Path using the Controller's full Name including its namespace.
-        $classPath = str_replace('\\', '/', ltrim($className, '\\'));
-
-        // First, check on the App path.
-        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
-            $module = null;
-
-            $view = $matches[1] .DS .$method;
-            // Secondly, check on the Modules path.
-        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
-            $module = $matches[1];
-
-            // The View is in Module sub-directories.
-            $view = $matches[2] .DS .$method;
-        } else {
-            throw new \Exception('Failed to calculate the view and module, for the Class: ' .$className);
-        }
-
-        return array($view, $module);
-    }
-
-     /**
-     * Magic Method for handling dynamic functions.
-     *
-     * @param  string  $method
-     * @param  array   $params
-     * @return \Core\View|static|void
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $params)
-    {
-        list($view, $module) = $this->getViewAndModule();
-
-        $instance = View::make($view, array(), $module);
-
-        return call_user_func_array(array($instance, $method), $params);
-    }
 }

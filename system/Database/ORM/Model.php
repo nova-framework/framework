@@ -30,6 +30,7 @@ use Carbon\Carbon;
 
 use ArrayAccess;
 use DateTime;
+use DateTimeInterface;
 use LogicException;
 use PDO;
 
@@ -2250,20 +2251,20 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     /**
      * Convert a DateTime to a storable string.
      *
-     * @param  \DateTime|int  $value
+     * @param  \DateTimeInterface|int  $value
      * @return string
      */
     public function fromDateTime($value)
     {
         $format = $this->getDateFormat();
 
-        if ($value instanceof DateTime) {
+        if ($value instanceof DateTimeInterface) {
             //
         } else if (is_numeric($value)) {
             $value = Carbon::createFromTimestamp($value);
         } else if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
             $value = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
-        } else if (! $value instanceof DateTime) {
+        } else if (! $value instanceof DateTimeInterface) {
             $value = Carbon::createFromFormat($format, $value);
         }
 
@@ -2282,7 +2283,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
             return Carbon::createFromTimestamp($value);
         } else if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
             return Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
-        } else if ( ! $value instanceof DateTime) {
+        } else if (! $value instanceof DateTimeInterface) {
             $format = $this->getDateFormat();
 
             return Carbon::createFromFormat($format, $value);

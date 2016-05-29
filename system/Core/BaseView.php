@@ -311,7 +311,7 @@ abstract class BaseView implements ArrayAccess
      * Magic Method for handling dynamic functions.
      *
      * @param  string  $method
-     * @param  array   $parames
+     * @param  array   $params
      * @return \Core\BaseView|static|void
      *
      * @throws \BadMethodCallException

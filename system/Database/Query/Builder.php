@@ -1595,7 +1595,7 @@ class Builder
     protected function cleanBindings(array $bindings)
     {
         return array_values(array_filter($bindings, function($binding) {
-            return true;
+            return (! $binding instanceof Expression);
         }));
     }
 

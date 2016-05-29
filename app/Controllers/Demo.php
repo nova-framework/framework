@@ -123,6 +123,17 @@ class Demo extends Controller
     {
         $content = '';
 
+        //
+        $query = DB::table('users')->where('username', 'admin');
+
+        $sql = $query->toSql();
+
+        $user = $query->first();
+
+        $content .= '<pre>' .var_export($sql, true) .'</pre>';
+        $content .= '<pre>' .var_export($user, true) .'</pre>';
+
+        //
         $user = User::find(1);
 
         $content .= '<pre>' .var_export($user->toArray(), true) .'</pre>';

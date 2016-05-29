@@ -23,7 +23,7 @@ class Database
      *
      * @var string
      */
-    protected $connection = 'default';
+    protected $connection;
 
     /**
      * @var array Array of saved databases for reusing

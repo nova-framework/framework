@@ -246,8 +246,8 @@ class Database
      */
     public function __call($method, $params)
     {
-        $object = $this->getPdo();
+        $instance = $this->getPdo();
 
-        return call_user_func_array(array($object, $method), $params);
+        return call_user_func_array(array($instance, $method), $params);
     }
 }

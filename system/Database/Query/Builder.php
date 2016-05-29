@@ -126,13 +126,6 @@ class Builder
     public $unions;
 
     /**
-     * The keyword identifier wrapper format.
-     *
-     * @var string
-     */
-    protected $wrapper = '`%s`';
-
-    /**
      * All of the available clause operators.
      *
      * @var array
@@ -2244,12 +2237,35 @@ class Builder
      */
     public function compileTruncate()
     {
-        return array('TRUNCATE ' .$this->wrapTable($this->from) => array());
+        $driver = $this->db->getDriver();
+
+        if ($driver == 'mysql') {
+            return array('TRUNCATE ' .$this->wrapTable($this->from) => array());
+        } else if ($driver == 'pgsql') {
+            return array('TRUNCATE '.$this->wrapTable($this->from).' RESTART identity' => array());
+        } else if ($driver == 'sqlite') {
+            $sql = array(
+                'DELETE FROM sqlite_sequence WHERE name = ?'  => array($query->from),
+                'DELETE FROM ' .$this->wrapTable($this->from) => array()
+            );
+
+            return $sql;
+        }
     }
 
     //--------------------------------------------------------------------
     // Utility Methods
     //--------------------------------------------------------------------
+
+    /**
+     * Get the keyword identifier wrapper format.
+     *
+     * @return string
+     */
+    public function getWrapper()
+    {
+        return $this->db->getWrapper();
+    }
 
     /**
      * Wrap a table in keyword identifiers.
@@ -2310,7 +2326,7 @@ class Builder
      */
     protected function wrapValue($value)
     {
-        return ($value !== '*') ? sprintf($this->wrapper, $value) : $value;
+        return ($value !== '*') ? sprintf($this->getWrapper(), $value) : $value;
     }
 
     /**

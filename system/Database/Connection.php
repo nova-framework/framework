@@ -10,6 +10,10 @@ namespace Database;
 
 use Core\Config;
 use Core\Logger;
+use Database\Connectors\Connector;
+use Database\Connectors\MySqlConnector;
+use Database\Connectors\PostgresConnector;
+use Database\Connectors\SQLiteConnector;
 use Database\Query\Expression;
 use Database\Query\Builder as QueryBuilder;
 
@@ -25,6 +29,13 @@ class Connection
      * @var Connection[]
      */
     private static $instances = array();
+
+    /**
+     * The Connector instance.
+     *
+     * @var
+     */
+    protected $connector;
 
     /**
      * The active PDO Connection.
@@ -76,13 +87,16 @@ class Connection
      */
     public function __construct(array $config)
     {
-        $this->pdo = $this->createConnection($config);
-
         $this->database = $config['dbname'];
 
         $this->tablePrefix = $config['prefix'];
 
         $this->config = $config;
+
+        //
+        $this->connector = $this->createConnector($config);
+
+        $this->pdo = $this->createConnection($config);
     }
 
     /**
@@ -94,21 +108,7 @@ class Connection
      */
     public static function getInstance($config = 'default')
     {
-        if (is_array($config) && ! empty($config)) {
-            // The given parameter is a configuration array.
-            $connection = implode('.', array_values($config));
-        } else {
-            $connection = (is_string($config) && ! empty($config)) ? $config : 'default';
-
-            // Retrieve the configuration with the specified name.
-            $config = Config::get('database');
-
-            if (isset($config[$connection]) && ! empty($config[$connection])) {
-                $config = $config[$connection];
-            } else {
-                throw new \Exception("Connection name '$connection' is not defined in your configuration");
-            }
-        }
+        $connection = (is_string($config) && ! empty($config)) ? $config : 'default';
 
         // Prepare a Token for handling the Connection instances.
         $token = md5($connection);
@@ -116,6 +116,15 @@ class Connection
         // If there is already a Connection instantiated, return it.
         if (isset(static::$instances[$token])) {
             return static::$instances[$token];
+        }
+
+        // Retrieve the configuration with the specified name.
+        $config = Config::get('database');
+
+        if (isset($config[$connection]) && ! empty($config[$connection])) {
+            $config = $config[$connection];
+        } else {
+            throw new \Exception("Connection name '$connection' is not defined in your configuration");
         }
 
         // Create the Connection instance and return it.
@@ -133,6 +142,34 @@ class Connection
     }
 
     /**
+     * Create a connector instance based on the configuration.
+     *
+     * @param  array  $config
+     * @return \Database\Connectors\ConnectorInterface
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function createConnector(array $config)
+    {
+        if ( ! isset($config['driver'])) {
+            throw new \InvalidArgumentException("A driver must be specified.");
+        }
+
+        switch ($config['driver']) {
+            case 'mysql':
+                return new MySqlConnector();
+
+            case 'pgsql':
+                return new PostgresConnector();
+
+            case 'sqlite':
+                return new SQLiteConnector();
+        }
+
+        throw new \InvalidArgumentException("Unsupported driver [{$config['driver']}]");
+    }
+
+    /**
      * Create a new PDO connection.
      *
      * @param  array   $config
@@ -140,16 +177,7 @@ class Connection
      */
     public function createConnection(array $config)
     {
-        extract($config);
-
-        $dsn = "$driver:host={$hostname};dbname={$database}";
-
-        $options = array(
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset} COLLATE {$collation}"
-        );
-
-        return new PDO($dsn, $username, $password, $options);
+        return $this->connector->connect($config);
     }
 
     /**
@@ -431,6 +459,26 @@ class Connection
     }
 
     /**
+     * Get the Database Driver.
+     *
+     * @return string
+     */
+    public function getDriver()
+    {
+        return isset($this->config['driver']) ? $this->config['driver'] : null;
+    }
+
+    /**
+     * Get the Connector instance.
+     *
+     * @return \Database\Connectors\Connector
+     */
+    public function getConnector()
+    {
+        return $this->connector;
+    }
+
+    /**
      * Get the PDO instance.
      *
      * @return PDO
@@ -464,12 +512,22 @@ class Connection
     }
 
     /**
+     * Get the keyword identifier wrapper format.
+     *
+     * @return string
+     */
+    public function getWrapper()
+    {
+        return $this->connector->getWrapper();
+    }
+
+    /**
      * Get the format for database stored dates.
      *
      * @return string
      */
     public function getDateFormat()
     {
-        return 'Y-m-d H:i:s';
+        return $this->connector->getDateFormat();
     }
 }

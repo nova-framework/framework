@@ -402,12 +402,13 @@ function createKey($length = 32)
 
 /**
  * addhttp - this will ensire $url starts with http
- * 
- * @param $url string 
- * @param $scheme string 
+ *
+ * @param $url string
+ * @param $scheme string
  * @return string
- * /
-function add_http($url, $scheme = 'http://') {
-  return parse_url($url, PHP_URL_SCHEME) === null ?
-    $scheme . $url : $url;
+ */
+
+function add_http($url, $scheme = 'http://')
+{
+    return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
 }

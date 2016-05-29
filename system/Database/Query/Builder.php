@@ -2258,16 +2258,6 @@ class Builder
     //--------------------------------------------------------------------
 
     /**
-     * Get the keyword identifier wrapper format.
-     *
-     * @return string
-     */
-    public function getWrapper()
-    {
-        return $this->db->getWrapper();
-    }
-
-    /**
      * Wrap a table in keyword identifiers.
      *
      * @param  string  $table
@@ -2326,7 +2316,9 @@ class Builder
      */
     protected function wrapValue($value)
     {
-        return ($value !== '*') ? sprintf($this->getWrapper(), $value) : $value;
+        $wrapper = $this->db->getWrapper();
+
+        return ($value !== '*') ? sprintf($wrapper, $value) : $value;
     }
 
     /**

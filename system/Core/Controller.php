@@ -197,6 +197,16 @@ abstract class Controller
     }
 
     /**
+     * @param  string $title
+     *
+     * @return \Core\Controller
+     */
+    protected function title($title)
+    {
+        View::share('title', $title);
+    }
+    
+    /**
      * Return a implicit View instance.
      * @return \Core\View
      */
@@ -226,16 +236,6 @@ abstract class Controller
         }
 
         return View::make($view, array(), $module);
-    }
-
-    /**
-     * @param  string $title
-     *
-     * @return \Core\Controller
-     */
-    public function title($title)
-    {
-        View::share('title', $title);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Aliases configuration
+ * Application Configuration
  *
  * @author David Carr - dave@daveismyname.com
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
@@ -9,7 +9,9 @@
 
 use Core\Config;
 
-
+/**
+ * Class Aliases configuration
+ */
 Config::set('classAliases', array(
     // The Core Tools
     'Config'        => '\Core\Config',
@@ -58,3 +60,11 @@ Config::set('classAliases', array(
     'Session'       => '\Support\Facades\Session',
     'Validator'     => '\Support\Facades\Validator',
 ));
+
+/**
+ * Profiler configuration
+ */
+Config::set('profiler', array(
+    'withDatabase' => false,
+));
+

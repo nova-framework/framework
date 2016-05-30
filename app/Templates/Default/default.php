@@ -3,6 +3,8 @@
  * Default Layout - a Layout similar with the classic Header and Footer files.
  */
 
+use Helpers\Profiler;
+
 // Generate the Language Changer menu.
 $language = Language::code();
 
@@ -60,6 +62,23 @@ echo $css; // Place to pass data / plugable hook zone
 
     <?= $content; ?>
 </div>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row" style="margin: 15px 0 0;">
+            <div class="col-lg-4">
+                <p class="text-muted">Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework</b></a></p>
+            </div>
+            <div class="col-lg-8">
+                <p class="text-muted pull-right">
+                    <?php if(ENVIRONMENT == 'development') { ?>
+                    <small><?= Profiler::report(); ?></small>
+                    <?php } ?>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
 
 <?php
 Assets::js([

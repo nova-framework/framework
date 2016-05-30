@@ -107,6 +107,13 @@ class Reminders extends Controller
      */
     public function postReset()
     {
+        $error = array();
+        
+        // Verify the reCAPTCHA
+        if(! ReCaptcha::check()) {
+            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+        }
+
         $credentials = Input::only(
             'email', 'password', 'password_confirmation', 'token'
         );
@@ -127,8 +134,6 @@ class Reminders extends Controller
         });
 
         // Parse the response.
-        $error = array();
-
         switch ($response) {
             case Password::INVALID_PASSWORD:
                 $error[] = __d('users', 'Passwords must be strong enough and match the confirmation.');

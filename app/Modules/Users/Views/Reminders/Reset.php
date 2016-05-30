@@ -24,6 +24,15 @@
                 <div class="form-group">
                     <p><input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Verify the new Password'); ?>"><br><br></p>
                 </div>
+                <?php $recaptchaSiteKey = Config::get('recaptcha.siteKey'); if (! empty($recaptchaSiteKey)) { ?>
+                <div class="row">
+                    <div class="row pull-right" style="margin-top: 10px; margin-right: 0;">
+                        <div class="g-recaptcha" data-sitekey="<?= $recaptchaSiteKey; ?>"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr>
+                </div>
+                <?php } ?>
                 <div class="row" style="margin-top: 22px;">
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <input type="submit" name="submit" class="btn btn-success col-sm-4 pull-right" value="<?= __d('users', 'Send'); ?>">
@@ -38,3 +47,5 @@
         </div>
     </div>
 </div>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>

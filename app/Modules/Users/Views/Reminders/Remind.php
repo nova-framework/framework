@@ -31,8 +31,11 @@
                             <a href="<?= site_url('login'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Login'); ?></a>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="g-recaptcha" data-sitekey="<?= Config::get('recaptcha.siteKey'); ?>"></div>
+                    </div>
                 </fieldset>
-                
+
                 <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
 
                 </form>
@@ -40,3 +43,5 @@
         </div>
     </div>
 </div>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>

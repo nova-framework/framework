@@ -26,7 +26,12 @@
                     <p><label><input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?></label></p>
                 </div>
                 <hr>
-                <div class="row" style="margin-top: 22px;">
+                <div class="row pull-right" style="margin-right: 0;">
+                    <div class="g-recaptcha" data-sitekey="<?= Config::get('recaptcha.siteKey'); ?>"></div>
+                </div>
+                <div class="clearfix"></div>
+                <hr>
+                <div class="form-group" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Login'); ?>">
                     </div>
@@ -42,3 +47,5 @@
         </div>
     </div>
 </div>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>

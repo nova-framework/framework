@@ -33,9 +33,9 @@ class Config
      * @param string $key
      * @return mixed|null
      */
-    public static function get($key)
+    public static function get($key, $default = null)
     {
-        return isset(static::$settings[$key]) ? static::$settings[$key] : null;
+        return array_get(static::$settings, $key, $default);
     }
 
     /**

@@ -11,7 +11,7 @@ namespace Support\Facades;
 use Core\Config;
 use Core\Template;
 use Core\BaseView as View;
-
+use Forensics\Profiler as QuickProfiler;
 use Http\Response as HttpResponse;
 use Session\FileSessionHandler;
 use Session\SessionInterface;
@@ -154,7 +154,7 @@ class Session
         static::processCookies($response, $config);
 
         // Finally, minify the Response's Content.
-        static::minifyContents($response);
+        static::processContent($response);
 
         // Prepare the Response instance for sending.
         $response->prepare($request);
@@ -169,21 +169,37 @@ class Session
      * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    protected static function minifyContents(SymfonyResponse $response)
+    protected static function processContent(SymfonyResponse $response)
     {
-        $search = array(
-            '/\>[^\S ]+/s', // Strip whitespaces after tags, except space.
-            '/[^\S ]+\</s', // Strip whitespaces before tags, except space.
-            '/(\s)+/s'      // Shorten multiple whitespace sequences.
-        );
-
-        $replace = array('>', '<', '\\1');
-
-        if(($response instanceof HttpResponse) && (ENVIRONMENT == 'production')) {
-            $content = preg_replace($search, $replace, $response->getContent());
-
-            $response->setContent($content);
+        if (! $response instanceof HttpResponse) {
+            return;
         }
+
+        $content = $response->getContent();
+
+        if(ENVIRONMENT == 'development') {
+            // Insert the QuickProfiler Widget in the Response's Content.
+
+            $content = str_replace(
+                '<!-- DO NOT DELETE! - Forensics Profiler -->',
+                QuickProfiler::process(true),
+                $content
+            );
+        } else if(ENVIRONMENT == 'production') {
+            // Minify the Response's Content.
+
+            $search = array(
+                '/\>[^\S ]+/s', // Strip whitespaces after tags, except space.
+                '/[^\S ]+\</s', // Strip whitespaces before tags, except space.
+                '/(\s)+/s'      // Shorten multiple whitespace sequences.
+            );
+
+            $replace = array('>', '<', '\\1');
+
+            $content = preg_replace($search, $replace, $content);
+        }
+
+        $response->setContent($content);
     }
 
     /**

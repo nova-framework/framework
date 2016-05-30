@@ -38,6 +38,9 @@ Config::set('classAliases', array(
     'Tags'          => '\Helpers\Tags',
     'Url'           => '\Helpers\Url',
 
+    // Forensics
+    'Console'       => '\Forensics\Console',
+
     // The Support Classes
     'Arr'           => '\Support\Arr',
     'Str'           => '\Support\Str',

@@ -66,14 +66,12 @@ class ModelCommand extends Command
 $data = "<?php
 namespace App\Models;
 
-use Core\Model;
+use Database\Model;
 
 class ".ucwords($this->modelName)." extends Model
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected \$table = '$this->modelName';
+    protected \$primaryKey = 'id';
     ";
 
 if (is_array($this->methods)) {
@@ -85,7 +83,8 @@ if (is_array($this->methods)) {
     }\n";
     }
 }
-$data .="}
+$data .="
+}
 ";
         file_put_contents("app/Models/".ucwords($this->modelName).".php", $data);
     }

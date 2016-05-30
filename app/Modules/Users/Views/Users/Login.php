@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <p><input type="password" name="password" id="password" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Password'); ?>"><br><br></p>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="margin-top: 20px; margin-left: 10px;">
                     <p><label><input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?></label></p>
                 </div>
                 <hr>

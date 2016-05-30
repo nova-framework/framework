@@ -72,7 +72,7 @@ echo $css; // Place to pass data / plugable hook zone
             <div class="col-lg-8">
                 <p class="text-muted pull-right">
                     <?php if(ENVIRONMENT == 'development') { ?>
-                    <small><?= Profiler::report(); ?></small>
+                    <small><?= Profiler::getReport(); ?></small>
                     <?php } ?>
                 </p>
             </div>

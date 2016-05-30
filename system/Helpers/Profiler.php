@@ -11,13 +11,13 @@ namespace Helpers;
 use Core\Config;
 use Database\Connection;
 
-use Input;
+use Request;
 
 
 class Profiler
 {
 
-    public static function report()
+    public static function getReport()
     {
         $options = Config::get('profiler');
 

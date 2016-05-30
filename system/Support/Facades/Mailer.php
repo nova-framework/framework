@@ -97,6 +97,11 @@ class Mailer
 
         static::$mailer = $mailer = new NovaMailer($swift, $events);
 
+        $mailer->alwaysFrom(
+            array_get($config, 'from.address'),
+            array_get($config, 'from.name')
+        );
+
         $mailer->pretend($pretend);
 
         return $mailer;

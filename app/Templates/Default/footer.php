@@ -34,5 +34,7 @@ echo $js; // Place to pass data / plugable hook zone
 echo $footer; // Place to pass data / plugable hook zone
 ?>
 
+<!-- DO NOT DELETE! - Forensics Profiler -->
+
 </body>
 </html>

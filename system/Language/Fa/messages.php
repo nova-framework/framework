@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => '',
   'The :attribute and :other must be different.' => ':attribute و :other باید متفاوت باشد.',
   'The :attribute and :other must match.' => ':attribute و :other باید مطابقت داشته باشد.',
   'The :attribute confirmation does not match.' => 'تایید :attribute مطابقت ندارد.',
@@ -45,4 +46,6 @@ return array (
   'The :attribute must have at least :min items.' => ':attribute باید حداقل :min مورد باشد.',
   'The :attribute must have between :min and :max items.' => ':attribute باید بین :min تا :max مورد باشد.',
   'The selected :attribute is invalid.' => ':attribute انتخابی نامعتبر است.',
+  'queries' => '',
+  'query' => '',
 );

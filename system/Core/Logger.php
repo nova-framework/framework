@@ -8,6 +8,7 @@
 
 namespace Core;
 
+use Core\Config;
 use Helpers\Mailer;
 
 /**
@@ -49,6 +50,16 @@ class Logger
     * @var string
     */
     public static $error;
+
+
+    public static function init()
+    {
+        $config = Config::get('logger');
+
+        $displayErrors = $config['displayErrors'];
+
+        static::setDisplay($displayErrors);
+    }
 
     /**
     * In the event of an error, show this message.

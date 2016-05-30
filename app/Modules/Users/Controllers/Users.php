@@ -49,6 +49,8 @@ class Users extends Controller
     {
         $error = Session::remove('error', array());
 
+        //View::share('js', 'https://www.google.com/recaptcha/api.js');
+
         return View::make('Users/Login', 'Users')
             ->shares('title', __d('users', 'User Login'))
             ->with('csrfToken', Session::token())

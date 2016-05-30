@@ -115,6 +115,29 @@ define('ENCRYPT_KEY', '');
 define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
 
 /**
+ * Setup the Logger configuration
+ */
+Config::set('logger', array(
+    'displayErrors' => false,
+));
+
+/**
+ * Setup the Profiler configuration
+ */
+Config::set('profiler', array(
+    'useForensics' => false,
+    'withDatabase' => false,
+));
+
+/**
+ * Setup the Google reCAPTCHA configuration
+ */
+Config::set('recaptcha', array(
+    'siteKey' => '',
+    'secret'  => '',
+));
+
+/**
  * Setup the Application configuration
  */
 require 'Config/App.php';

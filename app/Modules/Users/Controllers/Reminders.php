@@ -84,6 +84,8 @@ class Reminders extends Controller
 
         $error = Session::remove('error', array());
 
+        //View::share('js', 'https://www.google.com/recaptcha/api.js');
+
         return View::make('Reminders/Reset', 'Users')
             ->shares('title', __d('users', 'Password Reset'))
             ->with('csrfToken', Session::token())

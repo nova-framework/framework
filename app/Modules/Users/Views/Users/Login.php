@@ -22,11 +22,16 @@
                 <div class="form-group">
                     <p><input type="password" name="password" id="password" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Password'); ?>"><br><br></p>
                 </div>
-                <div class="form-group">
-                    <p><input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?></p>
+                <div class="form-group" style="margin-top: 20px; margin-left: 10px;">
+                    <p><label><input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?></label></p>
                 </div>
                 <hr>
-                <div class="row" style="margin-top: 22px;">
+                <div class="row pull-right" style="margin-right: 0;">
+                    <div class="g-recaptcha" data-sitekey="<?= Config::get('recaptcha.siteKey'); ?>"></div>
+                </div>
+                <div class="clearfix"></div>
+                <hr>
+                <div class="form-group" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Login'); ?>">
                     </div>
@@ -42,3 +47,5 @@
         </div>
     </div>
 </div>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>

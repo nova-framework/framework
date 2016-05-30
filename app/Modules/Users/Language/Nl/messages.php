@@ -16,6 +16,7 @@ return array (
   'Password Reset' => '',
   'Passwords must be strong enough and match the confirmation.' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => '',
+  'Remember me' => '',
   'Reset instructions have been sent to your email address' => '',
   'Reset your password for <b>{0}</b>' => '',
   'Save' => '',

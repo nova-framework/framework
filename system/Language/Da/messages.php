@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => '',
   'The :attribute and :other must be different.' => ':attribute og :other skal være forskellige.',
   'The :attribute and :other must match.' => ':attribute og :other skal være ens.',
   'The :attribute confirmation does not match.' => ':attribute bekræftelsen passer ikke.',
@@ -45,4 +46,6 @@ return array (
   'The :attribute must have at least :min items.' => ':attribute skal indeholde mindst :min genstade.',
   'The :attribute must have between :min and :max items.' => ':attribute skal indeholde mellem :min og :max genstande.',
   'The selected :attribute is invalid.' => 'Den valgte :attribute er ugyldig.',
+  'queries' => '',
+  'query' => '',
 );

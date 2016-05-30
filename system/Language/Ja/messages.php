@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => '',
   'The :attribute and :other must be different.' => '',
   'The :attribute and :other must match.' => '',
   'The :attribute confirmation does not match.' => '',
@@ -45,4 +46,6 @@ return array (
   'The :attribute must have at least :min items.' => '',
   'The :attribute must have between :min and :max items.' => '',
   'The selected :attribute is invalid.' => '',
+  'queries' => '',
+  'query' => '',
 );

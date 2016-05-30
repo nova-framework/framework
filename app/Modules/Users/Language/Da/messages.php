@@ -16,6 +16,7 @@ return array (
   'Password Reset' => 'Nulstil kodeord',
   'Passwords must be strong enough and match the confirmation.' => 'Kodeordet skal være stærkt nok og passe med bekræftelsen',
   'Please enter your e-mail address to be sent a link to reset your password.' => '',
+  'Remember me' => '',
   'Reset instructions have been sent to your email address' => 'Instruktionerne om nulstilling af kodeordet er sendt til din mail',
   'Reset your password for <b>{0}</b>' => '',
   'Save' => 'Gem',

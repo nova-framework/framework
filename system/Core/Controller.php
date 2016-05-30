@@ -16,6 +16,7 @@ use Helpers\Hooks;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use Event;
 use Response;
 use Session;
 
@@ -123,6 +124,9 @@ abstract class Controller
             return false;
         }
 
+        // Notify the interested Listeners about the iminent Controller's execution.
+        Event::fire('framework.controller.executing', array($this, $method, $params));
+
         // Execute the requested Method with the given arguments.
         $result = call_user_func_array(array($this, $method), $params);
 
@@ -206,16 +210,6 @@ abstract class Controller
      */
     protected function before()
     {
-        // Run the Hooks associated to the Views.
-        $hooks = Hooks::get();
-
-        foreach (array('afterBody', 'css', 'js') as $hook) {
-            $result = $hooks->run($hook);
-
-            // Share the result into Views.
-            View::share($hook, $result);
-        }
-
         // Return true to continue the processing.
         return true;
     }

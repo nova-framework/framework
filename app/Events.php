@@ -9,6 +9,7 @@
 use Support\Facades\Event;
 use Core\View;
 use Helpers\Hooks;
+use Forensics\Console;
 
 
 /** Define Events. */
@@ -32,4 +33,11 @@ Event::listen('framework.controller.executing', function($instance, $method, $pa
         // Share the result into Views.
         View::share($hook, $result);
     }
+});
+
+// Add a Listener Closure to the Event 'framework.controller.executing'.
+Event::listen('framework.controller.executing', function($instance, $method, $params) {
+    $className = get_class($instance);
+
+    Console::log("Executing '$className@$method'");
 });

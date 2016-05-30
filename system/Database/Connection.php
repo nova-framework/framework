@@ -18,8 +18,9 @@ use Database\Query\Expression;
 use Database\Query\Builder as QueryBuilder;
 use Database\QueryException;
 
-use \PDO;
-use \DateTimeInterface;
+use Closure;
+use PDO;
+use DateTimeInterface;
 
 
 class Connection

@@ -26,11 +26,13 @@
                     <p><label><input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?></label></p>
                 </div>
                 <hr>
+                <?php $recaptchaSiteKey = Config::get('recaptcha.siteKey'); if (! empty($recaptchaSiteKey)) { ?>
                 <div class="row pull-right" style="margin-right: 0;">
-                    <div class="g-recaptcha" data-sitekey="<?= Config::get('recaptcha.siteKey'); ?>"></div>
+                    <div class="g-recaptcha" data-sitekey="<?= $recaptchaSiteKey; ?>"></div>
                 </div>
                 <div class="clearfix"></div>
                 <hr>
+                <?php } ?>
                 <div class="form-group" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Login'); ?>">

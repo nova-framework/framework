@@ -9,6 +9,7 @@ return array (
   'Insert the current E-Mail' => '',
   'Insert the current Password' => 'Indtast den nuværende kodeord',
   'Insert the new Password' => 'Indtast det nye kodeord',
+  'Invalid reCAPTCHA submitted.' => '',
   'Login' => '',
   'Login to <b>{0}</b>' => '',
   'Password' => 'Kodeord',

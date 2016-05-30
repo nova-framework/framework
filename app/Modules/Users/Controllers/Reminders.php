@@ -11,6 +11,7 @@ namespace App\Modules\Users\Controllers;
 use Core\Controller;
 use Core\View;
 use Helpers\Url;
+use Helpers\ReCaptcha;
 
 use Hash;
 use Input;
@@ -59,9 +60,15 @@ class Reminders extends Controller
      */
     public function postRemind()
     {
-        $credentials = Input::only('email');
-
         $error = array();
+
+        // Verify the reCAPTCHA
+        if(! ReCaptcha::check()) {
+            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+        }
+
+        //
+        $credentials = Input::only('email');
 
         switch ($response = Password::remind($credentials)) {
             case Password::INVALID_USER:

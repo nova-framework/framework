@@ -133,6 +133,7 @@ Config::set('profiler', array(
  * Setup the Google reCAPTCHA configuration
  */
 Config::set('recaptcha', array(
+    'active'  => false,
     'siteKey' => '',
     'secret'  => '',
 ));

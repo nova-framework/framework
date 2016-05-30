@@ -16,6 +16,7 @@ use Database\Connectors\PostgresConnector;
 use Database\Connectors\SQLiteConnector;
 use Database\Query\Expression;
 use Database\Query\Builder as QueryBuilder;
+use Database\QueryException;
 
 use \PDO;
 use \DateTimeInterface;
@@ -57,6 +58,27 @@ class Connection
      * @var int
      */
     protected $transactions = 0;
+
+    /**
+     * All of the queries run against the connection.
+     *
+     * @var array
+     */
+    protected $queryLog = array();
+
+    /**
+     * Indicates whether queries are being logged.
+     *
+     * @var bool
+     */
+    protected $loggingQueries = true;
+
+    /**
+     * Indicates if the connection is in a "dry run".
+     *
+     * @var bool
+     */
+    protected $pretending = false;
 
     /**
      * The name of the connected Database.
@@ -124,7 +146,7 @@ class Connection
         if (isset($config[$connection]) && ! empty($config[$connection])) {
             $config = $config[$connection];
         } else {
-            throw new \Exception("Connection name '$connection' is not defined in your configuration");
+            throw new \InvalidArgumentException("Connection '$connection' is not defined in your configuration");
         }
 
         // Create the Connection instance and return it.
@@ -151,7 +173,7 @@ class Connection
      */
     public function createConnector(array $config)
     {
-        if ( ! isset($config['driver'])) {
+        if (! isset($config['driver'])) {
             throw new \InvalidArgumentException("A driver must be specified.");
         }
 
@@ -227,14 +249,19 @@ class Connection
      */
     public function select($query, array $bindings = array())
     {
-        $statement = $this->getPdo()->prepare($query);
+        return $this->run($query, $bindings, function($me, $query, $bindings)
+        {
+            if ($me->pretending()) return array();
 
-        $bindings = $this->prepareBindings($bindings);
+            //
+            $statement = $me->getPdo()->prepare($query);
 
-        // Execute the Statement.
-        $statement->execute($bindings);
+            $bindings = $this->prepareBindings($bindings);
 
-        return $statement->fetchAll($this->getFetchMode());
+            $statement->execute($bindings);
+
+            return $statement->fetchAll($me->getFetchMode());
+        });
     }
 
     /**
@@ -282,12 +309,17 @@ class Connection
      */
     public function statement($query, array $bindings = array())
     {
-        $statement = $this->getPdo()->prepare($query);
+        return $this->run($query, $bindings, function($me, $query, $bindings)
+        {
+            if ($me->pretending()) return true;
 
-        $bindings = $this->prepareBindings($bindings);
+            //
+            $statement = $me->getPdo()->prepare($query);
 
-        // Execute the Statement and return the result.
-        return $statement->execute($bindings);
+            $bindings = $me->prepareBindings($bindings);
+
+            return $statement->execute($bindings);
+        });
     }
 
     /**
@@ -299,14 +331,19 @@ class Connection
      */
     public function affectingStatement($query, array $bindings = array())
     {
-        $statement = $this->getPdo()->prepare($query);
+        return $this->run($query, $bindings, function($me, $query, $bindings)
+        {
+            if ($me->pretending()) return 0;
 
-        $bindings = $this->prepareBindings($bindings);
+            //
+            $statement = $me->getPdo()->prepare($query);
 
-        // Execute the Statement.
-        $statement->execute($bindings);
+            $bindings = $me->prepareBindings($bindings);
 
-        return $statement->rowCount();
+            $statement->execute($bindings);
+
+            return $statement->rowCount();
+        });
     }
 
     /**
@@ -317,7 +354,12 @@ class Connection
      */
     public function unprepared($query)
     {
-        return (bool) $this->getPdo()->exec($query);
+        return $this->run($query, array(), function($me, $query, $bindings)
+        {
+            if ($me->pretending()) return true;
+
+            return (bool) $me->getPdo()->exec($query);
+        });
     }
 
     /**
@@ -418,6 +460,96 @@ class Connection
     }
 
     /**
+     * Execute the given callback in "dry run" mode.
+     *
+     * @param  \Closure  $callback
+     * @return array
+     */
+    public function pretend(Closure $callback)
+    {
+        $this->pretending = true;
+
+        $this->queryLog = array();
+
+        // Execute the Callback in the pretend mode.
+        $callback($this);
+
+        $this->pretending = false;
+
+        return $this->queryLog;
+    }
+
+    /**
+     * Run a SQL statement and log its execution context.
+     *
+     * @param  string    $query
+     * @param  array     $bindings
+     * @param  \Closure  $callback
+     * @return mixed
+     *
+     * @throws \Database\QueryException
+     */
+    protected function run($query, $bindings, Closure $callback)
+    {
+        $start = microtime(true);
+
+        $result = $this->runQueryCallback($query, $bindings, $callback);
+
+        $time = $this->getElapsedTime($start);
+
+        $this->logQuery($query, $bindings, $time);
+
+        return $result;
+    }
+
+    /**
+     * Run a SQL statement.
+     *
+     * @param  string    $query
+     * @param  array     $bindings
+     * @param  \Closure  $callback
+     * @return mixed
+     *
+     * @throws \Database\QueryException
+     */
+    protected function runQueryCallback($query, $bindings, Closure $callback)
+    {
+        try {
+            $result = $callback($this, $query, $bindings);
+        } catch (\Exception $e) {
+            throw new QueryException($query, $this->prepareBindings($bindings), $e);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Log a query in the connection's query log.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @param  float|null  $time
+     * @return void
+     */
+    public function logQuery($query, $bindings, $time = null)
+    {
+        if (! $this->loggingQueries) return;
+
+        $this->queryLog[] = compact('query', 'bindings', 'time');
+    }
+
+    /**
+     * Get the elapsed time since a given starting point.
+     *
+     * @param  int    $start
+     * @return float
+     */
+    protected function getElapsedTime($start)
+    {
+        return round((microtime(true) - $start) * 1000, 2);
+    }
+
+    /**
      * Get the current configuration for the Connection.
      *
      * @return array
@@ -489,6 +621,35 @@ class Connection
     }
 
     /**
+     * Set the PDO connection.
+     *
+     * @param  \PDO|null  $pdo
+     * @return $this
+     *
+     * @throws \RuntimeException
+     */
+    public function setPdo($pdo)
+    {
+        if ($this->transactions >= 1) {
+            throw new \RuntimeException("Can't swap PDO instance while within transaction.");
+        }
+
+        $this->pdo = $pdo;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the connection in a "dry run".
+     *
+     * @return bool
+     */
+    public function pretending()
+    {
+        return ($this->pretending === true);
+    }
+
+    /**
      * Get the default fetch mode for the Connection.
      *
      * @return int
@@ -509,6 +670,56 @@ class Connection
         $this->fetchMode = $fetchMode;
 
         return $this;
+    }
+
+    /**
+     * Get the connection query log.
+     *
+     * @return array
+     */
+    public function getQueryLog()
+    {
+        return $this->queryLog;
+    }
+
+    /**
+     * Clear the query log.
+     *
+     * @return void
+     */
+    public function flushQueryLog()
+    {
+        $this->queryLog = array();
+    }
+
+    /**
+     * Enable the query log on the connection.
+     *
+     * @return void
+     */
+    public function enableQueryLog()
+    {
+        $this->loggingQueries = true;
+    }
+
+    /**
+     * Disable the query log on the connection.
+     *
+     * @return void
+     */
+    public function disableQueryLog()
+    {
+        $this->loggingQueries = false;
+    }
+
+    /**
+     * Determine whether we're logging queries.
+     *
+     * @return bool
+     */
+    public function logging()
+    {
+        return $this->loggingQueries;
     }
 
     /**

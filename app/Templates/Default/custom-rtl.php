@@ -2,9 +2,11 @@
 /**
  * Custom Layout - a Layout similar with the classic Header and Footer files.
  */
+
+use Helpers\Profiler;
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo LANGUAGE_CODE; ?>" dir="rtl">
+<html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
     <meta charset="utf-8">
     <title><?= $title .' - ' .SITETITLE; ?></title>
@@ -21,7 +23,7 @@ Assets::css([
 echo $css; // Place to pass data / plugable hook zone
 ?>
 </head>
-<body style='padding-top: 60px;'>
+<body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
@@ -71,6 +73,23 @@ echo $css; // Place to pass data / plugable hook zone
 
     <?= $content; ?>
 </div>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row" style="margin: 15px 0 0;">
+            <div class="col-lg-4">
+                <p class="text-muted">Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework</b></a></p>
+            </div>
+            <div class="col-lg-8">
+                <p class="text-muted pull-right">
+                    <?php if(ENVIRONMENT == 'development') { ?>
+                    <small><?= Profiler::getReport(); ?></small>
+                    <?php } ?>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
 
 <?php
 Assets::js([

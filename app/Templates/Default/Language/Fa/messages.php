@@ -2,8 +2,8 @@
 
 return array (
   'Dashboard' => 'داشبورد',
-  'Forgot Password?' => '',
+  'Forgot Password?' => 'فراموشی رمزعبور؟',
   'Logout' => 'خروج',
   'Profile' => 'پروفایل',
-  'User Login' => '',
+  'User Login' => 'ورود کاربر',
 );

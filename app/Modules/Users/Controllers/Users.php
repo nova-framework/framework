@@ -8,9 +8,11 @@
 
 namespace App\Modules\Users\Controllers;
 
+use Core\Config;
 use Core\Controller;
 use Core\View;
 use Helpers\Url;
+use Helpers\ReCaptcha;
 
 use Auth;
 use Hash;
@@ -60,6 +62,11 @@ class Users extends Controller
     public function postLogin()
     {
         $error = array();
+
+        // Verify the submitted reCAPTCHA
+        if(! ReCaptcha::check()) {
+            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+        }
 
         // Retrieve the Authentication credentials.
         $credentials = Input::only('username', 'password');

@@ -9,6 +9,7 @@ return array (
   'Insert the current E-Mail' => '',
   'Insert the current Password' => 'رمزعبور فعلی را وارد کنید',
   'Insert the new Password' => 'رمزعبور جدید را وارد کنید',
+  'Invalid reCAPTCHA submitted.' => '',
   'Login' => '',
   'Login to <b>{0}</b>' => '',
   'Password' => 'رمزعبور',

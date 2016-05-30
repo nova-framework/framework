@@ -22,11 +22,13 @@
                     <div class="form-group">
                         <p><input type="email" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'E-mail'); ?>"><br><br></p>
                     </div>
+                    <?php $recaptchaSiteKey = Config::get('recaptcha.siteKey'); if (! empty($recaptchaSiteKey)) { ?>
                     <div class="row pull-right" style="margin-top: 10px; margin-right: 0;">
-                        <div class="g-recaptcha" data-sitekey="<?= Config::get('recaptcha.siteKey'); ?>"></div>
+                        <div class="g-recaptcha" data-sitekey="<?= $recaptchaSiteKey; ?>"></div>
                     </div>
                     <div class="clearfix"></div>
                     <hr>
+                    <?php } ?>
                     <div class="row" style="margin-top: 22px;">
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <input type="submit" name="submit" class="btn btn-success col-sm-10" value="<?= __d('users', 'Send Reset Link'); ?>">

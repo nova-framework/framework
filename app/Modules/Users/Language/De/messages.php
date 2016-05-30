@@ -9,6 +9,7 @@ return array (
   'Insert the current E-Mail' => '',
   'Insert the current Password' => '',
   'Insert the new Password' => '',
+  'Invalid reCAPTCHA submitted.' => '',
   'Login' => '',
   'Login to <b>{0}</b>' => '',
   'Password' => '',

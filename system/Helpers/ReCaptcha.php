@@ -22,6 +22,8 @@ class ReCaptcha
      */
     const GOOGLEHOST = 'https://www.google.com/recaptcha/api/siteverify';
 
+    private $active = true;
+
     private $siteKey;
     private $secret;
 
@@ -35,8 +37,22 @@ class ReCaptcha
         //
         $config = Config::get('recaptcha');
 
-        $this->recaptcha_siteKey = $config['siteKey'];
-        $this->recaptcha_secret  = $config'secret'];
+        // Wheter is active or not.
+        $this->active  = $config['active'];
+
+        // The Google keys
+        $this->siteKey = $config['siteKey'];
+        $this->secret  = $config['secret'];
+    }
+
+    /**
+     * Get the Status
+     *
+     * @return string
+     */
+    protected function isActive()
+    {
+        return $this->active;
     }
 
     /**
@@ -65,11 +81,14 @@ class ReCaptcha
      * @param  string $response
      * @return boolean
      */
-    protected function checkResponse($response)
+    protected function check($response = null)
     {
-        if (empty($response)) {
-            return false;
-        }
+        if(! $this->active) return true;
+
+        //
+        $response = $response ?: Request::input('g-recaptcha-response', '');
+
+        if (empty($response)) return false;
 
         $google_url = sprintf('%s?secret=%s&response=%s&remoteip=%s',
             self::GOOGLEHOST,

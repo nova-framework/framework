@@ -9,6 +9,7 @@
 
 use Core\Aliases;
 use Core\Language;
+use Core\Logger;
 use Core\Modules;
 use Routing\Router;
 use Support\Facades\Session;
@@ -34,6 +35,9 @@ require dirname(__FILE__) .DS .'functions.php';
 
 /** Initialize the Class Aliases. */
 Aliases::init();
+
+/** Initialize the Logger. */
+Logger::init();
 
 /** Start the Session. */
 Session::init();

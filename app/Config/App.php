@@ -60,11 +60,3 @@ Config::set('classAliases', array(
     'Session'       => '\Support\Facades\Session',
     'Validator'     => '\Support\Facades\Validator',
 ));
-
-/**
- * Profiler configuration
- */
-Config::set('profiler', array(
-    'withDatabase' => false,
-));
-

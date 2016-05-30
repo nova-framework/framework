@@ -12,7 +12,7 @@ use Support\Str;
 use Support\Facades\Crypt;
 use Support\Facades\Language;
 
-use Closure;
+use Closure as Closure;
 
 
 /**

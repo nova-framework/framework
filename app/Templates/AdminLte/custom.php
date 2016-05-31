@@ -85,14 +85,14 @@ if(Auth::check()) {
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?= template_url('dist/img/avatar5.png'); ?>" class="user-image" alt="User Image">
+              <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?= $userInfo['username']; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?= template_url('dist/img/avatar5.png'); ?>" class="img-circle" alt="User Image">
+                <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="img-circle" alt="User Image">
 
                 <p>
                   <?= $userInfo['realname']; ?>

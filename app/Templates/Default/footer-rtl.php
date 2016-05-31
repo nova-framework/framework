@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Footer.
+ * Default RTL Footer.
  */
 
 use Helpers\Profiler;
@@ -33,6 +33,8 @@ Assets::js([
 echo $js; // Place to pass data / plugable hook zone
 echo $footer; // Place to pass data / plugable hook zone
 ?>
+
+<!-- DO NOT DELETE! - Forensics Profiler -->
 
 </body>
 </html>

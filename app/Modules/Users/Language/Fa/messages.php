@@ -39,4 +39,12 @@ return array (
   'You have successfully reset your Password.' => 'شما با موفقیت رمزعبور خود را ویرایش کردید.',
   'You have successfully updated your Password.' => 'شما با موفقیت رمزعبور خود را بروز کردید.',
   'Yup. This is the Dashboard.' => 'آره. این داشبورد هست.',
+  'User Register' => 'ثبت نام کاربر',
+  'Password Confirmation' => 'تایید رمزعبور',
+  'Email' => 'ایمیل',
+  'Your account has been successfully created.' => 'حساب شما با موفقیت ساخته شد',
+  'Register' => 'ثبت نام',
+  'I agree to the' => 'من با',
+  'Terms of Service' => 'شرایط استفاده از خدمات',
+  'Privacy Policy' => 'حریم خصوصی مواق هستم',
 );

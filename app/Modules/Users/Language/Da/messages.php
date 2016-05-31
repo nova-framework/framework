@@ -39,4 +39,12 @@ return array (
   'You have successfully reset your Password.' => 'Du har nulstillet dit kodeord.',
   'You have successfully updated your Password.' => 'Du har opdateret dit kodeord.',
   'Yup. This is the Dashboard.' => 'Dette er skrivebordet.',
+  'User Register' => '',
+  'Password Confirmation' => '',
+  'Email' => '',
+  'Your account has been successfully created.' => '',
+  'Register' => '',
+  'I agree to the' => '',
+  'Terms of Service' => '',
+  'Privacy Policy' => '',
 );

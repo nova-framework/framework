@@ -1,9 +1,10 @@
 <?php
 /**
- * Default Layout - a Layout similar with the classic Header and Footer files.
+ * Default RTL Layout - a Layout similar with the classic Header and Footer files.
  */
 
 use Helpers\Profiler;
+use Forensics\Profiler as QuickProfiler;
 
 // Generate the Language Changer menu.
 $language = Language::code();
@@ -89,6 +90,8 @@ Assets::js([
 echo $js; // Place to pass data / plugable hook zone
 echo $footer; // Place to pass data / plugable hook zone
 ?>
+
+<!-- DO NOT DELETE! - Forensics Profiler -->
 
 </body>
 </html>

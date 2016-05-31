@@ -260,16 +260,18 @@ abstract class BaseRouter
         if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $filePath = ROOTDIR .'assets' .DS .$matches[1];
         } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
-            $type = ucfirst($matches[1]);
+            $module = Inflector::classify($matches[2]);
 
-            $name = Inflector::classify($matches[2]);
+            $folder = $matches[3];
 
-            if($type == 'Modules') {
+            $path = $matches[4];
+
+            if($matches[1] == 'Modules') {
                 // A Module Asset file.
-                $filePath = APPDIR .$type .DS .$name .DS .'Assets' .DS .$matches[3] .DS .$matches[4];
+                $filePath = $this->getModuleAssetPath($module, $folder, $path);
             } else {
                 // A Template Asset file.
-                $filePath = $this->getTemplateAsset($name, $matches[3], $matches[4]);
+                $filePath = $this->getTemplateAssetPath($module, $folder, $path);
             }
         }
 
@@ -287,7 +289,18 @@ abstract class BaseRouter
      * Get the path of a Asset file
      * @return string|null
      */
-    protected function getTemplateAsset($template, $folder, $path)
+    protected function getModuleAssetPath($module, $folder, $path)
+    {
+        $basePath = APPDIR .str_replace('/', DS, "Modules/$module/Assets/");
+
+        return $basePath .$folder .DS .$path;
+    }
+
+    /**
+     * Get the path of a Asset file
+     * @return string|null
+     */
+    protected function getTemplateAssetPath($template, $folder, $path)
     {
         $path = str_replace('/', DS, $path);
 
@@ -303,27 +316,24 @@ abstract class BaseRouter
             $info = array();
         }
 
+        //
+        $basePath = null;
+
         // Get the current Asset Folder's Mode.
         $mode = array_get($info, 'assets.paths.' .$folder, 'local');
 
         if ($mode == 'local') {
-            $basePath = APPDIR .'Templates' .DS .$template .DS .'Assets' .DS;
+            $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
         } else if ($mode == 'vendor') {
-            $basePath = null;
-
             // Get the Vendor name.
             $vendor = array_get($info, 'assets.vendor', '');
 
             if (! empty($vendor)) {
-                $basePath = ROOTDIR .'vendor' .DS. $vendor .DS;
+                $basePath = ROOTDIR .str_replace('/', DS, "vendor/$vendor/");
             }
         }
 
-        if (! empty($basePath)) {
-            return  $basePath .$folder .DS .$path;
-        }
-
-        return '';
+        return ! empty($basePath) ? $basePath .$folder .DS .$path : '';
     }
 
     /**

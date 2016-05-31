@@ -21,7 +21,8 @@
         "symfony/http-foundation": "^3.0",
         "patchwork/utf8": "~1.2",
         "nesbot/carbon": "^1.21",
-        "swiftmailer/swiftmailer": "^5.4"
+        "swiftmailer/swiftmailer": "^5.4",
+        "almasaeed2010/adminlte": "~2.0"
     },
     "autoload": {
         "psr-4": {

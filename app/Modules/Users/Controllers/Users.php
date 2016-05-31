@@ -23,7 +23,8 @@ use Session;
 
 class Users extends Controller
 {
-    protected $layout = 'custom';
+    protected $template = 'AdminLte';
+    protected $layout   = 'default';
 
 
     public function __construct()

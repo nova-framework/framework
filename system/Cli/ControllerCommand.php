@@ -115,7 +115,7 @@ class ".ucwords($this->controllerName)." extends Controller
             foreach ($this->methods as $method) {
                 $title = ucwords($method);
 
-                $data .="
+                $data .= "
     public function $method()
     {
        return \$this->getView()->shares('title', '$title');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom Layout - a Layout similar with the classic Header and Footer files.
+ * Custom RTL Layout - a Layout similar with the classic Header and Footer files.
  */
 
 use Helpers\Profiler;
@@ -100,6 +100,8 @@ Assets::js([
 echo $js; // Place to pass data / plugable hook zone
 echo $footer; // Place to pass data / plugable hook zone
 ?>
+
+<!-- DO NOT DELETE! - Forensics Profiler -->
 
 </body>
 </html>

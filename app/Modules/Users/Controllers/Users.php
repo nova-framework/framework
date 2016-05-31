@@ -24,7 +24,7 @@ use Session;
 class Users extends Controller
 {
     protected $template = 'AdminLte';
-    protected $layout   = 'default';
+    protected $layout   = 'backend';
 
 
     public function __construct()
@@ -37,6 +37,10 @@ class Users extends Controller
 
     protected function before()
     {
+        if($this->getMethod() == 'login') {
+            $this->layout = 'default';
+        }
+
         View::share('currentUri', Url::detectUri());
 
         return parent::before();

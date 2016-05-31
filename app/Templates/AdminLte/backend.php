@@ -43,7 +43,7 @@ if(Auth::check()) {
 
     //Add Controller specific JS files.
     Assets::js(array(
-        template_url('plugins/jQuery/jQuery-2.2.0.min.js'),
+        template_url('plugins/jQuery/jQuery-2.2.0.min.js', 'AdminLte'),
     ));
 
     ?>
@@ -101,7 +101,7 @@ if(Auth::check()) {
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('admin/users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
+                  <a href="<?= site_url('profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
                 </div>
                 <div class="pull-right">
                   <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __('Sign out'); ?></a>

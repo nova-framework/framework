@@ -88,7 +88,7 @@ $user = Auth::user();
                 <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="img-circle" alt="User Image">
 
                 <p>
-                  <?= $user->username; ?>
+                  <?= $user->realname; ?>
                 </p>
               </li>
               <!-- Menu Footer-->

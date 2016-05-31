@@ -115,15 +115,12 @@ if (is_array($this->methods)) {
     $data .="
     public function $method()
     {
-        \$data['title'] = '$method';
-
-        View::renderTemplate('header', \$data);
-        View::render('".ucwords($this->controllerName)."/".ucwords($method)."', \$data);
-        View::renderTemplate('footer', \$data);
+       return \$this->getView()->shares('title', '$method');
     }\n";
     }
 }
-$data .="}
+$data .="
+}
 ";
         file_put_contents("app/Controllers/".ucwords($this->controllerName).".php", $data);
     }

@@ -2,7 +2,6 @@
 
 # Note **fileinfo is required to be enabled** (edit php.ini and uncomment php_fileinfo.dll or use php selector within cpanel if available.)
 
-[![Software License](http://img.shields.io/badge/License-BSD--3-brightgreen.svg)](LICENSE)
 [![Total Downloads](https://img.shields.io/packagist/dt/simple-mvc-framework/v2.svg)](https://packagist.org/packages/simple-mvc-framework/v2)
 [![Dependency Status](https://www.versioneye.com/user/projects/554367f738331321e2000005/badge.svg)](https://www.versioneye.com/user/projects/554367f738331321e2000005)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/simple-mvc-framework/v2/master/license.txt)

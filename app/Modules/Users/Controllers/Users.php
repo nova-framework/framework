@@ -11,14 +11,19 @@ namespace App\Modules\Users\Controllers;
 use Core\Config;
 use Core\Controller;
 use Core\View;
+
 use Helpers\Url;
 use Helpers\ReCaptcha;
+use Helpers\Password;
+
+use App\Models\User;
 
 use Auth;
 use Hash;
 use Input;
 use Redirect;
 use Session;
+use Validator;
 
 
 class Users extends Controller
@@ -90,6 +95,73 @@ class Users extends Controller
         $error[] = __d('users', 'Wrong username or password.');
 
         return Redirect::back()->with('error', $error);
+    }
+
+    public function register()
+    {
+        $error = Session::remove('error', array());
+
+        //View::share('js', 'https://www.google.com/recaptcha/api.js');
+
+        return View::make('Users/Register', 'Users')
+            ->shares('title', __d('users', 'User Register'))
+            ->with('csrfToken', Session::token())
+            ->with('error', $error);
+    }
+
+    public function postRegister()
+    {
+        $error = array();
+
+        // Verify the submitted reCAPTCHA
+        if(! ReCaptcha::check()) {
+            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+        }
+
+        // Retrieve the Authentication credentials.
+        $credentials = Input::only('username', 'password', 'repassword', 'email');
+
+        $data = array(
+            'username'   => Input::get('username'),
+            'password'   => Input::get('password'),
+            'repassword' => Input::get('repassword'),
+            'email'      => Input::get('email')
+        );
+
+        $rules = array(
+            'username'   => 'required|min:3|max:50|alpha_dash|unique:users',
+            'password'   => 'required|between:4,30',
+            'repassword' => 'required|same:password',
+            'email'      => 'required|email|max:100|unique:users'   
+        );
+
+        $attributes = array(
+            'username'   => __d('users', 'Username'),
+            'password'   => __d('users', 'Password'),
+            'repassword' => __d('users', 'Password Confirmation'),
+            'email'      => __d('users', 'Email'),
+        );
+
+        $validator = Validator::make($data, $rules, array(), $attributes);
+
+        if ($validator->passes()) {
+
+            $user = new User();
+
+            $user->username = Input::get('username');
+            $user->password = Password::make(Input::get('password'));
+            $user->email    = Input::get('email');
+
+            $user->save();
+
+            return Redirect::back()->with('message', __d('users', 'Your account has been successfully created.'));
+        } else {
+            $error = $validator->errors()->all();
+
+            return Redirect::back()->with('error', $error);
+        }
+
+
     }
 
     public function logout()

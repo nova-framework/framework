@@ -27,6 +27,16 @@ Router::get('logout', array(
     'uses' => 'App\Modules\Users\Controllers\Users@logout'
 ));
 
+Router::get('register',  array(
+    'filters' => 'guest',
+    'uses' => 'App\Modules\Users\Controllers\Users@register'
+));
+
+Router::post('register', array(
+    'filters' => 'guest|csrf',
+    'uses' => 'App\Modules\Users\Controllers\Users@postRegister'
+));
+
 // The User's Dashboard.
 Router::get('dashboard', array(
     'filters' => 'auth',

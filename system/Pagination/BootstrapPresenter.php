@@ -58,7 +58,7 @@ class BootstrapPresenter extends Presenter
      */
     public function getPaginationWrapper($content)
     {
-        return '<nav><ul class="pagination">' .$content .'</ul></nav>';
+        return '<ul class="pagination">' .$content .'</ul>';
     }
 
 }

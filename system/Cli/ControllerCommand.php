@@ -97,7 +97,7 @@ class ControllerCommand extends Command
 
     public function makeController()
     {
-$data = "<?php
+        $data = "<?php
 namespace App\Controllers;
 
 use Core\View;
@@ -110,18 +110,23 @@ class ".ucwords($this->controllerName)." extends Controller
         parent::__construct();
     }
     ";
-if (is_array($this->methods)) {
-    foreach ($this->methods as $method) {
-    $data .="
+
+        if (is_array($this->methods)) {
+            foreach ($this->methods as $method) {
+                $title = ucwords($method);
+
+                $data .= "
     public function $method()
     {
-       return \$this->getView()->shares('title', '$method');
+       return \$this->getView()->shares('title', '$title');
     }\n";
-    }
-}
-$data .="
+            }
+        }
+
+        $data .= "
 }
 ";
+
         file_put_contents("app/Controllers/".ucwords($this->controllerName).".php", $data);
     }
 }

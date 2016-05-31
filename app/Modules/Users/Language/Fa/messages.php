@@ -3,6 +3,8 @@
 return array (
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, شما با موفقیت وارد سیستم شدید.',
   'Change Password' => 'ویرایش رمزعبور',
+  'Confirm Password' => '',
+  'Current Password' => '',
   'Dashboard' => 'داشبورد',
   'E-mail' => 'ایمیل',
   'Forgot Password?' => 'فراموشی رمزعبور؟',
@@ -12,6 +14,7 @@ return array (
   'Invalid reCAPTCHA submitted.' => 'کد امنیتی نامعتبر است',
   'Login' => 'ورود',
   'Login to <b>{0}</b>' => 'ورود به <b>{0}</b>',
+  'New Password' => '',
   'Password' => 'رمزعبور',
   'Password Recovery' => 'بازیابی رمزعبور',
   'Password Reset' => 'بازنشانی رمزعبور',
@@ -23,7 +26,6 @@ return array (
   'Save' => 'ذخیره',
   'Send' => 'ارسال',
   'Send Reset Link' => 'ارسال لینک بازیابی',
-  'Someday, we\'ll have widgets and stuff on here...' => 'یک روز، ما در اینجا ابزار ها و امکاناتی خواهیم داشت...',
   'The current Password is invalid.' => 'رمز عبور اشتباه است.',
   'The new Password and its verification are not equals.' => 'رمز عبور و تایید آن با یکدیگر مطابقت ندارد.',
   'The new Password is not strong enough.' => 'رمز عبور جدید به اندازه کافی قوی نیست',
@@ -38,5 +40,4 @@ return array (
   'You have successfully logged out.' => 'شما با موفقیت از سیستم خارج شدید.',
   'You have successfully reset your Password.' => 'شما با موفقیت رمزعبور خود را ویرایش کردید.',
   'You have successfully updated your Password.' => 'شما با موفقیت رمزعبور خود را بروز کردید.',
-  'Yup. This is the Dashboard.' => 'آره. این داشبورد هست.',
 );

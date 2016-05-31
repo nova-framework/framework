@@ -5,16 +5,6 @@
 
 use Helpers\Profiler;
 
-// Prepare the current User Info.
-if(Auth::check()) {
-    $userInfo = Auth::user()->toArray();
-} else {
-    $userInfo = array(
-        'username' => __('admin_lte', 'guest'),
-        'realname' => __('admin_lte', 'Guest'),
-    );
-}
-
 ?>
 <!DOCTYPE html>
 <html>

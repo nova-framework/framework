@@ -3,6 +3,8 @@
 return array (
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, du er nu logget ind.',
   'Change Password' => 'Ændre kodeord',
+  'Confirm Password' => '',
+  'Current Password' => '',
   'Dashboard' => 'Skrivebord',
   'E-mail' => '',
   'Forgot Password?' => '',
@@ -12,6 +14,7 @@ return array (
   'Invalid reCAPTCHA submitted.' => '',
   'Login' => '',
   'Login to <b>{0}</b>' => '',
+  'New Password' => '',
   'Password' => 'Kodeord',
   'Password Recovery' => 'Gendan kodeord',
   'Password Reset' => 'Nulstil kodeord',
@@ -23,7 +26,6 @@ return array (
   'Save' => 'Gem',
   'Send' => '',
   'Send Reset Link' => '',
-  'Someday, we\'ll have widgets and stuff on here...' => 'En dag vil vi have en masse fede ting her...',
   'The current Password is invalid.' => 'Det nuværende kodeord er ikke gyldig',
   'The new Password and its verification are not equals.' => 'Det nye kodeord og gentagelse af kodeordet er ikke ens',
   'The new Password is not strong enough.' => 'Det nye kodeord er ikke stærkt nok',
@@ -38,5 +40,4 @@ return array (
   'You have successfully logged out.' => 'Du er nu logget ud.',
   'You have successfully reset your Password.' => 'Du har nulstillet dit kodeord.',
   'You have successfully updated your Password.' => 'Du har opdateret dit kodeord.',
-  'Yup. This is the Dashboard.' => 'Dette er skrivebordet.',
 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Reminders - A Controller for managing the Password Reminders.
+ * Authorize - A Controller for managing the User Authentication.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -13,6 +13,7 @@ use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
+use Auth;
 use Hash;
 use Input;
 use Password;
@@ -21,7 +22,7 @@ use Response;
 use Session;
 
 
-class Reminders extends Controller
+class Authorize extends Controller
 {
     protected $template = 'AdminLte';
     protected $layout   = 'default';
@@ -40,6 +41,87 @@ class Reminders extends Controller
     }
 
     /**
+     * Display the login view.
+     *
+     * @return Response
+     */
+    public function login()
+    {
+        $error = Session::remove('error', array());
+
+        //View::share('js', 'https://www.google.com/recaptcha/api.js');
+
+        return $this->getView()
+            ->shares('title', __d('users', 'User Login'))
+            ->with('csrfToken', Session::token())
+            ->with('error', $error);
+    }
+
+    /**
+     * Handle a POST request to login the User.
+     *
+     * @return Response
+     */
+    public function postLogin()
+    {
+        $error = array();
+
+        // Verify the submitted reCAPTCHA
+        if(! ReCaptcha::check()) {
+            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+        }
+
+        // Retrieve the Authentication credentials.
+        $credentials = Input::only('username', 'password');
+
+        // Prepare the 'remember' parameter.
+        $remember = (Input::get('remember') == 'on');
+
+        // Make an attempt to login the Guest with the given credentials.
+        if(Auth::attempt($credentials, $remember)) {
+            // The User is authenticated now; retrieve his Model instance.
+            $user = Auth::user();
+
+            if (Hash::needsRehash($user->password)) {
+                $password = $credentials['password'];
+
+                $user->password = Hash::make($password);
+
+                // Save the User Model instance - used with the Extended Auth Driver.
+                $user->save();
+
+                // Save the User Model instance - used with the Database Auth Driver.
+                // $model = new \App\Modules\Users\Models\Users();
+                //
+                //$model->updateGenericUser($user);
+            }
+
+            // Prepare the flash message.
+            $message = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
+
+            // Redirect to the User's Dashboard.
+            return Redirect::to('users/dashboard')->with('message', $message);
+        }
+
+        // An error has happened on authentication; add a message into $error array.
+        $error[] = __d('users', 'Wrong username or password.');
+
+        return Redirect::back()->with('error', $error);
+    }
+
+    /**
+     * Handle a GET request to logout the current User.
+     *
+     * @return Response
+     */
+    public function logout()
+    {
+        Auth::logout();
+
+        return Redirect::to('login')->with('message', __d('users', 'You have successfully logged out.'));
+    }
+
+    /**
      * Display the password reminder view.
      *
      * @return Response
@@ -48,14 +130,14 @@ class Reminders extends Controller
     {
         $error = Session::remove('error', array());
 
-        return View::make('Reminders/Remind', 'Users')
+        return $this->getView()
             ->shares('title', __d('users', 'Password Recovery'))
             ->with('csrfToken', Session::token())
             ->with('error', $error);
     }
 
     /**
-     * Handle a POST request to remind a user of their password.
+     * Handle a POST request to remind a User of their password.
      *
      * @return Response
      */
@@ -94,7 +176,7 @@ class Reminders extends Controller
 
         //View::share('js', 'https://www.google.com/recaptcha/api.js');
 
-        return View::make('Reminders/Reset', 'Users')
+        return $this->getView()
             ->shares('title', __d('users', 'Password Reset'))
             ->with('csrfToken', Session::token())
             ->with('error', $error)
@@ -102,7 +184,7 @@ class Reminders extends Controller
     }
 
     /**
-     * Handle a POST request to reset a user's password.
+     * Handle a POST request to reset a User's password.
      *
      * @return Response
      */

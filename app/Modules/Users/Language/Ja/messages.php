@@ -3,6 +3,8 @@
 return array (
   '<b>{0}</b>, you have successfully logged in.' => '',
   'Change Password' => '',
+  'Confirm Password' => '',
+  'Current Password' => '',
   'Dashboard' => '',
   'E-mail' => '',
   'Forgot Password?' => '',
@@ -12,6 +14,7 @@ return array (
   'Invalid reCAPTCHA submitted.' => '',
   'Login' => '',
   'Login to <b>{0}</b>' => '',
+  'New Password' => '',
   'Password' => '',
   'Password Recovery' => '',
   'Password Reset' => '',
@@ -23,7 +26,6 @@ return array (
   'Save' => '',
   'Send' => '',
   'Send Reset Link' => '',
-  'Someday, we\'ll have widgets and stuff on here...' => '',
   'The current Password is invalid.' => '',
   'The new Password and its verification are not equals.' => '',
   'The new Password is not strong enough.' => '',
@@ -38,5 +40,4 @@ return array (
   'You have successfully logged out.' => '',
   'You have successfully reset your Password.' => '',
   'You have successfully updated your Password.' => '',
-  'Yup. This is the Dashboard.' => '',
 );

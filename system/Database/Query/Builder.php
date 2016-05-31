@@ -171,6 +171,21 @@ class Builder
     }
 
     /**
+     * Add a new select column to the query.
+     *
+     * @param  mixed  $column
+     * @return \Database\Query\Builder|static
+     */
+    public function addSelect($column)
+    {
+        $column = is_array($column) ? $column : func_get_args();
+
+        $this->columns = array_merge((array) $this->columns, $column);
+
+        return $this;
+    }
+
+    /**
      * Force the query to only return distinct results.
      *
      * @return \Database\Query\Builder|static

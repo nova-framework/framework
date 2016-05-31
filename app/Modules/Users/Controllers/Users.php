@@ -19,6 +19,7 @@ use Hash;
 use Input;
 use Redirect;
 use Session;
+use Validator;
 
 
 class Users extends Controller
@@ -65,19 +66,49 @@ class Users extends Controller
     {
         $user = Auth::user();
 
-        $error = array();
-
         // The requested new Password information.
         $password = Input::get('password');
         $confirm  = Input::get('password_confirmation');
 
-        if (! Hash::check(Input::get('current_password'), $user->password)) {
-            $error[] = __d('users', 'The current Password is invalid.');
-        } else if ($password != $confirm) {
-            $error[] = __d('users', 'The new Password and its verification are not equals.');
-        } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
-            $error[] = __d('users', 'The new Password is not strong enough.');
-        } else {
+        //
+        $input = Input::only('current_password', 'password', 'password_confirmation');
+
+        $rules = array(
+            'current_password'      => 'required|user_password',
+            'password'              => 'required|strong_password',
+            'password_confirmation' => 'required|same:password',
+        );
+
+        $messages = array(
+            'user_password'   => __d('users', 'The :attribute field is invalid.'),
+            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
+        );
+
+        $attributes = array(
+            'current_password'      => __d('users', 'Current Password'),
+            'password'              => __d('users', 'New Password'),
+            'password_confirmation' => __d('users', 'Password Confirmation'),
+        );
+
+        // Add the custom Validation Rules.
+        Validator::extend('user_password', function($attribute, $value, $parameters) use ($user)
+        {
+            return Hash::check($value, $user->password);
+        });
+
+        Validator::extend('strong_password', function($attribute, $value, $parameters)
+        {
+            $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
+
+            return (preg_match($pattern, $value) === 1);
+        });
+
+        // Create a Validator instance.
+        $validator = Validator::make($input, $rules, $messages, $attributes);
+
+        // Validate the Input.
+        if ($validator->passes()) {
+            // Update the password on the User Model instance.
             $user->password = Hash::make($password);
 
             // Save the User Model instance - used with the Extended Auth Driver.
@@ -89,6 +120,9 @@ class Users extends Controller
             // Use a Redirect to avoid the reposting the data.
             return Redirect::back()->with('message', __d('users', 'You have successfully updated your Password.'));
         }
+
+        // Collect the Validation errors.
+        $error = $validator->errors()->all();
 
         return Redirect::back()->with('error', $error);
     }

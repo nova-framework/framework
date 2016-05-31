@@ -23,7 +23,8 @@ use Session;
 
 class Reminders extends Controller
 {
-    protected $layout = 'custom';
+    protected $template = 'AdminLte';
+    protected $layout   = 'default';
 
 
     public function __construct()
@@ -108,7 +109,7 @@ class Reminders extends Controller
     public function postReset()
     {
         $error = array();
-        
+
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
             return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));

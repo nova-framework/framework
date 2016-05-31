@@ -1,0 +1,24 @@
+{
+    "name" : "AdminLte",
+    "description" : "AdminLTE - admin control panel and dashboard that's based on Bootstrap 3",
+    "homepage" : "http://www.novaframework.com/",
+    "authors" : [
+        {
+            "name" : "Virgil-Adrian Teaca",
+            "email" : "virgil@giulianaeassociati.com",
+            "homepage": "http://www.giulianaeassociati.com",
+            "role": "Developer"
+        }
+    ],
+    "license" : "MIT",
+    "assets" : {
+        "default" : "local",
+        "paths" : {
+            "bootstrap" : "vendor",
+            "dist" : "vendor",
+            "images" : "local",
+            "plugins" : "vendor"
+        },
+        "vendor" : "almasaeed2010/adminlte"
+    }
+}

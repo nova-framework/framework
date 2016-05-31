@@ -16,6 +16,7 @@ use Routing\Route;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
+use Console;
 use Response;
 use Session;
 
@@ -258,11 +259,18 @@ abstract class BaseRouter
 
         if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $filePath = ROOTDIR .'assets' .DS .$matches[1];
-        } else if (preg_match('#^(templates|modules)/(.+)/assets/(.*)$#i', $uri, $matches)) {
-            // We need to classify the path name (the Module/Template path).
-            $basePath = ucfirst($matches[1]) .DS .Inflector::classify($matches[2]);
+        } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
+            $type = ucfirst($matches[1]);
 
-            $filePath = APPDIR .$basePath .DS .'Assets' .DS .$matches[3];
+            $name = Inflector::classify($matches[2]);
+
+            if($type == 'Modules') {
+                // A Module Asset file.
+                $filePath = APPDIR .$type .DS .$name .DS .'Assets' .DS .$matches[3] .DS .$matches[4];
+            } else {
+                // A Template Asset file.
+                $filePath = $this->getTemplateAsset($name, $matches[3], $matches[4]);
+            }
         }
 
         if (! empty($filePath)) {
@@ -273,6 +281,49 @@ abstract class BaseRouter
         }
 
         return false;
+    }
+
+    /**
+     * Get the path of a Asset file
+     * @return string|null
+     */
+    protected function getTemplateAsset($template, $folder, $path)
+    {
+        $path = str_replace('/', DS, $path);
+
+        // Retrieve the Template Info
+        $infoFile = APPDIR .'Templates' .DS .$template .DS .'template.json';
+
+        if (is_readable($infoFile)) {
+            $info = json_decode(file_get_contents($infoFile), true);
+
+            // Template Info should be always an array; ensure that.
+            $info = $info ?: array();
+        } else {
+            $info = array();
+        }
+
+        // Get the current Asset Folder's Mode.
+        $mode = array_get($info, 'assets.paths.' .$folder, 'local');
+
+        if ($mode == 'local') {
+            $basePath = APPDIR .'Templates' .DS .$template .DS .'Assets' .DS;
+        } else if ($mode == 'vendor') {
+            $basePath = null;
+
+            // Get the Vendor name.
+            $vendor = array_get($info, 'assets.vendor', '');
+
+            if (! empty($vendor)) {
+                $basePath = ROOTDIR .'vendor' .DS. $vendor .DS;
+            }
+        }
+
+        if (! empty($basePath)) {
+            return  $basePath .$folder .DS .$path;
+        }
+
+        return '';
     }
 
     /**

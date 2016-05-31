@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Header.
+ * Default RTL Header.
  */
 
 // Generate the Language Changer menu.

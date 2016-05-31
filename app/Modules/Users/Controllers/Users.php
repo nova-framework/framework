@@ -66,13 +66,10 @@ class Users extends Controller
     {
         $user = Auth::user();
 
-        // The requested new Password information.
-        $password = Input::get('password');
-        $confirm  = Input::get('password_confirmation');
-
-        //
+        // Retrive the Input data.
         $input = Input::only('current_password', 'password', 'password_confirmation');
 
+        // Prepare the Validation Rules, Messages and Attributes.
         $rules = array(
             'current_password'      => 'required|user_password',
             'password'              => 'required|strong_password',
@@ -90,7 +87,7 @@ class Users extends Controller
             'password_confirmation' => __d('users', 'Password Confirmation'),
         );
 
-        // Add the custom Validation Rules.
+        // Add the custom Validation Rule commands.
         Validator::extend('user_password', function($attribute, $value, $parameters) use ($user)
         {
             return Hash::check($value, $user->password);

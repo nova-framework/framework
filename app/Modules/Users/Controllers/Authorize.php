@@ -31,6 +31,9 @@ class Authorize extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        // Prepare the Users Model instance - while using the Database Auth Driver.
+        //$this->model = new \App\Modules\Users\Models\Users();
     }
 
     protected function before()
@@ -91,9 +94,7 @@ class Authorize extends Controller
                 $user->save();
 
                 // Save the User Model instance - used with the Database Auth Driver.
-                // $model = new \App\Modules\Users\Models\Users();
-                //
-                //$model->updateGenericUser($user);
+                //$this->model->updateGenericUser($user);
             }
 
             // Prepare the flash message.

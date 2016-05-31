@@ -50,7 +50,7 @@ Router::post('password/reset', array(
 ));
 
 // The User's Dashboard.
-Router::get('users/dashboard', array(
+Router::get('users(/dashboard)', array(
     'filters' => 'auth',
     'uses' => 'App\Modules\Users\Controllers\Users@dashboard'
 ));

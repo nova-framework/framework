@@ -28,7 +28,9 @@ use Helpers\Profiler;
         // AdminLTE Skins
         template_url('dist/css/skins/_all-skins.min.css', 'AdminLte'),
         // iCheck
-        template_url('plugins/iCheck/square/blue.css', 'AdminLte')
+        template_url('plugins/iCheck/square/blue.css', 'AdminLte'),
+        // Custom CSS
+        template_url('css/style.css', 'AdminLte'),
     ));
 
     echo $css; // Place to pass data / plugable hook zone

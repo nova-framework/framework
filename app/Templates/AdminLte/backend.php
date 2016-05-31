@@ -30,6 +30,8 @@ $user = Auth::user();
         template_url('dist/css/AdminLTE.min.css', 'AdminLte'),
         // AdminLTE Skins
         template_url('dist/css/skins/_all-skins.min.css', 'AdminLte'),
+        // Custom CSS
+        template_url('css/style.css', 'AdminLte'),
     ));
 
     echo $css; // Place to pass data / plugable hook zone

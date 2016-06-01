@@ -19,6 +19,7 @@ use Session\Store as SessionStore;
 use Support\Facades\Cookie;
 use Support\Facades\Crypt;
 use Support\Facades\Request;
+use Support\MessageBag;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -300,32 +301,43 @@ class Session
 
         if (is_array($message)) {
             // The Message is structured in the New Style.
-            $name    = $message['type'];
+            $type    = $message['type'];
             $message = $message['text'];
         }
 
-        // Prepare the allert Type and Icon.
-        $type = null;
-
-        switch ($name) {
+        // Adjust the alert Type.
+        switch ($type) {
             case 'info':
-                $icon = 'info';
-                break;
+            case 'success':
             case 'warning':
-                $icon = 'warning';
-                break;
             case 'danger':
-                $icon = 'bomb';
                 break;
+
             default:
-                $icon = 'check';
                 $type = 'success';
+
+                break;
         }
 
-        $type = ($type !== null) ? $type : $name;
+        // Handle the multiple line messages.
+        if($message instanceof MessageBag) {
+            $message = $message->all();
+        }
+
+        // Handle the array messages.
+        if (is_array($message)) {
+            if (count($message) > 1) {
+                $message = '<ul><li>' .implode('</li><li>', $message) .'</li></ul>';
+                        } else if(! empty($message)) {
+                $message = array_shift($message);
+            } else {
+                // An empty array?
+                $message = '';
+            }
+        }
 
         // Fetch the associated Template Fragment and return the result.
-        return Template::make('message', compact('type', 'icon', 'message'))->fetch();
+        return Template::make('message', compact('type', 'message'))->fetch();
     }
 
     /**

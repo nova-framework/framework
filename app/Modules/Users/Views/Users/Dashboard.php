@@ -8,7 +8,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::message('message'); ?>
+<?= Session::message('status'); ?>
 
 <div class="box box-widget">
     <div class="box-body">

@@ -1,10 +1,12 @@
-<div class='row-responsive'>
-    <h2><?= __d('users', 'User Login'); ?></h2>
-    <hr>
-</div>
+<section class="content-header">
+    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('users', 'User Login'); ?></h2>
+</section>
+
+<!-- Main content -->
+<section class="content">
 
 <div class="row">
-    <?php echo Session::message('message');?>
+    <?php echo Session::message('status');?>
 
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
@@ -13,8 +15,6 @@
             </div>
             <div class="panel-body">
                 <form method='post' role="form">
-
-                <?php echo Errors::display($error);?>
 
                 <div class="form-group">
                     <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Username'); ?>"><br><br></p>
@@ -26,9 +26,9 @@
                     <p><label><input name="remember" type="checkbox"> <?= __d('users', 'Remember me'); ?></label></p>
                 </div>
                 <hr>
-                <?php $recaptchaSiteKey = Config::get('recaptcha.siteKey'); if (! empty($recaptchaSiteKey)) { ?>
+                <?php if (Config::get('recaptcha.active') === true) { ?>
                 <div class="row pull-right" style="margin-right: 0;">
-                    <div class="g-recaptcha" data-sitekey="<?= $recaptchaSiteKey; ?>"></div>
+                    <div id="captcha" style="width: 304px; height: 78px;"></div>
                 </div>
                 <div class="clearfix"></div>
                 <hr>
@@ -50,4 +50,14 @@
     </div>
 </div>
 
-<script src='https://www.google.com/recaptcha/api.js'></script>
+</section>
+
+<script type="text/javascript">
+
+var captchaCallback = function() {
+    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get('recaptcha.siteKey'); ?>'});
+};
+
+</script>
+
+<script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?php echo LANGUAGE_CODE; ?>" async defer></script>

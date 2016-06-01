@@ -115,12 +115,14 @@ class Users extends Controller
             //$this->model->updateGenericUser($user);
 
             // Use a Redirect to avoid the reposting the data.
-            return Redirect::back()->with('message', __d('users', 'You have successfully updated your Password.'));
+            $status = __d('users', 'You have successfully updated your Password.');
+
+            return Redirect::back()->withStatus($status);
         }
 
         // Collect the Validation errors.
-        $error = $validator->errors()->all();
+        $status = $validator->errors()->all();
 
-        return Redirect::back()->with('error', $error);
+        return Redirect::back()->withStatus($status, 'danger');
     }
 }

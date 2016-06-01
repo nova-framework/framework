@@ -106,7 +106,7 @@ class Users extends Controller
         // Validate the Input.
         if ($validator->passes()) {
             // Update the password on the User Model instance.
-            $user->password = Hash::make($password);
+            $user->password = Hash::make($input['password']);
 
             // Save the User Model instance - used with the Extended Auth Driver.
             $user->save();

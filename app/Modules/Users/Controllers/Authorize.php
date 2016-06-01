@@ -50,14 +50,9 @@ class Authorize extends Controller
      */
     public function login()
     {
-        $error = Session::remove('error', array());
-
-        //View::share('js', 'https://www.google.com/recaptcha/api.js');
-
         return $this->getView()
             ->shares('title', __d('users', 'User Login'))
-            ->with('csrfToken', Session::token())
-            ->with('error', $error);
+            ->with('csrfToken', Session::token());
     }
 
     /**
@@ -67,8 +62,6 @@ class Authorize extends Controller
      */
     public function postLogin()
     {
-        $error = array();
-
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check()) {
             $status = __d('users', 'Invalid reCAPTCHA submitted.');
@@ -134,12 +127,10 @@ class Authorize extends Controller
      */
     public function remind()
     {
-        $error = Session::remove('error', array());
 
         return $this->getView()
             ->shares('title', __d('users', 'Password Recovery'))
-            ->with('csrfToken', Session::token())
-            ->with('error', $error);
+            ->with('csrfToken', Session::token());
     }
 
     /**
@@ -184,12 +175,9 @@ class Authorize extends Controller
     {
         if (is_null($token)) return Response::error(404);
 
-        $error = Session::remove('error', array());
-
         return $this->getView()
             ->shares('title', __d('users', 'Password Reset'))
             ->with('csrfToken', Session::token())
-            ->with('error', $error)
             ->with('token', $token);
     }
 

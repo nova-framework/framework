@@ -303,6 +303,8 @@ class Session
             // The Message is structured in the New Style.
             $type    = $message['type'];
             $message = $message['text'];
+        } else {
+            $type = $name;
         }
 
         // Adjust the alert Type.

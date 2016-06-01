@@ -31,6 +31,7 @@ The framework requirements are limited.
 - PHP 5.5 or greater is required
 - fileinfo enabled (edit php.ini and uncomment php_fileinfo.dll or use php selector within cpanel if available.)
 - OpenSSL extension
+- INTL extension should be enabled
 
 
 Although a database is not required, if a database is to be used the system is designed to work with a MySQL database using PDO. The framework can be changed to work with another database type such as Medoo.

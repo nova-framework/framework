@@ -53,31 +53,28 @@ class Users extends Controller
     {
         $user = Auth::user();
 
-        $error = Session::remove('error', array());
-
         return $this->getView()
             ->shares('title',  __d('users', 'User Profile'))
-            ->with('user', $user)
             ->with('csrfToken', Session::token())
-            ->with('error', $error);
+            ->with('user', $user);
     }
 
     public function postProfile()
     {
         $user = Auth::user();
 
-        // Retrive the Input data.
+        // Retrieve the Input data.
         $input = Input::only('current_password', 'password', 'password_confirmation');
 
         // Prepare the Validation Rules, Messages and Attributes.
         $rules = array(
-            'current_password'      => 'required|user_password',
+            'current_password'      => 'required|valid_password',
             'password'              => 'required|strong_password',
             'password_confirmation' => 'required|same:password',
         );
 
         $messages = array(
-            'user_password'   => __d('users', 'The :attribute field is invalid.'),
+            'valid_password'  => __d('users', 'The :attribute field is invalid.'),
             'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
         );
 
@@ -88,7 +85,7 @@ class Users extends Controller
         );
 
         // Add the custom Validation Rule commands.
-        Validator::extend('user_password', function($attribute, $value, $parameters) use ($user)
+        Validator::extend('valid_password', function($attribute, $value, $parameters) use ($user)
         {
             return Hash::check($value, $user->password);
         });
@@ -105,8 +102,10 @@ class Users extends Controller
 
         // Validate the Input.
         if ($validator->passes()) {
+            $password = $input['password'];
+
             // Update the password on the User Model instance.
-            $user->password = Hash::make($input['password']);
+            $user->password = Hash::make($password);
 
             // Save the User Model instance - used with the Extended Auth Driver.
             $user->save();

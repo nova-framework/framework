@@ -124,6 +124,21 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
     }
 
     /**
+     * Flash a array containing a message to the session.
+     *
+     * @param string $message
+     * @param string $type
+     *
+     * @return \Http\RedirectResponse
+     */
+    public function withStatus($message, $type = 'success')
+    {
+        $status = array('type' => $type, 'text' => $message);
+
+        return $this->with('status', $status);
+    }
+
+    /**
      * Get the Request instance.
      *
      * @return  \Http\Request

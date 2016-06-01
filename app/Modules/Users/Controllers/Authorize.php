@@ -50,14 +50,9 @@ class Authorize extends Controller
      */
     public function login()
     {
-        $error = Session::remove('error', array());
-
-        //View::share('js', 'https://www.google.com/recaptcha/api.js');
-
         return $this->getView()
             ->shares('title', __d('users', 'User Login'))
-            ->with('csrfToken', Session::token())
-            ->with('error', $error);
+            ->with('csrfToken', Session::token());
     }
 
     /**
@@ -67,11 +62,11 @@ class Authorize extends Controller
      */
     public function postLogin()
     {
-        $error = array();
-
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check()) {
-            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+            $status = __d('users', 'Invalid reCAPTCHA submitted.');
+
+            return Redirect::back()->withStatus($status, 'danger');
         }
 
         // Retrieve the Authentication credentials.
@@ -81,33 +76,33 @@ class Authorize extends Controller
         $remember = (Input::get('remember') == 'on');
 
         // Make an attempt to login the Guest with the given credentials.
-        if(Auth::attempt($credentials, $remember)) {
-            // The User is authenticated now; retrieve his Model instance.
-            $user = Auth::user();
+        if(! Auth::attempt($credentials, $remember)) {
+            // An error has happened on authentication.
+            $status = __d('users', 'Wrong username or password.');
 
-            if (Hash::needsRehash($user->password)) {
-                $password = $credentials['password'];
-
-                $user->password = Hash::make($password);
-
-                // Save the User Model instance - used with the Extended Auth Driver.
-                $user->save();
-
-                // Save the User Model instance - used with the Database Auth Driver.
-                //$this->model->updateGenericUser($user);
-            }
-
-            // Prepare the flash message.
-            $message = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
-
-            // Redirect to the User's Dashboard.
-            return Redirect::to('users/dashboard')->with('message', $message);
+            return Redirect::back()->withStatus($status, 'danger');
         }
 
-        // An error has happened on authentication; add a message into $error array.
-        $error[] = __d('users', 'Wrong username or password.');
+        // The User is authenticated now; retrieve his Model instance.
+        $user = Auth::user();
 
-        return Redirect::back()->with('error', $error);
+        if (Hash::needsRehash($user->password)) {
+            $password = $credentials['password'];
+
+            $user->password = Hash::make($password);
+
+            // Save the User Model instance - used with the Extended Auth Driver.
+            $user->save();
+
+            // Save the User Model instance - used with the Database Auth Driver.
+            //$this->model->updateGenericUser($user);
+        }
+
+        // Prepare the flash message.
+        $status = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
+
+        // Redirect to the User's Dashboard.
+        return Redirect::to('users/dashboard')->withStatus($status);
     }
 
     /**
@@ -119,7 +114,10 @@ class Authorize extends Controller
     {
         Auth::logout();
 
-        return Redirect::to('login')->with('message', __d('users', 'You have successfully logged out.'));
+        // Prepare the flash message.
+        $status = __d('users', 'You have successfully logged out.');
+
+        return Redirect::to('login')->withStatus($status);
     }
 
     /**
@@ -129,12 +127,10 @@ class Authorize extends Controller
      */
     public function remind()
     {
-        $error = Session::remove('error', array());
 
         return $this->getView()
             ->shares('title', __d('users', 'Password Recovery'))
-            ->with('csrfToken', Session::token())
-            ->with('error', $error);
+            ->with('csrfToken', Session::token());
     }
 
     /**
@@ -148,7 +144,9 @@ class Authorize extends Controller
 
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
-            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+            $status = __d('users', 'Invalid reCAPTCHA submitted.');
+
+            return Redirect::back()->withStatus($status, 'danger');
         }
 
         //
@@ -156,10 +154,14 @@ class Authorize extends Controller
 
         switch ($response = Password::remind($credentials)) {
             case Password::INVALID_USER:
-                return Redirect::back()->with('error', $error[] = __d('users', 'We can\'t find a User with that e-mail address.'));
+                $status = __d('users', 'We can\'t find a User with that e-mail address.');
+
+                return Redirect::back()->withStatus($status, 'danger');
 
             case Password::REMINDER_SENT:
-                return Redirect::back()->with('message', __d('users', 'Reset instructions have been sent to your email address'));
+                $status = __d('users', 'Reset instructions have been sent to your email address');
+
+                return Redirect::back()->withStatus($status);
         }
     }
 
@@ -173,14 +175,9 @@ class Authorize extends Controller
     {
         if (is_null($token)) return Response::error(404);
 
-        $error = Session::remove('error', array());
-
-        //View::share('js', 'https://www.google.com/recaptcha/api.js');
-
         return $this->getView()
             ->shares('title', __d('users', 'Password Reset'))
             ->with('csrfToken', Session::token())
-            ->with('error', $error)
             ->with('token', $token);
     }
 
@@ -191,11 +188,11 @@ class Authorize extends Controller
      */
     public function postReset()
     {
-        $error = array();
-
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
-            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
+            $status = __d('users', 'Invalid reCAPTCHA submitted.');
+
+            return Redirect::back()->withStatus($status, 'danger');
         }
 
         $credentials = Input::only(
@@ -220,22 +217,24 @@ class Authorize extends Controller
         // Parse the response.
         switch ($response) {
             case Password::INVALID_PASSWORD:
-                $error[] = __d('users', 'Passwords must be strong enough and match the confirmation.');
+                $status = __d('users', 'Passwords must be strong enough and match the confirmation.');
 
                 break;
             case Password::INVALID_TOKEN:
-                $error[] = __d('users', 'This password reset token is invalid.');
+                $status = __d('users', 'This password reset token is invalid.');
 
                 break;
             case Password::INVALID_USER:
-                $error[] = __d('users', 'We can\'t find a User with that e-mail address.');
+                $status = __d('users', 'We can\'t find a User with that e-mail address.');
 
                 break;
             case Password::PASSWORD_RESET:
-                return Redirect::to('login')->with('message', __d('users', 'You have successfully reset your Password.'));
+                $status = __d('users', 'You have successfully reset your Password.');
+
+                return Redirect::to('login')->withStatus($status);
         }
 
-        return Redirect::back()->with('error', $error);
+        return Redirect::back()->withStatus($status, 'danger');
     }
 
 }

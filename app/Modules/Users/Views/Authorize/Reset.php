@@ -1,6 +1,5 @@
 <div class='row-responsive'>
-    <h2><?= __d('users', 'Password Reset'); ?></h2>
-    <hr>
+    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('users', 'Password Reset'); ?></h2>
 </div>
 
 <div class="row">
@@ -10,10 +9,9 @@
                 <div class="panel-title"><?= __d('users', 'Password Reset'); ?></div>
             </div>
             <div class="panel-body">
-                <form method='post' action="<?= site_url('password/reset'); ?>" role="form">
+                <?= Session::message('status'); ?>
 
-                <?= Errors::display($error); ?>
-                <?= Session::message('message'); ?>
+                <form method='post' action="<?= site_url('password/reset'); ?>" role="form">
 
                 <div class="form-group">
                     <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Insert the current E-Mail'); ?>"><br><br></p>
@@ -24,10 +22,10 @@
                 <div class="form-group">
                     <p><input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Verify the new Password'); ?>"><br><br></p>
                 </div>
-                <?php $recaptchaSiteKey = Config::get('recaptcha.siteKey'); if (! empty($recaptchaSiteKey)) { ?>
+                <?php if (Config::get('recaptcha.active') === true) { ?>
                 <div class="row">
                     <div class="row pull-right" style="margin-top: 10px; margin-right: 0;">
-                        <div class="g-recaptcha" data-sitekey="<?= $recaptchaSiteKey; ?>"></div>
+                        <div id="captcha" style="width: 304px; height: 78px;"></div>
                     </div>
                     <div class="clearfix"></div>
                     <hr>
@@ -48,4 +46,12 @@
     </div>
 </div>
 
-<script src='https://www.google.com/recaptcha/api.js'></script>
+<script type="text/javascript">
+
+var captchaCallback = function() {
+    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get('recaptcha.siteKey'); ?>'});
+};
+
+</script>
+
+<script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?php echo LANGUAGE_CODE; ?>" async defer></script>

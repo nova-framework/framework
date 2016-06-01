@@ -9,8 +9,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Errors::display($error); ?>
-<?= Session::message('message'); ?>
+<?= Session::message('status'); ?>
 
 <div  class="box box-default">
     <div class="box-header with-border">

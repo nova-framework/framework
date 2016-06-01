@@ -9,35 +9,50 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ClearSessionsCommand extends Command
 {
+
+    private $savePath = 'app/Storage/Sessions/';
+
     protected function configure()
     {
         $this
             ->setName('clear:sessions')
             ->setDescription('Clears the sessions folder')
+            ->addArgument(
+                'lifeTime',
+                InputArgument::OPTIONAL,
+                'Number of minutes the Session is allowed to remain idle before it expires (default: 180).'
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $sessionsPath = 'app/Storage/Sessions';
-        $sessions = glob($sessionsPath.'/*');
-        $error = false;
 
-        if (is_dir($sessionsPath)) {
-            $this->clearSessions($sessions);
-            $output->writeln("<info>The sessions folder has been cleared.</>");
+        if ($input->getArgument('lifeTime')) {
+            $lifeTime = $input->getArgument('lifeTime');
+        } else {
+            $lifeTime = 180;
+        }
+
+        if (is_dir($this->savePath)) {
+            self::clearSessions($lifeTime);
+            $output->writeln("<info>The sessions have been cleared. Lifetime: $lifeTime</>");
         } else {
             $output->writeln("<error>Session directory does not exist.</>");
             $error = true;
         }
     }
 
-    public function clearSessions($files)
+    protected function clearSessions($lifeTime)
     {
-        foreach($files as $file){
-          if(is_file($file)) {
-            unlink($file);
-          }
+        foreach (glob($this->savePath .'sess_*') as $file) {
+            clearstatcache(true, $file);
+
+            if (((filemtime($file) + $lifeTime) < time()) && file_exists($file)) {
+                unlink($file);
+            }
         }
+
+        return true;
     }
 }

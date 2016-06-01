@@ -71,7 +71,7 @@ define('ROOTDIR', realpath(__DIR__).'/');
 ````
 
 * edit .htaccess set the rewritebase if running on a sub folder otherwise a single / will do.
-* edit system/Core/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
+* edit app/Config.example.php change the SITEURL and DIR constants. the DIR path this is relative to the project url for example / for on the root or /foldername/ when in a folder. Also change other options as desired. Rename file as Config.php
 * set a 32 character ENCRYPT_KEY by using the CLI tool by typing `php nova make:key` in your command line / console, or alternatively, by using this tool: http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/
 
 ---

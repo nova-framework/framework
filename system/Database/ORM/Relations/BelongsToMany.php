@@ -2,6 +2,7 @@
 
 namespace Database\ORM\Relations;
 
+use Helpers\Inflector;
 use Database\ORM\Model;
 use Database\ORM\Builder;
 use Database\ORM\Collection;
@@ -45,7 +46,7 @@ class BelongsToMany extends Relation
      */
     protected $pivotColumns = array();
 
-    
+
     /**
      * Create a new has many relationship instance.
      *
@@ -848,7 +849,9 @@ class BelongsToMany extends Relation
      */
     protected function guessInverseRelation()
     {
-        return camel_case(str_plural(class_basename($this->getParent())));
+        $value = Inflector::pluralize(class_basename($this->getParent()));
+
+        return Inflector::camelize($value);
     }
 
     /**

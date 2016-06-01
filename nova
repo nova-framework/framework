@@ -5,10 +5,16 @@ require_once 'vendor/autoload.php';
 use Cli\ControllerCommand;
 use Cli\ModelCommand;
 use Cli\EncryptionCommand;
+use Cli\ClearCacheCommand;
+use Cli\ClearSessionsCommand;
+use Cli\ClearLogsCommand;
 use Symfony\Component\Console\Application;
 
-$console = new Application('Nova Framework Command Line Interface for v3.0', '1.1.0');
+$console = new Application('Nova Framework Command Line Interface for v3.0', '1.3.0');
 $console->add(new ControllerCommand());
 $console->add(new ModelCommand());
 $console->add(new EncryptionCommand());
+$console->add(new ClearCacheCommand());
+$console->add(new ClearSessionsCommand());
+$console->add(new ClearLogsCommand());
 $console->run();

@@ -19,7 +19,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     protected $primaryKey = 'id';
 
-    protected $hidden = array('password', 'remember_token');
+    protected $hidden = array('password');
 
 
     /**

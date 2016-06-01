@@ -15,6 +15,7 @@
         "default" : "local",
         "paths" : {
             "bootstrap" : "vendor",
+            "css" : "local",
             "dist" : "vendor",
             "images" : "local",
             "plugins" : "vendor"

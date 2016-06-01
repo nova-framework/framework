@@ -4,7 +4,7 @@ namespace Auth;
 
 use Database\Connection;
 
-use Support\Facades\Hash;
+use Hash;
 
 
 class DatabaseUserProvider implements UserProviderInterface

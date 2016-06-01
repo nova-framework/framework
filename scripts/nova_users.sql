@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 28, 2016 at 10:27 AM
+-- Generation Time: May 31, 2016 at 03:18 PM
 -- Server version: 10.0.25-MariaDB
--- PHP Version: 5.6.21
+-- PHP Version: 5.6.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -30,6 +30,7 @@ CREATE TABLE `nova_users` (
   `id` int(11) UNSIGNED NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
+  `realname` varchar(100) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -38,8 +39,8 @@ CREATE TABLE `nova_users` (
 -- Dumping data for table `nova_users`
 --
 
-INSERT INTO `nova_users` (`id`, `username`, `password`, `email`, `remember_token`) VALUES
-(1, 'admin', '$2y$10$r4pnT4d0jRJRjs9ICpoRVe00Jz1IJFxE.pZTA553R7ThsZJGoGrcq', 'admin@novaframework.dev', NULL);
+INSERT INTO `nova_users` (`id`, `username`, `password`, `realname`, `email`, `remember_token`) VALUES
+(1, 'admin', '$2y$10$JNQ0.XDXkBr4wdStj1yr0etxHggq254kHAsNa0PQk1ke6VzFLTmDm', 'Administrator', 'admin@novaframework.dev', NULL);
 
 --
 -- Indexes for dumped tables

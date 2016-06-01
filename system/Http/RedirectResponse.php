@@ -133,11 +133,11 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
      */
     public function withStatus($message, $type = 'success')
     {
-        $flash = array('type' => $type, 'text' => $message);
+        $status = array('type' => $type, 'text' => $message);
 
-        return $this->with('status', $flash);
+        return $this->with('status', $status);
     }
-    
+
     /**
      * Get the Request instance.
      *

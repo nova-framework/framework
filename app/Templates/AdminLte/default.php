@@ -5,16 +5,6 @@
 
 use Helpers\Profiler;
 
-// Prepare the current User Info.
-if(Auth::check()) {
-    $userInfo = Auth::user()->toArray();
-} else {
-    $userInfo = array(
-        'username' => __('admin_lte', 'guest'),
-        'realname' => __('admin_lte', 'Guest'),
-    );
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,6 +27,10 @@ if(Auth::check()) {
         template_url('dist/css/AdminLTE.min.css', 'AdminLte'),
         // AdminLTE Skins
         template_url('dist/css/skins/_all-skins.min.css', 'AdminLte'),
+        // iCheck
+        template_url('plugins/iCheck/square/blue.css', 'AdminLte'),
+        // Custom CSS
+        template_url('css/style.css', 'AdminLte'),
     ));
 
     echo $css; // Place to pass data / plugable hook zone
@@ -124,11 +118,23 @@ Assets::js(array(
     template_url('bootstrap/js/bootstrap.min.js', 'AdminLte'),
     // AdminLTE App
     template_url('dist/js/app.min.js', 'AdminLte'),
+    // iCheck
+    template_url('plugins/iCheck/icheck.min.js', 'AdminLte'),
 ));
 
 echo $js; // Place to pass data / plugable hook zone
 echo $footer; // Place to pass data / plugable hook zone
 ?>
+
+<script>
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+</script>
 
 <!-- DO NOT DELETE! - Forensics Profiler -->
 

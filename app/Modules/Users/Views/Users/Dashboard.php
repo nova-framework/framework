@@ -1,11 +1,20 @@
-<div class='row-responsive'>
-    <h2><?= __d('users', 'Dashboard'); ?></h2>
-    <hr>
+<section class="content-header">
+    <h1><?= __('Dashboard'); ?></h1>
+    <ol class="breadcrumb">
+        <li><a href='<?= site_url('users/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __('Dashboard'); ?></a></li>
+    </ol>
+</section>
 
-    <?= Session::message('message'); ?>
+<!-- Main content -->
+<section class="content">
+
+<?= Session::message('message'); ?>
+
+<div class="box box-widget">
+    <div class="box-body">
+        <h4><strong><?= __('Yup. This is the Dashboard.'); ?></strong></h4>
+        <p><?= __('Someday, we\'ll have widgets and stuff on here...'); ?></p>
+    </div>
 </div>
 
-<div class='row-responsive'>
-    <h4><?= __d('users', 'Yup. This is the Dashboard.'); ?></h4>
-    <p><?= __d('users', 'Someday, we\'ll have widgets and stuff on here...'); ?></p>
-</div>
+</section>

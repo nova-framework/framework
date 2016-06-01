@@ -19,12 +19,13 @@ use Hash;
 use Input;
 use Redirect;
 use Session;
+use Validator;
 
 
 class Users extends Controller
 {
     protected $template = 'AdminLte';
-    protected $layout   = 'default';
+    protected $layout   = 'backend';
 
 
     public function __construct()
@@ -44,60 +45,8 @@ class Users extends Controller
 
     public function dashboard()
     {
-        return View::make('Users/Dashboard', 'Users')
+        return $this->getView()
             ->shares('title', __d('users', 'Dashboard'));
-    }
-
-    public function login()
-    {
-        $error = Session::remove('error', array());
-
-        //View::share('js', 'https://www.google.com/recaptcha/api.js');
-
-        return View::make('Users/Login', 'Users')
-            ->shares('title', __d('users', 'User Login'))
-            ->with('csrfToken', Session::token())
-            ->with('error', $error);
-    }
-
-    public function postLogin()
-    {
-        $error = array();
-
-        // Verify the submitted reCAPTCHA
-        if(! ReCaptcha::check()) {
-            return Redirect::back()->with('error', $error[] = __d('users', 'Invalid reCAPTCHA submitted.'));
-        }
-
-        // Retrieve the Authentication credentials.
-        $credentials = Input::only('username', 'password');
-
-        // Prepare the 'remember' parameter.
-        $remember = (Input::get('remember') == 'on');
-
-        // Make an attempt to login the Guest with the given credentials.
-        if(Auth::attempt($credentials, $remember)) {
-            // The User is authenticated now; retrieve his Model instance.
-            $user = Auth::user();
-
-            // Prepare the flash message.
-            $message = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
-
-            // Redirect to the User's Dashboard.
-            return Redirect::to('dashboard')->with('message', $message);
-        }
-
-        // An error has happened on authentication; add a message into $error array.
-        $error[] = __d('users', 'Wrong username or password.');
-
-        return Redirect::back()->with('error', $error);
-    }
-
-    public function logout()
-    {
-        Auth::logout();
-
-        return Redirect::to('login')->with('message', __d('users', 'You have successfully logged out.'));
     }
 
     public function profile()
@@ -106,7 +55,7 @@ class Users extends Controller
 
         $error = Session::remove('error', array());
 
-        return View::make('Users/Profile', 'Users')
+        return $this->getView()
             ->shares('title',  __d('users', 'User Profile'))
             ->with('user', $user)
             ->with('csrfToken', Session::token())
@@ -117,19 +66,46 @@ class Users extends Controller
     {
         $user = Auth::user();
 
-        $error = array();
+        // Retrive the Input data.
+        $input = Input::only('current_password', 'password', 'password_confirmation');
 
-        // The requested new Password information.
-        $password = Input::get('password');
-        $confirm  = Input::get('password_confirmation');
+        // Prepare the Validation Rules, Messages and Attributes.
+        $rules = array(
+            'current_password'      => 'required|user_password',
+            'password'              => 'required|strong_password',
+            'password_confirmation' => 'required|same:password',
+        );
 
-        if (! Hash::check(Input::get('current_password'), $user->password)) {
-            $error[] = __d('users', 'The current Password is invalid.');
-        } else if ($password != $confirm) {
-            $error[] = __d('users', 'The new Password and its verification are not equals.');
-        } else if(! preg_match("/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
-            $error[] = __d('users', 'The new Password is not strong enough.');
-        } else {
+        $messages = array(
+            'user_password'   => __d('users', 'The :attribute field is invalid.'),
+            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
+        );
+
+        $attributes = array(
+            'current_password'      => __d('users', 'Current Password'),
+            'password'              => __d('users', 'New Password'),
+            'password_confirmation' => __d('users', 'Password Confirmation'),
+        );
+
+        // Add the custom Validation Rule commands.
+        Validator::extend('user_password', function($attribute, $value, $parameters) use ($user)
+        {
+            return Hash::check($value, $user->password);
+        });
+
+        Validator::extend('strong_password', function($attribute, $value, $parameters)
+        {
+            $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
+
+            return (preg_match($pattern, $value) === 1);
+        });
+
+        // Create a Validator instance.
+        $validator = Validator::make($input, $rules, $messages, $attributes);
+
+        // Validate the Input.
+        if ($validator->passes()) {
+            // Update the password on the User Model instance.
             $user->password = Hash::make($password);
 
             // Save the User Model instance - used with the Extended Auth Driver.
@@ -141,6 +117,9 @@ class Users extends Controller
             // Use a Redirect to avoid the reposting the data.
             return Redirect::back()->with('message', __d('users', 'You have successfully updated your Password.'));
         }
+
+        // Collect the Validation errors.
+        $error = $validator->errors()->all();
 
         return Redirect::back()->with('error', $error);
     }

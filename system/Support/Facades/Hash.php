@@ -28,11 +28,11 @@ class Hash
      *
      * @throws \RuntimeException
      */
-    public static function make($password, $algo = PASSWORD_DEFAULT, array $options = array())
+    public static function make($value, $algo = PASSWORD_DEFAULT, array $options = array())
     {
         $cost = isset($options['rounds']) ? $options['rounds'] : static::$rounds;
 
-        $hash = password_hash($value, PASSWORD_BCRYPT, array('cost' => $cost));
+        $hash = password_hash($value, $algo, array('cost' => $cost));
 
         if ($hash === false) {
             throw new \RuntimeException("Bcrypt hashing not supported.");
@@ -61,11 +61,11 @@ class Hash
      * @param  array   $options
      * @return bool
      */
-    public static function needsRehash($hash, $algo = PASSWORD_DEFAULT, array $options = array())
+    public static function needsRehash($hashedValue, $algo = PASSWORD_DEFAULT, array $options = array())
     {
         $cost = isset($options['rounds']) ? $options['rounds'] : static::$rounds;
 
-        return password_needs_rehash($hashedValue, PASSWORD_BCRYPT, array('cost' => $cost));
+        return password_needs_rehash($hashedValue, $algo, array('cost' => $cost));
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace Auth;
 
-use Support\Facades\Hash;
+use Hash;
 
 
 class ExtendedUserProvider implements UserProviderInterface

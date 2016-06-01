@@ -38,7 +38,7 @@ Route::filter('referer', function($route) {
     // Check if the visitor come to this Route from another site.
     $referer = Request::header('referer');
 
-    if(($referer !== null) && ! str_starts_with($referer, SITEURL)) {
+    if(! str_starts_with($referer, SITEURL)) {
         return Redirect::error(400);
     }
 });
@@ -54,6 +54,6 @@ Route::filter('auth', function($route) {
 Route::filter('guest', function($route) {
     if (! Auth::guest()) {
         // User is authenticated, redirect him to Dashboard Page.
-        return Redirect::to('dashboard');
+        return Redirect::to('users/dashboard');
     }
 });

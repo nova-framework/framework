@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 28, 2016 at 10:23 AM
+-- Generation Time: May 31, 2016 at 03:17 PM
 -- Server version: 10.0.25-MariaDB
--- PHP Version: 5.6.21
+-- PHP Version: 5.6.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -99,6 +99,13 @@ CREATE TABLE `nova_password_reminders` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `nova_password_reminders`
+--
+
+INSERT INTO `nova_password_reminders` (`email`, `token`, `created_at`) VALUES
+('marcus@novaframework.dev', 'ea682c24847ac943ff3170e2c977c17d973306a1c17d949c429a468e342aa2c9', '2016-05-28 10:52:20');
+
 -- --------------------------------------------------------
 
 --
@@ -135,7 +142,6 @@ INSERT INTO `nova_posts` (`id`, `author_id`, `category_id`, `title`, `content`) 
 CREATE TABLE `nova_profiles` (
   `id` int(11) UNSIGNED NOT NULL,
   `user_id` int(11) UNSIGNED NOT NULL,
-  `realname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `country` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -143,12 +149,12 @@ CREATE TABLE `nova_profiles` (
 -- Dumping data for table `nova_profiles`
 --
 
-INSERT INTO `nova_profiles` (`id`, `user_id`, `realname`, `country`) VALUES
-(1, 1, 'Administrator', 'Italy'),
-(2, 2, 'Marcus Spears', 'UK'),
-(3, 3, 'Michael White', 'USA'),
-(4, 4, 'John Kennedy', 'UK'),
-(5, 5, 'Mark Black', 'Australia');
+INSERT INTO `nova_profiles` (`id`, `user_id`, `country`) VALUES
+(1, 1, 'Italy'),
+(2, 2, 'UK'),
+(3, 3, 'USA'),
+(4, 4, 'UK'),
+(5, 5, 'Australia');
 
 -- --------------------------------------------------------
 
@@ -183,6 +189,7 @@ CREATE TABLE `nova_users` (
   `id` int(11) UNSIGNED NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
+  `realname` varchar(100) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -191,12 +198,12 @@ CREATE TABLE `nova_users` (
 -- Dumping data for table `nova_users`
 --
 
-INSERT INTO `nova_users` (`id`, `username`, `password`, `email`, `remember_token`) VALUES
-(1, 'admin', '$2y$10$r4pnT4d0jRJRjs9ICpoRVe00Jz1IJFxE.pZTA553R7ThsZJGoGrcq', 'admin@novaframework.dev', NULL),
-(2, 'marcus', '$2y$10$yfffkOK3sqZy81eQituydeZE1bPuSkcZpLGT0aJFfFk7dmi5KpCFq', 'marcus@novaframework.dev', NULL),
-(3, 'michael', '$2y$10$klop7YxFoZOVqDq3hA7efeKEz4csFhAelfwP8M4s1ROlgpkBx9qVW', 'michael@novaframework.dev', NULL),
-(4, 'john', '$2y$10$WzBPFMiFeJ2XK9eW34zEgelSJI3R1TVrOWbjVDxFXDeMQxoh8asYK', 'john@novaframework.dev', NULL),
-(5, 'mark', '$2y$10$z4bRYEcnoHOR.GuObWTATuH/x1lto.2wUJ1RxCYWOmfjay2LnTd8W', 'mark@novaframework.dev', NULL);
+INSERT INTO `nova_users` (`id`, `username`, `password`, `realname`, `email`, `remember_token`) VALUES
+(1, 'admin', '$2y$10$JNQ0.XDXkBr4wdStj1yr0etxHggq254kHAsNa0PQk1ke6VzFLTmDm', 'Administrator', 'admin@novaframework.dev', NULL),
+(2, 'marcus', '$2y$10$Ba8DMaHDMknsaK8rPrskg..f8Uya4nlLFcpOAX2iVmbzDj7cUvtUG', 'Marcus Spears', 'marcus@novaframework.dev', NULL),
+(3, 'michael', '$2y$10$klop7YxFoZOVqDq3hA7efeKEz4csFhAelfwP8M4s1ROlgpkBx9qVW', 'Michael White', 'michael@novaframework.dev', NULL),
+(4, 'john', '$2y$10$WzBPFMiFeJ2XK9eW34zEgelSJI3R1TVrOWbjVDxFXDeMQxoh8asYK', 'John Kennedy', 'john@novaframework.dev', NULL),
+(5, 'mark', '$2y$10$z4bRYEcnoHOR.GuObWTATuH/x1lto.2wUJ1RxCYWOmfjay2LnTd8W', 'Mark Black', 'mark@novaframework.dev', NULL);
 
 --
 -- Indexes for dumped tables

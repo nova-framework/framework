@@ -6,14 +6,7 @@
 use Helpers\Profiler;
 
 // Prepare the current User Info.
-if(Auth::check()) {
-    $userInfo = Auth::user()->toArray();
-} else {
-    $userInfo = array(
-        'username' => __('admin_lte', 'guest'),
-        'realname' => __('admin_lte', 'Guest'),
-    );
-}
+$user = Auth::user();
 
 ?>
 <!DOCTYPE html>
@@ -37,13 +30,15 @@ if(Auth::check()) {
         template_url('dist/css/AdminLTE.min.css', 'AdminLte'),
         // AdminLTE Skins
         template_url('dist/css/skins/_all-skins.min.css', 'AdminLte'),
+        // Custom CSS
+        template_url('css/style.css', 'AdminLte'),
     ));
 
     echo $css; // Place to pass data / plugable hook zone
 
     //Add Controller specific JS files.
     Assets::js(array(
-        template_url('plugins/jQuery/jQuery-2.2.0.min.js'),
+        template_url('plugins/jQuery/jQuery-2.2.0.min.js', 'AdminLte'),
     ));
 
     ?>
@@ -87,7 +82,7 @@ if(Auth::check()) {
               <!-- The user image in the navbar-->
               <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs"><?= $userInfo['username']; ?></span>
+              <span class="hidden-xs"><?= $user->username; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
@@ -95,13 +90,13 @@ if(Auth::check()) {
                 <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="img-circle" alt="User Image">
 
                 <p>
-                  <?= $userInfo['realname']; ?>
+                  <?= $user->realname; ?>
                 </p>
               </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('admin/users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
+                  <a href="<?= site_url('users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
                 </div>
                 <div class="pull-right">
                   <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __('Sign out'); ?></a>
@@ -131,8 +126,8 @@ if(Auth::check()) {
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="header"><?= __('ADMINISTRATION'); ?></li>
-            <li <?php if ($currentUri == 'dashboard') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
+            <li <?php if ($currentUri == 'users/dashboard') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('users/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
             </li>
         </ul>
         <!-- /.sidebar-menu -->

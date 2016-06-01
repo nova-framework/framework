@@ -59,7 +59,7 @@ $user = Auth::user();
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="<?= site_url('admin/dashboard'); ?>" class="logo">
+    <a href="<?= site_url('users/dashboard'); ?>" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini">CP</span>
       <!-- logo for regular state and mobile devices -->

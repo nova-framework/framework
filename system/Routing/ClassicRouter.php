@@ -8,6 +8,7 @@
 
 namespace Core;
 
+use Core\Config;
 use Helpers\Inflector;
 use Helpers\Url;
 

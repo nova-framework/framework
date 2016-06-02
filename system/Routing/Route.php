@@ -173,7 +173,7 @@ class Route
             $regex = preg_replace('#\{([a-z]+)\}#', '(:any)', $this->pattern);
 
             // Convert the Named Patterns to (:num), e.g. {:id}
-            $route = preg_replace('#\{:([a-z]+)\}#', '(:num)', $route);
+            $regex = preg_replace('#\{:([a-z]+)\}#', '(:num)', $regex);
         } else {
             $regex = $this->pattern;
         }

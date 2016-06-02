@@ -22,6 +22,8 @@ Full docs & tutorials are available on [novaframework.com](http://novaframework.
 
 Offline docs are available in PDF, EPUB and MOBI formats on [Leanpub](https://leanpub.com/novaframeworkmanual22)
 
+Screencasts are available on [Novacasts](http://novacasts.com)
+
 ## Requirements
 
 The framework requirements are limited.
@@ -33,8 +35,7 @@ The framework requirements are limited.
 - OpenSSL extension
 - INTL extension should be enabled
 
-
-Although a database is not required, if a database is to be used the system is designed to work with a MySQL database using PDO. The framework can be changed to work with another database type such as Medoo.
+Although a database is not required, if a database is to be used the system is designed to work with a MySQL database using PDO.
 
 # Recommended way to install
 

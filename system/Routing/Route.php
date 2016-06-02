@@ -165,14 +165,15 @@ class Route
             return true;
         }
 
+        // Convert the Named Patterns to ANY, e.g. {category}
+        $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $this->pattern);
+
         // Build the regex for matching.
-        if (strpos($this->pattern, ':') !== false) {
+        if (strpos($regex, ':') !== false) {
             $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
             $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
 
             $regex = str_replace($searches, $replaces, $regex);
-        } else {
-            $regex = $this->pattern;
         }
 
         if ($optionals && (strpos($regex, '(/') !== false)) {

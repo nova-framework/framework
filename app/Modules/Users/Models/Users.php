@@ -15,6 +15,11 @@ use Database\Model as BaseModel;
 
 class Users extends BaseModel
 {
+    protected $table = null;
+
+    protected $primaryKey = 'id';
+
+
     public function __construct()
     {
         parent::__construct();

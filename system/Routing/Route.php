@@ -171,6 +171,9 @@ class Route
         if (strpos($this->pattern, '{') !== false) {
             // Convert the Named Patterns to (:any), e.g. {category}
             $regex = preg_replace('#\{([a-z]+)\}#', '(:any)', $this->pattern);
+
+            // Convert the Named Patterns to (:num), e.g. {:id}
+            $route = preg_replace('#\{:([a-z]+)\}#', '(:num)', $route);
         } else {
             $regex = $this->pattern;
         }

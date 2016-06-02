@@ -169,8 +169,8 @@ class Route
         // Build the regex for matching.
 
         if (strpos($this->pattern, '{') !== false) {
-            // Convert the Named Patterns to ANY, e.g. {category}
-            $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $this->pattern);
+            // Convert the Named Patterns to (:any), e.g. {category}
+            $regex = preg_replace('#\{([a-z]+)\}#', '(:any)', $this->pattern);
         } else {
             $regex = $this->pattern;
         }

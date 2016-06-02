@@ -144,6 +144,11 @@ Config::set('recaptcha', array(
 require 'Config/App.php';
 
 /**
+ * Setup the Routing configuration
+ */
+require 'Config/Routing.php';
+
+/**
  * Setup the Language configuration
  */
 require 'Config/Languages.php';

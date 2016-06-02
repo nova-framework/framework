@@ -148,7 +148,7 @@ class Route
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function match($uri, $method, $optionals = true)
+    public function match($uri, $method, $optionals = false, array $patterns = array())
     {
         if (! in_array($method, $this->methods)) {
             return false;
@@ -165,14 +165,27 @@ class Route
             return true;
         }
 
+        //
         // Build the regex for matching.
-        if (strpos($this->pattern, ':') !== false) {
-            $regex = str_replace(array(':any', ':num', ':all'), array('[^/]+', '[0-9]+', '.*'), $this->pattern);
+
+        if (strpos($this->pattern, '{') !== false) {
+            // Convert the Named Patterns to (:any), e.g. {category}
+            $regex = preg_replace('#\{([a-z]+)\}#', '(:any)', $this->pattern);
+
+            // Convert the Named Patterns to (:num), e.g. {:id}
+            $regex = preg_replace('#\{:([a-z]+)\}#', '(:num)', $regex);
         } else {
             $regex = $this->pattern;
         }
 
-        if ($optionals) {
+        if (strpos($regex, ':') !== false) {
+            $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
+            $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
+
+            $regex = str_replace($searches, $replaces, $regex);
+        }
+
+        if ($optionals && (strpos($regex, '(/') !== false)) {
             $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
         }
 

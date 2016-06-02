@@ -8,13 +8,14 @@
 
 namespace App\Modules\Users\Models;
 
+use Core\Config;
 use Auth\GenericUser;
 use Database\Model as BaseModel;
 
 
 class Users extends BaseModel
 {
-    protected $table = 'users';
+    protected $table = null;
 
     protected $primaryKey = 'id';
 
@@ -22,6 +23,11 @@ class Users extends BaseModel
     public function __construct()
     {
         parent::__construct();
+
+        // Configure the Model's table.
+        if($this->table === null) {
+            $this->table = Config::get('auth.table');
+        }
     }
 
     public function updateGenericUser(GenericUser $user)

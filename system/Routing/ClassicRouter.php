@@ -8,6 +8,7 @@
 
 namespace Core;
 
+use Core\Config;
 use Helpers\Inflector;
 use Helpers\Url;
 
@@ -88,7 +89,7 @@ class ClassicRouter extends BaseRouter
 
         // Search the defined Routes for any matches; invoke the associated Callback, if any.
         foreach ($this->routes as $route) {
-            if ($route->match($uri, $method, false)) {
+            if ($route->match($uri, $method)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 
@@ -143,6 +144,12 @@ class ClassicRouter extends BaseRouter
      */
     public function autoDispatch($uri)
     {
+        // Retrieve the options from configuration.
+        $options = Config::get('routing.default', array(
+            'controller' => DEFAULT_CONTROLLER,
+            'method'     => DEFAULT_METHOD
+        ));
+
         // Explode the URI to its parts.
         $parts = explode('/', trim($uri, '/'));
 
@@ -190,12 +197,12 @@ class ClassicRouter extends BaseRouter
         }
 
         // Get the normalized Controller.
-        $defaultOne = !empty($moduleName) ? $moduleName : DEFAULT_CONTROLLER;
+        $defaultOne = !empty($moduleName) ? $moduleName : $options['controller'];
 
         $controller = !empty($controller) ? $controller : $defaultOne;
 
         // Get the normalized Method.
-        $method = !empty($parts) ? array_shift($parts) : DEFAULT_METHOD;
+        $method = !empty($parts) ? array_shift($parts) : $options['method'];
 
         // Prepare the Controller's class name.
         $controller = str_replace(array('//', '/'), '\\', 'App/'.$basePath.$directory.$controller);

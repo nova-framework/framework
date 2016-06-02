@@ -8,6 +8,7 @@
 
 namespace Routing;
 
+use Core\Config;
 use Helpers\Inflector;
 use Helpers\Url;
 use Routing\BaseRouter;
@@ -226,6 +227,9 @@ class Router extends BaseRouter
      */
     public function dispatch()
     {
+        // Retrieve the additional Routing Patterns from configuration.
+        $patterns = Config::get('routing.patterns', array());
+
         // Detect the current URI.
         $uri = Url::detectUri();
 
@@ -243,7 +247,7 @@ class Router extends BaseRouter
         }
 
         foreach ($this->routes as $route) {
-            if ($route->match($uri, $method)) {
+            if ($route->match($uri, $method, true, $patterns)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 

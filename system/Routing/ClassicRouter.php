@@ -145,9 +145,9 @@ class ClassicRouter extends BaseRouter
     public function autoDispatch($uri)
     {
         // Retrieve the options from configuration.
-        $options = Config::get('routing.dispatcher', array(
-            'defaultController' => DEFAULT_CONTROLLER,
-            'defaultMethod'     => DEFAULT_METHOD
+        $options = Config::get('routing.default', array(
+            'controller' => DEFAULT_CONTROLLER,
+            'method'     => DEFAULT_METHOD
         ));
 
         // Explode the URI to its parts.
@@ -197,12 +197,12 @@ class ClassicRouter extends BaseRouter
         }
 
         // Get the normalized Controller.
-        $defaultOne = !empty($moduleName) ? $moduleName : $options['defaultController'];
+        $defaultOne = !empty($moduleName) ? $moduleName : $options['controller'];
 
         $controller = !empty($controller) ? $controller : $defaultOne;
 
         // Get the normalized Method.
-        $method = !empty($parts) ? array_shift($parts) : $options['defaultMethod'];
+        $method = !empty($parts) ? array_shift($parts) : $options['method'];
 
         // Prepare the Controller's class name.
         $controller = str_replace(array('//', '/'), '\\', 'App/'.$basePath.$directory.$controller);

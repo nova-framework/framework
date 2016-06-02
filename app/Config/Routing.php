@@ -17,8 +17,8 @@ Config::set('routing', array(
         //':hex'    => '[[:xdigit:]]+',
         //':uuidV4' => '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
     ),
-    'dispatcher' => array(
-        'defaultController' => DEFAULT_CONTROLLER,
-        'defaultMethod'     => DEFAULT_METHOD
+    'default' => array(
+        'controller' => DEFAULT_CONTROLLER,
+        'method'     => DEFAULT_METHOD
     )
 ));

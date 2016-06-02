@@ -175,7 +175,7 @@ class Route
             $regex = $this->pattern;
         }
 
-        if ($optionals && (strpos($this->pattern, '(/') !== false)) {
+        if ($optionals && (strpos($regex, '(/') !== false)) {
             $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
         }
 

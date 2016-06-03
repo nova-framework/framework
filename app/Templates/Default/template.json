@@ -18,6 +18,14 @@
     ],
     "license" : "MIT",
     "assets" : {
-        "default" : "local"
+        "default" : "local",
+        "paths" : {
+            "dist" : "vendor",
+            "css" : "local",
+            "fonts" : "local",
+            "images" : "local",
+            "js" : "local"
+        },
+        "vendor" : "twbs/bootstrap"
     }
 }

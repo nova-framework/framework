@@ -26,7 +26,24 @@ class Dashboard extends Controller
 
     protected function before()
     {
-        View::share('currentUri', Url::detectUri());
+        // Calculate and share on Views  the URIs.
+        $uri = Url::detectUri();
+
+        // Prepare the base URI.
+        $parts = explode('/', trim($uri, '/'));
+
+        // Make the path equal with the first part if it exists, i.e. 'admin'
+        $baseUri = array_shift($parts);
+
+        // Add to path the next part, if it exists, defaulting to 'dashboard'.
+        if(! empty($parts)) {
+            $baseUri .= '/' .array_shift($parts);
+        } else if ($withDashboard) {
+            $baseUri .= '/dashboard';
+        }
+
+        View::share('currentUri', $uri);
+        View::share('baseUri',    $baseUri);
 
         return parent::before();
     }

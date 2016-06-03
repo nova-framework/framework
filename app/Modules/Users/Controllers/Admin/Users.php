@@ -15,6 +15,7 @@ use Helpers\Url;
 use Helpers\ReCaptcha;
 
 use App\Models\User;
+use Carbon\Carbon;
 
 use Auth;
 use Hash;
@@ -158,6 +159,8 @@ class Users extends Controller
             User::create($input);
 
             // Create a User Model instance - used with the Database Auth Driver.
+            // $input['created_at'] = $input['created_at'] = new Carbon();
+            //
             //$this->model->insert($input);
 
             // Prepare the flash message.
@@ -254,6 +257,8 @@ class Users extends Controller
             $user->save();
 
             // Save the User information - used with the Database Auth Driver.
+            // $input['updated_at'] = new Carbon();
+            //
             //$this->model->update($id, (array) $user);
 
             // Prepare the flash message.
@@ -352,6 +357,8 @@ class Users extends Controller
             $user->save();
 
             // Save the User Model instance - used with the Database Auth Driver.
+            // $user->updated_at = new Carbon();
+            //
             //$this->model->updateGenericUser($user);
 
             // Use a Redirect to avoid the reposting the data.

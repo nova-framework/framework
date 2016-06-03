@@ -6,14 +6,14 @@
  * @version 3.0
  */
 
-namespace App\Modules\Users\Controllers\Admin;
+namespace App\Modules\Dashboard\Controllers\Admin;
 
 use Core\Controller;
 use Core\View;
 use Helpers\Url;
 
 
-class Dasboard extends Controller
+class Dashboard extends Controller
 {
     protected $template = 'AdminLte';
     protected $layout   = 'backend';

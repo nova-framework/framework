@@ -51,14 +51,14 @@ class Assets
     /**
      * Load js scripts.
      *
-     * @param  String|Array  $files      paths to file/s
-     * @param  boolean       $cache      if set to true a cache will be created and served
-     * @param  boolean       $refresh    if true the cache will be updated
-     * @param  string        $cachedMins minutes to hold the cache
+     * @param  String|Array   $files      paths to file/s
+     * @param  boolean|string $cache      if set to true a cache will be created and served
+     * @param  boolean        $refresh    if true the cache will be updated
+     * @param  string         $cachedMins minutes to hold the cache
      */
     public static function js($files, $cache = false, $refresh = false, $cachedMins = '1440')
     {
-        $path = APPDIR.Url::relativeTemplatePath().'js/compressed.min.js';
+        $path = APPDIR.Url::relativeTemplatePath()."js/$cache.min.js";
         $type = 'js';
 
         if ($cache == false) {
@@ -86,14 +86,14 @@ class Assets
     /**
      * Load css scripts.
      *
-     * @param  String|Array  $files      paths to file/s
-     * @param  boolean       $cache      if set to true a cache will be created and served
-     * @param  boolean       $refresh    if true the cache will be updated
-     * @param  string        $cachedMins minutes to hold the cache
+     * @param  String|Arra y  $files      paths to file/s
+     * @param  boolean|string $cache      if set to true a cache will be created and served
+     * @param  boolean        $refresh    if true the cache will be updated
+     * @param  string         $cachedMins minutes to hold the cache
      */
     public static function css($files, $cache = false, $refresh = false, $cachedMins = '1440')
     {
-        $path = APPDIR.Url::relativeTemplatePath().'css/compressed.min.css';
+        $path = APPDIR.Url::relativeTemplatePath()."css/$cache.min.css";
         $type = 'css';
 
         if ($cache == false) {

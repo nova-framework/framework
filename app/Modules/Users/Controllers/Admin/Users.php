@@ -177,6 +177,8 @@ class Users extends Controller
 
     public function show($id)
     {
+        $id = intval($id);
+
         // Get the User Model instance - used with the Extended Auth Driver.
         $user = User::find($id);
 
@@ -197,6 +199,8 @@ class Users extends Controller
 
     public function edit($id)
     {
+        $id = intval($id);
+
         // Get the User Model instance - used with the Extended Auth Driver.
         $user = User::find($id);
 
@@ -217,6 +221,8 @@ class Users extends Controller
 
     public function update($id)
     {
+        $id = intval($id);
+
         // Get the User Model instance - used with the Extended Auth Driver.
         $user = User::find($id);
 
@@ -275,7 +281,13 @@ class Users extends Controller
 
     public function destroy($id)
     {
+        $id = intval($id);
+
+        // Get the User Model instance - used with the Extended Auth Driver.
         $user = User::find($id);
+
+        // Get the User Model instance - used with the Database Auth Driver.
+        //$user = $this->model->find($id);
 
         if($user === null) {
             // There is no User with this ID.

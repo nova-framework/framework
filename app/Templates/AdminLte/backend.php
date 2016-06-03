@@ -96,7 +96,7 @@ $user = Auth::user();
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
+                  <a href="<?= site_url('admin/users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
                 </div>
                 <div class="pull-right">
                   <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __('Sign out'); ?></a>

@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h1><?= __d('users', 'Users'); ?></h1>
+    <h1><?= __d('users', 'Search Users'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
         <li><a href='<?= site_url('admin/users'); ?>'><?= __('Users'); ?></a></li>

@@ -114,9 +114,9 @@ $user = Auth::user();
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
         <!-- search form -->
-        <form action="<?= site_url('admin/search'); ?>" method="POST" class="sidebar-form">
+        <form action="<?= site_url('admin/users/search'); ?>" method="POST" class="sidebar-form">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <input type="text" name="query" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
                     <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                     </button>

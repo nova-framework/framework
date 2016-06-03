@@ -63,4 +63,7 @@ Router::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Contr
     Router::get( 'users/(:num)/edit',    array('filters' => 'auth',      'uses' => 'Users@edit'));
     Router::post('users/(:num)',         array('filters' => 'auth|csrf', 'uses' => 'Users@update'));
     Router::post('users/(:num)/destroy', array('filters' => 'auth|csrf', 'uses' => 'Users@destroy'));
+
+    // The Users Search.
+    Router::post( 'users/search', array('filters' => 'auth', 'uses' => 'Users@search'));
 });

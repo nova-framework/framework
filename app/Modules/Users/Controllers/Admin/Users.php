@@ -376,4 +376,54 @@ class Users extends Controller
 
         return Redirect::back()->withStatus($status, 'danger');
     }
+
+    public function search()
+    {
+        // Validation rules
+        $rules = array(
+            'query' => 'required|min:4|valid_query'
+        );
+
+        $messages = array(
+            'valid_query' => __('The :attribute field is not a valid query string.'),
+        );
+
+        $attributes = array(
+            'query' => __('Search Query'),
+        );
+
+        // Add the custom Validation Rule commands.
+        Validator::extend('valid_query', function($attribute, $value, $parameters)
+        {
+            return (preg_match('/^[\p{L}\p{N}_\-\s]+$/', $value) === 1);
+        });
+
+        // Validate the Input data.
+        $input = Input::only('query');
+
+        $validator = Validator::make($input, $rules, $messages, $attributes);
+
+        if($validator->fails()) {
+            // Prepare the flash message.
+            $status = $validator->errors();
+
+            return Redirect::back()->withStatus($status, 'danger');
+        }
+
+        // Search the Records on Database.
+        $search = $input['query'];
+
+        $users = User::where('username', 'LIKE', '%' .$search .'%')
+            ->orWhere('realname', 'LIKE', '%' .$search .'%')
+            ->orWhere('email', 'LIKE', '%' .$search .'%')
+            ->get();
+
+        // Prepare the Query for displaying.
+        $search = htmlentities($search);
+
+        return $this->getView()
+            ->shares('title', __('Searching Users for: {0}', $search))
+            ->with('search', $search)
+            ->with('users', $users);
+    }
 }

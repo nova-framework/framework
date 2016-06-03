@@ -21,7 +21,7 @@
             <div class="clearfix"></div>
             <br>
 
-            <form class="form-horizontal" method='POST' role="form">
+            <form class="form-horizontal" action="<?= site_url('admin/users'); ?>" method='POST' role="form">
 
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>

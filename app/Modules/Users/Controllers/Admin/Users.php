@@ -257,7 +257,7 @@ class Users extends Controller
             $user->save();
 
             // Save the User information - used with the Database Auth Driver.
-            // $input['updated_at'] = new Carbon();
+            // $user->updated_at = new Carbon();
             //
             //$this->model->update($id, (array) $user);
 

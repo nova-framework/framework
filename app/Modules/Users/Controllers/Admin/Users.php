@@ -56,7 +56,7 @@ class Users extends Controller
         // Add to path the next part, if it exists, defaulting to 'dashboard'.
         if(! empty($parts)) {
             $baseUri .= '/' .array_shift($parts);
-        } else if ($withDashboard) {
+        } else {
             $baseUri .= '/dashboard';
         }
 

@@ -59,7 +59,7 @@ $user = Auth::user();
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="<?= site_url('users/dashboard'); ?>" class="logo">
+    <a href="<?= site_url('admin/dashboard'); ?>" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini">CP</span>
       <!-- logo for regular state and mobile devices -->
@@ -126,8 +126,8 @@ $user = Auth::user();
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="header"><?= __('ADMINISTRATION'); ?></li>
-            <li <?php if ($baseUri == 'users/dashboard') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('users/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
+            <li <?php if ($baseUri == 'admin/dashboard') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
             </li>
             <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
                 <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-book"></i> <span><?= __('Users'); ?></span></a>

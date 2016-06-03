@@ -54,6 +54,6 @@ Route::filter('auth', function($route) {
 Route::filter('guest', function($route) {
     if (! Auth::guest()) {
         // User is authenticated, redirect him to Dashboard Page.
-        return Redirect::to('users/dashboard');
+        return Redirect::to('admin/dashboard');
     }
 });

@@ -22,7 +22,8 @@
         "patchwork/utf8": "~1.2",
         "nesbot/carbon": "^1.21",
         "swiftmailer/swiftmailer": "^5.4",
-        "almasaeed2010/adminlte": "~2.0"
+        "almasaeed2010/adminlte": "~2.0",
+        "twbs/bootstrap": "^3.3"
     },
     "autoload": {
         "psr-4": {

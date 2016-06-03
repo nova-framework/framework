@@ -168,14 +168,26 @@ class Route
         //
         // Build the regex for matching.
 
-        if (strpos($this->pattern, '{') !== false) {
-            // Convert the Named Patterns to (:any), e.g. {category}
-            $regex = preg_replace('#\{([a-z]+)\}#', '(:any)', $this->pattern);
-
-            // Convert the Named Patterns to (:num), e.g. {:id}
-            $regex = preg_replace('#\{:([a-z]+)\}#', '(:num)', $regex);
-        } else {
+        if (strpos($this->pattern, '{') === false) {
             $regex = $this->pattern;
+        } else {
+            // Convert the Named Patterns to (:any), e.g. {category}
+            $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
+
+            // Convert the optiona Named Patterns to (/(:any)), e.g. /{category?}
+            if ($optionals) {
+                $count = 0;
+
+                $regex = preg_replace('#/\{([a-z]+)\?\}#', '(/([^/]+)', $this->pattern, -1, $count);
+
+                if($count > 0) {
+                    // Pad the pattern with the required ')' characters.
+                    $regex .= str_repeat (')', $count);
+                }
+            } else {
+                // Convert the Named Patterns to (:num), e.g. {:d}
+                $regex = preg_replace('#\{:([a-z]+)\}#', '([0-9]+)', $regex);
+            }
         }
 
         if (strpos($regex, ':') !== false) {

@@ -49,19 +49,21 @@ Router::post('password/reset', array(
     'uses' => 'App\Modules\Users\Controllers\Authorize@postReset'
 ));
 
-// The User's Dashboard.
-Router::get('users(/dashboard)', array(
-    'filters' => 'auth',
-    'uses' => 'App\Modules\Users\Controllers\Users@dashboard'
-));
+// The Adminstration Routes.
+Router::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
+    // The User's Profile.
+    Router::get( 'users/profile', array('filters' => 'auth',      'uses' => 'Users@profile'));
+    Router::post('users/profile', array('filters' => 'auth|csrf', 'uses' => 'Users@postProfile'));
 
-// The User's Profile.
-Router::get('users/profile', array(
-    'filters' => 'auth',
-    'uses' => 'App\Modules\Users\Controllers\Users@profile'
-));
+    // The Users CRUD.
+    Router::get( 'users',                array('filters' => 'auth',      'uses' => 'Users@index'));
+    Router::get( 'users/create',         array('filters' => 'auth',      'uses' => 'Users@create'));
+    Router::post('users',                array('filters' => 'auth|csrf', 'uses' => 'Users@store'));
+    Router::get( 'users/(:num)',         array('filters' => 'auth',      'uses' => 'Users@show'));
+    Router::get( 'users/(:num)/edit',    array('filters' => 'auth',      'uses' => 'Users@edit'));
+    Router::post('users/(:num)',         array('filters' => 'auth|csrf', 'uses' => 'Users@update'));
+    Router::post('users/(:num)/destroy', array('filters' => 'auth|csrf', 'uses' => 'Users@destroy'));
 
-Router::post('users/profile', array(
-    'filters' => 'auth|csrf',
-    'uses' => 'App\Modules\Users\Controllers\Users@postProfile'
-));
+    // The Users Search.
+    Router::post( 'users/search', array('filters' => 'auth', 'uses' => 'Users@search'));
+});

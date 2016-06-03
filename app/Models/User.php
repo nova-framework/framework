@@ -21,7 +21,9 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     protected $hidden = array('password');
 
+    public $timestamps = true;
 
+    
     /**
      * Get the unique identifier for the User.
      *

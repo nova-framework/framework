@@ -33,8 +33,8 @@ $langMenuLinks = ob_get_clean();
 echo $meta; // Place to pass data / plugable hook zone
 
 Assets::css([
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css',
+    template_url('dist/css/bootstrap.min.css', 'Default'),
+    template_url('dist/css/bootstrap-theme.min.css', 'Default'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
     template_url('css/style.css', 'Default'),
 ]);
@@ -84,7 +84,7 @@ echo $css; // Place to pass data / plugable hook zone
 <?php
 Assets::js([
     'https://code.jquery.com/jquery-1.12.4.min.js',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
+    template_url('dist/js/bootstrap.min.js', 'Default'),
 ]);
 
 echo $js; // Place to pass data / plugable hook zone

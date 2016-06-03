@@ -59,7 +59,7 @@ $user = Auth::user();
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="<?= site_url('users/dashboard'); ?>" class="logo">
+    <a href="<?= site_url('admin/dashboard'); ?>" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini">CP</span>
       <!-- logo for regular state and mobile devices -->
@@ -96,7 +96,7 @@ $user = Auth::user();
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
+                  <a href="<?= site_url('admin/users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
                 </div>
                 <div class="pull-right">
                   <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __('Sign out'); ?></a>
@@ -114,9 +114,9 @@ $user = Auth::user();
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
         <!-- search form -->
-        <form action="<?= site_url('admin/search'); ?>" method="POST" class="sidebar-form">
+        <form action="<?= site_url('admin/users/search'); ?>" method="POST" class="sidebar-form">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <input type="text" name="query" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
                     <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                     </button>
@@ -126,8 +126,11 @@ $user = Auth::user();
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="header"><?= __('ADMINISTRATION'); ?></li>
-            <li <?php if ($currentUri == 'users/dashboard') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('users/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
+            <li <?php if ($baseUri == 'admin/dashboard') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
+            </li>
+            <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-book"></i> <span><?= __('Users'); ?></span></a>
             </li>
         </ul>
         <!-- /.sidebar-menu -->

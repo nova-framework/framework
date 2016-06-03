@@ -27,7 +27,7 @@ Router::any('demo/paginate',        'App\Controllers\Demo@paginate');
 
 Router::any('demo/request(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@request');
 
-Router::any('admin/(:any)(/(:any)(/(:any)(/(:all))))', array(
+Router::any('demo/test/(:any)(/(:any)(/(:any)(/(:all))))', array(
     'filters' => 'test',
     'uses'    => 'App\Controllers\Demo@test'
 ));

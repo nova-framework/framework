@@ -102,7 +102,7 @@ class Authorize extends Controller
         $status = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
         // Redirect to the User's Dashboard.
-        return Redirect::to('users/dashboard')->withStatus($status);
+        return Redirect::to('admin/dashboard')->withStatus($status);
     }
 
     /**

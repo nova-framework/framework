@@ -27,7 +27,7 @@ use Helpers\Profiler;
 <?php
 Assets::js([
 	'https://code.jquery.com/jquery-1.12.4.min.js',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
+    template_url('dist/js/bootstrap.min.js', 'Default'),
 ]);
 
 echo $js; // Place to pass data / plugable hook zone

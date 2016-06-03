@@ -1620,6 +1620,23 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         return new Pivot($parent, $attributes, $table, $exists);
     }
 
+    /**
+     * Get the table associated with the model.
+     *
+     * @return void
+     */
+    public static function getTableName()
+    {
+        $model = new static();
+
+        return $model->getTable();
+    }
+
+    /**
+     * Get the table associated with the model.
+     *
+     * @return void
+     */
     public function getTable()
     {
        if (isset($this->table)) return $this->table;

@@ -70,6 +70,10 @@ class Route
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
         $this->action = $this->parseAction($action);
+
+        if (isset($this->action['prefix'])) {
+            $this->prefix($this->action['prefix']);
+        }
     }
 
     /**
@@ -298,7 +302,7 @@ class Route
         // Exact match Route.
         if ($this->pattern == $uri) {
             // Store the current matched URI.
-            $this->currentUri = $uri;
+            $this->uri = $uri;
 
             return true;
         }
@@ -312,7 +316,7 @@ class Route
             // Convert the Named Patterns to (:any), e.g. {category}
             $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
 
-            // Convert the optiona Named Patterns to (/(:any)), e.g. /{category?}
+            // Convert the optional Named Patterns to (/(:any)), e.g. /{category?}
             if ($optionals) {
                 $count = 0;
 
@@ -345,7 +349,7 @@ class Route
             array_shift($matches);
 
             // Store the current matched URI.
-            $this->currentUri = $uri;
+            $this->uri = $uri;
 
             // Store the extracted parameters.
             $this->params = $matches;
@@ -367,7 +371,7 @@ class Route
      */
     public function prefix($prefix)
     {
-        $this->uri = trim($prefix, '/') .'/' .trim($this->uri, '/');
+        $this->pattern = trim($prefix, '/') .'/' .trim($this->pattern, '/');
 
         return $this;
     }
@@ -409,9 +413,17 @@ class Route
     /**
      * @return string|null
      */
-    public function getCurrentUri()
+    public function getUri()
     {
-        return $this->currentUri;
+        return $this->uri();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function uri()
+    {
+        return $this->uri;
     }
 
     /**

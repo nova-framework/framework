@@ -29,9 +29,9 @@ class Router extends BaseRouter
     /**
      * Array of Route Groups
      *
-     * @var array $routeGroups
+     * @var array $groupStack
      */
-    private static $routeGroups = array();
+    private static $groupStack = array();
 
     /**
      * Default Route, usually the Catch-All one.
@@ -96,22 +96,18 @@ class Router extends BaseRouter
      */
     public static function group($group, $callback)
     {
-        if (is_array($group)) {
-            $prefix    = trim($group['prefix'], '/');
-            $namespace = isset($group['namespace']) ? trim($group['namespace'], '\\') : '';
-        } else {
-            $prefix    = trim($group, '/');
-            $namespace = '';
+        if (! is_array($group)) {
+            $group = array('prefix' => $group);
         }
 
         // Add the Route Group to the array.
-        array_push(self::$routeGroups, array('prefix' => $prefix, 'namespace' => $namespace));
+        array_push(static::$groupStack, $group);
 
         // Call the Callback, to define the Routes on the current Group.
         call_user_func($callback);
 
         // Removes the last Route Group from the array.
-        array_pop(self::$routeGroups);
+        array_pop(static::$groupStack);
     }
 
     /* The Resourceful Routes in the Laravel Style.
@@ -150,9 +146,9 @@ class Router extends BaseRouter
      *
      * @param string $method HTTP metod(s) to match
      * @param string $route URL pattern to match
-     * @param callback $callback Callback object
+     * @param callback $action Callback object
      */
-    protected static function register($method, $route, $callback = null)
+    protected static function register($method, $route, $action = null)
     {
         // Get the Router instance.
         $router =& self::getInstance();
@@ -175,46 +171,50 @@ class Router extends BaseRouter
         // Prepare the Route PATTERN.
         $pattern = ltrim($route, '/');
 
-        // If $callback is an options array, extract the Filters and Callback.
-        if (is_array($callback)) {
-            $filters = isset($callback['filters']) ? trim($callback['filters'], '|') : '';
-
-            $callback = isset($callback['uses']) ? $callback['uses'] : null;
-        } else {
-            $filters = '';
+        // Pre-process the Action information.
+        if (! is_array($action)) {
+            $action = array('uses' => $action);
         }
 
-        if (! empty(self::$routeGroups)) {
+        if (! empty(static::$groupStack)) {
             $parts = array();
 
-            // The current Controller namespace; prepended to Callback if it is not a Closure.
-            $namespace = '';
+            $namespace = null;
 
-            foreach (self::$routeGroups as $group) {
+            foreach (static::$groupStack as $group) {
                 // Add the current prefix to the prefix list.
                 array_push($parts, trim($group['prefix'], '/'));
 
                 // Always update to the last Controller namespace.
-                $namespace = trim($group['namespace'], '\\');
+                $namespace = array_get($group, 'namespace');
             }
 
-            if (! empty($pattern)) {
-                array_push($parts, $pattern);
-            }
+            // Adjust the Route PATTERN, if it is needed.
+            $parts = array_filter($parts, function($value)
+            {
+                return ($value != '');
+            });
 
-            // Adjust the Route PATTERN.
             if (! empty($parts)) {
-                $pattern = implode('/', $parts);
+                $prefix = implode('/', $parts);
+
+                $action['prefix'] = $prefix;
             }
 
-            // Adjust the Route CALLBACK, when it is not a Closure.
-            if (! empty($namespace) && ! is_object($callback)) {
-                $callback = sprintf('%s\%s', $namespace,  trim($callback, '\\'));
+            // Adjust the Route CALLBACK, if it is needed.
+            $namespace = rtrim($namespace, '\\');
+
+            if (! empty($namespace)) {
+                $callback = array_get($action, 'uses');
+
+                if (is_string($callback) && ! empty($callback)) {
+                    $action['uses'] = $namespace .'\\' .ltrim($callback, '\\');
+                }
             }
         }
 
-        // Create a Route instance using the processed information.
-        $route = new Route($methods, $pattern, array('filters' => $filters, 'uses' => $callback));
+        // Create a Route instance.
+        $route = new Route($methods, $pattern, $action);
 
         // Add the current Route instance to the known Routes list.
         array_push($router->routes, $route);
@@ -262,11 +262,11 @@ class Router extends BaseRouter
                 }
 
                 // Get the matched Route callback.
-                $callback = $route->callback();
+                $callback = $route->getCallback();
 
                 if ($callback !== null) {
                     // Invoke the Route's Callback with the associated parameters.
-                    return $this->invokeObject($callback, $route->params());
+                    return $this->invokeObject($callback, $route->getParams());
                 }
 
                 return true;

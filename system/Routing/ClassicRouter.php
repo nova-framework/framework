@@ -93,11 +93,11 @@ class ClassicRouter extends BaseRouter
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 
-                $callback = $route->callback();
+                $callback = $route->getCallback();
 
                 if (is_object($callback)) {
                     // Invoke the Route's Callback with the associated parameters.
-                    call_user_func_array($callback, $route->params());
+                    call_user_func_array($callback, $route->getParams());
 
                     return true;
                 }

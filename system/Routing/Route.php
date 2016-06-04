@@ -19,7 +19,7 @@ class Route
     /**
      * @var array All available Filters
      */
-    private static $availFilters = array();
+    private static $filters = array();
 
     /**
      * @var array Supported HTTP methods
@@ -32,14 +32,9 @@ class Route
     private $pattern = null;
 
     /**
-     * @var array Filters to be applied on match
+     * @var array The route action array.
      */
-    private $filters = array();
-
-    /**
-     * @var callable Callback
-     */
-    private $callback = null;
+    protected $action = array();
 
     /**
      * @var string The current matched URI
@@ -66,26 +61,172 @@ class Route
      *
      * @param string|array $method HTTP method(s)
      * @param string $pattern URL pattern
-     * @param string|array|callable $callback Callback function or options
+     * @param string|array|callable $action Callback function or options
      */
-    public function __construct($method, $pattern, $callback)
+    public function __construct($method, $pattern, $action)
     {
         $this->methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
-        if (is_array($callback)) {
-            $this->callback = isset($callback['uses']) ? $callback['uses'] : null;
+        $this->action = $this->parseAction($action);
 
-            if (isset($callback['filters']) && ! empty($callback['filters'])) {
-                // Explode the filters string using the '|' delimiter.
-                $filters = array_filter(explode('|', $callback['filters']), 'strlen');
-
-                $this->filters = array_unique($filters);
-            }
-        } else {
-            $this->callback = $callback;
+        if (isset($this->action['prefix'])) {
+            $this->prefix($this->action['prefix']);
         }
+    }
+
+    /**
+     * Parse the Route Action into a standard array.
+     *
+     * @param  \Closure|array  $action
+     * @return array
+     */
+    protected function parseAction($action)
+    {
+        if (is_string($action) || is_callable($action)) {
+            // A string or Closure is given as Action.
+            return array('uses' => $action);
+        } else if (! isset($action['uses'])) {
+            // Find the Closure in the Action array.
+            $action['uses'] = $this->findClosure($action);
+        }
+
+        return $action;
+    }
+
+    /**
+     * Find the Closure in an action array.
+     *
+     * @param  array  $action
+     * @return \Closure
+     */
+    protected function findClosure(array $action)
+    {
+        return array_first($action, function($key, $value)
+        {
+            return is_callable($value);
+        });
+    }
+
+    /**
+     * Add (before) Filters to the Route.
+     *
+     * @param  string  $filters
+     * @return \Routing\Route
+     */
+    public function before($filters)
+    {
+        return $this->addFilters('filters', $filters);
+    }
+
+    /**
+     * Add the given Filters to the route by type.
+     *
+     * @param  string  $type
+     * @param  string  $filters
+     * @return \Routing\Route
+     */
+    protected function addFilters($type, $filters)
+    {
+        if (isset($this->action[$type])) {
+            $this->action[$type] .= '|' .$filters;
+        } else {
+            $this->action[$type] = $filters;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the Filters for the current Route instance.
+     *
+     * @return array
+     */
+    public function getFilters()
+    {
+        if (! isset($this->action['filters'])) {
+            return array();
+        }
+
+        // Parse and return the Filters.
+        $filters = $this->action['filters'];
+
+        return static::parseFilters($filters);
+    }
+
+    /**
+     * Parse the given filter string.
+     *
+     * @param  string  $filters
+     * @return array
+     */
+    public static function parseFilters($filters)
+    {
+        return array_build(static::explodeFilters($filters), function($key, $value)
+        {
+            return Route::parseFilter($value);
+        });
+    }
+
+    /**
+     * Turn the filters into an array if they aren't already.
+     *
+     * @param  array|string  $filters
+     * @return array
+     */
+    protected static function explodeFilters($filters)
+    {
+        if (is_array($filters)) {
+            return static::explodeArrayFilters($filters);
+        }
+
+        return explode('|', $filters);
+    }
+
+    /**
+     * Flatten out an array of filter declarations.
+     *
+     * @param  array  $filters
+     * @return array
+     */
+    protected static function explodeArrayFilters(array $filters)
+    {
+        $results = array();
+
+        foreach ($filters as $filter) {
+            $results = array_merge($results, explode('|', $filter));
+        }
+
+        return $results;
+    }
+
+    /**
+     * Parse the given filter into name and parameters.
+     *
+     * @param  string  $filter
+     * @return array
+     */
+    public static function parseFilter($filter)
+    {
+        if (! str_contains($filter, ':')) {
+            return array($filter, array());
+        }
+
+        return static::parseParameterFilter($filter);
+    }
+
+    /**
+     * Parse a filter with parameters.
+     *
+     * @param  string  $filter
+     * @return array
+     */
+    protected static function parseParameterFilter($filter)
+    {
+        list($name, $parameters) = explode(':', $filter, 2);
+
+        return array($name, explode(',', $parameters));
     }
 
     /**
@@ -96,11 +237,11 @@ class Route
      */
     public static function filter($name, $callback)
     {
-        if (array_key_exists($name, self::$availFilters)) {
+        if (array_key_exists($name, static::$filters)) {
             throw new \Exception('Filter already exists: ' .$name);
         }
 
-        self::$availFilters[$name] = $callback;
+        static::$filters[$name] = $callback;
     }
 
     /**
@@ -108,27 +249,28 @@ class Route
      *
      * @return array
      */
-    public static function availFilters()
+    public static function getAvailableFilters()
     {
-        return self::$availFilters;
+        return static::$filters;
     }
 
     public function applyFilters()
     {
         $result = null;
 
-        foreach ($this->filters as $filter) {
-            if (! array_key_exists($filter, self::$availFilters)) {
+        foreach ($this->getFilters() as $filter => $params) {
+            if(empty($filter)) {
+                continue;
+            } else if (! array_key_exists($filter, static::$filters)) {
                 throw new \Exception('Invalid Filter specified: ' .$filter);
             }
 
             // Get the current Filter Callback.
-            $callback = self::$availFilters[$filter];
+            $callback = static::$filters[$filter];
 
-            // Execute the current Filter's Callback with the Route instance as an argument.
             // If the Callback returns a Response instance, the Filtering will be stopped.
-            if (is_object($callback)) {
-                $result = call_user_func($callback, $this);
+            if (is_callable($callback)) {
+                $result = call_user_func($callback, $this, $params);
             }
 
             if ($result instanceof Response) {
@@ -160,7 +302,7 @@ class Route
         // Exact match Route.
         if ($this->pattern == $uri) {
             // Store the current matched URI.
-            $this->currentUri = $uri;
+            $this->uri = $uri;
 
             return true;
         }
@@ -174,7 +316,7 @@ class Route
             // Convert the Named Patterns to (:any), e.g. {category}
             $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
 
-            // Convert the optiona Named Patterns to (/(:any)), e.g. /{category?}
+            // Convert the optional Named Patterns to (/(:any)), e.g. /{category?}
             if ($optionals) {
                 $count = 0;
 
@@ -207,7 +349,7 @@ class Route
             array_shift($matches);
 
             // Store the current matched URI.
-            $this->currentUri = $uri;
+            $this->uri = $uri;
 
             // Store the extracted parameters.
             $this->params = $matches;
@@ -221,7 +363,28 @@ class Route
         return false;
     }
 
+    /**
+     * Add a prefix to the route URI.
+     *
+     * @param  string  $prefix
+     * @return \Routing\Route
+     */
+    public function prefix($prefix)
+    {
+        $this->pattern = trim($prefix, '/') .'/' .trim($this->pattern, '/');
+
+        return $this;
+    }
+
     // Some Getters
+
+    /**
+     * @return array
+     */
+    public function getMethods()
+    {
+        return $this->methods;
+    }
 
     /**
      * @return array
@@ -232,11 +395,11 @@ class Route
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function filters()
+    public function getPattern()
     {
-        return $this->filters;
+        return $this->pattern;
     }
 
     /**
@@ -248,25 +411,25 @@ class Route
     }
 
     /**
-     * @return callable
+     * @return string|null
      */
-    public function callback()
+    public function getUri()
     {
-        return $this->callback;
+        return $this->uri();
     }
 
     /**
      * @return string|null
      */
-    public function currentUri()
+    public function uri()
     {
-        return $this->currentUri;
+        return $this->uri;
     }
 
     /**
      * @return string
      */
-    public function method()
+    public function getMethod()
     {
         return $this->method;
     }
@@ -274,7 +437,7 @@ class Route
     /**
      * @return array
      */
-    public function params()
+    public function getParams()
     {
         return $this->params;
     }
@@ -282,8 +445,60 @@ class Route
     /**
      * @return string
      */
-    public function regex()
+    public function getRegex()
     {
         return $this->regex;
     }
+
+    /**
+     * @return callable
+     */
+    public function getCallback()
+    {
+        return array_get($this->action, 'uses');
+    }
+
+    /**
+     * Get the prefix of the route instance.
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return array_get($this->action, 'prefix');
+    }
+
+    /**
+     * Get the name of the route instance.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return array_get($this->action, 'as');
+    }
+
+    /**
+     * Return the Action array.
+     *
+     * @return array
+     */
+    public static function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * Set the Action array for the Route.
+     *
+     * @param  array  $action
+     * @return \Routing\Route
+     */
+    public function setAction(array $action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
 }

@@ -46,6 +46,10 @@ The base framework comes with a range of [helper classes](https://github.com/nov
 
 ## Installation
 
+This framework was designed and is **strongly recommended** to be installed above the document root directory, with it pointing to the `public` folder.
+
+Additionally, installing in a sub-directory, on a production server, will introduce severe security issues.
+
 #### Recommended
 The framework is located on [Packagist](https://packagist.org/packages/nova-framework/framework).
 

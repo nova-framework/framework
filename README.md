@@ -10,17 +10,17 @@
 
 [![Join the chat at https://gitter.im/simple-mvc-framework/framework](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/simple-mvc-framework/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-- [What is the Nova Framework?](what-is-the-nova-framework)
-- [Requirements](requirements)
-- [Installation](installation)
-    - [Recommended](recommended)
-    - [Manual](manual)
-- [Documentation](documentation)
-- [Contributing](contributing)
-    - [Issue Tracker](issue-tracker)
-    - [Pull Requests](pull-requests)
-    - [Code Style](code-style)
-- [License](license)
+- [What is the Nova Framework?](#what-is-the-nova-framework)
+- [Requirements](#requirements)
+- [Installation](#installation)
+    - [Recommended](#recommended)
+    - [Manual](#manual)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+    - [Issue Tracker](#issue-tracker)
+    - [Pull Requests](#pull-requests)
+    - [Code Style](#code-style)
+- [License](#license)
 
 ## What is the Nova Framework?
 
@@ -59,25 +59,8 @@ The foldername is the desired folder to be created.
 
 #### Manual
 
-##### Option 1 - Files above document root. (Recommended)
-
 - Place the contents of `public` into your public folder (`.htaccess` and `index.php`)
 - Navigate to your project in a terminal and type `composer install` to initiate the composer installation.
-- Edit `public/.htaccess` to set the rewritebase if running on a sub folder, otherwise a single `/` will do.
-- Edit `app/Config.example.php` and change the `SITEURL` and `DIR` constants. The `DIR` path is relative to the project url for example `/` for on the root or `/foldername/` when in a folder. Also change other options as desired. Rename file to `Config.php`
-- Set a 32 character `ENCRYPT_KEY` by using the CLI tool. You can do this by typing `php nova make:key` in your command line / console. Alternatively, you can use the following tool: http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/
-
-##### Option 2 - Everything inside your public folder.
-
-- Place all files inside your public folder
-- Navigate to your project in a terminal and type `composer install` to initiate the composer installation.
-- Open `index.php` and change the paths from using `DIR` to `FILE`:
-```php
-define('APPDIR', realpath(__DIR__.'/app/').'/');
-define('SYSTEMDIR', realpath(__DIR__.'/system/').'/');
-define('PUBLICDIR', realpath(__DIR__).'/');
-define('ROOTDIR', realpath(__DIR__).'/');
-```
 - Edit `public/.htaccess` to set the rewritebase if running on a sub folder, otherwise a single `/` will do.
 - Edit `app/Config.example.php` and change the `SITEURL` and `DIR` constants. The `DIR` path is relative to the project url for example `/` for on the root or `/foldername/` when in a folder. Also change other options as desired. Rename file to `Config.php`
 - Set a 32 character `ENCRYPT_KEY` by using the CLI tool. You can do this by typing `php nova make:key` in your command line / console. Alternatively, you can use the following tool: http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/

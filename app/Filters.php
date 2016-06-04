@@ -19,22 +19,22 @@ use Support\Facades\Session;
 /** Define Route Filters. */
 
 // A Testing Filter which dump the matched Route.
-Route::filter('test', function($route) {
+Route::filter('test', function($route, $params) {
     echo '<pre style="margin: 10px;">' .var_export($route, true) .'</pre>';
 });
 
 // A simple CSRF Filter.
-Route::filter('csrf', function($route) {
+Route::filter('csrf', function($route, $params) {
     $token = Request::input('csrfToken');
 
-    if (($route->method() == 'POST') && ($token != Session::token())) {
+    if ((Request::method() == 'POST') && ($token != Session::token())) {
         // When CSRF Token is invalid, respond with Error 400 Page (Bad Request)
         return Response::error(400);
     }
 });
 
 // Referer checking Filter.
-Route::filter('referer', function($route) {
+Route::filter('referer', function($route, $params) {
     // Check if the visitor come to this Route from another site.
     $referer = Request::header('referer');
 
@@ -44,14 +44,14 @@ Route::filter('referer', function($route) {
 });
 
 // Authentication Filters.
-Route::filter('auth', function($route) {
+Route::filter('auth', function($route, $params) {
     if (! Auth::check()) {
          // User is not logged in, redirect him to Login Page.
          return Redirect::to('login');
     }
 });
 
-Route::filter('guest', function($route) {
+Route::filter('guest', function($route, $params) {
     if (! Auth::guest()) {
         // User is authenticated, redirect him to Dashboard Page.
         return Redirect::to('admin/dashboard');

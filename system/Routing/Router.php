@@ -262,11 +262,11 @@ class Router extends BaseRouter
                 }
 
                 // Get the matched Route callback.
-                $callback = $route->callback();
+                $callback = $route->getCallback();
 
                 if ($callback !== null) {
                     // Invoke the Route's Callback with the associated parameters.
-                    return $this->invokeObject($callback, $route->params());
+                    return $this->invokeObject($callback, $route->getParams());
                 }
 
                 return true;

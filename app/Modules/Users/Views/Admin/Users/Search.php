@@ -10,7 +10,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::message('status'); ?>
+<?= Session::getMessages(); ?>
 
 <div class="box box-default">
     <div class="box-header with-border">

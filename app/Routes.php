@@ -24,6 +24,7 @@ Router::any('demo/mailer',          'App\Controllers\Demo@mailer');
 Router::any('demo/session',         'App\Controllers\Demo@session');
 Router::any('demo/validate',        'App\Controllers\Demo@validate');
 Router::any('demo/paginate',        'App\Controllers\Demo@paginate');
+Router::any('demo/cache',           'App\Controllers\Demo@cache');
 
 Router::any('demo/request(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@request');
 

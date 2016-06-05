@@ -3,6 +3,8 @@ namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
+
+use Helpers\FastCache;
 use Helpers\Password;
 use Helpers\Url;
 
@@ -247,6 +249,29 @@ class Demo extends Controller
 
         return View::make('Default')
             ->shares('title', __('Pagination'))
+            ->with('content', $content);
+    }
+
+    public function cache()
+    {
+
+        $cache = FastCache::getInstance();
+
+        $key = "test_page";
+
+        $content = $cache->get($key);
+
+        if (is_null($content)) {
+            $content = "Files Cache --> Well done !";
+
+            // Write products to Cache in 10 minutes with same keyword
+            $cache->set($key, $content, 600);
+        } else {
+            $content = "READ FROM CACHE // " .$content;
+        }
+
+        return View::make('Default')
+            ->shares('title', __('Cache'))
             ->with('content', $content);
     }
 }

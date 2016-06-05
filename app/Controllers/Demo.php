@@ -3,10 +3,10 @@ namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
-use Helpers\Password;
-use Helpers\Url;
 
 use Helpers\FastCache;
+use Helpers\Password;
+use Helpers\Url;
 
 use Event;
 use Validator;

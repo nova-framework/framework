@@ -5,6 +5,7 @@ use Core\View;
 use Core\Controller;
 use Helpers\Password;
 use Helpers\Url;
+use Helpers\FastCache;
 
 use Event;
 use Validator;
@@ -247,6 +248,29 @@ class Demo extends Controller
 
         return View::make('Default')
             ->shares('title', __('Pagination'))
+            ->with('content', $content);
+    }
+
+    public function cache()
+    {
+
+        $InstanceCache = FastCache::getInstance();
+
+        $key = "test_page";
+        $cache = $InstanceCache->get($key);
+
+        if (is_null($cache)) {
+            $content = "Files Cache --> Well done !";
+
+            // Write products to Cache in 10 minutes with same keyword
+            $InstanceCache->set($key, $content, 600);
+        } else {
+            $content = "READ FROM CACHE // ";
+            $content .= $cache;
+        }
+
+        return View::make('Default')
+            ->shares('title', __('Cache'))
             ->with('content', $content);
     }
 }

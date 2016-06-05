@@ -135,7 +135,9 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
     {
         $status = array('type' => $type, 'text' => $message);
 
-        return $this->with('status', $status);
+        $this->session->push('status', $status);
+
+        return $this;
     }
 
     /**

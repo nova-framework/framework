@@ -282,25 +282,83 @@ class Session
     }
 
     /**
+     * Flash a array containing a message to the session.
+     *
+     * @param string $message
+     * @param string $type
+     *
+     * @return \Http\RedirectResponse
+     */
+    public static function pushStatus($message, $type = 'success')
+    {
+        $instance = static::getSessionStore();
+
+        $status = array('type' => $type, 'text' => $message);
+
+        // Push the status on Session.
+        $instance->push('status', $status);
+    }
+
+    /**
+     * Display the one time Messages, then clear them from the Session.
+     *
+     * @param  string $name default Session name
+     *
+     * @return string
+     */
+    public static function getMessages()
+    {
+        $instance = static::getSessionStore();
+
+        if (! $instance->has('status')) {
+            return null;
+        }
+
+        // Pull the Message from the Session Store.
+        $messages = $instance->remove('status');
+
+        //
+        $content = null;
+
+        foreach ($messages as $message) {
+            $content .= static::createMessage($message);
+        }
+
+        return $content;
+    }
+
+    /**
      * Display a one time Message, then clear it from the Session.
      *
      * @param  string $name default Session name
      *
      * @return string
      */
-    public static function message($name = 'success')
+    public static function message($name = null)
     {
         $instance = static::getSessionStore();
 
-        if (! $instance->has($name)) {
-            return null;
+        if(is_null($name)) {
+            foreach (array('info', 'success', 'warning', 'danger') as $key) {
+                if ($instance->has($key)) {
+                    $name = $key;
+
+                    break;
+                }
+            }
         }
 
-        // Pull the Message from the Session Store.
-        $message = $instance->remove($name);
+        if (! is_null($name) && $instance->has($name)) {
+            // Pull the Message from the Session Store.
+            $message = $instance->remove($name);
 
-        if (is_array($message)) {
-            // The Message is structured in the New Style.
+            return static::createMessage($message, $name);
+        }
+    }
+
+    protected static function createMessage($message, $name = null)
+    {
+        if(is_array($message)) {
             $type    = $message['type'];
             $message = $message['text'];
         } else {

@@ -148,18 +148,30 @@ class Users extends BaseController
         $validator = $this->validate($input);
 
         if($validator->passes()) {
-            unset($input['password_confirmation']);
-
-            // Encrypt the Password.
-            $input['password'] = Hash::make($input['password']);
+            // Encrypt the given Password.
+            $password = Hash::make($input['password']);
 
             // Create a User Model instance - used with the Extended Auth Driver.
-            User::create($input);
+            User::create(array(
+                'username' => $input['username'],
+                'password' => $password,
+                'role_id'  => $input['role'],
+                'realname' => $input['realname'],
+                'email'    => $input['email'],
+            ));
 
             // Create a User Model instance - used with the Database Auth Driver.
-            // $input['created_at'] = $input['created_at'] = new Carbon();
-            //
-            //$this->model->insert($input);
+            /*
+            $this->model->insert(rray(
+                'username' => $input['username'],
+                'password' => $password,
+                'role_id'  => $input['role'],
+                'realname' => $input['realname'],
+                'email'    => $input['email'],
+                'created_at' => new Carbon(),
+                'updated_at' => new Carbon(),
+            ));
+            */
 
             // Prepare the flash message.
             $status = __('The User <b>{0}</b> was successfully created.', $input['username']);
@@ -247,7 +259,7 @@ class Users extends BaseController
 
             // Update the User Model instance.
             $user->username = $input['username'];
-            $user->role     = $input['role'];
+            $user->role_id  = $input['role'];
             $user->realname = $input['realname'];
             $user->email    = $input['email'];
 

@@ -9,7 +9,7 @@
                 <div class="panel-title"><?= __d('users', 'Password Reset'); ?></div>
             </div>
             <div class="panel-body">
-                <?= Session::message('status'); ?>
+                <?= Session::getMessages(); ?>
 
                 <form method='post' action="<?= site_url('password/reset'); ?>" role="form">
 

@@ -12,6 +12,10 @@ use Core\Config;
 use Auth\GenericUser;
 use Database\Model as BaseModel;
 
+use App\Modules\Users\Models\Roles;
+
+use DB;
+
 
 class Users extends BaseModel
 {
@@ -22,12 +26,12 @@ class Users extends BaseModel
 
     public function __construct()
     {
-        parent::__construct();
-
         // Configure the Model's table.
         if($this->table === null) {
             $this->table = Config::get('auth.table');
         }
+
+        parent::__construct();
     }
 
     public function updateGenericUser(GenericUser $user)

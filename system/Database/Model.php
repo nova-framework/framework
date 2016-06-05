@@ -57,7 +57,7 @@ class Model
      * @param  array  $attributes
      * @return void
      */
-    public function __construct($connection = null)
+    public function __construct($connection = null, $basicSetup = false)
     {
         if (! is_null($connection)) {
             // Store the requested Connection name.
@@ -71,8 +71,10 @@ class Model
             $this->table = Inflector::tableize(class_basename($className));
         }
 
-        // Setup the Connection instance.
-        $this->db = Connection::getInstance($this->connection);
+        if (! $basicSetup) {
+            // Setup the Connection instance.
+            $this->db = Connection::getInstance($this->connection);
+        }
     }
 
     /**
@@ -147,6 +149,18 @@ class Model
     public function getTable()
     {
         return $this->table;
+    }
+
+    /**
+     * Get the Table for the Model.
+     *
+     * @return string
+     */
+    public static function getTableName()
+    {
+        $model = new static(null, true);
+
+        return $model->getTable();
     }
 
     /**

@@ -30,6 +30,8 @@ $user = Auth::user();
         template_url('dist/css/AdminLTE.min.css', 'AdminLte'),
         // AdminLTE Skins
         template_url('dist/css/skins/_all-skins.min.css', 'AdminLte'),
+        // Select2
+        template_url('plugins/select2/select2.min.css', 'AdminLte'),
         // Custom CSS
         template_url('css/style.css', 'AdminLte'),
     ));
@@ -129,9 +131,17 @@ $user = Auth::user();
             <li <?php if ($baseUri == 'admin/dashboard') { echo "class='active'"; } ?>>
                 <a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
             </li>
+
+            <?php if ($user->hasRole('administrator')) { ?>
+
             <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-book"></i> <span><?= __('Users'); ?></span></a>
+                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __('Users'); ?></span></a>
             </li>
+            <li <?php if ($baseUri == 'admin/roles') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/roles'); ?>"><i class="fa fa-book"></i> <span><?= __('Roles'); ?></span></a>
+            </li>
+
+            <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->
     </section>
@@ -166,11 +176,20 @@ Assets::js(array(
     template_url('bootstrap/js/bootstrap.min.js', 'AdminLte'),
     // AdminLTE App
     template_url('dist/js/app.min.js', 'AdminLte'),
+    // Select2
+    template_url('plugins/select2/select2.full.min.js', 'AdminLte')
 ));
 
 echo $js; // Place to pass data / plugable hook zone
 echo $footer; // Place to pass data / plugable hook zone
 ?>
+
+<script>
+$(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+});
+</script>
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the

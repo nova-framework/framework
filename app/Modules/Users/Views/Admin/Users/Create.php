@@ -1,3 +1,9 @@
+<?php
+
+//
+$opt_role = Input::old('role');
+
+?>
 <section class="content-header">
     <h1><?= __d('users', 'Create User'); ?></h1>
     <ol class="breadcrumb">
@@ -14,7 +20,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Create a new User'); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'Create a new User Account'); ?></h3>
     </div>
     <div class="box-body">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
@@ -27,6 +33,17 @@
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
                     <input name="username" id="username" type="text" class="form-control" value="<?= Input::old('username'); ?>" placeholder="<?= __d('users', 'Username'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="role"><?= __('Role'); ?> <font color='#CC0000'>*</font></label>
+                <div class="col-sm-8">
+                    <select name="role" id="role" class="form-control select2">
+                        <option value="" <?php if (empty($opt_role)) echo 'selected'; ?>>- <?= __('Choose a Role'); ?> -</option>
+                        <?php foreach ($roles as $role) { ?>
+                        <option value="<?= $role->id ?>" <?php if ($opt_role == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -50,7 +67,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email'); ?>" placeholder="<?= __d('users', 'Email'); ?>">
+                    <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email'); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
                 </div>
             </div>
             <div class="clearfix"></div>

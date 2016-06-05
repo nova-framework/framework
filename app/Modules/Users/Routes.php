@@ -66,4 +66,13 @@ Router::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Contr
 
     // The Users Search.
     Router::post( 'users/search', array('filters' => 'auth', 'uses' => 'Users@search'));
+
+    // The Roles CRUD.
+    Router::get( 'roles',                array('filters' => 'auth',      'uses' => 'Roles@index'));
+    Router::get( 'roles/create',         array('filters' => 'auth',      'uses' => 'Roles@create'));
+    Router::post('roles',                array('filters' => 'auth|csrf', 'uses' => 'Roles@store'));
+    Router::get( 'roles/(:num)',         array('filters' => 'auth',      'uses' => 'Roles@show'));
+    Router::get( 'roles/(:num)/edit',    array('filters' => 'auth',      'uses' => 'Roles@edit'));
+    Router::post('roles/(:num)',         array('filters' => 'auth|csrf', 'uses' => 'Roles@update'));
+    Router::post('roles/(:num)/destroy', array('filters' => 'auth|csrf', 'uses' => 'Roles@destroy'));
 });

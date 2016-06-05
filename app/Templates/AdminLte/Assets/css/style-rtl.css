@@ -1,0 +1,9 @@
+/* Your right to left styles here */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif!important;
+}
+
+.navbar-xs { min-height:28px; height: 28px; }
+.navbar-xs .navbar-brand { padding: 0px 12px; font-size: 16px; line-height: 28px; }
+.navbar-xs .navbar-nav > li > a {  padding: 0 10px 0 10px; line-height: 28px; }

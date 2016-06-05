@@ -61,13 +61,13 @@ Modules::init();
 /** Get the Router instance. */
 $router = Router::getInstance();
 
-/** Load the Routes */
+/** Load the Routes. */
 require APPDIR .'Routes.php';
 
-/** Load the Routes from the active Modules */
+/** Load the Routes from the active Modules. */
 Modules::loadRoutes();
 
-/** Anounce the interested Listeners about Framework booting */
+/** Anounce the interested Listeners about the booting the Framework. */
 Event::fire('nova.framework.booting');
 
 /** Execute matched Routes. */

@@ -27,6 +27,10 @@
                 <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->username; ?></td>
             </tr>
             <tr>
+                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'Role'); ?></th>
+                <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->role->name; ?></td>
+            </tr>
+            <tr>
                 <th style='text-align: center; vertical-align: right;'><?= __d('users', 'Name and Surname'); ?></th>
                 <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->realname; ?></td>
             </tr>

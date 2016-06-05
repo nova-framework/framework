@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.5.1
+-- version 4.5.5
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 03, 2016 at 10:34 AM
+-- Generation Time: Jun 05, 2016 at 12:21 PM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.22
 
@@ -40,7 +40,6 @@ CREATE TABLE `nova_password_reminders` (
 -- Indexes for table `nova_password_reminders`
 --
 ALTER TABLE `nova_password_reminders`
-  ADD UNIQUE KEY `token_2` (`token`),
   ADD KEY `email` (`email`),
   ADD KEY `token` (`token`);
 

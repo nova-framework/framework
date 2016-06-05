@@ -85,7 +85,7 @@ if (! $users->isEmpty()) {
                 <h4 class="modal-title"><?= __d('users', 'Delete the User?'); ?></h4>
             </div>
             <div class="modal-body">
-                <p><?= __d('users', 'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?', $user->name); ?></p>
+                <p><?= __d('users', 'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?', $user->username); ?></p>
                 <p><?= __d('users', 'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abbandon the operation.'); ?></p>
             </div>
             <div class="modal-footer">

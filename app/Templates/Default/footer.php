@@ -11,7 +11,7 @@ use Helpers\Profiler;
     <div class="container-fluid">
         <div class="row" style="margin: 15px 0 0;">
             <div class="col-lg-4">
-                <p class="text-muted">Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework</b></a></p>
+                <p class="text-muted">Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= VERSION; ?></b></a></p>
             </div>
             <div class="col-lg-8">
                 <p class="text-muted pull-right">

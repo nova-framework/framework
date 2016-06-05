@@ -12,6 +12,11 @@
 use Core\Config;
 
 /**
+ * Set the Framework version.
+ */
+define('VERSION', trim(file_get_contents(ROOTDIR .'VERSION.txt')));
+
+/**
  * Define the complete site URL.
  */
 define('SITEURL', 'http://www.novaframework.dev/');

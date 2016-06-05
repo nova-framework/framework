@@ -28,7 +28,7 @@ $opt_email    = ! empty($opt_email)    ? $opt_email    : $user->email;
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Edit the User <b>{0}</b>', $user->username); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'Edit the User Account : <b>{0}</b>', $user->username); ?></h3>
     </div>
     <div class="box-body">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
@@ -64,7 +64,7 @@ $opt_email    = ! empty($opt_email)    ? $opt_email    : $user->email;
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="email" id="email" type="text" class="form-control" value="<?= $opt_email; ?>" placeholder="<?= __d('users', 'Email'); ?>">
+                    <input name="email" id="email" type="text" class="form-control" value="<?= $opt_email; ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
                 </div>
             </div>
             <div class="clearfix"></div>

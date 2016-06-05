@@ -100,7 +100,3 @@ if (! $users->isEmpty()) {
 <?php
     }
 }
-
-?>
-
-

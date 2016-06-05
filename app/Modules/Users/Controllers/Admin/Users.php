@@ -8,13 +8,14 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use Core\Config;
-use Core\Controller;
 use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
 use App\Models\User;
+use App\Modules\Users\Core\BaseController;
+use App\Modules\Users\Helpers\RoleVerifier as Authorize;
+
 use Carbon\Carbon;
 
 use Auth;
@@ -25,12 +26,8 @@ use Session;
 use Validator;
 
 
-class Users extends Controller
+class Users extends BaseController
 {
-    protected $template = 'AdminLte';
-    protected $layout   = 'backend';
-
-
     public function __construct()
     {
         parent::__construct();
@@ -41,27 +38,21 @@ class Users extends Controller
 
     protected function before()
     {
-        // Share on Views the CSRF Token.
-        View::share('csrfToken', Session::token());
+        // Check the User Authorization - while using the Extended Auth Driver.
+        if (! Auth::user()->hasRole('administrator')) {
+            $status = __('You are not authorized to access this resource.');
 
-        // Calculate and share on Views  the URIs.
-        $uri = Url::detectUri();
-
-        // Prepare the base URI.
-        $parts = explode('/', trim($uri, '/'));
-
-        // Make the path equal with the first part if it exists, i.e. 'admin'
-        $baseUri = array_shift($parts);
-
-        // Add to path the next part, if it exists, defaulting to 'dashboard'.
-        if(! empty($parts)) {
-            $baseUri .= '/' .array_shift($parts);
-        } else {
-            $baseUri .= '/dashboard';
+            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
         }
 
-        View::share('currentUri', $uri);
-        View::share('baseUri',    $baseUri);
+        // Check the User Authorization - while using the Database Auth Driver.
+        /*
+        if (! Authorize::userHasRole('administrator')) {
+            $status = __('You are not authorized to access this resource.');
+
+            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        }
+        */
 
         // Leave to parent's method the Execution Flow decisions.
         return parent::before();
@@ -166,7 +157,7 @@ class Users extends Controller
             // Prepare the flash message.
             $status = __('The User <b>{0}</b> was successfully created.', $input['username']);
 
-            return Redirect::to('admin/users')->withStatus($message, $status);
+            return Redirect::to('admin/users')->withStatus($status);
         }
 
         // Errors occurred on Validation.

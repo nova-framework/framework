@@ -2,6 +2,8 @@
     <h1><?= __d('users', 'Show User'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('admin/users'); ?>'><?= __d('users', 'Users'); ?></a></li>
+        <li><?= __d('users', 'Show User'); ?></li>
     </ol>
 </section>
 

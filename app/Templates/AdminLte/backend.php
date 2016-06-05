@@ -129,9 +129,17 @@ $user = Auth::user();
             <li <?php if ($baseUri == 'admin/dashboard') { echo "class='active'"; } ?>>
                 <a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
             </li>
+
+            <?php if ($user->hasRole('administrator')) { ?>
+
             <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-book"></i> <span><?= __('Users'); ?></span></a>
+                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __('Users'); ?></span></a>
             </li>
+            <li <?php if ($baseUri == 'admin/roles') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/roles'); ?>"><i class="fa fa-book"></i> <span><?= __('Roles'); ?></span></a>
+            </li>
+
+            <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->
     </section>

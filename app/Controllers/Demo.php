@@ -5,6 +5,7 @@ use Core\View;
 use Core\Controller;
 use Helpers\Password;
 use Helpers\Url;
+
 use Helpers\FastCache;
 
 use Event;
@@ -254,19 +255,19 @@ class Demo extends Controller
     public function cache()
     {
 
-        $InstanceCache = FastCache::getInstance();
+        $cache = FastCache::getInstance();
 
         $key = "test_page";
-        $cache = $InstanceCache->get($key);
 
-        if (is_null($cache)) {
+        $content = $cache->get($key);
+
+        if (is_null($content)) {
             $content = "Files Cache --> Well done !";
 
             // Write products to Cache in 10 minutes with same keyword
-            $InstanceCache->set($key, $content, 600);
+            $cache->set($key, $content, 600);
         } else {
-            $content = "READ FROM CACHE // ";
-            $content .= $cache;
+            $content = "READ FROM CACHE // " .$content;
         }
 
         return View::make('Default')

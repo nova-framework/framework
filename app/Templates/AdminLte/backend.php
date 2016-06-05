@@ -92,7 +92,8 @@ $user = Auth::user();
                 <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="img-circle" alt="User Image">
 
                 <p>
-                  <?= $user->realname; ?>
+                  <?= $user->realname; ?> - <?= $user->role->name; ?>
+                  <small><?= __('Member since {0}', $user->created_at->formatLocalized('%d %b %Y, %R')); ?></small>
                 </p>
               </li>
               <!-- Menu Footer-->

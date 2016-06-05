@@ -61,6 +61,7 @@ return array (
   'Required field' => '',
   'Reset instructions have been sent to your email address' => 'Instruktionerne om nulstilling af kodeordet er sendt til din mail',
   'Reset your password for <b>{0}</b>' => '',
+  'Role' => '',
   'Roles' => '',
   'Save' => 'Gem',
   'Search' => '',

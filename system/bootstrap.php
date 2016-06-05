@@ -12,6 +12,7 @@ use Core\Language;
 use Core\Logger;
 use Core\Modules;
 use Routing\Router;
+use Support\Facades\Event;
 use Support\Facades\Session;
 
 use Patchwork\Utf8\Bootup as Patchwork;
@@ -60,11 +61,14 @@ Modules::init();
 /** Get the Router instance. */
 $router = Router::getInstance();
 
-/** Load the Routes */
+/** Load the Routes. */
 require APPDIR .'Routes.php';
 
-/** Load the Routes from the active Modules */
+/** Load the Routes from the active Modules. */
 Modules::loadRoutes();
+
+/** Inform listeners of Nova execution. */
+Event::fire('nova.framework.booting');
 
 /** Execute matched Routes. */
 $router->dispatch();

@@ -287,7 +287,7 @@ class Session
      * @param string $message
      * @param string $type
      *
-     * @return \Http\RedirectResponse
+     * @return void
      */
     public static function pushStatus($message, $type = 'success')
     {

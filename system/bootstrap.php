@@ -67,7 +67,7 @@ require APPDIR .'Routes.php';
 /** Load the Routes from the active Modules. */
 Modules::loadRoutes();
 
-/** Anounce the interested Listeners about the booting the Framework. */
+/** Announce the interested Listeners about the booting of the Framework. */
 Event::fire('nova.framework.booting');
 
 /** Execute matched Routes. */

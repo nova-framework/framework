@@ -89,6 +89,7 @@ class Users extends BaseController
         );
 
         $messages = array(
+            'valid_name'      => __('The :attribute field is not a valid name.'),
             'strong_password' => __('The :attribute field is not strong enough.'),
         );
 

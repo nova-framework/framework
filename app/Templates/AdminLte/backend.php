@@ -8,6 +8,23 @@ use Helpers\Profiler;
 // Prepare the current User Info.
 $user = Auth::user();
 
+// Generate the Language Changer menu.
+$language = Language::code();
+
+$languages = Config::get('languages');
+
+//
+ob_start();
+
+foreach ($languages as $code => $info) {
+?>
+<li class="header <?php if ($language == $code) { echo 'active'; } ?>">
+    <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
+</li>
+<?php
+}
+
+$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html>
@@ -77,6 +94,14 @@ $user = Auth::user();
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav" style="margin-right: 10px;">
+          <li class="dropdown language-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class='fa fa-language'></i> <strong><?= strtoupper($language); ?></strong>
+            </a>
+            <ul class="dropdown-menu">
+              <?= $langMenuLinks; ?>
+            </ul>
+          </li>
           <!-- User Account Menu -->
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->

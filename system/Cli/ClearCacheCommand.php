@@ -7,6 +7,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Core\Config;
+
 class ClearCacheCommand extends Command
 {
     protected function configure()
@@ -19,25 +21,32 @@ class ClearCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cachePath = 'app/Storage/Cache';
-        $cache = glob($cachePath.'/*');
         $error = false;
+        $path = Config::get('cache.path', 'app/Storage/Cache');
 
-        if (is_dir($cachePath)) {
-            $this->clearCache($cache);
-            $output->writeln("<info>The cache has been cleared.</>");
-        } else {
-            $output->writeln("<error>Cache directory does not exist.</>");
+        if (!is_dir($path)) {
+            $output->writeln("<error>Cache directory does not exist. path: $path</>");
             $error = true;
         }
+
+        self::cleanCache($path);
+        $output->writeln("<info>Cache directory has been cleaned. path: $path</>");
     }
 
-    public function clearCache($files)
-    {
-        foreach($files as $file){
-          if(is_file($file)) {
-            unlink($file);
-          }
+   protected function cleanCache($dir)
+   {
+       if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != ".." && $object != ".gitignore") {
+                    if (is_dir($dir."/".$object)) {
+                        self::cleanCache($dir."/".$object);
+                    } else {
+                        unlink($dir."/".$object);
+                    }
+                }
+            }
+            @rmdir($dir);
         }
     }
 }

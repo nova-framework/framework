@@ -7,10 +7,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Core\Config;
+
 class ClearSessionsCommand extends Command
 {
-
-    private $savePath = 'app/Storage/Sessions/';
 
     protected function configure()
     {
@@ -27,32 +27,32 @@ class ClearSessionsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $error = false;
+        $path = Config::get('session.files', 'app/Storage/Sessions');
 
         if ($input->getArgument('lifeTime')) {
             $lifeTime = $input->getArgument('lifeTime');
         } else {
-            $lifeTime = 180;
+            $lifeTime = Config::get('session.lifetime', 180);
         }
 
-        if (is_dir($this->savePath)) {
-            self::clearSessions($lifeTime);
-            $output->writeln("<info>The sessions have been cleared. Lifetime: $lifeTime</>");
-        } else {
-            $output->writeln("<error>Session directory does not exist.</>");
+        if (!is_dir($path)) {
+            $output->writeln("<error>Session directory does not exist. path: $path</>");
             $error = true;
         }
+
+        self::clearSessions($path, $lifeTime);
+        $output->writeln("<info>The sessions have been cleared. Lifetime: $lifeTime, path: $path</>");
     }
 
-    protected function clearSessions($lifeTime)
+    protected function clearSessions($path, $lifeTime)
     {
-        foreach (glob($this->savePath .'sess_*') as $file) {
+        foreach (glob($path .'/sess_*') as $file) {
             clearstatcache(true, $file);
 
             if (((filemtime($file) + $lifeTime) < time()) && file_exists($file)) {
                 unlink($file);
             }
         }
-
-        return true;
     }
 }

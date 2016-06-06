@@ -16,9 +16,9 @@ use Routing\Route;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
+use App;
 use Console;
 use Response;
-use Session;
 
 
 /**
@@ -157,7 +157,7 @@ abstract class BaseRouter
 
         if($result instanceof SymfonyResponse) {
             // Finsih the Session Store.
-            Session::finish($result);
+            App::finish($result);
 
             // Send the Response.
             $result->send();
@@ -166,7 +166,7 @@ abstract class BaseRouter
             $response = Response::make($result);
 
             // Finish the Session Store.
-            Session::finish($response);
+            App::finish($response);
 
             // Send the Response.
             $response->send();

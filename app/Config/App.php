@@ -46,6 +46,7 @@ Config::set('classAliases', array(
     'Str'           => '\Support\Str',
 
     // The Support Facades
+    'App'           => '\Support\Facades\App',
     'Auth'          => '\Support\Facades\Auth',
     'Cookie'        => '\Support\Facades\Cookie',
     'Crypt'         => '\Support\Facades\Crypt',

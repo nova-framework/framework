@@ -16,9 +16,9 @@ use Routing\Route;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use App;
 use Response;
 use Request;
-use Session;
 
 
 /**
@@ -256,7 +256,7 @@ class Router extends BaseRouter
 
                 if($result instanceof SymfonyResponse) {
                     // Finish the Session and send the Response.
-                    Session::finish($result);
+                    App::finish($result);
 
                     return true;
                 }
@@ -279,7 +279,7 @@ class Router extends BaseRouter
         $response = Response::error(404, $data);
 
         // Finish the Session and send the Response.
-        Session::finish($response);
+        App::finish($response);
 
         return false;
     }

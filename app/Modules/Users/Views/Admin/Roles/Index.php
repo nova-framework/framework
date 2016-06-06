@@ -43,10 +43,10 @@
         echo "
 <tr>
     <td style='text-align: center; vertical-align: middle;' width='5%'>" .$role->id ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$role->name ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$role->slug ."</td>
-    <td style='text-align: left; vertical-align: middle;' width='45%'>" .$role->description ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='5%'>" .$role->users->count() ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='17%'>" .$role->name ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='17%'>" .$role->slug ."</td>
+    <td style='text-align: left; vertical-align: middle;' width='40%'>" .$role->description ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='6%'>" .$role->users->count() ."</td>
     <td style='text-align: right; vertical-align: middle;' width='15%'>
         <div class='btn-group' role='group' aria-label='...'>
             <a class='btn btn-sm btn-warning' href='" .site_url('admin/roles/' .$role->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>

@@ -22,7 +22,7 @@
         "paths" : {
             "dist" : "vendor",
             "css" : "local",
-            "fonts" : "local",
+            "fonts" : "vendor",
             "images" : "local",
             "js" : "local"
         },

@@ -70,7 +70,7 @@ use Database\Model;
 
 class ".ucwords($this->modelName)." extends Model
 {
-    protected \$table = '$this->modelName';
+    protected \$table = '".strtolower($this->modelName)."';
     protected \$primaryKey = 'id';
     ";
 

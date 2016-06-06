@@ -10,7 +10,7 @@
 ?>
 <style type="text/css">
 
-.pQp { width:100%; text-align: center; position: fixed; bottom: 0; }
+.pQp { width:100%; text-align: center; position: fixed; bottom: 0; z-index:999; }
 * html .pQp { position: absolute; }
 .pQp * { margin: 0; padding: 0; border: none; }
 #pQp { margin: 0 auto; width: 85%; min-width: 960px; background-color: #222; border: 3px solid #000; border-bottom: none; font-family: "Lucida Grande", Tahoma, Arial, sans-serif; -webkit-border-top-left-radius: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-topleft: 10px; -moz-border-radius-topright: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px; overflow: hidden; }

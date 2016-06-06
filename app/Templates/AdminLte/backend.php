@@ -9,7 +9,8 @@ use Helpers\Profiler;
 $user = Auth::user();
 
 // Generate the Language Changer menu.
-$language = Language::code();
+$langCode = Language::code();
+$langName = Language::name();
 
 $languages = Config::get('languages');
 
@@ -18,7 +19,7 @@ ob_start();
 
 foreach ($languages as $code => $info) {
 ?>
-<li class="header <?php if ($language == $code) { echo 'active'; } ?>">
+<li class="header <?php if ($code == $langCode) { echo 'active'; } ?>">
     <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
 </li>
 <?php
@@ -96,7 +97,7 @@ $langMenuLinks = ob_get_clean();
         <ul class="nav navbar-nav" style="margin-right: 10px;">
           <li class="dropdown language-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class='fa fa-language'></i> <strong><?= strtoupper($language); ?></strong>
+              <i class='fa fa-language'></i> <?= $langName; ?>
             </a>
             <ul class="dropdown-menu">
               <?= $langMenuLinks; ?>

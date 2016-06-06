@@ -96,7 +96,7 @@ $langMenuLinks = ob_get_clean();
         <ul class="nav navbar-nav" style="margin-right: 10px;">
           <li class="dropdown language-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class='fa fa-language'></i> <?= strtoupper($language); ?>
+              <i class='fa fa-language'></i> <strong><?= strtoupper($language); ?></strong>
             </a>
             <ul class="dropdown-menu">
               <?= $langMenuLinks; ?>

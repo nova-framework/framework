@@ -16,9 +16,9 @@ use Helpers\Hooks;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use App;
 use Event;
 use Response;
-use Session;
 
 
 /**
@@ -133,7 +133,7 @@ abstract class Controller
         // The Method returned a Response instance; send it and stop the processing.
         if ($result instanceof SymfonyResponse) {
             // Finish the Session and send the Response.
-            Session::finish($result);
+            App::finish($result);
 
             return true;
         }
@@ -181,7 +181,7 @@ abstract class Controller
             $response = Response::make($content, 200, $headers);
 
             // Finish the Session and send the Response.
-            Session::finish($response);
+            App::finish($response);
 
             return true;
         } else if (! $result instanceof BaseView) {
@@ -199,7 +199,7 @@ abstract class Controller
         $response = Response::make($result);
 
         // Finish the Session and send the Response.
-        Session::finish($response);
+        App::finish($response);
 
         return true;
     }

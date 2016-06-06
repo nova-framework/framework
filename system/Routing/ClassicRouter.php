@@ -15,9 +15,9 @@ use Helpers\Url;
 use Routing\BaseRouter;
 use Routing\Route;
 
+use App;
 use Response;
 use Request;
-use Session;
 
 
 /**
@@ -127,7 +127,7 @@ class ClassicRouter extends BaseRouter
         $response = Response::error(404, $data);
 
         // Finish the Session and send the Response.
-        Session::finish($response);
+        App::finish($response);
 
         return false;
     }

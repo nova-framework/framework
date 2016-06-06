@@ -107,4 +107,4 @@ All pull requests must use the PSR-2 code style.
 
 ## License
 
-The Nova Framework is under the MIT License, you can view the license [here](https://github.com/nova-framework/framework/blob/master/license.txt).
+The Nova Framework is under the MIT License, you can view the license [here](https://github.com/nova-framework/framework/blob/master/LICENSE.txt).

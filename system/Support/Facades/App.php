@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class App
 {
-
     /**
      * Initialize the Application instance
      *

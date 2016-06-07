@@ -9,8 +9,16 @@
 
 use Core\Config;
 
+
 /**
- * Class Aliases configuration
+ * The registered Service Providers.
+ */
+Config::set('providers' => array(
+    'Events\EventServiceProvider',
+));
+
+/**
+ * The Class Aliases configuration.
  */
 Config::set('classAliases', array(
     // The Core Tools

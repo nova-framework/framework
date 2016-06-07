@@ -1,6 +1,6 @@
 <?php
 /**
- * ProviderRepository - Implements a Service Provider Repository.
+ * Providers - Implements a Service Provider Repository.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -12,7 +12,7 @@ use Core\Application;
 use Support\ServiceProvider;
 
 
-class ProviderRepository
+class Providers
 {
     /**
      * The path to the manifest.

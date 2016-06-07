@@ -98,7 +98,7 @@ class Authorize extends Controller
             //$this->model->updateGenericUser($user);
         }
 
-        if($user->activate == 0) {
+        if($user->active == 0) {
             Auth::logout();
 
             // User not activated; go logout and redirect him back.

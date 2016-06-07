@@ -127,7 +127,9 @@ class Registrar extends Controller
         $token = $this->createNewToken($email);
 
         // Retrieve the 'user' Role.
-        $roleId = Role::where('slug', 'user')->pluck('id');
+        $keyName = Role::getKeyName();
+
+        $roleId = Role::where('slug', 'user')->pluck($keyName);
 
         // Create the User record.
         $user = User::create(array(
@@ -136,15 +138,17 @@ class Registrar extends Controller
             'email'           => $email,
             'password'        => $password,
             'activation_code' => $token,
-            'role_id'         => $roleId;
+            'role_id'         => $roleId,
         ));
 
         // Send the associated Activation E-mail.
-        Mailer::send('Emails/Auth/Activate', array('token' => $token, 'username' => $user->username), function($message) use ($user)
+        Mailer::send('Emails/Auth/Activate', array('token' => $token), function($message) use ($user)
         {
             $subject = __d('users', 'Activate your Account!');
 
-            $message->to($user->email, $user->username)->subject($subject);
+            $message->to($user->email, $user->realname);
+
+            $message->subject($subject);
         });
 
         // Prepare the flash message.
@@ -160,7 +164,7 @@ class Registrar extends Controller
      */
     public function verify($token)
     {
-        $user = User::where('activation_code', '=', $code)->where('active', '=', 0);
+        $user = User::where('activation_code', $token)->where('active', '=', 0);
 
         // If the User is available.
         if ($user->count()) {
@@ -169,7 +173,7 @@ class Registrar extends Controller
             // Update the User status to active.
             $user->active = 1;
 
-            $user->activation_code = '';
+            $user->activation_code = null;
 
             if ($user->save()) {
                 // Prepare the flash message.

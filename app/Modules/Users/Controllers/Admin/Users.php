@@ -114,10 +114,10 @@ class Users extends BaseController
     public function index()
     {
         // Get all User records for current page - used with the Extended Auth Driver.
-        $users = User::paginate(25);
+        $users = User::where('active', 1)->paginate(25);
 
         // Get all User records for current page - used with the Database Auth Driver.
-        //$users = $this->model->paginate(25);
+        //$users = $this->model->where('active', 1)->paginate(25);
 
         return $this->getView()
             ->shares('title', __('Users'))

@@ -1,6 +1,6 @@
 <?php
 
-namespace Support;
+namespace Core;
 
 use Closure;
 use ArrayAccess;

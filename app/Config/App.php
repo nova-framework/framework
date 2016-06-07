@@ -11,6 +11,11 @@ use Core\Config;
 
 
 /**
+ * Setup the Configuration Mode.
+ */
+define('APPCONFIG_STORE', 'files'); // Supported: "files", "database"
+
+/**
  * The registered Service Providers.
  */
 Config::set('providers', array(

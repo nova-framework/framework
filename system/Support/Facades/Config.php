@@ -27,6 +27,7 @@ class Config
      * Return the default Repository instance.
      *
      * @return \Config\Repository
+     * @throw \InvalidArgumentException
      */
     protected static function getRepository()
     {
@@ -37,10 +38,14 @@ class Config
         // Get a LoaderManager instance
         $loader = new LoaderManager();
 
-        // Get a Database Connection instance and setup it.
-        $connection = Connection::getInstance();
+        if(APPCONFIG_STORE == 'database') {
+            // Get a Database Connection instance.
+            $connection = Connection::getInstance();
 
-        $loader->setConnection($connection);
+            $loader->setConnection($connection);
+        } else if(APPCONFIG_STORE != 'files') {
+            throw new \InvalidArgumentException('Invalid Config Store type.');
+        }
 
         return static::$repository = new Repository($loader);
     }

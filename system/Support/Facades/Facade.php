@@ -14,7 +14,7 @@ abstract class Facade
     /**
      * The application instance being facaded.
      *
-     * @var \Hazzard\Application
+     * @var \Core\Application
      */
     protected static $app;
 
@@ -56,7 +56,7 @@ abstract class Facade
     /**
      * Set the application instance.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Core\Application  $app
      * @return void
      */
     public static function setFacadeApplication($app)
@@ -67,7 +67,7 @@ abstract class Facade
     /**
      * Get the application instance.
      *
-     * @return  \Foundation\Application  $app
+     * @return  \Core\Application  $app
      */
     public static function getFacadeApplication()
     {

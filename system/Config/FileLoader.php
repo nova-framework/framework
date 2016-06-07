@@ -8,7 +8,7 @@
  */
 namespace Config;
 
-use Core\Config as CoreConfig;
+use Core\Config;
 
 
 class FileLoader implements LoaderInterface
@@ -30,6 +30,6 @@ class FileLoader implements LoaderInterface
      */
     public function load($group)
     {
-        return CoreConfig::get($group, array());
+        return Config::get($group, array());
     }
 }

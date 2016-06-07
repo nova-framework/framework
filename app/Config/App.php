@@ -15,6 +15,15 @@ use Core\Config;
  */
 define('APPCONFIG_STORE', 'files'); // Supported: "files", "database"
 
+
+/**
+ * The Application configuration.
+ */
+Config::set('app', array(
+    'siteUrl'  => SITEURL,
+    'siteName' => SITETITLE,
+));
+
 /**
  * The registered Service Providers.
  */

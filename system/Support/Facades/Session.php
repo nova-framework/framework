@@ -8,11 +8,11 @@
 
 namespace Support\Facades;
 
-use Core\Config;
 use Core\Template;
 use Session\FileSessionHandler;
 use Session\Store as SessionStore;
 use Support\Facades\Cookie;
+use Support\Facades\Config;
 use Support\MessageBag;
 
 

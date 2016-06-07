@@ -8,9 +8,9 @@
 
 namespace Support\Facades;
 
-use Core\Config;
 use Encryption\DecryptException;
 use Http\Request as HttpRequest;
+use Support\Facades\Config;
 use Support\Facades\Crypt;
 use Support\Facades\Session;
 

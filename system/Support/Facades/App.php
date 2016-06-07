@@ -8,12 +8,13 @@
 
 namespace Support\Facades;
 
-use Core\Config;
+
 use Forensics\Profiler as QuickProfiler;
 use Http\Response as HttpResponse;
 use Session\SessionInterface;
 
 use Support\Facades\Cookie;
+use Support\Facades\Config;
 use Support\Facades\Crypt;
 use Support\Facades\Request;
 use Support\Facades\Session;

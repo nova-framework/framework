@@ -61,7 +61,7 @@ class DatabaseLoader implements LoaderInterface
 
         $items = $this->cache->get($token);
 
-        if($items === null) {
+        if (is_null($items)) {
             $items = array();
 
             // The current Group's data is not cached.

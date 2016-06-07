@@ -48,7 +48,9 @@ class DatabaseLoader implements LoaderInterface
     {
         $items = array();
 
-        $results = $this->query()->where('group', $group)->get(array('item', 'value'));
+        $results = $this->newQuery()
+            ->where('group', $group)
+            ->get(array('item', 'value'));
 
         foreach ($results as $result) {
             $items[$result->item] = maybe_unserialize($result->value);
@@ -88,16 +90,16 @@ class DatabaseLoader implements LoaderInterface
     {
         $value = maybe_serialize($value);
 
-        $id = $this->query()
+        $id = $this->newQuery()
             ->where('group', $group)
             ->where('item', $item)
             ->pluck('id');
 
         if (is_null($id)) {
-            $this->query()
+            $this->newQuery()
                 ->insert(compact('group', 'item', 'value'));
         } else {
-            $this->query()->where('id', $id)
+            $this->newQuery()->where('id', $id)
                 ->limit(1)
                 ->update(compact('value'));
         }
@@ -138,7 +140,7 @@ class DatabaseLoader implements LoaderInterface
      *
      * @return \Database\Query
      */
-    public function query()
+    public function newQuery()
     {
         return $this->db->table($this->table);
     }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 07, 2016 at 11:45 AM
+-- Generation Time: Jun 07, 2016 at 12:37 PM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.22
 
@@ -86,6 +86,19 @@ INSERT INTO `nova_course_student` (`id`, `student_id`, `course_id`) VALUES
 (7, 4, 3),
 (8, 1, 2),
 (9, 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nova_options`
+--
+
+CREATE TABLE `nova_options` (
+  `id` int(11) NOT NULL,
+  `group` varchar(100) NOT NULL,
+  `item` varchar(255) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -253,6 +266,12 @@ ALTER TABLE `nova_course_student`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `nova_options`
+--
+ALTER TABLE `nova_options`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `nova_password_reminders`
 --
 ALTER TABLE `nova_password_reminders`
@@ -308,6 +327,11 @@ ALTER TABLE `nova_courses`
 --
 ALTER TABLE `nova_course_student`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `nova_options`
+--
+ALTER TABLE `nova_options`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `nova_posts`
 --

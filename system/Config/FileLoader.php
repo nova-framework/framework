@@ -8,24 +8,18 @@
  */
 namespace Config;
 
+use Core\Config as CoreConfig;
+
 
 class FileLoader implements LoaderInterface
 {
-    /**
-     *  The path to the config files.
-     *
-     * @var string
-     */
-    protected $path;
-
     /**
      * Create a new FileLoader instance.
      *
      * @return void
      */
-    function __construct($path)
+    function __construct()
     {
-        $this->path = $path;
     }
 
     /**
@@ -36,19 +30,6 @@ class FileLoader implements LoaderInterface
      */
     public function load($group)
     {
-        $items = array();
-
-        //
-        $path = rtrim($this->path, '/');
-
-        foreach (array('/Local', '/Testing', '') as $dir) {
-            $file = $path ."{$dir}/{$group}.php";
-
-            if (is_readable($file)) {
-                return (array) include $file;
-            }
-        }
-
-        return $items;
+        return CoreConfig::get($group, array());
     }
 }

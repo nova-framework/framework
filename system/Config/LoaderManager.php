@@ -35,9 +35,9 @@ class LoaderManager implements LoaderInterface
      *
      * @return void
      */
-    function __construct($path)
+    function __construct()
     {
-        $this->fileLoader = new FileLoader($path);
+        $this->fileLoader = new FileLoader();
     }
 
     /**
@@ -66,8 +66,10 @@ class LoaderManager implements LoaderInterface
      */
     public function set($key, $value)
     {
-        // We update only the configuration value from Database
-        if ($this->dbLoader) $this->dbLoader->set($key, $value);
+        // We update only the Configuration value from Database
+        if (isset($this->dbLoader)) {
+            $this->dbLoader->set($key, $value);
+        }
     }
 
     /**

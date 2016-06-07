@@ -24,7 +24,7 @@ class Config
      */
     public static function all()
     {
-        return static::$settings);
+        return static::$settings;
     }
 
     /**

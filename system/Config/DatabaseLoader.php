@@ -62,19 +62,24 @@ class DatabaseLoader implements LoaderInterface
         $items = $this->cache->get($token);
 
         if($items === null) {
+            $items = array();
+
             // The current Group's data is not cached.
             $results = $this->newQuery()
                 ->where('group', $group)
                 ->get(array('item', 'value'));
 
             foreach ($results as $result) {
-                $key = $result->item;
+                $result = array() $result;
 
-                $items[$key] = maybe_unserialize($result->value);
+                // Insert the option on list.
+                $key = $result['item'];
+
+                $items[$key] = maybe_unserialize($result['value']);
             }
 
-            // Cache the current Group's data for 60 min.
-            $cache->set($token, $items, 3600);
+            // Cache the current Group's data for 15 min.
+            $cache->set($token, $items, 900);
         }
 
         return $items;

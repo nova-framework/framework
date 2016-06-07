@@ -22,7 +22,6 @@ Config::set('providers', array(
  */
 Config::set('classAliases', array(
     // The Core Tools
-    'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
 
     // The Helpers
@@ -56,6 +55,7 @@ Config::set('classAliases', array(
     // The Support Facades
     'App'           => '\Support\Facades\App',
     'Auth'          => '\Support\Facades\Auth',
+    'Config'        => '\Support\Facades\Config',
     'Cookie'        => '\Support\Facades\Cookie',
     'Crypt'         => '\Support\Facades\Crypt',
     'DB'            => '\Support\Facades\Database',

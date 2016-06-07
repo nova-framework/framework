@@ -70,7 +70,7 @@ class DatabaseLoader implements LoaderInterface
                 ->get(array('item', 'value'));
 
             foreach ($results as $result) {
-                $result = array() $result;
+                $result = (array) $result;
 
                 // Insert the option on list.
                 $key = $result['item'];
@@ -79,7 +79,7 @@ class DatabaseLoader implements LoaderInterface
             }
 
             // Cache the current Group's data for 15 min.
-            $cache->set($token, $items, 900);
+            $this->cache->set($token, $items, 900);
         }
 
         return $items;

@@ -42,7 +42,7 @@ class Config
 
         $loader->setConnection($connection);
 
-        return static::$repository = new Config($loader);
+        return static::$repository = new Repository($loader);
     }
 
     /**

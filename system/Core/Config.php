@@ -19,6 +19,15 @@ class Config
 
 
     /**
+     * Get the registered settings.
+     * @return mixed|null
+     */
+    public static function all()
+    {
+        return static::$settings);
+    }
+
+    /**
      * Return true if the key exists.
      * @param string $key
      * @return bool

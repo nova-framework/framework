@@ -9,7 +9,7 @@
 namespace Core;
 
 use Core\Container;
-use Support\ProviderRepository;
+use Core\ProviderRepository;
 use Events\EventServiceProvider;
 
 

@@ -1,12 +1,12 @@
 <?php
 /**
- * ServiceProviderRepository - Implements a Provider Repository.
+ * ProviderRepository - Implements a Service Provider Repository.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
-namespace Support;
+namespace Core;
 
 use Core\Application;
 use Support\ServiceProvider;

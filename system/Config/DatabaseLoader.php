@@ -50,31 +50,32 @@ class DatabaseLoader implements LoaderInterface
     }
 
     /**
-     * Load the configuration group for the key.
+     * Load the Configuration Group for the key.
      *
      * @param    string     $group
      * @return     array
      */
     public function load($group)
     {
-        $token = 'framework_options_' .sha1($group);
+        $token = 'options_' .md5($group);
 
         $items = $this->cache->get($token);
 
-        if($items !== null) {
-            return $items;
+        if($items === null) {
+            // The current Group's data is not cached.
+            $results = $this->newQuery()
+                ->where('group', $group)
+                ->get(array('item', 'value'));
+
+            foreach ($results as $result) {
+                $key = $result->item;
+
+                $items[$key] = maybe_unserialize($result->value);
+            }
+
+            // Cache the current Group's data for 60 min.
+            $cache->set($token, $items, 3600);
         }
-
-        $results = $this->newQuery()
-            ->where('group', $group)
-            ->get(array('item', 'value'));
-
-        foreach ($results as $result) {
-            $items[$result->item] = maybe_unserialize($result->value);
-        }
-
-        // Cache the options for 60 min
-        $cache->set($token, $items, 3600);
 
         return $items;
     }
@@ -90,11 +91,12 @@ class DatabaseLoader implements LoaderInterface
     {
         @list($group, $item) = $this->parseKey($key);
 
-        // Delete first the cached data for this Group.
-        $token = 'framework_options_' .sha1($group);
+        // Delete the cached data for current Group.
+        $token = 'options_' .md5($group);
 
         $this->cache->delete($token);
 
+        // Update the information on Database.
         if (empty($item)) {
             foreach ($value as $item => $val) {
                 $this->update($group, $item, $val);

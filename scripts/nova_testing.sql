@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 05, 2016 at 12:22 PM
+-- Generation Time: Jun 07, 2016 at 11:45 AM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.22
 
@@ -212,6 +212,8 @@ CREATE TABLE `nova_users` (
   `password` varchar(255) NOT NULL,
   `realname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `active` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
+  `activation_code` varchar(255) DEFAULT NULL,
   `remember_token` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
@@ -221,12 +223,12 @@ CREATE TABLE `nova_users` (
 -- Dumping data for table `nova_users`
 --
 
-INSERT INTO `nova_users` (`id`, `role_id`, `username`, `password`, `realname`, `email`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 1, 'admin', '$2y$10$MZpxcVZpwTCCotIkkfPP5O1sDC7GiKzD9klh4MoM/aE44YaVm4Xga', 'Administrator', 'admin@novaframework.dev', NULL, '2016-06-03 10:15:00', '2016-06-03 11:11:34'),
-(2, 2, 'marcus', '$2y$10$B1Q7LNu2xuIcFJ1lAotb5O93kkvUfFdOzUZhTmSdkQZ.6woLmgu3S', 'Marcus Spears', 'marcus@novaframework.dev', NULL, '2016-06-03 10:19:00', '2016-06-03 10:19:00'),
-(3, 2, 'michael', '$2y$10$klop7YxFoZOVqDq3hA7efeKEz4csFhAelfwP8M4s1ROlgpkBx9qVW', 'Michael White', 'michael@novaframework.dev', NULL, '2016-06-03 10:20:00', '2016-06-03 10:20:00'),
-(4, 3, 'john', '$2y$10$WzBPFMiFeJ2XK9eW34zEgelSJI3R1TVrOWbjVDxFXDeMQxoh8asYK', 'John Kennedy', 'john@novaframework.dev', NULL, '2016-06-03 10:21:00', '2016-06-03 10:21:00'),
-(5, 3, 'mark', '$2y$10$z4bRYEcnoHOR.GuObWTATuH/x1lto.2wUJ1RxCYWOmfjay2LnTd8W', 'Mark Black', 'mark@novaframework.dev', NULL, '2016-06-03 10:22:00', '2016-06-03 10:22:00');
+INSERT INTO `nova_users` (`id`, `role_id`, `username`, `password`, `realname`, `email`, `active`, `activation_code`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 1, 'admin', '$2y$10$MZpxcVZpwTCCotIkkfPP5O1sDC7GiKzD9klh4MoM/aE44YaVm4Xga', 'Administrator', 'admin@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:15:00', '2016-06-06 22:00:40'),
+(2, 2, 'marcus', '$2y$10$B1Q7LNu2xuIcFJ1lAotb5O93kkvUfFdOzUZhTmSdkQZ.6woLmgu3S', 'Marcus Spears', 'marcus@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:19:00', '2016-06-03 10:19:00'),
+(3, 3, 'michael', '$2y$10$klop7YxFoZOVqDq3hA7efeKEz4csFhAelfwP8M4s1ROlgpkBx9qVW', 'Michael White', 'michael@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:20:00', '2016-06-05 14:22:19'),
+(4, 5, 'john', '$2y$10$WzBPFMiFeJ2XK9eW34zEgelSJI3R1TVrOWbjVDxFXDeMQxoh8asYK', 'John Kennedy', 'john@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:21:00', '2016-06-05 14:22:32'),
+(5, 5, 'mark', '$2y$10$z4bRYEcnoHOR.GuObWTATuH/x1lto.2wUJ1RxCYWOmfjay2LnTd8W', 'Mark Black', 'mark@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:22:00', '2016-06-05 13:16:05');
 
 --
 -- Indexes for dumped tables

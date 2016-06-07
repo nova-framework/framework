@@ -1,6 +1,6 @@
 <?php
 /**
- * Repository
+ * Repository - Implements a Configuration Repository.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

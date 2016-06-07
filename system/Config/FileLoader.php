@@ -1,6 +1,6 @@
 <?php
 /**
- * FileLoader
+ * FileLoader - Implements a Configuration Loader for Files storage.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

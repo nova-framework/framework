@@ -1,6 +1,6 @@
 <?php
 /**
- * LoaderManager
+ * LoaderManager - Implements a Configuration Manager.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -10,19 +10,21 @@
 namespace Config;
 
 use Database\Connection;
+use Config\DatabaseLoader;
+use Config\FileLoader;
 
 
 class LoaderManager implements LoaderInterface
 {
     /**
-     * The file loader implementation.
+     * The File Loader implementation.
      *
      * @var \Config\LoaderInterface
      */
     protected $fileLoader;
 
     /**
-     * The database loader implementation.
+     * The Database Loader implementation.
      *
      * @var \Config\LoaderInterface
      */
@@ -64,12 +66,12 @@ class LoaderManager implements LoaderInterface
      */
     public function set($key, $value)
     {
-        // We update only the configuration value from database
+        // We update only the configuration value from Database
         if ($this->dbLoader) $this->dbLoader->set($key, $value);
     }
 
     /**
-     * Set the database connection instance.
+     * Set the Database Connection instance.
      *
      * @var \Database\Connection
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * DatabaseLoader
+ * DatabaseLoader - Implements a Configuration Loader for Database storage.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -96,7 +96,8 @@ class DatabaseLoader implements LoaderInterface
             ->pluck('id');
 
         if (is_null($id)) {
-            $this->query()->insert(compact('group', 'item', 'value'));
+            $this->query()
+                ->insert(compact('group', 'item', 'value'));
         } else {
             $this->query()->where('id', $id)
                 ->limit(1)

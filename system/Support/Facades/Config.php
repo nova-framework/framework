@@ -10,6 +10,7 @@ namespace Support\Facades;
 
 use Config\LoaderManager;
 use Config\Repository;
+use Database\Connection;
 
 
 class Config
@@ -35,6 +36,11 @@ class Config
 
         // Get a LoaderManager instance
         $loader = new LoaderManager();
+
+        // Get a Database Connection instance and setup it.
+        $connection = Connection::getInstance();
+
+        $loader->setConnection($connection);
 
         return static::$repository = new Config($loader);
     }

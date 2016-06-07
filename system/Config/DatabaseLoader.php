@@ -10,23 +10,31 @@
 namespace Config;
 
 use Database\Connection;
+use Helpers\FastCache;
 
 
 class DatabaseLoader implements LoaderInterface
 {
     /**
-     * The database connection instance.
+     * The Database Connection instance.
      *
      * @var \Database\Connection
      */
     protected $db;
 
     /**
-     * The database table.
+     * The Database Table.
      *
      * @var string
      */
     protected $table = 'options';
+
+    /**
+     * The FastCache instance.
+     *
+     * @var \Helpers\FastCache
+     */
+    protected $cache;
 
     /**
      * Create a new fileloader instance.
@@ -36,6 +44,9 @@ class DatabaseLoader implements LoaderInterface
     function __construct(Connection $db)
     {
         $this->db = $db;
+
+        // Setup the FastCache instance.
+        $this->cache = FastCache::getInstance();
     }
 
     /**
@@ -46,7 +57,13 @@ class DatabaseLoader implements LoaderInterface
      */
     public function load($group)
     {
-        $items = array();
+        $token = 'framework_options_' .sha1($group);
+
+        $items = $this->cache->get($token);
+
+        if($items !== null) {
+            return $items;
+        }
 
         $results = $this->newQuery()
             ->where('group', $group)
@@ -55,6 +72,9 @@ class DatabaseLoader implements LoaderInterface
         foreach ($results as $result) {
             $items[$result->item] = maybe_unserialize($result->value);
         }
+
+        // Cache the options for 60 min
+        $cache->set($token, $items, 3600);
 
         return $items;
     }
@@ -69,6 +89,11 @@ class DatabaseLoader implements LoaderInterface
     public function set($key, $value)
     {
         @list($group, $item) = $this->parseKey($key);
+
+        // Delete first the cached data for this Group.
+        $token = 'framework_options_' .sha1($group);
+
+        $this->cache->delete($token);
 
         if (empty($item)) {
             foreach ($value as $item => $val) {

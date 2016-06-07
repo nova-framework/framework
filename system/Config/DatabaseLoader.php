@@ -48,9 +48,7 @@ class DatabaseLoader implements LoaderInterface
     {
         $items = array();
 
-        $results = $this->query()
-            ->where('group', $group)
-            ->get(array('item', 'value'));
+        $results = $this->query()->where('group', $group)->get(array('item', 'value'));
 
         foreach ($results as $result) {
             $items[$result->item] = maybe_unserialize($result->value);

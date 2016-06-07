@@ -29,7 +29,7 @@ class FileLoader implements LoaderInterface
     }
 
     /**
-     * Load the configuration group for the key.
+     * Load the Configuration Group for the key.
      *
      * @param    string     $group
      * @return     array
@@ -38,10 +38,13 @@ class FileLoader implements LoaderInterface
     {
         $items = array();
 
-        foreach (array('/dev', '') as $dir) {
-            $file = $this->path ."{$dir}/{$group}.php";
+        //
+        $path = rtrim($this->path, '/');
 
-            if (file_exists($file)) {
+        foreach (array('/Local', '/Testing', '') as $dir) {
+            $file = $path ."{$dir}/{$group}.php";
+
+            if (is_readable($file)) {
                 return (array) include $file;
             }
         }

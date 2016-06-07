@@ -88,6 +88,36 @@ function __d($domain, $message, $args = null)
         ->translate($message, $params);
 }
 
+/**
+ * Unserialize value only if it was serialized.
+ *
+ * @param  string $original
+ * @return mixed
+ */
+function maybe_unserialize($original)
+{
+    if (is_serialized($original)) {
+        return @unserialize( $original );
+    }
+
+    return $original;
+}
+
+/**
+ * Serialize data, if needed.
+ *
+ * @param  mixed  $data
+ * @return mixed
+ */
+function maybe_serialize($data)
+{
+    if (is_array($data) || is_object($data)) {
+        return serialize($data);
+    }
+
+    return $data;
+}
+
 /** Array helpers. */
 
 /**

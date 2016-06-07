@@ -11,12 +11,6 @@ use Core\Config;
 
 
 /**
- * Setup the Configuration Mode.
- */
-define('APPCONFIG_STORE', 'files'); // Supported: "files", "database"
-
-
-/**
  * The Application configuration.
  */
 Config::set('app', array(

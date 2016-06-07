@@ -69,14 +69,12 @@ class Session
         // Load the configuration.
         $config = Config::get('session');
 
-        $savePath = $config['files'];
-
         $lifeTime = $config['lifetime'] * 60; // This option is in minutes.
 
         // Get a Session Handler instance.
         $className = $config['handler'];
 
-        static::$sessionHandler = new $className($savePath);
+        static::$sessionHandler = new $className($config);
 
         //
         //ini_set('session.save_handler', 'files');

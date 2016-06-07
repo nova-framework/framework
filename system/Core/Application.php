@@ -236,11 +236,11 @@ class Application extends Container
     /**
      * Get the Service Provider Repository instance.
      *
-     * @return \Support\ProviderRepository
+     * @return \Core\Providers
      */
     public function getProviderRepository()
     {
-        $path = APPDIR .'Storage' .DS;
+        $path = APPDIR .'Storage';
 
         return new ProviderRepository($path);
     }

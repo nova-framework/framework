@@ -13,7 +13,7 @@ use Core\Config;
 /**
  * The registered Service Providers.
  */
-Config::set('providers' => array(
+Config::set('providers', array(
     'Events\EventServiceProvider',
 ));
 

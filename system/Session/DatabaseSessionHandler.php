@@ -28,7 +28,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
      *
      * @var bool
      */
-    protected $exists;
+    protected $exists = false;
 
 
     /**

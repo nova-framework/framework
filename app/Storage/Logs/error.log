@@ -1,1 +1,30 @@
 
+Exception information:
+
+           Date: Jun 07, 2016 10:04AM
+
+           Message: Unable to load the view 'Registrar/Create'. File '/var/www/sites/novaframework/app/Modules/Users/Views/Registrar/Create.php' not found.
+
+           Code: 1
+
+           File: /var/www/sites/novaframework/system/Core/BaseView.php
+
+           Line: 80
+
+           Stack trace:
+
+           #0 /var/www/sites/novaframework/system/Core/BaseView.php(65): Core\BaseView->render()
+#1 [internal function]: Core\BaseView->fetch()
+#2 /var/www/sites/novaframework/system/Core/BaseView.php(325): call_user_func_array(Array, Array)
+#3 /var/www/sites/novaframework/system/Core/Controller.php(195): Core\BaseView->__call('fetch', Array)
+#4 /var/www/sites/novaframework/system/Core/Controller.php(195): Core\View->fetch()
+#5 /var/www/sites/novaframework/system/Core/Controller.php(146): Core\Controller->createResponse(Object(Core\View))
+#6 /var/www/sites/novaframework/system/Routing/BaseRouter.php(203): Core\Controller->execute('create', Array)
+#7 /var/www/sites/novaframework/system/Routing/BaseRouter.php(234): Routing\BaseRouter->invokeController('App\\Modules\\Use...', 'create', Array)
+#8 /var/www/sites/novaframework/system/Routing/Router.php(269): Routing\BaseRouter->invokeObject('App\\Modules\\Use...', Array)
+#9 /var/www/sites/novaframework/system/bootstrap.php(74): Routing\Router->dispatch()
+#10 /var/www/sites/novaframework/public/index.php(68): require('/var/www/sites/...')
+#11 {main}
+
+           ---------
+

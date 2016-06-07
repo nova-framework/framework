@@ -13,13 +13,14 @@ use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
+use App\Models\Role;
+use App\Models\User;
+
 use Auth;
 use Hash;
 use Input;
 use Mailer;
-use Password;
 use Redirect;
-use Response;
 use Session;
 use Validator;
 
@@ -78,7 +79,7 @@ class Registrar extends Controller
      *
      * @return \Core\View
      */
-    public function register()
+    public function create()
     {
         return $this->getView()
             ->shares('title', __d('users', 'User Registration'))
@@ -90,7 +91,7 @@ class Registrar extends Controller
      *
      * @return Response
      */
-    public function postRegister()
+    public function store()
     {
         $input = Input::only(
             'username',
@@ -110,7 +111,8 @@ class Registrar extends Controller
         // Create a Validator instance.
         $validator = $this->validate($input);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
+            // Errors occurred on Validation.
             $status = $validator->errors();
 
             return Redirect::back()->withInput()->withStatus($status, 'danger');
@@ -120,29 +122,33 @@ class Registrar extends Controller
         $password = Hash::make($input['password']);
 
         // Create the Activation code.
-        $value = str_shuffle(sha1($input['email'] .spl_object_hash($this) .microtime(true)));
+        $email = $input['email'];
 
-        $token = hash_hmac('sha256', $value, ENCRYPT_KEY);
+        $token = $this->createNewToken($email);
+
+        // Retrieve the 'user' Role.
+        $roleId = Role::where('slug', 'user')->pluck('id');
 
         // Create the User record.
-        User::create(array(
+        $user = User::create(array(
             'username'        => $input['username'],
             'realname'        => $input['realname'],
-            'email'           => $input['email'],
+            'email'           => $email,
             'password'        => $password,
-            'activation_code' => $token
+            'activation_code' => $token,
+            'role_id'         => $roleId;
         ));
 
         // Send the associated Activation E-mail.
-        Mail::send('Emails/Activation', compact($token), function($message) use ($input)
+        Mailer::send('Emails/Auth/Activate', array('token' => $token, 'username' => $user->username), function($message) use ($user)
         {
-            $subject = __d('users', 'Please verify your Account registration!');
+            $subject = __d('users', 'Activate your Account!');
 
-            $message->to($input['email'], $input['username'])->subject($subject);
+            $message->to($user->email, $user->username)->subject($subject);
         });
 
         // Prepare the flash message.
-        $status = __d('users', 'Thanks for signing up! Please check your E-mail.');
+        $status = __d('users', 'Your Account has been created. We have sent you an E-mail to activate your Account.');
 
         return Redirect::to('register/status')->withStatus($status);
     }
@@ -154,29 +160,45 @@ class Registrar extends Controller
      */
     public function verify($token)
     {
-        $user = User::where('activation_code', $token)->first();
+        $user = User::where('activation_code', '=', $code)->where('active', '=', 0);
 
-        if ($user === null) {
-            $status = __d('users', 'Invalid Account Activation code');
+        // If the User is available.
+        if ($user->count()) {
+            $user = $user->first();
 
-            return Redirect::to('register/status')->withStatus($status);
+            // Update the User status to active.
+            $user->active = 1;
+
+            $user->activation_code = '';
+
+            if ($user->save()) {
+                // Prepare the flash message.
+                $status = __d('users', 'Activated! You can now Sign in!');
+
+                return Redirect::to('login')->withStatus($status);
+            }
         }
 
-        // Mark the User instance as active.
-        $user->active = 1;
+        $status = __d('users', 'We could not activate your Account. Try again later.');
 
-        $user->activation_code = null;
-
-        $user->save();
-
-        // Prepare the flash message.
-        $status = __d('users', 'You have successfully verified your Account.');
-
-        return Redirect::to('login')->withStatus($status);
+        return Redirect::to('register/status')->withStatus($status);
     }
 
     public function status()
     {
         return $this->getView()->shares('title', __d('users', 'Registration Status'));
+    }
+
+    /**
+     * Create a new Token for the User.
+     *
+     * @param  string $email
+     * @return string
+     */
+    public function createNewToken($email)
+    {
+        $value = str_shuffle(sha1($email .spl_object_hash($this) .microtime(true)));
+
+        return hash_hmac('sha256', $value, ENCRYPT_KEY);
     }
 }

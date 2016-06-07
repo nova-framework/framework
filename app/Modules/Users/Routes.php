@@ -52,12 +52,12 @@ Router::post('password/reset', array(
 // The Account Registration.
 Router::get('register', array(
     'filters' => 'guest',
-    'uses' => 'App\Modules\Users\Controllers\Registrar@register'
+    'uses' => 'App\Modules\Users\Controllers\Registrar@create'
 ));
 
 Router::post('register', array(
     'filters' => 'guest|csrf',
-    'uses' => 'App\Modules\Users\Controllers\Registrar@postRegister'
+    'uses' => 'App\Modules\Users\Controllers\Registrar@store'
 ));
 
 Router::get('register/verify/(:any)', array(

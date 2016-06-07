@@ -98,6 +98,15 @@ class Authorize extends Controller
             //$this->model->updateGenericUser($user);
         }
 
+        if($user->activate == 0) {
+            Auth::logout();
+
+            // User not activated; go logout and redirect him back.
+            $status = __d('users', 'There is a problem. Have you activated your Account?');
+
+            return Redirect::back()->withStatus($status, 'warning');
+        }
+
         // Prepare the flash message.
         $status = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
 

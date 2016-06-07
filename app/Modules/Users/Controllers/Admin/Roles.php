@@ -59,25 +59,18 @@ class Roles extends BaseController
         return parent::before();
     }
 
-    protected function validate(array $data, $id = 0)
+    protected function validate(array $data, $id = null)
     {
-        // Get the Roles table - while using the Extended Auth Driver.
-        $table = Role::getTableName();
-
-        // Get the Roles table - while using the Database Auth Driver.
-        //$table = $this->model->getTable();
-
-        //
-        $unique = "|unique:$table,name";
-
-        if ($id > 0) {
-            $unique .= ',' .intval($id);
+        if (! is_null($id)) {
+            $ignore = ',' .intval($id);
+        } else {
+            $ignore =  '';
         }
 
         // The Validation rules.
         $rules = array(
             'name'        => 'required|min:4|max:40|valid_name',
-            'slug'        => 'required|min:4|max:40|alpha_dash' .$unique,
+            'slug'        => 'required|min:4|max:40|alpha_dash|unique:roles,name' .$ignore,
             'description' => 'required|min:5|max:255',
         );
 

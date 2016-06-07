@@ -59,28 +59,21 @@ class Users extends BaseController
         return parent::before();
     }
 
-    protected function validate(array $data, $id = 0)
+    protected function validate(array $data, $id = null)
     {
-        // Get the Users table - while using the Extended Auth Driver.
-        $table = User::getTableName();
-
-        // Get the Users table - while using the Database Auth Driver.
-        //$table = $this->model->getTable();
-
-        //
-        $unique = "|unique:$table,username";
-
-        if ($id > 0) {
-            $unique .= ',' .intval($id);
+        if (! is_null($id)) {
+            $ignore = ',' .intval($id);
 
             $required = 'sometimes|required';
         } else {
+            $ignore = '';
+
             $required = 'required';
         }
 
         // The Validation rules.
         $rules = array(
-            'username'              => 'required|min:4|max:100|alpha_dash' .$unique,
+            'username'              => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
             'role'                  => 'required|numeric|exists:roles,id',
             'realname'              => 'required|min:5|max:100|valid_name',
             'password'              => $required .'|confirmed|strong_password',

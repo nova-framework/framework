@@ -97,8 +97,11 @@ $langMenuLinks = ob_get_clean();
                     <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'Logout'); ?></a>
                 </li>
                 <?php } else { ?>
+               <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('default', 'Sign Up'); ?></a>
+                </li>
                 <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'User Login'); ?></a>
+                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'Sign In'); ?></a>
                 </li>
                 <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
                     <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('default', 'Forgot Password?'); ?></a>

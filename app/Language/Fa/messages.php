@@ -22,5 +22,4 @@ return array (
   'Validation API' => '',
   'Welcome to {0}!' => 'به {0} خوش آمدید!',
   'You are not authorized to access this resource.' => '',
-  '{0} Staff' => '',
 );

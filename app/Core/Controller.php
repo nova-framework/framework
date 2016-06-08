@@ -1,6 +1,6 @@
 <?php
 /**
- * BaseController - A base Controller for the demos included.
+ * Controller - A base Controller for the demos included.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

@@ -154,18 +154,20 @@ class Users extends Controller
                 'role_id'  => $input['role'],
                 'realname' => $input['realname'],
                 'email'    => $input['email'],
+                'active'   => 1,
             ));
 
             // Create a User Model instance - used with the Database Auth Driver.
             /*
             $this->model->insert(array(
-                'username' => $input['username'],
-                'password' => $password,
-                'role_id'  => $input['role'],
-                'realname' => $input['realname'],
-                'email'    => $input['email'],
+                'username'   => $input['username'],
+                'password'   => $password,
+                'role_id'    => $input['role'],
+                'realname'   => $input['realname'],
+                'email'      => $input['email'],
                 'created_at' => new Carbon(),
                 'updated_at' => new Carbon(),
+                'active'     => 1,
             ));
             */
 
@@ -209,15 +211,15 @@ class Users extends Controller
         // Get the User Model instance - used with the Database Auth Driver.
         //$user = $this->model->find($id);
 
-        // Get all available User Roles.
-        $roles = Role::all();
-
         if($user === null) {
             // There is no User with this ID.
             $status = __('User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
+
+        // Get all available User Roles.
+        $roles = Role::all();
 
         return $this->getView()
             ->shares('title', __('Edit User'))

@@ -8,7 +8,7 @@
 
 namespace Core;
 
-use Core\Container;
+use Illuminate\Container\Container;
 use Core\Providers as ProviderRepository;
 use Events\EventServiceProvider;
 

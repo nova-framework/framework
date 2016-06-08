@@ -83,7 +83,9 @@ class Roles extends Controller
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
-            return (preg_match('/^[\p{L}\p{N}_\-\s]+$/', $value) === 1);
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
+
+            return (preg_match($pattern, $value) === 1);
         });
 
         return Validator::make($data, $rules, array(), $attributes);

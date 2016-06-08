@@ -132,7 +132,7 @@
                     <input name="mailUsername" id="mailUsername" type="text" class="form-control" value="<?= $options['mailUsername']; ?>">
                 </div>
                 <div class='clearfix'></div>
-                <small><?= __d('settings', 'The Username used to connect to the external SMTP Server'); ?></small>
+                <small><?= __d('settings', 'The Username used to connect to the external SMTP Server.'); ?></small>
             </div>
         </div>
         <div class="form-group">
@@ -142,7 +142,7 @@
                     <input name="mailPassword" id="mailPassword" type="password" class="form-control" value="<?= $options['mailPassword']; ?>">
                 </div>
                 <div class='clearfix'></div>
-                <small><?= __d('settings', 'The Password used to connect to the external SMTP Server'); ?></small>
+                <small><?= __d('settings', 'The Password used to connect to the external SMTP Server.'); ?></small>
             </div>
         </div>
     </div>

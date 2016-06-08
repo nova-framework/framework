@@ -17,7 +17,7 @@ Config::set('app', array(
     'siteUrl'      => SITEURL,
     'siteName'     => SITETITLE,
 
-    // Wheter or not is the Application multilingual.
+    // Enable multilingual support.
     'multilingual' => true,
 ));
 

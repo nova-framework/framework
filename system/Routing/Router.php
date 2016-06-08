@@ -13,12 +13,14 @@ use Helpers\Inflector;
 use Helpers\Url;
 use Routing\BaseRouter;
 use Routing\Route;
+use Helpers\Cookie
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use App;
 use Response;
 use Request;
+use Session;
 
 
 /**
@@ -236,6 +238,41 @@ class Router extends BaseRouter
         // First, we will supose that URI is associated with an Asset File.
         if ((Request::method() == 'GET') && $this->dispatchFile($uri)) {
             return true;
+        }
+        
+        // Firstly we should deal with multilanguage urls
+        $languages = Config::get('languages');
+        if(isset($languages) && sizeof($languages)>1)
+        {
+            $uri_arr = explode('/',$uri);
+            if(array_key_exists($uri_arr[0],$languages))
+            {
+                $current_language = array_shift($uri_arr);
+                Session::set('language', $current_language);
+                Cookie::set(PREFIX .'language', $current_language);
+                $uri = rtrim(implode('/',$uri_arr),'/').(empty($uri_arr[0]) ? '/' : '');
+            }
+            elseif(Cookie::exists(PREFIX .'language'))
+            {
+                $current_language = Cookie::get(PREFIX .'language');
+                $url = rtrim($current_language.'/'.$uri,'/').'/';
+            }
+            elseif(Session::get('language'))
+            {
+                $current_language = Session::get('language');
+                $url = rtrim($current_language.'/'.$uri,'/').'/';
+            }
+            else
+            {
+                $current_language = LANGUAGE_CODE;
+            }
+            if(isset($url) && ($current_language!=LANGUAGE_CODE))
+            {
+                $newdir = DIR.$current_language;
+                define('DIR',$newdir);
+                header("Location: ".$url);
+                exit;
+            }
         }
 
         // Not an Asset File URI? Route the current request.

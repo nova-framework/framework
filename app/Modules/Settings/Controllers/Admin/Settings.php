@@ -14,6 +14,7 @@ use Helpers\Url;
 use Helpers\Csrf;
 
 use App\Core\Controller;
+use App\Modules\Users\Helpers\RoleVerifier as Authorize;
 
 use Auth;
 use Config;
@@ -43,6 +44,15 @@ class Settings extends Controller
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
         }
+
+        // Check the User Authorization - while using the Database Auth Driver.
+        /*
+        if (! Authorize::userHasRole('administrator')) {
+            $status = __('You are not authorized to access this resource.');
+
+            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        }
+        */
 
         // Leave to parent's method the Execution Flow decisions.
         return parent::before();

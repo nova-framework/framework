@@ -156,7 +156,7 @@ class Users extends BaseController
 
             // Create a User Model instance - used with the Database Auth Driver.
             /*
-            $this->model->insert(rray(
+            $this->model->insert(array(
                 'username' => $input['username'],
                 'password' => $password,
                 'role_id'  => $input['role'],

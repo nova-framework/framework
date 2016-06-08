@@ -9,7 +9,7 @@ use Helpers\Profiler;
 <html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
     <meta charset="utf-8">
-    <title><?= $title .' - ' .SITETITLE; ?></title>
+    <title><?= $title .' - ' .Config::get('app.siteName', SITETITLE); ?></title>
 <?php
 echo $meta; // Place to pass data / plugable hook zone
 
@@ -35,7 +35,7 @@ echo $css; // Place to pass data / plugable hook zone
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?= site_url('dashboard'); ?>"><strong><?= SITETITLE; ?></strong></a>
+            <a class="navbar-brand" href="<?= site_url('dashboard'); ?>"><strong><?= Config::get('app.siteName', SITETITLE); ?></strong></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
@@ -69,7 +69,7 @@ echo $css; // Place to pass data / plugable hook zone
 <?= $afterBody; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
-    <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>' style="max-width: 360px; height: auto;"></p>
+    <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.siteName', SITETITLE); ?>' style="max-width: 360px; height: auto;"></p>
 
     <?= $content; ?>
 </div>

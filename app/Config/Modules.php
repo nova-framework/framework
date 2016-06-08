@@ -12,6 +12,7 @@ use Core\Config;
 
 Config::set('modules', array(
     'Dashboard',
+    'Settings',
     'Demos',
     'Users',
 ));

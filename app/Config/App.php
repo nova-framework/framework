@@ -18,7 +18,7 @@ Config::set('app', array(
     'siteName'     => SITETITLE,
 
     // Enable multilingual support.
-    'multilingual' => true,
+    'multilingual' => false,
 ));
 
 /**

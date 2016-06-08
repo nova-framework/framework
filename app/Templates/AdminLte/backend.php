@@ -161,6 +161,10 @@ $langMenuLinks = ob_get_clean();
 
             <?php if ($user->hasRole('administrator')) { ?>
 
+            <li <?php if ($baseUri == 'admin/settings') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/settings'); ?>"><i class="fa fa-gears"></i> <span><?= __('Settings'); ?></span></a>
+            </li>
+
             <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
                 <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __('Users'); ?></span></a>
             </li>

@@ -20,13 +20,18 @@ use Closure as Closure;
 /**
  * Site URL helper
  * @param string $path
+ * @param null|string $language
  * @return string
  */
-function site_url($path = '/', $localized = true)
+function site_url($path = '/', $language = null)
 {
     $siteUrl = SITEURL;
 
-    if($localized && Config::get('app.multilingual', false)) {
+    if (($language === false) || ! Config::get('app.multilingual', false)) {
+        // Nothing to do.
+    } else if (is_string($language) && array_key_exists($language, Config::get('languages'))) {
+        $siteUrl .= $language .'/';
+    } else {
         $siteUrl .= Router::getLanguage() .'/';
     }
 

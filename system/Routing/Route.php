@@ -364,11 +364,11 @@ class Route
             $this->uri = $uri;
 
             // Store the extracted parameters.
-            if(! empty($matches) && Config::get('app.multilingual', false)) {
+            if (! empty($matches) && Config::get('app.multilingual', false)) {
                 $param = head($matches);
 
                 // Check again if the first parameter is a a valid Language Code.
-                if(str_starts_with($uri, $param) && array_key_exists($param, Config::get('languages'))) {
+                if (str_starts_with($uri, $param) && array_key_exists($param, Config::get('languages'))) {
                     $this->language = array_shift($matches);
                 }
             }

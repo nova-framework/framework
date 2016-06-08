@@ -7,7 +7,9 @@
  * @date April 12th, 2016
  */
 
+use Core\Config;
 use Helpers\Url;
+use Routing\Router;
 use Support\Str;
 use Support\Facades\Crypt;
 use Support\Facades\Language;
@@ -20,9 +22,15 @@ use Closure as Closure;
  * @param string $path
  * @return string
  */
-function site_url($path = '/')
+function site_url($path = '/', $localized = true)
 {
-    return SITEURL .ltrim($path, '/');
+    $siteUrl = SITEURL;
+
+    if($localized && Config::get('app.multilingual', false)) {
+        $siteUrl .= Router::getLanguage() .'/';
+    }
+
+    return $siteUrl .ltrim($path, '/');
 }
 
 /**
@@ -65,7 +73,13 @@ function __($message, $args = null)
     //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
-    return Language::getInstance()
+    if(Config::get('app.multilingual', false)) {
+        $code = Router::getLanguage();
+    } else {
+        $code = LANGUAGE_CODE;
+    }
+
+    return Language::getInstance('app', $code)
         ->translate($message, $params);
 }
 
@@ -84,7 +98,13 @@ function __d($domain, $message, $args = null)
     //
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
 
-    return Language::getInstance($domain)
+    if(Config::get('app.multilingual', false)) {
+        $code = Router::getLanguage();
+    } else {
+        $code = LANGUAGE_CODE;
+    }
+
+    return Language::getInstance($domain, $code)
         ->translate($message, $params);
 }
 

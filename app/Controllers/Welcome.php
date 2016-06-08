@@ -20,7 +20,7 @@ use Session;
  */
 class Welcome extends Controller
 {
-    protected $langCode;
+    protected $code;
 
     /**
      * Call the parent construct
@@ -30,10 +30,7 @@ class Welcome extends Controller
         parent::__construct();
 
         // Setup the Controller's Language code.
-        $this->langCode = Language::code();
-
-        // Load the Language file.
-        $this->language->load('Welcome');
+        $this->code = Language::code();
     }
 
     protected function before()
@@ -41,11 +38,13 @@ class Welcome extends Controller
         // Process the Multi-Language.
         $language = Router::getLanguage();
 
-        if($language != $this->langCode) {
-            $this->langCode = $language;
-
-            $this->language->load('Welcome', $this->langCode);
+        // Adjust the Controller's Language.
+        if($language != $this->code) {
+            $this->code = $language;
         }
+
+        // Load the Language file.
+        $this->language->load('Welcome', $this->code);
 
         // Leave to parent's method the Execution Flow decisions.
         return parent::before();
@@ -56,8 +55,8 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['title'] = $this->language->get('welcomeText', $this->langCode);
-        $data['welcomeMessage'] = $this->language->get('welcomeMessage', $this->langCode);
+        $data['title'] = $this->language->get('welcomeText', $this->code);
+        $data['welcomeMessage'] = $this->language->get('welcomeMessage', $this->code);
 
         View::renderTemplate('header', $data);
         View::render('Welcome/Welcome', $data);
@@ -70,7 +69,16 @@ class Welcome extends Controller
     public function subPage()
     {
         return View::make('Welcome/SubPage')
-            ->shares('title', $this->trans('subpageText', $this->langCode))
-            ->withWelcomeMessage($this->trans('subpageMessage', $this->langCode));
+            ->shares('title', $this->trans('subpageText'))
+            ->withWelcomeMessage($this->trans('subpageMessage'));
+    }
+
+    /**
+     * Return a translated string.
+     * @return string
+     */
+    protected function trans($str)
+    {
+        return $this->language->get($str, $this->code);
     }
 }

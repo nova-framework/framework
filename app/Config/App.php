@@ -14,8 +14,11 @@ use Core\Config;
  * The Application configuration.
  */
 Config::set('app', array(
-    'siteUrl'  => SITEURL,
-    'siteName' => SITETITLE,
+    'siteUrl'      => SITEURL,
+    'siteName'     => SITETITLE,
+
+    // Wheter or not is the Application multilingual.
+    'multilingual' => true,
 ));
 
 /**

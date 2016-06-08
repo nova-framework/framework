@@ -308,9 +308,6 @@ class Route
             return false;
         }
 
-        // Ensure that the URI ends with '/'.
-        $uri = rtrim($uri, '/') .'/';
-
         // Have a valid HTTP method for this Route; store it for later usage.
         $this->method = $method;
 
@@ -360,8 +357,6 @@ class Route
 
         // Attempt to match the Route and extract the parameters.
         if (preg_match('#^(?:([a-z]{2})?/?)?' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
-            echo '<pre>' .var_export($matches, true) .'</pre>';
-
             // Remove $matched[0] as [1] is the first parameter.
             array_shift($matches);
 
@@ -369,7 +364,7 @@ class Route
             $this->uri = $uri;
 
             // Store the extracted parameters.
-            if(! empty($matches)) {
+            if(! empty($matches) && Config::get('app.multilingual', false)) {
                 $param = head($matches);
 
                 // Check again if the first parameter is a a valid Language Code.

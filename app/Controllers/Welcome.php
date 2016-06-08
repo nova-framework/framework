@@ -10,7 +10,9 @@ namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
+use Routing\Router;
 
+use Language;
 use Session;
 
 /**
@@ -18,6 +20,8 @@ use Session;
  */
 class Welcome extends Controller
 {
+    protected $langCode;
+
     /**
      * Call the parent construct
      */
@@ -25,8 +29,26 @@ class Welcome extends Controller
     {
         parent::__construct();
 
+        // Setup the Controller's Language code.
+        $this->langCode = Language::code();
+
         // Load the Language file.
         $this->language->load('Welcome');
+    }
+
+    protected function before()
+    {
+        // Process the Multi-Language.
+        $language = Router::getLanguage();
+
+        if($language != $this->langCode) {
+            $this->langCode = $language;
+
+            $this->language->load('Welcome', $this->langCode);
+        }
+
+        // Leave to parent's method the Execution Flow decisions.
+        return parent::before();
     }
 
     /**
@@ -34,8 +56,8 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['title'] = $this->language->get('welcomeText');
-        $data['welcomeMessage'] = $this->language->get('welcomeMessage');
+        $data['title'] = $this->language->get('welcomeText', $this->langCode);
+        $data['welcomeMessage'] = $this->language->get('welcomeMessage', $this->langCode);
 
         View::renderTemplate('header', $data);
         View::render('Welcome/Welcome', $data);
@@ -48,7 +70,7 @@ class Welcome extends Controller
     public function subPage()
     {
         return View::make('Welcome/SubPage')
-            ->shares('title', $this->trans('subpageText'))
-            ->withWelcomeMessage($this->trans('subpageMessage'));
+            ->shares('title', $this->trans('subpageText', $this->langCode))
+            ->withWelcomeMessage($this->trans('subpageMessage', $this->langCode));
     }
 }

@@ -8,7 +8,11 @@
 
 namespace Routing;
 
+use Core\Config;
+
 use Symfony\Component\HttpFoundation\Response;
+
+use Language;
 
 
 /**
@@ -39,7 +43,7 @@ class Route
     /**
      * @var string The current matched URI
      */
-    private $currentUri = null;
+    private $uri = null;
 
     /**
      * @var string The matched HTTP method
@@ -55,6 +59,12 @@ class Route
      * @var string Matching regular expression
      */
     private $regex;
+
+    /**
+     * @var string The current matched Language
+     */
+    private $language = null;
+
 
     /**
      * Constructor.
@@ -74,6 +84,8 @@ class Route
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
         }
+
+        $this->language = Language::code();
     }
 
     /**
@@ -296,6 +308,9 @@ class Route
             return false;
         }
 
+        // Ensure that the URI ends with '/'.
+        $uri = rtrim($uri, '/') .'/';
+
         // Have a valid HTTP method for this Route; store it for later usage.
         $this->method = $method;
 
@@ -344,7 +359,9 @@ class Route
         }
 
         // Attempt to match the Route and extract the parameters.
-        if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
+        if (preg_match('#^(?:([a-z]{2})?/?)?' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
+            echo '<pre>' .var_export($matches, true) .'</pre>';
+
             // Remove $matched[0] as [1] is the first parameter.
             array_shift($matches);
 
@@ -352,6 +369,15 @@ class Route
             $this->uri = $uri;
 
             // Store the extracted parameters.
+            if(! empty($matches)) {
+                $param = head($matches);
+
+                // Check again if the first parameter is a a valid Language Code.
+                if(str_starts_with($uri, $param) && array_key_exists($param, Config::get('languages'))) {
+                    $this->language = array_shift($matches);
+                }
+            }
+
             $this->params = $matches;
 
             // Also, store the compiled regex.
@@ -424,6 +450,14 @@ class Route
     public function uri()
     {
         return $this->uri;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
     /**

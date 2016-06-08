@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 use App;
 use Console;
+use Language;
 use Response;
 
 
@@ -139,9 +140,27 @@ abstract class BaseRouter
      *
      * @return null|Route
      */
-    public function matchedRoute()
+    public function getMatchedRoute()
     {
         return $this->matchedRoute;
+    }
+
+    /**
+     * Return the current Matched Language, if there are any.
+     *
+     * @return null|string
+     */
+    public static function getLanguage()
+    {
+        $instance = static::getInstance();
+
+        $route = $instance->getMatchedRoute();
+
+        if(! is_null($route)) {
+            return $route->getLanguage();
+        }
+
+        return Language::code();
     }
 
     /**

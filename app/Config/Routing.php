@@ -14,7 +14,7 @@ use Core\Config;
  */
 Config::set('routing', array(
     'patterns' => array(
-        ':lang' => '[a-z]{2}', // pattern for the Language codes
+        //':hex' => '[[:xdigit:]]+',
     ),
     'default' => array(
         'controller' => DEFAULT_CONTROLLER,

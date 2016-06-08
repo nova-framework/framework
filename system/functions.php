@@ -25,11 +25,14 @@ use Closure as Closure;
  */
 function site_url($path = '/', $language = null)
 {
+    $languages = Config::get('languages');
+
+    // The base URL.
     $siteUrl = SITEURL;
 
     if (($language === false) || ! Config::get('app.multilingual', false)) {
         // Nothing to do.
-    } else if (is_string($language) && array_key_exists($language, Config::get('languages'))) {
+    } else if (is_string($language) && array_key_exists($language, $languages)) {
         $siteUrl .= $language .'/';
     } else {
         $siteUrl .= Router::getLanguage() .'/';

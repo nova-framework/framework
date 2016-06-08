@@ -1,21 +1,21 @@
 <?php
 /**
- * BaseController - A base Controller for managing the Users.
+ * BaseController - A base Controller for the demos included.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
-namespace App\Modules\Users\Core;
+namespace App\Core;
 
-use Core\Controller;
+use Core\Controller as BaseController;
 use Core\View;
 use Helpers\Url;
 
 use Session;
 
 
-class BaseController extends Controller
+class Controller extends BaseController
 {
     protected $template = 'AdminLte';
     protected $layout   = 'backend';

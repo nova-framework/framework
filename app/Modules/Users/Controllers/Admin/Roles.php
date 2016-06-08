@@ -13,8 +13,8 @@ use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
+use App\Core\Controller;
 use App\Models\Role;
-use App\Modules\Users\Core\BaseController;
 use App\Modules\Users\Helpers\RoleVerifier as Authorize;
 
 use Carbon\Carbon;
@@ -27,7 +27,7 @@ use Session;
 use Validator;
 
 
-class Roles extends BaseController
+class Roles extends Controller
 {
     public function __construct()
     {

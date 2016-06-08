@@ -8,12 +8,12 @@
 
 namespace App\Modules\Settings\Controllers\Admin;
 
-use Core\Controller;
 use Core\View;
-
 use Helpers\FastCache;
 use Helpers\Url;
 use Helpers\Csrf;
+
+use App\Core\Controller;
 
 use Auth;
 use Config;
@@ -43,27 +43,6 @@ class Settings extends Controller
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
         }
-
-        // Calculate and share on Views  the URIs.
-        $uri = Url::detectUri();
-
-        // Prepare the base URI.
-        $parts = explode('/', trim($uri, '/'));
-
-        // Make the path equal with the first part if it exists, i.e. 'admin'
-        $baseUri = array_shift($parts);
-
-        // Add to path the next part, if it exists, defaulting to 'dashboard'.
-        if(! empty($parts)) {
-            $baseUri .= '/' .array_shift($parts);
-        } else {
-            $baseUri .= '/dashboard';
-        }
-
-        View::share('currentUri', $uri);
-        View::share('baseUri',    $baseUri);
-
-        View::share('csrfToken', Session::token());
 
         // Leave to parent's method the Execution Flow decisions.
         return parent::before();

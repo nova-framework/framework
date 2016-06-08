@@ -8,11 +8,11 @@
 
 namespace App\Modules\Users\Controllers;
 
-use Core\Controller;
 use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
+use App\Core\Controller;
 use App\Models\Role;
 use App\Models\User;
 

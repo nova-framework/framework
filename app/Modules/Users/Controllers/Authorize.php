@@ -8,10 +8,11 @@
 
 namespace App\Modules\Users\Controllers;
 
-use Core\Controller;
 use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
+
+use App\Core\Controller;
 
 use Auth;
 use Hash;
@@ -24,8 +25,7 @@ use Session;
 
 class Authorize extends Controller
 {
-    protected $template = 'AdminLte';
-    protected $layout   = 'default';
+    protected $layout = 'default';
 
 
     public function __construct()

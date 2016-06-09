@@ -131,7 +131,7 @@ class Connection
      */
     public static function getInstance($name = null)
     {
-        $name = $name ?: static::getDefaultConnection();
+        $name = $name ?: Config::get('database.default');
 
         // If there is already a Connection instantiated, return it.
         if (isset(static::$instances[$name])) {
@@ -159,8 +159,6 @@ class Connection
      */
     protected static function getConnectionConfig($name)
     {
-        $name = $name ?: Config::get('database.default');
-
         $connections = Config::get('database.connections');
 
         if (is_null($config = array_get($connections, $name))) {

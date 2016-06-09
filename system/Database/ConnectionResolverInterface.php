@@ -5,7 +5,7 @@ namespace Database;
 interface ConnectionResolverInterface
 {
     /**
-     * Get a database connection instance.
+     * Get a Database Connection instance.
      *
      * @param  string  $name
      * @return \Database\Connection
@@ -13,14 +13,14 @@ interface ConnectionResolverInterface
     public function connection($name = null);
 
     /**
-     * Get the default connection name.
+     * Get the default Connection name.
      *
      * @return string
      */
     public function getDefaultConnection();
 
     /**
-     * Set the default connection name.
+     * Set the default Connection name.
      *
      * @param  string  $name
      * @return void

@@ -5,7 +5,7 @@ namespace Database;
 use Database\Connection;
 
 
-class DatabaseManager
+class DatabaseManager implements ConnectionResolverInterface
 {
     /**
      * The Application instance.

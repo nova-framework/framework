@@ -7,7 +7,9 @@
  * @date April 12th, 2016
  */
 
+use Core\Config;
 use Helpers\Url;
+use Routing\Router;
 use Support\Str;
 use Support\Facades\Crypt;
 use Support\Facades\Language;
@@ -18,11 +20,25 @@ use Closure as Closure;
 /**
  * Site URL helper
  * @param string $path
+ * @param null|string $language
  * @return string
  */
-function site_url($path = '/')
+function site_url($path = '/', $language = null)
 {
-    return SITEURL .ltrim($path, '/');
+    $languages = Config::get('languages');
+
+    // The base URL.
+    $siteUrl = SITEURL;
+
+    if (($language === false) || ! Config::get('app.multilingual', false)) {
+        // Nothing to do.
+    } else if (is_string($language) && array_key_exists($language, $languages)) {
+        $siteUrl .= $language .'/';
+    } else {
+        $siteUrl .= Router::getLanguage() .'/';
+    }
+
+    return $siteUrl .ltrim($path, '/');
 }
 
 /**
@@ -65,7 +81,13 @@ function __($message, $args = null)
     //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
-    return Language::getInstance()
+    if(Config::get('app.multilingual', false)) {
+        $code = Router::getLanguage();
+    } else {
+        $code = LANGUAGE_CODE;
+    }
+
+    return Language::getInstance('app', $code)
         ->translate($message, $params);
 }
 
@@ -84,8 +106,105 @@ function __d($domain, $message, $args = null)
     //
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
 
-    return Language::getInstance($domain)
+    if(Config::get('app.multilingual', false)) {
+        $code = Router::getLanguage();
+    } else {
+        $code = LANGUAGE_CODE;
+    }
+
+    return Language::getInstance($domain, $code)
         ->translate($message, $params);
+}
+
+/**
+ * Check value to find if it was serialized.
+ *
+ * @param  string  $data
+ * @param  bool    $strict
+ * @return bool
+ */
+function is_serialized($data, $strict = true)
+{
+    if (! is_string($data)) return false;
+
+    $data = trim($data);
+
+    if ('N;' == $data) return true;
+
+    if (strlen($data) < 4) return false;
+
+    if (':' !== $data[1]) return false;
+
+    if ($strict) {
+        $lastc = substr($data, -1);
+
+        if ((';' !== $lastc) && ('}' !== $lastc)) {
+            return false;
+        }
+    } else {
+        $semicolon = strpos($data, ';');
+        $brace     = strpos($data, '}');
+
+        if ((false === $semicolon) && (false === $brace)) return false;
+
+        if ((false !== $semicolon) && ($semicolon < 3)) return false;
+
+        if ((false !== $brace) && ($brace < 4)) return false;
+    }
+
+    $token = $data[0];
+
+    switch ($token) {
+        case 's' :
+            if ($strict) {
+                if ('"' !== substr($data, -2, 1)) {
+                    return false;
+                }
+            } else if (false === strpos($data, '"')) {
+                return false;
+            }
+        case 'a' :
+        case 'O' :
+            return (bool) preg_match("/^{$token}:[0-9]+:/s", $data);
+        case 'b' :
+        case 'i' :
+        case 'd' :
+            $end = $strict ? '$' : '';
+
+            return (bool) preg_match("/^{$token}:[0-9.E-]+;$end/", $data);
+    }
+
+    return false;
+}
+
+/**
+ * Serialize data, if needed.
+ *
+ * @param  mixed  $data
+ * @return mixed
+ */
+function maybe_serialize($data)
+{
+    if (is_array($data) || is_object($data)) {
+        return serialize($data);
+    }
+
+    return $data;
+}
+
+/**
+ * Unserialize value only if it was serialized.
+ *
+ * @param  string $original
+ * @return mixed
+ */
+function maybe_unserialize($original)
+{
+    if (\is_serialized($original)) {
+        return @unserialize($original);
+    }
+
+    return $original;
 }
 
 /** Array helpers. */

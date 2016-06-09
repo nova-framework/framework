@@ -49,6 +49,27 @@ Router::post('password/reset', array(
     'uses' => 'App\Modules\Users\Controllers\Authorize@postReset'
 ));
 
+// The Account Registration.
+Router::get('register', array(
+    'filters' => 'guest',
+    'uses' => 'App\Modules\Users\Controllers\Registrar@create'
+));
+
+Router::post('register', array(
+    'filters' => 'guest|csrf',
+    'uses' => 'App\Modules\Users\Controllers\Registrar@store'
+));
+
+Router::get('register/verify/(:any)', array(
+    'filters' => 'guest',
+    'uses' => 'App\Modules\Users\Controllers\Registrar@verify'
+));
+
+Router::get('register/status', array(
+    'filters' => 'guest',
+    'uses' => 'App\Modules\Users\Controllers\Registrar@status'
+));
+
 // The Adminstration Routes.
 Router::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
     // The User's Profile.

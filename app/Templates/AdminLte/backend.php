@@ -32,7 +32,7 @@ $langMenuLinks = ob_get_clean();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= $title; ?> | <?= SITETITLE; ?></title>
+    <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
     <?= $meta; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -72,7 +72,7 @@ $langMenuLinks = ob_get_clean();
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-<?= Config::get('app.skin', 'blue'); ?> sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->
@@ -160,6 +160,10 @@ $langMenuLinks = ob_get_clean();
             </li>
 
             <?php if ($user->hasRole('administrator')) { ?>
+
+            <li <?php if ($baseUri == 'admin/settings') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/settings'); ?>"><i class="fa fa-gears"></i> <span><?= __('Settings'); ?></span></a>
+            </li>
 
             <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
                 <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __('Users'); ?></span></a>

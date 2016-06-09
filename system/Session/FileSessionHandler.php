@@ -17,12 +17,14 @@ class FileSessionHandler implements SessionHandlerInterface
     /**
      * Create a new instance.
      *
-     * @param  string     $path
-     * @param  int         $lifetime
+     * @param  array     $config
+     * @param  int       $lifetime
      * @return void
      */
-    function __construct($savePath)
+    function __construct(array $config)
     {
+        $savePath = array_get($config, 'files', SESSION_PATH);
+
         $this->savePath = rtrim($savePath, '/') .DS;
     }
 

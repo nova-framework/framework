@@ -10,7 +10,9 @@ namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
+use Routing\Router;
 
+use Language;
 use Session;
 
 /**
@@ -18,6 +20,8 @@ use Session;
  */
 class Welcome extends Controller
 {
+    protected $code;
+
     /**
      * Call the parent construct
      */
@@ -25,8 +29,25 @@ class Welcome extends Controller
     {
         parent::__construct();
 
+        // Setup the Controller's Language code.
+        $this->code = Language::code();
+    }
+
+    protected function before()
+    {
+        // Process the Multi-Language.
+        $language = Router::getLanguage();
+
+        // Adjust the Controller's Language.
+        if($language != $this->code) {
+            $this->code = $language;
+        }
+
         // Load the Language file.
-        $this->language->load('Welcome');
+        $this->language->load('Welcome', $this->code);
+
+        // Leave to parent's method the Execution Flow decisions.
+        return parent::before();
     }
 
     /**
@@ -34,8 +55,8 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['title'] = $this->language->get('welcomeText');
-        $data['welcomeMessage'] = $this->language->get('welcomeMessage');
+        $data['title'] = $this->language->get('welcomeText', $this->code);
+        $data['welcomeMessage'] = $this->language->get('welcomeMessage', $this->code);
 
         View::renderTemplate('header', $data);
         View::render('Welcome/Welcome', $data);
@@ -50,5 +71,14 @@ class Welcome extends Controller
         return View::make('Welcome/SubPage')
             ->shares('title', $this->trans('subpageText'))
             ->withWelcomeMessage($this->trans('subpageMessage'));
+    }
+
+    /**
+     * Return a translated string.
+     * @return string
+     */
+    protected function trans($str)
+    {
+        return $this->language->get($str, $this->code);
     }
 }

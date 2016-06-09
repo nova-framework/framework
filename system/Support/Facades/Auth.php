@@ -8,12 +8,12 @@
 
 namespace Support\Facades;
 
-use Core\Config;
 use Database\Connection;
 use Auth\DatabaseUserProvider;
 use Auth\ExtendedUserProvider;
 use Auth\Guard as AuthGuard;
 use Support\Facades\Cookie;
+use Support\Facades\Config;
 use Support\Facades\Request;
 use Support\Facades\Session;
 

@@ -9,12 +9,31 @@
 
 use Core\Config;
 
+
 /**
- * Class Aliases configuration
+ * The Application configuration.
+ */
+Config::set('app', array(
+    'url'  => SITEURL,
+    'name' => SITETITLE,
+    'skin' => 'blue',
+
+    // Enable multilingual support.
+    'multilingual' => false,
+));
+
+/**
+ * The registered Service Providers.
+ */
+Config::set('providers', array(
+    'Events\EventServiceProvider',
+));
+
+/**
+ * The Class Aliases configuration.
  */
 Config::set('classAliases', array(
     // The Core Tools
-    'Config'        => '\Core\Config',
     'Errors'        => '\Core\Error',
 
     // The Helpers
@@ -48,6 +67,7 @@ Config::set('classAliases', array(
     // The Support Facades
     'App'           => '\Support\Facades\App',
     'Auth'          => '\Support\Facades\Auth',
+    'Config'        => '\Support\Facades\Config',
     'Cookie'        => '\Support\Facades\Cookie',
     'Crypt'         => '\Support\Facades\Crypt',
     'DB'            => '\Support\Facades\Database',

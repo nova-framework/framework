@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 05, 2016 at 12:22 PM
+-- Generation Time: Jun 07, 2016 at 11:03 PM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.22
 
@@ -86,6 +86,19 @@ INSERT INTO `nova_course_student` (`id`, `student_id`, `course_id`) VALUES
 (7, 4, 3),
 (8, 1, 2),
 (9, 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nova_options`
+--
+
+CREATE TABLE `nova_options` (
+  `id` int(11) NOT NULL,
+  `group` varchar(100) NOT NULL,
+  `item` varchar(255) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -179,6 +192,18 @@ INSERT INTO `nova_roles` (`id`, `name`, `slug`, `description`, `created_at`, `up
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nova_sessions`
+--
+
+CREATE TABLE `nova_sessions` (
+  `id` varchar(255) NOT NULL,
+  `payload` text NOT NULL,
+  `last_activity` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nova_students`
 --
 
@@ -212,6 +237,8 @@ CREATE TABLE `nova_users` (
   `password` varchar(255) NOT NULL,
   `realname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `active` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
+  `activation_code` varchar(255) DEFAULT NULL,
   `remember_token` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
@@ -221,12 +248,12 @@ CREATE TABLE `nova_users` (
 -- Dumping data for table `nova_users`
 --
 
-INSERT INTO `nova_users` (`id`, `role_id`, `username`, `password`, `realname`, `email`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 1, 'admin', '$2y$10$MZpxcVZpwTCCotIkkfPP5O1sDC7GiKzD9klh4MoM/aE44YaVm4Xga', 'Administrator', 'admin@novaframework.dev', NULL, '2016-06-03 10:15:00', '2016-06-03 11:11:34'),
-(2, 2, 'marcus', '$2y$10$B1Q7LNu2xuIcFJ1lAotb5O93kkvUfFdOzUZhTmSdkQZ.6woLmgu3S', 'Marcus Spears', 'marcus@novaframework.dev', NULL, '2016-06-03 10:19:00', '2016-06-03 10:19:00'),
-(3, 2, 'michael', '$2y$10$klop7YxFoZOVqDq3hA7efeKEz4csFhAelfwP8M4s1ROlgpkBx9qVW', 'Michael White', 'michael@novaframework.dev', NULL, '2016-06-03 10:20:00', '2016-06-03 10:20:00'),
-(4, 3, 'john', '$2y$10$WzBPFMiFeJ2XK9eW34zEgelSJI3R1TVrOWbjVDxFXDeMQxoh8asYK', 'John Kennedy', 'john@novaframework.dev', NULL, '2016-06-03 10:21:00', '2016-06-03 10:21:00'),
-(5, 3, 'mark', '$2y$10$z4bRYEcnoHOR.GuObWTATuH/x1lto.2wUJ1RxCYWOmfjay2LnTd8W', 'Mark Black', 'mark@novaframework.dev', NULL, '2016-06-03 10:22:00', '2016-06-03 10:22:00');
+INSERT INTO `nova_users` (`id`, `role_id`, `username`, `password`, `realname`, `email`, `active`, `activation_code`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 1, 'admin', '$2y$10$MZpxcVZpwTCCotIkkfPP5O1sDC7GiKzD9klh4MoM/aE44YaVm4Xga', 'Administrator', 'admin@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:15:00', '2016-06-06 22:00:40'),
+(2, 2, 'marcus', '$2y$10$B1Q7LNu2xuIcFJ1lAotb5O93kkvUfFdOzUZhTmSdkQZ.6woLmgu3S', 'Marcus Spears', 'marcus@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:19:00', '2016-06-03 10:19:00'),
+(3, 3, 'michael', '$2y$10$klop7YxFoZOVqDq3hA7efeKEz4csFhAelfwP8M4s1ROlgpkBx9qVW', 'Michael White', 'michael@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:20:00', '2016-06-05 14:22:19'),
+(4, 5, 'john', '$2y$10$WzBPFMiFeJ2XK9eW34zEgelSJI3R1TVrOWbjVDxFXDeMQxoh8asYK', 'John Kennedy', 'john@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:21:00', '2016-06-05 14:22:32'),
+(5, 5, 'mark', '$2y$10$z4bRYEcnoHOR.GuObWTATuH/x1lto.2wUJ1RxCYWOmfjay2LnTd8W', 'Mark Black', 'mark@novaframework.dev', 1, NULL, NULL, '2016-06-03 10:22:00', '2016-06-05 13:16:05');
 
 --
 -- Indexes for dumped tables
@@ -248,6 +275,12 @@ ALTER TABLE `nova_courses`
 -- Indexes for table `nova_course_student`
 --
 ALTER TABLE `nova_course_student`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `nova_options`
+--
+ALTER TABLE `nova_options`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -274,6 +307,12 @@ ALTER TABLE `nova_profiles`
 --
 ALTER TABLE `nova_roles`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `nova_sessions`
+--
+ALTER TABLE `nova_sessions`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Indexes for table `nova_students`
@@ -306,6 +345,11 @@ ALTER TABLE `nova_courses`
 --
 ALTER TABLE `nova_course_student`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `nova_options`
+--
+ALTER TABLE `nova_options`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `nova_posts`
 --

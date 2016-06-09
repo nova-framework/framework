@@ -13,8 +13,8 @@ use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
+use App\Core\Controller;
 use App\Models\Role;
-use App\Modules\Users\Core\BaseController;
 use App\Modules\Users\Helpers\RoleVerifier as Authorize;
 
 use Carbon\Carbon;
@@ -27,7 +27,7 @@ use Session;
 use Validator;
 
 
-class Roles extends BaseController
+class Roles extends Controller
 {
     public function __construct()
     {
@@ -59,25 +59,18 @@ class Roles extends BaseController
         return parent::before();
     }
 
-    protected function validate(array $data, $id = 0)
+    protected function validate(array $data, $id = null)
     {
-        // Get the Roles table - while using the Extended Auth Driver.
-        $table = Role::getTableName();
-
-        // Get the Roles table - while using the Database Auth Driver.
-        //$table = $this->model->getTable();
-
-        //
-        $unique = "|unique:$table,name";
-
-        if ($id > 0) {
-            $unique .= ',' .intval($id);
+        if (! is_null($id)) {
+            $ignore = ',' .intval($id);
+        } else {
+            $ignore =  '';
         }
 
         // The Validation rules.
         $rules = array(
             'name'        => 'required|min:4|max:40|valid_name',
-            'slug'        => 'required|min:4|max:40|alpha_dash' .$unique,
+            'slug'        => 'required|min:4|max:40|alpha_dash|unique:roles,name' .$ignore,
             'description' => 'required|min:5|max:255',
         );
 
@@ -90,7 +83,9 @@ class Roles extends BaseController
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
-            return (preg_match('/^[\p{L}\p{N}_\-\s]+$/', $value) === 1);
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
+
+            return (preg_match($pattern, $value) === 1);
         });
 
         return Validator::make($data, $rules, array(), $attributes);

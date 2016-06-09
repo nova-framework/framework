@@ -8,10 +8,11 @@
 
 namespace App\Modules\Users\Controllers;
 
-use Core\Controller;
 use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
+
+use App\Core\Controller;
 
 use Auth;
 use Hash;
@@ -24,8 +25,7 @@ use Session;
 
 class Authorize extends Controller
 {
-    protected $template = 'AdminLte';
-    protected $layout   = 'default';
+    protected $layout = 'default';
 
 
     public function __construct()
@@ -96,6 +96,15 @@ class Authorize extends Controller
 
             // Save the User Model instance - used with the Database Auth Driver.
             //$this->model->updateGenericUser($user);
+        }
+
+        if($user->active == 0) {
+            Auth::logout();
+
+            // User not activated; go logout and redirect him back.
+            $status = __d('users', 'There is a problem. Have you activated your Account?');
+
+            return Redirect::back()->withStatus($status, 'warning');
         }
 
         // Prepare the flash message.

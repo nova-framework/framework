@@ -8,9 +8,10 @@
 
 namespace App\Modules\Dashboard\Controllers\Admin;
 
-use Core\Controller;
 use Core\View;
 use Helpers\Url;
+
+use App\Core\Controller;
 
 
 class Dashboard extends Controller
@@ -22,30 +23,6 @@ class Dashboard extends Controller
     public function __construct()
     {
         parent::__construct();
-    }
-
-    protected function before()
-    {
-        // Calculate and share on Views  the URIs.
-        $uri = Url::detectUri();
-
-        // Prepare the base URI.
-        $parts = explode('/', trim($uri, '/'));
-
-        // Make the path equal with the first part if it exists, i.e. 'admin'
-        $baseUri = array_shift($parts);
-
-        // Add to path the next part, if it exists, defaulting to 'dashboard'.
-        if(! empty($parts)) {
-            $baseUri .= '/' .array_shift($parts);
-        } else {
-            $baseUri .= '/dashboard';
-        }
-
-        View::share('currentUri', $uri);
-        View::share('baseUri',    $baseUri);
-
-        return parent::before();
     }
 
     public function index()

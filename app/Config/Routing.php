@@ -14,8 +14,7 @@ use Core\Config;
  */
 Config::set('routing', array(
     'patterns' => array(
-        //':hex'    => '[[:xdigit:]]+',
-        //':uuidV4' => '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
+        //':hex' => '[[:xdigit:]]+',
     ),
     'default' => array(
         'controller' => DEFAULT_CONTROLLER,

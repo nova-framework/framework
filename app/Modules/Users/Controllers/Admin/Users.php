@@ -12,9 +12,9 @@ use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
+use App\Core\Controller;
 use App\Models\Role;
 use App\Models\User;
-use App\Modules\Users\Core\BaseController;
 use App\Modules\Users\Helpers\RoleVerifier as Authorize;
 
 use Carbon\Carbon;
@@ -27,7 +27,7 @@ use Session;
 use Validator;
 
 
-class Users extends BaseController
+class Users extends Controller
 {
     public function __construct()
     {
@@ -59,28 +59,21 @@ class Users extends BaseController
         return parent::before();
     }
 
-    protected function validate(array $data, $id = 0)
+    protected function validate(array $data, $id = null)
     {
-        // Get the Users table - while using the Extended Auth Driver.
-        $table = User::getTableName();
-
-        // Get the Users table - while using the Database Auth Driver.
-        //$table = $this->model->getTable();
-
-        //
-        $unique = "|unique:$table,username";
-
-        if ($id > 0) {
-            $unique .= ',' .intval($id);
+        if (! is_null($id)) {
+            $ignore = ',' .intval($id);
 
             $required = 'sometimes|required';
         } else {
+            $ignore = '';
+
             $required = 'required';
         }
 
         // The Validation rules.
         $rules = array(
-            'username'              => 'required|min:4|max:100|alpha_dash' .$unique,
+            'username'              => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
             'role'                  => 'required|numeric|exists:roles,id',
             'realname'              => 'required|min:5|max:100|valid_name',
             'password'              => $required .'|confirmed|strong_password',
@@ -89,6 +82,7 @@ class Users extends BaseController
         );
 
         $messages = array(
+            'valid_name'      => __('The :attribute field is not a valid name.'),
             'strong_password' => __('The :attribute field is not strong enough.'),
         );
 
@@ -104,7 +98,9 @@ class Users extends BaseController
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
-            return (preg_match('/^[\p{L}\p{N}_\-\s]+$/', $value) === 1);
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
+
+            return (preg_match($pattern, $value) === 1);
         });
 
         Validator::extend('strong_password', function($attribute, $value, $parameters)
@@ -120,10 +116,10 @@ class Users extends BaseController
     public function index()
     {
         // Get all User records for current page - used with the Extended Auth Driver.
-        $users = User::paginate(25);
+        $users = User::where('active', 1)->paginate(25);
 
         // Get all User records for current page - used with the Database Auth Driver.
-        //$users = $this->model->paginate(25);
+        //$users = $this->model->where('active', 1)->paginate(25);
 
         return $this->getView()
             ->shares('title', __('Users'))
@@ -158,18 +154,20 @@ class Users extends BaseController
                 'role_id'  => $input['role'],
                 'realname' => $input['realname'],
                 'email'    => $input['email'],
+                'active'   => 1,
             ));
 
             // Create a User Model instance - used with the Database Auth Driver.
             /*
-            $this->model->insert(rray(
-                'username' => $input['username'],
-                'password' => $password,
-                'role_id'  => $input['role'],
-                'realname' => $input['realname'],
-                'email'    => $input['email'],
+            $this->model->insert(array(
+                'username'   => $input['username'],
+                'password'   => $password,
+                'role_id'    => $input['role'],
+                'realname'   => $input['realname'],
+                'email'      => $input['email'],
                 'created_at' => new Carbon(),
                 'updated_at' => new Carbon(),
+                'active'     => 1,
             ));
             */
 
@@ -213,15 +211,15 @@ class Users extends BaseController
         // Get the User Model instance - used with the Database Auth Driver.
         //$user = $this->model->find($id);
 
-        // Get all available User Roles.
-        $roles = Role::all();
-
         if($user === null) {
             // There is no User with this ID.
             $status = __('User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
+
+        // Get all available User Roles.
+        $roles = Role::all();
 
         return $this->getView()
             ->shares('title', __('Edit User'))

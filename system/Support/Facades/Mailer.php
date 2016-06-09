@@ -8,9 +8,9 @@
 
 namespace Support\Facades;
 
-use Core\Config;
 use Events\Dispatcher as Events;
 use Mail\Mailer as NovaMailer;
+use Support\Facades\Config;
 
 use Swift_Mailer as SwiftMailer;
 use Swift_SmtpTransport as SmtpTransport;

@@ -8,12 +8,12 @@
 
 namespace Support\Facades;
 
-use Core\Config;
 use Database\Connection;
 use Auth\DatabaseUserProvider;
 use Auth\ExtendedUserProvider;
 use Auth\Reminders\PasswordBroker;
 use Auth\Reminders\ReminderRepository;
+use Support\Facades\Config;
 use Support\Facades\Mailer;
 
 class Password

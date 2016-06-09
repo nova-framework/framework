@@ -129,9 +129,7 @@ class Registrar extends Controller
         $token = $this->createNewToken($email);
 
         // Retrieve the 'user' Role.
-        $keyName = Role::getKeyName();
-
-        $roleId = Role::where('slug', 'user')->pluck($keyName);
+        $role = Role::where('slug', 'user')->first();
 
         // Create the User record.
         $user = User::create(array(
@@ -140,7 +138,7 @@ class Registrar extends Controller
             'email'           => $email,
             'password'        => $password,
             'activation_code' => $token,
-            'role_id'         => $roleId,
+            'role_id'         => $role->getKey(),
         ));
 
         // Send the associated Activation E-mail.

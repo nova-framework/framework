@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 05, 2016 at 12:16 PM
+-- Generation Time: Jun 09, 2016 at 10:15 PM
 -- Server version: 10.0.25-MariaDB
 -- PHP Version: 5.6.22
 
@@ -44,8 +44,7 @@ INSERT INTO `nova_roles` (`id`, `name`, `slug`, `description`, `created_at`, `up
 (2, 'Administrator', 'administrator', 'Full access to create, edit, and update companies, and orders.', '2016-06-05 01:48:00', '2016-06-05 01:48:00'),
 (3, 'Manager', 'manager', 'Ability to create new companies and orders, or edit and update any existing ones.', '2016-06-05 01:48:00', '2016-06-05 01:48:00'),
 (4, 'Company Manager', 'company-manager', 'Able to manage the company that the user belongs to, including adding sites, creating new users and assigning licences.', '2016-06-05 01:48:00', '2016-06-05 01:48:00'),
-(5, 'User', 'user', 'A standard user that can have a licence assigned to them. No administrative features.', '2016-06-05 01:48:00', '2016-06-05 01:48:00'),
-(6, 'Guest', 'guest', 'The Role of an unauthenticated Visitor of the site.', '2016-06-05 10:47:13', '2016-06-05 10:54:12');
+(5, 'User', 'user', 'A standard user that can have a licence assigned to them. No administrative features.', '2016-06-05 01:48:00', '2016-06-05 01:48:00');
 
 --
 -- Indexes for dumped tables

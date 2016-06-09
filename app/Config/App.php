@@ -20,6 +20,13 @@ Config::set('app', array(
 
     // Enable multilingual support.
     'multilingual' => false,
+
+    // The application's paths.
+    'paths' => array(
+        'base'    => ROOTDIR,
+        'app'     => APPDIR,
+        'storage' => APPDIR .'Storage' .DS,
+    ),
 ));
 
 /**

@@ -10,11 +10,15 @@ namespace Core;
 
 use Illuminate\Container\Container;
 use Core\Providers as ProviderRepository;
-use Events\EventServiceProvider;
 use Http\Request;
+use Http\Response;
+
+use Events\EventServiceProvider;
+use Routing\RoutingServiceProvider;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
 
 class Application extends Container
 {
@@ -40,27 +44,82 @@ class Application extends Container
     protected $deferredServices = array();
 
     /**
+     * The Request class used by the application.
+     *
+     * @var string
+     */
+    protected static $requestClass = 'Http\Request';
+
+
+    /**
      * Create a new application instance.
      *
      * @return void
      */
     public function __construct()
     {
+        $this->registerBaseBindings($request ?: $this->createNewRequest());
+
         $this->registerBaseServiceProviders();
     }
 
     /**
-     * Register all of the base service providers.
+     * Create a new Request instance from the Request class.
+     *
+     * @return \Http\Request
+     */
+    protected function createNewRequest()
+    {
+        return forward_static_call(array(static::$requestClass, 'createFromGlobals'));
+    }
+
+    /**
+     * Register the basic bindings into the Container.
+     *
+     * @param  \Http\Request  $request
+     * @return void
+     */
+    protected function registerBaseBindings(Request $request)
+    {
+        $this->instance('request', $request);
+
+        $this->instance('Illuminate\Container\Container', $this);
+    }
+
+    /**
+     * Register all of the base Service Providers.
      *
      * @return void
      */
     protected function registerBaseServiceProviders()
     {
-        $this->registerEventProvider();
+        foreach (array('Event', 'Exception', 'Routing') as $name) {
+            $this->{"register{$name}Provider"}();
+        }
     }
 
     /**
-     * Register the event service provider.
+     * Register the Exception Service Provider.
+     *
+     * @return void
+     */
+    protected function registerExceptionProvider()
+    {
+        //$this->register(new ExceptionServiceProvider($this));
+    }
+
+    /**
+     * Register the Routing Service Provider.
+     *
+     * @return void
+     */
+    protected function registerRoutingProvider()
+    {
+        $this->register(new RoutingServiceProvider($this));
+    }
+
+    /**
+     * Register the Event Service Provider.
      *
      * @return void
      */
@@ -77,13 +136,6 @@ class Application extends Container
      */
     public function bindInstallPaths(array $paths)
     {
-        $paths = array(
-            'base'    => ROOTDIR,
-            'app'     => APPDIR,
-            'storage' => APPDIR .'Storage' .DS,
-        );
-
-        //
         $this->instance('path', realpath($paths['app']));
 
         foreach ($paths as $key => $value) {

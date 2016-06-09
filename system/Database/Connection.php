@@ -149,9 +149,9 @@ class Connection
         static::$instances[$name] = $connection = new static($config);
 
         // Setup the Fetch Mode on Connection instance and return it.
-        $fetchMode = Config::get('database.fetch');
+        $mode = Config::get('database.fetch');
 
-        return $connection->setFetchMode($fetchModel);
+        return $connection->setFetchMode($mode);
     }
 
     /**

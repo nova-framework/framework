@@ -18,37 +18,47 @@ Config::set('app', array(
     'name' => SITETITLE,
     'skin' => 'blue',
 
-    // Enable multilingual support.
+    /**
+     * Enable multilingual support.
+     */
     'multilingual' => false,
 
-    // The application's paths.
+    /**
+     * The Application's paths.
+     */
     'paths' => array(
         'base'    => ROOTDIR,
         'app'     => APPDIR,
         'storage' => APPDIR .'Storage' .DS,
     ),
 
-    // The Encryption Key.
+    /**
+     * The Encryption Key.
+     */
     'key' => ENCRYPT_KEY,
 
-    // The registered Service Providers.
+    /**
+     * The registered Service Providers.
+     */
     'providers' => array(
         'Cookie\CookieServiceProvider',
         'Encryption\EncryptionServiceProvider',
         'Database\DatabaseServiceProvider',
         'Session\SessionServiceProvider',
+        'Routing\RoutingServiceProvider',
         'Validation\ValidationServiceProvider',
         'Pagination\PaginationServiceProvider',
         'Mailer\MailerServiceProvider',
-        'Routing\RoutingServiceProvider',
     ),
 
-    // The registered Class Aliases.
+    /**
+     * The registered Class Aliases.
+     */
     'aliases' => array(
-        // The Core Tools
+        // The Core Tools.
         'Errors'        => '\Core\Error',
 
-        // The Helpers
+        // The Helpers.
         'Mail'          => '\Helpers\Mailer',
         'Assets'        => '\Helpers\Assets',
         'Csrf'          => '\Helpers\Csrf',
@@ -69,14 +79,14 @@ Config::set('app', array(
         'Tags'          => '\Helpers\Tags',
         'Url'           => '\Helpers\Url',
 
-        // Forensics
+        // The Forensics Console.
         'Console'       => '\Forensics\Console',
 
-        // The Support Classes
+        // The Support Classes.
         'Arr'           => '\Support\Arr',
         'Str'           => '\Support\Str',
 
-        // The Support Facades
+        // The Support Facades.
         'App'           => '\Support\Facades\App',
         'Auth'          => '\Support\Facades\Auth',
         'Config'        => '\Support\Facades\Config',

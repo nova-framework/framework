@@ -159,7 +159,7 @@ class Connection
      */
     protected static function getConnectionConfig($name)
     {
-        $name = $name ?: static::getDefaultConnection();
+        $name = $name ?: Config::get('database.default');
 
         $connections = Config::get('database.connections');
 
@@ -168,16 +168,6 @@ class Connection
         }
 
         return $config;
-    }
-
-    /**
-     * Get the default connection name.
-     *
-     * @return string
-     */
-    public static function getDefaultConnection()
-    {
-        return Config::get('database.default');
     }
 
     /**

@@ -3,8 +3,6 @@
  * Frontend Default Layout
  */
 
-use Helpers\Profiler;
-
 // Generate the Language Changer menu.
 $langCode = Language::code();
 $langName = Language::name();
@@ -130,7 +128,7 @@ $langMenuLinks = ob_get_clean();
     <!-- To the right -->
     <div class="pull-right hidden-xs">
       <?php if(ENVIRONMENT == 'development') { ?>
-      <small><?= Profiler::getReport(); ?></small>
+      <small><!-- DO NOT DELETE! - Profiler --></small>
       <?php } ?>
     </div>
     <!-- Default to the left -->

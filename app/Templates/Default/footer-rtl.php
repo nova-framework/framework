@@ -3,7 +3,6 @@
  * Default RTL Footer.
  */
 
-use Helpers\Profiler;
 ?>
 </div>
 
@@ -16,7 +15,7 @@ use Helpers\Profiler;
             <div class="col-lg-8">
                 <p class="text-muted pull-right">
                     <?php if(ENVIRONMENT == 'development') { ?>
-                    <small><?= Profiler::getReport(); ?></small>
+                    <small><!-- DO NOT DELETE! - Profiler --></small>
                     <?php } ?>
                 </p>
             </div>

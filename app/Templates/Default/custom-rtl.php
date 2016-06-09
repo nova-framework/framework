@@ -3,7 +3,6 @@
  * Custom RTL Layout - a Layout similar with the classic Header and Footer files.
  */
 
-use Helpers\Profiler;
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo LANGUAGE_CODE; ?>">
@@ -83,7 +82,7 @@ echo $css; // Place to pass data / plugable hook zone
             <div class="col-lg-8">
                 <p class="text-muted pull-right">
                     <?php if(ENVIRONMENT == 'development') { ?>
-                    <small><?= Profiler::getReport(); ?></small>
+                    <small><!-- DO NOT DELETE! - Profiler --></small>
                     <?php } ?>
                 </p>
             </div>

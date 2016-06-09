@@ -107,7 +107,9 @@ class FileSessionHandler implements SessionHandlerInterface
         foreach (glob($this->savePath .'sess_*') as $file) {
             clearstatcache(true, $file);
 
-            if (((filemtime($file) + $lifeTime) < time()) && file_exists($file)) {
+            $lastTime = filemtime($file) + $lifeTime;
+
+            if (($lastTime < time()) && file_exists($file)) {
                 unlink($file);
             }
         }

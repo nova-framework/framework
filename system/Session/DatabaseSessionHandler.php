@@ -133,8 +133,10 @@ class DatabaseSessionHandler implements SessionHandlerInterface
      */
     public function gc($lifeTime)
     {
+        $timeLimit = time() - $lifeTime;
+
         $this->getQuery()
-            ->where('last_activity', '<=', (time() - $lifeTime))
+            ->where('last_activity', '<=', $timeLimit)
             ->delete();
     }
 

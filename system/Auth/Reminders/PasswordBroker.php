@@ -2,7 +2,7 @@
 
 namespace Auth\Reminders;
 
-use Auth\Reminders\ReminderRepository;
+use Auth\Reminders\ReminderRepositoryInterface;
 use Auth\UserProviderInterface;
 use Mail\Mailer;
 
@@ -49,7 +49,7 @@ class PasswordBroker
     /**
      * The password reminder repository.
      *
-     * @var \Auth\Reminders\ReminderRepository  $reminders
+     * @var \Auth\Reminders\ReminderRepositoryInterface  $reminders
      */
     protected $reminders;
 
@@ -84,22 +84,20 @@ class PasswordBroker
     /**
      * Create a new password broker instance.
      *
-     * @param  \Auth\Reminders\ReminderRepository  $reminders
+     * @param  \Auth\Reminders\ReminderRepositoryInterface  $reminders
      * @param  \Auth\UserProviderInterface  $users
      * @param  \Mail\Mailer  $mailer
      * @param  string  $reminderView
      * @return void
      */
-    public function __construct(ReminderRepository $reminders,
-                                UserProviderInterface $users,
-                                Mailer $mailer,
-                                $reminderView)
+    public function __construct(ReminderRepositoryInterface $reminders, UserProviderInterface $users, Mailer $mailer, $view)
     {
         $this->users     = $users;
         $this->mailer    = $mailer;
         $this->reminders = $reminders;
 
-        $this->reminderView = $reminderView;
+        //
+        $this->reminderView = $view;
     }
 
     /**
@@ -256,7 +254,7 @@ class PasswordBroker
     /**
      * Get the Password Reminder Repository implementation.
      *
-     * @return \Auth\Reminders\ReminderRepository
+     * @return \Auth\Reminders\ReminderRepositoryInterface
      */
     protected function getRepository()
     {

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Database\Connection;
 
 
-class ReminderRepository
+class ReminderRepository implements ReminderRepositoryInterface
 {
     /**
      * The database connection instance.

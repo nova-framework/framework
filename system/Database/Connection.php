@@ -140,8 +140,13 @@ class Connection
 
         $config = static::getConnectionConfig($name);
 
-        // Create the Connection instance and return it.
-        return static::$instances[$token] = new static($config);
+        // Create the Connection instance.
+        static::$instances[$name] = $connection = new static($config);
+
+        // Setup the Fetch Mode on Connection instance and return it.
+        $fetchMode = Config::get('database.fetch');
+
+        return $connection->setFetchMode($fetchModel);
     }
 
     /**

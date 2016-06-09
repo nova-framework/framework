@@ -15,25 +15,12 @@ class DatabaseManager
     protected $app;
 
     /**
-     * The database connection factory instance.
-     *
-     * @var \Database\Connectors\ConnectionFactory
-     */
-    protected $factory;
-
-    /**
      * The active connection instances.
      *
      * @var array
      */
     protected $connections = array();
 
-    /**
-     * The custom connection resolvers.
-     *
-     * @var array
-     */
-    protected $extensions = array();
 
     /**
      * Create a new database manager instance.

@@ -2,9 +2,9 @@
 
 namespace Auth\Reminders;
 
-use Support\ServiceProvider;
 use Auth\PasswordBroker;
 use Auth\Reminders\ReminderRepository;
+use Support\ServiceProvider;
 
 
 class ReminderServiceProvider extends ServiceProvider

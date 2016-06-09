@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('dashboard', 'Dashboard'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('users/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('dashboard', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('dashboard', 'Dashboard'); ?></a></li>
     </ol>
 </section>
 

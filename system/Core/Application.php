@@ -10,7 +10,14 @@ namespace Core;
 
 use Illuminate\Container\Container;
 use Core\Providers as ProviderRepository;
+use Http\Request;
+use Http\Response;
+
 use Events\EventServiceProvider;
+use Routing\RoutingServiceProvider;
+
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
 class Application extends Container
@@ -37,27 +44,82 @@ class Application extends Container
     protected $deferredServices = array();
 
     /**
+     * The Request class used by the application.
+     *
+     * @var string
+     */
+    protected static $requestClass = 'Http\Request';
+
+
+    /**
      * Create a new application instance.
      *
      * @return void
      */
     public function __construct()
     {
+        $this->registerBaseBindings($request ?: $this->createNewRequest());
+
         $this->registerBaseServiceProviders();
     }
 
     /**
-     * Register all of the base service providers.
+     * Create a new Request instance from the Request class.
+     *
+     * @return \Http\Request
+     */
+    protected function createNewRequest()
+    {
+        return forward_static_call(array(static::$requestClass, 'createFromGlobals'));
+    }
+
+    /**
+     * Register the basic bindings into the Container.
+     *
+     * @param  \Http\Request  $request
+     * @return void
+     */
+    protected function registerBaseBindings(Request $request)
+    {
+        $this->instance('request', $request);
+
+        $this->instance('Illuminate\Container\Container', $this);
+    }
+
+    /**
+     * Register all of the base Service Providers.
      *
      * @return void
      */
     protected function registerBaseServiceProviders()
     {
-        $this->registerEventProvider();
+        foreach (array('Event', 'Exception', 'Routing') as $name) {
+            $this->{"register{$name}Provider"}();
+        }
     }
 
     /**
-     * Register the event service provider.
+     * Register the Exception Service Provider.
+     *
+     * @return void
+     */
+    protected function registerExceptionProvider()
+    {
+        //$this->register(new ExceptionServiceProvider($this));
+    }
+
+    /**
+     * Register the Routing Service Provider.
+     *
+     * @return void
+     */
+    protected function registerRoutingProvider()
+    {
+        $this->register(new RoutingServiceProvider($this));
+    }
+
+    /**
+     * Register the Event Service Provider.
      *
      * @return void
      */
@@ -74,13 +136,6 @@ class Application extends Container
      */
     public function bindInstallPaths(array $paths)
     {
-        $paths = array(
-            'base'    => ROOTDIR,
-            'app'     => APPDIR,
-            'storage' => APPDIR .'Storage' .DS,
-        );
-
-        //
         $this->instance('path', realpath($paths['app']));
 
         foreach ($paths as $key => $value) {
@@ -207,6 +262,8 @@ class Application extends Container
     /**
      * Resolve the given type from the Container.
      *
+     * (Overriding Container::make)
+     *
      * @param  string  $abstract
      * @param  array  $parameters
      * @return mixed
@@ -220,6 +277,51 @@ class Application extends Container
         }
 
         return parent::make($abstract, $parameters);
+    }
+
+    /**
+     * Run the application and send the response.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @return void
+     */
+    public function run(SymfonyRequest $request = null)
+    {
+        $request = $request ?: $this['request'];
+
+        $this->dispatch($request);
+    }
+
+    /**
+     * Handle the given request and get the response.
+     *
+     * @param  Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function dispatch(Request $request)
+    {
+        $router = $this['router'];
+
+        return $router->dispatch($this->prepareRequest($request));
+    }
+
+    /**
+     * Prepare the request by injecting any services.
+     *
+     * @param  Http\Request  $request
+     * @return \Http\Request
+     */
+    public function prepareRequest(Request $request)
+    {
+        $config = $this['config'];
+
+        if (! is_null($config['session.driver']) && ! $request->hasSession()) {
+            $session = $this['session.store'];
+
+            $request->setSession($session);
+        }
+
+        return $request;
     }
 
     /**

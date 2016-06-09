@@ -16,13 +16,9 @@ class Aliases
 {
     public static function init()
     {
-        $classes = Config::get('classAliases');
+        $aliases = Config::get('app.aliases', array());
 
-        if(! is_array($classes)) {
-            return;
-        }
-
-        foreach ($classes as $classAlias => $className) {
+        foreach ($aliases as $classAlias => $className) {
             // This ensures the alias is created in the global namespace.
             $classAlias = '\\' .ltrim($classAlias, '\\');
 

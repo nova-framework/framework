@@ -3,9 +3,6 @@
  * Default RTL Layout - a Layout similar with the classic Header and Footer files.
  */
 
-use Helpers\Profiler;
-use Forensics\Profiler as QuickProfiler;
-
 // Generate the Language Changer menu.
 $language = Language::code();
 
@@ -73,7 +70,7 @@ echo $css; // Place to pass data / plugable hook zone
             <div class="col-lg-8">
                 <p class="text-muted pull-right">
                     <?php if(ENVIRONMENT == 'development') { ?>
-                    <small><?= Profiler::getReport(); ?></small>
+                    <small><!-- DO NOT DELETE! - Profiler --></small>
                     <?php } ?>
                 </p>
             </div>

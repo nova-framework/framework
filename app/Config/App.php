@@ -16,71 +16,119 @@ use Core\Config;
 Config::set('app', array(
     'url'  => SITEURL,
     'name' => SITETITLE,
-    'skin' => 'blue',
 
-    // Enable multilingual support.
+    /**
+     * Enable multilingual support.
+     */
     'multilingual' => false,
-));
 
-/**
- * The registered Service Providers.
- */
-Config::set('providers', array(
-    'Events\EventServiceProvider',
-));
+    /**
+     * The Application's paths.
+     */
+    'paths' => array(
+        'base'    => ROOTDIR,
+        'app'     => APPDIR,
+        'storage' => APPDIR .'Storage' .DS,
+    ),
 
-/**
- * The Class Aliases configuration.
- */
-Config::set('classAliases', array(
-    // The Core Tools
-    'Errors'        => '\Core\Error',
+    /**
+     * The Backend's Color Scheme.
+     */
+    'color_scheme' => 'blue',
 
-    // The Helpers
-    'Mail'          => '\Helpers\Mailer',
-    'Assets'        => '\Helpers\Assets',
-    'Csrf'          => '\Helpers\Csrf',
-    'Date'          => '\Helpers\Date',
-    'Document'      => '\Helpers\Document',
-    'Encrypter'     => '\Helpers\Encrypter',
-    'FastCache'     => '\Helpers\FastCache',
-    'Form'          => '\Helpers\Form',
-    'Ftp'           => '\Helpers\Ftp',
-    'GeoCode'       => '\Helpers\GeoCode',
-    'Hooks'         => '\Helpers\Hooks',
-    'Inflector'     => '\Helpers\Inflector',
-    'Number'        => '\Helpers\Number',
-    'RainCaptcha'   => '\Helpers\RainCaptcha',
-    'ReservedWords' => '\Helpers\ReservedWords',
-    'SimpleCurl'    => '\Helpers\SimpleCurl',
-    'TableBuilder'  => '\Helpers\TableBuilder',
-    'Tags'          => '\Helpers\Tags',
-    'Url'           => '\Helpers\Url',
+    /**
+     * The default locale that will be used by the translation.
+     */
+    'locale' => LANGUAGE_CODE,
 
-    // Forensics
-    'Console'       => '\Forensics\Console',
+    /**
+     * The default Timezone for your website.
+     * http://www.php.net/manual/en/timezones.php
+     */
+    'timezone' => 'UTC',
 
-    // The Support Classes
-    'Arr'           => '\Support\Arr',
-    'Str'           => '\Support\Str',
+    /**
+     * The Encryption Key.
+     */
+    'key' => ENCRYPT_KEY,
 
-    // The Support Facades
-    'App'           => '\Support\Facades\App',
-    'Auth'          => '\Support\Facades\Auth',
-    'Config'        => '\Support\Facades\Config',
-    'Cookie'        => '\Support\Facades\Cookie',
-    'Crypt'         => '\Support\Facades\Crypt',
-    'DB'            => '\Support\Facades\Database',
-    'Event'         => '\Support\Facades\Event',
-    'Hash'          => '\Support\Facades\Hash',
-    'Input'         => '\Support\Facades\Input',
-    'Language'      => '\Support\Facades\Language',
-    'Mailer'        => '\Support\Facades\Mailer',
-    'Paginator'     => '\Support\Facades\Paginator',
-    'Password'      => '\Support\Facades\Password',
-    'Redirect'      => '\Support\Facades\Redirect',
-    'Request'       => '\Support\Facades\Request',
-    'Response'      => '\Support\Facades\Response',
-    'Session'       => '\Support\Facades\Session',
-    'Validator'     => '\Support\Facades\Validator',
+    /**
+     *  Prevents the website from CSRF attacks.
+     */
+    'csrf' => true,
+
+    /**
+     * The registered Service Providers.
+     */
+    'providers' => array(
+        'Cookie\CookieServiceProvider',
+        'Encryption\EncryptionServiceProvider',
+        'Database\DatabaseServiceProvider',
+        'Session\SessionServiceProvider',
+        'Routing\RoutingServiceProvider',
+        'Validation\ValidationServiceProvider',
+        'Pagination\PaginationServiceProvider',
+        'Mailer\MailerServiceProvider',
+    ),
+
+    /**
+     * The Service Providers Manifest path.
+     */
+    'manifest' => APPDIR .'Storage' .DS,
+
+    /**
+     * The registered Class Aliases.
+     */
+    'aliases' => array(
+        // The Core Tools.
+        'Errors'        => '\Core\Error',
+
+        // The Helpers.
+        'Mail'          => '\Helpers\Mailer',
+        'Assets'        => '\Helpers\Assets',
+        'Csrf'          => '\Helpers\Csrf',
+        'Date'          => '\Helpers\Date',
+        'Document'      => '\Helpers\Document',
+        'Encrypter'     => '\Helpers\Encrypter',
+        'FastCache'     => '\Helpers\FastCache',
+        'Form'          => '\Helpers\Form',
+        'Ftp'           => '\Helpers\Ftp',
+        'GeoCode'       => '\Helpers\GeoCode',
+        'Hooks'         => '\Helpers\Hooks',
+        'Inflector'     => '\Helpers\Inflector',
+        'Number'        => '\Helpers\Number',
+        'RainCaptcha'   => '\Helpers\RainCaptcha',
+        'ReservedWords' => '\Helpers\ReservedWords',
+        'SimpleCurl'    => '\Helpers\SimpleCurl',
+        'TableBuilder'  => '\Helpers\TableBuilder',
+        'Tags'          => '\Helpers\Tags',
+        'Url'           => '\Helpers\Url',
+
+        // The Forensics Console.
+        'Console'       => '\Forensics\Console',
+
+        // The Support Classes.
+        'Arr'           => '\Support\Arr',
+        'Str'           => '\Support\Str',
+
+        // The Support Facades.
+        'App'           => '\Support\Facades\App',
+        'Auth'          => '\Support\Facades\Auth',
+        'Config'        => '\Support\Facades\Config',
+        'Cookie'        => '\Support\Facades\Cookie',
+        'Crypt'         => '\Support\Facades\Crypt',
+        'DB'            => '\Support\Facades\Database',
+        'Event'         => '\Support\Facades\Event',
+        'Hash'          => '\Support\Facades\Hash',
+        'Input'         => '\Support\Facades\Input',
+        'Language'      => '\Support\Facades\Language',
+        'Mailer'        => '\Support\Facades\Mailer',
+        'Paginator'     => '\Support\Facades\Paginator',
+        'Password'      => '\Support\Facades\Password',
+        'Redirect'      => '\Support\Facades\Redirect',
+        'Request'       => '\Support\Facades\Request',
+        'Response'      => '\Support\Facades\Response',
+        'Session'       => '\Support\Facades\Session',
+        'Validator'     => '\Support\Facades\Validator',
+    ),
 ));

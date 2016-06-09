@@ -8,7 +8,7 @@
 
 namespace Support\Facades;
 
-
+use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;
 use Http\Response as HttpResponse;
 use Session\SessionInterface;
@@ -102,8 +102,14 @@ class App
             // Insert the QuickProfiler Widget in the Response's Content.
 
             $content = str_replace(
-                '<!-- DO NOT DELETE! - Forensics Profiler -->',
-                QuickProfiler::process(true),
+                array(
+                    '<!-- DO NOT DELETE! - Forensics Profiler -->',
+                    '<!-- DO NOT DELETE! - Profiler -->',
+                ),
+                array(
+                    QuickProfiler::process(true),
+                    Profiler::getReport(),
+                ),
                 $content
             );
         } else if(ENVIRONMENT == 'production') {

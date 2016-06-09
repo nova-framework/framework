@@ -3,8 +3,6 @@
  * Frontend Default Layout
  */
 
-use Helpers\Profiler;
-
 // Generate the Language Changer menu.
 $langCode = Language::code();
 $langName = Language::name();
@@ -67,7 +65,7 @@ $langMenuLinks = ob_get_clean();
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-<?= Config::get('app.skin', 'blue'); ?> layout-top-nav">
+<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> layout-top-nav">
 <div class="wrapper">
   <header class="main-header">
     <nav class="navbar navbar-static-top">
@@ -130,7 +128,7 @@ $langMenuLinks = ob_get_clean();
     <!-- To the right -->
     <div class="pull-right hidden-xs">
       <?php if(ENVIRONMENT == 'development') { ?>
-      <small><?= Profiler::getReport(); ?></small>
+      <small><!-- DO NOT DELETE! - Profiler --></small>
       <?php } ?>
     </div>
     <!-- Default to the left -->

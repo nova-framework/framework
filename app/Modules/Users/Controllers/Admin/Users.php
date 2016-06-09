@@ -40,7 +40,7 @@ class Users extends Controller
     protected function before()
     {
         // Check the User Authorization - while using the Extended Auth Driver.
-        if (! Auth::user()->hasRole('administrator')) {
+        if (($this->getMethod() != 'profile') && ! Auth::user()->hasRole('administrator')) {
             $status = __('You are not authorized to access this resource.');
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
@@ -48,7 +48,7 @@ class Users extends Controller
 
         // Check the User Authorization - while using the Database Auth Driver.
         /*
-        if (! Authorize::userHasRole('administrator')) {
+        if (($this->getMethod() != '') && ! Authorize::userHasRole('administrator')) {
             $status = __('You are not authorized to access this resource.');
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');

@@ -104,7 +104,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
                 'id'            => $sessionId,
                 'payload'       => base64_encode($sessionData),
                 'last_activity' => time(),
-            ));
+            );
 
             $this->getQuery()->insert($data);
         }
@@ -133,8 +133,10 @@ class DatabaseSessionHandler implements SessionHandlerInterface
      */
     public function gc($lifeTime)
     {
+        $timeLimit = time() - $lifeTime;
+
         $this->getQuery()
-            ->where('last_activity', '<=', (time() - $lifeTime))
+            ->where('last_activity', '<=', $timeLimit)
             ->delete();
     }
 

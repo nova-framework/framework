@@ -3,8 +3,6 @@
  * Backend Default Layout
  */
 
-use Helpers\Profiler;
-
 // Prepare the current User Info.
 $user = Auth::user();
 
@@ -72,7 +70,7 @@ $langMenuLinks = ob_get_clean();
 
 </head>
 
-<body class="hold-transition skin-<?= Config::get('app.skin', 'blue'); ?> sidebar-mini">
+<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->
@@ -190,7 +188,7 @@ $langMenuLinks = ob_get_clean();
     <!-- To the right -->
     <div class="pull-right hidden-xs">
       <?php if(ENVIRONMENT == 'development') { ?>
-      <small><?= Profiler::getReport(); ?></small>
+      <small><!-- DO NOT DELETE! - Profiler --></small>
       <?php } ?>
     </div>
     <!-- Default to the left -->

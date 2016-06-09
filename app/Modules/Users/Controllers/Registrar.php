@@ -92,6 +92,8 @@ class Registrar extends Controller
      * Handle a POST request to login the User.
      *
      * @return Response
+     *
+     * @thow \RuntimeException
      */
     public function store()
     {
@@ -128,10 +130,12 @@ class Registrar extends Controller
 
         $token = $this->createNewToken($email);
 
-        // Retrieve the 'user' Role.
-        $keyName = Role::getKeyName();
+        // Retrieve the default 'user' Role.
+        $role = Role::where('slug', 'user')->first();
 
-        $roleId = Role::where('slug', 'user')->pluck($keyName);
+        if($role === null) {
+            throw new \RuntimeException('Default Role not found.');
+        }
 
         // Create the User record.
         $user = User::create(array(
@@ -140,7 +144,7 @@ class Registrar extends Controller
             'email'           => $email,
             'password'        => $password,
             'activation_code' => $token,
-            'role_id'         => $roleId,
+            'role_id'         => $role->getKey(),
         ));
 
         // Send the associated Activation E-mail.

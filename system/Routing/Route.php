@@ -367,7 +367,6 @@ class Route
             if (! empty($matches)) {
                 $language = array_shift($matches);
 
-
                 $active = Config::get('app.multilingual', false);
 
                 // Check again if the first parameter is a a valid Language Code.

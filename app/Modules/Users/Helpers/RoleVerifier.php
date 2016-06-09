@@ -30,10 +30,10 @@ class RoleVerifier
         }
 
         // Check if the User is a Root account.
-        if (is_null($role) return false;
+        if (is_null($role)) return false;
 
         // Check if the User is a Root account.
-        if ($role->slug == 'root')) return true;
+        if ($role->slug == 'root') return true;
 
         if (! is_array($roles)) return static::checkUserRole($roles);
 

@@ -119,7 +119,15 @@ abstract class Controller
         }
 
         // Before the Action execution stage.
-        if ($this->before() === false) {
+        $result = $this->before();
+
+        // Process the stage result.
+        if ($result instanceof SymfonyResponse) {
+            // Finish the Session and send the Response.
+            App::finish($result);
+
+            return true;
+        } else if ($result === false) {
             // This is needed to stop the execution.
             return false;
         }

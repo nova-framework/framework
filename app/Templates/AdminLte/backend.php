@@ -72,7 +72,7 @@ $langMenuLinks = ob_get_clean();
 
 </head>
 
-<body class="hold-transition skin-<?= Config::get('app.skin', 'blue'); ?> sidebar-mini">
+<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->

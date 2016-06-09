@@ -16,7 +16,6 @@ use Core\Config;
 Config::set('app', array(
     'url'  => SITEURL,
     'name' => SITETITLE,
-    'skin' => 'blue',
 
     /**
      * Enable multilingual support.
@@ -33,9 +32,30 @@ Config::set('app', array(
     ),
 
     /**
+     * The Backend's Color Scheme.
+     */
+    'color_scheme' => 'blue',
+
+    /**
+     * The default locale that will be used by the translation.
+     */
+    'locale' => LANGUAGE_CODE,
+
+    /**
+     * The default Timezone for your website.
+     * http://www.php.net/manual/en/timezones.php
+     */
+    'timezone' => 'UTC',
+
+    /**
      * The Encryption Key.
      */
     'key' => ENCRYPT_KEY,
+
+    /**
+     *  Prevents the website from CSRF attacks.
+     */
+    'csrf' => true,
 
     /**
      * The registered Service Providers.
@@ -50,6 +70,11 @@ Config::set('app', array(
         'Pagination\PaginationServiceProvider',
         'Mailer\MailerServiceProvider',
     ),
+
+    /**
+     * The Service Providers Manifest path.
+     */
+    'manifest' => APPDIR .'Storage' .DS,
 
     /**
      * The registered Class Aliases.

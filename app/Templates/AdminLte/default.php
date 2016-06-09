@@ -67,7 +67,7 @@ $langMenuLinks = ob_get_clean();
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-<?= Config::get('app.skin', 'blue'); ?> layout-top-nav">
+<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> layout-top-nav">
 <div class="wrapper">
   <header class="main-header">
     <nav class="navbar navbar-static-top">

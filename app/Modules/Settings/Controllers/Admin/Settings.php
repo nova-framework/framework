@@ -102,7 +102,7 @@ class Settings extends Controller
         $options = array(
             // The Application.
             'siteName'        => Config::get('app.name'),
-            'siteSkin'        => Config::get('app.skin'),
+            'siteSkin'        => Config::get('app.color_scheme'),
             'cronToken'       => Config::get('app.cronToken'),
 
             // The Mailer
@@ -130,8 +130,8 @@ class Settings extends Controller
 
         if($validator->passes()) {
             // The Application.
-            Config::set('app.name', $input['siteName']);
-            Config::set('app.skin', $input['siteSkin']);
+            Config::set('app.name',          $input['siteName']);
+            Config::set('app.color_scheme',  $input['siteSkin']);
 
             // The Mailer
             Config::set('mail.driver',       $input['mailDriver']);

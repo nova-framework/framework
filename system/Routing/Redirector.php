@@ -29,7 +29,7 @@ class Redirector
      * @param  \Http\Request  $request
      * @return void
      */
-    public function __construct(Request $request, SessionStore $session)
+    public function __construct(Request $request, SessionStore $session = null)
     {
         $this->request = $request;
         $this->session = $session;

@@ -92,6 +92,8 @@ class Registrar extends Controller
      * Handle a POST request to login the User.
      *
      * @return Response
+     *
+     * @thow \RuntimeException
      */
     public function store()
     {
@@ -130,6 +132,10 @@ class Registrar extends Controller
 
         // Retrieve the 'user' Role.
         $role = Role::where('slug', 'user')->first();
+
+        if($role === null) {
+            throw new \RuntimeException('Default Role not found.');
+        }
 
         // Create the User record.
         $user = User::create(array(

@@ -11,7 +11,10 @@ namespace Core;
 use Illuminate\Container\Container;
 use Core\Providers as ProviderRepository;
 use Events\EventServiceProvider;
+use Http\Request;
 
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class Application extends Container
 {
@@ -207,6 +210,8 @@ class Application extends Container
     /**
      * Resolve the given type from the Container.
      *
+     * (Overriding Container::make)
+     *
      * @param  string  $abstract
      * @param  array  $parameters
      * @return mixed
@@ -220,6 +225,45 @@ class Application extends Container
         }
 
         return parent::make($abstract, $parameters);
+    }
+
+    /**
+     * Run the application and send the response.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @return void
+     */
+    public function run(SymfonyRequest $request = null)
+    {
+        $request = $request ?: $this['request'];
+
+        $this->dispatch($request);
+    }
+
+    /**
+     * Handle the given request and get the response.
+     *
+     * @param  Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function dispatch(Request $request)
+    {
+        return $this['router']->dispatch($this->prepareRequest($request));
+    }
+
+    /**
+     * Prepare the request by injecting any services.
+     *
+     * @param  Http\Request  $request
+     * @return \Http\Request
+     */
+    public function prepareRequest(Request $request)
+    {
+        if ( ! is_null($this['config']['session.driver']) && ! $request->hasSession()) {
+            $request->setSession($this['session']->driver());
+        }
+
+        return $request;
     }
 
     /**

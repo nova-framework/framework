@@ -27,6 +27,13 @@ Config::set('app', array(
  */
 Config::set('providers', array(
     'Events\EventServiceProvider',
+    'Cookie\CookieServiceProvider',
+    'Encryption\EncryptionServiceProvider',
+    'Database\DatabaseServiceProvider',
+    'Session\SessionServiceProvider',
+    'Validation\ValidationServiceProvider',
+    'Pagination\PaginationServiceProvider',
+    'Mailer\MailerServiceProvider',
 ));
 
 /**

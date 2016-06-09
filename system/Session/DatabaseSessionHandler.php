@@ -104,7 +104,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
                 'id'            => $sessionId,
                 'payload'       => base64_encode($sessionData),
                 'last_activity' => time(),
-            ));
+            );
 
             $this->getQuery()->insert($data);
         }

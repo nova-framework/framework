@@ -138,7 +138,12 @@ class Connection
             return static::$instances[$name];
         }
 
-        $config = static::getConnectionConfig($name);
+        // Retrieve the requested configuration.
+        $connections = Config::get('database.connections');
+
+        if (is_null($config = array_get($connections, $name))) {
+            throw new \InvalidArgumentException("Database [$name] not configured.");
+        }
 
         // Create the Connection instance.
         static::$instances[$name] = $connection = new static($config);
@@ -147,25 +152,6 @@ class Connection
         $fetchMode = Config::get('database.fetch');
 
         return $connection->setFetchMode($fetchModel);
-    }
-
-    /**
-     * Get the configuration for a Connection.
-     *
-     * @param  string  $name
-     * @return array
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected static function getConnectionConfig($name)
-    {
-        $connections = Config::get('database.connections');
-
-        if (is_null($config = array_get($connections, $name))) {
-            throw new \InvalidArgumentException("Database [$name] not configured.");
-        }
-
-        return $config;
     }
 
     /**

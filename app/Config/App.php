@@ -34,6 +34,7 @@ Config::set('providers', array(
     'Validation\ValidationServiceProvider',
     'Pagination\PaginationServiceProvider',
     'Mailer\MailerServiceProvider',
+    'Routing\RoutingServiceProvider',
 ));
 
 /**

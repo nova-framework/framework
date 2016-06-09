@@ -8,14 +8,14 @@ use Database\Connection;
 class DatabaseManager
 {
     /**
-     * The application instance.
+     * The Application instance.
      *
-     * @var \Foundation\Application
+     * @var \Core\Application
      */
     protected $app;
 
     /**
-     * The active connection instances.
+     * The active Connection instances.
      *
      * @var array
      */
@@ -23,7 +23,7 @@ class DatabaseManager
 
 
     /**
-     * Create a new database manager instance.
+     * Create a new Database Manager instance.
      *
      * @param  \core\Application  $app
      * @return void
@@ -34,7 +34,7 @@ class DatabaseManager
     }
 
     /**
-     * Get a database connection instance.
+     * Get a database Connection instance.
      *
      * @param  string  $name
      * @return \Database\Connection

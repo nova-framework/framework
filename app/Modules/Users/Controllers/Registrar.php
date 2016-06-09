@@ -130,7 +130,7 @@ class Registrar extends Controller
 
         $token = $this->createNewToken($email);
 
-        // Retrieve the 'user' Role.
+        // Retrieve the default 'user' Role.
         $role = Role::where('slug', 'user')->first();
 
         if($role === null) {

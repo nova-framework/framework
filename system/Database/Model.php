@@ -20,7 +20,7 @@ class Model
      *
      * @var string
      */
-    protected $connection = 'default';
+    protected $connection = null;
 
     /**
      * The database connection instance.
@@ -59,17 +59,14 @@ class Model
      */
     public function __construct($connection = null, $basicSetup = false)
     {
-        if (! is_null($connection)) {
-            // Store the requested Connection name.
-            $this->connection = $connection;
-        }
-
         if(is_null($this->table)) {
             // There is not a Table name specified; try to auto-calculate it.
             $className = get_class($this);
 
             $this->table = Inflector::tableize(class_basename($className));
         }
+
+        $this->connection = $connection;
 
         if (! $basicSetup) {
             // Setup the Connection instance.

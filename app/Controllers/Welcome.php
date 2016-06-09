@@ -77,7 +77,7 @@ class Welcome extends Controller
      * Return a translated string.
      * @return string
      */
-    protected function trans($str)
+    protected function trans($str, $code = LANGUAGE_CODE)
     {
         return $this->language->get($str, $this->code);
     }

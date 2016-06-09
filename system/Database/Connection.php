@@ -129,29 +129,55 @@ class Connection
      * @return \Database\Connection|null
      * @throws \Exception
      */
-    public static function getInstance($config = 'default')
+    public static function getInstance($name = null)
     {
-        $connection = (is_string($config) && ! empty($config)) ? $config : 'default';
-
-        // Prepare a Token for handling the Connection instances.
-        $token = md5($connection);
+        $name = $name ?: static::getDefaultConnection();
 
         // If there is already a Connection instantiated, return it.
-        if (isset(static::$instances[$token])) {
-            return static::$instances[$token];
+        if (isset(static::$instances[$name])) {
+            return static::$instances[$name];
         }
 
-        // Retrieve the configuration with the specified name.
-        $config = Config::get('database');
+        $config = static::getConnectionConfig($name);
 
-        if (isset($config[$connection]) && ! empty($config[$connection])) {
-            $config = $config[$connection];
-        } else {
-            throw new \InvalidArgumentException("Connection '$connection' is not defined in your configuration");
+        // Create the Connection instance.
+        static::$instances[$name] = $connection = new static($config);
+
+        // Setup the Fetch Mode on Connection instance and return it.
+        $fetchMode = Config::get('database.fetch');
+
+        return $connection->setFetchMode($fetchModel);
+    }
+
+    /**
+     * Get the configuration for a Connection.
+     *
+     * @param  string  $name
+     * @return array
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected static function getConnectionConfig($name)
+    {
+        $name = $name ?: static::getDefaultConnection();
+
+        $connections = Config::get('database.connections');
+
+        if (is_null($config = array_get($connections, $name))) {
+            throw new \InvalidArgumentException("Database [$name] not configured.");
         }
 
-        // Create the Connection instance and return it.
-        return static::$instances[$token] = new static($config);
+        return $config;
+    }
+
+    /**
+     * Get the default connection name.
+     *
+     * @return string
+     */
+    public static function getDefaultConnection()
+    {
+        return Config::get('database.default');
     }
 
     /**

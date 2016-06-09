@@ -42,7 +42,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      *
      * @var string
      */
-    protected $connection = 'default';
+    protected $connection = null;
 
     /**
      * The table associated with the Model.
@@ -254,13 +254,8 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @param  array  $attributes
      * @return void
      */
-    public function __construct(array $attributes = array(), $connection = null)
+    public function __construct(array $attributes = array())
     {
-        if (! is_null($connection)) {
-            // Store the requested Connection name.
-            $this->connection = $connection;
-        }
-
         $this->bootIfNotBooted();
 
         $this->syncOriginal();

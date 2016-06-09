@@ -41,7 +41,7 @@ class DatabaseManager
      * @param  \core\Application  $app
      * @return void
      */
-    public function __construct($app
+    public function __construct($app)
     {
         $this->app = $app;
     }

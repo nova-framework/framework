@@ -248,7 +248,9 @@ class Application extends Container
      */
     public function dispatch(Request $request)
     {
-        return $this['router']->dispatch($this->prepareRequest($request));
+        $router = $this['router'];
+
+        return $router->dispatch($this->prepareRequest($request));
     }
 
     /**
@@ -259,7 +261,9 @@ class Application extends Container
      */
     public function prepareRequest(Request $request)
     {
-        if ( ! is_null($this['config']['session.driver']) && ! $request->hasSession()) {
+        $config = $this['config'];
+
+        if (! is_null($config['session.driver']) && ! $request->hasSession()) {
             $session = $this['session.store'];
 
             $request->setSession($session);

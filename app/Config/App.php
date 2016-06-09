@@ -14,8 +14,9 @@ use Core\Config;
  * The Application configuration.
  */
 Config::set('app', array(
-    'siteUrl'      => SITEURL,
-    'siteName'     => SITETITLE,
+    'url'  => SITEURL,
+    'name' => SITETITLE,
+    'skin' => 'blue',
 
     // Enable multilingual support.
     'multilingual' => false,

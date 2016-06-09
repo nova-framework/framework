@@ -101,8 +101,8 @@ class Settings extends Controller
         // Load the options from database.
         $options = array(
             // The Application.
-            'siteName'        => Config::get('app.siteName'),
-            'siteSkin'        => Config::get('app.siteSkin'),
+            'siteName'        => Config::get('app.name'),
+            'siteSkin'        => Config::get('app.skin'),
             'cronToken'       => Config::get('app.cronToken'),
 
             // The Mailer
@@ -130,8 +130,8 @@ class Settings extends Controller
 
         if($validator->passes()) {
             // The Application.
-            Config::set('app.siteName',  $input['siteName']);
-            Config::set('app.siteSkin',  $input['siteSkin']);
+            Config::set('app.name', $input['siteName']);
+            Config::set('app.skin', $input['siteSkin']);
 
             // The Mailer
             Config::set('mail.driver',       $input['mailDriver']);

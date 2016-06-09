@@ -8,6 +8,7 @@
 
 namespace Helpers;
 
+use Core\Config;
 use Database\Connection;
 
 use PDO;
@@ -48,15 +49,17 @@ class Database
      * @param  array $group
      * @return Helpers\Database
      */
-    public static function get($config = 'default')
+    public static function get($name = null)
     {
+        $name = $name ?: Config::get('database.default');
+
         // Check if the instance is the same.
-        if (isset(self::$instances[$config])) {
-            return self::$instances[$config];
+        if (isset(self::$instances[$name])) {
+            return self::$instances[$name];
         }
 
         // Set the Database into $instances to avoid any potential duplication.
-        return self::$instances[$config] = new static($config);
+        return self::$instances[$name] = new static($name);
     }
 
     /**

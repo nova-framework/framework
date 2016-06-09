@@ -61,14 +61,17 @@ Config::set('app', array(
      * The registered Service Providers.
      */
     'providers' => array(
-        'Cookie\CookieServiceProvider',
-        'Encryption\EncryptionServiceProvider',
-        'Database\DatabaseServiceProvider',
-        'Session\SessionServiceProvider',
+        'Auth\AuthServiceProvider',
         'Routing\RoutingServiceProvider',
-        'Validation\ValidationServiceProvider',
+        'Cookie\CookieServiceProvider',
+        'Database\DatabaseServiceProvider',
+        'Encryption\EncryptionServiceProvider',
+        'Hashing\HashingServiceProvider',
+        'Mail\MailerServiceProvider',
         'Pagination\PaginationServiceProvider',
-        'Mailer\MailerServiceProvider',
+        'Auth\Reminders\ReminderServiceProvider',
+        'Session\SessionServiceProvider',
+        'Validation\ValidationServiceProvider',
     ),
 
     /**

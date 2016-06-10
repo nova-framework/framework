@@ -176,23 +176,13 @@ abstract class BaseRouter
         $result = call_user_func_array($callback, $params);
 
         if($result instanceof SymfonyResponse) {
-            // Finsih the Session Store.
-            App::finish($result);
-
-            // Send the Response.
-            $result->send();
+            return $result;
         }  else if($result instanceof View) {
             // Create a Response instance.
-            $response = Response::make($result);
-
-            // Finish the Session Store.
-            App::finish($response);
-
-            // Send the Response.
-            $response->send();
+            return Response::make($result);
         }
 
-        return true;
+        return Response::make($result);
     }
 
     /**
@@ -207,7 +197,7 @@ abstract class BaseRouter
     {
         // The Controller's the Execution Flow Methods cannot be called via Router.
         if (($method == 'execute')) {
-            return false;
+            return Response::make(400);
         }
 
         // Initialize the Controller.
@@ -218,14 +208,12 @@ abstract class BaseRouter
         $methods = array_map('strtolower', get_class_methods($controller));
 
         // The called Method should be defined right on the called Controller to be executed.
-        if (in_array(strtolower($method), $methods)) {
-            // Execute the Controller's Method with the given arguments.
-            $controller->execute($method, $params);
-
-            return true;
+        if (! in_array(strtolower($method), $methods)) {
+            Response::make(400);
         }
 
-        return false;
+        // Execute the Controller's Method with the given arguments.
+        return $controller->execute($method, $params);
     }
 
     /**
@@ -249,12 +237,12 @@ abstract class BaseRouter
         $method     = $segments[1];
 
         // The Method shouldn't be called 'execute' or starting with '_'; also check if the Controller's class exists.
-        if (($method[0] !== '_') && class_exists($controller)) {
-            // Invoke the Controller's Method with the given arguments.
-            return $this->invokeController($controller, $method, $params);
+        if (($method[0] === '_') || ! class_exists($controller)) {
+            Response::make(400);
         }
 
-        return false;
+        // Invoke the Controller's Method with the given arguments.
+        return $this->invokeController($controller, $method, $params);
     }
 
     /**
@@ -267,12 +255,8 @@ abstract class BaseRouter
      * Dispatch/Serve a file
      * @return bool
      */
-    protected function dispatchFile(Request $request)
+    protected function dispatchFile($uri)
     {
-        if($request->method() != 'GET') return false;
-
-        $uri = $request->path();
-
         // For proper Assets serving, the file URI should be either of the following:
         //
         // /templates/default/assets/css/style.css

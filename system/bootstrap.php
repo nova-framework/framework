@@ -13,6 +13,7 @@ use Core\Language;
 use Core\Logger;
 use Core\Modules;
 use Routing\Router;
+use Support\Facades\App;
 use Support\Facades\Event;
 use Support\Facades\Request;
 use Support\Facades\Session;
@@ -75,7 +76,11 @@ Modules::loadRoutes();
 /** Inform listeners of Nova execution. */
 Event::fire('nova.framework.booting');
 
-/** Execute matched Routes. */
+/** Get the Request instance. */
 $request = Request::instance();
 
-$router->dispatch($request);
+/** Execute matched Routes. */
+$result = $router->dispatch($request);
+
+/* Finish the Session and send the Response. */
+App::finish($result);

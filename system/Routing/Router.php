@@ -257,24 +257,26 @@ class Router extends BaseRouter
     {
         $this->currentRequest = $request;
 
-        // Retrieve the additional Routing Patterns from configuration.
-        $patterns = Config::get('routing.patterns', array());
-
-        // First, we will supose that URI is associated with an Asset File.
-        if ($this->dispatchFile($request)) {
-            return true;
-        }
-
-        // Not an Asset File URI? Route the current request.
+        // Get the Method and Path.
         $method = $request->method();
 
         $path = $request->path();
+
+        // First, we will supose that URI is associated with an Asset File.
+        if (($method == 'GET') && $this->dispatchFile($path)) {
+            // Return a null value, to notify for no further processing.
+            return null;
+        }
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
         if ($this->defaultRoute !== null) {
             array_push($this->routes, $this->defaultRoute);
         }
 
+        // Retrieve the additional Routing Patterns from configuration.
+        $patterns = Config::get('routing.patterns', array());
+
+        // Execute the Routes matching loop.
         foreach ($this->routes as $route) {
             if ($route->match($path, $method, true, $patterns)) {
                 // Found a valid Route; process it.
@@ -284,10 +286,7 @@ class Router extends BaseRouter
                 $result = $route->applyFilters();
 
                 if($result instanceof SymfonyResponse) {
-                    // Finish the Session and send the Response.
-                    App::finish($result);
-
-                    return true;
+                    return $result;
                 }
 
                 // Get the matched Route callback.
@@ -298,18 +297,14 @@ class Router extends BaseRouter
                     return $this->invokeObject($callback, $route->getParams());
                 }
 
-                return true;
+                // There is no Callback; nothing to send back.
+                return Response::make('');
             }
         }
 
         // No valid Route found; send an Error 404 Response.
         $data = array('error' => htmlspecialchars($path, ENT_COMPAT, 'ISO-8859-1', true));
 
-        $response = Response::error(404, $data);
-
-        // Finish the Session and send the Response.
-        App::finish($response);
-
-        return false;
+        return Response::error(404, $data);
     }
 }

@@ -110,7 +110,7 @@ $app->booted(function() use ($app, $env)
 // Load The Application Start Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .'Boot' .DS .'Global.php';
+$path = $app['path'] .'Boot' .DS .'Environment' .DS .'Global.php';
 
 if (file_exists($path)) require $path;
 
@@ -118,7 +118,7 @@ if (file_exists($path)) require $path;
 // Load The Environment Start Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .'Boot' .DS . ucfirst($env) .'.php';
+$path = $app['path'] .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
 
 if (file_exists($path)) require $path;
 

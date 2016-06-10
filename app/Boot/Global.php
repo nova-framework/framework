@@ -4,7 +4,7 @@
 // Application Error Logger
 //--------------------------------------------------------------------------
 
-Log::useFiles(storage_path() .'/Logs/framework.log');
+Log::useFiles(storage_path() .'Logs ' .DS .'framework.log');
 
 //--------------------------------------------------------------------------
 // Application Error Handler
@@ -16,7 +16,13 @@ App::error(function(Exception $exception, $code)
 });
 
 //--------------------------------------------------------------------------
+// Require The Events File
+//--------------------------------------------------------------------------
+
+require app_path() .'Events.php';
+
+//--------------------------------------------------------------------------
 // Require The Filters File
 //--------------------------------------------------------------------------
 
-require app_path().'Filters.php';
+require app_path() .'Filters.php';

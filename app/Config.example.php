@@ -147,7 +147,7 @@ Config::set('recaptcha', array(
 /**
  * Include the configuration files located on application's Config directory.
  *
- * DO NOT CHANGE THE FOLLOWING CODE!
+ * DO NOT MODIFY THE FOLLOWING CODE:
  */
 foreach (glob(APPDIR .'Config/*') as $configFile) {
     require $configFile;

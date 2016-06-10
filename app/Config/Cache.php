@@ -21,7 +21,7 @@ Config::set('cache', array(
 
     'securityKey' => 'auto',
     'htaccess'    => true,
-    'path'        => CACHEPATH,
+    'path'        => STORAGE_PATH .'Cache', // Where the Session files may be stored.
 
     'memcache' => array(
         array("127.0.0.1",11211,1),

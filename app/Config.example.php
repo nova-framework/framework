@@ -94,11 +94,6 @@ define('PREFIX', 'nova_');
 define('SESSION_PREFIX', 'nova_');
 
 /**
- * Set where the Framework store the Session files.
- */
-define('SESSION_PATH', APPDIR .'Storage' .DS .'Sessions');
-
-/**
  * OPTIONAL, create a constant for the name of the site.
  */
 define('SITETITLE', 'Nova V3.0');
@@ -115,9 +110,9 @@ define('SITETITLE', 'Nova V3.0');
 define('ENCRYPT_KEY', '');
 
 /**
- * Set the Cache files Path.
+ * Set the Storage Path.
  */
-define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
+define('STORAGE_PATH', APPDIR .'Storage' .DS);
 
 /**
  * Setup the Config API Mode.
@@ -150,46 +145,10 @@ Config::set('recaptcha', array(
 ));
 
 /**
- * Setup the Application configuration
+ * Include the configuration files located on application's Config directory.
+ *
+ * DO NOT MODIFY THE FOLLOWING CODE:
  */
-require 'Config/App.php';
-
-/**
- * Setup the Routing configuration
- */
-require 'Config/Routing.php';
-
-/**
- * Setup the Language configuration
- */
-require 'Config/Languages.php';
-
-/**
- * Setup the Class Aliases configuration
- */
-require 'Config/Database.php';
-
-/**
- * Setup the Session configuration
- */
-require 'Config/Session.php';
-
-/**
- * Setup the Module cnfiguration
- */
-require 'Config/Modules.php';
-
-/**
- * Setup the Auth configuration.
- */
-require 'Config/Auth.php';
-
-/**
- * Setup the Mailing API configuration.
- */
-require 'Config/Mail.php';
-
-/**
- * Setup the FastCache configuration.
- */
-require 'Config/Cache.php';
+foreach (glob(APPDIR .'Config/*') as $configFile) {
+    require $configFile;
+}

@@ -28,7 +28,7 @@ Config::set('app', array(
     'paths' => array(
         'base'    => ROOTDIR,
         'app'     => APPDIR,
-        'storage' => APPDIR .'Storage' .DS,
+        'storage' => STORAGE_PATH,
     ),
 
     /**
@@ -77,7 +77,7 @@ Config::set('app', array(
     /**
      * The Service Providers Manifest path.
      */
-    'manifest' => APPDIR .'Storage' .DS,
+    'manifest' => STORAGE_PATH,
 
     /**
      * The registered Class Aliases.

@@ -127,7 +127,7 @@ class Connection
      *
      * @param $name string|array Name of the Connection provided in the configuration or options array
      * @return \Database\Connection|null
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public static function getInstance($name = null)
     {
@@ -145,13 +145,13 @@ class Connection
             throw new \InvalidArgumentException("Database [$name] not configured.");
         }
 
-        // Create the Connection instance.
-        static::$instances[$name] = $connection = new static($config);
+        // Create the requested Connection instance.
+        static::$instances[$name] = $instance = new static($config);
 
         // Setup the Fetch Mode on Connection instance and return it.
         $mode = Config::get('database.fetch');
 
-        return $connection->setFetchMode($mode);
+        return with($instance)->setFetchMode($mode);
     }
 
     /**

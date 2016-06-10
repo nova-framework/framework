@@ -94,11 +94,6 @@ define('PREFIX', 'nova_');
 define('SESSION_PREFIX', 'nova_');
 
 /**
- * Set where the Framework store the Session files.
- */
-define('SESSION_PATH', APPDIR .'Storage' .DS .'Sessions');
-
-/**
  * OPTIONAL, create a constant for the name of the site.
  */
 define('SITETITLE', 'Nova V3.0');
@@ -115,9 +110,9 @@ define('SITETITLE', 'Nova V3.0');
 define('ENCRYPT_KEY', '');
 
 /**
- * Set the Cache files Path.
+ * Set the files Storage Path.
  */
-define('CACHEPATH', APPDIR .'Storage' .DS .'Cache');
+define('STORAGE_PATH', APPDIR .'Storage' .DS);
 
 /**
  * Setup the Config API Mode.

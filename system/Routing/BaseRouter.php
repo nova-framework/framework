@@ -11,6 +11,7 @@ namespace Routing;
 use Core\BaseView as View;
 use Core\Controller;
 use Helpers\Inflector;
+use Http\Request;
 use Routing\Route;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -260,14 +261,18 @@ abstract class BaseRouter
      * Dispatch route
      * @return bool
      */
-    abstract public function dispatch();
+    abstract public function dispatch(Request $request);
 
     /**
      * Dispatch/Serve a file
      * @return bool
      */
-    protected function dispatchFile($uri)
+    protected function dispatchFile(Request $request)
     {
+        if($request->method() != 'GET') return false;
+
+        $uri = $request->path();
+
         // For proper Assets serving, the file URI should be either of the following:
         //
         // /templates/default/assets/css/style.css

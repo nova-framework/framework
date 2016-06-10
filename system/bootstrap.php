@@ -14,6 +14,7 @@ use Core\Logger;
 use Core\Modules;
 use Routing\Router;
 use Support\Facades\Event;
+use Support\Facades\Request;
 use Support\Facades\Session;
 
 use Patchwork\Utf8\Bootup as Patchwork;
@@ -75,4 +76,6 @@ Modules::loadRoutes();
 Event::fire('nova.framework.booting');
 
 /** Execute matched Routes. */
-$router->dispatch();
+$request = Request::instance();
+
+$router->dispatch($request);

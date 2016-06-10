@@ -30,8 +30,6 @@ Event::listen('framework.controller.executing', function($instance, $method, $pa
     foreach (array('afterBody', 'css', 'js', 'meta') as $hook) {
         $result = $hooks->run($hook);
 
-        var_export($result);
-
         // Share the result into Views.
         View::share($hook, $result);
     }

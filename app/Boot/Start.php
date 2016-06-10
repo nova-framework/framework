@@ -28,14 +28,25 @@ require app_path() .'Config.php';
 // Create New Application
 //--------------------------------------------------------------------------
 
-$paths = Config::get('app.paths');
-
-// Get a Application instance.
 $app = new Application();
 
 $app->instance('app', $app);
 
+//--------------------------------------------------------------------------
+// Bind Paths
+//--------------------------------------------------------------------------
+
+$paths = Config::get('app.paths');
+
 $app->bindInstallPaths($paths);
+
+//--------------------------------------------------------------------------
+// Detect The Application Environment
+//--------------------------------------------------------------------------
+
+$env = $app->detectEnvironment(array(
+    'local' => array('your-machine-name'),
+));
 
 //--------------------------------------------------------------------------
 // Check For The Test Environment
@@ -46,10 +57,14 @@ if (isset($unitTesting)) {
 }
 
 //--------------------------------------------------------------------------
-// Load The Nova Facades
+// Enable HTTP Method Override
 //--------------------------------------------------------------------------
 
-Facade::clearResolvedInstances();
+Request::enableHttpMethodParameterOverride();
+
+//--------------------------------------------------------------------------
+// Load The Framework Facades
+//--------------------------------------------------------------------------
 
 Facade::setFacadeApplication($app);
 
@@ -92,12 +107,6 @@ $aliases = $config['aliases'];
 AliasLoader::getInstance($aliases)->register();
 
 //--------------------------------------------------------------------------
-// Enable HTTP Method Override
-//--------------------------------------------------------------------------
-
-Request::enableHttpMethodParameterOverride();
-
-//--------------------------------------------------------------------------
 // Register The Core Service Providers
 //--------------------------------------------------------------------------
 
@@ -136,4 +145,14 @@ $routes = $app['path'] .'Routes.php';
 
 if (is_readable($routes)) require $routes;
 
+//--------------------------------------------------------------------------
+// End of the Boot Stage Registration
+//--------------------------------------------------------------------------
+
 });
+
+//--------------------------------------------------------------------------
+// Execute The Application
+//--------------------------------------------------------------------------
+
+$app->run();

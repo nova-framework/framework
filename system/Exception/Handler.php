@@ -108,7 +108,13 @@ class Handler
      */
     protected function displayException($exception)
     {
-        return Response::make($exception->getMessage());
+        if ($this->debug) {
+            $message = $exception->getMessage();
+        } else {
+            $message = 'An error has occurred. This error has been reported.';
+        }
+
+        return Response::make($message);
     }
 
     /**

@@ -13,6 +13,7 @@ use Core\Controller;
 use Helpers\Inflector;
 use Http\Request;
 use Routing\Route;
+use Support\Facades\Facade;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
@@ -67,6 +68,12 @@ abstract class BaseRouter
 
     public static function &getInstance()
     {
+        $app = Facade::getFacadeApplication();
+
+        if(! is_null($app)) {
+            return $app['router'];
+        }
+
         if (self::$instance === null) {
             $appRouter = APPROUTER;
 

@@ -39,6 +39,8 @@ class SessionServiceProvider extends ServiceProvider
             // Register the Session Handler.
             $me->registerSessionHandler($config);
 
+            $me->startSession($config);
+
             $store = new Store($cookie, $app['session.handler'], $token);
 
             return $store->start();
@@ -79,6 +81,31 @@ class SessionServiceProvider extends ServiceProvider
 
             return $handler;
         });
+    }
+
+    protected function startSession(array $config)
+    {
+        $cookieJar = $this->app['cookie'];
+
+        // Start the Session.
+        $lifeTime = (int) $config['lifetime'] * 60;
+
+        session_set_cookie_params($lifeTime, $config['path'], $config['domain']);
+
+        session_start();
+
+        // Create and queue a Cookie containing the proper Session's lifetime.
+        $cookie = $cookieJar->make(
+            session_name(),
+            session_id(),
+            $config['lifetime'],
+            $config['path'],
+            $config['domain'],
+            $config['secure'],
+            false
+        );
+
+        $cookieJar->queue($cookie);
     }
 }
 

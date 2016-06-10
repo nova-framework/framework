@@ -9,7 +9,7 @@
 namespace Routing;
 
 use Core\Config;
-use Events\Dispatcher as EventDispatcher;
+use Events\Dispatcher;
 use Helpers\Inflector;
 use Helpers\Url;
 use Http\Request;
@@ -297,7 +297,7 @@ class Router extends BaseRouter
                     return $this->invokeObject($callback, $route->getParams());
                 }
 
-                // There is no Callback; nothing to send back.
+                // There is no Callback; no content to send back.
                 return Response::make('');
             }
         }

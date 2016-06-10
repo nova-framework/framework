@@ -126,7 +126,7 @@ $app->booted(function() use ($app, $env)
 // Load The Application Start Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .'Boot' .DS .'Global.php';
+$path = $app['path'] .DS .'Boot' .DS .'Global.php';
 
 if (is_readable($path)) require $path;
 
@@ -134,7 +134,7 @@ if (is_readable($path)) require $path;
 // Load The Environment Start Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
+$path = $app['path'] .DS .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
 
 if (is_readable($path)) require $path;
 
@@ -142,7 +142,7 @@ if (is_readable($path)) require $path;
 // Load The Application Routes
 //--------------------------------------------------------------------------
 
-$routes = $app['path'] .'Routes.php';
+$routes = $app['path'] .DS .'Routes.php';
 
 if (is_readable($routes)) require $routes;
 

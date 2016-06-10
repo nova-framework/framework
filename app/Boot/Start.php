@@ -169,6 +169,7 @@ $routes = $app['path'] .DS .'Routes.php';
 
 if (is_readable($routes)) require $routes;
 
+// Load the Routes defined on Modules.
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Routes.php';
 

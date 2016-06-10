@@ -21,6 +21,7 @@ App::error(function(Exception $exception, $code)
 
 require app_path() .'Events.php';
 
+// Load the Events defined on Modules.
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Events.php';
 
@@ -33,6 +34,7 @@ foreach ($modules as $module) {
 
 require app_path() .'Filters.php';
 
+// Load the Filters defined on Modules.
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Filters.php';
 

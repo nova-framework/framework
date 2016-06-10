@@ -32,6 +32,14 @@ $app->instance('app', $app);
 $app->bindInstallPaths($paths);
 
 //--------------------------------------------------------------------------
+// Check For The Test Environment
+//--------------------------------------------------------------------------
+
+if (isset($unitTesting)) {
+    $app['env'] = $env = $testEnvironment;
+}
+
+//--------------------------------------------------------------------------
 // Load The Nova Facades
 //--------------------------------------------------------------------------
 
@@ -50,7 +58,7 @@ $app->registerCoreContainerAliases();
 //--------------------------------------------------------------------------
 
 $app->instance('config', $config = new ConfigRepository(
-    $app->getConfigLoader()
+    $app->getConfigLoader(), $env
 ));
 
 //--------------------------------------------------------------------------
@@ -70,6 +78,28 @@ $config = $app['config']['app'];
 date_default_timezone_set($config['timezone']);
 
 //--------------------------------------------------------------------------
+// Register The Alias Loader
+//--------------------------------------------------------------------------
+
+$aliases = $config['aliases'];
+
+AliasLoader::getInstance($aliases)->register();
+
+//--------------------------------------------------------------------------
+// Enable HTTP Method Override
+//--------------------------------------------------------------------------
+
+Request::enableHttpMethodParameterOverride();
+
+//--------------------------------------------------------------------------
+// Register The Core Service Providers
+//--------------------------------------------------------------------------
+
+$providers = $config['providers'];
+
+$app->getProviderRepository()->load($app, $providers);
+
+//--------------------------------------------------------------------------
 // Application Error Logger
 //--------------------------------------------------------------------------
 
@@ -81,5 +111,30 @@ Log::useFiles(storage_path() .'/Logs/framework.log');
 
 App::error(function(Exception $exception, $code)
 {
-        Log::error($exception);
+    Log::error($exception);
+});
+
+//--------------------------------------------------------------------------
+// Register Booted Start Files
+//--------------------------------------------------------------------------
+
+$app->booted(function() use ($app, $env)
+{
+
+//--------------------------------------------------------------------------
+// Load The Environment Start Script
+//--------------------------------------------------------------------------
+
+$path = $app['path'] ."Boot/{$env}.php";
+
+if (file_exists($path)) require $path;
+
+//--------------------------------------------------------------------------
+// Load The Application Routes
+//--------------------------------------------------------------------------
+
+$routes = $app['path'] .'Routes.php';
+
+if (file_exists($routes)) require $routes;
+
 });

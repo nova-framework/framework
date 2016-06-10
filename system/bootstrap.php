@@ -20,7 +20,7 @@ use Support\Facades\Session;
 
 use Patchwork\Utf8\Bootup as Patchwork;
 
-/** Ensure using internally the UTF-8 engoding. */
+/** Ensure using internally the UTF-8 encoding. */
 if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('utf-8');
 }

@@ -9,7 +9,7 @@
 namespace Core;
 
 use Illuminate\Container\Container;
-use Core\EnvironmentDetector;
+use Core\Environment as EnvironmentDetector;
 use Core\Providers as ProviderRepository;
 use Config\FileLoader;
 use Http\Request;

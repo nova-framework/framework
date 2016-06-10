@@ -1,11 +1,17 @@
 <?php
+/**
+ * Environment - Implements a Environment Detector.
+ *
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ */
 
 namespace Core;
 
 use Closure;
 
 
-class EnvironmentDetector
+class Environment
 {
     /**
      * Detect the application's current environment.

@@ -144,6 +144,8 @@ if (is_readable($path)) require $path;
 
 $routes = $app['path'] .DS .'Routes.php';
 
+echo '<pre>' .var_export($routes, true) .'</pre>';
+
 if (is_readable($routes)) require $routes;
 
 //--------------------------------------------------------------------------

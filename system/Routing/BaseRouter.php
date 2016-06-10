@@ -66,7 +66,7 @@ abstract class BaseRouter
     {
     }
 
-    public static function &getInstance()
+    public static function getInstance()
     {
         $app = Facade::getFacadeApplication();
 

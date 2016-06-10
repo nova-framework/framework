@@ -179,7 +179,7 @@ class Router extends BaseRouter
     protected static function register($method, $route, $action = null)
     {
         // Get the Router instance.
-        $router =& self::getInstance();
+        $router = self::getInstance();
 
         // Prepare the route Methods.
         if (is_string($method) && (strtolower($method) == 'any')) {

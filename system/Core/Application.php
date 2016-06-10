@@ -120,7 +120,48 @@ class Application extends Container
      */
     protected function createNewRequest()
     {
-        return forward_static_call(array(static::$requestClass, 'createFromGlobals'));
+        $request = forward_static_call(array(static::$requestClass, 'createFromGlobals'));
+
+        $this->processRequestCookies($request);
+
+        return $request;
+    }
+
+    protected function processRequestCookies(SymfonyRequest $request)
+    {
+        // Retrieve the Session configuration.
+        $config = $this['config']['session'];
+
+        if($config['encrypt'] == false) {
+            // The Cookies encryption is disabled.
+            return;
+        }
+
+        // Get the Encrypter instance.
+        $encrypter = $this['encrypter'];
+
+        foreach ($request->cookies as $name => $cookie) {
+            if($name == 'PHPSESSID') {
+                // Leave alone the PHPSESSID.
+                continue;
+            }
+
+            try {
+                if(is_array($cookie)) {
+                    $decrypted = array();
+
+                    foreach ($cookie as $key => $value) {
+                        $decrypted[$key] = $encrypter->decrypt($value);
+                    }
+                } else {
+                    $decrypted = $encrypter->decrypt($cookie);
+                }
+
+                $request->cookies->set($name, $decrypted);
+            } catch (DecryptException $e) {
+                $request->cookies->set($name, null);
+            }
+        }
     }
 
     /**
@@ -288,6 +329,8 @@ class Application extends Container
         }
 
         $this->markAsRegistered($provider);
+
+        if ($this->booted) $provider->boot();
 
         return $provider;
     }
@@ -478,12 +521,61 @@ class Application extends Container
     {
         $request = $request ?: $this['request'];
 
-        $this->processRequestCookies($request);
-
-        // Dispatch the Request.
-        $response = $this->dispatch($request);
+        // Handle the Request.
+        $response = $this->handle($request);
 
         $this->finish($request, $response);
+    }
+
+    /**
+     * Handle the given Request and get the Response.
+     *
+     * Provides compatibility with BrowserKit functional testing.
+     *
+     * @implements HttpKernelInterface::handle
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  bool  $catch
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function handle(SymfonyRequest $request, $catch = true)
+    {
+        try {
+            $this->refreshRequest($request = Request::createFromBase($request));
+
+            //$this->boot();
+
+            return $this->dispatch($request);
+        } catch (\Exception $e) {
+            if ($this->runningUnitTests()) throw $e;
+
+            return $this['exception']->handleException($e);
+        }
+    }
+
+    /**
+     * Refresh the bound request instance in the container.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function refreshRequest(Request $request)
+    {
+        $this->instance('request', $request);
+
+        Facade::clearResolvedInstance('request');
+    }
+
+    /**
+     * Call the booting callbacks for the application.
+     *
+     * @return void
+     */
+    protected function fireAppCallbacks(array $callbacks)
+    {
+        foreach ($callbacks as $callback) {
+            call_user_func($callback, $this);
+        }
     }
 
     /**
@@ -518,41 +610,17 @@ class Application extends Container
         return $request;
     }
 
-    protected function processRequestCookies(SymfonyRequest $request)
+    /**
+     * Prepare the given value as a Response object.
+     *
+     * @param  mixed  $value
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function prepareResponse($value)
     {
-        // Retrieve the Session configuration.
-        $config = $this['config']['session'];
+        if (! $value instanceof SymfonyResponse) $value = new Response($value);
 
-        if($config['encrypt'] == false) {
-            // The Cookies encryption is disabled.
-            return;
-        }
-
-        // Get the Encrypter instance.
-        $encrypter = $this['encrypter'];
-
-        foreach ($request->cookies as $name => $cookie) {
-            if($name == 'PHPSESSID') {
-                // Leave alone the PHPSESSID.
-                continue;
-            }
-
-            try {
-                if(is_array($cookie)) {
-                    $decrypted = array();
-
-                    foreach ($cookie as $key => $value) {
-                        $decrypted[$key] = $encrypter->decrypt($value);
-                    }
-                } else {
-                    $decrypted = $encrypter->decrypt($cookie);
-                }
-
-                $request->cookies->set($name, $decrypted);
-            } catch (DecryptException $e) {
-                $request->cookies->set($name, null);
-            }
-        }
+        return $value->prepare($this['request']);
     }
 
     protected function finish(SymfonyRequest $request, $response)
@@ -728,6 +796,76 @@ class Application extends Container
     public function setDeferredServices(array $services)
     {
         $this->deferredServices = $services;
+    }
+
+    /**
+     * Throw an HttpException with the given data.
+     *
+     * @param  int     $code
+     * @param  string  $message
+     * @param  array   $headers
+     * @return void
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function abort($code, $message = '', array $headers = array())
+    {
+        if ($code == 404) {
+            //throw new NotFoundHttpException($message);
+        } else {
+            //throw new HttpException($code, $message, null, $headers);
+        }
+    }
+
+    /**
+     * Register a 404 error handler.
+     *
+     * @param  Closure  $callback
+     * @return void
+     */
+    public function missing(Closure $callback)
+    {
+        $this->error(function(NotFoundHttpException $e) use ($callback)
+        {
+            return call_user_func($callback, $e);
+        });
+    }
+
+    /**
+     * Register an application error handler.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function error(Closure $callback)
+    {
+        $this['exception']->error($callback);
+    }
+
+    /**
+     * Register an error handler at the bottom of the stack.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function pushError(Closure $callback)
+    {
+        $this['exception']->pushError($callback);
+    }
+
+    /**
+     * Register an error handler for fatal errors.
+     *
+     * @param  Closure  $callback
+     * @return void
+     */
+    public function fatal(Closure $callback)
+    {
+        $this->error(function(FatalErrorException $e) use ($callback)
+        {
+            return call_user_func($callback, $e);
+        });
     }
 
     /**

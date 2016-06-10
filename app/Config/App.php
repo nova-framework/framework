@@ -146,5 +146,6 @@ Config::set('app', array(
         'Response'      => '\Support\Facades\Response',
         'Session'       => '\Support\Facades\Session',
         'Validator'     => '\Support\Facades\Validator',
+        'Log'           => '\Support\Facades\Log',
     ),
 ));

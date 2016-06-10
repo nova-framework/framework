@@ -108,11 +108,7 @@ class Handler
      */
     protected function displayException($exception)
     {
-        if ($this->debug) {
-            $message = $exception->getMessage();
-        } else {
-            $message = 'An error has occurred. This error has been reported.';
-        }
+        $message = $this->formatException($e);
 
         return Response::make($message);
     }
@@ -127,7 +123,7 @@ class Handler
     protected function callCustomHandlers($exception, $fromConsole = false)
     {
         foreach ($this->handlers as $handler) {
-            if ( ! $this->handlesException($handler, $exception)) {
+            if (! $this->handlesException($handler, $exception)) {
                 continue;
             }
 

@@ -145,46 +145,10 @@ Config::set('recaptcha', array(
 ));
 
 /**
- * Setup the Application configuration
+ * Include the configuration files located on application's Config directory.
+ *
+ * DO NOT CHANGE THE FOLLOWING CODE!
  */
-require 'Config/App.php';
-
-/**
- * Setup the Routing configuration
- */
-require 'Config/Routing.php';
-
-/**
- * Setup the Language configuration
- */
-require 'Config/Languages.php';
-
-/**
- * Setup the Class Aliases configuration
- */
-require 'Config/Database.php';
-
-/**
- * Setup the Session configuration
- */
-require 'Config/Session.php';
-
-/**
- * Setup the Module cnfiguration
- */
-require 'Config/Modules.php';
-
-/**
- * Setup the Auth configuration.
- */
-require 'Config/Auth.php';
-
-/**
- * Setup the Mailing API configuration.
- */
-require 'Config/Mail.php';
-
-/**
- * Setup the FastCache configuration.
- */
-require 'Config/Cache.php';
+foreach (glob(APPDIR .'Config/*') as $configFile) {
+    require $configFile;
+}

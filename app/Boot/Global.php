@@ -4,7 +4,7 @@
 // Application Error Logger
 //--------------------------------------------------------------------------
 
-Log::useFiles(storage_path() .'Logs ' .DS .'framework.log');
+Log::useFiles(storage_path() .'Logs ' .DS .'error.log');
 
 //--------------------------------------------------------------------------
 // Application Error Handler
@@ -38,4 +38,3 @@ foreach ($modules as $module) {
 
     if (is_readable($path)) require $path;
 }
-

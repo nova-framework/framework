@@ -4,7 +4,7 @@
 // Application Error Logger
 //--------------------------------------------------------------------------
 
-Log::useFiles(storage_path() .'Logs ' .DS .'error.log');
+Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
 //--------------------------------------------------------------------------
 // Application Error Handler

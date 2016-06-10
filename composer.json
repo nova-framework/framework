@@ -24,13 +24,18 @@
         "nesbot/carbon": "^1.21",
         "swiftmailer/swiftmailer": "^5.4",
         "almasaeed2010/adminlte": "~2.0",
-        "twbs/bootstrap": "^3.3"
+        "twbs/bootstrap": "^3.3",
+        "filp/whoops": "^2.1",
+        "monolog/monolog": "^1.19"
     },
     "autoload": {
         "psr-4": {
             "" : "system/",
             "App\\" : "app/"
-        }
+        },
+        "files": [
+            "system/functions.php"
+        ]
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

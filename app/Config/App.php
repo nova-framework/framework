@@ -67,6 +67,7 @@ Config::set('app', array(
         'Database\DatabaseServiceProvider',
         'Encryption\EncryptionServiceProvider',
         'Hashing\HashingServiceProvider',
+        'Log\LogServiceProvider',
         'Mail\MailerServiceProvider',
         'Pagination\PaginationServiceProvider',
         'Auth\Reminders\ReminderServiceProvider',

@@ -35,9 +35,6 @@ require APPDIR .'Config.php';
 /** Set the Default Timezone. */
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-/** Load the Framework wide functions. */
-require dirname(__FILE__) .DS .'functions.php';
-
 /** Initialize the Class Aliases. */
 Aliases::init();
 

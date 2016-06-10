@@ -14,6 +14,7 @@ use Http\Request;
 use Http\Response;
 
 use Events\EventServiceProvider;
+use ExceptionServiceProvider;
 use Routing\RoutingServiceProvider;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -105,7 +106,7 @@ class Application extends Container
      */
     protected function registerExceptionProvider()
     {
-        //$this->register(new ExceptionServiceProvider($this));
+        $this->register(new ExceptionServiceProvider($this));
     }
 
     /**

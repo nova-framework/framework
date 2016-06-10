@@ -64,6 +64,15 @@ function template_url($path, $template = TEMPLATE, $folder = '/assets/')
     return Url::templatePath($template, $folder) .ltrim($path, '/');
 }
 
+/**
+ * Storage Path helper
+ * @return string
+ */
+function storage_path()
+{
+    return STORAGE_PATH;
+}
+
 //
 // I18N functions
 

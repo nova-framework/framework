@@ -143,7 +143,7 @@ class Application extends Container
     {
         $this->instance('request', $request);
 
-        $this->instance('Container\Container', $this);
+        $this->instance('Illuminate\Container\Container', $this);
     }
 
     /**

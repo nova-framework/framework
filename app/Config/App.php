@@ -17,7 +17,7 @@ Config::set('app', array(
     /**
      * Debug Mode
      */
-    'debug' => true, // When enabled the actual PHP errors will be shown.
+    'debug' => false, // When enabled the actual PHP errors will be shown.
 
     /**
      * The Website URL.

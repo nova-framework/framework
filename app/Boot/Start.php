@@ -60,7 +60,12 @@ $app->instance('app', $app);
 // Bind Paths
 //--------------------------------------------------------------------------
 
-$paths = Config::get('app.paths');
+$paths = array(
+    'base'    => ROOTDIR,
+    'app'     => APPDIR,
+    'public'  => PUBLICDIR,
+    'storage' => STORAGE_PATH,
+);
 
 $app->bindInstallPaths($paths);
 

@@ -35,15 +35,6 @@ Config::set('app', array(
     'multilingual' => false,
 
     /**
-     * The Application's paths.
-     */
-    'paths' => array(
-        'base'    => ROOTDIR,
-        'app'     => APPDIR,
-        'storage' => STORAGE_PATH,
-    ),
-
-    /**
      * The Backend's Color Scheme.
      */
     'color_scheme' => 'blue',

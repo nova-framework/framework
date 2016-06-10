@@ -27,7 +27,7 @@ Event::listen('framework.controller.executing', function($instance, $method, $pa
     // Run the Hooks associated to the Views.
     $hooks = Hooks::get();
 
-    foreach (array('afterBody', 'css', 'js', 'meta') as $hook) {
+    foreach (array('afterBody', 'css', 'js', 'meta', 'footer') as $hook) {
         $result = $hooks->run($hook);
 
         // Share the result into Views.

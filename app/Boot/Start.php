@@ -19,11 +19,22 @@ use Support\Facades\Facade;
 
 error_reporting(-1);
 
+try {
+
 //--------------------------------------------------------------------------
 // Load The Configuration
 //--------------------------------------------------------------------------
 
 require app_path() .'Config.php';
+
+// Load the Modules configuration.
+$modules = Config::get('modules');
+
+foreach ($modules as $module) {
+    $path = app_path() .'Modules' .DS .$module .DS .'Config.php';
+
+    if (is_readable($path)) require $path;
+}
 
 //--------------------------------------------------------------------------
 // Create New Application
@@ -119,7 +130,7 @@ $app->getProviderRepository()->load($app, $providers);
 // Register Booted Start Files
 //--------------------------------------------------------------------------
 
-$app->booted(function() use ($app, $env)
+$app->booted(function() use ($app, $env, $modules)
 {
 
 //--------------------------------------------------------------------------
@@ -144,9 +155,13 @@ if (is_readable($path)) require $path;
 
 $routes = $app['path'] .DS .'Routes.php';
 
-echo '<pre>' .var_export($routes, true) .'</pre>';
-
 if (is_readable($routes)) require $routes;
+
+foreach ($modules as $module) {
+    $path = app_path() .'Modules' .DS .$module .DS .'Routes.php';
+
+    if (is_readable($path)) require $path;
+}
 
 //--------------------------------------------------------------------------
 // End of the Boot Stage Registration
@@ -159,3 +174,7 @@ if (is_readable($routes)) require $routes;
 //--------------------------------------------------------------------------
 
 $app->run();
+
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}

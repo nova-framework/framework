@@ -110,7 +110,7 @@ class Connection
      */
     public function __construct(array $config)
     {
-        $this->database = $config['dbname'];
+        $this->database = $config['database'];
 
         $this->tablePrefix = $config['prefix'];
 

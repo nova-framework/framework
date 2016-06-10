@@ -123,13 +123,7 @@ abstract class Controller
 
         // Process the stage result.
         if ($result instanceof SymfonyResponse) {
-            // Finish the Session and send the Response.
-            App::finish($result);
-
-            return true;
-        } else if ($result === false) {
-            // This is needed to stop the execution.
-            return false;
+            return $result;
         }
 
         // Notify the interested Listeners about the iminent Controller's execution.
@@ -140,10 +134,7 @@ abstract class Controller
 
         // The Method returned a Response instance; send it and stop the processing.
         if ($result instanceof SymfonyResponse) {
-            // Finish the Session and send the Response.
-            App::finish($result);
-
-            return true;
+            return $result;
         }
 
         // After the Action execution stage.
@@ -154,7 +145,7 @@ abstract class Controller
             return $this->createResponse($result);
         }
 
-        return true;
+        return Response::make('');
     }
 
     /**
@@ -171,7 +162,7 @@ abstract class Controller
 
             if(empty($items)) {
                 // There are no legacy View instances; quit processing.
-                return true;
+                return Response::make('');
             }
 
             // Prepare the Response's Content.
@@ -185,16 +176,11 @@ abstract class Controller
             // Retrieve also the legacy Headers.
             $headers = View::getLegacyHeaders();
 
-            // Create a Response instance.
-            $response = Response::make($content, 200, $headers);
-
-            // Finish the Session and send the Response.
-            App::finish($response);
-
-            return true;
+            // Create a Response instance and return it.
+            return Response::make($content, 200, $headers);
         } else if (! $result instanceof BaseView) {
-            // The result is not a BaseView instance; quit the processing.
-            return true;
+            // Create a Response instance and return it.
+            return Response::make($result);
         }
 
         if ((! $result instanceof Template) && ($this->layout !== false)) {
@@ -203,13 +189,8 @@ abstract class Controller
                 ->with('content', $result->fetch());
         }
 
-        // Create a Response instance.
-        $response = Response::make($result);
-
-        // Finish the Session and send the Response.
-        App::finish($response);
-
-        return true;
+        // Create a Response instance and return it.
+        return Response::make($result);
     }
 
     /**

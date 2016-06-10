@@ -9,13 +9,17 @@
 namespace Core;
 
 use Illuminate\Container\Container;
+
 use Core\Environment as EnvironmentDetector;
 use Core\Providers as ProviderRepository;
 use Config\FileLoader;
 use Encryption\DecryptException;
+use Helpers\Profiler;
 use Http\Request;
 use Http\Response;
+use Forensics\Profiler as QuickProfiler;
 use Session\SessionInterface;
+use Support\Facades\Facade;
 
 use Events\EventServiceProvider;
 use Exception\ExceptionServiceProvider;
@@ -24,6 +28,8 @@ use Routing\RoutingServiceProvider;
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
+use Closure;
 
 
 class Application extends Container
@@ -122,46 +128,9 @@ class Application extends Container
     {
         $request = forward_static_call(array(static::$requestClass, 'createFromGlobals'));
 
-        $this->processRequestCookies($request);
+        //$this->processRequestCookies($request);
 
         return $request;
-    }
-
-    protected function processRequestCookies(SymfonyRequest $request)
-    {
-        // Retrieve the Session configuration.
-        $config = $this['config']['session'];
-
-        if($config['encrypt'] == false) {
-            // The Cookies encryption is disabled.
-            return;
-        }
-
-        // Get the Encrypter instance.
-        $encrypter = $this['encrypter'];
-
-        foreach ($request->cookies as $name => $cookie) {
-            if($name == 'PHPSESSID') {
-                // Leave alone the PHPSESSID.
-                continue;
-            }
-
-            try {
-                if(is_array($cookie)) {
-                    $decrypted = array();
-
-                    foreach ($cookie as $key => $value) {
-                        $decrypted[$key] = $encrypter->decrypt($value);
-                    }
-                } else {
-                    $decrypted = $encrypter->decrypt($cookie);
-                }
-
-                $request->cookies->set($name, $decrypted);
-            } catch (DecryptException $e) {
-                $request->cookies->set($name, null);
-            }
-        }
     }
 
     /**
@@ -543,7 +512,7 @@ class Application extends Container
         try {
             $this->refreshRequest($request = Request::createFromBase($request));
 
-            //$this->boot();
+            $this->boot();
 
             return $this->dispatch($request);
         } catch (\Exception $e) {
@@ -561,6 +530,8 @@ class Application extends Container
      */
     protected function refreshRequest(Request $request)
     {
+        $this->processRequestCookies($request);
+
         $this->instance('request', $request);
 
         Facade::clearResolvedInstance('request');
@@ -608,6 +579,43 @@ class Application extends Container
         }
 
         return $request;
+    }
+
+    protected function processRequestCookies(SymfonyRequest $request)
+    {
+        // Retrieve the Session configuration.
+        $config = $this['config']['session'];
+
+        if($config['encrypt'] == false) {
+            // The Cookies encryption is disabled.
+            return;
+        }
+
+        // Get the Encrypter instance.
+        $encrypter = $this['encrypter'];
+
+        foreach ($request->cookies as $name => $cookie) {
+            if($name == 'PHPSESSID') {
+                // Leave alone the PHPSESSID.
+                continue;
+            }
+
+            try {
+                if(is_array($cookie)) {
+                    $decrypted = array();
+
+                    foreach ($cookie as $key => $value) {
+                        $decrypted[$key] = $encrypter->decrypt($value);
+                    }
+                } else {
+                    $decrypted = $encrypter->decrypt($cookie);
+                }
+
+                $request->cookies->set($name, $decrypted);
+            } catch (DecryptException $e) {
+                $request->cookies->set($name, null);
+            }
+        }
     }
 
     /**
@@ -677,7 +685,7 @@ class Application extends Container
      */
     protected function processResponseContent(SymfonyResponse $response)
     {
-        if (! $response instanceof HttpResponse) {
+        if (! $response instanceof Response) {
             return;
         }
 

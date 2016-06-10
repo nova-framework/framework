@@ -15,15 +15,27 @@ App::error(function(Exception $exception, $code)
     Log::error($exception);
 });
 
-
 //--------------------------------------------------------------------------
 // Require The Events File
 //--------------------------------------------------------------------------
 
 require app_path() .'Events.php';
 
+foreach ($modules as $module) {
+    $path = app_path() .'Modules' .DS .$module .DS .'Events.php';
+
+    if (is_readable($path)) require $path;
+}
+
 //--------------------------------------------------------------------------
 // Require The Filters File
 //--------------------------------------------------------------------------
 
 require app_path() .'Filters.php';
+
+foreach ($modules as $module) {
+    $path = app_path() .'Modules' .DS .$module .DS .'Filters.php';
+
+    if (is_readable($path)) require $path;
+}
+

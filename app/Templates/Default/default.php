@@ -51,7 +51,7 @@ echo $css; // Place to pass data / plugable hook zone
     </div>
 </nav>
 
-<?= $afterBody ?: ''; // Place to pass data / plugable hook zone ?>
+<?= $afterBody; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
     <p>
@@ -84,7 +84,8 @@ Assets::js([
     template_url('dist/js/bootstrap.min.js', 'Default'),
 ]);
 
-echo $js ?: ''; // Place to pass data / plugable hook zone
+echo $js; // Place to pass data / plugable hook zone
+
 echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 

@@ -5,38 +5,25 @@ namespace Database;
 use Database\Connection;
 
 
-class DatabaseManager
+class DatabaseManager implements ConnectionResolverInterface
 {
     /**
-     * The application instance.
+     * The Application instance.
      *
-     * @var \Foundation\Application
+     * @var \Core\Application
      */
     protected $app;
 
     /**
-     * The database connection factory instance.
-     *
-     * @var \Database\Connectors\ConnectionFactory
-     */
-    protected $factory;
-
-    /**
-     * The active connection instances.
+     * The active Connection instances.
      *
      * @var array
      */
     protected $connections = array();
 
-    /**
-     * The custom connection resolvers.
-     *
-     * @var array
-     */
-    protected $extensions = array();
 
     /**
-     * Create a new database manager instance.
+     * Create a new Database Manager instance.
      *
      * @param  \core\Application  $app
      * @return void
@@ -47,7 +34,7 @@ class DatabaseManager
     }
 
     /**
-     * Get a database connection instance.
+     * Get a database Connection instance.
      *
      * @param  string  $name
      * @return \Database\Connection

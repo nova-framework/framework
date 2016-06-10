@@ -9,8 +9,6 @@
 
 use Core\Config;
 
-use PDO;
-
 
 /**
  * Setup the Database configuration.

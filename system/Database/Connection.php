@@ -131,53 +131,27 @@ class Connection
      */
     public static function getInstance($name = null)
     {
-        $name = $name ?: static::getDefaultConnection();
+        $name = $name ?: Config::get('database.default');
 
         // If there is already a Connection instantiated, return it.
         if (isset(static::$instances[$name])) {
             return static::$instances[$name];
         }
 
-        $config = static::getConnectionConfig($name);
-
-        // Create the Connection instance.
-        static::$instances[$name] = $connection = new static($config);
-
-        // Setup the Fetch Mode on Connection instance and return it.
-        $fetchMode = Config::get('database.fetch');
-
-        return $connection->setFetchMode($fetchModel);
-    }
-
-    /**
-     * Get the configuration for a Connection.
-     *
-     * @param  string  $name
-     * @return array
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected static function getConnectionConfig($name)
-    {
-        $name = $name ?: static::getDefaultConnection();
-
+        // Retrieve the requested configuration.
         $connections = Config::get('database.connections');
 
         if (is_null($config = array_get($connections, $name))) {
             throw new \InvalidArgumentException("Database [$name] not configured.");
         }
 
-        return $config;
-    }
+        // Create the Connection instance.
+        static::$instances[$name] = $connection = new static($config);
 
-    /**
-     * Get the default connection name.
-     *
-     * @return string
-     */
-    public static function getDefaultConnection()
-    {
-        return Config::get('database.default');
+        // Setup the Fetch Mode on Connection instance and return it.
+        $mode = Config::get('database.fetch');
+
+        return $connection->setFetchMode($mode);
     }
 
     /**

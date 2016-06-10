@@ -8,12 +8,25 @@
 
 namespace Database;
 
-use Database\Connection;
+use Database\DatabaseManager;
+use Database\ORM\Model;
 use Support\ServiceProvider;
 
 
 class DatabaseServiceProvider extends ServiceProvider
 {
+    /**
+     * Bootstrap the Application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        //Model::setConnectionResolver($this->app['db']);
+
+        Model::setEventDispatcher($this->app['events']);
+    }
+
     /**
      * Register the Service Provider.
      *
@@ -23,9 +36,8 @@ class DatabaseServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('db', function($app)
         {
-            $config = $app['config']['database'];
-
-            return new Connection($config);
+            return new DatabaseManager($app, $app['db.factory']);
         });
     }
+
 }

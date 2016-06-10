@@ -1,13 +1,13 @@
 <?php
 /**
- * Bootstrap handler - perform the Application's bootstrap stage.
+ * Boot Handler - perform the Application's boot stage.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
-use Core\Application;
 use Core\AliasLoader;
+use Core\Application;
 use Core\Config;
 use Config\Repository as ConfigRepository;
 use Http\Request;
@@ -18,8 +18,6 @@ use Support\Facades\Facade;
 //--------------------------------------------------------------------------
 
 error_reporting(-1);
-
-try {
 
 //--------------------------------------------------------------------------
 // Load The Configuration
@@ -163,10 +161,6 @@ foreach ($modules as $module) {
     if (is_readable($path)) require $path;
 }
 
-//--------------------------------------------------------------------------
-// End of the Boot Stage Registration
-//--------------------------------------------------------------------------
-
 });
 
 //--------------------------------------------------------------------------
@@ -174,7 +168,3 @@ foreach ($modules as $module) {
 //--------------------------------------------------------------------------
 
 $app->run();
-
-} catch (\Exception $e) {
-    echo $e->getMessage();
-}

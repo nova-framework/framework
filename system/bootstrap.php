@@ -7,7 +7,8 @@
  * @date April 10th, 2016
  */
 
-use Core\Aliases;
+use Core\AliasLoader;
+use Core\Config;
 use Core\Language;
 use Core\Logger;
 use Core\Modules;
@@ -36,7 +37,9 @@ require APPDIR .'Config.php';
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
 /** Initialize the Class Aliases. */
-Aliases::init();
+$aliases = Config::get('app.aliases', array());
+
+AliasLoader::getInstance($aliases)->register();
 
 /** Initialize the Logger. */
 Logger::init();

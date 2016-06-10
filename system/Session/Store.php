@@ -98,7 +98,9 @@ class Store implements SessionInterface
             $this->regenerateToken();
         }
 
-        return $this->started = true;
+        $this->started = true;
+
+        return $this;
     }
 
     /**

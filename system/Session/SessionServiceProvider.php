@@ -32,9 +32,9 @@ class SessionServiceProvider extends ServiceProvider
             $cookie = $config['cookie'];
 
             // Retrieve the CookieJar instance.
-            $cookieJar = $app['cookie'];
+            $request = $app['request'];
 
-            $token = $cookieJar->get($cookie);
+            $token = $request->cookie($cookie);
 
             // Register the Session Handler.
             $me->registerSessionHandler($config);
@@ -59,13 +59,15 @@ class SessionServiceProvider extends ServiceProvider
         {
             $lifeTime = (int) $config['lifetime'] * 60;
 
-            switch ($config['driver']) {
+            $driver = array_get($config, 'driver', 'file');
+
+            switch ($driver) {
                 case 'database':
                     $handler = new DatabaseSessionHandler($app['db'], $config['table'], $lifeTime);
                 break;
 
                 case 'file':
-                    $handler = new FileSessionHandler($config['files'], $lifeTime);
+                    $handler = new FileSessionHandler($config, $lifeTime);
                 break;
             }
 

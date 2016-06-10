@@ -23,7 +23,7 @@ class FileSessionHandler implements SessionHandlerInterface
      */
     function __construct(array $config)
     {
-        $savePath = array_get($config, 'files', SESSION_PATH);
+        $savePath = array_get($config, 'files', STORAGE_PATH .'Sessions');
 
         $this->savePath = rtrim($savePath, '/') .DS;
     }

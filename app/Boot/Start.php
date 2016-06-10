@@ -7,6 +7,7 @@
  */
 
 use Core\Application;
+use Core\AliasLoader;
 use Core\Config;
 use Config\Repository as ConfigRepository;
 use Http\Request;

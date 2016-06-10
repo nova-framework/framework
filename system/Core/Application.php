@@ -9,12 +9,14 @@
 namespace Core;
 
 use Illuminate\Container\Container;
+use Core\EnvironmentDetector;
 use Core\Providers as ProviderRepository;
+use Config\FileLoader;
 use Http\Request;
 use Http\Response;
 
 use Events\EventServiceProvider;
-use ExceptionServiceProvider;
+use Exception\ExceptionServiceProvider;
 use Routing\RoutingServiceProvider;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -23,6 +25,48 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class Application extends Container
 {
+    /**
+     * The Nova Framework version.
+     *
+     * @var string
+     */
+    const VERSION = '3.53.1';
+
+    /**
+     * Indicates if the application has "booted".
+     *
+     * @var bool
+     */
+    protected $booted = false;
+
+    /**
+     * The array of booting callbacks.
+     *
+     * @var array
+     */
+    protected $bootingCallbacks = array();
+
+    /**
+     * The array of booted callbacks.
+     *
+     * @var array
+     */
+    protected $bootedCallbacks = array();
+
+    /**
+     * The array of finish callbacks.
+     *
+     * @var array
+     */
+    protected $finishCallbacks = array();
+
+    /**
+     * The array of shutdown callbacks.
+     *
+     * @var array
+     */
+    protected $shutdownCallbacks = array();
+
     /**
      * All of the registered service providers.
      *
@@ -84,7 +128,7 @@ class Application extends Container
     {
         $this->instance('request', $request);
 
-        $this->instance('Illuminate\Container\Container', $this);
+        $this->instance('Container\Container', $this);
     }
 
     /**
@@ -142,6 +186,76 @@ class Application extends Container
         foreach ($paths as $key => $value) {
             $this->instance("path.{$key}", realpath($value));
         }
+    }
+
+    /**
+     * Start the exception handling for the request.
+     *
+     * @return void
+     */
+    public function startExceptionHandling()
+    {
+        $this['exception']->register($this->environment());
+
+        $this['exception']->setDebug($this['config']['app.debug']);
+    }
+
+    /**
+     * Get or check the current application environment.
+     *
+     * @param  dynamic
+     * @return string
+     */
+    public function environment()
+    {
+        if (count(func_get_args()) > 0) {
+            return in_array($this['env'], func_get_args());
+        } else {
+            return $this['env'];
+        }
+    }
+
+    /**
+     * Determine if application is in local environment.
+     *
+     * @return bool
+     */
+    public function isLocal()
+    {
+        return $this['env'] == 'local';
+    }
+
+    /**
+     * Detect the application's current environment.
+     *
+     * @param  array|string  $envs
+     * @return string
+     */
+    public function detectEnvironment($envs)
+    {
+        $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
+
+        return $this['env'] = with(new EnvironmentDetector())->detect($envs, $args);
+    }
+
+    /**
+     * Determine if we are running in the console.
+     *
+     * @return bool
+     */
+    public function runningInConsole()
+    {
+        return php_sapi_name() == 'cli';
+    }
+
+    /**
+     * Determine if we are running unit tests.
+     *
+     * @return bool
+     */
+    public function runningUnitTests()
+    {
+        return $this['env'] == 'testing';
     }
 
     /**
@@ -258,6 +372,13 @@ class Application extends Container
         if ($service) unset($this->deferredServices[$service]);
 
         $this->register($instance = new $provider($this));
+
+        if (! $this->booted) {
+            $this->booting(function() use ($instance)
+            {
+                $instance->boot();
+            });
+        }
     }
 
     /**
@@ -278,6 +399,68 @@ class Application extends Container
         }
 
         return parent::make($abstract, $parameters);
+    }
+
+    /**
+     * Determine if the application has booted.
+     *
+     * @return bool
+     */
+    public function isBooted()
+    {
+        return $this->booted;
+    }
+
+    /**
+     * Boot the application's service providers.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if ($this->booted) return;
+
+        array_walk($this->serviceProviders, function($p) { $p->boot(); });
+
+        $this->bootApplication();
+    }
+
+    /**
+     * Boot the application and fire app callbacks.
+     *
+     * @return void
+     */
+    protected function bootApplication()
+    {
+        $this->fireAppCallbacks($this->bootingCallbacks);
+
+        $this->booted = true;
+
+        $this->fireAppCallbacks($this->bootedCallbacks);
+    }
+
+    /**
+     * Register a new boot listener.
+     *
+     * @param  mixed  $callback
+     * @return void
+     */
+    public function booting($callback)
+    {
+        $this->bootingCallbacks[] = $callback;
+    }
+
+    /**
+     * Register a new "booted" listener.
+     *
+     * @param  mixed  $callback
+     * @return void
+     */
+    public function booted($callback)
+    {
+        $this->bootedCallbacks[] = $callback;
+
+        if ($this->isBooted()) $this->fireAppCallbacks(array($callback));
     }
 
     /**
@@ -303,7 +486,7 @@ class Application extends Container
     {
         $router = $this['router'];
 
-        return $router->dispatch($this->prepareRequest($request));
+        //return $router->dispatch($this->prepareRequest($request));
     }
 
     /**
@@ -337,6 +520,16 @@ class Application extends Container
     }
 
     /**
+     * Get the configuration loader instance.
+     *
+     * @return \Config\LoaderInterface
+     */
+    public function getConfigLoader()
+    {
+        return new FileLoader();
+    }
+
+    /**
      * Get the Service Provider Repository instance.
      *
      * @return \Core\Providers
@@ -357,5 +550,61 @@ class Application extends Container
     public function url($path = '')
     {
         return site_url($path);
+    }
+
+    /**
+     * Register the core class aliases in the container.
+     *
+     * @return void
+     */
+    public function registerCoreContainerAliases()
+    {
+        $aliases = array(
+            'app'            => 'Core\Application',
+            'auth'           => 'Auth\AuthManager',
+            'auth.reminder.repository' => 'Auth\Reminders\ReminderRepositoryInterface',
+            'config'         => 'Config\Repository',
+            'cookie'         => 'Cookie\CookieJar',
+            'encrypter'      => 'Encryption\Encrypter',
+            'db'             => 'Database\DatabaseManager',
+            'events'         => 'Events\Dispatcher',
+            'hash'           => 'Hashing\HasherInterface',
+            'log'            => 'Log\Writer',
+            'mailer'         => 'Mail\Mailer',
+            'paginator'      => 'Pagination\Environment',
+            'auth.reminder'  => 'Auth\Reminders\PasswordBroker',
+            'redirect'       => 'Routing\Redirector',
+            'request'        => 'Http\Request',
+            'router'         => 'Routing\Router',
+            'session.store'  => 'Session\Store',
+            'validator'      => 'Validation\Factory',
+        );
+
+        foreach ($aliases as $key => $alias) {
+            $this->alias($key, $alias);
+        }
+    }
+
+    /**
+     * Dynamically access application services.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this[$key];
+    }
+
+    /**
+     * Dynamically set application services.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        $this[$key] = $value;
     }
 }

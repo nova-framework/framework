@@ -110,7 +110,7 @@ define('SITETITLE', 'Nova V3.0');
 define('ENCRYPT_KEY', '');
 
 /**
- * Set the files Storage Path.
+ * Set the Storage Path.
  */
 define('STORAGE_PATH', APPDIR .'Storage' .DS);
 

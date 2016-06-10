@@ -100,21 +100,6 @@ $providers = $config['providers'];
 $app->getProviderRepository()->load($app, $providers);
 
 //--------------------------------------------------------------------------
-// Application Error Logger
-//--------------------------------------------------------------------------
-
-Log::useFiles(storage_path() .'/Logs/framework.log');
-
-//--------------------------------------------------------------------------
-// Application Error Handler
-//--------------------------------------------------------------------------
-
-App::error(function(Exception $exception, $code)
-{
-    Log::error($exception);
-});
-
-//--------------------------------------------------------------------------
 // Register Booted Start Files
 //--------------------------------------------------------------------------
 
@@ -125,7 +110,7 @@ $app->booted(function() use ($app, $env)
 // Load The Application Start Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'].'Boot/Global.php';
+$path = $app['path'] .'Boot' .DS .'Global.php';
 
 if (file_exists($path)) require $path;
 
@@ -133,7 +118,7 @@ if (file_exists($path)) require $path;
 // Load The Environment Start Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'] ."Boot/{$env}.php";
+$path = $app['path'] .'Boot' .DS . ucfirst($env) .'.php';
 
 if (file_exists($path)) require $path;
 

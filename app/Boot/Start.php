@@ -34,27 +34,20 @@ if (function_exists('mb_internal_encoding')) {
 Patchwork\Utf8\Bootup::initMbstring();
 
 //--------------------------------------------------------------------------
-// Load The Configuration
-//--------------------------------------------------------------------------
-
-require app_path() .'Config.php';
-
-// Load the Modules configuration.
-$modules = Config::get('modules');
-
-foreach ($modules as $module) {
-    $path = app_path() .'Modules' .DS .$module .DS .'Config.php';
-
-    if (is_readable($path)) require $path;
-}
-
-//--------------------------------------------------------------------------
 // Create New Application
 //--------------------------------------------------------------------------
 
 $app = new Application();
 
 $app->instance('app', $app);
+
+//--------------------------------------------------------------------------
+// Detect The Application Environment
+//--------------------------------------------------------------------------
+
+$env = $app->detectEnvironment(array(
+    'local' => array('your-machine-name'),
+));
 
 //--------------------------------------------------------------------------
 // Bind Paths
@@ -70,14 +63,6 @@ $paths = array(
 $app->bindInstallPaths($paths);
 
 //--------------------------------------------------------------------------
-// Detect The Application Environment
-//--------------------------------------------------------------------------
-
-$env = $app->detectEnvironment(array(
-    'local' => array('your-machine-name'),
-));
-
-//--------------------------------------------------------------------------
 // Check For The Test Environment
 //--------------------------------------------------------------------------
 
@@ -86,14 +71,10 @@ if (isset($unitTesting)) {
 }
 
 //--------------------------------------------------------------------------
-// Enable HTTP Method Override
-//--------------------------------------------------------------------------
-
-Request::enableHttpMethodParameterOverride();
-
-//--------------------------------------------------------------------------
 // Load The Framework Facades
 //--------------------------------------------------------------------------
+
+Facade::clearResolvedInstances();
 
 Facade::setFacadeApplication($app);
 
@@ -102,6 +83,21 @@ Facade::setFacadeApplication($app);
 //--------------------------------------------------------------------------
 
 $app->registerCoreContainerAliases();
+
+//--------------------------------------------------------------------------
+// Load The Configuration
+//--------------------------------------------------------------------------
+
+require app_path() .'Config.php';
+
+// Load the Modules configuration.
+$modules = Config::get('modules');
+
+foreach ($modules as $module) {
+    $path = app_path() .'Modules' .DS .$module .DS .'Config.php';
+
+    if (is_readable($path)) require $path;
+}
 
 //--------------------------------------------------------------------------
 // Register The Config Manager
@@ -134,6 +130,12 @@ date_default_timezone_set($config['timezone']);
 $aliases = $config['aliases'];
 
 AliasLoader::getInstance($aliases)->register();
+
+//--------------------------------------------------------------------------
+// Enable HTTP Method Override
+//--------------------------------------------------------------------------
+
+Request::enableHttpMethodParameterOverride();
 
 //--------------------------------------------------------------------------
 // Register The Core Service Providers

@@ -6,8 +6,9 @@
  * @version 3.0
  */
 
-use Config\LoaderManager;
-use Config\Repository as Config;
+use Core\Application;
+use Core\Config;
+use Config\Repository as ConfigRepository;
 use Http\Request;
 use Support\Facades\Facade;
 
@@ -21,25 +22,52 @@ error_reporting(-1);
 // Create New Application
 //--------------------------------------------------------------------------
 
+$paths = Config::get('app.paths');
+
+// Get a Application instance.
 $app = new Application();
 
 $app->instance('app', $app);
 
-//$app->bindInstallPaths($paths);
+$app->bindInstallPaths($paths);
 
 //--------------------------------------------------------------------------
-// Load the Facades
+// Load The Nova Facades
 //--------------------------------------------------------------------------
+
+Facade::clearResolvedInstances();
 
 Facade::setFacadeApplication($app);
+
+//--------------------------------------------------------------------------
+// Register Facade Aliases To Full Classes
+//--------------------------------------------------------------------------
+
+$app->registerCoreContainerAliases();
 
 //--------------------------------------------------------------------------
 // Register The Config Manager
 //--------------------------------------------------------------------------
 
-$loader = new LoaderManager();
+$app->instance('config', $config = new ConfigRepository(
+    $app->getConfigLoader()
+));
 
-$app->instance('config', new Config($loader));
+//--------------------------------------------------------------------------
+// Register Application Exception Handling
+//--------------------------------------------------------------------------
+
+$app->startExceptionHandling();
+
+if ($env != 'testing') ini_set('display_errors', 'Off');
+
+//--------------------------------------------------------------------------
+// Set The Default Timezone
+//--------------------------------------------------------------------------
+
+$config = $app['config']['app'];
+
+date_default_timezone_set($config['timezone']);
 
 //--------------------------------------------------------------------------
 // Application Error Logger

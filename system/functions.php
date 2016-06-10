@@ -65,6 +65,15 @@ function template_url($path, $template = TEMPLATE, $folder = '/assets/')
 }
 
 /**
+ * Application Path helper
+ * @return string
+ */
+function app_path()
+{
+    return APPDIR;
+}
+
+/**
  * Storage Path helper
  * @return string
  */

@@ -9,26 +9,54 @@
 namespace Routing;
 
 use Core\Config;
+use Core\BaseView as View;
+use Core\Controller;
 use Events\Dispatcher;
+
 use Helpers\Inflector;
-use Helpers\Url;
 use Http\Request;
 //use Http\Response;
-use Routing\BaseRouter;
 use Routing\Route;
+use Support\Facades\Facade;
 
 use Illuminate\Container\Container;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Carbon\Carbon;
 
 use App;
+use Console;
+use Language;
 use Response;
 
 
 /**
- * Router class will load requested controller / closure based on url.
+ * Router class will load requested Controller / Closure based on URL.
  */
-class Router extends BaseRouter
+class Router
 {
+    /**
+     * The Router instance.
+     *
+     * @var Router $instance
+     */
+    private static $instance;
+
+    /**
+     * Array of routes
+     *
+     * @var Route[] $routes
+     */
+    protected $routes = array();
+
+    /**
+     * Matched Route, the current found Route, if any.
+     *
+     * @var Route|null $matchedRoute
+     */
+    protected $matchedRoute = null;
+
     /**
      * The event dispatcher instance.
      *
@@ -64,19 +92,89 @@ class Router extends BaseRouter
      */
     private $defaultRoute = null;
 
+    /**
+     * An array of HTTP request Methods.
+     *
+     * @var array $methods
+     */
+    public static $methods = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS');
 
     /**
      * Router constructor.
      *
      * @codeCoverageIgnore
      */
-    public function __construct(Dispatcher $events = null, Container $container = null)
+    protected function __construct(Dispatcher $events = null, Container $container = null)
     {
         $this->events = $events;
 
         $this->container = $container ?: new Container();
 
-        parent::__construct();
+        //
+        BinaryFileResponse::trustXSendfileTypeHeader();
+    }
+
+    public static function getInstance()
+    {
+        $app = Facade::getFacadeApplication();
+
+        if(! is_null($app)) {
+            return $app['router'];
+        }
+
+        if (self::$instance === null) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Defines a route with or without Callback and Method.
+     *
+     * @param string $method
+     * @param array @params
+     */
+    public static function __callStatic($method, $params)
+    {
+        $method = strtoupper($method);
+
+        if (($method != 'ANY') && ! in_array($method, static::$methods)) {
+            throw new \Exception('Invalid method');
+        } else if (empty($params)) {
+            throw new \Exception('Invalid parameters');
+        }
+
+        // Get the Route.
+        $route = array_shift($params);
+
+        // Get the Callback, if any.
+        $callback = ! empty($params) ? array_shift($params) : null;
+
+        // Register the Route.
+        static::register($method, $route, $callback);
+    }
+
+    /**
+     * Return the available Routes.
+     *
+     * @return Route[]
+     */
+    public function routes()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * Defines a multi-method Route Match.
+     *
+     * @param array|string $method The Route's method(s).
+     * @param string $route The Route definition.
+     * @param callback $callback Callback object called to define the Routes.
+     */
+    public static function match($method, $route, $callback = null)
+    {
+        self::register($method, $route, $callback);
     }
 
     /**
@@ -249,8 +347,113 @@ class Router extends BaseRouter
     }
 
     /**
-     * Dispatch route.
+     * Return the current Matched Route, if there are any.
      *
+     * @return null|Route
+     */
+    public function getMatchedRoute()
+    {
+        return $this->matchedRoute;
+    }
+
+    /**
+     * Return the current Matched Language, if there are any.
+     *
+     * @return null|string
+     */
+    public static function getLanguage()
+    {
+        $instance = static::getInstance();
+
+        $route = $instance->getMatchedRoute();
+
+        if(! is_null($route)) {
+            return $route->getLanguage();
+        }
+
+        return Language::code();
+    }
+
+    /**
+     * Invoke the callback with its associated parameters.
+     *
+     * @param  callable $callback
+     * @param  array $params array of matched parameters
+     * @return bool
+     */
+    protected function invokeCallback($callback, $params = array())
+    {
+        $result = call_user_func_array($callback, $params);
+
+        if($result instanceof SymfonyResponse) {
+            return $result;
+        }
+
+        return Response::make($result);
+    }
+
+    /**
+     * Invoke the Controller's Method with its associated parameters.
+     *
+     * @param  string $className to be instantiated
+     * @param  string $method method to be invoked
+     * @param  array $params parameters passed to method
+     * @return bool
+     */
+    protected function invokeController($className, $method, $params)
+    {
+        // The Controller's the Execution Flow Methods cannot be called via Router.
+        if (($method == 'execute')) {
+            return Response::error(403);
+        }
+
+        // Initialize the Controller.
+        /** @var Controller $controller */
+        $controller = new $className();
+
+        // Obtain the available methods into the requested Controller.
+        $methods = array_map('strtolower', get_class_methods($controller));
+
+        // The called Method should be defined right on the called Controller to be executed.
+        if (! in_array(strtolower($method), $methods)) {
+            return Response::error(403);
+        }
+
+        // Execute the Controller's Method with the given arguments.
+        return $controller->execute($method, $params);
+    }
+
+    /**
+     * Invoke the callback with its associated parameters.
+     *
+     * @param  callable $callback
+     * @param  array $params array of matched parameters
+     * @return bool
+     */
+    protected function invokeObject($callback, $params = array())
+    {
+        if (is_object($callback)) {
+            // Call the Closure function with the given arguments.
+            return $this->invokeCallback($callback, $params);
+        }
+
+        // Call the object Controller and its Method.
+        $segments = explode('@', $callback);
+
+        $controller = $segments[0];
+        $method     = $segments[1];
+
+        // The Method shouldn't be called 'execute' or starting with '_'; also check if the Controller's class exists.
+        if (($method[0] === '_') || ! class_exists($controller)) {
+            return Response::error(403);
+        }
+
+        // Invoke the Controller's Method with the given arguments.
+        return $this->invokeController($controller, $method, $params);
+    }
+
+    /**
+     * Dispatch route
      * @return bool
      */
     public function dispatch(Request $request)
@@ -263,9 +466,12 @@ class Router extends BaseRouter
         $path = $request->path();
 
         // First, we will supose that URI is associated with an Asset File.
-        if (($method == 'GET') && $this->dispatchFile($path)) {
-            // Return a null value, to notify for no further processing.
-            return null;
+        if ($method == 'GET') {
+            $result = $this->dispatchFile($path);
+
+            if($result instanceof SymfonyResponse) {
+                return $result;
+            }
         }
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
@@ -307,4 +513,153 @@ class Router extends BaseRouter
 
         return Response::error(404, $data);
     }
+
+    /**
+     * Dispatch/Serve a file
+     * @return bool
+     */
+    protected function dispatchFile($uri)
+    {
+        // For proper Assets serving, the file URI should be either of the following:
+        //
+        // /templates/default/assets/css/style.css
+        // /modules/blog/assets/css/style.css
+        // /assets/css/style.css
+
+        $filePath = '';
+
+        if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
+            $filePath = ROOTDIR .'assets' .DS .$matches[1];
+        } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
+            $module = Inflector::classify($matches[2]);
+
+            $folder = $matches[3];
+
+            $path = $matches[4];
+
+            if($matches[1] == 'Modules') {
+                // A Module Asset file.
+                $filePath = $this->getModuleAssetPath($module, $folder, $path);
+            } else {
+                // A Template Asset file.
+                $filePath = $this->getTemplateAssetPath($module, $folder, $path);
+            }
+        }
+
+        if (! empty($filePath)) {
+            // Serve the specified Asset File.
+            return static::serveFile($filePath);
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the path of a Asset file
+     * @return string|null
+     */
+    protected function getModuleAssetPath($module, $folder, $path)
+    {
+        $basePath = APPDIR .str_replace('/', DS, "Modules/$module/Assets/");
+
+        return $basePath .$folder .DS .$path;
+    }
+
+    /**
+     * Get the path of a Asset file
+     * @return string|null
+     */
+    protected function getTemplateAssetPath($template, $folder, $path)
+    {
+        $path = str_replace('/', DS, $path);
+
+        // Retrieve the Template Info
+        $infoFile = APPDIR .'Templates' .DS .$template .DS .'template.json';
+
+        if (is_readable($infoFile)) {
+            $info = json_decode(file_get_contents($infoFile), true);
+
+            // Template Info should be always an array; ensure that.
+            $info = $info ?: array();
+        } else {
+            $info = array();
+        }
+
+        //
+        $basePath = null;
+
+        // Get the current Asset Folder's Mode.
+        $mode = array_get($info, 'assets.paths.' .$folder, 'local');
+
+        if ($mode == 'local') {
+            $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
+        } else if ($mode == 'vendor') {
+            // Get the Vendor name.
+            $vendor = array_get($info, 'assets.vendor', '');
+
+            if (! empty($vendor)) {
+                $basePath = ROOTDIR .str_replace('/', DS, "vendor/$vendor/");
+            }
+        }
+
+        return ! empty($basePath) ? $basePath .$folder .DS .$path : '';
+    }
+
+    /**
+     * Serve a File.
+     *
+     * @param string $filePath
+     * @return bool
+     */
+    public static function serveFile($filePath)
+    {
+        if (! file_exists($filePath)) {
+            return  Response::make('', 404);
+        } else if (! is_readable($filePath)) {
+            return  Response::make('', 403);
+        }
+
+        // Collect the current file information.
+        $guesser = MimeTypeGuesser::getInstance();
+
+        // Even the Symfony's HTTP Foundation have troubles with the CSS and JS files?
+        //
+        // Hard coding the correct mime types for presently needed file extensions.
+        switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
+            case 'css':
+                $contentType = 'text/css';
+                break;
+            case 'js':
+                $contentType = 'application/javascript';
+                break;
+            default:
+                $contentType = $guesser->guess($filePath);
+                break;
+        }
+
+        // Create a BinaryFileResponse instance.
+        $response = Response::download($filePath, null, array(), 'inline');
+
+        // Set the Content type.
+        $response->headers->set('Content-Type', $contentType);
+
+        // Set the Expires.
+        $expires = Carbon::now()->addYear();
+
+        $response->setExpires($expires);
+
+        // Set the Caching.
+        $lastModified = Carbon::createFromTimestamp(filemtime($filePath));
+
+        $response->setCache(array(
+            'last_modified' => $lastModified,
+            'max_age'       => 600,
+            's_maxage'      => 600,
+            'private'       => false,
+            'public'        => true,
+        ));
+
+        return $response;
+    }
+
 }

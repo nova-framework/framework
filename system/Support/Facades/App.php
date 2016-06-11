@@ -71,11 +71,6 @@ class App
         // Collect the garbage for the Session Store instance.
         static::collectGarbage($session, $config);
 
-        if(is_null($response)) {
-            // No further processing required.
-            return;
-        }
-
         // Add all Request and queued Cookies.
         static::processCookies($response, $config);
 

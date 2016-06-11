@@ -27,14 +27,6 @@ define('SITEURL', 'http://www.novaframework.dev/');
 define('DIR', '/');
 
 /**
- * Set the Application Router.
- */
-// Default Routing
-define('APPROUTER', '\Routing\Router');
-// Classic Routing
-// define('APPROUTER', '\Routing\ClassicRouter');
-
-/**
  * Set timezone.
  */
 define('DEFAULT_TIMEZONE', 'Europe/London');

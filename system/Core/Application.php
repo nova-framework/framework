@@ -514,15 +514,9 @@ class Application extends Container implements ResponsePreparerInterface
         // Handle the Request.
         $response = $this->handle($request);
 
-        // Terminate the Application.
-        if(! is_null($response)) {
-            // Was served a File by Routing?
-            $this->terminate($request, $response);
-        } else {
-            $this->shutdown();
-        }
+        $this->terminate($request, $response);
 
-        $this->finalize($request, $response);
+        $this->sendResponse($request, $response);
     }
 
     /**
@@ -543,8 +537,6 @@ class Application extends Container implements ResponsePreparerInterface
 
             return $this->dispatch($request);
         } catch (\Exception $e) {
-            if ($this->runningUnitTests()) throw $e;
-
             return $this['exception']->handleException($e);
         }
     }
@@ -686,7 +678,7 @@ class Application extends Container implements ResponsePreparerInterface
         return $value->prepare($this['request']);
     }
 
-    protected function finalize(SymfonyRequest $request, $response)
+    protected function sendResponse(SymfonyRequest $request, SymfonyResponse $response)
     {
         $cookieJar = $this['cookie'];
 
@@ -713,11 +705,6 @@ class Application extends Container implements ResponsePreparerInterface
 
         // Collect the garbage for the Session Store instance.
         $this->collectSessionGarbage($session, $config);
-
-        if(is_null($response)) {
-            // No further processing required.
-            return;
-        }
 
         // Add all Request and queued Cookies.
         $this->processResponseCookies($response, $config);

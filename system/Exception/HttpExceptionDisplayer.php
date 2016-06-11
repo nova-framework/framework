@@ -31,9 +31,9 @@ class HttpExceptionDisplayer implements ExceptionDisplayerInterface
         if($debug) {
             $content = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
 
-            $content = '<p>Error in exception handler: ' .$message .'</p>';
+            $content = '<p>Error in Exception Handler: ' .$message .'</p>';
         } else {
-            $content = '';
+            $content = 'Error in Exception Handler';
         }
 
         // Start the View rendering.

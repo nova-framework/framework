@@ -28,11 +28,17 @@ class JsonExceptionDisplayer implements ExceptionDisplayerInterface
      public function display(Exception $exception, $debug = true)
      {
         if($debug) {
-            $message = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
-
-            $message = 'Error in exception handler: ' .$message;
+            $message = array(
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+            );
         } else {
-            $message = '';
+            $message = array(
+                'message' => 'Error in Exception Handler',
+                'file'    => '',
+                'line'    => 0,
+            );
         }
 
         // Start the View rendering.

@@ -421,6 +421,32 @@ class Application extends Container implements ResponsePreparerInterface
     }
 
     /**
+     * Register a "finish" application filter.
+     *
+     * @param  Closure|string  $callback
+     * @return void
+     */
+    public function finish($callback)
+    {
+        $this->finishCallbacks[] = $callback;
+    }
+
+    /**
+     * Register a "shutdown" callback.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    public function shutdown($callback = null)
+    {
+        if (is_null($callback)) {
+            $this->fireAppCallbacks($this->shutdownCallbacks);
+        } else {
+            $this->shutdownCallbacks[] = $callback;
+        }
+    }
+
+    /**
      * Determine if the application has booted.
      *
      * @return bool
@@ -495,15 +521,16 @@ class Application extends Container implements ResponsePreparerInterface
         // Handle the Request.
         $response = $this->handle($request);
 
-        $this->finish($request, $response);
+        // Terminate the Application.
+        $this->terminate($request, $response);
+
+        $this->finalize($request, $response);
     }
 
     /**
      * Handle the given Request and get the Response.
      *
      * Provides compatibility with BrowserKit functional testing.
-     *
-     * @implements HttpKernelInterface::handle
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @param  bool  $catch
@@ -525,6 +552,33 @@ class Application extends Container implements ResponsePreparerInterface
     }
 
     /**
+     * Handle the given request and get the response.
+     *
+     * @param  Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function dispatch(Request $request)
+    {
+        $router = $this['router'];
+
+        return $router->dispatch($this->prepareRequest($request));
+    }
+
+    /**
+     * Terminate the request and send the response to the browser.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @return void
+     */
+    public function terminate(SymfonyRequest $request, SymfonyResponse $response)
+    {
+        $this->callFinishCallbacks($request, $response);
+
+        $this->shutdown();
+    }
+
+    /**
      * Refresh the bound request instance in the container.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -540,6 +594,20 @@ class Application extends Container implements ResponsePreparerInterface
     }
 
     /**
+     * Call the "finish" callbacks assigned to the application.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @return void
+     */
+    public function callFinishCallbacks(SymfonyRequest $request, SymfonyResponse $response)
+    {
+        foreach ($this->finishCallbacks as $callback) {
+            call_user_func($callback, $request, $response);
+        }
+    }
+
+    /**
      * Call the booting callbacks for the application.
      *
      * @return void
@@ -549,19 +617,6 @@ class Application extends Container implements ResponsePreparerInterface
         foreach ($callbacks as $callback) {
             call_user_func($callback, $this);
         }
-    }
-
-    /**
-     * Handle the given request and get the response.
-     *
-     * @param  Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function dispatch(Request $request)
-    {
-        $router = $this['router'];
-
-        return $router->dispatch($this->prepareRequest($request));
     }
 
     /**
@@ -633,7 +688,7 @@ class Application extends Container implements ResponsePreparerInterface
         return $value->prepare($this['request']);
     }
 
-    protected function finish(SymfonyRequest $request, $response)
+    protected function finalize(SymfonyRequest $request, $response)
     {
         $cookieJar = $this['cookie'];
 
@@ -922,6 +977,57 @@ class Application extends Container implements ResponsePreparerInterface
     }
 
     /**
+     * Set the application request for the console environment.
+     *
+     * @return void
+     */
+    public function setRequestForConsoleEnvironment()
+    {
+        $url = $this['config']->get('app.url', 'http://localhost');
+
+        $parameters = array($url, 'GET', array(), array(), array(), $_SERVER);
+
+        $this->refreshRequest(static::onRequest('create', $parameters));
+    }
+
+    /**
+     * Call a method on the default request class.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public static function onRequest($method, $parameters = array())
+    {
+        return forward_static_call_array(array(static::requestClass(), $method), $parameters);
+    }
+
+    /**
+     * Get the current application locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this['config']->get('app.locale');
+    }
+
+    /**
+     * Set the current application locale.
+     *
+     * @param  string  $locale
+     * @return void
+     */
+    public function setLocale($locale)
+    {
+        $this['config']->set('app.locale', $locale);
+
+        $this['translator']->setLocale($locale);
+
+        $this['events']->fire('locale.changed', array($locale));
+    }
+
+    /**
      * Register the core class aliases in the container.
      *
      * @return void
@@ -931,6 +1037,7 @@ class Application extends Container implements ResponsePreparerInterface
         $aliases = array(
             'app'            => 'Core\Application',
             'auth'           => 'Auth\AuthManager',
+            'cache'          => 'Cache\CacheManager',
             'auth.reminder.repository' => 'Auth\Reminders\ReminderRepositoryInterface',
             'config'         => 'Config\Repository',
             'cookie'         => 'Cookie\CookieJar',

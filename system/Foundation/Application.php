@@ -6,14 +6,12 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Foundation;
 
-use Illuminate\Container\Container;
-
-use Core\Environment as EnvironmentDetector;
-use Core\Providers as ProviderRepository;
 use Config\FileLoader;
 use Encryption\DecryptException;
+use Foundation\EnvironmentDetector;
+use Foundation\ProviderRepository;
 use Helpers\Profiler;
 use Http\Request;
 use Http\Response;
@@ -29,6 +27,8 @@ use Routing\RoutingServiceProvider;
 use Exception\FatalErrorException;
 use Exception\HttpException;
 use Exception\NotFoundHttpException;
+
+use Illuminate\Container\Container;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -1030,7 +1030,7 @@ class Application extends Container implements ResponsePreparerInterface
     public function registerCoreContainerAliases()
     {
         $aliases = array(
-            'app'            => 'Core\Application',
+            'app'            => 'Foundation\Application',
             'auth'           => 'Auth\AuthManager',
             'cache'          => 'Cache\CacheManager',
             'auth.reminder.repository' => 'Auth\Reminders\ReminderRepositoryInterface',

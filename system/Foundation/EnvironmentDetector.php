@@ -6,12 +6,12 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Foundation;
 
 use Closure;
 
 
-class Environment
+class EnvironmentDetector
 {
     /**
      * Detect the application's current environment.

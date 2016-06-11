@@ -44,11 +44,11 @@ class HttpExceptionDisplayer implements ExceptionDisplayerInterface
         $message = ob_get_clean();
 
         // Prepare the Response and send it.
-        $status = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
+        $status = ($exception instanceof HttpExceptionInterface) ? $exception->getStatusCode() : 500;
 
-        $headers = $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : array();
+        $headers = ($exception instanceof HttpExceptionInterface) ? $exception->getHeaders() : array();
 
         // Create a Response and return it.
-        return new Response($message, $status, $headers());
+        return new Response($message, $status, $headers);
      }
 }

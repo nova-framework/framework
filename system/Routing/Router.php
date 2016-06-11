@@ -104,7 +104,7 @@ class Router
      *
      * @codeCoverageIgnore
      */
-    protected function __construct(Dispatcher $events = null, Container $container = null)
+    public function __construct(Dispatcher $events = null, Container $container = null)
     {
         $this->events = $events;
 

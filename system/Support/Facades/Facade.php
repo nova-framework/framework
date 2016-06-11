@@ -56,7 +56,7 @@ abstract class Facade
     /**
      * Set the application instance.
      *
-     * @param  \Core\Application  $app
+     * @param  \Foundation\Application  $app
      * @return void
      */
     public static function setFacadeApplication($app)
@@ -67,7 +67,7 @@ abstract class Facade
     /**
      * Get the application instance.
      *
-     * @return  \Core\Application  $app
+     * @return  \Foundation\Application  $app
      */
     public static function getFacadeApplication()
     {
@@ -94,7 +94,7 @@ abstract class Facade
     {
         static::$resolvedInstance = array();
     }
-    
+
     /**
      * Handle dynamic, static calls to the object.
      *

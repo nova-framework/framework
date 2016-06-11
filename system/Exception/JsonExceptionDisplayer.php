@@ -49,6 +49,6 @@ class JsonExceptionDisplayer implements ExceptionDisplayerInterface
         $headers = $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : array();
 
         // Create a Response and return it.
-        return new JsonResponse($data, $status, $headers());
+        return new JsonResponse($data, $status, $headers);
      }
 }

@@ -43,6 +43,21 @@ class Url
     }
 
     /**
+     * Go to the previous url.
+     */
+    public static function previous()
+    {
+        // Create a Response instance.
+        $response = Redirect::back();
+
+        // Finish the Session (and send the Response).
+        App::finish($response);
+
+        // Quit the Nova Framework's execution.
+        exit();
+    }
+
+    /**
      * Detect the true URI.
      *
      * * @return string parsed URI
@@ -161,15 +176,6 @@ class Url
         $slug = preg_replace($pattern, '-', $slug);
 
         return strtolower(trim($slug, '-'));
-    }
-
-    /**
-     * Go to the previous url.
-     */
-    public static function previous()
-    {
-        header('Location: '. $_SERVER['HTTP_REFERER']);
-        exit;
     }
 
     /**

@@ -5,8 +5,11 @@
 	<title>Whoops! An error has occurred</title>
 </head>
 <body>
-	<div class="container">
+	<div>
 		<h1>An error has occurred. This error has been reported.</h1>
     </div>
+    <p>
+        <?= $content; ?>
+    </p>
 </body>
 </html>

@@ -19,6 +19,7 @@ use Http\Request;
 use Http\Response;
 use Forensics\Profiler as QuickProfiler;
 use Session\SessionInterface;
+use Support\Contracts\ResponsePreparerInterface;
 use Support\Facades\Facade;
 
 use Events\EventServiceProvider;
@@ -32,7 +33,8 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Closure;
 
 
-class Application extends Container
+class Application extends Container implements ResponsePreparerInterface
+
 {
     /**
      * The Nova Framework version.
@@ -804,6 +806,16 @@ class Application extends Container
     public function setDeferredServices(array $services)
     {
         $this->deferredServices = $services;
+    }
+
+    /**
+     * Determine if the application is ready for responses.
+     *
+     * @return bool
+     */
+    public function readyForResponses()
+    {
+        return $this->booted;
     }
 
     /**

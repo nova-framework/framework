@@ -8,22 +8,33 @@
 
 namespace Exception;
 
+use Exception\ExceptionDisplayerInterface;
 use Exception\PlainDisplayer;
-
-use Whoops\Run as WhoopsRun;
-use Whoops\Handler\CallbackHandler;
-use Whoops\Handler\PrettyPageHandler;
-use Whoops\Handler\JsonResponseHandler;
-use Whoops\Util\Misc;
+use Support\Contracts\ResponsePreparerInterface;
 
 use Response;
 
 use Closure;
+use ErrorException;
 use ReflectionFunction;
 
 
 class Handler
 {
+    /**
+     * The response preparer implementation.
+     *
+     * @var \Support\Contracts\ResponsePreparerInterface
+     */
+    protected $responsePreparer;
+
+    /**
+     * The plain exception displayer.
+     *
+     * @var \Exception\ExceptionDisplayerInterface
+     */
+    protected $plainDisplayer;
+
     /**
      * Indicates if the Application is in Debug Mode.
      *
@@ -51,9 +62,13 @@ class Handler
      * @param  bool  $debug
      * @return void
      */
-    public function __construct($debug = true)
+    public function __construct(ResponsePreparerInterface $responsePreparer, ExceptionDisplayerInterface $plainDisplayer, $debug = true)
     {
         $this->debug = $debug;
+
+        $this->plainDisplayer = $plainDisplayer;
+
+        $this->responsePreparer = $responsePreparer;
     }
 
     /**
@@ -61,26 +76,61 @@ class Handler
      *
      * @return void
      */
-    public function register()
+    public function register($environment)
     {
-        if ($this->debug) {
-            if (Misc::isAjaxRequest()) {
-                $handler = new JsonResponseHandler;
+        $this->registerErrorHandler();
 
-                $handler->onlyForAjaxRequests(true);
-            } else {
-                $handler = new PrettyPageHandler();
-            }
-        } else {
-            $handler = new PlainDisplayer();
+        $this->registerExceptionHandler();
+
+        if ($environment != 'testing') $this->registerShutdownHandler();
+    }
+
+    /**
+     * Register the PHP error handler.
+     *
+     * @return void
+     */
+    protected function registerErrorHandler()
+    {
+        set_error_handler(array($this, 'handleError'));
+    }
+
+    /**
+     * Register the PHP exception handler.
+     *
+     * @return void
+     */
+    protected function registerExceptionHandler()
+    {
+        set_exception_handler(array($this, 'handleUncaughtException'));
+    }
+
+    /**
+     * Register the PHP shutdown handler.
+     *
+     * @return void
+     */
+    protected function registerShutdownHandler()
+    {
+        register_shutdown_function(array($this, 'handleShutdown'));
+    }
+
+    /**
+     * Handle a PHP error for the application.
+     *
+     * @param  int     $level
+     * @param  string  $message
+     * @param  string  $file
+     * @param  int     $line
+     * @param  array   $context
+     *
+     * @throws \ErrorException
+     */
+    public function handleError($level, $message, $file = '', $line = 0, $context = array())
+    {
+        if (error_reporting() & $level) {
+            throw new ErrorException($message, 0, $level, $file, $line);
         }
-
-        //
-        $runner = new WhoopsRun();
-
-        $runner->pushHandler($handler);
-
-        $runner->register();
     }
 
     /**
@@ -93,11 +143,51 @@ class Handler
     {
         $response = $this->callCustomHandlers($exception);
 
-        if (! is_null($response)) {
-            return $response;
+        if ( ! is_null($response)) {
+            return $this->prepareResponse($response);
         }
 
         return $this->displayException($exception);
+    }
+
+    /**
+     * Handle an uncaught exception.
+     *
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function handleUncaughtException($exception)
+    {
+        $this->handleException($exception)->send();
+    }
+
+    /**
+     * Handle the PHP shutdown event.
+     *
+     * @return void
+     */
+    public function handleShutdown()
+    {
+        $error = error_get_last();
+
+        if ( ! is_null($error)) {
+            extract($error);
+
+            if (! $this->isFatal($type)) return;
+
+            $this->handleException(new ErrorException($message, 0, $level, $file, $line))->send();
+        }
+    }
+
+    /**
+     * Determine if the error type is fatal.
+     *
+     * @param  int   $type
+     * @return bool
+     */
+    protected function isFatal($type)
+    {
+        return in_array($type, array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE));
     }
 
     /**
@@ -108,9 +198,7 @@ class Handler
      */
     protected function displayException($exception)
     {
-        $message = $this->formatException($e);
-
-        return Response::make($message);
+        return $this->plainDisplayer->display($exception, $this->debug);
     }
 
     /**
@@ -206,6 +294,27 @@ class Handler
     public function pushError(Closure $callback)
     {
         $this->handlers[] = $callback;
+    }
+
+    /**
+     * Prepare the given response.
+     *
+     * @param  mixed  $response
+     * @return \Illuminate\Http\Response
+     */
+    protected function prepareResponse($response)
+    {
+        return $this->responsePreparer->prepareResponse($response);
+    }
+
+    /**
+     * Determine if we are running in the console.
+     *
+     * @return bool
+     */
+    public function runningInConsole()
+    {
+        return php_sapi_name() == 'cli';
     }
 
     /**

@@ -25,7 +25,6 @@
         "swiftmailer/swiftmailer": "^5.4",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3",
-        "filp/whoops": "^2.1",
         "monolog/monolog": "^1.19"
     },
     "autoload": {

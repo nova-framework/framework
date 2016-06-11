@@ -47,6 +47,27 @@ class Connection
     protected $pdo;
 
     /**
+     * The event dispatcher instance.
+     *
+     * @var \Events\Dispatcher
+     */
+    protected $events;
+
+    /**
+     * The paginator environment instance.
+     *
+     * @var \Pagination\Paginator
+     */
+    protected $paginator;
+
+    /**
+     * The cache manager instance.
+     *
+     * @var \Cache\CacheManager
+     */
+    protected $cache;
+
+    /**
      * The default fetch mode of the Connection.
      *
      * @var int
@@ -638,6 +659,77 @@ class Connection
         $this->pdo = $pdo;
 
         return $this;
+    }
+
+    /**
+     * Get the event dispatcher used by the connection.
+     *
+     * @return \Events\Dispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->events;
+    }
+
+    /**
+     * Set the event dispatcher instance on the connection.
+     *
+     * @param  \Events\Dispatcher
+     * @return void
+     */
+    public function setEventDispatcher(\Events\Dispatcher $events)
+    {
+        $this->events = $events;
+    }
+
+    /**
+     * Get the paginator environment instance.
+     *
+     * @return \Illuminate\Pagination\Environment
+     */
+    public function getPaginator()
+    {
+        if ($this->paginator instanceof Closure) {
+            $this->paginator = call_user_func($this->paginator);
+        }
+
+        return $this->paginator;
+    }
+
+    /**
+     * Set the pagination environment instance.
+     *
+     * @param  \Pagination\Environment|\Closure  $paginator
+     * @return void
+     */
+    public function setPaginator($paginator)
+    {
+        $this->paginator = $paginator;
+    }
+
+    /**
+     * Get the cache manager instance.
+     *
+     * @return \Illuminate\Cache\CacheManager
+     */
+    public function getCacheManager()
+    {
+        if ($this->cache instanceof Closure) {
+            $this->cache = call_user_func($this->cache);
+        }
+
+        return $this->cache;
+    }
+
+    /**
+     * Set the cache manager instance on the connection.
+     *
+     * @param  \Cache\CacheManager|\Closure  $cache
+     * @return void
+     */
+    public function setCacheManager($cache)
+    {
+        $this->cache = $cache;
     }
 
     /**

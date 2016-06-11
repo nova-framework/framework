@@ -173,7 +173,7 @@ class Handler
 
             if (! $this->isFatal($type)) return;
 
-            $this->handleException(new ErrorException($message, 0, $level, $file, $line))->send();
+            $this->handleException(new ErrorException($message, $type, 0, $file, $line))->send();
         }
     }
 

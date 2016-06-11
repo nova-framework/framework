@@ -30,7 +30,7 @@ class ExceptionDisplayer implements ExceptionDisplayerInterface
         if($debug) {
             $message = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
 
-            $message = '<p>Error in exception handler: ' .$message .'</p>'
+            $message = '<p>Error in exception handler: ' .$message .'</p>';
         } else {
             $message = '';
         }

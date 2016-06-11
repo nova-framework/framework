@@ -28,7 +28,9 @@ class ExceptionDisplayer implements ExceptionDisplayerInterface
         $viewPath = dirname(__FILE__) .DS .'Views' .DS .'Plain.php';
 
         if($debug) {
-            $message = 'Error in exception handler: ' .$e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+            $message = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+
+            $message = '<p>Error in exception handler: ' .$message .'</p>'
         } else {
             $message = '';
         }

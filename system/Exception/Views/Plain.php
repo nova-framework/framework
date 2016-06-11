@@ -7,9 +7,7 @@
 <body>
     <div>
         <h1>An error has occurred. This error has been reported.</h1>
-        <p>
-            <?= $content; ?>
-        </p>
+        <?= $content; ?>
     </div>
 </body>
 </html>

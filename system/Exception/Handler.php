@@ -1,6 +1,6 @@
 <?php
 /**
- * Handler - A simple Exception Handler based on Whoops!
+ * Handler - Implements a simple Exception Handler.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -8,11 +8,9 @@
 
 namespace Exception;
 
+use Exception\ExceptionDisplayer;
 use Exception\ExceptionDisplayerInterface;
-use Exception\PlainDisplayer;
 use Support\Contracts\ResponsePreparerInterface;
-
-use Response;
 
 use Closure;
 use ErrorException;
@@ -29,11 +27,11 @@ class Handler
     protected $responsePreparer;
 
     /**
-     * The plain exception displayer.
+     * The exception displayer implementation.
      *
      * @var \Exception\ExceptionDisplayerInterface
      */
-    protected $plainDisplayer;
+    protected $exceptionDisplayer;
 
     /**
      * Indicates if the Application is in Debug Mode.
@@ -62,11 +60,11 @@ class Handler
      * @param  bool  $debug
      * @return void
      */
-    public function __construct(ResponsePreparerInterface $responsePreparer, ExceptionDisplayerInterface $plainDisplayer, $debug = true)
+    public function __construct(ResponsePreparerInterface $responsePreparer, ExceptionDisplayerInterface $exceptionDisplayer, $debug = true)
     {
         $this->debug = $debug;
 
-        $this->plainDisplayer = $plainDisplayer;
+        $this->exceptionDisplayer = $exceptionDisplayer;
 
         $this->responsePreparer = $responsePreparer;
     }
@@ -198,7 +196,7 @@ class Handler
      */
     protected function displayException($exception)
     {
-        return $this->plainDisplayer->display($exception, $this->debug);
+        return $this->exceptionDisplayer->display($exception, $this->debug);
     }
 
     /**

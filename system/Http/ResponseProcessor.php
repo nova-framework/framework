@@ -9,7 +9,6 @@
 namespace Http;
 
 use Core\Application;
-
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;
 use Http\Response as HttpResponse;

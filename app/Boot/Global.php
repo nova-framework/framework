@@ -6,6 +6,18 @@
 
 Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
+// Send a E-Mail to administrator when a Error is logged by Application.
+/*
+Log::getMonolog()->pushHandler(
+    new Monolog\Handler\SwiftMailerHandler(
+        Mail::getSwiftMailer(),
+        Swift_Message::newInstance('[Log] Some Subject')->setFrom('from@domain.dev')->setTo('to@domain.dev'),
+        Logger::ERROR, // Set minimal Log Level for Mail
+        true           // Bubble to next handler?
+    )
+);
+*/
+
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------

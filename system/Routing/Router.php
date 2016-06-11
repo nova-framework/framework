@@ -20,8 +20,10 @@ use Routing\Route;
 use Support\Facades\Facade;
 
 use Illuminate\Container\Container;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Carbon\Carbon;
 
 use App;
 use Console;
@@ -107,6 +109,9 @@ class Router
         $this->events = $events;
 
         $this->container = $container ?: new Container();
+
+        //
+        BinaryFileResponse::trustXSendfileTypeHeader();
     }
 
     public static function getInstance()
@@ -461,9 +466,12 @@ class Router
         $path = $request->path();
 
         // First, we will supose that URI is associated with an Asset File.
-        if (($method == 'GET') && $this->dispatchFile($path)) {
-            // Return a null value, to notify for no further processing.
-            return null;
+        if ($method == 'GET') {
+            $result = $this->dispatchFile($path);
+
+            if($result instanceof SymfonyResponse) {
+                return $result;
+            }
         }
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
@@ -540,9 +548,7 @@ class Router
 
         if (! empty($filePath)) {
             // Serve the specified Asset File.
-            static::serveFile($filePath);
-
-            return true;
+            return static::serveFile($filePath);
         }
 
         return false;
@@ -607,18 +613,10 @@ class Router
      */
     public static function serveFile($filePath)
     {
-        $httpProtocol = $_SERVER['SERVER_PROTOCOL'];
-
-        $expires = 60 * 60 * 24 * 365; // Cache for one year
-
         if (! file_exists($filePath)) {
-            header("$httpProtocol 404 Not Found");
-
-            return false;
+            return  Response::make('', 404);
         } else if (! is_readable($filePath)) {
-            header("$httpProtocol 403 Forbidden");
-
-            return false;
+            return  Response::make('', 403);
         }
 
         // Collect the current file information.
@@ -639,42 +637,29 @@ class Router
                 break;
         }
 
-        // Prepare and send the headers with browser-side caching support.
+        // Create a BinaryFileResponse instance.
+        $response = Response::download($filePath, null, array(), 'inline');
 
-        // Get the last-modified-date of this very file.
-        $lastModified = filemtime($filePath);
+        // Set the Content type.
+        $response->headers->set('Content-Type', $contentType);
 
-        // Get the HTTP_IF_MODIFIED_SINCE header if set.
-        $ifModifiedSince = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
+        // Set the Expires.
+        $expires = Carbon::now()->addYear();
 
-        // Firstly, we finalize the output buffering.
-        while (ob_get_level() > 0) {
-            ob_end_clean();
-        }
+        $response->setExpires($expires);
 
-        header('Access-Control-Allow-Origin: *');
-        header('Content-type: ' .$contentType);
-        header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expires).' GMT');
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s', $lastModified).' GMT');
-        // header('Etag: '.$etagFile);
-        header('Cache-Control: max-age='.$expires);
+        // Set the Caching.
+        $lastModified = Carbon::createFromTimestamp(filemtime($filePath));
 
-        // Check if the page has changed. If not, send 304 and exit.
-        if (@strtotime($ifModifiedSince) == $lastModified) {
-            header("$httpProtocol 304 Not Modified");
+        $response->setCache(array(
+            'last_modified' => $lastModified,
+            'max_age'       => 600,
+            's_maxage'      => 600,
+            'private'       => false,
+            'public'        => true,
+        ));
 
-            return true;
-        }
-
-        // Send the current file.
-
-        header("$httpProtocol 200 OK");
-        header('Content-Length: ' .filesize($filePath));
-
-        // Send the current file content.
-        readfile($filePath);
-
-        return true;
+        return $response;
     }
 
 }

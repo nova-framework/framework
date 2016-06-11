@@ -10,6 +10,8 @@ namespace Exception;
 
 use Exception\ExceptionDisplayer;
 use Exception\ExceptionDisplayerInterface;
+use Exception\FatalErrorException as FatalError;
+use Exception\HttpExceptionInterface;
 use Support\Contracts\ResponsePreparerInterface;
 
 use Closure;
@@ -173,7 +175,7 @@ class Handler
 
             if (! $this->isFatal($type)) return;
 
-            $this->handleException(new ErrorException($message, $type, 0, $file, $line))->send();
+            $this->handleException(new FatalError($message, $type, 0, $file, $line))->send();
         }
     }
 
@@ -211,10 +213,14 @@ class Handler
         foreach ($this->handlers as $handler) {
             if (! $this->handlesException($handler, $exception)) {
                 continue;
+            } else if ($exception instanceof HttpExceptionInterface) {
+                $code = $exception->getStatusCode();
+            } else {
+                $code = 500;
             }
 
             try {
-                $response = $handler($exception, 500, $fromConsole);
+                $response = $handler($exception, $code, $fromConsole);
             } catch (\Exception $e) {
                 $response = $this->formatException($e);
             }

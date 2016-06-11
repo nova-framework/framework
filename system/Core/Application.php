@@ -26,6 +26,10 @@ use Events\EventServiceProvider;
 use Exception\ExceptionServiceProvider;
 use Routing\RoutingServiceProvider;
 
+use Exception\FatalErrorException;
+use Exception\HttpException;
+use Exception\NotFoundHttpException;
+
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -34,14 +38,13 @@ use Closure;
 
 
 class Application extends Container implements ResponsePreparerInterface
-
 {
     /**
      * The Nova Framework version.
      *
      * @var string
      */
-    const VERSION = '3.53.1';
+    const VERSION = '3.53.2';
 
     /**
      * Indicates if the application has "booted".
@@ -263,16 +266,6 @@ class Application extends Container implements ResponsePreparerInterface
     public function runningInConsole()
     {
         return php_sapi_name() == 'cli';
-    }
-
-    /**
-     * Determine if we are running unit tests.
-     *
-     * @return bool
-     */
-    public function runningUnitTests()
-    {
-        return $this['env'] == 'testing';
     }
 
     /**
@@ -887,9 +880,9 @@ class Application extends Container implements ResponsePreparerInterface
     public function abort($code, $message = '', array $headers = array())
     {
         if ($code == 404) {
-            //throw new NotFoundHttpException($message);
+            throw new NotFoundHttpException($message);
         } else {
-            //throw new HttpException($code, $message, null, $headers);
+            throw new HttpException($code, $message, null, $headers);
         }
     }
 
@@ -963,17 +956,6 @@ class Application extends Container implements ResponsePreparerInterface
         $path = APPDIR .'Storage';
 
         return new ProviderRepository($path);
-    }
-
-    /**
-     * Get the Application URL.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    public function url($path = '')
-    {
-        return site_url($path);
     }
 
     /**

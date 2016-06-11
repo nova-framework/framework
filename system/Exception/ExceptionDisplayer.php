@@ -28,14 +28,14 @@ class ExceptionDisplayer implements ExceptionDisplayerInterface
         $viewPath = dirname(__FILE__) .DS .'Views' .DS .'Plain.php';
 
         if($debug) {
-            $message = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+            $content = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
 
-            $message = '<p>Error in exception handler: ' .$message .'</p>';
+            $content = '<p>Error in exception handler: ' .$message .'</p>';
         } else {
-            $message = '';
+            $content = '';
         }
 
-        // Start rendering.
+        // Start the View rendering.
         ob_start();
 
         require $viewPath;

@@ -27,7 +27,7 @@ $langMenuLinks = ob_get_clean();
     <meta charset="utf-8">
     <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>
 <?php
-echo $meta; // Place to pass data / plugable hook zone
+echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
     template_url('dist/css/bootstrap.min.css', 'Default'),
@@ -85,7 +85,8 @@ Assets::js([
 ]);
 
 echo $js; // Place to pass data / plugable hook zone
-echo $footer; // Place to pass data / plugable hook zone
+
+echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <!-- DO NOT DELETE! - Forensics Profiler -->

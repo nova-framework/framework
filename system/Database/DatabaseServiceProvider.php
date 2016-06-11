@@ -36,7 +36,7 @@ class DatabaseServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('db', function($app)
         {
-            return new DatabaseManager($app, $app['db.factory']);
+            return new DatabaseManager($app);
         });
     }
 

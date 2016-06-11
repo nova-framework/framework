@@ -9,6 +9,7 @@
 namespace Support\Facades;
 
 use Database\Connection;
+use Support\Facades\Facade;
 
 
 class Database
@@ -23,7 +24,13 @@ class Database
      */
     public static function __callStatic($method, $params)
     {
-        $instance = Connection::getInstance();
+        $app = Facade::getFacadeApplication();
+
+        if(! is_null($app)) {
+            $instance = $app['db'];
+        } else {
+            $instance = Connection::getInstance();
+        }
 
         // Call the non-static method from the Connection instance.
         return call_user_func_array(array($instance, $method), $params);

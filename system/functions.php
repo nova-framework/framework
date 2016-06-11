@@ -16,6 +16,9 @@ use Support\Facades\Language;
 
 use Closure as Closure;
 
+if (! defined('NOVA_SYSTEM_FUNCTIONS')) {
+
+define('NOVA_SYSTEM_FUNCTIONS', 1);
 
 /**
  * Site URL helper
@@ -62,6 +65,24 @@ function resource_url($path, $module = null)
 function template_url($path, $template = TEMPLATE, $folder = '/assets/')
 {
     return Url::templatePath($template, $folder) .ltrim($path, '/');
+}
+
+/**
+ * Application Path helper
+ * @return string
+ */
+function app_path()
+{
+    return APPDIR;
+}
+
+/**
+ * Storage Path helper
+ * @return string
+ */
+function storage_path()
+{
+    return STORAGE_PATH;
 }
 
 //
@@ -847,4 +868,6 @@ function createKey($length = 32)
 function add_http($url, $scheme = 'http://')
 {
     return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
+}
+
 }

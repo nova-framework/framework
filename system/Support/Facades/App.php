@@ -16,12 +16,12 @@ use Session\SessionInterface;
 use Support\Facades\Cookie;
 use Support\Facades\Config;
 use Support\Facades\Crypt;
+use Support\Facades\Facade;
 use Support\Facades\Request;
 use Support\Facades\Session;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-
 
 
 class App
@@ -70,6 +70,11 @@ class App
 
         // Collect the garbage for the Session Store instance.
         static::collectGarbage($session, $config);
+
+        if(is_null($response)) {
+            // No further processing required.
+            return;
+        }
 
         // Add all Request and queued Cookies.
         static::processCookies($response, $config);
@@ -196,4 +201,21 @@ class App
     {
         return (mt_rand(1, $config['lottery'][1]) <= $config['lottery'][0]);
     }
+
+    /**
+     * Magic Method for calling the methods on the Application instance.
+     *
+     * @param $method
+     * @param $params
+     *
+     * @return mixed
+     */
+    public static function __callStatic($method, $params)
+    {
+        $app = Facade::getFacadeApplication();
+
+        // Call the non-static method from the Application instance.
+        return call_user_func_array(array($app, $method), $params);
+    }
+
 }

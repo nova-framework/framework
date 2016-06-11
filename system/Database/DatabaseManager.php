@@ -43,7 +43,7 @@ class DatabaseManager implements ConnectionResolverInterface
     {
         $name = $name ?: $this->getDefaultConnection();
 
-        if ( ! isset($this->connections[$name])) {
+        if (! isset($this->connections[$name])) {
             $connection = $this->makeConnection($name);
 
             $this->connections[$name] = $this->prepare($connection);

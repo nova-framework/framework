@@ -14,22 +14,25 @@ use Core\Config;
  * The Application configuration.
  */
 Config::set('app', array(
+    /**
+     * Debug Mode
+     */
+    'debug' => false, // When enabled the actual PHP errors will be shown.
+
+    /**
+     * The Website URL.
+     */
     'url'  => SITEURL,
+
+    /**
+     * Website Name.
+     */
     'name' => SITETITLE,
 
     /**
      * Enable multilingual support.
      */
     'multilingual' => false,
-
-    /**
-     * The Application's paths.
-     */
-    'paths' => array(
-        'base'    => ROOTDIR,
-        'app'     => APPDIR,
-        'storage' => STORAGE_PATH,
-    ),
 
     /**
      * The Backend's Color Scheme.
@@ -62,12 +65,14 @@ Config::set('app', array(
      */
     'providers' => array(
         'Auth\AuthServiceProvider',
+        'Cache\CacheServiceProvider',
         'Routing\RoutingServiceProvider',
         'Cookie\CookieServiceProvider',
         'Database\DatabaseServiceProvider',
         'Encryption\EncryptionServiceProvider',
-        'Hashing\HashingServiceProvider',
-        'Mail\MailerServiceProvider',
+        'Hashing\HashServiceProvider',
+        'Log\LogServiceProvider',
+        'Mail\MailServiceProvider',
         'Pagination\PaginationServiceProvider',
         'Auth\Reminders\ReminderServiceProvider',
         'Session\SessionServiceProvider',
@@ -117,6 +122,7 @@ Config::set('app', array(
         // The Support Facades.
         'App'           => '\Support\Facades\App',
         'Auth'          => '\Support\Facades\Auth',
+        'Cache'         => '\Support\Facades\Cache',
         'Config'        => '\Support\Facades\Config',
         'Cookie'        => '\Support\Facades\Cookie',
         'Crypt'         => '\Support\Facades\Crypt',
@@ -133,5 +139,6 @@ Config::set('app', array(
         'Response'      => '\Support\Facades\Response',
         'Session'       => '\Support\Facades\Session',
         'Validator'     => '\Support\Facades\Validator',
+        'Log'           => '\Support\Facades\Log',
     ),
 ));

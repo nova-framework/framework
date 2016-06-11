@@ -7,17 +7,20 @@
  * @date April 10th, 2016
  */
 
-use Core\Aliases;
+use Core\AliasLoader;
+use Core\Config;
 use Core\Language;
 use Core\Logger;
 use Core\Modules;
 use Routing\Router;
+use Support\Facades\App;
 use Support\Facades\Event;
+use Support\Facades\Request;
 use Support\Facades\Session;
 
 use Patchwork\Utf8\Bootup as Patchwork;
 
-/** Ensure using internally the UTF-8 engoding. */
+/** Ensure using internally the UTF-8 encoding. */
 if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('utf-8');
 }
@@ -35,11 +38,10 @@ require APPDIR .'Config.php';
 /** Set the Default Timezone. */
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-/** Load the Framework wide functions. */
-require dirname(__FILE__) .DS .'functions.php';
-
 /** Initialize the Class Aliases. */
-Aliases::init();
+$aliases = Config::get('app.aliases', array());
+
+AliasLoader::getInstance($aliases)->register();
 
 /** Initialize the Logger. */
 Logger::init();
@@ -74,5 +76,11 @@ Modules::loadRoutes();
 /** Inform listeners of Nova execution. */
 Event::fire('nova.framework.booting');
 
+/** Get the Request instance. */
+$request = Request::instance();
+
 /** Execute matched Routes. */
-$router->dispatch();
+$result = $router->dispatch($request);
+
+/* Finish the Session and send the Response. */
+App::finish($result);

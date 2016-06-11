@@ -9,16 +9,19 @@
 namespace Routing;
 
 use Core\Config;
+use Events\Dispatcher;
 use Helpers\Inflector;
 use Helpers\Url;
+use Http\Request;
+//use Http\Response;
 use Routing\BaseRouter;
 use Routing\Route;
 
+use Illuminate\Container\Container;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use App;
 use Response;
-use Request;
 
 
 /**
@@ -26,6 +29,27 @@ use Request;
  */
 class Router extends BaseRouter
 {
+    /**
+     * The event dispatcher instance.
+     *
+     * @var \Events\Dispatcher
+     */
+    protected $events;
+
+    /**
+     * The IoC container instance.
+     *
+     * @var \Illuminate\Container\Container
+     */
+    protected $container;
+
+    /**
+     * The request currently being dispatched.
+     *
+     * @var \Http\Request
+     */
+    protected $currentRequest;
+
     /**
      * Array of Route Groups
      *
@@ -46,8 +70,12 @@ class Router extends BaseRouter
      *
      * @codeCoverageIgnore
      */
-    protected function __construct()
+    public function __construct(Dispatcher $events = null, Container $container = null)
     {
+        $this->events = $events;
+
+        $this->container = $container ?: new Container();
+
         parent::__construct();
     }
 
@@ -151,7 +179,7 @@ class Router extends BaseRouter
     protected static function register($method, $route, $action = null)
     {
         // Get the Router instance.
-        $router =& self::getInstance();
+        $router = self::getInstance();
 
         // Prepare the route Methods.
         if (is_string($method) && (strtolower($method) == 'any')) {
@@ -225,29 +253,32 @@ class Router extends BaseRouter
      *
      * @return bool
      */
-    public function dispatch()
+    public function dispatch(Request $request)
     {
-        // Retrieve the additional Routing Patterns from configuration.
-        $patterns = Config::get('routing.patterns', array());
+        $this->currentRequest = $request;
 
-        // Detect the current URI.
-        $uri = Url::detectUri();
+        // Get the Method and Path.
+        $method = $request->method();
+
+        $path = $request->path();
 
         // First, we will supose that URI is associated with an Asset File.
-        if ((Request::method() == 'GET') && $this->dispatchFile($uri)) {
-            return true;
+        if (($method == 'GET') && $this->dispatchFile($path)) {
+            // Return a null value, to notify for no further processing.
+            return null;
         }
-
-        // Not an Asset File URI? Route the current request.
-        $method = Request::method();
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
         if ($this->defaultRoute !== null) {
             array_push($this->routes, $this->defaultRoute);
         }
 
+        // Retrieve the additional Routing Patterns from configuration.
+        $patterns = Config::get('routing.patterns', array());
+
+        // Execute the Routes matching loop.
         foreach ($this->routes as $route) {
-            if ($route->match($uri, $method, true, $patterns)) {
+            if ($route->match($path, $method, true, $patterns)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 
@@ -255,10 +286,7 @@ class Router extends BaseRouter
                 $result = $route->applyFilters();
 
                 if($result instanceof SymfonyResponse) {
-                    // Finish the Session and send the Response.
-                    App::finish($result);
-
-                    return true;
+                    return $result;
                 }
 
                 // Get the matched Route callback.
@@ -269,18 +297,14 @@ class Router extends BaseRouter
                     return $this->invokeObject($callback, $route->getParams());
                 }
 
-                return true;
+                // There is no Callback; no content to send back.
+                return Response::make('');
             }
         }
 
         // No valid Route found; send an Error 404 Response.
-        $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
+        $data = array('error' => htmlspecialchars($path, ENT_COMPAT, 'ISO-8859-1', true));
 
-        $response = Response::error(404, $data);
-
-        // Finish the Session and send the Response.
-        App::finish($response);
-
-        return false;
+        return Response::error(404, $data);
     }
 }

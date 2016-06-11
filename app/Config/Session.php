@@ -10,6 +10,8 @@ use Core\Config;
 
 
 Config::set('session', array(
+    'driver'  => 'file', // The Session Driver used for storing Session data; supported: 'file' or 'database'.
+    
     'handler' => '\Session\FileSessionHandler', // The default Session Handler, using files for Session cache.
 
     // Storage configuration.

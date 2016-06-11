@@ -13,6 +13,7 @@ use Session\FileSessionHandler;
 use Session\Store as SessionStore;
 use Support\Facades\Cookie;
 use Support\Facades\Config;
+use Support\Facades\Facade;
 use Support\MessageBag;
 
 
@@ -40,6 +41,12 @@ class Session
      */
     protected static function getSessionStore()
     {
+        $app = Facade::getFacadeApplication();
+
+        if(! is_null($app)) {
+            return $app['session.store'];
+        }
+
         if (isset(static::$sessionStore)) {
             return static::$sessionStore;
         }

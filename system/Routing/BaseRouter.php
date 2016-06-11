@@ -11,7 +11,9 @@ namespace Routing;
 use Core\BaseView as View;
 use Core\Controller;
 use Helpers\Inflector;
+use Http\Request;
 use Routing\Route;
+use Support\Facades\Facade;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
@@ -64,8 +66,14 @@ abstract class BaseRouter
     {
     }
 
-    public static function &getInstance()
+    public static function getInstance()
     {
+        $app = Facade::getFacadeApplication();
+
+        if(! is_null($app)) {
+            return $app['router'];
+        }
+
         if (self::$instance === null) {
             $appRouter = APPROUTER;
 
@@ -175,23 +183,10 @@ abstract class BaseRouter
         $result = call_user_func_array($callback, $params);
 
         if($result instanceof SymfonyResponse) {
-            // Finsih the Session Store.
-            App::finish($result);
-
-            // Send the Response.
-            $result->send();
-        }  else if($result instanceof View) {
-            // Create a Response instance.
-            $response = Response::make($result);
-
-            // Finish the Session Store.
-            App::finish($response);
-
-            // Send the Response.
-            $response->send();
+            return $result;
         }
 
-        return true;
+        return Response::make($result);
     }
 
     /**
@@ -206,7 +201,7 @@ abstract class BaseRouter
     {
         // The Controller's the Execution Flow Methods cannot be called via Router.
         if (($method == 'execute')) {
-            return false;
+            return Response::error(403);
         }
 
         // Initialize the Controller.
@@ -217,14 +212,12 @@ abstract class BaseRouter
         $methods = array_map('strtolower', get_class_methods($controller));
 
         // The called Method should be defined right on the called Controller to be executed.
-        if (in_array(strtolower($method), $methods)) {
-            // Execute the Controller's Method with the given arguments.
-            $controller->execute($method, $params);
-
-            return true;
+        if (! in_array(strtolower($method), $methods)) {
+            return Response::error(403);
         }
 
-        return false;
+        // Execute the Controller's Method with the given arguments.
+        return $controller->execute($method, $params);
     }
 
     /**
@@ -248,19 +241,19 @@ abstract class BaseRouter
         $method     = $segments[1];
 
         // The Method shouldn't be called 'execute' or starting with '_'; also check if the Controller's class exists.
-        if (($method[0] !== '_') && class_exists($controller)) {
-            // Invoke the Controller's Method with the given arguments.
-            return $this->invokeController($controller, $method, $params);
+        if (($method[0] === '_') || ! class_exists($controller)) {
+            return Response::error(403);
         }
 
-        return false;
+        // Invoke the Controller's Method with the given arguments.
+        return $this->invokeController($controller, $method, $params);
     }
 
     /**
      * Dispatch route
      * @return bool
      */
-    abstract public function dispatch();
+    abstract public function dispatch(Request $request);
 
     /**
      * Dispatch/Serve a file

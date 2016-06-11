@@ -16,6 +16,9 @@ use Support\Facades\Language;
 
 use Closure as Closure;
 
+if (! defined('NOVA_SYSTEM_FUNCTIONS')) {
+
+define('NOVA_SYSTEM_FUNCTIONS', 1);
 
 /**
  * Site URL helper
@@ -865,4 +868,6 @@ function createKey($length = 32)
 function add_http($url, $scheme = 'http://')
 {
     return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
+}
+
 }

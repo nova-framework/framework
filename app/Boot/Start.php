@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-use Core\AliasLoader;
-use Core\Application;
 use Core\Config;
 use Config\Repository as ConfigRepository;
+use Foundation\AliasLoader;
+use Foundation\Application;
 use Http\Request;
 use Support\Facades\Facade;
 

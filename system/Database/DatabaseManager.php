@@ -10,7 +10,7 @@ class DatabaseManager implements ConnectionResolverInterface
     /**
      * The Application instance.
      *
-     * @var \Core\Application
+     * @var \Foundation\Application
      */
     protected $app;
 

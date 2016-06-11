@@ -948,19 +948,19 @@ class Application extends Container implements ResponsePreparerInterface
      */
     public function isDownForMaintenance()
     {
-        return file_exists($this['path.storage'].'/down');
+        return file_exists($this['path.storage'].'/SITEDOWN');
     }
 
-        /**
-         * Register a maintenance mode event listener.
-         *
-         * @param  \Closure  $callback
-         * @return void
-         */
-        public function down(Closure $callback)
-        {
-                $this['events']->listen('illuminate.app.down', $callback);
-        }
+    /**
+     * Register a maintenance mode event listener.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function down(Closure $callback)
+    {
+        $this['events']->listen('illuminate.app.down', $callback);
+    }
 
     /**
      * Get the configuration loader instance.

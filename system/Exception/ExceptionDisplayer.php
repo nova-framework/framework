@@ -23,7 +23,7 @@ class ExceptionDisplayer implements ExceptionDisplayerInterface
      * @param  string  $exception
      * @return \Symfony\Component\HttpFoundation\Response
      */
-     public function display(Exception $exception, $debug)
+     public function display(Exception $exception, $debug = true)
      {
         $viewPath = dirname(__FILE__) .DS .'Views' .DS .'Plain.php';
 

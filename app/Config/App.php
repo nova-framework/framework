@@ -65,6 +65,7 @@ Config::set('app', array(
      */
     'providers' => array(
         'Auth\AuthServiceProvider',
+        'Cache\CacheServiceProvider',
         'Routing\RoutingServiceProvider',
         'Cookie\CookieServiceProvider',
         'Database\DatabaseServiceProvider',
@@ -121,6 +122,7 @@ Config::set('app', array(
         // The Support Facades.
         'App'           => '\Support\Facades\App',
         'Auth'          => '\Support\Facades\Auth',
+        'Cache'         => '\Support\Facades\Cache',
         'Config'        => '\Support\Facades\Config',
         'Cookie'        => '\Support\Facades\Cookie',
         'Crypt'         => '\Support\Facades\Crypt',

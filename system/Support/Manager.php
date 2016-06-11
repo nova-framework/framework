@@ -66,7 +66,7 @@ abstract class Manager
      */
     protected function createDriver($driver)
     {
-        $method = 'create'.ucfirst($driver).'Driver';
+        $method = 'create' .ucfirst($driver) .'Driver';
 
         if (isset($this->customCreators[$driver])) {
             return $this->callCustomCreator($driver);

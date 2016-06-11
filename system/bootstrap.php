@@ -7,11 +7,11 @@
  * @date April 10th, 2016
  */
 
-use Core\AliasLoader;
 use Core\Config;
 use Core\Language;
 use Core\Logger;
 use Core\Modules;
+use Foundation\AliasLoader;
 use Routing\Router;
 use Support\Facades\App;
 use Support\Facades\Event;

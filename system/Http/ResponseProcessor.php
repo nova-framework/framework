@@ -15,13 +15,6 @@ use Forensics\Profiler as QuickProfiler;
 use Http\Response as HttpResponse;
 use Session\SessionInterface;
 
-use Support\Facades\Cookie;
-use Support\Facades\Config;
-use Support\Facades\Crypt;
-use Support\Facades\Facade;
-use Support\Facades\Request;
-use Support\Facades\Session;
-
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Response as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -30,24 +23,47 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 class ResponseProcessor
 {
     /**
-     * Finalize the Session Store and send the Response
+     * The Application instance being handled.
+     *
+     * @var \Core\Application
+     */
+    protected $app;
+
+    /**
+     * Class constuctor
+     *
+     * @param  \Core\Application $app
+     * @return void
+     */
+    protected function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * Finalize the Session Store and process the Response
      *
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    public static function handle(Application $app, SymfonyRequest $request, SymfonyResponse $response)
+    public static function handle(Application $app, SymfonyResponse $response)
     {
+        $processor = new static($app);
+
+        $processor->process($response);
+    }
+
+    protected function process(SymfonyResponse $response)
+    {
+        $cookieJar = $this->app['cookie'];
+
+        $session = $this->app['session.store'];
+
         // Get the Session Store configuration.
-        $config = Config::get('session');
-
-        // Get the Request instance.
-        $request = Request::instance();
-
-        // Get the Session Store instance.
-        $session = Session::instance();
+        $config = $this->app['config']['session'];
 
         // Store the Session ID in a Cookie.
-        $cookie = Cookie::make(
+        $cookie = $cookieJar->make(
             $config['cookie'],
             $session->getId(),
             $config['lifetime'],
@@ -57,13 +73,13 @@ class ResponseProcessor
             false
         );
 
-        Cookie::queue($cookie);
+        $cookieJar->queue($cookie);
 
         // Save the Session Store data.
         $session->save();
 
         // Collect the garbage for the Session Store instance.
-        static::collectGarbage($session, $config);
+        $this->collectSessionGarbage($session, $config);
 
         if(is_null($response)) {
             // No further processing required.
@@ -71,16 +87,10 @@ class ResponseProcessor
         }
 
         // Add all Request and queued Cookies.
-        static::processCookies($response, $config);
+        $this->processResponseCookies($response, $config);
 
         // Finally, minify the Response's Content.
-        static::processContent($response);
-
-        // Prepare the Response instance for sending.
-        $response->prepare($request);
-
-        // Send the Response.
-        $response->send();
+        $this->processResponseContent($response);
     }
 
     /**
@@ -89,9 +99,9 @@ class ResponseProcessor
      * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    protected static function processContent(SymfonyResponse $response)
+    protected function processResponseContent(SymfonyResponse $response)
     {
-        if (! $response instanceof HttpResponse) {
+        if (! $response instanceof Response) {
             return;
         }
 
@@ -134,14 +144,14 @@ class ResponseProcessor
      * @param  \Illuminate\Session\SessionInterface  $session
      * @return void
      */
-    protected static function collectGarbage(SessionInterface $session, array $config)
+    protected function collectSessionGarbage(SessionInterface $session, array $config)
     {
         $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
 
         // Here we will see if this request hits the garbage collection lottery by hitting
         // the odds needed to perform garbage collection on any given request. If we do
         // hit it, we'll call this handler to let it delete all the expired sessions.
-        if (static::configHitsLottery($config))  {
+        if ($this->configHitsLottery($config))  {
             $session->getHandler()->gc($lifeTime);
         }
     }
@@ -151,10 +161,12 @@ class ResponseProcessor
      *
      * @return void
      */
-    protected static function processCookies(SymfonyResponse $response, array $config)
+    protected function processResponseCookies(SymfonyResponse $response, array $config)
     {
+        $cookieJar = $this->app['cookie'];
+
         // Insert all queued Cookies on the Response instance.
-        foreach (Cookie::getQueuedCookies() as $cookie) {
+        foreach ($cookieJar->getQueuedCookies() as $cookie) {
             $response->headers->setCookie($cookie);
         }
 
@@ -162,6 +174,9 @@ class ResponseProcessor
             // The Cookies encryption is disabled.
             return;
         }
+
+        // Get the Encrypter instance.
+        $encrypter = $this->app['encrypter'];
 
         // Encrypt all Cookies present on the Response instance.
         foreach ($response->headers->getCookies() as $key => $cookie)  {
@@ -173,7 +188,7 @@ class ResponseProcessor
             // Create a new Cookie with the content encrypted.
             $cookie = new SymfonyCookie(
                 $cookie->getName(),
-                Crypt::encrypt($cookie->getValue()),
+                $encrypter->encrypt($cookie->getValue()),
                 $cookie->getExpiresTime(),
                 $cookie->getPath(),
                 $cookie->getDomain(),
@@ -191,7 +206,7 @@ class ResponseProcessor
      * @param  array  $config
      * @return bool
      */
-    protected static function configHitsLottery(array $config)
+    protected function configHitsLottery(array $config)
     {
         return (mt_rand(1, $config['lottery'][1]) <= $config['lottery'][0]);
     }

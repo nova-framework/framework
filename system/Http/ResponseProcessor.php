@@ -1,12 +1,14 @@
 <?php
 /**
- * App - A Facade to the Application.
+ * ResponseProcessor - Implements a Response processing.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
 namespace Http;
+
+use Core\Application;
 
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;
@@ -21,6 +23,7 @@ use Support\Facades\Request;
 use Support\Facades\Session;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
+use Symfony\Component\HttpFoundation\Response as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
@@ -32,7 +35,7 @@ class ResponseProcessor
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    public static function handle(SymfonyResponse $response, SymfonyResponse $response)
+    public static function handle(Application $app, SymfonyRequest $request, SymfonyResponse $response)
     {
         // Get the Session Store configuration.
         $config = Config::get('session');

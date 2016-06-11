@@ -25,6 +25,8 @@ class ExceptionDisplayer implements ExceptionDisplayerInterface
      */
      public function display(Exception $exception, $debug)
      {
+        $viewPath = dirname(__FILE__) .DS .'Views' .DS .'Plain.php';
+
         if($debug) {
             $message = 'Error in exception handler: ' .$e->getMessage().' in '.$e->getFile().':'.$e->getLine();
         } else {
@@ -34,10 +36,11 @@ class ExceptionDisplayer implements ExceptionDisplayerInterface
         // Start rendering.
         ob_start();
 
-        require dirname(__FILE__) .DS .'Resources' .DS .'plain.php';
+        require $viewPath;
 
         $message = ob_get_clean();
 
+        // Create a Response and return it.
         return new Response($message, 500);
      }
 }

@@ -79,7 +79,7 @@ class Environment
     {
         return array_first($args, function($k, $v)
         {
-            return starts_with($v, '--env');
+            return str_starts_with($v, '--env');
         });
     }
 

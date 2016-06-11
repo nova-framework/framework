@@ -11,37 +11,32 @@ namespace Exception;
 use Exception\ExceptionDisplayerInterface;
 use Exception\HttpExceptionInterface;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 use Exception;
 
 
-class ExceptionDisplayer implements ExceptionDisplayerInterface
+class JsonExceptionDisplayer implements ExceptionDisplayerInterface
 {
     /**
-     * Display the given exception to the user.
+     * Display the given exception to the User.
      *
      * @param  string  $exception
      * @return \Symfony\Component\HttpFoundation\Response
      */
      public function display(Exception $exception, $debug = true)
      {
-        $viewPath = dirname(__FILE__) .DS .'Views' .DS .'Plain.php';
-
         if($debug) {
-            $content = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+            $message = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
 
-            $content = '<p>Error in exception handler: ' .$message .'</p>';
+            $message = 'Error in exception handler: ' .$message;
         } else {
-            $content = '';
+            $message = '';
         }
 
         // Start the View rendering.
-        ob_start();
-
-        require $viewPath;
-
-        $message = ob_get_clean();
+        $data = array('error' => $message);
 
         // Prepare the Response and send it.
         $status = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
@@ -49,6 +44,6 @@ class ExceptionDisplayer implements ExceptionDisplayerInterface
         $headers = $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : array();
 
         // Create a Response and return it.
-        return new Response($message, $status, $headers());
+        return new JsonResponse($data, $status, $headers());
      }
 }

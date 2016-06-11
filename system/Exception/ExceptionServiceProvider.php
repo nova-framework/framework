@@ -8,6 +8,10 @@
 
 namespace Exception;
 
+use Exception\Handler;
+use Exception\HttpExceptionDisplayer;
+use Exception\JsonExceptionDisplayer;
+
 use Support\ServiceProvider;
 
 
@@ -20,7 +24,8 @@ class ExceptionServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerDisplayer();
+        $this->registerHttpDisplayer();
+        $this->registerJsonDisplayer();
 
         $this->registerHandler();
     }
@@ -34,20 +39,40 @@ class ExceptionServiceProvider extends ServiceProvider
     {
         $this->app['exception'] = $this->app->share(function($app)
         {
-            return new Handler($app, $app['exception.displayer']);
+            $config = $app['config'];
+
+            return new Handler(
+                $app,
+                $app['exception.httpDisplayer'],
+                $app['exception.httpDisplayer'],
+                $config['debug']
+            );
         });
     }
 
     /**
-     * Register the Exception Displayer.
+     * Register the Http Exception Displayer.
      *
      * @return void
      */
-    protected function registerDisplayer()
+    protected function registerHttpDisplayer()
     {
-        $this->app['exception.displayer'] = $this->app->share(function($app)
+        $this->app['exception.httpDisplayer'] = $this->app->share(function($app)
         {
-            return new ExceptionDisplayer();
+            return new HttpExceptionDisplayer();
+        });
+    }
+
+    /**
+     * Register the Json Exception Displayer.
+     *
+     * @return void
+     */
+    protected function registerJsonDisplayer()
+    {
+        $this->app['exception.jsonDisplayer'] = $this->app->share(function($app)
+        {
+            return new JsonExceptionDisplayer();
         });
     }
 }

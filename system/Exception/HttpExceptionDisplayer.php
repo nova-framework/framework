@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Exception;
 
 
-class ExceptionDisplayer implements ExceptionDisplayerInterface
+class HttpExceptionDisplayer implements ExceptionDisplayerInterface
 {
     /**
      * Display the given exception to the user.

@@ -8,7 +8,8 @@
 
 namespace Exception;
 
-use Exception\ExceptionDisplayer;
+use Exception\HttpExceptionDisplayer;
+use Exception\JsonExceptionDisplayer;
 use Exception\ExceptionDisplayerInterface;
 use Exception\FatalErrorException as FatalError;
 use Exception\HttpExceptionInterface;
@@ -33,7 +34,14 @@ class Handler
      *
      * @var \Exception\ExceptionDisplayerInterface
      */
-    protected $exceptionDisplayer;
+    protected $httpDisplayer;
+
+    /**
+     * The exception displayer implementation.
+     *
+     * @var \Exception\ExceptionDisplayerInterface
+     */
+    protected $jsonDisplayer;
 
     /**
      * Indicates if the Application is in Debug Mode.
@@ -62,11 +70,16 @@ class Handler
      * @param  bool  $debug
      * @return void
      */
-    public function __construct(ResponsePreparerInterface $responsePreparer, ExceptionDisplayerInterface $exceptionDisplayer, $debug = true)
+    public function __construct(
+        ResponsePreparerInterface $responsePreparer,
+        ExceptionDisplayerInterface $httpDisplayer,
+        ExceptionDisplayerInterface $jsonDisplayer,
+        $debug = true)
     {
         $this->debug = $debug;
 
-        $this->exceptionDisplayer = $exceptionDisplayer;
+        $this->httpDisplayer = $httpDisplayer;
+        $this->jsonDisplayer = $jsonDisplayer;
 
         $this->responsePreparer = $responsePreparer;
     }
@@ -198,7 +211,10 @@ class Handler
      */
     protected function displayException($exception)
     {
-        return $this->exceptionDisplayer->display($exception, $this->debug);
+        if($this->isAjaxRequest()) {
+        } else {
+            return $this->httpDisplayer->display($exception, $this->debug);
+        }
     }
 
     /**
@@ -319,6 +335,16 @@ class Handler
     public function runningInConsole()
     {
         return php_sapi_name() == 'cli';
+    }
+
+    /**
+     * Check if is an AJAX request.
+     *
+     * @return bool
+     */
+    protected function isAjaxRequest()
+    {
+        return (! empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
     }
 
     /**

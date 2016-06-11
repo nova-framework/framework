@@ -10,7 +10,7 @@ abstract class Manager
     /**
      * The application instance.
      *
-     * @var \Core\Application
+     * @var \Foundation\Application
      */
     protected $app;
 
@@ -31,7 +31,7 @@ abstract class Manager
     /**
      * Create a new manager instance.
      *
-     * @param  \Core\Application  $app
+     * @param  \Foundation\Application  $app
      * @return void
      */
     public function __construct($app)

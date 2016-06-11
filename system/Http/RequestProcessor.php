@@ -8,7 +8,7 @@
 
 namespace Http;
 
-use Core\Application;
+use Foundation\Application;
 use Encryption\DecryptException;
 use Session\SessionInterface;
 
@@ -21,14 +21,14 @@ class RequestProcessor
     /**
      * The Application instance being handled.
      *
-     * @var \Core\Application
+     * @var \Foundation\Application
      */
     protected $app;
 
     /**
      * Class constuctor
      *
-     * @param  \Core\Application $app
+     * @param  \Foundation\Application $app
      * @return void
      */
     protected function __construct(Application $app)

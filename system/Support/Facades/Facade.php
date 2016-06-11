@@ -14,7 +14,7 @@ abstract class Facade
     /**
      * The application instance being facaded.
      *
-     * @var \Core\Application
+     * @var \Foundation\Application
      */
     protected static $app;
 

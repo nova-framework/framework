@@ -8,7 +8,7 @@
 
 namespace Http;
 
-use Core\Application;
+use Foundation\Application;
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;
 use Http\Response as HttpResponse;
@@ -24,14 +24,14 @@ class ResponseProcessor
     /**
      * The Application instance being handled.
      *
-     * @var \Core\Application
+     * @var \Foundation\Application
      */
     protected $app;
 
     /**
      * Class constuctor
      *
-     * @param  \Core\Application $app
+     * @param  \Foundation\Application $app
      * @return void
      */
     protected function __construct(Application $app)

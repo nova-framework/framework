@@ -12,7 +12,6 @@ use Exception\ExceptionDisplayerInterface;
 use Exception\HttpExceptionInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 use Exception;
 

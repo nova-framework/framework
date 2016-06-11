@@ -184,7 +184,7 @@ abstract class BaseRouter
 
         if($result instanceof SymfonyResponse) {
             return $result;
-        } 
+        }
 
         return Response::make($result);
     }
@@ -201,7 +201,7 @@ abstract class BaseRouter
     {
         // The Controller's the Execution Flow Methods cannot be called via Router.
         if (($method == 'execute')) {
-            return Response::make(500);
+            return Response::error(403);
         }
 
         // Initialize the Controller.
@@ -213,7 +213,7 @@ abstract class BaseRouter
 
         // The called Method should be defined right on the called Controller to be executed.
         if (! in_array(strtolower($method), $methods)) {
-            return Response::make(500);
+            return Response::error(403);
         }
 
         // Execute the Controller's Method with the given arguments.
@@ -242,7 +242,7 @@ abstract class BaseRouter
 
         // The Method shouldn't be called 'execute' or starting with '_'; also check if the Controller's class exists.
         if (($method[0] === '_') || ! class_exists($controller)) {
-            return Response::make(500);
+            return Response::error(403);
         }
 
         // Invoke the Controller's Method with the given arguments.

@@ -515,7 +515,12 @@ class Application extends Container implements ResponsePreparerInterface
         $response = $this->handle($request);
 
         // Terminate the Application.
-        $this->terminate($request, $response);
+        if(! is_null($response)) {
+            // Was served a File by Routing?
+            $this->terminate($request, $response);
+        } else {
+            $this->shutdown();
+        }
 
         $this->finalize($request, $response);
     }

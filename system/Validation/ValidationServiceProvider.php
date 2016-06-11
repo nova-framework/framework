@@ -23,7 +23,7 @@ class ValidationServiceProvider extends ServiceProvider
      */
     protected $defer = true;
 
-    
+
     /**
      * Register the Service Provider.
      *
@@ -31,17 +31,14 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $me = $this;
+        $this->registerTranslator();
 
         $this->registerPresenceVerifier();
 
-        $this->app->bindShared('validator', function($app) use ($me)
+        $this->app->bindShared('validator', function($app)
         {
-            // Get a local Translator instance.
-            $translator = new Translator();
-
             // Get a Validation Factory instance.
-            $validator = new Factory($app['translator'], $app);
+            $validator = new Factory($app['validation.translator'], $app);
 
             if (isset($app['validation.presence'])) {
                 $validator->setPresenceVerifier($app['validation.presence']);
@@ -61,6 +58,19 @@ class ValidationServiceProvider extends ServiceProvider
         $this->app->bindShared('validation.presence', function($app)
         {
             return new DatabasePresenceVerifier($app['db']);
+        });
+    }
+
+    /**
+     * Register the Database Presence Verifier.
+     *
+     * @return void
+     */
+    protected function registerTranslator()
+    {
+        $this->app->bindShared('validation.translator', function($app)
+        {
+            return new Translator();
         });
     }
 

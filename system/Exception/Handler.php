@@ -212,6 +212,7 @@ class Handler
     protected function displayException($exception)
     {
         if($this->isAjaxRequest()) {
+            return $this->jsonDisplayer->display($exception, $this->debug);
         } else {
             return $this->httpDisplayer->display($exception, $this->debug);
         }

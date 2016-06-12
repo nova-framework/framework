@@ -11,11 +11,11 @@ namespace Http;
 use Foundation\Application;
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;
-use Http\Response as HttpResponse;
+use Http\Response;
 use Session\SessionInterface;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
-use Symfony\Component\HttpFoundation\Response as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
@@ -45,7 +45,7 @@ class ResponseProcessor
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    public static function handle(Application $app, SymfonyResponse $response)
+    public static function handle(SymfonyRequest $request, SymfonyResponse $response)
     {
         $processor = new static($app);
 

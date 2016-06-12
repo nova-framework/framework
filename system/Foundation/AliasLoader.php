@@ -61,8 +61,7 @@ class AliasLoader
      */
     public function load($alias)
     {
-        if (isset($this->aliases[$alias]))
-        {
+        if (isset($this->aliases[$alias])) {
             return class_alias($this->aliases[$alias], $alias);
         }
     }
@@ -86,7 +85,7 @@ class AliasLoader
      */
     public function register()
     {
-        if ( ! $this->registered) {
+        if (! $this->registered) {
             $this->prependToLoaderStack();
 
             $this->registered = true;

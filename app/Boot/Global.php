@@ -8,16 +8,19 @@ Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
 // Send a E-Mail to administrator when a Error is logged by Application.
 /*
+use Monolog\Logger;
+
 Log::getMonolog()->pushHandler(
     new Monolog\Handler\SwiftMailerHandler(
         Mailer::getSwiftMailer(),
-        Swift_Message::newInstance('[Log] Some Subject')->setFrom('from@domain.dev')->setTo('to@domain.dev'),
+        Swift_Message::newInstance('[Log] Errors!')
+            ->setFrom('no-reply@novaframework.dev')
+            ->setTo('novaframework@gmail.com'),
         Logger::ERROR, // Set minimal Log Level for Mail
         true           // Bubble to next handler?
     )
 );
 */
-
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------
@@ -75,7 +78,7 @@ if(APPCONFIG_STORE == 'database') {
 }
 
 // Refresh the Modules configuration.
-$modules = app['config']['modules'];
+$modules = $app['config']['modules'];
 
 //--------------------------------------------------------------------------
 // Require The Events File

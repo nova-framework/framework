@@ -39,7 +39,7 @@ class MailServiceProvider extends ServiceProvider
         {
             $me->registerSwiftMailer();
 
-            $mailer = new Mailer($app['view'], $app['swift.mailer'], $app['events']);
+            $mailer = new Mailer($app['swift.mailer'], $app['events']);
 
             $from = $app['config']['mail.from'];
 

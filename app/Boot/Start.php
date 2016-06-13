@@ -110,7 +110,7 @@ foreach ($modules as $module) {
 //--------------------------------------------------------------------------
 
 $app->instance('config', $config = new ConfigRepository(
-    $app->getConfigLoader(), $env
+    $app->getConfigLoader()
 ));
 
 //--------------------------------------------------------------------------
@@ -156,6 +156,29 @@ BinaryFileResponse::trustXSendfileTypeHeader();
 $providers = $config['providers'];
 
 $app->getProviderRepository()->load($app, $providers);
+
+//--------------------------------------------------------------------------
+// Register Again The Config Manager, If Is Need
+//--------------------------------------------------------------------------
+
+if(APPCONFIG_STORE == 'database') {
+    // Get the Database Connection instance.
+    $connection = $app['db']->connection();
+
+    // Get a fresh Config Loader instance.
+    $loader = $app->getConfigLoader();
+
+    // Setup the Database Connection on Config Loader.
+    $loader->setConnection($connection);
+
+    // Refresh the Application's Config instance
+    $app->instance('config', $config = new ConfigRepository(
+        $loader
+    ));
+
+    // Make the Facade to refresh its information.
+    Facade::clearResolvedInstance('config');
+}
 
 //--------------------------------------------------------------------------
 // Register Booted Start Files

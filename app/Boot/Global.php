@@ -74,6 +74,9 @@ if(APPCONFIG_STORE == 'database') {
     throw new \InvalidArgumentException('Invalid Config Store type.');
 }
 
+// Refresh the Modules configuration.
+$modules = app['config']['modules'];
+
 //--------------------------------------------------------------------------
 // Require The Events File
 //--------------------------------------------------------------------------

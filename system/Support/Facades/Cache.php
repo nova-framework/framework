@@ -2,6 +2,9 @@
 
 namespace Support\Facades;
 
+use Support\Facades\Facade;
+
+
 /**
  * @see \Cache\CacheManager
  * @see \Cache\Repository
@@ -14,4 +17,5 @@ class Cache extends Facade
      * @return string
      */
     protected static function getFacadeAccessor() { return 'cache'; }
+
 }

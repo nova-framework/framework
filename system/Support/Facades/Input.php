@@ -1,17 +1,14 @@
 <?php
-/**
- * Input - A Facade to the \Http\Request.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Support\Facades;
 
-use Support\Facades\Request;
+use Support\Facades\Facade;
 
 
-class Input extends Request
+/**
+ * @see \Http\Request
+ */
+class Input extends Facade
 {
     /**
      * Get an item from the input data.
@@ -24,6 +21,14 @@ class Input extends Request
      */
     public static function get($key = null, $default = null)
     {
-        return static::instance()->input($key, $default);
+        return static::$app['request']->input($key, $default);
     }
+
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor() { return 'request'; }
+
 }

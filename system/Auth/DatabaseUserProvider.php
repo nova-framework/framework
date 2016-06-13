@@ -3,6 +3,7 @@
 namespace Auth;
 
 use Database\Connection;
+use Hashing\HasherInterface;
 
 use Hash;
 
@@ -15,6 +16,13 @@ class DatabaseUserProvider implements UserProviderInterface
      * @param  \Database\Connection
      */
     protected $connection;
+
+    /**
+     * The hasher implementation.
+     *
+     * @var \Hashing\HasherInterface
+     */
+    protected $hasher;
 
     /**
      * The table containing the users.
@@ -30,9 +38,11 @@ class DatabaseUserProvider implements UserProviderInterface
      * @param  string  $table
      * @return void
      */
-    public function __construct(Connection $connection, $table)
+    public function __construct(Connection $connection, HasherInterface $hasher, $table)
     {
         $this->connection = $connection;
+
+        $this->hasher = $hasher;
 
         $this->table = $table;
     }
@@ -117,7 +127,7 @@ class DatabaseUserProvider implements UserProviderInterface
     {
         $plain = $credentials['password'];
 
-        return Hash::check($plain, $user->getAuthPassword());
+        return $this->hasher->check($plain, $user->getAuthPassword());
     }
 
     /**

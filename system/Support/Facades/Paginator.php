@@ -1,67 +1,32 @@
 <?php
-/**
- * Paginator - A Facade to the Pagination Factory.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Support\Facades;
 
-use Pagination\Factory;
-use Support\Facades\Request;
+use Support\Facades\Facade;
 
 
-class Paginator
+/**
+ * @see \Pagination\Factory
+ */
+class Paginator extends Facade
 {
     /**
-     * The Factory instance being handled.
-     *
-     * @var \Pagination\Factory|null
-     */
-    protected static $factory;
-
-    /**
-     * Return a Pagination Factory instance
-     *
-     * @return \Pagination\Factory
-     */
-    protected static function getFactory()
-    {
-        if (isset(static::$factory)) {
-            return static::$factory;
-        }
-
-        // Get the Request instance.
-        $request = Request::instance();
-
-        // Setup and return the Pagination Factory instance.
-        return static::$factory = new Factory($request);
-    }
-
-    /**
-     * Return the default Pagination Factory instance.
+     * Return the Application instance.
      *
      * @return \Pagination\Factory
      */
     public static function instance()
     {
-        return static::getFactory();
+        $accessor = static::getFacadeAccessor();
+
+        return static::resolveFacadeInstance($accessor);
     }
 
     /**
-     * Magic Method for calling the methods on the default Pagination Factory instance.
+     * Get the registered name of the component.
      *
-     * @param $method
-     * @param $params
-     *
-     * @return mixed
+     * @return string
      */
-    public static function __callStatic($method, $params)
-    {
-        $instance = static::getFactory();
+    protected static function getFacadeAccessor() { return 'paginator'; }
 
-        // Call the non-static method from the Pagination Factory instance.
-        return call_user_func_array(array($instance, $method), $params);
-    }
 }

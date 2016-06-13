@@ -2,11 +2,18 @@
 
 namespace Auth;
 
-use Hash;
+use Hashing\HasherInterface;
 
 
 class ExtendedUserProvider implements UserProviderInterface
 {
+    /**
+     * The hasher implementation.
+     *
+     * @var \Hashing\HasherInterface
+     */
+    protected $hasher;
+
     /**
      * The ORM User Model.
      *
@@ -18,11 +25,14 @@ class ExtendedUserProvider implements UserProviderInterface
     /**
      * Create a new Database User Provider.
      *
+     * @param  \Hashing\HasherInterface  $hasher
      * @param  string  $model
      * @return void
      */
-    public function __construct($model)
+    public function __construct(HasherInterface $hasher, $model)
     {
+        $this->hasher = $hasher;
+
         $this->model = $model;
     }
 
@@ -96,7 +106,7 @@ class ExtendedUserProvider implements UserProviderInterface
     {
         $plain = $credentials['password'];
 
-        return Hash::check($plain, $user->getAuthPassword());
+        return $this->hasher->check($plain, $user->getAuthPassword());
     }
 
     /**

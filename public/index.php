@@ -67,9 +67,6 @@ if (defined('ENVIRONMENT')) {
 
 }
 
-/** Bootstrap the Framework */
-require SYSTEMDIR .'bootstrap.php';
-
-/** Boot the Framework in the New Style */
-//require APPDIR .'Boot' .DS .'Start.php';
+/** Boot the Application. */
+require APPDIR .'Boot' .DS .'Start.php';
 

@@ -8,6 +8,7 @@
 
 namespace Helpers;
 
+use Exception\RedirectToException;
 use Helpers\Session;
 use Helpers\Inflector;
 
@@ -32,14 +33,8 @@ class Url
         // Process the URL according with fullPath.
         $url = ($fullPath === false) ? $url : site_url($url);
 
-        // Create a Response instance.
-        $response = Redirect::to($url, $code);
-
-        // Finish the Session (and send the Response).
-        App::finish($response);
-
-        // Quit the Nova Framework's execution.
-        exit();
+        // Throw the special Redirect Exception.
+        throw new RedirectToException($url, $code);
     }
 
     /**
@@ -47,14 +42,8 @@ class Url
      */
     public static function previous()
     {
-        // Create a Response instance.
-        $response = Redirect::back();
-
-        // Finish the Session (and send the Response).
-        App::finish($response);
-
-        // Quit the Nova Framework's execution.
-        exit();
+        // Throw the special Redirect Exception.
+        throw new RedirectToException();
     }
 
     /**

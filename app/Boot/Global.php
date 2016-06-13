@@ -22,9 +22,14 @@ Log::getMonolog()->pushHandler(
 // Application Error Handler
 //--------------------------------------------------------------------------
 
+use Exception\RedirectToException;
+
 App::error(function(Exception $exception, $code)
 {
-    Log::error($exception);
+    // Do not log the Redirect Exceptions.
+    if (! $exception instanceof RedirectToException) {
+        Log::error($exception);
+    }
 });
 
 //--------------------------------------------------------------------------

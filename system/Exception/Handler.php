@@ -13,7 +13,10 @@ use Exception\JsonExceptionDisplayer;
 use Exception\ExceptionDisplayerInterface;
 use Exception\FatalErrorException as FatalError;
 use Exception\HttpExceptionInterface;
+use Exception\RedirectToException;
 use Support\Contracts\ResponsePreparerInterface;
+
+use Redirect;
 
 use Closure;
 use ErrorException;
@@ -154,6 +157,17 @@ class Handler
      */
     public function handleException($exception)
     {
+        if ($exception instanceof RedirectToException) {
+            // Manage the Redirect comming from the Helpers\Url.
+            $url = $exception->getUrl();
+
+            if (is_null($url)) {
+                return Redirect::back($exception->getStatusCode());
+            } else {
+                return Redirect::to($url, $exception->getStatusCode());
+            }
+        }
+
         $response = $this->callCustomHandlers($exception);
 
         if (! is_null($response)) {

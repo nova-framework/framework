@@ -79,7 +79,7 @@ class Model
 
         if (! $basicSetup) {
             // Setup the Connection instance.
-            $this->db = DB::connection($this->connection);
+            $this->db = $this->resolveConnection($this->connection);
         }
     }
 

@@ -360,7 +360,7 @@ class Router
 
             // If the Callback returns a Response instance, the Filtering will be stopped.
             if (is_callable($callback)) {
-                $result = call_user_func($callback, $this, $params);
+                $result = call_user_func($callback, $route, $params);
             }
 
             if ($result instanceof Response) {

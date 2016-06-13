@@ -6,8 +6,9 @@
  * @version 3.0
  */
 
-use Router;
 use Helpers\Hooks;
+
+use Router;
 
 
 /** Define static routes. */

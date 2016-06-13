@@ -10,8 +10,9 @@ use Auth;
 use Redirect;
 use Request;
 use Response;
-use Route;
 use Session;
+
+use Route;
 
 
 /** Define Route Filters. */

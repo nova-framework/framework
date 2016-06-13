@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Support\Facades\Event;
+use Event;
 
 
 /** Define Events. */

@@ -66,7 +66,6 @@ Config::set('app', array(
     'providers' => array(
         'Auth\AuthServiceProvider',
         'Cache\CacheServiceProvider',
-        //'Config\ConfigServiceProvider',
         'Routing\RoutingServiceProvider',
         'Cookie\CookieServiceProvider',
         'Database\DatabaseServiceProvider',

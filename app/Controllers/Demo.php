@@ -102,7 +102,7 @@ class Demo extends Controller
 
         return View::make('Default')
             ->shares('title', __('Request API'))
-            ->withs('content', $content);
+            ->with('content', $content);
     }
 
     public function events()

@@ -21,11 +21,11 @@ use Closure;
 class Builder
 {
     /**
-     * The database connection instance.
+     * The Database Connection instance.
      *
      * @var \Database\Connection
      */
-    protected $db;
+    protected $connection;
 
     /**
      * The Model being queried.
@@ -141,9 +141,9 @@ class Builder
      *
      * @return void
      */
-    public function __construct(Connection $db)
+    public function __construct(Connection $connection)
     {
-        $this->db = $db;
+        $this->connection = $connection;
     }
 
     /**
@@ -1129,7 +1129,7 @@ class Builder
     public function paginate($perPage = null, $columns = array('*'))
     {
         // Get the Pagination Factory instance.
-        $paginator = Paginator::instance();
+        $paginator = $this->connection->getPaginator();
 
         if(is_null($perPage)) {
             // Get the perPage value, according on the Model instance.
@@ -1291,7 +1291,7 @@ class Builder
      */
     protected function runSelect()
     {
-        return $this->db->select($this->toSql(), $this->bindings);
+        return $this->connection->select($this->toSql(), $this->bindings);
     }
 
     /**
@@ -1424,7 +1424,7 @@ class Builder
 
         $bindings = $this->cleanBindings($bindings);
 
-        return $this->db->insert($sql, $bindings);
+        return $this->connection->insert($sql, $bindings);
     }
 
     /**
@@ -1439,9 +1439,9 @@ class Builder
 
         $values = $this->cleanBindings($values);
 
-        $this->db->insert($sql, $values);
+        $this->connection->insert($sql, $values);
 
-        $id = $this->db->getPdo()->lastInsertId();
+        $id = $this->connection->getPdo()->lastInsertId();
 
         return is_numeric($id) ? (int) $id : $id;
     }
@@ -1458,7 +1458,7 @@ class Builder
 
         $sql = $this->compileUpdate($values);
 
-        return $this->db->update($sql, $this->cleanBindings($bindings));
+        return $this->connection->update($sql, $this->cleanBindings($bindings));
     }
 
 
@@ -1509,7 +1509,7 @@ class Builder
 
         $sql = $this->compileDelete();
 
-        return $this->db->delete($sql, $this->bindings);
+        return $this->connection->delete($sql, $this->bindings);
     }
 
     /**
@@ -1520,7 +1520,7 @@ class Builder
     public function truncate()
     {
         foreach ($this->compileTruncate() as $sql => $bindings) {
-            $this->db->statement($sql, $bindings);
+            $this->connection->statement($sql, $bindings);
         }
     }
 
@@ -1531,7 +1531,7 @@ class Builder
      */
     public function newQuery()
     {
-        return new Builder($this->db);
+        return new Builder($this->connection);
     }
 
     /**
@@ -1542,7 +1542,7 @@ class Builder
      */
     public function raw($value)
     {
-        return $this->db->raw($value);
+        return $this->connection->raw($value);
     }
 
     /**
@@ -1614,7 +1614,7 @@ class Builder
      */
     public function getConnection()
     {
-        return $this->db;
+        return $this->connection;
     }
 
     /**
@@ -2252,7 +2252,7 @@ class Builder
      */
     public function compileTruncate()
     {
-        $driver = $this->db->getDriver();
+        $driver = $this->connection->getDriver();
 
         if ($driver == 'mysql') {
             return array('TRUNCATE ' .$this->wrapTable($this->from) => array());
@@ -2280,7 +2280,7 @@ class Builder
      */
     public function wrapTable($table)
     {
-        return $this->wrap($this->db->getTablePrefix() .$table);
+        return $this->wrap($this->connection->getTablePrefix() .$table);
     }
 
     /**
@@ -2331,7 +2331,7 @@ class Builder
      */
     protected function wrapValue($value)
     {
-        $wrapper = $this->db->getWrapper();
+        $wrapper = $this->connection->getWrapper();
 
         return ($value !== '*') ? sprintf($wrapper, $value) : $value;
     }

@@ -9,14 +9,10 @@
 namespace Foundation;
 
 use Config\FileLoader;
-use Encryption\DecryptException;
 use Foundation\EnvironmentDetector;
 use Foundation\ProviderRepository;
-use Helpers\Profiler;
 use Http\Request;
 use Http\Response;
-use Forensics\Profiler as QuickProfiler;
-use Session\SessionInterface;
 use Support\Contracts\ResponsePreparerInterface;
 use Support\Facades\Facade;
 
@@ -30,7 +26,6 @@ use Exception\NotFoundHttpException;
 
 use Illuminate\Container\Container;
 
-use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -132,8 +127,6 @@ class Application extends Container implements ResponsePreparerInterface
     protected function createNewRequest()
     {
         $request = forward_static_call(array(static::$requestClass, 'createFromGlobals'));
-
-        //$this->processRequestCookies($request);
 
         return $request;
     }
@@ -514,9 +507,13 @@ class Application extends Container implements ResponsePreparerInterface
         // Handle the Request.
         $response = $this->handle($request);
 
+        // Execute the Termination Stage.
         $this->terminate($request, $response);
 
-        $this->sendResponse($request, $response);
+        // Send the Response.
+        $response = $this->prepareResponse($response);
+
+        $response->send();
     }
 
     /**
@@ -576,8 +573,6 @@ class Application extends Container implements ResponsePreparerInterface
      */
     protected function refreshRequest(Request $request)
     {
-        $this->processRequestCookies($request);
-
         $this->instance('request', $request);
 
         Facade::clearResolvedInstance('request');
@@ -628,43 +623,6 @@ class Application extends Container implements ResponsePreparerInterface
         return $request;
     }
 
-    protected function processRequestCookies(SymfonyRequest $request)
-    {
-        // Retrieve the Session configuration.
-        $config = $this['config']['session'];
-
-        if($config['encrypt'] == false) {
-            // The Cookies encryption is disabled.
-            return;
-        }
-
-        // Get the Encrypter instance.
-        $encrypter = $this['encrypter'];
-
-        foreach ($request->cookies as $name => $cookie) {
-            if($name == 'PHPSESSID') {
-                // Leave alone the PHPSESSID.
-                continue;
-            }
-
-            try {
-                if(is_array($cookie)) {
-                    $decrypted = array();
-
-                    foreach ($cookie as $key => $value) {
-                        $decrypted[$key] = $encrypter->decrypt($value);
-                    }
-                } else {
-                    $decrypted = $encrypter->decrypt($cookie);
-                }
-
-                $request->cookies->set($name, $decrypted);
-            } catch (DecryptException $e) {
-                $request->cookies->set($name, null);
-            }
-        }
-    }
-
     /**
      * Prepare the given value as a Response object.
      *
@@ -676,165 +634,6 @@ class Application extends Container implements ResponsePreparerInterface
         if (! $value instanceof SymfonyResponse) $value = new Response($value);
 
         return $value->prepare($this['request']);
-    }
-
-    protected function sendResponse(SymfonyRequest $request, SymfonyResponse $response)
-    {
-        $cookieJar = $this['cookie'];
-
-        $session = $this['session.store'];
-
-        // Get the Session Store configuration.
-        $config = $this['config']['session'];
-
-        // Store the Session ID in a Cookie.
-        $cookie = $cookieJar->make(
-            $config['cookie'],
-            $session->getId(),
-            $config['lifetime'],
-            $config['path'],
-            $config['domain'],
-            $config['secure'],
-            false
-        );
-
-        $cookieJar->queue($cookie);
-
-        // Save the Session Store data.
-        $session->save();
-
-        // Collect the garbage for the Session Store instance.
-        $this->collectSessionGarbage($session, $config);
-
-        // Add all Request and queued Cookies.
-        $this->processResponseCookies($response, $config);
-
-        // Finally, minify the Response's Content.
-        $this->processResponseContent($response);
-
-        // Prepare the Response instance for sending.
-        $response->prepare($request);
-
-        // Send the Response.
-        $response->send();
-    }
-
-    /**
-     * Minify the Response instance Content.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Response $response
-     * @return void
-     */
-    protected function processResponseContent(SymfonyResponse $response)
-    {
-        if (! $response instanceof Response) {
-            return;
-        }
-
-        $content = $response->getContent();
-
-        if(ENVIRONMENT == 'development') {
-            // Insert the QuickProfiler Widget in the Response's Content.
-
-            $content = str_replace(
-                array(
-                    '<!-- DO NOT DELETE! - Forensics Profiler -->',
-                    '<!-- DO NOT DELETE! - Profiler -->',
-                ),
-                array(
-                    QuickProfiler::process(true),
-                    Profiler::getReport(),
-                ),
-                $content
-            );
-        } else if(ENVIRONMENT == 'production') {
-            // Minify the Response's Content.
-
-            $search = array(
-                '/\>[^\S ]+/s', // Strip whitespaces after tags, except space.
-                '/[^\S ]+\</s', // Strip whitespaces before tags, except space.
-                '/(\s)+/s'      // Shorten multiple whitespace sequences.
-            );
-
-            $replace = array('>', '<', '\\1');
-
-            $content = preg_replace($search, $replace, $content);
-        }
-
-        $response->setContent($content);
-    }
-
-    /**
-     * Remove the garbage from the session if necessary.
-     *
-     * @param  \Illuminate\Session\SessionInterface  $session
-     * @return void
-     */
-    protected function collectSessionGarbage(SessionInterface $session, array $config)
-    {
-        $lifeTime = $config['lifetime'] * 60; // The option is in minutes.
-
-        // Here we will see if this request hits the garbage collection lottery by hitting
-        // the odds needed to perform garbage collection on any given request. If we do
-        // hit it, we'll call this handler to let it delete all the expired sessions.
-        if ($this->configHitsLottery($config))  {
-            $session->getHandler()->gc($lifeTime);
-        }
-    }
-
-    /**
-     * Add all the queued Cookies to Response instance and encrypt all Cookies.
-     *
-     * @return void
-     */
-    protected function processResponseCookies(SymfonyResponse $response, array $config)
-    {
-        $cookieJar = $this['cookie'];
-
-        // Insert all queued Cookies on the Response instance.
-        foreach ($cookieJar->getQueuedCookies() as $cookie) {
-            $response->headers->setCookie($cookie);
-        }
-
-        if($config['encrypt'] == false) {
-            // The Cookies encryption is disabled.
-            return;
-        }
-
-        // Get the Encrypter instance.
-        $encrypter = $this['encrypter'];
-
-        // Encrypt all Cookies present on the Response instance.
-        foreach ($response->headers->getCookies() as $key => $cookie)  {
-            if($key == 'PHPSESSID') {
-                // Leave alone the PHPSESSID.
-                continue;
-            }
-
-            // Create a new Cookie with the content encrypted.
-            $cookie = new SymfonyCookie(
-                $cookie->getName(),
-                $encrypter->encrypt($cookie->getValue()),
-                $cookie->getExpiresTime(),
-                $cookie->getPath(),
-                $cookie->getDomain(),
-                $cookie->isSecure(),
-                $cookie->isHttpOnly()
-            );
-
-            $response->headers->setCookie($cookie);
-        }
-    }
-
-    /**
-     * Determine if the configuration odds hit the lottery.
-     *
-     * @param  array  $config
-     * @return bool
-     */
-    protected function configHitsLottery(array $config)
-    {
-        return (mt_rand(1, $config['lottery'][1]) <= $config['lottery'][0]);
     }
 
     /**

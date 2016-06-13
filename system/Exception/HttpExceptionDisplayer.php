@@ -29,9 +29,9 @@ class HttpExceptionDisplayer implements ExceptionDisplayerInterface
         $viewPath = dirname(__FILE__) .DS .'Views' .DS .'Plain.php';
 
         if($debug) {
-            $content = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+            $content = $exception->getMessage().' in '.$exception->getFile().':'.$exception->getLine();
 
-            $content = '<p>Error in Exception Handler: ' .$message .'</p>';
+            $content = '<p>Error in Exception Handler: ' .$content .'</p>';
         } else {
             $content = 'Error in Exception Handler';
         }

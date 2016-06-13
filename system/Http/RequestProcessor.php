@@ -10,10 +10,7 @@ namespace Http;
 
 use Foundation\Application;
 use Encryption\DecryptException;
-use Session\SessionInterface;
-
-use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
-use Symfony\Component\HttpFoundation\Response as SymfonyRequest;
+use Http\Request;
 
 
 class RequestProcessor
@@ -42,14 +39,14 @@ class RequestProcessor
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    public static function handle(Application $app, SymfonyRequest $request)
+    public static function handle(Application $app, Request $request)
     {
         $instance = new static($app);
 
         $instance->process($request);
     }
 
-    protected function process(SymfonyRequest $request)
+    protected function process(Request $request)
     {
         // Retrieve the Session configuration.
         $config = $this->app['config']['session'];

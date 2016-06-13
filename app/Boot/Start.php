@@ -11,6 +11,7 @@ use Config\Repository as ConfigRepository;
 use Foundation\AliasLoader;
 use Foundation\Application;
 use Http\Request;
+use Http\RequestProcessor;
 use Support\Facades\Facade;
 
 //--------------------------------------------------------------------------
@@ -186,7 +187,19 @@ foreach ($modules as $module) {
 });
 
 //--------------------------------------------------------------------------
+// Create The Request And Decrypt Its Cookies
+//--------------------------------------------------------------------------
+
+$request = Request::createFromGlobals();
+
+$config = $app['config']['session'];
+
+if($config['encrypt'] == true) {
+    RequestProcessor::handle($app, $request);
+}
+
+//--------------------------------------------------------------------------
 // Execute The Application
 //--------------------------------------------------------------------------
 
-$app->run();
+$app->run($request);

@@ -83,4 +83,4 @@ $request = Request::instance();
 $result = $router->dispatch($request);
 
 /* Finish the Session and send the Response. */
-App::finish($result);
+App::sendResponse($result);

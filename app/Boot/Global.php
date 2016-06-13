@@ -28,6 +28,22 @@ App::error(function(Exception $exception, $code)
 });
 
 //--------------------------------------------------------------------------
+// Application Finish Handler
+//--------------------------------------------------------------------------
+
+use Http\ResponseProcessor;
+use Session\SessionGuard;
+
+App::finish(function($request, $response)
+{
+    // Save the Session Store and cleanup its files.
+    SessionGuard::handle();
+
+    // Post-process the Response.
+    ResponseProcessor::handle($response);
+});
+
+//--------------------------------------------------------------------------
 // Require The Events File
 //--------------------------------------------------------------------------
 

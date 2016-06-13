@@ -35,13 +35,18 @@ class App
     {
     }
 
+    public static function instance()
+    {
+        return Facade::getFacadeApplication();
+    }
+
     /**
      * Finalize the Session Store and send the Response
      *
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    public static function finish(SymfonyResponse $response)
+    public static function sendResponse(SymfonyResponse $response)
     {
         // Get the Session Store configuration.
         $config = Config::get('session');

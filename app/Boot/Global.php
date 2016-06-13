@@ -6,27 +6,12 @@
 
 Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
-// Send a E-Mail to administrator when a Error is logged by Application.
+// Send a E-Mail to administrator (defined on SITEMAIL) when a Error is logged.
 /*
+use Log\Mailer as LogMailer;
 use Monolog\Logger;
-use Monolog\Handler\SwiftMailerHandler;
-use Monolog\Formatter\HtmlFormatter;
 
-$monologFormatter = new HtmlFormatter();
-
-$monologHandler = new SwiftMailerHandler(
-    Mailer::getSwiftMailer(),
-    Swift_Message::newInstance('[Log] ERROR!')
-        ->setFrom('no-reply@novaframework.dev')
-        ->setTo('novaframework@gmail.com')
-        ->setContentType('text/html'),
-    Logger::ERROR, // Set minimal Log Level for Mail
-    true           // Bubble to next handler?
-);
-
-$monologHandler->setFormatter($monologFormatter);
-
-Log::getMonolog()->pushHandler($monologHandler);
+LogMailer::initHandler($app, Logger::ERROR);
 */
 //--------------------------------------------------------------------------
 // Application Error Handler

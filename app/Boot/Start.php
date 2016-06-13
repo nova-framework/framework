@@ -158,29 +158,6 @@ $providers = $config['providers'];
 $app->getProviderRepository()->load($app, $providers);
 
 //--------------------------------------------------------------------------
-// Try To Register Again The Config Manager
-//--------------------------------------------------------------------------
-
-if(APPCONFIG_STORE == 'database') {
-    // Get the Database Connection instance.
-    $connection = $app['db']->connection();
-
-    // Get a fresh Config Loader instance.
-    $loader = $app->getConfigLoader();
-
-    // Setup Database Connection instance.
-    $loader->setConnection($connection);
-
-    // Refresh the Application's Config instance.
-    $app->instance('config', $config = new ConfigRepository($loader));
-
-    // Make the Facade to refresh its information.
-    Facade::clearResolvedInstance('config');
-} else if(APPCONFIG_STORE != 'files') {
-    throw new \InvalidArgumentException('Invalid Config Store type.');
-}
-
-//--------------------------------------------------------------------------
 // Register Booted Start Files
 //--------------------------------------------------------------------------
 

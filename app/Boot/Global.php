@@ -10,7 +10,7 @@ Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 /*
 Log::getMonolog()->pushHandler(
     new Monolog\Handler\SwiftMailerHandler(
-        Mail::getSwiftMailer(),
+        Mailer::getSwiftMailer(),
         Swift_Message::newInstance('[Log] Some Subject')->setFrom('from@domain.dev')->setTo('to@domain.dev'),
         Logger::ERROR, // Set minimal Log Level for Mail
         true           // Bubble to next handler?

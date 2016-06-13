@@ -12,9 +12,6 @@ use Exception\RedirectToException;
 use Helpers\Session;
 use Helpers\Inflector;
 
-use Support\Facades\Redirect;
-use Support\Facades\App;
-
 
 /**
  * Collection of methods for working with urls.

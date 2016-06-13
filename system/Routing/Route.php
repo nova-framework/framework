@@ -21,11 +21,6 @@ use Language;
 class Route
 {
     /**
-     * @var array All available Filters
-     */
-    private static $filters = array();
-
-    /**
      * @var array Supported HTTP methods
      */
     private $methods = array();
@@ -164,7 +159,7 @@ class Route
         // Parse and return the Filters.
         $filters = $this->action['filters'];
 
-        return static::parseFilters($filters);
+        return $this->parseFilters($filters);
     }
 
     /**
@@ -173,11 +168,11 @@ class Route
      * @param  string  $filters
      * @return array
      */
-    public static function parseFilters($filters)
+    protected function parseFilters($filters)
     {
         return array_build(static::explodeFilters($filters), function($key, $value)
         {
-            return Route::parseFilter($value);
+            return static::parseFilter($value);
         });
     }
 
@@ -239,58 +234,6 @@ class Route
         list($name, $parameters) = explode(':', $filter, 2);
 
         return array($name, explode(',', $parameters));
-    }
-
-    /**
-     * Define a Route Filter.
-     *
-     * @param string $name
-     * @param callback $callback
-     */
-    public static function filter($name, $callback)
-    {
-        if (array_key_exists($name, static::$filters)) {
-            throw new \Exception('Filter already exists: ' .$name);
-        }
-
-        static::$filters[$name] = $callback;
-    }
-
-    /**
-     * Return the available Filters.
-     *
-     * @return array
-     */
-    public static function getAvailableFilters()
-    {
-        return static::$filters;
-    }
-
-    public function applyFilters()
-    {
-        $result = null;
-
-        foreach ($this->getFilters() as $filter => $params) {
-            if(empty($filter)) {
-                continue;
-            } else if (! array_key_exists($filter, static::$filters)) {
-                throw new \Exception('Invalid Filter specified: ' .$filter);
-            }
-
-            // Get the current Filter Callback.
-            $callback = static::$filters[$filter];
-
-            // If the Callback returns a Response instance, the Filtering will be stopped.
-            if (is_callable($callback)) {
-                $result = call_user_func($callback, $this, $params);
-            }
-
-            if ($result instanceof Response) {
-                break;
-            }
-        }
-
-        return $result;
     }
 
     /**

@@ -139,6 +139,8 @@ Config::set('app', array(
         'Redirect'      => '\Support\Facades\Redirect',
         'Request'       => '\Support\Facades\Request',
         'Response'      => '\Support\Facades\Response',
+        'Route'         => '\Support\Facades\Route',
+        'Router'        => '\Support\Facades\Router',
         'Session'       => '\Support\Facades\Session',
         'Validator'     => '\Support\Facades\Validator',
         'Log'           => '\Support\Facades\Log',

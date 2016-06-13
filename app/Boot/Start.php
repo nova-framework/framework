@@ -14,6 +14,8 @@ use Http\Request;
 use Http\RequestProcessor;
 use Support\Facades\Facade;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 //--------------------------------------------------------------------------
 // Set PHP Error Reporting Options
 //--------------------------------------------------------------------------
@@ -47,7 +49,10 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $env = $app->detectEnvironment(array(
-    'local' => array('your-machine-name'),
+    'local'       => array('darkstar'),
+    'testing'     => array('your-testing-machine-name'),
+    'development' => array('your-development-machine-name'),
+    'production'  => array('your-production-machine-name'),
 ));
 
 //--------------------------------------------------------------------------
@@ -137,6 +142,12 @@ AliasLoader::getInstance($aliases)->register();
 //--------------------------------------------------------------------------
 
 Request::enableHttpMethodParameterOverride();
+
+//--------------------------------------------------------------------------
+// Enable Trusting Of X-Sendfile Type Header
+//--------------------------------------------------------------------------
+
+BinaryFileResponse::trustXSendfileTypeHeader();
 
 //--------------------------------------------------------------------------
 // Register The Core Service Providers

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Routing\Route;
+use Route;
 
 
 /** Define Route Filters. */

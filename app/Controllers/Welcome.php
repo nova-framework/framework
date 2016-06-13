@@ -10,9 +10,9 @@ namespace App\Controllers;
 
 use Core\View;
 use Core\Controller;
-use Routing\Router;
 
 use Language;
+use Router;
 use Session;
 
 /**

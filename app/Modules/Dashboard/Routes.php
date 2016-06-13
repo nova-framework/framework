@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Routing\Router;
+use Router;
 
 
 /** Define static routes. */

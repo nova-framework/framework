@@ -8,6 +8,7 @@ use Helpers\FastCache;
 use Helpers\Password;
 use Helpers\Url;
 
+use App;
 use Event;
 use Validator;
 use Input;
@@ -73,8 +74,14 @@ class Demo extends Controller
 
     public function request($param1 = '', $param2 = '', $param3 = '', $param4 = '')
     {
-        $content = '';
+        $content = '<pre>' .var_export(gethostname(), true).'</pre>';
 
+        //
+        $app = App::instance();
+
+        $content .= '<pre>' .var_export($app['env'], true).'</pre>';
+
+        //
         $content .= '<pre>' .var_export(Request::root(), true).'</pre>';
 
         $content .= '<pre>' .var_export(Request::url(), true).'</pre>';

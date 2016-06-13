@@ -37,18 +37,16 @@ use Response;
 class Router
 {
     /**
-     * The Router instance.
-     *
-     * @var Router $instance
-     */
-    private static $instance;
-
-    /**
      * Array of routes
      *
      * @var Route[] $routes
      */
     protected $routes = array();
+
+    /**
+     * @var array All available Filters
+     */
+    private $filters = array();
 
     /**
      * Matched Route, the current found Route, if any.
@@ -83,7 +81,7 @@ class Router
      *
      * @var array $groupStack
      */
-    private static $groupStack = array();
+    private $groupStack = array();
 
     /**
      * Default Route, usually the Catch-All one.
@@ -109,24 +107,6 @@ class Router
         $this->events = $events;
 
         $this->container = $container ?: new Container();
-
-        //
-        BinaryFileResponse::trustXSendfileTypeHeader();
-    }
-
-    public static function getInstance()
-    {
-        $app = Facade::getFacadeApplication();
-
-        if(! is_null($app)) {
-            return $app['router'];
-        }
-
-        if (self::$instance === null) {
-            self::$instance = new static();
-        }
-
-        return self::$instance;
     }
 
     /**
@@ -135,7 +115,7 @@ class Router
      * @param string $method
      * @param array @params
      */
-    public static function __callStatic($method, $params)
+    public function __call($method, $params)
     {
         $method = strtoupper($method);
 
@@ -152,7 +132,17 @@ class Router
         $callback = ! empty($params) ? array_shift($params) : null;
 
         // Register the Route.
-        static::register($method, $route, $callback);
+        $this->register($method, $route, $callback);
+    }
+
+    /**
+     * Return the available Filters.
+     *
+     * @return array
+     */
+    public function getFilters()
+    {
+        return $this->filters;
     }
 
     /**
@@ -172,9 +162,9 @@ class Router
      * @param string $route The Route definition.
      * @param callback $callback Callback object called to define the Routes.
      */
-    public static function match($method, $route, $callback = null)
+    public function match($method, $route, $callback = null)
     {
-        self::register($method, $route, $callback);
+        $this->register($method, $route, $callback);
     }
 
     /**
@@ -182,13 +172,9 @@ class Router
      *
      * @param $callback
      */
-    public static function catchAll($callback)
+    public function catchAll($callback)
     {
-        // Get the Router instance.
-        $router =& self::getInstance();
-
-        //
-        $router->defaultRoute = new Route('any', '(:all)', $callback);
+        $this->defaultRoute = new Route('any', '(:all)', $callback);
     }
 
     /**
@@ -203,14 +189,14 @@ class Router
      * @param  mixed  $callback
      * @return void
      */
-    public static function share($routes, $callback)
+    public function share($routes, $callback)
     {
         foreach ($routes as $entry) {
             $method = array_shift($entry);
             $route  = array_shift($entry);
 
             // Register the route.
-            static::register($method, $route, $callback);
+            $this->register($method, $route, $callback);
         }
     }
 
@@ -220,20 +206,20 @@ class Router
      * @param string $group The scope of the current Routes Group
      * @param callback $callback Callback object called to define the Routes.
      */
-    public static function group($group, $callback)
+    public function group($group, $callback)
     {
         if (! is_array($group)) {
             $group = array('prefix' => $group);
         }
 
         // Add the Route Group to the array.
-        array_push(static::$groupStack, $group);
+        array_push($this->groupStack, $group);
 
         // Call the Callback, to define the Routes on the current Group.
         call_user_func($callback);
 
         // Removes the last Route Group from the array.
-        array_pop(static::$groupStack);
+        array_pop($this->groupStack);
     }
 
     /* The Resourceful Routes in the Laravel Style.
@@ -256,15 +242,15 @@ class Router
      * @param string $basePath The base path of the resourceful routes group
      * @param string $controller The target Resourceful Controller's name.
      */
-    public static function resource($basePath, $controller)
+    public function resource($basePath, $controller)
     {
-        self::register('get',                 $basePath,                 $controller .'@index');
-        self::register('get',                 $basePath .'/create',      $controller .'@create');
-        self::register('post',                $basePath,                 $controller .'@store');
-        self::register('get',                 $basePath .'/(:any)',      $controller .'@show');
-        self::register('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
-        self::register(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
-        self::register('delete',              $basePath .'/(:any)',      $controller .'@delete');
+        $this->registrer('get',                 $basePath,                 $controller .'@index');
+        $this->registrer('get',                 $basePath .'/create',      $controller .'@create');
+        $this->registrer('post',                $basePath,                 $controller .'@store');
+        $this->registrer('get',                 $basePath .'/(:any)',      $controller .'@show');
+        $this->registrer('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
+        $this->registrer(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
+        $this->registrer('delete',              $basePath .'/(:any)',      $controller .'@delete');
     }
 
     /**
@@ -274,11 +260,8 @@ class Router
      * @param string $route URL pattern to match
      * @param callback $action Callback object
      */
-    protected static function register($method, $route, $action = null)
+    protected function register($method, $route, $action = null)
     {
-        // Get the Router instance.
-        $router = self::getInstance();
-
         // Prepare the route Methods.
         if (is_string($method) && (strtolower($method) == 'any')) {
             $methods = static::$methods;
@@ -302,12 +285,12 @@ class Router
             $action = array('uses' => $action);
         }
 
-        if (! empty(static::$groupStack)) {
+        if (! empty($this->groupStack)) {
             $parts = array();
 
             $namespace = null;
 
-            foreach (static::$groupStack as $group) {
+            foreach ($this->groupStack as $group) {
                 // Add the current prefix to the prefix list.
                 array_push($parts, trim($group['prefix'], '/'));
 
@@ -343,7 +326,49 @@ class Router
         $route = new Route($methods, $pattern, $action);
 
         // Add the current Route instance to the known Routes list.
-        array_push($router->routes, $route);
+        array_push($this->routes, $route);
+    }
+
+    /**
+     * Define a Route Filter.
+     *
+     * @param string $name
+     * @param callback $callback
+     */
+    public function filter($name, $callback)
+    {
+        if (array_key_exists($name, $this->filters)) {
+            throw new \Exception('Filter already exists: ' .$name);
+        }
+
+        $this->filters[$name] = $callback;
+    }
+
+    protected function applyFiltersToRoute(Route $route)
+    {
+        $result = null;
+
+        foreach ($route->getFilters() as $filter => $params) {
+            if(empty($filter)) {
+                continue;
+            } else if (! array_key_exists($filter, $this->filters)) {
+                throw new \Exception('Invalid Filter specified: ' .$filter);
+            }
+
+            // Get the current Filter Callback.
+            $callback = $this->filters[$filter];
+
+            // If the Callback returns a Response instance, the Filtering will be stopped.
+            if (is_callable($callback)) {
+                $result = call_user_func($callback, $this, $params);
+            }
+
+            if ($result instanceof Response) {
+                break;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -361,11 +386,9 @@ class Router
      *
      * @return null|string
      */
-    public static function getLanguage()
+    public function getLanguage()
     {
-        $instance = static::getInstance();
-
-        $route = $instance->getMatchedRoute();
+        $route = $this->getMatchedRoute();
 
         if(! is_null($route)) {
             return $route->getLanguage();
@@ -489,7 +512,7 @@ class Router
                 $this->matchedRoute = $route;
 
                 // Apply the (specified) Filters on matched Route.
-                $result = $route->applyFilters();
+                $result = $this->applyFiltersToRoute($route);
 
                 if($result instanceof SymfonyResponse) {
                     return $result;
@@ -548,7 +571,7 @@ class Router
 
         if (! empty($filePath)) {
             // Serve the specified Asset File.
-            return static::serveFile($filePath);
+            return $this->serveFile($filePath);
         }
 
         return false;
@@ -611,7 +634,7 @@ class Router
      * @param string $filePath
      * @return bool
      */
-    public static function serveFile($filePath)
+    public function serveFile($filePath)
     {
         if (! file_exists($filePath)) {
             return  Response::make('', 404);

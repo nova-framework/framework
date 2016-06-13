@@ -40,7 +40,7 @@ class CacheManager extends Manager
     {
         $config = $this->app['config']['cache'];
 
-        return $this->repository('files', $config));
+        return $this->repository('files', $config);
     }
 
     /**
@@ -52,7 +52,7 @@ class CacheManager extends Manager
     {
         $config = $this->app['config']['cache'];
 
-        return $this->repository('memcached', $config));
+        return $this->repository('memcached', $config);
     }
 
     /**

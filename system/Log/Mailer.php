@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer - Initialize a Mailing Handler for Logging.
+ * Mailer - Initialize a simple Mailing Handler for Logging.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0

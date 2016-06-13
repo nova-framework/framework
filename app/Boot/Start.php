@@ -168,13 +168,11 @@ if(APPCONFIG_STORE == 'database') {
     // Get a fresh Config Loader instance.
     $loader = $app->getConfigLoader();
 
-    // Setup the Database Connection on Config Loader.
+    // Setup Database Connection instance.
     $loader->setConnection($connection);
 
-    // Refresh the Application's Config instance
-    $app->instance('config', $config = new ConfigRepository(
-        $loader
-    ));
+    // Refresh the Application's Config instance.
+    $app->instance('config', $config = new ConfigRepository($loader));
 
     // Make the Facade to refresh its information.
     Facade::clearResolvedInstance('config');

@@ -26,7 +26,8 @@
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3",
         "monolog/monolog": "^1.19",
-        "filp/whoops": "^2.1"
+        "filp/whoops": "^2.1",
+        "symfony/finder": "^3.1"
     },
     "autoload": {
         "psr-4": {

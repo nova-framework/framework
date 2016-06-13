@@ -17,7 +17,9 @@ class App extends Facade
      */
     public static function instance()
     {
-        return static::$app;
+        $accessor = static::getFacadeAccessor();
+
+        return static::resolveFacadeInstance($accessor);
     }
 
     /**

@@ -11,8 +11,6 @@ namespace Session;
 use Foundation\Application;
 use Session\SessionInterface;
 
-use App;
-
 
 class SessionGuard
 {
@@ -28,9 +26,9 @@ class SessionGuard
      *
      * @return void
      */
-    protected function __construct()
+    protected function __construct(Application $app)
     {
-        $this->app = App::instance();
+        $this->app = $app;
     }
 
     /**
@@ -38,21 +36,40 @@ class SessionGuard
      *
      * @return void
      */
-    public static function handle()
+    public static function handle(Application $app)
     {
-        $processor = new static();
+        $processor = new static($app);
 
         $processor->process();
     }
 
     protected function process()
     {
-        $cookieJar = $this->app['cookie'];
-
         $session = $this->app['session.store'];
+
+        // Save the Session Store's data.
+        $session->save();
 
         // Get the Session Store configuration.
         $config = $this->app['config']['session'];
+
+        // Queue a proper Session Cookie.
+        $this->queueSessionCookie($session, $config);
+
+        // Collect the garbage for the Session Store instance.
+        $this->collectSessionGarbage($session, $config);
+    }
+
+    /**
+     * Remove the garbage from the session if necessary.
+     *
+     * @param  \Illuminate\Session\SessionInterface  $session
+     * @param  array $config
+     * @return void
+     */
+    protected function queueSessionCookie(SessionInterface $session, array $config)
+    {
+        $cookieJar = $this->app['cookie'];
 
         // Store the Session ID in a Cookie.
         $cookie = $cookieJar->make(
@@ -66,18 +83,13 @@ class SessionGuard
         );
 
         $cookieJar->queue($cookie);
-
-        // Save the Session Store data.
-        $session->save();
-
-        // Collect the garbage for the Session Store instance.
-        $this->collectSessionGarbage($session, $config);
     }
 
     /**
      * Remove the garbage from the session if necessary.
      *
      * @param  \Illuminate\Session\SessionInterface  $session
+     * @param  array $config
      * @return void
      */
     protected function collectSessionGarbage(SessionInterface $session, array $config)

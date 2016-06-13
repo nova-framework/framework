@@ -34,13 +34,13 @@ App::error(function(Exception $exception, $code)
 use Http\ResponseProcessor;
 use Session\SessionGuard;
 
-App::finish(function($request, $response)
+App::finish(function($request, $response) use ($app)
 {
     // Save the Session Store and cleanup its files.
-    SessionGuard::handle();
+    SessionGuard::handle($app);
 
     // Post-process the Response.
-    ResponseProcessor::handle($response);
+    ResponseProcessor::handle($app, $response);
 });
 
 //--------------------------------------------------------------------------

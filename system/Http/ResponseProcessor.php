@@ -18,8 +18,6 @@ use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-use App;
-
 
 class ResponseProcessor
 {
@@ -35,9 +33,9 @@ class ResponseProcessor
      *
      * @return void
      */
-    protected function __construct()
+    protected function __construct(Application $app)
     {
-        $this->app = App::instance();
+        $this->app = $app;
     }
 
     /**
@@ -46,9 +44,9 @@ class ResponseProcessor
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    public static function handle(SymfonyResponse $response)
+    public static function handle(Application $app, SymfonyResponse $response)
     {
-        $processor = new static();
+        $processor = new static($app);
 
         $processor->process($response);
     }

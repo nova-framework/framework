@@ -2,6 +2,7 @@
 
 namespace Support\Facades;
 
+use Http\Request as HttpRequest;
 use Support\Facades\Facade;
 
 use ReflectionMethod;
@@ -43,20 +44,17 @@ class Request extends Facade
                 // The requested Method is static.
                 return call_user_func_array(array(HttpRequest::class, $method), $params);
             }
-        } catch ( ReflectionException $e ) {
-            // Method not found; still support the checking of HTTP Method via isX.
-            if (str_starts_with($method, 'is') && (strlen($method) > 4)) {
-                // Get a HttpRequest instance.
-                $instance = static::instance();
-
-                return ($instance->method() == strtoupper(substr($method, 2)));
-            }
-
-            return null;
+        } catch (ReflectionException $e) {
+            // Method not found; do nothing.
         }
 
         // Get a HttpRequest instance.
         $instance = static::instance();
+
+        // Method not found; still support the checking of HTTP Method via isX.
+        if (str_starts_with($method, 'is') && (strlen($method) > 4)) {
+            return ($instance->method() == strtoupper(substr($method, 2)));
+        }
 
         // Call the non-static method from the Request instance.
         return call_user_func_array(array($instance, $method), $params);

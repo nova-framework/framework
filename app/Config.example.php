@@ -108,13 +108,6 @@ define('ENCRYPT_KEY', '');
 define('APPCONFIG_STORE', 'files'); // Supported: "files", "database"
 
 /**
- * Setup the Logger configuration
- */
-Config::set('logger', array(
-    'displayErrors' => false,
-));
-
-/**
  * Setup the Profiler configuration
  */
 Config::set('profiler', array(

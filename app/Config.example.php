@@ -32,12 +32,6 @@ define('DIR', '/');
 define('DEFAULT_TIMEZONE', 'Europe/London');
 
 /**
- * Set default controller and method for legacy calls.
- */
-define('DEFAULT_CONTROLLER', 'Welcome');
-define('DEFAULT_METHOD', 'index');
-
-/**
  * Set the default template.
  */
 define('TEMPLATE', 'Default');

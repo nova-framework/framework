@@ -34,14 +34,14 @@ class Handler
      *
      * @var \Exception\ExceptionDisplayerInterface
      */
-    protected $httpDisplayer;
+    protected $plainDisplayer;
 
     /**
      * The exception displayer implementation.
      *
      * @var \Exception\ExceptionDisplayerInterface
      */
-    protected $jsonDisplayer;
+    protected $debugDisplayer;
 
     /**
      * Indicates if the Application is in Debug Mode.
@@ -72,14 +72,14 @@ class Handler
      */
     public function __construct(
         ResponsePreparerInterface $responsePreparer,
-        ExceptionDisplayerInterface $httpDisplayer,
-        ExceptionDisplayerInterface $jsonDisplayer,
+        ExceptionDisplayerInterface $plainDisplayer,
+        ExceptionDisplayerInterface $debugDisplayer,
         $debug = true)
     {
         $this->debug = $debug;
 
-        $this->httpDisplayer = $httpDisplayer;
-        $this->jsonDisplayer = $jsonDisplayer;
+        $this->plainDisplayer = $plainDisplayer;
+        $this->debugDisplayer = $debugDisplayer;
 
         $this->responsePreparer = $responsePreparer;
     }
@@ -156,7 +156,7 @@ class Handler
     {
         $response = $this->callCustomHandlers($exception);
 
-        if ( ! is_null($response)) {
+        if (! is_null($response)) {
             return $this->prepareResponse($response);
         }
 
@@ -183,7 +183,7 @@ class Handler
     {
         $error = error_get_last();
 
-        if ( ! is_null($error)) {
+        if (! is_null($error)) {
             extract($error);
 
             if (! $this->isFatal($type)) return;
@@ -211,11 +211,9 @@ class Handler
      */
     protected function displayException($exception)
     {
-        if($this->isAjaxRequest()) {
-            return $this->jsonDisplayer->display($exception, $this->debug);
-        } else {
-            return $this->httpDisplayer->display($exception, $this->debug);
-        }
+        $displayer = $this->debug ? $this->debugDisplayer : $this->plainDisplayer;
+
+        return $displayer->display($exception);
     }
 
     /**
@@ -275,7 +273,7 @@ class Handler
 
         $expected = $parameters[0];
 
-        return ! $expected->getClass() || $expected->getClass()->isInstance($exception);
+        return (! $expected->getClass() || $expected->getClass()->isInstance($exception));
     }
 
     /**

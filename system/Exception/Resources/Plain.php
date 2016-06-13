@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Whoops, looks like something went wrong.</title>
+    <title>Whoops! An error has occurred</title>
 </head>
 <body>
     <div>
-        <h3>Whoops, looks like something went wrong.</h3>
+        <h3>Whoops! An error has occurred.</h3>
     </div>
 </body>
 </html>

@@ -9,7 +9,8 @@
 namespace Helpers;
 
 use Core\Config;
-use Database\Connection;
+
+use DB;
 
 use Request;
 
@@ -29,7 +30,7 @@ class Profiler
         $memoryUsage = Number::humanSize(memory_get_usage());
 
         if ($options['withDatabase'] == true) {
-            $connection = Connection::getInstance();
+            $connection = DB::connection();
 
             $queries = $connection->getQueryLog();
 

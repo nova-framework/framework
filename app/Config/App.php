@@ -126,7 +126,7 @@ Config::set('app', array(
         'Config'        => '\Support\Facades\Config',
         'Cookie'        => '\Support\Facades\Cookie',
         'Crypt'         => '\Support\Facades\Crypt',
-        'DB'            => '\Support\Facades\Database',
+        'DB'            => '\Support\Facades\DB',
         'Event'         => '\Support\Facades\Event',
         'Hash'          => '\Support\Facades\Hash',
         'Input'         => '\Support\Facades\Input',

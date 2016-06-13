@@ -1,1 +1,9 @@
 
+[2016-06-13 10:09:08] production.ERROR: exception 'Exception\FatalErrorException' with message 'Call to a member function connection() on null' in /var/www/sites/novaframework/system/Database/ORM/Model.php:2521
+Stack trace:
+#0 [internal function]: Exception\Handler->handleShutdown()
+#1 {main} [] []
+[2016-06-13 10:18:38] production.ERROR: exception 'Exception\FatalErrorException' with message 'Call to undefined method Database\Connection::getInstance()' in /var/www/sites/novaframework/system/Helpers/Profiler.php:32
+Stack trace:
+#0 [internal function]: Exception\Handler->handleShutdown()
+#1 {main} [] []

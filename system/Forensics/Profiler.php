@@ -25,11 +25,11 @@
 namespace Forensics;
 
 use Core\Config;
-use Database\Connection;
 
 use Forensics\Console;
 use Forensics\PdoDebugger;
 
+use DB;
 use Request;
 
 use PDO;
@@ -56,7 +56,7 @@ class Profiler
         if($connection instanceof Connection) {
             $this->connection = $connection;
         } else if($config['withDatabase'] == true) {
-            $this->connection = Connection::getInstance();
+            $this->connection = DB::connection();
         }
 
         // Setup the View path.

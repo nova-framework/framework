@@ -9,8 +9,11 @@
 namespace Database;
 
 use Database\Connection;
+use Database\ConnectionResolverInterface as Resolver;
 use Database\Query\Builder;
 use Helpers\Inflector;
+
+use DB;
 
 
 class Model
@@ -50,6 +53,12 @@ class Model
      */
     protected $perPage = 15;
 
+    /**
+     * The connection resolver instance.
+     *
+     * @var \Database\ConnectionResolverInterface
+     */
+    protected static $resolver;
 
     /**
      * Create a new Model instance.
@@ -70,7 +79,7 @@ class Model
 
         if (! $basicSetup) {
             // Setup the Connection instance.
-            $this->db = Connection::getInstance($this->connection);
+            $this->db = DB::connection($this->connection);
         }
     }
 
@@ -198,7 +207,7 @@ class Model
      */
     public function getConnection()
     {
-        return Connection::getInstance($this->connection);
+        return $this->resolveConnection($this->connection);
     }
 
     /**
@@ -222,6 +231,48 @@ class Model
         $this->connection = $name;
 
         return $this;
+    }
+
+    /**
+     * Resolve a connection instance.
+     *
+     * @param  string  $connection
+     * @return \Database\Connection
+     */
+    public static function resolveConnection($connection = null)
+    {
+        return static::$resolver->connection($connection);
+    }
+
+    /**
+     * Get the connection resolver instance.
+     *
+     * @return \Database\ConnectionResolverInterface
+     */
+    public static function getConnectionResolver()
+    {
+        return static::$resolver;
+    }
+
+    /**
+     * Set the connection resolver instance.
+     *
+     * @param  \Database\ConnectionResolverInterface  $resolver
+     * @return void
+     */
+    public static function setConnectionResolver(Resolver $resolver)
+    {
+        static::$resolver = $resolver;
+    }
+
+    /**
+     * Unset the connection resolver for models.
+     *
+     * @return void
+     */
+    public static function unsetConnectionResolver()
+    {
+        static::$resolver = null;
     }
 
     /**

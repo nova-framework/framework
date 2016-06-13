@@ -6,14 +6,6 @@
  * @version 3.0
  */
 
-use Auth;
-use Redirect;
-use Request;
-use Response;
-use Session;
-
-use Route;
-
 
 /** Define Route Filters. */
 

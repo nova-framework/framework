@@ -8,8 +8,6 @@
 
 use Helpers\Hooks;
 
-use Router;
-
 
 /** Define static routes. */
 

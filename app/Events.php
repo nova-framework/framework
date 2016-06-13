@@ -10,8 +10,6 @@ use Core\View;
 use Helpers\Hooks;
 use Forensics\Console;
 
-use Event;
-
 
 /** Define Events. */
 

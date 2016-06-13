@@ -6,8 +6,6 @@
  * @version 3.0
  */
 
-use Router;
-
 
 /** Define static routes. */
 

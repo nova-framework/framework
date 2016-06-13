@@ -158,7 +158,7 @@ $providers = $config['providers'];
 $app->getProviderRepository()->load($app, $providers);
 
 //--------------------------------------------------------------------------
-// Register Again The Config Manager, If Is Need
+// Try To Register Again The Config Manager
 //--------------------------------------------------------------------------
 
 if(APPCONFIG_STORE == 'database') {

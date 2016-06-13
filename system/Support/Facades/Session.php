@@ -2,6 +2,7 @@
 
 namespace Support\Facades;
 
+use Core\Template;
 use Support\Facades\Facade;
 
 
@@ -67,6 +68,79 @@ class Session extends Facade
         }
 
         return $content;
+    }
+
+    /**
+     * Display a one time Message, then clear it from the Session.
+     *
+     * @param  string $name default Session name
+     *
+     * @return string
+     */
+    public static function message($name = null)
+    {
+        $instance = static::getSessionStore();
+
+        if(is_null($name)) {
+            foreach (array('info', 'success', 'warning', 'danger') as $key) {
+                if ($instance->has($key)) {
+                    $name = $key;
+
+                    break;
+                }
+            }
+        }
+
+        if (! is_null($name) && $instance->has($name)) {
+            // Pull the Message from the Session Store.
+            $message = $instance->remove($name);
+
+            return static::createMessage($message, $name);
+        }
+    }
+
+    protected static function createMessage($message, $name = null)
+    {
+        if(is_array($message)) {
+            $type    = $message['type'];
+            $message = $message['text'];
+        } else {
+            $type = $name;
+        }
+
+        // Adjust the alert Type.
+        switch ($type) {
+            case 'info':
+            case 'success':
+            case 'warning':
+            case 'danger':
+                break;
+
+            default:
+                $type = 'success';
+
+                break;
+        }
+
+        // Handle the multiple line messages.
+        if($message instanceof MessageBag) {
+            $message = $message->all();
+        }
+
+        // Handle the array messages.
+        if (is_array($message)) {
+            if (count($message) > 1) {
+                $message = '<ul><li>' .implode('</li><li>', $message) .'</li></ul>';
+                        } else if(! empty($message)) {
+                $message = array_shift($message);
+            } else {
+                // An empty array?
+                $message = '';
+            }
+        }
+
+        // Fetch the associated Template Fragment and return the result.
+        return Template::make('message', compact('type', 'message'), TEMPLATE)->fetch();
     }
 
     /**

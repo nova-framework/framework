@@ -10,6 +10,8 @@ use Support\Facades\Facade;
  */
 class Cookie extends Facade
 {
+    const FIVEYEARS = 2628000;
+    
     /**
      * Determine if a cookie exists on the request.
      *

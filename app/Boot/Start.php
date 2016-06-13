@@ -176,6 +176,8 @@ if(APPCONFIG_STORE == 'database') {
 
     // Make the Facade to refresh its information.
     Facade::clearResolvedInstance('config');
+} else if(APPCONFIG_STORE != 'files') {
+    throw new \InvalidArgumentException('Invalid Config Store type.');
 }
 
 //--------------------------------------------------------------------------

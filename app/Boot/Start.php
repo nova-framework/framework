@@ -55,10 +55,8 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $env = $app->detectEnvironment(array(
-    'local'       => array('your-local-machine-name'),
-    'testing'     => array('your-testing-machine-name'),
-    'development' => array('darkstar'),
-    'production'  => array('your-production-machine-name'),
+    'local'   => array('your-local-machine-name'),
+    'testing' => array('darkstar'),
 ));
 
 //--------------------------------------------------------------------------

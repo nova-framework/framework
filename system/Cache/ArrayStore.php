@@ -20,8 +20,7 @@ class ArrayStore implements StoreInterface
      */
     public function get($key)
     {
-        if (array_key_exists($key, $this->storage))
-        {
+        if (array_key_exists($key, $this->storage)) {
             return $this->storage[$key];
         }
     }

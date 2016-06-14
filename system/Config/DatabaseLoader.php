@@ -45,7 +45,7 @@ class DatabaseLoader implements LoaderInterface
         $this->connection = $connection;
 
         // Setup the Cache Driver instance.
-        $this->cache = $connection->getCacheManager()->driver();
+        $this->cache = $connection->getCacheManager();
     }
 
     /**
@@ -57,8 +57,6 @@ class DatabaseLoader implements LoaderInterface
     public function load($group)
     {
         $token = 'options_' .md5($group);
-
-        $items = $this->cache->get($token);
 
         if (! $this->cache->has($token)) {
             $items = array();

@@ -8,6 +8,7 @@
 
 namespace Cache;
 
+use Core\Config;
 use Cache\StoreInterface;
 
 use phpFastCache\CacheManager;
@@ -22,13 +23,16 @@ class FastCacheStore implements StoreInterface
      */
     protected $cache;
 
+
     /**
      * Create a new Cache Repository instance.
      *
-     * @param  string $store
+     * @param  string $storage
      */
-    public function __construct($storage, array $config)
+    public function __construct($storage)
     {
+        $config = Config::get('cache');
+
         $config['storage'] = $storage;
 
         $this->cache = CacheManager::getInstance($storage, $config);
@@ -43,19 +47,6 @@ class FastCacheStore implements StoreInterface
     public function get($key)
     {
         return $this->cache->get($key);
-    }
-
-    /**
-     * Store an item in the cache for a given number of minutes.
-     *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @param  int     $minutes
-     * @return void
-     */
-    public function set($key, $value, $minutes)
-    {
-        return $this->cache->set($key, $value, $minutes);
     }
 
     /**

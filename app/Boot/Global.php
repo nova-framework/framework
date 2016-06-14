@@ -80,3 +80,11 @@ foreach ($modules as $module) {
 
     if (is_readable($path)) require $path;
 }
+
+//--------------------------------------------------------------------------
+// Start the Legacy Session
+//--------------------------------------------------------------------------
+
+use Helpers\Session as LegacySession;
+
+LegacySession::init();

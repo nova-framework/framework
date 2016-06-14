@@ -54,7 +54,9 @@ class ExceptionServiceProvider extends ServiceProvider
     {
         $this->app['exception'] = $this->app->share(function($app)
         {
-            // We this for starting the Error Handler before loading the configuration.
+            //$debug = $this['config']['app.debug'];
+
+            // This way is possible to start early the Exception Handler.
             $debug = (ENVIRONMENT == 'development');
 
             return new Handler(

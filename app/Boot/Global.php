@@ -27,22 +27,6 @@ App::error(function(Exception $exception, $code)
 });
 
 //--------------------------------------------------------------------------
-// Application Finish Handler
-//--------------------------------------------------------------------------
-
-use Http\ResponseProcessor;
-use Session\SessionGuard;
-
-App::finish(function($request, $response) use ($app)
-{
-    // Save the Session Store and cleanup its files.
-    SessionGuard::handle($app);
-
-    // Post-process the Response.
-    ResponseProcessor::handle($app, $response);
-});
-
-//--------------------------------------------------------------------------
 // Try To Register Again The Config Manager
 //--------------------------------------------------------------------------
 

@@ -16,8 +16,4 @@ Config::set('routing', array(
     'patterns' => array(
         //':hex' => '[[:xdigit:]]+',
     ),
-    'default' => array(
-        'controller' => DEFAULT_CONTROLLER,
-        'method'     => DEFAULT_METHOD
-    )
 ));

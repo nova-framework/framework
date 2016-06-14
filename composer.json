@@ -15,19 +15,21 @@
     "require": {
         "php": ">=5.5.0",
         "symfony/console": "^3.1",
+        "symfony/finder": "^3.1",
+        "symfony/http-foundation": "^3.1",
+        "symfony/http-kernel": "^3.1",
+        "stack/builder": "^1.0",
         "doctrine/inflector": "1.0.*",
         "illuminate/container": "4.1.*",
         "phpmailer/phpmailer": "5.2.*",
         "phpfastcache/phpfastcache": "4.0.*",
-        "symfony/http-foundation": "^3.0",
         "patchwork/utf8": "~1.2",
         "nesbot/carbon": "^1.21",
         "swiftmailer/swiftmailer": "^5.4",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3",
         "monolog/monolog": "^1.19",
-        "filp/whoops": "^2.1",
-        "symfony/finder": "^3.1"
+        "filp/whoops": "^2.1"
     },
     "autoload": {
         "psr-4": {

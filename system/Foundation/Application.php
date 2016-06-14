@@ -20,19 +20,23 @@ use Events\EventServiceProvider;
 use Exception\ExceptionServiceProvider;
 use Routing\RoutingServiceProvider;
 
-use Exception\FatalErrorException;
-use Exception\HttpException;
-use Exception\NotFoundHttpException;
-
 use Illuminate\Container\Container;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use Symfony\Component\Debug\Exception\FatalErrorException;
+
+
 use Closure;
 
 
-class Application extends Container implements ResponsePreparerInterface
+class Application extends Container implements HttpKernelInterface, TerminableInterface, ResponsePreparerInterface
 {
     /**
      * The Nova Framework version.
@@ -75,6 +79,13 @@ class Application extends Container implements ResponsePreparerInterface
      * @var array
      */
     protected $shutdownCallbacks = array();
+
+    /**
+     * All of the developer defined middlewares.
+     *
+     * @var array
+     */
+    protected $middlewares = array();
 
     /**
      * All of the registered service providers.
@@ -505,27 +516,105 @@ class Application extends Container implements ResponsePreparerInterface
         $request = $request ?: $this['request'];
 
         // Handle the Request.
-        $response = $this->handle($request);
+        $response = with($stack = $this->getStackedClient())->handle($request);
+
+        // Send the Response.
+        $this->prepareResponse($response)->send();
 
         // Execute the Termination Stage.
         $this->terminate($request, $response);
-
-        // Send the Response.
-        $response = $this->prepareResponse($response);
-
-        $response->send();
     }
+
+    /**
+     * Get the stacked HTTP kernel for the application.
+     *
+     * @return  \Symfony\Component\HttpKernel\HttpKernelInterface
+     */
+    protected function getStackedClient()
+    {
+        $sessionReject = $this->bound('session.reject') ? $this['session.reject'] : null;
+
+        $client = with(new \Stack\Builder)
+            ->push('Http\ContentGuard')
+            ->push('Cookie\Guard', $this['encrypter'])
+            ->push('Cookie\Queue', $this['cookie'])
+            ->push('Session\Middleware', $this['session'], $sessionReject);
+
+        $this->mergeCustomMiddlewares($client);
+
+        return $client->resolve($this);
+    }
+
+    /**
+     * Merge the developer defined middlewares onto the stack.
+     *
+     * @param  \Stack\Builder
+     * @return void
+     */
+    protected function mergeCustomMiddlewares(\Stack\Builder $stack)
+    {
+        foreach ($this->middlewares as $middleware) {
+            list($class, $parameters) = array_values($middleware);
+
+            array_unshift($parameters, $class);
+
+            call_user_func_array(array($stack, 'push'), $parameters);
+        }
+    }
+
+    /**
+     * Register the default, but optional middlewares.
+     *
+     * @return void
+     */
+    protected function registerBaseMiddlewares()
+    {
+        $this->middleware('Http\FrameGuard');
+    }
+
+    /**
+     * Add a HttpKernel middleware onto the stack.
+     *
+     * @param  string  $class
+     * @param  array  $parameters
+     * @return \Illuminate\Foundation\Application
+     */
+    public function middleware($class, array $parameters = array())
+    {
+        $this->middlewares[] = compact('class', 'parameters');
+
+        return $this;
+    }
+
+    /**
+     * Remove a custom middleware from the application.
+     *
+     * @param  string  $class
+     * @return void
+     */
+    public function forgetMiddleware($class)
+    {
+        $this->middlewares = array_filter($this->middlewares, function($m) use ($class)
+        {
+            return $m['class'] != $class;
+        });
+    }
+
 
     /**
      * Handle the given Request and get the Response.
      *
      * Provides compatibility with BrowserKit functional testing.
      *
+     * @implements HttpKernelInterface::handle
+     *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  int   $type
      * @param  bool  $catch
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(SymfonyRequest $request, $catch = true)
+
+    public function handle(SymfonyRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         try {
             $this->refreshRequest($request = Request::createFromBase($request));
@@ -614,8 +703,8 @@ class Application extends Container implements ResponsePreparerInterface
     {
         $config = $this['config'];
 
-        if (! is_null($config['session.store']) && ! $request->hasSession()) {
-            $request->setSession($this['session.store']);
+        if (! is_null($config['session.driver']) && ! $request->hasSession()) {
+            $request->setSession($this['session']->driver());
         }
 
         return $request;
@@ -845,6 +934,7 @@ class Application extends Container implements ResponsePreparerInterface
             'redirect'       => 'Routing\Redirector',
             'request'        => 'Http\Request',
             'router'         => 'Routing\Router',
+            'session'        => 'Session\SessionManager',
             'session.store'  => 'Session\Store',
             'validator'      => 'Validation\Factory',
         );

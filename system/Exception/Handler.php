@@ -8,13 +8,14 @@
 
 namespace Exception;
 
-use Exception\HttpExceptionDisplayer;
-use Exception\JsonExceptionDisplayer;
+use Exception\PlainDisplayer;
+use Exception\WhoopsDisplayer;
 use Exception\ExceptionDisplayerInterface;
-use Exception\FatalErrorException as FatalError;
-use Exception\HttpExceptionInterface;
 use Exception\RedirectToException;
 use Support\Contracts\ResponsePreparerInterface;
+
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\Debug\Exception\FatalErrorException as FatalError;
 
 use Redirect;
 

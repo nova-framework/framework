@@ -1,99 +1,78 @@
 <?php
-/**
- * SessionServiceProvider - Implements a Service Provider for Session.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Session;
 
-use Session\DatabaseSessionHandler;
-use Session\FileSessionHandler;
-use Session\Store;
 use Support\ServiceProvider;
 
 
 class SessionServiceProvider extends ServiceProvider
 {
     /**
-     * Register the Service Provider.
+     * Register the service provider.
      *
      * @return void
      */
     public function register()
     {
-        $me = $this;
+        $this->setupDefaultDriver();
 
-        $this->app->bindShared('session.store', function($app) use ($me)
+        $this->registerSessionManager();
+
+        $this->registerSessionDriver();
+    }
+
+    /**
+     * Setup the default session driver for the application.
+     *
+     * @return void
+     */
+    protected function setupDefaultDriver()
+    {
+        if ($this->app->runningInConsole())
         {
-            $config = $app['config']['session'];
+            $this->app['config']['session.driver'] = 'array';
+        }
+    }
 
-            $cookie = $config['cookie'];
-
-            // Retrieve the CookieJar instance.
-            $request = $app['request'];
-
-            $token = $request->cookie($cookie);
-
-            // Register the Session Handler.
-            $me->registerSessionHandler($config);
-
-            $me->startSession($config);
-
-            $store = new Store($cookie, $app['session.handler'], $token);
-
-            return $store->start();
+    /**
+     * Register the session manager instance.
+     *
+     * @return void
+     */
+    protected function registerSessionManager()
+    {
+        $this->app->bindShared('session', function($app)
+        {
+            return new SessionManager($app);
         });
     }
 
     /**
-     * Register session driver.
+     * Register the session driver instance.
      *
-     * @param  array  $config
      * @return void
      */
-    public function registerSessionHandler(array $config)
+    protected function registerSessionDriver()
     {
-        $this->app->bindShared('session.handler', function($app) use ($config)
+        $this->app->bindShared('session.store', function($app)
         {
-            $driver = array_get($config, 'driver', 'file');
+            // First, we will create the session manager which is responsible for the
+            // creation of the various session drivers when they are needed by the
+            // application instance, and will resolve them on a lazy load basis.
+            $manager = $app['session'];
 
-            switch ($driver) {
-                case 'database':
-                    return new DatabaseSessionHandler($app['db']->connection(), $config);
-                break;
-
-                case 'file':
-                    return new FileSessionHandler($config);
-                break;
-            }
+            return $manager->driver();
         });
     }
 
-    protected function startSession(array $config)
+    /**
+     * Get the session driver name.
+     *
+     * @return string
+     */
+    protected function getDriver()
     {
-        $cookieJar = $this->app['cookie'];
-
-        // Start the Session.
-        $lifeTime = (int) $config['lifetime'] * 60;
-
-        session_set_cookie_params($lifeTime, $config['path'], $config['domain']);
-
-        session_start();
-
-        // Create and queue a Cookie containing the proper Session's lifetime.
-        $cookie = $cookieJar->make(
-            session_name(),
-            session_id(),
-            $config['lifetime'],
-            $config['path'],
-            $config['domain'],
-            $config['secure'],
-            false
-        );
-
-        $cookieJar->queue($cookie);
+        return $this->app['config']['session.driver'];
     }
-}
 
+}

@@ -148,6 +148,6 @@ class Session extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'session.store'; }
+    protected static function getFacadeAccessor() { return 'session'; }
 
 }

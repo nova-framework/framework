@@ -578,4 +578,26 @@ class Store implements SessionInterface
         return $this->handler;
     }
 
+    /**
+     * Determine if the session handler needs a request.
+     *
+     * @return bool
+     */
+    public function handlerNeedsRequest()
+    {
+        return $this->handler instanceof CookieSessionHandler;
+    }
+
+    /**
+     * Set the request on the handler instance.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @return void
+     */
+    public function setRequestOnHandler(Request $request)
+    {
+        if ($this->handlerNeedsRequest()) {
+            $this->handler->setRequest($request);
+        }
+    }
 }

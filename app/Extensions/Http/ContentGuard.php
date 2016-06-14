@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Extensions\Middleware;
+namespace App\Extensions\Http;
 
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;

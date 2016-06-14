@@ -167,7 +167,7 @@ $app->getProviderRepository()->load($app, $providers);
 // Additional Middleware On Application
 //--------------------------------------------------------------------------
 
-App::middleware('App\Extensions\Middleware\ContentGuard', array(
+App::middleware('App\Extensions\Http\ContentGuard', array(
     $app['config']['app.debug']
 ));
 

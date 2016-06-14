@@ -127,7 +127,7 @@ $langMenuLinks = ob_get_clean();
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      <?php if(ENVIRONMENT == 'development') { ?>
+      <?php if(Config::get('app.debug')) { ?>
       <small><!-- DO NOT DELETE! - Profiler --></small>
       <?php } ?>
     </div>

@@ -17,8 +17,8 @@ Config::set('session', array(
     'connection' => null,       // The Database Connection name used by driver.
 
     // Session Lifetime.
-    'lifetime'        => 180,    // Number of minutes the Session is allowed to remain idle before it expires.
-    'expire_on_close' => false,  // If you want them to immediately expire on the browser closing, set that.
+    'lifetime'      => 180,   // Number of minutes the Session is allowed to remain idle before it expires.
+    'expireOnClose' => false, // If you want them to immediately expire on the browser closing, set that.
 
     // The File Session Driver configuration.
     'files'    => STORAGE_PATH .'Sessions',   // File Session Handler - where the Session files may be stored.

@@ -11,7 +11,7 @@ namespace Cache;
 use Core\Config;
 use Cache\StoreInterface;
 
-use phpFastCache\CacheManager;
+use phpFastCache\CacheManager as FastCacheManager;
 
 
 class FastCacheStore implements StoreInterface
@@ -35,7 +35,7 @@ class FastCacheStore implements StoreInterface
 
         $config['storage'] = $storage;
 
-        $this->cache = CacheManager::getInstance($storage, $config);
+        $this->cache = FastCacheManager::getInstance($storage, $config);
     }
 
     /**

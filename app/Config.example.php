@@ -123,6 +123,6 @@ Config::set('recaptcha', array(
  *
  * DO NOT MODIFY THE FOLLOWING CODE:
  */
-foreach (glob(APPDIR .'Config/*') as $configFile) {
-    require $configFile;
+foreach (glob(APPDIR .'Config/*') as $path) {
+    if (is_readable($path)) require $path;
 }

@@ -60,7 +60,7 @@ class DatabaseLoader implements LoaderInterface
 
         $items = $this->cache->get($token);
 
-        if (is_null($items)) {
+        if (! $this->cache->has($token)) {
             $items = array();
 
             // The current Group's data is not cached.
@@ -78,7 +78,9 @@ class DatabaseLoader implements LoaderInterface
             }
 
             // Cache the current Group's data for 15 min.
-            $this->cache->set($token, $items, 900);
+            $this->cache->put($token, $items, 900);
+        } else {
+            $items = $this->cache->get($token);
         }
 
         return $items;

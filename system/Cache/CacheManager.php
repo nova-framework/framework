@@ -3,6 +3,7 @@
 namespace Cache;
 
 use Cache\ArrayStore;
+use Cache\FastCacheStore;
 use Cache\Repository;
 use Support\Manager;
 
@@ -28,7 +29,7 @@ class CacheManager extends Manager
      */
     protected function createArrayDriver()
     {
-        return $this->repository(new ArrayStore, array());
+        return $this->repository(new ArrayStore);
     }
 
     /**
@@ -111,7 +112,11 @@ class CacheManager extends Manager
      */
     protected function repository($storage, array $config)
     {
-        return new Repository($storage, $config);
+        if(is_string($storage)) {
+            $storage = new FastCacheStore($storage, $config);
+        }
+
+        return new Repository($storage);
     }
 
     /**

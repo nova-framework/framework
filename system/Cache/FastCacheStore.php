@@ -1,16 +1,38 @@
 <?php
+/**
+ * ArrayStore - A simple in-memory simulation of a phpFastCache driver.
+ *
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
+ */
 
 namespace Cache;
 
+use Cache\StoreInterface;
 
-class ArrayStore implements StoreInterface
+use phpFastCache\CacheManager;
+
+
+class FastCacheStore implements StoreInterface
 {
     /**
-     * The array of stored values.
+     * The phpFastCache instance.
      *
      * @var array
      */
-    protected $storage = array();
+    protected $cache;
+
+    /**
+     * Create a new Cache Repository instance.
+     *
+     * @param  string $store
+     */
+    public function __construct($storage, array $config)
+    {
+        $config['storage'] = $storage;
+
+        $this->cache = CacheManager::getInstance($storage, $config);
+    }
 
     /**
      * Retrieve an item from the cache by key.
@@ -20,10 +42,20 @@ class ArrayStore implements StoreInterface
      */
     public function get($key)
     {
-        if (array_key_exists($key, $this->storage))
-        {
-            return $this->storage[$key];
-        }
+        return $this->cache->get($key);
+    }
+
+    /**
+     * Store an item in the cache for a given number of minutes.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @param  int     $minutes
+     * @return void
+     */
+    public function set($key, $value, $minutes)
+    {
+        return $this->cache->set($key, $value, $minutes);
     }
 
     /**
@@ -36,7 +68,7 @@ class ArrayStore implements StoreInterface
      */
     public function put($key, $value, $minutes)
     {
-        $this->storage[$key] = $value;
+        return $this->cache->set($key, $value, $minutes);
     }
 
     /**
@@ -48,9 +80,7 @@ class ArrayStore implements StoreInterface
      */
     public function increment($key, $value = 1)
     {
-        $this->storage[$key] = $this->storage[$key] + $value;
-
-        return $this->storage[$key];
+        return $this->cache->increment($key, $value);
     }
 
     /**
@@ -62,9 +92,7 @@ class ArrayStore implements StoreInterface
      */
     public function decrement($key, $value = 1)
     {
-        $this->storage[$key] = $this->storage[$key] - $value;
-
-        return $this->storage[$key];
+        return $this->cache->decrement($key, $value);
     }
 
     /**
@@ -87,7 +115,7 @@ class ArrayStore implements StoreInterface
      */
     public function forget($key)
     {
-        unset($this->storage[$key]);
+        $this->cache->delete($key);
     }
 
     /**
@@ -97,7 +125,7 @@ class ArrayStore implements StoreInterface
      */
     public function flush()
     {
-        $this->storage = array();
+        $this->cache->clean();
     }
 
     /**
@@ -109,5 +137,4 @@ class ArrayStore implements StoreInterface
     {
         return '';
     }
-
 }

@@ -2,9 +2,7 @@
 
 namespace Cache;
 
-use Cache\ArrayStore;
-
-use phpFastCache\CacheManager;
+use Cache\StoreInterface;
 
 use Carbon\Carbon;
 
@@ -20,7 +18,7 @@ class Repository implements ArrayAccess
      *
      * @var
      */
-    protected $cache;
+    protected $store;
 
     /**
      * The default number of minutes to store items.
@@ -41,15 +39,9 @@ class Repository implements ArrayAccess
      *
      * @param  string $store
      */
-    public function __construct($storage, array $config)
+    public function __construct(StoreInterface $storage)
     {
-        if($storage instanceof ArrayStore) {
-            $this->cache = $storage;
-        } else {
-            $config['storage'] = $storage;
-
-            $this->cache = CacheManager::getInstance($storage, $config);
-        }
+        $this->store = $storage;
     }
 
     /**
@@ -72,7 +64,7 @@ class Repository implements ArrayAccess
      */
     public function get($key, $default = null)
     {
-        $value = $this->cache->get($key);
+        $value = $this->store->get($key);
 
         return ! is_null($value) ? $value : value($default);
     }
@@ -89,7 +81,7 @@ class Repository implements ArrayAccess
     {
         $minutes = $this->getMinutes($minutes);
 
-        $this->cache->set($key, $value, $minutes);
+        $this->store->set($key, $value, $minutes);
     }
 
     /**
@@ -186,7 +178,7 @@ class Repository implements ArrayAccess
      */
     public function getStore()
     {
-        return $this->cache;
+        return $this->store;
     }
 
     /**
@@ -275,7 +267,7 @@ class Repository implements ArrayAccess
         if (isset($this->macros[$method])) {
             return call_user_func_array($this->macros[$method], $parameters);
         } else {
-            return call_user_func_array(array($this->cache, $method), $parameters);
+            return call_user_func_array(array($this->store, $method), $parameters);
         }
     }
 

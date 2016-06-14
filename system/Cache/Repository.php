@@ -39,9 +39,9 @@ class Repository implements ArrayAccess
      *
      * @param  string $store
      */
-    public function __construct(StoreInterface $storage)
+    public function __construct(StoreInterface $store)
     {
-        $this->store = $storage;
+        $this->store = $store;
     }
 
     /**

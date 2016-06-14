@@ -8,7 +8,7 @@
 
 namespace Foundation;
 
-use Config\FileLoader;
+use Config\LoaderManager;
 use Foundation\EnvironmentDetector;
 use Foundation\ProviderRepository;
 use Http\Request;
@@ -844,7 +844,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      */
     public function getConfigLoader()
     {
-        return new FileLoader();
+        return new LoaderManager();
     }
 
     /**

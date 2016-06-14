@@ -36,7 +36,7 @@ class CacheManager extends Manager
      *
      * @return \Cache\Repository
      */
-    protected function createFileDriver()
+    protected function createFilesDriver()
     {
         $config = $this->app['config']['cache'];
 
@@ -104,7 +104,7 @@ class CacheManager extends Manager
     }
 
     /**
-     * Create a new cache repository with the given implementation.
+     * Create a new Cache Repository with the given implementation.
      *
      * @param  string  $storage
      * @return \Cache\Repository

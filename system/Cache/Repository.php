@@ -16,11 +16,11 @@ use ArrayAccess;
 class Repository implements ArrayAccess
 {
     /**
-     * The phpFastCache.
+     * The phpFastCache instance.
      *
      * @var
      */
-    protected $store;
+    protected $cache;
 
     /**
      * The default number of minutes to store items.
@@ -44,11 +44,11 @@ class Repository implements ArrayAccess
     public function __construct($storage, array $config)
     {
         if($storage instanceof ArrayStore) {
-            $this->store = $storage;
+            $this->cache = $storage;
         } else {
             $config['storage'] = $storage;
 
-            $this->store = CacheManager::getInstance($storage, $config);
+            $this->cache = CacheManager::getInstance($storage, $config);
         }
     }
 
@@ -72,7 +72,7 @@ class Repository implements ArrayAccess
      */
     public function get($key, $default = null)
     {
-        $value = $this->store->get($key);
+        $value = $this->cache->get($key);
 
         return ! is_null($value) ? $value : value($default);
     }
@@ -89,7 +89,7 @@ class Repository implements ArrayAccess
     {
         $minutes = $this->getMinutes($minutes);
 
-        $this->store->set($key, $value, $minutes);
+        $this->cache->set($key, $value, $minutes);
     }
 
     /**
@@ -186,7 +186,7 @@ class Repository implements ArrayAccess
      */
     public function getStore()
     {
-        return $this->store;
+        return $this->cache;
     }
 
     /**
@@ -275,7 +275,7 @@ class Repository implements ArrayAccess
         if (isset($this->macros[$method])) {
             return call_user_func_array($this->macros[$method], $parameters);
         } else {
-            return call_user_func_array(array($this->store, $method), $parameters);
+            return call_user_func_array(array($this->cache, $method), $parameters);
         }
     }
 

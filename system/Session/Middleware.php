@@ -23,7 +23,7 @@ class Middleware implements HttpKernelInterface
     /**
      * The session manager.
      *
-     * @var \Illuminate\Session\SessionManager
+     * @var \Session\SessionManager
      */
     protected $manager;
 
@@ -38,7 +38,7 @@ class Middleware implements HttpKernelInterface
      * Create a new session middleware.
      *
      * @param  \Symfony\Component\HttpKernel\HttpKernelInterface  $app
-     * @param  \Illuminate\Session\SessionManager  $manager
+     * @param  \Session\SessionManager  $manager
      * @param  \Closure|null  $reject
      * @return void
      */
@@ -99,7 +99,7 @@ class Middleware implements HttpKernelInterface
      * Start the session for the given request.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
-     * @return \Illuminate\Session\SessionInterface
+     * @return \Session\SessionInterface
      */
     protected function startSession(Request $request)
     {
@@ -113,7 +113,7 @@ class Middleware implements HttpKernelInterface
     /**
      * Close the session handling for the request.
      *
-     * @param  \Illuminate\Session\SessionInterface  $session
+     * @param  \Session\SessionInterface  $session
      * @return void
      */
     protected function closeSession(SessionInterface $session)
@@ -139,16 +139,13 @@ class Middleware implements HttpKernelInterface
     /**
      * Remove the garbage from the session if necessary.
      *
-     * @param  \Illuminate\Session\SessionInterface  $session
+     * @param  \Session\SessionInterface  $session
      * @return void
      */
     protected function collectGarbage(SessionInterface $session)
     {
         $config = $this->manager->getSessionConfig();
 
-        // Here we will see if this request hits the garbage collection lottery by hitting
-        // the odds needed to perform garbage collection on any given request. If we do
-        // hit it, we'll call this handler to let it delete all the expired sessions.
         if ($this->configHitsLottery($config)) {
             $session->getHandler()->gc($this->getLifetimeSeconds());
         }
@@ -207,7 +204,7 @@ class Middleware implements HttpKernelInterface
     {
         $config = $this->manager->getSessionConfig();
 
-        return $config['expire_on_close'] ? 0 : Carbon::now()->addMinutes($config['lifetime']);
+        return $config['expireOnClose'] ? 0 : Carbon::now()->addMinutes($config['lifetime']);
     }
 
     /**
@@ -239,7 +236,7 @@ class Middleware implements HttpKernelInterface
     /**
      * Get the session implementation from the manager.
      *
-     * @return \Illuminate\Session\SessionInterface
+     * @return \Session\SessionInterface
      */
     public function getSession(Request $request)
     {

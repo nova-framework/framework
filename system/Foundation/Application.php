@@ -532,10 +532,12 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      */
     protected function getStackedClient()
     {
+        $debug = $this['config']['app.debug'];
+
         $sessionReject = $this->bound('session.reject') ? $this['session.reject'] : null;
 
         $client = with(new \Stack\Builder)
-            ->push('Http\ContentGuard')
+            ->push('Http\ContentGuard', $debug)
             ->push('Cookie\Guard', $this['encrypter'])
             ->push('Cookie\Queue', $this['cookie'])
             ->push('Session\Middleware', $this['session'], $sessionReject);

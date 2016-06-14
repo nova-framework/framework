@@ -27,14 +27,23 @@ class ContentGuard implements HttpKernelInterface
     protected $app;
 
     /**
+     * The debug flag.
+     *
+     * @var bool
+     */
+    protected $debug;
+
+    /**
      * Create a new FrameGuard instance.
      *
      * @param  \Symfony\Component\HttpKernel\HttpKernelInterface  $app
      * @return void
      */
-    public function __construct(HttpKernelInterface $app)
+    public function __construct(HttpKernelInterface $app, $debug)
     {
         $this->app = $app;
+
+        $this->debug = $debug;
     }
 
     /**
@@ -71,7 +80,7 @@ class ContentGuard implements HttpKernelInterface
 
         $content = $response->getContent();
 
-        if(ENVIRONMENT == 'development') {
+        if($this->debug) {
             // Insert the QuickProfiler Widget in the Response's Content.
 
             $content = str_replace(
@@ -85,7 +94,7 @@ class ContentGuard implements HttpKernelInterface
                 ),
                 $content
             );
-        } else if(ENVIRONMENT == 'production') {
+        } else {
             // Minify the Response's Content.
 
             $search = array(

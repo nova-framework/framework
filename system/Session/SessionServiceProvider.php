@@ -55,12 +55,8 @@ class SessionServiceProvider extends ServiceProvider
      */
     public function registerSessionHandler(array $config)
     {
-        $me = $this;
-
-        $this->app->bindShared('session.handler', function($app) use ($me, $config)
+        $this->app->bindShared('session.handler', function($app) use ($config)
         {
-            $lifeTime = (int) $config['lifetime'] * 60;
-
             $driver = array_get($config, 'driver', 'file');
 
             switch ($driver) {

@@ -100,7 +100,7 @@ class DatabaseLoader implements LoaderInterface
         // Delete the cached data for current Group.
         $token = 'options_' .md5($group);
 
-        $this->cache->delete($token);
+        $this->cache->forget($token);
 
         // Update the information on Database.
         if (empty($item)) {

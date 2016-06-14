@@ -65,21 +65,13 @@ class SessionServiceProvider extends ServiceProvider
 
             switch ($driver) {
                 case 'database':
-                    $handler = new DatabaseSessionHandler($app['db'], $config['table'], $lifeTime);
+                    return new DatabaseSessionHandler($app['db']->connection(), $config);
                 break;
 
                 case 'file':
-                    $handler = new FileSessionHandler($config, $lifeTime);
+                    return new FileSessionHandler($config);
                 break;
             }
-
-            // Setup the Save Session Handler.
-            session_set_save_handler($handler, true);
-
-            // The following prevents unexpected effects when using objects as save handlers
-            register_shutdown_function('session_write_close');
-
-            return $handler;
         });
     }
 

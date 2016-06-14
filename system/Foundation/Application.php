@@ -614,10 +614,8 @@ class Application extends Container implements ResponsePreparerInterface
     {
         $config = $this['config'];
 
-        if (! is_null($config['session.driver']) && ! $request->hasSession()) {
-            $session = $this['session.store'];
-
-            $request->setSession($session);
+        if (! is_null($config['session.store']) && ! $request->hasSession()) {
+            $request->setSession($this['session.store']);
         }
 
         return $request;

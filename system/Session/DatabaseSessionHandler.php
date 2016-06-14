@@ -37,11 +37,11 @@ class DatabaseSessionHandler implements SessionHandlerInterface
      * @param  array     $config
      * @return void
      */
-    function __construct(array $config)
+    function __construct(Connection $connection, array $config)
     {
-        $this->db = Connection::getInstance();
+        $this->db = $connection;
 
-        $this->table = array_get($config, 'table', 'options');
+        $this->table = array_get($config, 'table', 'sessions');
     }
 
     /**

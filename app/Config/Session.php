@@ -10,9 +10,9 @@ use Core\Config;
 
 
 Config::set('session', array(
-    'driver'  => 'file', // The Session Driver used for storing Session data; supported: 'file' or 'database'.
-    
-    'handler' => '\Session\FileSessionHandler', // The default Session Handler, using files for Session cache.
+    'driver' => 'file', // The Session Driver used for storing Session data; supported: 'file' or 'database'.
+
+    'table'  => 'sessions', // The Database Table used by the Database Session Driver.
 
     // Storage configuration.
     'lifetime' => 180,           // Number of minutes the Session is allowed to remain idle before it expires.

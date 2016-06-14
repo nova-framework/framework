@@ -89,6 +89,12 @@ Facade::setFacadeApplication($app);
 $app->registerCoreContainerAliases();
 
 //--------------------------------------------------------------------------
+// Initial Setup Of The Default Timezone - For The Exception Handling
+//--------------------------------------------------------------------------
+
+date_default_timezone_set('Europe/London');
+
+//--------------------------------------------------------------------------
 // Register Application Exception Handling
 //--------------------------------------------------------------------------
 
@@ -120,7 +126,7 @@ $app->instance('config', $config = new ConfigRepository(
 ));
 
 //--------------------------------------------------------------------------
-// Set The Default Timezone
+// Set The Default Timezone From Configuration
 //--------------------------------------------------------------------------
 
 $config = $app['config']['app'];

@@ -8,7 +8,7 @@ Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
 // Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
 /*
-use Log\Mailer as LogMailer;
+use App\Extensions\Log\Mailer as LogMailer;
 
 LogMailer::initHandler($app);
 */

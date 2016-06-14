@@ -164,6 +164,14 @@ $providers = $config['providers'];
 $app->getProviderRepository()->load($app, $providers);
 
 //--------------------------------------------------------------------------
+// Additional Middleware On Application
+//--------------------------------------------------------------------------
+
+App::middleware('App\Extensions\Middleware\ContentGuard', array(
+    $app['config']['app.debug']
+));
+
+//--------------------------------------------------------------------------
 // Register Booted Start Files
 //--------------------------------------------------------------------------
 

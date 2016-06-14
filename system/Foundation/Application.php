@@ -32,6 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Symfony\Component\Debug\Exception\FatalErrorException;
 
+use Stack\Builder as StackBuilder;
 
 use Closure;
 
@@ -536,8 +537,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 
         $sessionReject = $this->bound('session.reject') ? $this['session.reject'] : null;
 
-        $client = with(new \Stack\Builder)
-            ->push('Http\ContentGuard', $debug)
+        $client = with(new StackBuilder)
             ->push('Cookie\Guard', $this['encrypter'])
             ->push('Cookie\Queue', $this['cookie'])
             ->push('Session\Middleware', $this['session'], $sessionReject);
@@ -553,7 +553,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      * @param  \Stack\Builder
      * @return void
      */
-    protected function mergeCustomMiddlewares(\Stack\Builder $stack)
+    protected function mergeCustomMiddlewares(StackBuilder $stack)
     {
         foreach ($this->middlewares as $middleware) {
             list($class, $parameters) = array_values($middleware);

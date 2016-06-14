@@ -1,12 +1,12 @@
 <?php
 /**
- * ResponseProcessor - Implements a Response processing.
+ * ContentGuard - Implements a Response Content processing.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
-namespace Http;
+namespace App\Extensions\Middleware;
 
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;
@@ -82,7 +82,6 @@ class ContentGuard implements HttpKernelInterface
 
         if($this->debug) {
             // Insert the QuickProfiler Widget in the Response's Content.
-
             $content = str_replace(
                 array(
                     '<!-- DO NOT DELETE! - Forensics Profiler -->',
@@ -96,7 +95,6 @@ class ContentGuard implements HttpKernelInterface
             );
         } else {
             // Minify the Response's Content.
-
             $search = array(
                 '/\>[^\S ]+/s', // Strip whitespaces after tags, except space.
                 '/[^\S ]+\</s', // Strip whitespaces before tags, except space.

@@ -220,9 +220,12 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      */
     public function startExceptionHandling()
     {
+        // We this for starting the Error Handler before loading the configuration.
+        $debug = (ENVIRONMENT == 'development');
+
         $this['exception']->register($this->environment());
 
-        $this['exception']->setDebug($this['config']['app.debug']);
+        $this['exception']->setDebug($debug);
     }
 
     /**

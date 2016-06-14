@@ -55,9 +55,9 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $env = $app->detectEnvironment(array(
-    'local'       => array('darkstar'),
+    'local'       => array('your-local-machine-name'),
     'testing'     => array('your-testing-machine-name'),
-    'development' => array('your-development-machine-name'),
+    'development' => array('darkstar'),
     'production'  => array('your-production-machine-name'),
 ));
 
@@ -75,14 +75,6 @@ $paths = array(
 $app->bindInstallPaths($paths);
 
 //--------------------------------------------------------------------------
-// Check For The Test Environment
-//--------------------------------------------------------------------------
-
-if (isset($unitTesting)) {
-    $app['env'] = $env = $testEnvironment;
-}
-
-//--------------------------------------------------------------------------
 // Load The Framework Facades
 //--------------------------------------------------------------------------
 
@@ -95,6 +87,14 @@ Facade::setFacadeApplication($app);
 //--------------------------------------------------------------------------
 
 $app->registerCoreContainerAliases();
+
+//--------------------------------------------------------------------------
+// Register Application Exception Handling
+//--------------------------------------------------------------------------
+
+$app->startExceptionHandling();
+
+if ($env != 'testing') ini_set('display_errors', 'Off');
 
 //--------------------------------------------------------------------------
 // Load The Configuration
@@ -118,14 +118,6 @@ foreach ($modules as $module) {
 $app->instance('config', $config = new ConfigRepository(
     $app->getConfigLoader()
 ));
-
-//--------------------------------------------------------------------------
-// Register Application Exception Handling
-//--------------------------------------------------------------------------
-
-$app->startExceptionHandling();
-
-if ($env != 'testing') ini_set('display_errors', 'Off');
 
 //--------------------------------------------------------------------------
 // Set The Default Timezone

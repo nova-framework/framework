@@ -54,13 +54,14 @@ class ExceptionServiceProvider extends ServiceProvider
     {
         $this->app['exception'] = $this->app->share(function($app)
         {
-            $config = $app['config'];
+            // We this for starting the Error Handler before loading the configuration.
+            $debug = (ENVIRONMENT == 'development');
 
             return new Handler(
                 $app,
                 $app['exception.plain'],
                 $app['exception.debug'],
-                $config['debug']
+                $debug
             );
         });
     }

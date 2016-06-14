@@ -81,7 +81,7 @@ class Repository implements ArrayAccess
     {
         $minutes = $this->getMinutes($minutes);
 
-        $this->store->set($key, $value, $minutes);
+        $this->store->put($key, $value, $minutes);
     }
 
     /**

@@ -830,6 +830,7 @@ class Application extends Container implements ResponsePreparerInterface
             'app'            => 'Foundation\Application',
             'auth'           => 'Auth\AuthManager',
             'cache'          => 'Cache\CacheManager',
+            'cache.store'    => 'Cache\Repository',
             'auth.reminder.repository' => 'Auth\Reminders\ReminderRepositoryInterface',
             'config'         => 'Config\Repository',
             'cookie'         => 'Cookie\CookieJar',

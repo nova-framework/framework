@@ -225,6 +225,14 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         // This way is possible to start early the Exception Handler.
         $debug = (ENVIRONMENT == 'development');
 
+        // Optionally setup the Default Timezone to UTC.
+        $timezone = ini_get('date.timezone');
+
+        if (empty($timezone)) {
+            date_default_timezone_set('UTC');
+        }
+
+        // Start the Exception Handling.
         $this['exception']->register($this->environment());
 
         $this['exception']->setDebug($debug);

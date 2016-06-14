@@ -99,8 +99,7 @@ class Handler
 
         $this->registerExceptionHandler();
 
-        //if ($environment != 'testing') $this->registerShutdownHandler();
-        $this->registerShutdownHandler();
+        if ($environment != 'testing') $this->registerShutdownHandler();
     }
 
     /**

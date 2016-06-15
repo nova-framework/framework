@@ -32,7 +32,7 @@ Router::filter('referer', function($route) {
     $referer = Request::header('referer');
 
     if(! str_starts_with($referer, SITEURL)) {
-        return Redirect::error(400);
+        return Response::error(400);
     }
 });
 

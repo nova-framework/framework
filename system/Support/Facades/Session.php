@@ -132,7 +132,7 @@ class Session extends Facade
         if (is_array($message)) {
             if (count($message) > 1) {
                 $message = '<ul><li>' .implode('</li><li>', $message) .'</li></ul>';
-                        } else if(! empty($message)) {
+            } else if(! empty($message)) {
                 $message = array_shift($message);
             } else {
                 // An empty array?

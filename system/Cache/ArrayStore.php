@@ -1,14 +1,9 @@
 <?php
-/**
- * ArrayStore - A simple in-memory simulation of a phpFastCache driver.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Cache;
 
-class ArrayStore
+
+class ArrayStore implements StoreInterface
 {
     /**
      * The array of stored values.
@@ -25,8 +20,7 @@ class ArrayStore
      */
     public function get($key)
     {
-        if (array_key_exists($key, $this->storage))
-        {
+        if (array_key_exists($key, $this->storage)) {
             return $this->storage[$key];
         }
     }
@@ -39,7 +33,7 @@ class ArrayStore
      * @param  int     $minutes
      * @return void
      */
-    public function set($key, $value, $minutes)
+    public function put($key, $value, $minutes)
     {
         $this->storage[$key] = $value;
     }
@@ -90,7 +84,7 @@ class ArrayStore
      * @param  string  $key
      * @return void
      */
-    public function delete($key)
+    public function forget($key)
     {
         unset($this->storage[$key]);
     }
@@ -100,8 +94,19 @@ class ArrayStore
      *
      * @return void
      */
-    public function clean()
+    public function flush()
     {
         $this->storage = array();
     }
+
+    /**
+     * Get the cache key prefix.
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return '';
+    }
+
 }

@@ -22,12 +22,9 @@ class EnvironmentDetector
      */
     public function detect($environments, $consoleArgs = null)
     {
-        if ($consoleArgs)
-        {
+        if ($consoleArgs) {
             return $this->detectConsoleEnvironment($environments, $consoleArgs);
-        }
-        else
-        {
+        } else {
             return $this->detectWebEnvironment($environments);
         }
     }

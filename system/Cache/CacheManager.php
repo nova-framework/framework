@@ -2,7 +2,9 @@
 
 namespace Cache;
 
+use Core\Config;
 use Cache\ArrayStore;
+use Cache\FastCacheStore;
 use Cache\Repository;
 use Support\Manager;
 
@@ -16,9 +18,7 @@ class CacheManager extends Manager
      */
     protected function createApcDriver()
     {
-        $config = $this->app['config']['cache'];
-
-        return $this->repository('apc', $config);
+        return $this->repository('apc');
     }
 
     /**
@@ -28,7 +28,7 @@ class CacheManager extends Manager
      */
     protected function createArrayDriver()
     {
-        return $this->repository(new ArrayStore, array());
+        return $this->repository('array');
     }
 
     /**
@@ -36,11 +36,9 @@ class CacheManager extends Manager
      *
      * @return \Cache\Repository
      */
-    protected function createFileDriver()
+    protected function createFilesDriver()
     {
-        $config = $this->app['config']['cache'];
-
-        return $this->repository('files', $config);
+        return $this->repository('files');
     }
 
     /**
@@ -50,9 +48,7 @@ class CacheManager extends Manager
      */
     protected function createMemcachedDriver()
     {
-        $config = $this->app['config']['cache'];
-
-        return $this->repository('memcached', $config);
+        return $this->repository('memcached');
     }
 
     /**
@@ -62,9 +58,7 @@ class CacheManager extends Manager
      */
     protected function createWincacheDriver()
     {
-        $config = $this->app['config']['cache'];
-
-        return $this->repository('wincache', $config);
+        return $this->repository('wincache');
     }
 
     /**
@@ -74,9 +68,7 @@ class CacheManager extends Manager
      */
     protected function createXcacheDriver()
     {
-        $config = $this->app['config']['cache'];
-
-        return $this->repository('xcache', $config);
+        return $this->repository('xcache');
     }
 
     /**
@@ -86,9 +78,8 @@ class CacheManager extends Manager
      */
     protected function createRedisDriver()
     {
-        $config = $this->app['config']['cache'];
 
-        return $this->repository('redis', $config);
+        return $this->repository('redis');
     }
 
     /**
@@ -98,20 +89,24 @@ class CacheManager extends Manager
      */
     protected function createSqliteDriver()
     {
-        $config = $this->app['config']['cache'];
-
-        return $this->repository('sqlite', $config);
+        return $this->repository('sqlite');
     }
 
     /**
-     * Create a new cache repository with the given implementation.
+     * Create a new Cache Repository with the given implementation.
      *
      * @param  string  $storage
      * @return \Cache\Repository
      */
-    protected function repository($storage, array $config)
+    protected function repository($storage)
     {
-        return new Repository($storage, $config);
+        if($storage == 'array') {
+            $store = new ArrayStore();
+        } else {
+            $store = new FastCacheStore($storage);
+        }
+
+        return new Repository($store);
     }
 
     /**
@@ -121,7 +116,7 @@ class CacheManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['cache.storage'];
+        return Config::get('cache.storage');
     }
 
     /**
@@ -132,7 +127,19 @@ class CacheManager extends Manager
      */
     public function setDefaultDriver($name)
     {
-        $this->app['config']['cache.storage'] = $name;
+        Config::set('cache.storage', $name);
+    }
+
+    /**
+     * Dynamically call the default driver instance.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return call_user_func_array(array($this->driver(), $method), $parameters);
     }
 
 }

@@ -47,7 +47,7 @@ class Cookie
         $config = Config::get('session');
 
         // Encrypt the value
-        if (($key != 'PHPSESSID') && ($config['encrypt'] == true)) {
+        if ($key != 'PHPSESSID') {
             // // No PHPSESSID and end-user want the Cookie encryption.
             $value = Crypt::encrypt($value);
         }
@@ -84,7 +84,7 @@ class Cookie
         // Retrieve the Session configuration.
         $config = Config::get('session');
 
-        if (($key == 'PHPSESSID') || ($config['encrypt'] == false)) {
+        if ($key == 'PHPSESSID') {
             // A PHPSESSID or when end-user want not Cookie encryption.
             return $cookie;
         }

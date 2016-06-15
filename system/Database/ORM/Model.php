@@ -11,6 +11,7 @@ namespace Database\ORM;
 use Events\Dispatcher;
 use Helpers\Inflector;
 use Database\Connection;
+use Database\ConnectionResolverInterface as Resolver;
 use Database\Query\Builder as QueryBuilder;
 use Database\ORM\Builder;
 use Database\ORM\Relations\BelongsTo;
@@ -190,6 +191,13 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      * @var bool
      */
     public static $snakeAttributes = true;
+
+    /**
+     * The connection resolver instance.
+     *
+     * @var \Database\ConnectionResolverInterface
+     */
+    protected static $resolver;
 
     /**
      * The event dispatcher instance.
@@ -2477,7 +2485,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     public function getConnection()
     {
-        return Connection::getInstance($this->connection);
+        return $this->resolveConnection($this->connection);
     }
 
     /**
@@ -2501,6 +2509,48 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
         $this->connection = $name;
 
         return $this;
+    }
+
+    /**
+     * Resolve a connection instance.
+     *
+     * @param  string  $connection
+     * @return \Database\Connection
+     */
+    public static function resolveConnection($connection = null)
+    {
+        return static::$resolver->connection($connection);
+    }
+
+    /**
+     * Get the connection resolver instance.
+     *
+     * @return \Database\ConnectionResolverInterface
+     */
+    public static function getConnectionResolver()
+    {
+        return static::$resolver;
+    }
+
+    /**
+     * Set the connection resolver instance.
+     *
+     * @param  \Database\ConnectionResolverInterface  $resolver
+     * @return void
+     */
+    public static function setConnectionResolver(Resolver $resolver)
+    {
+        static::$resolver = $resolver;
+    }
+
+    /**
+     * Unset the connection resolver for models.
+     *
+     * @return void
+     */
+    public static function unsetConnectionResolver()
+    {
+        static::$resolver = null;
     }
 
     /**

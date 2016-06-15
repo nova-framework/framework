@@ -38,7 +38,7 @@ class ValidationServiceProvider extends ServiceProvider
         $this->app->bindShared('validator', function($app)
         {
             // Get a Validation Factory instance.
-            $validator = new Factory($app['validation.translator'], $app);
+            $validator = new Factory($app['validation.translator']);
 
             if (isset($app['validation.presence'])) {
                 $validator->setPresenceVerifier($app['validation.presence']);
@@ -57,7 +57,9 @@ class ValidationServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('validation.presence', function($app)
         {
-            return new DatabasePresenceVerifier($app['db']);
+            $connection = $app['db']->connection();
+
+            return new DatabasePresenceVerifier($connection);
         });
     }
 
@@ -81,6 +83,6 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array('validator', 'validation.presence');
+        return array('validator', 'validation.presence', 'validation.translator');
     }
 }

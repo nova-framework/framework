@@ -8,7 +8,7 @@
 
 namespace Pagination;
 
-use Validation\Factory;
+use Pagination\Factory;
 use Support\ServiceProvider;
 
 
@@ -21,7 +21,7 @@ class PaginationServiceProvider extends ServiceProvider
      */
     protected $defer = true;
 
-    
+
     /**
      * Register the Service Provider.
      *
@@ -31,7 +31,7 @@ class PaginationServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('paginator', function($app)
         {
-            $paginator = new Factory($app['request'], $app['view'], $app['translator']);
+            $paginator = new Factory($app['request']);
 
             $app->refresh('request', $paginator, 'setRequest');
 

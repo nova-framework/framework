@@ -13,8 +13,8 @@ define('ROOTDIR', realpath(__DIR__.'/../') .DS);
 define('STORAGE_PATH', APPDIR .'Storage' .DS);
 
 /** Load the composer autoloader */
-if (file_exists(ROOTDIR.'vendor/autoload.php')) {
-    require ROOTDIR.'vendor/autoload.php';
+if (file_exists(ROOTDIR .'vendor/autoload.php')) {
+    require ROOTDIR .'vendor/autoload.php';
 } else {
     echo "<h1>Please install via composer.json</h1>";
     echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
@@ -22,7 +22,7 @@ if (file_exists(ROOTDIR.'vendor/autoload.php')) {
     exit;
 }
 
-if (!is_readable(APPDIR.'Config.php')) {
+if (! is_readable(APPDIR .'Config.php')) {
     die('No Config.php found, configure and rename Config.example.php to Config.php in app.');
 }
 
@@ -39,37 +39,8 @@ if (!is_readable(APPDIR.'Config.php')) {
  *
  *     development
  *     production
- *
- * NOTE: If you change these, also change the error_reporting() code below
- *
  */
-    define('ENVIRONMENT', 'development');
-/*
- *---------------------------------------------------------------
- * ERROR REPORTING
- *---------------------------------------------------------------
- *
- * Different environments will require different levels of error reporting.
- * By default development will show errors but production will hide them.
- */
+define('ENVIRONMENT', 'development');
 
-if (defined('ENVIRONMENT')) {
-    switch (ENVIRONMENT) {
-        case 'development':
-            error_reporting(E_ALL);
-            break;
-        case 'production':
-            error_reporting(0);
-            break;
-        default:
-            exit('The application environment is not set correctly.');
-    }
-
-}
-
-/** Bootstrap the Framework */
-require SYSTEMDIR .'bootstrap.php';
-
-/** Boot the Framework in the New Style */
-//require APPDIR .'Boot' .DS .'Start.php';
-
+/** Boot the Application. */
+require APPDIR .'Boot' .DS .'Start.php';

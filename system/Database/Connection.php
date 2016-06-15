@@ -26,13 +26,6 @@ use DateTimeInterface;
 class Connection
 {
     /**
-     * Connection instances
-     *
-     * @var Connection[]
-     */
-    private static $instances = array();
-
-    /**
      * The Connector instance.
      *
      * @var
@@ -141,48 +134,6 @@ class Connection
         $this->connector = $this->createConnector($config);
 
         $this->pdo = $this->createConnection($config);
-    }
-
-    /**
-     * Retrieve an instance of the Connection.
-     *
-     * @param $name string|array Name of the Connection provided in the configuration or options array
-     * @return \Database\Connection|null
-     * @throws \InvalidArgumentException
-     */
-    public static function getInstance($name = null)
-    {
-        $name = $name ?: Config::get('database.default');
-
-        // If there is already a Connection instantiated, return it.
-        if (isset(static::$instances[$name])) {
-            return static::$instances[$name];
-        }
-
-        // Retrieve the requested configuration.
-        $connections = Config::get('database.connections');
-
-        if (is_null($config = array_get($connections, $name))) {
-            throw new \InvalidArgumentException("Database [$name] not configured.");
-        }
-
-        // Create the requested Connection instance.
-        static::$instances[$name] = $instance = new static($config);
-
-        // Setup the Fetch Mode on Connection instance and return it.
-        $mode = Config::get('database.fetch');
-
-        return with($instance)->setFetchMode($mode);
-    }
-
-    /**
-     * Return the current Connection instance.
-     *
-     * @return \Database\Connection
-     */
-    public function connection()
-    {
-        return $this;
     }
 
     /**

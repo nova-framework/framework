@@ -6,8 +6,7 @@
 </head>
 <body>
     <div>
-        <h1>An error has occurred. This error has been reported.</h1>
-        <?= $content; ?>
+        <h3>Whoops! An error has occurred.</h3>
     </div>
 </body>
 </html>

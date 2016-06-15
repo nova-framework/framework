@@ -12,5 +12,5 @@ interface ExceptionDisplayerInterface
      *
      * @param  \Exception  $exception
      */
-    public function display(Exception $exception, $debug);
+    public function display(Exception $exception);
 }

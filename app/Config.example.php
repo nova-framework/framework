@@ -32,12 +32,6 @@ define('DIR', '/');
 define('DEFAULT_TIMEZONE', 'Europe/London');
 
 /**
- * Set default controller and method for legacy calls.
- */
-define('DEFAULT_CONTROLLER', 'Welcome');
-define('DEFAULT_METHOD', 'index');
-
-/**
  * Set the default template.
  */
 define('TEMPLATE', 'Default');
@@ -108,13 +102,6 @@ define('ENCRYPT_KEY', '');
 define('APPCONFIG_STORE', 'files'); // Supported: "files", "database"
 
 /**
- * Setup the Logger configuration
- */
-Config::set('logger', array(
-    'displayErrors' => false,
-));
-
-/**
  * Setup the Profiler configuration
  */
 Config::set('profiler', array(
@@ -136,6 +123,6 @@ Config::set('recaptcha', array(
  *
  * DO NOT MODIFY THE FOLLOWING CODE:
  */
-foreach (glob(APPDIR .'Config/*') as $configFile) {
-    require $configFile;
+foreach (glob(APPDIR .'Config/*') as $path) {
+    if (is_readable($path)) require $path;
 }

@@ -6,26 +6,54 @@
 
 Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
-// Send a E-Mail to administrator when a Error is logged by Application.
+// Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
 /*
-Log::getMonolog()->pushHandler(
-    new Monolog\Handler\SwiftMailerHandler(
-        Mail::getSwiftMailer(),
-        Swift_Message::newInstance('[Log] Some Subject')->setFrom('from@domain.dev')->setTo('to@domain.dev'),
-        Logger::ERROR, // Set minimal Log Level for Mail
-        true           // Bubble to next handler?
-    )
-);
-*/
+use App\Extensions\Log\Mailer as LogMailer;
 
+LogMailer::initHandler($app);
+*/
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------
 
+use Exception\RedirectToException;
+
 App::error(function(Exception $exception, $code)
 {
-    Log::error($exception);
+    // Do not log the Redirect Exceptions.
+    if (! $exception instanceof RedirectToException) {
+        Log::error($exception);
+    }
 });
+
+//--------------------------------------------------------------------------
+// Try To Register Again The Config Manager
+//--------------------------------------------------------------------------
+
+use Config\Repository as ConfigRepository;
+use Support\Facades\Facade;
+
+if(APPCONFIG_STORE == 'database') {
+    // Get the Database Connection instance.
+    $connection = $app['db']->connection();
+
+    // Get a fresh Config Loader instance.
+    $loader = $app->getConfigLoader();
+
+    // Setup Database Connection instance.
+    $loader->setConnection($connection);
+
+    // Refresh the Application's Config instance.
+    $app->instance('config', $config = new ConfigRepository($loader));
+
+    // Make the Facade to refresh its information.
+    Facade::clearResolvedInstance('config');
+} else if(APPCONFIG_STORE != 'files') {
+    throw new \InvalidArgumentException('Invalid Config Store type.');
+}
+
+// Refresh the Modules configuration.
+$modules = $app['config']['modules'];
 
 //--------------------------------------------------------------------------
 // Require The Events File
@@ -52,3 +80,11 @@ foreach ($modules as $module) {
 
     if (is_readable($path)) require $path;
 }
+
+//--------------------------------------------------------------------------
+// Start the Legacy Session
+//--------------------------------------------------------------------------
+
+use Helpers\Session as LegacySession;
+
+LegacySession::init();

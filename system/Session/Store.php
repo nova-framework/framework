@@ -328,7 +328,7 @@ class Store implements SessionInterface
      * @param  mixed|null       $value
      * @return void
      */
-    public function put($key, $value)
+    public function put($key, $value = null)
     {
         if (! is_array($key)) $key = array($key => $value);
 
@@ -578,4 +578,26 @@ class Store implements SessionInterface
         return $this->handler;
     }
 
+    /**
+     * Determine if the session handler needs a request.
+     *
+     * @return bool
+     */
+    public function handlerNeedsRequest()
+    {
+        return $this->handler instanceof CookieSessionHandler;
+    }
+
+    /**
+     * Set the request on the handler instance.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @return void
+     */
+    public function setRequestOnHandler(Request $request)
+    {
+        if ($this->handlerNeedsRequest()) {
+            $this->handler->setRequest($request);
+        }
+    }
 }

@@ -34,7 +34,7 @@ class Config
      */
     public static function exists($key)
     {
-        return isset(static::$settings[$key]);
+        return ! is_null(array_get(static::$settings, $key));
     }
 
     /**
@@ -54,6 +54,6 @@ class Config
      */
     public static function set($key, $value)
     {
-        static::$settings[$key] = $value;
+        array_set(static::$settings, $key, $value);
     }
 }

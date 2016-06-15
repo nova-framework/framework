@@ -1,31 +1,20 @@
 <?php
-/**
- * Facade - A Facade to the Events Dispatcher.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Support\Facades;
 
-use Events\Dispatcher;
+use Support\Facades\Facade;
 
 
-class Event
+/**
+ * @see \Events\Dispatcher
+ */
+class Event extends Facade
 {
     /**
-     * Magic Method for calling the methods on the default Dispatcher instance.
+     * Get the registered name of the component.
      *
-     * @param $method
-     * @param $params
-     *
-     * @return mixed
+     * @return string
      */
-    public static function __callStatic($method, $params)
-    {
-        $instance = Dispatcher::getInstance();
+    protected static function getFacadeAccessor() { return 'events'; }
 
-        // Call the non-static method from the Dispatcher instance.
-        return call_user_func_array(array($instance, $method), $params);
-    }
 }

@@ -101,7 +101,7 @@ use Helpers\Profiler;
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      <?php if(ENVIRONMENT == 'development') { ?>
+      <?php if(Config::get('app.debug')) { ?>
       <small><?= Profiler::getReport(); ?></small>
       <?php } ?>
     </div>

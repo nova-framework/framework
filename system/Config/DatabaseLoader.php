@@ -10,7 +10,6 @@
 namespace Config;
 
 use Database\Connection;
-use Helpers\FastCache;
 
 
 class DatabaseLoader implements LoaderInterface
@@ -20,7 +19,7 @@ class DatabaseLoader implements LoaderInterface
      *
      * @var \Database\Connection
      */
-    protected $db;
+    protected $connection;
 
     /**
      * The Database Table.
@@ -30,9 +29,9 @@ class DatabaseLoader implements LoaderInterface
     protected $table = 'options';
 
     /**
-     * The FastCache instance.
+     * The Cache Manager instance.
      *
-     * @var \Helpers\FastCache
+     * @var \Cache\CacheManager
      */
     protected $cache;
 
@@ -41,12 +40,12 @@ class DatabaseLoader implements LoaderInterface
      *
      * @return void
      */
-    function __construct(Connection $db)
+    function __construct(Connection $connection)
     {
-        $this->db = $db;
+        $this->connection = $connection;
 
-        // Setup the FastCache instance.
-        $this->cache = FastCache::getInstance();
+        // Setup the Cache Driver instance.
+        $this->cache = $connection->getCacheManager();
     }
 
     /**
@@ -59,9 +58,7 @@ class DatabaseLoader implements LoaderInterface
     {
         $token = 'options_' .md5($group);
 
-        $items = $this->cache->get($token);
-
-        if (is_null($items)) {
+        if (! $this->cache->has($token)) {
             $items = array();
 
             // The current Group's data is not cached.
@@ -79,7 +76,9 @@ class DatabaseLoader implements LoaderInterface
             }
 
             // Cache the current Group's data for 15 min.
-            $this->cache->set($token, $items, 900);
+            $this->cache->put($token, $items, 900);
+        } else {
+            $items = $this->cache->get($token);
         }
 
         return $items;
@@ -99,7 +98,7 @@ class DatabaseLoader implements LoaderInterface
         // Delete the cached data for current Group.
         $token = 'options_' .md5($group);
 
-        $this->cache->delete($token);
+        $this->cache->forget($token);
 
         // Update the information on Database.
         if (empty($item)) {
@@ -174,6 +173,6 @@ class DatabaseLoader implements LoaderInterface
      */
     public function newQuery()
     {
-        return $this->db->table($this->table);
+        return $this->connection->table($this->table);
     }
 }

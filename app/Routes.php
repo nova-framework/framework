@@ -6,7 +6,6 @@
  * @version 3.0
  */
 
-use Routing\Router;
 use Helpers\Hooks;
 
 

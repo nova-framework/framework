@@ -11,7 +11,10 @@ use Config\Repository as ConfigRepository;
 use Foundation\AliasLoader;
 use Foundation\Application;
 use Http\Request;
+use Http\RequestProcessor;
 use Support\Facades\Facade;
+
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 //--------------------------------------------------------------------------
 // Set PHP Error Reporting Options
@@ -46,7 +49,8 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $env = $app->detectEnvironment(array(
-    'local' => array('your-machine-name'),
+    'local'   => array('your-local-machine-name'),
+    'testing' => array('darkstar'),
 ));
 
 //--------------------------------------------------------------------------
@@ -63,14 +67,6 @@ $paths = array(
 $app->bindInstallPaths($paths);
 
 //--------------------------------------------------------------------------
-// Check For The Test Environment
-//--------------------------------------------------------------------------
-
-if (isset($unitTesting)) {
-    $app['env'] = $env = $testEnvironment;
-}
-
-//--------------------------------------------------------------------------
 // Load The Framework Facades
 //--------------------------------------------------------------------------
 
@@ -83,6 +79,14 @@ Facade::setFacadeApplication($app);
 //--------------------------------------------------------------------------
 
 $app->registerCoreContainerAliases();
+
+//--------------------------------------------------------------------------
+// Register Application Exception Handling
+//--------------------------------------------------------------------------
+
+$app->startExceptionHandling();
+
+if ($env != 'testing') ini_set('display_errors', 'Off');
 
 //--------------------------------------------------------------------------
 // Load The Configuration
@@ -104,19 +108,11 @@ foreach ($modules as $module) {
 //--------------------------------------------------------------------------
 
 $app->instance('config', $config = new ConfigRepository(
-    $app->getConfigLoader(), $env
+    $app->getConfigLoader()
 ));
 
 //--------------------------------------------------------------------------
-// Register Application Exception Handling
-//--------------------------------------------------------------------------
-
-$app->startExceptionHandling();
-
-if ($env != 'testing') ini_set('display_errors', 'Off');
-
-//--------------------------------------------------------------------------
-// Set The Default Timezone
+// Set The Default Timezone From Configuration
 //--------------------------------------------------------------------------
 
 $config = $app['config']['app'];
@@ -138,12 +134,26 @@ AliasLoader::getInstance($aliases)->register();
 Request::enableHttpMethodParameterOverride();
 
 //--------------------------------------------------------------------------
+// Enable Trusting Of X-Sendfile Type Header
+//--------------------------------------------------------------------------
+
+BinaryFileResponse::trustXSendfileTypeHeader();
+
+//--------------------------------------------------------------------------
 // Register The Core Service Providers
 //--------------------------------------------------------------------------
 
 $providers = $config['providers'];
 
 $app->getProviderRepository()->load($app, $providers);
+
+//--------------------------------------------------------------------------
+// Additional Middleware On Application
+//--------------------------------------------------------------------------
+
+App::middleware('App\Extensions\Http\ContentGuard', array(
+    $app['config']['app.debug']
+));
 
 //--------------------------------------------------------------------------
 // Register Booted Start Files

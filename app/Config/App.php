@@ -17,7 +17,7 @@ Config::set('app', array(
     /**
      * Debug Mode
      */
-    'debug' => false, // When enabled the actual PHP errors will be shown.
+    'debug' => (ENVIRONMENT == 'development'), // When enabled the actual PHP errors will be shown.
 
     /**
      * The Website URL.
@@ -70,6 +70,7 @@ Config::set('app', array(
         'Cookie\CookieServiceProvider',
         'Database\DatabaseServiceProvider',
         'Encryption\EncryptionServiceProvider',
+        'Filesystem\FilesystemServiceProvider',
         'Hashing\HashServiceProvider',
         'Log\LogServiceProvider',
         'Mail\MailServiceProvider',
@@ -126,8 +127,9 @@ Config::set('app', array(
         'Config'        => '\Support\Facades\Config',
         'Cookie'        => '\Support\Facades\Cookie',
         'Crypt'         => '\Support\Facades\Crypt',
-        'DB'            => '\Support\Facades\Database',
+        'DB'            => '\Support\Facades\DB',
         'Event'         => '\Support\Facades\Event',
+        'File'          => '\Support\Facades\File',
         'Hash'          => '\Support\Facades\Hash',
         'Input'         => '\Support\Facades\Input',
         'Language'      => '\Support\Facades\Language',
@@ -137,6 +139,8 @@ Config::set('app', array(
         'Redirect'      => '\Support\Facades\Redirect',
         'Request'       => '\Support\Facades\Request',
         'Response'      => '\Support\Facades\Response',
+        'Route'         => '\Support\Facades\Route',
+        'Router'        => '\Support\Facades\Router',
         'Session'       => '\Support\Facades\Session',
         'Validator'     => '\Support\Facades\Validator',
         'Log'           => '\Support\Facades\Log',

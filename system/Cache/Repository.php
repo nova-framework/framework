@@ -2,9 +2,7 @@
 
 namespace Cache;
 
-use Cache\ArrayStore;
-
-use phpFastCache\CacheManager;
+use Cache\StoreInterface;
 
 use Carbon\Carbon;
 
@@ -16,7 +14,7 @@ use ArrayAccess;
 class Repository implements ArrayAccess
 {
     /**
-     * The phpFastCache.
+     * The phpFastCache instance.
      *
      * @var
      */
@@ -41,15 +39,9 @@ class Repository implements ArrayAccess
      *
      * @param  string $store
      */
-    public function __construct($storage, array $config)
+    public function __construct(StoreInterface $store)
     {
-        if($storage instanceof ArrayStore) {
-            $this->store = $storage;
-        } else {
-            $config['storage'] = $storage;
-
-            $this->store = CacheManager::getInstance($storage, $config);
-        }
+        $this->store = $store;
     }
 
     /**
@@ -89,7 +81,7 @@ class Repository implements ArrayAccess
     {
         $minutes = $this->getMinutes($minutes);
 
-        $this->store->set($key, $value, $minutes);
+        $this->store->put($key, $value, $minutes);
     }
 
     /**

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Exception;
 
 
-class HttpExceptionDisplayer implements ExceptionDisplayerInterface
+class PlainDisplayer implements ExceptionDisplayerInterface
 {
     /**
      * Display the given exception to the user.
@@ -24,17 +24,9 @@ class HttpExceptionDisplayer implements ExceptionDisplayerInterface
      * @param  string  $exception
      * @return \Symfony\Component\HttpFoundation\Response
      */
-     public function display(Exception $exception, $debug = true)
+     public function display(Exception $exception)
      {
-        $viewPath = dirname(__FILE__) .DS .'Views' .DS .'Plain.php';
-
-        if($debug) {
-            $content = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
-
-            $content = '<p>Error in Exception Handler: ' .$message .'</p>';
-        } else {
-            $content = 'Error in Exception Handler';
-        }
+        $viewPath = dirname(__FILE__) .DS .'Resources' .DS .'Plain.php';
 
         // Start the View rendering.
         ob_start();

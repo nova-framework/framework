@@ -1,54 +1,17 @@
 <?php
-/**
- * Cookie - A Facade to \Cookie\CookieJar.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Support\Facades;
 
-use Cookie\CookieJar;
-use Support\Facades\Request;
+use Support\Facades\Facade;
+
 
 /**
  * @see \Cookie\CookieJar
  */
-class Cookie
+class Cookie extends Facade
 {
     const FIVEYEARS = 2628000;
-
-    /**
-     * The CookieJar instance being handled.
-     *
-     * @var \Cookie\CookieJar|null
-     */
-    protected static $cookieJar;
-
-    /**
-     * Return a CookieJar instance
-     *
-     * @return \Cookie\CookieJar
-     */
-    protected static function getCookieJar()
-    {
-        if (isset(static::$cookieJar)) {
-            return static::$cookieJar;
-        }
-
-        return static::$cookieJar = new CookieJar();
-    }
-
-    /**
-     * Return the CookieJar instance.
-     *
-     * @return \Cookie\CookieJar
-     */
-    public static function instance()
-    {
-        return static::getCookieJar();
-    }
-
+    
     /**
      * Determine if a cookie exists on the request.
      *
@@ -57,10 +20,7 @@ class Cookie
      */
     public static function has($key)
     {
-        // Get the Request instance.
-        $request = Request::instance();
-
-        return ! is_null($request->cookie($key, null));
+        return ! is_null(static::$app['request']->cookie($key, null));
     }
 
     /**
@@ -72,26 +32,14 @@ class Cookie
      */
     public static function get($key = null, $default = null)
     {
-        // Get the Request instance.
-        $request = Request::instance();
-
-        return $request->cookie($key, $default);
+        return static::$app['request']->cookie($key, $default);
     }
 
     /**
-     * Magic Method for calling the methods on the default CookieJar instance.
+     * Get the registered name of the component.
      *
-     * @param $method
-     * @param $params
-     *
-     * @return mixed
+     * @return string
      */
-    public static function __callStatic($method, $params)
-    {
-        // Get a \Http\Request instance.
-        $instance = static::getCookieJar();
+    protected static function getFacadeAccessor() { return 'cookie'; }
 
-        // Call the non-static method from the Request instance.
-        return call_user_func_array(array($instance, $method), $params);
-    }
 }

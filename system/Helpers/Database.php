@@ -9,7 +9,8 @@
 namespace Helpers;
 
 use Core\Config;
-use Database\Connection;
+
+use DB;
 
 use PDO;
 
@@ -235,7 +236,7 @@ class Database
      */
     public function getPdo()
     {
-        $connection = Connection::getInstance($this->connection);
+        $connection = DB::connection($this->connection);
 
         return $connection->getPdo();
     }

@@ -6,7 +6,6 @@
  * @version 3.0
  */
 
-use Support\Facades\Event;
 use Core\View;
 use Helpers\Hooks;
 use Forensics\Console;

@@ -212,7 +212,7 @@ class Builder
     public function paginate($perPage = null, $columns = array('*'))
     {
         // Get the Pagination Factory instance.
-        $paginator = Paginator::instance();
+        $paginator = $this->query->getConnection()->getPaginator();
 
         $perPage = $perPage ?: $this->model->getPerPage();
 

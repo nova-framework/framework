@@ -9,10 +9,14 @@
 namespace Exception;
 
 use Exception\Handler;
-use Exception\HttpExceptionDisplayer;
-use Exception\JsonExceptionDisplayer;
+use Exception\PlainDisplayer;
+use Exception\WhoopsDisplayer;
 
 use Support\ServiceProvider;
+
+use Whoops\Run;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Handler\JsonResponseHandler;
 
 
 class ExceptionServiceProvider extends ServiceProvider
@@ -24,10 +28,21 @@ class ExceptionServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerHttpDisplayer();
-        $this->registerJsonDisplayer();
+        $this->registerDisplayers();
 
         $this->registerHandler();
+    }
+
+    /**
+     * Register the exception displayers.
+     *
+     * @return void
+     */
+    protected function registerDisplayers()
+    {
+        $this->registerPlainDisplayer();
+
+        $this->registerDebugDisplayer();
     }
 
     /**
@@ -39,27 +54,34 @@ class ExceptionServiceProvider extends ServiceProvider
     {
         $this->app['exception'] = $this->app->share(function($app)
         {
-            $config = $app['config'];
+            //$debug = $this['config']['app.debug'];
+
+            // This way is possible to start early the Exception Handler.
+            $debug = (ENVIRONMENT == 'development');
 
             return new Handler(
                 $app,
-                $app['exception.httpDisplayer'],
-                $app['exception.httpDisplayer'],
-                $config['debug']
+                $app['exception.plain'],
+                $app['exception.debug'],
+                $debug
             );
         });
     }
 
     /**
-     * Register the Http Exception Displayer.
+     * Register the Plain Exception Displayer.
      *
      * @return void
      */
-    protected function registerHttpDisplayer()
+    protected function registerPlainDisplayer()
     {
-        $this->app['exception.httpDisplayer'] = $this->app->share(function($app)
+        $this->app['exception.plain'] = $this->app->share(function($app)
         {
-            return new HttpExceptionDisplayer();
+            if ($app->runningInConsole()) {
+                return $app['exception.debug'];
+            } else {
+                return new PlainDisplayer();
+            }
         });
     }
 
@@ -68,11 +90,90 @@ class ExceptionServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerJsonDisplayer()
+    protected function registerDebugDisplayer()
     {
-        $this->app['exception.jsonDisplayer'] = $this->app->share(function($app)
+        $this->registerWhoops();
+
+        $this->app['exception.debug'] = $this->app->share(function($app)
         {
-            return new JsonExceptionDisplayer();
+            return new WhoopsDisplayer($app['whoops'], $app->runningInConsole());
         });
     }
+
+    /**
+     * Register the Whoops error display service.
+     *
+     * @return void
+     */
+    protected function registerWhoops()
+    {
+        $this->registerWhoopsHandler();
+
+        $this->app['whoops'] = $this->app->share(function($app)
+        {
+            // We will instruct Whoops to not exit after it displays the exception as it
+            // will otherwise run out before we can do anything else. We just want to
+            // let the framework go ahead and finish a request on this end instead.
+            with($whoops = new Run)->allowQuit(false);
+
+            $whoops->writeToOutput(false);
+
+            return $whoops->pushHandler($app['whoops.handler']);
+        });
+    }
+
+    /**
+     * Register the Whoops handler for the request.
+     *
+     * @return void
+     */
+    protected function registerWhoopsHandler()
+    {
+        if ($this->shouldReturnJson()) {
+            $this->app['whoops.handler'] = $this->app->share(function()
+            {
+                    return new JsonResponseHandler;
+            });
+        } else {
+            $this->registerPrettyWhoopsHandler();
+        }
+    }
+
+    /**
+     * Determine if the error provider should return JSON.
+     *
+     * @return bool
+     */
+    protected function shouldReturnJson()
+    {
+        return ($this->app->runningInConsole() || $this->requestWantsJson());
+    }
+
+    /**
+     * Determine if the request warrants a JSON response.
+     *
+     * @return bool
+     */
+    protected function requestWantsJson()
+    {
+        return ($this->app['request']->ajax() || $this->app['request']->wantsJson());
+    }
+
+    /**
+     * Register the "pretty" Whoops handler.
+     *
+     * @return void
+     */
+    protected function registerPrettyWhoopsHandler()
+    {
+        $me = $this;
+
+        $this->app['whoops.handler'] = $this->app->share(function() use ($me)
+        {
+            with($handler = new PrettyPageHandler)->setEditor('sublime');
+
+            return $handler;
+        });
+    }
+
 }

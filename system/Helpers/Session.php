@@ -29,9 +29,10 @@ class Session
     public static function init()
     {
         if (static::$sessionStarted == false) {
-            if (! session_id()) session_start();
-
             static::$sessionStarted = true;
+
+            // Start the native PHP Session.
+            session_start();
         }
     }
 
@@ -40,8 +41,6 @@ class Session
      */
     public static function exists($key)
     {
-        static::init();
-
         return isset($_SESSION[SESSION_PREFIX .$key]);
     }
 
@@ -53,8 +52,6 @@ class Session
      */
     public static function set($key, $value = false)
     {
-        static::init();
-
         /**
         * Check whether a session is set in an array or not.
         * If it is an array, then set all session key-values in a foreach loop.
@@ -77,8 +74,6 @@ class Session
      */
     public static function pull($key)
     {
-        static::init();
-
         if (isset($_SESSION[SESSION_PREFIX.$key])) {
             $value = $_SESSION[SESSION_PREFIX.$key];
             unset($_SESSION[SESSION_PREFIX.$key]);
@@ -97,8 +92,6 @@ class Session
      */
     public static function get($key, $secondkey = false)
     {
-        static::init();
-
         if ($secondkey == true) {
             if (isset($_SESSION[SESSION_PREFIX.$key][$secondkey])) {
                 return $_SESSION[SESSION_PREFIX.$key][$secondkey];
@@ -128,8 +121,6 @@ class Session
      */
     public static function regenerate()
     {
-        static::init();
-
         session_regenerate_id(true);
 
         return session_id();
@@ -142,8 +133,6 @@ class Session
      */
     public static function display()
     {
-        static::init();
-
         return $_SESSION;
     }
 
@@ -157,8 +146,6 @@ class Session
      */
     public static function destroy($key = '', $prefix = false)
     {
-        static::init();
-
         // Only run if the session has started.
         if (static::$sessionStarted == true) {
             // If the key is empty and the $prefix is false.
@@ -192,8 +179,6 @@ class Session
      */
     public static function message($name = 'success')
     {
-        static::init();
-
         if (! static::exists($name)) {
             return null;
         }

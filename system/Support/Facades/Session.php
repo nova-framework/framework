@@ -4,6 +4,7 @@ namespace Support\Facades;
 
 use Core\Template;
 use Support\Facades\Facade;
+use Support\MessageBag;
 
 
 /**
@@ -79,7 +80,7 @@ class Session extends Facade
      */
     public static function message($name = null)
     {
-        $instance = static::getSessionStore();
+        $instance = static::instance();
 
         if(is_null($name)) {
             foreach (array('info', 'success', 'warning', 'danger') as $key) {

@@ -9,6 +9,14 @@ use Support\ServiceProvider;
 class CacheServiceProvider extends ServiceProvider
 {
     /**
+     * Indicates if loading of the Provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
+
+    /**
      * Register the Service Provider.
      *
      * @return void

@@ -70,7 +70,7 @@ $langMenuLinks = ob_get_clean();
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->
@@ -93,6 +93,14 @@ $langMenuLinks = ob_get_clean();
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav" style="margin-right: 10px;">
+          <li class="dropdown language-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class='fa fa-language'></i> <?= $langName; ?>
+            </a>
+            <ul class="dropdown-menu">
+              <?= $langMenuLinks; ?>
+            </ul>
+          </li>
           <!-- User Account Menu -->
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
@@ -151,6 +159,10 @@ $langMenuLinks = ob_get_clean();
 
             <?php if ($user->hasRole('administrator')) { ?>
 
+            <li <?php if ($baseUri == 'admin/settings') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/settings'); ?>"><i class="fa fa-gears"></i> <span><?= __('Settings'); ?></span></a>
+            </li>
+
             <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
                 <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __('Users'); ?></span></a>
             </li>
@@ -176,7 +188,7 @@ $langMenuLinks = ob_get_clean();
     <!-- To the right -->
     <div class="pull-right hidden-xs">
       <?php if(Config::get('app.debug')) { ?>
-      <small><?= Profiler::getReport(); ?></small>
+      <small><!-- DO NOT DELETE! - Profiler --></small>
       <?php } ?>
     </div>
     <!-- Default to the left -->

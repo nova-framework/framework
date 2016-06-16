@@ -31,7 +31,7 @@ class HasManyThrough extends Relation
      */
     protected $secondKey;
 
-    
+
     /**
      * Create a new has many relationship instance.
      *
@@ -188,6 +188,19 @@ class HasManyThrough extends Relation
     public function getResults()
     {
         return $this->get();
+    }
+
+    /**
+     * Execute the query and get the first result.
+     *
+     * @param  array  $columns
+     * @return \Database\ORM\Model|static|null
+     */
+    public function first($columns = array('*'))
+    {
+        $results = $this->take(1)->get($columns);
+
+        return (count($results) > 0) ? $results->first() : null;
     }
 
     /**

@@ -453,7 +453,7 @@
             <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <?php $sections = $output['variables']; ?>
-            <?php foreach(array('controller', 'get', 'post', 'headers') as $section) { ?>
+            <?php foreach(array('get', 'post', 'headers') as $section) { ?>
                 <?php
                     if ($section == 'get') {
                         $title = __d('system', 'GET Variables');

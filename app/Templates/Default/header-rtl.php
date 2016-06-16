@@ -25,7 +25,7 @@ $langMenuLinks = ob_get_clean();
 <html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
     <meta charset="utf-8">
-    <title><?= $title .' - ' .SITETITLE; ?></title>
+    <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>
 <?php
 echo $meta; // Place to pass data / plugable hook zone
 
@@ -55,4 +55,4 @@ echo $css; // Place to pass data / plugable hook zone
 
 <div class="container">
 
-<p><img src='<?= Url::templatePath(); ?>images/nova.png' alt='<?= SITETITLE; ?>'></p>
+<p><img src='<?= Url::templatePath(); ?>images/nova.png' alt='<?= Config::get('app.name', SITETITLE); ?>'></p>

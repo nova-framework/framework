@@ -3,18 +3,34 @@
  * Backend Default RTL Layout
  */
 
-use Helpers\Profiler;
-
 // Prepare the current User Info.
 $user = Auth::user();
 
+// Generate the Language Changer menu.
+$langCode = Language::code();
+$langName = Language::name();
+
+$languages = Config::get('languages');
+
+//
+ob_start();
+
+foreach ($languages as $code => $info) {
+?>
+<li class="header <?php if ($code == $langCode) { echo 'active'; } ?>">
+    <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
+</li>
+<?php
+}
+
+$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= $title; ?> | <?= SITETITLE; ?></title>
+    <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
     <?= $meta; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">

@@ -40,8 +40,6 @@ class Users extends Controller
     protected function before()
     {
         // Check the User Authorization - while using the Extended Auth Driver.
-        $method = $this->getMethod();
-
         switch ($this->getMethod()) {
             case 'profile':
             case 'postProfile':

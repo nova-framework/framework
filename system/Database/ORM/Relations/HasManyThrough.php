@@ -211,9 +211,6 @@ class HasManyThrough extends Relation
      */
     public function get($columns = array('*'))
     {
-        // First we'll add the proper select columns onto the query so it is run with
-        // the proper columns. Then, we will get the results and hydrate out pivot
-        // models with the result of those columns as a separate model relation.
         $select = $this->getSelectColumns($columns);
 
         $models = $this->query->addSelect($select)->getModels();
@@ -226,6 +223,22 @@ class HasManyThrough extends Relation
         }
 
         return $this->related->newCollection($models);
+    }
+
+    /**
+     * Get a paginator for the "select" statement.
+     *
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @return \Pagination\Paginator
+     */
+    public function paginate($perPage = null, $columns = array('*'))
+    {
+        $select = $this->getSelectColumns($columns);
+
+        $this->query->addSelect($select);
+
+        return $this->query->paginate($perPage, $columns);
     }
 
     /**

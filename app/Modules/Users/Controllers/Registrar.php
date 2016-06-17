@@ -58,6 +58,13 @@ class Registrar extends Controller
             'strong_password' => __('The :attribute field is not strong enough.'),
         );
 
+        $attributes = array(
+            'username' => __('Username'),
+            'realname' => __('Name and Surname'),
+            'email'    => __('E-mail'),
+            'password' => __('Password'),
+        );
+        
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {

@@ -8,6 +8,7 @@
 
 namespace Helpers;
 
+use Core\Config;
 use Exception\RedirectToException;
 use Helpers\Session;
 use Helpers\Inflector;
@@ -85,7 +86,7 @@ class Url
             $path = '';
         }
 
-        return SITEURL .$path .'assets/';
+        return Config::get('app.url') .$path .'assets/';
     }
 
     /**
@@ -98,7 +99,7 @@ class Url
     {
         $template = Inflector::tableize($custom);
 
-        return SITEURL .'templates/' .$template .$folder;
+        return Config::get('app.url') .'templates/' .$template .$folder;
     }
 
     /**

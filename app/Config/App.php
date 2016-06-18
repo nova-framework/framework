@@ -22,17 +22,27 @@ Config::set('app', array(
     /**
      * The Website URL.
      */
-    'url'  => SITEURL,
+    'url' => 'http://www.novaframework.dev/',
+
+    /**
+     * The Website Path.
+     */
+    'path' => '/',
 
     /**
      * Website Name.
      */
-    'name' => SITETITLE,
+    'name' => 'Nova 3.0',
 
     /**
      * Enable multilingual support.
      */
     'multilingual' => false,
+
+    /**
+     * The default Template.
+     */
+    'template' => 'Default',
 
     /**
      * The Backend's Color Scheme.
@@ -42,18 +52,19 @@ Config::set('app', array(
     /**
      * The default locale that will be used by the translation.
      */
-    'locale' => LANGUAGE_CODE,
+    'locale' => 'en',
 
     /**
      * The default Timezone for your website.
      * http://www.php.net/manual/en/timezones.php
      */
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/London',
 
     /**
      * The Encryption Key.
+     * This tool can be used to generate key - http://jeffreybarke.net/tools/codeigniter-encryption-key-generator
      */
-    'key' => ENCRYPT_KEY,
+    'key' => 'SomeRandomString______1234567890',
 
     /**
      *  Prevents the website from CSRF attacks.

@@ -41,7 +41,7 @@ class Session
      */
     public static function exists($key)
     {
-        return isset($_SESSION[SESSION_PREFIX .$key]);
+        return isset($_SESSION[PREFIX .$key]);
     }
 
     /**
@@ -58,10 +58,10 @@ class Session
         */
         if (is_array($key) && $value === false) {
             foreach ($key as $name => $value) {
-                $_SESSION[SESSION_PREFIX.$name] = $value;
+                $_SESSION[PREFIX.$name] = $value;
             }
         } else {
-            $_SESSION[SESSION_PREFIX.$key] = $value;
+            $_SESSION[PREFIX.$key] = $value;
         }
     }
 
@@ -74,9 +74,9 @@ class Session
      */
     public static function pull($key)
     {
-        if (isset($_SESSION[SESSION_PREFIX.$key])) {
-            $value = $_SESSION[SESSION_PREFIX.$key];
-            unset($_SESSION[SESSION_PREFIX.$key]);
+        if (isset($_SESSION[PREFIX.$key])) {
+            $value = $_SESSION[PREFIX.$key];
+            unset($_SESSION[PREFIX.$key]);
             return $value;
         }
         return null;
@@ -93,12 +93,12 @@ class Session
     public static function get($key, $secondkey = false)
     {
         if ($secondkey == true) {
-            if (isset($_SESSION[SESSION_PREFIX.$key][$secondkey])) {
-                return $_SESSION[SESSION_PREFIX.$key][$secondkey];
+            if (isset($_SESSION[PREFIX.$key][$secondkey])) {
+                return $_SESSION[PREFIX.$key][$secondkey];
             }
         } else {
-            if (isset($_SESSION[SESSION_PREFIX.$key])) {
-                return $_SESSION[SESSION_PREFIX.$key];
+            if (isset($_SESSION[PREFIX.$key])) {
+                return $_SESSION[PREFIX.$key];
             }
         }
         return null;
@@ -141,7 +141,7 @@ class Session
      * Empty and destroy the session.
      *
      * @param  string $key - session name to destroy
-     * @param  boolean $prefix - if set to true clear all sessions for the current SESSION_PREFIX
+     * @param  boolean $prefix - if set to true clear all sessions for the current PREFIX
      *
      */
     public static function destroy($key = '', $prefix = false)
@@ -153,15 +153,15 @@ class Session
                 session_unset();
                 session_destroy();
             } elseif ($prefix == true) {
-                // Clear all the session for set SESSION_PREFIX
+                // Clear all the session for set PREFIX
                 foreach ($_SESSION as $key => $value) {
-                    if (strpos($key, SESSION_PREFIX) === 0) {
+                    if (strpos($key, PREFIX) === 0) {
                         unset($_SESSION[$key]);
                     }
                 }
             } else {
                 // Clear the specified session key.
-                unset($_SESSION[SESSION_PREFIX.$key]);
+                unset($_SESSION[PREFIX.$key]);
             }
         }
     }

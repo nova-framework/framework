@@ -17,6 +17,7 @@ use App\Models\Role;
 use App\Models\User;
 
 use Auth;
+use Config;
 use Hash;
 use Input;
 use Mailer;
@@ -64,7 +65,7 @@ class Registrar extends Controller
             'email'    => __('E-mail'),
             'password' => __('Password'),
         );
-        
+
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
@@ -216,6 +217,6 @@ class Registrar extends Controller
     {
         $value = str_shuffle(sha1($email .spl_object_hash($this) .microtime(true)));
 
-        return hash_hmac('sha256', $value, ENCRYPT_KEY);
+        return hash_hmac('sha256', $value, Config::get('app.key'));
     }
 }

@@ -26,21 +26,20 @@ class EncryptionCommand extends Command
         $this->length = 32;
 
         $error = null;
-        if (file_exists("app/Config.php")) {
-            $this->makeKey($this->length);
-            $output->writeln("<info>An Encryption key has been generated.</>");
-        } else {
-            $output->writeln("<error>No Config.php found, configure and rename Config.example.php to Config.php in app.</>");
-            $error = true;
-        }
+
+        $this->makeKey($this->length);
+
+        $output->writeln("<info>An Encryption key has been generated.</>");
     }
 
     public function makeKey($length)
     {
         $key = str_random($length);
 
-        $file = file_get_contents("app/Config.php");
-        $file = str_replace("define('ENCRYPT_KEY', '');", "define('ENCRYPT_KEY', '$key');", $file);
+        $file = file_get_contents("app/Config/App.php");
+
+        $file = str_replace("    'key' => 'SomeRandomString______1234567890',", "    'key' => '$key',", $file);
+
         file_put_contents("app/Config.php", $file);
     }
 }

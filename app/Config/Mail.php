@@ -15,7 +15,7 @@ Config::set('mail', array(
     'port'   => 587,
     'from'   => array(
         'address' => 'admin@novaframework.dev',
-        'name'    => SITETITLE,
+        'name'    => 'The Nova Staff',
     ),
     'encryption' => 'tls',
     'username'   => '',

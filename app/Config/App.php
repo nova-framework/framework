@@ -25,6 +25,11 @@ Config::set('app', array(
     'url' => 'http://www.novaframework.dev/',
 
     /**
+    * The Administrator's E-mail Address.
+    */
+    'email' => 'admin@novaframework.dev',
+
+    /**
      * The Website Path.
      */
     'path' => '/',

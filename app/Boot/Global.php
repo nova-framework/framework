@@ -84,9 +84,9 @@ define('LANGUAGE_CODE', $app['config']['app.locale']);
 define('TEMPLATE', $app['config']['app.template']);
 
 /**
- * OPTIONAL, set a Site administrator email address.
+ * Set a Site administrator email address.
  */
-// define('SITEEMAIL', 'email@domain.com');
+define('SITEEMAIL', $app['config']['app.email']);
 
 /**
  * Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.

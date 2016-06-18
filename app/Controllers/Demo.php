@@ -68,6 +68,13 @@ class Demo extends Controller
 
         $content = '<pre>' .var_export($params, true) .'</pre>';
 
+        //
+        $model = new App\Modules\Users\Models\Users();
+
+        $users = $model->all();
+
+        $content .= '<pre>' .var_export($users, true) .'</pre>';
+
         return View::make('Default')
             ->shares('title', __('Test'))
             ->with('content', $content);

@@ -60,25 +60,25 @@ class Model
      */
     protected static $resolver;
 
-    
+
     /**
      * Create a new Model instance.
      *
      * @param  array  $attributes
      * @return void
      */
-    public function __construct($connection = null, $basicSetup = false)
+    public function __construct($connection = null)
     {
         if(is_null($this->table)) {
             // There is not a Table name specified; try to auto-calculate it.
-            $className = get_class($this);
+            $className = class_basename(get_class($this));
 
-            $this->table = Inflector::tableize(class_basename($className));
+            $this->table = Inflector::tableize($className);
         }
 
-        $this->connection = $connection;
+        if ($connection !== false) {
+            $this->connection = $connection;
 
-        if (! $basicSetup) {
             // Setup the Connection instance.
             $this->db = $this->resolveConnection($this->connection);
         }
@@ -165,7 +165,7 @@ class Model
      */
     public static function getTableName()
     {
-        $model = new static(null, true);
+        $model = new static(false);
 
         return $model->getTable();
     }

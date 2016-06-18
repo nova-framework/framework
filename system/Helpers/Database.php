@@ -9,6 +9,7 @@
 namespace Helpers;
 
 use Core\Config;
+use Database\ConnectionResolverInterface as Resolver;
 
 use DB;
 

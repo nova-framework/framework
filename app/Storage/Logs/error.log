@@ -1,19 +1,1 @@
 
-[2016-06-18 18:08:15] testing.ERROR: exception 'ErrorException' with message 'Use of undefined constant CONFIG_STORE - assumed 'CONFIG_STORE'' in /var/www/sites/novaframework/app/Boot/Global.php:30
-Stack trace:
-#0 /var/www/sites/novaframework/app/Boot/Global.php(30): Exception\Handler->handleError(8, 'Use of undefine...', '/var/www/sites/...', 30, Array)
-#1 /var/www/sites/novaframework/app/Boot/Start.php(171): require('/var/www/sites/...')
-#2 [internal function]: {closure}(Object(Foundation\Application))
-#3 /var/www/sites/novaframework/system/Foundation/Application.php(707): call_user_func(Object(Closure), Object(Foundation\Application))
-#4 /var/www/sites/novaframework/system/Foundation/Application.php(495): Foundation\Application->fireAppCallbacks(Array)
-#5 /var/www/sites/novaframework/system/Foundation/Application.php(481): Foundation\Application->bootApplication()
-#6 /var/www/sites/novaframework/system/Foundation/Application.php(637): Foundation\Application->boot()
-#7 /var/www/sites/novaframework/app/Extensions/Http/ContentGuard.php(61): Foundation\Application->handle(Object(Http\Request), 1, true)
-#8 /var/www/sites/novaframework/system/Session/Middleware.php(72): App\Extensions\Http\ContentGuard->handle(Object(Http\Request), 1, true)
-#9 /var/www/sites/novaframework/system/Cookie/Queue.php(49): Session\Middleware->handle(Object(Http\Request), 1, true)
-#10 /var/www/sites/novaframework/system/Cookie/Guard.php(54): Cookie\Queue->handle(Object(Http\Request), 1, true)
-#11 /var/www/sites/novaframework/vendor/stack/builder/src/Stack/StackedHttpKernel.php(23): Cookie\Guard->handle(Object(Http\Request), 1, true)
-#12 /var/www/sites/novaframework/system/Foundation/Application.php(533): Stack\StackedHttpKernel->handle(Object(Http\Request))
-#13 /var/www/sites/novaframework/app/Boot/Start.php(228): Foundation\Application->run()
-#14 /var/www/sites/novaframework/public/index.php(46): require('/var/www/sites/...')
-#15 {main} [] []

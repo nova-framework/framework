@@ -6,12 +6,6 @@
 
 Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
-// Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
-/*
-use App\Extensions\Log\Mailer as LogMailer;
-
-LogMailer::initHandler($app);
-*/
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------
@@ -93,3 +87,9 @@ LegacySession::init();
 // Boot Stage Customization
 //--------------------------------------------------------------------------
 
+// Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
+/*
+use App\Extensions\Log\Mailer as LogMailer;
+
+LogMailer::initHandler($app);
+*/

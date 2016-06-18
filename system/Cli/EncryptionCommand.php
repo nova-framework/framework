@@ -38,7 +38,7 @@ class EncryptionCommand extends Command
 
         $file = file_get_contents("app/Config/App.php");
 
-        $file = str_replace("    'key' => 'SomeRandomString______1234567890',", "    'key' => '$key',", $file);
+        $file = str_replace("    'key' => 'SomeRandomStringThere_1234567890',", "    'key' => '$key',", $file);
 
         file_put_contents("app/Config/App.php", $file);
     }

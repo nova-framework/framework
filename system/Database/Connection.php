@@ -26,6 +26,13 @@ use DateTimeInterface;
 class Connection
 {
     /**
+     * The Driver name.
+     *
+     * @var
+     */
+    protected $driver;
+
+    /**
      * The Connector instance.
      *
      * @var
@@ -124,11 +131,17 @@ class Connection
      */
     public function __construct(array $config)
     {
+        if (! isset($config['driver'])) {
+            throw new \InvalidArgumentException("A driver must be specified.");
+        }
+
+        $this->config = $config;
+
+        $this->driver = $config['driver'];
+
         $this->database = $config['database'];
 
         $this->tablePrefix = $config['prefix'];
-
-        $this->config = $config;
 
         //
         $this->connector = $this->createConnector($config);
@@ -146,11 +159,7 @@ class Connection
      */
     public function createConnector(array $config)
     {
-        if (! isset($config['driver'])) {
-            throw new \InvalidArgumentException("A driver must be specified.");
-        }
-
-        switch ($config['driver']) {
+        switch ($this->driver) {
             case 'mysql':
                 return new MySqlConnector();
 
@@ -161,7 +170,7 @@ class Connection
                 return new SQLiteConnector();
         }
 
-        throw new \InvalidArgumentException("Unsupported driver [{$config['driver']}]");
+        throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
     }
 
     /**
@@ -570,7 +579,7 @@ class Connection
      */
     public function getDriver()
     {
-        return isset($this->config['driver']) ? $this->config['driver'] : null;
+        return $this->driver;
     }
 
     /**

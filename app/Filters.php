@@ -32,6 +32,7 @@ Router::filter('referer', function($route) {
     $referer = Request::header('referer');
 
     if(! str_starts_with($referer, SITEURL)) {
+        // When Referrer is invalid, respond with Error 400 Page (Bad Request)
         return Response::error(400);
     }
 });

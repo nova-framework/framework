@@ -3,6 +3,7 @@
 namespace Database\ORM;
 
 use Database\Query\Expression;
+use Database\ORM\ModelNotFoundException;
 use Database\ORM\Relations\Relation;
 use Database\Query\Builder as QueryBuilder;
 use Support\Facades\Paginator;

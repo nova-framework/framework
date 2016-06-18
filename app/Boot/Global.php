@@ -88,3 +88,8 @@ foreach ($modules as $module) {
 use Helpers\Session as LegacySession;
 
 LegacySession::init();
+
+//--------------------------------------------------------------------------
+// Boot Stage Customization
+//--------------------------------------------------------------------------
+

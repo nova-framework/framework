@@ -14,6 +14,7 @@ use Database\Connection;
 use Database\ConnectionResolverInterface as Resolver;
 use Database\Query\Builder as QueryBuilder;
 use Database\ORM\Builder;
+use Database\ORM\ModelNotFoundException;
 use Database\ORM\Relations\BelongsTo;
 use Database\ORM\Relations\BelongsToMany;
 use Database\ORM\Relations\HasOne;
@@ -566,7 +567,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         if (! is_null($model = static::find($id, $columns))) return $model;
 
-        throw new \Exception('No query results for Model [' .get_called_class() .']');
+        throw with(new ModelNotFoundException)->setModel(get_called_class());
     }
 
     /**

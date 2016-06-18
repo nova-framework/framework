@@ -40,18 +40,32 @@ class Users extends Controller
     protected function before()
     {
         // Check the User Authorization - while using the Extended Auth Driver.
-        if (($this->getMethod() != 'profile') && ! Auth::user()->hasRole('administrator')) {
-            $status = __('You are not authorized to access this resource.');
+        switch ($this->getMethod()) {
+            case 'profile':
+            case 'postProfile':
+                break;
 
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+            default:
+                if (! Auth::user()->hasRole('administrator')) {
+                    $status = __('You are not authorized to access this resource.');
+
+                    return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+                }
         }
 
         // Check the User Authorization - while using the Database Auth Driver.
         /*
-        if (($this->getMethod() != '') && ! Authorize::userHasRole('administrator')) {
-            $status = __('You are not authorized to access this resource.');
+        switch ($this->getMethod()) {
+            case 'profile':
+            case 'postProfile':
+                break;
 
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+            default:
+                if (!  Authorize::userHasRole('administrator')) {
+                    $status = __('You are not authorized to access this resource.');
+
+                    return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+                }
         }
         */
 

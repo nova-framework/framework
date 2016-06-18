@@ -18,7 +18,7 @@ use Foundation\Application;
 define('VERSION', Application::VERSION);
 
 /**
- * PREFER to be used in Database calls or Session data, default is nova_
+ * PREFER to be used in Database calls or Session data, default is 'nova_'
  */
 define('PREFIX', 'nova_');
 

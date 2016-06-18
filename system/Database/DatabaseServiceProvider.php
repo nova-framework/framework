@@ -11,6 +11,7 @@ namespace Database;
 use Database\DatabaseManager;
 use Database\ORM\Model;
 use Database\Model as SimpleModel;
+use Helpers\Database as DatabaseHelper;
 use Support\ServiceProvider;
 
 
@@ -23,13 +24,16 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Setup the Simple Model.
+        // Setup the (simple) Model.
         SimpleModel::setConnectionResolver($this->app['db']);
 
         // Setup the ORM Model.
         Model::setConnectionResolver($this->app['db']);
 
         Model::setEventDispatcher($this->app['events']);
+
+        // Setup the legacy Database Helper.
+        DatabaseHelper::setConnectionResolver($this->app['db']);
     }
 
     /**

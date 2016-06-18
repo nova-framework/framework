@@ -32,6 +32,13 @@ class Database
      */
     protected static $instances = array();
 
+    /**
+     * The connection resolver instance.
+     *
+     * @var \Database\ConnectionResolverInterface
+     */
+    protected static $resolver;
+
 
     /**
      * Constructor
@@ -236,9 +243,51 @@ class Database
      */
     public function getPdo()
     {
-        $connection = DB::connection($this->connection);
+        $connection = $this->resolveConnection($this->connection);
 
         return $connection->getPdo();
+    }
+
+    /**
+     * Resolve a connection instance.
+     *
+     * @param  string  $connection
+     * @return \Database\Connection
+     */
+    public static function resolveConnection($connection = null)
+    {
+        return static::$resolver->connection($connection);
+    }
+
+    /**
+     * Get the connection resolver instance.
+     *
+     * @return \Database\ConnectionResolverInterface
+     */
+    public static function getConnectionResolver()
+    {
+        return static::$resolver;
+    }
+
+    /**
+     * Set the connection resolver instance.
+     *
+     * @param  \Database\ConnectionResolverInterface  $resolver
+     * @return void
+     */
+    public static function setConnectionResolver(Resolver $resolver)
+    {
+        static::$resolver = $resolver;
+    }
+
+    /**
+     * Unset the connection resolver for models.
+     *
+     * @return void
+     */
+    public static function unsetConnectionResolver()
+    {
+        static::$resolver = null;
     }
 
      /**

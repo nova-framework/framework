@@ -2,7 +2,7 @@
 
 namespace Auth\Reminders;
 
-use Auth\PasswordBroker;
+use Auth\Reminders\PasswordBroker;
 use Auth\Reminders\ReminderRepository;
 use Support\ServiceProvider;
 

@@ -69,7 +69,7 @@ Config::set('app', array(
      * The Encryption Key.
      * This tool can be used to generate key - http://jeffreybarke.net/tools/codeigniter-encryption-key-generator
      */
-    'key' => 'SomeRandomString______1234567890',
+    'key' => 'SomeRandomStringThere_1234567890',
 
     /**
      *  Prevents the website from CSRF attacks.

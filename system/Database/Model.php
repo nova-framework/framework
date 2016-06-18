@@ -33,6 +33,13 @@ class Model
     protected $db;
 
     /**
+     * The connection resolver instance.
+     *
+     * @var \Database\ConnectionResolverInterface
+     */
+    protected static $resolver;
+
+    /**
      * The table associated with the Model.
      *
      * @var string

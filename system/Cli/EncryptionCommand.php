@@ -40,6 +40,6 @@ class EncryptionCommand extends Command
 
         $file = str_replace("    'key' => 'SomeRandomString______1234567890',", "    'key' => '$key',", $file);
 
-        file_put_contents("app/Config.php", $file);
+        file_put_contents("app/Config/App.php", $file);
     }
 }

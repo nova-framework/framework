@@ -25,9 +25,9 @@ $langMenuLinks = ob_get_clean();
 <html lang="<?php echo LANGUAGE_CODE; ?>">
 <head>
     <meta charset="utf-8">
-    <title><?= $title .' - ' .SITETITLE; ?></title>
+    <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>
 <?php
-echo $meta; // Place to pass data / plugable hook zone
+echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
     template_url('css/bootstrap-rtl.min.css', 'Default'),
@@ -55,7 +55,7 @@ echo $css; // Place to pass data / plugable hook zone
 
 <div class="container">
     <p>
-        <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>'>
+        <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>'>
     </p>
 
     <?= $content; ?>
@@ -85,10 +85,10 @@ Assets::js([
 ]);
 
 echo $js; // Place to pass data / plugable hook zone
-echo $footer; // Place to pass data / plugable hook zone
+
+echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <!-- DO NOT DELETE! - Forensics Profiler -->
 
 </body>
-</html>

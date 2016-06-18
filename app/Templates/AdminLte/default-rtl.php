@@ -3,15 +3,31 @@
  * Frontend Default RTL Layout
  */
 
-use Helpers\Profiler;
+// Generate the Language Changer menu.
+$langCode = Language::code();
+$langName = Language::name();
 
+$languages = Config::get('languages');
+
+//
+ob_start();
+
+foreach ($languages as $code => $info) {
+?>
+<li class="header <?php if ($code == $langCode) { echo 'active'; } ?>">
+    <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
+</li>
+<?php
+}
+
+$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= $title; ?> | <?= SITETITLE; ?></title>
+    <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
     <?= $meta; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -49,21 +65,28 @@ use Helpers\Profiler;
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-blue layout-top-nav">
+<body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> layout-top-nav">
 <div class="wrapper">
   <header class="main-header">
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= SITETITLE; ?></strong></a>
+          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= Config::get('app.name', SITETITLE); ?></strong></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
         </div>
-
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+                <li class="dropdown language-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class='fa fa-language'></i> <?= $langName; ?>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <?= $langMenuLinks; ?>
+                    </ul>
+                </li>
                 <?php if (Auth::check()) { ?>
                 <li <?php if($currentUri == 'profile') echo 'class="active"'; ?>>
                     <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> <?= __d('default', 'Profile'); ?></a>
@@ -72,8 +95,11 @@ use Helpers\Profiler;
                     <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'Logout'); ?></a>
                 </li>
                 <?php } else { ?>
+               <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('default', 'Sign Up'); ?></a>
+                </li>
                 <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'User Login'); ?></a>
+                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('default', 'Sign In'); ?></a>
                 </li>
                 <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
                     <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('default', 'Forgot Password?'); ?></a>
@@ -102,7 +128,7 @@ use Helpers\Profiler;
     <!-- To the right -->
     <div class="pull-right hidden-xs">
       <?php if(Config::get('app.debug')) { ?>
-      <small><?= Profiler::getReport(); ?></small>
+      <small><!-- DO NOT DELETE! - Profiler --></small>
       <?php } ?>
     </div>
     <!-- Default to the left -->

@@ -6,12 +6,6 @@
 
 Log::useFiles(storage_path() .'Logs' .DS .'error.log');
 
-// Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
-/*
-use App\Extensions\Log\Mailer as LogMailer;
-
-LogMailer::initHandler($app);
-*/
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------
@@ -33,7 +27,7 @@ App::error(function(Exception $exception, $code)
 use Config\Repository as ConfigRepository;
 use Support\Facades\Facade;
 
-if(APPCONFIG_STORE == 'database') {
+if(CONFIG_STORE == 'database') {
     // Get the Database Connection instance.
     $connection = $app['db']->connection();
 
@@ -48,37 +42,8 @@ if(APPCONFIG_STORE == 'database') {
 
     // Make the Facade to refresh its information.
     Facade::clearResolvedInstance('config');
-} else if(APPCONFIG_STORE != 'files') {
+} else if(CONFIG_STORE != 'files') {
     throw new \InvalidArgumentException('Invalid Config Store type.');
-}
-
-// Refresh the Modules configuration.
-$modules = $app['config']['modules'];
-
-//--------------------------------------------------------------------------
-// Require The Events File
-//--------------------------------------------------------------------------
-
-require app_path() .'Events.php';
-
-// Load the Events defined on Modules.
-foreach ($modules as $module) {
-    $path = app_path() .'Modules' .DS .$module .DS .'Events.php';
-
-    if (is_readable($path)) require $path;
-}
-
-//--------------------------------------------------------------------------
-// Require The Filters File
-//--------------------------------------------------------------------------
-
-require app_path() .'Filters.php';
-
-// Load the Filters defined on Modules.
-foreach ($modules as $module) {
-    $path = app_path() .'Modules' .DS .$module .DS .'Filters.php';
-
-    if (is_readable($path)) require $path;
 }
 
 //--------------------------------------------------------------------------
@@ -93,3 +58,41 @@ LegacySession::init();
 // Boot Stage Customization
 //--------------------------------------------------------------------------
 
+/**
+ * Create a constant for the URL of the site.
+ */
+define('SITEURL', $app['config']['app.url']);
+
+/**
+ * Define relative base path.
+ */
+define('DIR', $app['config']['app.path']);
+
+/**
+ * Create a constant for the name of the site.
+ */
+define('SITETITLE', $app['config']['app.name']);
+
+/**
+ * Set a default language.
+ */
+define('LANGUAGE_CODE', $app['config']['app.locale']);
+
+/**
+ * Set the default template.
+ */
+define('TEMPLATE', $app['config']['app.template']);
+
+/**
+ * Set a Site administrator email address.
+ */
+define('SITEEMAIL', $app['config']['app.email']);
+
+/**
+ * Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
+ */
+/*
+use App\Extensions\Log\Mailer as LogMailer;
+
+LogMailer::initHandler($app);
+*/

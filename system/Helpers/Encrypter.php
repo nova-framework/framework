@@ -9,6 +9,9 @@
 
 namespace Helpers;
 
+use Core\Config;
+
+
 class Encrypter
 {
     protected static $randomBytesLength = 16;
@@ -42,16 +45,16 @@ class Encrypter
     }
 
     /**
-     * Setup the key and algo using ENCRYPT_KEY.
+     * Setup the key and algo using the Encryption Key.
      *
      * @return void
      */
     protected static function setConfig()
     {
-        self::$key = ENCRYPT_KEY;
+        self::$key = Config::get('app.key');
 
         if (empty(self::$key)) {
-            throw new \Exception('Please configure the ENCRYPT_KEY.');
+            throw new \Exception('Please configure the Encryption Key.');
         }
 
         self::$algo = self::suportedAlgo(self::$key);

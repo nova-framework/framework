@@ -31,7 +31,7 @@ function site_url($path = '/', $language = null)
     $languages = Config::get('languages');
 
     // The base URL.
-    $siteUrl = SITEURL;
+    $siteUrl = Config::get('app.url');
 
     if (($language === false) || ! Config::get('app.multilingual', false)) {
         // Nothing to do.

@@ -61,27 +61,27 @@ LegacySession::init();
 /**
  * Create a constant for the URL of the site.
  */
-define('SITEURL', Config::get('app.url'));
+define('SITEURL', $app['config']['app.url']);
 
 /**
  * Define relative base path.
  */
-define('DIR', Config::get('app.path'));
+define('DIR', $app['config']['app.path']);
 
 /**
  * Create a constant for the name of the site.
  */
-define('SITETITLE', Config::get('app.name'));
+define('SITETITLE', $app['config']['app.name']);
 
 /**
  * Set a default language.
  */
-define('LANGUAGE_CODE', Config::get('app.locale'));
+define('LANGUAGE_CODE', $app['config']['app.locale']);
 
 /**
  * Set the default template.
  */
-define('TEMPLATE', Config::get('app.template'));
+define('TEMPLATE', $app['config']['app.template']);
 
 /**
  * OPTIONAL, set a Site administrator email address.

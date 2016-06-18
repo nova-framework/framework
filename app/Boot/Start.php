@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Core\Config;
+use Core\Config as CoreConfig;
 use Config\Repository as ConfigRepository;
 use Foundation\AliasLoader;
 use Foundation\Application;
@@ -95,7 +95,7 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 require app_path() .'Config.php';
 
 // Load the Modules configuration.
-$modules = Config::get('modules');
+$modules = CoreConfig::get('modules');
 
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Config.php';
@@ -179,21 +179,6 @@ $path = $app['path'] .DS .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
 if (is_readable($path)) require $path;
 
 //--------------------------------------------------------------------------
-// Load The Application Routes
-//--------------------------------------------------------------------------
-
-$routes = $app['path'] .DS .'Routes.php';
-
-if (is_readable($routes)) require $routes;
-
-// Load the Routes defined on Modules.
-foreach ($modules as $module) {
-    $path = app_path() .'Modules' .DS .$module .DS .'Routes.php';
-
-    if (is_readable($path)) require $path;
-}
-
-//--------------------------------------------------------------------------
 // Load The Application Events
 //--------------------------------------------------------------------------
 
@@ -215,6 +200,21 @@ require app_path() .'Filters.php';
 // Load the Filters defined on Modules.
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Filters.php';
+
+    if (is_readable($path)) require $path;
+}
+
+//--------------------------------------------------------------------------
+// Load The Application Routes
+//--------------------------------------------------------------------------
+
+$routes = $app['path'] .DS .'Routes.php';
+
+if (is_readable($routes)) require $routes;
+
+// Load the Routes defined on Modules.
+foreach ($modules as $module) {
+    $path = app_path() .'Modules' .DS .$module .DS .'Routes.php';
 
     if (is_readable($path)) require $path;
 }

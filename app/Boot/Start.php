@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Core\Config as CoreConfig;
+use Core\Config;
 use Config\Repository as ConfigRepository;
 use Foundation\AliasLoader;
 use Foundation\Application;
@@ -105,7 +105,7 @@ foreach (glob(app_path() .'Config/*') as $path) {
 }
 
 // Load the Modules configuration.
-$modules = CoreConfig::get('modules');
+$modules = Config::get('modules');
 
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Config.php';

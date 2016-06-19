@@ -12,15 +12,8 @@ define('ROOTDIR', realpath(__DIR__.'/../') .DS);
 /** Set the Storage Path. */
 define('STORAGE_PATH', APPDIR .'Storage' .DS);
 
-/** Load the composer autoloader */
-if (file_exists(ROOTDIR .'vendor/autoload.php')) {
-    require ROOTDIR .'vendor/autoload.php';
-} else {
-    echo "<h1>Please install via composer.json</h1>";
-    echo "<p>Install Composer instructions: <a href='https://getcomposer.org/doc/00-intro.md#globally'>https://getcomposer.org/doc/00-intro.md#globally</a></p>";
-    echo "<p>Once composer is installed, navigate to the working directory in your terminal/command prompt and enter 'composer install'</p>";
-    exit;
-}
+/** Load the Composer autoloader. */
+require ROOTDIR .'vendor/autoload.php';
 
 /*
  *---------------------------------------------------------------

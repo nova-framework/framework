@@ -22,10 +22,6 @@ if (file_exists(ROOTDIR .'vendor/autoload.php')) {
     exit;
 }
 
-if (! is_readable(APPDIR .'Config.php')) {
-    die('No Config.php found, configure and rename Config.example.php to Config.php in app.');
-}
-
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

@@ -14,5 +14,5 @@ use Core\Config;
  */
 Config::set('profiler', array(
     'useForensics' => false,
-    'withDatabase' => true,
+    'withDatabase' => false,
 ));

@@ -93,14 +93,14 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 //--------------------------------------------------------------------------
 
 /**
- * Set the Framework version.
+ * Set the Framework Version.
  */
 define('VERSION', Application::VERSION);
 
 /**
  * Include the files located on application's Config directory.
  */
-foreach (glob(APPDIR .'Config/*') as $path) {
+foreach (glob(app_path() .'Config/*') as $path) {
     if (is_readable($path)) require $path;
 }
 

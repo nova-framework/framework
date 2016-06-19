@@ -9,9 +9,6 @@ define('SYSTEMDIR', realpath(__DIR__.'/../system/') .DS);
 define('PUBLICDIR', realpath(__DIR__) .DS);
 define('ROOTDIR', realpath(__DIR__.'/../') .DS);
 
-/** Set the Storage Path. */
-define('STORAGE_PATH', APPDIR .'Storage' .DS);
-
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

@@ -92,7 +92,17 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 // Load The Configuration
 //--------------------------------------------------------------------------
 
-require app_path() .'Config.php';
+/**
+ * Set the Framework version.
+ */
+define('VERSION', Application::VERSION);
+
+/**
+ * Include the files located on application's Config directory.
+ */
+foreach (glob(APPDIR .'Config/*') as $path) {
+    if (is_readable($path)) require $path;
+}
 
 // Load the Modules configuration.
 $modules = CoreConfig::get('modules');

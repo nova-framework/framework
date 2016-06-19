@@ -25,5 +25,5 @@ define('ROOTDIR', realpath(__DIR__.'/../') .DS);
  */
 define('ENVIRONMENT', 'development');
 
-/** Boot the Nova's Application. */
+/** Boot the Application. */
 require APPDIR .'Boot' .DS .'Start.php';

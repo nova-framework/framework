@@ -98,8 +98,15 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 // Load The Configuration
 //--------------------------------------------------------------------------
 
-// Include the files located on application's Config directory.
+// Load first the file constants file.
+$path = app_path() .'Config' .DS .'Constants.php';
+
+if (is_readable($path)) require $path;
+
+// Include all other files located on Config directory.
 foreach (glob(app_path() .'Config/*') as $path) {
+    if (basename($path) == 'Constants.php') continue;
+
     if (is_readable($path)) require $path;
 }
 

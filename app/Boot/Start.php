@@ -6,7 +6,14 @@
  * @version 3.0
  */
 
-use Core\Config as CoreConfig;
+//--------------------------------------------------------------------------
+// Load The Composer Autoloader
+//--------------------------------------------------------------------------
+
+require ROOTDIR .'vendor/autoload.php';
+
+// The used Classes.
+use Core\Config;
 use Config\Repository as ConfigRepository;
 use Foundation\AliasLoader;
 use Foundation\Application;
@@ -35,6 +42,18 @@ if (function_exists('mb_internal_encoding')) {
 //--------------------------------------------------------------------------
 
 Patchwork\Utf8\Bootup::initMbstring();
+
+//--------------------------------------------------------------------------
+// Set The Storage Path
+//--------------------------------------------------------------------------
+
+define('STORAGE_PATH', APPDIR .'Storage' .DS);
+
+//--------------------------------------------------------------------------
+// Set The Framework Version
+//--------------------------------------------------------------------------
+
+define('VERSION', Application::VERSION);
 
 //--------------------------------------------------------------------------
 // Create New Application
@@ -92,10 +111,20 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 // Load The Configuration
 //--------------------------------------------------------------------------
 
-require app_path() .'Config.php';
+// Load first the file constants file.
+$path = app_path() .'Config' .DS .'Constants.php';
+
+if (is_readable($path)) require $path;
+
+// Include all other files located on Config directory.
+foreach (glob(app_path() .'Config/*') as $path) {
+    if (basename($path) == 'Constants.php') continue;
+
+    if (is_readable($path)) require $path;
+}
 
 // Load the Modules configuration.
-$modules = CoreConfig::get('modules');
+$modules = Config::get('modules');
 
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Config.php';

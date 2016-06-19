@@ -37,6 +37,12 @@ if (function_exists('mb_internal_encoding')) {
 Patchwork\Utf8\Bootup::initMbstring();
 
 //--------------------------------------------------------------------------
+// Set The Framework Version
+//--------------------------------------------------------------------------
+
+define('VERSION', Application::VERSION);
+
+//--------------------------------------------------------------------------
 // Create New Application
 //--------------------------------------------------------------------------
 
@@ -92,14 +98,7 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 // Load The Configuration
 //--------------------------------------------------------------------------
 
-/**
- * Set the Framework Version.
- */
-define('VERSION', Application::VERSION);
-
-/**
- * Include the files located on application's Config directory.
- */
+// Include the files located on application's Config directory.
 foreach (glob(app_path() .'Config/*') as $path) {
     if (is_readable($path)) require $path;
 }

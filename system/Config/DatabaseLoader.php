@@ -58,27 +58,29 @@ class DatabaseLoader implements LoaderInterface
     {
         $token = 'options_' .md5($group);
 
-        if (! $this->cache->has($token)) {
-            $items = array();
+        if ((ENVIRONMENT != 'development') && $this->cache->has($token)) {
+            return $this->cache->get($token);
+        }
 
-            // The current Group's data is not cached.
-            $results = $this->newQuery()
-                ->where('group', $group)
-                ->get(array('item', 'value'));
+        $items = array();
 
-            foreach ($results as $result) {
-                $result = (array) $result;
+        // The current Group's data is not cached.
+        $results = $this->newQuery()
+            ->where('group', $group)
+            ->get(array('item', 'value'));
 
-                // Insert the option on list.
-                $key = $result['item'];
+        foreach ($results as $result) {
+            $result = (array) $result;
 
-                $items[$key] = maybe_unserialize($result['value']);
-            }
+            // Insert the option on list.
+            $key = $result['item'];
 
+            $items[$key] = maybe_unserialize($result['value']);
+        }
+
+        if (ENVIRONMENT != 'development') {
             // Cache the current Group's data for 15 min.
             $this->cache->put($token, $items, 900);
-        } else {
-            $items = $this->cache->get($token);
         }
 
         return $items;
@@ -98,7 +100,10 @@ class DatabaseLoader implements LoaderInterface
         // Delete the cached data for current Group.
         $token = 'options_' .md5($group);
 
-        $this->cache->forget($token);
+        if (ENVIRONMENT != 'development') {
+            // Invalidate the current group's cache.
+            $this->cache->forget($token);
+        }
 
         // Update the information on Database.
         if (empty($item)) {

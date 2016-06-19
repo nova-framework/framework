@@ -6,6 +6,13 @@
  * @version 3.0
  */
 
+//--------------------------------------------------------------------------
+// Load The Composer Autoloader
+//--------------------------------------------------------------------------
+
+require ROOTDIR .'vendor/autoload.php';
+
+// The used Classes.
 use Core\Config;
 use Config\Repository as ConfigRepository;
 use Foundation\AliasLoader;

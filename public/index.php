@@ -28,9 +28,5 @@ define('STORAGE_PATH', APPDIR .'Storage' .DS);
  */
 define('ENVIRONMENT', 'development');
 
-
-/** Load the Composer autoloader. */
-require ROOTDIR .'vendor/autoload.php';
-
 /** Boot the Nova's Application. */
 require APPDIR .'Boot' .DS .'Start.php';

@@ -1192,7 +1192,7 @@ class Builder
         // Once we have the total number of records to be paginated, we can grab the
         // current page and the result array. Then we are ready to create a brand
         // new Paginator instances for the results which will create the links.
-        $page = $paginator->getCurrentPage($total, $perPage);
+        $page = $paginator->getCurrentPage($total);
 
         $results = $this->forPage($page, $perPage)->get($columns);
 

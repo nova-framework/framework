@@ -53,7 +53,19 @@ $langMenuLinks = ob_get_clean();
     ));
 
     echo $css; // Place to pass data / plugable hook zone
+?>
 
+<style>
+.pagination {
+    margin: 0;
+}
+
+.pagination > li > a, .pagination > li > span {
+  padding: 5px 10px;
+}
+</style>
+
+<?php
     //Add Controller specific JS files.
     Assets::js(array(
         template_url('plugins/jQuery/jquery-2.2.3.min.js', 'AdminLte'),

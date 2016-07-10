@@ -24,7 +24,7 @@
 
 ## What is the Nova Framework?
 
-Nova Framework is a PHP 5.5 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
+Nova Framework is a PHP 5.6 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.
 
 The base framework comes with a range of [helper classes](https://github.com/nova-framework/framework/tree/master/system/Helpers).
 
@@ -32,7 +32,7 @@ The base framework comes with a range of [helper classes](https://github.com/nov
 
 **The framework requirements are limited.**
 
-- PHP 5.5 or greater.
+- PHP 5.6 or greater.
 - Apache Web Server or equivalent with mod rewrite support.
 - IIS with URL Rewrite module installed - [http://www.iis.net/downloads/microsoft/url-rewrite](http://www.iis.net/downloads/microsoft/url-rewrite)
 

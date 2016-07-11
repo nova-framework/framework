@@ -93,7 +93,7 @@ $langMenuLinks = ob_get_clean();
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini">CP</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><?= __('Control Panel'); ?></span>
+      <span class="logo-lg"><?= __d('admin_lte', 'Control Panel'); ?></span>
     </a>
 
     <!-- Header Navbar -->
@@ -129,16 +129,16 @@ $langMenuLinks = ob_get_clean();
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>
-                  <small><?= __('Member since {0}', $user->created_at->formatLocalized('%d %b %Y, %R')); ?></small>
+                  <small><?= __d('admin_lte', 'Member since {0}', $user->created_at->formatLocalized('%d %b %Y, %R')); ?></small>
                 </p>
               </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('admin/users/profile'); ?>" class="btn btn-default btn-flat"><?= __('Profile'); ?></a>
+                  <a href="<?= site_url('admin/users/profile'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lte', 'Profile'); ?></a>
                 </div>
                 <div class="pull-right">
-                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __('Sign out'); ?></a>
+                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lte', 'Sign out'); ?></a>
                 </div>
               </li>
             </ul>
@@ -164,22 +164,22 @@ $langMenuLinks = ob_get_clean();
         </form>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header"><?= __('ADMINISTRATION'); ?></li>
+            <li class="header"><?= __d('admin_lte', 'ADMINISTRATION'); ?></li>
             <li <?php if ($baseUri == 'admin/dashboard') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __('Dashboard'); ?></span></a>
+                <a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __d('admin_lte', 'Dashboard'); ?></span></a>
             </li>
 
             <?php if ($user->hasRole('administrator')) { ?>
 
             <li <?php if ($baseUri == 'admin/settings') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/settings'); ?>"><i class="fa fa-gears"></i> <span><?= __('Settings'); ?></span></a>
+                <a href="<?= site_url('admin/settings'); ?>"><i class="fa fa-gears"></i> <span><?= __d('admin_lte', 'Settings'); ?></span></a>
             </li>
 
             <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __('Users'); ?></span></a>
+                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __d('admin_lte', 'Users'); ?></span></a>
             </li>
             <li <?php if ($baseUri == 'admin/roles') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/roles'); ?>"><i class="fa fa-book"></i> <span><?= __('Roles'); ?></span></a>
+                <a href="<?= site_url('admin/roles'); ?>"><i class="fa fa-book"></i> <span><?= __d('admin_lte', 'Roles'); ?></span></a>
             </li>
 
             <?php } ?>

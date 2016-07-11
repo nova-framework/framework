@@ -1,10 +1,17 @@
 <?php
 
 return array (
+  'ADMINISTRATION' => '',
+  'Control Panel' => '',
+  'Dashboard' => '',
   'Forgot Password?' => '',
   'Logout' => '',
+  'Member since {0}' => '',
   'Profile' => '',
+  'Roles' => '',
+  'Settings' => '',
   'Sign In' => '',
   'Sign Up' => '',
-  'User Login' => '',
+  'Sign out' => '',
+  'Users' => '',
 );

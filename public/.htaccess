@@ -4,6 +4,14 @@
     </IfModule>
 
     RewriteEngine On
+    
+    # Remove www uncomment to activate
+    #RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    #RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+    # Force ssl uncomment to activate
+    #RewriteCond %{HTTPS} !on
+    #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d

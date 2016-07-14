@@ -52,7 +52,7 @@ class Csrf
             Session::set($name .'_time', time());
         }
 
-        return Session::get('csrfToken');
+        return Session::get($name);
     }
 
     /**

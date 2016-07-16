@@ -14,7 +14,6 @@ use Core\Controller;
 use Language;
 use Router;
 use Session;
-use Str;
 
 
 /**

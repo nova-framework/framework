@@ -14,6 +14,8 @@ use Core\Controller;
 use Language;
 use Router;
 use Session;
+use Str;
+
 
 /**
  * Sample controller showing a construct and 2 methods and their typical usage.

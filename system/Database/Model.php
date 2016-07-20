@@ -10,7 +10,7 @@ namespace Database;
 
 use Database\Connection;
 use Database\ConnectionResolverInterface as Resolver;
-use Database\Query\Builder;
+use Database\Query as QueryBuilder;
 use Helpers\Inflector;
 
 use DB;
@@ -76,12 +76,12 @@ class Model
             $this->table = Inflector::tableize($className);
         }
 
-        if ($connection !== false) {
+        if (! is_null($connection)) {
             $this->connection = $connection;
-
-            // Setup the Connection instance.
-            $this->db = $this->resolveConnection($this->connection);
         }
+
+        // Setup the Connection instance.
+        $this->db = $this->getConnection();
     }
 
     /**
@@ -156,18 +156,6 @@ class Model
     public function getTable()
     {
         return $this->table;
-    }
-
-    /**
-     * Get the Table for the Model.
-     *
-     * @return string
-     */
-    public static function getTableName()
-    {
-        $model = new static(false);
-
-        return $model->getTable();
     }
 
     /**
@@ -283,7 +271,9 @@ class Model
      */
     public function newQuery()
     {
-        return $this->db->table($this->table)->setModel($this);
+        $query = $this->db->table($this->table);
+
+        return with(new QueryBuilder($query))->setModel($this);
     }
 
     /**

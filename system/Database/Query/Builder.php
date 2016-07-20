@@ -28,13 +28,6 @@ class Builder
     protected $connection;
 
     /**
-     * The Model being queried.
-     *
-     * @var \Database\Model|Database\ORM\Model
-     */
-    protected $model = null;
-
-    /**
      * The current query value bindings.
      *
      * @var array
@@ -1022,9 +1015,7 @@ class Builder
      */
     public function find($id, $columns = array('*'))
     {
-        $keyName = isset($this->model) ? $this->model->getKeyName() : 'id';
-
-        return $this->where($keyName, '=', $id)->first($columns);
+        return $this->where('id', '=', $id)->first($columns);
     }
 
     /**
@@ -1126,15 +1117,10 @@ class Builder
      * @param  array  $columns
      * @return \Pagination\Paginator
      */
-    public function paginate($perPage = null, $columns = array('*'))
+    public function paginate($perPage = 15, $columns = array('*'))
     {
         // Get the Pagination Factory instance.
         $paginator = $this->connection->getPaginator();
-
-        if(is_null($perPage)) {
-            // Get the perPage value, according on the Model instance.
-            $perPage = isset($this->model) ? $this->model->getPerPage() : 15;
-        }
 
         if (isset($this->groups)) {
             return $this->groupedPaginate($paginator, $perPage, $columns);
@@ -1208,15 +1194,10 @@ class Builder
      * @param  array  $columns
      * @return \Pagination\Paginator
      */
-    public function simplePaginate($perPage = null, $columns = array('*'))
+    public function simplePaginate($perPage = 15, $columns = array('*'))
     {
         // Get the Pagination Factory instance.
         $paginator = Paginator::instance();
-
-        if(is_null($perPage)) {
-            // Get the perPage value, according on the Model instance.
-            $perPage = isset($this->model) ? $this->model->getPerPage() : 15;
-        }
 
         $page = $paginator->getCurrentPage();
 
@@ -1615,29 +1596,6 @@ class Builder
     public function getConnection()
     {
         return $this->connection;
-    }
-
-    /**
-     * Get the Model instance being queried.
-     *
-     * @return \Database\Model|\Database\ORM\Model
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    /**
-     * Set a Model instance for the Model being queried.
-     *
-     * @param  \Database\Model|\Database\ORM\Model|null  $model
-     * @return \Database\Builder
-     */
-    public function setModel($model)
-    {
-        $this->model = $model;
-
-        return $this;
     }
 
     //--------------------------------------------------------------------

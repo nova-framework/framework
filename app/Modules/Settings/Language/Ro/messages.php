@@ -36,6 +36,7 @@ return array (
   'The From Field of any outgoing e-mails.' => '',
   'The Password used to connect to the external SMTP Server.' => '',
   'The Port used for connecting to the external SMTP Server.' => '',
+  'The Settings are not available while the Config Store is on Files Mode.' => '',
   'The Settings was successfully updated.' => '',
   'The Skin used by the Site\'s Template.' => '',
   'The Username used to connect to the external SMTP Server.' => '',

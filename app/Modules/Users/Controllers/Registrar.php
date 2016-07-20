@@ -37,13 +37,6 @@ class Registrar extends Controller
         parent::__construct();
     }
 
-    protected function before()
-    {
-        View::share('currentUri', Url::detectUri());
-
-        return parent::before();
-    }
-
     protected function validate(array $data)
     {
         // Validation rules.
@@ -92,8 +85,7 @@ class Registrar extends Controller
     public function create()
     {
         return $this->getView()
-            ->shares('title', __d('users', 'User Registration'))
-            ->with('csrfToken', Session::token());
+            ->shares('title', __d('users', 'User Registration'));
     }
 
     /**
@@ -204,7 +196,8 @@ class Registrar extends Controller
 
     public function status()
     {
-        return $this->getView()->shares('title', __d('users', 'Registration Status'));
+        return $this->getView()
+            ->shares('title', __d('users', 'Registration Status'));
     }
 
     /**

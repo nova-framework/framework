@@ -165,7 +165,7 @@
 <?php } else { ?>
 
 <div class="callout callout-info">
-    <?= __('The Settings are not available while the Config Store is on Files Mode.'); ?>
+    <?= __d('settings', 'The Settings are not available while the Config Store is on Files Mode.'); ?>
 </div>
 
 <?php } ?>

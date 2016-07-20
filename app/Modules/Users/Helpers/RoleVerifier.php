@@ -16,18 +16,36 @@ use DB;
 
 class RoleVerifier
 {
-    protected static $cachedRole;
+    protected $model;
 
+    protected $cachedRole;
+
+    protected static $instance;
+
+
+    protected function __construct()
+    {
+        $this->model = new Roles();
+    }
+
+    protected static function getInstance()
+    {
+        if(! isset(static::$instance)) {
+            static::$instance = new static();
+        }
+
+        return static::$instance;
+    }
 
     public static function userHasRole($roles)
     {
-        if (! isset(static::$cachedRole)) {
-            $user = Auth::user();
+        $instance = static::getInstance();
 
-            static::$cachedRole = $role = static::getGenericUserRole($user);
-        } else {
-            $role = static::$cachedRole;
-        }
+        // Get the User instance.
+        $user = Auth::user();
+
+        // Get the associated Role information.
+        $role = $instance->getGenericUserRole($user);
 
         // Check if the User is a Root account.
         if (is_null($role)) return false;
@@ -38,7 +56,7 @@ class RoleVerifier
         if (! is_array($roles)) return static::checkUserRole($roles);
 
         foreach ($roles as $wantedRole) {
-            if (static::checkUserRole($wantedRole)) {
+            if (static::checkUserRole($role, $wantedRole)) {
                 return true;
             }
         }
@@ -46,25 +64,16 @@ class RoleVerifier
         return false;
     }
 
-    protected function checkUserRole($wantedRole)
+    protected static function checkUserRole($role, $wantedRole)
     {
-        if(! isset(static::$cachedRole)) {
-            return false;
-        }
-
-        $role = static::$cachedRole;
-
         return (strtolower($wantedRole) == strtolower($role->slug));
     }
 
-    protected static function getGenericUserRole(GenericUser $user)
+    protected function getGenericUserRole(GenericUser $user)
     {
-        // Retrieve the data from the User Model instance.
-        $roleId = $user->role_id;
+        if (isset($this->cachedRole)) return $this->cachedRole;
 
-        $table = Roles::getTableName();
-
-        return DB::table($table)->find($roleId);
+        return $this->cachedRole = $this->model->find($user->role_id);
     }
 
 }

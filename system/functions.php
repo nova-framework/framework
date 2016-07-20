@@ -663,8 +663,10 @@ function e($value)
  * @param string $className
  * @return string
  */
-function class_basename($className)
+function class_basename($class)
 {
+    $className = is_object($class) ? get_class($class) : $class;
+
     return basename(str_replace('\\', '/', $className));
 }
 

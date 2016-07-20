@@ -13,14 +13,14 @@ class Query
     /**
      * The base Query Builder instance.
      *
-     * @var \Nova\Database\Query\Builder
+     * @var \Database\Query\Builder
      */
     protected $query;
 
     /**
      * The model being queried.
      *
-     * @var \Nova\Database\Model
+     * @var \Database\Model
      */
     protected $model;
 
@@ -28,7 +28,7 @@ class Query
     /**
      * Create a new Model Query Builder instance.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @return void
      */
     public function __construct(QueryBuilder $query)
@@ -157,7 +157,7 @@ class Query
     /**
      * Get the underlying query builder instance.
      *
-     * @return \Nova\Database\Query\Builder|static
+     * @return \Database\Query\Builder|static
      */
     public function getQuery()
     {
@@ -167,7 +167,7 @@ class Query
     /**
      * Set the underlying query builder instance.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @return void
      */
     public function setQuery($query)
@@ -178,7 +178,7 @@ class Query
     /**
      * Get the model instance being queried.
      *
-     * @return \Nova\Database\ORM\Model
+     * @return \Database\ORM\Model
      */
     public function getModel()
     {
@@ -188,8 +188,8 @@ class Query
     /**
      * Set a model instance for the model being queried.
      *
-     * @param  \Nova\Database\ORM\Model  $model
-     * @return \Nova\Database\ORM\Builder
+     * @param  \Database\ORM\Model  $model
+     * @return \Database\ORM\Builder
      */
     public function setModel(Model $model)
     {

@@ -36,13 +36,6 @@ class Authorize extends Controller
         //$this->model = new \App\Modules\Users\Models\Users();
     }
 
-    protected function before()
-    {
-        View::share('currentUri', Url::detectUri());
-
-        return parent::before();
-    }
-
     /**
      * Display the login view.
      *
@@ -51,8 +44,7 @@ class Authorize extends Controller
     public function login()
     {
         return $this->getView()
-            ->shares('title', __d('users', 'User Login'))
-            ->with('csrfToken', Session::token());
+            ->shares('title', __d('users', 'User Login'));
     }
 
     /**
@@ -138,8 +130,7 @@ class Authorize extends Controller
     {
 
         return $this->getView()
-            ->shares('title', __d('users', 'Password Recovery'))
-            ->with('csrfToken', Session::token());
+            ->shares('title', __d('users', 'Password Recovery'));
     }
 
     /**
@@ -186,7 +177,6 @@ class Authorize extends Controller
 
         return $this->getView()
             ->shares('title', __d('users', 'Password Reset'))
-            ->with('csrfToken', Session::token())
             ->with('token', $token);
     }
 

@@ -57,7 +57,7 @@ class Query
     /**
      * Find a model by its primary key.
      *
-     * @param  array  $id
+     * @param  array  $ids
      * @param  array  $columns
      * @return array|null|static
      */

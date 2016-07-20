@@ -112,14 +112,12 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 //--------------------------------------------------------------------------
 
 // Load first the file constants file.
-$path = app_path() .'Config' .DS .'Constants.php';
+$path = app_path() .DS .'Config.php';
 
 if (is_readable($path)) require $path;
 
 // Include all other files located on Config directory.
-foreach (glob(app_path() .'Config/*') as $path) {
-    if (basename($path) == 'Constants.php') continue;
-
+foreach (glob(app_path() .DS .'Config/*.php') as $path) {
     if (is_readable($path)) require $path;
 }
 

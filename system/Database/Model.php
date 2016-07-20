@@ -104,9 +104,19 @@ class Model
      */
     public function find($id, $columns = array('*'))
     {
-        return $this->newQuery()
-            ->where($this->getKeyName(), $id)
-            ->first($columns);
+        return $this->newQuery()->find($id, $columns);
+    }
+
+    /**
+     * Find Records by their primary key.
+     *
+     * @param  array  $ids
+     * @param  array  $columns
+     * @return Model
+     */
+    public function findMany($ids, $columns = array('*'))
+    {
+        return $this->newQuery()->findMany($ids, $columns);
     }
 
     /**

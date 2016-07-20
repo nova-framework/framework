@@ -1,9 +1,9 @@
 <?php
 
-namespace Nova\Database;
+namespace Database;
 
-use Nova\Database\Query\Expression;
-use Nova\Database\Query\Builder as QueryBuilder;
+use Database\Query\Expression;
+use Database\Query\Builder as QueryBuilder;
 
 use Closure;
 

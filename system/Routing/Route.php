@@ -457,7 +457,7 @@ class Route
      *
      * @return array
      */
-    public static function getAction()
+    public function getAction()
     {
         return $this->action;
     }

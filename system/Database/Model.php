@@ -73,9 +73,10 @@ class Model
         if($connection === false) {
             // Nothing to do; the user want a bare Model instance.
             return;
-        } else if (! is_null($connection)) {
-            $this->connection = $connection;
         }
+
+        // Setup the Connection name.
+        $this->connection = $connection;
 
         // Setup the Connection instance.
         $this->db = $this->getConnection();

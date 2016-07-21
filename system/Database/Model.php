@@ -10,7 +10,8 @@ namespace Database;
 
 use Database\Connection;
 use Database\ConnectionResolverInterface as Resolver;
-use Database\Query as QueryBuilder;
+use Database\Query\Builder as QueryBuilder;
+use Database\Query as Builder;
 use Helpers\Inflector;
 
 use DB;
@@ -37,7 +38,7 @@ class Model
      *
      * @var string
      */
-    protected $table = null;
+    protected $table;
 
     /**
      * The primary key for the Model.
@@ -69,13 +70,6 @@ class Model
      */
     public function __construct($connection = null)
     {
-        if(is_null($this->table)) {
-            // There is not a Table name specified; try to auto-calculate it.
-            $className = class_basename(get_class($this));
-
-            $this->table = Inflector::tableize($className);
-        }
-
         if (! is_null($connection)) {
             $this->connection = $connection;
         }
@@ -165,7 +159,11 @@ class Model
      */
     public function getTable()
     {
-        return $this->table;
+        if (isset($this->table)) return $this->table;
+
+        $baseName = class_basename($this);
+
+        return str_replace('\\', '', Inflector::tableize($baseName));
     }
 
     /**
@@ -281,9 +279,24 @@ class Model
      */
     public function newQuery()
     {
-        $query = $this->db->table($this->table);
+        $query = new QueryBuilder($this->db);
 
-        return with(new QueryBuilder($query))->setModel($this);
+        $builder = $this->newBuilder($query);
+
+        $builder->setModel($this);
+
+        return $builder;
+    }
+
+    /**
+     * Create a new ORM query builder for the Model.
+     *
+     * @param  \Database\Query\Builder $query
+     * @return \Database\Query|static
+     */
+    public function newBuilder($query)
+    {
+        return new Builder($query);
     }
 
     /**

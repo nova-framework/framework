@@ -71,6 +71,7 @@ class Model
     public function __construct($connection = null)
     {
         if($connection === false) {
+            // Nothing to do; the user want a bare Model instance.
             return;
         } else if (! is_null($connection)) {
             $this->connection = $connection;

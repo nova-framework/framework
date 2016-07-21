@@ -281,7 +281,7 @@ class Model
     {
         $query = $this->newBaseQueryBuilder();
 
-        $builder = $this->newQueryBuilder($query);
+        $builder = $this->newBuilder($query);
 
         return $builder->setModel($this);
     }
@@ -304,7 +304,7 @@ class Model
      * @param  \Database\Query\Builder $query
      * @return \Database\Query|static
      */
-    public function newQueryBuilder($query)
+    public function newBuilder($query)
     {
         return new Builder($query);
     }

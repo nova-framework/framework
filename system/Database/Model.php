@@ -70,9 +70,13 @@ class Model
      */
     public function __construct($connection = null)
     {
-        if (! is_null($connection)) {
-            $this->connection = $connection;
+        if($connection === false) {
+            // Nothing to do; the user want a bare Model instance.
+            return;
         }
+
+        // Setup the Connection name.
+        $this->connection = $connection;
 
         // Setup the Connection instance.
         $this->db = $this->getConnection();
@@ -150,6 +154,18 @@ class Model
             ->delete();
 
         return true;
+    }
+
+    /**
+     * Get the Table for the Model.
+     *
+     * @return string
+     */
+    public static function getTableName()
+    {
+        $model = new static(false);
+
+        return $model->getTable();
     }
 
     /**
@@ -279,13 +295,23 @@ class Model
      */
     public function newQuery()
     {
-        $query = new QueryBuilder($this->db);
+        $query = $this->newBaseQueryBuilder();
 
         $builder = $this->newBuilder($query);
 
-        $builder->setModel($this);
+        return $builder->setModel($this);
+    }
 
-        return $builder;
+    /**
+     * Get a new query builder instance for the connection.
+     *
+     * @return \Nova\Database\Query\Builder
+     */
+    protected function newBaseQueryBuilder()
+    {
+        $connection = $this->getConnection();
+
+        return new QueryBuilder($connection);
     }
 
     /**

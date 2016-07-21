@@ -74,8 +74,10 @@ class Model
             $this->connection = $connection;
         }
 
-        // Setup the Connection instance.
-        $this->db = $this->getConnection();
+        if($connection !== false) {
+            // Setup the Connection instance.
+            $this->db = $this->getConnection();
+        }
     }
 
     /**
@@ -164,6 +166,18 @@ class Model
         $baseName = class_basename($this);
 
         return str_replace('\\', '', Inflector::tableize($baseName));
+    }
+
+    /**
+     * Get the table associated with the model.
+     *
+     * @return void
+     */
+    public static function getTableName()
+    {
+        $model = new static(false);
+
+        return $model->getTable();
     }
 
     /**

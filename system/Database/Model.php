@@ -156,9 +156,9 @@ class Model
     }
 
     /**
-     * Get the table associated with the model.
+     * Get the Table for the Model.
      *
-     * @return void
+     * @return string
      */
     public static function getTableName()
     {

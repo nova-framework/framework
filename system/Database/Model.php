@@ -72,9 +72,7 @@ class Model
     {
         if($connection === false) {
             return;
-        }
-
-        if (! is_null($connection)) {
+        } else if (! is_null($connection)) {
             $this->connection = $connection;
         }
 

@@ -42,20 +42,6 @@ abstract class Controller
     private $params = array();
 
     /**
-     * The Module name.
-     *
-     * @var string|null
-     */
-    private $module = null;
-
-    /**
-     * The Default View.
-     *
-     * @var string
-     */
-    private $defaultView;
-
-    /**
      * The currently used Template.
      *
      * @var string

@@ -67,8 +67,10 @@ abstract class Controller
      */
     public function __construct()
     {
-        // Adjust to the default Template, if it is not defined.
-        $this->template = $this->template ?: Config::get('app.template');
+        // Setup the used Template to default, if it is not already defined.
+        if(! isset($this->template)) {
+            $this->template = Config::get('app.template');
+        }
 
         // Initialise the Language object.
         $this->language = Language::getInstance();

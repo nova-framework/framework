@@ -8,6 +8,7 @@
 
 namespace Core;
 
+use Core\Config;
 use Core\BaseView;
 use Core\Language;
 use Core\Template;
@@ -81,7 +82,7 @@ abstract class Controller
     public function __construct()
     {
         // Adjust to the default Template, if it is not defined.
-        $this->template = $this->template ?: TEMPLATE;
+        $this->template = $this->template ?: Config::get('app.template');
 
         // Initialise the Language object.
         $this->language = Language::getInstance();
@@ -89,7 +90,7 @@ abstract class Controller
 
     /**
      * Execute the Controller Method
-     * @return bool
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throw \Exception
      */
@@ -99,98 +100,75 @@ abstract class Controller
         $this->method = $method;
         $this->params = $params;
 
-        // Setup the Controller's properties.
-        $className = get_class($this);
-
-        // Prepare the View Path using the Controller's full Name including its namespace.
-        $classPath = str_replace('\\', '/', ltrim($className, '\\'));
-
-        // First, check on the App path.
-        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
-            $this->defaultView = $matches[1] .DS .ucfirst($method);
-            // Secondly, check on the Modules path.
-        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
-            $this->module = $matches[1];
-
-            // The View is in Module sub-directories.
-            $this->defaultView = $matches[2] .DS .ucfirst($method);
-        } else {
-            throw new \Exception('Failed to calculate the view and module, for the Class: ' .$className);
-        }
-
         // Before the Action execution stage.
-        $result = $this->before();
+        $response = $this->before();
 
-        // Process the stage result.
-        if ($result instanceof SymfonyResponse) {
-            return $result;
-        }
+        // In depth Action execution stage.
+        if (! $response instanceof SymfonyResponse) {
+            // Notify the interested Listeners about the iminent Controller's execution.
+            Event::fire('framework.controller.executing', array($this, $method, $params));
 
-        // Notify the interested Listeners about the iminent Controller's execution.
-        Event::fire('framework.controller.executing', array($this, $method, $params));
+            // Execute the requested Method with the given arguments.
+            $response = call_user_func_array(array($this, $method), $params);
 
-        // Execute the requested Method with the given arguments.
-        $result = call_user_func_array(array($this, $method), $params);
-
-        // The Method returned a Response instance; send it and stop the processing.
-        if ($result instanceof SymfonyResponse) {
-            return $result;
+            // Execute the Legacy Views Rendering support if is requested.
+            if (is_null($response) && View::useLegacyMode()) {
+                return $this->createResponseFromLegacy();
+            }
         }
 
         // After the Action execution stage.
-        $retval = $this->after($result);
+        $this->after($response);
 
-        if($retval !== false) {
-            // Create the Response and send it.
-            return $this->createResponse($result);
+        // Final post-processing stage.
+        if ($response instanceof SymfonyResponse) {
+            return $response;
+        } else if ($response instanceof BaseView) {
+            return $this->createResponseFromView($response);
         }
 
-        return Response::make('');
+        return Response::make($response);
     }
 
     /**
      * Create from the given result a Response instance and send it.
      *
-     * @param mixed  $result
-     * @return bool
+     * @param mixed  $response
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function createResponse($result)
+    protected function createResponseFromView($response)
     {
-        if ($result === null) {
-            // Retrieve the legacy View instances.
-            $items = View::getLegacyItems();
-
-            if(empty($items)) {
-                // There are no legacy View instances; quit processing.
-                return Response::make('');
-            }
-
-            // Prepare the Response's Content.
-            $content = '';
-
-            foreach ($items as $item) {
-                // Fetch the current View instance to content.
-                $content .= $item->fetch();
-            }
-
-            // Retrieve also the legacy Headers.
-            $headers = View::getLegacyHeaders();
-
-            // Create a Response instance and return it.
-            return Response::make($content, 200, $headers);
-        } else if (! $result instanceof BaseView) {
-            // Create a Response instance and return it.
-            return Response::make($result);
-        }
-
-        if ((! $result instanceof Template) && ($this->layout !== false)) {
+        if ((! $response instanceof Template) && ($this->layout !== false)) {
             // A View instance, having a Layout specified; create a Template instance.
-            $result = Template::make($this->layout, $this->template)
-                ->with('content', $result->fetch());
+            $response = Template::make($this->layout, $this->template)->with('content', $response);
         }
 
         // Create a Response instance and return it.
-        return Response::make($result);
+        return Response::make($response);
+    }
+
+    /**
+     * Create a Response instance from Legacy View items and send it.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function createResponseFromLegacy()
+    {
+        $content = '';
+
+        // Retrieve and fetch the legacy View instances.
+        $items = View::getLegacyItems();
+
+        foreach ($items as $item) {
+            $content .= $item->fetch();
+        }
+
+        // Retrieve also the legacy Headers.
+        $headers = View::getLegacyHeaders();
+
+        // Create a Response instance and return it.
+        return Response::make($content, 200, $headers);
     }
 
     /**
@@ -204,14 +182,14 @@ abstract class Controller
     }
 
     /**
-     * This method automatically invokes after the current Action, when it does not return a
-     * null or boolean value. This Method is supposed to be overriden for using it.
+     * This method automatically invokes after the current Action and is supposed
+     * to be overriden for using it.
      *
      * Note that the Action's returned value is passed to this Method as parameter.
      */
     protected function after($result)
     {
-        return true;
+        //
     }
 
     /**
@@ -240,23 +218,26 @@ abstract class Controller
      */
     protected function getView(array $data = array())
     {
-        return View::make($this->defaultView, $data, $this->module);
-    }
+        list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-    /**
-     * @return string
-     */
-    protected function getViewName()
-    {
-        return $this->defaultView;
-    }
+        $baseView = ucfirst($caller['function']);
 
-    /**
-     * @return string|null
-     */
-    protected function getModule()
-    {
-        return $this->module;
+        //
+        $classPath = str_replace('\\', '/', static::class);
+
+        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
+            $view = str_replace('/', DS, $matches[1]) .DS .$baseView;
+
+            $module = null;
+        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
+            $view = str_replace('/', DS, $matches[2]) .DS .$baseView;
+
+            $module = $matches[1];
+        } else {
+            throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
+        }
+
+        return View::make($view, $data, $module);
     }
 
     /**

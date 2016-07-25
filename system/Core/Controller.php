@@ -93,9 +93,9 @@ abstract class Controller
         // Before the Action execution stage.
         $response = $this->before();
 
-        // The requested Action execution stage.
+        // When the Before Stage do not return a Symfony Response, execute the requested
+        // Method with the given arguments, capturing its returned value on our response.
         if (! $response instanceof SymfonyResponse) {
-            // Execute the requested Method with the given arguments.
             $response = call_user_func_array(array($this, $method), $params);
         }
 

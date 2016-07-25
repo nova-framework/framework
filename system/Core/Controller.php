@@ -117,27 +117,30 @@ abstract class Controller
     {
         // If the response which is returned from the Controller's Action is null and we have
         // View instance on View's Legacy support, we will assume the we are on Legacy Mode.
-        if (is_null($response) && View::hasLegacyItems()) {
-            $content = '';
-
-            // Retrieve and fetch the Legacy View instances, merging them to content.
+        if (is_null($response)) {
+            // Retrieve the Legacy View instances.
             $items = View::getLegacyItems();
 
-            foreach ($items as $item) {
-                $content .= $item->fetch();
+            if (! empty($items)) {
+                // We have Legacy View instances; fetch every one to content.
+                $content = '';
+
+                foreach ($items as $item) {
+                    $content .= $item->fetch();
+                }
+
+                // Retrieve the Legacy Headers.
+                $headers = View::getLegacyHeaders();
+
+                // Create a Response instance to response.
+                $response = Response::make($content, 200, $headers);
             }
-
-            // Retrieve the Legacy Headers.
-            $headers = View::getLegacyHeaders();
-
-            // Create a Response instance and return it.
-            $response = Response::make($content, 200, $headers);
-        }
-
-        // If the response which is returned from the Controller's Action is a View instance,
-        // we will assume we want to render it on the default Controller's templated environment.
-        if (($response instanceof View) && ($this->layout !== false)) {
-            $response = Template::make($this->layout, $this->template)->with('content', $response);
+        } else if ($response instanceof View) {
+            // If the response which is returned from the Controller's Action is a View instance,
+            // we will assume we want to render it using the Controller's templated environment.
+            if ($this->layout !== false) {
+                $response = Template::make($this->layout, $this->template)->with('content', $response);
+            }
         }
 
         // If the current response is not a instance of Symfony Response, we will create one.

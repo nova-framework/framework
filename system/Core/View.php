@@ -74,16 +74,6 @@ class View extends BaseView
      *
      * @return array
      */
-    public static function hasLegacyItems()
-    {
-        return ! empty(static::$legacyItems);
-    }
-
-    /**
-     * Return the stored (legacy) instances.
-     *
-     * @return array
-     */
     public static function getLegacyItems()
     {
         return static::$legacyItems;

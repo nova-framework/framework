@@ -53,14 +53,7 @@ class View extends BaseView
      */
     public static function make($view, $data = array(), $module = null)
     {
-        if (is_string($data)) {
-            if (! empty($data) && ($module === null)) {
-                // The Module name given as second parameter; adjust the information.
-                $module = $data;
-            }
-
-            $data = array();
-        }
+        list($data, $module) = static::parseParams($data, $module);
 
         // Prepare the (relative) file path according with Module parameter presence.
         if ($module !== null) {

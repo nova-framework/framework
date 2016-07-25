@@ -40,14 +40,7 @@ class Template extends BaseView
      */
     public static function make($view, $data = array(), $template = null)
     {
-        if (is_string($data)) {
-            if (! empty($data) && ($template === null)) {
-                // The Module name given as second parameter; adjust the information.
-                $template = $data;
-            }
-
-            $data = array();
-        }
+        list($data, $template) = static::parseParams($data, $template);
 
         // Adjust the current Template.
         $template = $template ?: Config::get('app.template');

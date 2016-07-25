@@ -49,15 +49,14 @@ class Template extends BaseView
         $basePath = APPDIR .'Templates' .DS .$template .DS;
 
         // Get the name of the current Template files.
-        $ltrFile = $view .'.php';
-        $rtlFile = $view .'-rtl.php';
-
-        // Use the LTR Template file by default.
-        $path = $basePath .$ltrFile;
+        $ltrPath = $basePath .$view .'.php';
+        $rtlPath = $basePath .$view .'-rtl.php';
 
         // Depending on the Language direction, adjust to RTL Template file, if case.
-        if ((Translator::direction() == 'rtl') && file_exists($basePath .$rtlFile)) {
-            $path = $basePath .$rtlFile;
+        if ((Translator::direction() == 'rtl') && file_exists($rtlPath)) {
+            $path = $rtlPath;
+        } else {
+            $path = $ltrPath;
         }
 
         return new Template($view, $path, $data);

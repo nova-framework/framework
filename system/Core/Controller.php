@@ -119,21 +119,18 @@ abstract class Controller
         // View instance on View's Legacy support, we will assume the we are on Legacy Mode.
         if (is_null($response)) {
             // Retrieve the Legacy View instances.
-            $items = View::getLegacyItems();
+            $views = View::getLegacyItems();
 
-            if (! empty($items)) {
-                // We have Legacy View instances; fetch every one to content.
+            if (! empty($views)) {
+                // We have Legacy View instances; fetch every one to the Response content.
                 $content = '';
 
-                foreach ($items as $item) {
-                    $content .= $item->fetch();
+                foreach ($views as $view) {
+                    $content .= $view->fetch();
                 }
 
-                // Retrieve the Legacy Headers.
-                $headers = View::getLegacyHeaders();
-
                 // Create a Response instance to response.
-                $response = Response::make($content, 200, $headers);
+                $response = Response::make($content, 200, View::getLegacyHeaders());
             }
         } else if ($response instanceof View) {
             // If the response which is returned from the Controller's Action is a View instance,

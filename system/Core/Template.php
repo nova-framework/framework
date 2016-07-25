@@ -8,6 +8,7 @@
 
 namespace Core;
 
+use Core\Config;
 use Core\BaseView;
 use Support\Facades\Language as Translator;
 
@@ -49,7 +50,7 @@ class Template extends BaseView
         }
 
         // Adjust the current Template.
-        $template = ($template !== null) ? $template : TEMPLATE;
+        $template = $template ?: Config::get('app.template');
 
         // Get the base path for the current Template files.
         $basePath = APPDIR .'Templates' .DS .$template .DS;

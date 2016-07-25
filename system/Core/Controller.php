@@ -9,7 +9,6 @@
 namespace Core;
 
 use Core\Config;
-use Core\BaseView;
 use Core\Language;
 use Core\Template;
 use Core\View;
@@ -46,7 +45,7 @@ abstract class Controller
      *
      * @var string
      */
-    protected $template = null;
+    protected $template;
 
     /**
      * The currently used Layout.
@@ -99,23 +98,17 @@ abstract class Controller
             // Execute the requested Method with the given arguments.
             $response = call_user_func_array(array($this, $method), $params);
 
-            // Execute the Legacy Views Rendering support if is requested.
-            if (is_null($response) && View::useLegacyMode()) {
-                return $this->createResponseFromLegacy();
+            if (is_null($response) && View::hasLegacyItems()) {
+                // No response returned from Action, while having Legacy View items.
+                $response = $this->createResponseFromLegacy();
             }
         }
 
         // After the Action execution stage.
         $this->after($response);
 
-        // Final post-processing stage.
-        if ($response instanceof SymfonyResponse) {
-            return $response;
-        } else if ($response instanceof BaseView) {
-            return $this->createResponseFromView($response);
-        }
-
-        return Response::make($response);
+        // Do the final post-processing stage and return the response.
+        return $this->processResponse($response);
     }
 
     /**
@@ -125,10 +118,12 @@ abstract class Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function createResponseFromView($response)
+    protected function processResponse($response)
     {
-        if ((! $response instanceof Template) && ($this->layout !== false)) {
-            // A View instance, having a Layout specified; create a Template instance.
+        if ($response instanceof SymfonyResponse) return $response;
+
+        if (($response instanceof View) && ($this->layout !== false)) {
+            // A View instance, while a Layout is specified; make the response a Template instance.
             $response = Template::make($this->layout, $this->template)->with('content', $response);
         }
 
@@ -137,7 +132,7 @@ abstract class Controller
     }
 
     /**
-     * Create a Response instance from Legacy View items and send it.
+     * Create a Response instance from Legacy View items and return it.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -145,14 +140,14 @@ abstract class Controller
     {
         $content = '';
 
-        // Retrieve and fetch the legacy View instances.
+        // Retrieve and fetch the Legacy View instances, merging them to content.
         $items = View::getLegacyItems();
 
         foreach ($items as $item) {
             $content .= $item->fetch();
         }
 
-        // Retrieve also the legacy Headers.
+        // Retrieve the Legacy Headers.
         $headers = View::getLegacyHeaders();
 
         // Create a Response instance and return it.

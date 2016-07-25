@@ -81,7 +81,7 @@ class View extends BaseView
      *
      * @return array
      */
-    public static function useLegacyMode()
+    public static function hasLegacyItems()
     {
         return ! empty(static::$legacyItems);
     }

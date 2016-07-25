@@ -116,25 +116,27 @@ abstract class Controller
     protected function processResponse($response)
     {
         // If the response which is returned from the Controller's Action is null and we have
-        // View instance on View's Legacy support, we will assume the we are on Legacy Mode.
+        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
         if (is_null($response)) {
             // Retrieve the Legacy View instances.
             $views = View::getLegacyViews();
 
             if (! empty($views)) {
-                // We have Legacy View instances; fetch every one to the Response content.
+                // Fetch every View instance and append it to the Response content.
                 $content = '';
 
                 foreach ($views as $view) {
                     $content .= $view->fetch();
                 }
 
-                // Create a Response instance to response.
+                // Create a Response instance from gathered information.
                 $response = Response::make($content, 200, View::getLegacyHeaders());
             }
-        } else if ($response instanceof View) {
-            // If the response which is returned from the Controller's Action is a View instance,
-            // we will assume we want to render it using the Controller's templated environment.
+        }
+
+        // If the response which is returned from the Controller's Action is a View instance,
+        // we will assume we want to render it using the Controller's templated environment.
+        else if ($response instanceof View) {
             if ($this->layout !== false) {
                 $response = Template::make($this->layout, $this->template)->with('content', $response);
             }

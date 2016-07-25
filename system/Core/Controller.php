@@ -122,6 +122,8 @@ abstract class Controller
             $views = View::getLegacyViews();
 
             if (! empty($views)) {
+                $headers = View::getLegacyHeaders();
+
                 // Fetch every View instance and append it to the Response content.
                 $content = '';
 
@@ -130,10 +132,9 @@ abstract class Controller
                 }
 
                 // Create a Response instance from gathered information.
-                $response = Response::make($content, 200, View::getLegacyHeaders());
+                $response = Response::make($content, 200, $headers);
             }
         }
-
         // If the response which is returned from the Controller's Action is a View instance,
         // we will assume we want to render it using the Controller's templated environment.
         else if ($response instanceof View) {

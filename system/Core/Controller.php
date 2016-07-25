@@ -119,7 +119,7 @@ abstract class Controller
         // View instance on View's Legacy support, we will assume the we are on Legacy Mode.
         if (is_null($response)) {
             // Retrieve the Legacy View instances.
-            $views = View::getLegacyItems();
+            $views = View::getLegacyViews();
 
             if (! empty($views)) {
                 // We have Legacy View instances; fetch every one to the Response content.

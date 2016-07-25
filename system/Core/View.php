@@ -23,7 +23,7 @@ class View extends BaseView
     /**
      * @var array Array of legacy BaseView instances
      */
-    private static $legacyItems = array();
+    private static $legacyViews = array();
 
     /**
      * @var array Array of legacy HTTP headers
@@ -74,9 +74,9 @@ class View extends BaseView
      *
      * @return array
      */
-    public static function getLegacyItems()
+    public static function getLegacyViews()
     {
-        return static::$legacyItems;
+        return static::$legacyViews;
     }
 
     /**
@@ -133,11 +133,11 @@ class View extends BaseView
         $className = static::class;
 
         // Flag for fetching the View rendering output.
-        $shouldFetch = false;
+        $fetchView = false;
 
         // Prepare the required information.
         if ($method == 'fetch') {
-            $shouldFetch = true;
+            $fetchView = true;
         } else if ($method == 'render') {
             // Nothing to do; there is no Headers sending.
         } else if ($method == 'renderTemplate') {
@@ -148,14 +148,14 @@ class View extends BaseView
         }
 
         // Create a View instance, using the current Class and the given parameters.
-        $instance = call_user_func_array(array($className, 'make'), $params);
+        $view = call_user_func_array(array($className, 'make'), $params);
 
-        if ($shouldFetch) {
+        if ($fetchView) {
             // Render the object and return the captured output.
-            return $instance->fetch();
+            return $view->fetch();
         }
 
-        array_push(static::$legacyItems, $instance);
+        array_push(static::$legacyViews, $view);
     }
 
 }

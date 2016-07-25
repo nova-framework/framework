@@ -120,13 +120,13 @@ abstract class Controller
      */
     protected function processResponse($response)
     {
-        // If the response is returned from the controller action is a View instance
-        // we will assume we want to render it on the default templated environment,
-        // which is setup via the current controller properties.
+        // If the response which is returned from the Controller's Action is a View instance,
+        // we will assume we want to render it on the default Controller's templated environment.
         if (($response instanceof View) && ($this->layout !== false)) {
             $response = Template::make($this->layout, $this->template)->with('content', $response);
         }
 
+        // If the current response is not a instance of Symfony Response, we will create one.
         if (! $response instanceof SymfonyResponse) {
             $response = Response::make($response);
         }

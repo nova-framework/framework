@@ -97,11 +97,6 @@ abstract class Controller
 
             // Execute the requested Method with the given arguments.
             $response = call_user_func_array(array($this, $method), $params);
-
-            if (is_null($response) && View::hasLegacyItems()) {
-                // No response returned from Action, while having Legacy View items.
-                $response = $this->createResponseFromLegacy();
-            }
         }
 
         // After the Action execution stage.
@@ -126,35 +121,31 @@ abstract class Controller
             $response = Template::make($this->layout, $this->template)->with('content', $response);
         }
 
+        // If the response which is returned from the Controller's Action is null and we have
+        // View instance on View's Legacy support, we will assume the we are on Legacy Mode.
+        else if (is_null($response) && View::hasLegacyItems()) {
+            $content = '';
+
+            // Retrieve and fetch the Legacy View instances, merging them to content.
+            $items = View::getLegacyItems();
+
+            foreach ($items as $item) {
+                $content .= $item->fetch();
+            }
+
+            // Retrieve the Legacy Headers.
+            $headers = View::getLegacyHeaders();
+
+            // Create a Response instance and return it.
+            $response = Response::make($content, 200, $headers);
+        }
+
         // If the current response is not a instance of Symfony Response, we will create one.
         if (! $response instanceof SymfonyResponse) {
             $response = Response::make($response);
         }
 
         return $response;
-    }
-
-    /**
-     * Create a Response instance from Legacy View items and return it.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function createResponseFromLegacy()
-    {
-        $content = '';
-
-        // Retrieve and fetch the Legacy View instances, merging them to content.
-        $items = View::getLegacyItems();
-
-        foreach ($items as $item) {
-            $content .= $item->fetch();
-        }
-
-        // Retrieve the Legacy Headers.
-        $headers = View::getLegacyHeaders();
-
-        // Create a Response instance and return it.
-        return Response::make($content, 200, $headers);
     }
 
     /**

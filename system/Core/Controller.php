@@ -115,12 +115,6 @@ abstract class Controller
      */
     protected function processResponse($response)
     {
-        // If the response which is returned from the Controller's Action is a View instance,
-        // we will assume we want to render it on the default Controller's templated environment.
-        if (($response instanceof View) && ($this->layout !== false)) {
-            $response = Template::make($this->layout, $this->template)->with('content', $response);
-        }
-
         // If the response which is returned from the Controller's Action is null and we have
         // View instance on View's Legacy support, we will assume the we are on Legacy Mode.
         if (is_null($response) && View::hasLegacyItems()) {
@@ -138,6 +132,12 @@ abstract class Controller
 
             // Create a Response instance and return it.
             $response = Response::make($content, 200, $headers);
+        }
+
+        // If the response which is returned from the Controller's Action is a View instance,
+        // we will assume we want to render it on the default Controller's templated environment.
+        if (($response instanceof View) && ($this->layout !== false)) {
+            $response = Template::make($this->layout, $this->template)->with('content', $response);
         }
 
         // If the current response is not a instance of Symfony Response, we will create one.

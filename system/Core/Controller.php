@@ -123,7 +123,7 @@ abstract class Controller
 
         // If the response which is returned from the Controller's Action is null and we have
         // View instance on View's Legacy support, we will assume the we are on Legacy Mode.
-        else if (is_null($response) && View::hasLegacyItems()) {
+        if (is_null($response) && View::hasLegacyItems()) {
             $content = '';
 
             // Retrieve and fetch the Legacy View instances, merging them to content.

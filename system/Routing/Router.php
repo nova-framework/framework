@@ -9,7 +9,6 @@
 namespace Routing;
 
 use Core\Config;
-use Core\BaseView as View;
 use Core\Controller;
 use Events\Dispatcher;
 

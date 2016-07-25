@@ -10,5 +10,12 @@ interface RenderableInterface
      *
      * @return string
      */
+    public function fetch();
+    
+    /**
+     * Get the evaluated contents of the object.
+     *
+     * @return string
+     */
     public function render();
 }

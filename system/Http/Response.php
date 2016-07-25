@@ -2,13 +2,13 @@
 
 namespace Http;
 
-use ArrayObject;
-use Symfony\Component\HttpFoundation\Cookie;
-
-use Core\BaseView;
-
+use Core\BaseView as View;
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
+
+use Symfony\Component\HttpFoundation\Cookie;
+
+use ArrayObject;
 
 
 class Response extends \Symfony\Component\HttpFoundation\Response
@@ -65,7 +65,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
             $content = $this->morphToJson($content);
         } else if ($content instanceof RenderableInterface) {
             $content = $content->render();
-        } else if ($content instanceof BaseView) {
+        } else if ($content instanceof View) {
             $content = $content->fetch();
         }
 

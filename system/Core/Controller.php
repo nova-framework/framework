@@ -9,7 +9,6 @@
 namespace Core;
 
 use Core\Config;
-use Core\BaseView;
 use Core\Language;
 use Core\Template;
 use Core\View;
@@ -46,7 +45,7 @@ abstract class Controller
      *
      * @var string
      */
-    protected $template = null;
+    protected $template;
 
     /**
      * The currently used Layout.
@@ -88,34 +87,23 @@ abstract class Controller
         $this->method = $method;
         $this->params = $params;
 
+        // Notify the interested Listeners about the iminent Controller's execution.
+        Event::fire('framework.controller.executing', array($this, $method, $params));
+
         // Before the Action execution stage.
         $response = $this->before();
 
-        // In depth Action execution stage.
+        // When the Before Stage do not return a Symfony Response, execute the requested
+        // Method with the given arguments, capturing its returned value on our response.
         if (! $response instanceof SymfonyResponse) {
-            // Notify the interested Listeners about the iminent Controller's execution.
-            Event::fire('framework.controller.executing', array($this, $method, $params));
-
-            // Execute the requested Method with the given arguments.
             $response = call_user_func_array(array($this, $method), $params);
-
-            // Execute the Legacy Views Rendering support if is requested.
-            if (is_null($response) && View::useLegacyMode()) {
-                return $this->createResponseFromLegacy();
-            }
         }
 
         // After the Action execution stage.
         $this->after($response);
 
-        // Final post-processing stage.
-        if ($response instanceof SymfonyResponse) {
-            return $response;
-        } else if ($response instanceof BaseView) {
-            return $this->createResponseFromView($response);
-        }
-
-        return Response::make($response);
+        // Do the final post-processing stage and return the response.
+        return $this->processResponse($response);
     }
 
     /**
@@ -125,38 +113,42 @@ abstract class Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function createResponseFromView($response)
+    protected function processResponse($response)
     {
-        if ((! $response instanceof Template) && ($this->layout !== false)) {
-            // A View instance, having a Layout specified; create a Template instance.
-            $response = Template::make($this->layout, $this->template)->with('content', $response);
+        // If the response which is returned from the Controller's Action is null and we have
+        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
+        if (is_null($response)) {
+            // Retrieve the Legacy View instances.
+            $views = View::getLegacyViews();
+
+            if (! empty($views)) {
+                $headers = View::getLegacyHeaders();
+
+                // Fetch every View instance and append it to the Response content.
+                $content = '';
+
+                foreach ($views as $view) {
+                    $content .= $view->fetch();
+                }
+
+                // Create a Response instance from gathered information.
+                $response = Response::make($content, 200, $headers);
+            }
+        }
+        // If the response which is returned from the Controller's Action is a View instance,
+        // we will assume we want to render it using the Controller's templated environment.
+        else if ($response instanceof View) {
+            if ($this->layout !== false) {
+                $response = Template::make($this->layout, $this->template)->with('content', $response);
+            }
         }
 
-        // Create a Response instance and return it.
-        return Response::make($response);
-    }
-
-    /**
-     * Create a Response instance from Legacy View items and send it.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function createResponseFromLegacy()
-    {
-        $content = '';
-
-        // Retrieve and fetch the legacy View instances.
-        $items = View::getLegacyItems();
-
-        foreach ($items as $item) {
-            $content .= $item->fetch();
+        // If the current response is not a instance of Symfony Response, we will create one.
+        if (! $response instanceof SymfonyResponse) {
+            $response = Response::make($response);
         }
 
-        // Retrieve also the legacy Headers.
-        $headers = View::getLegacyHeaders();
-
-        // Create a Response instance and return it.
-        return Response::make($content, 200, $headers);
+        return $response;
     }
 
     /**
@@ -258,6 +250,20 @@ abstract class Controller
     protected function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Handle calls to missing methods on the controller.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        throw new \BadMethodCallException("Method [$method] does not exist.");
     }
 
 }

@@ -23,7 +23,7 @@ class View extends BaseView
     /**
      * @var array Array of legacy BaseView instances
      */
-    private static $legacyItems = array();
+    private static $legacyViews = array();
 
     /**
      * @var array Array of legacy HTTP headers
@@ -53,20 +53,13 @@ class View extends BaseView
      */
     public static function make($view, $data = array(), $module = null)
     {
-        if (is_string($data)) {
-            if (! empty($data) && ($module === null)) {
-                // The Module name given as second parameter; adjust the information.
-                $module = $data;
-            }
-
-            $data = array();
-        }
+        list($data, $module) = static::parseParams($data, $module);
 
         // Prepare the (relative) file path according with Module parameter presence.
-        if ($module !== null) {
-            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
-        } else {
+        if (is_null($module)) {
             $path = str_replace('/', DS, APPDIR ."Views/$view.php");
+        } else {
+            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
         }
 
         return new View($view, $path, $data);
@@ -81,19 +74,9 @@ class View extends BaseView
      *
      * @return array
      */
-    public static function useLegacyMode()
+    public static function getLegacyViews()
     {
-        return ! empty(static::$legacyItems);
-    }
-
-    /**
-     * Return the stored (legacy) instances.
-     *
-     * @return array
-     */
-    public static function getLegacyItems()
-    {
-        return static::$legacyItems;
+        return static::$legacyViews;
     }
 
     /**
@@ -150,11 +133,11 @@ class View extends BaseView
         $className = static::class;
 
         // Flag for fetching the View rendering output.
-        $shouldFetch = false;
+        $fetchView = false;
 
         // Prepare the required information.
         if ($method == 'fetch') {
-            $shouldFetch = true;
+            $fetchView = true;
         } else if ($method == 'render') {
             // Nothing to do; there is no Headers sending.
         } else if ($method == 'renderTemplate') {
@@ -165,14 +148,14 @@ class View extends BaseView
         }
 
         // Create a View instance, using the current Class and the given parameters.
-        $instance = call_user_func_array(array($className, 'make'), $params);
+        $view = call_user_func_array(array($className, 'make'), $params);
 
-        if ($shouldFetch) {
+        if ($fetchView) {
             // Render the object and return the captured output.
-            return $instance->fetch();
+            return $view->fetch();
         }
 
-        array_push(static::$legacyItems, $instance);
+        array_push(static::$legacyViews, $view);
     }
 
 }

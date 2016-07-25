@@ -238,6 +238,27 @@ abstract class BaseView implements ArrayAccess
     }
 
     /**
+     * Process the given parameters.
+     *
+     * @param mixed $data
+     * @param mixed $custom
+     * @return array
+     */
+    protected static function parseParams($data, $custom = null)
+    {
+        if (is_string($data)) {
+            if (! empty($data) && is_null($custom)) {
+                // The custom given as second parameter; adjust the information.
+                $custom = $data;
+            }
+
+            $data = array();
+        }
+
+        return array($data, $custom);
+    }
+
+    /**
      * Implementation of the ArrayAccess offsetExists method.
      */
     public function offsetExists($offset)

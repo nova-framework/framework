@@ -2,13 +2,13 @@
 
 namespace Http;
 
-use ArrayObject;
-use Symfony\Component\HttpFoundation\Cookie;
-
 use Core\BaseView;
-
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
+
+use Symfony\Component\HttpFoundation\Cookie;
+
+use ArrayObject;
 
 
 class Response extends \Symfony\Component\HttpFoundation\Response

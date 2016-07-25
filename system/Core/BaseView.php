@@ -247,7 +247,7 @@ abstract class BaseView implements ArrayAccess
     protected static function parseParams($data, $custom = null)
     {
         if (is_string($data)) {
-            if (! empty($data) && ($custom === null)) {
+            if (! empty($data) && is_null($custom)) {
                 // The custom given as second parameter; adjust the information.
                 $custom = $data;
             }

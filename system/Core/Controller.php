@@ -120,15 +120,18 @@ abstract class Controller
      */
     protected function processResponse($response)
     {
-        if ($response instanceof SymfonyResponse) return $response;
-
+        // If the response is returned from the controller action is a View instance
+        // we will assume we want to render it on the default templated environment,
+        // which is setup via the current controller properties.
         if (($response instanceof View) && ($this->layout !== false)) {
-            // A View instance, while a Layout is specified; make the response a Template instance.
             $response = Template::make($this->layout, $this->template)->with('content', $response);
         }
 
-        // Create a Response instance and return it.
-        return Response::make($response);
+        if (! $response instanceof SymfonyResponse) {
+            $response = Response::make($response);
+        }
+
+        return $response;
     }
 
     /**
@@ -268,5 +271,5 @@ abstract class Controller
     {
         throw new \BadMethodCallException("Method [$method] does not exist.");
     }
-    
+
 }

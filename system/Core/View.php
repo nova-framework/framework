@@ -56,10 +56,10 @@ class View extends BaseView
         list($data, $module) = static::parseParams($data, $module);
 
         // Prepare the (relative) file path according with Module parameter presence.
-        if ($module !== null) {
-            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
-        } else {
+        if (is_null($module)) {
             $path = str_replace('/', DS, APPDIR ."Views/$view.php");
+        } else {
+            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
         }
 
         return new View($view, $path, $data);

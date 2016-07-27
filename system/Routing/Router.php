@@ -28,6 +28,7 @@ use App;
 use Console;
 use Language;
 use Response;
+use Str;
 
 
 /**
@@ -485,16 +486,16 @@ class Router
         // Get the Method and Path.
         $method = $request->method();
 
-        $path = $request->path();
-
         // First, we will supose that URI is associated with an Asset File.
         if ($method == 'GET') {
-            $result = $this->dispatchFile($path);
+            $response = $this->dispatchFile($request);
 
-            if($result instanceof SymfonyResponse) {
-                return $result;
+            if($response instanceof SymfonyResponse) {
+                return $response;
             }
         }
+
+        $path = $request->path();
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
         if ($this->defaultRoute !== null) {
@@ -511,10 +512,10 @@ class Router
                 $this->matchedRoute = $route;
 
                 // Apply the (specified) Filters on matched Route.
-                $result = $this->applyFiltersToRoute($route);
+                $response = $this->applyFiltersToRoute($route);
 
-                if($result instanceof SymfonyResponse) {
-                    return $result;
+                if($response instanceof SymfonyResponse) {
+                    return $response;
                 }
 
                 // Get the matched Route callback.
@@ -540,7 +541,7 @@ class Router
      * Dispatch/Serve a file
      * @return bool
      */
-    protected function dispatchFile($uri)
+    protected function dispatchFile(Request $request)
     {
         // For proper Assets serving, the file URI should be either of the following:
         //
@@ -548,6 +549,9 @@ class Router
         // /modules/blog/assets/css/style.css
         // /assets/css/style.css
 
+        $uri = $request->path();
+
+        //
         $filePath = '';
 
         if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
@@ -568,12 +572,18 @@ class Router
             }
         }
 
-        if (! empty($filePath)) {
-            // Serve the specified Asset File.
-            return $this->serveFile($filePath);
+        if (empty($filePath)) {
+            return false;
         }
 
-        return false;
+        // Serve the specified Asset File.
+        $response = $this->serveFile($filePath);
+
+        if($response instanceof BinaryFileResponse) {
+            $response->isNotModified($request);
+        }
+
+        return $response;
     }
 
     /**
@@ -660,26 +670,15 @@ class Router
         }
 
         // Create a BinaryFileResponse instance.
-        $response = Response::download($filePath, null, array(), 'inline');
+        $response = new BinaryFileResponse($filePath, 200, array(), true, 'inline', true, false);
 
         // Set the Content type.
         $response->headers->set('Content-Type', $contentType);
 
-        // Set the Expires.
-        $expires = Carbon::now()->addYear();
-
-        $response->setExpires($expires);
-
-        // Set the Caching.
-        $lastModified = Carbon::createFromTimestamp(filemtime($filePath));
-
-        $response->setCache(array(
-            'last_modified' => $lastModified,
-            'max_age'       => 600,
-            's_maxage'      => 600,
-            'private'       => false,
-            'public'        => true,
-        ));
+        // Set the Cache Control.
+        $response->setTtl(600);
+        $response->setMaxAge(10800);
+        $response->setSharedMaxAge(600);
 
         return $response;
     }

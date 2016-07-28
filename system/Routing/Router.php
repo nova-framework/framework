@@ -550,6 +550,9 @@ class Router
 
         $uri = $request->path();
 
+        //
+        $filePath = null;
+
         if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $filePath = ROOTDIR .'assets' .DS .$matches[1];
         } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
@@ -563,7 +566,7 @@ class Router
                 $filePath = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
             }
         }
-        
+
         if (empty($filePath)) {
             // The URI does not match a Asset path; return null.
             return null;

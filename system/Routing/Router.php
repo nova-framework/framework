@@ -559,16 +559,12 @@ class Router
         } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
             $module = Inflector::classify($matches[2]);
 
-            $folder = $matches[3];
-
-            $path = $matches[4];
-
             if(strtolower($matches[1]) == 'modules') {
                 // A Module Asset file.
-                $filePath = $this->getModuleAssetPath($module, $folder, $path);
+                $filePath = $this->getModuleAssetPath($module, $matches[3], $matches[4]);
             } else {
                 // A Template Asset file.
-                $filePath = $this->getTemplateAssetPath($module, $folder, $path);
+                $filePath = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
             }
         }
 

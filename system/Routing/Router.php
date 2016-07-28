@@ -562,7 +562,9 @@ class Router
                 // A Template Asset file.
                 $filePath = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
             }
-        } else {
+        }
+        
+        if (empty($filePath)) {
             // The URI does not match a Asset path; return null.
             return null;
         }

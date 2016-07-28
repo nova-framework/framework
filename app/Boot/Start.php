@@ -33,7 +33,7 @@ error_reporting(-1);
 // Set PHP Session Cache Limiter
 //--------------------------------------------------------------------------
 
-session_cache_limiter('public');
+session_cache_limiter('');
 
 //--------------------------------------------------------------------------
 // Use Internally The UTF-8 Encoding

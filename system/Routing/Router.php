@@ -28,7 +28,6 @@ use App;
 use Console;
 use Language;
 use Response;
-use Str;
 
 
 /**

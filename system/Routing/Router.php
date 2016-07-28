@@ -550,9 +550,6 @@ class Router
 
         $uri = $request->path();
 
-        //
-        $filePath = '';
-
         if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $filePath = ROOTDIR .'assets' .DS .$matches[1];
         } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
@@ -565,10 +562,8 @@ class Router
                 // A Template Asset file.
                 $filePath = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
             }
-        }
-
-        if (empty($filePath)) {
-            return false;
+        } else {
+            $filePath = null;
         }
 
         // Serve the specified Asset File.
@@ -640,7 +635,9 @@ class Router
      */
     public function serveFile($filePath)
     {
-        if (! file_exists($filePath)) {
+        if (empty($filePath)) {
+            return null;
+        } else if (! file_exists($filePath)) {
             return  Response::make('', 404);
         } else if (! is_readable($filePath)) {
             return  Response::make('', 403);

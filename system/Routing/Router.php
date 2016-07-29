@@ -94,7 +94,7 @@ class Router
      *
      * @var array $methods
      */
-    public static $methods = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS');
+    public static $methods = array('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS');
 
     /**
      * Router constructor.
@@ -243,21 +243,21 @@ class Router
      */
     public function resource($basePath, $controller)
     {
-        $this->registrer('get',                 $basePath,                 $controller .'@index');
-        $this->registrer('get',                 $basePath .'/create',      $controller .'@create');
-        $this->registrer('post',                $basePath,                 $controller .'@store');
-        $this->registrer('get',                 $basePath .'/(:any)',      $controller .'@show');
-        $this->registrer('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
-        $this->registrer(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
-        $this->registrer('delete',              $basePath .'/(:any)',      $controller .'@delete');
+        $this->register('get',                 $basePath,                 $controller .'@index');
+        $this->register('get',                 $basePath .'/create',      $controller .'@create');
+        $this->register('post',                $basePath,                 $controller .'@store');
+        $this->register('get',                 $basePath .'/(:any)',      $controller .'@show');
+        $this->register('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
+        $this->register(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
+        $this->register('delete',              $basePath .'/(:any)',      $controller .'@delete');
     }
 
     /**
      * Maps a Method and URL pattern to a Callback.
      *
-     * @param string $method HTTP metod(s) to match
-     * @param string $route URL pattern to match
-     * @param callback $action Callback object
+     * @param string|array $method HTTP metod(s) to match
+     * @param string       $route URL pattern to match
+     * @param callback     $action Callback object
      */
     protected function register($method, $route, $action = null)
     {

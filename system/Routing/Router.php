@@ -15,6 +15,7 @@ use Events\Dispatcher;
 use Helpers\Inflector;
 use Http\Request;
 //use Http\Response;
+use Routing\AssetFileDispatcher;
 use Routing\ControllerInspector;
 use Routing\Route;
 use Support\Facades\Facade;
@@ -36,6 +37,13 @@ use Response;
  */
 class Router
 {
+    /**
+     * The asset file dispatcher instance.
+     *
+     * @var \Nova\Routing\AssetFileDispatcher
+     */
+    protected $assetDispatcher;
+
     /**
      * The controller inspector instance.
      *
@@ -143,13 +151,17 @@ class Router
     }
 
     /**
-     * Return the available Filters.
+     * Get the controller dispatcher instance.
      *
-     * @return array
+     * @return \Routing\ControllerDispatcher
      */
-    public function getFilters()
+    public function getAssetFileDispatcher()
     {
-        return $this->filters;
+        if (is_null($this->assetDispatcher)) {
+            $this->assetDispatcher = new AssetFileDispatcher();
+        }
+
+        return $this->assetDispatcher;
     }
 
     /**
@@ -160,6 +172,16 @@ class Router
     public function getInspector()
     {
         return $this->inspector ?: $this->inspector = new ControllerInspector();
+    }
+
+    /**
+     * Return the available Filters.
+     *
+     * @return array
+     */
+    public function getFilters()
+    {
+        return $this->filters;
     }
 
     /**
@@ -554,12 +576,26 @@ class Router
 
         // First, we will supose that URI is associated with an Asset File.
         if ($method == 'GET') {
-            $response = $this->dispatchFile($request);
+            $response = $this->dispatchAssetFile($request);
 
             if($response instanceof SymfonyResponse) {
                 return $response;
             }
         }
+
+        return $this->dispatchToRoute($request);
+    }
+
+    /**
+     * Dispatch the request to a route and return the response.
+     *
+     * @param  \Nova\Http\Request  $request
+     * @return mixed
+     */
+    public function dispatchToRoute(Request $request)
+    {
+        // Get the Method and Path.
+        $method = $request->method();
 
         $path = $request->path();
 
@@ -604,146 +640,15 @@ class Router
     }
 
     /**
-     * Dispatch/Serve a file
-     * @return bool
-     */
-    protected function dispatchFile(Request $request)
-    {
-        // For proper Assets serving, the file URI should be either of the following:
-        //
-        // /templates/default/assets/css/style.css
-        // /modules/blog/assets/css/style.css
-        // /assets/css/style.css
-
-        $uri = $request->path();
-
-        //
-        $filePath = null;
-
-        if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
-            $filePath = ROOTDIR .'assets' .DS .$matches[1];
-        } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
-            $module = Inflector::classify($matches[2]);
-
-            if(strtolower($matches[1]) == 'modules') {
-                // A Module Asset file.
-                $filePath = $this->getModuleAssetPath($module, $matches[3], $matches[4]);
-            } else {
-                // A Template Asset file.
-                $filePath = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
-            }
-        }
-
-        if (empty($filePath)) {
-            // The URI does not match a Asset path; return null.
-            return null;
-        }
-
-        // Serve the specified Asset File.
-        $response = $this->serveFile($filePath);
-
-        if($response instanceof BinaryFileResponse) {
-            $response->isNotModified($request);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Get the path of a Asset file
-     * @return string|null
-     */
-    protected function getModuleAssetPath($module, $folder, $path)
-    {
-        $basePath = APPDIR .str_replace('/', DS, "Modules/$module/Assets/");
-
-        return $basePath .$folder .DS .$path;
-    }
-
-    /**
-     * Get the path of a Asset file
-     * @return string|null
-     */
-    protected function getTemplateAssetPath($template, $folder, $path)
-    {
-        $path = str_replace('/', DS, $path);
-
-        // Retrieve the Template Info
-        $infoFile = APPDIR .'Templates' .DS .$template .DS .'template.json';
-
-        if (is_readable($infoFile)) {
-            $info = json_decode(file_get_contents($infoFile), true);
-
-            // Template Info should be always an array; ensure that.
-            $info = $info ?: array();
-        } else {
-            $info = array();
-        }
-
-        //
-        $basePath = null;
-
-        // Get the current Asset Folder's Mode.
-        $mode = array_get($info, 'assets.paths.' .$folder, 'local');
-
-        if ($mode == 'local') {
-            $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
-        } else if ($mode == 'vendor') {
-            // Get the Vendor name.
-            $vendor = array_get($info, 'assets.vendor', '');
-
-            if (! empty($vendor)) {
-                $basePath = ROOTDIR .str_replace('/', DS, "vendor/$vendor/");
-            }
-        }
-
-        return ! empty($basePath) ? $basePath .$folder .DS .$path : '';
-    }
-
-    /**
-     * Serve a File.
+     * Dispatch the request to a asset file and return the response.
      *
-     * @param string $filePath
-     * @return bool
+     * @param  \Nova\Http\Request  $request
+     * @return mixed
      */
-    public function serveFile($filePath)
+    public function dispatchAssetFile(Request $request)
     {
-        if (! file_exists($filePath)) {
-            return  Response::make('', 404);
-        } else if (! is_readable($filePath)) {
-            return  Response::make('', 403);
-        }
+        $assetDispatcher = $this->getAssetFileDispatcher();
 
-        // Collect the current file information.
-        $guesser = MimeTypeGuesser::getInstance();
-
-        // Even the Symfony's HTTP Foundation have troubles with the CSS and JS files?
-        //
-        // Hard coding the correct mime types for presently needed file extensions.
-        switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
-            case 'css':
-                $contentType = 'text/css';
-                break;
-            case 'js':
-                $contentType = 'application/javascript';
-                break;
-            default:
-                $contentType = $guesser->guess($filePath);
-                break;
-        }
-
-        // Create a BinaryFileResponse instance.
-        $response = new BinaryFileResponse($filePath, 200, array(), true, 'inline', true, false);
-
-        // Set the Content type.
-        $response->headers->set('Content-Type', $contentType);
-
-        // Set the Cache Control.
-        $response->setTtl(600);
-        $response->setMaxAge(10800);
-        $response->setSharedMaxAge(600);
-
-        return $response;
+        return $assetDispatcher->dispatch($request);
     }
-
 }

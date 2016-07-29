@@ -2,6 +2,7 @@
 
 namespace Session;
 
+use Session\ExistenceAwareInterface;
 use Session\SessionInterface;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -205,6 +206,8 @@ class Store implements SessionInterface
     public function migrate($destroy = false, $lifetime = null)
     {
         if ($destroy) $this->handler->destroy($this->getId());
+
+        $this->setExists(false);
 
         $this->id = $this->generateSessionId();
 
@@ -566,6 +569,19 @@ class Store implements SessionInterface
     public function regenerateToken()
     {
         $this->put('_token', str_random(128));
+    }
+
+    /**
+     * Set the existence of the session on the handler if applicable.
+     *
+     * @param  bool  $value
+     * @return void
+     */
+    public function setExists($value)
+    {
+        if ($this->handler instanceof ExistenceAwareInterface) {
+            $this->handler->setExists($value);
+        }
     }
 
     /**

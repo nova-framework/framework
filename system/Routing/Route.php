@@ -268,7 +268,7 @@ class Route
         if (strpos($this->pattern, '{') === false) {
             $regex = $this->pattern;
 
-            // Convert the patterns.
+            // Convert the patterns to their regex equivalents.
             if (strpos($regex, ':') !== false) {
                 $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
                 $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));

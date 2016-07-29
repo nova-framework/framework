@@ -15,6 +15,7 @@ use Events\Dispatcher;
 use Helpers\Inflector;
 use Http\Request;
 //use Http\Response;
+use Routing\ControllerInspector;
 use Routing\Route;
 use Support\Facades\Facade;
 
@@ -35,6 +36,13 @@ use Response;
  */
 class Router
 {
+    /**
+     * The controller inspector instance.
+     *
+     * @var \Routing\ControllerInspector
+     */
+    protected $inspector;
+
     /**
      * Array of routes
      *
@@ -145,6 +153,16 @@ class Router
     }
 
     /**
+     * Get a Controller Inspector instance.
+     *
+     * @return \Routing\ControllerInspector
+     */
+    public function getInspector()
+    {
+        return $this->inspector ?: $this->inspector = new ControllerInspector();
+    }
+
+    /**
      * Return the available Routes.
      *
      * @return Route[]
@@ -250,6 +268,55 @@ class Router
         $this->register('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
         $this->register(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
         $this->register('delete',              $basePath .'/(:any)',      $controller .'@delete');
+    }
+
+    /**
+     * Register an array of controllers with wildcard routing.
+     *
+     * @param  array  $controllers
+     * @return void
+     */
+    public function controllers(array $controllers)
+    {
+        foreach ($controllers as $uri => $name) {
+            $this->controller($uri, $name);
+        }
+    }
+
+    /**
+     * Route a Controller to a URI with wildcard routing.
+     *
+     * @param  string  $uri
+     * @param  string  $controller
+     * @return void
+     */
+    public function controller($uri, $controller)
+    {
+        $prepended = $controller;
+
+        // Adjust the Controller's namespace if we are on a Group.
+        if (! empty($this->groupStack)) {
+            $lastGroup = end($this->groupStack);
+
+            $namespace = array_get($lastGroup, 'namespace');
+
+            if (! empty($namespace)) {
+                $prepended = $namespace .'\\' .ltrim($controller, '\\');
+            }
+        }
+
+        // Retrieve the Controller routable methods and associated information.
+        $routable = $this->getInspector()->getRoutable($prepended, $uri);
+
+        foreach ($routable as $method => $routes) {
+            foreach ($routes as $route) {
+                $action = array('uses' => $controller .'@' .$method);
+
+                $this->register($route['verb'], $route['uri'], $action);
+            }
+        }
+
+        $this->register('ANY', $uri .'/(:all)', $controller .'@missingMethod');
     }
 
     /**

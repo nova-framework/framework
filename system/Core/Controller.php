@@ -15,6 +15,7 @@ use Core\View;
 use Helpers\Hooks;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use App;
 use Event;
@@ -250,6 +251,19 @@ abstract class Controller
     protected function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Handle calls to missing methods on the controller.
+     *
+     * @param  array   $parameters
+     * @return mixed
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function missingMethod($parameters = array())
+    {
+        throw new NotFoundHttpException("Controller method not found.");
     }
 
     /**

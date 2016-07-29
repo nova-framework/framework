@@ -127,7 +127,6 @@ Config::set('app', array(
         'SimpleCurl'    => '\Helpers\SimpleCurl',
         'TableBuilder'  => '\Helpers\TableBuilder',
         'Tags'          => '\Helpers\Tags',
-        'Url'           => '\Helpers\Url',
 
         // The Forensics Console.
         'Console'       => '\Forensics\Console',

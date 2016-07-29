@@ -9,6 +9,7 @@
 namespace Routing;
 
 use Core\Config;
+use Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -241,23 +242,25 @@ class Route
      *
      * @param string $uri Requested URL
      * @param string $method Current HTTP method
-     * @param array $patterns Additional REGEX patterns
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function match($uri, $method, array $patterns = array())
+    public function matches(Request $request, $includingMethod = true)
     {
-        if (! in_array($method, $this->methods)) {
+        $method = $request->method();
+
+        if ($includingMethod && ! in_array($method, $this->methods)) {
             return false;
         }
 
-        // Have a valid HTTP method for this Route; store it for later usage.
-        $this->method = $method;
+        $uri = $request->path();
 
         // Exact match Route.
         if ($this->pattern == $uri) {
-            // Store the current matched URI.
+            // Store the current matched URI and Method.
             $this->uri = $uri;
+
+            $this->method = $method;
 
             return true;
         }
@@ -270,6 +273,10 @@ class Route
 
             // Convert the patterns to their regex equivalents.
             if (strpos($regex, ':') !== false) {
+                // Retrieve the additional Routing Patterns from configuration.
+                $patterns = Config::get('routing.patterns', array());
+
+                //
                 $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
                 $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
 
@@ -313,6 +320,7 @@ class Route
             }
 
             $this->params = $matches;
+            $this->method = $method;
 
             // Also, store the compiled regex.
             $this->regex = $regex;

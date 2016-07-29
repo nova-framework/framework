@@ -591,19 +591,16 @@ class Router
         // Get the Method and Path.
         $method = $request->method();
 
-        $path = $request->path();
+        $uri = $request->path();
 
         // If there exists a Catch-All Route, firstly we add it to Routes list.
         if ($this->defaultRoute !== null) {
             array_push($this->routes, $this->defaultRoute);
         }
 
-        // Retrieve the additional Routing Patterns from configuration.
-        $patterns = Config::get('routing.patterns', array());
-
         // Execute the Routes matching loop.
         foreach ($this->routes as $route) {
-            if ($route->match($path, $method, $patterns)) {
+            if ($route->matches($request)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 
@@ -628,7 +625,7 @@ class Router
         }
 
         // No valid Route found; send an Error 404 Response.
-        $data = array('error' => htmlspecialchars($path, ENT_COMPAT, 'ISO-8859-1', true));
+        $data = array('error' => htmlspecialchars($uri, ENT_COMPAT, 'ISO-8859-1', true));
 
         return Response::error(404, $data);
     }

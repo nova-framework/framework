@@ -288,7 +288,6 @@ class Router
      *
      * @param  string  $uri
      * @param  string  $controller
-     * @param  array   $names
      * @return void
      */
     public function controller($uri, $controller)

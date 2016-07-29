@@ -21,6 +21,28 @@ App::error(function(Exception $exception, $code)
 });
 
 //--------------------------------------------------------------------------
+// Application Missing Route Handler
+//--------------------------------------------------------------------------
+
+use Core\Template;
+
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+App::missing(function(NotFoundHttpException $exception)
+{
+    $status = $exception->getStatusCode();
+
+    $headers = $exception->getHeaders();
+
+    // Create the themed Error Page Response.
+    $view = Template::make('default')
+        ->shares('title', 'Error ' .$status)
+        ->nest('content', 'Error/' .$status);
+
+    return Response::make($view, $status, $headers);
+});
+
+//--------------------------------------------------------------------------
 // Try To Register Again The Config Manager
 //--------------------------------------------------------------------------
 

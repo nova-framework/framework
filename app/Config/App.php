@@ -127,7 +127,6 @@ Config::set('app', array(
         'SimpleCurl'    => '\Helpers\SimpleCurl',
         'TableBuilder'  => '\Helpers\TableBuilder',
         'Tags'          => '\Helpers\Tags',
-        'Url'           => '\Helpers\Url',
 
         // The Forensics Console.
         'Console'       => '\Forensics\Console',
@@ -160,5 +159,6 @@ Config::set('app', array(
         'Session'       => '\Support\Facades\Session',
         'Validator'     => '\Support\Facades\Validator',
         'Log'           => '\Support\Facades\Log',
+        'URL'           => '\Support\Facades\URL',
     ),
 ));

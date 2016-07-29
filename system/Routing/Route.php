@@ -240,12 +240,12 @@ class Route
      * Checks if a URL and HTTP method matches the Route pattern.
      *
      * @param string $uri Requested URL
-     * @param $method Current HTTP method
-     * @param bool $optionals Use, or not, the support for the optional parameters
+     * @param string $method Current HTTP method
+     * @param array $patterns Additional REGEX patterns
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function match($uri, $method, $optionals = false, array $patterns = array())
+    public function match($uri, $method, array $patterns = array())
     {
         if (! in_array($method, $this->methods)) {
             return false;
@@ -267,34 +267,28 @@ class Route
 
         if (strpos($this->pattern, '{') === false) {
             $regex = $this->pattern;
+
+            // Convert the patterns to their regex equivalents.
+            if (strpos($regex, ':') !== false) {
+                $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
+                $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
+
+                $regex = str_replace($searches, $replaces, $regex);
+            }
         } else {
             // Convert the Named Patterns to (:any), e.g. {category}
             $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
 
             // Convert the optional Named Patterns to (/(:any)), e.g. /{category?}
-            if ($optionals) {
-                $count = 0;
+            $regex = preg_replace('#/\{([a-z]+)\?\}#', '(/([^/]+)', $this->pattern, -1, $count);
 
-                $regex = preg_replace('#/\{([a-z]+)\?\}#', '(/([^/]+)', $this->pattern, -1, $count);
-
-                if($count > 0) {
-                    // Pad the pattern with the required ')' characters.
-                    $regex .= str_repeat (')', $count);
-                }
-            } else {
-                // Convert the Named Patterns to (:num), e.g. {:d}
-                $regex = preg_replace('#\{:([a-z]+)\}#', '([0-9]+)', $regex);
+            if($count > 0) {
+                // Pad the pattern with the required ')' characters.
+                $regex .= str_repeat (')', $count);
             }
         }
 
-        if (strpos($regex, ':') !== false) {
-            $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
-            $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
-
-            $regex = str_replace($searches, $replaces, $regex);
-        }
-
-        if ($optionals && (strpos($regex, '(/') !== false)) {
+        if (strpos($regex, '(/') !== false) {
             $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
         }
 

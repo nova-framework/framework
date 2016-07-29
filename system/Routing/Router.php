@@ -603,7 +603,7 @@ class Router
 
         // Execute the Routes matching loop.
         foreach ($this->routes as $route) {
-            if ($route->match($path, $method, true, $patterns)) {
+            if ($route->match($path, $method, $patterns)) {
                 // Found a valid Route; process it.
                 $this->matchedRoute = $route;
 

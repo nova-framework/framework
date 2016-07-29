@@ -9,6 +9,7 @@
 namespace Routing;
 
 use Core\Config;
+use Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -72,6 +73,11 @@ class Route
     {
         $this->methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
+        if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
+            $this->methods[] = 'HEAD';
+        }
+
+        //
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
         $this->action = $this->parseAction($action);
@@ -241,41 +247,24 @@ class Route
      *
      * @param string $uri Requested URL
      * @param string $method Current HTTP method
-     * @param array $patterns Additional REGEX patterns
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function match($uri, $method, array $patterns = array())
+    public function matches(Request $request, $includingMethod = true)
     {
-        if (! in_array($method, $this->methods)) {
+        $method = $request->method();
+
+        if ($includingMethod && ! in_array($method, $this->methods)) {
             return false;
         }
 
-        // Have a valid HTTP method for this Route; store it for later usage.
-        $this->method = $method;
-
-        // Exact match Route.
-        if ($this->pattern == $uri) {
-            // Store the current matched URI.
-            $this->uri = $uri;
-
-            return true;
-        }
+        $uri = $request->path();
 
         //
         // Build the regex for matching.
+        $regex = $this->pattern;
 
-        if (strpos($this->pattern, '{') === false) {
-            $regex = $this->pattern;
-
-            // Convert the patterns to their regex equivalents.
-            if (strpos($regex, ':') !== false) {
-                $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
-                $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
-
-                $regex = str_replace($searches, $replaces, $regex);
-            }
-        } else {
+        if (strpos($this->pattern, '{') !== false) {
             // Convert the Named Patterns to (:any), e.g. {category}
             $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
 
@@ -286,6 +275,15 @@ class Route
                 // Pad the pattern with the required ')' characters.
                 $regex .= str_repeat (')', $count);
             }
+        } else if (strpos($regex, ':') !== false) {
+            // Retrieve the additional Routing Patterns from configuration.
+            $patterns = Config::get('routing.patterns', array());
+
+            //
+            $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
+            $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
+
+            $regex = str_replace($searches, $replaces, $regex);
         }
 
         if (strpos($regex, '(/') !== false) {
@@ -297,8 +295,9 @@ class Route
             // Remove $matched[0] as [1] is the first parameter.
             array_shift($matches);
 
-            // Store the current matched URI.
-            $this->uri = $uri;
+            // Store the current matched URI and Method.
+            $this->uri    = $uri;
+            $this->method = $method;
 
             // Store the extracted parameters.
             if (! empty($matches)) {

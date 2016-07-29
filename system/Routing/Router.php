@@ -16,6 +16,7 @@ use Helpers\Inflector;
 use Http\Request;
 use Routing\AssetFileDispatcher;
 use Routing\ControllerInspector;
+use Routing\RouteCollection;
 use Routing\Route;
 
 use Illuminate\Container\Container;
@@ -32,11 +33,11 @@ use Response;
 class Router
 {
     /**
-     * Array of routes
+     * The route collection instance.
      *
-     * @var Route[] $routes
+     * @var \Routing\RouteCollection
      */
-    protected $routes = array();
+    protected $routes;
 
     /**
      * @var array All available Filters
@@ -114,6 +115,8 @@ class Router
     public function __construct(Dispatcher $events = null, Container $container = null)
     {
         $this->events = $events;
+
+        $this->routes = new RouteCollection();
 
         $this->container = $container ?: new Container();
     }
@@ -408,7 +411,7 @@ class Router
         $route = new Route($methods, $pattern, $action);
 
         // Add the current Route instance to the known Routes list.
-        array_push($this->routes, $route);
+        $this->routes->add($route);
     }
 
     /**
@@ -565,19 +568,14 @@ class Router
     {
         $this->currentRequest = $request;
 
-        // Get the Method and Path.
-        $method = $request->method();
-
         // First, we will supose that URI is associated with an Asset File.
-        if ($method == 'GET') {
-            $response = $this->dispatchAssetFile($request);
+        $response = $this->dispatchAssetFile($request);
 
-            if($response instanceof SymfonyResponse) {
-                return $response;
-            }
+        if (is_null($response)) {
+            $response = $this->dispatchToRoute($request);
         }
 
-        return $this->dispatchToRoute($request);
+        return $this->prepareResponse($request, $response);
     }
 
     /**
@@ -588,49 +586,40 @@ class Router
      */
     public function dispatchToRoute(Request $request)
     {
-        // Get the Method and Path.
-        $method = $request->method();
-
-        $path = $request->path();
-
         // If there exists a Catch-All Route, firstly we add it to Routes list.
         if ($this->defaultRoute !== null) {
-            array_push($this->routes, $this->defaultRoute);
+            $this->routes->add($this->defaultRoute);
         }
 
-        // Retrieve the additional Routing Patterns from configuration.
-        $patterns = Config::get('routing.patterns', array());
+        // Execute the Routes matching.
+        $route = $this->findRoute($request);
 
-        // Execute the Routes matching loop.
-        foreach ($this->routes as $route) {
-            if ($route->match($path, $method, $patterns)) {
-                // Found a valid Route; process it.
-                $this->matchedRoute = $route;
+        $this->events->fire('router.matched', array($route, $request));
 
-                // Apply the (specified) Filters on matched Route.
-                $response = $this->applyFiltersToRoute($route);
+        // Apply the (specified) Filters on matched Route.
+        $response = $this->applyFiltersToRoute($route);
 
-                if($response instanceof SymfonyResponse) {
-                    return $response;
-                }
+        if(! $response instanceof SymfonyResponse) {
+            $callback = $route->getCallback();
 
-                // Get the matched Route callback.
-                $callback = $route->getCallback();
-
-                if ($callback !== null) {
-                    // Invoke the Route's Callback with the associated parameters.
-                    return $this->invokeObject($callback, $route->getParams());
-                }
-
-                // There is no Callback; no content to send back.
-                return Response::make('');
+            if ($callback !== null) {
+                // Invoke the Route's Callback with the associated parameters.
+                $response = $this->invokeObject($callback, $route->getParams());
             }
         }
 
-        // No valid Route found; send an Error 404 Response.
-        $data = array('error' => htmlspecialchars($path, ENT_COMPAT, 'ISO-8859-1', true));
+        return $response;
+    }
 
-        return Response::error(404, $data);
+    /**
+     * Find the route matching a given request.
+     *
+     * @param  \Http\Request  $request
+     * @return \Routing\Route
+     */
+    protected function findRoute($request)
+    {
+        return $this->matchedRoute = $this->routes->match($request);
     }
 
     /**
@@ -644,5 +633,21 @@ class Router
         $assetDispatcher = $this->getAssetFileDispatcher();
 
         return $assetDispatcher->dispatch($request);
+    }
+
+    /**
+     * Create a response instance from the given value.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  mixed  $response
+     * @return \Nova\Http\Response
+     */
+    protected function prepareResponse($request, $response)
+    {
+        if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
+        }
+
+        return $response->prepare($request);
     }
 }

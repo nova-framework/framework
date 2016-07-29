@@ -105,8 +105,10 @@ Config::set('app', array(
      * The registered Class Aliases.
      */
     'aliases' => array(
-        // The Core Tools.
+        // The Core.
         'Errors'        => '\Core\Error',
+        'Template'      => '\Core\Template',
+        'View'          => '\Core\View',
 
         // The Helpers.
         'Mail'          => '\Helpers\Mailer',

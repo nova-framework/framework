@@ -3,11 +3,12 @@
 namespace Session;
 
 use Database\Connection;
+use Session\ExistenceAwareInterface;
 
 use SessionHandlerInterface;
 
 
-class DatabaseSessionHandler implements SessionHandlerInterface
+class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareInterface
 {
     /**
      * The Database Connection instance.
@@ -79,8 +80,6 @@ class DatabaseSessionHandler implements SessionHandlerInterface
 
             return base64_decode($session->payload);
         }
-
-        return '';
     }
 
     /**
@@ -92,7 +91,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
      */
     public function write($sessionId, $sessionData)
     {
-       if ($this->exists) {
+        if ($this->exists) {
             $data = array(
                 'payload'       => base64_encode($sessionData),
                 'last_activity' => time(),

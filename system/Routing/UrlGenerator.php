@@ -70,9 +70,7 @@ class UrlGenerator
 
         $scheme = $this->getScheme($secure);
 
-        $tail = implode('/', array_map(
-            'rawurlencode', (array) $extra)
-        );
+        $tail = implode('/', array_map('rawurlencode', (array) $extra));
 
         $root = $this->getRootUrl($scheme);
 
@@ -107,7 +105,7 @@ class UrlGenerator
         // for asset paths, but only for routes to endpoints in the application.
         $root = $this->getRootUrl($this->getScheme($secure));
 
-        return $this->removeIndex($root).'/'.trim($path, '/');
+        return $this->removeIndex($root) .'/' .trim($path, '/');
     }
 
     /**

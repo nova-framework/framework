@@ -14,7 +14,6 @@ use Events\Dispatcher;
 
 use Helpers\Inflector;
 use Http\Request;
-use Http\Response as HttpResponse;
 use Routing\AssetFileDispatcher;
 use Routing\ControllerInspector;
 use Routing\Route;
@@ -449,7 +448,7 @@ class Router
                 $result = call_user_func($callback, $route, $params);
             }
 
-            if ($result instanceof HttpResponse) {
+            if ($result instanceof SymfonyResponse) {
                 break;
             }
         }

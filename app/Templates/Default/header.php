@@ -2,9 +2,6 @@
 /**
  * Default Header.
  */
- 
- //import Url helper
- use Helpers\Url;
 
 // Generate the Language Changer menu.
 $language = Language::code();
@@ -36,7 +33,7 @@ Assets::css([
     template_url('dist/css/bootstrap.min.css', 'Default'),
     template_url('dist/css/bootstrap-theme.min.css', 'Default'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
-    Url::templatePath() .'css/style.css',
+    template_url('css/style.css', 'Default'),
 ]);
 
 echo $css; // Place to pass data / plugable hook zone
@@ -58,4 +55,4 @@ echo $css; // Place to pass data / plugable hook zone
 
 <div class="container">
 
-<p><img src='<?= Url::templatePath(); ?>images/nova.png' alt='<?= Config::get('app.name', SITETITLE); ?>'></p>
+<p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>'></p>

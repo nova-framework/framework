@@ -4,17 +4,19 @@ namespace Routing;
 
 use Http\Request;
 use Http\RedirectResponse;
+use Routing\UrlGenerator;
 use Session\Store as SessionStore;
 use Support\Str;
+
 
 class Redirector
 {
     /**
-     * The Request instance.
+     * The URL generator instance.
      *
-     * @var \Http\Request
+     * @var \Routing\UrlGenerator
      */
-    protected $request;
+    protected $generator;
 
     /**
      * The Session Store instance.
@@ -26,13 +28,12 @@ class Redirector
     /**
      * Create a new Redirector instance.
      *
-     * @param  \Http\Request  $request
+     * @param  \Routing\UrlGenerator  $generator
      * @return void
      */
-    public function __construct(Request $request, SessionStore $session = null)
+    public function __construct(UrlGenerator $generator)
     {
-        $this->request = $request;
-        $this->session = $session;
+        $this->generator = $generator;
     }
 
     /**
@@ -55,7 +56,7 @@ class Redirector
      */
     public function back($status = 302, $headers = array())
     {
-        $back = $this->request->headers->get('referer');
+        $back = $this->generator->getRequest()->headers->get('referer');
 
         return $this->createRedirect($back, $status, $headers);
     }
@@ -69,7 +70,7 @@ class Redirector
      */
     public function refresh($status = 302, $headers = array())
     {
-        return $this->to($this->request->path(), $status, $headers);
+        return $this->to($this->generator->getRequest()->path(), $status, $headers);
     }
 
     /**
@@ -83,7 +84,7 @@ class Redirector
      */
     public function guest($path, $status = 302, $headers = array(), $secure = null)
     {
-        $this->session->put('url.intended', $this->request->fullUrl());
+        $this->session->put('url.intended', $this->generator->full());
 
         return $this->to($path, $status, $headers, $secure);
     }
@@ -99,9 +100,7 @@ class Redirector
      */
     public function intended($default = '/', $status = 302, $headers = array(), $secure = null)
     {
-        $path = $this->session->get('url.intended', $default);
-
-        $this->session->forget('url.intended');
+        $path = $this->session->pull('url.intended', $default);
 
         return $this->to($path, $status, $headers, $secure);
     }
@@ -117,7 +116,7 @@ class Redirector
      */
     public function to($path, $status = 302, $headers = array(), $secure = null)
     {
-        $path = $this->createUrl($path, array(), $secure);
+        $path = $this->generator->to($path, array(), $secure);
 
         return $this->createRedirect($path, $status, $headers);
     }
@@ -149,29 +148,6 @@ class Redirector
     }
 
     /**
-     * Generate a absolute URL to the given path.
-     *
-     * @param  string  $path
-     * @param  mixed  $extra
-     * @param  bool  $secure
-     * @return string
-     */
-    protected function createUrl($path, $extra = array(), $secure = null)
-    {
-        if ($this->isValidUrl($path)) return $path;
-
-        $scheme = $this->getScheme($secure);
-
-        $tail = implode('/', array_map(
-            'rawurlencode', (array) $extra)
-        );
-
-        $root = $this->getRootUrl($scheme);
-
-        return $this->trimUrl($root, $path, $tail);
-    }
-
-    /**
      * Create a new redirect response.
      *
      * @param  string  $path
@@ -187,19 +163,19 @@ class Redirector
             $redirect->setSession($this->session);
         }
 
-        $redirect->setRequest($this->request);
+        $redirect->setRequest($this->generator->getRequest());
 
         return $redirect;
     }
 
     /**
-     * Get the Request instance.
+     * Get the URL generator instance.
      *
-     * @return  \Http\Request
+     * @return  \Routing\UrlGenerator
      */
-    public function getRequest()
+    public function getUrlGenerator()
     {
-        return $this->request;
+        return $this->generator;
     }
 
     /**
@@ -213,60 +189,4 @@ class Redirector
         $this->session = $session;
     }
 
-    /**
-     * Get the base URL for the request.
-     *
-     * @param  string  $scheme
-     * @param  string  $root
-     * @return string
-     */
-    protected function getRootUrl($scheme, $root = null)
-    {
-        $root = $root ?: $this->request->root();
-
-        $start = Str::startsWith($root, 'http://') ? 'http://' : 'https://';
-
-        return preg_replace('~'.$start.'~', $scheme, $root, 1);
-    }
-
-    /**
-     * Determine if the given path is a valid URL.
-     *
-     * @param  string  $path
-     * @return bool
-     */
-    protected function isValidUrl($path)
-    {
-        if (Str::startsWith($path, array('#', '//', 'mailto:', 'tel:'))) return true;
-
-        return (filter_var($path, FILTER_VALIDATE_URL) !== false);
-    }
-
-    /**
-     * Format the given URL segments into a single URL.
-     *
-     * @param  string  $root
-     * @param  string  $path
-     * @param  string  $tail
-     * @return string
-     */
-    protected function trimUrl($root, $path, $tail = '')
-    {
-        return trim($root.'/'.trim($path.'/'.$tail, '/'), '/');
-    }
-
-    /**
-     * Get the scheme for a raw URL.
-     *
-     * @param  bool    $secure
-     * @return string
-     */
-    protected function getScheme($secure)
-    {
-        if (is_null($secure)) {
-            return $this->request->getScheme() .'://';
-        } else {
-            return $secure ? 'https://' : 'http://';
-        }
-    }
 }

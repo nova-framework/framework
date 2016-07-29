@@ -9,6 +9,8 @@
 namespace Routing;
 
 use Routing\Router;
+use Routing\Redirector;
+use Routing\UrlGenerator;
 use Support\ServiceProvider;
 
 
@@ -22,6 +24,8 @@ class RoutingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerRouter();
+
+        $this->registerUrlGenerator();
 
         $this->registerRedirector();
     }
@@ -40,6 +44,22 @@ class RoutingServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the URL generator service.
+     *
+     * @return void
+     */
+    protected function registerUrlGenerator()
+    {
+        $this->app['url'] = $this->app->share(function($app)
+        {
+            return new UrlGenerator($app->rebinding('request', function($app, $request)
+            {
+                $app['url']->setRequest($request);
+            }));
+        });
+    }
+
+    /**
      * Register the Redirector service.
      *
      * @return void
@@ -48,7 +68,7 @@ class RoutingServiceProvider extends ServiceProvider
     {
         $this->app['redirect'] = $this->app->share(function($app)
         {
-            $redirector = new Redirector($app['request']);
+            $redirector = new Redirector($app['url']);
 
             if (isset($app['session.store'])) {
                 $redirector->setSession($app['session.store']);

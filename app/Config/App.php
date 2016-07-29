@@ -160,5 +160,6 @@ Config::set('app', array(
         'Session'       => '\Support\Facades\Session',
         'Validator'     => '\Support\Facades\Validator',
         'Log'           => '\Support\Facades\Log',
+        'URL'           => '\Support\Facades\URL',
     ),
 ));

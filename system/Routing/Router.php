@@ -35,20 +35,6 @@ use Response;
 class Router
 {
     /**
-     * The asset file dispatcher instance.
-     *
-     * @var \Nova\Routing\AssetFileDispatcher
-     */
-    protected $assetDispatcher;
-
-    /**
-     * The controller inspector instance.
-     *
-     * @var \Routing\ControllerInspector
-     */
-    protected $inspector;
-
-    /**
      * Array of routes
      *
      * @var Route[] $routes
@@ -80,6 +66,20 @@ class Router
      * @var \Illuminate\Container\Container
      */
     protected $container;
+
+    /**
+     * The controller inspector instance.
+     *
+     * @var \Routing\ControllerInspector
+     */
+    protected $inspector;
+
+    /**
+     * The asset file dispatcher instance.
+     *
+     * @var \Routing\AssetFileDispatcher
+     */
+    protected $assetDispatcher;
 
     /**
      * The request currently being dispatched.

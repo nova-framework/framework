@@ -267,26 +267,25 @@ class Route
 
         if (strpos($this->pattern, '{') === false) {
             $regex = $this->pattern;
+
+            // Convert the patterns.
+            if (strpos($regex, ':') !== false) {
+                $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
+                $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
+
+                $regex = str_replace($searches, $replaces, $regex);
+            }
         } else {
             // Convert the Named Patterns to (:any), e.g. {category}
             $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
 
             // Convert the optional Named Patterns to (/(:any)), e.g. /{category?}
-            $count = 0;
-
             $regex = preg_replace('#/\{([a-z]+)\?\}#', '(/([^/]+)', $this->pattern, -1, $count);
 
             if($count > 0) {
                 // Pad the pattern with the required ')' characters.
                 $regex .= str_repeat (')', $count);
             }
-        }
-
-        if (strpos($regex, ':') !== false) {
-            $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
-            $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
-
-            $regex = str_replace($searches, $replaces, $regex);
         }
 
         if (strpos($regex, '(/') !== false) {

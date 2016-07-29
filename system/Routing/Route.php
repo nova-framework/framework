@@ -240,8 +240,8 @@ class Route
      * Checks if a URL and HTTP method matches the Route pattern.
      *
      * @param string $uri Requested URL
-     * @param $method Current HTTP method
-     * @param bool $optionals Use, or not, the support for the optional parameters
+     * @param string $method Current HTTP method
+     * @param array $patterns Additional REGEX patterns
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */

@@ -16,6 +16,7 @@ use Helpers\Inflector;
 use Http\Request;
 use Routing\AssetFileDispatcher;
 use Routing\ControllerInspector;
+use Routing\RouteCollection;
 use Routing\Route;
 
 use Illuminate\Container\Container;

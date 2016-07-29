@@ -19,12 +19,9 @@ use Routing\ControllerInspector;
 use Routing\Route;
 
 use Illuminate\Container\Container;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
-use App;
-use Console;
 use Language;
 use Response;
 

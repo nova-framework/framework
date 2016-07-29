@@ -5,8 +5,10 @@ namespace Session;
 use Cookie\CookieJar;
 use Symfony\Component\HttpFoundation\Request;
 
+use SessionHandlerInterface;
 
-class CookieSessionHandler implements \SessionHandlerInterface
+
+class CookieSessionHandler implements SessionHandlerInterface
 {
     /**
      * The cookie jar instance.

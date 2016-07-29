@@ -2,6 +2,9 @@
 /**
  * Default Header.
  */
+ 
+ //import Url helper
+ use Helpers\Url;
 
 // Generate the Language Changer menu.
 $language = Language::code();

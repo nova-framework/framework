@@ -24,8 +24,6 @@ App::error(function(Exception $exception, $code)
 // Application Missing Route Handler
 //--------------------------------------------------------------------------
 
-use Core\Template;
-
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 App::missing(function(NotFoundHttpException $exception)

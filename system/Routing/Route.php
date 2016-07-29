@@ -73,6 +73,11 @@ class Route
     {
         $this->methods = array_map('strtoupper', is_array($method) ? $method : array($method));
 
+        if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
+            $this->methods[] = 'HEAD';
+        }
+
+        //
         $this->pattern = ! empty($pattern) ? $pattern : '/';
 
         $this->action = $this->parseAction($action);

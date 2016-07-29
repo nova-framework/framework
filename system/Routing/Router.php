@@ -568,19 +568,14 @@ class Router
     {
         $this->currentRequest = $request;
 
-        // Get the Method and Path.
-        $method = $request->method();
-
         // First, we will supose that URI is associated with an Asset File.
-        if ($method == 'GET') {
-            $response = $this->dispatchAssetFile($request);
+        $response = $this->dispatchAssetFile($request);
 
-            if($response instanceof SymfonyResponse) {
-                return $response;
-            }
+        if (is_null($response)) {
+            $response = $this->dispatchToRoute($request);
         }
 
-        return $this->dispatchToRoute($request);
+        return $this->prepareResponse($request, $response);
     }
 
     /**
@@ -597,25 +592,34 @@ class Router
         }
 
         // Execute the Routes matching.
-        $this->matchedRoute = $route = $this->routes->match($request);
+        $route = $this->findRoute($request);
+
+        $this->events->fire('router.matched', array($route, $request));
 
         // Apply the (specified) Filters on matched Route.
         $response = $this->applyFiltersToRoute($route);
 
-        if($response instanceof SymfonyResponse) {
-            return $response;
+        if(! $response instanceof SymfonyResponse) {
+            $callback = $route->getCallback();
+
+            if ($callback !== null) {
+                // Invoke the Route's Callback with the associated parameters.
+                $response = $this->invokeObject($callback, $route->getParams());
+            }
         }
 
-        // Get the matched Route callback.
-        $callback = $route->getCallback();
+        return $response;
+    }
 
-        if ($callback !== null) {
-            // Invoke the Route's Callback with the associated parameters.
-            return $this->invokeObject($callback, $route->getParams());
-        }
-
-        // There is no Callback; no content to send back.
-        return Response::make('');
+    /**
+     * Find the route matching a given request.
+     *
+     * @param  \Http\Request  $request
+     * @return \Routing\Route
+     */
+    protected function findRoute($request)
+    {
+        return $this->matchedRoute = $this->routes->match($request);
     }
 
     /**
@@ -629,5 +633,21 @@ class Router
         $assetDispatcher = $this->getAssetFileDispatcher();
 
         return $assetDispatcher->dispatch($request);
+    }
+
+    /**
+     * Create a response instance from the given value.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  mixed  $response
+     * @return \Nova\Http\Response
+     */
+    protected function prepareResponse($request, $response)
+    {
+        if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
+        }
+
+        return $response->prepare($request);
     }
 }

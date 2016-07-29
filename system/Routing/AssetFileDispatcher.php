@@ -33,6 +33,10 @@ class AssetFileDispatcher
         // /modules/blog/assets/css/style.css
         // /assets/css/style.css
 
+        if ($request->method() != 'GET') {
+            return null;
+        }
+
         $uri = $request->path();
 
         //

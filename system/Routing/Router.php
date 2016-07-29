@@ -14,17 +14,15 @@ use Events\Dispatcher;
 
 use Helpers\Inflector;
 use Http\Request;
-//use Http\Response;
+use Http\Response as HttpResponse;
 use Routing\AssetFileDispatcher;
 use Routing\ControllerInspector;
 use Routing\Route;
-use Support\Facades\Facade;
 
 use Illuminate\Container\Container;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
-use Carbon\Carbon;
 
 use App;
 use Console;
@@ -451,7 +449,7 @@ class Router
                 $result = call_user_func($callback, $route, $params);
             }
 
-            if ($result instanceof Response) {
+            if ($result instanceof HttpResponse) {
                 break;
             }
         }

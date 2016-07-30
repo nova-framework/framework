@@ -49,9 +49,9 @@ class Router implements RouteFiltererInterface
     /**
      * Matched Route, the current found Route, if any.
      *
-     * @var Route|null $matchedRoute
+     * @var Route|null $currentRoute
      */
-    protected $matchedRoute = null;
+    protected $currentRoute = null;
 
     /**
      * The event dispatcher instance.
@@ -131,61 +131,104 @@ class Router implements RouteFiltererInterface
     }
 
     /**
-     * Defines a route with or without Callback and Method.
+     * Register a new GET route with the router.
      *
-     * @param string $method
-     * @param array @params
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
      */
-    public function __call($method, $params)
+    public function get($route, $action)
     {
-        $method = strtoupper($method);
-
-        if (($method != 'ANY') && ! in_array($method, static::$methods)) {
-            throw new \Exception('Invalid method: ' .$method);
-        } else if (empty($params)) {
-            throw new \Exception('Invalid parameters');
-        }
-
-        // Get the Route.
-        $route = array_shift($params);
-
-        // Get the Callback, if any.
-        $callback = ! empty($params) ? array_shift($params) : null;
-
-        // Register the Route.
-        $this->register($method, $route, $callback);
+        return $this->addRoute(array('GET', 'HEAD'), $route, $action);
     }
 
     /**
-     * Return the available Filters.
+     * Register a new POST route with the router.
      *
-     * @return array
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
      */
-    public function getFilters()
+    public function post($route, $action)
     {
-        return $this->filters;
+        return $this->addRoute('POST', $route, $action);
     }
 
     /**
-     * Return the available Routes.
+     * Register a new PUT route with the router.
      *
-     * @return Route[]
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
      */
-    public function routes()
+    public function put($route, $action)
     {
-        return $this->routes;
+        return $this->addRoute('PUT', $route, $action);
     }
 
     /**
-     * Defines a multi-method Route Match.
+     * Register a new PATCH route with the router.
      *
-     * @param array|string $method The Route's method(s).
-     * @param string $route The Route definition.
-     * @param callback $callback Callback object called to define the Routes.
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
      */
-    public function match($method, $route, $callback = null)
+    public function patch($route, $action)
     {
-        $this->register($method, $route, $callback);
+        return $this->addRoute('PATCH', $route, $action);
+    }
+
+    /**
+     * Register a new DELETE route with the router.
+     *
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
+     */
+    public function delete($route, $action)
+    {
+        return $this->addRoute('DELETE', $route, $action);
+    }
+
+    /**
+     * Register a new OPTIONS route with the router.
+     *
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
+     */
+    public function options($route, $action)
+    {
+        return $this->addRoute('OPTIONS', $route, $action);
+    }
+
+    /**
+     * Register a new route responding to all verbs.
+     *
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
+     */
+    public function any($route, $action)
+    {
+        $methods = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE');
+
+        return $this->addRoute($methods, $route, $action);
+    }
+
+    /**
+     * Register a new route with the given verbs.
+     *
+     * @param  array|string  $methods
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
+     */
+    public function match($methods, $route, $action)
+    {
+        $methods = array_map('strtoupper', (array) $methods);
+
+        return $this->addRoute($methods, $route, $action);
     }
 
     /**
@@ -193,9 +236,18 @@ class Router implements RouteFiltererInterface
      *
      * @param $callback
      */
-    public function catchAll($callback)
+    public function catchAll($action)
     {
-        $this->defaultRoute = new Route('any', '(:all)', $callback);
+        if (! is_array($action)) $action = array('uses' => $action);
+
+        if ($this->routingToController($action)) {
+            $action = $this->getControllerAction($action);
+        }
+
+        //
+        $methods = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE');
+
+        $this->defaultRoute = new Route($methods, '(:all)', $action);
     }
 
     /**
@@ -217,7 +269,7 @@ class Router implements RouteFiltererInterface
             $route  = array_shift($entry);
 
             // Register the route.
-            $this->register($method, $route, $callback);
+            $this->addRoute($method, $route, $callback);
         }
     }
 
@@ -265,13 +317,13 @@ class Router implements RouteFiltererInterface
      */
     public function resource($basePath, $controller)
     {
-        $this->register('get',                 $basePath,                 $controller .'@index');
-        $this->register('get',                 $basePath .'/create',      $controller .'@create');
-        $this->register('post',                $basePath,                 $controller .'@store');
-        $this->register('get',                 $basePath .'/(:any)',      $controller .'@show');
-        $this->register('get',                 $basePath .'/(:any)/edit', $controller .'@edit');
-        $this->register(array('put', 'patch'), $basePath .'/(:any)',      $controller .'@update');
-        $this->register('delete',              $basePath .'/(:any)',      $controller .'@delete');
+        $this->addRoute('GET',                 $basePath,                 $controller .'@index');
+        $this->addRoute('GET',                 $basePath .'/create',      $controller .'@create');
+        $this->addRoute('POST',                $basePath,                 $controller .'@store');
+        $this->addRoute('GET',                 $basePath .'/(:any)',      $controller .'@show');
+        $this->addRoute('GET',                 $basePath .'/(:any)/edit', $controller .'@edit');
+        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/(:any)',      $controller .'@update');
+        $this->addRoute('DELETE',              $basePath .'/(:any)',      $controller .'@delete');
     }
 
     /**
@@ -298,7 +350,7 @@ class Router implements RouteFiltererInterface
     {
         $prepended = $controller;
 
-        if ( ! empty($this->groupStack)) {
+        if (! empty($this->groupStack)) {
             $prepended = $this->prependGroupUses($controller);
         }
 
@@ -309,11 +361,11 @@ class Router implements RouteFiltererInterface
             foreach ($routes as $route) {
                 $action = array('uses' => $controller .'@' .$method);
 
-                $this->register($route['verb'], $route['uri'], $action);
+                $this->addRoute($route['verb'], $route['uri'], $action);
             }
         }
 
-        $this->register('ANY', $uri .'/(:all)', $controller .'@missingMethod');
+        $this->addRoute('ANY', $uri .'/(:all)', $controller .'@missingMethod');
     }
 
     /**
@@ -323,7 +375,7 @@ class Router implements RouteFiltererInterface
      * @param string       $route URL pattern to match
      * @param callback     $action Callback object
      */
-    protected function register($method, $route, $action = null)
+    protected function addRoute($method, $route, $action = null)
     {
         // Prepare the route Methods.
         if (is_string($method) && (strtolower($method) == 'any')) {
@@ -421,32 +473,6 @@ class Router implements RouteFiltererInterface
     }
 
     /**
-     * Return the current Matched Route, if there are any.
-     *
-     * @return null|Route
-     */
-    public function getMatchedRoute()
-    {
-        return $this->matchedRoute;
-    }
-
-    /**
-     * Return the current Matched Language, if there are any.
-     *
-     * @return null|string
-     */
-    public function getLanguage()
-    {
-        $route = $this->getMatchedRoute();
-
-        if(! is_null($route)) {
-            return $route->getLanguage();
-        }
-
-        return Language::code();
-    }
-
-    /**
      * Determine if the action is routing to a controller.
      *
      * @param  array  $action
@@ -488,18 +514,18 @@ class Router implements RouteFiltererInterface
      */
     protected function getClassClosure($controller)
     {
-        $d = $this->getControllerDispatcher();
+        $dispatcher = $this->getControllerDispatcher();
 
-        return function() use ($d, $controller)
+        return function() use ($dispatcher, $controller)
         {
-            $route = $this->getMatchedRoute();
+            $route = $this->getCurrentRoute();
 
             $request = $this->getCurrentRequest();
 
             //
             list($class, $method) = explode('@', $controller);
 
-            return $d->dispatch($route, $request, $class, $method);
+            return $dispatcher->dispatch($route, $request, $class, $method);
         };
     }
 
@@ -535,15 +561,28 @@ class Router implements RouteFiltererInterface
     }
 
     /**
+     * Dispatch the request to a asset file and return the response.
+     *
+     * @param  \Http\Request  $request
+     * @return mixed
+     */
+    public function dispatchAssetFile(Request $request)
+    {
+        $assetDispatcher = $this->getAssetFileDispatcher();
+
+        return $assetDispatcher->dispatch($request);
+    }
+
+    /**
      * Dispatch the request to a route and return the response.
      *
-     * @param  \Nova\Http\Request  $request
+     * @param  \Http\Request  $request
      * @return mixed
      */
     public function dispatchToRoute(Request $request)
     {
         // If there exists a Catch-All Route, firstly we add it to Routes list.
-        if ($this->defaultRoute !== null) {
+        if (isset($this->defaultRoute)) {
             $this->routes->add($this->defaultRoute);
         }
 
@@ -570,20 +609,23 @@ class Router implements RouteFiltererInterface
      */
     protected function findRoute($request)
     {
-        return $this->matchedRoute = $this->routes->match($request);
+        return $this->currentRoute = $this->routes->match($request);
     }
 
     /**
-     * Dispatch the request to a asset file and return the response.
+     * Create a response instance from the given value.
      *
-     * @param  \Nova\Http\Request  $request
-     * @return mixed
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  mixed  $response
+     * @return \Http\Response
      */
-    public function dispatchAssetFile(Request $request)
+    protected function prepareResponse($request, $response)
     {
-        $assetDispatcher = $this->getAssetFileDispatcher();
+        if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
+        }
 
-        return $assetDispatcher->dispatch($request);
+        return $response->prepare($request);
     }
 
     /**
@@ -636,28 +678,58 @@ class Router implements RouteFiltererInterface
     }
 
     /**
-     * Create a response instance from the given value.
+     * Return the available Filters.
      *
-     * @param  \Symfony\Component\HttpFoundation\Request  $request
-     * @param  mixed  $response
-     * @return \Nova\Http\Response
+     * @return array
      */
-    protected function prepareResponse($request, $response)
+    public function getFilters()
     {
-        if (! $response instanceof SymfonyResponse) {
-            $response = new Response($response);
-        }
+        return $this->filters;
+    }
 
-        return $response->prepare($request);
+    /**
+     * Return the available Routes.
+     *
+     * @return \Routing\RouteCollection
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * Return the current Matched Route, if there are any.
+     *
+     * @return null|Route
+     */
+    public function getCurrentRoute()
+    {
+        return $this->currentRoute;
     }
 
     /**
      * Get the request currently being dispatched.
      *
-     * @return \Nova\Http\Request
+     * @return \Http\Request
      */
     public function getCurrentRequest()
     {
         return $this->currentRequest;
+    }
+
+    /**
+     * Return the current Matched Language, if there are any.
+     *
+     * @return null|string
+     */
+    public function getLanguage()
+    {
+        $route = $this->getCurrentRoute();
+
+        if(! is_null($route)) {
+            return $route->getLanguage();
+        }
+
+        return Language::code();
     }
 }

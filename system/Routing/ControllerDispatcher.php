@@ -32,11 +32,11 @@ class ControllerDispatcher
      * @param  \Illuminate\Container\Container  $container
      * @return void
      */
-    public function __construct(RouteFiltererInterface $filterer,
-                                Container $container = null)
+    public function __construct(RouteFiltererInterface $filterer, Container $container = null)
     {
         $this->filterer = $filterer;
-        $this->container = $container;
+
+        $this->container = $container ?: new Container();
     }
 
     /**
@@ -76,7 +76,7 @@ class ControllerDispatcher
      */
     protected function call($instance, $route, $method)
     {
-        $parameters = $route->getParams();
+        $parameters = $route->parametersWithoutNulls();
 
         return $instance->execute($method, $parameters);
     }

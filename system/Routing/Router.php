@@ -492,7 +492,7 @@ class Router implements RouteFiltererInterface
             $callback = $this->filters[$filter];
 
             // If the Callback returns a Response instance, the Filtering will be stopped.
-            if (is_callable($callback)) {
+            if (! is_callable($callback)) {
                 continue;
             }
 

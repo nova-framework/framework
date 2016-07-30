@@ -96,7 +96,7 @@ abstract class Presenter
         if ($this->lastPage < 13) {
             $content = $this->getPageRange(1, $this->lastPage);
         } else {
-            $content = $this->getPageSlider($adjacent);
+            $content = $this->getPageSlider();
         }
 
         $content = $this->getPrevious() .$content .$this->getNext();

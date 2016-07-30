@@ -551,12 +551,12 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     {
         $this->currentRequest = $request;
 
-        //
+        // Asset Files Dispatching.
         $response = $this->dispatchAssetFile($request);
 
         if (! is_null($response)) return $response;
 
-        //
+        // Request Dispatching to Routes.
         $response = $this->callFilter('before', $request);
 
         if (is_null($response)) {

@@ -22,8 +22,10 @@ use Routing\RouteFiltererInterface;
 use Routing\Route;
 
 use Illuminate\Container\Container;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Language;
 use Response;
@@ -32,7 +34,7 @@ use Response;
 /**
  * Router class will load requested Controller / Closure based on URL.
  */
-class Router implements RouteFiltererInterface
+class Router implements HttpKernelInterface, RouteFiltererInterface
 {
     /**
      * Indicates if the router is running filters.
@@ -130,6 +132,19 @@ class Router implements RouteFiltererInterface
         $this->routes = new RouteCollection();
 
         $this->container = $container ?: new Container();
+    }
+
+    /**
+     * Get the response for a given request.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  int   $type
+     * @param  bool  $catch
+     * @return \Nova\Http\Response
+     */
+    public function handle(SymfonyRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    {
+        return $this->dispatch(Request::createFromBase($request));
     }
 
     /**
@@ -443,92 +458,6 @@ class Router implements RouteFiltererInterface
     }
 
     /**
-     * Register a route matched event listener.
-     *
-     * @param  string|callable  $callback
-     * @return void
-     */
-    public function matched($callback)
-    {
-        $this->events->listen('router.matched', $callback);
-    }
-
-    /**
-     * Register a new Filter with the Router.
-     *
-     * @param  string  $name
-     * @param  string|callable  $callback
-     * @return void
-     */
-    public function filter($name, $callback)
-    {
-        $this->events->listen('router.filter: '.$name, $this->parseFilter($callback));
-    }
-
-    /**
-     * Parse the registered Filter.
-     *
-     * @param  callable|string  $callback
-     * @return mixed
-     */
-    protected function parseFilter($callback)
-    {
-        if (is_string($callback) && ! str_contains($callback, '@')) {
-            return $callback .'@filter';
-        }
-
-        return $callback;
-    }
-
-    /**
-     * Call the given Route's before filters.
-     *
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
-     * @return mixed
-     */
-    protected function callRouteFilters(Route $route, Request $request)
-    {
-        foreach ($route->getFilters() as $filter => $parameters) {
-            $response = $this->callRouteFilter($filter, $parameters, $route, $request);
-
-            if (! is_null($response)) return $response;
-        }
-    }
-
-    /**
-     * Call the given Route Filter.
-     *
-     * @param  string  $filter
-     * @param  array  $parameters
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
-     * @return mixed
-     */
-    public function callRouteFilter($filter, $parameters, $route, $request, $response = null)
-    {
-        if ( ! $this->filtering) return null;
-
-        $data = array_merge(array($route, $request, $response), $parameters);
-
-        return $this->events->until('router.filter: '.$filter, $this->cleanFilterParameters($data));
-    }
-
-    /**
-     * Clean the parameters being passed to a filter callback.
-     *
-     * @param  array  $parameters
-     * @return array
-     */
-    protected function cleanFilterParameters(array $parameters)
-    {
-        return array_filter($parameters, function($p)
-        {
-            return ! is_null($p) && ($p !== '');
-        });
-    }
-
-    /**
      * Create a response instance from the given value.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
@@ -622,14 +551,23 @@ class Router implements RouteFiltererInterface
     {
         $this->currentRequest = $request;
 
-        // First, we will supose that URI is associated with an Asset File.
+        //
         $response = $this->dispatchAssetFile($request);
+
+        if (! is_null($response)) return $response;
+
+        //
+        $response = $this->callFilter('before', $request);
 
         if (is_null($response)) {
             $response = $this->dispatchToRoute($request);
         }
 
-        return $this->prepareResponse($request, $response);
+        $response = $this->prepareResponse($request, $response);
+
+        $this->callFilter('after', $request, $response);
+
+        return $response;
     }
 
     /**
@@ -682,6 +620,141 @@ class Router implements RouteFiltererInterface
     protected function findRoute(Request $request)
     {
         return $this->currentRoute = $this->routes->match($request);
+    }
+
+    /**
+     * Register a route matched event listener.
+     *
+     * @param  string|callable  $callback
+     * @return void
+     */
+    public function matched($callback)
+    {
+        $this->events->listen('router.matched', $callback);
+    }
+
+    /**
+     * Register a new "before" filter with the router.
+     *
+     * @param  string|callable  $callback
+     * @return void
+     */
+    public function before($callback)
+    {
+        $this->addGlobalFilter('before', $callback);
+    }
+
+    /**
+     * Register a new "after" filter with the router.
+     *
+     * @param  string|callable  $callback
+     * @return void
+     */
+    public function after($callback)
+    {
+        $this->addGlobalFilter('after', $callback);
+    }
+
+    /**
+     * Register a new global filter with the router.
+     *
+     * @param  string  $filter
+     * @param  string|callable   $callback
+     * @return void
+     */
+    protected function addGlobalFilter($filter, $callback)
+    {
+        $this->events->listen('router.'.$filter, $this->parseFilter($callback));
+    }
+
+    /**
+     * Register a new Filter with the Router.
+     *
+     * @param  string  $name
+     * @param  string|callable  $callback
+     * @return void
+     */
+    public function filter($name, $callback)
+    {
+        $this->events->listen('router.filter: '.$name, $this->parseFilter($callback));
+    }
+
+    /**
+     * Parse the registered Filter.
+     *
+     * @param  callable|string  $callback
+     * @return mixed
+     */
+    protected function parseFilter($callback)
+    {
+        if (is_string($callback) && ! str_contains($callback, '@')) {
+            return $callback .'@filter';
+        }
+
+        return $callback;
+    }
+
+    /**
+     * Call the given filter with the request and response.
+     *
+     * @param  string  $filter
+     * @param  \Nova\Http\Request   $request
+     * @param  \Nova\Http\Response  $response
+     * @return mixed
+     */
+    protected function callFilter($filter, $request, $response = null)
+    {
+        if ( ! $this->filtering) return null;
+
+        return $this->events->until('router.'.$filter, array($request, $response));
+    }
+
+    /**
+     * Call the given Route's before filters.
+     *
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
+     * @return mixed
+     */
+    protected function callRouteFilters(Route $route, Request $request)
+    {
+        foreach ($route->getFilters() as $filter => $parameters) {
+            $response = $this->callRouteFilter($filter, $parameters, $route, $request);
+
+            if (! is_null($response)) return $response;
+        }
+    }
+
+    /**
+     * Call the given Route Filter.
+     *
+     * @param  string  $filter
+     * @param  array  $parameters
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
+     * @return mixed
+     */
+    public function callRouteFilter($filter, $parameters, $route, $request, $response = null)
+    {
+        if ( ! $this->filtering) return null;
+
+        $data = array_merge(array($route, $request, $response), $parameters);
+
+        return $this->events->until('router.filter: '.$filter, $this->cleanFilterParameters($data));
+    }
+
+    /**
+     * Clean the parameters being passed to a filter callback.
+     *
+     * @param  array  $parameters
+     * @return array
+     */
+    protected function cleanFilterParameters(array $parameters)
+    {
+        return array_filter($parameters, function($p)
+        {
+            return ! is_null($p) && ($p !== '');
+        });
     }
 
     /**

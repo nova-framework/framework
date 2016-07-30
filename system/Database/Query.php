@@ -101,7 +101,7 @@ class Query
      */
     protected function groupedPaginate($paginator, $perPage, $columns)
     {
-        $results = $this->get($columns)->all();
+        $results = $this->get($columns);
 
         return $this->query->buildRawPaginator($paginator, $results, $perPage);
     }
@@ -123,7 +123,7 @@ class Query
         $query = $this->query->forPage($page, $perPage);
 
         // Retrieve the results from database.
-        $results = $query->get($columns)->all();
+        $results = $query->get($columns);
 
         return $paginator->make($results, $total, $perPage);
     }

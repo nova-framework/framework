@@ -369,19 +369,34 @@ class Router implements RouteFiltererInterface
     }
 
     /**
-     * Maps a Method and URL pattern to a Callback.
+     * Add a route to the underlying route collection.
      *
-     * @param string|array $method HTTP metod(s) to match
-     * @param string       $route URL pattern to match
-     * @param callback     $action Callback object
+     * @param  array|string  $methods
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return \Routing\Route
      */
-    protected function addRoute($method, $route, $action = null)
+    protected function addRoute($methods, $route, $action = null)
+    {
+        // Add the current Route instance to the known Routes list.
+        return $this->routes->add($this->createRoute($methods, $route, $action));
+    }
+
+    /**
+     * Create a new route instance.
+     *
+     * @param  array|string  $methods
+     * @param  string  $route
+     * @param  mixed   $action
+     * @return \Routing\Route
+     */
+    protected function createRoute($methods, $route, $action)
     {
         // Prepare the route Methods.
-        if (is_string($method) && (strtolower($method) == 'any')) {
+        if (is_string($methods) && (strtolower($methods) == 'any')) {
             $methods = static::$methods;
         } else {
-            $methods = array_map('strtoupper', is_array($method) ? $method : array($method));
+            $methods = array_map('strtoupper', is_array($methods) ? $methods : array($methods));
 
             // Ensure the requested Methods are valid ones.
             $methods = array_intersect($methods, static::$methods);
@@ -424,10 +439,20 @@ class Router implements RouteFiltererInterface
         }
 
         // Create a Route instance.
-        $route = new Route($methods, $pattern, $action);
+        return $this->newRoute($methods, $pattern, $action);
+    }
 
-        // Add the current Route instance to the known Routes list.
-        $this->routes->add($route);
+    /**
+     * Create a new Route object.
+     *
+     * @param  array|string  $methods
+     * @param  string  $uri
+     * @param  mixed   $action
+     * @return \Routing\Route
+     */
+    protected function newRoute($methods, $uri, $action)
+    {
+        return new Route($methods, $uri, $action);
     }
 
     /**

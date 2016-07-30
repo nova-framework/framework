@@ -40,7 +40,7 @@ class Router implements RouteFiltererInterface
      * @var bool
      */
     protected $filtering = true;
-    
+
     /**
      * The route collection instance.
      *
@@ -394,21 +394,6 @@ class Router implements RouteFiltererInterface
      */
     protected function createRoute($methods, $route, $action)
     {
-        // Prepare the route Methods.
-        if (is_string($methods) && (strtolower($methods) == 'any')) {
-            $methods = static::$methods;
-        } else {
-            $methods = array_map('strtoupper', is_array($methods) ? $methods : array($methods));
-
-            // Ensure the requested Methods are valid ones.
-            $methods = array_intersect($methods, static::$methods);
-        }
-
-        if (empty($methods)) {
-            // If there are no valid Methods defined, fallback to ANY.
-            $methods = static::$methods;
-        }
-
         // Prepare the Route PATTERN.
         $pattern = ltrim($route, '/');
 
@@ -520,11 +505,11 @@ class Router implements RouteFiltererInterface
      * @param  \Http\Request  $request
      * @return mixed
      */
-    public function callRouteFilter($filter, $parameters, Route $route, Request $request)
+    public function callRouteFilter($filter, $parameters, $route, $request, $response = null)
     {
         if ( ! $this->filtering) return null;
 
-        $data = array_merge(array($route, $request), $parameters);
+        $data = array_merge(array($route, $request, $response), $parameters);
 
         return $this->events->until('router.filter: '.$filter, $this->cleanFilterParameters($data));
     }

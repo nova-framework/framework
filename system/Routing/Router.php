@@ -15,8 +15,10 @@ use Events\Dispatcher;
 use Helpers\Inflector;
 use Http\Request;
 use Routing\AssetFileDispatcher;
+use Routing\ControllerDispatcher;
 use Routing\ControllerInspector;
 use Routing\RouteCollection;
+use Routing\RouteFiltererInterface;
 use Routing\Route;
 
 use Illuminate\Container\Container;
@@ -30,7 +32,7 @@ use Response;
 /**
  * Router class will load requested Controller / Closure based on URL.
  */
-class Router
+class Router implements RouteFiltererInterface
 {
     /**
      * The route collection instance.
@@ -71,6 +73,13 @@ class Router
      * @var \Routing\ControllerInspector
      */
     protected $inspector;
+
+    /**
+     * The controller dispatcher instance.
+     *
+     * @var \Routing\ControllerDispatcher
+     */
+    protected $controllerDispatcher;
 
     /**
      * The asset file dispatcher instance.
@@ -132,7 +141,7 @@ class Router
         $method = strtoupper($method);
 
         if (($method != 'ANY') && ! in_array($method, static::$methods)) {
-            throw new \Exception('Invalid method');
+            throw new \Exception('Invalid method: ' .$method);
         } else if (empty($params)) {
             throw new \Exception('Invalid parameters');
         }
@@ -145,30 +154,6 @@ class Router
 
         // Register the Route.
         $this->register($method, $route, $callback);
-    }
-
-    /**
-     * Get the controller dispatcher instance.
-     *
-     * @return \Routing\ControllerDispatcher
-     */
-    public function getAssetFileDispatcher()
-    {
-        if (is_null($this->assetDispatcher)) {
-            $this->assetDispatcher = new AssetFileDispatcher();
-        }
-
-        return $this->assetDispatcher;
-    }
-
-    /**
-     * Get a Controller Inspector instance.
-     *
-     * @return \Routing\ControllerInspector
-     */
-    public function getInspector()
-    {
-        return $this->inspector ?: $this->inspector = new ControllerInspector();
     }
 
     /**
@@ -313,15 +298,8 @@ class Router
     {
         $prepended = $controller;
 
-        // Adjust the Controller's namespace if we are on a Group.
-        if (! empty($this->groupStack)) {
-            $lastGroup = end($this->groupStack);
-
-            $namespace = array_get($lastGroup, 'namespace');
-
-            if (! empty($namespace)) {
-                $prepended = $namespace .'\\' .ltrim($controller, '\\');
-            }
+        if ( ! empty($this->groupStack)) {
+            $prepended = $this->prependGroupUses($controller);
         }
 
         // Retrieve the Controller routable methods and associated information.
@@ -366,27 +344,20 @@ class Router
         $pattern = ltrim($route, '/');
 
         // Pre-process the Action information.
-        if (! is_array($action)) {
-            $action = array('uses' => $action);
-        }
+        if (! is_array($action)) $action = array('uses' => $action);
 
         if (! empty($this->groupStack)) {
             $parts = array();
 
-            $namespace = null;
-
             foreach ($this->groupStack as $group) {
                 // Add the current prefix to the prefix list.
                 array_push($parts, trim($group['prefix'], '/'));
-
-                // Always update to the last Controller namespace.
-                $namespace = array_get($group, 'namespace');
             }
 
             // Adjust the Route PATTERN, if it is needed.
             $parts = array_filter($parts, function($value)
             {
-                return ($value != '');
+                return ! empty($value);
             });
 
             if (! empty($parts)) {
@@ -394,17 +365,10 @@ class Router
 
                 $action['prefix'] = $prefix;
             }
+        }
 
-            // Adjust the Route CALLBACK, if it is needed.
-            $namespace = rtrim($namespace, '\\');
-
-            if (! empty($namespace)) {
-                $callback = array_get($action, 'uses');
-
-                if (is_string($callback) && ! empty($callback)) {
-                    $action['uses'] = $namespace .'\\' .ltrim($callback, '\\');
-                }
-            }
+        if ($this->routingToController($action)) {
+            $action = $this->getControllerAction($action);
         }
 
         // Create a Route instance.
@@ -483,75 +447,73 @@ class Router
     }
 
     /**
-     * Invoke the callback with its associated parameters.
+     * Determine if the action is routing to a controller.
      *
-     * @param  callable $callback
-     * @param  array $params array of matched parameters
+     * @param  array  $action
      * @return bool
      */
-    protected function invokeCallback($callback, $params = array())
+    protected function routingToController($action)
     {
-        return call_user_func_array($callback, $params);
+        if ($action instanceof Closure) return false;
+
+        return is_string($action) || is_string(array_get($action, 'uses'));
     }
 
     /**
-     * Invoke the Controller's Method with its associated parameters.
+     * Add a controller based route action to the action array.
      *
-     * @param  string $className to be instantiated
-     * @param  string $method method to be invoked
-     * @param  array $params parameters passed to method
-     * @return bool
+     * @param  array|string  $action
+     * @return array
      */
-    protected function invokeController($className, $method, $params)
+    protected function getControllerAction($action)
     {
-        // The Controller's the Execution Flow Methods cannot be called via Router.
-        if (($method == 'execute')) {
-            return Response::error(403);
+        if (is_string($action)) $action = array('uses' => $action);
+
+        if (! empty($this->groupStack)) {
+            $action['uses'] = $this->prependGroupUses($action['uses']);
         }
 
-        // Initialize the Controller.
-        /** @var Controller $controller */
-        $controller = new $className();
+        $action['controller'] = $action['uses'];
 
-        // Obtain the available methods into the requested Controller.
-        $methods = array_map('strtolower', get_class_methods($controller));
+        $closure = $this->getClassClosure($action['uses']);
 
-        // The called Method should be defined right on the called Controller to be executed.
-        if (! in_array(strtolower($method), $methods)) {
-            return Response::error(403);
-        }
-
-        // Execute the Controller's Method with the given arguments.
-        return $controller->execute($method, $params);
+        return array_set($action, 'uses', $closure);
     }
 
     /**
-     * Invoke the callback with its associated parameters.
+     * Get the Closure for a controller based action.
      *
-     * @param  callable $callback
-     * @param  array $params array of matched parameters
-     * @return bool
+     * @param  string  $controller
+     * @return \Closure
      */
-    protected function invokeObject($callback, $params = array())
+    protected function getClassClosure($controller)
     {
-        if (is_object($callback)) {
-            // Call the Closure function with the given arguments.
-            return $this->invokeCallback($callback, $params);
-        }
+        $d = $this->getControllerDispatcher();
 
-        // Call the object Controller and its Method.
-        $segments = explode('@', $callback);
+        return function() use ($d, $controller)
+        {
+            $route = $this->getMatchedRoute();
 
-        $controller = $segments[0];
-        $method     = $segments[1];
+            $request = $this->getCurrentRequest();
 
-        // The Method shouldn't be called 'execute' or starting with '_'; also check if the Controller's class exists.
-        if (($method[0] === '_') || ! class_exists($controller)) {
-            return Response::error(403);
-        }
+            //
+            list($class, $method) = explode('@', $controller);
 
-        // Invoke the Controller's Method with the given arguments.
-        return $this->invokeController($controller, $method, $params);
+            return $d->dispatch($route, $request, $class, $method);
+        };
+    }
+
+    /**
+     * Prepend the last group uses onto the use clause.
+     *
+     * @param  string  $uses
+     * @return string
+     */
+    protected function prependGroupUses($uses)
+    {
+        $group = last($this->groupStack);
+
+        return isset($group['namespace']) ? $group['namespace'] .'\\' .$uses : $uses;
     }
 
     /**
@@ -594,12 +556,7 @@ class Router
         $response = $this->applyFiltersToRoute($route);
 
         if(! $response instanceof SymfonyResponse) {
-            $callback = $route->getCallback();
-
-            if ($callback !== null) {
-                // Invoke the Route's Callback with the associated parameters.
-                $response = $this->invokeObject($callback, $route->getParams());
-            }
+            $response = $route->run();
         }
 
         return $response;
@@ -630,6 +587,55 @@ class Router
     }
 
     /**
+     * Get the controller dispatcher instance.
+     *
+     * @return \Routing\ControllerDispatcher
+     */
+    public function getControllerDispatcher()
+    {
+        if (is_null($this->controllerDispatcher)) {
+            $this->controllerDispatcher = new ControllerDispatcher($this, $this->container);
+        }
+
+        return $this->controllerDispatcher;
+    }
+
+    /**
+     * Set the controller dispatcher instance.
+     *
+     * @param  \Routing\ControllerDispatcher  $dispatcher
+     * @return void
+     */
+    public function setControllerDispatcher(ControllerDispatcher $dispatcher)
+    {
+        $this->controllerDispatcher = $dispatcher;
+    }
+
+    /**
+     * Get the controller dispatcher instance.
+     *
+     * @return \Routing\ControllerDispatcher
+     */
+    public function getAssetFileDispatcher()
+    {
+        if (is_null($this->assetDispatcher)) {
+            $this->assetDispatcher = new AssetFileDispatcher();
+        }
+
+        return $this->assetDispatcher;
+    }
+
+    /**
+     * Get a Controller Inspector instance.
+     *
+     * @return \Routing\ControllerInspector
+     */
+    public function getInspector()
+    {
+        return $this->inspector ?: $this->inspector = new ControllerInspector();
+    }
+
+    /**
      * Create a response instance from the given value.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
@@ -643,5 +649,15 @@ class Router
         }
 
         return $response->prepare($request);
+    }
+
+    /**
+     * Get the request currently being dispatched.
+     *
+     * @return \Nova\Http\Request
+     */
+    public function getCurrentRequest()
+    {
+        return $this->currentRequest;
     }
 }

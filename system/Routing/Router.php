@@ -35,16 +35,18 @@ use Response;
 class Router implements RouteFiltererInterface
 {
     /**
+     * Indicates if the router is running filters.
+     *
+     * @var bool
+     */
+    protected $filtering = true;
+    
+    /**
      * The route collection instance.
      *
      * @var \Routing\RouteCollection
      */
     protected $routes;
-
-    /**
-     * @var array All available Filters
-     */
-    private $filters = array();
 
     /**
      * Matched Route, the current found Route, if any.
@@ -467,41 +469,94 @@ class Router implements RouteFiltererInterface
     }
 
     /**
-     * Define a Route Filter.
+     * Register a new Filter with the Router.
      *
-     * @param string $name
-     * @param callback $callback
+     * @param  string  $name
+     * @param  string|callable  $callback
+     * @return void
      */
     public function filter($name, $callback)
     {
-        if (array_key_exists($name, $this->filters)) {
-            throw new \Exception('Filter already exists: ' .$name);
-        }
-
-        $this->filters[$name] = $callback;
+        $this->events->listen('router.filter: '.$name, $this->parseFilter($callback));
     }
 
-    protected function applyFiltersToRoute(Route $route)
+    /**
+     * Parse the registered Filter.
+     *
+     * @param  callable|string  $callback
+     * @return mixed
+     */
+    protected function parseFilter($callback)
     {
-        foreach ($route->getFilters() as $filter => $params) {
-            if (empty($filter) || ! array_key_exists($filter, $this->filters)) {
-                continue;
-            }
-
-            // Get the current Filter Callback.
-            $callback = $this->filters[$filter];
-
-            // If the Callback returns a Response instance, the Filtering will be stopped.
-            if (! is_callable($callback)) {
-                continue;
-            }
-
-            $result = call_user_func($callback, $route, $params);
-
-            if ($result instanceof SymfonyResponse) {
-                return $result;
-            }
+        if (is_string($callback) && ! str_contains($callback, '@')) {
+            return $callback .'@filter';
         }
+
+        return $callback;
+    }
+
+    /**
+     * Call the given Route's before filters.
+     *
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
+     * @return mixed
+     */
+    protected function callRouteFilters(Route $route, Request $request)
+    {
+        foreach ($route->getFilters() as $filter => $parameters) {
+            $response = $this->callRouteFilter($filter, $parameters, $route, $request);
+
+            if (! is_null($response)) return $response;
+        }
+    }
+
+    /**
+     * Call the given Route Filter.
+     *
+     * @param  string  $filter
+     * @param  array  $parameters
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
+     * @return mixed
+     */
+    public function callRouteFilter($filter, $parameters, Route $route, Request $request)
+    {
+        if ( ! $this->filtering) return null;
+
+        $data = array_merge(array($route, $request), $parameters);
+
+        return $this->events->until('router.filter: '.$filter, $this->cleanFilterParameters($data));
+    }
+
+    /**
+     * Clean the parameters being passed to a filter callback.
+     *
+     * @param  array  $parameters
+     * @return array
+     */
+    protected function cleanFilterParameters(array $parameters)
+    {
+        return array_filter($parameters, function($p)
+        {
+            return ! is_null($p) && ($p !== '');
+        });
+    }
+
+    /**
+     * Create a response instance from the given value.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  mixed  $response
+     * @return \Http\Response
+     */
+    protected function prepareResponse($request, $response)
+    {
+        if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
+        }
+
+        return $response->prepare($request);
     }
 
     /**
@@ -623,8 +678,8 @@ class Router implements RouteFiltererInterface
 
         $this->events->fire('router.matched', array($route, $request));
 
-        // Apply the (specified) Filters on matched Route.
-        $response = $this->applyFiltersToRoute($route);
+        // Call the Route's associated Filters.
+        $response = $this->callRouteFilters($route, $request);
 
         if(! $response instanceof SymfonyResponse) {
             $response = $route->run();
@@ -642,22 +697,6 @@ class Router implements RouteFiltererInterface
     protected function findRoute($request)
     {
         return $this->currentRoute = $this->routes->match($request);
-    }
-
-    /**
-     * Create a response instance from the given value.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Request  $request
-     * @param  mixed  $response
-     * @return \Http\Response
-     */
-    protected function prepareResponse($request, $response)
-    {
-        if (! $response instanceof SymfonyResponse) {
-            $response = new Response($response);
-        }
-
-        return $response->prepare($request);
     }
 
     /**
@@ -710,6 +749,53 @@ class Router implements RouteFiltererInterface
     }
 
     /**
+     * Run a callback with filters disable on the router.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    public function withoutFilters(callable $callback)
+    {
+        $this->disableFilters();
+
+        call_user_func($callback);
+
+        $this->enableFilters();
+    }
+
+    /**
+     * Enable route filtering on the router.
+     *
+     * @return void
+     */
+    public function enableFilters()
+    {
+        $this->filtering = true;
+    }
+
+    /**
+     * Disable route filtering on the router.
+     *
+     * @return void
+     */
+    public function disableFilters()
+    {
+        $this->filtering = false;
+    }
+
+    /**
+     * Get a route parameter for the current route.
+     *
+     * @param  string  $key
+     * @param  string  $default
+     * @return mixed
+     */
+    public function input($key, $default = null)
+    {
+        return $this->current()->parameter($key, $default);
+    }
+
+    /**
      * Return the available Filters.
      *
      * @return array
@@ -720,6 +806,26 @@ class Router implements RouteFiltererInterface
     }
 
     /**
+     * Return the current Matched Route, if there are any.
+     *
+     * @return null|Route
+     */
+    public function getCurrentRoute()
+    {
+        return $this->current();
+    }
+
+    /**
+     * Get the currently dispatched route instance.
+     *
+     * @return \Routing\Route
+     */
+    public function current()
+    {
+        return $this->currentRoute;
+    }
+
+    /**
      * Return the available Routes.
      *
      * @return \Routing\RouteCollection
@@ -727,16 +833,6 @@ class Router implements RouteFiltererInterface
     public function getRoutes()
     {
         return $this->routes;
-    }
-
-    /**
-     * Return the current Matched Route, if there are any.
-     *
-     * @return null|Route
-     */
-    public function getCurrentRoute()
-    {
-        return $this->currentRoute;
     }
 
     /**

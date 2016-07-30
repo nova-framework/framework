@@ -456,6 +456,17 @@ class Router implements RouteFiltererInterface
     }
 
     /**
+     * Register a route matched event listener.
+     *
+     * @param  string|callable  $callback
+     * @return void
+     */
+    public function matched($callback)
+    {
+        $this->events->listen('router.matched', $callback);
+    }
+
+    /**
      * Define a Route Filter.
      *
      * @param string $name
@@ -472,13 +483,9 @@ class Router implements RouteFiltererInterface
 
     protected function applyFiltersToRoute(Route $route)
     {
-        $result = null;
-
         foreach ($route->getFilters() as $filter => $params) {
-            if(empty($filter)) {
+            if (empty($filter) || ! array_key_exists($filter, $this->filters)) {
                 continue;
-            } else if (! array_key_exists($filter, $this->filters)) {
-                throw new \Exception('Invalid Filter specified: ' .$filter);
             }
 
             // Get the current Filter Callback.
@@ -486,15 +493,15 @@ class Router implements RouteFiltererInterface
 
             // If the Callback returns a Response instance, the Filtering will be stopped.
             if (is_callable($callback)) {
-                $result = call_user_func($callback, $route, $params);
+                continue;
             }
+
+            $result = call_user_func($callback, $route, $params);
 
             if ($result instanceof SymfonyResponse) {
-                break;
+                return $result;
             }
         }
-
-        return $result;
     }
 
     /**

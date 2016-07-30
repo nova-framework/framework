@@ -491,13 +491,7 @@ class Router
      */
     protected function invokeCallback($callback, $params = array())
     {
-        $result = call_user_func_array($callback, $params);
-
-        if($result instanceof SymfonyResponse) {
-            return $result;
-        }
-
-        return Response::make($result);
+        return call_user_func_array($callback, $params);
     }
 
     /**

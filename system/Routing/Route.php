@@ -243,6 +243,18 @@ class Route
     }
 
     /**
+     * Run the Route action and return the response.
+     *
+     * @return mixed
+     */
+    public function run()
+    {
+        $parameters = array_filter($this->getParams(), function($p) { return isset($p); });
+
+        return call_user_func_array($this->action['uses'], $parameters);
+    }
+
+    /**
      * Checks if a URL and HTTP method matches the Route pattern.
      *
      * @param string $uri Requested URL

@@ -666,7 +666,7 @@ class Router implements RouteFiltererInterface
         // Call the Route's associated Filters.
         $response = $this->callRouteFilters($route, $request);
 
-        if(! $response instanceof SymfonyResponse) {
+        if (is_null($response)) {
             $response = $route->run();
         }
 
@@ -679,7 +679,7 @@ class Router implements RouteFiltererInterface
      * @param  \Http\Request  $request
      * @return \Routing\Route
      */
-    protected function findRoute($request)
+    protected function findRoute(Request $request)
     {
         return $this->currentRoute = $this->routes->match($request);
     }

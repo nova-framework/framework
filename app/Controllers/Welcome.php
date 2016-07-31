@@ -20,7 +20,6 @@ use Session;
  */
 class Welcome extends Controller
 {
-    protected $code;
 
     /**
      * Call the parent construct
@@ -28,23 +27,12 @@ class Welcome extends Controller
     public function __construct()
     {
         parent::__construct();
-
-        // Setup the Controller's Language code.
-        $this->code = Language::code();
     }
 
     protected function before()
     {
-        // Process the Multi-Language.
-        $language = Router::getLanguage();
-
-        // Adjust the Controller's Language.
-        if($language != $this->code) {
-            $this->code = $language;
-        }
-
         // Load the Language file.
-        $this->language->load('Welcome', $this->code);
+        $this->language->load('Welcome');
 
         // Leave to parent's method the Execution Flow decisions.
         return parent::before();
@@ -55,8 +43,8 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['title'] = $this->language->get('welcomeText', $this->code);
-        $data['welcomeMessage'] = $this->language->get('welcomeMessage', $this->code);
+        $data['title'] = $this->language->get('welcomeText');
+        $data['welcomeMessage'] = $this->language->get('welcomeMessage');
 
         View::renderTemplate('header', $data);
         View::render('Welcome/Welcome', $data);
@@ -73,12 +61,4 @@ class Welcome extends Controller
             ->withWelcomeMessage($this->trans('subpageMessage'));
     }
 
-    /**
-     * Return a translated string.
-     * @return string
-     */
-    protected function trans($str, $code = LANGUAGE_CODE)
-    {
-        return $this->language->get($str, $this->code);
-    }
 }

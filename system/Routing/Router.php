@@ -28,8 +28,6 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Language;
-
 
 /**
  * Router class will load requested Controller / Closure based on URL.
@@ -903,19 +901,4 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         return $this->currentRequest;
     }
 
-    /**
-     * Return the current Matched Language, if there are any.
-     *
-     * @return null|string
-     */
-    public function getLanguage()
-    {
-        $route = $this->getCurrentRoute();
-
-        if(! is_null($route)) {
-            return $route->getLanguage();
-        }
-
-        return Language::code();
-    }
 }

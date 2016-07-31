@@ -11,9 +11,9 @@ use Core\Config;
 use Helpers\Url;
 use Support\Str;
 use Support\Facades\Crypt;
-use Support\Facades\Language;
 
 use Closure as Closure;
+
 
 if (! defined('NOVA_SYSTEM_FUNCTIONS')) {
 
@@ -22,23 +22,12 @@ define('NOVA_SYSTEM_FUNCTIONS', 1);
 /**
  * Site URL helper
  * @param string $path
- * @param null|string $language
  * @return string
  */
-function site_url($path = '/', $language = null)
+function site_url($path = '/')
 {
-    $languages = Config::get('languages');
-
     // The base URL.
     $siteUrl = Config::get('app.url');
-
-    if (($language === false) || ! Config::get('app.multilingual', false)) {
-        // Nothing to do.
-    } else if (is_string($language) && array_key_exists($language, $languages)) {
-        $siteUrl .= $language .'/';
-    } else {
-        $siteUrl .= Router::getLanguage() .'/';
-    }
 
     return $siteUrl .ltrim($path, '/');
 }
@@ -101,13 +90,7 @@ function __($message, $args = null)
     //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
-    if(Config::get('app.multilingual', false)) {
-        $code = Router::getLanguage();
-    } else {
-        $code = LANGUAGE_CODE;
-    }
-
-    return Language::getInstance('app', $code)
+    return Language::getInstance('app', LANGUAGE_CODE)
         ->translate($message, $params);
 }
 
@@ -126,13 +109,7 @@ function __d($domain, $message, $args = null)
     //
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
 
-    if(Config::get('app.multilingual', false)) {
-        $code = Router::getLanguage();
-    } else {
-        $code = LANGUAGE_CODE;
-    }
-
-    return Language::getInstance($domain, $code)
+    return Language::getInstance($domain, LANGUAGE_CODE)
         ->translate($message, $params);
 }
 

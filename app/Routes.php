@@ -11,6 +11,10 @@ use Helpers\Hooks;
 
 /** Define static routes. */
 
+Router::any('ok', function(){
+    echo 'got';
+});
+
 // Default Routing
 Router::any('', 'App\Controllers\Welcome@index');
 Router::any('subpage', 'App\Controllers\Welcome@subPage');

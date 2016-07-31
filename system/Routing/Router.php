@@ -14,6 +14,7 @@ use Events\Dispatcher;
 
 use Helpers\Inflector;
 use Http\Request;
+use Http\Response;
 use Routing\AssetFileDispatcher;
 use Routing\ControllerDispatcher;
 use Routing\ControllerInspector;
@@ -28,7 +29,6 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Language;
-use Response;
 
 
 /**

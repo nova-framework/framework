@@ -49,7 +49,7 @@ class Route
     /**
      * @var array The matched Route parameters
      */
-    private $params = array();
+    private $parameters = array();
 
     /**
      * @var string Matching regular expression
@@ -323,7 +323,7 @@ class Route
                 }
             }
 
-            $this->params = $matches;
+            $this->parameters = $matches;
 
             // Also, store the compiled regex.
             $this->regex = $regex;
@@ -345,6 +345,46 @@ class Route
         $this->pattern = trim($prefix, '/') .'/' .trim($this->pattern, '/');
 
         return $this;
+    }
+
+    /**
+     * Get a given parameter from the route.
+     *
+     * @param  string  $name
+     * @param  mixed   $default
+     * @return string
+     */
+    public function parameter($name, $default = null)
+    {
+        return array_get($this->parameters(), $name, $default);
+    }
+
+    /**
+     * Get the key / value list of parameters for the route.
+     *
+     * @return array
+     *
+     * @throws \LogicException
+     */
+    public function parameters()
+    {
+        return array_map(function($value)
+        {
+            return is_string($value) ? rawurldecode($value) : $value;
+        }, $this->parameters);
+    }
+
+    /**
+     * Get the key / value list of parameters without null values.
+     *
+     * @return array
+     */
+    public function parametersWithoutNulls()
+    {
+        return array_filter($this->parameters(), function($value)
+        {
+            return ! is_null($value);
+        });
     }
 
     // Some Getters
@@ -418,7 +458,7 @@ class Route
      */
     public function getParams()
     {
-        return $this->params;
+        return $this->parameters();
     }
 
     /**

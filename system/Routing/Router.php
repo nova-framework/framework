@@ -58,6 +58,13 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected $currentRoute = null;
 
     /**
+     * Default Route, usually the Catch-All one.
+     *
+     * @var Route $defaultRoute
+     */
+    private $defaultRoute = null;
+
+    /**
      * The event dispatcher instance.
      *
      * @var \Events\Dispatcher
@@ -105,13 +112,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @var array $groupStack
      */
     private $groupStack = array();
-
-    /**
-     * Default Route, usually the Catch-All one.
-     *
-     * @var Route $defaultRoute
-     */
-    private $defaultRoute = null;
 
     /**
      * An array of HTTP request Methods.

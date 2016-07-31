@@ -13,8 +13,6 @@ use Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
 
-use Language;
-
 
 /**
  * The Route class is responsible for routing an HTTP request to an assigned Callback function.
@@ -57,12 +55,6 @@ class Route
     private $regex;
 
     /**
-     * @var string The current matched Language
-     */
-    private $language = null;
-
-
-    /**
      * Constructor.
      *
      * @param string|array $method HTTP method(s)
@@ -85,8 +77,6 @@ class Route
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
         }
-
-        $this->language = Language::code();
     }
 
     /**
@@ -303,26 +293,16 @@ class Route
         }
 
         // Attempt to match the Route and extract the parameters.
-        if (preg_match('#^(?:([a-z]{2})?/?)?' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
+        if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
             // Remove $matched[0] as [1] is the first parameter.
             array_shift($matches);
 
             // Store the current matched URI and Method.
-            $this->uri    = $uri;
+            $this->uri = $uri;
+
             $this->method = $method;
 
-            // Store the extracted parameters.
-            if (! empty($matches)) {
-                $language = array_shift($matches);
-
-                $active = Config::get('app.multilingual', false);
-
-                // Check again if the first parameter is a a valid Language Code.
-                if ($active && array_key_exists($language, Config::get('languages'))) {
-                    $this->language = $language;
-                }
-            }
-
+            // Store the captured parameters.
             $this->parameters = $matches;
 
             // Also, store the compiled regex.
@@ -435,14 +415,6 @@ class Route
     public function uri()
     {
         return $this->uri;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLanguage()
-    {
-        return $this->language;
     }
 
     /**

@@ -40,11 +40,6 @@ Config::set('app', array(
     'name' => 'Nova 3.0',
 
     /**
-     * Enable multilingual support.
-     */
-    'multilingual' => false,
-
-    /**
      * The default Template.
      */
     'template' => 'Default',

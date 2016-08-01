@@ -328,18 +328,6 @@ class Route
     }
 
     /**
-     * Get a given parameter from the route.
-     *
-     * @param  string  $name
-     * @param  mixed   $default
-     * @return string
-     */
-    public function parameter($name, $default = null)
-    {
-        return array_get($this->parameters(), $name, $default);
-    }
-
-    /**
      * Get the key / value list of parameters for the route.
      *
      * @return array

@@ -15,9 +15,9 @@ use Events\Dispatcher;
 use Helpers\Inflector;
 use Http\Request;
 use Http\Response;
-use Routing\AssetFileDispatcher;
 use Routing\ControllerDispatcher;
 use Routing\ControllerInspector;
+use Routing\FileDispatcher;
 use Routing\RouteCollection;
 use Routing\RouteFiltererInterface;
 use Routing\Route;
@@ -95,7 +95,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @var \Routing\AssetFileDispatcher
      */
-    protected $assetDispatcher;
+    protected $fileDispatcher;
 
     /**
      * The request currently being dispatched.
@@ -555,7 +555,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         $this->currentRequest = $request;
 
         // Asset Files Dispatching.
-        $response = $this->dispatchAssetFile($request);
+        $response = $this->dispatchToFile($request);
 
         if (! is_null($response)) return $response;
 
@@ -571,19 +571,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         $this->callFilter('after', $request, $response);
 
         return $response;
-    }
-
-    /**
-     * Dispatch the request to a asset file and return the response.
-     *
-     * @param  \Http\Request  $request
-     * @return mixed
-     */
-    public function dispatchAssetFile(Request $request)
-    {
-        $assetDispatcher = $this->getAssetFileDispatcher();
-
-        return $assetDispatcher->dispatch($request);
     }
 
     /**
@@ -612,6 +599,19 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         }
 
         return $response;
+    }
+
+    /**
+     * Dispatch the request to a asset file and return the response.
+     *
+     * @param  \Http\Request  $request
+     * @return mixed
+     */
+    public function dispatchToFile(Request $request)
+    {
+        $fileDispatcher = $this->getFileDispatcher();
+
+        return $fileDispatcher->dispatch($request);
     }
 
     /**
@@ -790,9 +790,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @return \Routing\ControllerDispatcher
      */
-    public function getAssetFileDispatcher()
+    public function getFileDispatcher()
     {
-        return $this->assetDispatcher ?: new AssetFileDispatcher();
+        return $this->fileDispatcher ?: new FileDispatcher();
     }
 
     /**

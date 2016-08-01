@@ -10,15 +10,16 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 
-class AssetFileDispatcher
+class FileDispatcher
 {
     /**
-     * Create a new controller dispatcher instance.
+     * Create a new File Dispatcher instance.
      *
      * @return void
      */
     public function __construct()
     {
+        //
     }
 
     /**
@@ -45,10 +46,10 @@ class AssetFileDispatcher
 
             if(strtolower($matches[1]) == 'modules') {
                 // A Module Asset file.
-                $path = $this->getModuleAssetPath($module, $matches[3], $matches[4]);
+                $path = $this->getModulePath($module, $matches[3], $matches[4]);
             } else {
                 // A Template Asset file.
-                $path = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
+                $path = $this->getTemplatePath($module, $matches[3], $matches[4]);
             }
         } else {
             // The URI is not a Asset File path.
@@ -58,7 +59,7 @@ class AssetFileDispatcher
         //
         // Serve the specified Asset File.
         if (! empty($path)) {
-            $response = $this->serveFile($path);
+            $response = $this->serve($path);
         } else {
             $response = null;
         }
@@ -73,64 +74,13 @@ class AssetFileDispatcher
     }
 
     /**
-     * Get the path of a Asset file
-     * @return string|null
-     */
-    protected function getModuleAssetPath($module, $folder, $path)
-    {
-        $basePath = APPDIR .str_replace('/', DS, "Modules/$module/Assets/");
-
-        return $basePath .$folder .DS .$path;
-    }
-
-    /**
-     * Get the path of a Asset file
-     * @return string|null
-     */
-    protected function getTemplateAssetPath($template, $folder, $path)
-    {
-        $path = str_replace('/', DS, $path);
-
-        // Retrieve the Template Info
-        $infoFile = APPDIR .'Templates' .DS .$template .DS .'template.json';
-
-        if (is_readable($infoFile)) {
-            $info = json_decode(file_get_contents($infoFile), true);
-
-            // Template Info should be always an array; ensure that.
-            $info = $info ?: array();
-        } else {
-            $info = array();
-        }
-
-        //
-        $basePath = null;
-
-        // Get the current Asset Folder's Mode.
-        $mode = array_get($info, 'assets.paths.' .$folder, 'local');
-
-        if ($mode == 'local') {
-            $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
-        } else if ($mode == 'vendor') {
-            // Get the Vendor name.
-            $vendor = array_get($info, 'assets.vendor', '');
-
-            if (! empty($vendor)) {
-                $basePath = ROOTDIR .str_replace('/', DS, "vendor/$vendor/");
-            }
-        }
-
-        return ! empty($basePath) ? $basePath .$folder .DS .$path : '';
-    }
-
-    /**
      * Serve a File.
      *
      * @param string $path
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function serveFile($path)
+    protected function serve($path)
     {
         if (! file_exists($path)) {
             return new Response('', 404);
@@ -168,6 +118,57 @@ class AssetFileDispatcher
         $response->setSharedMaxAge(600);
 
         return $response;
+    }
+
+    /**
+     * Get the path of a Asset file
+     * @return string|null
+     */
+    protected function getModulePath($module, $folder, $path)
+    {
+        $basePath = APPDIR .str_replace('/', DS, "Modules/$module/Assets/");
+
+        return $basePath .$folder .DS .$path;
+    }
+
+    /**
+     * Get the path of a Asset file
+     * @return string|null
+     */
+    protected function getTemplatePath($template, $folder, $path)
+    {
+        $path = str_replace('/', DS, $path);
+
+        // Retrieve the Template Info
+        $infoFile = APPDIR .'Templates' .DS .$template .DS .'template.json';
+
+        if (is_readable($infoFile)) {
+            $info = json_decode(file_get_contents($infoFile), true);
+
+            // Template Info should be always an array; ensure that.
+            $info = $info ?: array();
+        } else {
+            $info = array();
+        }
+
+        //
+        $basePath = null;
+
+        // Get the current Asset Folder's Mode.
+        $mode = array_get($info, 'assets.paths.' .$folder, 'local');
+
+        if ($mode == 'local') {
+            $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
+        } else if ($mode == 'vendor') {
+            // Get the Vendor name.
+            $vendor = array_get($info, 'assets.vendor', '');
+
+            if (! empty($vendor)) {
+                $basePath = ROOTDIR .str_replace('/', DS, "vendor/$vendor/");
+            }
+        }
+
+        return ! empty($basePath) ? $basePath .$folder .DS .$path : '';
     }
 
 }

@@ -60,9 +60,8 @@ abstract class Controller
         // Before the Action execution stage.
         $response = $this->before();
 
-        // When the Before Stage do not return a Symfony Response, execute the requested
-        // Method with the given arguments, capturing its returned value on our response.
-        if (! $response instanceof SymfonyResponse) {
+        // When the Before Stage return a null Response, execute the requested Action.
+        if (is_null($response)) {
             $response = call_user_func_array(array($this, $method), $params);
         }
 
@@ -86,13 +85,12 @@ abstract class Controller
     }
 
     /**
-     * Method automatically invoked before the current Action, stopping the flight
-     * when it returns false. This Method is supposed to be overriden for using it.
+     * This method automatically invokes before the current Action and is supposed
+     * to be overriden for using it.
      */
     protected function before()
     {
-        // Return true to continue the processing.
-        return true;
+        //
     }
 
     /**

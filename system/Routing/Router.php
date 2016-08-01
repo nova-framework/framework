@@ -363,6 +363,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function controller($uri, $controller)
     {
+        $ispector = $this->getInspector();
+
+        //
         $prepended = $controller;
 
         if (! empty($this->groupStack)) {
@@ -370,7 +373,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         }
 
         // Retrieve the Controller routable methods and associated information.
-        $routable = $this->getInspector()->getRoutable($prepended, $uri);
+        $routable = $inspector->getRoutable($prepended, $uri);
 
         foreach ($routable as $method => $routes) {
             foreach ($routes as $route) {

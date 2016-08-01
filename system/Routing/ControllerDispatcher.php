@@ -33,11 +33,11 @@ class ControllerDispatcher
      * @param  \Illuminate\Container\Container  $container
      * @return void
      */
-    public function __construct(RouteFiltererInterface $filterer, Container $container = null)
+    public function __construct(RouteFiltererInterface $filterer, Container $container)
     {
         $this->filterer = $filterer;
 
-        $this->container = $container ?: new Container();
+        $this->container = $container;
     }
 
     /**

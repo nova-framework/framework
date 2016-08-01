@@ -37,28 +37,28 @@ class AssetFileDispatcher
 
         if (! in_array($request->method(), array('GET', 'HEAD'))) {
             // No allowed HTTP method on the Request.
-            $filePath = null;
+            $path = null;
         } else if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
-            $filePath = ROOTDIR .'assets' .DS .$matches[1];
+            $path = ROOTDIR .'assets' .DS .$matches[1];
         } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
             $module = Inflector::classify($matches[2]);
 
             if(strtolower($matches[1]) == 'modules') {
                 // A Module Asset file.
-                $filePath = $this->getModuleAssetPath($module, $matches[3], $matches[4]);
+                $path = $this->getModuleAssetPath($module, $matches[3], $matches[4]);
             } else {
                 // A Template Asset file.
-                $filePath = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
+                $path = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
             }
         } else {
             // The URI is not a Asset File path.
-            $filePath = null;
+            $path = null;
         }
 
         //
         // Serve the specified Asset File.
-        if (! empty($filePath)) {
-            $response = $this->serveFile($filePath);
+        if (! empty($path)) {
+            $response = $this->serveFile($path);
         } else {
             $response = null;
         }
@@ -126,15 +126,15 @@ class AssetFileDispatcher
     /**
      * Serve a File.
      *
-     * @param string $filePath
+     * @param string $path
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function serveFile($filePath)
+    public function serveFile($path)
     {
-        if (! file_exists($filePath)) {
+        if (! file_exists($path)) {
             return new Response('', 404);
-        } else if (! is_readable($filePath)) {
+        } else if (! is_readable($path)) {
             return new Response('', 403);
         }
 
@@ -144,7 +144,7 @@ class AssetFileDispatcher
         // Even the Symfony's HTTP Foundation have troubles with the CSS and JS files?
         //
         // Hard coding the correct mime types for presently needed file extensions.
-        switch ($fileExt = pathinfo($filePath, PATHINFO_EXTENSION)) {
+        switch ($fileExt = pathinfo($path, PATHINFO_EXTENSION)) {
             case 'css':
                 $contentType = 'text/css';
                 break;
@@ -152,12 +152,12 @@ class AssetFileDispatcher
                 $contentType = 'application/javascript';
                 break;
             default:
-                $contentType = $guesser->guess($filePath);
+                $contentType = $guesser->guess($path);
                 break;
         }
 
         // Create a BinaryFileResponse instance.
-        $response = new BinaryFileResponse($filePath, 200, array(), true, 'inline', true, false);
+        $response = new BinaryFileResponse($path, 200, array(), true, 'inline', true, false);
 
         // Set the Content type.
         $response->headers->set('Content-Type', $contentType);

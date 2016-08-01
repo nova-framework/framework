@@ -363,7 +363,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function controller($uri, $controller)
     {
-        $ispector = $this->getInspector();
+        $inspector = $this->getInspector();
 
         //
         $prepended = $controller;

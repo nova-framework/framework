@@ -396,8 +396,10 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addRoute($methods, $route, $action = null)
     {
+        $route = $this->createRoute($methods, $route, $action);
+
         // Add the current Route instance to the known Routes list.
-        return $this->routes->add($this->createRoute($methods, $route, $action));
+        return $this->routes->add($route);
     }
 
     /**

@@ -262,7 +262,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         //
         $methods = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE');
 
-        $this->defaultRoute = new Route($methods, '(:all)', $action);
+        $this->defaultRoute = $this->newRoute($methods, '(:all)', $action);
     }
 
     /**

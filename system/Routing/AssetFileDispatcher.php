@@ -36,6 +36,7 @@ class AssetFileDispatcher
         $uri = $request->path();
 
         if (! in_array($request->method(), array('GET', 'HEAD'))) {
+            // No allowed HTTP method on the Request.
             $filePath = null;
         } else if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $filePath = ROOTDIR .'assets' .DS .$matches[1];
@@ -50,6 +51,7 @@ class AssetFileDispatcher
                 $filePath = $this->getTemplateAssetPath($module, $matches[3], $matches[4]);
             }
         } else {
+            // The URI is not a Asset File path.
             $filePath = null;
         }
 

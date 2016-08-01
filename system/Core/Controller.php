@@ -12,14 +12,12 @@ use Core\Config;
 use Core\Language;
 use Core\Template;
 use Core\View;
-use Helpers\Hooks;
+use Http\Response;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use App;
 use Event;
-use Response;
 
 
 /**
@@ -133,7 +131,7 @@ abstract class Controller
                 }
 
                 // Create a Response instance from gathered information.
-                $response = Response::make($content, 200, $headers);
+                $response = new Response($content, 200, $headers);
             }
         }
         // If the response which is returned from the Controller's Action is a View instance,
@@ -146,7 +144,7 @@ abstract class Controller
 
         // If the current response is not a instance of Symfony Response, we will create one.
         if (! $response instanceof SymfonyResponse) {
-            $response = Response::make($response);
+            $response = new Response($response);
         }
 
         return $response;

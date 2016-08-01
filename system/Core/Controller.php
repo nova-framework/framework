@@ -142,11 +142,6 @@ abstract class Controller
             }
         }
 
-        // If the current response is not a instance of Symfony Response, we will create one.
-        if (! $response instanceof SymfonyResponse) {
-            $response = new Response($response);
-        }
-
         return $response;
     }
 

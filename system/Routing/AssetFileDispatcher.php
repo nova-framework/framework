@@ -58,10 +58,10 @@ class AssetFileDispatcher
 
         //
         // Serve the specified Asset File.
-        $response = null;
-
         if (! empty($filePath)) {
             $response = $this->serveFile($filePath);
+        } else {
+            $response = null;
         }
 
         if($response instanceof BinaryFileResponse) {
@@ -69,7 +69,7 @@ class AssetFileDispatcher
 
             $response->prepare($request);
         }
-        
+
         return $response;
     }
 

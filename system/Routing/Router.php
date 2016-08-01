@@ -22,7 +22,7 @@ use Routing\RouteCollection;
 use Routing\RouteFiltererInterface;
 use Routing\Route;
 
-use Illuminate\Container\Container;
+use Container\Container;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
@@ -72,7 +72,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * The IoC container instance.
      *
-     * @var \Illuminate\Container\Container
+     * @var \Container\Container
      */
     protected $container;
 

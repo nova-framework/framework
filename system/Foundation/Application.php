@@ -20,7 +20,7 @@ use Events\EventServiceProvider;
 use Exception\ExceptionServiceProvider;
 use Routing\RoutingServiceProvider;
 
-use Illuminate\Container\Container;
+use Container\Container;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -153,7 +153,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     {
         $this->instance('request', $request);
 
-        $this->instance('Illuminate\Container\Container', $this);
+        $this->instance('Container\Container', $this);
     }
 
     /**

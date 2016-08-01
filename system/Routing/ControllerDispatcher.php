@@ -6,7 +6,7 @@ use Closure;
 use Http\Request;
 use Routing\RouteFiltererInterface;
 
-use Illuminate\Container\Container;
+use Container\Container;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 
@@ -30,7 +30,7 @@ class ControllerDispatcher
      * Create a new controller dispatcher instance.
      *
      * @param  \Routing\RouteFiltererInterface  $filterer
-     * @param  \Illuminate\Container\Container  $container
+     * @param  \Container\Container  $container
      * @return void
      */
     public function __construct(RouteFiltererInterface $filterer, Container $container)

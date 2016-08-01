@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Event;
 
 
-/**
- * Core controller, all other controllers extend this base controller.
- */
 abstract class Controller
 {
     /**
@@ -36,7 +33,7 @@ abstract class Controller
      */
     private $params = array();
 
-    
+
     /**
      * Create a new Controller instance.
      */

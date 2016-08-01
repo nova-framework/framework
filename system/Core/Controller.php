@@ -42,6 +42,7 @@ abstract class Controller extends BaseController
      */
     public $language;
 
+    
     /**
      * On the initial run, create an instance of the config class and the view class.
      */

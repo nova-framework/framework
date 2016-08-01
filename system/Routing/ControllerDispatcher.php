@@ -53,7 +53,9 @@ class ControllerDispatcher
     {
         $instance = $this->makeController($controller);
 
-        return $this->call($instance, $route, $method);
+        $parameters = $route->parameters();
+
+        return $instance->execute($method, $parameters);
     }
 
     /**
@@ -65,21 +67,6 @@ class ControllerDispatcher
     protected function makeController($controller)
     {
         return $this->container->make($controller);
-    }
-
-    /**
-     * Call the given controller instance method.
-     *
-     * @param  \Routing\Controller  $instance
-     * @param  \Routing\Route  $route
-     * @param  string  $method
-     * @return mixed
-     */
-    protected function call($instance, $route, $method)
-    {
-        $parameters = $route->parametersWithoutNulls();
-
-        return $instance->execute($method, $parameters);
     }
 
 }

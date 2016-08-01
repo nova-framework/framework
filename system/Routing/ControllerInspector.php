@@ -57,7 +57,7 @@ class ControllerInspector
      */
     public function isRoutable(ReflectionMethod $method)
     {
-        if ($method->class == 'Core\Controller') return false;
+        if (($method->class == 'Routing\Controller') || ($className == 'Core\Controller')) return false;
 
         return str_starts_with($method->name, $this->verbs);
     }

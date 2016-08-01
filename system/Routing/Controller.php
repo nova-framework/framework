@@ -74,18 +74,14 @@ abstract class Controller
     }
 
     /**
-     * Create from the given result a Response instance and send it.
+     * Process the response and return it.
      *
      * @param mixed  $response
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return mixed
      */
     protected function processResponse($response)
     {
-        if (! $response instanceof SymfonyResponse) {
-            $response = new Response($response);
-        }
-
         return $response;
     }
 

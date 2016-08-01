@@ -56,13 +56,13 @@ class AssetFileDispatcher
             }
         }
 
-        if (empty($filePath)) {
-            // The URI does not match a Asset path; return null.
-            return null;
-        }
-
+        //
         // Serve the specified Asset File.
-        $response = $this->serveFile($filePath);
+        if (! empty($filePath)) {
+            $response = $this->serveFile($filePath);
+        } else {
+            $response = null;
+        }
 
         if($response instanceof BinaryFileResponse) {
             $response->isNotModified($request);

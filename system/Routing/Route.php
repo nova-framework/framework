@@ -430,14 +430,6 @@ class Route
     }
 
     /**
-     * @return callable
-     */
-    public function getCallback()
-    {
-        return array_get($this->action, 'uses');
-    }
-
-    /**
      * Get the prefix of the route instance.
      *
      * @return string

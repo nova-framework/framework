@@ -42,7 +42,7 @@ abstract class Controller extends BaseController
      */
     public $language;
 
-    
+
     /**
      * On the initial run, create an instance of the config class and the view class.
      */
@@ -93,8 +93,10 @@ abstract class Controller extends BaseController
             }
 
             // Create a Response instance from gathered information and return it.
-            return new Response($content, 200, $headers);
+            $response = new Response($content, 200, $headers);
         }
+
+        return $response;
     }
 
     /**

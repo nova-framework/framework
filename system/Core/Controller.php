@@ -44,7 +44,7 @@ abstract class Controller
      *
      * @var string
      */
-    protected $template;
+    protected $template = null;
 
     /**
      * The currently used Layout.

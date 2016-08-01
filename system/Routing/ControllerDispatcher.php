@@ -4,6 +4,7 @@ namespace Routing;
 
 use Closure;
 use Http\Request;
+use Routing\RouteFiltererInterface;
 
 use Illuminate\Container\Container;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;

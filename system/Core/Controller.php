@@ -12,14 +12,12 @@ use Core\Config;
 use Core\Language;
 use Core\Template;
 use Core\View;
-use Helpers\Hooks;
+use Http\Response;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use App;
 use Event;
-use Response;
 
 
 /**
@@ -46,7 +44,7 @@ abstract class Controller
      *
      * @var string
      */
-    protected $template;
+    protected $template = null;
 
     /**
      * The currently used Layout.
@@ -132,21 +130,17 @@ abstract class Controller
                     $content .= $view->fetch();
                 }
 
-                // Create a Response instance from gathered information.
-                $response = Response::make($content, 200, $headers);
-            }
-        }
-        // If the response which is returned from the Controller's Action is a View instance,
-        // we will assume we want to render it using the Controller's templated environment.
-        else if ($response instanceof View) {
-            if ($this->layout !== false) {
-                $response = Template::make($this->layout, $this->template)->with('content', $response);
+                // Create a Response instance from gathered information and return it.
+                return new Response($content, 200, $headers);
             }
         }
 
-        // If the current response is not a instance of Symfony Response, we will create one.
-        if (! $response instanceof SymfonyResponse) {
-            $response = Response::make($response);
+        // If the response which is returned from the Controller's Action is a View instance,
+        // we will assume we want to render it using the Controller's templated environment.
+        if ($response instanceof View) {
+            if ($this->layout !== false) {
+                $response = Template::make($this->layout, $this->template)->with('content', $response);
+            }
         }
 
         return $response;

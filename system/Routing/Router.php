@@ -262,7 +262,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         //
         $methods = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE');
 
-        $this->defaultRoute = new Route($methods, '(:all)', $action);
+        $this->defaultRoute = $this->newRoute($methods, '(:all)', $action);
     }
 
     /**
@@ -363,6 +363,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function controller($uri, $controller)
     {
+        $inspector = $this->getInspector();
+
+        //
         $prepended = $controller;
 
         if (! empty($this->groupStack)) {
@@ -370,7 +373,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         }
 
         // Retrieve the Controller routable methods and associated information.
-        $routable = $this->getInspector()->getRoutable($prepended, $uri);
+        $routable = $inspector->getRoutable($prepended, $uri);
 
         foreach ($routable as $method => $routes) {
             foreach ($routes as $route) {
@@ -393,8 +396,10 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addRoute($methods, $route, $action = null)
     {
+        $route = $this->createRoute($methods, $route, $action);
+
         // Add the current Route instance to the known Routes list.
-        return $this->routes->add($this->createRoute($methods, $route, $action));
+        return $this->routes->add($route);
     }
 
     /**
@@ -787,11 +792,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getAssetFileDispatcher()
     {
-        if (is_null($this->assetDispatcher)) {
-            $this->assetDispatcher = new AssetFileDispatcher();
-        }
-
-        return $this->assetDispatcher;
+        return $this->assetDispatcher ?: new AssetFileDispatcher();
     }
 
     /**
@@ -837,18 +838,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     public function disableFilters()
     {
         $this->filtering = false;
-    }
-
-    /**
-     * Get a route parameter for the current route.
-     *
-     * @param  string  $key
-     * @param  string  $default
-     * @return mixed
-     */
-    public function input($key, $default = null)
-    {
-        return $this->current()->parameter($key, $default);
     }
 
     /**

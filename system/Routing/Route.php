@@ -245,10 +245,10 @@ class Route
     }
 
     /**
-     * Checks if a URL and HTTP method matches the Route pattern.
+     * Checks if a Request matches the Route pattern.
      *
-     * @param string $uri Requested URL
-     * @param string $method Current HTTP method
+     * @param \Http\Request $request The dispatched Request instance
+     * @param bool $includingMethod Wheter or not is matched the HTTP Method
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */

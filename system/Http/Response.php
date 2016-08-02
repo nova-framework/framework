@@ -6,12 +6,13 @@ use Core\BaseView as View;
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
 
-use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use ArrayObject;
 
 
-class Response extends \Symfony\Component\HttpFoundation\Response
+class Response extends SymfonyResponse
 {
     /**
      * The original content of the Response.
@@ -42,7 +43,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
      * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
      * @return \Http\Response
      */
-    public function withCookie(Cookie $cookie)
+    public function withCookie(SymfonyCookie $cookie)
     {
         $this->headers->setCookie($cookie);
 

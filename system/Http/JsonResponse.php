@@ -2,11 +2,13 @@
 
 namespace Http;
 
-use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
+use Symfony\Component\HttpFoundation\JsonResponse as SymfonyJsonResponse;
 use Support\Contracts\JsonableInterface;
 
-class JsonResponse extends \Symfony\Component\HttpFoundation\JsonResponse {
 
+class JsonResponse extends SymfonyJsonResponse
+{
     /**
      * The json encoding options.
      *
@@ -76,7 +78,7 @@ class JsonResponse extends \Symfony\Component\HttpFoundation\JsonResponse {
      * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
      * @return \Http\Response
      */
-    public function withCookie(Cookie $cookie)
+    public function withCookie(SymfonyCookie $cookie)
     {
         $this->headers->setCookie($cookie);
 

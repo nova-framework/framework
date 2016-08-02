@@ -2,12 +2,15 @@
 
 namespace Http;
 
-use Support\MessageBag;
-use Symfony\Component\HttpFoundation\Cookie;
 use Session\Store as SessionStore;
 use Support\Contracts\MessageProviderInterface;
+use Support\MessageBag;
 
-class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectResponse
+use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
+
+
+class RedirectResponse extends SymfonyRedirectResponse
 {
     /**
      * The request instance.
@@ -62,7 +65,7 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
      * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
      * @return \Http\RedirectResponse
      */
-    public function withCookie(Cookie $cookie)
+    public function withCookie(SymfonyCookie $cookie)
     {
         $this->headers->setCookie($cookie);
 

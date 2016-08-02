@@ -117,7 +117,7 @@ class Request extends SymfonyRequest
     {
         $segments = explode('/', $this->path());
 
-        return array_values(array_filter($segments, function($v) { return $v != ''; }));
+        return array_values(array_filter($segments, function($v) { return ! empty($v); }));
     }
 
     /**
@@ -128,8 +128,7 @@ class Request extends SymfonyRequest
      */
     public function is()
     {
-        foreach (func_get_args() as $pattern)
-        {
+        foreach (func_get_args() as $pattern) {
             if (str_is($pattern, urldecode($this->path()))) {
                 return true;
             }
@@ -202,9 +201,9 @@ class Request extends SymfonyRequest
      */
     protected function isEmptyString($key)
     {
-        $boolOrArray = is_bool($this->input($key)) || is_array($this->input($key));
+        $boolOrArray = (is_bool($this->input($key)) || is_array($this->input($key)));
 
-        return ! $boolOrArray && (trim((string) $this->input($key)) === '');
+        return (! $boolOrArray && (trim((string) $this->input($key)) === ''));
     }
 
     /**

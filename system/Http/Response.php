@@ -3,16 +3,19 @@
 namespace Http;
 
 use Core\BaseView as View;
+use Http\ResponseTrait;
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
 
-use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use ArrayObject;
 
 
-class Response extends \Symfony\Component\HttpFoundation\Response
+class Response extends SymfonyResponse
 {
+    use ResponseTrait;
+
     /**
      * The original content of the Response.
      *
@@ -20,34 +23,6 @@ class Response extends \Symfony\Component\HttpFoundation\Response
      */
     public $original;
 
-
-    /**
-     * Set a header on the Response.
-     *
-     * @param  string  $key
-     * @param  string  $value
-     * @param  bool    $replace
-     * @return \Http\Response
-     */
-    public function header($key, $value, $replace = true)
-    {
-        $this->headers->set($key, $value, $replace);
-
-        return $this;
-    }
-
-    /**
-     * Add a cookie to the response.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
-     * @return \Http\Response
-     */
-    public function withCookie(Cookie $cookie)
-    {
-        $this->headers->setCookie($cookie);
-
-        return $this;
-    }
 
     /**
      * Set the content on the response.

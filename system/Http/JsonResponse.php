@@ -2,13 +2,16 @@
 
 namespace Http;
 
-use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
+use Http\ResponseTrait;
+
 use Symfony\Component\HttpFoundation\JsonResponse as SymfonyJsonResponse;
 use Support\Contracts\JsonableInterface;
 
 
 class JsonResponse extends SymfonyJsonResponse
 {
+    use ResponseTrait;
+
     /**
      * The json encoding options.
      *
@@ -55,34 +58,6 @@ class JsonResponse extends SymfonyJsonResponse
         }
 
         return $this->update();
-    }
-
-    /**
-     * Set a header on the Response.
-     *
-     * @param  string  $key
-     * @param  string  $value
-     * @param  bool    $replace
-     * @return \Http\Response
-     */
-    public function header($key, $value, $replace = true)
-    {
-        $this->headers->set($key, $value, $replace);
-
-        return $this;
-    }
-
-    /**
-     * Add a cookie to the response.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
-     * @return \Http\Response
-     */
-    public function withCookie(SymfonyCookie $cookie)
-    {
-        $this->headers->setCookie($cookie);
-
-        return $this;
     }
 
 }

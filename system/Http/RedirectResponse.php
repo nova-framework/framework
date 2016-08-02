@@ -2,16 +2,18 @@
 
 namespace Http;
 
+use Http\ResponseTrait;
 use Session\Store as SessionStore;
 use Support\Contracts\MessageProviderInterface;
 use Support\MessageBag;
 
-use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 
 class RedirectResponse extends SymfonyRedirectResponse
 {
+    use ResponseTrait;
+
     /**
      * The request instance.
      *
@@ -26,20 +28,6 @@ class RedirectResponse extends SymfonyRedirectResponse
      */
     protected $session;
 
-    /**
-     * Set a header on the Response.
-     *
-     * @param  string  $key
-     * @param  string  $value
-     * @param  bool  $replace
-     * @return \Http\RedirectResponse
-     */
-    public function header($key, $value, $replace = true)
-    {
-        $this->headers->set($key, $value, $replace);
-
-        return $this;
-    }
 
     /**
      * Flash a piece of data to the session.
@@ -55,19 +43,6 @@ class RedirectResponse extends SymfonyRedirectResponse
         } else {
             $this->session->flash($key, $value);
         }
-
-        return $this;
-    }
-
-    /**
-     * Add a cookie to the response.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
-     * @return \Http\RedirectResponse
-     */
-    public function withCookie(SymfonyCookie $cookie)
-    {
-        $this->headers->setCookie($cookie);
 
         return $this;
     }

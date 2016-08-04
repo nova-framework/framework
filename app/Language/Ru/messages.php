@@ -1,7 +1,7 @@
 <?php
 
 return array (
-'Cache' => 'Кэш',
+  'Cache' => 'Кэш',
   'Database API' => 'API базы данных',
   'Events API' => 'API событий',
   'Hello, welcome from the welcome controller and subpage method! <br/>

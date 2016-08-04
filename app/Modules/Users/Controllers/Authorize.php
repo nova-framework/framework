@@ -28,14 +28,6 @@ class Authorize extends Controller
     protected $layout = 'default';
 
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        // Prepare the Users Model instance - while using the Database Auth Driver.
-        //$this->model = new \App\Modules\Users\Models\Users();
-    }
-
     /**
      * Display the login view.
      *
@@ -85,9 +77,6 @@ class Authorize extends Controller
 
             // Save the User Model instance - used with the Extended Auth Driver.
             $user->save();
-
-            // Save the User Model instance - used with the Database Auth Driver.
-            //$this->model->updateGenericUser($user);
         }
 
         if($user->active == 0) {

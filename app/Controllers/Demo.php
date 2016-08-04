@@ -69,11 +69,63 @@ class Demo extends Controller
         $content = '<pre>' .var_export($params, true) .'</pre>';
 
         //
+        $route = 'demo/{command}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}';
+        $route = 'demo/{command}/{mode?}/{slug:.*}?';
+        //$route = '{slug:.*}';
+
+        $content .= '<pre>' .var_export($route, true) .'</pre>';
+
+        // Convert the route to a regular expression: escape forward slashes
+        //$route = preg_replace('/\//', '\\/', $route);
+
+        $padCount = 0;
+
+        // Convert the Named Patterns, e.g. {controller}
+        $route = preg_replace('#\{([a-z0-9]+)\}#', '(?P<\1>[^/]+)', $route);
+
+        // Convert the optional Named Patterns, e.g. /{category?}
+        $route = preg_replace('#/\{([a-z0-9]+)\?\}#', '(?:/(?P<\1>[^/]+)', $route, -1, $count);
+
+        $padCount += $count;
+
+        // Convert variables with custom regular expression e.g. {id:\d+}
+        $route = preg_replace('#/\{([a-z0-9]+):([^\}]+)\}\?#', '(?:/(?P<\1>\2)', $route, -1, $count);
+
+        $padCount += $count;
+
+        // Convert variables with custom regular expression e.g. {id:\d+}
+        $route = preg_replace('#\{([a-z0-9]+):([^\}]+)\}#', '(?P<\1>\2)', $route);
+
+        if($padCount > 0) {
+            $route .= str_repeat (')?', $padCount);
+        }
+
+
+
+        // Add start and end delimiters, and case insesitive flag
+        $route = '#^' .$route .'$#i';
+
+        $content .= '<pre>' .var_export($route, true) .'</pre>';
+
+        //$url = 'demo/blog/first-article';
+        $url = Request::path();
+
+        if(preg_match($route, $url, $matches)) {
+            // Get named capture group values
+            $params = array_filter($matches, function($key)
+            {
+                return is_string($key);
+            }, ARRAY_FILTER_USE_KEY);
+
+            $content .= '<pre>' .var_export($params, true) .'</pre>';
+        }
+
+        //
         $model = new App\Modules\Users\Models\Users();
 
         $users = $model->all();
 
-        $content .= '<pre>' .var_export($users, true) .'</pre>';
+        //$content .= '<pre>' .var_export($users, true) .'</pre>';
 
         return View::make('Default')
             ->shares('title', __('Test'))

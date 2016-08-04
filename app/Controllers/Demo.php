@@ -28,13 +28,6 @@ use DB;
 */
 class Demo extends Controller
 {
-    /**
-     * Call the parent construct
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * Define Index method

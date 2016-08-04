@@ -6,7 +6,7 @@ return array (
   'Dashboard' => 'Рабочий стол',
   'Forgot Password?' => 'Забыли пароль?',
   'Logout' => 'Выйти',
-  'Member since {0}' => '',
+  'Member since {0}' => 'Участник с {0}',
   'Profile' => 'Профиль',
   'Roles' => 'Роли',
   'Settings' => 'Параметры',

@@ -5,5 +5,5 @@
 <p><?=$welcomeMessage;?></p>
 
 <a class="btn btn-md btn-success" href="<?= site_url('subpage'); ?>">
-	<?php echo Language::show('openSubPage', 'Welcome'); ?>
+    <?= __('Open subpage'); ?>
 </a>

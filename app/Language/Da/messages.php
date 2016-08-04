@@ -5,12 +5,14 @@ return array (
   'Database API' => '',
   'Events API' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
-        This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => '',
+This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => '',
   'Hello, welcome from the welcome controller! <br/>
 this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '',
+  'Home' => '',
   'If you have problems, please paste the above URL into your web browser.' => 'Hvis du har problemer skal du indsætte den ovenstående URL ind i din webbrowser.',
   'Mailing API' => '',
   'Message sent while pretending. Please, look on <code>{0}</code>' => 'Besked sendt imens du er i udviklingsstatus. Vær venlig at kigge på <code>{0}</code>',
+  'Open subpage' => '',
   'Pagination' => 'Sideinddeling',
   'Password Reset' => 'Nulstil kodeord',
   'Password Sample' => 'Eksempel på kodeord',

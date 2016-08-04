@@ -29,15 +29,6 @@ class Welcome extends Controller
         parent::__construct();
     }
 
-    protected function before()
-    {
-        // Load the Language file.
-        $this->language->load('Welcome');
-
-        // Leave to parent's method the Execution Flow decisions.
-        return parent::before();
-    }
-
     /**
      * Define Index page title and load template files.
      */
@@ -47,9 +38,7 @@ class Welcome extends Controller
         $data['welcomeMessage'] = __('Hello, welcome from the welcome controller! <br/>
 this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
 
-        View::renderTemplate('header', $data);
-        View::render('Welcome/Welcome', $data);
-        View::renderTemplate('footer', $data);
+        return View::make('Welcome/Welcome', $data)->shares('title', __('Welcome'));
     }
 
     /**
@@ -57,10 +46,10 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
      */
     public function subPage()
     {
-        return View::make('Welcome/SubPage')
+        return $this->getView()
             ->shares('title', __('Subpage'))
             ->withWelcomeMessage(__('Hello, welcome from the welcome controller and subpage method! <br/>
-        This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>'));
+This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>'));
     }
 
 }

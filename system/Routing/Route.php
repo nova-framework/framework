@@ -307,16 +307,33 @@ class Route
         // Build the regex for matching.
         $regex = $this->pattern;
 
+        $namedParams = false;
+
         if (strpos($this->pattern, '{') !== false) {
-            // Convert the Named Patterns to (:any), e.g. {category}
-            $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
+            $namedParams = true;
 
-            // Convert the optional Named Patterns to (/(:any)), e.g. /{category?}
-            $regex = preg_replace('#/\{([a-z]+)\?\}#', '(/([^/]+)', $this->pattern, -1, $count);
+            //
+            $count = 0;
 
+            // Convert the Named Patterns, e.g. {controller}
+            $regex = preg_replace('#\{([a-z0-9]+)\}#', '(?P<\1>[^/]+)', $regex);
+
+            // Convert the optional Named Patterns, e.g. /{category?}
+            $regex = preg_replace('#/\{([a-z0-9]+)\?\}#', '(?:/(?P<\1>[^/]+)', $regex, -1, $replacements);
+
+            $count += $replacements;
+
+            // Convert the optional Named Patterns with custom regular expression e.g. {id:\d+}?
+            $regex = preg_replace('#/\{([a-z0-9]+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $regex, -1, $replacements);
+
+            $count += $replacements;
+
+            // Convert the Named Patterns with custom regular expression e.g. {id:\d+}
+            $regex = preg_replace('#\{([a-z0-9]+):([^\}]+)\}#', '(?P<\1>\2)', $regex);
+
+            // Pad the pattern with ')?' if is need.
             if($count > 0) {
-                // Pad the pattern with the required ')' characters.
-                $regex .= str_repeat (')', $count);
+                $regex .= str_repeat (')?', $count);
             }
         } else if (strpos($regex, ':') !== false) {
             // Retrieve the additional Routing Patterns from configuration.
@@ -327,16 +344,26 @@ class Route
             $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
 
             $regex = str_replace($searches, $replaces, $regex);
-        }
 
-        if (strpos($regex, '(/') !== false) {
-            $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
+            if (strpos($regex, '(/') !== false) {
+                $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
+            }
         }
 
         // Attempt to match the Route and extract the parameters.
         if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
-            // Remove $matched[0] as [1] is the first parameter.
-            array_shift($matches);
+            if (! $namedParams) {
+                // Remove $matched[0] as [1] is the first parameter.
+                array_shift($matches);
+
+                $params = $matches;
+            } else {
+                // Get named capture group values
+                $params = array_filter($matches, function($key)
+                {
+                    return is_string($key);
+                }, ARRAY_FILTER_USE_KEY);
+            }
 
             // Store the current matched URI and Method.
             $this->uri = $uri;
@@ -344,7 +371,7 @@ class Route
             $this->method = $method;
 
             // Store the captured parameters.
-            $this->parameters = $matches;
+            $this->parameters = $params;
 
             // Also, store the compiled regex.
             $this->regex = $regex;

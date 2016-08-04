@@ -70,10 +70,10 @@ class Demo extends Controller
 
         //
         $route = 'demo/test/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}';
-        $route = 'demo/test/{param1?}/{param2?}/{param3?}/{slug:.*}?';
+        $route = 'demo/test/{param1?}/{param2?}/{param3?}/{slug:.*:?}';
         //$route = '{slug:.*}';
 
-        $content .= '<pre>' .var_export($route, true) .'</pre>';
+        $content .= '<pre>' .htmlspecialchars($route) .'</pre>';
 
         // Convert the route to a regular expression: escape forward slashes
         //$route = preg_replace('/\//', '\\/', $route);
@@ -88,8 +88,8 @@ class Demo extends Controller
 
         $padCount += $count;
 
-        // Convert variables with custom regular expression e.g. {id:\d+}
-        $route = preg_replace('#/\{([a-z0-9]+):([^\}]+)\}\?#', '(?:/(?P<\1>\2)', $route, -1, $count);
+        // Convert variables with custom regular expression e.g. {id:\d+?}
+        $route = preg_replace('#/\{([a-z0-9]+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $route, -1, $count);
 
         $padCount += $count;
 
@@ -100,12 +100,10 @@ class Demo extends Controller
             $route .= str_repeat (')?', $padCount);
         }
 
-
-
         // Add start and end delimiters, and case insesitive flag
         $route = '#^' .$route .'$#i';
 
-        $content .= '<pre>' .var_export($route, true) .'</pre>';
+        $content .= '<pre>' .htmlspecialchars($route) .'</pre>';
 
         //$url = 'demo/blog/first-article';
         $url = Request::path();

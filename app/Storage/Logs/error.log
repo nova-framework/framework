@@ -1,1 +1,23 @@
 
+[2016-08-04 12:48:49] testing.ERROR: exception 'ErrorException' with message 'Undefined variable: route' in /var/www/sites/novaframework/system/Routing/Route.php:314
+Stack trace:
+#0 /var/www/sites/novaframework/system/Routing/Route.php(314): Exception\Handler->handleError(8, 'Undefined varia...', '/var/www/sites/...', 314, Array)
+#1 /var/www/sites/novaframework/system/Routing/RouteCollection.php(149): Routing\Route->matches(Object(Http\Request), true)
+#2 [internal function]: Routing\RouteCollection->Routing\{closure}('demo/test/{para...', Object(Routing\Route))
+#3 /var/www/sites/novaframework/system/functions.php(324): call_user_func(Object(Closure), 'demo/test/{para...', Object(Routing\Route))
+#4 /var/www/sites/novaframework/system/Routing/RouteCollection.php(150): array_first(Array, Object(Closure))
+#5 /var/www/sites/novaframework/system/Routing/RouteCollection.php(65): Routing\RouteCollection->check(Array, Object(Http\Request))
+#6 /var/www/sites/novaframework/system/Routing/Router.php(613): Routing\RouteCollection->match(Object(Http\Request))
+#7 /var/www/sites/novaframework/system/Routing/Router.php(571): Routing\Router->findRoute(Object(Http\Request))
+#8 /var/www/sites/novaframework/system/Routing/Router.php(552): Routing\Router->dispatchToRoute(Object(Http\Request))
+#9 /var/www/sites/novaframework/system/Foundation/Application.php(677): Routing\Router->dispatch(Object(Http\Request))
+#10 /var/www/sites/novaframework/system/Foundation/Application.php(661): Foundation\Application->dispatch(Object(Http\Request))
+#11 /var/www/sites/novaframework/app/Extensions/Http/ContentGuard.php(61): Foundation\Application->handle(Object(Http\Request), 1, true)
+#12 /var/www/sites/novaframework/system/Session/Middleware.php(72): App\Extensions\Http\ContentGuard->handle(Object(Http\Request), 1, true)
+#13 /var/www/sites/novaframework/system/Cookie/Queue.php(49): Session\Middleware->handle(Object(Http\Request), 1, true)
+#14 /var/www/sites/novaframework/system/Cookie/Guard.php(54): Cookie\Queue->handle(Object(Http\Request), 1, true)
+#15 /var/www/sites/novaframework/vendor/stack/builder/src/Stack/StackedHttpKernel.php(23): Cookie\Guard->handle(Object(Http\Request), 1, true)
+#16 /var/www/sites/novaframework/system/Foundation/Application.php(555): Stack\StackedHttpKernel->handle(Object(Http\Request))
+#17 /var/www/sites/novaframework/app/Boot/Start.php(261): Foundation\Application->run()
+#18 /var/www/sites/novaframework/public/index.php(37): require('/var/www/sites/...')
+#19 {main} [] []

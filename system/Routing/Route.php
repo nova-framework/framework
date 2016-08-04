@@ -352,18 +352,10 @@ class Route
 
         // Attempt to match the Route and extract the parameters.
         if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
-            if (! $namedParams) {
-                // Remove $matched[0] as [1] is the first parameter.
-                array_shift($matches);
-
-                $params = $matches;
-            } else {
-                // Get named capture group values
-                $params = array_filter($matches, function($key)
-                {
-                    return is_string($key);
-                }, ARRAY_FILTER_USE_KEY);
-            }
+            $params = array_filter($matches, function($key) use ($namedParams)
+            {
+                return $namedParams ? is_string($key) : ($key > 0);
+            }, ARRAY_FILTER_USE_KEY);
 
             // Store the current matched URI and Method.
             $this->uri = $uri;

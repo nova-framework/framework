@@ -32,7 +32,7 @@ App::after(function($request, $response)
 
 // A Testing Filter which dump the matched Route.
 Router::filter('test', function($route, $request) {
-    echo '<pre style="margin: 10px;">' .var_export($route, true) .'</pre>';
+    echo '<pre style="margin: 10px;">' .htmlspecialchars(var_export($route, true)) .'</pre>';
 });
 
 // A simple CSRF Filter.

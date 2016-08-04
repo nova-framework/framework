@@ -28,14 +28,14 @@ Router::any('demo/cache',           'App\Controllers\Demo@cache');
 Router::any('demo/request(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@request');
 
 Router::any('demo/test/(:any)(/(:any)(/(:any)(/(:all))))', array(
-    'filters' => 'test',
-    'uses'    => 'App\Controllers\Demo@test'
+    'before' => 'test',
+    'uses'   => 'App\Controllers\Demo@test'
 ));
 
 // The Framework's Language Changer.
 Router::any('language/(:any)', array(
-    'filters' => 'referer',
-    'uses'    => 'App\Controllers\Language@change'
+    'before' => 'referer',
+    'uses'   => 'App\Controllers\Language@change'
 ));
 /** End default Routes */
 

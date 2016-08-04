@@ -56,13 +56,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected $currentRoute = null;
 
     /**
-     * Default Route, usually the Catch-All one.
-     *
-     * @var Route $defaultRoute
-     */
-    private $defaultRoute = null;
-
-    /**
      * The event dispatcher instance.
      *
      * @var \Events\Dispatcher
@@ -253,16 +246,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function catchAll($action)
     {
-        if (! is_array($action)) $action = array('uses' => $action);
-
-        if ($this->routingToController($action)) {
-            $action = $this->getControllerAction($action);
-        }
-
-        //
         $methods = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE');
 
-        $this->defaultRoute = $this->newRoute($methods, '(:all)', $action);
+        return $this->addRoute($methods, '(:all)', $action);
     }
 
     /**
@@ -433,9 +419,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
             });
 
             if (! empty($parts)) {
-                $prefix = implode('/', $parts);
-
-                $action['prefix'] = $prefix;
+                $action['prefix'] = implode('/', $parts);
             }
         }
 
@@ -557,7 +541,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         // Asset Files Dispatching.
         $response = $this->dispatchToFile($request);
 
-        if (! is_null($response)) return $response;
+        if (! is_null($response)) {
+            return $this->prepareResponse($request, $response);
+        }
 
         // Request Dispatching to Routes.
         $response = $this->callFilter('before', $request);
@@ -581,22 +567,24 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function dispatchToRoute(Request $request)
     {
-        // If there exists a Catch-All Route, firstly we add it to Routes list.
-        if (isset($this->defaultRoute)) {
-            $this->routes->add($this->defaultRoute);
-        }
-
         // Execute the Routes matching.
         $route = $this->findRoute($request);
 
         $this->events->fire('router.matched', array($route, $request));
 
-        // Call the Route's associated Filters.
-        $response = $this->callRouteFilters($route, $request);
+        // Call the Route's Before Filters.
+        $response = $this->callRouteBefore($route, $request);
 
         if (is_null($response)) {
+            // Run the Route Callback.
             $response = $route->run();
         }
+
+        // Prepare the Reesponse.
+        $response = $this->prepareResponse($request, $response);
+
+        // Call the Route's After Filters.
+        $this->callRouteAfter($route, $request, $response);
 
         return $response;
     }
@@ -713,18 +701,33 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Call the given Route's before filters.
+     * Call the given route's before filters.
      *
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @return mixed
      */
-    protected function callRouteFilters(Route $route, Request $request)
+    public function callRouteBefore($route, $request)
     {
-        foreach ($route->getFilters() as $filter => $parameters) {
+        foreach ($route->beforeFilters() as $filter => $parameters) {
             $response = $this->callRouteFilter($filter, $parameters, $route, $request);
 
-            if (! is_null($response)) return $response;
+            if ( ! is_null($response)) return $response;
+        }
+    }
+
+    /**
+     * Call the given route's before filters.
+     *
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
+     * @param  \Nova\Http\Response  $response
+     * @return mixed
+     */
+    public function callRouteAfter($route, $request, $response)
+    {
+        foreach ($route->afterFilters() as $filter => $parameters) {
+            $this->callRouteFilter($filter, $parameters, $route, $request, $response);
         }
     }
 

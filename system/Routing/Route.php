@@ -113,14 +113,25 @@ class Route
     }
 
     /**
-     * Add (before) Filters to the Route.
+     * Add before filters to the route.
      *
      * @param  string  $filters
-     * @return \Routing\Route
+     * @return $this
      */
     public function before($filters)
     {
-        return $this->addFilters('filters', $filters);
+        return $this->addFilters('before', $filters);
+    }
+
+    /**
+     * Add after filters to the route.
+     *
+     * @param  string  $filters
+     * @return $this
+     */
+    public function after($filters)
+    {
+        return $this->addFilters('after', $filters);
     }
 
     /**
@@ -154,6 +165,36 @@ class Route
 
         // Parse and return the Filters.
         $filters = $this->action['filters'];
+
+        return $this->parseFilters($filters);
+    }
+
+    /**
+     * Get the "before" filters for the route.
+     *
+     * @return array
+     */
+    public function beforeFilters()
+    {
+        if ( ! isset($this->action['before'])) return array();
+
+        //
+        $filters = $this->action['before'];
+
+        return $this->parseFilters($filters);
+    }
+
+    /**
+     * Get the "after" filters for the route.
+     *
+     * @return array
+     */
+    public function afterFilters()
+    {
+        if ( ! isset($this->action['after'])) return array();
+
+        //
+        $filters = $this->action['after'];
 
         return $this->parseFilters($filters);
     }

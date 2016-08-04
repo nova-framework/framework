@@ -34,7 +34,6 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['title'] = __('Welcome');
         $data['welcomeMessage'] = __('Hello, welcome from the welcome controller! <br/>
 this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
 

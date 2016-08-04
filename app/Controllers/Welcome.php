@@ -43,8 +43,9 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['title'] = $this->language->get('welcomeText');
-        $data['welcomeMessage'] = $this->language->get('welcomeMessage');
+        $data['title'] = __('Welcome');
+        $data['welcomeMessage'] = __('Hello, welcome from the welcome controller! <br/>
+this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
 
         View::renderTemplate('header', $data);
         View::render('Welcome/Welcome', $data);
@@ -57,8 +58,9 @@ class Welcome extends Controller
     public function subPage()
     {
         return View::make('Welcome/SubPage')
-            ->shares('title', $this->trans('subpageText'))
-            ->withWelcomeMessage($this->trans('subpageMessage'));
+            ->shares('title', __('Subpage'))
+            ->withWelcomeMessage(__('Hello, welcome from the welcome controller and subpage method! <br/>
+        This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>'));
     }
 
 }

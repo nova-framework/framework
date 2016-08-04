@@ -48,15 +48,15 @@ class Registrar extends Controller
         );
 
         $messages = array(
-            'valid_name'      => __('The :attribute field is not a valid name.'),
-            'strong_password' => __('The :attribute field is not strong enough.'),
+            'valid_name'      => __d('users', 'The :attribute field is not a valid name.'),
+            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'username' => __('Username'),
-            'realname' => __('Name and Surname'),
-            'email'    => __('E-mail'),
-            'password' => __('Password'),
+            'username' => __d('users', 'Username'),
+            'realname' => __d('users', 'Name and Surname'),
+            'email'    => __d('users', 'E-mail'),
+            'password' => __d('users', 'Password'),
         );
 
         // Add the custom Validation Rule commands.

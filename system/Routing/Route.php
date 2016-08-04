@@ -319,14 +319,14 @@ class Route
             $regex = preg_replace('#\{([a-z0-9]+)\}#', '(?P<\1>[^/]+)', $regex);
 
             // Convert the optional Named Patterns, e.g. /{category?}
-            $regex = preg_replace('#/\{([a-z0-9]+)\?\}#', '(?:/(?P<\1>[^/]+)', $regex, -1, $replacements);
+            $regex = preg_replace('#/\{([a-z0-9]+)\?\}#', '(?:/(?P<\1>[^/]+)', $regex, -1, $cnt);
 
-            $count += $replacements;
+            $count += $cnt;
 
             // Convert the optional Named Patterns with custom regular expression e.g. {id:\d+}?
-            $regex = preg_replace('#/\{([a-z0-9]+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $regex, -1, $replacements);
+            $regex = preg_replace('#/\{([a-z0-9]+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $regex, -1, $cnt);
 
-            $count += $replacements;
+            $count += $cnt;
 
             // Convert the Named Patterns with custom regular expression e.g. {id:\d+}
             $regex = preg_replace('#\{([a-z0-9]+):([^\}]+)\}#', '(?P<\1>\2)', $regex);

@@ -66,11 +66,11 @@ class Demo extends Controller
             'param4' => $param4
         );
 
-        $content = '<pre>' .var_export($params, true) .'</pre>';
+        $content = '<pre>' .var_export($this->getParams(), true) .'</pre>';
 
         //
-        $route = 'demo/{command}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}';
-        $route = 'demo/{command}/{mode?}/{slug:.*}?';
+        $route = 'demo/test/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}';
+        $route = 'demo/test/{param1?}/{param2?}/{param3?}/{slug:.*}?';
         //$route = '{slug:.*}';
 
         $content .= '<pre>' .var_export($route, true) .'</pre>';

@@ -83,4 +83,18 @@ class Number
 
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
+    
+    /**
+     * returns number with ordinal prefix
+     * @param  numeric number
+     * @return string  returns number with ordinal prefix
+     */
+    public static function ordinal($number)
+    {
+        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+        if ((($number % 100) >= 11) && (($number%100) <= 13))
+            return $number. 'th';
+        else
+            return $number. $ends[$number % 10];
+    }
 }

@@ -305,45 +305,27 @@ class Route
 
         //
         // Build the regex for matching.
-        $regex = $this->pattern;
-
         $namedParams = false;
 
-        if (strpos($this->pattern, '{') !== false) {
+        if (preg_match('#\{([^\}]+)\}#', $this->pattern) === 1) {
+            // We have Named Parameters.
+            $regex = static::compileRoute($this->pattern);
+
             $namedParams = true;
+        } else {
+            $searches = array(':any', ':num', ':all');
+            $replaces = array('[^/]+', '[0-9]+', '.*');
 
-            //
-            $count = 0;
-
-            // Convert the Named Patterns, e.g. {controller}
-            $regex = preg_replace('#\{([a-z0-9]+)\}#', '(?P<\1>[^/]+)', $regex);
-
-            // Convert the optional Named Patterns, e.g. /{category?}
-            $regex = preg_replace('#/\{([a-z0-9]+)\?\}#', '(?:/(?P<\1>[^/]+)', $regex, -1, $cnt);
-
-            $count += $cnt;
-
-            // Convert the optional Named Patterns with custom regular expression e.g. {id:\d+}?
-            $regex = preg_replace('#/\{([a-z0-9]+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $regex, -1, $cnt);
-
-            $count += $cnt;
-
-            // Convert the Named Patterns with custom regular expression e.g. {id:\d+}
-            $regex = preg_replace('#\{([a-z0-9]+):([^\}]+)\}#', '(?P<\1>\2)', $regex);
-
-            // Pad the pattern with ')?' if is need.
-            if($count > 0) {
-                $regex .= str_repeat (')?', $count);
-            }
-        } else if (strpos($regex, ':') !== false) {
             // Retrieve the additional Routing Patterns from configuration.
             $patterns = Config::get('routing.patterns', array());
 
-            //
-            $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
-            $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
+            if(! empty($patterns)) {
+                $searches = array_merge($searches, array_keys($patterns));
+                $replaces = array_merge($replaces, array_values($patterns));
+            }
 
-            $regex = str_replace($searches, $replaces, $regex);
+            // Prepare the pattern with replacements.
+            $regex = str_replace($searches, $replaces, $this->pattern);
 
             if (strpos($regex, '(/') !== false) {
                 $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
@@ -351,27 +333,46 @@ class Route
         }
 
         // Attempt to match the Route and extract the parameters.
-        if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
+        if (preg_match('#^' .$pattern .'(?:\?.*)?$#i', $uri, $matches)) {
             $params = array_filter($matches, function($key) use ($namedParams)
             {
                 return $namedParams ? is_string($key) : ($key > 0);
             }, ARRAY_FILTER_USE_KEY);
 
-            // Store the current matched URI and Method.
-            $this->uri = $uri;
-
-            $this->method = $method;
-
-            // Store the captured parameters.
+            // Store the current information.
+            $this->uri        = $uri;
+            $this->method     = $method;
             $this->parameters = $params;
-
-            // Also, store the compiled regex.
-            $this->regex = $regex;
+            $this->regex      = $regex;
 
             return true;
         }
 
         return false;
+    }
+
+    protected static function compileRoute($pattern)
+    {
+        // Convert the Named Patterns, e.g. {controller}
+        $regex = preg_replace('#\{(\w+)\}#', '(?P<\1>[^/]+)', $pattern);
+
+        // Convert the optional Named Patterns, e.g. /{category?}
+        $regex = preg_replace('#/\{(\w+)\?\}#', '(?:/(?P<\1>[^/]+)', $regex, -1, $count);
+
+        // Convert the optional Named Patterns with custom regular expression e.g. {id:\d+:?}
+        $regex = preg_replace('#/\{(\w+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $regex, -1, $count2);
+
+        $count += $count2;
+
+        // Convert the Named Patterns with custom regular expression e.g. {id:\d+}
+        $regex = preg_replace('#\{(\w+):([^\}]+)\}#', '(?P<\1>\2)', $regex);
+
+        // Pad the pattern with ')?' if is need.
+        if($count > 0) {
+            $regex .= str_repeat (')?', $count);
+        }
+
+        return $regex;
     }
 
     /**

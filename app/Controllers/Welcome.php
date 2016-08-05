@@ -26,10 +26,14 @@ class Welcome extends Controller
      */
     public function index()
     {
-        $data['welcomeMessage'] = __('Hello, welcome from the welcome controller! <br/>
-this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
+        $data = array(
+            'welcomeMessage' => __('Hello, welcome from the welcome controller! <br/>
+this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>')
+        );
 
-        return View::make('Welcome/Welcome', $data)->shares('title', __('Welcome'));
+        return View::make('Welcome/Welcome')
+            ->shares('title', __('Welcome'))
+            ->with($data);
     }
 
     /**
@@ -37,10 +41,12 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
      */
     public function subPage()
     {
+        $message = __('Hello, welcome from the welcome controller and subpage method! <br/>
+This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>');
+
         return $this->getView()
             ->shares('title', __('Subpage'))
-            ->withWelcomeMessage(__('Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>'));
+            ->withWelcomeMessage($message);
     }
 
 }

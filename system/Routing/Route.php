@@ -333,7 +333,7 @@ class Route
         }
 
         // Attempt to match the Route and extract the parameters.
-        if (preg_match('#^' .$pattern .'(?:\?.*)?$#i', $uri, $matches)) {
+        if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
             $params = array_filter($matches, function($key) use ($namedParams)
             {
                 return $namedParams ? is_string($key) : ($key > 0);

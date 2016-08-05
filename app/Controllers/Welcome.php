@@ -11,33 +11,28 @@ namespace App\Controllers;
 use Core\View;
 use Core\Controller;
 
-use Language;
-use Router;
-use Session;
 
 /**
- * Sample controller showing a construct and 2 methods and their typical usage.
+ * Sample controller showing 2 methods and their typical usage.
  */
 class Welcome extends Controller
 {
 
     /**
-     * Define Index page title and load template files.
+     * Create and return a View instance.
      */
     public function index()
     {
-        $data = array(
-            'welcomeMessage' => __('Hello, welcome from the welcome controller! <br/>
-this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>')
-        );
+        $message = __('Hello, welcome from the welcome controller! <br/>
+this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
 
         return View::make('Welcome/Welcome')
             ->shares('title', __('Welcome'))
-            ->with($data);
+            ->withWelcomeMessage($message);
     }
 
     /**
-     * The New Style Rendering - create and return a proper View instance.
+     * Create and return a View instance.
      */
     public function subPage()
     {

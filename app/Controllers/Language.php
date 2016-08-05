@@ -12,13 +12,6 @@ use Session;
 
 class Language extends Controller
 {
-    /**
-     * Call the parent construct.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * Change the Framework Language.

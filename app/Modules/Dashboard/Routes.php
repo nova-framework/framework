@@ -11,6 +11,6 @@
 
 // The Adminstrations's Dashboard.
 Router::get('admin(/dashboard)', array(
-    'filters' => 'auth',
+    'before' => 'auth',
     'uses' => 'App\Modules\Dashboard\Controllers\Admin\Dashboard@index'
 ));

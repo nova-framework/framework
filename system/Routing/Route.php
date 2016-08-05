@@ -113,14 +113,25 @@ class Route
     }
 
     /**
-     * Add (before) Filters to the Route.
+     * Add before filters to the route.
      *
      * @param  string  $filters
-     * @return \Routing\Route
+     * @return $this
      */
     public function before($filters)
     {
-        return $this->addFilters('filters', $filters);
+        return $this->addFilters('before', $filters);
+    }
+
+    /**
+     * Add after filters to the route.
+     *
+     * @param  string  $filters
+     * @return $this
+     */
+    public function after($filters)
+    {
+        return $this->addFilters('after', $filters);
     }
 
     /**
@@ -154,6 +165,36 @@ class Route
 
         // Parse and return the Filters.
         $filters = $this->action['filters'];
+
+        return $this->parseFilters($filters);
+    }
+
+    /**
+     * Get the "before" filters for the route.
+     *
+     * @return array
+     */
+    public function beforeFilters()
+    {
+        if ( ! isset($this->action['before'])) return array();
+
+        //
+        $filters = $this->action['before'];
+
+        return $this->parseFilters($filters);
+    }
+
+    /**
+     * Get the "after" filters for the route.
+     *
+     * @return array
+     */
+    public function afterFilters()
+    {
+        if ( ! isset($this->action['after'])) return array();
+
+        //
+        $filters = $this->action['after'];
 
         return $this->parseFilters($filters);
     }
@@ -264,54 +305,74 @@ class Route
 
         //
         // Build the regex for matching.
-        $regex = $this->pattern;
+        $namedParams = false;
 
-        if (strpos($this->pattern, '{') !== false) {
-            // Convert the Named Patterns to (:any), e.g. {category}
-            $regex = preg_replace('#\{([a-z]+)\}#', '([^/]+)', $regex);
+        if (preg_match('#\{([^\}]+)\}#', $this->pattern) === 1) {
+            // We have Named Parameters.
+            $regex = static::compileRoute($this->pattern);
 
-            // Convert the optional Named Patterns to (/(:any)), e.g. /{category?}
-            $regex = preg_replace('#/\{([a-z]+)\?\}#', '(/([^/]+)', $this->pattern, -1, $count);
+            $namedParams = true;
+        } else {
+            $searches = array(':any', ':num', ':all');
+            $replaces = array('[^/]+', '[0-9]+', '.*');
 
-            if($count > 0) {
-                // Pad the pattern with the required ')' characters.
-                $regex .= str_repeat (')', $count);
-            }
-        } else if (strpos($regex, ':') !== false) {
             // Retrieve the additional Routing Patterns from configuration.
             $patterns = Config::get('routing.patterns', array());
 
-            //
-            $searches = array_merge(array(':any', ':num', ':all'), array_keys($patterns));
-            $replaces = array_merge(array('[^/]+', '[0-9]+', '.*'), array_values($patterns));
+            if(! empty($patterns)) {
+                $searches = array_merge($searches, array_keys($patterns));
+                $replaces = array_merge($replaces, array_values($patterns));
+            }
 
-            $regex = str_replace($searches, $replaces, $regex);
-        }
+            // Prepare the pattern with replacements.
+            $regex = str_replace($searches, $replaces, $this->pattern);
 
-        if (strpos($regex, '(/') !== false) {
-            $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
+            if (strpos($regex, '(/') !== false) {
+                $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
+            }
         }
 
         // Attempt to match the Route and extract the parameters.
         if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
-            // Remove $matched[0] as [1] is the first parameter.
-            array_shift($matches);
+            $params = array_filter($matches, function($key) use ($namedParams)
+            {
+                return $namedParams ? is_string($key) : ($key > 0);
+            }, ARRAY_FILTER_USE_KEY);
 
-            // Store the current matched URI and Method.
-            $this->uri = $uri;
-
-            $this->method = $method;
-
-            // Store the captured parameters.
-            $this->parameters = $matches;
-
-            // Also, store the compiled regex.
-            $this->regex = $regex;
+            // Store the current information.
+            $this->uri        = $uri;
+            $this->method     = $method;
+            $this->parameters = $params;
+            $this->regex      = $regex;
 
             return true;
         }
 
         return false;
+    }
+
+    protected static function compileRoute($pattern)
+    {
+        // Convert the Named Patterns, e.g. {controller}
+        $regex = preg_replace('#\{(\w+)\}#', '(?P<\1>[^/]+)', $pattern);
+
+        // Convert the optional Named Patterns, e.g. /{category?}
+        $regex = preg_replace('#/\{(\w+)\?\}#', '(?:/(?P<\1>[^/]+)', $regex, -1, $count);
+
+        // Convert the optional Named Patterns with custom regular expression e.g. {id:\d+:?}
+        $regex = preg_replace('#/\{(\w+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $regex, -1, $count2);
+
+        $count += $count2;
+
+        // Convert the Named Patterns with custom regular expression e.g. {id:\d+}
+        $regex = preg_replace('#\{(\w+):([^\}]+)\}#', '(?P<\1>\2)', $regex);
+
+        // Pad the pattern with ')?' if is need.
+        if($count > 0) {
+            $regex .= str_repeat (')?', $count);
+        }
+
+        return $regex;
     }
 
     /**

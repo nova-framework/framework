@@ -31,15 +31,15 @@ App::after(function($request, $response)
 /** Define Route Filters. */
 
 // A Testing Filter which dump the matched Route.
-Router::filter('test', function($route) {
-    echo '<pre style="margin: 10px;">' .var_export($route, true) .'</pre>';
+Router::filter('test', function($route, $request) {
+    echo '<pre style="margin: 10px;">' .htmlspecialchars(var_export($route, true)) .'</pre>';
 });
 
 // A simple CSRF Filter.
-Router::filter('csrf', function($route) {
-    $token = Request::input('csrfToken');
+Router::filter('csrf', function($route, $request) {
+    $token = $request->input('csrfToken');
 
-    $method = Request::method();
+    $method = $request->method();
 
     if (($method == 'POST') && ($token != Session::token())) {
         // When CSRF Token is invalid, respond with Error 400 Page (Bad Request)
@@ -48,9 +48,9 @@ Router::filter('csrf', function($route) {
 });
 
 // Referer checking Filter.
-Router::filter('referer', function($route) {
+Router::filter('referer', function($route, $request) {
     // Check if the visitor come to this Route from another site.
-    $referer = Request::header('referer');
+    $referer = $request->header('referer');
 
     if(! str_starts_with($referer, Config::get('app.url'))) {
         // When Referrer is invalid, respond with Error 400 Page (Bad Request)
@@ -59,7 +59,7 @@ Router::filter('referer', function($route) {
 });
 
 // Authentication Filters.
-Router::filter('auth', function($route) {
+Router::filter('auth', function($route, $request) {
     if (! Auth::check()) {
          // User is not logged in, redirect him to Login Page.
          return Redirect::to('login');
@@ -67,7 +67,7 @@ Router::filter('auth', function($route) {
 });
 
 // Role-based Authorization Filter.
-Router::filter('roles', function($route) {
+Router::filter('roles', function($route, $request) {
     $action = $route->getAction();
 
     $roles = array_get($action, 'roles');
@@ -79,7 +79,7 @@ Router::filter('roles', function($route) {
     }
 });
 
-Router::filter('guest', function($route) {
+Router::filter('guest', function($route, $request) {
     if (! Auth::guest()) {
         // User is authenticated, redirect him to Dashboard Page.
         return Redirect::to('admin/dashboard');

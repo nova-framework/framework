@@ -66,8 +66,6 @@ class FileDispatcher
 
         if($response instanceof BinaryFileResponse) {
             $response->isNotModified($request);
-
-            $response->prepare($request);
         }
 
         return $response;

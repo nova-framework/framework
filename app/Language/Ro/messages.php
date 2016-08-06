@@ -22,7 +22,7 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Please verify your E-mail address' => '',
   'Request API' => '',
   'Session API' => '',
-  'Subpage' => '',
+  'Subpage' => 'Subpagina',
   'Test' => '',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
   'This is a test!!!' => '',

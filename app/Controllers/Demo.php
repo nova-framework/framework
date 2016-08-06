@@ -9,7 +9,6 @@ use Helpers\Password;
 use Helpers\Url;
 
 use App;
-use Config;
 use Event;
 use Validator;
 use Input;
@@ -29,15 +28,6 @@ use DB;
 */
 class Demo extends Controller
 {
-    const REGEX_DELIMITER = '#';
-
-    /**
-     * This string defines the characters that are automatically considered separators in front of
-     * optional placeholders (with default and no static text following). Such a single separator
-     * can be left out together with the optional placeholder from matching and generating URLs.
-     */
-    const SEPARATORS = '/,;.:-_~+*=@|';
-
     /**
      * Define Index method
      */

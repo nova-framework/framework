@@ -5,14 +5,16 @@ return array (
   'Database API' => '',
   'Events API' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
-This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => '',
+This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Bună, bun venit la controlerul <code>Welcome</code> și metoda <code>subPage</code>! <br/>
+Acest conținut poate fi modificat în <code>/app/Views/Welcome/SubPage.php</code>',
   'Hello, welcome from the welcome controller! <br/>
-this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '',
-  'Home' => '',
+this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => 'Bună, bun venit la controlerul <code>Welcome</code>! <br/>
+Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</code>',
+  'Home' => 'Acasă',
   'If you have problems, please paste the above URL into your web browser.' => '',
   'Mailing API' => '',
   'Message sent while pretending. Please, look on <code>{0}</code>' => '',
-  'Open subpage' => '',
+  'Open subpage' => 'Deschide subpagina',
   'Pagination' => '',
   'Password Reset' => '',
   'Password Sample' => '',
@@ -27,7 +29,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Timestamp:' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Validation API' => '',
-  'Welcome' => '',
+  'Welcome' => 'Bun venit',
   'Welcome to {0}!' => '',
   'You are not authorized to access this resource.' => '',
 );

@@ -28,6 +28,14 @@ use DB;
 */
 class Demo extends Controller
 {
+    const REGEX_DELIMITER = '#';
+
+    /**
+     * This string defines the characters that are automatically considered separators in front of
+     * optional placeholders (with default and no static text following). Such a single separator
+     * can be left out together with the optional placeholder from matching and generating URLs.
+     */
+    const SEPARATORS = '/,;.:-_~+*=@|';
 
     /**
      * Define Index method
@@ -50,6 +58,26 @@ class Demo extends Controller
             ->with('content', $content);
     }
 
+    /**
+     * Returns the next static character in the Route pattern that will serve as a separator.
+     *
+     * @param string $pattern The route pattern
+     *
+     * @return string The next static character that functions as separator (or empty string when none available)
+     */
+    private static function findNextSeparator($pattern)
+    {
+        if ('' == $pattern) {
+            // return empty string if pattern is empty or false (false which can be returned by substr)
+            return '';
+        }
+
+        // first remove all placeholders from the pattern so we can find the next real static character
+        $pattern = preg_replace('#\(:\w+\)#', '', $pattern);
+
+        return (isset($pattern[0]) && (false !== strpos(static::SEPARATORS, $pattern[0]))) ? $pattern[0] : '';
+    }
+
     public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')
     {
         $params = array(
@@ -61,9 +89,87 @@ class Demo extends Controller
 
         $content = '<pre>' .var_export($this->getParams(), true) .'</pre>';
 
+        $pattern = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
+        //$pattern = 'demo/test/(:any)/(:any)/(:any)/(:all)';
+
+        $content .= '<pre>' .htmlspecialchars(var_export($pattern, true)) .'</pre>';
+
+        preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
+        $content .= '<pre>' .htmlspecialchars(var_export($matches, true)) .'</pre>';
+
         //
-        $route = 'demo/test/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}';
-        $route = 'demo/test/{param1?}/{param2?}/{param3?}/{slug:.*:?}';
+        $cnt = 1;
+        $pos = 0;
+
+        $tokens = array();
+
+        $defaultSeparator = '/';
+
+        foreach ($matches as $match) {
+            $varName = substr($match[0][0], 1, -1);
+
+            // Get all static text preceding the current variable
+            $precedingText = substr($pattern, $pos, $match[0][1] - $pos);
+
+            $pos = $match[0][1] + strlen($match[0][0]);
+
+            $precedingChar = (strlen($precedingText) > 0) ? substr($precedingText, -1) : '';
+
+            $content .= '<pre>' .htmlspecialchars(var_export(substr($precedingText, -2), true)) .'</pre>';
+
+            $isSeparator = ('' !== $precedingChar) && (false !== strpos(static::SEPARATORS, $precedingChar));
+
+            if ($isSeparator && (strlen($precedingText) > 1)) {
+                $tokens[] = array('text', substr($precedingText, 0, -1));
+            } elseif (! $isSeparator && (strlen($precedingText) > 0)) {
+                $tokens[] = array('text', $precedingText);
+            }
+
+            switch ($varName) {
+                case ':all':
+                    $regexp = '.*';
+
+                    break;
+                case ':num':
+                    $regexp = '\d+';
+
+                    break;
+                default:
+                    $regexp = '[^/]+';
+            }
+
+            $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $regexp, 'param' .$cnt);
+
+            $cnt++;
+        }
+
+        if ($pos < strlen($pattern)) {
+            $tokens[] = array('text', substr($pattern, $pos));
+        }
+
+        $content .= '<pre>' .htmlspecialchars(var_export($tokens, true)) .'</pre>';
+
+        //
+        $route = '';
+
+        foreach ($tokens as $token) {
+            if ($token[0] == 'text') {
+                $route .= $token[1];
+            } else if ($token[0] == 'variable') {
+                $route .= $token[1] .'{' .$token[3];
+
+                if($token[2] != '[^/]+') {
+                    $route .= ':' .$token[2];
+                }
+
+                $route .= '}';
+            }
+        }
+
+        //
+        //$route = 'demo/test/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}';
+        //$route = 'demo/test/{param1?}/{param2?}/{param3?}/{slug:.*:?}';
         //$route = '{slug:.*}';
 
         $content .= '<pre>' .htmlspecialchars($route) .'</pre>';

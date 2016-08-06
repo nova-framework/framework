@@ -1,9 +1,9 @@
 <?php
 
 return array (
-  'Dashboard' => '',
-  'Forgot Password?' => '',
-  'Logout' => '',
-  'Profile' => '',
-  'User Login' => '',
+  'Dashboard' => 'Рабочий стол',
+  'Forgot Password?' => 'Забыли пароль?',
+  'Logout' => 'Выйти',
+  'Profile' => 'Профиль',
+  'User Login' => 'Вход пользователя',
 );

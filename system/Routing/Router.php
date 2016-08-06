@@ -398,8 +398,10 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function createRoute($methods, $route, $action)
     {
-        // Prepare the Route PATTERN.
-        $pattern = ltrim($route, '/');
+        // Prepare the Route URI.
+        $uri = trim($route, '/');
+
+        $uri = ! empty($uri) ? $uri : '/';
 
         // Pre-process the Action information.
         if (! is_array($action)) $action = array('uses' => $action);
@@ -428,7 +430,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         }
 
         // Create a Route instance.
-        return $this->newRoute($methods, $pattern, $action);
+        return $this->newRoute($methods, $uri, $action);
     }
 
     /**

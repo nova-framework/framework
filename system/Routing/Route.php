@@ -19,60 +19,69 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Route
 {
-    /**
-     * @var array Supported HTTP methods
-     */
-    private $methods = array();
+    const REGEX_DELIMITER = '#';
 
     /**
-     * @var string URL pattern
+     * This string defines the characters that are automatically considered separators in front of
+     * optional placeholders (with default and no static text following). Such a single separator
+     * can be left out together with the optional placeholder from matching and generating URLs.
      */
-    private $pattern = null;
+    const SEPARATORS = '/,;.:-_~+*=@|';
 
     /**
-     * @var array The route action array.
-     */
-    protected $action = array();
-
-    /**
-     * @var string The current matched URI
+     * The URI pattern the route responds to.
+     *
+     * @var string
      */
     private $uri = null;
 
     /**
-     * @var string The matched HTTP method
+     * Supported HTTP methods.
+     *
+     * @var array
      */
-    private $method = null;
+    private $methods = array();
 
     /**
-     * @var array The matched Route parameters
+     * The route action array.
+     *
+     * @var array
+     */
+    protected $action = array();
+
+    /**
+     * The regular expression requirements.
+     *
+     * @var array
+     */
+    protected $wheres = array();
+
+    /**
+     * The matched Route parameters.
+     *
+     * @var array
      */
     private $parameters = array();
 
-    /**
-     * @var string Matching regular expression
-     */
-    private $regex;
 
     /**
      * Constructor.
      *
-     * @param string|array $method HTTP method(s)
-     * @param string $pattern URL pattern
+     * @param string|array $methods HTTP methods
+     * @param string $uri URL pattern
      * @param string|array|callable $action Callback function or options
      */
-    public function __construct($method, $pattern, $action)
+    public function __construct($methods, $uri, $action)
     {
-        $this->methods = array_map('strtoupper', is_array($method) ? $method : array($method));
+        $this->uri = $uri;
+
+        $this->methods = (array) $methods;
+
+        $this->action = $this->parseAction($action);
 
         if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
             $this->methods[] = 'HEAD';
         }
-
-        //
-        $this->pattern = ! empty($pattern) ? $pattern : '/';
-
-        $this->action = $this->parseAction($action);
 
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
@@ -295,84 +304,283 @@ class Route
      */
     public function matches(Request $request, $includingMethod = true)
     {
-        $method = $request->method();
-
-        if ($includingMethod && ! in_array($method, $this->methods)) {
+        // Attempt to match the Route Method if it is requested.
+        if ($includingMethod && ! in_array($request->method(), $this->methods)) {
             return false;
         }
 
-        $uri = $request->path();
+        // Detect the Named Parameters and build the pattern for matching.
+        $pattern = $this->compileRoute();
 
-        //
-        // Build the regex for matching.
-        $namedParams = false;
-
-        if (preg_match('#\{([^\}]+)\}#', $this->pattern) === 1) {
-            // We have Named Parameters.
-            $regex = static::compileRoute($this->pattern);
-
-            $namedParams = true;
-        } else {
-            $searches = array(':any', ':num', ':all');
-            $replaces = array('[^/]+', '[0-9]+', '.*');
-
-            // Retrieve the additional Routing Patterns from configuration.
-            $patterns = Config::get('routing.patterns', array());
-
-            if(! empty($patterns)) {
-                $searches = array_merge($searches, array_keys($patterns));
-                $replaces = array_merge($replaces, array_values($patterns));
-            }
-
-            // Prepare the pattern with replacements.
-            $regex = str_replace($searches, $replaces, $this->pattern);
-
-            if (strpos($regex, '(/') !== false) {
-                $regex = str_replace(array('(/', ')'), array('(?:/', ')?'), $regex);
-            }
+        // Attempt to match the Route pattern.
+        if (preg_match('#^' .$pattern .'(?:\?.*)?$#i', $request->path(), $matches) !== 1) {
+            return false;
         }
 
-        // Attempt to match the Route and extract the parameters.
-        if (preg_match('#^' .$regex .'(?:\?.*)?$#i', $uri, $matches)) {
-            $params = array_filter($matches, function($key) use ($namedParams)
-            {
-                return $namedParams ? is_string($key) : ($key > 0);
-            }, ARRAY_FILTER_USE_KEY);
+        // Extract the captured parameters.
+        $params = array_filter($matches, function($key)
+        {
+            return is_string($key);
+        }, ARRAY_FILTER_USE_KEY);
 
-            // Store the current information.
-            $this->uri        = $uri;
-            $this->method     = $method;
-            $this->parameters = $params;
-            $this->regex      = $regex;
+        // Store the matched parameters.
+        $this->parameters = $params;
 
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
-    protected static function compileRoute($pattern)
+    protected function compileRoute()
     {
-        // Convert the Named Patterns, e.g. {controller}
-        $regex = preg_replace('#\{(\w+)\}#', '(?P<\1>[^/]+)', $pattern);
+        // Process for the Routes which contains Named Parameters.
+        if (preg_match('#\{([^\}]+)\}#', $this->uri) === 1) {
+            $optionals = $this->extractOptionalParameters();
 
-        // Convert the optional Named Patterns, e.g. /{category?}
-        $regex = preg_replace('#/\{(\w+)\?\}#', '(?:/(?P<\1>[^/]+)', $regex, -1, $count);
+            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
-        // Convert the optional Named Patterns with custom regular expression e.g. {id:\d+:?}
-        $regex = preg_replace('#/\{(\w+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $regex, -1, $count2);
-
-        $count += $count2;
-
-        // Convert the Named Patterns with custom regular expression e.g. {id:\d+}
-        $regex = preg_replace('#\{(\w+):([^\}]+)\}#', '(?P<\1>\2)', $regex);
-
-        // Pad the pattern with ')?' if is need.
-        if($count > 0) {
-            $regex .= str_repeat (')?', $count);
+            return $this->compilePattern($uri, $optionals);
         }
 
-        return $regex;
+        // Process for the Routes which contains Unnamed Parameters.
+        if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
+            return $this->compileLegacyPattern($this->uri);
+        }
+
+        // Process for the bare Routes with optional paths.
+        $pattern = $this->uri;
+
+        if (strpos($pattern, '(/') !== false) {
+            $pattern = str_replace(array('(/', ')'), array('(?:/', ')?'), $pattern);
+        }
+
+        return $pattern;
+    }
+
+    /**
+     * Get the optional parameters for the route.
+     *
+     * @return array
+     */
+    protected function extractOptionalParameters()
+    {
+        preg_match_all('/\{(\w+?)\?\}/', $this->uri, $matches);
+
+        return isset($matches[1]) ? $matches[1] : array();
+    }
+
+    protected function compilePattern($pattern, $optionals)
+    {
+        preg_match_all('#\{([^\}]+)\}#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
+        //
+        $variables = array();
+
+        $tokens = array();
+
+        $defaultSeparator = '/';
+
+        $pos = 0;
+
+        foreach ($matches as $match) {
+            $varName = substr($match[0][0], 1, -1);
+
+            if (in_array($varName, $variables)) {
+                throw new \LogicException(sprintf('Route pattern "%s" cannot reference variable name "%s" more than once.', $pattern, $varName));
+            }
+
+            array_push($variables, $varName);
+
+            // Get all static text preceding the current variable.
+            $precedingText = substr($pattern, $pos, $match[0][1] - $pos);
+
+            $pos = $match[0][1] + strlen($match[0][0]);
+
+            $precedingChar = (strlen($precedingText) > 0) ? substr($precedingText, -1) : '';
+
+            $isSeparator = ('' !== $precedingChar) && (false !== strpos(static::SEPARATORS, $precedingChar));
+
+            //
+            if ($isSeparator && (strlen($precedingText) > 1)) {
+                $tokens[] = array('text', substr($precedingText, 0, -1));
+            } elseif (! $isSeparator && (strlen($precedingText) > 0)) {
+                $tokens[] = array('text', $precedingText);
+            }
+
+            if (array_key_exists($varName, $this->wheres)) {
+                $regexp = $this->wheres[$varName];
+            } else {
+                $regexp = '[^/]+';
+            }
+
+            $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $varName, $regexp);
+        }
+
+        if ($pos < strlen($pattern)) {
+            $tokens[] = array('text', substr($pattern, $pos));
+        }
+
+        //
+        $pattern = '';
+
+        foreach ($tokens as $token) {
+            if ($token[0] == 'text') {
+                $pattern .= $token[1];
+            } else if ($token[0] == 'variable') {
+                if (in_array($token[2], $optionals)) $pattern .= '(?:';
+
+                $pattern .= $token[1] .'(?P<' .$token[2] .'>' .$token[3] .')';
+            }
+        }
+
+        // Pad the pattern with ')?' if it is need.
+        if(! empty($optionals)) {
+            $pattern .= str_repeat (')?', count($optionals));
+        }
+
+        return $pattern;
+    }
+
+    protected function compileLegacyPattern($pattern)
+    {
+        preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
+        //
+        $tokens = array();
+
+        $pos = 0;
+
+        $defaultSeparator = '/';
+
+        $optionals = 0;
+
+        foreach ($matches as $match) {
+            //
+            $varName = substr($match[0][0], 1, -1);
+
+            // Get all static text preceding the current variable
+            $precedingText = substr($pattern, $pos, $match[0][1] - $pos);
+
+            $pos = $match[0][1] + strlen($match[0][0]);
+
+            $precedingChar = (strlen($precedingText) > 0) ? substr($precedingText, -1) : '';
+
+            $isSeparator = ('' !== $precedingChar) && (false !== strpos(static::SEPARATORS, $precedingChar));
+
+            //
+            $isOptional = false;
+
+            if ($isSeparator && (strlen($precedingText) > 1)) {
+                if(substr($precedingText, -2) == '(/') {
+                    $isOptional = true;
+
+                    $optionals++;
+
+                    if ((strlen($precedingText) > 2)) {
+                        $tokens[] = array('text', substr($precedingText, 0, -2));
+                    }
+                } else {
+                    $tokens[] = array('text', substr($precedingText, 0, -1));
+                }
+            } elseif (! $isSeparator && (strlen($precedingText) > 0)) {
+                $tokens[] = array('text', $precedingText);
+            }
+
+            $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $varName, $isOptional);
+        }
+
+        if ($pos < strlen($pattern)) {
+            $tokens[] = array('text', substr($pattern, $pos));
+        }
+
+        //
+        $patterns = Config::get('routing.patterns', array());
+
+        $patterns = array_merge($patterns, array(
+            ':any' => '[^/]+',
+            ':num' => '[0-9]+',
+            ':all' => '.*'
+        ));
+
+        //
+        $endingText = '';
+
+        if($optionals > 0) {
+            $token = end($tokens);
+
+            if ($token[0] == 'text') {
+                $endingText = str_replace(')', ')?', $token[1]);
+
+                array_pop($tokens);
+            }
+        }
+
+        //
+        $pattern = '';
+
+        $cnt = 0;
+
+        foreach ($tokens as $token) {
+            if ($token[0] == 'text') {
+                $pattern .= $token[1];
+
+                continue;
+            }
+
+            $cnt++;
+
+            list($type, $separator, $varName, $isOptional) = $token;
+
+            if ($isOptional) $pattern .= '(?:';
+
+            //
+            $key = array_key_exists($varName, $patterns) ? $varName : ':any';
+
+            $pattern .= $separator .'(?P<param' .$cnt .'>' .$patterns[$key] .')';
+        }
+
+        return $pattern .$endingText;
+    }
+
+    /**
+     * Set a regular expression requirement on the route.
+     *
+     * @param  array|string  $name
+     * @param  string  $expression
+     * @return $this
+     */
+    public function where($name, $expression = null)
+    {
+        foreach ($this->parseWhere($name, $expression) as $name => $expression) {
+            $this->wheres[$name] = $expression;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Parse arguments to the where method into an array.
+     *
+     * @param  array|string  $name
+     * @param  string  $expression
+     * @return array
+     */
+    protected function parseWhere($name, $expression)
+    {
+        return is_array($name) ? $name : array($name => $expression);
+    }
+
+    /**
+     * Set a list of regular expression requirements on the route.
+     *
+     * @param  array  $wheres
+     * @return $this
+     */
+    protected function whereArray(array $wheres)
+    {
+        foreach ($wheres as $name => $expression) {
+            $this->where($name, $expression);
+        }
+
+        return $this;
     }
 
     /**
@@ -383,7 +591,7 @@ class Route
      */
     public function prefix($prefix)
     {
-        $this->pattern = trim($prefix, '/') .'/' .trim($this->pattern, '/');
+        $this->uri = trim($prefix, '/') .'/' .trim($this->uri, '/');
 
         return $this;
     }
@@ -416,7 +624,25 @@ class Route
         });
     }
 
-    // Some Getters
+    /**
+     * Get the URI associated with the route.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->uri();
+    }
+
+    /**
+     * Get the URI associated with the route.
+     *
+     * @return string
+     */
+    public function uri()
+    {
+        return $this->uri;
+    }
 
     /**
      * @return array
@@ -435,19 +661,16 @@ class Route
     }
 
     /**
-     * @return string
+     * Set the URI that the route responds to.
+     *
+     * @param  string  $uri
+     * @return \Routing\Route
      */
-    public function getPattern()
+    public function setUri($uri)
     {
-        return $this->pattern;
-    }
+        $this->uri = $uri;
 
-    /**
-     * @return string
-     */
-    public function pattern()
-    {
-        return $this->pattern;
+        return $this;
     }
 
     /**
@@ -459,35 +682,11 @@ class Route
     }
 
     /**
-     * @return string|null
-     */
-    public function uri()
-    {
-        return $this->uri;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    /**
      * @return array
      */
     public function getParams()
     {
         return $this->parameters();
-    }
-
-    /**
-     * @return string
-     */
-    public function getRegex()
-    {
-        return $this->regex;
     }
 
     /**

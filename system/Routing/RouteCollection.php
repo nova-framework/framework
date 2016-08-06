@@ -38,13 +38,13 @@ class RouteCollection implements Countable, IteratorAggregate
      */
     public function add(Route $route)
     {
-        $patern = $route->getPattern();
+        $uri = $route->getUri();
 
         foreach ($route->methods() as $method) {
-            $this->routes[$method][$patern] = $route;
+            $this->routes[$method][$uri] = $route;
         }
 
-        $this->allRoutes[$method .$patern] = $route;
+        $this->allRoutes[$method .$uri] = $route;
 
         return $route;
     }

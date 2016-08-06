@@ -9,6 +9,7 @@ use Helpers\Password;
 use Helpers\Url;
 
 use App;
+use Config;
 use Event;
 use Validator;
 use Input;
@@ -89,140 +90,12 @@ class Demo extends Controller
 
         $content = '<pre>' .var_export($this->getParams(), true) .'</pre>';
 
-        $pattern = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
-        //$pattern = 'demo/test/(:any)/(:any)/(:any)/(:all)';
-
-        $content .= '<pre>' .htmlspecialchars(var_export($pattern, true)) .'</pre>';
-
-        preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-
-        $content .= '<pre>' .htmlspecialchars(var_export($matches, true)) .'</pre>';
-
-        //
-        $cnt = 1;
-        $pos = 0;
-
-        $tokens = array();
-
-        $defaultSeparator = '/';
-
-        foreach ($matches as $match) {
-            $varName = substr($match[0][0], 1, -1);
-
-            // Get all static text preceding the current variable
-            $precedingText = substr($pattern, $pos, $match[0][1] - $pos);
-
-            $pos = $match[0][1] + strlen($match[0][0]);
-
-            $precedingChar = (strlen($precedingText) > 0) ? substr($precedingText, -1) : '';
-
-            $content .= '<pre>' .htmlspecialchars(var_export(substr($precedingText, -2), true)) .'</pre>';
-
-            $isSeparator = ('' !== $precedingChar) && (false !== strpos(static::SEPARATORS, $precedingChar));
-
-            if ($isSeparator && (strlen($precedingText) > 1)) {
-                $tokens[] = array('text', substr($precedingText, 0, -1));
-            } elseif (! $isSeparator && (strlen($precedingText) > 0)) {
-                $tokens[] = array('text', $precedingText);
-            }
-
-            switch ($varName) {
-                case ':all':
-                    $regexp = '.*';
-
-                    break;
-                case ':num':
-                    $regexp = '\d+';
-
-                    break;
-                default:
-                    $regexp = '[^/]+';
-            }
-
-            $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $regexp, 'param' .$cnt);
-
-            $cnt++;
-        }
-
-        if ($pos < strlen($pattern)) {
-            $tokens[] = array('text', substr($pattern, $pos));
-        }
-
-        $content .= '<pre>' .htmlspecialchars(var_export($tokens, true)) .'</pre>';
-
-        //
-        $route = '';
-
-        foreach ($tokens as $token) {
-            if ($token[0] == 'text') {
-                $route .= $token[1];
-            } else if ($token[0] == 'variable') {
-                $route .= $token[1] .'{' .$token[3];
-
-                if($token[2] != '[^/]+') {
-                    $route .= ':' .$token[2];
-                }
-
-                $route .= '}';
-            }
-        }
-
-        //
-        //$route = 'demo/test/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}';
-        //$route = 'demo/test/{param1?}/{param2?}/{param3?}/{slug:.*:?}';
-        //$route = '{slug:.*}';
-
-        $content .= '<pre>' .htmlspecialchars($route) .'</pre>';
-
-        // Convert the route to a regular expression: escape forward slashes
-        //$route = preg_replace('/\//', '\\/', $route);
-
-        $padCount = 0;
-
-        // Convert the Named Patterns, e.g. {controller}
-        $route = preg_replace('#\{([a-z0-9]+)\}#', '(?P<\1>[^/]+)', $route);
-
-        // Convert the optional Named Patterns, e.g. /{category?}
-        $route = preg_replace('#/\{([a-z0-9]+)\?\}#', '(?:/(?P<\1>[^/]+)', $route, -1, $count);
-
-        $padCount += $count;
-
-        // Convert variables with custom regular expression e.g. {id:\d+?}
-        $route = preg_replace('#/\{([a-z0-9]+):([^\}]+):\?\}#', '(?:/(?P<\1>\2)', $route, -1, $count);
-
-        $padCount += $count;
-
-        // Convert variables with custom regular expression e.g. {id:\d+}
-        $route = preg_replace('#\{([a-z0-9]+):([^\}]+)\}#', '(?P<\1>\2)', $route);
-
-        if($padCount > 0) {
-            $route .= str_repeat (')?', $padCount);
-        }
-
-        // Add start and end delimiters, and case insesitive flag
-        $route = '#^' .$route .'$#i';
-
-        $content .= '<pre>' .htmlspecialchars($route) .'</pre>';
-
-        //$url = 'demo/blog/first-article';
-        $url = Request::path();
-
-        if(preg_match($route, $url, $matches)) {
-            // Get named capture group values
-            $params = array_filter($matches, function($key)
-            {
-                return is_string($key);
-            }, ARRAY_FILTER_USE_KEY);
-
-            $content .= '<pre>' .var_export($params, true) .'</pre>';
-        }
-
         //
         $model = new App\Modules\Users\Models\Users();
 
         $users = $model->all();
 
-        //$content .= '<pre>' .var_export($users, true) .'</pre>';
+        $content .= '<pre>' .var_export($users, true) .'</pre>';
 
         return View::make('Default')
             ->shares('title', __('Test'))

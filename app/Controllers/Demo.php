@@ -88,20 +88,13 @@ class Demo extends Controller
 
         $content = '<pre>' .htmlspecialchars($route) .'</pre>';
 
-        //
-        $pattern = Route::compileLegacyPattern($route);
-
-        $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
+        $route = new Route('GET', $route, array('uses' => null));
 
         //
-        if (preg_match('#^' .$pattern .'$#i', Request::path(), $matches) === 1) {
-            // Extract the captured parameters.
-            $params = array_filter($matches, function($key)
-            {
-                return is_string($key);
-            }, ARRAY_FILTER_USE_KEY);
+        $request = Request::instance();
 
-            $content .= '<pre>' .var_export($params, true) .'</pre>';
+        if ($route->matches($request)) {
+            $content .= '<pre>' .var_export($route->parameters(), true) .'</pre>';
         }
 
         return View::make('Default')

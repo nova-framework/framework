@@ -311,7 +311,7 @@ class Route
         $pattern = $this->compileRoute();
 
         // Attempt to match the Route pattern.
-        if (preg_match('#^' .$pattern .'(?:\?.*)?$#i', $request->path(), $matches) !== 1) {
+        if (preg_match('#^' .$pattern .'$#i', $request->path(), $matches) !== 1) {
             return false;
         }
 
@@ -414,10 +414,10 @@ class Route
             $tokens[] = array('text', substr($pattern, $pos));
         }
 
-        return static::createPattern($tokens, $optionals);
+        return $this->createPattern($tokens, $optionals);
     }
 
-    public static function compileLegacyPattern($pattern)
+    protected function compileLegacyPattern($pattern)
     {
         $optionals = array();
 
@@ -482,10 +482,10 @@ class Route
             $tokens[] = array('text', substr($pattern, $pos));
         }
 
-        return static::createPattern($tokens, $optionals);
+        return $this->createPattern($tokens, $optionals);
     }
 
-    protected static function createPattern(array $tokens, $optionals)
+    protected function createPattern(array $tokens, $optionals)
     {
         $pattern = '';
 

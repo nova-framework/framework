@@ -79,7 +79,9 @@ class Demo extends Controller
         $content = '<pre>' .htmlspecialchars($route) .'</pre>';
 
         //
-        $route = new Route('GET', $route, array('uses' => null));
+        $route = new Route('GET', $route, function() {
+            //
+        });
 
         $content .= '<pre>' .htmlspecialchars($route->compile()) .'</pre>';
 

@@ -307,7 +307,7 @@ class Route
             return false;
         }
 
-        // Detect the Named Parameters and build the pattern for matching.
+        // Compile the Route pattern for matching.
         $pattern = $this->compile();
 
         // Attempt to match the Route pattern.

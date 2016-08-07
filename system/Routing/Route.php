@@ -8,7 +8,6 @@
 
 namespace Routing;
 
-use Core\Config;
 use Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -340,14 +339,14 @@ class Route
 
         // Process for the Routes which contains Unnamed Parameters.
         if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
-            return static::compileLegacyPattern($this->uri);
+            return $this->compileLegacyPattern($this->uri);
         }
 
         // Process for the bare Routes with optional paths.
-        $pattern = $this->uri;
-
-        if (strpos($pattern, '(/') !== false) {
-            $pattern = str_replace(array('(/', ')'), array('(?:/', ')?'), $pattern);
+        if (strpos($this->uri, '(/') !== false) {
+            $pattern = str_replace(array('(/', ')'), array('(?:/', ')?'), $this->uri);
+        } else {
+            $pattern = $this->uri;
         }
 
         return $pattern;
@@ -419,16 +418,14 @@ class Route
 
     protected function compileLegacyPattern($pattern)
     {
-        $patterns = Config::get('routing.patterns', array());
+        preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
-        $patterns = array_merge($patterns, array(
+        //
+        $patterns = array_merge($this->wheres, array(
             ':any' => '[^/]+',
             ':num' => '[0-9]+',
             ':all' => '.*'
         ));
-
-        //
-        preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
         $optionals = array();
@@ -473,6 +470,7 @@ class Route
                 $regexp = '[^/]+';
             }
 
+            //
             $varName = 'param' .$cnt++;
 
             if ($isOptional) array_push($optionals, $varName);

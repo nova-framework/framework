@@ -369,7 +369,21 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
             }
         }
 
-        $this->addRoute('ANY', $uri .'/(:all)', $controller .'@missingMethod');
+        $this->addFallthroughRoute($controller, $uri);
+    }
+
+    /**
+     * Add a fallthrough route for a controller.
+     *
+     * @param  string  $controller
+     * @param  string  $uri
+     * @return void
+     */
+    protected function addFallthroughRoute($controller, $uri)
+    {
+        $missing = $this->any($uri.'/{_missing}', $controller.'@missingMethod');
+
+        $missing->where('_missing', '(.*)');
     }
 
     /**

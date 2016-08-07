@@ -7,6 +7,7 @@ use Core\Controller;
 use Helpers\FastCache;
 use Helpers\Password;
 use Helpers\Url;
+use Routing\Route;
 
 use App;
 use Event;
@@ -81,11 +82,27 @@ class Demo extends Controller
         $content = '<pre>' .var_export($this->getParams(), true) .'</pre>';
 
         //
-        $model = new App\Modules\Users\Models\Users();
+        //$route = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
+        $route = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
+        //$route = '(:all)';
 
-        $users = $model->all();
+        $content = '<pre>' .htmlspecialchars($route) .'</pre>';
 
-        $content .= '<pre>' .var_export($users, true) .'</pre>';
+        //
+        $pattern = Route::compileLegacyPattern($route);
+
+        $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
+
+        //
+        if (preg_match('#^' .$pattern .'$#i', Request::path(), $matches) === 1) {
+            // Extract the captured parameters.
+            $params = array_filter($matches, function($key)
+            {
+                return is_string($key);
+            }, ARRAY_FILTER_USE_KEY);
+
+            $content .= '<pre>' .var_export($params, true) .'</pre>';
+        }
 
         return View::make('Default')
             ->shares('title', __('Test'))

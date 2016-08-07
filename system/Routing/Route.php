@@ -419,9 +419,6 @@ class Route
 
     protected function compileLegacyPattern($pattern)
     {
-        $optionals = array();
-
-        //
         $patterns = Config::get('routing.patterns', array());
 
         $patterns = array_merge($patterns, array(
@@ -434,6 +431,8 @@ class Route
         preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
+        $optionals = array();
+
         $tokens = array();
 
         $pos = 0;

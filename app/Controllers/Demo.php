@@ -72,14 +72,14 @@ class Demo extends Controller
 
     public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')
     {
-        //$route = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
-        $route = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
-        //$route = '(:all)';
+        //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
+        $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
+        //$uri = '(:all)';
 
-        $content = '<pre>' .htmlspecialchars($route) .'</pre>';
+        $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
 
         //
-        $route = new Route('GET', $route, function() {
+        $route = new Route('GET', $uri, function() {
             //
         });
 

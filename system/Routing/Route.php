@@ -327,7 +327,7 @@ class Route
         return true;
     }
 
-    protected function compileRoute()
+    public function compileRoute()
     {
         // Process for the Routes which contains Named Parameters.
         if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {

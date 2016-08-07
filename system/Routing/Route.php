@@ -308,7 +308,7 @@ class Route
         }
 
         // Detect the Named Parameters and build the pattern for matching.
-        $pattern = $this->compileRoute();
+        $pattern = $this->compile();
 
         // Attempt to match the Route pattern.
         if (preg_match('#^' .$pattern .'$#i', $request->path(), $matches) !== 1) {
@@ -327,7 +327,7 @@ class Route
         return true;
     }
 
-    public function compileRoute()
+    public function compile()
     {
         // Process for the Routes which contains Named Parameters.
         if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {

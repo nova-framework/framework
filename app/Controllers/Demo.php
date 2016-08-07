@@ -92,7 +92,7 @@ class Demo extends Controller
         $route = new Route('GET', $route, array('uses' => null));
 
         //
-        $pattern = $route->compileRoute();
+        $pattern = $route->compile();
 
         $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
 

@@ -72,16 +72,6 @@ class Demo extends Controller
 
     public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')
     {
-        $params = array(
-            'param1' => $param1,
-            'param2' => $param2,
-            'param3' => $param3,
-            'param4' => $param4
-        );
-
-        $content = '<pre>' .var_export($this->getParams(), true) .'</pre>';
-
-        //
         //$route = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
         $route = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
         //$route = '(:all)';

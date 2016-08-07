@@ -455,7 +455,7 @@ class Route
             $isOptional = false;
 
             if ($isSeparator && (strlen($precedingText) > 1)) {
-                if(substr($precedingText, -2) == '(/') {
+                if (substr($precedingText, -2) == '(/') {
                     $isOptional = true;
 
                     if ((strlen($precedingText) > 2)) {
@@ -464,7 +464,7 @@ class Route
                 } else {
                     $tokens[] = array('text', substr($precedingText, 0, -1));
                 }
-            } elseif (! $isSeparator && (strlen($precedingText) > 0)) {
+            } else if (! $isSeparator && (strlen($precedingText) > 0)) {
                 $tokens[] = array('text', $precedingText);
             }
 
@@ -503,7 +503,7 @@ class Route
         }
 
         // Pad the pattern with ')?' if it is need.
-        if(! empty($optionals)) {
+        if (! empty($optionals)) {
             $pattern .= str_repeat (')?', count($optionals));
         }
 

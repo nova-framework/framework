@@ -13,7 +13,5 @@ use Core\Config;
  * Routing configuration
  */
 Config::set('routing', array(
-    'patterns' => array(
-        //':hex' => '[[:xdigit:]]+',
-    ),
+    'parameters' => 'named' // The style of parameters processed on Route pattern; supported: 'named' and 'unnamed'.
 ));

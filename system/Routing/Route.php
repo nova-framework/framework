@@ -468,8 +468,11 @@ class Route
                 $tokens[] = array('text', $precedingText);
             }
 
-            //
-            $regexp = isset($patterns[$varName]) ? $patterns[$varName] : '[^/]+';
+            if (isset($patterns[$varName])) {
+                $regexp = $patterns[$varName];
+            } else {
+                $regexp = '[^/]+';
+            }
 
             $varName = 'param' .$cnt++;
 

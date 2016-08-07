@@ -91,10 +91,7 @@ class Demo extends Controller
         //
         $route = new Route('GET', $route, array('uses' => null));
 
-        //
-        $pattern = $route->compile();
-
-        $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
+        $content .= '<pre>' .htmlspecialchars($route->compile()) .'</pre>';
 
         //
         $request = Request::instance();

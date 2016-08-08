@@ -153,17 +153,17 @@ class Route
      */
     public function compile()
     {
-        if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {
-            // Process for the Routes which contains Named Parameters.
-            $optionals = $this->extractOptionalParameters();
-
-            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-            return $this->compilePattern($uri, $optionals);
+        if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
+            // The Route pattern contains Unnamed Parameters.
+            return $this->compileLegacyPattern($this->uri);
         }
 
-        // Process for the Routes which contains Unnamed Parameters.
-        return $this->compileLegacyPattern($this->uri);
+        // Process for the Routes which contains Named Parameters.
+        $optionals = $this->extractOptionalParameters();
+
+        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
+        return $this->compilePattern($uri, $optionals);
     }
 
     /**

@@ -85,7 +85,7 @@ class RouteCompiler
             $tokens[] = array('text', substr($route, $pos));
         }
 
-        return $this->createPattern($tokens, $optionals);
+        return $this->process($tokens, $optionals);
     }
 
     public function legacyPattern($route)
@@ -156,10 +156,10 @@ class RouteCompiler
             $tokens[] = array('text', substr($route, $pos));
         }
 
-        return $this->createPattern($tokens, $optionals);
+        return $this->process($tokens, $optionals);
     }
 
-    protected function createPattern($tokens, $optionals)
+    protected function process($tokens, $optionals)
     {
         $pattern = '';
 

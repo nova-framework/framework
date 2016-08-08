@@ -34,33 +34,6 @@ class RouteCompiler
         $this->patterns = $patterns;
     }
 
-    protected function createPattern(array $tokens, array $optionals)
-    {
-        $pattern = '';
-
-        foreach ($tokens as $token) {
-            if ($token[0] == 'text') {
-                $pattern .= $token[1];
-
-                continue;
-            }
-
-            list($type, $separator, $varName, $regexp) = $token;
-
-            //
-            if (in_array($varName, $optionals)) $pattern .= '(?:';
-
-            $pattern .= $separator .'(?P<' .$varName .'>' .$regexp .')';
-        }
-
-        // Pad the pattern with ')?' if it is need.
-        if (! empty($optionals)) {
-            $pattern .= str_repeat (')?', count($optionals));
-        }
-
-        return $pattern;
-    }
-
     public function compileRoute($route, array $optionals = array())
     {
         preg_match_all('#\{[^\}]+\}#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
@@ -186,4 +159,31 @@ class RouteCompiler
         return $this->createPattern($tokens, $optionals);
     }
 
+    protected function createPattern(array $tokens, array $optionals)
+    {
+        $pattern = '';
+
+        foreach ($tokens as $token) {
+            if ($token[0] == 'text') {
+                $pattern .= $token[1];
+
+                continue;
+            }
+
+            list($type, $separator, $varName, $regexp) = $token;
+
+            //
+            if (in_array($varName, $optionals)) $pattern .= '(?:';
+
+            $pattern .= $separator .'(?P<' .$varName .'>' .$regexp .')';
+        }
+
+        // Pad the pattern with ')?' if it is need.
+        if (! empty($optionals)) {
+            $pattern .= str_repeat (')?', count($optionals));
+        }
+
+        return $pattern;
+    }
+    
 }

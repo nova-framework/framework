@@ -144,6 +144,11 @@ class Route
         return false;
     }
 
+    /**
+     * Compile the Route pattern for matching and return it.
+     *
+     * @return string
+     */
     public function compile()
     {
         if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {
@@ -301,7 +306,7 @@ class Route
         return $this->createPattern($tokens, $optionals);
     }
 
-    protected function createPattern(array $tokens, $optionals)
+    protected function createPattern(array $tokens, array $optionals)
     {
         $pattern = '';
 

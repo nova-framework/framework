@@ -150,7 +150,7 @@ class Route
      *
      * @return string
      */
-    protected function compileRoute()
+    public function compileRoute()
     {
         $compiler = new RouteCompiler($this->wheres);
 
@@ -690,8 +690,6 @@ class Route
      */
     public function getPattern()
     {
-        if (isset($this->pattern)) return $this->pattern;
-
-        return $this->compileRoute();
+        return isset($this->pattern) ? $this->pattern : null;
     }
 }

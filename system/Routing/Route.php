@@ -192,7 +192,9 @@ class Route
             $varName = substr($match[0][0], 1, -1);
 
             if (in_array($varName, $variables)) {
-                throw new \LogicException(sprintf('Route pattern "%s" cannot reference variable name "%s" more than once.', $pattern, $varName));
+                $error = sprintf('Route pattern "%s" cannot reference variable name "%s" more than once.', $pattern, $varName);
+
+                throw new \LogicException($error);
             }
 
             array_push($variables, $varName);

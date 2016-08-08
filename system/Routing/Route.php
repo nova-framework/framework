@@ -578,14 +578,14 @@ class Route
      */
     public function parameters()
     {
-        if (! isset($this->parameters)) {
-            throw new \LogicException("Route is not bound.");
+        if (isset($this->parameters)) {
+            return array_map(function($value)
+            {
+                return is_string($value) ? rawurldecode($value) : $value;
+            }, $this->parameters);
         }
 
-        return array_map(function($value)
-        {
-            return is_string($value) ? rawurldecode($value) : $value;
-        }, $this->parameters);
+        throw new \LogicException("Route is not bound.");
     }
 
     /**
@@ -608,7 +608,9 @@ class Route
      */
     public function parameterNames()
     {
-        if (isset($this->parameterNames)) return $this->parameterNames;
+        if (isset($this->parameterNames)) {
+            return $this->parameterNames;
+        }
 
         return $this->parameterNames = $this->compileParameterNames();
     }
@@ -622,7 +624,10 @@ class Route
     {
         preg_match_all('/\{(.*?)\}/', $this->uri, $matches);
 
-        return array_map(function($m) { return trim($m, '?'); }, $matches[1]);
+        return array_map(function($value)
+        {
+            return trim($value, '?');
+        }, $matches[1]);
     }
 
     /**

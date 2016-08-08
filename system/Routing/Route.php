@@ -99,7 +99,10 @@ class Route
      */
     public function run()
     {
-        $parameters = array_filter($this->getParams(), function($p) { return isset($p); });
+        $parameters = array_filter($this->getParams(), function($param)
+        {
+            return isset($param);
+        });
 
         return call_user_func_array($this->action['uses'], $parameters);
     }

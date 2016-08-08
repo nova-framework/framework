@@ -405,7 +405,11 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
                 array_push($parts, trim($group['prefix'], '/'));
             }
 
-            // Adjust the Route PATTERN, if it is needed.
+            if (isset($action['prefix'])) {
+                array_push($parts, trim($action['prefix'], '/'));
+            }
+
+            // Adjust the Route PREFIX, if it is needed.
             $parts = array_filter($parts, function($value)
             {
                 return ! empty($value);

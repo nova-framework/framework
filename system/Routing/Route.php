@@ -130,13 +130,13 @@ class Route
 
         if (preg_match('#^' .$pattern .'$#i', $uri, $matches) === 1) {
             // Extract the named parameters from matches.
-            $params = array_filter($matches, function($key)
-            {
-                return is_string($key);
-            }, ARRAY_FILTER_USE_KEY);
+            $this->parameters = array();
 
-            // Store the named parameters.
-            $this->parameters = $params;
+            foreach ($matches as $key => $value) {
+                if (is_string($key)) {
+                    $this->parameters[$key] = $value;
+                }
+            }
 
             return true;
         }

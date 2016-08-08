@@ -302,7 +302,7 @@ class Route
         return $this->createPattern($tokens, $optionals);
     }
 
-    protected function createPattern(array $tokens, array $optionals)
+    protected function createPattern($tokens, $optionals)
     {
         $pattern = '';
 

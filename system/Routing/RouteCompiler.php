@@ -38,7 +38,7 @@ class RouteCompiler
      */
     public function __construct($route, array $patterns = array())
     {
-        $this->route = $uri;
+        $this->route = $route;
 
         $this->patterns = $patterns;
     }

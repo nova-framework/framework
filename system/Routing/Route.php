@@ -307,16 +307,18 @@ class Route
         $pattern = '';
 
         foreach ($tokens as $token) {
-            if ($token[0] == 'variable') {
-                list($type, $separator, $varName, $regexp) = $token;
-
-                //
-                if (in_array($varName, $optionals)) $pattern .= '(?:';
-
-                $pattern .= $separator .'(?P<' .$varName .'>' .$regexp .')';
-            } else if ($token[0] == 'text') {
+            if ($token[0] == 'text') {
                 $pattern .= $token[1];
+
+                continue;
             }
+
+            list($type, $separator, $varName, $regexp) = $token;
+
+            //
+            if (in_array($varName, $optionals)) $pattern .= '(?:';
+
+            $pattern .= $separator .'(?P<' .$varName .'>' .$regexp .')';
         }
 
         // Pad the pattern with ')?' if it is need.

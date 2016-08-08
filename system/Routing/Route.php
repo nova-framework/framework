@@ -129,11 +129,12 @@ class Route
         // Attempt to match the URI to Route pattern.
 
         if (preg_match('#^' .$pattern .'$#i', $uri, $matches) === 1) {
+            // Initialize the Route parameters, marking the Route as being bound.
             $this->parameters = array();
 
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
-                    // A named parameter; add it to the Route parameters.
+                    // A named parameter found; add it to the Route parameters.
                     $this->parameters[$key] = $value;
                 }
             }

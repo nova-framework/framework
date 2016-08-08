@@ -132,6 +132,7 @@ class Route
             // Initialize the Route parameters, marking the Route as being bound.
             $this->parameters = array();
 
+            // Walk over matches, looking for named parameters need to be stored.
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
                     // A named parameter found; add it to the Route parameters.

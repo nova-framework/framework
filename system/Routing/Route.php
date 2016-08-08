@@ -150,7 +150,7 @@ class Route
     public function compile()
     {
         if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
-            // The Route pattern contains Legacy (Unnamed) Parameters.
+            // The Route contains Unnamed Parameters; special processing is required.
             return $this->compileLegacyPattern($this->uri);
         }
 

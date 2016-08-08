@@ -34,7 +34,7 @@ class RouteCompiler
         $this->patterns = $patterns;
     }
 
-    protected function createPattern($tokens, $optionals)
+    protected function createPattern(array $tokens, array $optionals)
     {
         $pattern = '';
 
@@ -61,7 +61,7 @@ class RouteCompiler
         return $pattern;
     }
 
-    public function compile($route, $optionals)
+    public function compile($route, array $optionals = array())
     {
         preg_match_all('#\{[^\}]+\}#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 

@@ -26,20 +26,21 @@ class RouteCompiler
      *
      * @var array
      */
-    protected $wheres = array();
+    protected $patterns = array();
+
 
     /**
      * Create a new controller dispatcher instance.
      *
-     * @param  \Routing\RouteFiltererInterface  $filterer
-     * @param  \Container\Container  $container
+     * @param  string $uri
+     * @param  array  $patterns
      * @return void
      */
-    public function __construct($uri, $wheres)
+    public function __construct($uri, array $patterns = array())
     {
         $this->uri = $uri;
 
-        $this->wheres = $wheres;
+        $this->patterns = $patterns;
     }
 
     /**
@@ -112,8 +113,8 @@ class RouteCompiler
                 $tokens[] = array('text', $precedingText);
             }
 
-            if (isset($this->wheres[$varName])) {
-                $regexp = $this->wheres[$varName];
+            if (isset($this->patterns[$varName])) {
+                $regexp = $this->patterns[$varName];
             } else {
                 $regexp = '[^/]+';
             }
@@ -133,7 +134,7 @@ class RouteCompiler
         preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
-        $patterns = array_merge($this->wheres, array(
+        $patterns = array_merge($this->patterns, array(
             ':any' => '[^/]+',
             ':num' => '[0-9]+',
             ':all' => '.*'

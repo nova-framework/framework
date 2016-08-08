@@ -83,7 +83,10 @@ class Demo extends Controller
             //
         });
 
-        $content .= '<pre>' .htmlspecialchars($route->getPattern()) .'</pre>';
+        //
+        $pattern = $route->compileRoute();
+
+        $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
 
         //
         $request = Request::instance();

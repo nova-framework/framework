@@ -119,15 +119,18 @@ class Route
             return false;
         }
 
+        // Get the URI from the Request instance.
+        $uri = $request->path();
+
         // Compile the Route pattern for matching.
         $pattern = $this->compile();
 
-        // Attempt to match the Route pattern.
-        if (preg_match('#^' .$pattern .'$#i', $request->path(), $matches) !== 1) {
+        // Attempt to match the URI to Route pattern.
+        if (preg_match('#^' .$pattern .'$#i', $uri, $matches) !== 1) {
             return false;
         }
 
-        // Extract the captured parameters.
+        // Extract the named parameters from matches.
         $params = array_filter($matches, function($key)
         {
             return is_string($key);

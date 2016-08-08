@@ -160,15 +160,10 @@ class Route
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
             return $this->compilePattern($uri, $optionals);
-        } else if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
-            // Process for the Routes which contains Unnamed Parameters.
-            return $this->compileLegacyPattern($this->uri);
-        } else if (strpos($this->uri, '(/') !== false) {
-            // Process for the Routes which contains bare URI with optional paths.
-            return str_replace(array('(/', ')'), array('(?:/', ')?'), $this->uri);
         }
 
-        return $this->uri;
+        // Process for the Routes which contains Unnamed Parameters.
+        return $this->compileLegacyPattern($this->uri);
     }
 
     /**

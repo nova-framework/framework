@@ -119,23 +119,19 @@ class Route
             return false;
         }
 
-        // Get the URI from the Request instance.
-        $uri = $request->path();
-
         // Compile the Route pattern for matching.
         $pattern = $this->compile();
 
         //
         // Attempt to match the URI to Route pattern.
 
-        if (preg_match('#^' .$pattern .'$#i', $uri, $matches) === 1) {
+        if (preg_match('#^' .$pattern .'$#i', $request->path(), $matches) === 1) {
             // Initialize the Route parameters, marking the Route as being bound.
             $this->parameters = array();
 
             // Walk over matches, looking for named parameters need to be stored.
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
-                    // A named parameter found; add it to the Route parameters.
                     $this->parameters[$key] = $value;
                 }
             }
@@ -154,11 +150,10 @@ class Route
     public function compile()
     {
         if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
-            // The Route pattern contains Unnamed Parameters.
+            // The Route pattern contains Legacy (Unnamed) Parameters.
             return $this->compileLegacyPattern($this->uri);
         }
 
-        // Process for the Routes which contains Named Parameters.
         $optionals = $this->extractOptionalParameters();
 
         $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);

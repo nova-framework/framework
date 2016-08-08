@@ -129,11 +129,11 @@ class Route
         // Attempt to match the URI to Route pattern.
 
         if (preg_match('#^' .$pattern .'$#i', $uri, $matches) === 1) {
-            // Extract the named parameters from matches.
             $this->parameters = array();
 
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
+                    // A named parameter; add it to the Route parameters.
                     $this->parameters[$key] = $value;
                 }
             }

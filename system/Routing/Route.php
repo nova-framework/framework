@@ -125,21 +125,23 @@ class Route
         // Compile the Route pattern for matching.
         $pattern = $this->compile();
 
+        //
         // Attempt to match the URI to Route pattern.
-        if (preg_match('#^' .$pattern .'$#i', $uri, $matches) !== 1) {
-            return false;
+
+        if (preg_match('#^' .$pattern .'$#i', $uri, $matches) === 1) {
+            // Extract the named parameters from matches.
+            $params = array_filter($matches, function($key)
+            {
+                return is_string($key);
+            }, ARRAY_FILTER_USE_KEY);
+
+            // Store the named parameters.
+            $this->parameters = $params;
+
+            return true;
         }
 
-        // Extract the named parameters from matches.
-        $params = array_filter($matches, function($key)
-        {
-            return is_string($key);
-        }, ARRAY_FILTER_USE_KEY);
-
-        // Store the matched parameters.
-        $this->parameters = $params;
-
-        return true;
+        return false;
     }
 
     public function compile()

@@ -288,7 +288,9 @@ class Route
             //
             $varName = 'param' .$cnt++;
 
-            if ($isOptional) array_push($optionals, $varName);
+            if ($isOptional) {
+                array_push($optionals, $varName);
+            }
 
             $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $varName, $regexp);
         }

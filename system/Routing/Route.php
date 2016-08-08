@@ -123,7 +123,7 @@ class Route
         $pattern = $this->compile();
 
         //
-        // Attempt to match the URI to Route pattern.
+        // Attempt to match the Request URI to Route pattern.
 
         if (preg_match('#^' .$pattern .'$#i', $request->path(), $matches) === 1) {
             // Initialize the Route parameters, marking the Route as being bound.

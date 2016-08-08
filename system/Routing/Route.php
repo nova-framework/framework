@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Route
 {
     /**
-     * The URI pattern the route responds to.
+     * The URI pattern the Route responds to.
      *
      * @var string
      */
@@ -61,6 +61,12 @@ class Route
      */
     protected $parameterNames;
 
+    /**
+     * The compiled pattern the Route responds to.
+     *
+     * @var string
+     */
+    private $pattern;
 
     /**
      * Constructor.
@@ -117,7 +123,7 @@ class Route
         }
 
         // Compile the Route pattern for matching.
-        $pattern = $this->compile();
+        $pattern = $this->compileRoute();
 
         //
         // Attempt to match the Request URI to Route pattern.
@@ -144,13 +150,13 @@ class Route
      *
      * @return string
      */
-    public function compile()
+    public function compileRoute()
     {
         $compiler = new RouteCompiler($this->wheres);
 
         if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
             // The Route pattern contains Unnamed Parameters.
-            return $compiler->compileLegacyRoute($this->uri);
+            return $this->pattern = $compiler->compileLegacyRoute($this->uri);
         }
 
         //
@@ -158,7 +164,7 @@ class Route
 
         $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
-        return $compiler->compile($uri, $optionals);
+        return $this->pattern = $compiler->compile($uri, $optionals);
     }
 
     /**
@@ -676,4 +682,15 @@ class Route
         return $this;
     }
 
+    /**
+     * Return the compiled pattern the Route responds to.
+     *
+     * @return string|null
+     */
+    public function getPattern()
+    {
+        if (isset($this->pattern)) return $this->pattern;
+
+        return $this->compileRoute();
+    }
 }

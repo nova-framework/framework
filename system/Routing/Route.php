@@ -154,7 +154,7 @@ class Route
 
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
-            return $compiler->pattern($uri, $optionals);
+            return $compiler->compile($uri, $optionals);
         }
 
         return $compiler->legacyPattern($this->uri);

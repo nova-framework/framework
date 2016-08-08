@@ -34,7 +34,7 @@ class RouteCompiler
         $this->patterns = $patterns;
     }
 
-    public function pattern($route, $optionals)
+    public function compile($route, $optionals)
     {
         preg_match_all('#\{[^\}]+\}#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 

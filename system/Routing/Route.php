@@ -58,7 +58,14 @@ class Route
      *
      * @var array
      */
-    private $parameters = array();
+    private $parameters;
+
+    /**
+     * The parameter names for the route.
+     *
+     * @var array|null
+     */
+    protected $parameterNames;
 
 
     /**
@@ -83,200 +90,6 @@ class Route
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
         }
-    }
-
-    /**
-     * Parse the Route Action into a standard array.
-     *
-     * @param  \Closure|array  $action
-     * @return array
-     */
-    protected function parseAction($action)
-    {
-        if (is_string($action) || is_callable($action)) {
-            // A string or Closure is given as Action.
-            return array('uses' => $action);
-        } else if (! isset($action['uses'])) {
-            // Find the Closure in the Action array.
-            $action['uses'] = $this->findClosure($action);
-        }
-
-        return $action;
-    }
-
-    /**
-     * Find the Closure in an action array.
-     *
-     * @param  array  $action
-     * @return \Closure
-     */
-    protected function findClosure(array $action)
-    {
-        return array_first($action, function($key, $value)
-        {
-            return is_callable($value);
-        });
-    }
-
-    /**
-     * Add before filters to the route.
-     *
-     * @param  string  $filters
-     * @return $this
-     */
-    public function before($filters)
-    {
-        return $this->addFilters('before', $filters);
-    }
-
-    /**
-     * Add after filters to the route.
-     *
-     * @param  string  $filters
-     * @return $this
-     */
-    public function after($filters)
-    {
-        return $this->addFilters('after', $filters);
-    }
-
-    /**
-     * Add the given Filters to the route by type.
-     *
-     * @param  string  $type
-     * @param  string  $filters
-     * @return \Routing\Route
-     */
-    protected function addFilters($type, $filters)
-    {
-        if (isset($this->action[$type])) {
-            $this->action[$type] .= '|' .$filters;
-        } else {
-            $this->action[$type] = $filters;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the Filters for the current Route instance.
-     *
-     * @return array
-     */
-    public function getFilters()
-    {
-        if (! isset($this->action['filters'])) {
-            return array();
-        }
-
-        // Parse and return the Filters.
-        $filters = $this->action['filters'];
-
-        return $this->parseFilters($filters);
-    }
-
-    /**
-     * Get the "before" filters for the route.
-     *
-     * @return array
-     */
-    public function beforeFilters()
-    {
-        if ( ! isset($this->action['before'])) return array();
-
-        //
-        $filters = $this->action['before'];
-
-        return $this->parseFilters($filters);
-    }
-
-    /**
-     * Get the "after" filters for the route.
-     *
-     * @return array
-     */
-    public function afterFilters()
-    {
-        if ( ! isset($this->action['after'])) return array();
-
-        //
-        $filters = $this->action['after'];
-
-        return $this->parseFilters($filters);
-    }
-
-    /**
-     * Parse the given filter string.
-     *
-     * @param  string  $filters
-     * @return array
-     */
-    protected function parseFilters($filters)
-    {
-        return array_build(static::explodeFilters($filters), function($key, $value)
-        {
-            return static::parseFilter($value);
-        });
-    }
-
-    /**
-     * Turn the filters into an array if they aren't already.
-     *
-     * @param  array|string  $filters
-     * @return array
-     */
-    protected static function explodeFilters($filters)
-    {
-        if (is_array($filters)) {
-            return static::explodeArrayFilters($filters);
-        }
-
-        return explode('|', $filters);
-    }
-
-    /**
-     * Flatten out an array of filter declarations.
-     *
-     * @param  array  $filters
-     * @return array
-     */
-    protected static function explodeArrayFilters(array $filters)
-    {
-        $results = array();
-
-        foreach ($filters as $filter) {
-            $results = array_merge($results, explode('|', $filter));
-        }
-
-        return $results;
-    }
-
-    /**
-     * Parse the given filter into name and parameters.
-     *
-     * @param  string  $filter
-     * @return array
-     */
-    public static function parseFilter($filter)
-    {
-        if (! str_contains($filter, ':')) {
-            return array($filter, array());
-        }
-
-        return static::parseParameterFilter($filter);
-    }
-
-    /**
-     * Parse a filter with parameters.
-     *
-     * @param  string  $filter
-     * @return array
-     */
-    protected static function parseParameterFilter($filter)
-    {
-        list($name, $parameters) = explode(':', $filter, 2);
-
-        return array($name, explode(',', $parameters));
     }
 
     /**
@@ -511,6 +324,307 @@ class Route
     }
 
     /**
+     * Parse the Route Action into a standard array.
+     *
+     * @param  \Closure|array  $action
+     * @return array
+     */
+    protected function parseAction($action)
+    {
+        if (is_string($action) || is_callable($action)) {
+            // A string or Closure is given as Action.
+            return array('uses' => $action);
+        } else if (! isset($action['uses'])) {
+            // Find the Closure in the Action array.
+            $action['uses'] = $this->findClosure($action);
+        }
+
+        return $action;
+    }
+
+    /**
+     * Find the Closure in an action array.
+     *
+     * @param  array  $action
+     * @return \Closure
+     */
+    protected function findClosure(array $action)
+    {
+        return array_first($action, function($key, $value)
+        {
+            return is_callable($value);
+        });
+    }
+
+    /**
+     * Add before filters to the route.
+     *
+     * @param  string  $filters
+     * @return $this
+     */
+    public function before($filters)
+    {
+        return $this->addFilters('before', $filters);
+    }
+
+    /**
+     * Add after filters to the route.
+     *
+     * @param  string  $filters
+     * @return $this
+     */
+    public function after($filters)
+    {
+        return $this->addFilters('after', $filters);
+    }
+
+    /**
+     * Add the given Filters to the route by type.
+     *
+     * @param  string  $type
+     * @param  string  $filters
+     * @return \Routing\Route
+     */
+    protected function addFilters($type, $filters)
+    {
+        if (isset($this->action[$type])) {
+            $this->action[$type] .= '|' .$filters;
+        } else {
+            $this->action[$type] = $filters;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the Filters for the current Route instance.
+     *
+     * @return array
+     */
+    public function getFilters()
+    {
+        if (! isset($this->action['filters'])) {
+            return array();
+        }
+
+        // Parse and return the Filters.
+        $filters = $this->action['filters'];
+
+        return $this->parseFilters($filters);
+    }
+
+    /**
+     * Get the "before" filters for the route.
+     *
+     * @return array
+     */
+    public function beforeFilters()
+    {
+        if ( ! isset($this->action['before'])) return array();
+
+        //
+        $filters = $this->action['before'];
+
+        return $this->parseFilters($filters);
+    }
+
+    /**
+     * Get the "after" filters for the route.
+     *
+     * @return array
+     */
+    public function afterFilters()
+    {
+        if ( ! isset($this->action['after'])) return array();
+
+        //
+        $filters = $this->action['after'];
+
+        return $this->parseFilters($filters);
+    }
+
+    /**
+     * Parse the given filter string.
+     *
+     * @param  string  $filters
+     * @return array
+     */
+    protected function parseFilters($filters)
+    {
+        return array_build(static::explodeFilters($filters), function($key, $value)
+        {
+            return static::parseFilter($value);
+        });
+    }
+
+    /**
+     * Turn the filters into an array if they aren't already.
+     *
+     * @param  array|string  $filters
+     * @return array
+     */
+    protected static function explodeFilters($filters)
+    {
+        if (is_array($filters)) {
+            return static::explodeArrayFilters($filters);
+        }
+
+        return explode('|', $filters);
+    }
+
+    /**
+     * Flatten out an array of filter declarations.
+     *
+     * @param  array  $filters
+     * @return array
+     */
+    protected static function explodeArrayFilters(array $filters)
+    {
+        $results = array();
+
+        foreach ($filters as $filter) {
+            $results = array_merge($results, explode('|', $filter));
+        }
+
+        return $results;
+    }
+
+    /**
+     * Parse the given filter into name and parameters.
+     *
+     * @param  string  $filter
+     * @return array
+     */
+    public static function parseFilter($filter)
+    {
+        if (! str_contains($filter, ':')) {
+            return array($filter, array());
+        }
+
+        return static::parseParameterFilter($filter);
+    }
+
+    /**
+     * Parse a filter with parameters.
+     *
+     * @param  string  $filter
+     * @return array
+     */
+    protected static function parseParameterFilter($filter)
+    {
+        list($name, $parameters) = explode(':', $filter, 2);
+
+        return array($name, explode(',', $parameters));
+    }
+
+    /**
+     * Get a given parameter from the route.
+     *
+     * @param  string  $name
+     * @param  mixed   $default
+     * @return string
+     */
+    public function getParameter($name, $default = null)
+    {
+        return $this->parameter($name, $default);
+    }
+
+    /**
+     * Get a given parameter from the route.
+     *
+     * @param  string  $name
+     * @param  mixed   $default
+     * @return string
+     */
+    public function parameter($name, $default = null)
+    {
+        return array_get($this->parameters(), $name, $default);
+    }
+
+    /**
+     * Set a parameter to the given value.
+     *
+     * @param  string  $name
+     * @param  mixed   $value
+     * @return void
+     */
+    public function setParameter($name, $value)
+    {
+        $this->parameters();
+
+        $this->parameters[$name] = $value;
+    }
+
+    /**
+     * Unset a parameter on the route if it is set.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    public function forgetParameter($name)
+    {
+        $this->parameters();
+
+        unset($this->parameters[$name]);
+    }
+
+    /**
+     * Get the key / value list of parameters for the route.
+     *
+     * @return array
+     *
+     * @throws \LogicException
+     */
+    public function parameters()
+    {
+        if (! isset($this->parameters)) {
+            throw new \LogicException("Route is not bound.");
+        }
+
+        return array_map(function($value)
+        {
+            return is_string($value) ? rawurldecode($value) : $value;
+        }, $this->parameters);
+    }
+
+    /**
+     * Get the key / value list of parameters without null values.
+     *
+     * @return array
+     */
+    public function parametersWithoutNulls()
+    {
+        return array_filter($this->parameters(), function($value)
+        {
+            return ! is_null($value);
+        });
+    }
+
+    /**
+     * Get all of the parameter names for the route.
+     *
+     * @return array
+     */
+    public function parameterNames()
+    {
+        if (isset($this->parameterNames)) return $this->parameterNames;
+
+        return $this->parameterNames = $this->compileParameterNames();
+    }
+
+    /**
+     * Get the parameter names for the route.
+     *
+     * @return array
+     */
+    protected function compileParameterNames()
+    {
+        preg_match_all('/\{(.*?)\}/', $this->domain().$this->uri, $matches);
+
+        return array_map(function($m) { return trim($m, '?'); }, $matches[1]);
+    }
+
+    /**
      * Set a regular expression requirement on the route.
      *
      * @param  array|string  $name
@@ -567,34 +681,6 @@ class Route
     }
 
     /**
-     * Get the key / value list of parameters for the route.
-     *
-     * @return array
-     *
-     * @throws \LogicException
-     */
-    public function parameters()
-    {
-        return array_map(function($value)
-        {
-            return is_string($value) ? rawurldecode($value) : $value;
-        }, $this->parameters);
-    }
-
-    /**
-     * Get the key / value list of parameters without null values.
-     *
-     * @return array
-     */
-    public function parametersWithoutNulls()
-    {
-        return array_filter($this->parameters(), function($value)
-        {
-            return ! is_null($value);
-        });
-    }
-
-    /**
      * Get the URI associated with the route.
      *
      * @return string
@@ -628,6 +714,36 @@ class Route
     public function methods()
     {
         return $this->methods;
+    }
+
+    /**
+     * Determine if the route only responds to HTTP requests.
+     *
+     * @return bool
+     */
+    public function httpOnly()
+    {
+        return in_array('http', $this->action, true);
+    }
+
+    /**
+     * Determine if the route only responds to HTTPS requests.
+     *
+     * @return bool
+     */
+    public function httpsOnly()
+    {
+        return $this->secure();
+    }
+
+    /**
+     * Determine if the route only responds to HTTPS requests.
+     *
+     * @return bool
+     */
+    public function secure()
+    {
+        return in_array('https', $this->action, true);
     }
 
     /**
@@ -677,6 +793,16 @@ class Route
     public function getName()
     {
         return array_get($this->action, 'as');
+    }
+
+    /**
+     * Get the action name for the route.
+     *
+     * @return string
+     */
+    public function getActionName()
+    {
+        return isset($this->action['controller']) ? $this->action['controller'] : 'Closure';
     }
 
     /**

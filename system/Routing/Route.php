@@ -741,6 +741,24 @@ class Route
     }
 
     /**
+     * Get the domain defined for the Route.
+     *
+     * @return string|null
+     */
+    public function domain()
+    {
+        return isset($this->action['domain']) ? $this->action['domain'] : null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUri()
+    {
+        return $this->uri();
+    }
+
+    /**
      * Set the URI that the route responds to.
      *
      * @param  string  $uri
@@ -751,14 +769,6 @@ class Route
         $this->uri = $uri;
 
         return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getUri()
-    {
-        return $this->uri();
     }
 
     /**

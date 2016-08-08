@@ -88,7 +88,7 @@ class RouteCompiler
         return $this->process($tokens, $optionals);
     }
 
-    public function legacyPattern($route)
+    public function compileLegacyPattern($route)
     {
         preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 

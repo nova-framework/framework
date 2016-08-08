@@ -148,16 +148,17 @@ class Route
     {
         $compiler = new RouteCompiler($this->wheres);
 
-        if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {
-            // The Route pattern contains Named Parameters.
-            $optionals = $this->extractOptionalParameters();
-
-            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-            return $compiler->compile($uri, $optionals);
+        if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
+            // The Route pattern contains Unnamed Parameters.
+            return $compiler->compileLegacyPattern($this->uri);
         }
 
-        return $compiler->legacyPattern($this->uri);
+        //
+        $optionals = $this->extractOptionalParameters();
+
+        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
+        return $compiler->compile($uri, $optionals);
     }
 
     /**

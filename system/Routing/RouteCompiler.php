@@ -61,7 +61,7 @@ class RouteCompiler
         return $pattern;
     }
 
-    public function compile($route, array $optionals = array())
+    public function compileRoute($route, array $optionals = array())
     {
         preg_match_all('#\{[^\}]+\}#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 

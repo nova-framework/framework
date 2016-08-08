@@ -162,7 +162,7 @@ class Route
 
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
-            $this->pattern = $compiler->compile($uri, $optionals);
+            $this->pattern = $compiler->compileRoute($uri, $optionals);
         }
 
         return $this->pattern;

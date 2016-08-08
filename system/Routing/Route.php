@@ -146,9 +146,30 @@ class Route
      */
     public function compile()
     {
-        $compiler = new RouteCompiler($this->uri, $this->wheres);
+        $compiler = new RouteCompiler($this->wheres);
 
-        return $compiler->compile();
+        if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {
+            // The Route pattern contains Named Parameters.
+            $optionals = $this->extractOptionalParameters();
+
+            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
+            return $compiler->pattern($uri, $optionals);
+        }
+
+        return $compiler->legacyPattern($this->uri);
+    }
+
+    /**
+     * Get the optional parameters for the route.
+     *
+     * @return array
+     */
+    protected function extractOptionalParameters()
+    {
+        preg_match_all('/\{(\w+?)\?\}/', $this->uri, $matches);
+
+        return isset($matches[1]) ? $matches[1] : array();
     }
 
     /**

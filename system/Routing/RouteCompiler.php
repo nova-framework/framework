@@ -15,13 +15,6 @@ class RouteCompiler
     const SEPARATORS = '/,;.:-_~+*=@|';
 
     /**
-     * The URI pattern the Route responds to.
-     *
-     * @var string
-     */
-    private $route = null;
-
-    /**
      * The regular expression requirements.
      *
      * @var array
@@ -36,46 +29,12 @@ class RouteCompiler
      * @param  array  $patterns
      * @return void
      */
-    public function __construct($route, array $patterns = array())
+    public function __construct(array $patterns = array())
     {
-        $this->route = $route;
-
         $this->patterns = $patterns;
     }
 
-    /**
-     * Compile the Route pattern for matching and return it.
-     *
-     * @return string
-     */
-    public function compile()
-    {
-        if (preg_match('#\{[^\}]+\}#', $this->route) === 1) {
-            // The Route pattern contains Named Parameters.
-            $optionals = $this->extractOptionalParameters();
-
-            $route = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->route);
-
-            return $this->compilePattern($route, $optionals);
-        }
-
-        // The Route pattern contains Unnamed Parameters.
-        return $this->compileLegacyPattern($this->route);
-    }
-
-    /**
-     * Get the optional parameters for the route.
-     *
-     * @return array
-     */
-    protected function extractOptionalParameters()
-    {
-        preg_match_all('/\{(\w+?)\?\}/', $this->route, $matches);
-
-        return isset($matches[1]) ? $matches[1] : array();
-    }
-
-    protected function compilePattern($route, $optionals)
+    public function pattern($route, $optionals)
     {
         preg_match_all('#\{[^\}]+\}#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
@@ -129,7 +88,7 @@ class RouteCompiler
         return $this->createPattern($tokens, $optionals);
     }
 
-    protected function compileLegacyPattern($route)
+    public function legacyPattern($route)
     {
         preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 

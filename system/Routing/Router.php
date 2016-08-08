@@ -358,7 +358,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addFallthroughRoute($controller, $uri)
     {
-        $missing = $this->any($uri.'/{_missing}', $controller.'@missingMethod');
+        $missing = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
 
         $missing->where('_missing', '(.*)');
     }

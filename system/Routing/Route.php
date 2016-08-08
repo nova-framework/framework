@@ -396,30 +396,13 @@ class Route
     }
 
     /**
-     * Get the Filters for the current Route instance.
-     *
-     * @return array
-     */
-    public function getFilters()
-    {
-        if (! isset($this->action['filters'])) {
-            return array();
-        }
-
-        // Parse and return the Filters.
-        $filters = $this->action['filters'];
-
-        return $this->parseFilters($filters);
-    }
-
-    /**
      * Get the "before" filters for the route.
      *
      * @return array
      */
     public function beforeFilters()
     {
-        if ( ! isset($this->action['before'])) return array();
+        if (! isset($this->action['before'])) return array();
 
         //
         $filters = $this->action['before'];
@@ -434,7 +417,7 @@ class Route
      */
     public function afterFilters()
     {
-        if ( ! isset($this->action['after'])) return array();
+        if (! isset($this->action['after'])) return array();
 
         //
         $filters = $this->action['after'];

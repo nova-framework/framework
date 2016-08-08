@@ -170,16 +170,18 @@ class RouteCompiler
                 continue;
             }
 
+            // A token of type 'variable'; extract its information.
             list($type, $separator, $varName, $regexp) = $token;
 
-            //
-            if (in_array($varName, $optionals)) $pattern .= '(?:';
+            if (in_array($varName, $optionals)) {
+                $pattern .= '(?:';
+            }
 
             $pattern .= $separator .'(?P<' .$varName .'>' .$regexp .')';
         }
 
-        // Pad the pattern with ')?' if it is need.
         if (! empty($optionals)) {
+            // We have optional variables; adjust the pattern ending.
             $pattern .= str_repeat (')?', count($optionals));
         }
 

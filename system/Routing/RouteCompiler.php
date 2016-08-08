@@ -68,7 +68,7 @@ class RouteCompiler
             //
             if ($isSeparator && (strlen($precedingText) > 1)) {
                 $tokens[] = array('text', substr($precedingText, 0, -1));
-            } elseif (! $isSeparator && (strlen($precedingText) > 0)) {
+            } else if (! $isSeparator && (strlen($precedingText) > 0)) {
                 $tokens[] = array('text', $precedingText);
             }
 
@@ -183,7 +183,7 @@ class RouteCompiler
             $pattern .= str_repeat (')?', count($optionals));
         }
 
-        return $pattern;
+        return sprintf('#^%s$#i', $pattern);
     }
-    
+
 }

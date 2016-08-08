@@ -123,21 +123,23 @@ class Route
         }
 
         // Compile the Route pattern for matching.
-        $pattern = $this->compileRoute();
+        $this->compileRoute();
 
         //
         // Attempt to match the Request URI to Route pattern.
 
-        if (preg_match('#^' .$pattern .'$#i', $request->path(), $matches) === 1) {
-            // Initialize the Route parameters, marking the Route as being bound.
-            $this->parameters = array();
+        if (preg_match($this->pattern(), $request->path(), $matches) === 1) {
+            $params = array();
 
             // Walk over matches, looking for named parameters need to be stored.
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
-                    $this->parameters[$key] = $value;
+                    $params[$key] = $value;
                 }
             }
+
+            // Store the Route parameters.
+            $this->parameters = $params;
 
             return true;
         }
@@ -690,6 +692,18 @@ class Route
      */
     public function getPattern()
     {
-        return isset($this->pattern) ? $this->pattern : null;
+        return $this->pattern();
+    }
+
+    /**
+     * Return the compiled pattern the Route responds to.
+     *
+     * @return string|null
+     */
+    public function pattern()
+    {
+        if (isset($this->pattern)) return $this->pattern;
+
+        throw new \LogicException("Route pattern is not compiled.");
     }
 }

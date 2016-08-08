@@ -15,11 +15,11 @@ class RouteCompiler
     const SEPARATORS = '/,;.:-_~+*=@|';
 
     /**
-     * The URI pattern the route responds to.
+     * The URI pattern the Route responds to.
      *
      * @var string
      */
-    private $uri = null;
+    private $route = null;
 
     /**
      * The regular expression requirements.
@@ -32,13 +32,13 @@ class RouteCompiler
     /**
      * Create a new controller dispatcher instance.
      *
-     * @param  string $uri
+     * @param  string $route
      * @param  array  $patterns
      * @return void
      */
-    public function __construct($uri, array $patterns = array())
+    public function __construct($route, array $patterns = array())
     {
-        $this->uri = $uri;
+        $this->route = $uri;
 
         $this->patterns = $patterns;
     }
@@ -50,17 +50,17 @@ class RouteCompiler
      */
     public function compile()
     {
-        if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {
+        if (preg_match('#\{[^\}]+\}#', $this->route) === 1) {
             // The Route pattern contains Named Parameters.
             $optionals = $this->extractOptionalParameters();
 
-            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+            $route = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->route);
 
-            return $this->compilePattern($uri, $optionals);
+            return $this->compilePattern($route, $optionals);
         }
 
         // The Route pattern contains Unnamed Parameters.
-        return $this->compileLegacyPattern($this->uri);
+        return $this->compileLegacyPattern($this->route);
     }
 
     /**
@@ -70,14 +70,14 @@ class RouteCompiler
      */
     protected function extractOptionalParameters()
     {
-        preg_match_all('/\{(\w+?)\?\}/', $this->uri, $matches);
+        preg_match_all('/\{(\w+?)\?\}/', $this->route, $matches);
 
         return isset($matches[1]) ? $matches[1] : array();
     }
 
-    protected function compilePattern($pattern, $optionals)
+    protected function compilePattern($route, $optionals)
     {
-        preg_match_all('#\{[^\}]+\}#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+        preg_match_all('#\{[^\}]+\}#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
         $variables = array();
@@ -90,7 +90,7 @@ class RouteCompiler
             $varName = substr($match[0][0], 1, -1);
 
             if (in_array($varName, $variables)) {
-                $error = sprintf('Route pattern "%s" cannot reference variable name "%s" more than once.', $pattern, $varName);
+                $error = sprintf('Route pattern "%s" cannot reference variable name "%s" more than once.', $route, $varName);
 
                 throw new \LogicException($error);
             }
@@ -98,7 +98,7 @@ class RouteCompiler
             array_push($variables, $varName);
 
             // Get all static text preceding the current variable.
-            $precedingText = substr($pattern, $pos, $match[0][1] - $pos);
+            $precedingText = substr($route, $pos, $match[0][1] - $pos);
 
             $pos = $match[0][1] + strlen($match[0][0]);
 
@@ -122,16 +122,16 @@ class RouteCompiler
             $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $varName, $regexp);
         }
 
-        if ($pos < strlen($pattern)) {
-            $tokens[] = array('text', substr($pattern, $pos));
+        if ($pos < strlen($route)) {
+            $tokens[] = array('text', substr($route, $pos));
         }
 
         return $this->createPattern($tokens, $optionals);
     }
 
-    protected function compileLegacyPattern($pattern)
+    protected function compileLegacyPattern($route)
     {
-        preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+        preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
         $patterns = array_merge($this->patterns, array(
@@ -152,7 +152,7 @@ class RouteCompiler
             $varName = substr($match[0][0], 1, -1);
 
             // Get all static text preceding the current variable
-            $precedingText = substr($pattern, $pos, $match[0][1] - $pos);
+            $precedingText = substr($route, $pos, $match[0][1] - $pos);
 
             $pos = $match[0][1] + strlen($match[0][0]);
 
@@ -193,8 +193,8 @@ class RouteCompiler
             $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $varName, $regexp);
         }
 
-        if (empty($optionals) && ($pos < strlen($pattern))) {
-            $tokens[] = array('text', substr($pattern, $pos));
+        if (empty($optionals) && ($pos < strlen($route))) {
+            $tokens[] = array('text', substr($route, $pos));
         }
 
         return $this->createPattern($tokens, $optionals);

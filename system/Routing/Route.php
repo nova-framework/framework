@@ -623,7 +623,7 @@ class Route
      */
     protected function compileParameterNames()
     {
-        preg_match_all('/\{(.*?)\}/', $this->domain().$this->uri, $matches);
+        preg_match_all('/\{(.*?)\}/', $this->uri, $matches);
 
         return array_map(function($m) { return trim($m, '?'); }, $matches[1]);
     }

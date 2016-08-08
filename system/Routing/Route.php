@@ -153,7 +153,7 @@ class Route
     public function compile()
     {
         if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {
-            // The Route contains Named Parameters.
+            // The Route pattern contains Named Parameters.
             $optionals = $this->extractOptionalParameters();
 
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
@@ -161,7 +161,7 @@ class Route
             return $this->compilePattern($uri, $optionals);
         }
 
-        // The Route contains Unnamed Parameters.
+        // The Route pattern contains Unnamed Parameters.
         return $this->compileLegacyPattern($this->uri);
     }
 

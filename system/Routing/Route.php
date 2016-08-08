@@ -8,7 +8,6 @@
 
 namespace Routing;
 
-use Core\Config;
 use Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Route
 {
-    const REGEX_DELIMITER = '#';
-
     /**
      * This string defines the characters that are automatically considered separators in front of
      * optional placeholders (with default and no static text following). Such a single separator
@@ -309,11 +306,11 @@ class Route
             return false;
         }
 
-        // Detect the Named Parameters and build the pattern for matching.
-        $pattern = $this->compileRoute();
+        // Compile the Route pattern for matching.
+        $pattern = $this->compile();
 
         // Attempt to match the Route pattern.
-        if (preg_match('#^' .$pattern .'(?:\?.*)?$#i', $request->path(), $matches) !== 1) {
+        if (preg_match('#^' .$pattern .'$#i', $request->path(), $matches) !== 1) {
             return false;
         }
 
@@ -329,10 +326,10 @@ class Route
         return true;
     }
 
-    protected function compileRoute()
+    public function compile()
     {
         // Process for the Routes which contains Named Parameters.
-        if (preg_match('#\{([^\}]+)\}#', $this->uri) === 1) {
+        if (preg_match('#\{[^\}]+\}#', $this->uri) === 1) {
             $optionals = $this->extractOptionalParameters();
 
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
@@ -346,10 +343,10 @@ class Route
         }
 
         // Process for the bare Routes with optional paths.
-        $pattern = $this->uri;
-
-        if (strpos($pattern, '(/') !== false) {
-            $pattern = str_replace(array('(/', ')'), array('(?:/', ')?'), $pattern);
+        if (strpos($this->uri, '(/') !== false) {
+            $pattern = str_replace(array('(/', ')'), array('(?:/', ')?'), $this->uri);
+        } else {
+            $pattern = $this->uri;
         }
 
         return $pattern;
@@ -369,14 +366,12 @@ class Route
 
     protected function compilePattern($pattern, $optionals)
     {
-        preg_match_all('#\{([^\}]+)\}#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+        preg_match_all('#\{[^\}]+\}#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
         $variables = array();
 
         $tokens = array();
-
-        $defaultSeparator = '/';
 
         $pos = 0;
 
@@ -405,7 +400,7 @@ class Route
                 $tokens[] = array('text', $precedingText);
             }
 
-            if (array_key_exists($varName, $this->wheres)) {
+            if (isset($this->wheres[$varName])) {
                 $regexp = $this->wheres[$varName];
             } else {
                 $regexp = '[^/]+';
@@ -418,25 +413,7 @@ class Route
             $tokens[] = array('text', substr($pattern, $pos));
         }
 
-        //
-        $pattern = '';
-
-        foreach ($tokens as $token) {
-            if ($token[0] == 'text') {
-                $pattern .= $token[1];
-            } else if ($token[0] == 'variable') {
-                if (in_array($token[2], $optionals)) $pattern .= '(?:';
-
-                $pattern .= $token[1] .'(?P<' .$token[2] .'>' .$token[3] .')';
-            }
-        }
-
-        // Pad the pattern with ')?' if it is need.
-        if(! empty($optionals)) {
-            $pattern .= str_repeat (')?', count($optionals));
-        }
-
-        return $pattern;
+        return $this->createPattern($tokens, $optionals);
     }
 
     protected function compileLegacyPattern($pattern)
@@ -444,16 +421,21 @@ class Route
         preg_match_all('#\(:\w+\)#', $pattern, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
+        $patterns = array_merge($this->wheres, array(
+            ':any' => '[^/]+',
+            ':num' => '[0-9]+',
+            ':all' => '.*'
+        ));
+
+        //
+        $optionals = array();
+
         $tokens = array();
 
         $pos = 0;
-
-        $defaultSeparator = '/';
-
-        $optionals = 0;
+        $cnt = 1;
 
         foreach ($matches as $match) {
-            //
             $varName = substr($match[0][0], 1, -1);
 
             // Get all static text preceding the current variable
@@ -469,10 +451,8 @@ class Route
             $isOptional = false;
 
             if ($isSeparator && (strlen($precedingText) > 1)) {
-                if(substr($precedingText, -2) == '(/') {
+                if (substr($precedingText, -2) == '(/') {
                     $isOptional = true;
-
-                    $optionals++;
 
                     if ((strlen($precedingText) > 2)) {
                         $tokens[] = array('text', substr($precedingText, 0, -2));
@@ -480,64 +460,54 @@ class Route
                 } else {
                     $tokens[] = array('text', substr($precedingText, 0, -1));
                 }
-            } elseif (! $isSeparator && (strlen($precedingText) > 0)) {
+            } else if (! $isSeparator && (strlen($precedingText) > 0)) {
                 $tokens[] = array('text', $precedingText);
             }
 
-            $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $varName, $isOptional);
+            if (isset($patterns[$varName])) {
+                $regexp = $patterns[$varName];
+            } else {
+                $regexp = '[^/]+';
+            }
+
+            //
+            $varName = 'param' .$cnt++;
+
+            if ($isOptional) array_push($optionals, $varName);
+
+            $tokens[] = array('variable', $isSeparator ? $precedingChar : '', $varName, $regexp);
         }
 
-        if ($pos < strlen($pattern)) {
+        if (empty($optionals) && ($pos < strlen($pattern))) {
             $tokens[] = array('text', substr($pattern, $pos));
         }
 
-        //
-        $patterns = Config::get('routing.patterns', array());
+        return $this->createPattern($tokens, $optionals);
+    }
 
-        $patterns = array_merge($patterns, array(
-            ':any' => '[^/]+',
-            ':num' => '[0-9]+',
-            ':all' => '.*'
-        ));
-
-        //
-        $endingText = '';
-
-        if($optionals > 0) {
-            $token = end($tokens);
-
-            if ($token[0] == 'text') {
-                $endingText = str_replace(')', ')?', $token[1]);
-
-                array_pop($tokens);
-            }
-        }
-
-        //
+    protected function createPattern(array $tokens, $optionals)
+    {
         $pattern = '';
 
-        $cnt = 0;
-
         foreach ($tokens as $token) {
-            if ($token[0] == 'text') {
+            if ($token[0] == 'variable') {
+                list($type, $separator, $varName, $regexp) = $token;
+
+                //
+                if (in_array($varName, $optionals)) $pattern .= '(?:';
+
+                $pattern .= $separator .'(?P<' .$varName .'>' .$regexp .')';
+            } else if ($token[0] == 'text') {
                 $pattern .= $token[1];
-
-                continue;
             }
-
-            $cnt++;
-
-            list($type, $separator, $varName, $isOptional) = $token;
-
-            if ($isOptional) $pattern .= '(?:';
-
-            //
-            $key = array_key_exists($varName, $patterns) ? $varName : ':any';
-
-            $pattern .= $separator .'(?P<param' .$cnt .'>' .$patterns[$key] .')';
         }
 
-        return $pattern .$endingText;
+        // Pad the pattern with ')?' if it is need.
+        if (! empty($optionals)) {
+            $pattern .= str_repeat (')?', count($optionals));
+        }
+
+        return $pattern;
     }
 
     /**

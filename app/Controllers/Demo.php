@@ -7,6 +7,7 @@ use Core\Controller;
 use Helpers\FastCache;
 use Helpers\Password;
 use Helpers\Url;
+use Routing\Route;
 
 use App;
 use Event;
@@ -71,21 +72,25 @@ class Demo extends Controller
 
     public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')
     {
-        $params = array(
-            'param1' => $param1,
-            'param2' => $param2,
-            'param3' => $param3,
-            'param4' => $param4
-        );
+        //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
+        $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
+        //$uri = '(:all)';
 
-        $content = '<pre>' .var_export($this->getParams(), true) .'</pre>';
+        $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
 
         //
-        $model = new App\Modules\Users\Models\Users();
+        $route = new Route('GET', $uri, function() {
+            //
+        });
 
-        $users = $model->all();
+        $content .= '<pre>' .htmlspecialchars($route->compile()) .'</pre>';
 
-        $content .= '<pre>' .var_export($users, true) .'</pre>';
+        //
+        $request = Request::instance();
+
+        if ($route->matches($request)) {
+            $content .= '<pre>' .var_export($route->parameters(), true) .'</pre>';
+        }
 
         return View::make('Default')
             ->shares('title', __('Test'))

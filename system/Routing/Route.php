@@ -152,17 +152,15 @@ class Route
      */
     public function compileRoute()
     {
-        $uri = trim($this->uri, '/');
-
         $compiler = new RouteCompiler($this->wheres);
 
-        if (preg_match('#\(:\w+\)#', $uri) === 1) {
+        if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
             // The Route pattern contains Unnamed Parameters.
-            $this->pattern = $compiler->compileLegacyRoute($uri);
+            $this->pattern = $compiler->compileLegacyRoute($this->uri);
         } else {
             $optionals = $this->extractOptionalParameters();
 
-            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $uri);
+            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
             $this->pattern = $compiler->compileRoute($uri, $optionals);
         }

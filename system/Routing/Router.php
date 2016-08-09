@@ -252,29 +252,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Register many request URIs to a single Callback.
-     *
-     * <code>
-     *      // Register a group of URIs for a Callback
-     *      Router::share(array(array('GET', '/'), array('POST', '/home')), 'App\Controllers\Home@index');
-     * </code>
-     *
-     * @param  array  $routes
-     * @param  mixed  $callback
-     * @return void
-     */
-    public function share($routes, $callback)
-    {
-        foreach ($routes as $entry) {
-            $method = array_shift($entry);
-            $route  = array_shift($entry);
-
-            // Register the route.
-            $this->addRoute($method, $route, $callback);
-        }
-    }
-
-    /**
      * Defines a Route Group.
      *
      * @param string $group The scope of the current Routes Group
@@ -381,7 +358,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addFallthroughRoute($controller, $uri)
     {
-        $missing = $this->any($uri.'/{_missing}', $controller.'@missingMethod');
+        $missing = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
 
         $missing->where('_missing', '(.*)');
     }
@@ -428,7 +405,11 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
                 array_push($parts, trim($group['prefix'], '/'));
             }
 
-            // Adjust the Route PATTERN, if it is needed.
+            if (isset($action['prefix'])) {
+                array_push($parts, trim($action['prefix'], '/'));
+            }
+
+            // Adjust the Route PREFIX, if it is needed.
             $parts = array_filter($parts, function($value)
             {
                 return ! empty($value);

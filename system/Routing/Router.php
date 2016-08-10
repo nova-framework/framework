@@ -389,14 +389,10 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function createRoute($methods, $route, $action)
     {
-        // Prepare the Route URI.
-        $uri = trim($route, '/');
-
-        $uri = ! empty($uri) ? $uri : '/';
-
-        // Pre-process the Action information.
+        // Pre-process the Action data.
         if (! is_array($action)) $action = array('uses' => $action);
 
+        // Adjust the Prefix according with the Groups stack.
         if (! empty($this->groupStack)) {
             $parts = array();
 
@@ -424,8 +420,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
             $action = $this->getControllerAction($action);
         }
 
-        // Create a Route instance.
-        return $this->newRoute($methods, $uri, $action);
+        // Create a Route instance and return it.
+        return $this->newRoute($methods, $route, $action);
     }
 
     /**

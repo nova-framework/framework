@@ -79,10 +79,8 @@ class Route
     {
         $uri = trim($uri, '/');
 
-        $uri = ! empty($uri) ? $uri : '/';
-
         //
-        $this->uri = $uri;
+        $this->uri = ! empty($uri) ? $uri : '/';
 
         $this->methods = (array) $methods;
 

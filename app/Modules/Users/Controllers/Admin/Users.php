@@ -15,7 +15,6 @@ use Helpers\ReCaptcha;
 use App\Core\Controller;
 use App\Models\Role;
 use App\Models\User;
-use App\Modules\Users\Helpers\RoleVerifier as Authorize;
 
 use Carbon\Carbon;
 

@@ -70,16 +70,13 @@ class Model
      */
     public function __construct($connection = null)
     {
-        if($connection === false) {
-            // Nothing to do; the user want a bare Model instance.
-            return;
+        if($connection !== false) {
+            // Setup the Connection name.
+            $this->connection = $connection;
+
+            // Setup the Connection instance.
+            $this->db = $this->getConnection();
         }
-
-        // Setup the Connection name.
-        $this->connection = $connection;
-
-        // Setup the Connection instance.
-        $this->db = $this->getConnection();
     }
 
     /**

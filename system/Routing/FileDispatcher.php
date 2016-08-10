@@ -140,13 +140,16 @@ class FileDispatcher
         // Retrieve the Template Info
         $infoFile = APPDIR .'Templates' .DS .$template .DS .'template.json';
 
+        //
+        $info = array();
+
         if (is_readable($infoFile)) {
-            $info = json_decode(file_get_contents($infoFile), true);
+            $content = file_get_contents($infoFile);
+
+            $info = json_decode($content, true);
 
             // Template Info should be always an array; ensure that.
             $info = $info ?: array();
-        } else {
-            $info = array();
         }
 
         //

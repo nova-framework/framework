@@ -215,8 +215,6 @@ if (is_readable($path)) require $path;
 // Load The Application Events
 //--------------------------------------------------------------------------
 
-require app_path() .'Events.php';
-
 // Load the Events defined on Modules.
 foreach ($modules as $module) {
     $path = app_path() .'Modules' .DS .$module .DS .'Events.php';
@@ -224,11 +222,14 @@ foreach ($modules as $module) {
     if (is_readable($path)) require $path;
 }
 
+// Load the Events defined on App.
+$path = app_path() .'Events.php';
+
+if (is_readable($path)) require $path;
+
 //--------------------------------------------------------------------------
 // Load The Application's Route Filters
 //--------------------------------------------------------------------------
-
-require app_path() .'Filters.php';
 
 // Load the Filters defined on Modules.
 foreach ($modules as $module) {
@@ -237,13 +238,14 @@ foreach ($modules as $module) {
     if (is_readable($path)) require $path;
 }
 
+// Load the Filters defined on App.
+$path = app_path() .'Filters.php';
+
+if (is_readable($path)) require $path;
+
 //--------------------------------------------------------------------------
 // Load The Application Routes
 //--------------------------------------------------------------------------
-
-$routes = $app['path'] .DS .'Routes.php';
-
-if (is_readable($routes)) require $routes;
 
 // Load the Routes defined on Modules.
 foreach ($modules as $module) {
@@ -251,6 +253,11 @@ foreach ($modules as $module) {
 
     if (is_readable($path)) require $path;
 }
+
+// Load the Routes defined on App.
+$path = app_path() .'Routes.php';
+
+if (is_readable($path)) require $path;
 
 });
 

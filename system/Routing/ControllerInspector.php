@@ -65,6 +65,8 @@ class ControllerInspector
             default:
                 return str_starts_with($method->name, $this->verbs);
         }
+
+        return false;
     }
 
     /**

@@ -36,9 +36,6 @@ class RouteCompiler
 
     public function compileRoute($route, array $optionals = array())
     {
-        $route = trim($route, '/');
-
-        //
         preg_match_all('#\{[^\}]+\}#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
@@ -93,9 +90,6 @@ class RouteCompiler
 
     public function compileLegacyRoute($route)
     {
-        $route = trim($route, '/');
-
-        //
         preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //

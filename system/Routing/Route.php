@@ -77,6 +77,11 @@ class Route
      */
     public function __construct($methods, $uri, $action)
     {
+        $uri = trim($uri, '/');
+
+        $uri = ! empty($uri) ? $uri : '/';
+
+        //
         $this->uri = $uri;
 
         $this->methods = (array) $methods;

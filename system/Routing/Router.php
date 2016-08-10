@@ -259,9 +259,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function group($group, $callback)
     {
-        if (! is_array($group)) {
-            $group = array('prefix' => $group);
-        }
+        if (is_string($group)) $group = array('prefix' => $group);
 
         // Add the Route Group to the array.
         array_push($this->groupStack, $group);
@@ -358,9 +356,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addFallthroughRoute($controller, $uri)
     {
-        $missing = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
+        $route = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
 
-        $missing->where('_missing', '(.*)');
+        $route->where('_missing', '(.*)');
     }
 
     /**

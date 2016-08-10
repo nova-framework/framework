@@ -57,11 +57,14 @@ class ControllerInspector
      */
     public function isRoutable(ReflectionMethod $method)
     {
-        $className = $method->class;
+        switch ($method->class) {
+            case 'Routing\Controller':
+            case 'Core\Controller':
+                return false;
 
-        if (($className == 'Routing\Controller') || ($className == 'Core\Controller')) return false;
-
-        return str_starts_with($method->name, $this->verbs);
+            default:
+                return str_starts_with($method->name, $this->verbs);
+        }
     }
 
     /**
@@ -123,7 +126,7 @@ class ControllerInspector
      */
     public function addUriWildcards($uri)
     {
-        return $uri.'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
+        return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
     }
 
 }

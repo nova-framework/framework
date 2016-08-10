@@ -520,9 +520,9 @@ class Route
      */
     public function prefix($prefix)
     {
-        $uri = trim($prefix, '/') .'/' .trim($this->uri, '/');
+        $uri = trim(trim($prefix, '/') .'/' .trim($this->uri, '/'), '/');
 
-        $this->uri = trim($uri, '/');
+        $this->uri = ! empty($uri) ? $uri : '/';
 
         return $this;
     }

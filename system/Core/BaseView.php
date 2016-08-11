@@ -98,8 +98,6 @@ abstract class BaseView implements ArrayAccess
      */
     public function display()
     {
-        Response::sendHeaders();
-
         $this->render();
     }
 

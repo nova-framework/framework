@@ -8,6 +8,7 @@
 
 namespace Routing;
 
+use Core\Config;
 use Http\Request;
 use Routing\RouteCompiler;
 
@@ -118,7 +119,7 @@ class Route
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function matches(Request $request, $includingMethod = true)
+    public function matches(Request $request, $includingMethod = true, $forceLegacy = false)
     {
         // Attempt to match the Route Method if it is requested.
         if ($includingMethod && ! in_array($request->method(), $this->methods)) {
@@ -126,7 +127,7 @@ class Route
         }
 
         // Compile and retrieve the Route regex for matching.
-        $regex = $this->compileRoute();
+        $regex = $this->compileRoute($forceLegacy);
 
         // Attempt to match the Request URI to the Route regex.
         if (preg_match($regex, $request->path(), $matches) === 1) {
@@ -156,22 +157,21 @@ class Route
      *
      * @return string
      */
-    public function compileRoute()
+    public function compileRoute($forceLegacy = false)
     {
         $compiler = new RouteCompiler($this->wheres);
 
-        if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
-            // The Route pattern contains Unnamed Parameters.
-            $this->regex = $compiler->compileLegacyRoute($this->uri);
-        } else {
-            $optionals = $this->extractOptionalParameters();
-
-            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-            $this->regex = $compiler->compileRoute($uri, $optionals);
+        if ($forceLegacy || ('unnamed' == Config::get('routing.parameters', 'named'))) {
+            // We are using the Unnamed Parameters on Route compilation.
+            return ($this->regex = $compiler->compileLegacyRoute($this->uri));
         }
 
-        return $this->regex;
+        // Compile the standard Route pattern, using the Named Parameters.
+        $optionals = $this->extractOptionalParameters();
+
+        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
+        return ($this->regex = $compiler->compileRoute($uri, $optionals));
     }
 
     /**

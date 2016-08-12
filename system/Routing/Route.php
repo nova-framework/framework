@@ -120,14 +120,14 @@ class Route
      */
     public function matches(Request $request, $includingMethod = true)
     {
-        // Compile the Route pattern for matching.
-        $regex = $this->compileRoute();
-
         // Attempt to match the Route Method if it is requested.
         if ($includingMethod && ! in_array($request->method(), $this->methods)) {
             return false;
         }
 
+        // Compile the Route pattern for matching.
+        $regex = $this->compileRoute();
+        
         // Attempt to match the Request URI to the Route pattern.
         if (preg_match($regex, $request->path(), $matches) === 1) {
             $params = array();

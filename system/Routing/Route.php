@@ -134,9 +134,11 @@ class Route
 
             // Walk over matches, looking for named parameters need to be stored.
             foreach ($matches as $key => $value) {
-                if (is_string($key)) {
-                    $params[$key] = $value;
+                if (! is_string($key)) {
+                    continue;
                 }
+
+                $params[$key] = $value;
             }
 
             // Store the Route parameters.

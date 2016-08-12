@@ -128,7 +128,7 @@ class Route
         // Compile and retrieve the Route regex for matching.
         $regex = $this->compileRoute();
 
-        // Attempt to match the Request URI to the Route pattern.
+        // Attempt to match the Request URI to the Route regex.
         if (preg_match($regex, $request->path(), $matches) === 1) {
             $params = array();
 

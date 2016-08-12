@@ -138,10 +138,11 @@ class Route
                     continue;
                 }
 
+                // A named parameter found.
                 $params[$key] = $value;
             }
 
-            // Store the Route parameters.
+            // Store the Route parameters, also marking this Route as bound.
             $this->parameters = $params;
 
             return true;

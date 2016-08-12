@@ -62,11 +62,11 @@ class Route
     protected $parameterNames;
 
     /**
-     * The compiled pattern the Route responds to.
+     * The compiled regex the Route responds to.
      *
      * @var string
      */
-    private $pattern;
+    private $regex;
 
     /**
      * Constructor.
@@ -129,7 +129,7 @@ class Route
         }
 
         // Attempt to match the Request URI to the Route pattern.
-        if (preg_match($this->pattern(), $request->path(), $matches) === 1) {
+        if (preg_match($this->regex(), $request->path(), $matches) === 1) {
             $params = array();
 
             // Walk over matches, looking for named parameters need to be stored.
@@ -159,16 +159,16 @@ class Route
 
         if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
             // The Route pattern contains Unnamed Parameters.
-            $this->pattern = $compiler->compileLegacyRoute($this->uri);
+            $this->regex = $compiler->compileLegacyRoute($this->uri);
         } else {
             $optionals = $this->extractOptionalParameters();
 
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
-            $this->pattern = $compiler->compileRoute($uri, $optionals);
+            $this->regex = $compiler->compileRoute($uri, $optionals);
         }
 
-        return $this->pattern;
+        return $this->regex;
     }
 
     /**
@@ -693,9 +693,9 @@ class Route
      *
      * @return string|null
      */
-    public function getPattern()
+    public function getRegex()
     {
-        return $this->pattern();
+        return $this->regex();
     }
 
     /**
@@ -703,10 +703,10 @@ class Route
      *
      * @return string|null
      */
-    public function pattern()
+    public function regex()
     {
-        if (isset($this->pattern)) return $this->pattern;
+        if (isset($this->regex)) return $this->regex;
 
-        throw new \LogicException("Route pattern is not compiled.");
+        throw new \LogicException("Route regex is not compiled.");
     }
 }

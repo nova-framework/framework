@@ -121,7 +121,7 @@ class Route
     public function matches(Request $request, $includingMethod = true)
     {
         // Compile the Route pattern for matching.
-        $this->compileRoute();
+        $regex = $this->compileRoute();
 
         // Attempt to match the Route Method if it is requested.
         if ($includingMethod && ! in_array($request->method(), $this->methods)) {
@@ -129,7 +129,7 @@ class Route
         }
 
         // Attempt to match the Request URI to the Route pattern.
-        if (preg_match($this->regex(), $request->path(), $matches) === 1) {
+        if (preg_match($regex, $request->path(), $matches) === 1) {
             $params = array();
 
             // Walk over matches, looking for named parameters need to be stored.

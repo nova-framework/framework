@@ -185,7 +185,7 @@ class RouteCompiler
             $pattern .= str_repeat (')?', count($optionals));
         }
 
-        return sprintf('#^%s$#i', $pattern);
+        return sprintf('#^%s$#s', $pattern);
     }
 
 }

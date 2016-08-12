@@ -8,6 +8,7 @@
 
 namespace Routing;
 
+use Core\Config;
 use Http\Request;
 use Routing\RouteCompiler;
 
@@ -62,11 +63,11 @@ class Route
     protected $parameterNames;
 
     /**
-     * The compiled pattern the Route responds to.
+     * The compiled regex the Route responds to.
      *
      * @var string
      */
-    private $pattern;
+    private $regex;
 
     /**
      * Constructor.
@@ -118,28 +119,31 @@ class Route
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function matches(Request $request, $includingMethod = true)
+    public function matches(Request $request, $includingMethod = true, $forceLegacy = false)
     {
-        // Compile the Route pattern for matching.
-        $this->compileRoute();
-
         // Attempt to match the Route Method if it is requested.
         if ($includingMethod && ! in_array($request->method(), $this->methods)) {
             return false;
         }
 
-        // Attempt to match the Request URI to the Route pattern.
-        if (preg_match($this->pattern(), $request->path(), $matches) === 1) {
+        // Compile and retrieve the Route regex for matching.
+        $regex = $this->compileRoute($forceLegacy);
+
+        // Attempt to match the Request URI to the Route regex.
+        if (preg_match($regex, $request->path(), $matches) === 1) {
             $params = array();
 
             // Walk over matches, looking for named parameters need to be stored.
             foreach ($matches as $key => $value) {
-                if (is_string($key)) {
-                    $params[$key] = $value;
+                if (! is_string($key)) {
+                    continue;
                 }
+
+                // A named parameter found.
+                $params[$key] = $value;
             }
 
-            // Store the Route parameters.
+            // Store the Route parameters, also marking this Route as bound.
             $this->parameters = $params;
 
             return true;
@@ -153,22 +157,21 @@ class Route
      *
      * @return string
      */
-    public function compileRoute()
+    public function compileRoute($forceLegacy = false)
     {
         $compiler = new RouteCompiler($this->wheres);
 
-        if (preg_match('#\(:\w+\)#', $this->uri) === 1) {
-            // The Route pattern contains Unnamed Parameters.
-            $this->pattern = $compiler->compileLegacyRoute($this->uri);
-        } else {
-            $optionals = $this->extractOptionalParameters();
-
-            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-            $this->pattern = $compiler->compileRoute($uri, $optionals);
+        if ($forceLegacy || ('unnamed' == Config::get('routing.parameters', 'named'))) {
+            // We are using the Unnamed Parameters on Route compilation.
+            return ($this->regex = $compiler->compileLegacyRoute($this->uri));
         }
 
-        return $this->pattern;
+        // Compile the standard Route pattern, using the Named Parameters.
+        $optionals = $this->extractOptionalParameters();
+
+        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
+        return ($this->regex = $compiler->compileRoute($uri, $optionals));
     }
 
     /**
@@ -693,9 +696,9 @@ class Route
      *
      * @return string|null
      */
-    public function getPattern()
+    public function getRegex()
     {
-        return $this->pattern();
+        return $this->regex();
     }
 
     /**
@@ -703,10 +706,10 @@ class Route
      *
      * @return string|null
      */
-    public function pattern()
+    public function regex()
     {
-        if (isset($this->pattern)) return $this->pattern;
+        if (isset($this->regex)) return $this->regex;
 
-        throw new \LogicException("Route pattern is not compiled.");
+        throw new \LogicException("Route regex is not compiled.");
     }
 }

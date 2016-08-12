@@ -84,14 +84,14 @@ class Demo extends Controller
         });
 
         //
-        $pattern = $route->compileRoute();
+        $pattern = $route->compileRoute(true);
 
         $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
 
         //
         $request = Request::instance();
 
-        if ($route->matches($request)) {
+        if ($route->matches($request, true, true)) {
             $content .= '<pre>' .var_export($route->parameters(), true) .'</pre>';
         }
 

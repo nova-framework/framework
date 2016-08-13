@@ -4,6 +4,7 @@ namespace Template;
 
 use Core\Config;
 use Core\Language;
+use Foundation\Application;
 use Support\Contracts\ArrayableInterface as Arrayable;
 use View\Factory as ViewFactory;
 use View\View;
@@ -12,11 +13,11 @@ use View\View;
 class Factory
 {
     /**
-     * The View Factory instance.
+     * The Application instance.
      *
-     * @var \View\Factory
+     * @var \Foundation\Application
      */
-    protected $viewFactory;
+    protected $app;
 
 
     /**
@@ -25,9 +26,9 @@ class Factory
      * @param $factory The View Factory instance.
      * @return void
      */
-    function __construct(ViewFactory $factory)
+    function __construct(Application $app)
     {
-        $this->viewFactory = $factory;
+        $this->app = $app;
     }
 
     /**
@@ -49,12 +50,15 @@ class Factory
             $data = array();
         }
 
+        // Get the View Factory instance.
+        $factory = $this->app['view'];
+
         // Get the View file path.
         $path = $this->viewFile($view, $template);
 
         $data = $this->parseData($data);
 
-        return new View($this->viewFactory, $view, $path, $data, true);
+        return new View($factory, $view, $path, $data, true);
     }
 
     /**

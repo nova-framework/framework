@@ -9,17 +9,11 @@
 
 namespace Core;
 
-use Core\Template;
-use View\Factory;
+use Support\Facades\Facade;
 
 
-class View
+class View extends Facade
 {
-    /**
-     * @var \View\Factory
-     */
-    private static $factory;
-
     /**
      * @var array Array of legacy View instances
      */
@@ -31,23 +25,58 @@ class View
     private static $headers = array();
 
 
-    private function __construct()
-    {
-        //
-    }
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor() { return 'view'; }
 
     /**
-     * Return a View Factory instance
+     * Magic Method for handling dynamic functions.
      *
-     * @return \View\Factory
+     * @param  string  $method
+     * @param  array   $params
+     * @return void|mixed
      */
-    public static function getFactory()
+    public static function __callStatic($method, $params)
     {
-        if (! isset(static::$factory)) {
-            static::$factory = new Factory();
+        $accessor = static::getFacadeAccessor();
+
+        $instance = static::resolveFacadeInstance($accessor);
+
+        // Process the required action.
+        $view = null;
+
+        switch ($method) {
+            case 'addHeader':
+            case 'addHeaders':
+                // Add the Header(s) using the legacy method.
+                return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
+
+            case 'sendHeaders':
+                // No Headers will be sent from there.
+                return null;
+
+            case 'render':
+                // Create a standard View instance.
+                $view = call_user_func_array(array($instance, 'make'), $params);
+
+                break;
+            case 'renderTemplate':
+                // Create a Template View instance.
+                $view = call_user_func_array(array(static::$app['template'], 'make'), $params);
+
+                break;
+            default:
+                // Call the non-static method from the View Factory instance.
+                return call_user_func_array(array($instance, $method), $params);
         }
 
-        return static::$factory;
+        //
+        // We can arrive there only for the methods: 'render' and 'renderTemplate'
+
+        array_push(static::$items, $view);
     }
 
     //--------------------------------------------------------------------
@@ -90,52 +119,6 @@ class View
 
             static::$headers[$key] = trim($value);
         }
-    }
-
-    /**
-     * Magic Method for handling dynamic functions.
-     *
-     * @param  string  $method
-     * @param  array   $params
-     * @return void|mixed
-     */
-    public static function __callStatic($method, $params)
-    {
-        // Get the View Factory instance;
-        $factory = static::getFactory();
-
-        // Process the required action.
-        $instance = null;
-
-        switch ($method) {
-            case 'addHeader':
-            case 'addHeaders':
-                // Add the Header(s) using the legacy method.
-                return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
-
-            case 'sendHeaders':
-                // No Headers will be sent from there.
-                return null;
-
-            case 'render':
-                // Create a standard View instance.
-                $instance = call_user_func_array(array($factory, 'make'), $params);
-
-                break;
-            case 'renderTemplate':
-                // Create a Template View instance.
-                $instance = call_user_func_array(array(Template::class, 'make'), $params);
-
-                break;
-            default:
-                // Call the non-static method from the View Factory instance.
-                return call_user_func_array(array($factory, $method), $params);
-        }
-
-        //
-        // We can arrive there only for the methods: 'render' and 'renderTemplate'
-
-        array_push(static::$items, $instance);
     }
 
 }

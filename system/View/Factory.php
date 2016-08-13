@@ -10,18 +10,26 @@ use View\View;
 class Factory
 {
     /**
+     * The Application instance.
+     *
+     * @var \Foundation\Application
+     */
+    protected $app;
+
+    /**
      * @var array Array of shared data
      */
     protected $shared = array();
+
 
     /**
      * Create new View Factory instance.
      *
      * @return void
      */
-    function __construct()
+    function __construct(Application $app)
     {
-        //
+        $this->app = $app;
     }
 
     /**

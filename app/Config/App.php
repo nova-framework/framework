@@ -89,6 +89,8 @@ Config::set('app', array(
         'Auth\Reminders\ReminderServiceProvider',
         'Session\SessionServiceProvider',
         'Validation\ValidationServiceProvider',
+        'Template\TemplateServiceProvider',
+        'View\ViewServiceProvider',
     ),
 
     /**

@@ -1,15 +1,15 @@
 <?php
 
-namespace View;
+namespace Template;
 
 use Core\Config;
 use Core\Language;
 use Support\Contracts\ArrayableInterface as Arrayable;
-use View\Factory;
+use View\Factory as ViewFactory;
 use View\View;
 
 
-class Template
+class Factory
 {
     /**
      * The View Factory instance.
@@ -24,7 +24,7 @@ class Template
      * @param $factory The View Factory instance.
      * @return void
      */
-    function __construct(Factory $factory)
+    function __construct(ViewFactory $factory)
     {
         $this->factory = $factory;
     }

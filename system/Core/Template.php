@@ -9,7 +9,7 @@
 namespace Core;
 
 use Core\View;
-use View\Template as Factory;
+use Template\Factory;
 
 
 /**

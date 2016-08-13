@@ -133,7 +133,7 @@ class View
         }
 
         //
-        // We can arrive there only for the methods called 'render' and 'renderTemplate'
+        // We can arrive there only for the methods: 'render' and 'renderTemplate'
 
         array_push(static::$items, $instance);
     }

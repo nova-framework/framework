@@ -16,7 +16,8 @@ class Factory
      *
      * @var \View\Factory
      */
-    protected $factory;
+    protected $viewFactory;
+
 
     /**
      * Create new Template Factory instance.
@@ -26,7 +27,7 @@ class Factory
      */
     function __construct(ViewFactory $factory)
     {
-        $this->factory = $factory;
+        $this->viewFactory = $factory;
     }
 
     /**
@@ -53,7 +54,7 @@ class Factory
 
         $data = $this->parseData($data);
 
-        return new View($this->factory, $view, $path, $data, true);
+        return new View($this->viewFactory, $view, $path, $data, true);
     }
 
     /**

@@ -55,7 +55,7 @@ class View
     //--------------------------------------------------------------------
 
     /**
-     * Return the stored (legacy) instances.
+     * Return the stored (legacy) View instances.
      *
      * @return array
      */
@@ -65,7 +65,7 @@ class View
     }
 
     /**
-     * Return the legacy Headers.
+     * Return the stored (legacy) Headers.
      *
      * @return array
      */

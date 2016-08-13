@@ -9,19 +9,22 @@
 
 namespace Core;
 
-use Core\BaseView;
 use Core\Template;
-
-use Response;
+use View\Factory;
 
 
 /**
  * View class to load views files.
  */
-class View extends BaseView
+class View
 {
     /**
-     * @var array Array of legacy BaseView instances
+     * @var \View\Factory
+     */
+    private static $factory;
+
+    /**
+     * @var array Array of legacy View instances
      */
     private static $legacyViews = array();
 
@@ -32,37 +35,17 @@ class View extends BaseView
 
 
     /**
-     * Constructor
-     * @param mixed $path
-     * @param array $data
+     * Return a View Factory instance
      *
-     * @throws \UnexpectedValueException
+     * @return \View\Factory
      */
-    protected function __construct($view, $path, array $data = array())
+    public static function getFactory()
     {
-        parent::__construct($view, $path, $data);
-    }
-
-    /**
-     * Create a View instance
-     *
-     * @param string $path
-     * @param array|string $data
-     * @param string|null $module
-     * @return View
-     */
-    public static function make($view, $data = array(), $module = null)
-    {
-        list($data, $module) = static::parseParams($data, $module);
-
-        // Prepare the (relative) file path according with Module parameter presence.
-        if (is_null($module)) {
-            $path = str_replace('/', DS, APPDIR ."Views/$view.php");
-        } else {
-            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
+        if (! isset(static::$factory)) {
+            static::$factory = new Factory();
         }
 
-        return new View($view, $path, $data);
+        return static::$factory;
     }
 
     //--------------------------------------------------------------------
@@ -116,45 +99,46 @@ class View extends BaseView
      */
     public static function __callStatic($method, $params)
     {
-        // Process the legacy Headers management.
+        // Get the View Factory instance;
+        $factory = static::getFactory();
+
+        // Process the required action.
+        $view = null;
+
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
+                // Add the Header(s) using the legacy method.
                 return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
 
             case 'sendHeaders':
+                // No Headers will be sent from there; just go out.
                 return null;
 
-            default:
+            case 'fetch':
+            case 'render':
+                // Create a standard View instance.
+                $view = call_user_func_array(array($factory, 'make'), $params);
+
                 break;
+            case 'renderTemplate':
+                // Create a Template View instance.
+                $view = call_user_func_array(array(Template::class, 'make'), $params);
+
+                break;
+            default:
+                // Call the non-static method from the View Factory instance.
+                return call_user_func_array(array($factory, $method), $params);
         }
 
-        // The called Class; for getting a View instance.
-        $className = static::class;
+        // We would arrive there only for the methods: 'fetch', 'render' and 'renderTemplate'
 
-        // Flag for fetching the View rendering output.
-        $fetchView = false;
-
-        // Prepare the required information.
         if ($method == 'fetch') {
-            $fetchView = true;
-        } else if ($method == 'render') {
-            // Nothing to do; there is no Headers sending.
-        } else if ($method == 'renderTemplate') {
-            $className = Template::class;
-        } else {
-            // No valid Compat Method found; go out.
-            return null;
-        }
-
-        // Create a View instance, using the current Class and the given parameters.
-        $view = call_user_func_array(array($className, 'make'), $params);
-
-        if ($fetchView) {
             // Render the object and return the captured output.
-            return $view->fetch();
+            return $view->render();
         }
 
+        // Push the View instance to the legacy Views.
         array_push(static::$legacyViews, $view);
     }
 

@@ -2,7 +2,6 @@
 
 namespace Http;
 
-use Core\BaseView as View;
 use Http\ResponseTrait;
 use Support\Contracts\JsonableInterface;
 use Support\Contracts\RenderableInterface;
@@ -40,8 +39,6 @@ class Response extends SymfonyResponse
             $content = $this->morphToJson($content);
         } else if ($content instanceof RenderableInterface) {
             $content = $content->render();
-        } else if ($content instanceof View) {
-            $content = $content->fetch();
         }
 
         return parent::setContent($content);

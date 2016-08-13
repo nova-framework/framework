@@ -14,6 +14,7 @@ use Core\Template;
 use Core\View;
 use Http\Response;
 use Routing\Controller as BaseController;
+use Support\Contracts\RenderableInterface as Renderable;
 
 
 /**
@@ -68,35 +69,36 @@ abstract class Controller extends BaseController
      */
     protected function processResponse($response)
     {
-        // If the response which is returned from the Controller's Action is a View instance,
-        // we will assume we want to render it using the Controller's templated environment.
-        if (($this->layout !== false) && ($response instanceof View)) {
-            return Template::make($this->layout, $this->template)->with('content', $response);
-        } else if (! is_null($response)) {
-            return $response;
+        if ($response instanceof Renderable) {
+            // If the response which is returned from the called Action is a Renderable instance,
+            // we will assume we want to render it using the Controller's templated environment.
+            if (($this->layout !== false) && ! $response->isLayout()) {
+                $response = Template::make($this->layout, $this->template)->with('content', $response);
+            }
         }
+
+        // At this point, we will return any not null response.
+        if (! is_null($response)) return $response;
 
         // If the response which is returned from the Controller's Action is null and we have
         // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
+        // Setup the default value of the response.
+        $response = '';
+
+        // Get the legacy Headers.
+        $headers = View::getLegacyHeaders();
+
         // Retrieve the Legacy View instances.
         $views = View::getLegacyViews();
 
-        if (! empty($views)) {
-            $content = '';
-
-            $headers = View::getLegacyHeaders();
-
-            // Fetch every View instance and append it to the Response content.
-            foreach ($views as $view) {
-                $content .= $view->fetch();
-            }
-
-            // Create a Response instance from gathered information and return it.
-            $response = new Response($content, 200, $headers);
+        // Fetch every View instance and append it to the response.
+        foreach ($views as $view) {
+            $response .= $view->render();
         }
 
-        return $response;
+        // Create a Response instance from gathered information and return it.
+        return new Response($response, 200, $headers);
     }
 
     /**

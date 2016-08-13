@@ -8,57 +8,49 @@
 
 namespace Core;
 
-use Core\Config;
-use Core\BaseView;
-use Support\Facades\Language as Translator;
+use Core\View;
+use View\Template as Factory;
 
 
 /**
  * View class to load templates files.
  */
-class Template extends BaseView
+class Template
 {
     /**
-     * Constructor
-     * @param mixed $path
-     * @param array $data
-     *
-     * @throws \UnexpectedValueException
+     * @var \View\Template
      */
-    protected function __construct($view, $path, array $data = array())
+    private static $factory;
+
+    /**
+     * Return a View Factory instance
+     *
+     * @return \Vview\Factory
+     */
+    protected static function getFactory()
     {
-        parent::__construct($view, $path, $data);
+        if (! isset(static::$factory)) {
+            $viewFactory = View::getFactory();
+
+            static::$factory = new Factory($viewFactory);
+        }
+
+        return static::$factory;
     }
 
     /**
-     * Create a Template instance
+     * Magic Method for calling the methods on the Factory instance.
      *
-     * @param string $view
-     * @param array|string $data
-     * @param string $custom
-     * @return Template
+     * @param $method
+     * @param $params
+     *
+     * @return mixed
      */
-    public static function make($view, $data = array(), $template = null)
+    public static function __callStatic($method, $params)
     {
-        list($data, $template) = static::parseParams($data, $template);
+        $instance = static::getFactory();
 
-        // Adjust the current Template.
-        $template = $template ?: Config::get('app.template');
-
-        // Get the base path for the current Template files.
-        $basePath = APPDIR .'Templates' .DS .$template .DS;
-
-        // Get the name of the current Template files.
-        $ltrPath = $basePath .$view .'.php';
-        $rtlPath = $basePath .$view .'-rtl.php';
-
-        // Depending on the Language direction, adjust to RTL Template file, if case.
-        if ((Translator::direction() == 'rtl') && file_exists($rtlPath)) {
-            $path = $rtlPath;
-        } else {
-            $path = $ltrPath;
-        }
-
-        return new Template($view, $path, $data);
+        // Call the non-static method from the Template Factory instance.
+        return call_user_func_array(array($instance, $method), $params);
     }
 }

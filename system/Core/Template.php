@@ -19,6 +19,12 @@ class Template
      */
     private static $factory;
 
+    
+    private function __construct()
+    {
+        //
+    }
+
     /**
      * Return a View Factory instance
      *

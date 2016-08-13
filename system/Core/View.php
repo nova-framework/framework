@@ -31,6 +31,11 @@ class View
     private static $headers = array();
 
 
+    private function __construct()
+    {
+        //
+    }
+
     /**
      * Return a View Factory instance
      *
@@ -135,7 +140,7 @@ class View
             return $view->render();
         }
 
-        // Push the View instance to the legacy items.
+        // Push the View instance to the (legacy) items.
         array_push(static::$items, $view);
     }
 

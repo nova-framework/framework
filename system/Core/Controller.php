@@ -86,13 +86,13 @@ abstract class Controller extends BaseController
         // Setup the default value of the response.
         $response = '';
 
-        // Get the legacy Headers.
+        // Get the (legacy) Headers stored on the View Facade.
         $headers = View::getHeaders();
 
-        // Retrieve the Legacy View instances.
+        // Retrieve the (legacy) View instances stored on the View Facade.
         $items = View::getItems();
 
-        // Fetch every View instance and append it to the response.
+        // Render every View instance and append the result to the response.
         foreach ($items as $item) {
             $response .= $item->render();
         }

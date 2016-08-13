@@ -83,15 +83,15 @@ abstract class Controller extends BaseController
         // If the response which is returned from the Controller's Action is null and we have
         // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
-        // Setup the default value of the response.
-        $response = '';
-
         // Get the (legacy) Headers stored on the View Facade.
         $headers = View::getHeaders();
 
         // Retrieve the (legacy) View instances stored on the View Facade.
         $items = View::getItems();
 
+        // Setup the default value of the response.
+        $response = '';
+        
         // Render every View instance and append the result to the response.
         foreach ($items as $item) {
             $response .= $item->render();

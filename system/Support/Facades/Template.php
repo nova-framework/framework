@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\facades;
+namespace Support\Facades;
 
 use Support\Facades\Facade;
 

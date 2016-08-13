@@ -48,6 +48,8 @@ class View extends Facade
         // Process the required action.
         $view = null;
 
+        $template = static::resolveFacadeInstance('template');
+
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
@@ -65,7 +67,7 @@ class View extends Facade
                 break;
             case 'renderTemplate':
                 // Create a Template View instance.
-                $view = call_user_func_array(array(static::$app['template'], 'make'), $params);
+                $view = call_user_func_array(array($template, 'make'), $params);
 
                 break;
             default:

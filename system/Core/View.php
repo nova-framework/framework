@@ -105,7 +105,7 @@ class View
         $factory = static::getFactory();
 
         // Process the required action.
-        $view = null;
+        $instance = null;
 
         switch ($method) {
             case 'addHeader':
@@ -117,15 +117,14 @@ class View
                 // No Headers will be sent from there; just go out.
                 return null;
 
-            case 'fetch':
             case 'render':
                 // Create a standard View instance.
-                $view = call_user_func_array(array($factory, 'make'), $params);
+                $instance = call_user_func_array(array($factory, 'make'), $params);
 
                 break;
             case 'renderTemplate':
                 // Create a Template View instance.
-                $view = call_user_func_array(array(Template::class, 'make'), $params);
+                $instance = call_user_func_array(array(Template::class, 'make'), $params);
 
                 break;
             default:
@@ -134,15 +133,9 @@ class View
         }
 
         //
-        // We can arrive there only for the methods: 'fetch', 'render' and 'renderTemplate'
+        // We can arrive there only for the methods called 'render' and 'renderTemplate'
 
-        if ($method == 'fetch') {
-            // Render the object and return the captured output.
-            return $view->render();
-        }
-
-        // Push the View instance to the (legacy) items.
-        array_push(static::$items, $view);
+        array_push(static::$items, $instance);
     }
 
 }

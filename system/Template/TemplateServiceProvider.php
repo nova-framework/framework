@@ -2,7 +2,6 @@
 
 namespace Template;
 
-use Core\View;
 use Template\Factory;
 use Support\ServiceProvider;
 

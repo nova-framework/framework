@@ -114,7 +114,7 @@ class View
                 return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
 
             case 'sendHeaders':
-                // No Headers will be sent from there; just go out.
+                // No Headers will be sent from there.
                 return null;
 
             case 'render':

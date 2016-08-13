@@ -56,7 +56,7 @@ class View extends Facade
                 break;
         }
 
-        // Get the required instance.
+        // Get the Factory instance.
         if ($method == 'renderTemplate') {
             $accessor = 'template';
         } else {

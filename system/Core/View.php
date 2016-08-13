@@ -133,7 +133,8 @@ class View
                 return call_user_func_array(array($factory, $method), $params);
         }
 
-        // We would arrive there only for the methods: 'fetch', 'render' and 'renderTemplate'
+        //
+        // We can arrive there only for the methods: 'fetch', 'render' and 'renderTemplate'
 
         if ($method == 'fetch') {
             // Render the object and return the captured output.

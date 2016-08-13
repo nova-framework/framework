@@ -41,6 +41,7 @@ class View extends Facade
      */
     public static function __callStatic($method, $params)
     {
+        // Process first the (legacy) methods associated to Headers.
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
@@ -48,42 +49,34 @@ class View extends Facade
                 return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
 
             case 'sendHeaders':
-                // No Headers will be sent from there.
-                return null;
+                // No Headers should be sent from there.
+                return;
 
             default:
                 break;
         }
 
-        // Get the associated instance.
-        $accessor = static::getFacadeAccessor();
+        // Get the required instance.
+        if ($method == 'renderTemplate') {
+            $accessor = 'template';
+        } else {
+            $accessor = static::getFacadeAccessor();
+        }
 
         $instance = static::resolveFacadeInstance($accessor);
 
-        // Process the required action.
-        $view = null;
+        //
+        // Process the requested method.
 
-        switch ($method) {
-            case 'render':
-                // Create a standard View instance.
-                $view = call_user_func_array(array($instance, 'make'), $params);
-
-                break;
-            case 'renderTemplate':
-                // Create a Template View instance.
-                $factory = static::resolveFacadeInstance('template');
-
-                $view = call_user_func_array(array($factory, 'make'), $params);
-
-                break;
-            default:
-                // Call the non-static method from the View Factory instance.
-                return call_user_func_array(array($instance, $method), $params);
+        if (! str_starts_with($method, 'render')) {
+            // Call the non-static method from the View Factory instance.
+            return call_user_func_array(array($instance, $method), $params);
         }
 
-        //
-        // We can arrive there only for the methods: 'render' and 'renderTemplate'
+        // Create a View instance calling the Factory.
+        $view = call_user_func_array(array($instance, 'make'), $params);
 
+        // Push the View instance to (legacy) items.
         array_push(static::$items, $view);
     }
 

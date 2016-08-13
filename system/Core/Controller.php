@@ -123,7 +123,7 @@ abstract class Controller extends BaseController
     /**
      * Return a default View instance.
      *
-     * @return \Core\View
+     * @return \View\View
      */
     protected function getView(array $data = array())
     {

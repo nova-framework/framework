@@ -49,7 +49,7 @@ class View extends Facade
                 return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
 
             case 'sendHeaders':
-                // No Headers should be sent from there.
+                // The Headers should not be sent from there; go out.
                 return;
 
             default:

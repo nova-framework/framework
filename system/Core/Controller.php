@@ -87,14 +87,14 @@ abstract class Controller extends BaseController
         $response = '';
 
         // Get the legacy Headers.
-        $headers = View::getLegacyHeaders();
+        $headers = View::getHeaders();
 
         // Retrieve the Legacy View instances.
-        $views = View::getLegacyViews();
+        $items = View::getItems();
 
         // Fetch every View instance and append it to the response.
-        foreach ($views as $view) {
-            $response .= $view->render();
+        foreach ($items as $item) {
+            $response .= $item->render();
         }
 
         // Create a Response instance from gathered information and return it.

@@ -23,12 +23,12 @@ class View
     /**
      * @var array Array of legacy View instances
      */
-    private static $legacyViews = array();
+    private static $items = array();
 
     /**
      * @var array Array of legacy HTTP headers
      */
-    private static $legacyHeaders = array();
+    private static $headers = array();
 
 
     /**
@@ -54,9 +54,9 @@ class View
      *
      * @return array
      */
-    public static function getLegacyViews()
+    public static function getItems()
     {
-        return static::$legacyViews;
+        return static::$items;
     }
 
     /**
@@ -64,9 +64,9 @@ class View
      *
      * @return array
      */
-    public static function getLegacyHeaders()
+    public static function getHeaders()
     {
-        return static::$legacyHeaders;
+        return static::$headers;
     }
 
     /**
@@ -83,7 +83,7 @@ class View
 
             $key = ltrim($key, ':');
 
-            static::$legacyHeaders[$key] = trim($value);
+            static::$headers[$key] = trim($value);
         }
     }
 
@@ -135,8 +135,8 @@ class View
             return $view->render();
         }
 
-        // Push the View instance to the legacy Views.
-        array_push(static::$legacyViews, $view);
+        // Push the View instance to the legacy items.
+        array_push(static::$items, $view);
     }
 
 }

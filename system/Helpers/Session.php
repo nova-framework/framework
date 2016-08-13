@@ -8,7 +8,7 @@
 
 namespace Helpers;
 
-use Core\Template;
+use Support\Facades\Template;
 
 
 /**

@@ -2,11 +2,11 @@
 
 namespace Support\Facades;
 
-use Core\Template;
 use Core\View;
 use Http\JsonResponse;
 use Http\Response as HttpResponse;
 use Support\Contracts\ArrayableInterface;
+use Support\Facades\Template;
 
 use Str;
 

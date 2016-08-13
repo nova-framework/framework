@@ -2,8 +2,8 @@
 
 namespace Support\Facades;
 
-use Core\Template;
 use Support\Facades\Facade;
+use Support\Facades\Template;
 use Support\MessageBag;
 
 

@@ -1,16 +1,13 @@
 <?php
-/**
- * Template - a View specialized for handling the Template files.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
-namespace Core;
+namespace Support\facades;
 
 use Support\Facades\Facade;
 
-
+/**
+ * @see \Template\Factory
+ * @see \View\View
+ */
 class Template extends Facade
 {
     /**
@@ -19,5 +16,5 @@ class Template extends Facade
      * @return string
      */
     protected static function getFacadeAccessor() { return 'template'; }
-    
+
 }

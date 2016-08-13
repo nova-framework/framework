@@ -10,11 +10,11 @@ namespace Core;
 
 use Core\Config;
 use Core\Language;
-use Core\Template;
 use Core\View;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;
+use Support\Facades\Template;
 
 
 /**
@@ -91,7 +91,7 @@ abstract class Controller extends BaseController
 
         // Setup the default value of the response.
         $response = '';
-        
+
         // Render every View instance and append the result to the response.
         foreach ($items as $item) {
             $response .= $item->render();

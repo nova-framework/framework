@@ -104,7 +104,6 @@ Config::set('app', array(
     'aliases' => array(
         // The Core.
         'Errors'        => '\Core\Error',
-        'Template'      => '\Core\Template',
         'View'          => '\Core\View',
 
         // The Helpers.
@@ -159,5 +158,6 @@ Config::set('app', array(
         'Validator'     => '\Support\Facades\Validator',
         'Log'           => '\Support\Facades\Log',
         'URL'           => '\Support\Facades\URL',
+        'Template'      => '\Support\Facades\Template',
     ),
 ));

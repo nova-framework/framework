@@ -12,9 +12,6 @@ use Core\View;
 use Template\Factory;
 
 
-/**
- * View class to load templates files.
- */
 class Template
 {
     /**

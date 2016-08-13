@@ -13,9 +13,6 @@ use Core\Template;
 use View\Factory;
 
 
-/**
- * View class to load views files.
- */
 class View
 {
     /**

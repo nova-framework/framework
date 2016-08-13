@@ -46,7 +46,7 @@ class View extends Facade
             case 'addHeader':
             case 'addHeaders':
                 // Add the Header(s) using the legacy method.
-                return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
+                return call_user_func_array(array(static::class, 'addHeaders'), $params);
 
             case 'sendHeaders':
                 // The Headers should not be sent from there; go out.
@@ -109,7 +109,7 @@ class View extends Facade
      *
      * @param  string  $header HTTP header text
      */
-    protected static function addLegacyHeaders($headers)
+    protected static function addHeaders($headers)
     {
         if(! is_array($headers)) $headers = array($headers);
 

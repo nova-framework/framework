@@ -41,13 +41,6 @@ class View extends Facade
      */
     public static function __callStatic($method, $params)
     {
-        $accessor = static::getFacadeAccessor();
-
-        $instance = static::resolveFacadeInstance($accessor);
-
-        // Process the required action.
-        $view = null;
-
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
@@ -58,6 +51,19 @@ class View extends Facade
                 // No Headers will be sent from there.
                 return null;
 
+            default:
+                break;
+        }
+
+        // Get the associated instance.
+        $accessor = static::getFacadeAccessor();
+
+        $instance = static::resolveFacadeInstance($accessor);
+
+        // Process the required action.
+        $view = null;
+
+        switch ($method) {
             case 'render':
                 // Create a standard View instance.
                 $view = call_user_func_array(array($instance, 'make'), $params);

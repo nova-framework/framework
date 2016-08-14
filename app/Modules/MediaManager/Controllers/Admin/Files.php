@@ -4,11 +4,9 @@ namespace App\Modules\MediaManager\Controllers\Admin;
 
 use App\Core\Controller;
 
-use Http\Response;
 use Routing\FileDispatcher;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 use Auth;
 use Input;
@@ -51,26 +49,26 @@ class Files extends Controller
         return $this->getView();
     }
 
-    public function preview()
+    public function preview($file = null)
     {
-        $file = Input::get('file');
-
+        // Sanitize the variable.
         $path = filter_var($file, FILTER_SANITIZE_URL);
 
         // Calculate the preview file path.
-        $path = str_replace('/', DS, ltrim($path, '/'));
+        $path = str_replace('/', DS, ROOTDIR .ltrim($path, '/'));
 
-        return $this->serve(ROOTDIR .$path);
+        return $this->serve($path);
     }
 
     public function thumbnails($thumbnail)
     {
+        // Sanitize the variable.
         $thumbnail = filter_var($thumbnail, FILTER_SANITIZE_URL);
 
         // Calculate the thumbnail file path.
-        $path = str_replace('/', DS, 'Storage/Files/thumbnails/' .$thumbnail);
+        $path = str_replace('/', DS, APPDIR .'Storage/Files/thumbnails/' .$thumbnail);
 
-        return $this->serve(APPDIR .$path);
+        return $this->serve($path);
     }
 
     /**

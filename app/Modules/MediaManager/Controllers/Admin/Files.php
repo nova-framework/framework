@@ -49,10 +49,10 @@ class Files extends Controller
         return $this->getView();
     }
 
-    public function preview($file)
+    public function preview($path)
     {
         // Sanitize the variable.
-        $path = filter_var($file, FILTER_SANITIZE_URL);
+        $path = filter_var($path, FILTER_SANITIZE_URL);
 
         // Calculate the preview file path.
         $path = str_replace('/', DS, ROOTDIR .ltrim($path, '/'));

@@ -14,9 +14,10 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\MediaManager
     Route::get('files',           array('before' => 'auth', 'uses' => 'Files@index'));
     Route::any('files/connector', array('before' => 'auth', 'uses' => 'Files@connector'));
 
-    // Files/thumbnails serving
+    // Thumbnails serving.
     Route::get('files/thumbnails/{file}', array('before' => 'auth', 'uses' => 'Files@thumbnails'));
 
+    // Files serving.
     Route::get('files/preview/{path}', array('before' => 'auth', 'uses' => 'Files@preview'))
         ->where('path', '.*');
 });

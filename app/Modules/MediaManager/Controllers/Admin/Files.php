@@ -51,9 +51,6 @@ class Files extends Controller
 
     public function preview($path)
     {
-        // Sanitize the variable.
-        $path = filter_var($path, FILTER_SANITIZE_URL);
-
         // Calculate the preview file path.
         $path = str_replace('/', DS, ROOTDIR .ltrim($path, '/'));
 
@@ -62,9 +59,6 @@ class Files extends Controller
 
     public function thumbnails($thumbnail)
     {
-        // Sanitize the variable.
-        $thumbnail = filter_var($thumbnail, FILTER_SANITIZE_URL);
-
         // Calculate the thumbnail file path.
         $path = str_replace('/', DS, APPDIR .'Storage/Files/thumbnails/' .$thumbnail);
 

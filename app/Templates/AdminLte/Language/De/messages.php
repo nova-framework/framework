@@ -4,6 +4,7 @@ return array (
   'ADMINISTRATION' => '',
   'Control Panel' => '',
   'Dashboard' => '',
+  'Files' => '',
   'Forgot Password?' => '',
   'Logout' => '',
   'Member since {0}' => '',

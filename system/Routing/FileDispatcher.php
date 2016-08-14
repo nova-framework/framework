@@ -78,7 +78,7 @@ class FileDispatcher
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function serve($path)
+    public function serve($path)
     {
         if (! file_exists($path)) {
             return new Response('', 404);

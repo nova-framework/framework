@@ -4,6 +4,7 @@ return array (
   'ADMINISTRATION' => 'Управление',
   'Control Panel' => 'Панель управления',
   'Dashboard' => 'Рабочий стол',
+  'Files' => '',
   'Forgot Password?' => 'Забыли пароль?',
   'Logout' => 'Выйти',
   'Member since {0}' => 'Участник с {0}',

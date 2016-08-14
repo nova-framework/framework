@@ -10,8 +10,8 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Router::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Settings\Controllers\Admin'), function() {
-    Router::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));
-    Router::post('settings', array('before' => 'auth|csrf', 'uses' => 'Settings@store'));
+Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Settings\Controllers\Admin'), function() {
+    Route::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));
+    Route::post('settings', array('before' => 'auth|csrf', 'uses' => 'Settings@store'));
 });
 

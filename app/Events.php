@@ -22,7 +22,7 @@ Event::listen('test', function($data) {
 });
 
 // Add a Listener Closure to the Event 'framework.controller.executing'.
-Event::listen('framework.controller.executing', function($instance, $method, $params) {
+Event::listen('router.matched', function($route, $request) {
     // Run the Hooks associated to the Views.
     $hooks = Hooks::get();
 
@@ -37,11 +37,4 @@ Event::listen('framework.controller.executing', function($instance, $method, $pa
 // Add a Listener Closure to the Event 'nova.framework.booting'.
 Event::listen('nova.framework.booting', function() {
     Console::logSpeed("Nova Framework booting");
-});
-
-// Add a Listener Closure to the Event 'framework.controller.executing'.
-Event::listen('framework.controller.executing', function($instance, $method, $params) {
-    $className = get_class($instance);
-
-    Console::logSpeed("Executing '$className@$method'");
 });

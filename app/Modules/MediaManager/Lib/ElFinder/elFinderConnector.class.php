@@ -51,16 +51,6 @@ class elFinderConnector {
 	public function run() {
 		$isPost = $_SERVER["REQUEST_METHOD"] == 'POST';
 		$src    = $_SERVER["REQUEST_METHOD"] == 'POST' ? $_POST : $_GET;
-		if ($isPost && !$src && $rawPostData = @file_get_contents('php://input')) {
-			// for support IE XDomainRequest()
-			$parts = explode('&', $rawPostData);
-			foreach($parts as $part) {
-				list($key, $value) = array_pad(explode('=', $part), 2, '');
-				$src[$key] = rawurldecode($value);
-			}
-			$_POST = $this->input_filter($src);
-			$_REQUEST = $this->input_filter(array_merge_recursive($src, $_REQUEST));
-		}
 		$cmd    = isset($src['cmd']) ? $src['cmd'] : '';
 		$args   = array();
 		
@@ -111,6 +101,9 @@ class elFinderConnector {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function output(array $data) {
+		// clear output buffer
+		while(ob_get_level() && @ob_end_clean()){}
+		
 		$header = isset($data['header']) ? $data['header'] : $this->header;
 		unset($data['header']);
 		if ($header) {
@@ -147,7 +140,7 @@ class elFinderConnector {
 	 * @return mixed
 	 * @author Naoki Sawada
 	 */
-	private function input_filter($args) {
+	protected function input_filter($args) {
 		static $magic_quotes_gpc = NULL;
 		
 		if ($magic_quotes_gpc === NULL)

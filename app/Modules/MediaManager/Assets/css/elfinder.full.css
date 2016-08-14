@@ -1,10 +1,10 @@
 /*!
  * elFinder - file manager for web
- * Version 2.1 (Nightly: 748d896) (2015-04-13)
+ * Version 2.0.7 (2016-07-11)
  * http://elfinder.org
  * 
- * Copyright 2009-2015, Studio 42
- * Licensed under a 3 clauses BSD license
+ * Copyright 2009-2016, Studio 42
+ * Licensed under a 3-clauses BSD license
  */
 
 /* File: /css/commands.css */
@@ -184,10 +184,10 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td {
 }
 div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	position: absolute;
-	top: 0.4em;
+	top: -5px;
 	left: 0;
 	right: 0;
-	margin: auto 0px auto auto;
+	margin: auto;
 }
 
 
@@ -297,7 +297,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 }
 
 /* dir/file permissions and symlink markers */
-.elfinder-lock,
 .elfinder-perms,
 .elfinder-symlink {
 	position:absolute;
@@ -318,11 +317,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 /* write only */
 .elfinder-wo .elfinder-perms { background-position:0 -80px;}
-
-/* locked */
-.elfinder-lock {
-	background-position:0 -656px;
-}
 
 /* drag helper */
 .elfinder-drag-helper {
@@ -418,9 +412,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	margin-top:-8px;
 	display:none;
 }
-.elfinder-contextmenu-item.elfinder-touch {
-	padding:12px 30px;
-}
 
 /* text in item */
 .elfinder-contextmenu .elfinder-contextmenu-item span { display:block; }
@@ -493,11 +484,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	-webkit-user-select: none;
 	user-select: none;
 	-webkit-tap-highlight-color:rgba(0,0,0,0);
-	-webkit-touch-callout:none;
-	user-select:          none;
-	-webkit-user-select:  none;
-	-moz-user-select:     none;
-	-khtml-user-select:   none;
 }
 
 /* container active on dropenter */
@@ -552,7 +538,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 /* permissions/symlink markers */
 .elfinder-cwd-view-icons .elfinder-perms { bottom:4px; right:2px; }
-.elfinder-cwd-view-icons .elfinder-lock { top:-3px; right:-2px; }
 .elfinder-cwd-view-icons .elfinder-symlink { bottom:6px; left:0px; }
 
 /* icon/thumbnail */
@@ -676,20 +661,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 }
 .elfinder .elfinder-cwd table thead tr { border-left:0 solid; border-top:0 solid; border-right:0 solid; }
 
-.elfinder .elfinder-cwd table thead td {
-	padding: 4px 14px;
-}
-.elfinder .elfinder-cwd table thead td.ui-state-active {
-	background: #ebf1f6;
-	background: -moz-linear-gradient(top,  #ebf1f6 0%, #abd3ee 50%, #89c3eb 51%, #d5ebfb 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ebf1f6), color-stop(50%,#abd3ee), color-stop(51%,#89c3eb), color-stop(100%,#d5ebfb));
-	background: -webkit-linear-gradient(top,  #ebf1f6 0%,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
-	background: -o-linear-gradient(top,  #ebf1f6 0%,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
-	background: -ms-linear-gradient(top,  #ebf1f6 0%,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
-	background: linear-gradient(to bottom,  #ebf1f6 0%,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ebf1f6', endColorstr='#d5ebfb',GradientType=0 );
-}
-
 .elfinder .elfinder-cwd table td { 
 	padding:4px 12px;
 	white-space:pre;
@@ -698,14 +669,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	cursor:default;
 	border:0 solid;
 	
-}
-
-.elfinder .elfinder-cwd tr.elfinder-touch td {
-	padding: 10px 12px;
-}
-
-.elfinder .elfinder-cwd tr.elfinder-cwd-file.elfinder-touch td {
-	padding: 13px 12px;
 }
 
 .elfinder-ltr .elfinder-cwd table td { text-align:right; }
@@ -723,11 +686,9 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 /* premissions/symlink marker */
 .elfinder-cwd-view-list .elfinder-perms, 
-.elfinder-cwd-view-list .elfinder-lock,
 .elfinder-cwd-view-list .elfinder-symlink { top:50%; margin-top:-6px; }
 /* markers in ltr/rtl enviroment */
 .elfinder-ltr .elfinder-cwd-view-list .elfinder-perms   { left:7px;  }
-.elfinder-ltr .elfinder-cwd-view-list .elfinder-lock    { left:9px; top:0px; }
 .elfinder-ltr .elfinder-cwd-view-list .elfinder-symlink { left:-7px; }
 
 /* file icon */
@@ -874,7 +835,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 .elfinder-dialog-icon-prepare,
 .elfinder-dialog-icon-move        { background-position: 0 -128px;}
 .elfinder-dialog-icon-upload      { background-position: 0 -160px; }
-.elfinder-dialog-icon-chunkmerge  { background-position: 0 -160px; }
 .elfinder-dialog-icon-rm          { background-position: 0 -192px; }
 .elfinder-dialog-icon-download    { background-position: 0 -260px; }
 .elfinder-dialog-icon-save        { background-position: 0 -295px; }
@@ -937,8 +897,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	text-align:center;
 	padding:2em 0;
 	border:3px dashed #aaa;
-	height: 1em;
-	overflow: hidden;
 }
 
 .elfinder-upload-dropbox.ui-state-hover {
@@ -1039,11 +997,6 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	user-select: none;
 	-webkit-tap-highlight-color:rgba(0,0,0,0);
 /*	border:1px solid #111;*/
-	-webkit-touch-callout:none;
-	user-select:          none;
-	-webkit-user-select:  none;
-	-moz-user-select:     none;
-	-khtml-user-select:   none;
 }
 
 
@@ -1071,9 +1024,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	outline:0px solid;
 	border:1px solid transparent;
 	cursor:default;
-}
-.elfinder-navbar-dir.elfinder-touch {
-	padding: 12px 12px;
+	
 }
 
 /* ltr/rtl enviroment */
@@ -1123,7 +1074,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 /* root folder */
 .elfinder-tree   .elfinder-navbar-root .elfinder-navbar-icon { background-position:0 0; }
-.elfinder-places .elfinder-navbar-root .elfinder-navbar-icon { background-position:0 -704px; }
+.elfinder-places .elfinder-navbar-root .elfinder-navbar-icon { background-position:0 -48px; }
 
 /* icon in active/hove/dropactive state */
 .ui-state-active           .elfinder-navbar-icon, 
@@ -1155,19 +1106,14 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 /* permissions marker */
 .elfinder-navbar .elfinder-perms { top:50%; margin-top:-8px; }
 
-/* locked marker */
-.elfinder-navbar .elfinder-lock { top:-2px; }
-
 /* permissions/symlink markers ltr/rtl enviroment */
 .elfinder-ltr .elfinder-navbar .elfinder-perms   { left:  18px; }
 .elfinder-rtl .elfinder-navbar .elfinder-perms   { right: 18px; }
-.elfinder-ltr .elfinder-navbar .elfinder-lock    { left:  18px; }
-.elfinder-rtl .elfinder-navbar .elfinder-lock    { right: 18px; }
 .elfinder-ltr .elfinder-navbar .elfinder-symlink { left:  8px; }
 .elfinder-rtl .elfinder-navbar .elfinder-symlink { right: 8px; }
 
 /* resizable */
-.elfinder-navbar .ui-resizable-handle { width:12px; background:transparent url('../img/resize.png') center center no-repeat; }
+.elfinder-navbar .ui-resizable-handle { width:12px; background:transparent url('../img/resize.png') center center no-repeat; left:0; }
 .elfinder-nav-handle-icon {
 	position:absolute;
 	top:50%;
@@ -1473,12 +1419,6 @@ embed.elfinder-quicklook-preview-audio {
 	border-right:0 solid transparent;
 	border-bottom:0 solid transparent;
 	border-left:0 solid transparent;
-	
-	-webkit-touch-callout:none;
-	user-select:          none;
-	-webkit-user-select:  none;
-	-moz-user-select:     none;
-	-khtml-user-select:   none;
 }
 
 .elfinder-statusbar a { text-decoration:none; }
@@ -1620,9 +1560,6 @@ embed.elfinder-quicklook-preview-audio {
 .elfinder-button-icon-sort      { background-position: 0 -577px; }
 .elfinder-button-icon-rotate-r  { background-position: 0 -625px; }
 .elfinder-button-icon-rotate-l  { background-position: 0 -641px; }
-.elfinder-button-icon-netmount  { background-position: 0 -688px; }
-.elfinder-button-icon-netunmount { background-position: 0 -96px; }
-.elfinder-button-icon-places    { background-position: 0 -704px; }
 
 /* button with dropdown menu*/
 .elfinder .elfinder-menubutton { overflow:visible; }

@@ -12,7 +12,7 @@
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\MediaManager\Controllers\Admin'), function() {
     Route::get('files',           array('before' => 'auth', 'uses' => 'Files@index'));
-    Route::get('files/connector', array('before' => 'auth', 'uses' => 'Files@connector'));
+    Route::any('files/connector', array('before' => 'auth', 'uses' => 'Files@connector'));
 
     // Files/thumbnails serving
     Route::get('files/thumbnails/{file}', array('before' => 'auth', 'uses' => 'Files@thumbnails'));

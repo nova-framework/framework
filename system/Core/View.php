@@ -9,103 +9,28 @@
 
 namespace Core;
 
-use Core\BaseView;
-use Core\Template;
-
-use Response;
+use Support\Facades\Facade;
 
 
-/**
- * View class to load views files.
- */
-class View extends BaseView
+class View extends Facade
 {
     /**
-     * @var array Array of legacy BaseView instances
+     * @var array Array of legacy View instances
      */
-    private static $legacyViews = array();
+    private static $items = array();
 
     /**
      * @var array Array of legacy HTTP headers
      */
-    private static $legacyHeaders = array();
+    private static $headers = array();
 
 
     /**
-     * Constructor
-     * @param mixed $path
-     * @param array $data
+     * Get the registered name of the component.
      *
-     * @throws \UnexpectedValueException
+     * @return string
      */
-    protected function __construct($view, $path, array $data = array())
-    {
-        parent::__construct($view, $path, $data);
-    }
-
-    /**
-     * Create a View instance
-     *
-     * @param string $path
-     * @param array|string $data
-     * @param string|null $module
-     * @return View
-     */
-    public static function make($view, $data = array(), $module = null)
-    {
-        list($data, $module) = static::parseParams($data, $module);
-
-        // Prepare the (relative) file path according with Module parameter presence.
-        if (is_null($module)) {
-            $path = str_replace('/', DS, APPDIR ."Views/$view.php");
-        } else {
-            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
-        }
-
-        return new View($view, $path, $data);
-    }
-
-    //--------------------------------------------------------------------
-    // Legacy API Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Return the stored (legacy) instances.
-     *
-     * @return array
-     */
-    public static function getLegacyViews()
-    {
-        return static::$legacyViews;
-    }
-
-    /**
-     * Return the legacy Headers.
-     *
-     * @return array
-     */
-    public static function getLegacyHeaders()
-    {
-        return static::$legacyHeaders;
-    }
-
-    /**
-     * Add the HTTP header(s) to the legacy Headers array.
-     *
-     * @param  string  $header HTTP header text
-     */
-    protected static function addLegacyHeaders($headers)
-    {
-        if(! is_array($headers)) $headers = array($headers);
-
-        foreach ($headers as $header) {
-            list($key, $value) = explode(' ', $header, 1);
-
-            $key = ltrim($key, ':');
-
-            static::$legacyHeaders[$key] = trim($value);
-        }
-    }
+    protected static function getFacadeAccessor() { return 'view'; }
 
     /**
      * Magic Method for handling dynamic functions.
@@ -116,46 +41,85 @@ class View extends BaseView
      */
     public static function __callStatic($method, $params)
     {
-        // Process the legacy Headers management.
+        // Process first the (legacy) methods associated to Headers.
         switch ($method) {
             case 'addHeader':
             case 'addHeaders':
-                return call_user_func_array(array(static::class, 'addLegacyHeaders'), $params);
+                // Add the Header(s) using the legacy method.
+                return call_user_func_array(array(static::class, 'addHeaders'), $params);
 
             case 'sendHeaders':
-                return null;
+                // The Headers should not be sent from there; go out.
+                return;
 
             default:
                 break;
         }
 
-        // The called Class; for getting a View instance.
-        $className = static::class;
-
-        // Flag for fetching the View rendering output.
-        $fetchView = false;
-
-        // Prepare the required information.
-        if ($method == 'fetch') {
-            $fetchView = true;
-        } else if ($method == 'render') {
-            // Nothing to do; there is no Headers sending.
-        } else if ($method == 'renderTemplate') {
-            $className = Template::class;
+        // Get the Factory instance.
+        if ($method == 'renderTemplate') {
+            $accessor = 'template';
         } else {
-            // No valid Compat Method found; go out.
-            return null;
+            $accessor = static::getFacadeAccessor();
         }
 
-        // Create a View instance, using the current Class and the given parameters.
-        $view = call_user_func_array(array($className, 'make'), $params);
+        $instance = static::resolveFacadeInstance($accessor);
 
-        if ($fetchView) {
-            // Render the object and return the captured output.
-            return $view->fetch();
+        //
+        // Process the requested method.
+
+        if (! str_starts_with($method, 'render')) {
+            // Call the non-static method from the View Factory instance.
+            return call_user_func_array(array($instance, $method), $params);
         }
 
-        array_push(static::$legacyViews, $view);
+        // Create a View instance calling the Factory.
+        $view = call_user_func_array(array($instance, 'make'), $params);
+
+        // Push the View instance to (legacy) items.
+        array_push(static::$items, $view);
+    }
+
+    //--------------------------------------------------------------------
+    // Legacy API Methods
+    //--------------------------------------------------------------------
+
+    /**
+     * Return the stored (legacy) View instances.
+     *
+     * @return array
+     */
+    public static function getItems()
+    {
+        return static::$items;
+    }
+
+    /**
+     * Return the stored (legacy) Headers.
+     *
+     * @return array
+     */
+    public static function getHeaders()
+    {
+        return static::$headers;
+    }
+
+    /**
+     * Add the HTTP header(s) to the legacy Headers array.
+     *
+     * @param  string  $header HTTP header text
+     */
+    protected static function addHeaders($headers)
+    {
+        if(! is_array($headers)) $headers = array($headers);
+
+        foreach ($headers as $header) {
+            list($key, $value) = explode(' ', $header, 1);
+
+            $key = ltrim($key, ':');
+
+            static::$headers[$key] = trim($value);
+        }
     }
 
 }

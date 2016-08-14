@@ -8,7 +8,7 @@
 
 namespace Helpers;
 
-use Core\Template;
+use Support\Facades\Template;
 
 
 /**
@@ -213,6 +213,6 @@ class Session
         $type = ($type !== null) ? $type : $name;
 
         // Fetch the associated Template Fragment and return the result.
-        return Template::make('message', compact('type', 'icon', 'message'))->fetch();
+        return Template::make('message', compact('type', 'icon', 'message'))->render();
     }
 }

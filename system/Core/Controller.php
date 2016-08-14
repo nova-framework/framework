@@ -10,10 +10,11 @@ namespace Core;
 
 use Core\Config;
 use Core\Language;
-use Core\Template;
 use Core\View;
 use Http\Response;
 use Routing\Controller as BaseController;
+use Support\Contracts\RenderableInterface as Renderable;
+use Support\Facades\Template;
 
 
 /**
@@ -68,35 +69,36 @@ abstract class Controller extends BaseController
      */
     protected function processResponse($response)
     {
-        // If the response which is returned from the Controller's Action is a View instance,
-        // we will assume we want to render it using the Controller's templated environment.
-        if (($this->layout !== false) && ($response instanceof View)) {
-            return Template::make($this->layout, $this->template)->with('content', $response);
-        } else if (! is_null($response)) {
-            return $response;
+        if ($response instanceof Renderable) {
+            // If the response which is returned from the called Action is a Renderable instance,
+            // we will assume we want to render it using the Controller's templated environment.
+            if (($this->layout !== false) && ! $response->isLayout()) {
+                $response = Template::make($this->layout, $this->template)->with('content', $response);
+            }
         }
+
+        // At this point, we will return any not null response.
+        if (! is_null($response)) return $response;
 
         // If the response which is returned from the Controller's Action is null and we have
         // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
-        // Retrieve the Legacy View instances.
-        $views = View::getLegacyViews();
+        // Get the (legacy) Headers stored on the View Facade.
+        $headers = View::getHeaders();
 
-        if (! empty($views)) {
-            $content = '';
+        // Retrieve the (legacy) View instances stored on the View Facade.
+        $items = View::getItems();
 
-            $headers = View::getLegacyHeaders();
+        // Setup the default value of the response.
+        $response = '';
 
-            // Fetch every View instance and append it to the Response content.
-            foreach ($views as $view) {
-                $content .= $view->fetch();
-            }
-
-            // Create a Response instance from gathered information and return it.
-            $response = new Response($content, 200, $headers);
+        // Render every View instance and append the result to the response.
+        foreach ($items as $item) {
+            $response .= $item->render();
         }
 
-        return $response;
+        // Create a Response instance from gathered information and return it.
+        return new Response($response, 200, $headers);
     }
 
     /**
@@ -121,7 +123,7 @@ abstract class Controller extends BaseController
     /**
      * Return a default View instance.
      *
-     * @return \Core\View
+     * @return \View\View
      */
     protected function getView(array $data = array())
     {

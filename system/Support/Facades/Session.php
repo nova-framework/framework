@@ -2,8 +2,8 @@
 
 namespace Support\Facades;
 
-use Core\Template;
 use Support\Facades\Facade;
+use Support\Facades\Template;
 use Support\MessageBag;
 
 
@@ -141,7 +141,7 @@ class Session extends Facade
         }
 
         // Fetch the associated Template Fragment and return the result.
-        return Template::make('message', compact('type', 'message'), TEMPLATE)->fetch();
+        return Template::make('message', compact('type', 'message'), TEMPLATE)->render();
     }
 
     /**

@@ -23,10 +23,13 @@ function access($attr, $path, $data, $volume)
             :  null;                                  // else elFinder decide it itself
 }
 
-//
-$opts = Config::get('elfinder');
+// Retrieve the options.
+$options = Config::get('elfinder');
 
-//
-$connector = new \elFinderConnector(new elFinder($opts), true);
+// Create a elFinder instance.
+$elfinder = new \elFinder($options);
 
+$connector = new \elFinderConnector($elfinder, true);
+
+// Run the elFinder Connector.
 $connector->run();

@@ -1,6 +1,6 @@
 <?php
 
-$elFinderPath = APPDIR .'Modules/MediaManager/Lib/ElFinder/';
+$elFinderPath = APPDIR .'Modules/MediaManager/Lib/elFinder/';
 
 require $elFinderPath .'elFinderConnector.class.php';
 require $elFinderPath .'elFinder.class.php';

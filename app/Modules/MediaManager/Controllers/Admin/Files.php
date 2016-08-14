@@ -49,7 +49,7 @@ class Files extends Controller
         return $this->getView();
     }
 
-    public function preview($file = null)
+    public function preview($file)
     {
         // Sanitize the variable.
         $path = filter_var($file, FILTER_SANITIZE_URL);

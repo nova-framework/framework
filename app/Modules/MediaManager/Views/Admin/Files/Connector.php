@@ -18,13 +18,13 @@ require $elFinderPath .'elFinderVolumeLocalFileSystem.class.php';
 
 function access($attr, $path, $data, $volume)
 {
-    return (strpos(basename($path), '.') === 0)      // if file/folder begins with '.' (dot)
-            ? !($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
-            :  null;                                 // else elFinder decide it itself
+    return (strpos(basename($path), '.') === 0)       // if file/folder begins with '.' (dot)
+            ? ! ($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
+            :  null;                                  // else elFinder decide it itself
 }
 
 //
-$opts = Config::get('elfinder_options');
+$opts = Config::get('elfinder');
 
 //
 $connector = new \elFinderConnector(new elFinder($opts), true);

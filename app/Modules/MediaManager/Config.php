@@ -12,7 +12,7 @@ use Core\Config;
 /**
  * Configuration constants and options.
  */
-Config::set('elfinder_options', array(
+Config::set('elfinder', array(
     'locale' => 'en_US.UTF-8',
     'debug' => false,
     'roots' => array(

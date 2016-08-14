@@ -27,9 +27,10 @@ function access($attr, $path, $data, $volume)
 $options = Config::get('elfinder');
 
 // Create a elFinder instance.
-$elfinder = new \elFinder($options);
+$elfinder = new elFinder($options);
 
-$connector = new \elFinderConnector($elfinder, true);
+// Create a elFinder Connector instance.
+$connector = new elFinderConnector($elfinder, true);
 
 // Run the elFinder Connector.
 $connector->run();

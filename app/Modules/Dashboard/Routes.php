@@ -10,7 +10,7 @@
 /** Define static routes. */
 
 // The Adminstrations's Dashboard.
-Router::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Dashboard\Controllers\Admin'), function() {
-    Router::get('',          array('before' => 'auth', 'uses' => 'Dashboard@index'));
-    Router::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
+Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Dashboard\Controllers\Admin'), function() {
+    Route::get('',          array('before' => 'auth', 'uses' => 'Dashboard@index'));
+    Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
 });

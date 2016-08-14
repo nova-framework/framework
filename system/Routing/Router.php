@@ -240,18 +240,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Register catchAll route.
-     *
-     * @param $callback
-     */
-    public function catchAll($action)
-    {
-        $methods = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE');
-
-        return $this->addRoute($methods, '(:all)', $action);
-    }
-
-    /**
      * Defines a Route Group.
      *
      * @param string $group The scope of the current Routes Group
@@ -293,13 +281,19 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function resource($basePath, $controller)
     {
-        $this->addRoute('GET',                 $basePath,                 $controller .'@index');
-        $this->addRoute('GET',                 $basePath .'/create',      $controller .'@create');
-        $this->addRoute('POST',                $basePath,                 $controller .'@store');
-        $this->addRoute('GET',                 $basePath .'/(:any)',      $controller .'@show');
-        $this->addRoute('GET',                 $basePath .'/(:any)/edit', $controller .'@edit');
-        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/(:any)',      $controller .'@update');
-        $this->addRoute('DELETE',              $basePath .'/(:any)',      $controller .'@delete');
+        if ('unnamed' == Config::get('routing.parameters', 'named')) {
+            $id = '(:any)';
+        } else {
+            $id = '{id}';
+        }
+
+        $this->addRoute('GET',                 $basePath,                    $controller .'@index');
+        $this->addRoute('GET',                 $basePath .'/create',         $controller .'@create');
+        $this->addRoute('POST',                $basePath,                    $controller .'@store');
+        $this->addRoute('GET',                 $basePath .'/' .$id,          $controller .'@show');
+        $this->addRoute('GET',                 $basePath .'/' .$id .'/edit', $controller .'@edit');
+        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/' .$id,          $controller .'@update');
+        $this->addRoute('DELETE',              $basePath .'/' .$id,          $controller .'@delete');
     }
 
     /**
@@ -356,9 +350,13 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addFallthroughRoute($controller, $uri)
     {
-        $route = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
+        if ('unnamed' == Config::get('routing.parameters', 'named')) {
+            $this->any($uri .'/(:all)', $controller .'@missingMethod');
+        } else {
+            $route = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
 
-        $route->where('_missing', '(.*)');
+            $route->where('_missing', '(.*)');
+        }
     }
 
     /**

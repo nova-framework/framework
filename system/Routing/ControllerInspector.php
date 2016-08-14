@@ -2,6 +2,7 @@
 
 namespace Routing;
 
+use Core\Config;
 use Helpers\Inflector;
 
 use ReflectionClass;
@@ -128,6 +129,10 @@ class ControllerInspector
      */
     public function addUriWildcards($uri)
     {
+        if ('unnamed' == Config::get('routing.parameters', 'named')) {
+             return $uri .'(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any))))))))';
+        }
+
         return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
     }
 

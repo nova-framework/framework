@@ -10,88 +10,88 @@
 /** Define static routes. */
 
 // The default Auth Routes.
-Router::get('login',  array(
+Route::get('login',  array(
     'before' => 'guest',
     'uses'   => 'App\Modules\Users\Controllers\Authorize@login'
 ));
 
-Router::post('login', array(
+Route::post('login', array(
     'before' => 'guest|csrf',
     'uses'   => 'App\Modules\Users\Controllers\Authorize@postLogin'
 ));
 
-Router::get('logout', array(
+Route::get('logout', array(
     'before' => 'auth',
     'uses'   => 'App\Modules\Users\Controllers\Authorize@logout'
 ));
 
 // The Password Remind.
-Router::get('password/remind', array(
+Route::get('password/remind', array(
     'before' => 'guest',
     'uses'   => 'App\Modules\Users\Controllers\Authorize@remind'
 ));
 
-Router::post('password/remind', array(
+Route::post('password/remind', array(
     'before' => 'guest|csrf',
     'uses'   => 'App\Modules\Users\Controllers\Authorize@postRemind'
 ));
 
 // The Password Reset.
-Router::get('password/reset/{token?}', array(
+Route::get('password/reset/{token?}', array(
     'before' => 'guest',
     'uses'   => 'App\Modules\Users\Controllers\Authorize@reset'
 ));
 
-Router::post('password/reset', array(
+Route::post('password/reset', array(
     'before' => 'guest|csrf',
     'uses'   => 'App\Modules\Users\Controllers\Authorize@postReset'
 ));
 
 // The Account Registration.
-Router::get('register', array(
+Route::get('register', array(
     'before' => 'guest',
     'uses'   => 'App\Modules\Users\Controllers\Registrar@create'
 ));
 
-Router::post('register', array(
+Route::post('register', array(
     'before' => 'guest|csrf',
     'uses'   => 'App\Modules\Users\Controllers\Registrar@store'
 ));
 
-Router::get('register/verify/{token?}', array(
+Route::get('register/verify/{token?}', array(
     'before' => 'guest',
     'uses'   => 'App\Modules\Users\Controllers\Registrar@verify'
 ));
 
-Router::get('register/status', array(
+Route::get('register/status', array(
     'before' => 'guest',
     'uses'   => 'App\Modules\Users\Controllers\Registrar@status'
 ));
 
 // The Adminstration Routes.
-Router::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
+Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
     // The User's Profile.
-    Router::get( 'users/profile', array('before' => 'auth',      'uses' => 'Users@profile'));
-    Router::post('users/profile', array('before' => 'auth|csrf', 'uses' => 'Users@postProfile'));
+    Route::get( 'users/profile', array('before' => 'auth',      'uses' => 'Users@profile'));
+    Route::post('users/profile', array('before' => 'auth|csrf', 'uses' => 'Users@postProfile'));
 
     // The Users CRUD.
-    Router::get( 'users',              array('before' => 'auth',      'uses' => 'Users@index'));
-    Router::get( 'users/create',       array('before' => 'auth',      'uses' => 'Users@create'));
-    Router::post('users',              array('before' => 'auth|csrf', 'uses' => 'Users@store'));
-    Router::get( 'users/{id}',         array('before' => 'auth',      'uses' => 'Users@show'));
-    Router::get( 'users/{id}/edit',    array('before' => 'auth',      'uses' => 'Users@edit'));
-    Router::post('users/{id}',         array('before' => 'auth|csrf', 'uses' => 'Users@update'));
-    Router::post('users/{id}/destroy', array('before' => 'auth|csrf', 'uses' => 'Users@destroy'));
+    Route::get( 'users',              array('before' => 'auth',      'uses' => 'Users@index'));
+    Route::get( 'users/create',       array('before' => 'auth',      'uses' => 'Users@create'));
+    Route::post('users',              array('before' => 'auth|csrf', 'uses' => 'Users@store'));
+    Route::get( 'users/{id}',         array('before' => 'auth',      'uses' => 'Users@show'));
+    Route::get( 'users/{id}/edit',    array('before' => 'auth',      'uses' => 'Users@edit'));
+    Route::post('users/{id}',         array('before' => 'auth|csrf', 'uses' => 'Users@update'));
+    Route::post('users/{id}/destroy', array('before' => 'auth|csrf', 'uses' => 'Users@destroy'));
 
     // The Users Search.
-    Router::post( 'users/search', array('before' => 'auth', 'uses' => 'Users@search'));
+    Route::post( 'users/search', array('before' => 'auth', 'uses' => 'Users@search'));
 
     // The Roles CRUD.
-    Router::get( 'roles',              array('before' => 'auth',      'uses' => 'Roles@index'));
-    Router::get( 'roles/create',       array('before' => 'auth',      'uses' => 'Roles@create'));
-    Router::post('roles',              array('before' => 'auth|csrf', 'uses' => 'Roles@store'));
-    Router::get( 'roles/{id}',         array('before' => 'auth',      'uses' => 'Roles@show'));
-    Router::get( 'roles/{id}/edit',    array('before' => 'auth',      'uses' => 'Roles@edit'));
-    Router::post('roles/{id}',         array('before' => 'auth|csrf', 'uses' => 'Roles@update'));
-    Router::post('roles/{id}/destroy', array('before' => 'auth|csrf', 'uses' => 'Roles@destroy'));
+    Route::get( 'roles',              array('before' => 'auth',      'uses' => 'Roles@index'));
+    Route::get( 'roles/create',       array('before' => 'auth',      'uses' => 'Roles@create'));
+    Route::post('roles',              array('before' => 'auth|csrf', 'uses' => 'Roles@store'));
+    Route::get( 'roles/{id}',         array('before' => 'auth',      'uses' => 'Roles@show'));
+    Route::get( 'roles/{id}/edit',    array('before' => 'auth',      'uses' => 'Roles@edit'));
+    Route::post('roles/{id}',         array('before' => 'auth|csrf', 'uses' => 'Roles@update'));
+    Route::post('roles/{id}/destroy', array('before' => 'auth|csrf', 'uses' => 'Roles@destroy'));
 });

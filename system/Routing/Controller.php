@@ -54,9 +54,6 @@ abstract class Controller
         $this->method = $method;
         $this->params = $params;
 
-        // Notify the interested Listeners about the iminent Controller's execution.
-        Event::fire('framework.controller.executing', array($this, $method, $params));
-
         // Before the Action execution stage.
         $response = $this->before();
 

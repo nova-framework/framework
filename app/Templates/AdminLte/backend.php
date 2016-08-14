@@ -181,6 +181,9 @@ $langMenuLinks = ob_get_clean();
             <li <?php if ($baseUri == 'admin/roles') { echo "class='active'"; } ?>>
                 <a href="<?= site_url('admin/roles'); ?>"><i class="fa fa-book"></i> <span><?= __d('admin_lte', 'Roles'); ?></span></a>
             </li>
+            <li <?php if ($baseUri == 'admin/files') { echo "class='active'"; } ?>>
+                <a href="<?= site_url('admin/files'); ?>"><i class="fa fa-file"></i> <span><?= __d('admin_lte', 'Files'); ?></span></a>
+            </li>
 
             <?php } ?>
         </ul>

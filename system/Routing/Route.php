@@ -180,6 +180,7 @@ class Route
         $compiler = $this->getCompiler();
 
         if ($this->namedParams) {
+            // We are using the Named Parameters on Route compilation.
             $optionals = $this->extractOptionalParameters();
 
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);

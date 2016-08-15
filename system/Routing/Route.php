@@ -20,13 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 class Route
 {
     /**
-     * The route compiler instance.
-     *
-     * @var \Routing\RouteCompiler
-     */
-    protected $compiler;
-
-    /**
      * The URI pattern the Route responds to.
      *
      * @var string
@@ -54,6 +47,13 @@ class Route
      */
     protected $wheres = array();
 
+    /**
+     * The route compiler instance.
+     *
+     * @var \Routing\RouteCompiler
+     */
+    protected $compiler;
+    
     /**
      * The matched Route parameters.
      *

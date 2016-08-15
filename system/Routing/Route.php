@@ -103,7 +103,7 @@ class Route
             $this->prefix($this->action['prefix']);
         }
 
-        // Wheter or not are used the Named Parameters.
+        //
         $this->namedParams = $namedParams;
     }
 

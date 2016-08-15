@@ -7,7 +7,6 @@ use App\Core\Controller;
 use Routing\FileDispatcher;
 
 use Auth;
-use Input;
 use Request;
 
 

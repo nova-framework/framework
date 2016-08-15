@@ -31,12 +31,12 @@ App::after(function($request, $response)
 /** Define Route Filters. */
 
 // A Testing Filter which dump the matched Route.
-Router::filter('test', function($route, $request) {
+Route::filter('test', function($route, $request) {
     echo '<pre style="margin: 10px;">' .htmlspecialchars(var_export($route, true)) .'</pre>';
 });
 
 // A simple CSRF Filter.
-Router::filter('csrf', function($route, $request) {
+Route::filter('csrf', function($route, $request) {
     $token = $request->input('csrfToken');
 
     $method = $request->method();
@@ -48,7 +48,7 @@ Router::filter('csrf', function($route, $request) {
 });
 
 // Referer checking Filter.
-Router::filter('referer', function($route, $request) {
+Route::filter('referer', function($route, $request) {
     // Check if the visitor come to this Route from another site.
     $referer = $request->header('referer');
 
@@ -59,26 +59,16 @@ Router::filter('referer', function($route, $request) {
 });
 
 // Authentication Filters.
-Router::filter('auth', function($route, $request) {
+Route::filter('auth', function($route, $request) {
     if (! Auth::check()) {
          // User is not logged in, redirect him to Login Page.
          return Redirect::to('login');
     }
 });
 
-Router::filter('guest', function($route, $request) {
+Route::filter('guest', function($route, $request) {
     if (! Auth::guest()) {
         // User is authenticated, redirect him to Dashboard Page.
         return Redirect::to('admin/dashboard');
     }
 });
-
-// Role-based Authorization Filter.
-Router::filter('roles', function($route, $request, $response, $roles = null) {
-    if (! is_null($roles) && ! Auth::user()->hasRole($roles)) {
-         $status = __('You are not authorized to access this resource.');
-
-         return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-    }
-});
-

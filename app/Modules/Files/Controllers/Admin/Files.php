@@ -17,6 +17,10 @@ class Files extends Controller
 {
     private $dispatcher;
 
+
+    /**
+     * Create a new Files Controller instance.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -74,7 +78,7 @@ class Files extends Controller
      */
     protected function serve($path)
     {
-        // Get the Response required to serve this file path.
+        // Get the Response from File Dispatcher instance.
         $response = $this->dispatcher->serve($path);
 
         // Setup the Response against the Request instance.

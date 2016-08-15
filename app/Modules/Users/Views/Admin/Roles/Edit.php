@@ -1,17 +1,3 @@
-<?php
-
-//
-$opt_name = Input::old('name');
-$opt_slug = Input::old('slug');
-$opt_desc = Input::old('description');
-
-//
-$opt_name = ! empty($opt_name) ? $opt_name : $role->name;
-$opt_slug = ! empty($opt_slug) ? $opt_slug : $role->slug;
-$opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
-
-?>
-
 <section class="content-header">
     <h1><?= __d('users', 'Edit Role'); ?></h1>
     <ol class="breadcrumb">
@@ -40,19 +26,19 @@ $opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="name"><?= __d('users', 'Name'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="name" id="name" type="text" class="form-control" value="<?= $opt_name; ?>" placeholder="<?= __d('users', 'Name'); ?>">
+                    <input name="name" id="name" type="text" class="form-control" value="<?= Input::old('name', $role->name); ?>" placeholder="<?= __d('users', 'Name'); ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="slug"><?= __d('users', 'Slug'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="slug" id="slug" type="text" class="form-control" value="<?= $opt_slug; ?>" placeholder="<?= __d('users', 'Slug'); ?>">
+                    <input name="slug" id="slug" type="text" class="form-control" value="<?= Input::old('slug', $role->slug); ?>" placeholder="<?= __d('users', 'Slug'); ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="description"><?= __d('users', 'Description'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="description" id="description" type="text" class="form-control" value="<?= $opt_desc; ?>" placeholder="<?= __d('users', 'Description'); ?>">
+                    <input name="description" id="description" type="text" class="form-control" value="<?= Input::old('description', $role->description); ?>" placeholder="<?= __d('users', 'Description'); ?>">
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -66,7 +52,7 @@ $opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
             </div>
 
             <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
-            <input type="hidden" name="userId" value="<?= $role->id; ?>" />
+            <input type="hidden" name="roleId" value="<?= $role->id; ?>" />
 
             </form>
         </div>

@@ -28,7 +28,8 @@ Route::group(array('prefix' => 'demo', 'namespace' => 'App\Controllers'), functi
     Route::get('password/{password}', 'Demo@password');
 
     //Route::get('request(/(:any)(/(:any)(/(:all))))', 'Demo@request');
-    Route::get('request/{param1?}/{param2?}/{slug?}', 'Demo@request')->where('slug', '.*');
+    Route::get('request/{param1?}/{param2?}/{slug?}', 'Demo@request')
+        ->where('slug', '.*');
 
     //Route::get('test(/(:any)(/(:any)(/(:any)(/(:all)))))', array('before' => 'test', 'uses' => 'Demo@test'));
     Route::get('test/{param1?}/{param2?}/{param3?}/{slug?}', array('before' => 'test', 'uses' => 'Demo@test'))

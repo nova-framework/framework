@@ -111,16 +111,6 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * @param  string $title
-     *
-     * @return \Core\Controller
-     */
-    protected function title($title)
-    {
-        View::share('title', $title);
-    }
-
-    /**
      * Return a default View instance.
      *
      * @return \View\View

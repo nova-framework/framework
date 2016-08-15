@@ -22,7 +22,7 @@ foreach ($languages as $code => $info) {
 $langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo LANGUAGE_CODE; ?>">
+<html lang="<?= $language; ?>">
 <head>
     <meta charset="utf-8">
     <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>

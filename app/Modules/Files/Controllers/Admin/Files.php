@@ -41,7 +41,7 @@ class Files extends Controller
     public function index()
     {
         return $this->getView()
-            ->shares('title', __d('files', 'File Manager'));
+            ->shares('title', __d('files', 'Files'));
     }
 
     public function connector()

@@ -8,7 +8,6 @@
 
 namespace Routing;
 
-use Core\Config;
 use Http\Request;
 use Routing\RouteCompiler;
 
@@ -83,8 +82,9 @@ class Route
      * @param string|array $methods HTTP methods
      * @param string $uri URL pattern
      * @param string|array|callable $action Callback function or options
+     * @param bool $namedParams Wheter or not are used the Named Parameters
      */
-    public function __construct($methods, $uri, $action)
+    public function __construct($methods, $uri, $action, $namedParams = true)
     {
         $uri = trim($uri, '/');
 
@@ -103,10 +103,8 @@ class Route
             $this->prefix($this->action['prefix']);
         }
 
-        // Wheter or not use the Named Parameters.
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-            $this->namedParams = false;
-        }
+        // Wheter or not are used the Named Parameters.
+        $this->namedParams = $namedParams;
     }
 
     /**

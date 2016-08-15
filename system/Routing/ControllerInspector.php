@@ -2,7 +2,6 @@
 
 namespace Routing;
 
-use Core\Config;
 use Helpers\Inflector;
 
 use ReflectionClass;
@@ -29,14 +28,12 @@ class ControllerInspector
     /**
      * ControllerInspector constructor.
      *
+     * @param bool $namedParams Wheter or not are used the Named Parameters
      * @codeCoverageIgnore
      */
-    public function __construct()
+    public function __construct($namedParams = true)
     {
-        // Wheter or not use the Named Parameters.
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-            $this->namedParams = false;
-        }
+        $this->namedParams = $namedParams;
     }
 
     /**

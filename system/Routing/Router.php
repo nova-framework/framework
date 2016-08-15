@@ -132,7 +132,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         $this->container = $container ?: new Container();
 
-        // Wheter or not use the Named Parameters.
+        // Wheter or not are used the Named Parameters.
         if ('unnamed' == Config::get('routing.parameters', 'named')) {
             $this->namedParams = false;
         }
@@ -440,7 +440,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function newRoute($methods, $uri, $action)
     {
-        return new Route($methods, $uri, $action);
+        return new Route($methods, $uri, $action, $this->namedParams);
     }
 
     /**
@@ -804,7 +804,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getInspector()
     {
-        return $this->inspector ?: $this->inspector = new ControllerInspector();
+        return $this->inspector ?: $this->inspector = new ControllerInspector($this->namedParams);
     }
 
     /**

@@ -77,7 +77,7 @@ class Demo extends Controller
         //$uri = '(:all)';
 
         //
-        $route = new Route('GET', $uri, array(), false);
+        $route = new Route('GET', $uri, null, false);
 
         // Match the Route.
         $request = Request::instance();

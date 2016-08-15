@@ -53,7 +53,7 @@ class Route
      * @var \Routing\RouteCompiler
      */
     protected $compiler;
-    
+
     /**
      * The matched Route parameters.
      *
@@ -94,6 +94,8 @@ class Route
     public function __construct($methods, $uri, $action, $namedParams = true)
     {
         $uri = trim($uri, '/');
+
+        if (! is_array($action)) $action = array('uses' => $action);
 
         //
         $this->uri = ! empty($uri) ? $uri : '/';

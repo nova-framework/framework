@@ -5,7 +5,7 @@
 
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo LANGUAGE_CODE; ?>">
+<html lang="<?= Language::code(); ?>">
 <head>
     <meta charset="utf-8">
     <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>

@@ -12,7 +12,7 @@ use Helpers\Hooks;
 /** Define static routes. */
 
 // Default Routing
-Router::get('', 'App\Controllers\Welcome@index');
+Router::get('/', 'App\Controllers\Welcome@index');
 Router::get('subpage', 'App\Controllers\Welcome@subPage');
 
 // Demo Routes

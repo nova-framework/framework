@@ -10,12 +10,7 @@
 /** Define static routes. */
 
 // The alternate Framework's Language Changer.
-/*
-Route::any('language/{code}', array(
-    'before' => 'referer',
-    'uses'   => 'App\Modules\Settings\Controllers\Language@change'
-));
-*/
+//Route::get('language/{code}', array('before' => 'referer', 'uses' => 'App\Modules\Settings\Controllers\Language@change'));
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Settings\Controllers\Admin'), function() {

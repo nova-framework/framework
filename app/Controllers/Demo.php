@@ -76,23 +76,18 @@ class Demo extends Controller
         $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
         //$uri = '(:all)';
 
-        $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
-
         //
-        $route = new Route('GET', $uri, function() {
-            //
-        });
+        $route = new Route('GET', $uri, array(), false);
 
-        //
-        $pattern = $route->compileRoute(true);
-
-        $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
-
-        //
+        // Match the Route.
         $request = Request::instance();
 
-        if ($route->matches($request, true, true)) {
-            $content .= '<pre>' .var_export($route->parameters(), true) .'</pre>';
+        if ($route->matches($request)) {
+            $content = '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
+        } else {
+            $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
+
+            $content .= '<pre>' .htmlspecialchars($route->regex()) .'</pre>';
         }
 
         return View::make('Default')

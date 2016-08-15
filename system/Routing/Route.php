@@ -130,7 +130,7 @@ class Route
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function matches(Request $request, $includingMethod = true, $forceLegacy = false)
+    public function matches(Request $request, $includingMethod = true)
     {
         // Attempt to match the Route Method if it is requested.
         if ($includingMethod && ! in_array($request->method(), $this->methods)) {
@@ -138,7 +138,7 @@ class Route
         }
 
         // Compile and retrieve the Route regex for matching.
-        $regex = $this->compileRoute($forceLegacy);
+        $regex = $this->compileRoute();
 
         // Attempt to match the Request URI to the Route regex.
         if (preg_match($regex, $request->path(), $matches) === 1) {
@@ -168,11 +168,11 @@ class Route
      *
      * @return string
      */
-    public function compileRoute($forceLegacy = false)
+    public function compileRoute()
     {
         $compiler = new RouteCompiler($this->wheres);
 
-        if ($this->namedParams && ! $forceLegacy) {
+        if ($this->namedParams) {
             // Compile the standard Route pattern, using the Named Parameters.
             $optionals = $this->extractOptionalParameters();
 

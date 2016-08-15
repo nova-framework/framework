@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="role"><?= __('Role'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <?php $optRole = Input::old('role', $role->id);?>
+                    <?php $optRole = Input::old('role', $user->role_id);?>
                     <select name="role" id="role" class="form-control select2">
                         <?php foreach ($roles as $role) { ?>
                         <option value="<?= $role->id ?>" <?php if ($optRole == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>

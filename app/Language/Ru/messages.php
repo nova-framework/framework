@@ -25,6 +25,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Subpage' => 'Подстраница',
   'Test' => 'Тест',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'Спасибо за создание учетной записи на {0}. Пожалуйста, перейдите по ссылке ниже, чтобы подтвердить свой адрес электронной почты: {1}',
+  'The catch-all Route' => '',
   'This is a test!!!' => 'Это тест!!!',
   'Timestamp:' => 'Метка времени',
   'To reset your password, complete this form: {0}.' => 'Чтобы сбросить пароль, заполните эту форму: {0}',

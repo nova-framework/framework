@@ -95,8 +95,6 @@ class Route
     {
         $uri = trim($uri, '/');
 
-        if (! is_array($action)) $action = array('uses' => $action);
-
         //
         $this->uri = ! empty($uri) ? $uri : '/';
 
@@ -215,7 +213,7 @@ class Route
      */
     protected function parseAction($action)
     {
-        if (is_string($action) || is_callable($action)) {
+        if (is_null($action) || is_string($action) || is_callable($action)) {
             // A string or Closure is given as Action.
             return array('uses' => $action);
         } else if (! isset($action['uses'])) {

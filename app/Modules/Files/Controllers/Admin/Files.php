@@ -55,10 +55,10 @@ class Files extends Controller
 
     public function preview($path)
     {
-        // Calculate the preview file path.
+        // Calculate the Preview file path.
         $path = str_replace('/', DS, ROOTDIR .ltrim($path, '/'));
 
-        return $this->serve($path);
+        return $this->serveFile($path);
     }
 
     public function thumbnails($thumbnail)
@@ -66,7 +66,7 @@ class Files extends Controller
         // Calculate the thumbnail file path.
         $path = str_replace('/', DS, APPDIR .'Storage/Files/thumbnails/' .$thumbnail);
 
-        return $this->serve($path);
+        return $this->serveFile($path);
     }
 
     /**
@@ -76,19 +76,12 @@ class Files extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function serve($path)
+    protected function serveFile($path)
     {
-        // Get the Response from File Dispatcher instance.
-        $response = $this->dispatcher->serve($path);
+        $request = Request::instance();
 
-        // Setup the Response against the Request instance.
-        if($response instanceof BinaryFileResponse) {
-            $request = Request::instance();
-
-            $response->isNotModified($request);
-        }
-
-        return $response;
+        // Get the Response from File Dispatcher instance and return it.
+        return $this->dispatcher->serve($path, $request);
     }
 
 }

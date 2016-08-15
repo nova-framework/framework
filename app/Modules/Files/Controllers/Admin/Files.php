@@ -6,8 +6,6 @@ use App\Core\Controller;
 
 use Routing\FileDispatcher;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
 use Auth;
 use Input;
 use Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\MediaManager\Controllers\Admin;
+namespace App\Modules\Files\Controllers\Admin;
 
 use App\Core\Controller;
 
@@ -29,7 +29,7 @@ class Files extends Controller
     {
         // Check the User Authorization.
         if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('users', 'You are not authorized to access this resource.');
+            $status = __d('files', 'You are not authorized to access this resource.');
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
         }
@@ -41,7 +41,7 @@ class Files extends Controller
     public function index()
     {
         return $this->getView()
-            ->shares('title', __d('media_manager', 'File Manager'));
+            ->shares('title', __d('files', 'File Manager'));
     }
 
     public function connector()

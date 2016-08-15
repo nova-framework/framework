@@ -1,8 +1,8 @@
 <section class="content-header">
-    <h1><?= __d('media_manager', 'Files'); ?></h1>
+    <h1><?= __d('files', 'Files'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
-        <li><?= __d('media_manager', 'Files'); ?></li>
+        <li><?= __d('files', 'Files'); ?></li>
     </ol>
 </section>
 
@@ -17,13 +17,13 @@
 
 Assets::css(array(
     'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css',
-    site_url('modules/media_manager/assets/css/elfinder.min.css'),
-    site_url('modules/media_manager/assets/css/theme.css')
+    site_url('modules/files/assets/css/elfinder.min.css'),
+    site_url('modules/files/assets/css/theme.css')
 ));
 
 Assets::js(array(
     'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js',
-    site_url('modules/media_manager/assets/js/elfinder.full.js')
+    site_url('modules/files/assets/js/elfinder.full.js')
 ));
 
 ?>

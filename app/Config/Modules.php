@@ -15,5 +15,5 @@ Config::set('modules', array(
     'Settings',
     'Demos',
     'Users',
-    'MediaManager',
+    'Files',
 ));

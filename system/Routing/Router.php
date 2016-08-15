@@ -294,16 +294,16 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function resource($basePath, $controller)
     {
-        $id = $this->namedParams ? '{id}' : '(:any)';
+        $param = $this->namedParams ? '{id}' : '(:any)';
 
         //
-        $this->addRoute('GET',                 $basePath,                    $controller .'@index');
-        $this->addRoute('GET',                 $basePath .'/create',         $controller .'@create');
-        $this->addRoute('POST',                $basePath,                    $controller .'@store');
-        $this->addRoute('GET',                 $basePath .'/' .$id,          $controller .'@show');
-        $this->addRoute('GET',                 $basePath .'/' .$id .'/edit', $controller .'@edit');
-        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/' .$id,          $controller .'@update');
-        $this->addRoute('DELETE',              $basePath .'/' .$id,          $controller .'@delete');
+        $this->addRoute('GET',                 $basePath,                       $controller .'@index');
+        $this->addRoute('GET',                 $basePath .'/create',            $controller .'@create');
+        $this->addRoute('POST',                $basePath,                       $controller .'@store');
+        $this->addRoute('GET',                 $basePath .'/' .$param,          $controller .'@show');
+        $this->addRoute('GET',                 $basePath .'/' .$param .'/edit', $controller .'@edit');
+        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/' .$param,          $controller .'@update');
+        $this->addRoute('DELETE',              $basePath .'/' .$param,          $controller .'@delete');
     }
 
     /**

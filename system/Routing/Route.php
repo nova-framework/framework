@@ -172,17 +172,19 @@ class Route
     {
         $compiler = new RouteCompiler($this->wheres);
 
-        if ($forceLegacy || ! $this->namedParams) {
+        if ($this->namedParams && ! $forceLegacy) {
+            // Compile the standard Route pattern, using the Named Parameters.
+            $optionals = $this->extractOptionalParameters();
+
+            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
+            $this->regex = $compiler->compileRoute($uri, $optionals);
+        } else {
             // We are using the Unnamed Parameters on Route compilation.
-            return ($this->regex = $compiler->compileLegacyRoute($this->uri));
+            $this->regex = $compiler->compileLegacyRoute($this->uri);
         }
 
-        // Compile the standard Route pattern, using the Named Parameters.
-        $optionals = $this->extractOptionalParameters();
-
-        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-        return ($this->regex = $compiler->compileRoute($uri, $optionals));
+        return $this->regex;
     }
 
     /**

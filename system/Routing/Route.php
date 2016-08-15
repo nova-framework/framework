@@ -173,7 +173,6 @@ class Route
         $compiler = new RouteCompiler($this->wheres);
 
         if ($this->namedParams) {
-            // Compile the standard Route pattern, using the Named Parameters.
             $optionals = $this->extractOptionalParameters();
 
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);

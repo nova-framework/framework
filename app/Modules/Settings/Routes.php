@@ -11,8 +11,7 @@
 
 /*
 // The alternate Framework's Language Changer.
-//Router::any('language/(:any)', array(
-Router::any('language/{code}', array(
+Route::any('language/{code}', array(
     'before' => 'referer',
     'uses'   => 'App\Modules\Settings\Controllers\Language@change'
 ));

@@ -34,12 +34,16 @@ class FileDispatcher
         // /modules/blog/assets/css/style.css
         // /assets/css/style.css
 
-        $uri = $request->path();
-
+        // Check the HTTP Method.
         if (! in_array($request->method(), array('GET', 'HEAD'))) {
             // No allowed HTTP method on the Request.
             return null;
-        } else if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
+        }
+
+        // Check the URI.
+        $uri = $request->path();
+
+        if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $path = ROOTDIR .'assets' .DS .$matches[1];
         } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
             $module = Inflector::classify($matches[2]);

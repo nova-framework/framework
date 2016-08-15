@@ -36,7 +36,7 @@ Assets::js(array(
             url : '<?= site_url('admin/files/connector'); ?>',
             dateFormat: 'M d, Y h:i A',
             fancyDateFormat: '$1 H:m:i',
-            lang: 'en',
+            lang: '<?= Language::code(); ?>',
             height: 600,
             cookie : {
                 expires: 30,

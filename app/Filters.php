@@ -67,11 +67,7 @@ Router::filter('auth', function($route, $request) {
 });
 
 // Role-based Authorization Filter.
-Router::filter('roles', function($route, $request) {
-    $action = $route->getAction();
-
-    $roles = array_get($action, 'roles');
-
+Router::filter('roles', function($route, $request, $response, $roles = null) {
     if (! is_null($roles) && ! Auth::user()->hasRole($roles)) {
          $status = __('You are not authorized to access this resource.');
 

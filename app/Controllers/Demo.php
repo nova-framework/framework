@@ -70,7 +70,7 @@ class Demo extends Controller
         return (isset($pattern[0]) && (false !== strpos(static::SEPARATORS, $pattern[0]))) ? $pattern[0] : '';
     }
 
-    public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')
+    public function test()
     {
         //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
         $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
@@ -302,6 +302,15 @@ class Demo extends Controller
 
         return View::make('Default')
             ->shares('title', __('Cache'))
+            ->with('content', $content);
+    }
+
+    public function catchAll($slug)
+    {
+        $content = '<pre>' .htmlspecialchars($slug) .'</pre>';
+
+        return View::make('Default')
+            ->shares('title', __('The catch-all Route'))
             ->with('content', $content);
     }
 }

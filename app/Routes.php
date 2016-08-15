@@ -29,11 +29,11 @@ Route::group(array('prefix' => 'demo', 'namespace' => 'App\Controllers'), functi
 
     //Route::get('request(/(:any)(/(:any)(/(:all))))', 'Demo@request');
     Route::get('request/{param1?}/{param2?}/{slug?}', 'Demo@request')
-        ->where('slug', '.*');
+        ->where('slug', '(.*)');
 
     //Route::get('test(/(:any)(/(:any)(/(:any)(/(:all)))))', array('before' => 'test', 'uses' => 'Demo@test'));
     Route::get('test/{param1?}/{param2?}/{param3?}/{slug?}', array('before' => 'test', 'uses' => 'Demo@test'))
-        ->where('slug', '.*');
+        ->where('slug', '(.*)');
 });
 
 // The Framework's Language Changer.
@@ -42,5 +42,12 @@ Route::get('language/{code}', array(
     'before' => 'referer',
     'uses'   => 'App\Controllers\Language@change'
 ));
+
+//
+// The catch-all Route - when enabled it will capture any URI.
+// NOTE: be sure that this Route will be the last one defined.
+
+//Route::any('(:all)', 'App\Controllers\Demo@catchAll');
+Route::any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');
 
 /** End default Routes */

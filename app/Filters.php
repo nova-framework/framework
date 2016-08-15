@@ -66,6 +66,13 @@ Router::filter('auth', function($route, $request) {
     }
 });
 
+Router::filter('guest', function($route, $request) {
+    if (! Auth::guest()) {
+        // User is authenticated, redirect him to Dashboard Page.
+        return Redirect::to('admin/dashboard');
+    }
+});
+
 // Role-based Authorization Filter.
 Router::filter('roles', function($route, $request, $response, $roles = null) {
     if (! is_null($roles) && ! Auth::user()->hasRole($roles)) {
@@ -75,9 +82,3 @@ Router::filter('roles', function($route, $request, $response, $roles = null) {
     }
 });
 
-Router::filter('guest', function($route, $request) {
-    if (! Auth::guest()) {
-        // User is authenticated, redirect him to Dashboard Page.
-        return Redirect::to('admin/dashboard');
-    }
-});

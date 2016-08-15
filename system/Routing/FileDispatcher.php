@@ -60,7 +60,7 @@ class FileDispatcher
             return null;
         }
 
-        // Serve the specified Asset File.
+        // Get the Response instance and return it.
         return $this->serve($path, $request);
     }
 

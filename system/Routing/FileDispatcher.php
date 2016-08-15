@@ -38,7 +38,7 @@ class FileDispatcher
 
         if (! in_array($request->method(), array('GET', 'HEAD'))) {
             // No allowed HTTP method on the Request.
-            $path = null;
+            return null;
         } else if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
             $path = ROOTDIR .'assets' .DS .$matches[1];
         } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
@@ -53,13 +53,9 @@ class FileDispatcher
             }
         } else {
             // The URI is not a Asset File path.
-            $path = null;
+            return null;
         }
 
-        // IF there is no valid file path, return null for Routing to continue.
-        if (is_null($path)) return null;
-
-        //
         // Serve the specified Asset File.
         return $this->serve($path, $request);
     }

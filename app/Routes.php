@@ -44,8 +44,8 @@ Route::get('language/{code}', array(
 ));
 
 //
-// The catch-all Route - when enabled it will capture any URI.
-// NOTE: be sure that this Route will be the last one defined.
+// The catch-all Route - when enabled, it will capture any URI, with any HTTP Method.
+// NOTE: ensure that it is the last one defined, otherwise it will mask other Routes.
 
 //Route::any('(:all)', 'App\Controllers\Demo@catchAll');
 Route::any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');

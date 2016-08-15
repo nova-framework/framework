@@ -20,6 +20,13 @@ use Symfony\Component\HttpFoundation\Response;
 class Route
 {
     /**
+     * The route compiler instance.
+     *
+     * @var \Routing\RouteCompiler
+     */
+    protected $compiler;
+
+    /**
      * The URI pattern the Route responds to.
      *
      * @var string
@@ -170,7 +177,7 @@ class Route
      */
     public function compileRoute()
     {
-        $compiler = new RouteCompiler($this->wheres);
+        $compiler = $this->getCompiler();
 
         if ($this->namedParams) {
             $optionals = $this->extractOptionalParameters();
@@ -546,6 +553,16 @@ class Route
     }
 
     /**
+     * Get a Route Compiler instance.
+     *
+     * @return \Routing\RouteCompiler
+     */
+    public function getCompiler()
+    {
+        return $this->compiler ?: $this->compiler = new RouteCompiler($this->wheres);
+    }
+
+    /**
      * Get the URI associated with the route.
      *
      * @return string
@@ -724,4 +741,5 @@ class Route
 
         throw new \LogicException("Route regex is not compiled.");
     }
+
 }

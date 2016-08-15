@@ -70,6 +70,14 @@ class Route
     private $regex;
 
     /**
+     * Boolean indicating the use of Named Parameters on not.
+     *
+     * @var bool $namedParams
+     */
+    private $namedParams = true;
+
+
+    /**
      * Constructor.
      *
      * @param string|array $methods HTTP methods
@@ -93,6 +101,11 @@ class Route
 
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
+        }
+
+        // Wheter or not use the Named Parameters.
+        if ('unnamed' == Config::get('routing.parameters', 'named')) {
+            $this->namedParams = false;
         }
     }
 
@@ -161,7 +174,7 @@ class Route
     {
         $compiler = new RouteCompiler($this->wheres);
 
-        if ($forceLegacy || ('unnamed' == Config::get('routing.parameters', 'named'))) {
+        if ($forceLegacy || ! $this->namedParams) {
             // We are using the Unnamed Parameters on Route compilation.
             return ($this->regex = $compiler->compileLegacyRoute($this->uri));
         }

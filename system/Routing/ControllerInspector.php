@@ -19,6 +19,27 @@ class ControllerInspector
     protected $verbs = array('any', 'get', 'post', 'put', 'patch', 'delete', 'head', 'options');
 
     /**
+     * Boolean indicating the use of Named Parameters on not.
+     *
+     * @var bool $namedParams
+     */
+    protected $namedParams = true;
+
+
+    /**
+     * ControllerInspector constructor.
+     *
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        // Wheter or not use the Named Parameters.
+        if ('unnamed' == Config::get('routing.parameters', 'named')) {
+            $this->namedParams = false;
+        }
+    }
+
+    /**
      * Get the routable methods for a controller.
      *
      * @param  string  $controller
@@ -129,11 +150,11 @@ class ControllerInspector
      */
     public function addUriWildcards($uri)
     {
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-             return $uri .'(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any))))))))';
+        if ($this->namedParams) {
+            return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
         }
 
-        return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
+        return $uri .'(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any))))))))';
     }
 
 }

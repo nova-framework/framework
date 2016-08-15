@@ -37,11 +37,8 @@ Route::group(array('prefix' => 'demo', 'namespace' => 'App\Controllers'), functi
 });
 
 // The Framework's Language Changer.
-//Route::get('language/(:any)', array(
-Route::get('language/{code}', array(
-    'before' => 'referer',
-    'uses'   => 'App\Controllers\Language@change'
-));
+//Route::get('language/(:any)', array('before' => 'referer', 'uses' => 'App\Controllers\Language@change'));
+Route::get('language/{code}', array('before' => 'referer', 'uses' => 'App\Controllers\Language@change'));
 
 //
 // The catch-all Route - when enabled, it will capture any URI, with any HTTP Method.

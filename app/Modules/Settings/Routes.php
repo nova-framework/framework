@@ -9,8 +9,8 @@
 
 /** Define static routes. */
 
-/*
 // The alternate Framework's Language Changer.
+/*
 Route::any('language/{code}', array(
     'before' => 'referer',
     'uses'   => 'App\Modules\Settings\Controllers\Language@change'

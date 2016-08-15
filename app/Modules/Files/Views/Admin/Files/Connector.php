@@ -1,11 +1,11 @@
 <?php
 
-$elFinderPath = APPDIR .'Modules/Files/Lib/elFinder/';
+$basePath = str_replace('/', DS, APPDIR .'Modules/Files/Lib/elFinder/');
 
-require $elFinderPath .'elFinderConnector.class.php';
-require $elFinderPath .'elFinder.class.php';
-require $elFinderPath .'elFinderVolumeDriver.class.php';
-require $elFinderPath .'elFinderVolumeLocalFileSystem.class.php';
+require $basePath .'elFinderConnector.class.php';
+require $basePath .'elFinder.class.php';
+require $basePath .'elFinderVolumeDriver.class.php';
+require $basePath .'elFinderVolumeLocalFileSystem.class.php';
 
 /**
  * Simple function to demonstrate how to control file access using "accessControl" callback.
@@ -23,14 +23,14 @@ function access($attr, $path, $data, $volume)
             :  null;                                  // else elFinder decide it itself
 }
 
-// Retrieve the options.
-$options = Config::get('elfinder');
+// Retrieve the elFinder options.
+$options = Config::get('elFinder');
 
 // Create a elFinder instance.
-$elfinder = new elFinder($options);
+$elFinder = new elFinder($options);
 
 // Create a elFinder Connector instance.
-$connector = new elFinderConnector($elfinder, true);
+$connector = new elFinderConnector($elFinder, true);
 
 // Run the elFinder Connector.
 $connector->run();

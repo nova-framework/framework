@@ -56,6 +56,9 @@ class FileDispatcher
             $path = null;
         }
 
+        // IF there is no valid file path, return null for Routing to continue.
+        if (is_null($path)) return null;
+
         //
         // Serve the specified Asset File.
         return $this->serve($path, $request);

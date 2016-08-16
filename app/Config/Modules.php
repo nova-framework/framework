@@ -12,6 +12,7 @@ use Core\Config;
 
 Config::set('modules', array(
     'System',
+    'Cron',
     'Dashboard',
     'Users',
     'Files',

@@ -45,8 +45,8 @@ class Manager
     /**
      * Gets an instance of the given Adapter name.
      *
-     * @param string  $name The Adapter name
-     * @param array   $config The Adapter's configuration array
+     * @param  string  $name The Adapter name
+     * @param  array   $config The Adapter's configuration array
      *
      * @return \App\Modules\Cron\Adapters\AbstractAdapter|null
      */
@@ -57,20 +57,22 @@ class Manager
         }
 
         //
-        $callback = $this->adapters[$name];
+        $isCreated = false;
 
-        if (is_string($callback) && class_exists($callback)) {
-            $callback = new $callback($config);
+        $adapter = $this->adapters[$name];
 
-            $created = true;
+        if (is_string($adapter) && class_exists($adapter)) {
+            $adapter = new $adapter($config);
+
+            $isCreated = true;
         }
 
-        if ($callback instanceof Adapter) {
-            if (! isset($created)) {
-                $callback->config($config);
+        if ($adapter instanceof Adapter) {
+            if (! $isCreated) {
+                $adapter->config($config);
             }
 
-            return $callback;
+            return $adapter;
         }
 
         return null;

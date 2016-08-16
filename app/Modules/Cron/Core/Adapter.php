@@ -19,7 +19,7 @@ abstract class Adapter
      */
     public function config($config = array())
     {
-        //
+        return $this;
     }
 
     /**

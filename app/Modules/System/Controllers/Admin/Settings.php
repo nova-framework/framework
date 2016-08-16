@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\Settings\Controllers\Admin;
+namespace App\Modules\System\Controllers\Admin;
 
 use Core\View;
 use Helpers\FastCache;
@@ -26,20 +26,12 @@ use Validator;
 
 class Settings extends Controller
 {
-    protected $template = 'AdminLte';
-    protected $layout   = 'backend';
-
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     protected function before()
     {
         // Check the User Authorization.
         if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('settings', 'You are not authorized to access this resource.');
+            $status = __d('system', 'You are not authorized to access this resource.');
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
         }
@@ -69,18 +61,18 @@ class Settings extends Controller
 
         $attributes = array(
             // The Application.
-            'siteName'        => __d('settings', 'Site Name'),
-            'siteSkin'        => __d('settings', 'Site Skin'),
+            'siteName'        => __d('system', 'Site Name'),
+            'siteSkin'        => __d('system', 'Site Skin'),
 
             // The Mailer
-            'mailDriver'      => __d('settings', 'Mail Driver'),
-            'mailHost'        => __d('settings', 'Server Name'),
-            'mailPort'        => __d('settings', 'Server Port'),
-            'mailFromAddress' => __d('settings', 'Mail from Adress'),
-            'mailFromName'    => __d('settings', 'Mail from Name'),
-            'mailEncryption'  => __d('settings', 'Encryption'),
-            'mailUsername'    => __d('settings', 'Server Username'),
-            'mailPassword'    => __d('settings', 'Server Password'),
+            'mailDriver'      => __d('system', 'Mail Driver'),
+            'mailHost'        => __d('system', 'Server Name'),
+            'mailPort'        => __d('system', 'Server Port'),
+            'mailFromAddress' => __d('system', 'Mail from Adress'),
+            'mailFromName'    => __d('system', 'Mail from Name'),
+            'mailEncryption'  => __d('system', 'Encryption'),
+            'mailUsername'    => __d('system', 'Server Username'),
+            'mailPassword'    => __d('system', 'Server Password'),
         );
 
         return Validator::make($data, $rules, array(), $attributes);
@@ -107,7 +99,7 @@ class Settings extends Controller
         );
 
         return $this->getView()
-            ->shares('title', __d('settings', 'Settings'))
+            ->shares('title', __d('system', 'Settings'))
             ->withOptions($options);
     }
 
@@ -134,7 +126,7 @@ class Settings extends Controller
             Config::set('mail.password',     $input['mailPassword']);
 
             // Prepare the flash message.
-            $status = __d('settings', 'The Settings was successfully updated.');
+            $status = __d('system', 'The Settings was successfully updated.');
 
             return Redirect::to('admin/settings')->withStatus($status);
         }

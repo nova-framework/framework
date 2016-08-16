@@ -36,17 +36,17 @@ class Profiler
 
             $totalQueries = count($queries);
 
-            $queriesStr = ($totalQueries == 1) ? __d('system', 'query') : __d('system', 'queries');
+            $queriesStr = ($totalQueries == 1) ? __d('nova', 'query') : __d('nova', 'queries');
         } else {
             $totalQueries = 0;
 
-            $queriesStr = __d('system', 'queries');
+            $queriesStr = __d('nova', 'queries');
         }
 
         $estimatedUsers = sprintf("%0d", intval(25 / $execTime));
 
         //
-        $retval = __d('system', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>', $elapsedTime, $memoryUsage, $totalQueries, $queriesStr, $estimatedUsers);
+        $retval = __d('nova', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>', $elapsedTime, $memoryUsage, $totalQueries, $queriesStr, $estimatedUsers);
 
         return $retval;
     }

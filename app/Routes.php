@@ -3,57 +3,48 @@
  * Routes - all standard Routes are defined here.
  *
  * @author David Carr - dave@daveismyname.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
-
-use Helpers\Hooks;
 
 
 /** Define static routes. */
 
-// Default Routing
-Router::any('', 'App\Controllers\Welcome@index');
-Router::any('subpage', 'App\Controllers\Welcome@subPage');
+// The default Routing
+Route::get('/',       'App\Controllers\Welcome@index');
+Route::get('subpage', 'App\Controllers\Welcome@subPage');
 
-// Demo Routes
-Router::any('demo/database',            'App\Controllers\Demo@database');
+// The Demo Routes
+Route::group(array('prefix' => 'demo', 'namespace' => 'App\Controllers'), function() {
+    Route::get('database', 'Demo@database');
+    Route::get('events',   'Demo@events');
+    Route::get('mailer',   'Demo@mailer');
+    Route::get('session',  'Demo@session');
+    Route::get('validate', 'Demo@validate');
+    Route::get('paginate', 'Demo@paginate');
+    Route::get('cache',    'Demo@cache');
 
-//Router::any('demo/password/(:any)',     'App\Controllers\Demo@password');
-Router::any('demo/password/{password}', 'App\Controllers\Demo@password');
+    //Route::get('password/(:any)',     'Demo@password');
+    Route::get('password/{password}', 'Demo@password');
 
-Router::any('demo/events',              'App\Controllers\Demo@events');
-Router::any('demo/mailer',              'App\Controllers\Demo@mailer');
-Router::any('demo/session',             'App\Controllers\Demo@session');
-Router::any('demo/validate',            'App\Controllers\Demo@validate');
-Router::any('demo/paginate',            'App\Controllers\Demo@paginate');
-Router::any('demo/cache',               'App\Controllers\Demo@cache');
+    //Route::get('request(/(:any)(/(:any)(/(:all))))', 'Demo@request');
+    Route::get('request/{param1?}/{param2?}/{slug?}', 'Demo@request')
+        ->where('slug', '(.*)');
 
-//Router::any('demo/request(/(:any)(/(:any)(/(:all))))', 'App\Controllers\Demo@request');
-Router::any('demo/request/{param1?}/{param2?}/{slug?}', 'App\Controllers\Demo@request')->where('slug', '.*');
-
-/*
-Router::any('demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))', array(
-    'before' => 'test',
-    'uses'   => 'App\Controllers\Demo@test'
-));
-*/
-Router::any('demo/test/{param1?}/{param2?}/{param3?}/{slug?}', array(
-    'before' => 'test',
-    'uses'   => 'App\Controllers\Demo@test'
-))->where('slug', '.*');
+    //Route::get('test(/(:any)(/(:any)(/(:any)(/(:all)))))', array('before' => 'test', 'uses' => 'Demo@test'));
+    Route::get('test/{param1?}/{param2?}/{param3?}/{slug?}', array('before' => 'test', 'uses' => 'Demo@test'))
+        ->where('slug', '(.*)');
+});
 
 // The Framework's Language Changer.
-//Router::any('language/(:any)', array(
-Router::any('language/{code}', array(
-    'before' => 'referer',
-    'uses'   => 'App\Controllers\Language@change'
-));
+//Route::get('language/(:any)', array('before' => 'referer', 'uses' => 'App\Controllers\Language@change'));
+Route::get('language/{code}', array('before' => 'referer', 'uses' => 'App\Controllers\Language@change'));
+
+//
+// The catch-all Route - when enabled, it will capture any URI, with any HTTP Method.
+// NOTE: ensure that it is the last one defined, otherwise it will mask other Routes.
+
+//Route::any('(:all)', 'App\Controllers\Demo@catchAll');
+Route::any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');
 
 /** End default Routes */
-
-/** Module Routes. */
-$hooks = Hooks::get();
-
-$hooks->run('routes');
-/** End Module Routes. */
-

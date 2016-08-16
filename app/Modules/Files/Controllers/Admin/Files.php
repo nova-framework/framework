@@ -6,11 +6,9 @@ use App\Core\Controller;
 
 use Routing\FileDispatcher;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
 use Auth;
-use Input;
 use Request;
+use Response;
 
 
 class Files extends Controller
@@ -18,28 +16,23 @@ class Files extends Controller
     private $dispatcher;
 
 
-    /**
-     * Create a new Files Controller instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        //
-        $this->dispatcher = new FileDispatcher();
-    }
-
     protected function before()
     {
         // Check the User Authorization.
-        if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('files', 'You are not authorized to access this resource.');
-
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        if (Auth::user()->hasRole('administrator')) {
+            // The User is authorized; continue the Execution Flow.
+            return parent::before();
         }
 
-        // Leave to parent's method the Execution Flow decisions.
-        return parent::before();
+        if (Request::ajax()) {
+            // On an AJAX Request; just return Error 403 (Access denied)
+            return Response::make('', 403);
+        }
+
+        // Redirect the User to his/hers Dashboard with a warning message.
+        $status = __d('files', 'You are not authorized to access this resource.');
+
+        return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
     }
 
     public function index()
@@ -50,6 +43,9 @@ class Files extends Controller
 
     public function connector()
     {
+        // Disable the auto-rendering on a (Template) Layout.
+        $this->layout = false;
+
         return $this->getView();
     }
 
@@ -70,7 +66,7 @@ class Files extends Controller
     }
 
     /**
-     * Serve a File.
+     * Return a Symfony Response instance for serving a File
      *
      * @param string $path
      *
@@ -80,8 +76,20 @@ class Files extends Controller
     {
         $request = Request::instance();
 
-        // Get the Response from File Dispatcher instance and return it.
-        return $this->dispatcher->serve($path, $request);
+        // Get a File Dispatcher instance.
+        $dispatcher = $this->getDispatcher();
+
+        return $dispatcher->serve($path, $request);
+    }
+
+    /**
+     * Return a Files Dispatcher instance
+     *
+     * @return \Routing\FileDispatcher
+     */
+    protected function getDispatcher()
+    {
+        return $this->dispatcher ?: $this->dispatcher = new FileDispatcher();
     }
 
 }

@@ -25,11 +25,11 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Subpage' => 'زیر صفحه',
   'Test' => 'تست',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'بابت ایجاد حساب کاربری با {0} سپاس گذاریم. لطفا لینک زیر را جهت فعال سازی ایمیل خود کلیک کنید: {1}',
+  'The catch-all Route' => '',
   'This is a test!!!' => 'این یک آزمایش میباشد!!!',
   'Timestamp:' => 'برچسب زمان',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
   'Validation API' => '',
   'Welcome' => 'خوش امدید',
   'Welcome to {0}!' => 'به {0} خوش آمدید!',
-  'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید.',
 );

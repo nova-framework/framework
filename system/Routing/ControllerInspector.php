@@ -2,7 +2,6 @@
 
 namespace Routing;
 
-use Core\Config;
 use Helpers\Inflector;
 
 use ReflectionClass;
@@ -17,6 +16,25 @@ class ControllerInspector
      * @var array
      */
     protected $verbs = array('any', 'get', 'post', 'put', 'patch', 'delete', 'head', 'options');
+
+    /**
+     * Boolean indicating the use of Named Parameters on not.
+     *
+     * @var bool $namedParams
+     */
+    protected $namedParams = true;
+
+
+    /**
+     * ControllerInspector constructor.
+     *
+     * @param bool $namedParams Wheter or not are used the Named Parameters
+     * @codeCoverageIgnore
+     */
+    public function __construct($namedParams = true)
+    {
+        $this->namedParams = $namedParams;
+    }
 
     /**
      * Get the routable methods for a controller.
@@ -129,11 +147,11 @@ class ControllerInspector
      */
     public function addUriWildcards($uri)
     {
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-             return $uri .'(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any))))))))';
+        if ($this->namedParams) {
+            return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
         }
 
-        return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
+        return $uri .'(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any))))))))';
     }
 
 }

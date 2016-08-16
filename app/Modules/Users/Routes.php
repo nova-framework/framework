@@ -9,64 +9,26 @@
 
 /** Define static routes. */
 
-// The default Auth Routes.
-Route::get('login',  array(
-    'before' => 'guest',
-    'uses'   => 'App\Modules\Users\Controllers\Authorize@login'
-));
+Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers'), function() {
+    // The default Auth Routes.
+    Route::get( 'login',  array('before' => 'guest',      'uses' => 'Authorize@login'));
+    Route::post('login',  array('before' => 'guest|csrf', 'uses' => 'Authorize@postLogin'));
+    Route::get( 'logout', array('before' => 'auth',       'uses' => 'Authorize@logout'));
 
-Route::post('login', array(
-    'before' => 'guest|csrf',
-    'uses'   => 'App\Modules\Users\Controllers\Authorize@postLogin'
-));
+    // The Password Remind.
+    Route::get( 'password/remind', array('before' => 'guest',      'uses' => 'Authorize@remind'));
+    Route::post('password/remind', array('before' => 'guest|csrf', 'uses' => 'Authorize@postRemind'));
 
-Route::get('logout', array(
-    'before' => 'auth',
-    'uses'   => 'App\Modules\Users\Controllers\Authorize@logout'
-));
+    // The Password Reset.
+    Route::get( 'password/reset/{token?}', array('before' => 'guest',      'uses' => 'Authorize@reset'));
+    Route::post('password/reset',          array('before' => 'guest|csrf', 'uses' => 'Authorize@postReset'));
 
-// The Password Remind.
-Route::get('password/remind', array(
-    'before' => 'guest',
-    'uses'   => 'App\Modules\Users\Controllers\Authorize@remind'
-));
-
-Route::post('password/remind', array(
-    'before' => 'guest|csrf',
-    'uses'   => 'App\Modules\Users\Controllers\Authorize@postRemind'
-));
-
-// The Password Reset.
-Route::get('password/reset/{token?}', array(
-    'before' => 'guest',
-    'uses'   => 'App\Modules\Users\Controllers\Authorize@reset'
-));
-
-Route::post('password/reset', array(
-    'before' => 'guest|csrf',
-    'uses'   => 'App\Modules\Users\Controllers\Authorize@postReset'
-));
-
-// The Account Registration.
-Route::get('register', array(
-    'before' => 'guest',
-    'uses'   => 'App\Modules\Users\Controllers\Registrar@create'
-));
-
-Route::post('register', array(
-    'before' => 'guest|csrf',
-    'uses'   => 'App\Modules\Users\Controllers\Registrar@store'
-));
-
-Route::get('register/verify/{token?}', array(
-    'before' => 'guest',
-    'uses'   => 'App\Modules\Users\Controllers\Registrar@verify'
-));
-
-Route::get('register/status', array(
-    'before' => 'guest',
-    'uses'   => 'App\Modules\Users\Controllers\Registrar@status'
-));
+    // The Account Registration.
+    Route::get( 'register',                 array('before' => 'guest',      'uses' => 'Registrar@create'));
+    Route::post('register',                 array('before' => 'guest|csrf', 'uses' => 'Registrar@store'));
+    Route::get( 'register/verify/{token?}', array('before' => 'guest',      'uses' => 'Registrar@verify'));
+    Route::get( 'register/status',          array('before' => 'guest',      'uses' => 'Registrar@status'));
+});
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {

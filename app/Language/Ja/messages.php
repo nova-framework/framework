@@ -23,11 +23,11 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Subpage' => '',
   'Test' => '',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
+  'The catch-all Route' => '',
   'This is a test!!!' => '',
   'Timestamp:' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Validation API' => '',
   'Welcome' => '',
   'Welcome to {0}!' => '',
-  'You are not authorized to access this resource.' => '',
 );

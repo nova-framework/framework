@@ -1,9 +1,3 @@
-<?php
-
-//
-$opt_role = Input::old('role');
-
-?>
 <section class="content-header">
     <h1><?= __d('users', 'Create User'); ?></h1>
     <ol class="breadcrumb">
@@ -38,10 +32,11 @@ $opt_role = Input::old('role');
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="role"><?= __('Role'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
+                    <?php $optRole = Input::old('role'); ?>
                     <select name="role" id="role" class="form-control select2">
-                        <option value="" <?php if (empty($opt_role)) echo 'selected'; ?>>- <?= __('Choose a Role'); ?> -</option>
+                        <option value="" <?php if (empty($optRole)) echo 'selected'; ?>>- <?= __('Choose a Role'); ?> -</option>
                         <?php foreach ($roles as $role) { ?>
-                        <option value="<?= $role->id ?>" <?php if ($opt_role == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>
+                        <option value="<?= $role->id ?>" <?php if ($optRole == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>
                         <?php } ?>
                     </select>
                 </div>

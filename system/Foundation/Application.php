@@ -963,6 +963,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
             'encrypter'      => 'Encryption\Encrypter',
             'db'             => 'Database\DatabaseManager',
             'events'         => 'Events\Dispatcher',
+            'files'          => 'Filesystem\Filesystem',
             'hash'           => 'Hashing\HasherInterface',
             'log'            => 'Log\Writer',
             'mailer'         => 'Mail\Mailer',
@@ -973,7 +974,9 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
             'router'         => 'Routing\Router',
             'session'        => 'Session\SessionManager',
             'session.store'  => 'Session\Store',
+            'url'            => 'Routing\UrlGenerator',
             'validator'      => 'Validation\Factory',
+            'view'           => 'View\Factory',
         );
 
         foreach ($aliases as $key => $alias) {

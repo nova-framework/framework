@@ -1,19 +1,3 @@
-<?php
-
-//
-$opt_username = Input::old('username');
-$opt_realname = Input::old('realname');
-$opt_email    = Input::old('email');
-$opt_role     = Input::old('role');
-
-//
-$opt_username = ! empty($opt_username) ? $opt_username : $user->username;
-$opt_realname = ! empty($opt_realname) ? $opt_realname : $user->realname;
-$opt_email    = ! empty($opt_email)    ? $opt_email    : $user->email;
-$opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
-
-?>
-
 <section class="content-header">
     <h1><?= __d('users', 'Edit User'); ?></h1>
     <ol class="breadcrumb">
@@ -42,15 +26,16 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="username" id="username" type="text" class="form-control" value="<?= $opt_username; ?>" placeholder="<?= __d('users', 'Username'); ?>">
+                    <input name="username" id="username" type="text" class="form-control" value="<?= Input::old('username', $user->username); ?>" placeholder="<?= __d('users', 'Username'); ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="role"><?= __('Role'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
+                    <?php $optRole = Input::old('role', $user->role_id);?>
                     <select name="role" id="role" class="form-control select2">
                         <?php foreach ($roles as $role) { ?>
-                        <option value="<?= $role->id ?>" <?php if ($opt_role == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>
+                        <option value="<?= $role->id ?>" <?php if ($optRole == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -58,7 +43,7 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="realname"><?= __d('users', 'Name and Surname'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="realname" id="realname" type="text" class="form-control" value="<?= $opt_realname; ?>" placeholder="<?= __d('users', 'Name and Surname'); ?>">
+                    <input name="realname" id="realname" type="text" class="form-control" value="<?= Input::old('realname', $user->realname); ?>" placeholder="<?= __d('users', 'Name and Surname'); ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -76,7 +61,7 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="email" id="email" type="text" class="form-control" value="<?= $opt_email; ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
+                    <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email', $user->email); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
                 </div>
             </div>
             <div class="clearfix"></div>

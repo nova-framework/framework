@@ -8,7 +8,6 @@
 
 namespace Routing;
 
-use Core\Config;
 use Http\Request;
 use Routing\RouteCompiler;
 
@@ -49,6 +48,13 @@ class Route
     protected $wheres = array();
 
     /**
+     * The route compiler instance.
+     *
+     * @var \Routing\RouteCompiler
+     */
+    protected $compiler;
+
+    /**
      * The matched Route parameters.
      *
      * @var array
@@ -70,13 +76,22 @@ class Route
     private $regex;
 
     /**
+     * Boolean indicating the use of Named Parameters on not.
+     *
+     * @var bool $namedParams
+     */
+    private $namedParams = true;
+
+
+    /**
      * Constructor.
      *
      * @param string|array $methods HTTP methods
      * @param string $uri URL pattern
      * @param string|array|callable $action Callback function or options
+     * @param bool $namedParams Wheter or not are used the Named Parameters
      */
-    public function __construct($methods, $uri, $action)
+    public function __construct($methods, $uri, $action, $namedParams = true)
     {
         $uri = trim($uri, '/');
 
@@ -94,6 +109,9 @@ class Route
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
         }
+
+        //
+        $this->namedParams = $namedParams;
     }
 
     /**
@@ -119,7 +137,7 @@ class Route
      * @return bool Match status
      * @internal param string $pattern URL pattern
      */
-    public function matches(Request $request, $includingMethod = true, $forceLegacy = false)
+    public function matches(Request $request, $includingMethod = true)
     {
         // Attempt to match the Route Method if it is requested.
         if ($includingMethod && ! in_array($request->method(), $this->methods)) {
@@ -127,7 +145,7 @@ class Route
         }
 
         // Compile and retrieve the Route regex for matching.
-        $regex = $this->compileRoute($forceLegacy);
+        $regex = $this->compileRoute();
 
         // Attempt to match the Request URI to the Route regex.
         if (preg_match($regex, $request->path(), $matches) === 1) {
@@ -157,21 +175,23 @@ class Route
      *
      * @return string
      */
-    public function compileRoute($forceLegacy = false)
+    public function compileRoute()
     {
-        $compiler = new RouteCompiler($this->wheres);
+        $compiler = $this->getCompiler();
 
-        if ($forceLegacy || ('unnamed' == Config::get('routing.parameters', 'named'))) {
+        if ($this->namedParams) {
+            // We are using the Named Parameters on Route compilation.
+            $optionals = $this->extractOptionalParameters();
+
+            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
+            $this->regex = $compiler->compileRoute($uri, $optionals);
+        } else {
             // We are using the Unnamed Parameters on Route compilation.
-            return ($this->regex = $compiler->compileLegacyRoute($this->uri));
+            $this->regex = $compiler->compileLegacyRoute($this->uri);
         }
 
-        // Compile the standard Route pattern, using the Named Parameters.
-        $optionals = $this->extractOptionalParameters();
-
-        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-        return ($this->regex = $compiler->compileRoute($uri, $optionals));
+        return $this->regex;
     }
 
     /**
@@ -194,8 +214,8 @@ class Route
      */
     protected function parseAction($action)
     {
-        if (is_string($action) || is_callable($action)) {
-            // A string or Closure is given as Action.
+        if (is_null($action) || is_string($action) || is_callable($action)) {
+            // A null, string or Closure is given as Action.
             return array('uses' => $action);
         } else if (! isset($action['uses'])) {
             // Find the Closure in the Action array.
@@ -534,6 +554,16 @@ class Route
     }
 
     /**
+     * Get a Route Compiler instance.
+     *
+     * @return \Routing\RouteCompiler
+     */
+    public function getCompiler()
+    {
+        return $this->compiler ?: $this->compiler = new RouteCompiler($this->wheres);
+    }
+
+    /**
      * Get the URI associated with the route.
      *
      * @return string
@@ -712,4 +742,5 @@ class Route
 
         throw new \LogicException("Route regex is not compiled.");
     }
+
 }

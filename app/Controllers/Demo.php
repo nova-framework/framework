@@ -70,29 +70,24 @@ class Demo extends Controller
         return (isset($pattern[0]) && (false !== strpos(static::SEPARATORS, $pattern[0]))) ? $pattern[0] : '';
     }
 
-    public function test($param1 = '', $param2 = '', $param3 = '', $param4 = '')
+    public function test()
     {
         //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
         $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
         //$uri = '(:all)';
 
-        $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
-
         //
-        $route = new Route('GET', $uri, function() {
-            //
-        });
+        $route = new Route('GET', $uri, null, false);
 
-        //
-        $pattern = $route->compileRoute(true);
-
-        $content .= '<pre>' .htmlspecialchars($pattern) .'</pre>';
-
-        //
+        // Match the Route.
         $request = Request::instance();
 
-        if ($route->matches($request, true, true)) {
-            $content .= '<pre>' .var_export($route->parameters(), true) .'</pre>';
+        if ($route->matches($request)) {
+            $content = '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
+        } else {
+            $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
+
+            $content .= '<pre>' .htmlspecialchars($route->regex()) .'</pre>';
         }
 
         return View::make('Default')
@@ -307,6 +302,15 @@ class Demo extends Controller
 
         return View::make('Default')
             ->shares('title', __('Cache'))
+            ->with('content', $content);
+    }
+
+    public function catchAll($slug)
+    {
+        $content = '<pre>' .htmlspecialchars($slug) .'</pre>';
+
+        return View::make('Default')
+            ->shares('title', __('The catch-all Route'))
             ->with('content', $content);
     }
 }

@@ -20,11 +20,6 @@ class Dashboard extends Controller
     protected $layout   = 'backend';
 
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function index()
     {
         return $this->getView()

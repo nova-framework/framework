@@ -112,6 +112,14 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     public static $methods = array('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS');
 
     /**
+     * Boolean indicating the use of Named Parameters on not.
+     *
+     * @var bool $namedParams
+     */
+    protected $namedParams = true;
+
+
+    /**
      * Router constructor.
      *
      * @codeCoverageIgnore
@@ -123,6 +131,11 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         $this->routes = new RouteCollection();
 
         $this->container = $container ?: new Container();
+
+        // Wheter or not are used the Named Parameters.
+        if ('unnamed' == Config::get('routing.parameters', 'named')) {
+            $this->namedParams = false;
+        }
     }
 
     /**
@@ -281,19 +294,16 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function resource($basePath, $controller)
     {
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-            $id = '(:any)';
-        } else {
-            $id = '{id}';
-        }
+        $param = $this->namedParams ? '{id}' : '(:any)';
 
-        $this->addRoute('GET',                 $basePath,                    $controller .'@index');
-        $this->addRoute('GET',                 $basePath .'/create',         $controller .'@create');
-        $this->addRoute('POST',                $basePath,                    $controller .'@store');
-        $this->addRoute('GET',                 $basePath .'/' .$id,          $controller .'@show');
-        $this->addRoute('GET',                 $basePath .'/' .$id .'/edit', $controller .'@edit');
-        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/' .$id,          $controller .'@update');
-        $this->addRoute('DELETE',              $basePath .'/' .$id,          $controller .'@delete');
+        //
+        $this->addRoute('GET',                 $basePath,                       $controller .'@index');
+        $this->addRoute('GET',                 $basePath .'/create',            $controller .'@create');
+        $this->addRoute('POST',                $basePath,                       $controller .'@store');
+        $this->addRoute('GET',                 $basePath .'/' .$param,          $controller .'@show');
+        $this->addRoute('GET',                 $basePath .'/' .$param .'/edit', $controller .'@edit');
+        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/' .$param,          $controller .'@update');
+        $this->addRoute('DELETE',              $basePath .'/' .$param,          $controller .'@delete');
     }
 
     /**
@@ -350,12 +360,12 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addFallthroughRoute($controller, $uri)
     {
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-            $this->any($uri .'/(:all)', $controller .'@missingMethod');
-        } else {
+        if ($this->namedParams) {
             $route = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
 
             $route->where('_missing', '(.*)');
+        } else {
+            $this->any($uri .'/(:all)', $controller .'@missingMethod');
         }
     }
 
@@ -430,7 +440,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function newRoute($methods, $uri, $action)
     {
-        return new Route($methods, $uri, $action);
+        return new Route($methods, $uri, $action, $this->namedParams);
     }
 
     /**
@@ -794,7 +804,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getInspector()
     {
-        return $this->inspector ?: $this->inspector = new ControllerInspector();
+        return $this->inspector ?: $this->inspector = new ControllerInspector($this->namedParams);
     }
 
     /**

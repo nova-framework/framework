@@ -28,10 +28,6 @@ use Validator;
 
 class Users extends Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     protected function before()
     {

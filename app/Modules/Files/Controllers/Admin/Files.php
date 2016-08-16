@@ -36,7 +36,7 @@ class Files extends Controller
         }
 
         if (Request::ajax()) {
-            // On AJAX Request; just return Error 403 (Access denied)
+            // On an AJAX Request; just return Error 403 (Access denied)
             return Response::make('', 403);
         }
 

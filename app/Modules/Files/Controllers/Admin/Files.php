@@ -47,7 +47,7 @@ class Files extends Controller
 
     public function connector()
     {
-        // Disable the auto-rendering of the returned View instance on a Layout.
+        // Disable the auto-rendering on a (Template) Layout.
         $this->layout = false;
 
         return $this->getView();

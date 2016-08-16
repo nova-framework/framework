@@ -32,5 +32,4 @@ Dieser Inhalt kann in <code>/app/Views/Welcome/Welcome.php</code> geändert werd
   'Validation API' => '',
   'Welcome' => 'Willkommen',
   'Welcome to {0}!' => '',
-  'You are not authorized to access this resource.' => '',
 );

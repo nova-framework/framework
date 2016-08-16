@@ -32,5 +32,4 @@ Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.ph
   'Validation API' => '',
   'Welcome' => 'Bienvenue',
   'Welcome to {0}!' => '',
-  'You are not authorized to access this resource.' => '',
 );

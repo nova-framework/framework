@@ -30,5 +30,4 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Validation API' => '',
   'Welcome' => 'Velkommen',
   'Welcome to {0}!' => 'Velkommen til {0}!',
-  'You are not authorized to access this resource.' => 'Du har ikke adgang til denne side.',
 );

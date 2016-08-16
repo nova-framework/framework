@@ -32,5 +32,4 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Validation API' => 'API проверки',
   'Welcome' => 'Добро пожаловать!',
   'Welcome to {0}!' => 'Добро пожаловать на {0}',
-  'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
 );

@@ -292,43 +292,43 @@
         <tr>
             <td class="green" onclick="changeTab('console');">
                 <var><?= $logCount; ?></var>
-                <h4><?= __d('system', 'Console'); ?></h4>
+                <h4><?= __d('nova', 'Console'); ?></h4>
             </td>
             <td class="blue" onclick="changeTab('speed');">
                 <var><?= $speedTotal; ?></var>
-                <h4><?= __d('system', 'Load Time'); ?></h4>
+                <h4><?= __d('nova', 'Load Time'); ?></h4>
             </td>
             <td class="purple" onclick="changeTab('queries');">
-                <var><?= __d('system', '{0} Queries', $queryCount); ?></var>
-                <h4><?= __d('system', 'Database'); ?></h4>
+                <var><?= __d('nova', '{0} Queries', $queryCount); ?></var>
+                <h4><?= __d('nova', 'Database'); ?></h4>
             </td>
             <td class="orange" onclick="changeTab('memory');">
                 <var><?= $memoryUsed; ?></var>
-                <h4><?= __d('system', 'Memory Used'); ?></h4>
+                <h4><?= __d('nova', 'Memory Used'); ?></h4>
             </td>
             <td class="red" onclick="changeTab('files');">
-                <var><?= __d('system', '{0} Files', $fileCount); ?></var>
-                <h4><?= __d('system', 'Included'); ?></h4>
+                <var><?= __d('nova', '{0} Files', $fileCount); ?></var>
+                <h4><?= __d('nova', 'Included'); ?></h4>
             </td>
             <td class="white" onclick="changeTab('variables');">
-                <var><?= __d('system', 'Variables'); ?></var>
-                <h4><?= __d('system', 'Server Headers'); ?></h4>
+                <var><?= __d('nova', 'Variables'); ?></var>
+                <h4><?= __d('nova', 'Server Headers'); ?></h4>
             </td>
         </tr>
     </table>
 
     <div id='pqp-console' class='pqp-box'>
         <?php if ($logCount == 0) { ?>
-            <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
+            <h3><?= __d('nova', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <table class='side' cellspacing='0'>
             <tr>
-                <td class='alt1'><var><?= $output['logs']['logCount']; ?></var> <h4><?= __d('system', 'Logs'); ?></h4></td>
-                <td class='alt2'><var><?= $output['logs']['errorCount']; ?></var> <h4><?= __d('system', 'Errors'); ?></h4></td>
+                <td class='alt1'><var><?= $output['logs']['logCount']; ?></var> <h4><?= __d('nova', 'Logs'); ?></h4></td>
+                <td class='alt2'><var><?= $output['logs']['errorCount']; ?></var> <h4><?= __d('nova', 'Errors'); ?></h4></td>
             </tr>
             <tr>
-                <td class='alt3'><var><?= $output['logs']['memoryCount']; ?></var> <h4><?= __d('system', 'Memory'); ?></h4></td>
-                <td class='alt4'><var><?= $output['logs']['speedCount']; ?></var> <h4><?= __d('system', 'Speed'); ?></h4></td>
+                <td class='alt3'><var><?= $output['logs']['memoryCount']; ?></var> <h4><?= __d('nova', 'Memory'); ?></h4></td>
+                <td class='alt4'><var><?= $output['logs']['speedCount']; ?></var> <h4><?= __d('nova', 'Speed'); ?></h4></td>
             </tr>
             </table>
             <table class='main' cellspacing='0'>
@@ -356,11 +356,11 @@
 
     <div id="pqp-speed" class="pqp-box">
         <?php if ($speedTotal == 0) { ?>
-            <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
+            <h3><?= __d('nova', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <table class='side' cellspacing='0'>
-                <tr><td><var><?= $output['speedTotals']['total']; ?></var><h4><?= __d('system', 'Load Time'); ?></h4></td></tr>
-                <tr><td class='alt'><var><?= $output['speedTotals']['allowed']; ?> s</var> <h4><?= __d('system', 'Max Execution Time'); ?></h4></td></tr>
+                <tr><td><var><?= $output['speedTotals']['total']; ?></var><h4><?= __d('nova', 'Load Time'); ?></h4></td></tr>
+                <tr><td class='alt'><var><?= $output['speedTotals']['allowed']; ?> s</var> <h4><?= __d('nova', 'Max Execution Time'); ?></h4></td></tr>
             </table>
 
             <table class='main' cellspacing='0'>
@@ -379,12 +379,12 @@
 
     <div id='pqp-queries' class='pqp-box'>
         <?php if($output['queryTotals']['count'] ==  0) { ?>
-            <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
+            <h3><?= __d('nova', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <table class='side' cellspacing='0'>
-            <tr><td><var><?= $output['queryTotals']['count'] ?></var><h4><?= __d('system', 'Total Queries'); ?></h4></td></tr>
-            <tr><td class='alt'><var><?= $output['queryTotals']['time'] ?></var> <h4><?= __d('system', 'Total Time'); ?></h4></td></tr>
-            <tr><td class='last'><var>0</var> <h4><?= __d('system', 'Duplicates'); ?></h4></td></tr>
+            <tr><td><var><?= $output['queryTotals']['count'] ?></var><h4><?= __d('nova', 'Total Queries'); ?></h4></td></tr>
+            <tr><td class='alt'><var><?= $output['queryTotals']['time'] ?></var> <h4><?= __d('nova', 'Total Time'); ?></h4></td></tr>
+            <tr><td class='last'><var>0</var> <h4><?= __d('nova', 'Duplicates'); ?></h4></td></tr>
             </table>
 
                 <table class='main' cellspacing='0'>
@@ -395,11 +395,11 @@
                                 <?= $query['sql']; ?>
                                 <?php if(isset($query['explain'])) { ?>
                                 <em>
-                                    <?= __d('system', 'Possible keys: <b>{0}</b>', isset($query['explain']['possible_keys']) ? $query['explain']['possible_keys'] : ''); ?> &middot;
-                                    <?= __d('system', 'Key Used: <b>{0}</b>', isset($query['explain']['key']) ? $query['explain']['key'] : ''); ?> &middot;
-                                    <?= __d('system', 'Type: <b>{0}</b>', isset($query['explain']['type']) ? $query['explain']['type'] : ''); ?> &middot;
-                                    <?= __d('system', 'Rows: <b>{0}</b>', isset($query['explain']['rows']) ? $query['explain']['rows'] : ''); ?> &middot;
-                                    <?= __d('system', 'Speed: <b>{0}</b>', $query['time']); ?>
+                                    <?= __d('nova', 'Possible keys: <b>{0}</b>', isset($query['explain']['possible_keys']) ? $query['explain']['possible_keys'] : ''); ?> &middot;
+                                    <?= __d('nova', 'Key Used: <b>{0}</b>', isset($query['explain']['key']) ? $query['explain']['key'] : ''); ?> &middot;
+                                    <?= __d('nova', 'Type: <b>{0}</b>', isset($query['explain']['type']) ? $query['explain']['type'] : ''); ?> &middot;
+                                    <?= __d('nova', 'Rows: <b>{0}</b>', isset($query['explain']['rows']) ? $query['explain']['rows'] : ''); ?> &middot;
+                                    <?= __d('nova', 'Speed: <b>{0}</b>', $query['time']); ?>
                                 </em>
                                 <?php } ?>
                             </td>
@@ -412,11 +412,11 @@
 
     <div id="pqp-memory" class="pqp-box">
         <?php if($output['logs']['memoryCount'] == 0) { ?>
-            <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
+            <h3><?= __d('nova', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <table class='side' cellspacing='0'>
-                <tr><td><var><?= $output['memoryTotals']['used']; ?></var><h4><?= __d('system', 'Memory Used'); ?></h4></td></tr>
-                <tr><td class='alt'><var><?= $output['memoryTotals']['total']; ?></var> <h4><?= __d('system', 'Total Available'); ?></h4></td></tr>
+                <tr><td><var><?= $output['memoryTotals']['used']; ?></var><h4><?= __d('nova', 'Memory Used'); ?></h4></td></tr>
+                <tr><td class='alt'><var><?= $output['memoryTotals']['total']; ?></var> <h4><?= __d('nova', 'Total Available'); ?></h4></td></tr>
             </table>
 
             <table class='main' cellspacing='0'>
@@ -435,9 +435,9 @@
 
     <div id='pqp-files' class='pqp-box'>
             <table class='side' cellspacing='0'>
-                <tr><td><var><?= $output['fileTotals']['count']; ?></var><h4><?= __d('system', 'Total Files'); ?></h4></td></tr>
-                <tr><td class='alt'><var><?= $output['fileTotals']['size']; ?></var> <h4><?= __d('system', 'Total Size'); ?></h4></td></tr>
-                <tr><td class='last'><var><?= $output['fileTotals']['largest']; ?></var> <h4><?= __d('system', 'Largest'); ?></h4></td></tr>
+                <tr><td><var><?= $output['fileTotals']['count']; ?></var><h4><?= __d('nova', 'Total Files'); ?></h4></td></tr>
+                <tr><td class='alt'><var><?= $output['fileTotals']['size']; ?></var> <h4><?= __d('nova', 'Total Size'); ?></h4></td></tr>
+                <tr><td class='last'><var><?= $output['fileTotals']['largest']; ?></var> <h4><?= __d('nova', 'Largest'); ?></h4></td></tr>
             </table>
             <table class='main' cellspacing='0'>
                 <?php $class = ''; ?>
@@ -450,17 +450,17 @@
 
     <div id='pqp-variables' class='pqp-box'>
         <?php if(empty($output['variables'])) { ?>
-            <h3><?= __d('system', 'This panel has no log items.'); ?></h3>
+            <h3><?= __d('nova', 'This panel has no log items.'); ?></h3>
         <?php } else { ?>
             <?php $sections = $output['variables']; ?>
             <?php foreach(array('get', 'post', 'headers') as $section) { ?>
                 <?php
                     if ($section == 'get') {
-                        $title = __d('system', 'GET Variables');
+                        $title = __d('nova', 'GET Variables');
                     } else if($section == 'post') {
-                        $title = __d('system', 'POST Variables');
+                        $title = __d('nova', 'POST Variables');
                     } else if($section == 'headers') {
-                        $title = __d('system', 'Server Headers');
+                        $title = __d('nova', 'Server Headers');
                     }
                 ?>
                 <h3 style="text-align: left; font-size: 16px; font-weight: bold; line-height: 40px;"><?= $title; ?></h3>
@@ -485,9 +485,9 @@
                 <div class="logo"><strong>Nova Forensics - Profiler</strong></div>
             </td>
             <td class="actions">
-                <a href="#" onclick="hideProfiler(); return false"><?= __d('system', 'Hide'); ?></a>
-                <a href="#" onclick="toggleDetails(); return false"><?= __d('system', 'Details'); ?></a>
-                <a class="heightToggle" href="#" onclick="toggleHeight(); return false"><?= __d('system', 'Height'); ?></a>
+                <a href="#" onclick="hideProfiler(); return false"><?= __d('nova', 'Hide'); ?></a>
+                <a href="#" onclick="toggleDetails(); return false"><?= __d('nova', 'Details'); ?></a>
+                <a class="heightToggle" href="#" onclick="toggleHeight(); return false"><?= __d('nova', 'Height'); ?></a>
             </td>
         </tr>
     </table>

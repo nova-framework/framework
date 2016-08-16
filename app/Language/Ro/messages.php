@@ -32,5 +32,4 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Validation API' => '',
   'Welcome' => 'Bun venit',
   'Welcome to {0}!' => '',
-  'You are not authorized to access this resource.' => '',
 );

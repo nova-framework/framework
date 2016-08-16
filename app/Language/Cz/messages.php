@@ -32,5 +32,4 @@ Tento obsah lze změnit v <code>/app/Views/Welcome/Welcome.php</code>',
   'Validation API' => '',
   'Welcome' => 'Vítejte',
   'Welcome to {0}!' => '',
-  'You are not authorized to access this resource.' => '',
 );

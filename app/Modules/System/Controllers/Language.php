@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Settings\Controllers;
+namespace App\Modules\System\Controllers;
 
 use Core\Config;
 use Core\Controller;

@@ -8,6 +8,7 @@ use Routing\FileDispatcher;
 
 use Auth;
 use Request;
+use Response;
 
 
 class Files extends Controller
@@ -29,14 +30,20 @@ class Files extends Controller
     protected function before()
     {
         // Check the User Authorization.
-        if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('files', 'You are not authorized to access this resource.');
-
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        if (Auth::user()->hasRole('administrator')) {
+            // User authorized; continue the Execution Flow.
+            return parent::before();
         }
 
-        // Leave to parent's method the Execution Flow decisions.
-        return parent::before();
+        if (Request::ajax()) {
+            // On AJAX Request; just return Error 403 (Access denied)
+            return Response::make('', 403);
+        }
+
+        // Redirect the User to his/hers Dashboard with a warning message.
+        $status = __d('files', 'You are not authorized to access this resource.');
+
+        return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
     }
 
     public function index()

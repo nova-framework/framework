@@ -22,9 +22,6 @@ class Files extends Controller
     public function __construct()
     {
         parent::__construct();
-
-        //
-        $this->dispatcher = new FileDispatcher();
     }
 
     protected function before()
@@ -87,8 +84,19 @@ class Files extends Controller
     {
         $request = Request::instance();
 
-        // Get the Response from File Dispatcher instance and return it.
-        return $this->dispatcher->serve($path, $request);
+        $dispatcher = $this->getDispatcher();
+
+        return $dispatcher->serve($path, $request);
+    }
+
+    /**
+     * Return a Files Dispatcher instance
+     *
+     * @return \Routing\FileDispatcher
+     */
+    protected function getDispatcher()
+    {
+        return $this->dispatcher ?: $this->dispatcher = new FileDispatcher();
     }
 
 }

@@ -26,9 +26,6 @@ use Validator;
 
 class Settings extends Controller
 {
-    protected $template = 'AdminLte';
-    protected $layout   = 'backend';
-
 
     protected function before()
     {

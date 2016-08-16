@@ -76,6 +76,7 @@ class Files extends Controller
     {
         $request = Request::instance();
 
+        // Get a File Dispatcher instance.
         $dispatcher = $this->getDispatcher();
 
         return $dispatcher->serve($path, $request);

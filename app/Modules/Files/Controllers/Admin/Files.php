@@ -20,7 +20,7 @@ class Files extends Controller
     {
         // Check the User Authorization.
         if (Auth::user()->hasRole('administrator')) {
-            // User authorized; continue the Execution Flow.
+            // The User is authorized; continue the Execution Flow.
             return parent::before();
         }
 

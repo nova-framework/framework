@@ -16,14 +16,6 @@ class Files extends Controller
     private $dispatcher;
 
 
-    /**
-     * Create a new Files Controller instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     protected function before()
     {
         // Check the User Authorization.
@@ -74,7 +66,7 @@ class Files extends Controller
     }
 
     /**
-     * Serve a File.
+     * Return a Symfony Response instance for serving a File
      *
      * @param string $path
      *

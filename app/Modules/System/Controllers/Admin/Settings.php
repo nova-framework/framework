@@ -30,11 +30,6 @@ class Settings extends Controller
     protected $layout   = 'backend';
 
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     protected function before()
     {
         // Check the User Authorization.

@@ -47,6 +47,8 @@ class Files extends Controller
 
     public function connector()
     {
+        $this->layout = false;
+        
         return $this->getView();
     }
 

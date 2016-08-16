@@ -9,17 +9,12 @@
 namespace App\Modules\Dashboard\Controllers\Admin;
 
 use Core\View;
-use Helpers\Url;
 
 use App\Core\Controller;
 
 
 class Dashboard extends Controller
 {
-    protected $template = 'AdminLte';
-    protected $layout   = 'backend';
-
-
     public function index()
     {
         return $this->getView()

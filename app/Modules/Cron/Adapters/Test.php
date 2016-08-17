@@ -12,7 +12,7 @@ class Test extends Adapter
     /**
      * Execute the CRON operations.
      */
-    protected function handle()
+    public function handle()
     {
         return 'Hello from the CRON!';
     }

@@ -28,7 +28,7 @@ abstract class Adapter
     /**
      * Handle the assigned tasks.
      */
-    abstract protected function handle();
+    abstract public function handle();
 
     /**
      * Return the Adapter name.

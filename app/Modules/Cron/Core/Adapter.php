@@ -5,7 +5,7 @@ namespace App\Modules\Cron\Core;
 
 abstract class Adapter
 {
-    protected $name = 'Adapter';
+    protected $name = 'CRON Adapter';
 
     /**
      * Create a new Adapter instance.

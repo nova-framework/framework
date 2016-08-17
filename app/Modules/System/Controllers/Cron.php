@@ -54,11 +54,11 @@ class Cron extends Controller
         //
         $title = __d('cron', '{0} - Cron executed on {1}', Config::get('app.name'), $timestamp->formatLocalized('%d %b %Y, %R'));
 
-        $message = '<p>' .implode('</p></p>', $messages) .'</p>';
+        $content = '<p>' .implode('</p></p>', $messages) .'</p>';
 
         return $this->getView()
             ->with('title', $title)
-            ->with('message', $message);
+            ->with('content', $content);
     }
 
 }

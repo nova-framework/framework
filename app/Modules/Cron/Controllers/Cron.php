@@ -29,10 +29,10 @@ class Cron extends Controller
         $timestamp = new Carbon();
 
         // Execute the registered CRON Task.
-        $results = CronManager::execute();
+        $responses = CronManager::execute();
 
-        foreach($results as $item) {
-            list($name, $result) = $item;
+        foreach($responses as $response) {
+            list($name, $result) = $response;
 
             if (is_null($result)) {
                 $result = __d('cron', 'executed.');

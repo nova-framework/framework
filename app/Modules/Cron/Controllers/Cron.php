@@ -37,7 +37,7 @@ class Cron extends Controller
             if (is_null($result)) {
                 continue;
             } else if (is_bool($result)) {
-                $result = $result ? __d('cron', 'successfully executed') : __d('cron', 'execution failed');
+                $result = $result ? __d('cron', 'successfully executed.') : __d('cron', 'execution failed.');
             }
 
             $messages[] = '<b>' .$name .'</b> : ' .$result;

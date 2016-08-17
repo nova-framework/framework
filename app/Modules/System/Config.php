@@ -12,6 +12,7 @@ use Core\Config;
 /**
  * Configuration constants and options.
  */
+ 
 Config::set('cron', array(
     /**
      * The CRON token.

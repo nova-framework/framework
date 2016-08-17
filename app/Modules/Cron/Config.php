@@ -19,9 +19,3 @@ Config::set('cron', array(
      */
     'token' => 'SomeRandomStringThere_1234567890'
 ));
-
-
-// Register a CRON Adapter for testing.
-use App\Modules\Cron\Core\Manager as Cron;
-
-Cron::register('test', 'App\Modules\Cron\Adapters\Test');

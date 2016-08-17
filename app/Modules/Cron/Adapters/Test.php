@@ -7,13 +7,14 @@ use App\Modules\Cron\Core\Adapter;
 
 class Test extends Adapter
 {
+    protected $name = 'CRON Test';
 
     /**
-     * Execute the Adapter assigned tasks.
+     * Execute the CRON operations.
      */
     public function execute()
     {
-        return 'Hello from the CRON Adapter';
+        return array($this->name, 'Hello from the CRON Adapter');
     }
 
 }

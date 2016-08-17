@@ -5,21 +5,14 @@ namespace App\Modules\Cron\Core;
 
 abstract class Adapter
 {
+    protected $name = 'Adapter';
 
     /**
      * Create a new Adapter instance.
      */
-    public function __construct($config = array())
+    public function __construct()
     {
         //
-    }
-
-    /**
-     * Configure the Adapter from the given options.
-     */
-    public function config($config = array())
-    {
-        return $this;
     }
 
     /**
@@ -27,4 +20,13 @@ abstract class Adapter
      */
     abstract public function execute();
 
+    /**
+     * Return the Adapter name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 }

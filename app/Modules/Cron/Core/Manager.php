@@ -2,20 +2,19 @@
 
 namespace App\Modules\Cron\Core;
 
+use Events\Dispatcher;
+
 use App\Modules\Cron\Core\Adapter;
 
 
 class Manager
 {
     /**
-     * The CRON Manager instance.
+     * The Event Dispatcher instance.
+     *
+     * @var \Events\Dispatcher
      */
-    protected static $instance;
-
-    /**
-     * List of registered Adapters.
-     */
-    protected $adapters = array();
+    protected $events;
 
 
     /**
@@ -23,84 +22,37 @@ class Manager
      *
      * @return void
      */
-    protected function __construct()
+    public function __construct(Dispatcher $dispatcher)
     {
-        // The constructor exists only to avoid the direct instantiation.
+        $this->events = $dispatcher;
     }
 
     /**
-     * Gets the CRON Manager instance.
+     * Register a new Filter with the Router.
      *
-     * @return \App\Modules\Cron\Manager\Cron
+     * @param  string  $name
+     * @param  string|callable  $callback
+     * @param  int     $priority
+     * @return void
      */
-    protected static function getInstance()
+    public function register($name, $callback, $priority = 0)
     {
-        if (! isset(static::$instance)) {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
+        $this->events->listen('cron.execute', $this->parseAdapter($callback), $priority);
     }
 
     /**
-     * Gets an instance of the given Adapter name.
+     * Parse the registered Filter.
      *
-     * @param  string  $name The Adapter name
-     * @param  array   $config The Adapter's configuration array
-     *
-     * @return \App\Modules\Cron\Adapters\AbstractAdapter|null
+     * @param  callable|string  $callback
+     * @return mixed
      */
-    protected function getAdapter($name, array $config = array())
+    protected function parseAdapter($callback)
     {
-        if (! isset($this->adapters[$name])) {
-            return null;
+        if (is_string($callback) && ! str_contains($callback, '@')) {
+            return $callback .'@execute';
         }
 
-        //
-        $isCreated = false;
-
-        $adapter = $this->adapters[$name];
-
-        if (is_string($adapter) && class_exists($adapter)) {
-            $adapter = new $adapter($config);
-
-            $isCreated = true;
-        }
-
-        if ($adapter instanceof Adapter) {
-            if (! $isCreated) {
-                $adapter->config($config);
-            }
-
-            return $adapter;
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets the full list of all registered Adapters.
-     */
-    protected function getAdapters()
-    {
-        return array_keys($this->adapters);
-    }
-
-    /**
-     * Registers a new Cron Adapter.
-     *
-     * @param string  $name The Adapter name
-     * @param string  $callback The Adapter class or instance
-     */
-    protected function register($name, $callback)
-    {
-        if (array_key_exists($name, $this->adapters)) {
-            $error = __d('cron', 'The Adapter <b>{0}<b> is already defined.', $name);
-
-            throw new \LogicException($error);
-        }
-
-        $this->adapters[$name] = $callback;
+        return $callback;
     }
 
     /**
@@ -108,22 +60,22 @@ class Manager
      *
      * @param string  $name The Adapter name
      */
-    protected function forget($name)
+    public function forget($name)
     {
-        unset($this->adapters[$name]);
+        $this->events->forget($name);
     }
 
     /**
-     * Magic Method for handling dynamic functions.
+     * Execute the CRON.
      *
-     * @param  string  $method
-     * @param  array   $params
-     * @return void|mixed
+     * @param  string  $filter
+     * @param  \Nova\Http\Request   $request
+     * @param  \Nova\Http\Response  $response
+     * @return mixed
      */
-    public static function __callStatic($method, $params)
+    public function execute()
     {
-        $instance = static::getInstance();
-
-        return call_user_func_array(array($instance, $method), $params);
+        return $this->events->fire('cron.execute');
     }
+
 }

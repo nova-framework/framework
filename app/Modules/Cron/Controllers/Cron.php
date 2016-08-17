@@ -6,7 +6,10 @@ use Core\Config;
 use Core\View;
 use Core\Controller;
 
-use App\Modules\Cron\Core\Manager;
+use Cron as CronManager;
+use Response;
+
+use Carbon\Carbon;
 
 
 class Cron extends Controller
@@ -22,38 +25,26 @@ class Cron extends Controller
             return Response::make('', 403); // Error 403 (Access denied)
         }
 
-        //
-        $timestamp = time();
+        // Get the init timestamp.
+        $timestamp = new Carbon();
 
-        // Perform the required operations.
-        $messages = array();
+        // Execute the registered CRON Task.
+        $results = CronManager::execute();
 
-        $adapters = Manager::getAdapters();
+        foreach($results as $result) {
+            if (is_null($result)) {
+                continue;
+            }
 
-        foreach($adapters as $adapter) {
-            $instance = Manager::getAdapter($adapter);
-
-            if(! is_null($instance)) {
-                $result = $instance->execute();
+            if (is_array($result)) {
+                $messages[] = implode(' : ', $result);
             } else {
-                $result = __d('cron', 'Cron Adapter not found: %s.', $adapter);
+                $messages[] = $result;
             }
-
-            if(is_bool($result)) {
-                $message = '<b>' .$adapter .':</b> ' .($result ? __d('cron', 'succesfully executed.') : __d('cron', 'execution failed.'));
-            } else if(is_array($result)) {
-                $message = '<b>' .$adapter .':</b><br>' .implode('<br>', $result);
-            } else if(is_string($result)) {
-                $message = '<b>' .$adapter .':</b> ' .$result;
-            }
-
-            $messages[] = $message;
         }
 
         //
-        $dateFormat = __d('cron', 'jS M Y H:i:s');
-
-        $title = __d('cron', '{0} - Cron executed on {1}', Config::get('app.name'), date($dateFormat, $timestamp));
+        $title = __d('cron', '{0} - Cron executed on {1}', Config::get('app.name'), $timestamp->formatLocalized('%d %b %Y, %R'));
 
         $message = '<p>' .implode('</p></p>', $messages) .'</p>';
 

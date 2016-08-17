@@ -12,9 +12,9 @@ class Test extends Adapter
     /**
      * Execute the CRON operations.
      */
-    public function execute()
+    protected function handle()
     {
-        return array($this->name, 'Hello from the CRON Adapter');
+        return 'Hello from the CRON!';
     }
 
 }

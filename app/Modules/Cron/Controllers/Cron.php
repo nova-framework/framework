@@ -31,16 +31,16 @@ class Cron extends Controller
         // Execute the registered CRON Task.
         $results = CronManager::execute();
 
-        foreach($results as $result) {
+        foreach($results as $item) {
+            list($name, $result) = $item;
+
             if (is_null($result)) {
                 continue;
+            } else if (is_bool($result)) {
+                $result = $result ? __d('cron', 'successfully executed') : __d('cron', 'execution failed');
             }
 
-            if (is_array($result)) {
-                $messages[] = implode(' : ', $result);
-            } else {
-                $messages[] = $result;
-            }
+            $messages[] = '<b>' .$name .'</b> : ' .$result;
         }
 
         //

@@ -43,16 +43,18 @@ class Cron extends Controller
             list($name, $result) = $response;
 
             if (is_null($result)) {
-                $result = __d('cron', 'executed.');
+                $result = __d('system', 'executed.');
             } else if (is_bool($result)) {
-                $result = $result ? __d('cron', 'successfully executed.') : __d('cron', 'execution failed.');
+                $result = $result ? __d('system', 'successfully executed.') : __d('system', 'execution failed.');
             }
 
             $messages[] = '<b>' .$name .'</b> : ' .$result;
         }
 
-        //
-        $title = __d('cron', '{0} - Cron executed on {1}', Config::get('app.name'), $timestamp->formatLocalized('%d %b %Y, %R'));
+        // Create the page information.
+        $date = $timestamp->formatLocalized(__d('system', '%d %b %Y, %R'));
+
+        $title = __d('system', '{0} - Cron executed on {1}', Config::get('app.name'), $date);
 
         $content = '<p>' .implode('</p></p>', $messages) .'</p>';
 

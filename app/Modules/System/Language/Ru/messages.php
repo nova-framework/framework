@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   'Apply the changes' => 'Применить изменения',
   'Backend Skin' => 'Внешний вид админки',
   'Black' => 'Чёрный',

@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   'Apply the changes' => 'اعمال تغییرات',
   'Backend Skin' => 'پوسته ظاهر',
   'Black' => 'سیاه',

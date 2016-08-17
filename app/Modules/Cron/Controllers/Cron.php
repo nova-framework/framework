@@ -35,7 +35,7 @@ class Cron extends Controller
             list($name, $result) = $item;
 
             if (is_null($result)) {
-                $result = __d('cron', 'executed.')
+                $result = __d('cron', 'executed.');
             } else if (is_bool($result)) {
                 $result = $result ? __d('cron', 'successfully executed.') : __d('cron', 'execution failed.');
             }

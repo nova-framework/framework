@@ -9,7 +9,7 @@ return array (
   'Logout' => 'Log ud',
   'Member since {0}' => 'Medlem siden {0}',
   'Profile' => 'Bruger konto',
-  'Roles' => 'Rolle',
+  'Roles' => 'Roller',
   'Settings' => 'Indstillinger',
   'Sign In' => 'Log ind',
   'Sign Up' => 'Tilmeld',

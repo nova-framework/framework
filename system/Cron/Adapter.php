@@ -16,7 +16,9 @@ abstract class Adapter
     }
 
     /**
-     * Execute the Adapter.
+     * Execute the the assigned tasks.
+     *
+     * @return array
      */
     public function execute()
     {

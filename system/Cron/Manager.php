@@ -17,7 +17,7 @@ class Manager
 
 
     /**
-     * Create a new CRON Manager instance.
+     * Create a new Manager instance.
      *
      * @return void
      */
@@ -27,9 +27,8 @@ class Manager
     }
 
     /**
-     * Register a new Filter with the Router.
+     * Register a new Adapter with the Manager.
      *
-     * @param  string  $name
      * @param  string|callable  $callback
      * @param  int     $priority
      * @return void
@@ -40,7 +39,7 @@ class Manager
     }
 
     /**
-     * Parse the registered Filter.
+     * Parse the registered Adapter.
      *
      * @param  callable|string  $callback
      * @return mixed
@@ -55,12 +54,9 @@ class Manager
     }
 
     /**
-     * Execute the CRON.
+     * Execute the registered Adapters and return a processed response.
      *
-     * @param  string  $filter
-     * @param  \Nova\Http\Request   $request
-     * @param  \Nova\Http\Response  $response
-     * @return mixed
+     * @return array
      */
     public function execute()
     {

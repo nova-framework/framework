@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Modules\Cron\Core;
+namespace Cron;
 
+use Cron\Adapter;
 use Events\Dispatcher;
-
-use App\Modules\Cron\Core\Adapter;
 
 
 class Manager

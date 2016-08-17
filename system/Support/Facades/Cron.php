@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Cron\Facades;
+namespace Support\Facades;
 
 use Support\Facades\Facade;
 

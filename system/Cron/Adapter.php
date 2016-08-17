@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Cron\Core;
+namespace Cron;
 
 
 abstract class Adapter

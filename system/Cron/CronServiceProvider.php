@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Cron\Providers;
+namespace Cron;
 
 use Support\ServiceProvider;
 
-use App\Modules\Cron\Core\Manager;
+use Cron\Manager;
 
 
 class CronServiceProvider extends ServiceProvider

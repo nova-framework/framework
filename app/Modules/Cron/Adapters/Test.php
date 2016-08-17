@@ -2,7 +2,7 @@
 
 namespace App\Modules\Cron\Adapters;
 
-use App\Modules\Cron\Core\Adapter;
+use Cron\Adapter;
 
 
 class Test extends Adapter

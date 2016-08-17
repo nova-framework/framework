@@ -73,7 +73,7 @@ class Manager
      * @param  \Nova\Http\Response  $response
      * @return mixed
      */
-    public function execute()
+    public function run()
     {
         // Fire the CRON Event and retrieve the results.
         $responses = $this->events->fire('cron.execute');

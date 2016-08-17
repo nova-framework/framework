@@ -75,7 +75,16 @@ class Manager
      */
     public function execute()
     {
-        return $this->events->fire('cron.execute');
+        // Fire the CRON Event and retrieve the results.
+        $results = $this->events->fire('cron.execute');
+
+        // Filter out the null responses on results.
+        $results = array_filter($results, function($value)
+        {
+            return ! is_null($value);
+        });
+
+        return $results;
     }
 
 }

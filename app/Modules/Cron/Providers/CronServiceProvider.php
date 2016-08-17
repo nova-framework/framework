@@ -2,9 +2,9 @@
 
 namespace App\Modules\Cron\Providers;
 
-use App\Modules\Cron\Core\Manager;
-
 use Support\ServiceProvider;
+
+use App\Modules\Cron\Core\Manager;
 
 
 class CronServiceProvider extends ServiceProvider

@@ -16,11 +16,6 @@ abstract class Adapter
     }
 
     /**
-     * Handle the Adapter assigned tasks.
-     */
-    abstract protected function handle();
-
-    /**
      * Execute the Adapter.
      */
     public function execute()
@@ -29,6 +24,11 @@ abstract class Adapter
 
         return array($this->name, $result);
     }
+
+    /**
+     * Handle the assigned tasks.
+     */
+    abstract protected function handle();
 
     /**
      * Return the Adapter name.

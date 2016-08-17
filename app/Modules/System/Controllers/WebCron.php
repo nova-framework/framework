@@ -6,13 +6,13 @@ use Core\Config;
 use Core\View;
 use Core\Controller;
 
-use Cron as CronManager;
+use Cron;
 use Response;
 
 use Carbon\Carbon;
 
 
-class Cron extends Controller
+class WebCron extends Controller
 {
     protected $layout = false;
 
@@ -37,7 +37,7 @@ class Cron extends Controller
         $timestamp = new Carbon();
 
         // Execute the registered CRON Task.
-        $responses = CronManager::execute();
+        $responses = Cron::execute();
 
         foreach($responses as $response) {
             list($name, $result) = $response;

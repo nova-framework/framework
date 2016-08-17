@@ -14,7 +14,7 @@ Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controller
     Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@change'));
 
     // The CRON runner.
-    Route::get('cron/{token}', array('uses' => 'Cron@run'));
+    Route::get('cron/{token}', array('uses' => 'WebCron@run'));
 });
 
 // The Adminstration Routes.

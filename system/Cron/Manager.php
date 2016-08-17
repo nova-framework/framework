@@ -34,7 +34,7 @@ class Manager
      * @param  int     $priority
      * @return void
      */
-    public function register($name, $callback, $priority = 0)
+    public function register($callback, $priority = 0)
     {
         $this->events->listen('cron.execute', $this->parseAdapter($callback), $priority);
     }
@@ -55,16 +55,6 @@ class Manager
     }
 
     /**
-     * Remove a Cron Adapter.
-     *
-     * @param string  $name The Adapter name
-     */
-    public function forget($name)
-    {
-        $this->events->forget($name);
-    }
-
-    /**
      * Execute the CRON.
      *
      * @param  string  $filter
@@ -72,7 +62,7 @@ class Manager
      * @param  \Nova\Http\Response  $response
      * @return mixed
      */
-    public function run()
+    public function execute()
     {
         // Fire the CRON Event and retrieve the results.
         $responses = $this->events->fire('cron.execute');

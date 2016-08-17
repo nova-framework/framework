@@ -7,4 +7,4 @@
  */
 
 // Register a CRON Adapter for testing.
-Cron::register('test', 'App\Modules\System\Cron\Adapters\Test');
+Cron::register('App\Modules\System\Cron\Adapters\Test');

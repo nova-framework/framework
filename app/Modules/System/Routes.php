@@ -9,11 +9,13 @@
 
 /** Define static routes. */
 
-// The alternate Framework's Language Changer.
-//Route::get('language/{code}', array('before' => 'referer', 'uses' => 'App\Modules\System\Controllers\Language@change'));
+Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controllers'), function() {
+    // The Framework's Language Changer.
+    Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@change'));
 
-// The CRON Route.
-Route::get('cron/{token}', 'App\Modules\System\Controllers\Cron@run');
+    // The CRON runner.
+    Route::get('cron/{token}', array('uses' => 'Cron@run'));
+});
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\System\Controllers\Admin'), function() {

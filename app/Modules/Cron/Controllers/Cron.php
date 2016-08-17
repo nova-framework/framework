@@ -16,12 +16,20 @@ class Cron extends Controller
 {
     protected $layout = false;
 
+    /**
+     * @var string The CRON token
+     */
+    protected $token;
+
+
+    public function __construct()
+    {
+        $this->token = Config::get('cron.token');
+    }
 
     public function run($token)
     {
-        $options = Config::get('cron');
-
-        if($options['token'] != $token) {
+        if ($this->token != $token) {
             return Response::make('', 403); // Error 403 (Access denied)
         }
 

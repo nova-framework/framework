@@ -48,4 +48,8 @@ return array (
   'Yellow' => 'Gul',
   'Yellow Light' => 'Gul lys',
   'You are not authorized to access this resource.' => 'Du har ikke tilgang til denne side.',
+  'executed.' => '',
+  'execution failed.' => '',
+  'successfully executed.' => '',
+  '{0} - Cron executed on {1}' => '',
 );

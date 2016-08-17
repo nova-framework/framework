@@ -48,4 +48,8 @@ return array (
   'Yellow' => '',
   'Yellow Light' => '',
   'You are not authorized to access this resource.' => '',
+  'executed.' => '',
+  'execution failed.' => '',
+  'successfully executed.' => '',
+  '{0} - Cron executed on {1}' => '',
 );

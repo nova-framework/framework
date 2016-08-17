@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Cron\Controllers;
+namespace App\Modules\System\Controllers;
 
 use Core\Config;
 use Core\View;

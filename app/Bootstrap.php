@@ -1,10 +1,8 @@
 <?php
 /**
- * Events - all Module's specific Events are defined here.
+ * Bootstrap - the Application's specific Bootstrap.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
-
-/** Define Events. */

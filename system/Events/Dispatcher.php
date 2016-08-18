@@ -8,11 +8,19 @@
 
 namespace Events;
 
+use Container\Container;
 use Events\Subscriber;
 
 
 class Dispatcher
 {
+    /**
+     * The IoC container instance.
+     *
+     * @var \Nova\Container\Container
+     */
+    protected $container;
+
     /**
      * The active Dispatcher instance.
      *
@@ -42,17 +50,14 @@ class Dispatcher
     protected $sorted = array();
 
     /**
-     * Get the active Dispatcher instance.
+     * Create a new event dispatcher instance.
      *
-     * @return \Events\Dispatcher
+     * @param  \Nova\Container\Container  $container
+     * @return void
      */
-    public static function getInstance()
+    public function __construct(Container $container = null)
     {
-        if (! isset(self::$instance)) {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
+        $this->container = $container ?: new Container();
     }
 
     /**
@@ -298,22 +303,27 @@ class Dispatcher
      */
     public function createClassListener($listener)
     {
-        return function() use ($listener) {
+        $container = $this->container;
+
+        return function() use ($listener, $container) {
             // If the listener has an @ sign, we will assume it is being used to delimit
             // the class name from the handle method name. This allows for handlers
             // to run multiple handler methods in a single class for convenience.
             $segments = explode('@', $listener);
 
+            //
+            $className = $segments[0];
+
             $method = (count($segments) == 2) ? $segments[1] : 'handle';
 
-            $className = $segments[0];
+            $callable = array($container->make($className), $method);
 
             // We will make a callable of the listener instance and a method that should
             // be called on that instance, then we will pass in the arguments that we
             // received in this method into this listener class instance's methods.
             $data = func_get_args();
 
-            return call_user_func_array(array($className, $method), $data);
+            return call_user_func_array($callable, $data);
         };
     }
 

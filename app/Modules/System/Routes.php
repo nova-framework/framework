@@ -9,12 +9,16 @@
 
 /** Define static routes. */
 
-// The alternate Framework's Language Changer.
-//Route::get('language/{code}', array('before' => 'referer', 'uses' => 'App\Modules\System\Controllers\Language@change'));
+Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controllers'), function() {
+    // The Framework's Language Changer.
+    Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@change'));
+
+    // The CRON runner.
+    Route::get('cron/{token}', array('uses' => 'Cron@index'));
+});
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\System\Controllers\Admin'), function() {
     Route::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));
     Route::post('settings', array('before' => 'auth|csrf', 'uses' => 'Settings@store'));
 });
-

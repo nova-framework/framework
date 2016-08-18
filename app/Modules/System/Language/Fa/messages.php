@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   'Apply the changes' => 'اعمال تغییرات',
   'Backend Skin' => 'پوسته ظاهر',
   'Black' => 'سیاه',
@@ -48,4 +49,8 @@ return array (
   'Yellow' => 'زرد',
   'Yellow Light' => 'زرد سفید',
   'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید.',
+  'executed.' => '',
+  'execution failed.' => '',
+  'successfully executed.' => '',
+  '{0} - Cron executed on {1}' => '',
 );

@@ -259,6 +259,22 @@ $path = app_path() .'Routes.php';
 
 if (is_readable($path)) require $path;
 
+//--------------------------------------------------------------------------
+// Load The Application Bootstrap
+//--------------------------------------------------------------------------
+
+// Load the Bootstrap files existing on Modules.
+foreach ($modules as $module) {
+    $path = app_path() .'Modules' .DS .$module .DS .'Bootstrap.php';
+
+    if (is_readable($path)) require $path;
+}
+
+// Load the Routes defined on App.
+$path = app_path() .'Bootstrap.php';
+
+if (is_readable($path)) require $path;
+
 });
 
 //--------------------------------------------------------------------------

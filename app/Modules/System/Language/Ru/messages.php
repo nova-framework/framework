@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   'Apply the changes' => 'Применить изменения',
   'Backend Skin' => 'Внешний вид админки',
   'Black' => 'Чёрный',
@@ -48,4 +49,8 @@ return array (
   'Yellow' => 'желтый',
   'Yellow Light' => 'Светло-жёлтый',
   'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
+  'executed.' => '',
+  'execution failed.' => '',
+  'successfully executed.' => '',
+  '{0} - Cron executed on {1}' => '',
 );

@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   'Apply the changes' => 'Tilføj ændringerne',
   'Backend Skin' => 'Backend design',
   'Black' => 'Sort',
@@ -48,4 +49,8 @@ return array (
   'Yellow' => 'Gul',
   'Yellow Light' => 'Lys Gul',
   'You are not authorized to access this resource.' => 'Du har ikke tilgang til denne side.',
+  'executed.' => '',
+  'execution failed.' => '',
+  'successfully executed.' => '',
+  '{0} - Cron executed on {1}' => '',
 );

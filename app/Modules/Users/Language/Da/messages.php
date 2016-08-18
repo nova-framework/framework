@@ -90,7 +90,7 @@ return array (
   'The User <b>{0}</b> was successfully created.' => 'Brugeren <b>{0}</b> er oprettet.',
   'The User <b>{0}</b> was successfully deleted.' => 'Brugeren <b>{0}</b> er slettet.',
   'The User <b>{0}</b> was successfully updated.' => 'Brugeren <b>{0}</b> er opdateret.',
-  'There are no registered Users.' => 'Der er ingen registeret brugere',
+  'There are no registered Roles.' => '',
   'There are no registered Users for: <b>{0}</b>' => 'Der er ingen registreret bruger på: <b>{0}</b>',
   'There are no registered Users.' => 'Der er ingen registeret brugere',
   'There is a problem. Have you activated your Account?' => 'Der er opstået et problem, har du aktiveret din konto?',

@@ -44,8 +44,6 @@ class Cron extends Controller
         // Create the page information.
         $title = __d('system', '{0} - Cron executed on {1}', Config::get('app.name'), $date);
 
-        $content = '<p>' .implode('</p></p>', $messages) .'</p>';
-
         return $this->getView()
             ->with('title', $title)
             ->with('content', $result);
@@ -57,6 +55,8 @@ class Cron extends Controller
         $responses = CronManager::execute();
 
         // Prepare the CRON task messages.
+        $messages = array();
+
         foreach($responses as $response) {
             list($name, $result) = $response;
 

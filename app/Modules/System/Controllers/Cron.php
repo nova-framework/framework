@@ -33,7 +33,7 @@ class Cron extends Controller
             return Response::make('', 403); // Error 403 (Access denied)
         }
 
-        // Get the init date and time string.
+        // Get the execution date and time as translated string.
         $format = __d('system', '%d %b %Y, %R');
 
         $date = Carbon::now()->formatLocalized($format);

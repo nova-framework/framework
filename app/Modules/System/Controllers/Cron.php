@@ -57,6 +57,8 @@ class Cron extends Controller
         $responses = CronManager::execute();
 
         // Prepare the CRON task messages.
+        $messages = array();
+
         foreach($responses as $response) {
             list($name, $result) = $response;
 

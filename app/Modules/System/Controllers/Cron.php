@@ -27,18 +27,36 @@ class Cron extends Controller
         $this->token = Config::get('cron.token');
     }
 
-    public function run($token)
+    public function index($token)
     {
         if ($this->token != $token) {
             return Response::make('', 403); // Error 403 (Access denied)
         }
 
-        // Get the init timestamp.
-        $timestamp = new Carbon();
+        // Get the init date and time string.
+        $format = __d('system', '%d %b %Y, %R');
 
+        $date = Carbon::now()->formatLocalized($format);
+
+        // Execute the CRON tasks.
+        $result = $this->executeCron();
+
+        // Create the page information.
+        $title = __d('system', '{0} - Cron executed on {1}', Config::get('app.name'), $date);
+
+        $content = '<p>' .implode('</p></p>', $messages) .'</p>';
+
+        return $this->getView()
+            ->with('title', $title)
+            ->with('content', $result);
+    }
+
+    protected function executeCron()
+    {
         // Execute the registered CRON Task.
         $responses = CronManager::execute();
 
+        // Prepare the CRON task messages.
         foreach($responses as $response) {
             list($name, $result) = $response;
 
@@ -51,16 +69,10 @@ class Cron extends Controller
             $messages[] = '<b>' .$name .'</b> : ' .$result;
         }
 
-        // Create the page information.
-        $date = $timestamp->formatLocalized(__d('system', '%d %b %Y, %R'));
+        // Create the CRON execution repport and return it.
+        $result = '<p>' .implode('</p></p>', $messages) .'</p>';
 
-        $title = __d('system', '{0} - Cron executed on {1}', Config::get('app.name'), $date);
-
-        $content = '<p>' .implode('</p></p>', $messages) .'</p>';
-
-        return $this->getView()
-            ->with('title', $title)
-            ->with('content', $content);
+        return $result;
     }
 
 }

@@ -1,1 +1,19 @@
 
+[2016-08-18 09:44:47] testing.ERROR: exception 'InvalidArgumentException' with message 'Unable to load the view 'Cron/Index'. File '/var/www/sites/novaframework/app/Modules/System/Views/Cron/Index.php' not found.' in /var/www/sites/novaframework/system/View/View.php:78
+Stack trace:
+#0 /var/www/sites/novaframework/system/Http/Response.php(41): View\View->render()
+#1 /var/www/sites/novaframework/vendor/symfony/http-foundation/Response.php(201): Http\Response->setContent(Object(View\View))
+#2 /var/www/sites/novaframework/system/Routing/Router.php(456): Symfony\Component\HttpFoundation\Response->__construct(Object(View\View))
+#3 /var/www/sites/novaframework/system/Routing/Router.php(583): Routing\Router->prepareResponse(Object(Http\Request), Object(View\View))
+#4 /var/www/sites/novaframework/system/Routing/Router.php(551): Routing\Router->dispatchToRoute(Object(Http\Request))
+#5 /var/www/sites/novaframework/system/Foundation/Application.php(677): Routing\Router->dispatch(Object(Http\Request))
+#6 /var/www/sites/novaframework/system/Foundation/Application.php(661): Foundation\Application->dispatch(Object(Http\Request))
+#7 /var/www/sites/novaframework/app/Extensions/Http/ContentGuard.php(61): Foundation\Application->handle(Object(Http\Request), 1, true)
+#8 /var/www/sites/novaframework/system/Session/Middleware.php(72): App\Extensions\Http\ContentGuard->handle(Object(Http\Request), 1, true)
+#9 /var/www/sites/novaframework/system/Cookie/Queue.php(49): Session\Middleware->handle(Object(Http\Request), 1, true)
+#10 /var/www/sites/novaframework/system/Cookie/Guard.php(54): Cookie\Queue->handle(Object(Http\Request), 1, true)
+#11 /var/www/sites/novaframework/vendor/stack/builder/src/Stack/StackedHttpKernel.php(23): Cookie\Guard->handle(Object(Http\Request), 1, true)
+#12 /var/www/sites/novaframework/system/Foundation/Application.php(555): Stack\StackedHttpKernel->handle(Object(Http\Request))
+#13 /var/www/sites/novaframework/app/Boot/Start.php(284): Foundation\Application->run()
+#14 /var/www/sites/novaframework/public/index.php(37): require('/var/www/sites/...')
+#15 {main} [] []

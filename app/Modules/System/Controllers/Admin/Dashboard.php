@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\Dashboard\Controllers\Admin;
+namespace App\Modules\System\Controllers\Admin;
 
 use Core\View;
 
@@ -18,7 +18,7 @@ class Dashboard extends Controller
     public function index()
     {
         return $this->getView()
-            ->shares('title', __d('dashboard', 'Dashboard'));
+            ->shares('title', __d('system', 'Dashboard'));
     }
 
 }

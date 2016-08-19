@@ -6,13 +6,13 @@ use Core\Config;
 use Core\View;
 use Core\Controller;
 
-use Cron as CronManager;
+use Cron;
 use Response;
 
 use Carbon\Carbon;
 
 
-class Cron extends Controller
+class CronRunner extends Controller
 {
     protected $layout = false;
 
@@ -52,7 +52,7 @@ class Cron extends Controller
     protected function executeCron()
     {
         // Execute the registered CRON Task.
-        $responses = CronManager::execute();
+        $responses = Cron::execute();
 
         // Prepare the CRON task messages.
         $messages = array();

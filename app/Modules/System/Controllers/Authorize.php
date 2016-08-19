@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\Users\Controllers;
+namespace App\Modules\System\Controllers;
 
 use Core\View;
 use Helpers\Url;

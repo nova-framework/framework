@@ -42,12 +42,12 @@ class Demos extends Controller
     {
         $content = '';
 
-        $content .= '<p><b>' .__('Password:') .'</b> : <code>'. Password::make($password) .'</code></p>';
+        $content .= '<p><b>' .__d('demos', 'Password:') .'</b> : <code>'. Password::make($password) .'</code></p>';
 
-        $content .= '<p><b>' .__('Timestamp:') .'</b> : <code>'.time() .'<b></code>';
+        $content .= '<p><b>' .__d('demos', 'Timestamp:') .'</b> : <code>'.time() .'<b></code>';
 
         return View::make('Default')
-            ->shares('title', __('Password Sample'))
+            ->shares('title', __d('demos', 'Password Sample'))
             ->with('content', $content);
     }
 
@@ -92,7 +92,7 @@ class Demos extends Controller
         }
 
         return View::make('Default')
-            ->shares('title', __('Test'))
+            ->shares('title', __d('demos', 'Test'))
             ->with('content', $content);
     }
 
@@ -125,7 +125,7 @@ class Demos extends Controller
         $content .= '<pre>' .var_export(Request::instance(), true).'</pre>';
 
         return View::make('Default')
-            ->shares('title', __('Request API'))
+            ->shares('title', __d('demos', 'Request API'))
             ->with('content', $content);
     }
 
@@ -148,7 +148,7 @@ class Demos extends Controller
         $content .= Event::until('test', $payload);
 
         return View::make('Default')
-            ->shares('title', __('Events API'))
+            ->shares('title', __d('demos', 'Events API'))
             ->with('content', $content);
     }
 
@@ -182,15 +182,15 @@ class Demos extends Controller
         $content .= '<pre>' .var_export($users->toArray(), true) .'</pre>';
 
         return View::make('Default')
-            ->shares('title', __('Database API'))
+            ->shares('title', __d('demos', 'Database API'))
             ->with('content', $content);
     }
 
     public function mailer()
     {
         $data = array(
-            'title'   => __('Welcome to {0}!', SITETITLE),
-            'content' => __('This is a test!!!'),
+            'title'   => __d('demos', 'Welcome to {0}!', SITETITLE),
+            'content' => __d('demos', 'This is a test!!!'),
         );
 
         Mailer::pretend(true);
@@ -203,10 +203,10 @@ class Demos extends Controller
         });
 
         // Prepare and return the View instance.
-        $content = __('Message sent while pretending. Please, look on <code>{0}</code>', 'app/Storage/Logs/messages.log');
+        $content = __d('demos', 'Message sent while pretending. Please, look on <code>{0}</code>', 'app/Storage/Logs/messages.log');
 
         return View::make('Default')
-            ->shares('title', __('Mailing API'))
+            ->shares('title', __d('demos', 'Mailing API'))
             ->with('content', $content);
     }
 
@@ -221,7 +221,7 @@ class Demos extends Controller
         $content .= '<pre>' .var_export($data, true) .'</pre>';
 
         return View::make('Default')
-            ->shares('title', __('Session API'))
+            ->shares('title', __d('demos', 'Session API'))
             ->with('content', $content);
     }
 
@@ -255,7 +255,7 @@ class Demos extends Controller
         }
 
         return View::make('Default')
-            ->shares('title', __('Validation API'))
+            ->shares('title', __d('demos', 'Validation API'))
             ->with('content', $content);
     }
 
@@ -279,7 +279,7 @@ class Demos extends Controller
         }
 
         return View::make('Default')
-            ->shares('title', __('Pagination'))
+            ->shares('title', __d('demos', 'Pagination'))
             ->with('content', $content);
     }
 
@@ -302,7 +302,7 @@ class Demos extends Controller
         }
 
         return View::make('Default')
-            ->shares('title', __('Cache'))
+            ->shares('title', __d('demos', 'Cache'))
             ->with('content', $content);
     }
 
@@ -311,7 +311,7 @@ class Demos extends Controller
         $content = '<pre>' .htmlspecialchars($slug) .'</pre>';
 
         return View::make('Default')
-            ->shares('title', __('The catch-all Route'))
+            ->shares('title', __d('demos', 'The catch-all Route'))
             ->with('content', $content);
     }
 }

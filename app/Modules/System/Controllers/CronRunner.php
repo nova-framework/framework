@@ -55,26 +55,25 @@ class CronRunner extends Controller
         $responses = Cron::execute();
 
         // Prepare the CRON task messages.
-        $messages = array();
+        if (! empty($responses)) {
+            $messages = array();
 
-        foreach($responses as $response) {
-            list($name, $result) = $response;
+            foreach($responses as $response) {
+                list($name, $result) = $response;
 
-            if (is_null($result)) {
-                $result = __d('system', 'executed.');
-            } else if (is_bool($result)) {
-                $result = $result ? __d('system', 'successfully executed.') : __d('system', 'execution failed.');
+                if (is_null($result)) {
+                    $result = __d('system', 'executed.');
+                } else if (is_bool($result)) {
+                    $result = $result ? __d('system', 'successfully executed.') : __d('system', 'execution failed.');
+                }
+
+                $messages[] = '<b>' .$name .'</b> : ' .$result;
             }
 
-            $messages[] = '<b>' .$name .'</b> : ' .$result;
+            $result = '<p>' .implode('</p></p>', $messages) .'</p>';
+        } else {
+            $result = '<p>' .__d('system', 'All tasks successfully executed.') .'</p>';
         }
-
-        if (empty($messages)) {
-            $messages[] = __d('system', 'All tasks successfully executed.');
-        }
-
-        // Create the CRON execution repport and return it.
-        $result = '<p>' .implode('</p></p>', $messages) .'</p>';
 
         return $result;
     }

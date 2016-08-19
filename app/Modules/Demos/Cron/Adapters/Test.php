@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\System\Cron\Adapters;
+namespace App\Modules\Demos\Cron\Adapters;
 
 use Cron\Adapter;
 

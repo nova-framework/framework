@@ -14,4 +14,5 @@ Config::set('modules', array(
     'System',
     'Users',
     'Files',
+    'Demos',
 ));

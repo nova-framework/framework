@@ -1,5 +1,6 @@
 <?php
-namespace App\Controllers;
+
+namespace App\Modules\Demos\Controllers;
 
 use Core\View;
 use Core\Controller;
@@ -27,7 +28,7 @@ use DB;
 *
 * Demo controller
 */
-class Demo extends Controller
+class Demos extends Controller
 {
     /**
      * Define Index method

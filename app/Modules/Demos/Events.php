@@ -1,9 +1,10 @@
 <?php
 /**
- * Bootstrap - the Module's specific Bootstrap.
+ * Events - all Module's specific Events are defined here.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
 
+/** Define Events. */

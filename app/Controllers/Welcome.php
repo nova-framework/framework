@@ -28,7 +28,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>');
 
         return View::make('Welcome/Welcome')
             ->shares('title', __('Welcome'))
-            ->withWelcomeMessage($message);
+            ->with('welcomeMessage', $message);
     }
 
     /**

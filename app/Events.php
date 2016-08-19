@@ -13,14 +13,6 @@ use Forensics\Console;
 
 /** Define Events. */
 
-// Add a Listener Class to the Event 'test'.
-Event::listen('test', 'App\Events\Test@handle');
-
-// Add a Listener Closure to the Event 'test'.
-Event::listen('test', function($data) {
-    return '<pre>Closure : ' .var_export($data, true) .'</pre>';
-});
-
 // Add a Listener Closure to the Event 'framework.controller.executing'.
 Event::listen('router.matched', function($route, $request) {
     // Run the Hooks associated to the Views.

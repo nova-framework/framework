@@ -69,6 +69,10 @@ class CronRunner extends Controller
             $messages[] = '<b>' .$name .'</b> : ' .$result;
         }
 
+        if (empty($messages)) {
+            $messages[] = __d('system', 'All tasks successfully executed.');
+        }
+
         // Create the CRON execution repport and return it.
         $result = '<p>' .implode('</p></p>', $messages) .'</p>';
 

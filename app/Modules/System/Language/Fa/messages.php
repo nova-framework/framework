@@ -3,6 +3,7 @@
 return array (
   '%d %b %Y, %R' => '',
   '<b>{0}</b>, you have successfully logged in.' => '',
+  'All tasks successfully executed.' => '',
   'Apply the changes' => 'اعمال تغییرات',
   'Backend Skin' => 'پوسته ظاهر',
   'Black' => 'سیاه',

@@ -30,4 +30,3 @@ Route::group(array('prefix' => 'demo', 'namespace' => 'App\Modules\Demos\Control
     Route::get('test/{param1?}/{param2?}/{param3?}/{slug?}', array('before' => 'test', 'uses' => 'Demos@test'))
         ->where('slug', '(.*)');
 });
-

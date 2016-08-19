@@ -3,6 +3,7 @@
 return array (
   '%d %b %Y, %R' => '',
   '<b>{0}</b>, you have successfully logged in.' => '',
+  'All tasks successfully executed.' => '',
   'Apply the changes' => 'Применить изменения',
   'Backend Skin' => 'Внешний вид админки',
   'Black' => 'Чёрный',

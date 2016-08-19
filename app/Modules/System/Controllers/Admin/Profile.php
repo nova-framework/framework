@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\Users\Controllers\Admin;
+namespace App\Modules\System\Controllers\Admin;
 
 use Core\View;
 use App\Core\Controller;

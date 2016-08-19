@@ -18,7 +18,6 @@ Route::get('subpage', 'App\Controllers\Welcome@subPage');
 // The catch-all Route - when enabled, it will capture any URI, with any HTTP Method.
 // NOTE: ensure that it is the last one defined, otherwise it will mask other Routes.
 
-//Route::any('(:all)', 'App\Controllers\Demo@catchAll');
-Route::any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');
+//Route::any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');
 
 /** End default Routes */

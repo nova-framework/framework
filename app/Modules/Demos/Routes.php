@@ -19,14 +19,12 @@ Route::group(array('prefix' => 'demo', 'namespace' => 'App\Modules\Demos\Control
     Route::get('paginate', 'Demos@paginate');
     Route::get('cache',    'Demos@cache');
 
-    //Route::get('password/(:any)',     'Demos@password');
     Route::get('password/{password}', 'Demos@password');
 
-    //Route::get('request(/(:any)(/(:any)(/(:all))))', 'Demos@request');
+    //
     Route::get('request/{param1?}/{param2?}/{slug?}', 'Demos@request')
         ->where('slug', '(.*)');
 
-    //Route::get('test(/(:any)(/(:any)(/(:any)(/(:all)))))', array('before' => 'test', 'uses' => 'Demos@test'));
     Route::get('test/{param1?}/{param2?}/{param3?}/{slug?}', array('before' => 'test', 'uses' => 'Demos@test'))
         ->where('slug', '(.*)');
 });

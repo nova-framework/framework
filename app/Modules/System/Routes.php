@@ -38,7 +38,7 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\System\Contr
 
     // The User's Profile.
     Route::get( 'profile', array('before' => 'auth',      'uses' => 'Profile@index'));
-    Route::post('profile', array('before' => 'auth|csrf', 'uses' => 'Profile@store'));
+    Route::post('profile', array('before' => 'auth|csrf', 'uses' => 'Profile@update'));
 
     // The Site Settings.
     Route::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));

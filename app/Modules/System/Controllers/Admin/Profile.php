@@ -67,7 +67,7 @@ class Profile extends Controller
             ->with('user', $user);
     }
 
-    public function store()
+    public function update()
     {
         $user = Auth::user();
 

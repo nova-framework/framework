@@ -250,17 +250,18 @@ class Factory
     protected function find($view, $module = null)
     {
         if (! is_null($module)) {
-            $search = "Modules/$module/Views/$view";
+            $path = "Modules/$module/Views/$view";
         } else {
-            $search = "Views/$view";
+            $path = "Views/$view";
         }
 
-        $search = str_replace('/', DS, APPDIR .$search);
+        // Make the path absolute and adjust the directory separator.
+        $path = str_replace('/', DS, APPDIR .$path);
 
         //
-        $path = $this->finder->find($search);
+        $filePath = $this->finder->find($path);
 
-        if (! is_null($path)) return $path;
+        if (! is_null($filePath)) return $filePath;
 
         throw new \InvalidArgumentException("Unable to load the view '" .$view ."' on domain '" .($module ?: 'App')."'.", 1);
     }

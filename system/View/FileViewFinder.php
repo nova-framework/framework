@@ -110,7 +110,7 @@ class FileViewFinder implements ViewFinderInterface
     /**
      * Get the filesystem instance.
      *
-     * @return \Illuminate\Filesystem\Filesystem
+     * @return \Filesystem\Filesystem
      */
     public function getFilesystem()
     {

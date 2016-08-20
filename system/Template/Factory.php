@@ -72,28 +72,6 @@ class Factory
     }
 
     /**
-     * Get the appropriate View Engine for the given path.
-     *
-     * @param  string  $path
-     * @return \View\Engines\EngineInterface
-     */
-    protected function getEngineFromPath($path)
-    {
-        return $this->factory->getEngineFromPath($path);
-    }
-
-    /**
-     * Parse the given data into a raw array.
-     *
-     * @param  mixed  $data
-     * @return array
-     */
-    protected function parseData($data)
-    {
-        return ($data instanceof Arrayable) ? $data->toArray() : $data;
-    }
-
-    /**
      * Check if the view file exists.
      *
      * @param    string     $view
@@ -108,6 +86,28 @@ class Factory
         }
 
         return true;
+    }
+
+    /**
+     * Parse the given data into a raw array.
+     *
+     * @param  mixed  $data
+     * @return array
+     */
+    protected function parseData($data)
+    {
+        return ($data instanceof Arrayable) ? $data->toArray() : $data;
+    }
+
+    /**
+     * Get the appropriate View Engine for the given path.
+     *
+     * @param  string  $path
+     * @return \View\Engines\EngineInterface
+     */
+    protected function getEngineFromPath($path)
+    {
+        return $this->factory->getEngineFromPath($path);
     }
 
     /**
@@ -126,14 +126,15 @@ class Factory
         // Calculate the current Template name.
         $template = $template ?: Config::get('app.template');
 
-        $search = sprintf('Templates/%s/%s%s', $template, $view, $suffix);
+        $path = sprintf('Templates/%s/%s%s', $template, $view, $suffix);
 
-        $search = str_replace('/', DS, APPDIR .$search);
+        // Make the path absolute and adjust the directory separator.
+        $path = str_replace('/', DS, APPDIR .$path);
 
         //
-        $path = $this->finder->find($search);
+        $filePath = $this->finder->find($path);
 
-        if (! is_null($path)) return $path;
+        if (! is_null($filePath)) return $filePath;
 
         throw new \InvalidArgumentException("Unable to load the view '" .$view ."' on template '" .$template ."'.", 1);
     }

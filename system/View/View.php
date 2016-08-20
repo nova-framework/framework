@@ -11,9 +11,11 @@ namespace View;
 use Support\Contracts\ArrayableInterface as Arrayable;
 use Support\Contracts\RenderableInterface as Renderable;
 use Support\MessageBag;
+use View\Engines\EngineInterface;
 use View\Factory;
 
 use ArrayAccess;
+use Exception;
 
 
 /**
@@ -24,9 +26,16 @@ class View implements ArrayAccess, Renderable
     /**
      * The View Factory instance.
      *
-     * @var \Nova\View\Factory
+     * @var \View\Factory
      */
     protected $factory;
+
+    /**
+     * The View Engine instance.
+     *
+     * @var \View\Engines\EngineInterface
+     */
+    protected $engine;
 
     /**
      * @var string The given View name.
@@ -48,15 +57,18 @@ class View implements ArrayAccess, Renderable
      */
     protected $layout = false;
 
+
     /**
      * Constructor
      * @param mixed $path
      * @param array $data
      */
-    public function __construct(Factory $factory, $view, $path, $data = array(), $layout = false)
+    public function __construct(Factory $factory, EngineInterface $engine, $view, $path, $data = array(), $layout = false)
     {
         $this->factory = $factory;
+        $this->engine  = $engine;
 
+        //
         $this->view = $view;
         $this->path = $path;
 
@@ -66,32 +78,28 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
+     * Get the string contents of the View.
+     *
+     * @param  \Closure  $callback
+     * @return string
+     */
+    public function render(Closure $callback = null)
+    {
+        $contents = $this->getContents();
+
+        $response = isset($callback) ? $callback($this, $contents) : null;
+
+        return $response ?: $contents;
+    }
+
+    /**
      * Render the View and return the result.
      *
-     * @return void
-     *
-     * @throws \InvalidArgumentException
+     * @return string
      */
-    public function render()
+    public function getContents()
     {
-        if (! is_readable($this->path)) {
-            throw new \InvalidArgumentException("Unable to load the view '" .$this->view ."'. File '" .$this->path."' not found.", 1);
-        }
-
-        // Get a local copy of the prepared data.
-        $data = $this->gatherData();
-
-        // Start output buffering.
-        ob_start();
-
-        // Extract the rendering variables from the local data copy.
-        foreach ($data as $variable => $value) {
-            ${$variable} = $value;
-        }
-
-        require $this->path;
-
-        return ob_get_clean();
+        return $this->engine->get($this->path, $this->gatherData());
     }
 
     /**

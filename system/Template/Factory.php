@@ -7,17 +7,25 @@ use Core\Language;
 use Foundation\Application;
 use Support\Contracts\ArrayableInterface as Arrayable;
 use View\Factory as ViewFactory;
+use View\ViewFinderInterface;
 use View\View;
 
 
 class Factory
 {
     /**
-     * The Application instance.
+     * The View Factory instance.
      *
-     * @var \Foundation\Application
+     * @var \View\Factory
      */
-    protected $app;
+    protected $factory;
+
+    /**
+     * The view finder implementation.
+     *
+     * @var \View\ViewFinderInterface
+     */
+    protected $finder;
 
 
     /**
@@ -26,9 +34,10 @@ class Factory
      * @param $factory The View Factory instance.
      * @return void
      */
-    function __construct(Application $app)
+    function __construct(ViewFactory $factory, ViewFinderInterface $finder)
     {
-        $this->app = $app;
+        $this->factory = $factory;
+        $this->finder  = $finder;
     }
 
     /**
@@ -50,15 +59,27 @@ class Factory
             $data = array();
         }
 
-        // Get the View Factory instance.
-        $factory = $this->app['view'];
-
         // Get the View file path.
-        $path = $this->viewFile($view, $template);
+        $path = $this->find($view, $template);
 
+        // Get the View Engine instance.
+        $engine = $this->getEngineFromPath($path);
+
+        // Get the parsed data.
         $data = $this->parseData($data);
 
-        return new View($factory, $view, $path, $data, true);
+        return new View($this->factory, $engine, $view, $path, $data, true);
+    }
+
+    /**
+     * Get the appropriate View Engine for the given path.
+     *
+     * @param  string  $path
+     * @return \View\Engines\EngineInterface
+     */
+    protected function getEngineFromPath($path)
+    {
+        return $this->factory->getEngineFromPath($path);
     }
 
     /**
@@ -80,36 +101,40 @@ class Factory
      */
     public function exists($view, $template = null)
     {
-        // Get the View file path.
-        $path = $this->viewFile($view, $template);
+        try {
+            $this->find($view);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
 
-        return file_exists($path);
+        return true;
     }
 
     /**
-     * Get the view file.
+     * Find the View file.
      *
      * @param    string     $view
+     * @param    string     $template
      * @return    string
      */
-    protected function viewFile($view, $template = null)
+    protected function find($view, $template = null)
     {
         $language = Language::getInstance();
+
+        $suffix = ($language->direction() == 'rtl') ? '-rtl' : '';
 
         // Calculate the current Template name.
         $template = $template ?: Config::get('app.template');
 
-        if ($language->direction() == 'rtl') {
-            // The current Language is RTL. Check the path of the RTL Template file.
-            $filePath = str_replace('/', DS, APPDIR ."Templates/$template/$view-rtl.php");
+        $search = sprintf('Templates/%s/%s%s', $template, $view, $suffix);
 
-            if (is_readable($filePath)) {
-                // A valid RTL Template file found; return it.
-                return $filePath;
-            }
-        }
+        $search = str_replace('/', DS, APPDIR .$search);
 
-        // Return the path of the current LTR Template file.
-        return str_replace('/', DS, APPDIR ."Templates/$template/$view.php");
+        //
+        $path = $this->finder->find($search);
+
+        if (! is_null($path)) return $path;
+
+        throw new \InvalidArgumentException("Unable to load the view '" .$view ."' on template '" .$template ."'.", 1);
     }
 }

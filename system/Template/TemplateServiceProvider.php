@@ -4,6 +4,7 @@ namespace Template;
 
 use Template\Factory;
 use Support\ServiceProvider;
+use View\Engines\EngineResolver;
 
 
 class TemplateServiceProvider extends ServiceProvider
@@ -24,7 +25,7 @@ class TemplateServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('template', function($app)
         {
-            return new Factory($app);
+            return new Factory($app['view'], $app['view.finder']);
         });
     }
 

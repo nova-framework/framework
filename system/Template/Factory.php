@@ -102,7 +102,7 @@ class Factory
     public function exists($view, $template = null)
     {
         try {
-            $this->find($view);
+            $this->find($view, $template);
         } catch (\InvalidArgumentException $e) {
             return false;
         }

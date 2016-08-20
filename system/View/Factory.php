@@ -137,7 +137,7 @@ class Factory
     public function exists($view, $module = null)
     {
         try {
-            $this->find($view);
+            $this->find($view, $module);
         } catch (\InvalidArgumentException $e) {
             return false;
         }

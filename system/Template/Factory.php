@@ -126,6 +126,7 @@ class Factory
         // Calculate the current Template name.
         $template = $template ?: Config::get('app.template');
 
+        // Calculate the search path.
         $path = sprintf('Templates/%s/%s%s', $template, $view, $suffix);
 
         // Make the path absolute and adjust the directory separator.

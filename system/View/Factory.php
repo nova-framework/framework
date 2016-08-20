@@ -2,24 +2,39 @@
 
 namespace View;
 
-use Foundation\Application;
 use Support\Contracts\ArrayableInterface as Arrayable;
+use View\Engines\EngineResolver;
 use View\View;
+use View\ViewFinderInterface;
 
 
 class Factory
 {
     /**
-     * The Application instance.
+     * The Engines Resolver instance.
      *
-     * @var \Foundation\Application
+     * @var \View\Engines\EngineResolver
      */
-    protected $app;
+    protected $engines;
+
+    /**
+     * The view finder implementation.
+     *
+     * @var \View\ViewFinderInterface
+     */
+    protected $finder;
 
     /**
      * @var array Array of shared data
      */
     protected $shared = array();
+
+    /**
+     * The extension to Engine bindings.
+     *
+     * @var array
+     */
+    protected $extensions = array('php' => 'php');
 
 
     /**
@@ -27,9 +42,13 @@ class Factory
      *
      * @return void
      */
-    function __construct(Application $app)
+    function __construct(EngineResolver $resolver, ViewFinderInterface $finder)
     {
-        $this->app = $app;
+        $this->engines = $resolver;
+        $this->finder  = $finder;
+
+        //
+        $this->share('__env', $this);
     }
 
     /**
@@ -52,11 +71,15 @@ class Factory
         }
 
         // Get the View file path.
-        $path = $this->viewFile($view, $module);
+        $path = $this->find($view, $module);
 
+        // Get the View Engine instance.
+        $engine = $this->getEngineFromPath($path);
+
+        // Get the parsed data.
         $data = $this->parseData($data);
 
-        return new View($this, $view, $path, $data);
+        return new View($this, $engine, $view, $path, $data);
     }
 
     /**
@@ -116,27 +139,130 @@ class Factory
      */
     public function exists($view, $module = null)
     {
-        // Get the View file path.
-        $path = $this->viewFile($view, $module);
+        try {
+            $this->find($view, $module);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
 
-        return file_exists($path);
+        return true;
     }
 
     /**
-     * Get the view file.
+     * Get the appropriate View Engine for the given path.
      *
-     * @param    string     $view
-     * @return    string
+     * @param  string  $path
+     * @return \View\Engines\EngineInterface
      */
-    protected function viewFile($view, $module = null)
+    public function getEngineFromPath($path)
     {
-        // Prepare the (relative) file path according with Module parameter presence.
-        if ($module !== null) {
-            $path = str_replace('/', DS, APPDIR ."Modules/$module/Views/$view.php");
-        } else {
-            $path = str_replace('/', DS, APPDIR ."Views/$view.php");
+        $extension = $this->getExtension($path);
+
+        $engine = $this->extensions[$extension];
+
+        return $this->engines->resolve($engine);
+    }
+
+    /**
+     * Get the extension used by the view file.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    protected function getExtension($path)
+    {
+        $extensions = array_keys($this->extensions);
+
+        return array_first($extensions, function($key, $value) use ($path)
+        {
+            return str_ends_with($path, $value);
+        });
+    }
+
+    /**
+     * Register a valid view extension and its engine.
+     *
+     * @param  string   $extension
+     * @param  string   $engine
+     * @param  Closure  $resolver
+     * @return void
+     */
+    public function addExtension($extension, $engine, $resolver = null)
+    {
+        $this->finder->addExtension($extension);
+
+        if (isset($resolver)) {
+            $this->engines->register($engine, $resolver);
         }
 
-        return $path;
+        unset($this->extensions[$extension]);
+
+        $this->extensions = array_merge(array($extension => $engine), $this->extensions);
+    }
+
+    /**
+     * Get the extension to engine bindings.
+     *
+     * @return array
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * Get the engine resolver instance.
+     *
+     * @return \View\Engines\EngineResolver
+     */
+    public function getEngineResolver()
+    {
+        return $this->engines;
+    }
+
+    /**
+     * Get the View Finder instance.
+     *
+     * @return \View\ViewFinderInterface
+     */
+    public function getFinder()
+    {
+        return $this->finder;
+    }
+
+    /**
+     * Set the View Finder instance.
+     *
+     * @return void
+     */
+    public function setFinder(ViewFinderInterface $finder)
+    {
+        $this->finder = $finder;
+    }
+
+    /**
+     * Find the view file.
+     *
+     * @param    string      $view
+     * @param    string|null $module
+     * @return    string
+     */
+    protected function find($view, $module = null)
+    {
+        if (! is_null($module)) {
+            $path = "Modules/$module/Views/$view";
+        } else {
+            $path = "Views/$view";
+        }
+
+        // Make the path absolute and adjust the directory separator.
+        $path = str_replace('/', DS, APPDIR .$path);
+
+        //
+        $filePath = $this->finder->find($path);
+
+        if (! is_null($filePath)) return $filePath;
+
+        throw new \InvalidArgumentException("Unable to load the view '" .$view ."' on domain '" .($module ?: 'App')."'.", 1);
     }
 }

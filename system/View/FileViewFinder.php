@@ -9,21 +9,21 @@ use View\ViewFinderInterface;
 class FileViewFinder implements ViewFinderInterface
 {
     /**
-     * The filesystem instance.
+     * The Filesystem instance.
      *
      * @var \Filesystem\Filesystem
      */
     protected $files;
 
     /**
-     * The array of views that have been located.
+     * The array of Views that have been located.
      *
      * @var array
      */
     protected $views = array();
 
     /**
-     * Register a view extension with the finder.
+     * Register a View extension with the finder.
      *
      * @var array
      */
@@ -87,7 +87,7 @@ class FileViewFinder implements ViewFinderInterface
     {
         return array_map(function($extension) use ($name)
         {
-            return str_replace('.', '/', $name).'.'.$extension;
+            return str_replace('.', '/', $name) .'.' .$extension;
 
         }, $this->extensions);
     }

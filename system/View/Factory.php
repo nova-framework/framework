@@ -30,7 +30,7 @@ class Factory
     protected $shared = array();
 
     /**
-     * The extension to engine bindings.
+     * The extension to Engine bindings.
      *
      * @var array
      */
@@ -46,6 +46,9 @@ class Factory
     {
         $this->engines = $resolver;
         $this->finder  = $finder;
+
+        //
+        $this->share('__env', $this);
     }
 
     /**

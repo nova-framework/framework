@@ -13,6 +13,6 @@ interface EngineInterface
      * @param  array   $data
      * @return string
      */
-    public function get($path, array $data = array());
+    public function render($path, array $data = array());
 
 }

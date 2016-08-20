@@ -85,7 +85,7 @@ class View implements ArrayAccess, Renderable
      */
     public function render(Closure $callback = null)
     {
-        $contents = $this->getContents();
+        $contents = $this->renderContents();
 
         $response = isset($callback) ? $callback($this, $contents) : null;
 
@@ -97,9 +97,9 @@ class View implements ArrayAccess, Renderable
      *
      * @return string
      */
-    public function getContents()
+    public function renderContents()
     {
-        return $this->engine->get($this->path, $this->gatherData());
+        return $this->engine->render($this->path, $this->gatherData());
     }
 
     /**
@@ -319,20 +319,6 @@ class View implements ArrayAccess, Renderable
     }
 
     /**
-     * Get the evaluated string content of the View.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        try {
-            return $this->render();
-        } catch (\Exception $e) {
-            return '';
-        }
-    }
-
-     /**
      * Magic Method for handling dynamic functions.
      *
      * @param  string  $method
@@ -352,4 +338,20 @@ class View implements ArrayAccess, Renderable
 
         throw new \BadMethodCallException("Method [$method] does not exist on " .get_class($this));
     }
+
+
+    /**
+     * Get the evaluated string content of the View.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        try {
+            return $this->render();
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
 }

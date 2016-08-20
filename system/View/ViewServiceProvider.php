@@ -3,7 +3,7 @@
 namespace View;
 
 use View\Engines\EngineResolver;
-use View\Engines\Engine;
+use View\Engines\PhpEngine;
 use View\Factory;
 use View\FileViewFinder;
 use Support\MessageBag;
@@ -48,7 +48,7 @@ class ViewServiceProvider extends ServiceProvider
         {
             $resolver = new EngineResolver();
 
-            $me->registerEngine($resolver);
+            $me->registerPhpEngine($resolver);
 
             return $resolver;
         });
@@ -60,11 +60,11 @@ class ViewServiceProvider extends ServiceProvider
      * @param  \View\Engines\EngineResolver  $resolver
      * @return void
      */
-    public function registerEngine($resolver)
+    public function registerPhpEngine($resolver)
     {
         $resolver->register('php', function()
         {
-            return new Engine();
+            return new PhpEngine();
         });
     }
 

@@ -32,12 +32,21 @@ App::missing(function(NotFoundHttpException $exception)
 
     $headers = $exception->getHeaders();
 
-    // Create the themed Error Page Response.
-    $view = Template::make('default')
-        ->shares('title', 'Error ' .$status)
-        ->nest('content', 'Error/' .$status);
+    if (Request::ajax()) {
+        // An AJAX request; we'll create a JSON Response.
+        $content = array('status' => $status);
 
-    return Response::make($view, $status, $headers);
+        $response = Response::json($content, $status, $headers);
+    } else {
+        // We'll create the templated Error Page Response.
+        $content = Template::make('default')
+            ->shares('title', 'Error ' .$status)
+            ->nest('content', 'Error/' .$status);
+
+        $response = Response::make($content, $status, $headers);
+    }
+
+    return $response;
 });
 
 //--------------------------------------------------------------------------

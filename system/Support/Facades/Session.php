@@ -46,8 +46,6 @@ class Session extends Facade
     /**
      * Display the one time Messages, then clear them from the Session.
      *
-     * @param  string $name default Session name
-     *
      * @return string
      */
     public static function getMessages()
@@ -72,7 +70,7 @@ class Session extends Facade
     }
 
     /**
-     * Display a one time Message, then clear it from the Session.
+     * Display an one time Message, then clear it from the Session.
      *
      * @param  string $name default Session name
      *

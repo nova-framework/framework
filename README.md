@@ -8,11 +8,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/nova-framework/framework.svg)](https://github.com/nova-framework/framework/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/nova-framework/framework.svg)](https://github.com/nova-framework/framework/network)
 
-[![Join the nova development chat at https://gitter.im/nova-framework/framework](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/nova-framework/framework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-OR 
-
-[![Join the general chat open to all at https://gitter.im/nova-framework/framework](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/nova-framework/framework/novausers?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the general chat open to all at https://gitter.im/nova-framework/framework](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/nova-framework/framework/novausers)
 
 - [What is the Nova Framework?](#what-is-the-nova-framework)
 - [Requirements](#requirements)

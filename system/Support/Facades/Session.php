@@ -70,7 +70,7 @@ class Session extends Facade
     }
 
     /**
-     * Display an one time Message, then clear it from the Session.
+     * Display a one time Message, then clear it from the Session.
      *
      * @param  string $name default Session name
      *

@@ -52,7 +52,7 @@ The base framework comes with a range of [helper classes](https://github.com/nov
 
 This framework was designed and is **strongly recommended** to be installed above the document root directory, with it pointing to the `public` folder.
 
-Additionally, installing in a sub-directory, on a production server, will introduce severe security issues.
+Additionally, installing in a sub-directory, on a production server, will introduce severe security issues. If there is no choice still place the framework files above the document root and have only index.php and .htacess from the public folder in the sub folder and adjust the paths accordingly.
 
 #### Recommended
 The framework is located on [Packagist](https://packagist.org/packages/nova-framework/framework).
@@ -70,7 +70,7 @@ The foldername is the desired folder to be created.
 - Place the contents of `public` into your public folder (`.htaccess` and `index.php`)
 - Navigate to your project in a terminal and type `composer install` to initiate the composer installation.
 - Edit `public/.htaccess` to set the rewritebase if running on a sub folder, otherwise a single `/` will do.
-- Edit `app/Config.example.php` and change the `SITEURL` and `DIR` constants. The `DIR` path is relative to the project url for example `/` for on the root or `/foldername/` when in a folder. Also change other options as desired. Rename file to `Config.php`
+- Edit `app/Config/App.php` and change the options as desired.
 - Set a 32 character `ENCRYPT_KEY` by using the CLI tool. You can do this by typing `php nova make:key` in your command line / console. Alternatively, you can use the following tool: http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/
 
 > **Note:** For additional installation instructions, for example; setting up a Virtualhost (Recommended for Local Development), Nginx or IIS with URL Rewrite, [please visit the Github Wiki](https://github.com/nova-framework/framework/wiki/Install).

@@ -8,8 +8,6 @@
 
 namespace App\Modules\Users\Controllers;
 
-use Core\View;
-use Helpers\Url;
 use Helpers\ReCaptcha;
 
 use App\Core\Controller;
@@ -24,6 +22,7 @@ use Mailer;
 use Redirect;
 use Session;
 use Validator;
+use View;
 
 
 class Registrar extends Controller

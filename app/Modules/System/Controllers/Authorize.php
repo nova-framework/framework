@@ -8,7 +8,6 @@
 
 namespace App\Modules\System\Controllers;
 
-use Core\View;
 use Helpers\Url;
 use Helpers\ReCaptcha;
 
@@ -21,6 +20,7 @@ use Password;
 use Redirect;
 use Response;
 use Session;
+use View;
 
 
 class Authorize extends Controller

@@ -8,7 +8,6 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use Core\View;
 use Helpers\ReCaptcha;
 
 use App\Core\Controller;
@@ -23,6 +22,7 @@ use Input;
 use Redirect;
 use Session;
 use Validator;
+use View;
 
 
 class Users extends Controller

@@ -105,7 +105,6 @@ Config::set('app', array(
     'aliases' => array(
         // The Core.
         'Errors'        => 'Core\Error',
-        'View'          => 'Core\View',
 
         // The Helpers.
         'Mail'          => 'Helpers\Mailer',
@@ -128,7 +127,10 @@ Config::set('app', array(
         'Tags'          => 'Helpers\Tags',
 
         // The Forensics Console.
-        'Console'       => '\Forensics\Console',
+        'Console'       => 'Forensics\Console',
+
+        // The Compatibility Support.
+        'Core\View'     => 'Support\Facades\View',
 
         // The Support Classes.
         'Arr'           => 'Support\Arr',
@@ -160,6 +162,7 @@ Config::set('app', array(
         'Log'           => 'Support\Facades\Log',
         'URL'           => 'Support\Facades\URL',
         'Template'      => 'Support\Facades\Template',
+        'View'          => 'Support\Facades\View',
         'Cron'          => 'Support\Facades\Cron',
     ),
 ));

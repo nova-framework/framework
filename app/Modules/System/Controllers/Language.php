@@ -9,6 +9,7 @@ use Helpers\Url;
 use Cookie;
 use Redirect;
 use Session;
+use View;
 
 
 class Language extends Controller

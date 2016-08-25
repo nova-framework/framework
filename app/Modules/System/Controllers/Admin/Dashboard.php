@@ -8,9 +8,9 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use Core\View;
-
 use App\Core\Controller;
+
+use View;
 
 
 class Dashboard extends Controller

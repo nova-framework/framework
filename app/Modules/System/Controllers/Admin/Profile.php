@@ -8,7 +8,6 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use Core\View;
 use App\Core\Controller;
 use App\Models\User;
 
@@ -17,6 +16,7 @@ use Hash;
 use Input;
 use Redirect;
 use Validator;
+use View;
 
 
 class Profile extends Controller

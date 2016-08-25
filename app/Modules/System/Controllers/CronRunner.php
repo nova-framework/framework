@@ -3,11 +3,11 @@
 namespace App\Modules\System\Controllers;
 
 use Core\Config;
-use Core\View;
 use Core\Controller;
 
 use Cron;
 use Response;
+use View;
 
 use Carbon\Carbon;
 

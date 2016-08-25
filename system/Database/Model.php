@@ -249,7 +249,7 @@ class Model
      * @param  string  $connection
      * @return \Database\Connection
      */
-    public static function resolveConnection($connection = null)
+    public function resolveConnection($connection = null)
     {
         return static::$resolver->connection($connection);
     }

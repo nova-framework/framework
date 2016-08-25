@@ -14,7 +14,4 @@
 Route::get('/',       'App\Controllers\Welcome@index');
 Route::get('subpage', 'App\Controllers\Welcome@subPage');
 
-// A catch-all Route - will match any URI, while using any HTTP Method.
-//Route::any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');
-
 /** End default Routes */

@@ -129,9 +129,6 @@ Config::set('app', array(
         // The Forensics Console.
         'Console'       => 'Forensics\Console',
 
-        // The Compatibility Support.
-        'Core\View'     => 'Support\Facades\View',
-
         // The Support Classes.
         'Arr'           => 'Support\Arr',
         'Str'           => 'Support\Str',
@@ -164,5 +161,9 @@ Config::set('app', array(
         'Template'      => 'Support\Facades\Template',
         'View'          => 'Support\Facades\View',
         'Cron'          => 'Support\Facades\Cron',
+
+        // The Compatibility Support.
+        'Core\Template' => 'Support\Facades\Template',
+        'Core\View'     => 'Support\Facades\View',
     ),
 ));

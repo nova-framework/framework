@@ -70,13 +70,16 @@ class Model
      */
     public function __construct($connection = null)
     {
-        if($connection !== false) {
-            // Setup the Connection name.
-            $this->connection = $connection;
-
-            // Setup the Connection instance.
-            $this->db = $this->getConnection();
+        if ($connection === false) {
+            // Is wanted a bare Model instance.
+            return;
         }
+
+        // Setup the Connection name.
+        $this->connection = $connection;
+
+        // Setup the Connection instance.
+        $this->db = $this->getConnection();
     }
 
     /**
@@ -87,7 +90,8 @@ class Model
      */
     public function all($columns = array('*'))
     {
-        return $this->newQuery()->get($columns);
+        return $this->newQuery()
+            ->get($columns);
     }
 
     /**
@@ -99,7 +103,8 @@ class Model
      */
     public function find($id, $columns = array('*'))
     {
-        return $this->newQuery()->find($id, $columns);
+        return $this->newQuery()
+            ->find($id, $columns);
     }
 
     /**
@@ -111,7 +116,8 @@ class Model
      */
     public function findMany($ids, $columns = array('*'))
     {
-        return $this->newQuery()->findMany($ids, $columns);
+        return $this->newQuery()
+            ->findMany($ids, $columns);
     }
 
     /**
@@ -122,7 +128,8 @@ class Model
      */
     public function insert(array $values)
     {
-        return $this->newQuery()->insertGetId($values);
+        return $this->newQuery()
+            ->insertGetId($values);
     }
 
     /**
@@ -249,7 +256,7 @@ class Model
      * @param  string  $connection
      * @return \Database\Connection
      */
-    public static function resolveConnection($connection = null)
+    public function resolveConnection($connection = null)
     {
         return static::$resolver->connection($connection);
     }

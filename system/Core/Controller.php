@@ -10,11 +10,12 @@ namespace Core;
 
 use Core\Config;
 use Core\Language;
-use Core\View;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;
 use Support\Facades\Template;
+
+use View;
 
 
 /**

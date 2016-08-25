@@ -8,7 +8,6 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use Core\View;
 use Helpers\FastCache;
 
 use App\Core\Controller;
@@ -20,6 +19,7 @@ use Session;
 use Redirect;
 use Request;
 use Validator;
+use View;
 
 
 class Settings extends Controller

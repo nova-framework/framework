@@ -2,26 +2,24 @@
 
 namespace App\Modules\Demos\Controllers;
 
-use Core\View;
 use Core\Controller;
 
-use Helpers\FastCache;
-use Helpers\Password;
-use Helpers\Url;
 use Routing\Route;
 
+use App\Models\User;
+
 use App;
+use Cache;
+use DB;
 use Event;
-use Validator;
+use Hash;
 use Input;
 use Mailer;
 use Redirect;
 use Request;
 use Session;
-
-use App\Models\User;
-
-use DB;
+use Validator;
+use View;
 
 
 /*
@@ -42,7 +40,7 @@ class Demos extends Controller
     {
         $content = '';
 
-        $content .= '<p><b>' .__d('demos', 'Password:') .'</b> : <code>'. Password::make($password) .'</code></p>';
+        $content .= '<p><b>' .__d('demos', 'Password:') .'</b> : <code>'. Hash::make($password) .'</code></p>';
 
         $content .= '<p><b>' .__d('demos', 'Timestamp:') .'</b> : <code>'.time() .'<b></code>';
 
@@ -285,18 +283,15 @@ class Demos extends Controller
 
     public function cache()
     {
-
-        $cache = FastCache::getInstance();
-
         $key = "test_page";
 
-        $content = $cache->get($key);
+        $content = Cache::get($key);
 
         if (is_null($content)) {
             $content = "Files Cache --> Well done !";
 
             // Write products to Cache in 10 minutes with same keyword
-            $cache->set($key, $content, 600);
+            Cache::put($key, $content, 10);
         } else {
             $content = "READ FROM CACHE // " .$content;
         }

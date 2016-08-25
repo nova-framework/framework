@@ -7,7 +7,7 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Support\Facades;
 
 use Support\Facades\Facade;
 

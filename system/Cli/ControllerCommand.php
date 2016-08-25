@@ -100,8 +100,10 @@ class ControllerCommand extends Command
         $data = "<?php
 namespace App\Controllers;
 
-use Core\View;
 use Core\Controller;
+
+use View;
+
 
 class ".ucwords($this->controllerName)." extends Controller
 {
@@ -118,7 +120,8 @@ class ".ucwords($this->controllerName)." extends Controller
                 $data .= "
     public function $method()
     {
-       return \$this->getView()->shares('title', '$title');
+       return \$this->getView()
+            ->shares('title', '$title');
     }\n";
             }
         }

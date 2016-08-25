@@ -9,6 +9,7 @@ use Routing\FileDispatcher;
 use Auth;
 use Request;
 use Response;
+use View;
 
 
 class Files extends Controller

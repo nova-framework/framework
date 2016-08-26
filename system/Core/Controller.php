@@ -71,9 +71,10 @@ abstract class Controller extends BaseController
      */
     protected function processResponse($response)
     {
+        // If the response which is returned from the called Action is a Renderable instance,
+        // we will assume we want to render it using the Controller's templated environment.
+
         if ($response instanceof Renderable) {
-            // If the response which is returned from the called Action is a Renderable instance,
-            // we will assume we want to render it using the Controller's templated environment.
             if (($this->layout !== false) && (! $response instanceof Layout)) {
                 return Template::make($this->layout, $this->template)->with('content', $response);
             }
@@ -83,23 +84,19 @@ abstract class Controller extends BaseController
         // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
         if (is_null($response)) {
-            // Retrieve the (legacy) View instances stored on the View Facade.
             $items = View::getItems();
 
-            // Retrieve the (legacy) Headers stored on the View Facade.
             $headers = View::getHeaders();
 
-            if (! empty($items) || ! empty($headers)) {
-                $response = '';
+            // Render the View instances to response.
+            $response = '';
 
-                // Render every View instance to response.
-                foreach ($items as $item) {
-                    $response .= $item->render();
-                }
-
-                // Create a Response instance and return it.
-                return new Response($response, 200, $headers);
+            foreach ($items as $item) {
+                $response .= $item->render();
             }
+
+            // Create a Response instance and return it.
+            return new Response($response, 200, $headers);
         }
 
         return $response;

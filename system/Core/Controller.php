@@ -13,8 +13,9 @@ use Core\Language;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;
-use Support\Facades\Template;
+use Template\Template as Layout;
 
+use Template;
 use View;
 
 
@@ -73,12 +74,12 @@ abstract class Controller extends BaseController
         if ($response instanceof Renderable) {
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
-            if (($this->layout !== false) && ! $response->isLayout()) {
+            if (($this->layout !== false) && (! $response instanceof Layout)) {
                 $response = Template::make($this->layout, $this->template)->with('content', $response);
             }
         }
 
-        // At this point, we will return any not null response.
+        // If the response is not null, we return it.
         if (! is_null($response)) return $response;
 
         // If the response which is returned from the Controller's Action is null and we have

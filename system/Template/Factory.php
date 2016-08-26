@@ -4,8 +4,8 @@ namespace Template;
 
 use Core\Config;
 use Core\Language;
-use Foundation\Application;
 use Support\Contracts\ArrayableInterface as Arrayable;
+use Template\Template;
 use View\Factory as ViewFactory;
 use View\ViewFinderInterface;
 use View\View;
@@ -62,13 +62,10 @@ class Factory
         // Get the View file path.
         $path = $this->find($view, $template);
 
-        // Get the View Engine instance.
-        $engine = $this->getEngineFromPath($path);
-
         // Get the parsed data.
         $data = $this->parseData($data);
 
-        return new View($this->factory, $engine, $view, $path, $data, true);
+        return new Template($this->factory, $view, $path, $data);
     }
 
     /**
@@ -97,17 +94,6 @@ class Factory
     protected function parseData($data)
     {
         return ($data instanceof Arrayable) ? $data->toArray() : $data;
-    }
-
-    /**
-     * Get the appropriate View Engine for the given path.
-     *
-     * @param  string  $path
-     * @return \View\Engines\EngineInterface
-     */
-    protected function getEngineFromPath($path)
-    {
-        return $this->factory->getEngineFromPath($path);
     }
 
     /**

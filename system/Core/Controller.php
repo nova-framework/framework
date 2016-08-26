@@ -108,7 +108,11 @@ abstract class Controller extends BaseController
      */
     protected function trans($str, $code = LANGUAGE_CODE)
     {
-        return $this->language->get($str, $code);
+        if ($this->language !== false) {
+            return $this->language->get($str, $code);
+        }
+
+        return $str;
     }
 
     /**

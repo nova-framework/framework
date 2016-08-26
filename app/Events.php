@@ -24,6 +24,11 @@ Event::listen('router.matched', function($route, $request) {
 
 // Add a Listener to the Event 'router.matched', to process the global View variables.
 Event::listen('router.matched', function($route, $request) {
+    // Share on Views the CSRF Token.
+    $session = $request->session();
+
+    View::share('csrfToken', $session->token());
+    
     // Calculate the URIs and share them on Views.
     $uri = $request->path();
 
@@ -47,9 +52,4 @@ Event::listen('router.matched', function($route, $request) {
 
     View::share('currentUri', $uri);
     View::share('baseUri', $baseUri);
-
-    // Share on Views the CSRF Token.
-    $session = $request->session();
-
-    View::share('csrfToken', $session->token());
 });

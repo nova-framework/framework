@@ -130,16 +130,17 @@ class Factory
         // Make the path absolute and adjust the directory separator.
         $path = str_replace('/', DS, APPDIR .$path);
 
-        // Try to find the View file for RTL languages.
+        //
         if ($language->direction() == 'rtl') {
-            $rtlPath = $path .'-rtl';
-
-            $filePath = $this->finder->find($rtlPath);
-
-            if (! is_null($filePath)) return $filePath;
+            // Search for the Layout file used on the RTL languages.
+            $filePath = $this->finder->find($path .'-rtl');
+        } else {
+            $filePath = null;
         }
 
-        $filePath = $this->finder->find($path);
+        if (is_null($filePath)) {
+            $filePath = $this->finder->find($path);
+        }
 
         if (! is_null($filePath)) return $filePath;
 

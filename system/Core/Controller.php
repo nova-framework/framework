@@ -123,18 +123,18 @@ abstract class Controller extends BaseController
      */
     protected function getView(array $data = array())
     {
-        $classPath = str_replace('\\', '/', static::class);
+        $path = str_replace('\\', '/', static::class);
 
         //
         list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
         $method = $caller['function'];
 
-        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
+        if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[1] .'/' .ucfirst($method);
 
             return View::make($view, $data);
-        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
+        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[2] .'/' .ucfirst($method);
 
             return View::make($view, $data, $matches[1]);

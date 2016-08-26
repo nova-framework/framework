@@ -119,8 +119,6 @@ class Factory
      */
     protected function find($view, $template = null)
     {
-        $language = Language::getInstance();
-
         // Calculate the current Template name.
         $template = $template ?: Config::get('app.template');
 
@@ -130,9 +128,11 @@ class Factory
         // Make the path absolute and adjust the directory separator.
         $path = str_replace('/', DS, APPDIR .$path);
 
-        //
+        // Find the View file depending on the Language direction.
+        $language = Language::getInstance();
+
         if ($language->direction() == 'rtl') {
-            // Search for the Layout file used on the RTL languages.
+            // Search for the View file used on the RTL languages.
             $filePath = $this->finder->find($path .'-rtl');
         } else {
             $filePath = null;

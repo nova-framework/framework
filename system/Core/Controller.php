@@ -54,12 +54,14 @@ abstract class Controller extends BaseController
         parent::__construct();
 
         // Setup the used Template to default, if it is not already defined.
-        if(! isset($this->template)) {
+        if (($this->layout !== false) && ! isset($this->template)) {
             $this->template = Config::get('app.template');
         }
 
         // Initialise the Language object.
-        $this->language = Language::getInstance();
+        if ($this->language !== false) {
+            $this->language = Language::getInstance();
+        }
     }
 
     /**
@@ -71,19 +73,17 @@ abstract class Controller extends BaseController
      */
     protected function processResponse($response)
     {
-        // If the response which is returned from the called Action is a Renderable instance,
-        // we will assume we want to render it using the Controller's templated environment.
-
         if ($response instanceof Renderable) {
+            // If the response which is returned from the called Action is a Renderable instance,
+            // we will assume we want to render it using the Controller's templated environment.
+
             if (($this->layout !== false) && (! $response instanceof Layout)) {
                 return Template::make($this->layout, $this->template)->with('content', $response);
             }
-        }
+        } else if (is_null($response)) {
+            // If the response which is returned from the Controller's Action is null and we have
+            // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
-        // If the response which is returned from the Controller's Action is null and we have
-        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
-
-        if (is_null($response)) {
             $items = View::getItems();
 
             $headers = View::getHeaders();

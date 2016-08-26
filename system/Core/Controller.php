@@ -43,7 +43,7 @@ abstract class Controller extends BaseController
      *
      * @var string
      */
-    public $language;
+    public $language = null;
 
 
     /**

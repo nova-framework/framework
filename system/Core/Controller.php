@@ -75,32 +75,34 @@ abstract class Controller extends BaseController
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
             if (($this->layout !== false) && (! $response instanceof Layout)) {
-                $response = Template::make($this->layout, $this->template)->with('content', $response);
+                return Template::make($this->layout, $this->template)->with('content', $response);
             }
         }
-
-        // If the response is not null, we return it.
-        if (! is_null($response)) return $response;
 
         // If the response which is returned from the Controller's Action is null and we have
         // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
-        // Get the (legacy) Headers stored on the View Facade.
-        $headers = View::getHeaders();
+        if (is_null($response)) {
+            // Retrieve the (legacy) View instances stored on the View Facade.
+            $items = View::getItems();
 
-        // Retrieve the (legacy) View instances stored on the View Facade.
-        $items = View::getItems();
+            // Retrieve the (legacy) Headers stored on the View Facade.
+            $headers = View::getHeaders();
 
-        // Setup the default value of the response.
-        $response = '';
+            if (! empty($items) || ! empty($headers)) {
+                $response = '';
 
-        // Render every View instance and append the result to the response.
-        foreach ($items as $item) {
-            $response .= $item->render();
+                // Render every View instance to response.
+                foreach ($items as $item) {
+                    $response .= $item->render();
+                }
+
+                // Create a Response instance and return it.
+                return new Response($response, 200, $headers);
+            }
         }
 
-        // Create a Response instance from gathered information and return it.
-        return new Response($response, 200, $headers);
+        return $response;
     }
 
     /**

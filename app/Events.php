@@ -11,9 +11,9 @@
 
 // Add a Listener to the Event 'router.matched', to process the View associated Hooks.
 Event::listen('router.matched', function($route, $request) {
-    // Run the Hooks associated to the Views.
     $hooks = Hooks::get();
 
+    // Run the Hooks associated to the Views.
     foreach (array('afterBody', 'css', 'js', 'meta', 'footer') as $hook) {
         $result = $hooks->run($hook);
 
@@ -24,11 +24,11 @@ Event::listen('router.matched', function($route, $request) {
 
 // Add a Listener to the Event 'router.matched', to process the global View variables.
 Event::listen('router.matched', function($route, $request) {
-    // Share on Views the CSRF Token.
     $session = $request->session();
 
+    // Share on Views the CSRF Token.
     View::share('csrfToken', $session->token());
-    
+
     // Calculate the URIs and share them on Views.
     $uri = $request->path();
 

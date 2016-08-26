@@ -121,18 +121,24 @@ class Factory
     {
         $language = Language::getInstance();
 
-        $suffix = ($language->direction() == 'rtl') ? '-rtl' : '';
-
         // Calculate the current Template name.
         $template = $template ?: Config::get('app.template');
 
         // Calculate the search path.
-        $path = sprintf('Templates/%s/%s%s', $template, $view, $suffix);
+        $path = sprintf('Templates/%s/%s', $template, $view);
 
         // Make the path absolute and adjust the directory separator.
         $path = str_replace('/', DS, APPDIR .$path);
 
-        //
+        // Try to find the View file for RTL languages.
+        if ($language->direction() == 'rtl') {
+            $rtlPath = $path .'-rtl';
+
+            $filePath = $this->finder->find($rtlPath);
+
+            if (! is_null($filePath)) return $filePath;
+        }
+
         $filePath = $this->finder->find($path);
 
         if (! is_null($filePath)) return $filePath;

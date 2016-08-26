@@ -108,7 +108,7 @@ abstract class Controller extends BaseController
      */
     protected function trans($str, $code = LANGUAGE_CODE)
     {
-        if ($this->language !== false) {
+        if ($this->language instanceof Language) {
             return $this->language->get($str, $code);
         }
 
@@ -119,29 +119,28 @@ abstract class Controller extends BaseController
      * Return a default View instance.
      *
      * @return \View\View
+     * @throw \BadMethodCallException
      */
     protected function getView(array $data = array())
     {
-        list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-
-        $baseView = ucfirst($caller['function']);
-
-        //
         $classPath = str_replace('\\', '/', static::class);
 
+        //
+        list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+        $method = $caller['function'];
+
         if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
-            $view = str_replace('/', DS, $matches[1]) .DS .$baseView;
+            $view = $matches[1] .'/' .ucfirst($method);
 
-            $module = null;
+            return View::make($view, $data);
         } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
-            $view = str_replace('/', DS, $matches[2]) .DS .$baseView;
+            $view = $matches[2] .'/' .ucfirst($method);
 
-            $module = $matches[1];
-        } else {
-            throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
+            return View::make($view, $data, $matches[1]);
         }
 
-        return View::make($view, $data, $module);
+        throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
     }
 
     /**

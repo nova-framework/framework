@@ -36,7 +36,9 @@ Route::filter('csrf', function($route, $request) {
 
     $method = $request->method();
 
-    if (($method == 'POST') && ($token != Session::token())) {
+    $session = $request->session();
+
+    if (($method == 'POST') && ($token != $session->token())) {
         // When CSRF Token is invalid, respond with Error 400 Page (Bad Request)
         return Response::error(400);
     }

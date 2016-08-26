@@ -80,7 +80,7 @@ class ContentGuard implements HttpKernelInterface
 
         $content = $response->getContent();
 
-        if($this->debug) {
+        if ($this->debug) {
             // Insert the QuickProfiler Widget in the Response's Content.
             $content = str_replace(
                 array(

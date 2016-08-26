@@ -13,8 +13,9 @@ use Core\Language;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;
-use Support\Facades\Template;
+use Template\Template as Layout;
 
+use Template;
 use View;
 
 
@@ -42,7 +43,7 @@ abstract class Controller extends BaseController
      *
      * @var string
      */
-    public $language;
+    public $language = null;
 
 
     /**
@@ -53,12 +54,14 @@ abstract class Controller extends BaseController
         parent::__construct();
 
         // Setup the used Template to default, if it is not already defined.
-        if(! isset($this->template)) {
+        if (($this->layout !== false) && ! isset($this->template)) {
             $this->template = Config::get('app.template');
         }
 
         // Initialise the Language object.
-        $this->language = Language::getInstance();
+        if ($this->language !== false) {
+            $this->language = Language::getInstance();
+        }
     }
 
     /**
@@ -73,33 +76,30 @@ abstract class Controller extends BaseController
         if ($response instanceof Renderable) {
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
-            if (($this->layout !== false) && ! $response->isLayout()) {
-                $response = Template::make($this->layout, $this->template)->with('content', $response);
+
+            if (($this->layout !== false) && (! $response instanceof Layout)) {
+                return Template::make($this->layout, $this->template)->with('content', $response);
             }
+        } else if (is_null($response)) {
+            // If the response which is returned from the Controller's Action is null and we have
+            // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
+
+            $items = View::getItems();
+
+            $headers = View::getHeaders();
+
+            // Render the View instances to response.
+            $response = '';
+
+            foreach ($items as $item) {
+                $response .= $item->render();
+            }
+
+            // Create a Response instance and return it.
+            return new Response($response, 200, $headers);
         }
 
-        // At this point, we will return any not null response.
-        if (! is_null($response)) return $response;
-
-        // If the response which is returned from the Controller's Action is null and we have
-        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
-
-        // Get the (legacy) Headers stored on the View Facade.
-        $headers = View::getHeaders();
-
-        // Retrieve the (legacy) View instances stored on the View Facade.
-        $items = View::getItems();
-
-        // Setup the default value of the response.
-        $response = '';
-
-        // Render every View instance and append the result to the response.
-        foreach ($items as $item) {
-            $response .= $item->render();
-        }
-
-        // Create a Response instance from gathered information and return it.
-        return new Response($response, 200, $headers);
+        return $response;
     }
 
     /**
@@ -108,36 +108,39 @@ abstract class Controller extends BaseController
      */
     protected function trans($str, $code = LANGUAGE_CODE)
     {
-        return $this->language->get($str, $code);
+        if ($this->language instanceof Language) {
+            return $this->language->get($str, $code);
+        }
+
+        return $str;
     }
 
     /**
      * Return a default View instance.
      *
      * @return \View\View
+     * @throw \BadMethodCallException
      */
     protected function getView(array $data = array())
     {
         list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
-        $baseView = ucfirst($caller['function']);
+        $method = $caller['function'];
 
         //
-        $classPath = str_replace('\\', '/', static::class);
+        $path = str_replace('\\', '/', static::class);
 
-        if (preg_match('#^App/Controllers/(.*)$#i', $classPath, $matches)) {
-            $view = str_replace('/', DS, $matches[1]) .DS .$baseView;
+        if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
+            $view = $matches[1] .'/' .ucfirst($method);
 
-            $module = null;
-        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $classPath, $matches)) {
-            $view = str_replace('/', DS, $matches[2]) .DS .$baseView;
+            return View::make($view, $data);
+        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $path, $matches)) {
+            $view = $matches[2] .'/' .ucfirst($method);
 
-            $module = $matches[1];
-        } else {
-            throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
+            return View::make($view, $data, $matches[1]);
         }
 
-        return View::make($view, $data, $module);
+        throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
     }
 
     /**

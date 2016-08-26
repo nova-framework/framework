@@ -26,7 +26,7 @@ class PhpEngine implements EngineInterface
      * @param  array   $data
      * @return string
      */
-    public function render($path, array $data = array())
+    public function get($path, array $data = array())
     {
         return $this->evaluatePath($path, $data);
     }
@@ -42,7 +42,12 @@ class PhpEngine implements EngineInterface
     {
         ob_start();
 
-        extract($__data);
+        // Extract the rendering variables.
+        foreach ($__data as $__variable => $__value) {
+            ${$__variable} = $__value;
+        }
+
+        unset($__variable, $__value);
 
         // We'll evaluate the contents of the view inside a try/catch block so we can
         // flush out any stray output that might get out before an error occurs or

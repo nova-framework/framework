@@ -4,8 +4,8 @@ namespace Template;
 
 use Core\Config;
 use Core\Language;
-use Foundation\Application;
 use Support\Contracts\ArrayableInterface as Arrayable;
+use Template\Template;
 use View\Factory as ViewFactory;
 use View\ViewFinderInterface;
 use View\View;
@@ -62,13 +62,10 @@ class Factory
         // Get the View file path.
         $path = $this->find($view, $template);
 
-        // Get the View Engine instance.
-        $engine = $this->getEngineFromPath($path);
-
         // Get the parsed data.
         $data = $this->parseData($data);
 
-        return new View($this->factory, $engine, $view, $path, $data, true);
+        return new Template($this->factory, $view, $path, $data);
     }
 
     /**
@@ -100,17 +97,6 @@ class Factory
     }
 
     /**
-     * Get the appropriate View Engine for the given path.
-     *
-     * @param  string  $path
-     * @return \View\Engines\EngineInterface
-     */
-    protected function getEngineFromPath($path)
-    {
-        return $this->factory->getEngineFromPath($path);
-    }
-
-    /**
      * Find the View file.
      *
      * @param    string     $view
@@ -119,21 +105,28 @@ class Factory
      */
     protected function find($view, $template = null)
     {
-        $language = Language::getInstance();
-
-        $suffix = ($language->direction() == 'rtl') ? '-rtl' : '';
-
         // Calculate the current Template name.
         $template = $template ?: Config::get('app.template');
 
         // Calculate the search path.
-        $path = sprintf('Templates/%s/%s%s', $template, $view, $suffix);
+        $path = sprintf('Templates/%s/%s', $template, $view);
 
         // Make the path absolute and adjust the directory separator.
         $path = str_replace('/', DS, APPDIR .$path);
 
-        //
-        $filePath = $this->finder->find($path);
+        // Find the View file depending on the Language direction.
+        $language = Language::getInstance();
+
+        if ($language->direction() == 'rtl') {
+            // Search for the View file used on the RTL languages.
+            $filePath = $this->finder->find($path .'-rtl');
+        } else {
+            $filePath = null;
+        }
+
+        if (is_null($filePath)) {
+            $filePath = $this->finder->find($path);
+        }
 
         if (! is_null($filePath)) return $filePath;
 

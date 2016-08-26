@@ -99,7 +99,7 @@ class View implements ArrayAccess, Renderable
      */
     public function renderContents()
     {
-        return $this->engine->render($this->path, $this->gatherData());
+        return $this->engine->get($this->path, $this->gatherData());
     }
 
     /**

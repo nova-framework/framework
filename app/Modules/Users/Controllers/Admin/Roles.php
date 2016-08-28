@@ -11,7 +11,7 @@ namespace App\Modules\Users\Controllers\Admin;
 use Core\Config;
 use Helpers\ReCaptcha;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 use App\Models\Role;
 
 use Carbon\Carbon;
@@ -25,7 +25,7 @@ use Validator;
 use View;
 
 
-class Roles extends Controller
+class Roles extends BackendController
 {
 
     protected function before()

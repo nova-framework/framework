@@ -8,9 +8,7 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use Helpers\FastCache;
-
-use App\Core\Controller;
+use App\Core\BackendController;
 
 use Auth;
 use Config;
@@ -22,7 +20,7 @@ use Validator;
 use View;
 
 
-class Settings extends Controller
+class Settings extends BackendController
 {
 
     protected function before()

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Files\Controllers\Admin;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 
 use Routing\FileDispatcher;
 
@@ -12,7 +12,7 @@ use Response;
 use View;
 
 
-class Files extends Controller
+class Files extends BackendController
 {
     private $dispatcher;
 

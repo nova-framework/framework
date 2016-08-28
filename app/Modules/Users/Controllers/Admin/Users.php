@@ -10,7 +10,7 @@ namespace App\Modules\Users\Controllers\Admin;
 
 use Helpers\ReCaptcha;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 use App\Models\Role;
 use App\Models\User;
 
@@ -25,7 +25,7 @@ use Validator;
 use View;
 
 
-class Users extends Controller
+class Users extends BackendController
 {
 
     protected function before()

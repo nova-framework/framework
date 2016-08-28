@@ -8,16 +8,23 @@
 
 namespace App\Core;
 
-use Core\Controller as BaseController;
-
-use Request;
-use Session;
-use View;
+use Core\Controller;
 
 
-class Controller extends BaseController
+class BackendController extends Controller
 {
+    /**
+     * The currently used Template.
+     *
+     * @var string
+     */
     protected $template = 'AdminLte';
+
+    /**
+     * The currently used Layout.
+     *
+     * @var mixed
+     */
     protected $layout   = 'backend';
 
 

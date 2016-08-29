@@ -160,11 +160,11 @@ Config::set('app', array(
         'Cron'          => 'Support\Facades\Cron',
 
         // The Compatibility Support.
-        'Errors'        => 'App\Core\LegacyError',
+        'Errors'        => 'App\Legacy\Error',
 
         //
-        'Core\Controller' => 'App\Core\LegacyController',
-        'Core\Model'      => 'App\Core\LegacyModel',
+        'Core\Controller' => 'App\Legacy\Controller',
+        'Core\Model'      => 'App\Legacy\Model',
         'Core\Template'   => 'Support\Facades\Template',
         'Core\View'       => 'Support\Facades\View',
     ),

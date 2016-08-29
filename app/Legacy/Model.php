@@ -6,14 +6,14 @@
  * @version 3.0
  */
 
-namespace App\Core;
+namespace App\Legacy;
 
 use Helpers\Database;
 
 /**
  * Base model class. All other models will extend from this base.
  */
-abstract class LegacyModel
+abstract class Model
 {
     /**
      * Hold the database connection.

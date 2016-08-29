@@ -6,12 +6,12 @@
  * @version 3.0
  */
 
-namespace App\Core;
+namespace App\Legacy;
 
 /**
  * Error class.
  */
-class LegacyError
+class Error
 {
     /**
      * Display errors.

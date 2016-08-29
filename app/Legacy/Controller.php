@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Core;
+namespace App\Legacy;
 
 use App\Core\Controller as BaseController;
 use Language\Language;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use BadMethodCallException;
 
 
-abstract class LegacyController extends BaseController
+abstract class Controller extends BaseController
 {
     /**
      * The requested Method by Router.

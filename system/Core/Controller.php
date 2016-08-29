@@ -9,11 +9,13 @@
 namespace Core;
 
 use Core\Config;
+use Http\Response;
 use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;
 use Template\Template as Layout;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use Template;
 use View;
@@ -68,7 +70,12 @@ abstract class Controller extends BaseController
             }
         }
 
-        return parent::processResponse($response);
+        // If the response is not a instance of Symfony Response, create a proper one.
+        if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
+        }
+
+        return $response;
     }
 
     /**

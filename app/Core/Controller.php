@@ -14,6 +14,8 @@ use Support\Contracts\RenderableInterface as Renderable;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+use BadMethodCallException;
+
 
 /**
  * Core controller, all other controllers extend this base controller.
@@ -50,6 +52,12 @@ abstract class Controller extends BaseController
 
     /**
      * Call the (legacy) Controller Middleware - Before Stage.
+     *
+     * @param \Routing\Route $route
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return mixed|void
+     * @throw \BadMethodCallException
      */
     public function callLegacyBefore(Route $route, SymfonyRequest $request)
     {
@@ -64,6 +72,8 @@ abstract class Controller extends BaseController
 
             // Store the called method name.
             $this->method = $method;
+        } else {
+            throw new BadMethodCallException('No controller found on Route instance');
         }
 
         // Execute the legacy Before Stage.
@@ -72,6 +82,12 @@ abstract class Controller extends BaseController
 
     /**
      * Call the (legacy) Controller Middleware - After Stage.
+     *
+     * @param \Routing\Route $route
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param mixed $response
+     *
+     * @return void
      */
     public function callLegacyAfter(Route $route, SymfonyRequest $request, $response)
     {
@@ -81,6 +97,8 @@ abstract class Controller extends BaseController
 
     /**
      * The (legacy) Middleware called before the Action execution.
+     *
+     * @return mixed|void
      */
     protected function before()
     {
@@ -89,6 +107,10 @@ abstract class Controller extends BaseController
 
     /**
      * The (legacy) Middleware called after the Action execution.
+     *
+     * @param mixed $response
+     *
+     * @return void
      */
     protected function after($response)
     {

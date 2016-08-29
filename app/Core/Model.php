@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace App\Core;
 
 use Helpers\Database;
 

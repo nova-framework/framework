@@ -8,7 +8,7 @@
 
 namespace Cache;
 
-use Core\Config;
+use Config\Config;
 use Cache\StoreInterface;
 
 use phpFastCache\CacheManager as FastCacheManager;

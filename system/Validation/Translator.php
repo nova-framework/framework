@@ -10,7 +10,7 @@
 
 namespace Validation;
 
-use Core\Config;
+use Config\Config;
 
 
 class Translator

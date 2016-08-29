@@ -24,7 +24,7 @@
 
 namespace Forensics;
 
-use Core\Config;
+use Config\Config;
 
 use Forensics\Console;
 use Forensics\PdoDebugger;

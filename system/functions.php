@@ -7,7 +7,7 @@
  * @date April 12th, 2016
  */
 
-use Core\Config;
+use Config\Config;
 use Helpers\Url;
 use Support\Str;
 use Support\Facades\Crypt;

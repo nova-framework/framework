@@ -8,7 +8,7 @@
 
 namespace Database;
 
-use Core\Config;
+use Config\Config;
 use Core\Logger;
 use Database\Connectors\Connector;
 use Database\Connectors\MySqlConnector;

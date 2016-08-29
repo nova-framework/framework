@@ -8,7 +8,7 @@
  */
 namespace Config;
 
-use Core\Config;
+use Config\Config;
 
 
 class FileLoader implements LoaderInterface

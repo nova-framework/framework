@@ -8,7 +8,7 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use Core\Config;
+use Config\Config;
 use Helpers\ReCaptcha;
 use Routing\Route;
 

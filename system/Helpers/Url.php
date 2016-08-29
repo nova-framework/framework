@@ -8,7 +8,7 @@
 
 namespace Helpers;
 
-use Core\Config;
+use Config\Config;
 use Exception\RedirectToException;
 use Helpers\Session;
 use Helpers\Inflector;

@@ -8,7 +8,7 @@
 
 namespace Helpers;
 
-use Core\Config;
+use Config\Config;
 use Encryption\DecryptException;
 use Support\Facades\Crypt;
 

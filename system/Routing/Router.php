@@ -8,7 +8,7 @@
 
 namespace Routing;
 
-use Core\Config;
+use Config\Config;
 use App\Core\Controller;
 use Events\Dispatcher;
 

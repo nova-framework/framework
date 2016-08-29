@@ -2,7 +2,7 @@
 
 namespace App\Modules\System\Controllers;
 
-use Core\Config;
+use Config\Config;
 use App\Core\Controller;
 
 use Cron;

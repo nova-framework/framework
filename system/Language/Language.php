@@ -8,7 +8,7 @@
 
 namespace Language;
 
-use Core\Config;
+use Config\Config;
 use Helpers\Inflector;
 
 use Cookie;

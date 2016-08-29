@@ -2,7 +2,7 @@
 
 namespace Template;
 
-use Core\Config;
+use Config\Config;
 use Language\Language;
 use Support\Contracts\ArrayableInterface as Arrayable;
 use Template\Template;

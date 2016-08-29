@@ -8,7 +8,7 @@
 
 namespace App\Core;
 
-use Core\Config;
+use Config\Config;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;

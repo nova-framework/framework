@@ -7,7 +7,7 @@
  * @date April 12th, 2016
  */
 
-namespace Core;
+namespace Config;
 
 
 class Config

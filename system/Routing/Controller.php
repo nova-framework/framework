@@ -263,7 +263,7 @@ abstract class Controller
     }
 
     /**
-     * Handle calls to missing methods on the controller.
+     * Handle calls to missing methods on the Controller.
      *
      * @param  array   $parameters
      * @return mixed
@@ -276,7 +276,7 @@ abstract class Controller
     }
 
     /**
-     * Handle calls to missing methods on the controller.
+     * Handle calls to missing methods on the Controller.
      *
      * @param  string  $method
      * @param  array   $parameters

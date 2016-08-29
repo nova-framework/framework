@@ -164,7 +164,7 @@ Config::set('app', array(
 
         // The Compatibility Support.
         'Core\Controller' => 'App\Core\Controller',
-        'Core\Model'      => 'App\Core\Model',
+        'Core\Model'      => 'App\Core\LegacyModel',
         'Core\Template'   => 'Support\Facades\Template',
         'Core\View'       => 'Support\Facades\View',
     ),

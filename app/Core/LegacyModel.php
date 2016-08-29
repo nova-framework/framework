@@ -13,7 +13,7 @@ use Helpers\Database;
 /**
  * Base model class. All other models will extend from this base.
  */
-abstract class Model
+abstract class LegacyModel
 {
     /**
      * Hold the database connection.

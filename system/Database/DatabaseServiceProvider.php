@@ -24,16 +24,20 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $db = $this->app['db'];
+
+        $events = $this->app['events'];
+
         // Setup the (simple) Model.
-        SimpleModel::setConnectionResolver($this->app['db']);
+        SimpleModel::setConnectionResolver($db);
 
         // Setup the ORM Model.
-        Model::setConnectionResolver($this->app['db']);
+        Model::setConnectionResolver($db);
 
-        Model::setEventDispatcher($this->app['events']);
+        Model::setEventDispatcher($events);
 
         // Setup the legacy Database Helper.
-        DatabaseHelper::setConnectionResolver($this->app['db']);
+        DatabaseHelper::setConnectionResolver($db);
     }
 
     /**

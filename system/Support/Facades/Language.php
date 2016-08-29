@@ -8,7 +8,7 @@
 
 namespace Support\Facades;
 
-use Core\Language as CoreLanguage;
+use Language\Language as CoreLanguage;
 
 use ReflectionMethod;
 use ReflectionException;
@@ -26,7 +26,7 @@ class Language
      */
     public static function __callStatic($method, $params)
     {
-        // First handle the static Methods from Core\Language.
+        // First handle the static Methods from Language\Language.
         try {
             $reflection = new ReflectionMethod(CoreLanguage::class, $method);
 
@@ -38,7 +38,7 @@ class Language
             // Nothing to do.
         }
 
-        // Get a Core\Language instance.
+        // Get a Language\Language instance.
         $instance = CoreLanguage::getInstance();
 
         // Call the non-static method from the Language instance.

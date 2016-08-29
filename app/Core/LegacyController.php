@@ -9,7 +9,7 @@
 namespace App\Core;
 
 use App\Core\Controller as BaseController;
-use Core\Language;
+use Language\Language;
 use Http\Response;
 use Routing\Route;
 

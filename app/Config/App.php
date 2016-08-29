@@ -103,9 +103,6 @@ Config::set('app', array(
      * The registered Class Aliases.
      */
     'aliases' => array(
-        // The Core.
-        'Errors'        => 'App\Core\LegacyError',
-
         // The Helpers.
         'Mail'          => 'Helpers\Mailer',
         'Assets'        => 'Helpers\Assets',
@@ -164,6 +161,7 @@ Config::set('app', array(
 
         // The Compatibility Support.
         'Core\Controller' => 'App\Core\LegacyController',
+        'Errors'          => 'App\Core\LegacyError',
         'Core\Model'      => 'App\Core\LegacyModel',
         'Core\Template'   => 'Support\Facades\Template',
         'Core\View'       => 'Support\Facades\View',

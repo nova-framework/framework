@@ -890,7 +890,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function prefix($uri)
     {
-        return trim(trim($this->getLastGroupPrefix(), '/').'/'.trim($uri, '/'), '/') ?: '/';
+        $prefix = $this->getLastGroupPrefix();
+
+        return trim(trim($prefix, '/') .'/' .trim($uri, '/'), '/') ?: '/';
     }
 
     /**

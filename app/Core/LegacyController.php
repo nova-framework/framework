@@ -146,6 +146,11 @@ abstract class LegacyController extends BaseController
         return parent::processResponse($response);
     }
 
+    /**
+     * Create a Response instance from the legacy View API and return it.
+     *
+     * @return \Http\Response
+     */
     protected function createLegacyResponse()
     {
         $items = View::getItems();
@@ -165,6 +170,7 @@ abstract class LegacyController extends BaseController
 
     /**
      * Return a translated string.
+     *
      * @return string
      */
     protected function trans($str, $code = LANGUAGE_CODE)

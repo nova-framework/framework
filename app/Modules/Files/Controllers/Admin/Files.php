@@ -33,7 +33,7 @@ class Files extends BackendController
      */
     public function filterRequests(Route $route, Request $request)
     {
-        // Store the incomming Request for further processing.
+        // Store the Request instance for further processing.
         $this->request = $request;
 
         // Check the User Authorization.

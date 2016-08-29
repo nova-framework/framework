@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demos\Controllers;
 
-use Core\Controller;
+use App\Core\Controller;
 
 use Routing\Route;
 

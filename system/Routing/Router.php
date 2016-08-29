@@ -9,7 +9,7 @@
 namespace Routing;
 
 use Core\Config;
-use Core\Controller;
+use App\Core\Controller;
 use Events\Dispatcher;
 
 use Helpers\Inflector;

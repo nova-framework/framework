@@ -163,7 +163,8 @@ Config::set('app', array(
         'Cron'          => 'Support\Facades\Cron',
 
         // The Compatibility Support.
-        'Core\Template' => 'Support\Facades\Template',
-        'Core\View'     => 'Support\Facades\View',
+        'Core\Controller' => 'App\Core\Controller',
+        'Core\Template'   => 'Support\Facades\Template',
+        'Core\View'       => 'Support\Facades\View',
     ),
 ));

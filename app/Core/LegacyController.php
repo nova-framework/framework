@@ -8,7 +8,7 @@
 
 namespace App\Core;
 
-use Core\Controller as BaseController;
+use App\Core\Controller as BaseController;
 use Core\Language;
 use Http\Response;
 use Routing\Route;

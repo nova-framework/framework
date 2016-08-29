@@ -8,10 +8,10 @@
 
 namespace App\Core;
 
-use Core\Controller;
+use App\Core\Controller as BaseController;
 
 
-abstract class BackendController extends Controller
+abstract class BackendController extends BaseController
 {
     /**
      * The currently used Template.

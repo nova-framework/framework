@@ -8,7 +8,7 @@
 
 namespace App\Controllers;
 
-use Core\Controller;
+use App\Core\Controller;
 
 use View;
 

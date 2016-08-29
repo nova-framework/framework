@@ -11,9 +11,7 @@ namespace App\Legacy;
 use App\Core\Controller as BaseController;
 use Language\Language;
 use Http\Response;
-use Routing\Route;
 
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use BadMethodCallException;
@@ -55,55 +53,41 @@ abstract class Controller extends BaseController
             $this->language = Language::getInstance();
         }
 
-        // Setup the Controller Middleware; preserve the legacy before/after methods.
-        $this->beforeFilter('@callLegacyBefore');
-
-        $this->afterFilter('@callLegacyAfter');
+        // Setup the (legacy) Middleware.
+        $this->setupMiddleware();
     }
 
-    /**
-     * Call the (legacy) Controller Middleware - Before Stage.
-     *
-     * @param \Routing\Route $route
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return mixed|void
-     * @throw \BadMethodCallException
-     */
-    public function callLegacyBefore(Route $route, SymfonyRequest $request)
+    private function setupMiddleware()
     {
-        // Setup the call parameters from the Route instance.
-        $this->params = $route->getParams();
+        $me = $this;
 
-        // Setup the called method from the Route instance.
-        $action = $route->getAction();
+        // Get the Route's parameters and method name, optionally call the Before Middleware.
+        $this->beforeFilter(function($route, $request) use ($me)
+        {
+            // Setup the call parameters from the Route instance.
+            $me->params = $route->getParams();
 
-        if (isset($action['controller'])) {
-            list(, $method) = explode('@', $action['controller']);
+            // Setup the called method from the Route instance.
+            $action = $route->getAction();
 
-            // Store the method name.
-            $this->method = $method;
-        } else {
-            throw new BadMethodCallException('No controller found on Route instance');
-        }
+            if (isset($action['controller'])) {
+                list(, $method) = explode('@', $action['controller']);
 
-        // Execute the legacy Before Stage.
-        return $this->before();
-    }
+                // Store the method name.
+                $me->method = $method;
+            } else {
+                throw new BadMethodCallException('No controller found on Route action');
+            }
 
-    /**
-     * Call the (legacy) Controller Middleware - After Stage.
-     *
-     * @param \Routing\Route $route
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param mixed $response
-     *
-     * @return void
-     */
-    public function callLegacyAfter(Route $route, SymfonyRequest $request, $response)
-    {
-        // Execute the legacy After Stage.
-        $this->after($response);
+            // Execute the Controller's Before Middleware.
+            return $me->before();
+        });
+
+        // Setup the Controller's After Middleware.
+        $this->afterFilter(function($route, $request, $response) use ($me)
+        {
+            $me->after($response);
+        });
     }
 
     /**
@@ -141,7 +125,7 @@ abstract class Controller extends BaseController
         // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
         if (is_null($response)) {
-            return $this->createLegacyResponse();
+            return $this->createResponse();
         }
 
         return parent::processResponse($response);
@@ -152,7 +136,7 @@ abstract class Controller extends BaseController
      *
      * @return \Http\Response
      */
-    protected function createLegacyResponse()
+    protected function createResponse()
     {
         $items = View::getItems();
 

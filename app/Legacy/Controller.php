@@ -76,13 +76,13 @@ abstract class Controller extends BaseController
             // Setup the called method from the Route instance.
             $action = $route->getAction();
 
-            if (isset($action['controller'])) {
+            if (isset($action['controller']) && str_contains($action['controller'], '@')) {
                 list(, $method) = explode('@', $action['controller']);
 
                 // Store the method name.
                 $me->method = $method;
             } else {
-                throw new BadMethodCallException('No controller found on Route action');
+                throw new BadMethodCallException('No valid Controller found on Route action');
             }
 
             // Execute the Controller's Before Middleware.

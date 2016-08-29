@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller - A base controller with legacy Middleware support.
+ * LegacyController - A base controller with legacy API support.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -9,15 +9,16 @@
 namespace App\Core;
 
 use Core\Controller as BaseController;
+use Core\Language;
+use Http\Response;
 use Routing\Route;
-use Support\Contracts\RenderableInterface as Renderable;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 use BadMethodCallException;
 
 
-abstract class Controller extends BaseController
+abstract class LegacyController extends BaseController
 {
     /**
      * The requested Method by Router.
@@ -33,6 +34,13 @@ abstract class Controller extends BaseController
      */
     private $params = array();
 
+    /**
+     * Language variable to use the languages class.
+     *
+     * @var string
+     */
+    public $language = null;
+
 
     /**
      * On the initial run, create an instance of the config class and the view class.
@@ -40,6 +48,11 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         parent::__construct();
+
+        // Initialise the Language object.
+        if ($this->language !== false) {
+            $this->language = Language::getInstance();
+        }
 
         // Setup the Controller Middleware; preserve the legacy before/after methods.
         $this->beforeFilter('@callLegacyBefore');
@@ -112,6 +125,55 @@ abstract class Controller extends BaseController
     protected function after($response)
     {
         //
+    }
+
+    /**
+     * Create from the given result a Response instance and send it.
+     *
+     * @param mixed  $response
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function processResponse($response)
+    {
+        // If the response which is returned from the Controller's Action is null and we have
+        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
+
+        if (is_null($response)) {
+            return $this->createLegacyResponse();
+        }
+
+        return parent::processResponse($response);
+    }
+
+    protected function createLegacyResponse()
+    {
+        $items = View::getItems();
+
+        $headers = View::getHeaders();
+
+        // Render the View instances to response.
+        $response = '';
+
+        foreach ($items as $item) {
+            $response .= $item->render();
+        }
+
+        // Create a Response instance and return it.
+        return new Response($response, 200, $headers);
+    }
+
+    /**
+     * Return a translated string.
+     * @return string
+     */
+    protected function trans($str, $code = LANGUAGE_CODE)
+    {
+        if ($this->language instanceof Language) {
+            return $this->language->get($str, $code);
+        }
+
+        return $str;
     }
 
     /**

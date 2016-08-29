@@ -17,13 +17,6 @@ class ControllerInspector
      */
     protected $verbs = array('any', 'get', 'post', 'put', 'patch', 'delete', 'head', 'options');
 
-    /**
-     * Boolean indicating the use of Named Parameters on not.
-     *
-     * @var bool $namedParams
-     */
-    protected $namedParams = true;
-
 
     /**
      * ControllerInspector constructor.
@@ -31,9 +24,9 @@ class ControllerInspector
      * @param bool $namedParams Wheter or not are used the Named Parameters
      * @codeCoverageIgnore
      */
-    public function __construct($namedParams = true)
+    public function __construct()
     {
-        $this->namedParams = $namedParams;
+        //
     }
 
     /**
@@ -147,11 +140,7 @@ class ControllerInspector
      */
     public function addUriWildcards($uri)
     {
-        if ($this->namedParams) {
-            return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
-        }
-
-        return $uri .'(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any)(/(:any))))))))';
+        return $uri .'/{one?}/{two?}/{three?}/{four?}/{five?}/{six?}/{seven?}';
     }
 
 }

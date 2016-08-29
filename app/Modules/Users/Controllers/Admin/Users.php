@@ -9,10 +9,13 @@
 namespace App\Modules\Users\Controllers\Admin;
 
 use Helpers\ReCaptcha;
+use Routing\Route;
 
 use App\Core\BackendController;
 use App\Models\Role;
 use App\Models\User;
+
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 use Carbon\Carbon;
 
@@ -28,24 +31,25 @@ use View;
 class Users extends BackendController
 {
 
-    protected function before()
+    public function __construct()
     {
-        // Check the User Authorization.
-        switch ($this->getMethod()) {
-            case 'profile':
-            case 'postProfile':
-                break;
+        parent::__construct();
 
-            default:
-                if (! Auth::user()->hasRole('administrator')) {
-                    $status = __d('users', 'You are not authorized to access this resource.');
+        //
+        $this->beforeFilter('@filterRequests');
+    }
 
-                    return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-                }
+    /**
+     * Filter the incoming requests.
+     */
+    public function filterRequests(Route $route, SymfonyRequest $request)
+    {
+        // Check the User Authorization - while using the Extended Auth Driver.
+        if (! Auth::user()->hasRole('administrator')) {
+            $status = __d('users', 'You are not authorized to access this resource.');
+
+            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
         }
-
-        // Leave to parent's method the Execution Flow decisions.
-        return parent::before();
     }
 
     protected function validate(array $data, $id = null)

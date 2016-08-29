@@ -15,6 +15,7 @@ use View;
 
 class Dashboard extends BackendController
 {
+
     public function index()
     {
         return $this->getView()

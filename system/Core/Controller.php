@@ -63,27 +63,6 @@ abstract class Controller extends BaseController
         if ($this->language !== false) {
             $this->language = Language::getInstance();
         }
-
-        // Setup the Controller Middleware; preserve the legacy before/after methods.
-        $this->beforeFilter('@before');
-
-        $this->afterFilter('@after');
-    }
-
-    /**
-     * The (legacy) Middleware called before the Action execution.
-     */
-    protected function before(Route $route, SymfonyRequest $request)
-    {
-        //
-    }
-
-    /**
-     * The (legacy) Middleware called after the Action execution.
-     */
-    protected function after(Route $route, SymfonyRequest $request, $response)
-    {
-        //
     }
 
     /**
@@ -181,26 +160,4 @@ abstract class Controller extends BaseController
         return $this->layout;
     }
 
-    /**
-     * Handle calls to missing methods on the Controller.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        switch ($method) {
-            case 'before':
-            case 'after':
-                return call_user_func_array(array($this, $method), $parameters);
-
-            default:
-                break;
-        }
-
-        throw new \BadMethodCallException("Method [$method] does not exist.");
-    }
 }

@@ -67,7 +67,7 @@ abstract class Controller extends BaseController
         if (isset($action['controller'])) {
             list(, $method) = explode('@', $action['controller']);
 
-            // Store the called method name.
+            // Store the method name.
             $this->method = $method;
         } else {
             throw new BadMethodCallException('No controller found on Route instance');

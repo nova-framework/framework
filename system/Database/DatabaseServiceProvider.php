@@ -11,7 +11,7 @@ namespace Database;
 use Database\DatabaseManager;
 use Database\ORM\Model;
 use Database\Model as BasicModel;
-use Helpers\Database as DatabaseHelper;
+use Helpers\Database;
 use Support\ServiceProvider;
 
 
@@ -37,7 +37,7 @@ class DatabaseServiceProvider extends ServiceProvider
         BasicModel::setConnectionResolver($db);
 
         // Setup the legacy Database Helper.
-        DatabaseHelper::setConnectionResolver($db);
+        Database::setConnectionResolver($db);
     }
 
     /**

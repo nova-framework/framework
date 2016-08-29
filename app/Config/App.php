@@ -104,7 +104,7 @@ Config::set('app', array(
      */
     'aliases' => array(
         // The Core.
-        'Errors'        => 'Core\Error',
+        'Errors'        => 'App\Core\LegacyError',
 
         // The Helpers.
         'Mail'          => 'Helpers\Mailer',

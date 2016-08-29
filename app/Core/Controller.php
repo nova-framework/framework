@@ -2,7 +2,7 @@
 /**
  * Controller - base controller
  *
- * @author David Carr - dave@novaframework.com
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
 
@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use Template;
 use View;
+
+use BadMethodCallException;
 
 
 /**

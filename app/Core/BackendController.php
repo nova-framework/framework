@@ -11,7 +11,7 @@ namespace App\Core;
 use Core\Controller;
 
 
-class BackendController extends Controller
+abstract class BackendController extends Controller
 {
     /**
      * The currently used Template.

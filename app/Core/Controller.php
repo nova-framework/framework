@@ -17,9 +17,6 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use BadMethodCallException;
 
 
-/**
- * Core controller, all other controllers extend this base controller.
- */
 abstract class Controller extends BaseController
 {
     /**

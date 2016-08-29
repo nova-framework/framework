@@ -23,9 +23,6 @@ use View;
 use BadMethodCallException;
 
 
-/**
- * Core controller, all other controllers extend this base controller.
- */
 abstract class Controller extends BaseController
 {
     /**
@@ -44,7 +41,7 @@ abstract class Controller extends BaseController
 
 
     /**
-     * On the initial run, create an instance of the config class and the view class.
+     * Create a new Controller instance.
      */
     public function __construct()
     {

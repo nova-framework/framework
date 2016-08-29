@@ -44,7 +44,7 @@ abstract class Controller extends BaseController
 
 
     /**
-     * On the initial run, create an instance of the config class and the view class.
+     * Create a new Controller instance.
      */
     public function __construct()
     {

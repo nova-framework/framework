@@ -8,18 +8,16 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
+use Http\Request;
 use Routing\Route;
 
 use App\Core\BackendController;
-
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 use Auth;
 use Config;
 use Input;
 use Session;
 use Redirect;
-use Request;
 use Validator;
 use View;
 
@@ -38,7 +36,7 @@ class Settings extends BackendController
     /**
      * Filter the incoming requests.
      */
-    public function filterRequests(Route $route, SymfonyRequest $request)
+    public function filterRequests(Route $route, Request $request)
     {
         // Check the User Authorization - while using the Extended Auth Driver.
         if (! Auth::user()->hasRole('administrator')) {

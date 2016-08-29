@@ -14,7 +14,6 @@ use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;
 use Template\Template as Layout;
 
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use Template;

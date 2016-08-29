@@ -10,9 +10,9 @@ namespace App\Legacy;
 
 use App\Core\Controller as BaseController;
 use Language\Language;
+use Http\Request;
 use Http\Response;
-
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Routing\Route;
 
 use BadMethodCallException;
 
@@ -57,12 +57,18 @@ abstract class Controller extends BaseController
         $this->setupMiddleware();
     }
 
+    /**
+     *  Setup the (legacy) Middleware.
+     *
+     * @return void
+     + @throw \BadMethodCallException
+     */
     private function setupMiddleware()
     {
         $me = $this;
 
         // Get the Route's parameters and method name, optionally call the Before Middleware.
-        $this->beforeFilter(function($route, $request) use ($me)
+        $this->beforeFilter(function(Route $route, Request $request) use ($me)
         {
             // Setup the call parameters from the Route instance.
             $me->params = $route->getParams();
@@ -84,7 +90,7 @@ abstract class Controller extends BaseController
         });
 
         // Setup the Controller's After Middleware.
-        $this->afterFilter(function($route, $request, $response) use ($me)
+        $this->afterFilter(function(Route $route, Request $request, $response) use ($me)
         {
             $me->after($response);
         });

@@ -10,12 +10,11 @@ namespace App\Modules\Users\Controllers\Admin;
 
 use Config\Config;
 use Helpers\ReCaptcha;
+use Http\Request;
 use Routing\Route;
 
 use App\Core\BackendController;
 use App\Models\Role;
-
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 use Carbon\Carbon;
 
@@ -42,7 +41,7 @@ class Roles extends BackendController
     /**
      * Filter the incoming requests.
      */
-    public function filterRequests(Route $route, SymfonyRequest $request)
+    public function filterRequests(Route $route, Request $request)
     {
         // Check the User Authorization - while using the Extended Auth Driver.
         if (! Auth::user()->hasRole('administrator')) {

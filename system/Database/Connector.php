@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Database\Connectors;
+namespace Database;
 
 use PDO;
 

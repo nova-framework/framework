@@ -10,7 +10,7 @@ namespace Database;
 
 use Config\Config;
 use Core\Logger;
-use Database\Connectors\Connector;
+use Database\Connector;
 use Database\Connectors\MySqlConnector;
 use Database\Connectors\PostgresConnector;
 use Database\Connectors\SQLiteConnector;

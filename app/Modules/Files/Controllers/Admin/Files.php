@@ -35,7 +35,6 @@ class Files extends BackendController
 
         //
         $this->beforeFilter('@setupRequestFilter');
-
         $this->beforeFilter('@adminUsersFilter');
     }
 

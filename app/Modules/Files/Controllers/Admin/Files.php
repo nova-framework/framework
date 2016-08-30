@@ -34,7 +34,7 @@ class Files extends BackendController
         parent::__construct();
 
         //
-        $this->beforeFilter('@setupRequest');
+        $this->beforeFilter('@setupRequestFilter');
 
         $this->beforeFilter('@adminUsersFilter');
     }
@@ -42,7 +42,7 @@ class Files extends BackendController
     /**
      * Filter the incoming requests.
      */
-    public function setupRequest(Route $route, Request $request)
+    public function setupRequestFilter(Route $route, Request $request)
     {
         // Store the Request instance for further processing.
         $this->request = $request;

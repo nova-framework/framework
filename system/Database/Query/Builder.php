@@ -1516,6 +1516,20 @@ class Builder
     }
 
     /**
+     * Merge an array of where clauses and bindings.
+     *
+     * @param  array  $wheres
+     * @param  array  $bindings
+     * @return void
+     */
+    public function mergeWheres($wheres, $bindings)
+    {
+        $this->wheres = array_merge((array) $this->wheres, (array) $wheres);
+
+        $this->bindings['where'] = array_values(array_merge($this->bindings['where'], (array) $bindings));
+    }
+
+    /**
      * Create a raw Database Expression.
      *
      * @param  mixed  $value

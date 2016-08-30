@@ -13,6 +13,9 @@ use Routing\Route;
 
 use App\Core\Controller as BaseController;
 
+use Auth;
+use Redirect;
+
 
 abstract class BackendController extends BaseController
 {

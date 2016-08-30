@@ -6,7 +6,6 @@ use App\Core\BackendController;
 
 use Http\Request;
 use Routing\FileDispatcher;
-use Routing\Route;
 
 use Auth;
 use Response;
@@ -15,8 +14,18 @@ use View;
 
 class Files extends BackendController
 {
+    /**
+     * The Request instance.
+     *
+     * @var \Http\Request
+     */
     private $request = null;
 
+    /**
+     * The File Dispatcher instance.
+     *
+     * @var \Routing\FileDispatcher
+     */
     private $dispatcher;
 
 
@@ -25,32 +34,18 @@ class Files extends BackendController
         parent::__construct();
 
         //
-        $this->beforeFilter('@filterRequests');
+        $this->beforeFilter('@setupRequest');
+
+        $this->beforeFilter('@adminUsersFilter');
     }
 
     /**
      * Filter the incoming requests.
      */
-    public function filterRequests(Route $route, Request $request)
+    public function setupRequest(Route $route, Request $request)
     {
         // Store the Request instance for further processing.
         $this->request = $request;
-
-        // Check the User Authorization.
-        if (Auth::user()->hasRole('administrator')) {
-            // The User is authorized; continue the Execution Flow.
-            return null;
-        }
-
-        if ($request->ajax()) {
-            // On an AJAX Request; just return Error 403 (Access denied)
-            return Response::make('', 403);
-        }
-
-        // Redirect the User to his/hers Dashboard with a warning message.
-        $status = __d('files', 'You are not authorized to access this resource.');
-
-        return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
     }
 
     public function index()

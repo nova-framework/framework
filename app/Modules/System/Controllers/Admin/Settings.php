@@ -8,9 +8,6 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use Http\Request;
-use Routing\Route;
-
 use App\Core\BackendController;
 
 use Auth;
@@ -30,20 +27,7 @@ class Settings extends BackendController
         parent::__construct();
 
         //
-        $this->beforeFilter('@filterRequests');
-    }
-
-    /**
-     * Filter the incoming requests.
-     */
-    public function filterRequests(Route $route, Request $request)
-    {
-        // Check the User Authorization - while using the Extended Auth Driver.
-        if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('users', 'You are not authorized to access this resource.');
-
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-        }
+        $this->beforeFilter('@adminUsersFilter');
     }
 
     protected function validate(array $data)

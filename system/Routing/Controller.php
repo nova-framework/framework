@@ -112,7 +112,9 @@ abstract class Controller
      */
     protected function registerInstanceFilter($filter)
     {
-        $this->getFilterer()->filter($filter, array($this, substr($filter, 1)));
+        $method = substr($filter, 1);
+
+        $this->getFilterer()->filter($filter, array($this, $method));
 
         return $filter;
     }
@@ -128,7 +130,9 @@ abstract class Controller
     protected function isInstanceFilter($filter)
     {
         if (is_string($filter) && str_starts_with($filter, '@')) {
-            if (method_exists($this, substr($filter, 1))) return true;
+            $method = substr($filter, 1);
+
+            if (method_exists($this, $method)) return true;
 
             throw new \InvalidArgumentException("Filter method [$filter] does not exist.");
         }

@@ -54,46 +54,53 @@ abstract class Controller extends BaseController
         }
 
         // Setup the (legacy) Middleware.
-        $this->setupMiddleware();
+        $this->beforeFilter('@callLegacyBefore');
+
+        $this->afterFilter('@callLegacyAfter');
     }
 
     /**
-     *  Setup the (legacy) Middleware.
+     * Setup the Controller's parameters and method name.
+     *
+     * @param \Routing\Route $route
+     * @return void
+     */
+    protected function setupController(Route $route, Request $request)
+    {
+        $action = $route->getAction();
+
+        if (isset($action['controller'])) {
+            list($class, $method) = explode('@', $action['controller']);
+
+            $this->method = $method;
+        }
+
+        $this->params = $route->getParams();
+    }
+
+    /**
+     *  Call the (legacy) Before Middleware.
+     *
+     * @return mixed
+     */
+    public function callLegacyBefore(Route $route, Request $request)
+    {
+        // Setup the Controller instance.
+        $this->setupController($route, $request);
+
+        // Execute the Controller's Before Middleware.
+        return $this->before();
+    }
+
+    /**
+     *  Call the (legacy) After Middleware.
      *
      * @return void
-     + @throw \BadMethodCallException
      */
-    private function setupMiddleware()
+    public function callLegacyAfter(Route $route, Request $request, $response)
     {
-        $me = $this;
-
-        // Get the Route's parameters and method name, optionally call the Before Middleware.
-        $this->beforeFilter(function(Route $route, Request $request) use ($me)
-        {
-            // Setup the call parameters from the Route instance.
-            $me->params = $route->getParams();
-
-            // Setup the called method from the Route instance.
-            $action = $route->getAction();
-
-            if (isset($action['controller']) && str_contains($action['controller'], '@')) {
-                list(, $method) = explode('@', $action['controller']);
-
-                // Store the method name.
-                $me->method = $method;
-            } else {
-                throw new BadMethodCallException('No valid Controller found on Route action');
-            }
-
-            // Execute the Controller's Before Middleware.
-            return $me->before();
-        });
-
-        // Setup the Controller's After Middleware.
-        $this->afterFilter(function(Route $route, Request $request, $response) use ($me)
-        {
-            $me->after($response);
-        });
+        // Execute the Controller's After Middleware.
+        $this->after($response);
     }
 
     /**
@@ -131,7 +138,7 @@ abstract class Controller extends BaseController
         // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
 
         if (is_null($response)) {
-            return $this->createResponse();
+            return $this->createLegacyResponse();
         }
 
         return parent::processResponse($response);
@@ -142,7 +149,7 @@ abstract class Controller extends BaseController
      *
      * @return \Http\Response
      */
-    protected function createResponse()
+    protected function createLegacyResponse()
     {
         $items = View::getItems();
 

@@ -2,6 +2,21 @@
 
 namespace Database;
 
+use Database\Connectors\MySqlConnector;
+use Database\Connectors\PostgresConnector;
+use Database\Connectors\SQLiteConnector;
+use Database\Connectors\SqlServerConnector;
+
+use Database\Query\Grammars\MySqlGrammar;
+use Database\Query\Grammars\PostgresGrammar;
+use Database\Query\Grammars\SQLiteGrammar;
+use Database\Query\Grammars\SqlServerGrammar;
+
+use Database\Query\Processors\MySqlProcessor;
+use Database\Query\Processors\PostgresProcessor;
+use Database\Query\Processors\SQLiteProcessor;
+use Database\Query\Processors\SqlServerProcessor;
+
 use Database\Connection;
 
 
@@ -85,12 +100,27 @@ class DatabaseManager implements ConnectionResolverInterface
      *
      * @param  string  $name
      * @return \Database\Connection
+     *
+     * @throws \InvalidArgumentException
      */
     protected function makeConnection($name)
     {
         $config = $this->getConfig($name);
 
-        return new Connection($config);
+        if (! isset($config['driver'])) {
+            throw new \InvalidArgumentException("A driver must be specified.");
+        }
+
+        $driver = $config['driver'];
+
+        return new Connection(
+            $config['database'],
+            $config['prefix'],
+            $config,
+            $this->createConnector($driver),
+            $this->createQueryGrammar($driver),
+            $this->createQueryProcessor($driver)
+        );
     }
 
     /**
@@ -123,6 +153,87 @@ class DatabaseManager implements ConnectionResolverInterface
         });
 
         return $connection;
+    }
+
+    /**
+     * Create a connector instance based on the configuration.
+     *
+     * @param  array  $config
+     * @return \Database\ConnectorInterface
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function createConnector($driver)
+    {
+        switch ($driver) {
+            case 'mysql':
+                return new MySqlConnector();
+
+            case 'pgsql':
+                return new PostgresConnector();
+
+            case 'sqlite':
+                return new SQLiteConnector();
+
+            case 'sqlsrv':
+                return new SqlServerConnector();
+        }
+
+        throw new \InvalidArgumentException("Unsupported driver [$driver]");
+    }
+
+    /**
+     * Create a Query Grammar instance based on the configuration.
+     *
+     * @param  array  $config
+     * @return \Database\Query\Grammar
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function createQueryGrammar($driver)
+    {
+        switch ($driver) {
+            case 'mysql':
+                return new MySqlGrammar();
+
+            case 'pgsql':
+                return new PostgresGrammar();
+
+            case 'sqlite':
+                return new SQLiteGrammar();
+
+            case 'sqlsrv':
+                return new SqlServerGrammar();
+        }
+
+        throw new \InvalidArgumentException("Unsupported driver [$driver]");
+    }
+
+    /**
+     * Create a Query Processor instance based on the configuration.
+     *
+     * @param  array  $config
+     * @return \Database\Query\Processor
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function createQueryProcessor($driver)
+    {
+        switch ($driver) {
+            case 'mysql':
+                return new MySqlProcessor();
+
+            case 'pgsql':
+                return new PostgresProcessor();
+
+            case 'sqlite':
+                return new SQLiteProcessor();
+
+            case 'sqlsrv':
+                return new SqlServerProcessor();
+        }
+
+        throw new \InvalidArgumentException("Unsupported driver [$driver]");
     }
 
     /**

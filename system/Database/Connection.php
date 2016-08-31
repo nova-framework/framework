@@ -11,24 +11,10 @@ namespace Database;
 use Config\Config;
 use Core\Logger;
 
-use Database\Connectors\MySqlConnector;
-use Database\Connectors\PostgresConnector;
-use Database\Connectors\SQLiteConnector;
-use Database\Connectors\SqlServerConnector;
-
-use Database\Query\Grammars\MySqlGrammar;
-use Database\Query\Grammars\PostgresGrammar;
-use Database\Query\Grammars\SQLiteGrammar;
-use Database\Query\Grammars\SqlServerGrammar;
-
-use Database\Query\Processors\MySqlProcessor;
-use Database\Query\Processors\PostgresProcessor;
-use Database\Query\Processors\SQLiteProcessor;
-use Database\Query\Processors\SqlServerProcessor;
-
 use Database\Query\Expression;
 use Database\Query\Grammar;
 use Database\Query\Builder as QueryBuilder;
+use Database\Query\Processor;
 
 use Database\Connector;
 use Database\QueryException;
@@ -40,13 +26,6 @@ use DateTimeInterface;
 
 class Connection
 {
-    /**
-     * The Driver name.
-     *
-     * @var
-     */
-    protected $driver;
-
     /**
      * The Connector instance.
      *
@@ -158,114 +137,25 @@ class Connection
      * @param  array  $config
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct($database = '', $tablePrefix = '', array $config, Connector $connector, Grammar $grammar, Processor $processor)
     {
-        if (! isset($config['driver'])) {
-            throw new \InvalidArgumentException("A driver must be specified.");
-        }
+        $this->database = $database;
+
+        $this->tablePrefix = $tablePrefix;
 
         $this->config = $config;
 
-        $this->driver = $config['driver'];
+        // Setup the Database Connector instance.
+        $this->connector = $connector;
 
-        $this->database = $config['database'];
-
-        $this->tablePrefix = $config['prefix'];
-
-        // Create the Database Connection instance.
-        $this->connector = $this->createConnector();
-
-        // Create the Query Grammar instance.
-        $grammar = $this->createQueryGrammar();
-
+        // Setup the Query Grammar instance.
         $this->grammar = $this->withTablePrefix($grammar);
 
-        // Create the Query Processor instance.
-        $this->processor = $this->createQueryProcessor();
+        // Setup the Query Processor instance.
+        $this->processor = $processor;
 
         // Create the PDO Connection instance.
         $this->pdo = $this->createConnection($config);
-    }
-
-    /**
-     * Create a connector instance based on the configuration.
-     *
-     * @param  array  $config
-     * @return \Database\ConnectorInterface
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function createConnector()
-    {
-        switch ($this->driver) {
-            case 'mysql':
-                return new MySqlConnector();
-
-            case 'pgsql':
-                return new PostgresConnector();
-
-            case 'sqlite':
-                return new SQLiteConnector();
-
-            case 'sqlsrv':
-                return new SqlServerConnector();
-        }
-
-        throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
-    }
-
-    /**
-     * Create a Query Grammar instance based on the configuration.
-     *
-     * @param  array  $config
-     * @return \Database\Query\Grammar
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function createQueryGrammar()
-    {
-        switch ($this->driver) {
-            case 'mysql':
-                return new MySqlGrammar();
-
-            case 'pgsql':
-                return new PostgresGrammar();
-
-            case 'sqlite':
-                return new SQLiteGrammar();
-
-            case 'sqlsrv':
-                return new SqlServerGrammar();
-        }
-
-        throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
-    }
-
-    /**
-     * Create a Query Processor instance based on the configuration.
-     *
-     * @param  array  $config
-     * @return \Database\Query\Processor
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function createQueryProcessor()
-    {
-        switch ($this->driver) {
-            case 'mysql':
-                return new MySqlProcessor();
-
-            case 'pgsql':
-                return new PostgresProcessor();
-
-            case 'sqlite':
-                return new SQLiteProcessor();
-
-            case 'sqlsrv':
-                return new SqlServerProcessor();
-        }
-
-        throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
     }
 
     /**
@@ -678,16 +568,6 @@ class Connection
         $grammar->setTablePrefix($this->tablePrefix);
 
         return $grammar;
-    }
-
-    /**
-     * Get the Database Driver.
-     *
-     * @return string
-     */
-    public function getDriver()
-    {
-        return $this->driver;
     }
 
     /**

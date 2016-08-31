@@ -39,7 +39,7 @@ abstract class Relation
      */
     protected static $constraints = true;
 
-    
+
     /**
      * Create a new relation instance.
      *
@@ -281,7 +281,7 @@ abstract class Relation
      */
     public function wrap($value)
     {
-        return $this->parent->getQuery()->wrap($value);
+        return $this->parent->getQuery()->getGrammar()->wrap($value);
     }
 
     /**

@@ -1596,7 +1596,11 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
     {
         $connection = $this->getConnection();
 
-        return new QueryBuilder($connection);
+        $grammar = $connection->getQueryGrammar();
+
+        $processor = $connection->getQueryProcessor();
+
+        return new QueryBuilder($connection, $grammar, $processor);
     }
 
     /**
@@ -2320,7 +2324,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
      */
     protected function getDateFormat()
     {
-        return $this->getConnection()->getDateFormat();
+        return $this->getConnection()->getQueryGrammar()->getDateFormat();
     }
 
     /**

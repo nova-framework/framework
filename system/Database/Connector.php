@@ -26,16 +26,10 @@ abstract class Connector
         PDO::ATTR_EMULATE_PREPARES  => false,
     );
 
-    /**
-     * The keyword identifier wrapper format.
-     *
-     * @var string
-     */
-    protected $wrapper = '`%s`';
-
 
     public function __construct()
     {
+        //
     }
 
     /**
@@ -87,26 +81,6 @@ abstract class Connector
     public function setDefaultOptions(array $options)
     {
         $this->options = $options;
-    }
-
-    /**
-     * Get the keyword identifier wrapper format.
-     *
-     * @return string
-     */
-    public function getWrapper()
-    {
-        return $this->wrapper;
-    }
-
-    /**
-     * Get the format for database stored dates.
-     *
-     * @return string
-     */
-    public function getDateFormat()
-    {
-        return 'Y-m-d H:i:s';
     }
 
 }

@@ -14,7 +14,14 @@ use Database\Connector;
 use Database\Connectors\MySqlConnector;
 use Database\Connectors\PostgresConnector;
 use Database\Connectors\SQLiteConnector;
+use Database\Query\Grammars\MySqlGrammar;
+use Database\Query\Grammars\PostgresGrammar;
+use Database\Query\Grammars\SQLiteGrammar;
+use Database\Query\Processors\MySqlProcessor;
+use Database\Query\Processors\PostgresProcessor;
+use Database\Query\Processors\SQLiteProcessor;
 use Database\Query\Expression;
+use Database\Query\Grammar;
 use Database\Query\Builder as QueryBuilder;
 use Database\QueryException;
 
@@ -38,6 +45,20 @@ class Connection
      * @var
      */
     protected $connector;
+
+    /**
+     * The Query Grammar instance.
+     *
+     * @var \Database\Query\Grammar
+     */
+    protected $grammar;
+
+    /**
+     * The Query Processor instance.
+     *
+     * @var \Database\Query\Processor
+     */
+    protected $processor;
 
     /**
      * The active PDO Connection.
@@ -143,9 +164,18 @@ class Connection
 
         $this->tablePrefix = $config['prefix'];
 
-        //
-        $this->connector = $this->createConnector($config);
+        // Create the Database Connection instance.
+        $this->connector = $this->createConnector();
 
+        // Create the Query Grammar instance.
+        $grammar = $this->createQueryGrammar();
+
+        $this->grammar = $this->withTablePrefix($grammar);
+
+        // Create the Query Processor instance.
+        $this->processor = $this->createQueryProcessor();
+
+        // Create the PDO Connection instance.
         $this->pdo = $this->createConnection($config);
     }
 
@@ -153,11 +183,11 @@ class Connection
      * Create a connector instance based on the configuration.
      *
      * @param  array  $config
-     * @return \Database\Connectors\ConnectorInterface
+     * @return \Database\ConnectorInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function createConnector(array $config)
+    public function createConnector()
     {
         switch ($this->driver) {
             case 'mysql':
@@ -168,6 +198,54 @@ class Connection
 
             case 'sqlite':
                 return new SQLiteConnector();
+        }
+
+        throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
+    }
+
+    /**
+     * Create a Query Grammar instance based on the configuration.
+     *
+     * @param  array  $config
+     * @return \Database\Query\Grammar
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function createQueryGrammar()
+    {
+        switch ($this->driver) {
+            case 'mysql':
+                return new MySqlGrammar();
+
+            case 'pgsql':
+                return new PostgresGrammar();
+
+            case 'sqlite':
+                return new SQLiteGrammar();
+        }
+
+        throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
+    }
+
+    /**
+     * Create a Query Processor instance based on the configuration.
+     *
+     * @param  array  $config
+     * @return \Database\Query\Processor
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function createQueryProcessor()
+    {
+        switch ($this->driver) {
+            case 'mysql':
+                return new MySqlProcessor();
+
+            case 'pgsql':
+                return new PostgresProcessor();
+
+            case 'sqlite':
+                return new SQLiteProcessor();
         }
 
         throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
@@ -192,7 +270,7 @@ class Connection
      */
     public function table($table)
     {
-        $query = new QueryBuilder($this);
+        $query = new QueryBuilder($this, $this->grammar, $this->processor);
 
         return $query->from($table);
     }
@@ -573,6 +651,19 @@ class Connection
     }
 
     /**
+     * Set the table prefix and return the grammar.
+     *
+     * @param  \Database\Grammar  $grammar
+     * @return \Database\Grammar
+     */
+    public function withTablePrefix(Grammar $grammar)
+    {
+        $grammar->setTablePrefix($this->tablePrefix);
+
+        return $grammar;
+    }
+
+    /**
      * Get the Database Driver.
      *
      * @return string
@@ -585,11 +676,31 @@ class Connection
     /**
      * Get the Connector instance.
      *
-     * @return \Database\Connectors\Connector
+     * @return \Database\Connector
      */
     public function getConnector()
     {
         return $this->connector;
+    }
+
+    /**
+     * Get the Connector instance.
+     *
+     * @return \Database\Query\Grammar
+     */
+    public function getQueryGrammar()
+    {
+        return $this->grammar;
+    }
+
+    /**
+     * Get the Connector instance.
+     *
+     * @return \Database\Query\Processor
+     */
+    public function getQueryProcessor()
+    {
+        return $this->processor;
     }
 
     /**
@@ -775,23 +886,4 @@ class Connection
         return $this->loggingQueries;
     }
 
-    /**
-     * Get the keyword identifier wrapper format.
-     *
-     * @return string
-     */
-    public function getWrapper()
-    {
-        return $this->connector->getWrapper();
-    }
-
-    /**
-     * Get the format for database stored dates.
-     *
-     * @return string
-     */
-    public function getDateFormat()
-    {
-        return $this->connector->getDateFormat();
-    }
 }

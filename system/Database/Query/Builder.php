@@ -11,7 +11,9 @@ namespace Database\Query;
 use Helpers\Inflector;
 use Database\Connection;
 use Database\Query\Expression;
+use Database\Query\Grammar;
 use Database\Query\JoinClause;
+use Database\Query\Processor;
 use Support\Facades\Paginator;
 
 use PDO;
@@ -26,6 +28,20 @@ class Builder
      * @var \Database\Connection
      */
     protected $connection;
+
+    /**
+     * The Database Query Grammar instance.
+     *
+     * @var \Database\Query\Grammar
+     */
+    protected $grammar;
+
+    /**
+     * The Database Query Processor instance.
+     *
+     * @var \Database\Query\Processor
+     */
+    protected $processor;
 
     /**
      * The current query value bindings.
@@ -119,6 +135,34 @@ class Builder
     public $unions;
 
     /**
+     * The maximum number of union records to return.
+     *
+     * @var int
+     */
+    public $unionLimit;
+
+    /**
+     * The number of union records to skip.
+     *
+     * @var int
+     */
+    public $unionOffset;
+
+    /**
+     * The orderings for the union query.
+     *
+     * @var array
+     */
+    public $unionOrders;
+
+    /**
+     * Indicates whether row locking is being used.
+     *
+     * @var string|bool
+     */
+    public $lock;
+
+    /**
      * All of the available clause operators.
      *
      * @var array
@@ -132,11 +176,18 @@ class Builder
     /**
      * Create a new Query instance.
      *
+     * @param  \Database\Connection  $connection
+     * @param  \Database\Query\Grammar  $grammar
+     * @param  \Database\Query\Processor  $processor
      * @return void
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, Grammar $grammar, Processor $processor)
     {
         $this->connection = $connection;
+
+        $this->grammar = $grammar;
+
+        $this->processor = $processor;
     }
 
     /**
@@ -868,9 +919,11 @@ class Builder
      */
     public function orderBy($column, $direction = 'asc')
     {
-        $direction = (strtolower($direction) == 'asc') ? 'ASC' : 'DESC';
+        $property = $this->unions ? 'unionOrders' : 'orders';
 
-        $this->orders[] = compact('column', 'direction');
+        $direction = strtolower($direction) == 'asc' ? 'ASC' : 'DESC';
+
+        $this->{$property}[] = compact('column', 'direction');
 
         return $this;
     }
@@ -923,7 +976,9 @@ class Builder
      */
     public function offset($value)
     {
-        $this->offset = max(0, $value);
+        $property = $this->unions ? 'unionOffset' : 'offset';
+
+        $this->$property = max(0, $value);
 
         return $this;
     }
@@ -947,9 +1002,9 @@ class Builder
      */
     public function limit($value)
     {
-        if ($value > 0) {
-            $this->limit = $value;
-        }
+        $property = $this->unions ? 'unionLimit' : 'limit';
+
+        if ($value > 0) $this->$property = $value;
 
         return $this;
     }
@@ -1004,6 +1059,39 @@ class Builder
     public function unionAll($query)
     {
         return $this->union($query, true);
+    }
+
+    /**
+     * Lock the selected rows in the table.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function lock($value = true)
+    {
+        $this->lock = $value;
+
+        return $this;
+    }
+
+    /**
+     * Lock the selected rows in the table for updating.
+     *
+     * @return \Database\Query\Builder
+     */
+    public function lockForUpdate()
+    {
+        return $this->lock(true);
+    }
+
+    /**
+     * Share lock the selected rows in the table.
+     *
+     * @return \Database\Query\Builder
+     */
+    public function sharedLock()
+    {
+        return $this->lock(false);
     }
 
     /**
@@ -1272,7 +1360,7 @@ class Builder
      */
     protected function runSelect()
     {
-        return $this->connection->select($this->toSql(), $this->bindings);
+        return $this->connection->select($this->toSql(), $this->getBindings());
     }
 
     /**
@@ -1282,7 +1370,7 @@ class Builder
      */
     public function toSql()
     {
-        return $this->compileSelect($this);
+        return $this->grammar->compileSelect($this);
     }
 
     /**
@@ -1385,23 +1473,23 @@ class Builder
      */
     public function insert(array $values)
     {
-        if (! is_array(reset($values))) {
+        if ( ! is_array(reset($values))) {
             $values = array($values);
         } else {
             foreach ($values as $key => $value) {
-                ksort($value);
-
-                $values[$key] = $value;
+                ksort($value); $values[$key] = $value;
             }
         }
 
         $bindings = array();
 
         foreach ($values as $record) {
-            $bindings = array_merge($bindings, array_values($record));
+            foreach ($record as $value) {
+                $bindings[] = $value;
+            }
         }
 
-        $sql = $this->compileInsert($values);
+        $sql = $this->grammar->compileInsert($this, $values);
 
         $bindings = $this->cleanBindings($bindings);
 
@@ -1416,15 +1504,11 @@ class Builder
      */
     public function insertGetId(array $values)
     {
-        $sql = $this->compileInsert($values);
+        $sql = $this->grammar->compileInsertGetId($this, $values, $sequence);
 
         $values = $this->cleanBindings($values);
 
-        $this->connection->insert($sql, $values);
-
-        $id = $this->connection->getPdo()->lastInsertId();
-
-        return is_numeric($id) ? (int) $id : $id;
+        return $this->processor->processInsertGetId($this, $sql, $values, $sequence);
     }
 
     /**
@@ -1435,13 +1519,12 @@ class Builder
      */
     public function update(array $values)
     {
-        $bindings = array_values(array_merge($values, $this->bindings));
+        $bindings = array_values(array_merge($values, $this->getBindings()));
 
-        $sql = $this->compileUpdate($values);
+        $sql = $this->grammar->compileUpdate($this, $values);
 
         return $this->connection->update($sql, $this->cleanBindings($bindings));
     }
-
 
     /**
      * Increment a Column's value by a given amount.
@@ -1453,7 +1536,7 @@ class Builder
      */
     public function increment($column, $amount = 1, array $extra = array())
     {
-        $wrapped = $this->wrap($column);
+        $wrapped = $this->grammar->wrap($column);
 
         $columns = array_merge(array($column => $this->raw("$wrapped + $amount")), $extra);
 
@@ -1470,7 +1553,7 @@ class Builder
      */
     public function decrement($column, $amount = 1, array $extra = array())
     {
-        $wrapped = $this->wrap($column);
+        $wrapped = $this->grammar->wrap($column);
 
         $columns = array_merge(array($column => $this->raw("$wrapped - $amount")), $extra);
 
@@ -1484,13 +1567,11 @@ class Builder
      */
     public function delete($id = null)
     {
-        if (! is_null($id)) {
-            $this->where('id', '=', $id);
-        }
+        if (! is_null($id)) $this->where('id', '=', $id);
 
-        $sql = $this->compileDelete();
+        $sql = $this->grammar->compileDelete($this);
 
-        return $this->connection->delete($sql, $this->bindings);
+        return $this->connection->delete($sql, $this->getBindings());
     }
 
     /**
@@ -1500,7 +1581,7 @@ class Builder
      */
     public function truncate()
     {
-        foreach ($this->compileTruncate() as $sql => $bindings) {
+        foreach ($this->grammar->compileTruncate($this) as $sql => $bindings) {
             $this->connection->statement($sql, $bindings);
         }
     }
@@ -1512,7 +1593,7 @@ class Builder
      */
     public function newQuery()
     {
-        return new Builder($this->connection);
+        return new Builder($this->connection, $this->grammar, $this->processor);
     }
 
     /**
@@ -1547,18 +1628,35 @@ class Builder
      */
     public function getBindings()
     {
+        return array_flatten($this->bindings);
+    }
+
+    /**
+     * Get the raw array of bindings.
+     *
+     * @return array
+     */
+    public function getRawBindings()
+    {
         return $this->bindings;
     }
 
     /**
      * Set the bindings on the query builder.
      *
-     * @param  array  $bindings
-     * @return \Database\Query\Builder
+     * @param  array   $bindings
+     * @param  string  $type
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
-    public function setBindings(array $bindings)
+    public function setBindings(array $bindings, $type = 'where')
     {
-        $this->bindings = $bindings;
+        if (! array_key_exists($type, $this->bindings)) {
+            throw new \InvalidArgumentException("Invalid binding type: {$type}.");
+        }
+
+        $this->bindings[$type] = $bindings;
 
         return $this;
     }
@@ -1566,12 +1664,23 @@ class Builder
     /**
      * Add a binding to the query.
      *
-     * @param  mixed  $value
-     * @return \Database\Query\Builder
+     * @param  mixed   $value
+     * @param  string  $type
+     * @return $this
+     *
+     * @throws \InvalidArgumentException
      */
-    public function addBinding($value)
+    public function addBinding($value, $type = 'where')
     {
-        $this->bindings[] = $value;
+        if ( ! array_key_exists($type, $this->bindings)) {
+            throw new \InvalidArgumentException("Invalid binding type: {$type}.");
+        }
+
+        if (is_array($value)) {
+            $this->bindings[$type] = array_values(array_merge($this->bindings[$type], $value));
+        } else {
+            $this->bindings[$type][] = $value;
+        }
 
         return $this;
     }
@@ -1597,7 +1706,8 @@ class Builder
      */
     protected function cleanBindings(array $bindings)
     {
-        return array_values(array_filter($bindings, function($binding) {
+        return array_values(array_filter($bindings, function($binding)
+        {
             return (! $binding instanceof Expression);
         }));
     }
@@ -1610,6 +1720,16 @@ class Builder
     public function getConnection()
     {
         return $this->connection;
+    }
+
+    /**
+     * Get the query grammar instance.
+     *
+     * @return \Database\Grammar
+     */
+    public function getGrammar()
+    {
+        return $this->grammar;
     }
 
     //--------------------------------------------------------------------
@@ -1636,732 +1756,4 @@ class Builder
         throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
     }
 
-    //--------------------------------------------------------------------
-    // Clauses Compilation and Statements generation
-    //--------------------------------------------------------------------
-
-    /**
-     * Compile a select query into SQL.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @return string
-     */
-    public function compileSelect(Builder $query)
-    {
-        if (is_null($query->columns)) {
-            $query->columns = array('*');
-        }
-
-        return trim($this->concatenate($this->compileComponents($query)));
-    }
-
-    /**
-     * Compile the components necessary for a select clause.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @return array
-     */
-    protected function compileComponents(Builder $query)
-    {
-        $sql = array();
-
-        $selectComponents = array(
-            'aggregate',
-            'columns',
-            'from',
-            'joins',
-            'wheres',
-            'groups',
-            'havings',
-            'orders',
-            'limit',
-            'unions',
-            'offset'
-        );
-
-        foreach ($selectComponents as $component) {
-            if (! is_null($query->{$component})) {
-                $method = 'compile' .ucfirst($component);
-
-                $sql[$component] = call_user_func(array($this, $method), $query, $query->{$component});
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Compile an aggregated select clause.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $aggregate
-     * @return string
-     */
-    protected function compileAggregate(Builder $query, $aggregate)
-    {
-        $column = $this->columnize($aggregate['columns']);
-
-        if ($query->distinct && ($column !== '*')) {
-            $column = 'DISTINCT ' .$column;
-        }
-
-        return 'SELECT ' .$aggregate['function'] .'(' .$column .') AS aggregate';
-    }
-
-    /**
-     * Compile the "SELECT *" portion of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $columns
-     * @return string
-     */
-    protected function compileColumns(Builder $query, $columns)
-    {
-        if (is_null($query->aggregate)) {
-            $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
-
-            return $select .$this->columnize($columns);
-        }
-
-        return '';
-    }
-
-    /**
-     * Compile the "FROM" portion of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  string  $table
-     * @return string
-     */
-    protected function compileFrom(Builder $query, $table)
-    {
-        return 'FROM ' .$this->wrapTable($table);
-    }
-
-    /**
-     * Compile the "JOIN" portions of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $joins
-     * @return string
-     */
-    protected function compileJoins(Builder $query, $joins)
-    {
-        $sql = array();
-
-        foreach ($joins as $join) {
-            $table = $this->wrapTable($join->table);
-
-            $clauses = array();
-
-            foreach ($join->clauses as $clause) {
-                $clauses[] = $this->compileJoinConstraint($clause);
-            }
-
-            $clauses[0] = $this->removeLeadingBoolean($clauses[0]);
-
-            $clauses = implode(' ', $clauses);
-
-            $type = $join->type;
-
-            $sql[] = "$type JOIN $table ON $clauses";
-        }
-
-        return implode(' ', $sql);
-    }
-
-    /**
-     * Create a join clause constraint segment.
-     *
-     * @param  array   $clause
-     * @return string
-     */
-    protected function compileJoinConstraint(array $clause)
-    {
-        $first = $this->wrap($clause['first']);
-
-        $second = $clause['where'] ? '?' : $this->wrap($clause['second']);
-
-        $boolean = strtoupper($clause['boolean']);
-
-        return "$boolean $first {$clause['operator']} $second";
-    }
-
-    /**
-     * Compile the "WHERE" portions of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @return string
-     */
-    protected function compileWheres(Builder $query)
-    {
-        $sql = array();
-
-        if (is_null($query->wheres)) {
-            return '';
-        }
-
-        foreach ($query->wheres as $where) {
-            $method = "compileWhere{$where['type']}";
-
-            $sql[] = strtoupper($where['boolean']) .' ' .call_user_func(array($this, $method), $where);
-        }
-
-        if (count($sql) > 0) {
-            $sql = implode(' ', $sql);
-
-            return 'WHERE ' .preg_replace('/AND |OR /', '', $sql, 1);
-        }
-
-        return '';
-    }
-
-    /**
-     * Compile a nested where clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereNested($where)
-    {
-        $nested = $where['query'];
-
-        return '(' .substr($this->compileWheres($nested), 6) .')';
-    }
-
-    /**
-     * Compile a where condition with a sub-select.
-     *
-     * @param  array   $where
-     * @return string
-     */
-    protected function compileWhereSub($where)
-    {
-        $select = $this->compileSelect($where['query']);
-
-        return $this->wrap($where['column']) .' ' .$where['operator'] ." ($select)";
-    }
-
-    /**
-     * Compile a basic where clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereBasic($where)
-    {
-        $value = $this->parameter($where['value']);
-
-        return $this->wrap($where['column']) .' ' .$where['operator'] .' ' .$value;
-    }
-
-    /**
-     * Compile a "BETWEEN" where clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereBetween($where)
-    {
-        $between = $where['not'] ? 'NOT BETWEEN' : 'BETWEEN';
-
-        return $this->wrap($where['column']) .' ' .$between .' ? AND ?';
-    }
-
-    /**
-     * Compile a "WHERE IN" clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereIn($where)
-    {
-        $values = $this->parameterize($where['values']);
-
-        return $this->wrap($where['column']) .' IN (' .$values .')';
-    }
-
-    /**
-     * Compile a "WHERE NOT IN" clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereNotIn($where)
-    {
-        $values = $this->parameterize($where['values']);
-
-        return $this->wrap($where['column']) .' NOT IN (' .$values .')';
-    }
-
-    /**
-     * Compile a where in sub-select clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereInSub($where)
-    {
-        $select = $this->compileSelect($where['query']);
-
-        return $this->wrap($where['column']) .' IN (' .$select .')';
-    }
-
-    /**
-     * Compile a where not in sub-select clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereNotInSub($where)
-    {
-        $select = $this->compileSelect($where['query']);
-
-        return $this->wrap($where['column']) .' NOT IN (' .$select .')';
-    }
-
-    /**
-     * Compile a "WHERE NULL" clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereNull($where)
-    {
-        return $this->wrap($where['column']) .' IS NULL';
-    }
-
-    /**
-     * Compile a "WHERE NOT NULL" clause.
-     *
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereNotNull($where)
-    {
-        return $this->wrap($where['column']) .' IS NOT NULL';
-    }
-
-    /**
-     * Compile a "WHERE DAY" clause.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereDay(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('day', $query, $where);
-    }
-
-    /**
-     * Compile a "WHERE MONTH" clause.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereMonth(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('month', $query, $where);
-    }
-
-    /**
-     * Compile a "WHERE YEAR" clause.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereYear(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('year', $query, $where);
-    }
-
-    /**
-     * Compile a date based where clause.
-     *
-     * @param  string  $type
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function dateBasedWhere($type, $where)
-    {
-        $value = $this->parameter($where['value']);
-
-        return $type .'(' .$this->wrap($where['column']) .') ' .$where['operator'] .' ' .$value;
-    }
-
-    /**
-     * Compile a raw "WHERE" clause.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileWhereRaw($where)
-    {
-        return $where['sql'];
-    }
-
-    /**
-     * Compile the GROUP BY clause for a query.
-     *
-     * @param  Query   $query
-     * @return string
-     */
-    protected function compileGroups(Builder $query, $groups)
-    {
-        return 'GROUP BY '.$this->columnize($groups);
-    }
-
-    /**
-     * Compile the "HAVING" portions of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $havings
-     * @return string
-     */
-    protected function compileHavings(Builder $query, $havings)
-    {
-        $sql = implode(' ', array_map(array($this, 'compileHaving'), $havings));
-
-        return 'HAVING ' .preg_replace('/AND /', '', $sql, 1);
-    }
-
-    /**
-     * Compile a single having clause.
-     *
-     * @param  array   $having
-     * @return string
-     */
-    protected function compileHaving(array $having)
-    {
-        if ($having['type'] === 'Raw') {
-            return $having['boolean'].' '.$having['sql'];
-        }
-
-        return $this->compileBasicHaving($having);
-    }
-
-    /**
-     * Compile a basic having clause.
-     *
-     * @param  array   $having
-     * @return string
-     */
-    protected function compileBasicHaving($having)
-    {
-        $column = $this->wrap($having['column']);
-
-        $parameter = $this->parameter($having['value']);
-
-        return 'AND ' .$column .' ' .$having['operator'] .' ' .$parameter;
-    }
-
-    /**
-     * Compile the "ORDER BY" portions of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  array  $orders
-     * @return string
-     */
-    protected function compileOrders(Builder $query, $orders)
-    {
-        $me = $this;
-
-        return 'ORDER BY ' .implode(', ', array_map(function($order) use ($me) {
-            if (isset($order['sql'])) return $order['sql'];
-
-            return $me->wrap($order['column']).' '.$order['direction'];
-        }, $orders));
-    }
-
-    /**
-     * Compile the "LIMIT" portions of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  int  $limit
-     * @return string
-     */
-    protected function compileLimit(Builder $query, $limit)
-    {
-        return 'LIMIT ' .(int) $limit;
-    }
-
-    /**
-     * Compile the "OFFSET" portions of the query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @param  int  $offset
-     * @return string
-     */
-    protected function compileOffset(Builder $query, $offset)
-    {
-        return 'OFFSET ' .(int) $offset;
-    }
-
-    /**
-     * Compile the "UNION" queries attached to the main query.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @return string
-     */
-    protected function compileUnions(Builder $query)
-    {
-        $sql = '';
-
-        foreach ($query->unions as $union) {
-            $sql .= $this->compileUnion($union);
-        }
-
-        return ltrim($sql);
-    }
-
-    /**
-     * Compile a single "UNION" statement.
-     *
-     * @param  array  $union
-     * @return string
-     */
-    protected function compileUnion(array $union)
-    {
-        $joiner = isset($union['all']) ? ' UNION ALL ' : ' UNION ';
-
-        return $joiner .$union['query']->toSql();
-    }
-
-    /**
-     * Compile an insert statement into SQL.
-     *
-     * @param  array  $values
-     * @return string
-     */
-    public function compileInsert(array $values)
-    {
-        $table = $this->wrapTable($this->from);
-
-        if (! is_array(reset($values))) {
-            $values = array($values);
-        }
-
-        $columns = $this->columnize(array_keys(reset($values)));
-
-        $parameters = $this->parameterize(reset($values));
-
-        $value = array_fill(0, count($values), "($parameters)");
-
-        $parameters = implode(', ', $value);
-
-        return "INSERT INTO $table ($columns) VALUES $parameters";
-    }
-
-    /**
-     * Compile an update statement into SQL.
-     *
-     * @param  array  $values
-     * @return string
-     */
-    public function compileUpdate($values)
-    {
-        $table = $this->wrapTable($this->from);
-
-        $columns = array();
-
-        foreach ($values as $key => $value) {
-            $columns[] = $this->wrap($key) .' = ' .$this->parameter($value);
-        }
-
-        $columns = implode(', ', $columns);
-
-        if (isset($this->joins)) {
-            $joins = ' ' .$this->compileJoins($this, $this->joins);
-        } else {
-            $joins = '';
-        }
-
-        $where = $this->compileWheres($this);
-
-        $sql = trim("UPDATE {$table}{$joins} SET $columns $where");
-
-        if (isset($this->orders)) {
-            $sql .= ' ' .$this->compileOrders($this, $this->orders);
-        }
-
-        if (isset($this->limit)) {
-            $sql .= ' ' .$this->compileLimit($this, $this->limit);
-        }
-
-        return rtrim($sql);
-    }
-
-    /**
-     * Compile a delete statement into SQL.
-     *
-     * @return string
-     */
-    public function compileDelete()
-    {
-        $table = $this->wrapTable($this->from);
-
-        $where = is_array($this->wheres) ? $this->compileWheres($this) : '';
-
-        $sql = trim("DELETE FROM $table " .$where);
-
-        if (isset($this->limit)) {
-            $sql .= ' ' .$this->compileLimit($this, $this->limit);
-        }
-
-        return rtrim($sql);
-    }
-
-    /**
-     * Compile a truncate table statement into SQL.
-     *
-     * @param  \Database\Query\Builder  $query
-     * @return array
-     */
-    public function compileTruncate()
-    {
-        $driver = $this->connection->getDriver();
-
-        if ($driver == 'mysql') {
-            return array('TRUNCATE ' .$this->wrapTable($this->from) => array());
-        } else if ($driver == 'pgsql') {
-            return array('TRUNCATE '.$this->wrapTable($this->from).' RESTART identity' => array());
-        } else if ($driver == 'sqlite') {
-            $sql = array(
-                'DELETE FROM sqlite_sequence WHERE name = ?'  => array($query->from),
-                'DELETE FROM ' .$this->wrapTable($this->from) => array()
-            );
-
-            return $sql;
-        }
-    }
-
-    //--------------------------------------------------------------------
-    // Utility Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Wrap a table in keyword identifiers.
-     *
-     * @param  string  $table
-     * @return string
-     */
-    public function wrapTable($table)
-    {
-        return $this->wrap($this->connection->getTablePrefix() .$table);
-    }
-
-    /**
-     * Wrap a value in keyword identifiers.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function wrap($value)
-    {
-        if (strpos(strtolower($value), ' as ') !== false) {
-            $segments = explode(' ', $value);
-
-            return $this->wrap($segments[0]) .' AS ' .$this->wrap($segments[2]);
-        }
-
-        $wrapped = array();
-
-        $segments = explode('.', $value);
-
-        foreach ($segments as $key => $segment) {
-            if (($key == 0) && (count($segments) > 1)) {
-                $wrapped[] = $this->wrapTable($segment);
-            } else {
-                $wrapped[] = $this->wrapValue($segment);
-            }
-        }
-
-        return implode('.', $wrapped);
-    }
-
-    /**
-     * Wrap an array of values.
-     *
-     * @param  array  $values
-     * @return array
-     */
-    public function wrapArray(array $values)
-    {
-        return array_map(array($this, 'wrap'), $values);
-    }
-
-    /**
-     * Wrap a single string in keyword identifiers.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function wrapValue($value)
-    {
-        $wrapper = $this->connection->getWrapper();
-
-        return ($value !== '*') ? sprintf($wrapper, $value) : $value;
-    }
-
-    /**
-     * Concatenate an array of segments, removing empties.
-     *
-     * @param  array   $segments
-     * @return string
-     */
-    protected function concatenate($segments)
-    {
-        return implode(' ', array_filter($segments, function($value) {
-            return (string) ($value !== '');
-        }));
-    }
-
-    /**
-     * Remove the leading boolean from a statement.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function removeLeadingBoolean($value)
-    {
-        return preg_replace('/AND |OR /', '', $value, 1);
-    }
-
-    /**
-     * Create query parameter place-holders for an array.
-     *
-     * @param  array   $values
-     * @return string
-     */
-    public function parameterize(array $values)
-    {
-        return implode(', ', array_map(array($this, 'parameter'), $values));
-    }
-
-    /**
-     * Get the appropriate query parameter place-holder for a value.
-     *
-     * @param  mixed   $value
-     * @return string
-     */
-    public function parameter($value)
-    {
-        return ($value instanceof Expression) ? $value->get() : '?';
-    }
-
-    /**
-     * Convert an array of column names into a delimited string.
-     *
-     * @param  array   $columns
-     * @return string
-     */
-    public function columnize(array $columns)
-    {
-        return implode(', ', array_map(array($this, 'wrap'), $columns));
-    }
 }

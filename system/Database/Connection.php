@@ -10,19 +10,26 @@ namespace Database;
 
 use Config\Config;
 use Core\Logger;
-use Database\Connector;
+
 use Database\Connectors\MySqlConnector;
 use Database\Connectors\PostgresConnector;
 use Database\Connectors\SQLiteConnector;
+
 use Database\Query\Grammars\MySqlGrammar;
 use Database\Query\Grammars\PostgresGrammar;
 use Database\Query\Grammars\SQLiteGrammar;
+use Database\Query\Grammars\SqlServerGrammar;
+
 use Database\Query\Processors\MySqlProcessor;
 use Database\Query\Processors\PostgresProcessor;
 use Database\Query\Processors\SQLiteProcessor;
+use Database\Query\Processors\SqlServerProcessor;
+
 use Database\Query\Expression;
 use Database\Query\Grammar;
 use Database\Query\Builder as QueryBuilder;
+
+use Database\Connector;
 use Database\QueryException;
 
 use Closure;
@@ -222,6 +229,9 @@ class Connection
 
             case 'sqlite':
                 return new SQLiteGrammar();
+
+            case 'sqlsrv':
+                return new SqlServerConnector();
         }
 
         throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
@@ -246,6 +256,9 @@ class Connection
 
             case 'sqlite':
                 return new SQLiteProcessor();
+
+            case 'sqlsrv':
+                return new SqlServerProcessor();
         }
 
         throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");

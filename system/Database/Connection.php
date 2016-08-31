@@ -16,6 +16,7 @@ use Database\Query\Grammar as QueryGrammar;
 use Database\Query\Builder as QueryBuilder;
 use Database\Query\Processor as PostProcessor;
 
+use Database\ConnectionInterface;
 use Database\Connector;
 use Database\QueryException;
 
@@ -24,7 +25,7 @@ use DateTimeInterface;
 use PDO;
 
 
-class Connection
+class Connection implements ConnectionInterface
 {
     /**
      * The Connector instance.
@@ -131,7 +132,7 @@ class Connection
      */
     protected $config = array();
 
-    
+
     /**
      * Create a new Database Connection instance.
      *
@@ -245,7 +246,7 @@ class Connection
      * @param  array   $bindings
      * @return array
      */
-    public function select($query, array $bindings = array())
+    public function select($query, $bindings = array())
     {
         return $this->run($query, $bindings, function($me, $query, $bindings)
         {
@@ -269,7 +270,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function insert($query, array $bindings = array())
+    public function insert($query, $bindings = array())
     {
         return $this->statement($query, $bindings);
     }
@@ -281,7 +282,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function update($query, array $bindings = array())
+    public function update($query, $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -293,7 +294,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function delete($query, array $bindings = array())
+    public function delete($query, $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -305,7 +306,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function statement($query, array $bindings = array())
+    public function statement($query, $bindings = array())
     {
         return $this->run($query, $bindings, function($me, $query, $bindings)
         {
@@ -327,7 +328,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function affectingStatement($query, array $bindings = array())
+    public function affectingStatement($query, $bindings = array())
     {
         return $this->run($query, $bindings, function($me, $query, $bindings)
         {

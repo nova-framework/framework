@@ -17,7 +17,7 @@ class SQLiteConnection extends Connection
      */
     protected function getDefaultQueryGrammar()
     {
-        return $this->withTablePrefix(new QueryGrammar);
+        return $this->withTablePrefix(new QueryGrammar());
     }
 
     /**
@@ -27,7 +27,7 @@ class SQLiteConnection extends Connection
      */
     protected function getDefaultPostProcessor()
     {
-        return new QueryProcessor;
+        return new QueryProcessor();
     }
 
 }

@@ -1598,7 +1598,7 @@ class Model implements ArrayableInterface, JsonableInterface, ArrayAccess
 
         $grammar = $connection->getQueryGrammar();
 
-        $processor = $connection->getQueryProcessor();
+        $processor = $connection->getPostProcessor();
 
         return new QueryBuilder($connection, $grammar, $processor);
     }

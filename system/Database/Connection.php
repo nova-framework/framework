@@ -595,7 +595,7 @@ class Connection
      *
      * @return \Database\Query\Processor
      */
-    public function getQueryProcessor()
+    public function getPostProcessor()
     {
         return $this->processor;
     }

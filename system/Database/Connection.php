@@ -14,6 +14,7 @@ use Core\Logger;
 use Database\Connectors\MySqlConnector;
 use Database\Connectors\PostgresConnector;
 use Database\Connectors\SQLiteConnector;
+use Database\Connectors\SqlServerConnector;
 
 use Database\Query\Grammars\MySqlGrammar;
 use Database\Query\Grammars\PostgresGrammar;
@@ -205,6 +206,9 @@ class Connection
 
             case 'sqlite':
                 return new SQLiteConnector();
+
+            case 'sqlsrv':
+                return new SqlServerConnector();
         }
 
         throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
@@ -231,7 +235,7 @@ class Connection
                 return new SQLiteGrammar();
 
             case 'sqlsrv':
-                return new SqlServerConnector();
+                return new SqlServerGrammar();
         }
 
         throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");

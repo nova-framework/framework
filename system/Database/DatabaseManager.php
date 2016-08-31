@@ -2,22 +2,9 @@
 
 namespace Database;
 
-use Database\Connectors\MySqlConnector;
-use Database\Connectors\PostgresConnector;
-use Database\Connectors\SQLiteConnector;
-use Database\Connectors\SqlServerConnector;
-
-use Database\Query\Grammars\MySqlGrammar;
-use Database\Query\Grammars\PostgresGrammar;
-use Database\Query\Grammars\SQLiteGrammar;
-use Database\Query\Grammars\SqlServerGrammar;
-
-use Database\Query\Processors\MySqlProcessor;
-use Database\Query\Processors\PostgresProcessor;
-use Database\Query\Processors\SQLiteProcessor;
-use Database\Query\Processors\SqlServerProcessor;
-
 use Database\Connection;
+use Database\ConnectionFactory;
+use Foundation\Application;
 
 
 class DatabaseManager implements ConnectionResolverInterface
@@ -30,6 +17,13 @@ class DatabaseManager implements ConnectionResolverInterface
     protected $app;
 
     /**
+     * The Database Connection Factory instance.
+     *
+     * @var \Database\ConnectionFactory
+     */
+    protected $factory;
+
+    /**
      * The active Connection instances.
      *
      * @var array
@@ -40,12 +34,15 @@ class DatabaseManager implements ConnectionResolverInterface
     /**
      * Create a new Database Manager instance.
      *
-     * @param  \core\Application  $app
+     * @param  \Foundation\Application  $app
+     * @param  \Database\ConnectionFactory  $factory
      * @return void
      */
-    public function __construct($app)
+    public function __construct(Application $app, ConnectionFactory $factory)
     {
         $this->app = $app;
+
+        $this->factory = $factory;
     }
 
     /**
@@ -68,18 +65,16 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Reconnect to the given database.
+     * Disconnect from the given database and remove from local cache.
      *
      * @param  string  $name
-     * @return \Database\Connection
+     * @return void
      */
-    public function reconnect($name = null)
+    public function purge($name = null)
     {
-        $name = $name ?: $this->getDefaultConnection();
-
         $this->disconnect($name);
 
-        return $this->connection($name);
+        unset($this->connections[$name]);
     }
 
     /**
@@ -92,11 +87,47 @@ class DatabaseManager implements ConnectionResolverInterface
     {
         $name = $name ?: $this->getDefaultConnection();
 
-        unset($this->connections[$name]);
+        if (isset($this->connections[$name])) {
+            $this->connections[$name]->disconnect();
+        }
     }
 
     /**
-     * Make the database connection instance.
+     * Reconnect to the given database.
+     *
+     * @param  string  $name
+     * @return \Database\Connection
+     */
+    public function reconnect($name = null)
+    {
+        $name = $name ?: $this->getDefaultConnection();
+
+        $this->disconnect($name);
+
+        if (! isset($this->connections[$name])) {
+            return $this->connection($name);
+        }
+
+        return $this->refreshPdoConnection($name);
+    }
+
+    /**
+     * Refresh the PDO connections on a given connection.
+     *
+     * @param  string  $name
+     * @return \Database\Connection
+     */
+    protected function refreshPdoConnection($name)
+    {
+        $fresh = $this->makeConnection($name);
+
+        $connection = $this->connections[$name];
+
+        return $connection->setPdo($fresh->getPdo());
+    }
+
+    /**
+     * Make the Database Connection instance.
      *
      * @param  string  $name
      * @return \Database\Connection
@@ -107,20 +138,18 @@ class DatabaseManager implements ConnectionResolverInterface
     {
         $config = $this->getConfig($name);
 
-        if (! isset($config['driver'])) {
-            throw new \InvalidArgumentException("A driver must be specified.");
+        if (isset($this->extensions[$name])) {
+            return call_user_func($this->extensions[$name], $config, $name);
         }
 
+        //
         $driver = $config['driver'];
 
-        return new Connection(
-            $config['database'],
-            $config['prefix'],
-            $config,
-            $this->createConnector($driver),
-            $this->createQueryGrammar($driver),
-            $this->createQueryProcessor($driver)
-        );
+        if (isset($this->extensions[$driver])) {
+            return call_user_func($this->extensions[$driver], $config, $name);
+        }
+
+        return $this->factory->make($config, $name);
     }
 
     /**
@@ -153,87 +182,6 @@ class DatabaseManager implements ConnectionResolverInterface
         });
 
         return $connection;
-    }
-
-    /**
-     * Create a connector instance based on the configuration.
-     *
-     * @param  array  $config
-     * @return \Database\ConnectorInterface
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function createConnector($driver)
-    {
-        switch ($driver) {
-            case 'mysql':
-                return new MySqlConnector();
-
-            case 'pgsql':
-                return new PostgresConnector();
-
-            case 'sqlite':
-                return new SQLiteConnector();
-
-            case 'sqlsrv':
-                return new SqlServerConnector();
-        }
-
-        throw new \InvalidArgumentException("Unsupported driver [$driver]");
-    }
-
-    /**
-     * Create a Query Grammar instance based on the configuration.
-     *
-     * @param  array  $config
-     * @return \Database\Query\Grammar
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function createQueryGrammar($driver)
-    {
-        switch ($driver) {
-            case 'mysql':
-                return new MySqlGrammar();
-
-            case 'pgsql':
-                return new PostgresGrammar();
-
-            case 'sqlite':
-                return new SQLiteGrammar();
-
-            case 'sqlsrv':
-                return new SqlServerGrammar();
-        }
-
-        throw new \InvalidArgumentException("Unsupported driver [$driver]");
-    }
-
-    /**
-     * Create a Query Processor instance based on the configuration.
-     *
-     * @param  array  $config
-     * @return \Database\Query\Processor
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function createQueryProcessor($driver)
-    {
-        switch ($driver) {
-            case 'mysql':
-                return new MySqlProcessor();
-
-            case 'pgsql':
-                return new PostgresProcessor();
-
-            case 'sqlite':
-                return new SQLiteProcessor();
-
-            case 'sqlsrv':
-                return new SqlServerProcessor();
-        }
-
-        throw new \InvalidArgumentException("Unsupported driver [$driver]");
     }
 
     /**

@@ -26,14 +26,6 @@ class SQLiteGrammar extends Grammar
     );
 
     /**
-     * The keyword identifier wrapper format.
-     *
-     * @var string
-     */
-    protected $wrapper = '"%s"';
-
-
-    /**
      * Compile an insert statement into SQL.
      *
      * @param  \Nova\Database\Query\Builder  $query

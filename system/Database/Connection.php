@@ -12,16 +12,16 @@ use Config\Config;
 use Core\Logger;
 
 use Database\Query\Expression;
-use Database\Query\Grammar;
+use Database\Query\Grammar as QueryGrammar;
 use Database\Query\Builder as QueryBuilder;
-use Database\Query\Processor;
+use Database\Query\Processor as PostProcessor;
 
 use Database\Connector;
 use Database\QueryException;
 
 use Closure;
-use PDO;
 use DateTimeInterface;
+use PDO;
 
 
 class Connection
@@ -38,14 +38,14 @@ class Connection
      *
      * @var \Database\Query\Grammar
      */
-    protected $grammar;
+    protected $queryGrammar;
 
     /**
      * The Query Processor instance.
      *
      * @var \Database\Query\Processor
      */
-    protected $processor;
+    protected $postProcessor;
 
     /**
      * The active PDO Connection.
@@ -131,42 +131,71 @@ class Connection
      */
     protected $config = array();
 
+    
     /**
-     * Create a new Connection instance.
+     * Create a new Database Connection instance.
      *
-     * @param  array  $config
+     * @param  \PDO     $pdo
+     * @param  string   $database
+     * @param  string   $tablePrefix
+     * @param  array    $config
      * @return void
      */
-    public function __construct($database = '', $tablePrefix = '', array $config, Connector $connector, Grammar $grammar, Processor $processor)
+    public function __construct(PDO $pdo, $database = '', $tablePrefix = '', array $config = array())
     {
+        $this->pdo = $pdo;
+
+        //
         $this->database = $database;
 
         $this->tablePrefix = $tablePrefix;
 
         $this->config = $config;
 
-        // Setup the Database Connector instance.
-        $this->connector = $connector;
+        //
+        $this->useDefaultQueryGrammar();
 
-        // Setup the Query Grammar instance.
-        $this->grammar = $this->withTablePrefix($grammar);
-
-        // Setup the Query Processor instance.
-        $this->processor = $processor;
-
-        // Create the PDO Connection instance.
-        $this->pdo = $this->createConnection($config);
+        $this->useDefaultPostProcessor();
     }
 
     /**
-     * Create a new PDO connection.
+     * Set the query grammar to the default implementation.
      *
-     * @param  array   $config
-     * @return PDO
+     * @return void
      */
-    public function createConnection(array $config)
+    public function useDefaultQueryGrammar()
     {
-        return $this->connector->connect($config);
+        $this->queryGrammar = $this->getDefaultQueryGrammar();
+    }
+
+    /**
+     * Get the default query grammar instance.
+     *
+     * @return \Database\Query\Grammars\Grammar
+     */
+    protected function getDefaultQueryGrammar()
+    {
+        return new QueryGrammar();
+    }
+
+    /**
+     * Set the query post processor to the default implementation.
+     *
+     * @return void
+     */
+    public function useDefaultPostProcessor()
+    {
+        $this->postProcessor = $this->getDefaultPostProcessor();
+    }
+
+    /**
+     * Get the default post processor instance.
+     *
+     * @return \Database\Query\Processors\Processor
+     */
+    protected function getDefaultPostProcessor()
+    {
+        return new PostProcessor();
     }
 
     /**
@@ -177,7 +206,9 @@ class Connection
      */
     public function table($table)
     {
-        $query = new QueryBuilder($this, $this->grammar, $this->processor);
+        $processor = $this->getPostProcessor();
+
+        $query = new QueryBuilder($this, $this->getQueryGrammar(), $processor);
 
         return $query->from($table);
     }
@@ -563,7 +594,7 @@ class Connection
      * @param  \Database\Grammar  $grammar
      * @return \Database\Grammar
      */
-    public function withTablePrefix(Grammar $grammar)
+    public function withTablePrefix(QueryGrammar $grammar)
     {
         $grammar->setTablePrefix($this->tablePrefix);
 
@@ -587,7 +618,7 @@ class Connection
      */
     public function getQueryGrammar()
     {
-        return $this->grammar;
+        return $this->queryGrammar;
     }
 
     /**
@@ -597,7 +628,7 @@ class Connection
      */
     public function getPostProcessor()
     {
-        return $this->processor;
+        return $this->postProcessor;
     }
 
     /**

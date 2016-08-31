@@ -9,23 +9,11 @@
 namespace Database\Query;
 
 use Database\Query\Builder;
+use Database\Grammar as BaseGrammar;
 
 
-class Grammar
+class Grammar extends BaseGrammar
 {
-    /**
-     * The grammar table prefix.
-     *
-     * @var string
-     */
-    protected $tablePrefix = '';
-
-    /**
-     * The keyword identifier wrapper format.
-     *
-     * @var string
-     */
-    protected $wrapper = '`%s`';
 
     /**
      * The components that make up a select clause.
@@ -46,6 +34,7 @@ class Grammar
         'unions',
         'lock'
     );
+
 
     /**
      * Compile a select query into SQL.
@@ -638,72 +627,6 @@ class Grammar
         return is_string($value) ? $value : '';
     }
 
-    //--------------------------------------------------------------------
-    // Utility Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Wrap a table in keyword identifiers.
-     *
-     * @param  string  $table
-     * @return string
-     */
-    public function wrapTable($table)
-    {
-        return $this->wrap($this->tablePrefix .$table);
-    }
-
-    /**
-     * Wrap a value in keyword identifiers.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function wrap($value)
-    {
-        if (strpos(strtolower($value), ' as ') !== false) {
-            $segments = explode(' ', $value);
-
-            return $this->wrap($segments[0]) .' AS ' .$this->wrap($segments[2]);
-        }
-
-        $wrapped = array();
-
-        $segments = explode('.', $value);
-
-        foreach ($segments as $key => $segment) {
-            if (($key == 0) && (count($segments) > 1)) {
-                $wrapped[] = $this->wrapTable($segment);
-            } else {
-                $wrapped[] = $this->wrapValue($segment);
-            }
-        }
-
-        return implode('.', $wrapped);
-    }
-
-    /**
-     * Wrap an array of values.
-     *
-     * @param  array  $values
-     * @return array
-     */
-    public function wrapArray(array $values)
-    {
-        return array_map(array($this, 'wrap'), $values);
-    }
-
-    /**
-     * Wrap a single string in keyword identifiers.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function wrapValue($value)
-    {
-        return ($value !== '*') ? sprintf($this->wrapper, $value) : $value;
-    }
-
     /**
      * Concatenate an array of segments, removing empties.
      *
@@ -718,39 +641,6 @@ class Grammar
     }
 
     /**
-     * Create query parameter place-holders for an array.
-     *
-     * @param  array   $values
-     * @return string
-     */
-    public function parameterize(array $values)
-    {
-        return implode(', ', array_map(array($this, 'parameter'), $values));
-    }
-
-    /**
-     * Get the appropriate query parameter place-holder for a value.
-     *
-     * @param  mixed   $value
-     * @return string
-     */
-    public function parameter($value)
-    {
-        return ($value instanceof Expression) ? $value->get() : '?';
-    }
-
-    /**
-     * Convert an array of column names into a delimited string.
-     *
-     * @param  array   $columns
-     * @return string
-     */
-    public function columnize(array $columns)
-    {
-        return implode(', ', array_map(array($this, 'wrap'), $columns));
-    }
-
-    /**
      * Remove the leading boolean from a statement.
      *
      * @param  string  $value
@@ -761,40 +651,4 @@ class Grammar
         return preg_replace('/AND |OR /', '', $value, 1);
     }
 
-    //--------------------------------------------------------------------
-    // Setters/Getters Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Get the grammar's table prefix.
-     *
-     * @return string
-     */
-    public function getTablePrefix()
-    {
-        return $this->tablePrefix;
-    }
-
-    /**
-     * Set the grammar's table prefix.
-     *
-     * @param  string  $prefix
-     * @return $this
-     */
-    public function setTablePrefix($prefix)
-    {
-        $this->tablePrefix = $prefix;
-
-        return $this;
-    }
-
-    /**
-     * Get the format for database stored dates.
-     *
-     * @return string
-     */
-    public function getDateFormat()
-    {
-        return 'Y-m-d H:i:s';
-    }
 }

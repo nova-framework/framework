@@ -8,8 +8,9 @@
 
 namespace Database;
 
-use Database\DatabaseManager;
 use Database\ORM\Model;
+use Database\ConnectionFactory;
+use Database\DatabaseManager;
 use Database\Model as BasicModel;
 use Helpers\Database;
 use Support\ServiceProvider;
@@ -47,9 +48,14 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bindShared('db.factory', function($app)
+        {
+            return new ConnectionFactory($app);
+        });
+
         $this->app->bindShared('db', function($app)
         {
-            return new DatabaseManager($app);
+            return new DatabaseManager($app, $app['db.factory']);
         });
     }
 

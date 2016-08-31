@@ -121,4 +121,17 @@ class MySqlGrammar extends Grammar
         return trim("DELETE FROM $table $where");
     }
 
+    /**
+     * Wrap a single string in keyword identifiers.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function wrapValue($value)
+    {
+        if ($value === '*') return $value;
+
+        return '`'.str_replace('`', '``', $value).'`';
+    }
+
 }

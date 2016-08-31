@@ -4,6 +4,7 @@ namespace Database;
 
 use Closure;
 
+
 interface ConnectionInterface
 {
     /**

@@ -185,14 +185,14 @@ class Dispatcher
         $responses = array();
 
         //
-        if ( ! is_array($payload)) $payload = array($payload);
+        if (! is_array($payload)) $payload = array($payload);
 
         $this->firing[] = $event;
 
         foreach ($this->getListeners($event) as $listener) {
             $response = call_user_func_array($listener, $payload);
 
-            if ( ! is_null($response) && $halt) {
+            if (! is_null($response) && $halt) {
                 array_pop($this->firing);
 
                 return $response;
@@ -218,7 +218,7 @@ class Dispatcher
     {
         $wildcards = $this->getWildcardListeners($eventName);
 
-        if ( ! isset($this->sorted[$eventName])) {
+        if (! isset($this->sorted[$eventName])) {
             $this->sortListeners($eventName);
         }
 

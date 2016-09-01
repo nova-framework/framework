@@ -68,7 +68,7 @@ class DatabaseStore implements StoreInterface
         // If we have a cache record we will check the expiration time against current
         // time on the system and see if the record has expired. If it has, we will
         // remove the records from the database table so it isn't returned again.
-        if ( ! is_null($cache)) {
+        if (! is_null($cache)) {
             if (is_array($cache)) $cache = (object) $cache;
 
             if (time() >= $cache->expiration) {

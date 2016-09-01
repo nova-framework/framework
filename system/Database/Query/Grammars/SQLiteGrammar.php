@@ -36,7 +36,7 @@ class SQLiteGrammar extends Grammar
     {
         $table = $this->wrapTable($query->from);
 
-        if ( ! is_array(reset($values))) {
+        if (! is_array(reset($values))) {
             $values = array($values);
         }
 

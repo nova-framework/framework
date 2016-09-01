@@ -85,7 +85,7 @@ class PostgresGrammar extends Grammar
      */
     protected function compileUpdateFrom(Builder $query)
     {
-        if ( ! isset($query->joins)) return '';
+        if (! isset($query->joins)) return '';
 
         $froms = array();
 
@@ -106,7 +106,7 @@ class PostgresGrammar extends Grammar
     {
         $baseWhere = $this->compileWheres($query);
 
-        if ( ! isset($query->joins)) return $baseWhere;
+        if (! isset($query->joins)) return $baseWhere;
 
         $joinWhere = $this->compileUpdateJoinWheres($query);
 

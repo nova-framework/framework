@@ -102,7 +102,7 @@ class Factory
      */
     public function share($key, $value = null)
     {
-        if ( ! is_array($key)) return $this->shared[$key] = $value;
+        if (! is_array($key)) return $this->shared[$key] = $value;
 
         foreach ($key as $innerKey => $innerValue) {
             $this->share($innerKey, $innerValue);

@@ -419,7 +419,7 @@ class Builder
             return $this->whereNested($column, $boolean);
         }
 
-        if ( ! in_array(strtolower($operator), $this->operators, true)) {
+        if (! in_array(strtolower($operator), $this->operators, true)) {
             list($value, $operator) = array($operator, '=');
         }
 
@@ -1306,7 +1306,7 @@ class Builder
      */
     public function get($columns = array('*'))
     {
-        if ( ! is_null($this->cacheMinutes)) return $this->getCached($columns);
+        if (! is_null($this->cacheMinutes)) return $this->getCached($columns);
 
         return $this->getFresh($columns);
     }
@@ -1449,7 +1449,7 @@ class Builder
 
         $values = $results->fetch($columns[0])->all();
 
-        if ( ! is_null($key) && count($results) > 0) {
+        if (! is_null($key) && count($results) > 0) {
             $keys = $results->fetch($key)->all();
 
             return array_combine($keys, $values);
@@ -1650,7 +1650,7 @@ class Builder
      */
     public function count($columns = '*')
     {
-        if ( ! is_array($columns)) {
+        if (! is_array($columns)) {
             $columns = array($columns);
         }
 
@@ -1737,7 +1737,7 @@ class Builder
      */
     public function insert(array $values)
     {
-        if ( ! is_array(reset($values))) {
+        if (! is_array(reset($values))) {
             $values = array($values);
         } else {
             foreach ($values as $key => $value) {
@@ -1833,7 +1833,7 @@ class Builder
      */
     public function delete($id = null)
     {
-        if ( ! is_null($id)) $this->where('id', '=', $id);
+        if (! is_null($id)) $this->where('id', '=', $id);
 
         $sql = $this->grammar->compileDelete($this);
 
@@ -1932,7 +1932,7 @@ class Builder
      */
     public function setBindings(array $bindings, $type = 'where')
     {
-        if ( ! array_key_exists($type, $this->bindings)) {
+        if (! array_key_exists($type, $this->bindings)) {
             throw new \InvalidArgumentException("Invalid binding type: {$type}.");
         }
 
@@ -1952,7 +1952,7 @@ class Builder
      */
     public function addBinding($value, $type = 'where')
     {
-        if ( ! array_key_exists($type, $this->bindings)) {
+        if (! array_key_exists($type, $this->bindings)) {
             throw new \InvalidArgumentException("Invalid binding type: {$type}.");
         }
 

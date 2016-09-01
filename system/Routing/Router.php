@@ -12,6 +12,7 @@ use Config\Config;
 use App\Core\Controller;
 use Events\Dispatcher;
 
+use Container\Container;
 use Helpers\Inflector;
 use Http\Request;
 use Http\Response;
@@ -22,7 +23,6 @@ use Routing\RouteCollection;
 use Routing\RouteFiltererInterface;
 use Routing\Route;
 
-use Container\Container;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
@@ -287,7 +287,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     public function controller($uri, $controller, $names = array())
     {
         if (! $this->namedParams) {
-            throw new BadMethodCallException("The method is not available while using Unnamed Parameters.");
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
         }
 
         $inspector = $this->getInspector();
@@ -358,7 +358,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     public function resource($name, $controller, array $options = array())
     {
         if (! $this->namedParams) {
-            throw new BadMethodCallException("The method is not available while using Unnamed Parameters.");
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
         }
 
         // If the resource name contains a slash, we will assume the developer wishes to
@@ -451,7 +451,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getResourceUri($resource)
     {
-        if ( ! str_contains($resource, '.')) return $resource;
+        if (! str_contains($resource, '.')) return $resource;
 
         // Once we have built the base URI, we'll remove the wildcard holder for this
         // base resource name so that the individual route adders can suffix these
@@ -735,7 +735,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function updateGroupStack(array $attributes)
     {
-        if ( ! empty($this->groupStack)) {
+        if (! empty($this->groupStack)) {
             $attributes = static::mergeGroup($attributes, last($this->groupStack));
         }
 
@@ -812,7 +812,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function getLastGroupPrefix()
     {
-        if ( ! empty($this->groupStack)) {
+        if (! empty($this->groupStack)) {
             $last = end($this->groupStack);
 
             return isset($last['prefix']) ? $last['prefix'] : '';
@@ -1159,7 +1159,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function callFilter($filter, $request, $response = null)
     {
-        if ( ! $this->filtering) return null;
+        if (! $this->filtering) return null;
 
         return $this->events->until('router.'.$filter, array($request, $response));
     }
@@ -1176,7 +1176,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         foreach ($route->beforeFilters() as $filter => $parameters) {
             $response = $this->callRouteFilter($filter, $parameters, $route, $request);
 
-            if ( ! is_null($response)) return $response;
+            if (! is_null($response)) return $response;
         }
     }
 
@@ -1206,7 +1206,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function callRouteFilter($filter, $parameters, $route, $request, $response = null)
     {
-        if ( ! $this->filtering) return null;
+        if (! $this->filtering) return null;
 
         $data = array_merge(array($route, $request, $response), $parameters);
 

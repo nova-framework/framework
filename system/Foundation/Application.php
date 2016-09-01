@@ -397,7 +397,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     {
         $provider = $this->deferredServices[$service];
 
-        if ( ! isset($this->loadedProviders[$provider])) {
+        if (! isset($this->loadedProviders[$provider])) {
             $this->registerDeferredProvider($provider, $service);
         }
     }
@@ -415,7 +415,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
 
         $this->register($instance = new $provider($this));
 
-        if ( ! $this->booted) {
+        if (! $this->booted) {
             $this->booting(function() use ($instance)
             {
                 $instance->boot();
@@ -717,7 +717,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
             return $this->dispatch($request);
         }
         catch (\Exception $e) {
-            if ( ! $catch || $this->runningUnitTests()) throw $e;
+            if (! $catch || $this->runningUnitTests()) throw $e;
 
             return $this['exception']->handleException($e);
         }
@@ -734,7 +734,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         if ($this->isDownForMaintenance()) {
             $response = $this['events']->until('nova.app.down');
 
-            if ( ! is_null($response)) return $this->prepareResponse($response, $request);
+            if (! is_null($response)) return $this->prepareResponse($response, $request);
         }
 
         if ($this->runningUnitTests() && ! $this['session']->isStarted()) {
@@ -821,7 +821,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      */
     public function prepareResponse($value)
     {
-        if ( ! $value instanceof SymfonyResponse) $value = new Response($value);
+        if (! $value instanceof SymfonyResponse) $value = new Response($value);
 
         return $value->prepare($this['request']);
     }
@@ -999,7 +999,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      */
     public static function requestClass($class = null)
     {
-        if ( ! is_null($class)) static::$requestClass = $class;
+        if (! is_null($class)) static::$requestClass = $class;
 
         return static::$requestClass;
     }

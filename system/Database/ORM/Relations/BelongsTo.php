@@ -114,7 +114,7 @@ class BelongsTo extends Relation
         $keys = array();
 
         foreach ($models as $model) {
-            if ( ! is_null($value = $model->{$this->foreignKey})) {
+            if (! is_null($value = $model->{$this->foreignKey})) {
                 $keys[] = $value;
             }
         }

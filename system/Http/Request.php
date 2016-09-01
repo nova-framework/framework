@@ -193,7 +193,7 @@ class Request extends SymfonyRequest
 
         foreach ($keys as $value)
         {
-            if ( ! array_key_exists($value, $input)) return false;
+            if (! array_key_exists($value, $input)) return false;
         }
 
         return true;
@@ -348,7 +348,7 @@ class Request extends SymfonyRequest
      */
     public function hasFile($key)
     {
-        if ( ! is_array($files = $this->file($key))) $files = array($files);
+        if (! is_array($files = $this->file($key))) $files = array($files);
 
         foreach ($files as $file) {
             if ($this->isValidFile($file)) return true;
@@ -413,7 +413,7 @@ class Request extends SymfonyRequest
      */
     public function flash($filter = null, $keys = array())
     {
-        $flash = ( ! is_null($filter)) ? $this->$filter($keys) : $this->input();
+        $flash = (! is_null($filter)) ? $this->$filter($keys) : $this->input();
 
         $this->session()->flashInput($flash);
     }
@@ -502,7 +502,7 @@ class Request extends SymfonyRequest
      */
     public function json($key = null, $default = null)
     {
-        if ( ! isset($this->json))
+        if (! isset($this->json))
         {
             $this->json = new ParameterBag((array) json_decode($this->getContent(), true));
         }
@@ -599,7 +599,7 @@ class Request extends SymfonyRequest
      */
     public function session()
     {
-        if ( ! $this->hasSession()) {
+        if (! $this->hasSession()) {
             throw new \RuntimeException("Session store not set on request.");
         }
 

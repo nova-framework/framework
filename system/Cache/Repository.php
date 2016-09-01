@@ -94,7 +94,7 @@ class Repository implements ArrayAccess
     {
         $minutes = $this->getMinutes($minutes);
 
-        if ( ! is_null($minutes)) {
+        if (! is_null($minutes)) {
             $this->store->put($key, $value, $minutes);
         }
     }
@@ -129,7 +129,7 @@ class Repository implements ArrayAccess
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
         // of that execution for the given number of minutes in storage.
-        if ( ! is_null($value = $this->get($key))) {
+        if (! is_null($value = $this->get($key))) {
             return $value;
         }
 
@@ -162,7 +162,7 @@ class Repository implements ArrayAccess
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
         // of that execution for the given number of minutes. It's easy.
-        if ( ! is_null($value = $this->get($key))) {
+        if (! is_null($value = $this->get($key))) {
             return $value;
         }
 

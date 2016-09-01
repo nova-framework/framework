@@ -52,7 +52,7 @@ class Grammar extends BaseGrammar
         $sql = array();
 
         foreach ($this->selectComponents as $component) {
-            if ( ! is_null($query->$component)) {
+            if (! is_null($query->$component)) {
                 $method = 'compile'.ucfirst($component);
 
                 $sql[$component] = $this->$method($query, $query->$component);
@@ -89,7 +89,7 @@ class Grammar extends BaseGrammar
      */
     protected function compileColumns(Builder $query, $columns)
     {
-        if ( ! is_null($query->aggregate)) return;
+        if (! is_null($query->aggregate)) return;
 
         $select = $query->distinct ? 'select distinct ' : 'select ';
 
@@ -579,7 +579,7 @@ class Grammar extends BaseGrammar
     {
         $table = $this->wrapTable($query->from);
 
-        if ( ! is_array(reset($values))) {
+        if (! is_array(reset($values))) {
             $values = array($values);
         }
 

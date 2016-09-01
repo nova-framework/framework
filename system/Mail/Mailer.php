@@ -210,7 +210,7 @@ class Mailer
             $this->events->fire('mailer.sending', array($message));
         }
 
-        if ( ! $this->pretending) {
+        if (! $this->pretending) {
             $this->swift->send($message, $this->failedRecipients);
         } else if (isset($this->logger)) {
             $this->logMessage($message);

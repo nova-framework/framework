@@ -131,7 +131,7 @@ class Guard
         // If we have already retrieved the user for the current request we can just
         // return it back immediately. We do not want to pull the user data every
         // request into the method because that would tremendously slow an app.
-        if ( ! is_null($this->user)) {
+        if (! is_null($this->user)) {
             return $this->user;
         }
 
@@ -142,7 +142,7 @@ class Guard
         // request, and if one exists, attempt to retrieve the user using that.
         $user = null;
 
-        if ( ! is_null($id)) {
+        if (! is_null($id)) {
             $user = $this->provider->retrieveByID($id);
         }
 
@@ -225,7 +225,7 @@ class Guard
      */
     protected function validRecaller($recaller)
     {
-        if ( ! is_string($recaller) || ! str_contains($recaller, '|')) return false;
+        if (! is_string($recaller) || ! str_contains($recaller, '|')) return false;
 
         $segments = explode('|', $recaller);
 
@@ -292,7 +292,7 @@ class Guard
     {
         $request = $request ?: $this->getRequest();
 
-        if ( ! $this->once($this->getBasicCredentials($request, $field))) {
+        if (! $this->once($this->getBasicCredentials($request, $field))) {
             return $this->getBasicResponse();
         }
     }
@@ -306,7 +306,7 @@ class Guard
      */
     protected function attemptBasic(Request $request, $field)
     {
-        if ( ! $request->getUser()) return false;
+        if (! $request->getUser()) return false;
 
         return $this->attempt($this->getBasicCredentials($request, $field));
     }
@@ -515,7 +515,7 @@ class Guard
         // listening for anytime a user signs out of this application manually.
         $this->clearUserDataFromStorage();
 
-        if ( ! is_null($this->user)) {
+        if (! is_null($this->user)) {
             $this->refreshRememberToken($user);
         }
 
@@ -582,7 +582,7 @@ class Guard
      */
     public function getCookieJar()
     {
-        if ( ! isset($this->cookie)) {
+        if (! isset($this->cookie)) {
             throw new \RuntimeException("Cookie jar has not been set.");
         }
 

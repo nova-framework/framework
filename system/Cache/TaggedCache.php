@@ -73,7 +73,7 @@ class TaggedCache implements StoreInterface
     {
         $minutes = $this->getMinutes($minutes);
 
-        if ( ! is_null($minutes)) {
+        if (! is_null($minutes)) {
             $this->store->put($this->taggedItemKey($key), $value, $minutes);
         }
     }
@@ -165,7 +165,7 @@ class TaggedCache implements StoreInterface
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
         // of that execution for the given number of minutes in storage.
-        if ( ! is_null($value = $this->get($key))) return $value;
+        if (! is_null($value = $this->get($key))) return $value;
 
         $this->put($key, $value = $callback(), $minutes);
 
@@ -196,7 +196,7 @@ class TaggedCache implements StoreInterface
         // If the item exists in the cache we will just return this immediately
         // otherwise we will execute the given Closure and cache the result
         // of that execution for the given number of minutes. It's easy.
-        if ( ! is_null($value = $this->get($key))) return $value;
+        if (! is_null($value = $this->get($key))) return $value;
 
         $this->forever($key, $value = $callback());
 

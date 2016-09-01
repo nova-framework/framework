@@ -93,7 +93,7 @@ class Store implements SessionInterface
     {
         $this->loadSession();
 
-        if ( ! $this->has('_token')) $this->regenerateToken();
+        if (! $this->has('_token')) $this->regenerateToken();
 
         return $this->started = true;
     }
@@ -151,7 +151,7 @@ class Store implements SessionInterface
      */
     public function setId($id)
     {
-        if ( ! $this->isValidId($id)) {
+        if (! $this->isValidId($id)) {
             $id = $this->generateSessionId();
         }
 
@@ -348,7 +348,7 @@ class Store implements SessionInterface
      */
     public function put($key, $value = null)
     {
-        if ( ! is_array($key)) $key = array($key => $value);
+        if (! is_array($key)) $key = array($key => $value);
 
         foreach ($key as $arrayKey => $arrayValue) {
             $this->set($arrayKey, $arrayValue);

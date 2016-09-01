@@ -160,7 +160,7 @@ class Handler
         // If one of the custom error handlers returned a response, we will send that
         // response back to the client after preparing it. This allows a specific
         // type of exceptions to handled by a Closure giving great flexibility.
-        if ( ! is_null($response)) {
+        if (! is_null($response)) {
             return $this->prepareResponse($response);
         }
 
@@ -193,10 +193,10 @@ class Handler
         // If an error has occurred that has not been displayed, we will create a fatal
         // error exception instance and pass it into the regular exception handling
         // code so it can be displayed back out to the developer for information.
-        if ( ! is_null($error)) {
+        if (! is_null($error)) {
             extract($error);
 
-            if ( ! $this->isFatal($type)) return;
+            if (! $this->isFatal($type)) return;
 
             $this->handleException(new FatalError($message, $type, 0, $file, $line))->send();
         }
@@ -237,7 +237,7 @@ class Handler
             // If this exception handler does not handle the given exception, we will just
             // go the next one. A handler may type-hint an exception that it handles so
             //  we can have more granularity on the error handling for the developer.
-            if ( ! $this->handlesException($handler, $exception))
+            if (! $this->handlesException($handler, $exception))
             {
                 continue;
             } else if ($exception instanceof HttpExceptionInterface) {

@@ -648,7 +648,7 @@ class Connection implements ConnectionInterface
             $this->events->fire('nova.query', array($query, $bindings, $time, $this->getName()));
         }
 
-        if ( ! $this->loggingQueries) return;
+        if (! $this->loggingQueries) return;
 
         $this->queryLog[] = compact('query', 'bindings', 'time');
     }

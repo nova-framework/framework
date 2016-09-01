@@ -49,7 +49,7 @@ abstract class Manager
     {
         $driver = $driver ?: $this->getDefaultDriver();
 
-        if ( ! isset($this->drivers[$driver])) {
+        if (! isset($this->drivers[$driver])) {
             $this->drivers[$driver] = $this->createDriver($driver);
         }
 

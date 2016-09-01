@@ -114,7 +114,7 @@ class ControllerDispatcher
                 // them until we get a response or are finished iterating through this filters.
                 $response = $this->callFilter($filter, $route, $request);
 
-                if ( ! is_null($response)) return $response;
+                if (! is_null($response)) return $response;
             }
         }
     }
@@ -180,7 +180,7 @@ class ControllerDispatcher
      */
     protected function filterFailsOnly($filter, $request, $method)
     {
-        if ( ! isset($filter['options']['only'])) return false;
+        if (! isset($filter['options']['only'])) return false;
 
         return ! in_array($method, (array) $filter['options']['only']);
     }
@@ -195,7 +195,7 @@ class ControllerDispatcher
      */
     protected function filterFailsExcept($filter, $request, $method)
     {
-        if ( ! isset($filter['options']['except'])) return false;
+        if (! isset($filter['options']['except'])) return false;
 
         return in_array($method, (array) $filter['options']['except']);
     }

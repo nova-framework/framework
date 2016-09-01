@@ -147,7 +147,7 @@ class PasswordBroker
         {
             $m->to($user->getReminderEmail());
 
-            if ( ! is_null($callback)) call_user_func($callback, $m, $user, $token);
+            if (! is_null($callback)) call_user_func($callback, $m, $user, $token);
         });
     }
 
@@ -165,7 +165,7 @@ class PasswordBroker
         // the user is properly redirected having an error message on the post.
         $user = $this->validateReset($credentials);
 
-        if ( ! $user instanceof RemindableInterface) {
+        if (! $user instanceof RemindableInterface) {
             return $user;
         }
 
@@ -193,11 +193,11 @@ class PasswordBroker
             return self::INVALID_USER;
         }
 
-        if ( ! $this->validNewPasswords($credentials)) {
+        if (! $this->validNewPasswords($credentials)) {
             return self::INVALID_PASSWORD;
         }
 
-        if ( ! $this->reminders->exists($user, $credentials['token'])) {
+        if (! $this->reminders->exists($user, $credentials['token'])) {
             return self::INVALID_TOKEN;
         }
 

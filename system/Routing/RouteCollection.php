@@ -91,7 +91,7 @@ class RouteCollection implements Countable, IteratorAggregate
         $others = array();
 
         foreach ($methods as $method) {
-            if ( ! is_null($this->check($this->get($method), $request, false))) {
+            if (! is_null($this->check($this->get($method), $request, false))) {
                 $others[] = $method;
             }
         }

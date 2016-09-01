@@ -225,14 +225,14 @@ class FormBuilder
      */
     public function input($type, $name, $value = null, $options = array())
     {
-        if ( ! isset($options['name'])) $options['name'] = $name;
+        if (! isset($options['name'])) $options['name'] = $name;
 
         // We will get the appropriate value for the given field. We will look for the
         // value in the session for the value in the old input data then we'll look
         // in the model instance if one is set. Otherwise we will just use empty.
         $id = $this->getIdAttribute($name, $options);
 
-        if ( ! in_array($type, $this->skipValueTypes))
+        if (! in_array($type, $this->skipValueTypes))
         {
             $value = $this->getValueAttribute($name, $value);
         }
@@ -333,7 +333,7 @@ class FormBuilder
      */
     public function textarea($name, $value = null, $options = array())
     {
-        if ( ! isset($options['name'])) $options['name'] = $name;
+        if (! isset($options['name'])) $options['name'] = $name;
 
         // Next we will look for the rows and cols attributes, as each of these are put
         // on the textarea element definition. If they are not present, we will just
@@ -421,7 +421,7 @@ class FormBuilder
 
         $options['id'] = $this->getIdAttribute($name, $options);
 
-        if ( ! isset($options['name'])) $options['name'] = $name;
+        if (! isset($options['name'])) $options['name'] = $name;
 
         // We will simply loop through the options and build an HTML value for each of
         // them until we have an array of HTML declarations. Then we will join them
@@ -734,7 +734,7 @@ class FormBuilder
      */
     public function button($value = null, $options = array())
     {
-        if ( ! array_key_exists('type', $options))
+        if (! array_key_exists('type', $options))
         {
             $options['type'] = 'button';
         }
@@ -895,12 +895,12 @@ class FormBuilder
     {
         if (is_null($name)) return $value;
 
-        if ( ! is_null($this->old($name)))
+        if (! is_null($this->old($name)))
         {
             return $this->old($name);
         }
 
-        if ( ! is_null($value)) return $value;
+        if (! is_null($value)) return $value;
 
         if (isset($this->model))
         {

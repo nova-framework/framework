@@ -59,7 +59,7 @@ class DatabaseManager implements ConnectionResolverInterface
     {
         list($name, $type) = $this->parseConnectionName($name);
 
-        if ( ! isset($this->connections[$name])) {
+        if (! isset($this->connections[$name])) {
             $connection = $this->makeConnection($name);
 
             $this->setPdoForType($connection, $type);
@@ -119,7 +119,7 @@ class DatabaseManager implements ConnectionResolverInterface
     {
         $this->disconnect($name = $name ?: $this->getDefaultConnection());
 
-        if ( ! isset($this->connections[$name])) {
+        if (! isset($this->connections[$name])) {
             return $this->connection($name);
         }
 

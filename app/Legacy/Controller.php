@@ -50,7 +50,7 @@ abstract class Controller extends BaseController
 
         // Initialise the Language object.
         if ($this->language !== false) {
-            $this->language = Language::getInstance();
+            $this->language = Language::instance();
         }
 
         // Setup the (legacy) Middleware.

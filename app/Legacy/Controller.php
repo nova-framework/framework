@@ -14,6 +14,7 @@ use Http\Response;
 use Routing\Route;
 
 use Language;
+use View;
 
 use BadMethodCallException;
 

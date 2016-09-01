@@ -21,7 +21,6 @@
         "stack/builder": "^1.0",
         "doctrine/inflector": "1.0.*",
         "phpmailer/phpmailer": "5.2.*",
-        "phpfastcache/phpfastcache": "4.0.*",
         "patchwork/utf8": "~1.2",
         "nesbot/carbon": "^1.21",
         "swiftmailer/swiftmailer": "^5.4",

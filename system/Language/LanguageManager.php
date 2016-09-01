@@ -23,6 +23,13 @@ class LanguageManager
     protected $locale;
 
     /**
+     * The know Languages.
+     *
+     * @var array
+     */
+    protected $languages = array();
+
+    /**
      * The active Language instances.
      *
      * @var array
@@ -40,6 +47,9 @@ class LanguageManager
         $this->app = $app;
 
         $this->locale = $locale;
+
+        // Setup the know Languages.
+        $this->languages = $app['config']['languages'];
     }
 
     /**
@@ -57,12 +67,20 @@ class LanguageManager
 
         // Initialize the domain instance, if not already exists.
         if (! isset($this->instances[$id])) {
-            $languages = $this->app['config']['languages'];
-
-            $this->instances[$id] = new Language($this, $languages, $domain, $locale);
+            $this->instances[$id] = new Language($this, $domain, $locale);
         }
 
         return $this->instances[$id];
+    }
+
+    /**
+     * Get the know Languages.
+     *
+     * @return string
+     */
+    public function getLanguages()
+    {
+        return $this->languages;
     }
 
     /**

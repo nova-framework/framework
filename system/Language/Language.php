@@ -52,7 +52,7 @@ class Language
      *
      * @var array
      */
-    private static $legacyMessages = array();
+    private $legacyMessages = array();
 
 
     /**
@@ -60,15 +60,19 @@ class Language
      * @param string $domain
      * @param string $code
      */
-    public function __construct(Manager $manager, $languages, $domain, $code)
+    public function __construct(Manager $manager, $domain, $code)
     {
         $this->manager = $manager;
+
+        //
+        $languages = $manager->getLanguages();
 
         if (isset($languages[$code]) && ! empty($languages[$code])) {
             $info = $languages[$code];
 
             $this->code = $code;
 
+            //
             $this->info      = $info['info'];
             $this->name      = $info['name'];
             $this->locale    = $info['locale'];
@@ -226,10 +230,10 @@ class Language
         // Require the file.
         $messages = include $file;
 
-        if(isset(static::$legacyMessages[$code]) && is_array(static::$legacyMessages[$code])) {
-            static::$legacyMessages[$code] = array_merge(static::$legacyMessages[$code], $messages);
+        if (isset($this->legacyMessages[$code]) && is_array($this->legacyMessages[$code])) {
+            $this->legacyMessages[$code] = array_merge($this->legacyMessages[$code], $messages);
         } else {
-            static::$legacyMessages[$code] = $messages;
+            $this->legacyMessages[$code] = $messages;
         }
     }
 
@@ -244,30 +248,13 @@ class Language
     {
         $code = $code ?: $this->getLocale();
 
-        if (! empty(static::$legacyMessages[$code][$value])) {
-            return static::$legacyMessages[$code][$value];
-        } elseif(! empty(static::$legacyMessages[LANGUAGE_CODE][$value])) {
-            return static::$legacyMessages[LANGUAGE_CODE][$value];
+        if (! empty($this->legacyMessages[$code][$value])) {
+            return $this->legacyMessages[$code][$value];
+        } elseif (! empty($this->legacyMessages[LANGUAGE_CODE][$value])) {
+            return $this->legacyMessages[LANGUAGE_CODE][$value];
         } else {
             return $value;
         }
-    }
-
-    /**
-     * Get the language for the Views.
-     *
-     * @param  string $value this is a "word" value from the language file
-     * @param  string $name  name of the file with the language
-     * @param  string $code  optional, language code
-     *
-     * @return string
-     */
-    public function show($value, $name, $code = LANGUAGE_CODE)
-    {
-        // Load the specified Language file.
-        $this->load($name, $code);
-
-        return $this->get($value, $code);
     }
 
     /**

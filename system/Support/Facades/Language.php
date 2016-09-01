@@ -40,6 +40,25 @@ class Language extends Facade
     }
 
     /**
+     * Get the language for the Views.
+     *
+     * @param  string $value this is a "word" value from the language file
+     * @param  string $name  name of the file with the language
+     * @param  string $code  optional, language code
+     *
+     * @return string
+     */
+    public static function show($value, $name, $code = LANGUAGE_CODE)
+    {
+        $language = static::instance('legacy_api', $code);
+
+        // Load the specified Language file.
+        $language->load($name, $code);
+
+        return $language->get($value, $code);
+    }
+
+    /**
      * Get the registered name of the component.
      *
      * @return string

@@ -1,124 +1,273 @@
 <?php
-/**
- * Controller - base controller
- *
- * @author David Carr - dave@novaframework.com
- * @version 3.0
- */
 
 namespace Routing;
 
-use Core\Config;
 use Http\Response;
+use View\View;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-use Event;
+use BadMethodCallException;
+use Closure;
 
 
 abstract class Controller
 {
     /**
-     * The requested Method by Router.
+     * The currently used Layout.
      *
-     * @var string|null
+     * @var mixed
      */
-    private $method = null;
+    protected $layout;
 
     /**
-     * The parameters given by Router.
+     * The "before" filters registered on the controller.
      *
      * @var array
      */
-    private $params = array();
+    protected $beforeFilters = array();
+
+    /**
+     * The "after" filters registered on the controller.
+     *
+     * @var array
+     */
+    protected $afterFilters = array();
+
+    /**
+     * The route filterer implementation.
+     *
+     * @var \Routing\RouteFiltererInterface
+     */
+    protected static $filterer;
 
 
     /**
-     * Create a new Controller instance.
+     * Register a "before" filter on the controller.
+     *
+     * @param  \Closure|string  $filter
+     * @param  array  $options
+     * @return void
      */
-    public function __construct()
+    public function beforeFilter($filter, array $options = array())
     {
-        //
+        $this->beforeFilters[] = $this->parseFilter($filter, $options);
     }
 
     /**
-     * Execute the Controller Method
-     * @return \Symfony\Component\HttpFoundation\Response
+     * Register an "after" filter on the controller.
      *
-     * @throw \Exception
+     * @param  \Closure|string  $filter
+     * @param  array  $options
+     * @return void
      */
-    public function execute($method, $params = array())
+    public function afterFilter($filter, array $options = array())
     {
-        // Initialise the Controller's variables.
-        $this->method = $method;
-        $this->params = $params;
+        $this->afterFilters[] = $this->parseFilter($filter, $options);
+    }
 
-        // Before the Action execution stage.
-        $response = $this->before();
+    /**
+     * Parse the given filter and options.
+     *
+     * @param  \Closure|string  $filter
+     * @param  array  $options
+     * @return array
+     */
+    protected function parseFilter($filter, array $options)
+    {
+        $parameters = array();
 
-        // When the Before Stage return a null Response, execute the requested Action.
-        if (is_null($response)) {
-            $response = call_user_func_array(array($this, $method), $params);
+        $original = $filter;
+
+        if ($filter instanceof Closure) {
+            $filter = $this->registerClosureFilter($filter);
+        } else if ($this->isInstanceFilter($filter)) {
+            $filter = $this->registerInstanceFilter($filter);
+        } else {
+            list($filter, $parameters) = Route::parseFilter($filter);
         }
 
-        // After the Action execution stage.
-        $this->after($response);
+        return compact('original', 'filter', 'parameters', 'options');
+    }
 
-        // Do the final post-processing stage and return the response.
+    /**
+     * Register an anonymous controller filter Closure.
+     *
+     * @param  \Closure  $filter
+     * @return string
+     */
+    protected function registerClosureFilter(Closure $filter)
+    {
+        $this->getFilterer()->filter($name = spl_object_hash($filter), $filter);
+
+        return $name;
+    }
+
+    /**
+     * Register a controller instance method as a filter.
+     *
+     * @param  string  $filter
+     * @return string
+     */
+    protected function registerInstanceFilter($filter)
+    {
+        $method = substr($filter, 1);
+
+        $this->getFilterer()->filter($filter, array($this, $method));
+
+        return $filter;
+    }
+
+    /**
+     * Determine if a filter is a local method on the controller.
+     *
+     * @param  mixed  $filter
+     * @return boolean
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function isInstanceFilter($filter)
+    {
+        if (is_string($filter) && str_starts_with($filter, '@')) {
+            $method = substr($filter, 1);
+
+            if (method_exists($this, $method)) return true;
+
+            throw new \InvalidArgumentException("Filter method [$filter] does not exist.");
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove the given before filter.
+     *
+     * @param  string  $filter
+     * @return void
+     */
+    public function forgetBeforeFilter($filter)
+    {
+        $this->beforeFilters = $this->removeFilter($filter, $this->getBeforeFilters());
+    }
+
+    /**
+     * Remove the given after filter.
+     *
+     * @param  string  $filter
+     * @return void
+     */
+    public function forgetAfterFilter($filter)
+    {
+        $this->afterFilters = $this->removeFilter($filter, $this->getAfterFilters());
+    }
+
+    /**
+     * Remove the given controller filter from the provided filter array.
+     *
+     * @param  string  $removing
+     * @param  array  $current
+     * @return array
+     */
+    protected function removeFilter($removing, $current)
+    {
+        return array_filter($current, function($filter) use ($removing)
+        {
+            return $filter['original'] != $removing;
+        });
+    }
+
+    /**
+     * Get the registered "before" filters.
+     *
+     * @return array
+     */
+    public function getBeforeFilters()
+    {
+        return $this->beforeFilters;
+    }
+
+    /**
+     * Get the registered "after" filters.
+     *
+     * @return array
+     */
+    public function getAfterFilters()
+    {
+        return $this->afterFilters;
+    }
+
+    /**
+     * Get the route filterer implementation.
+     *
+     * @return \Routing\RouteFiltererInterface
+     */
+    public static function getFilterer()
+    {
+        return static::$filterer;
+    }
+
+    /**
+     * Set the route filterer implementation.
+     *
+     * @param  \Routing\RouteFiltererInterface  $filterer
+     * @return void
+     */
+    public static function setFilterer(RouteFiltererInterface $filterer)
+    {
+        static::$filterer = $filterer;
+    }
+
+    /**
+     * Create the layout used by the controller.
+     *
+     * @return void
+     */
+    protected function setupLayout() {}
+
+    /**
+     * Execute an action on the controller.
+     *
+     * @param string  $method
+     * @param array   $params
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function callAction($method, $parameters)
+    {
+        $this->setupLayout();
+
+        // Execute the requested Method with the given arguments.
+        $response = call_user_func_array(array($this, $method), $parameters);
+
+        // If no response is returned from the controller action and a layout is being
+        // used we will assume we want to just return the Layout view as any nested
+        // Views were probably bound on this view during this Controller actions.
+        if (is_null($response) && ($this->layout instanceof View)) {
+            $response = $this->layout;
+        }
+
+        // Process the Response and return it.
         return $this->processResponse($response);
     }
 
     /**
-     * Process the response and return it.
+     * Process the response given by the controller action.
      *
-     * @param mixed  $response
+     * @param mixed $response
      *
      * @return mixed
      */
     protected function processResponse($response)
     {
+        if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
+        }
+
         return $response;
     }
 
     /**
-     * This method automatically invokes before the current Action and is supposed
-     * to be overriden for using it.
-     */
-    protected function before()
-    {
-        //
-    }
-
-    /**
-     * This method automatically invokes after the current Action and is supposed
-     * to be overriden for using it.
-     *
-     * Note that the Action's returned value is passed to this Method as parameter.
-     */
-    protected function after($result)
-    {
-        //
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getMethod()
-    {
-        return $this->method;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * Handle calls to missing methods on the controller.
+     * Handle calls to missing methods on the Controller.
      *
      * @param  array   $parameters
      * @return mixed
@@ -131,7 +280,7 @@ abstract class Controller
     }
 
     /**
-     * Handle calls to missing methods on the controller.
+     * Handle calls to missing methods on the Controller.
      *
      * @param  string  $method
      * @param  array   $parameters

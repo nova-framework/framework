@@ -8,34 +8,26 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use Helpers\FastCache;
-
-use App\Core\Controller;
+use App\Core\BackendController;
 
 use Auth;
 use Config;
 use Input;
 use Session;
 use Redirect;
-use Request;
 use Validator;
 use View;
 
 
-class Settings extends Controller
+class Settings extends BackendController
 {
 
-    protected function before()
+    public function __construct()
     {
-        // Check the User Authorization.
-        if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('system', 'You are not authorized to access this resource.');
+        parent::__construct();
 
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-        }
-
-        // Leave to parent's method the Execution Flow decisions.
-        return parent::before();
+        //
+        $this->beforeFilter('@adminUsersFilter');
     }
 
     protected function validate(array $data)

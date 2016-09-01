@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Connectors;
+namespace Database;
 
 
 interface ConnectorInterface

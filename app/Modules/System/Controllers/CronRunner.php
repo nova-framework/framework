@@ -2,8 +2,8 @@
 
 namespace App\Modules\System\Controllers;
 
-use Core\Config;
-use Core\Controller;
+use Config\Config;
+use App\Core\Controller;
 
 use Cron;
 use Response;

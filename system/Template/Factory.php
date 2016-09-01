@@ -2,8 +2,8 @@
 
 namespace Template;
 
-use Core\Config;
-use Core\Language;
+use Config\Config;
+use Language\Language;
 use Support\Contracts\ArrayableInterface as Arrayable;
 use Template\Template;
 use View\Factory as ViewFactory;

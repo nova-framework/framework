@@ -13,7 +13,7 @@
 require ROOTDIR .'vendor/autoload.php';
 
 // The used Classes.
-use Core\Config;
+use Config\Config;
 use Config\Repository as ConfigRepository;
 use Foundation\AliasLoader;
 use Foundation\Application;

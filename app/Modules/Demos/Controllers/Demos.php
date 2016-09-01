@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demos\Controllers;
 
-use Core\Controller;
+use App\Core\Controller;
 
 use Routing\Route;
 
@@ -76,7 +76,11 @@ class Demos extends Controller
         //$uri = '(:all)';
 
         //
-        $route = new Route('GET', $uri, null, false);
+        $route = new Route('GET', $uri, function()
+        {
+            echo 'Hello, World!';
+
+        }, false);
 
         // Match the Route.
         $request = Request::instance();

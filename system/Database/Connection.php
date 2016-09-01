@@ -8,36 +8,45 @@
 
 namespace Database;
 
-use Core\Config;
+use Config\Config;
 use Core\Logger;
-use Database\Connectors\Connector;
-use Database\Connectors\MySqlConnector;
-use Database\Connectors\PostgresConnector;
-use Database\Connectors\SQLiteConnector;
+
 use Database\Query\Expression;
+use Database\Query\Grammar as QueryGrammar;
 use Database\Query\Builder as QueryBuilder;
+use Database\Query\Processor as QueryProcessor;
+
+use Database\ConnectionInterface;
+use Database\Connector;
 use Database\QueryException;
 
 use Closure;
-use PDO;
 use DateTimeInterface;
+use PDO;
 
 
-class Connection
+class Connection implements ConnectionInterface
 {
-    /**
-     * The Driver name.
-     *
-     * @var
-     */
-    protected $driver;
-
     /**
      * The Connector instance.
      *
      * @var
      */
     protected $connector;
+
+    /**
+     * The Query Grammar instance.
+     *
+     * @var \Database\Query\Grammar
+     */
+    protected $queryGrammar;
+
+    /**
+     * The Query Processor instance.
+     *
+     * @var \Database\Query\Processor
+     */
+    protected $postProcessor;
 
     /**
      * The active PDO Connection.
@@ -123,65 +132,71 @@ class Connection
      */
     protected $config = array();
 
+
     /**
-     * Create a new Connection instance.
+     * Create a new Database Connection instance.
      *
-     * @param  array  $config
+     * @param  \PDO     $pdo
+     * @param  string   $database
+     * @param  string   $tablePrefix
+     * @param  array    $config
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(PDO $pdo, $database = '', $tablePrefix = '', array $config = array())
     {
-        if (! isset($config['driver'])) {
-            throw new \InvalidArgumentException("A driver must be specified.");
-        }
+        $this->pdo = $pdo;
+
+        //
+        $this->database = $database;
+
+        $this->tablePrefix = $tablePrefix;
 
         $this->config = $config;
 
-        $this->driver = $config['driver'];
-
-        $this->database = $config['database'];
-
-        $this->tablePrefix = $config['prefix'];
-
         //
-        $this->connector = $this->createConnector($config);
+        $this->useDefaultQueryGrammar();
 
-        $this->pdo = $this->createConnection($config);
+        $this->useDefaultPostProcessor();
     }
 
     /**
-     * Create a connector instance based on the configuration.
+     * Set the query grammar to the default implementation.
      *
-     * @param  array  $config
-     * @return \Database\Connectors\ConnectorInterface
-     *
-     * @throws \InvalidArgumentException
+     * @return void
      */
-    public function createConnector(array $config)
+    public function useDefaultQueryGrammar()
     {
-        switch ($this->driver) {
-            case 'mysql':
-                return new MySqlConnector();
-
-            case 'pgsql':
-                return new PostgresConnector();
-
-            case 'sqlite':
-                return new SQLiteConnector();
-        }
-
-        throw new \InvalidArgumentException("Unsupported driver [{$this->driver}]");
+        $this->queryGrammar = $this->getDefaultQueryGrammar();
     }
 
     /**
-     * Create a new PDO connection.
+     * Get the default query grammar instance.
      *
-     * @param  array   $config
-     * @return PDO
+     * @return \Database\Query\Grammar
      */
-    public function createConnection(array $config)
+    protected function getDefaultQueryGrammar()
     {
-        return $this->connector->connect($config);
+        return new QueryGrammar();
+    }
+
+    /**
+     * Set the query post processor to the default implementation.
+     *
+     * @return void
+     */
+    public function useDefaultPostProcessor()
+    {
+        $this->postProcessor = $this->getDefaultPostProcessor();
+    }
+
+    /**
+     * Get the default post processor instance.
+     *
+     * @return \Database\Query\Processor
+     */
+    protected function getDefaultPostProcessor()
+    {
+        return new QueryProcessor();
     }
 
     /**
@@ -192,7 +207,9 @@ class Connection
      */
     public function table($table)
     {
-        $query = new QueryBuilder($this);
+        $processor = $this->getPostProcessor();
+
+        $query = new QueryBuilder($this, $this->getQueryGrammar(), $processor);
 
         return $query->from($table);
     }
@@ -229,7 +246,7 @@ class Connection
      * @param  array   $bindings
      * @return array
      */
-    public function select($query, array $bindings = array())
+    public function select($query, $bindings = array())
     {
         return $this->run($query, $bindings, function($me, $query, $bindings)
         {
@@ -253,7 +270,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function insert($query, array $bindings = array())
+    public function insert($query, $bindings = array())
     {
         return $this->statement($query, $bindings);
     }
@@ -265,7 +282,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function update($query, array $bindings = array())
+    public function update($query, $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -277,7 +294,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function delete($query, array $bindings = array())
+    public function delete($query, $bindings = array())
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -289,7 +306,7 @@ class Connection
      * @param  array   $bindings
      * @return bool
      */
-    public function statement($query, array $bindings = array())
+    public function statement($query, $bindings = array())
     {
         return $this->run($query, $bindings, function($me, $query, $bindings)
         {
@@ -311,7 +328,7 @@ class Connection
      * @param  array   $bindings
      * @return int
      */
-    public function affectingStatement($query, array $bindings = array())
+    public function affectingStatement($query, $bindings = array())
     {
         return $this->run($query, $bindings, function($me, $query, $bindings)
         {
@@ -573,23 +590,46 @@ class Connection
     }
 
     /**
-     * Get the Database Driver.
+     * Set the table prefix and return the grammar.
      *
-     * @return string
+     * @param  \Database\Grammar  $grammar
+     * @return \Database\Grammar
      */
-    public function getDriver()
+    public function withTablePrefix(QueryGrammar $grammar)
     {
-        return $this->driver;
+        $grammar->setTablePrefix($this->tablePrefix);
+
+        return $grammar;
     }
 
     /**
      * Get the Connector instance.
      *
-     * @return \Database\Connectors\Connector
+     * @return \Database\Connector
      */
     public function getConnector()
     {
         return $this->connector;
+    }
+
+    /**
+     * Get the Connector instance.
+     *
+     * @return \Database\Query\Grammar
+     */
+    public function getQueryGrammar()
+    {
+        return $this->queryGrammar;
+    }
+
+    /**
+     * Get the Connector instance.
+     *
+     * @return \Database\Query\Processor
+     */
+    public function getPostProcessor()
+    {
+        return $this->postProcessor;
     }
 
     /**
@@ -645,7 +685,7 @@ class Connection
     /**
      * Get the paginator environment instance.
      *
-     * @return \Illuminate\Pagination\Environment
+     * @return \Pagination\Environment
      */
     public function getPaginator()
     {
@@ -670,7 +710,7 @@ class Connection
     /**
      * Get the cache manager instance.
      *
-     * @return \Illuminate\Cache\CacheManager
+     * @return \Cache\CacheManager
      */
     public function getCacheManager()
     {
@@ -775,23 +815,4 @@ class Connection
         return $this->loggingQueries;
     }
 
-    /**
-     * Get the keyword identifier wrapper format.
-     *
-     * @return string
-     */
-    public function getWrapper()
-    {
-        return $this->connector->getWrapper();
-    }
-
-    /**
-     * Get the format for database stored dates.
-     *
-     * @return string
-     */
-    public function getDateFormat()
-    {
-        return $this->connector->getDateFormat();
-    }
 }

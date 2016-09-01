@@ -8,8 +8,8 @@
 
 namespace Routing;
 
-use Core\Config;
-use Core\Controller;
+use Config\Config;
+use App\Core\Controller;
 use Events\Dispatcher;
 
 use Helpers\Inflector;
@@ -27,6 +27,9 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+use Closure;
+use BadMethodCallException;
 
 
 /**
@@ -110,6 +113,13 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @var array $methods
      */
     public static $methods = array('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS');
+
+    /**
+     * The default actions for a resourceful controller.
+     *
+     * @var array
+     */
+    protected $resourceDefaults = array('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
 
     /**
      * Boolean indicating the use of Named Parameters on not.
@@ -253,60 +263,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Defines a Route Group.
-     *
-     * @param string $group The scope of the current Routes Group
-     * @param callback $callback Callback object called to define the Routes.
-     */
-    public function group($group, $callback)
-    {
-        if (is_string($group)) $group = array('prefix' => $group);
-
-        // Add the Route Group to the array.
-        array_push($this->groupStack, $group);
-
-        // Call the Callback, to define the Routes on the current Group.
-        call_user_func($callback);
-
-        // Removes the last Route Group from the array.
-        array_pop($this->groupStack);
-    }
-
-    /* The Resourceful Routes in the Laravel Style.
-
-    Method     |  Path                 |  Action   |
-    ------------------------------------------------
-    GET        |  /photo               |  index    |
-    GET        |  /photo/create        |  create   |
-    POST       |  /photo               |  store    |
-    GET        |  /photo/{photo}       |  show     |
-    GET        |  /photo/{photo}/edit  |  edit     |
-    PUT/PATCH  |  /photo/{photo}       |  update   |
-    DELETE     |  /photo/{photo}       |  destroy  |
-
-    */
-
-    /**
-     * Defines a Resourceful Routes Group to a target Controller.
-     *
-     * @param string $basePath The base path of the resourceful routes group
-     * @param string $controller The target Resourceful Controller's name.
-     */
-    public function resource($basePath, $controller)
-    {
-        $param = $this->namedParams ? '{id}' : '(:any)';
-
-        //
-        $this->addRoute('GET',                 $basePath,                       $controller .'@index');
-        $this->addRoute('GET',                 $basePath .'/create',            $controller .'@create');
-        $this->addRoute('POST',                $basePath,                       $controller .'@store');
-        $this->addRoute('GET',                 $basePath .'/' .$param,          $controller .'@show');
-        $this->addRoute('GET',                 $basePath .'/' .$param .'/edit', $controller .'@edit');
-        $this->addRoute(array('PUT', 'PATCH'), $basePath .'/' .$param,          $controller .'@update');
-        $this->addRoute('DELETE',              $basePath .'/' .$param,          $controller .'@delete');
-    }
-
-    /**
      * Register an array of controllers with wildcard routing.
      *
      * @param  array  $controllers
@@ -324,10 +280,16 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  string  $controller
+     * @param  array   $names
      * @return void
+     * @throw  \BadMethodCallException
      */
-    public function controller($uri, $controller)
+    public function controller($uri, $controller, $names = array())
     {
+        if (! $this->namedParams) {
+            throw new BadMethodCallException("The method is not available while using Unnamed Parameters.");
+        }
+
         $inspector = $this->getInspector();
 
         //
@@ -342,13 +304,32 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         foreach ($routable as $method => $routes) {
             foreach ($routes as $route) {
-                $action = array('uses' => $controller .'@' .$method);
-
-                $this->addRoute($route['verb'], $route['uri'], $action);
+                $this->registerInspected($route, $controller, $method, $names);
             }
         }
 
         $this->addFallthroughRoute($controller, $uri);
+    }
+
+    /**
+     * Register an inspected controller route.
+     *
+     * @param  array   $route
+     * @param  string  $controller
+     * @param  string  $method
+     * @param  array   $names
+     * @return void
+     */
+    protected function registerInspected($route, $controller, $method, &$names)
+    {
+        $action = array('uses' => $controller.'@'.$method);
+
+        // If a given controller method has been named, we will assign the name to the
+        // controller action array, which provides for a short-cut to method naming
+        // so you don't have to define an individual route for these controllers.
+        $action['as'] = array_get($names, $method);
+
+        $this->{$route['verb']}($route['uri'], $action);
     }
 
     /**
@@ -357,16 +338,487 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $controller
      * @param  string  $uri
      * @return void
+     * @throw  \BadMethodCallException
      */
     protected function addFallthroughRoute($controller, $uri)
     {
-        if ($this->namedParams) {
-            $route = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
+        $route = $this->any($uri .'/{_missing}', $controller .'@missingMethod');
 
-            $route->where('_missing', '(.*)');
-        } else {
-            $this->any($uri .'/(:all)', $controller .'@missingMethod');
+        $route->where('_missing', '(.*)');
+    }
+
+    /**
+     * Route a resource to a controller.
+     *
+     * @param  string  $name
+     * @param  string  $controller
+     * @param  array   $options
+     * @return void
+     */
+    public function resource($name, $controller, array $options = array())
+    {
+        if (! $this->namedParams) {
+            throw new BadMethodCallException("The method is not available while using Unnamed Parameters.");
         }
+
+        // If the resource name contains a slash, we will assume the developer wishes to
+        // register these resource routes with a prefix so we will set that up out of
+        // the box so they don't have to mess with it. Otherwise, we will continue.
+        if (str_contains($name, '/')) {
+            $this->prefixedResource($name, $controller, $options);
+
+            return;
+        }
+
+        // We need to extract the base resource from the resource name. Nested resources
+        // are supported in the framework, but we need to know what name to use for a
+        // place-holder on the route wildcards, which should be the base resources.
+        $base = $this->getResourceWildcard(last(explode('.', $name)));
+
+        $defaults = $this->resourceDefaults;
+
+        foreach ($this->getResourceMethods($defaults, $options) as $method) {
+            $this->{'addResource'.ucfirst($method)}($name, $base, $controller, $options);
+        }
+    }
+
+    /**
+     * Build a set of prefixed resource routes.
+     *
+     * @param  string  $name
+     * @param  string  $controller
+     * @param  array   $options
+     * @return void
+     */
+    protected function prefixedResource($name, $controller, array $options)
+    {
+        list($name, $prefix) = $this->getResourcePrefix($name);
+
+        // We need to extract the base resource from the resource name. Nested resources
+        // are supported in the framework, but we need to know what name to use for a
+        // place-holder on the route wildcards, which should be the base resources.
+        $callback = function($me) use ($name, $controller, $options)
+        {
+            $me->resource($name, $controller, $options);
+        };
+
+        return $this->group(compact('prefix'), $callback);
+    }
+
+    /**
+     * Extract the resource and prefix from a resource name.
+     *
+     * @param  string  $name
+     * @return array
+     */
+    protected function getResourcePrefix($name)
+    {
+        $segments = explode('/', $name);
+
+        // To get the prefix, we will take all of the name segments and implode them on
+        // a slash. This will generate a proper URI prefix for us. Then we take this
+        // last segment, which will be considered the final resources name we use.
+        $prefix = implode('/', array_slice($segments, 0, -1));
+
+        $name = end($segments);
+
+        return array($name, $prefix);
+    }
+
+    /**
+     * Get the applicable resource methods.
+     *
+     * @param  array  $defaults
+     * @param  array  $options
+     * @return array
+     */
+    protected function getResourceMethods($defaults, $options)
+    {
+        if (isset($options['only'])) {
+            return array_intersect($defaults, (array) $options['only']);
+        } else if (isset($options['except'])) {
+            return array_diff($defaults, (array) $options['except']);
+        }
+
+        return $defaults;
+    }
+
+    /**
+     * Get the base resource URI for a given resource.
+     *
+     * @param  string  $resource
+     * @return string
+     */
+    public function getResourceUri($resource)
+    {
+        if ( ! str_contains($resource, '.')) return $resource;
+
+        // Once we have built the base URI, we'll remove the wildcard holder for this
+        // base resource name so that the individual route adders can suffix these
+        // paths however they need to, as some do not have any wildcards at all.
+        $segments = explode('.', $resource);
+
+        $uri = $this->getNestedResourceUri($segments);
+
+        return str_replace('/{'.$this->getResourceWildcard(last($segments)).'}', '', $uri);
+    }
+
+    /**
+     * Get the URI for a nested resource segment array.
+     *
+     * @param  array   $segments
+     * @return string
+     */
+    protected function getNestedResourceUri(array $segments)
+    {
+        // We will spin through the segments and create a place-holder for each of the
+        // resource segments, as well as the resource itself. Then we should get an
+        // entire string for the resource URI that contains all nested resources.
+        return implode('/', array_map(function($segment)
+        {
+            return $segment .'/{'.$this->getResourceWildcard($segment).'}';
+
+        }, $segments));
+    }
+
+    /**
+     * Get the action array for a resource route.
+     *
+     * @param  string  $resource
+     * @param  string  $controller
+     * @param  string  $method
+     * @param  array   $options
+     * @return array
+     */
+    protected function getResourceAction($resource, $controller, $method, $options)
+    {
+        $name = $this->getResourceName($resource, $method, $options);
+
+        return array('as' => $name, 'uses' => $controller .'@' .$method);
+    }
+
+    /**
+     * Get the name for a given resource.
+     *
+     * @param  string  $resource
+     * @param  string  $method
+     * @param  array   $options
+     * @return string
+     */
+    protected function getResourceName($resource, $method, $options)
+    {
+        if (isset($options['names'][$method])) return $options['names'][$method];
+
+        // If a global prefix has been assigned to all names for this resource, we will
+        // grab that so we can prepend it onto the name when we create this name for
+        // the resource action. Otherwise we'll just use an empty string for here.
+        $prefix = isset($options['as']) ? $options['as'] .'.' : '';
+
+        if (empty($this->groupStack)) {
+            return $prefix .$resource .'.' .$method;
+        }
+
+        return $this->getGroupResourceName($prefix, $resource, $method);
+    }
+
+    /**
+     * Get the resource name for a grouped resource.
+     *
+     * @param  string  $prefix
+     * @param  string  $resource
+     * @param  string  $method
+     * @return string
+     */
+    protected function getGroupResourceName($prefix, $resource, $method)
+    {
+        $group = str_replace('/', '.', $this->getLastGroupPrefix());
+
+        if (empty($group)) {
+            return trim("{$prefix}{$resource}.{$method}", '.');
+        }
+
+        return trim("{$prefix}{$group}.{$resource}.{$method}", '.');
+    }
+
+    /**
+     * Format a resource wildcard for usage.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getResourceWildcard($value)
+    {
+        return str_replace('-', '_', $value);
+    }
+
+    /**
+     * Add the index method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return \Nova\Routing\Route
+     */
+    protected function addResourceIndex($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name);
+
+        $action = $this->getResourceAction($name, $controller, 'index', $options);
+
+        return $this->get($uri, $action);
+    }
+
+    /**
+     * Add the create method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return \Nova\Routing\Route
+     */
+    protected function addResourceCreate($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/create';
+
+        $action = $this->getResourceAction($name, $controller, 'create', $options);
+
+        return $this->get($uri, $action);
+    }
+
+    /**
+     * Add the store method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return \Nova\Routing\Route
+     */
+    protected function addResourceStore($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name);
+
+        $action = $this->getResourceAction($name, $controller, 'store', $options);
+
+        return $this->post($uri, $action);
+    }
+
+    /**
+     * Add the show method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return \Nova\Routing\Route
+     */
+    protected function addResourceShow($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/{'.$base.'}';
+
+        $action = $this->getResourceAction($name, $controller, 'show', $options);
+
+        return $this->get($uri, $action);
+    }
+
+    /**
+     * Add the edit method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return \Nova\Routing\Route
+     */
+    protected function addResourceEdit($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/{'.$base.'}/edit';
+
+        $action = $this->getResourceAction($name, $controller, 'edit', $options);
+
+        return $this->get($uri, $action);
+    }
+
+    /**
+     * Add the update method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return void
+     */
+    protected function addResourceUpdate($name, $base, $controller, $options)
+    {
+        $this->addPutResourceUpdate($name, $base, $controller, $options);
+
+        return $this->addPatchResourceUpdate($name, $base, $controller);
+    }
+
+    /**
+     * Add the update method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return \Nova\Routing\Route
+     */
+    protected function addPutResourceUpdate($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/{'.$base.'}';
+
+        $action = $this->getResourceAction($name, $controller, 'update', $options);
+
+        return $this->put($uri, $action);
+    }
+
+    /**
+     * Add the update method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @return void
+     */
+    protected function addPatchResourceUpdate($name, $base, $controller)
+    {
+        $uri = $this->getResourceUri($name).'/{'.$base.'}';
+
+        $this->patch($uri, $controller.'@update');
+    }
+
+    /**
+     * Add the destroy method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array   $options
+     * @return \Nova\Routing\Route
+     */
+    protected function addResourceDestroy($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/{'.$base.'}';
+
+        $action = $this->getResourceAction($name, $controller, 'destroy', $options);
+
+        return $this->delete($uri, $action);
+    }
+
+    /**
+     * Create a route group with shared attributes.
+     *
+     * @param  array     $attributes
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function group(array $attributes, Closure $callback)
+    {
+        $this->updateGroupStack($attributes);
+
+        // Once we have updated the group stack, we will execute the user Closure and
+        // merge in the groups attributes when the route is created. After we have
+        // run the callback, we will pop the attributes off of this group stack.
+        call_user_func($callback, $this);
+
+        array_pop($this->groupStack);
+    }
+
+    /**
+     * Update the group stack with the given attributes.
+     *
+     * @param  array  $attributes
+     * @return void
+     */
+    protected function updateGroupStack(array $attributes)
+    {
+        if ( ! empty($this->groupStack)) {
+            $attributes = static::mergeGroup($attributes, last($this->groupStack));
+        }
+
+        $this->groupStack[] = $attributes;
+    }
+
+    /**
+     * Merge the given array with the last group stack.
+     *
+     * @param  array  $new
+     * @return array
+     */
+    public function mergeWithLastGroup($new)
+    {
+        $old = last($this->groupStack);
+
+        return static::mergeGroup($new, $old);
+    }
+
+    /**
+     * Merge the given group attributes.
+     *
+     * @param  array  $new
+     * @param  array  $old
+     * @return array
+     */
+    public static function mergeGroup($new, $old)
+    {
+        $new['namespace'] = static::formatUsesPrefix($new, $old);
+
+        $new['prefix'] = static::formatGroupPrefix($new, $old);
+
+        return array_merge_recursive(array_except($old, array('namespace', 'prefix')), $new);
+    }
+
+    /**
+     * Format the uses prefix for the new group attributes.
+     *
+     * @param  array  $new
+     * @param  array  $old
+     * @return string
+     */
+    protected static function formatUsesPrefix($new, $old)
+    {
+        if (isset($new['namespace']) && isset($old['namespace'])) {
+            return trim(array_get($old, 'namespace'), '\\') .'\\' .trim($new['namespace'], '\\');
+        } else if (isset($new['namespace'])) {
+            return trim($new['namespace'], '\\');
+        }
+
+        return array_get($old, 'namespace');
+    }
+
+    /**
+     * Format the prefix for the new group attributes.
+     *
+     * @param  array  $new
+     * @param  array  $old
+     * @return string
+     */
+    protected static function formatGroupPrefix($new, $old)
+    {
+        if (isset($new['prefix'])) {
+            return trim(array_get($old, 'prefix'), '/') .'/' .trim($new['prefix'], '/');
+        }
+
+        return array_get($old, 'prefix');
+    }
+
+    /**
+     * Get the prefix from the last group on the stack.
+     *
+     * @return string
+     */
+    protected function getLastGroupPrefix()
+    {
+        if ( ! empty($this->groupStack)) {
+            $last = end($this->groupStack);
+
+            return isset($last['prefix']) ? $last['prefix'] : '';
+        }
+
+        return '';
     }
 
     /**
@@ -389,45 +841,32 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * Create a new route instance.
      *
      * @param  array|string  $methods
-     * @param  string  $route
+     * @param  string  $uri
      * @param  mixed   $action
      * @return \Routing\Route
      */
-    protected function createRoute($methods, $route, $action)
+    protected function createRoute($methods, $uri, $action)
     {
-        // Pre-process the Action data.
-        if (! is_array($action)) $action = array('uses' => $action);
-
-        // Adjust the Prefix according with the Groups stack.
-        if (! empty($this->groupStack)) {
-            $parts = array();
-
-            foreach ($this->groupStack as $group) {
-                // Add the current prefix to the prefix list.
-                array_push($parts, trim($group['prefix'], '/'));
-            }
-
-            if (isset($action['prefix'])) {
-                array_push($parts, trim($action['prefix'], '/'));
-            }
-
-            // Adjust the Route PREFIX, if it is needed.
-            $parts = array_filter($parts, function($value)
-            {
-                return ! empty($value);
-            });
-
-            if (! empty($parts)) {
-                $action['prefix'] = implode('/', $parts);
-            }
-        }
-
+        // If the route is routing to a controller we will parse the route action into
+        // an acceptable array format before registering it and creating this route
+        // instance itself. We need to build the Closure that will call this out.
         if ($this->routingToController($action)) {
             $action = $this->getControllerAction($action);
         }
 
-        // Create a Route instance and return it.
-        return $this->newRoute($methods, $route, $action);
+        // Prefix the current route pattern.
+        $uri = $this->prefix($uri);
+
+        $route = $this->newRoute($methods, $uri, $action);
+
+        // If we have groups that need to be merged, we will merge them now after this
+        // route has already been created and is ready to go. After we're done with
+        // the merge we will be ready to return the route back out to the caller.
+        if (! empty($this->groupStack)) {
+            $this->mergeController($route);
+        }
+
+        return $route;
     }
 
     /**
@@ -441,6 +880,32 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected function newRoute($methods, $uri, $action)
     {
         return new Route($methods, $uri, $action, $this->namedParams);
+    }
+
+    /**
+     * Prefix the given URI with the last prefix.
+     *
+     * @param  string  $uri
+     * @return string
+     */
+    protected function prefix($uri)
+    {
+        $prefix = $this->getLastGroupPrefix();
+
+        return trim(trim($prefix, '/') .'/' .trim($uri, '/'), '/') ?: '/';
+    }
+
+    /**
+     * Merge the group stack with the controller action.
+     *
+     * @param  \Nova\Routing\Route  $route
+     * @return void
+     */
+    protected function mergeController($route)
+    {
+        $action = $this->mergeWithLastGroup($route->getAction());
+
+        $route->setAction($action);
     }
 
     /**
@@ -804,7 +1269,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getInspector()
     {
-        return $this->inspector ?: $this->inspector = new ControllerInspector($this->namedParams);
+        return $this->inspector ?: $this->inspector = new ControllerInspector();
     }
 
     /**

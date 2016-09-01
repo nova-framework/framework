@@ -8,10 +8,10 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use Core\Config;
+use Config\Config;
 use Helpers\ReCaptcha;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 use App\Models\Role;
 
 use Carbon\Carbon;
@@ -25,20 +25,15 @@ use Validator;
 use View;
 
 
-class Roles extends Controller
+class Roles extends BackendController
 {
 
-    protected function before()
+    public function __construct()
     {
-        // Check the User Authorization.
-        if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('users', 'You are not authorized to access this resource.');
+        parent::__construct();
 
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-        }
-
-        // Leave to parent's method the Execution Flow decisions.
-        return parent::before();
+        //
+        $this->beforeFilter('@adminUsersFilter');
     }
 
     protected function validate(array $data, $id = null)

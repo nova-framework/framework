@@ -2,7 +2,7 @@
 
 namespace Cache;
 
-use Core\Config;
+use Config\Config;
 use Cache\ArrayStore;
 use Cache\FastCacheStore;
 use Cache\Repository;

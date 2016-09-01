@@ -3,7 +3,6 @@
 namespace Database\ORM\Relations;
 
 use Database\ORM\Builder;
-use Database\ORM\Relations\Pivot;
 
 
 class MorphPivot extends Pivot
@@ -18,6 +17,15 @@ class MorphPivot extends Pivot
     protected $morphType;
 
     /**
+     * The value of the polymorphic relation.
+     *
+     * Explicitly define this so it's not included in saved attributes.
+     *
+     * @var string
+     */
+    protected $morphClass;
+
+    /**
      * Set the keys for a save update query.
      *
      * @param  \Database\ORM\Builder  $query
@@ -25,7 +33,7 @@ class MorphPivot extends Pivot
      */
     protected function setKeysForSaveQuery(Builder $query)
     {
-        $query->where($this->morphType, $this->getAttribute($this->morphType));
+        $query->where($this->morphType, $this->morphClass);
 
         return parent::setKeysForSaveQuery($query);
     }
@@ -39,7 +47,7 @@ class MorphPivot extends Pivot
     {
         $query = $this->getDeleteQuery();
 
-        $query->where($this->morphType, $this->getAttribute($this->morphType));
+        $query->where($this->morphType, $this->morphClass);
 
         return $query->delete();
     }
@@ -48,7 +56,7 @@ class MorphPivot extends Pivot
      * Set the morph type for the pivot.
      *
      * @param  string  $morphType
-     * @return \Database\ORM\Relations\MorphPivot
+     * @return $this
      */
     public function setMorphType($morphType)
     {
@@ -56,5 +64,19 @@ class MorphPivot extends Pivot
 
         return $this;
     }
+
+    /**
+     * Set the morph class for the pivot.
+     *
+     * @param  string  $morphClass
+     * @return \Database\ORM\Relations\MorphPivot
+     */
+    public function setMorphClass($morphClass)
+    {
+            $this->morphClass = $morphClass;
+
+            return $this;
+    }
+
 
 }

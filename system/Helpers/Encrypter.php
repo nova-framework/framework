@@ -9,7 +9,7 @@
 
 namespace Helpers;
 
-use Core\Config;
+use Config\Config;
 
 
 class Encrypter

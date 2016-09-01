@@ -8,21 +8,14 @@
 
 namespace Database\Connectors;
 
-use Database\Connectors\Connector;
-use Database\Connectors\ConnectorInterface;
+use Database\Connector;
+use Database\ConnectorInterface;
 
 use PDO;
 
 
 class SQLiteConnector extends Connector implements ConnectorInterface
 {
-    /**
-     * The keyword identifier wrapper format.
-     *
-     * @var string
-     */
-    protected $wrapper = '"%s"';
-
 
     /**
      * Establish a database connection.

@@ -8,13 +8,14 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 
 use View;
 
 
-class Dashboard extends Controller
+class Dashboard extends BackendController
 {
+
     public function index()
     {
         return $this->getView()

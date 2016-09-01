@@ -2,7 +2,7 @@
 /**
  * Translator - Class to handle a Laravel-esque style Translations.
  *
- * NOTE: The real strings translation is made via the new \Core\Language API.
+ * NOTE: The real strings translation is made via the new \Language\Language API.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -10,7 +10,7 @@
 
 namespace Validation;
 
-use Core\Config;
+use Config\Config;
 
 
 class Translator

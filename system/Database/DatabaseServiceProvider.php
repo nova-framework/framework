@@ -8,10 +8,11 @@
 
 namespace Database;
 
-use Database\DatabaseManager;
 use Database\ORM\Model;
-use Database\Model as SimpleModel;
-use Helpers\Database as DatabaseHelper;
+use Database\ConnectionFactory;
+use Database\DatabaseManager;
+use Database\Model as BasicModel;
+use Helpers\Database;
 use Support\ServiceProvider;
 
 
@@ -24,16 +25,20 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Setup the (simple) Model.
-        SimpleModel::setConnectionResolver($this->app['db']);
+        $db = $this->app['db'];
+
+        $events = $this->app['events'];
 
         // Setup the ORM Model.
-        Model::setConnectionResolver($this->app['db']);
+        Model::setConnectionResolver($db);
 
-        Model::setEventDispatcher($this->app['events']);
+        Model::setEventDispatcher($events);
+
+        // Setup the (basic) Model.
+        BasicModel::setConnectionResolver($db);
 
         // Setup the legacy Database Helper.
-        DatabaseHelper::setConnectionResolver($this->app['db']);
+        Database::setConnectionResolver($db);
     }
 
     /**
@@ -43,9 +48,14 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bindShared('db.factory', function($app)
+        {
+            return new ConnectionFactory($app);
+        });
+
         $this->app->bindShared('db', function($app)
         {
-            return new DatabaseManager($app);
+            return new DatabaseManager($app, $app['db.factory']);
         });
     }
 

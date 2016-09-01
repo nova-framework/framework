@@ -6,12 +6,12 @@
  * @version 3.0
  */
 
-use Core\Config;
+use Config\Config;
 
 /**
  * Configuration constants and options.
  */
- 
+
 Config::set('elFinder', array(
     'locale' => 'en_US.UTF-8',
     'debug'  => false,

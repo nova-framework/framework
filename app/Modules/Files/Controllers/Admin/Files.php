@@ -2,30 +2,57 @@
 
 namespace App\Modules\Files\Controllers\Admin;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 
+use Http\Request;
 use Routing\FileDispatcher;
+use Routing\Route;
 
 use Auth;
-use Request;
 use Response;
 use View;
 
 
-class Files extends Controller
+class Files extends BackendController
 {
+    /**
+     * The Request instance.
+     *
+     * @var \Http\Request
+     */
+    private $request = null;
+
+    /**
+     * The File Dispatcher instance.
+     *
+     * @var \Routing\FileDispatcher
+     */
     private $dispatcher;
 
 
-    protected function before()
+    public function __construct()
     {
+        parent::__construct();
+
+        //
+        $this->beforeFilter('@filterRequests');
+    }
+
+    /**
+     * Filter the incoming requests.
+     */
+    public function filterRequests(Route $route, Request $request)
+    {
+        // Store the Request instance for further processing.
+        $this->request = $request;
+
         // Check the User Authorization.
         if (Auth::user()->hasRole('administrator')) {
             // The User is authorized; continue the Execution Flow.
-            return parent::before();
+            return null;
         }
 
-        if (Request::ajax()) {
+        if ($request->ajax()) {
             // On an AJAX Request; just return Error 403 (Access denied)
             return Response::make('', 403);
         }
@@ -75,12 +102,10 @@ class Files extends Controller
      */
     protected function serveFile($path)
     {
-        $request = Request::instance();
-
         // Get a File Dispatcher instance.
         $dispatcher = $this->getDispatcher();
 
-        return $dispatcher->serve($path, $request);
+        return $dispatcher->serve($path, $this->request);
     }
 
     /**

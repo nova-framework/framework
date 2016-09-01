@@ -100,7 +100,7 @@ class ControllerCommand extends Command
         $data = "<?php
 namespace App\Controllers;
 
-use Core\Controller;
+use App\Core\Controller;
 
 use View;
 

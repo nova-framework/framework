@@ -214,7 +214,7 @@ class Route
      */
     protected function parseAction($action)
     {
-        if (is_null($action) || is_string($action) || is_callable($action)) {
+        if (is_string($action) || is_callable($action)) {
             // A null, string or Closure is given as Action.
             return array('uses' => $action);
         } else if (! isset($action['uses'])) {

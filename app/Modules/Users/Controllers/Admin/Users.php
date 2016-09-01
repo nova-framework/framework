@@ -10,7 +10,7 @@ namespace App\Modules\Users\Controllers\Admin;
 
 use Helpers\ReCaptcha;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 use App\Models\Role;
 use App\Models\User;
 
@@ -25,27 +25,15 @@ use Validator;
 use View;
 
 
-class Users extends Controller
+class Users extends BackendController
 {
 
-    protected function before()
+    public function __construct()
     {
-        // Check the User Authorization.
-        switch ($this->getMethod()) {
-            case 'profile':
-            case 'postProfile':
-                break;
+        parent::__construct();
 
-            default:
-                if (! Auth::user()->hasRole('administrator')) {
-                    $status = __d('users', 'You are not authorized to access this resource.');
-
-                    return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-                }
-        }
-
-        // Leave to parent's method the Execution Flow decisions.
-        return parent::before();
+        //
+        $this->beforeFilter('@adminUsersFilter');
     }
 
     protected function validate(array $data, $id = null)

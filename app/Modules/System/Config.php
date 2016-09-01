@@ -7,12 +7,12 @@
  * @version 3.0
  */
 
-use Core\Config;
+use Config\Config;
 
 /**
  * Configuration constants and options.
  */
- 
+
 Config::set('cron', array(
     /**
      * The CRON token.

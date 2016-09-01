@@ -6,10 +6,9 @@
  * @version 3.0
  */
 
-namespace Core;
+namespace Language;
 
-use Core\Config;
-use Core\Error;
+use Config\Config;
 use Helpers\Inflector;
 
 use Cookie;

@@ -7,7 +7,7 @@
  * @version 3.0
  */
 
-use Core\Config;
+use Config\Config;
 
 
 /**
@@ -103,9 +103,6 @@ Config::set('app', array(
      * The registered Class Aliases.
      */
     'aliases' => array(
-        // The Core.
-        'Errors'        => 'Core\Error',
-
         // The Helpers.
         'Mail'          => 'Helpers\Mailer',
         'Assets'        => 'Helpers\Assets',
@@ -163,7 +160,12 @@ Config::set('app', array(
         'Cron'          => 'Support\Facades\Cron',
 
         // The Compatibility Support.
-        'Core\Template' => 'Support\Facades\Template',
-        'Core\View'     => 'Support\Facades\View',
+        'Errors'        => 'App\Legacy\Error',
+
+        //
+        'Core\Controller' => 'App\Legacy\Controller',
+        'Core\Model'      => 'App\Legacy\Model',
+        'Core\Template'   => 'Support\Facades\Template',
+        'Core\View'       => 'Support\Facades\View',
     ),
 ));

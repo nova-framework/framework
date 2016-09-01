@@ -8,10 +8,9 @@
 
 namespace App\Modules\System\Controllers;
 
-use Helpers\Url;
 use Helpers\ReCaptcha;
 
-use App\Core\Controller;
+use App\Core\BackendController;
 
 use Auth;
 use Hash;
@@ -23,7 +22,7 @@ use Session;
 use View;
 
 
-class Authorize extends Controller
+class Authorize extends BackendController
 {
     protected $layout = 'default';
 

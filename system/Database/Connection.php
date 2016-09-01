@@ -172,7 +172,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the default query grammar instance.
      *
-     * @return \Database\Query\Grammars\Grammar
+     * @return \Database\Query\Grammar
      */
     protected function getDefaultQueryGrammar()
     {
@@ -192,7 +192,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the default post processor instance.
      *
-     * @return \Database\Query\Processors\Processor
+     * @return \Database\Query\Processor
      */
     protected function getDefaultPostProcessor()
     {
@@ -685,7 +685,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the paginator environment instance.
      *
-     * @return \Illuminate\Pagination\Environment
+     * @return \Pagination\Environment
      */
     public function getPaginator()
     {
@@ -710,7 +710,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the cache manager instance.
      *
-     * @return \Illuminate\Cache\CacheManager
+     * @return \Cache\CacheManager
      */
     public function getCacheManager()
     {

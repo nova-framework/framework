@@ -184,9 +184,7 @@ class Dispatcher
     {
         $responses = array();
 
-        // If an array is not given to us as the payload, we will turn it into one so
-        // we can easily use call_user_func_array on the listeners, passing in the
-        // payload to each of them so that they receive each of these arguments.
+        //
         if ( ! is_array($payload)) $payload = array($payload);
 
         $this->firing[] = $event;
@@ -194,18 +192,12 @@ class Dispatcher
         foreach ($this->getListeners($event) as $listener) {
             $response = call_user_func_array($listener, $payload);
 
-            // If a response is returned from the listener and event halting is enabled
-            // we will just return this response, and not call the rest of the event
-            // listeners. Otherwise we will add the response on the response list.
             if ( ! is_null($response) && $halt) {
                 array_pop($this->firing);
 
                 return $response;
             }
 
-            // If a boolean false is returned from a listener, we will stop propagating
-            // the event to any further listeners down in the chain, else we keep on
-            // looping through the listeners and firing every one in our sequence.
             if ($response === false) break;
 
             $responses[] = $response;
@@ -260,9 +252,6 @@ class Dispatcher
     {
         $this->sorted[$eventName] = array();
 
-        // If listeners exist for the given event, we will sort them by the priority
-        // so that we can call them in the correct order. We will cache off these
-        // sorted event listeners so we do not have to re-sort on every events.
         if (isset($this->listeners[$eventName])) {
             krsort($this->listeners[$eventName]);
 
@@ -297,18 +286,13 @@ class Dispatcher
 
         return function() use ($listener, $container)
         {
-            // If the listener has an @ sign, we will assume it is being used to delimit
-            // the class name from the handle method name. This allows for handlers
-            // to run multiple handler methods in a single class for convenience.
             $segments = explode('@', $listener);
 
             $method = count($segments) == 2 ? $segments[1] : 'handle';
 
             $callable = array($container->make($segments[0]), $method);
 
-            // We will make a callable of the listener instance and a method that should
-            // be called on that instance, then we will pass in the arguments that we
-            // received in this method into this listener class instance's methods.
+            //
             $data = func_get_args();
 
             return call_user_func_array($callable, $data);

@@ -1,12 +1,12 @@
 <?php
 
-namespace Nova\Support\Facades;
+namespace Support\Facades;
 
-use Nova\Support\Facades\Facade;
+use Support\Facades\Facade;
 
 
 /**
- * @see \Nova\Html\FormBuilder
+ * @see \Html\FormBuilder
  */
 class Form extends Facade
 {

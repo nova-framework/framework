@@ -164,8 +164,8 @@ class View implements ArrayAccess, Renderable
     /**
      * Add validation errors to the view.
      *
-     * @param  \Nova\Support\Contracts\MessageProviderInterface|array  $provider
-     * @return \Nova\View\View
+     * @param  \Support\Contracts\MessageProviderInterface|array  $provider
+     * @return \View\View
      */
     public function withErrors($provider)
     {
@@ -197,7 +197,7 @@ class View implements ArrayAccess, Renderable
     /**
      * Get the View Factory instance.
      *
-     * @return \Nova\View\Factory
+     * @return \View\Factory
      */
     public function getFactory()
     {
@@ -306,7 +306,7 @@ class View implements ArrayAccess, Renderable
      *
      * @param  string  $method
      * @param  array   $params
-     * @return \Nova\View\View|static|void
+     * @return \View\View|static|void
      *
      * @throws \BadMethodCallException
      */

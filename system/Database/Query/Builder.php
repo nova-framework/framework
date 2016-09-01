@@ -3,6 +3,7 @@
 namespace Database\Query;
 
 use Support\Collection;
+use Support\Str;
 use Database\ConnectionInterface;
 use Database\Query\Expression;
 use Database\Query\Grammar;
@@ -932,7 +933,7 @@ class Builder
     {
         $bool = strtolower($connector);
 
-        $this->where(snake_case($segment), '=', $parameters[$index], $bool);
+        $this->where(Str::snake($segment), '=', $parameters[$index], $bool);
     }
 
     /**

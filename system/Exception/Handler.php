@@ -1,24 +1,12 @@
 <?php
-/**
- * Handler - Implements a simple Exception Handler.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Exception;
 
-use Exception\PlainDisplayer;
-use Exception\WhoopsDisplayer;
-use Exception\ExceptionDisplayerInterface;
-use Exception\RedirectToException;
 use Support\Contracts\ResponsePreparerInterface;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Debug\Exception\FatalErrorException as FatalError;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
-
-use Redirect;
 
 use Closure;
 use Exception;
@@ -36,21 +24,21 @@ class Handler
     protected $responsePreparer;
 
     /**
-     * The exception displayer implementation.
+     * The plain exception displayer.
      *
      * @var \Exception\ExceptionDisplayerInterface
      */
     protected $plainDisplayer;
 
     /**
-     * The exception displayer implementation.
+     * The debug exception displayer.
      *
      * @var \Exception\ExceptionDisplayerInterface
      */
     protected $debugDisplayer;
 
     /**
-     * Indicates if the Application is in Debug Mode.
+     * Indicates if the application is in debug mode.
      *
      * @var bool
      */
@@ -71,16 +59,18 @@ class Handler
     protected $handled = array();
 
     /**
-     * Create a new Error Handler instance.
+     * Create a new error handler instance.
      *
+     * @param  \Support\Contracts\ResponsePreparerInterface  $responsePreparer
+     * @param  \Exception\ExceptionDisplayerInterface  $plainDisplayer
+     * @param  \Exception\ExceptionDisplayerInterface  $debugDisplayer
      * @param  bool  $debug
      * @return void
      */
-    public function __construct(
-        ResponsePreparerInterface $responsePreparer,
-        ExceptionDisplayerInterface $plainDisplayer,
-        ExceptionDisplayerInterface $debugDisplayer,
-        $debug = true)
+    public function __construct(ResponsePreparerInterface $responsePreparer,
+                                ExceptionDisplayerInterface $plainDisplayer,
+                                ExceptionDisplayerInterface $debugDisplayer,
+                                $debug = true)
     {
         $this->debug = $debug;
 
@@ -91,8 +81,9 @@ class Handler
     }
 
     /**
-     * Register the exception / error handlers.
+     * Register the exception / error handlers for the application.
      *
+     * @param  string  $environment
      * @return void
      */
     public function register($environment)
@@ -160,25 +151,22 @@ class Handler
      */
     public function handleException($exception)
     {
-        if ($exception instanceof RedirectToException) {
-            // Manage the Redirect comming from the Helpers\Url.
-            $url = $exception->getUrl();
-
-            if (is_null($url)) {
-                return Redirect::back($exception->getStatusCode());
-            } else {
-                return Redirect::to($url, $exception->getStatusCode());
-            }
-        } else if (! $exception instanceof Exception) {
+        if (! $exception instanceof Exception) {
             $exception = new FatalThrowableError($exception);
         }
 
         $response = $this->callCustomHandlers($exception);
 
-        if (! is_null($response)) {
+        // If one of the custom error handlers returned a response, we will send that
+        // response back to the client after preparing it. This allows a specific
+        // type of exceptions to handled by a Closure giving great flexibility.
+        if ( ! is_null($response)) {
             return $this->prepareResponse($response);
         }
 
+        // If no response was sent by this custom exception handler, we will call the
+        // default exception displayer for the current application context and let
+        // it show the exception to the user / developer based on the situation.
         return $this->displayException($exception);
     }
 
@@ -202,10 +190,13 @@ class Handler
     {
         $error = error_get_last();
 
-        if (! is_null($error)) {
+        // If an error has occurred that has not been displayed, we will create a fatal
+        // error exception instance and pass it into the regular exception handling
+        // code so it can be displayed back out to the developer for information.
+        if ( ! is_null($error)) {
             extract($error);
 
-            if (! $this->isFatal($type)) return;
+            if ( ! $this->isFatal($type)) return;
 
             $this->handleException(new FatalError($message, $type, 0, $file, $line))->send();
         }
@@ -223,6 +214,66 @@ class Handler
     }
 
     /**
+     * Handle a console exception.
+     *
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function handleConsole($exception)
+    {
+        return $this->callCustomHandlers($exception, true);
+    }
+
+    /**
+     * Handle the given exception.
+     *
+     * @param  \Exception  $exception
+     * @param  bool  $fromConsole
+     * @return void
+     */
+    protected function callCustomHandlers($exception, $fromConsole = false)
+    {
+        foreach ($this->handlers as $handler) {
+            // If this exception handler does not handle the given exception, we will just
+            // go the next one. A handler may type-hint an exception that it handles so
+            //  we can have more granularity on the error handling for the developer.
+            if ( ! $this->handlesException($handler, $exception))
+            {
+                continue;
+            } else if ($exception instanceof HttpExceptionInterface) {
+                $code = $exception->getStatusCode();
+            }
+
+            // If the exception doesn't implement the HttpExceptionInterface, we will just
+            // use the generic 500 error code for a server side error. If it implements
+            // the HttpException interfaces we'll grab the error code from the class.
+            else
+            {
+                $code = 500;
+            }
+
+            // We will wrap this handler in a try / catch and avoid white screens of death
+            // if any exceptions are thrown from a handler itself. This way we will get
+            // at least some errors, and avoid errors with no data or not log writes.
+            try
+            {
+                $response = $handler($exception, $code, $fromConsole);
+            }
+            catch (\Exception $e)
+            {
+                $response = $this->formatException($e);
+            }
+
+            // If this handler returns a "non-null" response, we will return it so it will
+            // get sent back to the browsers. Once the handler returns a valid response
+            // we will cease iterating through them and calling these other handlers.
+            if (isset($response) && ! is_null($response)) {
+                return $response;
+            }
+        }
+    }
+
+    /**
      * Display the given exception to the user.
      *
      * @param  \Exception  $exception
@@ -236,39 +287,9 @@ class Handler
     }
 
     /**
-     * Handle the given exception.
-     *
-     * @param  \Exception  $exception
-     * @param  bool  $fromConsole
-     * @return void
-     */
-    protected function callCustomHandlers($exception, $fromConsole = false)
-    {
-        foreach ($this->handlers as $handler) {
-            if (! $this->handlesException($handler, $exception)) {
-                continue;
-            } else if ($exception instanceof HttpExceptionInterface) {
-                $code = $exception->getStatusCode();
-            } else {
-                $code = 500;
-            }
-
-            try {
-                $response = $handler($exception, $code, $fromConsole);
-            } catch (\Exception $e) {
-                $response = $this->formatException($e);
-            }
-
-            if (isset($response) && ! is_null($response)) {
-                return $response;
-            }
-        }
-    }
-
-    /**
      * Determine if the given handler handles this exception.
      *
-     * @param  Closure    $handler
+     * @param  \Closure    $handler
      * @param  \Exception  $exception
      * @return bool
      */
@@ -276,13 +297,13 @@ class Handler
     {
         $reflection = new ReflectionFunction($handler);
 
-        return (($reflection->getNumberOfParameters() == 0) || $this->hints($reflection, $exception));
+        return $reflection->getNumberOfParameters() == 0 || $this->hints($reflection, $exception);
     }
 
     /**
      * Determine if the given handler type hints the exception.
      *
-     * @param  ReflectionFunction  $reflection
+     * @param  \ReflectionFunction  $reflection
      * @param  \Exception  $exception
      * @return bool
      */
@@ -292,7 +313,7 @@ class Handler
 
         $expected = $parameters[0];
 
-        return (! $expected->getClass() || $expected->getClass()->isInstance($exception));
+        return ! $expected->getClass() || $expected->getClass()->isInstance($exception);
     }
 
     /**
@@ -304,7 +325,7 @@ class Handler
     protected function formatException(\Exception $e)
     {
         if ($this->debug) {
-            $location = $e->getMessage().' in '.$e->getFile().':'.$e->getLine();
+            $location = $e->getMessage() .' in '.$e->getFile() .':' .$e->getLine();
 
             return 'Error in exception handler: '.$location;
         }
@@ -315,7 +336,7 @@ class Handler
     /**
      * Register an application error handler.
      *
-     * @param  Closure  $callback
+     * @param  \Closure  $callback
      * @return void
      */
     public function error(Closure $callback)
@@ -326,7 +347,7 @@ class Handler
     /**
      * Register an application error handler at the bottom of the stack.
      *
-     * @param  Closure  $callback
+     * @param  \Closure  $callback
      * @return void
      */
     public function pushError(Closure $callback)
@@ -338,7 +359,7 @@ class Handler
      * Prepare the given response.
      *
      * @param  mixed  $response
-     * @return \Illuminate\Http\Response
+     * @return \Http\Response
      */
     protected function prepareResponse($response)
     {
@@ -356,16 +377,6 @@ class Handler
     }
 
     /**
-     * Check if is an AJAX request.
-     *
-     * @return bool
-     */
-    protected function isAjaxRequest()
-    {
-        return (! empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-    }
-
-    /**
      * Set the debug level for the handler.
      *
      * @param  bool  $debug
@@ -375,4 +386,5 @@ class Handler
     {
         $this->debug = $debug;
     }
+
 }

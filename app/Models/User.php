@@ -8,13 +8,18 @@
 
 namespace App\Models;
 
+use Auth\UserTrait;
 use Auth\UserInterface;
+use Auth\Reminders\RemindableTrait;
 use Auth\Reminders\RemindableInterface;
 use Database\ORM\Model as BaseModel;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
+    use UserTrait, RemindableTrait;
+
+    //
     protected $table = 'users';
 
     protected $primaryKey = 'id';

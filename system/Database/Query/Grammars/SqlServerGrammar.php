@@ -47,7 +47,7 @@ class SqlServerGrammar extends Grammar
     {
         if ( ! is_null($query->aggregate)) return;
 
-        $select = $query->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
+        $select = $query->distinct ? 'select distinct ' : 'select ';
 
         if (($query->limit > 0) && ($query->offset <= 0)) {
             $select .= 'top '.$query->limit.' ';
@@ -86,7 +86,7 @@ class SqlServerGrammar extends Grammar
     protected function compileAnsiOffset(Builder $query, $components)
     {
         if ( ! isset($components['orders'])) {
-            $components['orders'] = 'ORDER BY (SELECT 0)';
+            $components['orders'] = 'order by (select 0)';
         }
 
         $orderings = $components['orders'];
@@ -110,7 +110,7 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileOver($orderings)
     {
-        return ", row_number() OVER ({$orderings}) AS row_num";
+        return ", row_number() over ({$orderings}) as row_num";
     }
 
     /**
@@ -127,7 +127,7 @@ class SqlServerGrammar extends Grammar
         {
             $finish = $query->offset + $query->limit;
 
-            return "BETWEEN {$start} AND {$finish}";
+            return "between {$start} and {$finish}";
         }
 
         return ">= {$start}";
@@ -142,7 +142,7 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileTableExpression($sql, $constraint)
     {
-        return "SELECT * FROM ({$sql}) AS temp_table WHERE row_num {$constraint}";
+        return "select * from ({$sql}) as temp_table where row_num {$constraint}";
     }
 
     /**
@@ -177,7 +177,7 @@ class SqlServerGrammar extends Grammar
      */
     public function compileTruncate(Builder $query)
     {
-        return array('TRUNCATE TABLE ' .$this->wrapTable($query->from) => array());
+        return array('truncate table ' .$this->wrapTable($query->from) => array());
     }
 
     /**

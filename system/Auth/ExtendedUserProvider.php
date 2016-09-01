@@ -15,15 +15,14 @@ class ExtendedUserProvider implements UserProviderInterface
     protected $hasher;
 
     /**
-     * The ORM User Model.
+     * The Eloquent user model.
      *
      * @var string
      */
     protected $model;
 
-
     /**
-     * Create a new Database User Provider.
+     * Create a new database user provider.
      *
      * @param  \Hashing\HasherInterface  $hasher
      * @param  string  $model
@@ -31,9 +30,8 @@ class ExtendedUserProvider implements UserProviderInterface
      */
     public function __construct(HasherInterface $hasher, $model)
     {
-        $this->hasher = $hasher;
-
         $this->model = $model;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -48,7 +46,7 @@ class ExtendedUserProvider implements UserProviderInterface
     }
 
     /**
-     * Retrieve a user by by their unique identifier and "remember me" token.
+     * Retrieve a user by their unique identifier and "remember me" token.
      *
      * @param  mixed  $identifier
      * @param  string  $token
@@ -73,7 +71,7 @@ class ExtendedUserProvider implements UserProviderInterface
      */
     public function updateRememberToken(UserInterface $user, $token)
     {
-        $user->setAttribute($user->getRememberTokenName(), $token);
+        $user->setRememberToken($token);
 
         $user->save();
     }
@@ -86,6 +84,9 @@ class ExtendedUserProvider implements UserProviderInterface
      */
     public function retrieveByCredentials(array $credentials)
     {
+        // First we will add each credential element to the query as a where clause.
+        // Then we can execute the query and, if we found a user, return it in a
+        // Eloquent User "model" that will be utilized by the Guard instances.
         $query = $this->createModel()->newQuery();
 
         foreach ($credentials as $key => $value) {
@@ -96,7 +97,7 @@ class ExtendedUserProvider implements UserProviderInterface
     }
 
     /**
-     * Validate a User against the given credentials.
+     * Validate a user against the given credentials.
      *
      * @param  \Auth\UserInterface  $user
      * @param  array  $credentials
@@ -110,15 +111,15 @@ class ExtendedUserProvider implements UserProviderInterface
     }
 
     /**
-     * Create a new instance of the Model.
+     * Create a new instance of the model.
      *
-     * @return \Database\ORM\Model
+     * @return \Database\Eloquent\Model
      */
     public function createModel()
     {
         $className = '\\'.ltrim($this->model, '\\');
 
-        return new $className();
+        return new $className;
     }
 
 }

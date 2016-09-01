@@ -2,6 +2,7 @@
 
 namespace Foundation;
 
+
 class AliasLoader
 {
     /**
@@ -21,7 +22,7 @@ class AliasLoader
     /**
      * The singleton instance of the loader.
      *
-     * @var \Core\AliasLoader
+     * @var \Foundation\AliasLoader
      */
     protected static $instance;
 
@@ -37,14 +38,14 @@ class AliasLoader
     }
 
     /**
-     * Get or create the singleton Alias Loader instance.
+     * Get or create the singleton alias loader instance.
      *
      * @param  array  $aliases
-     * @return \Core\AliasLoader
+     * @return \Foundation\AliasLoader
      */
     public static function getInstance(array $aliases = array())
     {
-        if (is_null(static::$instance)) static::$instance = new static($aliases);
+        if (is_null(static::$instance)) return static::$instance = new static($aliases);
 
         $aliases = array_merge(static::$instance->getAliases(), $aliases);
 
@@ -85,7 +86,7 @@ class AliasLoader
      */
     public function register()
     {
-        if (! $this->registered) {
+        if ( ! $this->registered) {
             $this->prependToLoaderStack();
 
             $this->registered = true;
@@ -147,7 +148,7 @@ class AliasLoader
     /**
      * Set the value of the singleton alias loader.
      *
-     * @param  \Core\AliasLoader  $loader
+     * @param  \Foundation\AliasLoader  $loader
      * @return void
      */
     public static function setInstance($loader)

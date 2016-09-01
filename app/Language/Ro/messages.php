@@ -16,4 +16,5 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Welcome' => 'Bun venit',
+  'You are not authorized to access this resource.' => '',
 );

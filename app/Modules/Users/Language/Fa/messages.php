@@ -42,6 +42,7 @@ return array (
   'Password' => 'رمزعبور',
   'Password confirmation' => 'تایید رمزعبور',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => 'لطفا روی دکمه <b>حذف وظیفه</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید.',
+  'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => 'لطفا روی دکمه <b>حذف کاربر</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید',
   'Register to <b>{0}</b>' => 'عضویت در <b>{0}</b>',
   'Registered Roles' => 'وظیفه های ثبت شده',
@@ -81,6 +82,5 @@ return array (
   'Username' => 'نام کاربری',
   'Users' => 'کاربران',
   'We could not activate your Account. Try again later.' => 'ما نتوانستیم حساب شما را فعال کنیم. لطفا دوباره تلاش کنید.',
-  'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => 'حساب شما با موفقیت ساخته شد. ما یک ایمیل جهت فعال سازی حساب خود برای شما ارسال نمودیم.',
 );

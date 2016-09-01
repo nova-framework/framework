@@ -42,6 +42,7 @@ return array (
   'Password' => 'Kodeord',
   'Password confirmation' => 'Gentag kodeord',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => 'Tryk på knappen <b>Slet brugerniveauet</b> for at forsætte, eller <b>Fortryd</b> for at fortryde sletningen.',
+  'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => 'Tryk på knappen <b>Slet brugeren</b> for at forsætte, eller <b>Fortryd</b> for at fortryde sletningen.',
   'Register to <b>{0}</b>' => 'Tilmeldt på <b>{0}</b>',
   'Registered Roles' => 'Registrerede Roller',
@@ -81,6 +82,5 @@ return array (
   'Username' => 'Brugernavn',
   'Users' => 'Brugere',
   'We could not activate your Account. Try again later.' => 'Vi kunne ikke aktivere din brugerkonto. Prøv igen senere.',
-  'You are not authorized to access this resource.' => 'Du har ikke adgang til dette område.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => 'Din konto er nu oprettet. Der er sendt en aktiveringsmail til dig.',
 );

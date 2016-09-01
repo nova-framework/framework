@@ -88,7 +88,6 @@ return array (
   'Wrong username or password.' => '',
   'Yellow' => 'желтый',
   'Yellow Light' => 'Светло-жёлтый',
-  'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
   'You have successfully logged out.' => '',
   'You have successfully reset your Password.' => '',
   'You have successfully updated your Password.' => '',

@@ -202,7 +202,7 @@ class UrlGenerator
     /**
      * Set the current request instance.
      *
-     * @param  \Nova\Http\Request  $request
+     * @param  \Http\Request  $request
      * @return void
      */
     public function setRequest(Request $request)

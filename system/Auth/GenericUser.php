@@ -2,14 +2,13 @@
 
 namespace Auth;
 
-use Auth\UserInterface;
 use Support\Contracts\ArrayableInterface;
 
 
 class GenericUser implements UserInterface, ArrayableInterface
 {
     /**
-     * All of the User's attributes.
+     * All of the user's attributes.
      *
      * @var array
      */
@@ -37,7 +36,7 @@ class GenericUser implements UserInterface, ArrayableInterface
     }
 
     /**
-     * Get the unique identifier for the User.
+     * Get the unique identifier for the user.
      *
      * @return mixed
      */
@@ -47,7 +46,7 @@ class GenericUser implements UserInterface, ArrayableInterface
     }
 
     /**
-     * Get the password for the User.
+     * Get the password for the user.
      *
      * @return string
      */
@@ -63,7 +62,7 @@ class GenericUser implements UserInterface, ArrayableInterface
      */
     public function getRememberToken()
     {
-        return $this->attributes['remember_token'];
+        return $this->attributes[$this->getRememberTokenName()];
     }
 
     /**
@@ -74,7 +73,7 @@ class GenericUser implements UserInterface, ArrayableInterface
      */
     public function setRememberToken($value)
     {
-        $this->attributes['remember_token'] = $value;
+        $this->attributes[$this->getRememberTokenName()] = $value;
     }
 
     /**
@@ -88,7 +87,7 @@ class GenericUser implements UserInterface, ArrayableInterface
     }
 
     /**
-     * Dynamically access the User's attributes.
+     * Dynamically access the user's attributes.
      *
      * @param  string  $key
      * @return mixed
@@ -99,7 +98,7 @@ class GenericUser implements UserInterface, ArrayableInterface
     }
 
     /**
-     * Dynamically set an attribute on the User.
+     * Dynamically set an attribute on the user.
      *
      * @param  string  $key
      * @param  mixed   $value
@@ -111,7 +110,7 @@ class GenericUser implements UserInterface, ArrayableInterface
     }
 
     /**
-     * Dynamically check if a value is set on the User.
+     * Dynamically check if a value is set on the user.
      *
      * @param  string  $key
      * @return bool
@@ -122,10 +121,10 @@ class GenericUser implements UserInterface, ArrayableInterface
     }
 
     /**
-     * Dynamically unset a value on the User.
+     * Dynamically unset a value on the user.
      *
      * @param  string  $key
-     * @return bool
+     * @return void
      */
     public function __unset($key)
     {

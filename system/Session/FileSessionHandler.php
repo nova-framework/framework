@@ -2,34 +2,43 @@
 
 namespace Session;
 
-use SessionHandlerInterface;
+use Filesystem\Filesystem;
+
+use Symfony\Component\Finder\Finder;
 
 
-class FileSessionHandler implements SessionHandlerInterface
+class FileSessionHandler implements \SessionHandlerInterface
 {
+    /**
+     * The filesystem instance.
+     *
+     * @var \Filesystem\Filesystem
+     */
+    protected $files;
+
     /**
      * The path where sessions should be stored.
      *
      * @var string
      */
-    protected $savePath;
+    protected $path;
 
     /**
-     * Create a new instance.
+     * Create a new file driven handler instance.
      *
-     * @param  string    $path
-     * @param  int       $lifetime
+     * @param  \Filesystem\Filesystem  $files
+     * @param  string  $path
      * @return void
      */
-    function __construct($path)
+    public function __construct(Filesystem $files, $path)
     {
-        $this->savePath = rtrim($path, '/') .DS;
+        $this->path = $path;
+
+        $this->files = $files;
     }
 
     /**
-     * File open handler.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function open($savePath, $sessionName)
     {
@@ -37,9 +46,7 @@ class FileSessionHandler implements SessionHandlerInterface
     }
 
     /**
-     * File close handler.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function close()
     {
@@ -47,71 +54,47 @@ class FileSessionHandler implements SessionHandlerInterface
     }
 
     /**
-     * File read handler.
-     *
-     * @param  string  $sessionId
-     * @return string
+     * {@inheritDoc}
      */
     public function read($sessionId)
     {
-        $filePath = $this->savePath .'sess_' .$sessionId;
-
-        if(is_readable($filePath)) {
-            return file_get_contents($filePath);
-        } else {
-            return '';
+        if ($this->files->exists($path = $this->path .DS .$sessionId)) {
+            return $this->files->get($path);
         }
+
+        return '';
     }
 
     /**
-     * File write handler.
-     *
-     * @param  string     $sessionId
-     * @param  string     $sessionData
-     * @return string
+     * {@inheritDoc}
      */
-    public function write($sessionId , $sessionData)
+    public function write($sessionId, $data)
     {
-        $filePath = $this->savePath .'sess_' .$sessionId;
-
-        return (file_put_contents($filePath, $sessionData) !== false);
+        $this->files->put($this->path .DS .$sessionId, $data, true);
     }
 
     /**
-     * File destroy handler.
-     *
-     * @param  string  $sessionId
-     * @return string
+     * {@inheritDoc}
      */
     public function destroy($sessionId)
     {
-        $filePath = $this->savePath .'sess_' .$sessionId;
-
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-
-        return true;
+        $this->files->delete($this->path .DS .$sessionId);
     }
 
     /**
-     * File Garbage Collector handler.
-     *
-     * @param  int  $lifeTime
-     * @return bool
+     * {@inheritDoc}
      */
-    public function gc($lifeTime)
+    public function gc($lifetime)
     {
-        foreach (glob($this->savePath .'sess_*') as $file) {
-            clearstatcache(true, $file);
+        $files = Finder::create()
+                    ->in($this->path)
+                    ->files()
+                    ->ignoreDotFiles(true)
+                    ->date('<= now - ' .$lifetime .' seconds');
 
-            $lastTime = filemtime($file) + $lifeTime;
-
-            if (($lastTime < time()) && file_exists($file)) {
-                unlink($file);
-            }
+        foreach ($files as $file) {
+            $this->files->delete($file->getRealPath());
         }
-
-        return true;
     }
+
 }

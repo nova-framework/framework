@@ -1,15 +1,8 @@
 <?php
-/**
- * Environment - Implements a Environment Detector.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Foundation;
 
 use Closure;
-
 
 class EnvironmentDetector
 {
@@ -24,9 +17,9 @@ class EnvironmentDetector
     {
         if ($consoleArgs) {
             return $this->detectConsoleEnvironment($environments, $consoleArgs);
-        } else {
-            return $this->detectWebEnvironment($environments);
         }
+
+        return $this->detectWebEnvironment($environments);
     }
 
     /**
@@ -37,11 +30,17 @@ class EnvironmentDetector
      */
     protected function detectWebEnvironment($environments)
     {
+        // If the given environment is just a Closure, we will defer the environment check
+        // to the Closure the developer has provided, which allows them to totally swap
+        // the webs environment detection logic with their own custom Closure's code.
         if ($environments instanceof Closure) {
             return call_user_func($environments);
         }
 
         foreach ($environments as $environment => $hosts) {
+            // To determine the current environment, we'll simply iterate through the possible
+            // environments and look for the host that matches the host for this request we
+            // are currently processing here, then return back these environment's names.
             foreach ((array) $hosts as $host) {
                 if ($this->isMachine($host)) return $environment;
             }
@@ -59,11 +58,14 @@ class EnvironmentDetector
      */
     protected function detectConsoleEnvironment($environments, array $args)
     {
+        // First we will check if an environment argument was passed via console arguments
+        // and if it was that automatically overrides as the environment. Otherwise, we
+        // will check the environment as a "web" request like a typical HTTP request.
         if (! is_null($value = $this->getEnvironmentArgument($args))) {
             return head(array_slice(explode('=', $value), 1));
-        } else {
-            return $this->detectWebEnvironment($environments);
         }
+
+        return $this->detectWebEnvironment($environments);
     }
 
     /**
@@ -76,7 +78,7 @@ class EnvironmentDetector
     {
         return array_first($args, function($k, $v)
         {
-            return str_starts_with($v, '--env');
+            return starts_with($v, '--env');
         });
     }
 

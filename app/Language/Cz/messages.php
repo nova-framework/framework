@@ -16,4 +16,5 @@ Tento obsah lze změnit v <code>/app/Views/Welcome/Welcome.php</code>',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Welcome' => 'Vítejte',
+  'You are not authorized to access this resource.' => '',
 );

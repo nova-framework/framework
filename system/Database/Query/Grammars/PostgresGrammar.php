@@ -29,7 +29,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile the lock into SQL.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  bool|string  $value
      * @return string
      */
@@ -37,7 +37,7 @@ class PostgresGrammar extends Grammar
     {
         if (is_string($value)) return $value;
 
-        return $value ? 'FOR UPDATE' : 'FOR SHARE';
+        return $value ? 'for update' : 'for share';
     }
 
     /**
@@ -93,7 +93,7 @@ class PostgresGrammar extends Grammar
             $froms[] = $this->wrapTable($join->table);
         }
 
-        if (count($froms) > 0) return ' FROM '.implode(', ', $froms);
+        if (count($froms) > 0) return ' from '.implode(', ', $froms);
     }
 
     /**
@@ -111,7 +111,7 @@ class PostgresGrammar extends Grammar
         $joinWhere = $this->compileUpdateJoinWheres($query);
 
         if (trim($baseWhere) == '') {
-            return 'WHERE '.$this->removeLeadingBoolean($joinWhere);
+            return 'where '.$this->removeLeadingBoolean($joinWhere);
         }
 
         return $baseWhere .' ' .$joinWhere;
@@ -139,7 +139,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile an insert and get ID statement into SQL.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  array   $values
      * @param  string  $sequence
      * @return string
@@ -148,7 +148,7 @@ class PostgresGrammar extends Grammar
     {
         if (is_null($sequence)) $sequence = 'id';
 
-        return $this->compileInsert($query, $values).' RETURNING '.$this->wrap($sequence);
+        return $this->compileInsert($query, $values).' returning '.$this->wrap($sequence);
     }
 
     /**
@@ -159,7 +159,7 @@ class PostgresGrammar extends Grammar
      */
     public function compileTruncate(Builder $query)
     {
-        return array('TRUNCATE ' .$this->wrapTable($query->from) .' RESTART identity' => array());
+        return array('truncate ' .$this->wrapTable($query->from) .' restart identity' => array());
     }
 }
 

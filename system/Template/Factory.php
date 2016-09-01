@@ -46,7 +46,7 @@ class Factory
      * @param string $view
      * @param array|string $data
      * @param string $custom
-     * @return \Nova\View\View
+     * @return \View\View
      */
     public function make($view, $data = array(), $template = null)
     {

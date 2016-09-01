@@ -6,12 +6,11 @@ namespace Database;
 abstract class Grammar
 {
     /**
-     * The Grammar table prefix.
+     * The grammar table prefix.
      *
      * @var string
      */
     protected $tablePrefix = '';
-
 
     /**
      * Wrap an array of values.
@@ -34,7 +33,7 @@ abstract class Grammar
     {
         if ($this->isExpression($table)) return $this->getValue($table);
 
-        return $this->wrap($this->tablePrefix .$table);
+        return $this->wrap($this->tablePrefix.$table);
     }
 
     /**
@@ -50,7 +49,7 @@ abstract class Grammar
         if (strpos(strtolower($value), ' as ') !== false) {
             $segments = explode(' ', $value);
 
-            return $this->wrap($segments[0]) .' as ' .$this->wrapValue($segments[2]);
+            return $this->wrap($segments[0]).' as '.$this->wrapValue($segments[2]);
         }
 
         $wrapped = array();
@@ -58,7 +57,7 @@ abstract class Grammar
         $segments = explode('.', $value);
 
         foreach ($segments as $key => $segment) {
-            if (($key == 0) && (count($segments) > 1)) {
+            if ($key == 0 && count($segments) > 1) {
                 $wrapped[] = $this->wrapTable($segment);
             } else {
                 $wrapped[] = $this->wrapValue($segment);
@@ -117,7 +116,7 @@ abstract class Grammar
     /**
      * Get the value of a raw expression.
      *
-     * @param  \Nova\Database\Query\Expression  $expression
+     * @param  \Database\Query\Expression  $expression
      * @return string
      */
     public function getValue($expression)

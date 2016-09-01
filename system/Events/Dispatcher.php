@@ -1,35 +1,20 @@
 <?php
-/**
- * Dispatcher - A simple Events Dispatcher.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Events;
 
 use Container\Container;
-use Events\Subscriber;
-
 
 class Dispatcher
 {
     /**
      * The IoC container instance.
      *
-     * @var \Nova\Container\Container
+     * @var \Container\Container
      */
     protected $container;
 
     /**
-     * The active Dispatcher instance.
-     *
-     * @var \Events\Dispatcher
-     */
-    private static $instance;
-
-    /**
-     * The registered Event listeners.
+     * The registered event listeners.
      *
      * @var array
      */
@@ -43,27 +28,34 @@ class Dispatcher
     protected $wildcards = array();
 
     /**
-     * The sorted Event listeners.
+     * The sorted event listeners.
      *
      * @var array
      */
     protected $sorted = array();
 
     /**
+     * The event firing stack.
+     *
+     * @var array
+     */
+    protected $firing = array();
+
+    /**
      * Create a new event dispatcher instance.
      *
-     * @param  \Nova\Container\Container  $container
+     * @param  \Container\Container  $container
      * @return void
      */
     public function __construct(Container $container = null)
     {
-        $this->container = $container ?: new Container();
+        $this->container = $container ?: new Container;
     }
 
     /**
-     * Register an Event Listener with the Dispatcher.
+     * Register an event listener with the dispatcher.
      *
-     * @param  string|array  $event
+     * @param  string|array  $events
      * @param  mixed   $listener
      * @param  int     $priority
      * @return void
@@ -72,17 +64,17 @@ class Dispatcher
     {
         foreach ((array) $events as $event) {
             if (str_contains($event, '*')) {
-                return $this->setupWildcardListen($event, $listener);
+                $this->setupWildcardListen($event, $listener);
+            } else {
+                $this->listeners[$event][$priority][] = $this->makeListener($listener);
+
+                unset($this->sorted[$event]);
             }
-
-            $this->listeners[$event][$priority][] = $this->makeListener($listener);
-
-            unset($this->sorted[$event]);
         }
     }
 
     /**
-     * Setup a wildcard Listener callback.
+     * Setup a wildcard listener callback.
      *
      * @param  string  $event
      * @param  mixed   $listener
@@ -94,7 +86,7 @@ class Dispatcher
     }
 
     /**
-     * Determine if a given Event has listeners.
+     * Determine if a given event has listeners.
      *
      * @param  string  $eventName
      * @return bool
@@ -105,7 +97,22 @@ class Dispatcher
     }
 
     /**
-     * Register an Event Subscriber with the Dispatcher.
+     * Register a queued event and payload.
+     *
+     * @param  string  $event
+     * @param  array   $payload
+     * @return void
+     */
+    public function queue($event, $payload = array())
+    {
+        $this->listen($event.'_queue', function() use ($event, $payload)
+        {
+            $this->fire($event, $payload);
+        });
+    }
+
+    /**
+     * Register an event subscriber with the dispatcher.
      *
      * @param  string  $subscriber
      * @return void
@@ -118,62 +125,22 @@ class Dispatcher
     }
 
     /**
-     * Resolve the Subscriber instance.
+     * Resolve the subscriber instance.
      *
      * @param  mixed  $subscriber
-     * @return \Events\Subscriber
-     *
-     * @throw \InvalidArgumentException
+     * @return mixed
      */
     protected function resolveSubscriber($subscriber)
     {
-        if (! is_string($subscriber)) {
-            return $subscriber;
+        if (is_string($subscriber)) {
+            return $this->container->make($subscriber);
         }
 
-        if (! class_exists($subscriber)) {
-            throw new \InvalidArgumentException('Invalid subscriber requested.');
-        }
-
-        // Get a instance of the requested Subscriber.
-        $instance = new $subscriber();
-
-        if ($instance instanceof Subscriber) {
-            return $instance;
-        }
-
-        throw new \InvalidArgumentException('Invalid subscriber requested.');
+        return $subscriber;
     }
 
     /**
-     * Register a Queued Event and payload.
-     *
-     * @param  string  $event
-     * @param  array   $payload
-     * @return void
-     */
-    public function queue($event, $payload = array())
-    {
-        $me = $this;
-
-        $this->listen($event .'_queue', function() use ($me, $event, $payload) {
-            $me->fire($event, $payload);
-        });
-    }
-
-    /**
-     * Flush a set of Queued Events.
-     *
-     * @param  string  $event
-     * @return void
-     */
-    public function flush($event)
-    {
-        $this->fire($event .'_queue');
-    }
-
-    /**
-     * Fire an Event until the first non-null response is returned.
+     * Fire an event until the first non-null response is returned.
      *
      * @param  string  $event
      * @param  array   $payload
@@ -185,7 +152,28 @@ class Dispatcher
     }
 
     /**
-     * Fire an Event and call the listeners.
+     * Flush a set of queued events.
+     *
+     * @param  string  $event
+     * @return void
+     */
+    public function flush($event)
+    {
+        $this->fire($event.'_queue');
+    }
+
+    /**
+     * Get the event that is currently firing.
+     *
+     * @return string
+     */
+    public function firing()
+    {
+        return last($this->firing);
+    }
+
+    /**
+     * Fire an event and call the listeners.
      *
      * @param  string  $event
      * @param  mixed   $payload
@@ -199,33 +187,37 @@ class Dispatcher
         // If an array is not given to us as the payload, we will turn it into one so
         // we can easily use call_user_func_array on the listeners, passing in the
         // payload to each of them so that they receive each of these arguments.
-        if (! is_array($payload)) {
-            $payload = array($payload);
-        }
+        if ( ! is_array($payload)) $payload = array($payload);
+
+        $this->firing[] = $event;
 
         foreach ($this->getListeners($event) as $listener) {
             $response = call_user_func_array($listener, $payload);
 
-            // If a response is returned from the Listener and Event halting is enabled
+            // If a response is returned from the listener and event halting is enabled
             // we will just return this response, and not call the rest of the event
             // listeners. Otherwise we will add the response on the response list.
-            if (! is_null($response) && $halt) {
+            if ( ! is_null($response) && $halt) {
+                array_pop($this->firing);
+
                 return $response;
             }
 
-            // If a boolean false is returned from a Listener, we will stop propagating
-            // the Event to any further listeners down in the chain, else we keep on
+            // If a boolean false is returned from a listener, we will stop propagating
+            // the event to any further listeners down in the chain, else we keep on
             // looping through the listeners and firing every one in our sequence.
             if ($response === false) break;
 
             $responses[] = $response;
         }
 
+        array_pop($this->firing);
+
         return $halt ? null : $responses;
     }
 
     /**
-     * Get all of the listeners for a given Event name.
+     * Get all of the listeners for a given event name.
      *
      * @param  string  $eventName
      * @return array
@@ -234,7 +226,7 @@ class Dispatcher
     {
         $wildcards = $this->getWildcardListeners($eventName);
 
-        if (! isset($this->sorted[$eventName])) {
+        if ( ! isset($this->sorted[$eventName])) {
             $this->sortListeners($eventName);
         }
 
@@ -242,7 +234,7 @@ class Dispatcher
     }
 
     /**
-     * Get the wildcard listeners for the Event.
+     * Get the wildcard listeners for the event.
      *
      * @param  string  $eventName
      * @return array
@@ -252,16 +244,14 @@ class Dispatcher
         $wildcards = array();
 
         foreach ($this->wildcards as $key => $listeners) {
-            if (str_is($key, $eventName)) {
-                $wildcards = array_merge($wildcards, $listeners);
-            }
+            if (str_is($key, $eventName)) $wildcards = array_merge($wildcards, $listeners);
         }
 
         return $wildcards;
     }
 
     /**
-     * Sort the listeners for a given Event by priority.
+     * Sort the listeners for a given event by priority.
      *
      * @param  string  $eventName
      * @return array
@@ -270,7 +260,7 @@ class Dispatcher
     {
         $this->sorted[$eventName] = array();
 
-        // If listeners exist for the given Event, we will sort them by the priority
+        // If listeners exist for the given event, we will sort them by the priority
         // so that we can call them in the correct order. We will cache off these
         // sorted event listeners so we do not have to re-sort on every events.
         if (isset($this->listeners[$eventName])) {
@@ -281,9 +271,9 @@ class Dispatcher
     }
 
     /**
-     * Register an Event listener with the dispatcher.
+     * Register an event listener with the dispatcher.
      *
-     * @param  mixed  $listener
+     * @param  mixed   $listener
      * @return mixed
      */
     public function makeListener($listener)
@@ -296,27 +286,25 @@ class Dispatcher
     }
 
     /**
-     * Create a Class based Listener.
+     * Create a class based listener using the IoC container.
      *
-     * @param  string  $listener
+     * @param  mixed    $listener
      * @return \Closure
      */
     public function createClassListener($listener)
     {
         $container = $this->container;
 
-        return function() use ($listener, $container) {
+        return function() use ($listener, $container)
+        {
             // If the listener has an @ sign, we will assume it is being used to delimit
             // the class name from the handle method name. This allows for handlers
             // to run multiple handler methods in a single class for convenience.
             $segments = explode('@', $listener);
 
-            //
-            $className = $segments[0];
+            $method = count($segments) == 2 ? $segments[1] : 'handle';
 
-            $method = (count($segments) == 2) ? $segments[1] : 'handle';
-
-            $callable = array($container->make($className), $method);
+            $callable = array($container->make($segments[0]), $method);
 
             // We will make a callable of the listener instance and a method that should
             // be called on that instance, then we will pass in the arguments that we
@@ -328,15 +316,26 @@ class Dispatcher
     }
 
     /**
-     * Remove a set of listeners from the Dispatcher.
+     * Remove a set of listeners from the dispatcher.
      *
      * @param  string  $event
      * @return void
      */
     public function forget($event)
     {
-        unset($this->listeners[$event]);
-
-        unset($this->sorted[$event]);
+        unset($this->listeners[$event], $this->sorted[$event]);
     }
+
+    /**
+     * Forget all of the queued listeners.
+     *
+     * @return void
+     */
+    public function forgetQueued()
+    {
+        foreach ($this->listeners as $key => $value) {
+            if (ends_with($key, '_queue')) $this->forget($key);
+        }
+    }
+
 }

@@ -42,6 +42,7 @@ return array (
   'Password' => 'Пароль',
   'Password confirmation' => 'Подтверждение пароля',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => 'Пожалуйста, нажмите на <b>Удалить роль</b> для удаления или <b>Отмена</b> для отказа от операции ',
+  'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => 'Пожалуйста, нажмите на <b>Удалить пользователя</b> для удаления или <b>Отмена</b> для отказа от оперции',
   'Register to <b>{0}</b>' => 'Регистрация для <b>{0}</b>',
   'Registered Roles' => 'Зарегистрированные роли',
@@ -81,6 +82,5 @@ return array (
   'Username' => 'Имя пользователя',
   'Users' => 'Пользователи',
   'We could not activate your Account. Try again later.' => 'Мы не смогли активировать ваш аккаунт. Попробуйте позже.',
-  'You are not authorized to access this resource.' => 'Вы не имеете сюда прав доступа',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => 'Ваш аккаунт был создан. Мы отправили вам email для его активации.',
 );

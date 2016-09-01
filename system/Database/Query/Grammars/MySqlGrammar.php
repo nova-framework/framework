@@ -59,7 +59,7 @@ class MySqlGrammar extends Grammar
      */
     protected function compileUnion(array $union)
     {
-        $joiner = $union['all'] ? ' UNION ALL ' : ' UNION ';
+        $joiner = $union['all'] ? ' union all ' : ' union ';
 
         return $joiner .'(' .$union['query']->toSql() .')';
     }
@@ -75,7 +75,7 @@ class MySqlGrammar extends Grammar
     {
         if (is_string($value)) return $value;
 
-        return $value ? 'FOR UPDATE' : 'LOCK IN SHARE MODE';
+        return $value ? 'for update' : 'lock in share mode';
     }
 
     /**
@@ -113,12 +113,12 @@ class MySqlGrammar extends Grammar
         $where = is_array($query->wheres) ? $this->compileWheres($query) : '';
 
         if (isset($query->joins)) {
-            $joins = ' '.$this->compileJoins($query, $query->joins);
+            $joins = ' ' .$this->compileJoins($query, $query->joins);
 
-            return trim("DELETE $table FROM {$table}{$joins} $where");
+            return trim("delete $table from {$table}{$joins} $where");
         }
 
-        return trim("DELETE FROM $table $where");
+        return trim("delete from $table $where");
     }
 
     /**

@@ -3,10 +3,10 @@
 namespace Exception;
 
 use Exception;
-use Exception\HttpExceptionInterface;
 
 use Whoops\Run;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 
 class WhoopsDisplayer implements ExceptionDisplayerInterface

@@ -51,6 +51,10 @@ class Roles extends BackendController
             'description' => 'required|min:5|max:255',
         );
 
+        $messages = array(
+            'valid_name' => __d('users', 'The :attribute field is not a valid name.'),
+        );
+
         $attributes = array(
             'name'        => __d('users', 'Name'),
             'slug'        => __d('users', 'Slug'),
@@ -60,12 +64,12 @@ class Roles extends BackendController
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });
 
-        return Validator::make($data, $rules, array(), $attributes);
+        return Validator::make($data, $rules, $messages, $attributes);
     }
 
     public function index()

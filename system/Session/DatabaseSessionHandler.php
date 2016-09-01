@@ -3,52 +3,46 @@
 namespace Session;
 
 use Database\Connection;
-use Session\ExistenceAwareInterface;
-
-use SessionHandlerInterface;
 
 
-class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareInterface
+class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAwareInterface
 {
     /**
-     * The Database Connection instance.
+     * The database connection instance.
      *
      * @var \Database\Connection
      */
     protected $connection;
 
     /**
-     * The Database Table.
+     * The name of the session table.
      *
      * @var string
      */
     protected $table;
 
     /**
-     * The existence state of the Session.
+     * The existence state of the session.
      *
      * @var bool
      */
-    protected $exists = false;
-
+    protected $exists;
 
     /**
-     * Create a new instance.
+     * Create a new database session handler instance.
      *
-     * @param  array     $config
+     * @param  \Database\Connection  $connection
+     * @param  string  $table
      * @return void
      */
-    function __construct(Connection $connection, $table)
+    public function __construct(Connection $connection, $table)
     {
-        $this->connection = $connection;
-
         $this->table = $table;
+        $this->connection = $connection;
     }
 
     /**
-     * Database open handler.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function open($savePath, $sessionName)
     {
@@ -56,9 +50,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
     }
 
     /**
-     * Database close handler.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function close()
     {
@@ -66,16 +58,14 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
     }
 
     /**
-     * Database read handler.
-     *
-     * @param  int  $sessionId
-     * @return string
+     * {@inheritDoc}
      */
     public function read($sessionId)
     {
         $session = (object) $this->getQuery()->find($sessionId);
 
-        if (isset($session->payload)) {
+        if (isset($session->payload))
+        {
             $this->exists = true;
 
             return base64_decode($session->payload);
@@ -83,41 +73,28 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
     }
 
     /**
-     * Database write handler.
-     *
-     * @param  int      $sessionId
-     * @param  string   $sessionData
-     * @return string
+     * {@inheritDoc}
      */
-    public function write($sessionId, $sessionData)
+    public function write($sessionId, $data)
     {
         if ($this->exists) {
-            $data = array(
-                'payload'       => base64_encode($sessionData),
+            $this->getQuery()->where('id', $sessionId)->update(array(
+                'payload' => base64_encode($data),
                 'last_activity' => time(),
-            );
-
-            $this->getQuery()->where('id', $sessionId)->update($data);
+            ));
         } else {
-            $data = array(
-                'id'            => $sessionId,
-                'payload'       => base64_encode($sessionData),
+            $this->getQuery()->insert(array(
+                'id' => $sessionId,
+                'payload' => base64_encode($data),
                 'last_activity' => time(),
-            );
-
-            $this->getQuery()->insert($data);
+            ));
         }
 
         $this->exists = true;
-
-        return true;
     }
 
     /**
-     * Database destroy handler.
-     *
-     * @param  int  $sessionId
-     * @return string
+     * {@inheritDoc}
      */
     public function destroy($sessionId)
     {
@@ -125,22 +102,15 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
     }
 
     /**
-     * Database gc handler.
-     *
-     * @param  int  $lifeTime
-     * @return string
+     * {@inheritDoc}
      */
-    public function gc($lifeTime)
+    public function gc($lifetime)
     {
-        $timeLimit = time() - $lifeTime;
-
-        $this->getQuery()
-            ->where('last_activity', '<=', $timeLimit)
-            ->delete();
+        $this->getQuery()->where('last_activity', '<=', (time() - $lifetime))->delete();
     }
 
     /**
-     * Get a fresh QueryBuilder instance for the Table.
+     * Get a fresh query builder instance for the table.
      *
      * @return \Database\Query\Builder
      */
@@ -150,7 +120,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
     }
 
     /**
-     * Set the existence state for the Session.
+     * Set the existence state for the session.
      *
      * @param  bool  $value
      * @return $this
@@ -161,4 +131,5 @@ class DatabaseSessionHandler implements SessionHandlerInterface, ExistenceAwareI
 
         return $this;
     }
+
 }

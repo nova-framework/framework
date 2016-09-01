@@ -28,7 +28,8 @@ class SessionServiceProvider extends ServiceProvider
      */
     protected function setupDefaultDriver()
     {
-        if ($this->app->runningInConsole()) {
+        if ($this->app->runningInConsole())
+        {
             $this->app['config']['session.driver'] = 'array';
         }
     }
@@ -55,20 +56,13 @@ class SessionServiceProvider extends ServiceProvider
     {
         $this->app->bindShared('session.store', function($app)
         {
+            // First, we will create the session manager which is responsible for the
+            // creation of the various session drivers when they are needed by the
+            // application instance, and will resolve them on a lazy load basis.
             $manager = $app['session'];
 
             return $manager->driver();
         });
-    }
-
-    /**
-     * Get the session driver name.
-     *
-     * @return string
-     */
-    protected function getDriver()
-    {
-        return $this->app['config']['session.driver'];
     }
 
 }

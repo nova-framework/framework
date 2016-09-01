@@ -1,6 +1,6 @@
 <?php
 
-namespace Nova\Database\Query\Processors;
+namespace Database\Query\Processors;
 
 use Database\Query\Builder;
 use Database\Query\Processor;
@@ -11,7 +11,7 @@ class SqlServerProcessor extends Processor
     /**
      * Process an "insert get ID" query.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  string  $sql
      * @param  array   $values
      * @param  string  $sequence

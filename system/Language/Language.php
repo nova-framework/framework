@@ -8,8 +8,8 @@
 
 namespace Language;
 
-use Config\Config;
 use Helpers\Inflector;
+use Language\LanguageManager as Manager;
 
 use Cookie;
 use Session;
@@ -23,18 +23,18 @@ use MessageFormatter;
 class Language
 {
     /**
+     * The Language Manager Instance.
+     *
+     * @var \Language\LanguageManager
+     */
+    protected $manager;
+
+    /**
      * Holds an array with the Domain's Messages.
      *
      * @var array
      */
     private $messages = array();
-
-    /**
-     * The Language instances.
-     *
-     * @var array
-     */
-    private static $instances = array();
 
     /**
      * The current Language Domain.
@@ -63,9 +63,9 @@ class Language
      * @param string $domain
      * @param string $code
      */
-    protected function __construct($domain, $code)
+    public function __construct(Manager $manager, $languages, $domain, $code)
     {
-        $languages = Config::get('languages');
+        $this->manager = $manager;
 
         if (isset($languages[$code]) && ! empty($languages[$code])) {
             $info = $languages[$code];
@@ -108,44 +108,6 @@ class Language
         // A final consistency check.
         if (is_array($messages) && ! empty($messages)) {
             $this->messages = $messages;
-        }
-    }
-
-    /**
-     * Get instance of language with domain and code (optional).
-     * @param string $domain Optional custom domain
-     * @param string $code Optional custom language code.
-     * @return Language
-     */
-    public static function &getInstance($domain = 'app', $code = LANGUAGE_CODE)
-    {
-        $code = self::getCurrentLanguage($code);
-
-        // The ID code is something like: 'en/system', 'en/app' or 'en/file_manager'
-        $id = $code .'/' .$domain;
-
-        // Initialize the domain instance, if not already exists.
-        if (! isset(self::$instances[$id])) {
-            self::$instances[$id] = new self($domain, $code);
-        }
-
-        return self::$instances[$id];
-    }
-
-
-    public static function init()
-    {
-        $languages = Config::get('languages');
-
-        if (Session::has('language')) {
-            // The Language was already set; nothing to do.
-            return;
-        } else if(Cookie::has(PREFIX .'language')) {
-            $cookie = Cookie::get(PREFIX .'language');
-
-            if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, array_keys($languages))) {
-                Session::set('language', $cookie);
-            }
         }
     }
 
@@ -241,20 +203,6 @@ class Language
         return $this->direction;
     }
 
-    /**
-     * Get current Language
-     * @return string
-     */
-    protected static function getCurrentLanguage($code)
-    {
-        // Check if the end-user do not ask for a custom code.
-        if ($code == LANGUAGE_CODE) {
-            return Session::get('language', $code);
-        }
-
-        return $code;
-    }
-
     //--------------------------------------------------------------------
     // Legacy API Methods
     //--------------------------------------------------------------------
@@ -268,7 +216,7 @@ class Language
      */
     public function load($name, $code = LANGUAGE_CODE)
     {
-        $code = self::getCurrentLanguage($code);
+        $code = ($code != LANGUAGE_CODE) ? $code : $this->getLocale();
 
         // Language file.
         $file = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
@@ -297,7 +245,7 @@ class Language
      */
     public function get($value, $code = LANGUAGE_CODE)
     {
-        $code = self::getCurrentLanguage($code);
+        $code = ($code != LANGUAGE_CODE) ? $code : $this->getLocale();
 
         if (!empty($this->legacyMessages[$code][$value])) {
             return $this->legacyMessages[$code][$value];
@@ -324,4 +272,15 @@ class Language
 
         return $this->get($value, $code);
     }
+
+    /**
+     * Get the default locale being used.
+     *
+     * @return string
+     */
+    protected function getLocale()
+    {
+        return $this->manager->getLocale();
+    }
+
 }

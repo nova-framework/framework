@@ -90,8 +90,7 @@ function __($message, $args = null)
     //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
-    return Language::getInstance('app', LANGUAGE_CODE)
-        ->translate($message, $params);
+    return Language::instance('app')->translate($message, $params);
 }
 
 /**
@@ -109,8 +108,7 @@ function __d($domain, $message, $args = null)
     //
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
 
-    return Language::getInstance($domain, LANGUAGE_CODE)
-        ->translate($message, $params);
+    return Language::instance($domain)->translate($message, $params);
 }
 
 /**

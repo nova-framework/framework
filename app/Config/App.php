@@ -83,6 +83,7 @@ Config::set('app', array(
         'Encryption\EncryptionServiceProvider',
         'Filesystem\FilesystemServiceProvider',
         'Hashing\HashServiceProvider',
+        'Language\LanguageServiceProvider',
         'Log\LogServiceProvider',
         'Mail\MailServiceProvider',
         'Pagination\PaginationServiceProvider',

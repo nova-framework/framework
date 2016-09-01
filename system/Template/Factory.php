@@ -3,8 +3,8 @@
 namespace Template;
 
 use Config\Config;
-use Language\Language;
 use Support\Contracts\ArrayableInterface as Arrayable;
+use Support\Facades\Language;
 use Template\Template;
 use View\Factory as ViewFactory;
 use View\ViewFinderInterface;
@@ -115,7 +115,7 @@ class Factory
         $path = str_replace('/', DS, APPDIR .$path);
 
         // Find the View file depending on the Language direction.
-        $language = Language::getInstance();
+        $language = Language::instance();
 
         if ($language->direction() == 'rtl') {
             // Search for the View file used on the RTL languages.

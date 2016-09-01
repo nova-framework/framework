@@ -7,6 +7,7 @@ use Database\Query\Builder;
 
 class Processor
 {
+
     /**
      * Process the results of a "select" query.
      *
@@ -35,17 +36,6 @@ class Processor
         $id = $query->getConnection()->getPdo()->lastInsertId($sequence);
 
         return is_numeric($id) ? (int) $id : $id;
-    }
-
-    /**
-     * Process the results of a column listing query.
-     *
-     * @param  array  $results
-     * @return array
-     */
-    public function processColumnListing($results)
-    {
-        return $results;
     }
 
 }

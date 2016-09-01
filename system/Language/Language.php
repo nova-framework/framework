@@ -220,21 +220,24 @@ class Language
         $code = $code ?: $this->getLocale();
 
         // Language file.
-        $file = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
+        $filePath = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
 
         // Check if it is readable.
-        if (! is_readable($file)) {
+        if (! is_readable($filePath)) {
             return;
         }
 
         // Require the file.
-        $messages = include $file;
+        $messages = include $filePath;
 
-        if (isset($this->legacyMessages[$code]) && is_array($this->legacyMessages[$code])) {
-            $this->legacyMessages[$code] = array_merge($this->legacyMessages[$code], $messages);
-        } else {
-            $this->legacyMessages[$code] = $messages;
+        // A small sanity check.
+        $messages = is_array($messages) ? $messages : array();
+
+        if (isset($this->legacyMessages[$code])) {
+            $messages = array_merge($this->legacyMessages[$code], $messages);
         }
+
+        $this->legacyMessages[$code] = $messages;
     }
 
     /**
@@ -248,13 +251,13 @@ class Language
     {
         $code = $code ?: $this->getLocale();
 
-        if (! empty($this->legacyMessages[$code][$value])) {
-            return $this->legacyMessages[$code][$value];
-        } elseif (! empty($this->legacyMessages[LANGUAGE_CODE][$value])) {
-            return $this->legacyMessages[LANGUAGE_CODE][$value];
-        } else {
-            return $value;
+        $messages = isset($this->legacyMessages[$code]) ? $this->legacyMessages[$code] : array();
+
+        if (isset($messages[$value]) && ! empty($messages[$value])) {
+            return $messages[$value];
         }
+
+        return $value;
     }
 
     /**

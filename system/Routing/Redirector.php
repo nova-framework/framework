@@ -181,7 +181,7 @@ class Redirector
     /**
      * Set the active session store.
      *
-     * @param  \Illuminate\Session\Store  $session
+     * @param  \Session\Store  $session
      * @return void
      */
     public function setSession(SessionStore $session)

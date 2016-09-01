@@ -648,6 +648,40 @@ function class_basename($class)
 }
 
 /**
+ * Returns all traits used by a trait and its traits
+ *
+ * @param  string  $trait
+ * @return array
+ */
+function trait_uses_recursive($trait)
+{
+    $traits = class_uses($trait);
+
+    foreach ($traits as $trait) {
+        $traits += trait_uses_recursive($trait);
+    }
+
+    return $traits;
+}
+
+/**
+ * Returns all traits used by a class, it's subclasses and trait of their traits
+ *
+ * @param  string  $class
+ * @return array
+ */
+function class_uses_recursive($class)
+{
+    $results = [];
+
+    foreach (array_merge([$class => $class], class_parents($class)) as $class) {
+        $results += trait_uses_recursive($class);
+    }
+
+    return array_unique($results);
+}
+
+/**
  * Determine if the given object has a toString method.
  *
  * @param  object  $object

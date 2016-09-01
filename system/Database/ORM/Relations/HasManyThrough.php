@@ -6,6 +6,7 @@ use Database\ORM\Model;
 use Database\ORM\Builder;
 use Database\Query\Expression;
 use Database\ORM\Collection;
+use Database\ORM\ModelNotFoundException;
 
 
 class HasManyThrough extends Relation
@@ -31,11 +32,11 @@ class HasManyThrough extends Relation
      */
     protected $secondKey;
 
-
     /**
      * Create a new has many relationship instance.
      *
      * @param  \Database\ORM\Builder  $query
+     * @param  \Database\ORM\Model  $farParent
      * @param  \Database\ORM\Model  $parent
      * @param  string  $firstKey
      * @param  string  $secondKey
@@ -43,7 +44,7 @@ class HasManyThrough extends Relation
      */
     public function __construct(Builder $query, Model $farParent, Model $parent, $firstKey, $secondKey)
     {
-        $this->firstKey  = $firstKey;
+        $this->firstKey = $firstKey;
         $this->secondKey = $secondKey;
         $this->farParent = $farParent;
 
@@ -142,13 +143,10 @@ class HasManyThrough extends Relation
     {
         $dictionary = $this->buildDictionary($results);
 
-        // Once we have the dictionary we can simply spin through the parent models to
-        // link them up with their children using the keyed dictionary to make the
-        // matching very convenient and easy work. Then we'll just return them.
         foreach ($models as $model) {
             $key = $model->getKey();
 
-            if (isset($dictionary[$key]))  {
+            if (isset($dictionary[$key])) {
                 $value = $this->related->newCollection($dictionary[$key]);
 
                 $model->setRelation($relation, $value);
@@ -168,11 +166,8 @@ class HasManyThrough extends Relation
     {
         $dictionary = array();
 
-        $foreign = $this->farParent->getForeignKey();
+        $foreign = $this->firstKey;
 
-        // First we will create a dictionary of models keyed by the foreign key of the
-        // relationship as this will allow us to quickly access all of the related
-        // models without having to do nested looping which will be quite slow.
         foreach ($results as $result) {
             $dictionary[$result->{$foreign}][] = $result;
         }
@@ -204,6 +199,21 @@ class HasManyThrough extends Relation
     }
 
     /**
+     * Execute the query and get the first result or throw an exception.
+     *
+     * @param  array  $columns
+     * @return \Database\ORM\Model|static
+     *
+     * @throws \Database\ORM\ModelNotFoundException
+     */
+    public function firstOrFail($columns = array('*'))
+    {
+        if ( ! is_null($model = $this->first($columns))) return $model;
+
+        throw new ModelNotFoundException;
+    }
+
+    /**
      * Execute the query as a "select" statement.
      *
      * @param  array  $columns
@@ -215,14 +225,26 @@ class HasManyThrough extends Relation
 
         $models = $this->query->addSelect($select)->getModels();
 
-        // If we actually found models we will also eager load any relationships that
-        // have been specified as needing to be eager loaded. This will solve the
-        // n + 1 query problem for the developer and also increase performance.
         if (count($models) > 0) {
             $models = $this->query->eagerLoadRelations($models);
         }
 
         return $this->related->newCollection($models);
+    }
+
+    /**
+     * Set the select clause for the relation query.
+     *
+     * @param  array  $columns
+     * @return \Database\ORM\Relations\BelongsToMany
+     */
+    protected function getSelectColumns(array $columns = array('*'))
+    {
+        if ($columns == array('*')) {
+            $columns = array($this->related->getTable().'.*');
+        }
+
+        return array_merge($columns, array($this->parent->getTable().'.'.$this->firstKey));
     }
 
     /**
@@ -234,35 +256,11 @@ class HasManyThrough extends Relation
      */
     public function paginate($perPage = null, $columns = array('*'))
     {
-        $select = $this->getSelectColumns($columns);
+        $this->query->addSelect($this->getSelectColumns($columns));
 
-        $this->query->addSelect($select);
+        $pager = $this->query->paginate($perPage, $columns);
 
-        return $this->query->paginate($perPage, $columns);
-    }
-
-    /**
-     * Set the select clause for the relation query.
-     *
-     * @return \Database\ORM\Relations\BelongsToMany
-     */
-    protected function getSelectColumns(array $columns = array('*'))
-    {
-        if ($columns == array('*')) {
-            $columns = array($this->related->getTable().'.*');
-        }
-
-        return array_merge($columns, array($this->parent->getTable() .'.' .$this->firstKey));
-    }
-
-    /**
-     * Get the key name of the parent model.
-     *
-     * @return string
-     */
-    protected function getQualifiedParentKeyName()
-    {
-        return $this->parent->getQualifiedKeyName();
+        return $pager;
     }
 
     /**

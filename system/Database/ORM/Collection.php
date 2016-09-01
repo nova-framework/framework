@@ -8,7 +8,7 @@ use Support\Collection as BaseCollection;
 class Collection extends BaseCollection
 {
     /**
-     * Find a Model in the collection by key.
+     * Find a model in the collection by key.
      *
      * @param  mixed  $key
      * @param  mixed  $default
@@ -30,8 +30,8 @@ class Collection extends BaseCollection
     /**
      * Load a set of relationships onto the collection.
      *
-     * @param  dynamic  $relations
-     * @return \Database\ORM\Collection
+     * @param  mixed  $relations
+     * @return $this
      */
     public function load($relations)
     {
@@ -50,7 +50,7 @@ class Collection extends BaseCollection
      * Add an item to the collection.
      *
      * @param  mixed  $item
-     * @return \Database\ORM\Collection
+     * @return $this
      */
     public function add($item)
     {
@@ -74,7 +74,7 @@ class Collection extends BaseCollection
      * Fetch a nested element of the collection.
      *
      * @param  string  $key
-     * @return \Support\Collection
+     * @return static
      */
     public function fetch($key)
     {
@@ -122,15 +122,14 @@ class Collection extends BaseCollection
     /**
      * Merge the collection with the given items.
      *
-     * @param  \Support\Collection|\Support\Contracts\ArrayableInterface|array  $items
-     * @return \Support\Collection
+     * @param  \ArrayAccess|array  $items
+     * @return static
      */
-    public function merge($collection)
+    public function merge($items)
     {
         $dictionary = $this->getDictionary();
 
-        foreach ($collection as $item)
-        {
+        foreach ($items as $item) {
             $dictionary[$item->getKey()] = $item;
         }
 
@@ -140,14 +139,14 @@ class Collection extends BaseCollection
     /**
      * Diff the collection with the given items.
      *
-     * @param  \Support\Collection|\Support\Contracts\ArrayableInterface|array  $items
-     * @return \Support\Collection
+     * @param  \ArrayAccess|array  $items
+     * @return static
      */
-    public function diff($collection)
+    public function diff($items)
     {
         $diff = new static;
 
-        $dictionary = $this->getDictionary($collection);
+        $dictionary = $this->getDictionary($items);
 
         foreach ($this->items as $item) {
             if ( ! isset($dictionary[$item->getKey()])) {
@@ -161,14 +160,14 @@ class Collection extends BaseCollection
     /**
      * Intersect the collection with the given items.
      *
-      * @param  \Support\Collection|\Support\Contracts\ArrayableInterface|array  $items
-     * @return \Support\Collection
+      * @param  \ArrayAccess|array  $items
+     * @return static
      */
-    public function intersect($collection)
+    public function intersect($items)
     {
         $intersect = new static;
 
-        $dictionary = $this->getDictionary($collection);
+        $dictionary = $this->getDictionary($items);
 
         foreach ($this->items as $item) {
             if (isset($dictionary[$item->getKey()])) {
@@ -182,7 +181,7 @@ class Collection extends BaseCollection
     /**
      * Return only unique items from the collection.
      *
-     * @return \Support\Collection
+     * @return static
      */
     public function unique()
     {
@@ -195,11 +194,11 @@ class Collection extends BaseCollection
      * Returns only the models from the collection with the specified keys.
      *
      * @param  mixed  $keys
-     * @return \Support\Collection
+     * @return static
      */
     public function only($keys)
     {
-        $dictionary = array_only($this->getDictionary($this), $keys);
+        $dictionary = array_only($this->getDictionary(), $keys);
 
         return new static(array_values($dictionary));
     }
@@ -208,11 +207,11 @@ class Collection extends BaseCollection
      * Returns all models in the collection except the models with specified keys.
      *
      * @param  mixed  $keys
-     * @return \Support\Collection
+     * @return static
      */
     public function except($keys)
     {
-        $dictionary = array_except($this->getDictionary($this), $keys);
+        $dictionary = array_except($this->getDictionary(), $keys);
 
         return new static(array_values($dictionary));
     }
@@ -220,16 +219,16 @@ class Collection extends BaseCollection
     /**
      * Get a dictionary keyed by primary keys.
      *
-     * @param  \Support\Collection  $collection
+     * @param  \ArrayAccess|array  $items
      * @return array
      */
-    public function getDictionary($collection = null)
+    public function getDictionary($items = null)
     {
-        $collection = $collection ?: $this;
+        $items = is_null($items) ? $this->items : $items;
 
         $dictionary = array();
 
-        foreach ($collection as $value) {
+        foreach ($items as $value) {
             $dictionary[$value->getKey()] = $value;
         }
 

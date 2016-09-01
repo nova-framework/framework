@@ -5,7 +5,6 @@ namespace Database\ORM\Relations;
 use Database\ORM\Model;
 use Database\ORM\Builder;
 use Database\ORM\Collection;
-use Database\ORM\Relations\BelongsTo;
 use Support\Collection as BaseCollection;
 
 
@@ -32,7 +31,13 @@ class MorphTo extends BelongsTo
      */
     protected $dictionary = array();
 
-    
+    /*
+     * Indicates if soft-deleted model instances should be fetched.
+     *
+     * @var bool
+     */
+    protected $withTrashed = false;
+
     /**
      * Create a new belongs to relationship instance.
      *
@@ -65,7 +70,7 @@ class MorphTo extends BelongsTo
     /**
      * Build a dictionary with the models.
      *
-     * @param  \Database\ORM\Models  $models
+     * @param  \Database\ORM\Collection  $models
      * @return void
      */
     protected function buildDictionary(Collection $models)
@@ -100,7 +105,7 @@ class MorphTo extends BelongsTo
     {
         $this->parent->setAttribute($this->foreignKey, $model->getKey());
 
-        $this->parent->setAttribute($this->morphType, get_class($model));
+        $this->parent->setAttribute($this->morphType, $model->getMorphClass());
 
         return $this->parent->setRelation($this->relation, $model);
     }
@@ -131,10 +136,8 @@ class MorphTo extends BelongsTo
     protected function matchToMorphParents($type, Collection $results)
     {
         foreach ($results as $result) {
-            if (isset($this->dictionary[$type][$result->getKey()]))
-            {
-                foreach ($this->dictionary[$type][$result->getKey()] as $model)
-                {
+            if (isset($this->dictionary[$type][$result->getKey()])) {
+                foreach ($this->dictionary[$type][$result->getKey()] as $model) {
                     $model->setRelation($this->relation, $result);
                 }
             }
@@ -153,7 +156,11 @@ class MorphTo extends BelongsTo
 
         $key = $instance->getKeyName();
 
-        return $instance->whereIn($key, $this->gatherKeysByType($type)->all())->get();
+        $query = $instance->newQuery();
+
+        $query = $this->useWithTrashed($query);
+
+        return $query->whereIn($key, $this->gatherKeysByType($type)->all())->get();
     }
 
     /**
@@ -185,6 +192,16 @@ class MorphTo extends BelongsTo
     }
 
     /**
+     * Get the foreign key "type" name.
+     *
+     * @return string
+     */
+    public function getMorphType()
+    {
+        return $this->morphType;
+    }
+
+    /**
      * Get the dictionary used by the relationship.
      *
      * @return array
@@ -192,6 +209,35 @@ class MorphTo extends BelongsTo
     public function getDictionary()
     {
         return $this->dictionary;
+    }
+
+    /**
+     * Fetch soft-deleted model instances with query
+     *
+     * @return $this
+     */
+    public function withTrashed()
+    {
+        $this->withTrashed = true;
+
+        $this->query = $this->useWithTrashed($this->query);
+
+        return $this;
+    }
+
+    /**
+     * Return trashed models with query if told so
+     *
+     * @param  \Database\ORM\Builder  $query
+     * @return \Database\ORM\Builder
+     */
+    protected function useWithTrashed(Builder $query)
+    {
+        if ($this->withTrashed && $query->getMacro('withTrashed') !== null) {
+            return $query->withTrashed();
+        }
+
+        return $query;
     }
 
 }

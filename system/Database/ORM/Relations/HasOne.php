@@ -4,7 +4,6 @@ namespace Database\ORM\Relations;
 
 use Database\ORM\Collection;
 
-
 class HasOne extends HasOneOrMany
 {
     /**

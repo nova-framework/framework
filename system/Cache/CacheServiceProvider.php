@@ -35,28 +35,6 @@ class CacheServiceProvider extends ServiceProvider
         {
             return new MemcachedConnector;
         });
-
-        $this->registerCommands();
-    }
-
-    /**
-     * Register the cache related console commands.
-     *
-     * @return void
-     */
-    public function registerCommands()
-    {
-        $this->app->bindShared('command.cache.clear', function($app)
-        {
-            return new Console\ClearCommand($app['cache'], $app['files']);
-        });
-
-        $this->app->bindShared('command.cache.table', function($app)
-        {
-            return new Console\CacheTableCommand($app['files']);
-        });
-
-        $this->commands('command.cache.clear', 'command.cache.table');
     }
 
     /**
@@ -67,7 +45,7 @@ class CacheServiceProvider extends ServiceProvider
     public function provides()
     {
         return array(
-            'cache', 'cache.store', 'memcached.connector', 'command.cache.clear', 'command.cache.table'
+            'cache', 'cache.store', 'memcached.connector'
         );
     }
 

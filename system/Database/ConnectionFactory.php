@@ -48,6 +48,10 @@ class ConnectionFactory
     {
         $config = $this->parseConfig($config, $name);
 
+        if (isset($config['read'])) {
+            return $this->createReadWriteConnection($config);
+        }
+
         return $this->createSingleConnection($config);
     }
 
@@ -65,7 +69,87 @@ class ConnectionFactory
     }
 
     /**
-     * Parse and prepare the Database configuration.
+     * Create a single database connection instance.
+     *
+     * @param  array  $config
+     * @return \Database\Connection
+     */
+    protected function createReadWriteConnection(array $config)
+    {
+        $connection = $this->createSingleConnection($this->getWriteConfig($config));
+
+        return $connection->setReadPdo($this->createReadPdo($config));
+    }
+
+    /**
+     * Create a new PDO instance for reading.
+     *
+     * @param  array  $config
+     * @return \PDO
+     */
+    protected function createReadPdo(array $config)
+    {
+        $readConfig = $this->getReadConfig($config);
+
+        return $this->createConnector($readConfig)->connect($readConfig);
+    }
+
+    /**
+     * Get the read configuration for a read / write connection.
+     *
+     * @param  array  $config
+     * @return array
+     */
+    protected function getReadConfig(array $config)
+    {
+        $readConfig = $this->getReadWriteConfig($config, 'read');
+
+        return $this->mergeReadWriteConfig($config, $readConfig);
+    }
+
+    /**
+     * Get the read configuration for a read / write connection.
+     *
+     * @param  array  $config
+     * @return array
+     */
+    protected function getWriteConfig(array $config)
+    {
+        $writeConfig = $this->getReadWriteConfig($config, 'write');
+
+        return $this->mergeReadWriteConfig($config, $writeConfig);
+    }
+
+    /**
+     * Get a read / write level configuration.
+     *
+     * @param  array   $config
+     * @param  string  $type
+     * @return array
+     */
+    protected function getReadWriteConfig(array $config, $type)
+    {
+        if (isset($config[$type][0])) {
+            return $config[$type][array_rand($config[$type])];
+        }
+
+        return $config[$type];
+    }
+
+    /**
+     * Merge a configuration for a read / write connection.
+     *
+     * @param  array  $config
+     * @param  array  $merge
+     * @return array
+     */
+    protected function mergeReadWriteConfig(array $config, array $merge)
+    {
+        return array_except(array_merge($config, $merge), array('read', 'write'));
+    }
+
+    /**
+     * Parse and prepare the database configuration.
      *
      * @param  array   $config
      * @param  string  $name
@@ -97,16 +181,16 @@ class ConnectionFactory
         switch ($config['driver'])
         {
             case 'mysql':
-                return new MySqlConnector();
+                return new MySqlConnector;
 
             case 'pgsql':
-                return new PostgresConnector();
+                return new PostgresConnector;
 
             case 'sqlite':
-                return new SQLiteConnector();
+                return new SQLiteConnector;
 
             case 'sqlsrv':
-                return new SqlServerConnector();
+                return new SqlServerConnector;
         }
 
         throw new \InvalidArgumentException("Unsupported driver [{$config['driver']}]");
@@ -130,7 +214,8 @@ class ConnectionFactory
             return $this->container->make($key, array($connection, $database, $prefix, $config));
         }
 
-        switch ($driver) {
+        switch ($driver)
+        {
             case 'mysql':
                 return new MySqlConnection($connection, $database, $prefix, $config);
 

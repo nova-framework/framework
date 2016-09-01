@@ -14,7 +14,7 @@ use Core\Logger;
 use Database\Query\Expression;
 use Database\Query\Grammar as QueryGrammar;
 use Database\Query\Builder as QueryBuilder;
-use Database\Query\Processor as PostProcessor;
+use Database\Query\Processor as QueryProcessor;
 
 use Database\ConnectionInterface;
 use Database\Connector;
@@ -196,7 +196,7 @@ class Connection implements ConnectionInterface
      */
     protected function getDefaultPostProcessor()
     {
-        return new PostProcessor();
+        return new QueryProcessor();
     }
 
     /**

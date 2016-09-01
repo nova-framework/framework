@@ -11,9 +11,6 @@ namespace Language;
 use Helpers\Inflector;
 use Language\LanguageManager as Manager;
 
-use Cookie;
-use Session;
-
 use MessageFormatter;
 
 
@@ -55,7 +52,7 @@ class Language
      *
      * @var array
      */
-    private $legacyMessages = array();
+    private static $legacyMessages = array();
 
 
     /**
@@ -214,9 +211,9 @@ class Language
      * @param string $code
      * @return void
      */
-    public function load($name, $code = LANGUAGE_CODE)
+    public function load($name, $code = null)
     {
-        $code = ($code != LANGUAGE_CODE) ? $code : $this->getLocale();
+        $code = $code ?: $this->getLocale();
 
         // Language file.
         $file = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
@@ -229,10 +226,10 @@ class Language
         // Require the file.
         $messages = include $file;
 
-        if(isset($this->legacyMessages[$code]) && is_array($this->legacyMessages[$code])) {
-            $this->legacyMessages[$code] = array_merge($this->legacyMessages[$code], $messages);
+        if(isset(static::$legacyMessages[$code]) && is_array(static::$legacyMessages[$code])) {
+            static::$legacyMessages[$code] = array_merge(static::$legacyMessages[$code], $messages);
         } else {
-            $this->legacyMessages[$code] = $messages;
+            static::$legacyMessages[$code] = $messages;
         }
     }
 
@@ -243,14 +240,14 @@ class Language
      *
      * @return string
      */
-    public function get($value, $code = LANGUAGE_CODE)
+    public function get($value, $code = null)
     {
-        $code = ($code != LANGUAGE_CODE) ? $code : $this->getLocale();
+        $code = $code ?: $this->getLocale();
 
-        if (!empty($this->legacyMessages[$code][$value])) {
-            return $this->legacyMessages[$code][$value];
-        } elseif(!empty($this->legacyMessages[LANGUAGE_CODE][$value])) {
-            return $this->legacyMessages[LANGUAGE_CODE][$value];
+        if (! empty(static::$legacyMessages[$code][$value])) {
+            return static::$legacyMessages[$code][$value];
+        } elseif(! empty(static::$legacyMessages[LANGUAGE_CODE][$value])) {
+            return static::$legacyMessages[LANGUAGE_CODE][$value];
         } else {
             return $value;
         }

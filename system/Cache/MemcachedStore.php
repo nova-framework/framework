@@ -1,41 +1,36 @@
 <?php
-/**
- * ArrayStore - A simple in-memory simulation of a phpFastCache driver.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Cache;
 
-use Config\Config;
-use Cache\StoreInterface;
 
-use phpFastCache\CacheManager as FastCacheManager;
-
-
-class FastCacheStore implements StoreInterface
+class MemcachedStore extends TaggableStore implements StoreInterface
 {
     /**
-     * The phpFastCache instance.
+     * The Memcached instance.
      *
-     * @var array
+     * @var \Memcached
      */
-    protected $cache;
-
+    protected $memcached;
 
     /**
-     * Create a new Cache Repository instance.
+     * A string that should be prepended to keys.
      *
-     * @param  string $storage
+     * @var string
      */
-    public function __construct($storage)
+    protected $prefix;
+
+    /**
+     * Create a new Memcached store.
+     *
+     * @param  \Memcached  $memcached
+     * @param  string      $prefix
+     * @return void
+     */
+    public function __construct($memcached, $prefix = '')
     {
-        $config = Config::get('cache');
+        $this->memcached = $memcached;
 
-        $config['storage'] = $storage;
-
-        $this->cache = FastCacheManager::getInstance($storage, $config);
+        $this->prefix = (strlen($prefix) > 0) ? $prefix .':' : '';
     }
 
     /**
@@ -46,7 +41,11 @@ class FastCacheStore implements StoreInterface
      */
     public function get($key)
     {
-        return $this->cache->get($key);
+        $value = $this->memcached->get($this->prefix.$key);
+
+        if ($this->memcached->getResultCode() == 0) {
+            return $value;
+        }
     }
 
     /**
@@ -59,7 +58,7 @@ class FastCacheStore implements StoreInterface
      */
     public function put($key, $value, $minutes)
     {
-        return $this->cache->set($key, $value, $minutes);
+        $this->memcached->set($this->prefix.$key, $value, $minutes * 60);
     }
 
     /**
@@ -67,23 +66,23 @@ class FastCacheStore implements StoreInterface
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return int|bool
      */
     public function increment($key, $value = 1)
     {
-        return $this->cache->increment($key, $value);
+        return $this->memcached->increment($this->prefix.$key, $value);
     }
 
     /**
-     * Increment the value of an item in the cache.
+     * Decrement the value of an item in the cache.
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return int|bool
      */
     public function decrement($key, $value = 1)
     {
-        return $this->cache->decrement($key, $value);
+        return $this->memcached->decrement($this->prefix.$key, $value);
     }
 
     /**
@@ -106,7 +105,7 @@ class FastCacheStore implements StoreInterface
      */
     public function forget($key)
     {
-        $this->cache->delete($key);
+        $this->memcached->delete($this->prefix.$key);
     }
 
     /**
@@ -116,7 +115,17 @@ class FastCacheStore implements StoreInterface
      */
     public function flush()
     {
-        $this->cache->clean();
+        $this->memcached->flush();
+    }
+
+    /**
+     * Get the underlying Memcached connection.
+     *
+     * @return \Memcached
+     */
+    public function getMemcached()
+    {
+        return $this->memcached;
     }
 
     /**
@@ -126,6 +135,7 @@ class FastCacheStore implements StoreInterface
      */
     public function getPrefix()
     {
-        return '';
+        return $this->prefix;
     }
+
 }

@@ -2,7 +2,7 @@
 
 namespace Cache;
 
-use Cache\StoreInterface;
+use Support\Traits\MacroableTrait;
 
 use Carbon\Carbon;
 
@@ -13,10 +13,14 @@ use ArrayAccess;
 
 class Repository implements ArrayAccess
 {
+    use MacroableTrait {
+        __call as macroCall;
+    }
+
     /**
-     * The phpFastCache instance.
+     * The cache store implementation.
      *
-     * @var
+     * @var \Cache\StoreInterface
      */
     protected $store;
 
@@ -28,16 +32,9 @@ class Repository implements ArrayAccess
     protected $default = 60;
 
     /**
-     * An array of registered Cache macros.
+     * Create a new cache repository instance.
      *
-     * @var array
-     */
-    protected $macros = array();
-
-    /**
-     * Create a new Cache Repository instance.
-     *
-     * @param  string $store
+     * @param  \Cache\StoreInterface  $store
      */
     public function __construct(StoreInterface $store)
     {
@@ -70,6 +67,22 @@ class Repository implements ArrayAccess
     }
 
     /**
+     * Retrieve an item from the cache and delete it.
+     *
+     * @param  string  $key
+     * @param  mixed   $default
+     * @return mixed
+     */
+    public function pull($key, $default = null)
+    {
+        $value = $this->get($key, $default);
+
+        $this->forget($key);
+
+        return $value;
+    }
+
+    /**
      * Store an item in the cache.
      *
      * @param  string  $key
@@ -81,7 +94,9 @@ class Repository implements ArrayAccess
     {
         $minutes = $this->getMinutes($minutes);
 
-        $this->store->put($key, $value, $minutes);
+        if ( ! is_null($minutes)) {
+            $this->store->put($key, $value, $minutes);
+        }
     }
 
     /**
@@ -106,11 +121,14 @@ class Repository implements ArrayAccess
      *
      * @param  string  $key
      * @param  \DateTime|int  $minutes
-     * @param  Closure  $callback
+     * @param  \Closure  $callback
      * @return mixed
      */
     public function remember($key, $minutes, Closure $callback)
     {
+        // If the item exists in the cache we will just return this immediately
+        // otherwise we will execute the given Closure and cache the result
+        // of that execution for the given number of minutes in storage.
         if ( ! is_null($value = $this->get($key))) {
             return $value;
         }
@@ -124,7 +142,7 @@ class Repository implements ArrayAccess
      * Get an item from the cache, or store the default value forever.
      *
      * @param  string   $key
-     * @param  Closure  $callback
+     * @param  \Closure  $callback
      * @return mixed
      */
     public function sear($key, Closure $callback)
@@ -136,11 +154,14 @@ class Repository implements ArrayAccess
      * Get an item from the cache, or store the default value forever.
      *
      * @param  string   $key
-     * @param  Closure  $callback
+     * @param  \Closure  $callback
      * @return mixed
      */
     public function rememberForever($key, Closure $callback)
     {
+        // If the item exists in the cache we will just return this immediately
+        // otherwise we will execute the given Closure and cache the result
+        // of that execution for the given number of minutes. It's easy.
         if ( ! is_null($value = $this->get($key))) {
             return $value;
         }
@@ -174,7 +195,7 @@ class Repository implements ArrayAccess
     /**
      * Get the cache store implementation.
      *
-     * @return phpFastCache instance
+     * @return \Cache\StoreInterface
      */
     public function getStore()
     {
@@ -230,29 +251,17 @@ class Repository implements ArrayAccess
      * Calculate the number of minutes with the given duration.
      *
      * @param  \DateTime|int  $duration
-     * @return int
+     * @return int|null
      */
     protected function getMinutes($duration)
     {
         if ($duration instanceof DateTime) {
-            $duration = Carbon::instance($duration);
+            $fromNow = Carbon::instance($duration)->diffInMinutes();
 
-            return max(0, Carbon::now()->diffInMinutes($duration, false));
-        } else {
-            return is_string($duration) ? intval($duration) : $duration;
+            return $fromNow > 0 ? $fromNow : null;
         }
-    }
 
-    /**
-     * Register a macro with the Cache class.
-     *
-     * @param  string    $name
-     * @param  callable  $callback
-     * @return void
-     */
-    public function macro($name, $callback)
-    {
-        $this->macros[$name] = $callback;
+        return is_string($duration) ? (int) $duration : $duration;
     }
 
     /**
@@ -264,12 +273,11 @@ class Repository implements ArrayAccess
      */
     public function __call($method, $parameters)
     {
-        if (isset($this->macros[$method])) {
-            return call_user_func_array($this->macros[$method], $parameters);
-        } else {
-            return call_user_func_array(array($this->store, $method), $parameters);
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $parameters);
         }
+
+        return call_user_func_array(array($this->store, $method), $parameters);
     }
 
 }
-

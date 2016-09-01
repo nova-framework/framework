@@ -28,6 +28,7 @@
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3",
         "monolog/monolog": "^1.19",
+        "predis/predis": "0.8.*",
         "filp/whoops": "^2.1"
     },
     "autoload": {

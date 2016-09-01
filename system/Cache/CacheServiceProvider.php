@@ -2,22 +2,20 @@
 
 namespace Cache;
 
-use Cache\CacheManager;
 use Support\ServiceProvider;
 
 
 class CacheServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the Provider is deferred.
+     * Indicates if loading of the provider is deferred.
      *
      * @var bool
      */
     protected $defer = true;
 
-
     /**
-     * Register the Service Provider.
+     * Register the service provider.
      *
      * @return void
      */
@@ -27,6 +25,38 @@ class CacheServiceProvider extends ServiceProvider
         {
             return new CacheManager($app);
         });
+
+        $this->app->bindShared('cache.store', function($app)
+        {
+            return $app['cache']->driver();
+        });
+
+        $this->app->bindShared('memcached.connector', function()
+        {
+            return new MemcachedConnector;
+        });
+
+        $this->registerCommands();
+    }
+
+    /**
+     * Register the cache related console commands.
+     *
+     * @return void
+     */
+    public function registerCommands()
+    {
+        $this->app->bindShared('command.cache.clear', function($app)
+        {
+            return new Console\ClearCommand($app['cache'], $app['files']);
+        });
+
+        $this->app->bindShared('command.cache.table', function($app)
+        {
+            return new Console\CacheTableCommand($app['files']);
+        });
+
+        $this->commands('command.cache.clear', 'command.cache.table');
     }
 
     /**
@@ -36,7 +66,9 @@ class CacheServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array('cache');
+        return array(
+            'cache', 'cache.store', 'memcached.connector', 'command.cache.clear', 'command.cache.table'
+        );
     }
 
 }

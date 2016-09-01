@@ -2,14 +2,35 @@
 
 namespace Cache;
 
-class ArrayStore extends TaggableStore implements StoreInterface
+class ApcStore extends TaggableStore implements StoreInterface
 {
     /**
-     * The array of stored values.
+     * The APC wrapper instance.
      *
-     * @var array
+     * @var \Cache\ApcWrapper
      */
-    protected $storage = array();
+    protected $apc;
+
+    /**
+     * A string that should be prepended to keys.
+     *
+     * @var string
+     */
+    protected $prefix;
+
+    /**
+     * Create a new APC store.
+     *
+     * @param  \Cache\ApcWrapper  $apc
+     * @param  string  $prefix
+     * @return void
+     */
+    public function __construct(ApcWrapper $apc, $prefix = '')
+    {
+        $this->apc = $apc;
+
+        $this->prefix = $prefix;
+    }
 
     /**
      * Retrieve an item from the cache by key.
@@ -19,8 +40,10 @@ class ArrayStore extends TaggableStore implements StoreInterface
      */
     public function get($key)
     {
-        if (array_key_exists($key, $this->storage)) {
-            return $this->storage[$key];
+        $value = $this->apc->get($this->prefix.$key);
+
+        if ($value !== false) {
+            return $value;
         }
     }
 
@@ -34,7 +57,7 @@ class ArrayStore extends TaggableStore implements StoreInterface
      */
     public function put($key, $value, $minutes)
     {
-        $this->storage[$key] = $value;
+        $this->apc->put($this->prefix.$key, $value, $minutes * 60);
     }
 
     /**
@@ -42,25 +65,23 @@ class ArrayStore extends TaggableStore implements StoreInterface
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return int
+     * @return int|bool
      */
     public function increment($key, $value = 1)
     {
-        $this->storage[$key] = $this->storage[$key] + $value;
-
-        return $this->storage[$key];
+        return $this->apc->increment($this->prefix.$key, $value);
     }
 
     /**
-     * Increment the value of an item in the cache.
+     * Decrement the value of an item in the cache.
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return int
+     * @return int|bool
      */
     public function decrement($key, $value = 1)
     {
-        return $this->increment($key, $value * -1);
+        return $this->apc->decrement($this->prefix.$key, $value);
     }
 
     /**
@@ -68,7 +89,7 @@ class ArrayStore extends TaggableStore implements StoreInterface
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return array|bool
      */
     public function forever($key, $value)
     {
@@ -83,7 +104,7 @@ class ArrayStore extends TaggableStore implements StoreInterface
      */
     public function forget($key)
     {
-        unset($this->storage[$key]);
+        $this->apc->delete($this->prefix.$key);
     }
 
     /**
@@ -93,7 +114,7 @@ class ArrayStore extends TaggableStore implements StoreInterface
      */
     public function flush()
     {
-        $this->storage = array();
+        $this->apc->flush();
     }
 
     /**
@@ -103,7 +124,7 @@ class ArrayStore extends TaggableStore implements StoreInterface
      */
     public function getPrefix()
     {
-        return '';
+        return $this->prefix;
     }
 
 }

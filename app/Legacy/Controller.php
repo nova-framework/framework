@@ -9,10 +9,11 @@
 namespace App\Legacy;
 
 use App\Core\Controller as BaseController;
-use Language\Language;
 use Http\Request;
 use Http\Response;
 use Routing\Route;
+
+use Language;
 
 use BadMethodCallException;
 

@@ -66,9 +66,10 @@ class LoaderManager implements LoaderInterface
      */
     public function set($key, $value)
     {
-        // We update only the Configuration value from Database.
         if (isset($this->dbLoader)) {
             $this->dbLoader->set($key, $value);
+        } else {
+            $this->fileLoader->set($key, $value);
         }
     }
 

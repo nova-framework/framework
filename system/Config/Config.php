@@ -32,7 +32,7 @@ class Config
      * @param string $key
      * @return bool
      */
-    public static function exists($key)
+    public static function has($key)
     {
         return ! is_null(array_get(static::$settings, $key));
     }

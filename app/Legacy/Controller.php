@@ -173,13 +173,13 @@ abstract class Controller extends BaseController
      *
      * @return string
      */
-    protected function trans($str, $code = LANGUAGE_CODE)
+    protected function trans($message, $code = LANGUAGE_CODE)
     {
         if ($this->language instanceof Language) {
-            return $this->language->get($str, $code);
+            return $this->language->get($message, $code);
         }
 
-        return $str;
+        return $message;
     }
 
     /**

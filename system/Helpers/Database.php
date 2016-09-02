@@ -10,8 +10,7 @@ namespace Helpers;
 
 use Config\Config;
 use Database\ConnectionResolverInterface as Resolver;
-
-use DB;
+use Support\Facades\DB;
 
 use PDO;
 

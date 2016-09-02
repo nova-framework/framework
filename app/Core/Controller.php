@@ -12,12 +12,11 @@ use Config\Config;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Support\Contracts\RenderableInterface as Renderable;
+use Support\Facades\Template;
+use Support\Facades\View;
 use Template\Template as Layout;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-
-use Template;
-use View;
 
 use BadMethodCallException;
 

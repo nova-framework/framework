@@ -12,9 +12,8 @@ use App\Core\Controller as BaseController;
 use Http\Request;
 use Http\Response;
 use Routing\Route;
-
-use Language;
-use View;
+use Support\Facades\Language;
+use Support\Facades\View;
 
 use BadMethodCallException;
 

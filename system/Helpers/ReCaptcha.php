@@ -10,7 +10,7 @@ namespace Helpers;
 
 use Config\Config;
 
-use Request;
+use Helpers\Request;
 
 /**
  * ReCaptcha: Google Anti-spam protection for your website.

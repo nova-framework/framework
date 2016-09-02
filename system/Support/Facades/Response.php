@@ -5,13 +5,12 @@ namespace Support\Facades;
 use Http\JsonResponse;
 use Http\Response as HttpResponse;
 use Support\Contracts\ArrayableInterface;
+use Support\Facades\Template;
+use Support\Facades\View;
+use Support\Str;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
-use Str;
-use Template;
-use View;
 
 
 class Response

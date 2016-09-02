@@ -2,6 +2,7 @@
 
 namespace Session;
 
+
 interface ExistenceAwareInterface
 {
     /**

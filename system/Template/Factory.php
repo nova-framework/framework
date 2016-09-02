@@ -3,8 +3,9 @@
 namespace Template;
 
 use Config\Config;
+use Foundation\Application;
+use Language\LanguageManager;
 use Support\Contracts\ArrayableInterface as Arrayable;
-use Support\Facades\Language;
 use Template\Template;
 use View\Factory as ViewFactory;
 use View\ViewFinderInterface;
@@ -14,11 +15,11 @@ use View\View;
 class Factory
 {
     /**
-     * The View Factory instance.
+     * The Application instance.
      *
-     * @var \View\Factory
+     * @var \Foundation\Application
      */
-    protected $factory;
+    protected $app;
 
     /**
      * The view finder implementation.
@@ -27,17 +28,17 @@ class Factory
      */
     protected $finder;
 
-
     /**
      * Create new Template Factory instance.
      *
      * @param $factory The View Factory instance.
      * @return void
      */
-    function __construct(ViewFactory $factory, ViewFinderInterface $finder)
+    function __construct(Application $app, ViewFinderInterface $finder)
     {
-        $this->factory = $factory;
-        $this->finder  = $finder;
+        $this->app = $app;
+
+        $this->finder = $finder;
     }
 
     /**
@@ -65,7 +66,10 @@ class Factory
         // Get the parsed data.
         $data = $this->parseData($data);
 
-        return new Template($this->factory, $view, $path, $data);
+        // Get the View Factory instance.
+        $factory = $this->getViewFactory();
+
+        return new Template($factory, $view, $path, $data);
     }
 
     /**
@@ -115,7 +119,7 @@ class Factory
         $path = str_replace('/', DS, APPDIR .$path);
 
         // Find the View file depending on the Language direction.
-        $language = Language::instance();
+        $language = $this->getLanguage();
 
         if ($language->direction() == 'rtl') {
             // Search for the View file used on the RTL languages.
@@ -131,5 +135,27 @@ class Factory
         if (! is_null($filePath)) return $filePath;
 
         throw new \InvalidArgumentException("Unable to load the view '" .$view ."' on template '" .$template ."'.", 1);
+    }
+
+    /**
+     * Return the current View Factory instance.
+     *
+     * @return \View\Factory
+     */
+    protected function getViewFactory()
+    {
+        return $this->app['view'];
+    }
+
+    /**
+     * Return the current Language instance.
+     *
+     * @return \Language\Language
+     */
+    protected function getLanguage()
+    {
+        $languages = $this->app['language'];
+
+        return $languages->instance();
     }
 }

@@ -1050,7 +1050,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     {
         $this['config']->set('app.locale', $locale);
 
-        $this['translator']->setLocale($locale);
+        $this['language']->setLocale($locale);
 
         $this['events']->fire('locale.changed', array($locale));
     }

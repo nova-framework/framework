@@ -23,7 +23,9 @@ class Language extends Facade
 
     public static function initialize()
     {
-        $language = static::$app['language'];
+        $accessor = static::getFacadeAccessor();
+
+        $instance = static::resolveFacadeInstance($accessor);
 
         //
         $locale = static::$app['config']['app.locale'];
@@ -36,7 +38,7 @@ class Language extends Facade
             Session::set('language', $locale);
         }
 
-        $language->setLocale($locale);
+        $instance->setLocale($locale);
     }
 
     /**

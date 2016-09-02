@@ -2,8 +2,7 @@
 
 namespace Cache;
 
-
-class ArrayStore implements StoreInterface
+class ArrayStore extends TaggableStore implements StoreInterface
 {
     /**
      * The array of stored values.
@@ -43,7 +42,7 @@ class ArrayStore implements StoreInterface
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return int
      */
     public function increment($key, $value = 1)
     {
@@ -57,13 +56,11 @@ class ArrayStore implements StoreInterface
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return int
      */
     public function decrement($key, $value = 1)
     {
-        $this->storage[$key] = $this->storage[$key] - $value;
-
-        return $this->storage[$key];
+        return $this->increment($key, $value * -1);
     }
 
     /**

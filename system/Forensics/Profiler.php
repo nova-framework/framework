@@ -242,7 +242,7 @@ class Profiler
             $output['get'] = array();
 
             foreach ($_GET as $key => $value) {
-                if ( ! is_numeric($key)) {
+                if (! is_numeric($key)) {
                     $key = "'".$key."'";
                 }
 
@@ -261,7 +261,7 @@ class Profiler
             $output['post'] = array();
 
             foreach ($_POST as $key => $value) {
-                if ( ! is_numeric($key)) {
+                if (! is_numeric($key)) {
                     $key = "'".$key."'";
                 }
 

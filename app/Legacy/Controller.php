@@ -9,10 +9,12 @@
 namespace App\Legacy;
 
 use App\Core\Controller as BaseController;
-use Language\Language;
 use Http\Request;
 use Http\Response;
 use Routing\Route;
+
+use Language;
+use View;
 
 use BadMethodCallException;
 
@@ -50,7 +52,7 @@ abstract class Controller extends BaseController
 
         // Initialise the Language object.
         if ($this->language !== false) {
-            $this->language = Language::getInstance();
+            $this->language = Language::instance('legacy_api', LANGUAGE_CODE);
         }
 
         // Setup the (legacy) Middleware.
@@ -171,13 +173,13 @@ abstract class Controller extends BaseController
      *
      * @return string
      */
-    protected function trans($str, $code = LANGUAGE_CODE)
+    protected function trans($message, $code = LANGUAGE_CODE)
     {
         if ($this->language instanceof Language) {
-            return $this->language->get($str, $code);
+            return $this->language->get($message, $code);
         }
 
-        return $str;
+        return $message;
     }
 
     /**

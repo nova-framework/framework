@@ -2,9 +2,6 @@
 
 namespace Session;
 
-use Session\CookieSessionHandler;
-use Session\DatabaseSessionHandler;
-use Session\FileSessionHandler;
 use Support\Manager;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
@@ -36,7 +33,7 @@ class SessionManager extends Manager
     /**
      * Create an instance of the "cookie" session driver.
      *
-     * @return \Illuminate\Session\Store
+     * @return \Session\Store
      */
     protected function createCookieDriver()
     {
@@ -64,7 +61,7 @@ class SessionManager extends Manager
     {
         $path = $this->app['config']['session.files'];
 
-        return $this->buildSession(new FileSessionHandler($path));
+        return $this->buildSession(new FileSessionHandler($this->app['files'], $path));
     }
 
     /**
@@ -91,6 +88,74 @@ class SessionManager extends Manager
         $connection = $this->app['config']['session.connection'];
 
         return $this->app['db']->connection($connection);
+    }
+
+    /**
+     * Create an instance of the APC session driver.
+     *
+     * @return \Session\Store
+     */
+    protected function createApcDriver()
+    {
+        return $this->createCacheBased('apc');
+    }
+
+    /**
+     * Create an instance of the Memcached session driver.
+     *
+     * @return \Session\Store
+     */
+    protected function createMemcachedDriver()
+    {
+        return $this->createCacheBased('memcached');
+    }
+
+    /**
+     * Create an instance of the Wincache session driver.
+     *
+     * @return \Session\Store
+     */
+    protected function createWincacheDriver()
+    {
+        return $this->createCacheBased('wincache');
+    }
+
+    /**
+     * Create an instance of the Redis session driver.
+     *
+     * @return \Session\Store
+     */
+    protected function createRedisDriver()
+    {
+        $handler = $this->createCacheHandler('redis');
+
+        $handler->getCache()->getStore()->setConnection($this->app['config']['session.connection']);
+
+        return $this->buildSession($handler);
+    }
+
+    /**
+     * Create an instance of a cache driven driver.
+     *
+     * @param  string  $driver
+     * @return \Session\Store
+     */
+    protected function createCacheBased($driver)
+    {
+        return $this->buildSession($this->createCacheHandler($driver));
+    }
+
+    /**
+     * Create the cache based session handler instance.
+     *
+     * @param  string  $driver
+     * @return \Session\CacheBasedSessionHandler
+     */
+    protected function createCacheHandler($driver)
+    {
+        $minutes = $this->app['config']['session.lifetime'];
+
+        return new CacheBasedSessionHandler($this->app['cache']->driver($driver), $minutes);
     }
 
     /**

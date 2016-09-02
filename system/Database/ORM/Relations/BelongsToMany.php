@@ -137,7 +137,7 @@ class BelongsToMany extends Relation
      */
     public function firstOrFail($columns = array('*'))
     {
-        if ( ! is_null($model = $this->first($columns))) return $model;
+        if (! is_null($model = $this->first($columns))) return $model;
 
         throw new ModelNotFoundException;
     }
@@ -582,7 +582,7 @@ class BelongsToMany extends Relation
         $results = array();
 
         foreach ($records as $id => $attributes) {
-            if ( ! is_array($attributes)) {
+            if (! is_array($attributes)) {
                 list($id, $attributes) = array($attributes, array());
             }
 
@@ -605,7 +605,7 @@ class BelongsToMany extends Relation
         $changes = array('attached' => array(), 'updated' => array());
 
         foreach ($records as $id => $attributes) {
-            if ( ! in_array($id, $current)) {
+            if (! in_array($id, $current)) {
                 $this->attach($id, $attributes, $touch);
 
                 $changes['attached'][] = (int) $id;
@@ -743,7 +743,7 @@ class BelongsToMany extends Relation
     {
         $fresh = $this->parent->freshTimestamp();
 
-        if ( ! $exists && $this->hasPivotColumn($this->createdAt())) {
+        if (! $exists && $this->hasPivotColumn($this->createdAt())) {
             $record[$this->createdAt()] = $fresh;
         }
 

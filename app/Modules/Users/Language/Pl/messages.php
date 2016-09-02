@@ -42,6 +42,7 @@ return array (
   'Password' => '',
   'Password confirmation' => '',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => '',
+  'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => '',
   'Register to <b>{0}</b>' => '',
   'Registered Roles' => '',
@@ -81,6 +82,5 @@ return array (
   'Username' => '',
   'Users' => '',
   'We could not activate your Account. Try again later.' => '',
-  'You are not authorized to access this resource.' => '',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => '',
 );

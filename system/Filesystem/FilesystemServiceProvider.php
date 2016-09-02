@@ -2,9 +2,8 @@
 
 namespace Filesystem;
 
-use Support\ServiceProvider;
-
 use Filesystem\Filesystem;
+use Support\ServiceProvider;
 
 
 class FilesystemServiceProvider extends ServiceProvider

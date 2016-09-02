@@ -2,8 +2,6 @@
 
 namespace Session;
 
-use Session\ExistenceAwareInterface;
-use Session\SessionInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
@@ -45,7 +43,7 @@ class Store implements SessionInterface
     /**
      * The meta-data bag instance.
      *
-     * @var \Symfony\Component\Session\Storage\MetadataBag
+     * @var \Symfony\Component\HttpFoundation\Session\Storage\MetadataBag
      */
     protected $metaBag;
 
@@ -75,17 +73,17 @@ class Store implements SessionInterface
      *
      * @param  string  $name
      * @param  \SessionHandlerInterface  $handler
-     * @param  string|null $id
+     * @param  string|null  $id
      * @return void
      */
     public function __construct($name, SessionHandlerInterface $handler, $id = null)
     {
+        $this->setId($id);
+
         $this->name = $name;
         $this->handler = $handler;
 
         $this->metaBag = new MetadataBag;
-
-        $this->setId($id ?: $this->generateSessionId());
     }
 
     /**
@@ -95,13 +93,9 @@ class Store implements SessionInterface
     {
         $this->loadSession();
 
-        if ( ! $this->has('_token')) {
-            $this->regenerateToken();
-        }
+        if (! $this->has('_token')) $this->regenerateToken();
 
-        $this->started = true;
-
-        return $this;
+        return $this->started = true;
     }
 
     /**
@@ -141,9 +135,7 @@ class Store implements SessionInterface
      */
     protected function initializeLocalBag($bag)
     {
-        $this->bagData[$bag->getStorageKey()] = $this->get($bag->getStorageKey(), array());
-
-        $this->forget($bag->getStorageKey());
+        $this->bagData[$bag->getStorageKey()] = $this->pull($bag->getStorageKey(), []);
     }
 
     /**
@@ -159,7 +151,22 @@ class Store implements SessionInterface
      */
     public function setId($id)
     {
-        $this->id = $id ?: $this->generateSessionId();
+        if (! $this->isValidId($id)) {
+            $id = $this->generateSessionId();
+        }
+
+        $this->id = $id;
+    }
+
+    /**
+     * Determine if this is a valid session ID.
+     *
+     * @param  string  $id
+     * @return bool
+     */
+    public function isValidId($id)
+    {
+        return (is_string($id) && preg_match('/^[a-f0-9]{40}$/', $id));
     }
 
     /**
@@ -169,7 +176,7 @@ class Store implements SessionInterface
      */
     protected function generateSessionId()
     {
-        return sha1(uniqid(true) .str_random(25) .microtime(true));
+        return sha1(uniqid('', true) .str_random(25) .microtime(true));
     }
 
     /**
@@ -209,9 +216,7 @@ class Store implements SessionInterface
 
         $this->setExists(false);
 
-        $this->id = $this->generateSessionId();
-
-        return true;
+        $this->id = $this->generateSessionId(); return true;
     }
 
     /**
@@ -285,6 +290,18 @@ class Store implements SessionInterface
     }
 
     /**
+     * Get the value of a given key and then forget it.
+     *
+     * @param  string  $key
+     * @param  string  $default
+     * @return mixed
+     */
+    public function pull($key, $default = null)
+    {
+        return array_pull($this->attributes, $key, $default);
+    }
+
+    /**
      * Determine if the session contains old input.
      *
      * @param  string  $key
@@ -294,7 +311,7 @@ class Store implements SessionInterface
     {
         $old = $this->getOldInput($key);
 
-        return is_null($key) ? (count($old) > 0) : ! is_null($old);
+        return is_null($key) ? count($old) > 0 : ! is_null($old);
     }
 
     /**
@@ -311,8 +328,6 @@ class Store implements SessionInterface
         // Input that is flashed to the session can be easily retrieved by the
         // developer, making repopulating old forms and the like much more
         // convenient, since the request's previous input is available.
-        if (is_null($key)) return $input;
-
         return array_get($input, $key, $default);
     }
 
@@ -398,7 +413,7 @@ class Store implements SessionInterface
     /**
      * Reflash a subset of the current flash data.
      *
-     * @param  array|dynamic  $keys
+     * @param  array|mixed  $keys
      * @return void
      */
     public function keep($keys = null)
@@ -447,8 +462,7 @@ class Store implements SessionInterface
      */
     public function replace(array $attributes)
     {
-        foreach ($attributes as $key => $value)
-        {
+        foreach ($attributes as $key => $value) {
             $this->put($key, $value);
         }
     }
@@ -479,8 +493,7 @@ class Store implements SessionInterface
     {
         $this->attributes = array();
 
-        foreach ($this->bags as $bag)
-        {
+        foreach ($this->bags as $bag) {
             $bag->clear();
         }
     }
@@ -568,7 +581,7 @@ class Store implements SessionInterface
      */
     public function regenerateToken()
     {
-        $this->put('_token', str_random(128));
+        $this->put('_token', str_random(40));
     }
 
     /**
@@ -601,7 +614,7 @@ class Store implements SessionInterface
      */
     public function handlerNeedsRequest()
     {
-        return $this->handler instanceof CookieSessionHandler;
+        return ($this->handler instanceof CookieSessionHandler);
     }
 
     /**
@@ -616,4 +629,5 @@ class Store implements SessionInterface
             $this->handler->setRequest($request);
         }
     }
+
 }

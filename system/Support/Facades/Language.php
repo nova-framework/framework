@@ -10,38 +10,58 @@ namespace Support\Facades;
 
 use Language\Language as CoreLanguage;
 
+use Support\Facades\Facade;
+use Support\Facades\Cookie;
+use Support\Facades\Session;
+
 use ReflectionMethod;
 use ReflectionException;
 
 
-class Language
+class Language extends Facade
 {
-    /**
-     * Magic Method for calling the methods on the default Language instance.
-     *
-     * @param $method
-     * @param $params
-     *
-     * @return mixed
-     */
-    public static function __callStatic($method, $params)
-    {
-        // First handle the static Methods from Language\Language.
-        try {
-            $reflection = new ReflectionMethod(CoreLanguage::class, $method);
 
-            if ($reflection->isStatic()) {
-                // The requested Method is static.
-                return call_user_func_array(array(CoreLanguage::class, $method), $params);
-            }
-        } catch ( ReflectionException $e ) {
-            // Nothing to do.
+    public static function initialize()
+    {
+        $language = static::$app['language'];
+
+        //
+        $locale = static::$app['config']['app.locale'];
+
+        if (Session::has('language')) {
+            $locale = Session::get('language', $locale);
+        } else if(Cookie::has(PREFIX .'language')) {
+            $locale = Cookie::get(PREFIX .'language', $locale);
+
+            Session::set('language', $locale);
         }
 
-        // Get a Language\Language instance.
-        $instance = CoreLanguage::getInstance();
-
-        // Call the non-static method from the Language instance.
-        return call_user_func_array(array($instance, $method), $params);
+        $language->setLocale($locale);
     }
+
+    /**
+     * Get the language for the Views.
+     *
+     * @param  string $value this is a "word" value from the language file
+     * @param  string $name  name of the file with the language
+     * @param  string $code  optional, language code
+     *
+     * @return string
+     */
+    public static function show($value, $name, $code = LANGUAGE_CODE)
+    {
+        $language = static::instance('legacy_api', $code);
+
+        // Load the specified Language file.
+        $language->load($name, $code);
+
+        return $language->get($value, $code);
+    }
+
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor() { return 'language'; }
 }

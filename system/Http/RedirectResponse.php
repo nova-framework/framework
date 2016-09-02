@@ -2,18 +2,19 @@
 
 namespace Http;
 
-use Http\ResponseTrait;
 use Session\Store as SessionStore;
-use Support\Contracts\MessageProviderInterface;
 use Support\MessageBag;
+use Support\ViewErrorBag;
+use Support\Contracts\MessageProviderInterface;
+use Support\Str;
 
+use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 class RedirectResponse extends SymfonyRedirectResponse
 {
-    use ResponseTrait;
-
     /**
      * The request instance.
      *
@@ -28,6 +29,20 @@ class RedirectResponse extends SymfonyRedirectResponse
      */
     protected $session;
 
+    /**
+     * Set a header on the Response.
+     *
+     * @param  string  $key
+     * @param  string  $value
+     * @param  bool  $replace
+     * @return $this
+     */
+    public function header($key, $value, $replace = true)
+    {
+        $this->headers->set($key, $value, $replace);
+
+        return $this;
+    }
 
     /**
      * Flash a piece of data to the session.
@@ -38,10 +53,39 @@ class RedirectResponse extends SymfonyRedirectResponse
      */
     public function with($key, $value = null)
     {
-        if (is_array($key)) {
-            foreach ($key as $k => $v) $this->with($k, $v);
-        } else {
-            $this->session->flash($key, $value);
+        $key = is_array($key) ? $key : [$key => $value];
+
+        foreach ($key as $k => $v) {
+            $this->session->flash($k, $v);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a cookie to the response.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
+     * @return $this
+     */
+    public function withCookie(SymfonyCookie $cookie)
+    {
+        $this->headers->setCookie($cookie);
+
+        return $this;
+    }
+
+    /**
+     * Add multiple cookies to the response.
+     *
+     * @param  array  $cookie
+     * @return $this
+     */
+    public function withCookies(array $cookies)
+    {
+        foreach ($cookies as $cookie)
+        {
+            $this->headers->setCookie($cookie);
         }
 
         return $this;
@@ -51,13 +95,16 @@ class RedirectResponse extends SymfonyRedirectResponse
      * Flash an array of input to the session.
      *
      * @param  array  $input
-     * @return \Http\RedirectResponse
+     * @return $this
      */
     public function withInput(array $input = null)
     {
         $input = $input ?: $this->request->input();
 
-        $this->session->flashInput($input);
+        $this->session->flashInput(array_filter($input, function ($value)
+        {
+            return ! $value instanceof UploadedFile;
+        }));
 
         return $this;
     }
@@ -65,8 +112,8 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Flash an array of input to the session.
      *
-     * @param  dynamic  string
-     * @return \Http\RedirectResponse
+     * @param  mixed  string
+     * @return $this
      */
     public function onlyInput()
     {
@@ -76,29 +123,12 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Flash an array of input to the session.
      *
-     * @param  dynamic  string
+     * @param  mixed  string
      * @return \Http\RedirectResponse
      */
     public function exceptInput()
     {
         return $this->withInput($this->request->except(func_get_args()));
-    }
-
-    /**
-     * Flash a container of errors to the session.
-     *
-     * @param  \Support\Contracts\MessageProviderInterface|array  $provider
-     * @return \Http\RedirectResponse
-     */
-    public function withErrors($provider)
-    {
-        if ($provider instanceof MessageProviderInterface) {
-            $this->with('errors', $provider->getMessageBag());
-        } else {
-            $this->with('errors', new MessageBag((array) $provider));
-        }
-
-        return $this;
     }
 
     /**
@@ -119,7 +149,40 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Get the Request instance.
+     * Flash a container of errors to the session.
+     *
+     * @param  \Support\Contracts\MessageProviderInterface|array  $provider
+     * @param  string  $key
+     * @return $this
+     */
+    public function withErrors($provider, $key = 'default')
+    {
+        $value = $this->parseErrors($provider);
+
+        $this->session->flash(
+            'errors', $this->session->get('errors', new ViewErrorBag)->put($key, $value)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Parse the given errors into an appropriate value.
+     *
+     * @param  \Support\Contracts\MessageProviderInterface|array  $provider
+     * @return \Support\MessageBag
+     */
+    protected function parseErrors($provider)
+    {
+        if ($provider instanceof MessageProviderInterface) {
+            return $provider->getMessageBag();
+        }
+
+        return new MessageBag((array) $provider);
+    }
+
+    /**
+     * Get the request instance.
      *
      * @return  \Http\Request
      */
@@ -129,7 +192,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Set the Request instance.
+     * Set the request instance.
      *
      * @param  \Http\Request  $request
      * @return void
@@ -140,7 +203,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Get the Session Store implementation.
+     * Get the session store implementation.
      *
      * @return \Session\Store
      */
@@ -150,9 +213,9 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Set the Session Store implementation.
+     * Set the session store implementation.
      *
-     * @param \Session\Store  $store
+     * @param  \Session\Store  $session
      * @return void
      */
     public function setSession(SessionStore $session)
@@ -161,7 +224,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     }
 
     /**
-     * Dynamically bind flash data in the Session.
+     * Dynamically bind flash data in the session.
      *
      * @param  string  $method
      * @param  array  $parameters
@@ -171,10 +234,11 @@ class RedirectResponse extends SymfonyRedirectResponse
      */
     public function __call($method, $parameters)
     {
-        if (str_starts_with($method, 'with')) {
-            return $this->with(lcfirst(substr($method, 4)), $parameters[0]);
+        if (starts_with($method, 'with')) {
+            return $this->with(Str::snake(substr($method, 4)), $parameters[0]);
         }
 
         throw new \BadMethodCallException("Method [$method] does not exist on Redirect.");
     }
+
 }

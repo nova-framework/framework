@@ -21,13 +21,13 @@
         "stack/builder": "^1.0",
         "doctrine/inflector": "1.0.*",
         "phpmailer/phpmailer": "5.2.*",
-        "phpfastcache/phpfastcache": "4.0.*",
         "patchwork/utf8": "~1.2",
         "nesbot/carbon": "^1.21",
         "swiftmailer/swiftmailer": "^5.4",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3",
         "monolog/monolog": "^1.19",
+        "predis/predis": "0.8.*",
         "filp/whoops": "^2.1"
     },
     "autoload": {

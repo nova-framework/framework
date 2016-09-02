@@ -28,7 +28,7 @@ interface StoreInterface
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return int|bool
      */
     public function increment($key, $value = 1);
 
@@ -37,7 +37,7 @@ interface StoreInterface
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return void
+     * @return int|bool
      */
     public function decrement($key, $value = 1);
 
@@ -71,4 +71,5 @@ interface StoreInterface
      * @return string
      */
     public function getPrefix();
+
 }

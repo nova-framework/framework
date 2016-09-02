@@ -29,13 +29,6 @@ class DatabaseLoader implements LoaderInterface
     protected $table = 'options';
 
     /**
-     * The Cache Manager instance.
-     *
-     * @var \Cache\CacheManager
-     */
-    protected $cache;
-
-    /**
      * Create a new fileloader instance.
      *
      * @return void
@@ -43,9 +36,6 @@ class DatabaseLoader implements LoaderInterface
     function __construct(Connection $connection)
     {
         $this->connection = $connection;
-
-        // Setup the Cache Driver instance.
-        $this->cache = $connection->getCacheManager();
     }
 
     /**
@@ -56,12 +46,6 @@ class DatabaseLoader implements LoaderInterface
      */
     public function load($group)
     {
-        $token = 'options_' .md5($group);
-
-        if ((ENVIRONMENT != 'development') && $this->cache->has($token)) {
-            return $this->cache->get($token);
-        }
-
         $items = array();
 
         // The current Group's data is not cached.
@@ -75,12 +59,15 @@ class DatabaseLoader implements LoaderInterface
             // Insert the option on list.
             $key = $result['item'];
 
-            $items[$key] = maybe_unserialize($result['value']);
-        }
+            // Process the (optional) JSON encoding.
+            $value = json_decode($result['value'], true);
 
-        if (ENVIRONMENT != 'development') {
-            // Cache the current Group's data for 15 min.
-            $this->cache->put($token, $items, 900);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                // A valid JSON data there.
+                $items[$key] = $value;
+            } else {
+                $items[$key] = $result['value'];
+            }
         }
 
         return $items;
@@ -96,14 +83,6 @@ class DatabaseLoader implements LoaderInterface
     public function set($key, $value)
     {
         @list($group, $item) = $this->parseKey($key);
-
-        // Delete the cached data for current Group.
-        $token = 'options_' .md5($group);
-
-        if (ENVIRONMENT != 'development') {
-            // Invalidate the current group's cache.
-            $this->cache->forget($token);
-        }
 
         // Update the information on Database.
         if (empty($item)) {
@@ -124,7 +103,7 @@ class DatabaseLoader implements LoaderInterface
      */
     protected function update($group, $item, $value)
     {
-        $value = maybe_serialize($value);
+        $value = is_string($value) ? $value : json_encode($value);
 
         $id = $this->newQuery()
             ->where('group', $group)

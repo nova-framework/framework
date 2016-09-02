@@ -8,7 +8,6 @@
 
 namespace Helpers;
 
-use Helpers\Database;
 
 /**
  * Collection of useful methods.

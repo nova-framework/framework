@@ -88,7 +88,6 @@ return array (
   'Wrong username or password.' => '',
   'Yellow' => 'زرد',
   'Yellow Light' => 'زرد سفید',
-  'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید.',
   'You have successfully logged out.' => '',
   'You have successfully reset your Password.' => '',
   'You have successfully updated your Password.' => '',

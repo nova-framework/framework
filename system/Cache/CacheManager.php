@@ -2,110 +2,161 @@
 
 namespace Cache;
 
-use Config\Config;
-use Cache\ArrayStore;
-use Cache\FastCacheStore;
-use Cache\Repository;
+use Closure;
 use Support\Manager;
-
 
 class CacheManager extends Manager
 {
     /**
      * Create an instance of the APC cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\ApcStore
      */
     protected function createApcDriver()
     {
-        return $this->repository('apc');
+        return $this->repository(new ApcStore(new ApcWrapper, $this->getPrefix()));
     }
 
     /**
      * Create an instance of the array cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\ArrayStore
      */
     protected function createArrayDriver()
     {
-        return $this->repository('array');
+        return $this->repository(new ArrayStore);
     }
 
     /**
      * Create an instance of the file cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\FileStore
      */
-    protected function createFilesDriver()
+    protected function createFileDriver()
     {
-        return $this->repository('files');
+        $path = $this->app['config']['cache.path'];
+
+        return $this->repository(new FileStore($this->app['files'], $path));
     }
 
     /**
      * Create an instance of the Memcached cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\MemcachedStore
      */
     protected function createMemcachedDriver()
     {
-        return $this->repository('memcached');
+        $servers = $this->app['config']['cache.memcached'];
+
+        $memcached = $this->app['memcached.connector']->connect($servers);
+
+        return $this->repository(new MemcachedStore($memcached, $this->getPrefix()));
+    }
+
+    /**
+     * Create an instance of the Null cache driver.
+     *
+     * @return \Cache\NullStore
+     */
+    protected function createNullDriver()
+    {
+        return $this->repository(new NullStore);
     }
 
     /**
      * Create an instance of the WinCache cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\WinCacheStore
      */
     protected function createWincacheDriver()
     {
-        return $this->repository('wincache');
+        return $this->repository(new WinCacheStore($this->getPrefix()));
     }
 
     /**
      * Create an instance of the XCache cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\WinCacheStore
      */
     protected function createXcacheDriver()
     {
-        return $this->repository('xcache');
+        return $this->repository(new XCacheStore($this->getPrefix()));
     }
 
     /**
      * Create an instance of the Redis cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\RedisStore
      */
     protected function createRedisDriver()
     {
+        $redis = $this->app['redis'];
 
-        return $this->repository('redis');
+        return $this->repository(new RedisStore($redis, $this->getPrefix()));
     }
 
     /**
      * Create an instance of the database cache driver.
      *
-     * @return \Cache\Repository
+     * @return \Cache\DatabaseStore
      */
-    protected function createSqliteDriver()
+    protected function createDatabaseDriver()
     {
-        return $this->repository('sqlite');
+        $connection = $this->getDatabaseConnection();
+
+        $encrypter = $this->app['encrypter'];
+
+        // We allow the developer to specify which connection and table should be used
+        // to store the cached items. We also need to grab a prefix in case a table
+        // is being used by multiple applications although this is very unlikely.
+        $table = $this->app['config']['cache.table'];
+
+        $prefix = $this->getPrefix();
+
+        return $this->repository(new DatabaseStore($connection, $encrypter, $table, $prefix));
     }
 
     /**
-     * Create a new Cache Repository with the given implementation.
+     * Get the database connection for the database driver.
      *
-     * @param  string  $storage
+     * @return \Database\Connection
+     */
+    protected function getDatabaseConnection()
+    {
+        $connection = $this->app['config']['cache.connection'];
+
+        return $this->app['db']->connection($connection);
+    }
+
+    /**
+     * Get the cache "prefix" value.
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->app['config']['cache.prefix'];
+    }
+
+    /**
+     * Set the cache "prefix" value.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    public function setPrefix($name)
+    {
+        $this->app['config']['cache.prefix'] = $name;
+    }
+
+    /**
+     * Create a new cache repository with the given implementation.
+     *
+     * @param  \Cache\StoreInterface  $store
      * @return \Cache\Repository
      */
-    protected function repository($storage)
+    protected function repository(StoreInterface $store)
     {
-        if($storage == 'array') {
-            $store = new ArrayStore();
-        } else {
-            $store = new FastCacheStore($storage);
-        }
-
         return new Repository($store);
     }
 
@@ -116,7 +167,7 @@ class CacheManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return Config::get('cache.storage');
+        return $this->app['config']['cache.driver'];
     }
 
     /**
@@ -127,19 +178,7 @@ class CacheManager extends Manager
      */
     public function setDefaultDriver($name)
     {
-        Config::set('cache.storage', $name);
-    }
-
-    /**
-     * Dynamically call the default driver instance.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return call_user_func_array(array($this->driver(), $method), $parameters);
+        $this->app['config']['cache.driver'] = $name;
     }
 
 }

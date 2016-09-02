@@ -90,8 +90,7 @@ function __($message, $args = null)
     //
     $params = (func_num_args() === 2) ? (array)$args : array_slice(func_get_args(), 1);
 
-    return Language::getInstance('app', LANGUAGE_CODE)
-        ->translate($message, $params);
+    return Language::instance('app')->translate($message, $params);
 }
 
 /**
@@ -109,8 +108,7 @@ function __d($domain, $message, $args = null)
     //
     $params = (func_num_args() === 3) ? (array)$args : array_slice(func_get_args(), 2);
 
-    return Language::getInstance($domain, LANGUAGE_CODE)
-        ->translate($message, $params);
+    return Language::instance($domain)->translate($message, $params);
 }
 
 /**
@@ -216,7 +214,7 @@ function maybe_unserialize($original)
  */
 function array_add($array, $key, $value)
 {
-    if ( ! isset($array[$key])) $array[$key] = $value;
+    if (! isset($array[$key])) $array[$key] = $value;
 
     return $array;
 }
@@ -399,7 +397,7 @@ function array_set(&$array, $key, $value)
     while (count($keys) > 1) {
         $key = array_shift($keys);
 
-        if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+        if (! isset($array[$key]) || ! is_array($array[$key])) {
             $array[$key] = array();
         }
 
@@ -437,7 +435,7 @@ function array_forget(&$array, $key)
     while (count($keys) > 1) {
         $key = array_shift($keys);
 
-        if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+        if (! isset($array[$key]) || ! is_array($array[$key])) {
             return;
         }
 
@@ -736,7 +734,7 @@ function data_get($target, $key, $default = null)
 
             $target = $target[$segment];
         } elseif (is_object($target)) {
-            if ( ! isset($target->{$segment})) {
+            if (! isset($target->{$segment})) {
                 return value($default);
             }
 
@@ -762,7 +760,7 @@ function object_get($object, $key, $default = null)
     if (is_null($key) || trim($key) == '') return $object;
 
     foreach (explode('.', $key) as $segment) {
-        if ( ! is_object($object) || ! isset($object->{$segment})) {
+        if (! is_object($object) || ! isset($object->{$segment})) {
             return value($default);
         }
 

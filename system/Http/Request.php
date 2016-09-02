@@ -5,6 +5,8 @@ namespace Http;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+use SplFileInfo;
+
 
 class Request extends SymfonyRequest
 {
@@ -16,7 +18,7 @@ class Request extends SymfonyRequest
     protected $json;
 
     /**
-     * The Nova Session Store implementation.
+     * The Nova session store implementation.
      *
      * @var \Session\Store
      */
@@ -25,7 +27,7 @@ class Request extends SymfonyRequest
     /**
      * Return the Request instance.
      *
-     * @return \Http\Request
+     * @return $this
      */
     public function instance()
     {
@@ -49,7 +51,7 @@ class Request extends SymfonyRequest
      */
     public function root()
     {
-        return rtrim($this->getSchemeAndHttpHost() .$this->getBaseUrl(), '/');
+        return rtrim($this->getSchemeAndHttpHost().$this->getBaseUrl(), '/');
     }
 
     /**
@@ -71,7 +73,7 @@ class Request extends SymfonyRequest
     {
         $query = $this->getQueryString();
 
-        return $query ? $this->url() .'?' .$query : $this->url();
+        return $query ? $this->url().'?'.$query : $this->url();
     }
 
     /**
@@ -83,7 +85,7 @@ class Request extends SymfonyRequest
     {
         $pattern = trim($this->getPathInfo(), '/');
 
-        return ($pattern == '') ? '/' : $pattern;
+        return $pattern == '' ? '/' : $pattern;
     }
 
     /**
@@ -117,13 +119,13 @@ class Request extends SymfonyRequest
     {
         $segments = explode('/', $this->path());
 
-        return array_values(array_filter($segments, function($v) { return ! empty($v); }));
+        return array_values(array_filter($segments, function($v) { return $v != ''; }));
     }
 
     /**
      * Determine if the current request URI matches a pattern.
      *
-     * @param  dynamic  string
+     * @param  mixed  string
      * @return bool
      */
     public function is()
@@ -158,6 +160,26 @@ class Request extends SymfonyRequest
     }
 
     /**
+     * Returns the client IP address.
+     *
+     * @return string
+     */
+    public function ip()
+    {
+        return $this->getClientIp();
+    }
+
+    /**
+     * Returns the client IP addresses.
+     *
+     * @return array
+     */
+    public function ips()
+    {
+        return $this->getClientIps();
+    }
+
+    /**
      * Determine if the request contains a given input item key.
      *
      * @param  string|array  $key
@@ -169,15 +191,16 @@ class Request extends SymfonyRequest
 
         $input = $this->all();
 
-        foreach ($keys as $value) {
-            if ( ! array_key_exists($value, $input)) return false;
+        foreach ($keys as $value)
+        {
+            if (! array_key_exists($value, $input)) return false;
         }
 
         return true;
     }
 
     /**
-     * Determine if the request contains a non-emtpy value for an input item.
+     * Determine if the request contains a non-empty value for an input item.
      *
      * @param  string|array  $key
      * @return bool
@@ -186,7 +209,8 @@ class Request extends SymfonyRequest
     {
         $keys = is_array($key) ? $key : func_get_args();
 
-        foreach ($keys as $value) {
+        foreach ($keys as $value)
+        {
             if ($this->isEmptyString($value)) return false;
         }
 
@@ -201,9 +225,9 @@ class Request extends SymfonyRequest
      */
     protected function isEmptyString($key)
     {
-        $boolOrArray = (is_bool($this->input($key)) || is_array($this->input($key)));
+        $boolOrArray = is_bool($this->input($key)) || is_array($this->input($key));
 
-        return (! $boolOrArray && (trim((string) $this->input($key)) === ''));
+        return ! $boolOrArray && trim((string) $this->input($key)) === '';
     }
 
     /**
@@ -213,7 +237,7 @@ class Request extends SymfonyRequest
      */
     public function all()
     {
-        return array_merge_recursive($this->input(), $this->files->all());
+        return array_replace_recursive($this->input(), $this->files->all());
     }
 
     /**
@@ -240,7 +264,16 @@ class Request extends SymfonyRequest
     {
         $keys = is_array($keys) ? $keys : func_get_args();
 
-        return array_only($this->input(), $keys) + array_fill_keys($keys, null);
+        $results = [];
+
+        $input = $this->all();
+
+        foreach ($keys as $key)
+        {
+            array_set($results, $key, array_get($input, $key));
+        }
+
+        return $results;
     }
 
     /**
@@ -253,9 +286,9 @@ class Request extends SymfonyRequest
     {
         $keys = is_array($keys) ? $keys : func_get_args();
 
-        $results = $this->input();
+        $results = $this->all();
 
-        foreach ($keys as $key) array_forget($results, $key);
+        array_forget($results, $keys);
 
         return $results;
     }
@@ -265,7 +298,7 @@ class Request extends SymfonyRequest
      *
      * @param  string  $key
      * @param  mixed   $default
-     * @return string
+     * @return string|array
      */
     public function query($key = null, $default = null)
     {
@@ -315,9 +348,24 @@ class Request extends SymfonyRequest
      */
     public function hasFile($key)
     {
-        if (is_array($file = $this->file($key))) $file = head($file);
+        if (! is_array($files = $this->file($key))) $files = array($files);
 
-        return (($file instanceof \SplFileInfo) && ($file->getPath() != ''));
+        foreach ($files as $file) {
+            if ($this->isValidFile($file)) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check that the given file is a valid file instance.
+     *
+     * @param  mixed  $file
+     * @return bool
+     */
+    protected function isValidFile($file)
+    {
+        return $file instanceof SplFileInfo && $file->getPath() != '';
     }
 
     /**
@@ -359,13 +407,13 @@ class Request extends SymfonyRequest
     /**
      * Flash the input for the current request to the session.
      *
-     * @param  string $filter
-     * @param  array  $keys
+     * @param  string  $filter
+     * @param  array   $keys
      * @return void
      */
     public function flash($filter = null, $keys = array())
     {
-        $flash = (! is_null($filter)) ? call_user_func(array($this, $filter), $keys) : $this->input();
+        $flash = (! is_null($filter)) ? $this->$filter($keys) : $this->input();
 
         $this->session()->flashInput($flash);
     }
@@ -373,7 +421,7 @@ class Request extends SymfonyRequest
     /**
      * Flash only some of the input to the session.
      *
-     * @param  dynamic  string
+     * @param  mixed  string
      * @return void
      */
     public function flashOnly($keys)
@@ -386,7 +434,7 @@ class Request extends SymfonyRequest
     /**
      * Flash only some of the input to the session.
      *
-     * @param  dynamic  string
+     * @param  mixed  string
      * @return void
      */
     public function flashExcept($keys)
@@ -418,9 +466,9 @@ class Request extends SymfonyRequest
     {
         if (is_null($key)) {
             return $this->$source->all();
-        } else {
-            return $this->$source->get($key, $default, true);
         }
+
+        return $this->$source->get($key, $default, true);
     }
 
     /**
@@ -454,7 +502,8 @@ class Request extends SymfonyRequest
      */
     public function json($key = null, $default = null)
     {
-        if ( ! isset($this->json)) {
+        if (! isset($this->json))
+        {
             $this->json = new ParameterBag((array) json_decode($this->getContent(), true));
         }
 
@@ -472,7 +521,7 @@ class Request extends SymfonyRequest
     {
         if ($this->isJson()) return $this->json();
 
-        return ($this->getMethod() == 'GET') ? $this->query : $this->request;
+        return $this->getMethod() == 'GET' ? $this->query : $this->request;
     }
 
     /**
@@ -494,17 +543,19 @@ class Request extends SymfonyRequest
     {
         $acceptable = $this->getAcceptableContentTypes();
 
-        return (isset($acceptable[0]) && ($acceptable[0] == 'application/json'));
+        return isset($acceptable[0]) && $acceptable[0] == 'application/json';
     }
 
     /**
      * Get the data format expected in the response.
      *
+     * @param  string  $default
      * @return string
      */
     public function format($default = 'html')
     {
-        foreach ($this->getAcceptableContentTypes() as $type) {
+        foreach ($this->getAcceptableContentTypes() as $type)
+        {
             if ($format = $this->getFormat($type)) return $format;
         }
 
@@ -521,7 +572,9 @@ class Request extends SymfonyRequest
     {
         if ($request instanceof static) return $request;
 
-        return with(new static())->duplicate(
+        $content = $request->content;
+
+        $request = (new static)->duplicate(
             $request->query->all(),
             $request->request->all(),
             $request->attributes->all(),
@@ -529,6 +582,12 @@ class Request extends SymfonyRequest
             $request->files->all(),
             $request->server->all()
         );
+
+        $request->content = $content;
+
+        $request->request = $request->getInputSource();
+
+        return $request;
     }
 
     /**
@@ -540,7 +599,7 @@ class Request extends SymfonyRequest
      */
     public function session()
     {
-        if ( ! $this->hasSession()) {
+        if (! $this->hasSession()) {
             throw new \RuntimeException("Session store not set on request.");
         }
 

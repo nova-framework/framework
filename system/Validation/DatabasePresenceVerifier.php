@@ -10,9 +10,10 @@ namespace Validation;
 
 use Database\Connection;
 use Database\Query\Builder as QueryBuilder;
+use Validation\PresenceVerifierInterface;
 
 
-class DatabasePresenceVerifier
+class DatabasePresenceVerifier implements PresenceVerifierInterface
 {
     /**
      * The database Connection instance.

@@ -5,17 +5,15 @@ namespace Auth;
 use Database\Connection;
 use Hashing\HasherInterface;
 
-use Hash;
-
 
 class DatabaseUserProvider implements UserProviderInterface
 {
     /**
-     * The active Database Connection.
+     * The active database connection.
      *
-     * @param  \Database\Connection
+     * @var \Database\Connection
      */
-    protected $connection;
+    protected $conn;
 
     /**
      * The hasher implementation.
@@ -35,16 +33,15 @@ class DatabaseUserProvider implements UserProviderInterface
      * Create a new database user provider.
      *
      * @param  \Database\Connection  $conn
+     * @param  \Hashing\HasherInterface  $hasher
      * @param  string  $table
      * @return void
      */
-    public function __construct(Connection $connection, HasherInterface $hasher, $table)
+    public function __construct(Connection $conn, HasherInterface $hasher, $table)
     {
-        $this->connection = $connection;
-
-        $this->hasher = $hasher;
-
+        $this->conn = $conn;
         $this->table = $table;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -55,9 +52,10 @@ class DatabaseUserProvider implements UserProviderInterface
      */
     public function retrieveById($identifier)
     {
-        $user = $this->getTable()->find($identifier);
+        $user = $this->conn->table($this->table)->find($identifier);
 
-        if (! is_null($user)) {
+        if (! is_null($user))
+        {
             return new GenericUser((array) $user);
         }
     }
@@ -65,18 +63,19 @@ class DatabaseUserProvider implements UserProviderInterface
     /**
      * Retrieve a user by by their unique identifier and "remember me" token.
      *
-     * @param  mixed  $identifier
+     * @param  mixed   $identifier
      * @param  string  $token
      * @return \Auth\UserInterface|null
      */
     public function retrieveByToken($identifier, $token)
     {
-        $user = $this->getTable()
-            ->where('id', $identifier)
-            ->where('remember_token', $token)
-            ->first();
+        $user = $this->conn->table($this->table)
+                                ->where('id', $identifier)
+                                ->where('remember_token', $token)
+                                ->first();
 
-        if (! is_null($user)) {
+        if (! is_null($user))
+        {
             return new GenericUser((array) $user);
         }
     }
@@ -90,9 +89,9 @@ class DatabaseUserProvider implements UserProviderInterface
      */
     public function updateRememberToken(UserInterface $user, $token)
     {
-        $this->getTable()
-            ->where('id', $user->getAuthIdentifier())
-            ->update(array('remember_token' => $token));
+        $this->conn->table($this->table)
+                            ->where('id', $user->getAuthIdentifier())
+                            ->update(array('remember_token' => $token));
     }
 
     /**
@@ -103,15 +102,26 @@ class DatabaseUserProvider implements UserProviderInterface
      */
     public function retrieveByCredentials(array $credentials)
     {
-        $query = $this->getTable();
+        // First we will add each credential element to the query as a where clause.
+        // Then we can execute the query and, if we found a user, return it in a
+        // generic "user" object that will be utilized by the Guard instances.
+        $query = $this->conn->table($this->table);
 
-        foreach ($credentials as $key => $value) {
-            if (! str_contains($key, 'password')) $query->where($key, $value);
+        foreach ($credentials as $key => $value)
+        {
+            if (! str_contains($key, 'password'))
+            {
+                $query->where($key, $value);
+            }
         }
 
+        // Now we are ready to execute the query to see if we have an user matching
+        // the given credentials. If not, we will just return nulls and indicate
+        // that there are no matching users for these given credential arrays.
         $user = $query->first();
 
-        if (! is_null($user)) {
+        if (! is_null($user))
+        {
             return new GenericUser((array) $user);
         }
     }
@@ -130,13 +140,4 @@ class DatabaseUserProvider implements UserProviderInterface
         return $this->hasher->check($plain, $user->getAuthPassword());
     }
 
-    /**
-     * Begin a new database query against the table.
-     *
-     * @return \Database\Query\Builder
-     */
-    protected function getTable()
-    {
-        return $this->connection->table($this->table);
-    }
 }

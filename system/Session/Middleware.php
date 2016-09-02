@@ -2,11 +2,12 @@
 
 namespace Session;
 
-use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+use Carbon\Carbon;
 
 use Closure;
 
@@ -45,7 +46,8 @@ class Middleware implements HttpKernelInterface
     public function __construct(HttpKernelInterface $app, SessionManager $manager, Closure $reject = null)
     {
         $this->app = $app;
-        $this->reject = $reject;
+
+        $this->reject  = $reject;
         $this->manager = $manager;
     }
 
@@ -63,6 +65,9 @@ class Middleware implements HttpKernelInterface
     {
         $this->checkRequestForArraySessions($request);
 
+        // If a session driver has been configured, we will need to start the session here
+        // so that the data is ready for an application. Note that the Laravel sessions
+        // do not make use of PHP "native" sessions in any way since they are crappy.
         if ($this->sessionConfigured()) {
             $session = $this->startSession($request);
 
@@ -71,6 +76,9 @@ class Middleware implements HttpKernelInterface
 
         $response = $this->app->handle($request, $type, $catch);
 
+        // Again, if the session has been configured we will need to close out the session
+        // so that the attributes may be persisted to some storage medium. We will also
+        // add the session identifier cookie to the application response headers now.
         if ($this->sessionConfigured()) {
             $this->closeSession($session);
 
@@ -146,6 +154,9 @@ class Middleware implements HttpKernelInterface
     {
         $config = $this->manager->getSessionConfig();
 
+        // Here we will see if this request hits the garbage collection lottery by hitting
+        // the odds needed to perform garbage collection on any given request. If we do
+        // hit it, we'll call this handler to let it delete all the expired sessions.
         if ($this->configHitsLottery($config)) {
             $session->getHandler()->gc($this->getLifetimeSeconds());
         }
@@ -171,15 +182,15 @@ class Middleware implements HttpKernelInterface
      */
     protected function addCookieToResponse(Response $response, SessionInterface $session)
     {
-        if ($this->sessionIsPersistent($config = $this->manager->getSessionConfig())) {
-            $secure = array_get($config, 'secure', false);
+        if ($this->sessionIsPersistent($cookie = $this->manager->getSessionConfig())) {
+            $secure = array_get($cookie, 'secure', false);
 
             $response->headers->setCookie(new Cookie(
                 $session->getName(),
                 $session->getId(),
                 $this->getCookieLifetime(),
-                $config['path'],
-                $config['domain'],
+                $cookie['path'],
+                $cookie['domain'],
                 $secure
             ));
         }
@@ -236,6 +247,7 @@ class Middleware implements HttpKernelInterface
     /**
      * Get the session implementation from the manager.
      *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return \Session\SessionInterface
      */
     public function getSession(Request $request)

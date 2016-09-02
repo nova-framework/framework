@@ -16,28 +16,35 @@ class Response extends SymfonyResponse
     use ResponseTrait;
 
     /**
-     * The original content of the Response.
+     * The original content of the response.
      *
      * @var mixed
      */
     public $original;
 
-
     /**
      * Set the content on the response.
      *
      * @param  mixed  $content
-     * @return void
+     * @return $this
      */
     public function setContent($content)
     {
         $this->original = $content;
 
+        // If the content is "JSONable" we will set the appropriate header and convert
+        // the content to JSON. This is useful when returning something like models
+        // from routes that will be automatically transformed to their JSON form.
         if ($this->shouldBeJson($content)) {
             $this->headers->set('Content-Type', 'application/json');
 
             $content = $this->morphToJson($content);
-        } else if ($content instanceof RenderableInterface) {
+        }
+
+        // If this content implements the "RenderableInterface", then we will call the
+        // render method on the object so we will avoid any "__toString" exceptions
+        // that might be thrown and have their errors obscured by PHP's handling.
+        else if ($content instanceof RenderableInterface) {
             $content = $content->render();
         }
 
@@ -52,9 +59,7 @@ class Response extends SymfonyResponse
      */
     protected function morphToJson($content)
     {
-        if ($content instanceof JsonableInterface) {
-            return $content->toJson();
-        }
+        if ($content instanceof JsonableInterface) return $content->toJson();
 
         return json_encode($content);
     }
@@ -67,7 +72,9 @@ class Response extends SymfonyResponse
      */
     protected function shouldBeJson($content)
     {
-        return (($content instanceof JsonableInterface) || ($content instanceof ArrayObject) || is_array($content));
+        return ($content instanceof JsonableInterface) ||
+               ($content instanceof ArrayObject) ||
+               is_array($content);
     }
 
     /**

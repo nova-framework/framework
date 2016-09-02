@@ -3,7 +3,7 @@
 namespace Support\Facades;
 
 /**
- * @see \Illuminate\Filesystem\Filesystem
+ * @see \Filesystem\Filesystem
  */
 class File extends Facade
 {

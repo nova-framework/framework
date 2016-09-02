@@ -2,14 +2,15 @@
 
 namespace Support;
 
+use Support\Contracts\JsonableInterface;
+use Support\Contracts\ArrayableInterface;
+
 use Closure;
 use Countable;
 use ArrayAccess;
 use ArrayIterator;
 use CachingIterator;
 use IteratorAggregate;
-use Support\Contracts\JsonableInterface;
-use Support\Contracts\ArrayableInterface;
 
 
 class Collection implements ArrayAccess, ArrayableInterface, Countable, IteratorAggregate, JsonableInterface
@@ -117,6 +118,22 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     public function filter(Closure $callback)
     {
         return new static(array_filter($this->items, $callback));
+    }
+
+    /**
+     * Filter items by the given key value pair.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  bool  $strict
+     * @return static
+     */
+    public function where($key, $value, $strict = true)
+    {
+        return $this->filter(function ($item) use ($key, $value, $strict)
+        {
+            return ($strict ? (data_get($item, $key) === $value) : (data_get($item, $key) == $value));
+        });
     }
 
     /**
@@ -455,8 +472,7 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
         // Once we have sorted all of the keys in the array, we will loop through them
         // and grab the corresponding model so we can set the underlying items list
         // to the sorted version. Then we'll just return the collection instance.
-        foreach (array_keys($results) as $key)
-        {
+        foreach (array_keys($results) as $key) {
             $results[$key] = $this->items[$key];
         }
 
@@ -547,6 +563,16 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     }
 
     /**
+     * Get the keys of the collection items.
+     *
+     * @return static
+     */
+    public function keys()
+    {
+        return new static(array_keys($this->items));
+    }
+
+    /**
      * Reset the keys on the underlying array.
      *
      * @return \Support\Collection
@@ -566,7 +592,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
      */
     protected function valueRetriever($value)
     {
-        return function($item) use ($value) {
+        return function($item) use ($value)
+        {
             return data_get($item, $value);
         };
     }
@@ -578,8 +605,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
      */
     public function toArray()
     {
-        return array_map(function($value) {
-            return $value instanceof ArrayableInterface ? $value->toArray() : $value;
+        return array_map(function($value)
+        {
+            return ($value instanceof ArrayableInterface) ? $value->toArray() : $value;
         }, $this->items);
     }
 
@@ -591,7 +619,18 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
      */
     public function toJson($options = 0)
     {
-        return json_encode($this->toArray(), $options);
+        $items = array_map(function ($value)
+        {
+            if ($value instanceof JsonableInterface) {
+                return json_decode($value->toJson(), true);
+            } elseif ($value instanceof ArrayableInterface) {
+                return $value->toArray();
+            } else {
+                return $value;
+            }
+        }, $this->items);
+
+        return json_encode($items, $options);
     }
 
     /**
@@ -691,13 +730,15 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
      */
     private function getArrayableItems($items)
     {
-        if ($items instanceof Collection) {
-            $items = $items->all();
+        if (is_array($items)) {
+            return $items;
+        } else if ($items instanceof Collection) {
+            return $items->all();
         } else if ($items instanceof ArrayableInterface) {
-            $items = $items->toArray();
+            return $items->toArray();
         }
 
-        return $items;
+        return (array) $items;
     }
 
 }

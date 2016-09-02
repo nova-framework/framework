@@ -95,7 +95,7 @@ class Response
     {
         $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
 
-        if ( ! is_null($name)) {
+        if (! is_null($name)) {
             return $response->setContentDisposition($disposition, $name, Str::ascii($name));
         }
 

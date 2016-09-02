@@ -28,7 +28,7 @@ class SQLiteGrammar extends Grammar
     /**
      * Compile an insert statement into SQL.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
@@ -36,7 +36,7 @@ class SQLiteGrammar extends Grammar
     {
         $table = $this->wrapTable($query->from);
 
-        if ( ! is_array(reset($values))) {
+        if (! is_array(reset($values))) {
             $values = array($values);
         }
 
@@ -54,7 +54,7 @@ class SQLiteGrammar extends Grammar
 
         $columns = array_fill(0, count($values), implode(', ', $columns));
 
-        return "INSERT INTO $table ($names) SELECT ".implode(' UNION SELECT ', $columns);
+        return "insert into $table ($names) select ".implode(' union select ', $columns);
     }
 
     /**
@@ -66,8 +66,8 @@ class SQLiteGrammar extends Grammar
     public function compileTruncate(Builder $query)
     {
         $sql = array(
-            'DELETE FROM sqlite_sequence WHERE name = ?'  => array($query->from),
-            'DELETE FROM ' .$this->wrapTable($query->from) => array()
+            'delete from sqlite_sequence where name = ?'  => array($query->from),
+            'delete from ' .$this->wrapTable($query->from) => array()
         );
 
         return $sql;
@@ -76,7 +76,7 @@ class SQLiteGrammar extends Grammar
     /**
      * Compile a "where day" clause.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -88,7 +88,7 @@ class SQLiteGrammar extends Grammar
     /**
      * Compile a "where month" clause.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -100,7 +100,7 @@ class SQLiteGrammar extends Grammar
     /**
      * Compile a "where year" clause.
      *
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -113,7 +113,7 @@ class SQLiteGrammar extends Grammar
      * Compile a date based where clause.
      *
      * @param  string  $type
-     * @param  \Nova\Database\Query\Builder  $query
+     * @param  \Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */

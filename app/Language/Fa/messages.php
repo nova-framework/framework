@@ -16,4 +16,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'بابت ایجاد حساب کاربری با {0} سپاس گذاریم. لطفا لینک زیر را جهت فعال سازی ایمیل خود کلیک کنید: {1}',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
   'Welcome' => 'خوش امدید',
+  'You are not authorized to access this resource.' => '',
 );

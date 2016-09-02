@@ -12,6 +12,7 @@ use Config\Config;
 use App\Core\Controller;
 use Events\Dispatcher;
 
+use Container\Container;
 use Helpers\Inflector;
 use Http\Request;
 use Http\Response;
@@ -22,7 +23,6 @@ use Routing\RouteCollection;
 use Routing\RouteFiltererInterface;
 use Routing\Route;
 
-use Container\Container;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
@@ -154,7 +154,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @param  int   $type
      * @param  bool  $catch
-     * @return \Nova\Http\Response
+     * @return \Http\Response
      */
     public function handle(SymfonyRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
@@ -287,7 +287,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     public function controller($uri, $controller, $names = array())
     {
         if (! $this->namedParams) {
-            throw new BadMethodCallException("The method is not available while using Unnamed Parameters.");
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
         }
 
         $inspector = $this->getInspector();
@@ -322,11 +322,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function registerInspected($route, $controller, $method, &$names)
     {
-        $action = array('uses' => $controller.'@'.$method);
+        $action = array('uses' => $controller .'@' .$method);
 
-        // If a given controller method has been named, we will assign the name to the
-        // controller action array, which provides for a short-cut to method naming
-        // so you don't have to define an individual route for these controllers.
+        //
         $action['as'] = array_get($names, $method);
 
         $this->{$route['verb']}($route['uri'], $action);
@@ -358,21 +356,15 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     public function resource($name, $controller, array $options = array())
     {
         if (! $this->namedParams) {
-            throw new BadMethodCallException("The method is not available while using Unnamed Parameters.");
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
         }
 
-        // If the resource name contains a slash, we will assume the developer wishes to
-        // register these resource routes with a prefix so we will set that up out of
-        // the box so they don't have to mess with it. Otherwise, we will continue.
         if (str_contains($name, '/')) {
             $this->prefixedResource($name, $controller, $options);
 
             return;
         }
 
-        // We need to extract the base resource from the resource name. Nested resources
-        // are supported in the framework, but we need to know what name to use for a
-        // place-holder on the route wildcards, which should be the base resources.
         $base = $this->getResourceWildcard(last(explode('.', $name)));
 
         $defaults = $this->resourceDefaults;
@@ -394,9 +386,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     {
         list($name, $prefix) = $this->getResourcePrefix($name);
 
-        // We need to extract the base resource from the resource name. Nested resources
-        // are supported in the framework, but we need to know what name to use for a
-        // place-holder on the route wildcards, which should be the base resources.
         $callback = function($me) use ($name, $controller, $options)
         {
             $me->resource($name, $controller, $options);
@@ -415,9 +404,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     {
         $segments = explode('/', $name);
 
-        // To get the prefix, we will take all of the name segments and implode them on
-        // a slash. This will generate a proper URI prefix for us. Then we take this
-        // last segment, which will be considered the final resources name we use.
         $prefix = implode('/', array_slice($segments, 0, -1));
 
         $name = end($segments);
@@ -451,11 +437,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getResourceUri($resource)
     {
-        if ( ! str_contains($resource, '.')) return $resource;
+        if (! str_contains($resource, '.')) return $resource;
 
-        // Once we have built the base URI, we'll remove the wildcard holder for this
-        // base resource name so that the individual route adders can suffix these
-        // paths however they need to, as some do not have any wildcards at all.
         $segments = explode('.', $resource);
 
         $uri = $this->getNestedResourceUri($segments);
@@ -471,9 +454,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function getNestedResourceUri(array $segments)
     {
-        // We will spin through the segments and create a place-holder for each of the
-        // resource segments, as well as the resource itself. Then we should get an
-        // entire string for the resource URI that contains all nested resources.
         return implode('/', array_map(function($segment)
         {
             return $segment .'/{'.$this->getResourceWildcard($segment).'}';
@@ -509,9 +489,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     {
         if (isset($options['names'][$method])) return $options['names'][$method];
 
-        // If a global prefix has been assigned to all names for this resource, we will
-        // grab that so we can prepend it onto the name when we create this name for
-        // the resource action. Otherwise we'll just use an empty string for here.
         $prefix = isset($options['as']) ? $options['as'] .'.' : '';
 
         if (empty($this->groupStack)) {
@@ -558,7 +535,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Nova\Routing\Route
+     * @return \Routing\Route
      */
     protected function addResourceIndex($name, $base, $controller, $options)
     {
@@ -576,7 +553,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Nova\Routing\Route
+     * @return \Routing\Route
      */
     protected function addResourceCreate($name, $base, $controller, $options)
     {
@@ -594,7 +571,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Nova\Routing\Route
+     * @return \Routing\Route
      */
     protected function addResourceStore($name, $base, $controller, $options)
     {
@@ -612,7 +589,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Nova\Routing\Route
+     * @return \Routing\Route
      */
     protected function addResourceShow($name, $base, $controller, $options)
     {
@@ -630,7 +607,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Nova\Routing\Route
+     * @return \Routing\Route
      */
     protected function addResourceEdit($name, $base, $controller, $options)
     {
@@ -664,7 +641,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Nova\Routing\Route
+     * @return \Routing\Route
      */
     protected function addPutResourceUpdate($name, $base, $controller, $options)
     {
@@ -697,7 +674,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Nova\Routing\Route
+     * @return \Routing\Route
      */
     protected function addResourceDestroy($name, $base, $controller, $options)
     {
@@ -719,9 +696,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     {
         $this->updateGroupStack($attributes);
 
-        // Once we have updated the group stack, we will execute the user Closure and
-        // merge in the groups attributes when the route is created. After we have
-        // run the callback, we will pop the attributes off of this group stack.
+        // Execute the group callback.
         call_user_func($callback, $this);
 
         array_pop($this->groupStack);
@@ -735,7 +710,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function updateGroupStack(array $attributes)
     {
-        if ( ! empty($this->groupStack)) {
+        if (! empty($this->groupStack)) {
             $attributes = static::mergeGroup($attributes, last($this->groupStack));
         }
 
@@ -812,7 +787,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function getLastGroupPrefix()
     {
-        if ( ! empty($this->groupStack)) {
+        if (! empty($this->groupStack)) {
             $last = end($this->groupStack);
 
             return isset($last['prefix']) ? $last['prefix'] : '';
@@ -847,9 +822,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function createRoute($methods, $uri, $action)
     {
-        // If the route is routing to a controller we will parse the route action into
-        // an acceptable array format before registering it and creating this route
-        // instance itself. We need to build the Closure that will call this out.
         if ($this->routingToController($action)) {
             $action = $this->getControllerAction($action);
         }
@@ -859,9 +831,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         $route = $this->newRoute($methods, $uri, $action);
 
-        // If we have groups that need to be merged, we will merge them now after this
-        // route has already been created and is ready to go. After we're done with
-        // the merge we will be ready to return the route back out to the caller.
         if (! empty($this->groupStack)) {
             $this->mergeController($route);
         }
@@ -898,7 +867,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Merge the group stack with the controller action.
      *
-     * @param  \Nova\Routing\Route  $route
+     * @param  \Routing\Route  $route
      * @return void
      */
     protected function mergeController($route)
@@ -1153,13 +1122,13 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * Call the given filter with the request and response.
      *
      * @param  string  $filter
-     * @param  \Nova\Http\Request   $request
-     * @param  \Nova\Http\Response  $response
+     * @param  \Http\Request   $request
+     * @param  \Http\Response  $response
      * @return mixed
      */
     protected function callFilter($filter, $request, $response = null)
     {
-        if ( ! $this->filtering) return null;
+        if (! $this->filtering) return null;
 
         return $this->events->until('router.'.$filter, array($request, $response));
     }
@@ -1167,8 +1136,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Call the given route's before filters.
      *
-     * @param  \Nova\Routing\Route  $route
-     * @param  \Nova\Http\Request  $request
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
      * @return mixed
      */
     public function callRouteBefore($route, $request)
@@ -1176,16 +1145,16 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         foreach ($route->beforeFilters() as $filter => $parameters) {
             $response = $this->callRouteFilter($filter, $parameters, $route, $request);
 
-            if ( ! is_null($response)) return $response;
+            if (! is_null($response)) return $response;
         }
     }
 
     /**
      * Call the given route's before filters.
      *
-     * @param  \Nova\Routing\Route  $route
-     * @param  \Nova\Http\Request  $request
-     * @param  \Nova\Http\Response  $response
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
+     * @param  \Http\Response  $response
      * @return mixed
      */
     public function callRouteAfter($route, $request, $response)
@@ -1206,7 +1175,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function callRouteFilter($filter, $parameters, $route, $request, $response = null)
     {
-        if ( ! $this->filtering) return null;
+        if (! $this->filtering) return null;
 
         $data = array_merge(array($route, $request, $response), $parameters);
 

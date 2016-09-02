@@ -1,28 +1,16 @@
 <?php
-/**
- * ExceptionServiceProvider - Implements a Service Provider for the Exception Handler.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Exception;
-
-use Exception\Handler;
-use Exception\PlainDisplayer;
-use Exception\WhoopsDisplayer;
-
-use Support\ServiceProvider;
 
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\JsonResponseHandler;
-
+use Support\ServiceProvider;
 
 class ExceptionServiceProvider extends ServiceProvider
 {
     /**
-     * Register the Service Provider.
+     * Register the service provider.
      *
      * @return void
      */
@@ -46,7 +34,7 @@ class ExceptionServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Exception Handler instance.
+     * Register the exception handler instance.
      *
      * @return void
      */
@@ -54,22 +42,12 @@ class ExceptionServiceProvider extends ServiceProvider
     {
         $this->app['exception'] = $this->app->share(function($app)
         {
-            //$debug = $this['config']['app.debug'];
-
-            // This way is possible to start early the Exception Handler.
-            $debug = (ENVIRONMENT == 'development');
-
-            return new Handler(
-                $app,
-                $app['exception.plain'],
-                $app['exception.debug'],
-                $debug
-            );
+            return new Handler($app, $app['exception.plain'], $app['exception.debug']);
         });
     }
 
     /**
-     * Register the Plain Exception Displayer.
+     * Register the plain exception displayer.
      *
      * @return void
      */
@@ -77,16 +55,21 @@ class ExceptionServiceProvider extends ServiceProvider
     {
         $this->app['exception.plain'] = $this->app->share(function($app)
         {
+            // If the application is running in a console environment, we will just always
+            // use the debug handler as there is no point in the console ever returning
+            // out HTML. This debug handler always returns JSON from the console env.
             if ($app->runningInConsole()) {
                 return $app['exception.debug'];
-            } else {
-                return new PlainDisplayer();
+            }
+            else
+            {
+                return new PlainDisplayer;
             }
         });
     }
 
     /**
-     * Register the Json Exception Displayer.
+     * Register the Whoops exception displayer.
      *
      * @return void
      */
@@ -132,7 +115,7 @@ class ExceptionServiceProvider extends ServiceProvider
         if ($this->shouldReturnJson()) {
             $this->app['whoops.handler'] = $this->app->share(function()
             {
-                    return new JsonResponseHandler;
+                return new JsonResponseHandler;
             });
         } else {
             $this->registerPrettyWhoopsHandler();
@@ -166,9 +149,7 @@ class ExceptionServiceProvider extends ServiceProvider
      */
     protected function registerPrettyWhoopsHandler()
     {
-        $me = $this;
-
-        $this->app['whoops.handler'] = $this->app->share(function() use ($me)
+        $this->app['whoops.handler'] = $this->app->share(function()
         {
             with($handler = new PrettyPageHandler)->setEditor('sublime');
 

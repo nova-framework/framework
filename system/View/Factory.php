@@ -57,7 +57,7 @@ class Factory
      * @param string $path
      * @param array|string $data
      * @param string|null $module
-     * @return \Nova\View\View
+     * @return \View\View
      */
     public function make($view, $data = array(), $module = null)
     {
@@ -102,7 +102,7 @@ class Factory
      */
     public function share($key, $value = null)
     {
-        if ( ! is_array($key)) return $this->shared[$key] = $value;
+        if (! is_array($key)) return $this->shared[$key] = $value;
 
         foreach ($key as $innerKey => $innerValue) {
             $this->share($innerKey, $innerValue);

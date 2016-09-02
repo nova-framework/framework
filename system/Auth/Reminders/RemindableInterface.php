@@ -2,6 +2,7 @@
 
 namespace Auth\Reminders;
 
+
 interface RemindableInterface
 {
     /**
@@ -10,4 +11,5 @@ interface RemindableInterface
      * @return string
      */
     public function getReminderEmail();
+
 }

@@ -8,11 +8,8 @@
 
 namespace Language;
 
-use Config\Config;
 use Helpers\Inflector;
-
-use Cookie;
-use Session;
+use Language\LanguageManager as Manager;
 
 use MessageFormatter;
 
@@ -23,18 +20,18 @@ use MessageFormatter;
 class Language
 {
     /**
+     * The Language Manager Instance.
+     *
+     * @var \Language\LanguageManager
+     */
+    protected $manager;
+
+    /**
      * Holds an array with the Domain's Messages.
      *
      * @var array
      */
     private $messages = array();
-
-    /**
-     * The Language instances.
-     *
-     * @var array
-     */
-    private static $instances = array();
 
     /**
      * The current Language Domain.
@@ -63,15 +60,19 @@ class Language
      * @param string $domain
      * @param string $code
      */
-    protected function __construct($domain, $code)
+    public function __construct(Manager $manager, $domain, $code)
     {
-        $languages = Config::get('languages');
+        $this->manager = $manager;
+
+        //
+        $languages = $manager->getLanguages();
 
         if (isset($languages[$code]) && ! empty($languages[$code])) {
             $info = $languages[$code];
 
             $this->code = $code;
 
+            //
             $this->info      = $info['info'];
             $this->name      = $info['name'];
             $this->locale    = $info['locale'];
@@ -108,44 +109,6 @@ class Language
         // A final consistency check.
         if (is_array($messages) && ! empty($messages)) {
             $this->messages = $messages;
-        }
-    }
-
-    /**
-     * Get instance of language with domain and code (optional).
-     * @param string $domain Optional custom domain
-     * @param string $code Optional custom language code.
-     * @return Language
-     */
-    public static function &getInstance($domain = 'app', $code = LANGUAGE_CODE)
-    {
-        $code = self::getCurrentLanguage($code);
-
-        // The ID code is something like: 'en/system', 'en/app' or 'en/file_manager'
-        $id = $code .'/' .$domain;
-
-        // Initialize the domain instance, if not already exists.
-        if (! isset(self::$instances[$id])) {
-            self::$instances[$id] = new self($domain, $code);
-        }
-
-        return self::$instances[$id];
-    }
-
-
-    public static function init()
-    {
-        $languages = Config::get('languages');
-
-        if (Session::has('language')) {
-            // The Language was already set; nothing to do.
-            return;
-        } else if(Cookie::has(PREFIX .'language')) {
-            $cookie = Cookie::get(PREFIX .'language');
-
-            if (preg_match ('/[a-z]/', $cookie) && in_array($cookie, array_keys($languages))) {
-                Session::set('language', $cookie);
-            }
         }
     }
 
@@ -241,20 +204,6 @@ class Language
         return $this->direction;
     }
 
-    /**
-     * Get current Language
-     * @return string
-     */
-    protected static function getCurrentLanguage($code)
-    {
-        // Check if the end-user do not ask for a custom code.
-        if ($code == LANGUAGE_CODE) {
-            return Session::get('language', $code);
-        }
-
-        return $code;
-    }
-
     //--------------------------------------------------------------------
     // Legacy API Methods
     //--------------------------------------------------------------------
@@ -266,26 +215,29 @@ class Language
      * @param string $code
      * @return void
      */
-    public function load($name, $code = LANGUAGE_CODE)
+    public function load($name, $code = null)
     {
-        $code = self::getCurrentLanguage($code);
+        $code = $code ?: $this->getLocale();
 
         // Language file.
-        $file = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
+        $filePath = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
 
         // Check if it is readable.
-        if (! is_readable($file)) {
+        if (! is_readable($filePath)) {
             return;
         }
 
         // Require the file.
-        $messages = include $file;
+        $messages = include $filePath;
 
-        if(isset($this->legacyMessages[$code]) && is_array($this->legacyMessages[$code])) {
-            $this->legacyMessages[$code] = array_merge($this->legacyMessages[$code], $messages);
-        } else {
-            $this->legacyMessages[$code] = $messages;
+        // A small sanity check.
+        $messages = is_array($messages) ? $messages : array();
+
+        if (isset($this->legacyMessages[$code])) {
+            $messages = array_merge($this->legacyMessages[$code], $messages);
         }
+
+        $this->legacyMessages[$code] = $messages;
     }
 
     /**
@@ -295,33 +247,27 @@ class Language
      *
      * @return string
      */
-    public function get($value, $code = LANGUAGE_CODE)
+    public function get($value, $code = null)
     {
-        $code = self::getCurrentLanguage($code);
+        $code = $code ?: $this->getLocale();
 
-        if (!empty($this->legacyMessages[$code][$value])) {
-            return $this->legacyMessages[$code][$value];
-        } elseif(!empty($this->legacyMessages[LANGUAGE_CODE][$value])) {
-            return $this->legacyMessages[LANGUAGE_CODE][$value];
-        } else {
-            return $value;
+        $messages = isset($this->legacyMessages[$code]) ? $this->legacyMessages[$code] : array();
+
+        if (isset($messages[$value]) && ! empty($messages[$value])) {
+            return $messages[$value];
         }
+
+        return $value;
     }
 
     /**
-     * Get the language for the Views.
-     *
-     * @param  string $value this is a "word" value from the language file
-     * @param  string $name  name of the file with the language
-     * @param  string $code  optional, language code
+     * Get the default locale being used.
      *
      * @return string
      */
-    public function show($value, $name, $code = LANGUAGE_CODE)
+    protected function getLocale()
     {
-        // Load the specified Language file.
-        $this->load($name, $code);
-
-        return $this->get($value, $code);
+        return $this->manager->getLocale();
     }
+
 }

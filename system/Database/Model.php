@@ -309,7 +309,7 @@ class Model
     /**
      * Get a new query builder instance for the connection.
      *
-     * @return \Nova\Database\Query\Builder
+     * @return \Database\Query\Builder
      */
     protected function newBaseQueryBuilder()
     {

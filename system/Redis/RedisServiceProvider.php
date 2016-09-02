@@ -1,4 +1,6 @@
-<?php namespace Redis;
+<?php
+
+namespace Redis;
 
 use Support\ServiceProvider;
 

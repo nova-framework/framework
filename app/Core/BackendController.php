@@ -10,11 +10,10 @@ namespace App\Core;
 
 use Http\Request;
 use Routing\Route;
+use Support\Facades\Auth;
+use Support\Facades\Redirect;
 
 use App\Core\Controller as BaseController;
-
-use Auth;
-use Redirect;
 
 
 abstract class BackendController extends BaseController

@@ -28,9 +28,8 @@ use Config\Config;
 
 use Forensics\Console;
 use Forensics\PdoDebugger;
-
-use DB;
-use Request;
+use Support\Facades\DB;
+use Support\Facades\Request;
 
 use PDO;
 

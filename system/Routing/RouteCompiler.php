@@ -185,7 +185,9 @@ class RouteCompiler
             $pattern .= str_repeat (')?', count($optionals));
         }
 
-        return sprintf('#^/%s$#s', $pattern);
+        $pattern = ($pattern == '/') ? '/' : '/' .$pattern;
+
+        return sprintf('#^%s$#s', $pattern);
     }
 
     public function createPath(array $tokens, array $optionals)

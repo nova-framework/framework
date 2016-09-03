@@ -1,26 +1,21 @@
 <?php
-/**
- * Expression - A Class which represent a Database Expression.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
+
 namespace Database\Query;
 
 
 class Expression
 {
     /**
-     * The value of the database expression.
+     * The value of the expression.
      *
-     * @var string
+     * @var mixed
      */
     protected $value;
 
     /**
-     * Create a new database expression instance.
+     * Create a new raw query expression.
      *
-     * @param  string  $value
+     * @param  mixed  $value
      * @return void
      */
     public function __construct($value)
@@ -29,22 +24,23 @@ class Expression
     }
 
     /**
-     * Get the string value of the database expression.
+     * Get the value of the expression.
      *
-     * @return string
+     * @return mixed
      */
-    public function get()
+    public function getValue()
     {
         return $this->value;
     }
 
     /**
-     * Get the string value of the database expression.
+     * Get the value of the expression.
      *
      * @return string
      */
     public function __toString()
     {
-        return $this->get();
+        return (string) $this->getValue();
     }
+
 }

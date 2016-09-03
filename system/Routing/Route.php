@@ -514,7 +514,7 @@ class Route
         } else if (isset($this->regex)) {
             preg_match_all('#\(\?P<(\w+)>[^\)]+\)#s', $this->regex, $matches);
 
-            return end($matches);
+            return $matches[1];
         }
 
         throw new \LogicException("Route is not compiled.");

@@ -193,6 +193,7 @@ class Route
 
             $this->regex = $compiler->compileRoute($uri, $optionals);
 
+            // The path is just similar with uri pattern.
             $this->path = $this->uri;
         } else {
             // We are using the Unnamed Parameters on Route compilation.
@@ -200,6 +201,7 @@ class Route
 
             $this->regex = $compiler->createRegex($tokens, $optionals);
 
+            // The path is the translated pattern to the named style.
             $this->path = $compiler->createPath($tokens, $optionals);
         }
 

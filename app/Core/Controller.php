@@ -44,7 +44,7 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // Setup the used Template to default, if it is not already defined.
-        if (($this->layout !== false) && ! isset($this->template)) {
+        if (! isset($this->template)) {
             $this->template = Config::get('app.template');
         }
     }

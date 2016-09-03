@@ -30,6 +30,13 @@ class Route
     private $uri = null;
 
     /**
+     * The processed pattern the Route responds to.
+     *
+     * @var string
+     */
+    private $path;
+
+    /**
      * Supported HTTP methods.
      *
      * @var array
@@ -185,9 +192,15 @@ class Route
             $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
             $this->regex = $compiler->compileRoute($uri, $optionals);
+
+            $this->path = $this->uri;
         } else {
             // We are using the Unnamed Parameters on Route compilation.
-            $this->regex = $compiler->compileLegacyRoute($this->uri);
+            list($tokens, $optionals) = $compiler->parseLegacyRoute($this->uri);
+
+            $this->regex = $compiler->createRegex($tokens, $optionals);
+
+            $this->path = $compiler->createPath($tokens, $optionals);
         }
 
         return $this->regex;
@@ -685,7 +698,9 @@ class Route
      */
     public function getPath()
     {
-        return $this->uri();
+        $this->compileRoute();
+
+        return $this->path;
     }
 
     /**

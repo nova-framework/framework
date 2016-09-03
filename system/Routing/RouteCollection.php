@@ -64,8 +64,9 @@ class RouteCollection implements Countable, IteratorAggregate
         // Match the Request on the Routes registered for its Method.
         $route = $this->check($routes, $request);
 
-        // If a Route matching with the Request was found, return it.
-        if (! is_null($route)) return $route;
+        if (! is_null($route)) {
+            return $route->bind($request);
+        }
 
         // No Route match found; check for the alternate HTTP Methods.
         $others = $this->checkForAlternateMethods($request);
@@ -74,7 +75,7 @@ class RouteCollection implements Countable, IteratorAggregate
             return $this->getOtherMethodsRoute($request, $others);
         }
 
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

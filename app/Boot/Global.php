@@ -36,17 +36,15 @@ App::missing(function(NotFoundHttpException $exception)
         // An AJAX request; we'll create a JSON Response.
         $content = array('status' => $status);
 
-        $response = Response::json($content, $status, $headers);
-    } else {
-        // We'll create the templated Error Page Response.
-        $content = Template::make('default')
-            ->shares('title', 'Error ' .$status)
-            ->nest('content', 'Error/' .$status);
-
-        $response = Response::make($content, $status, $headers);
+        return Response::json($content, $status, $headers);
     }
 
-    return $response;
+    // We'll create the templated Error Page Response.
+    $response = Template::make('default')
+        ->shares('title', 'Error ' .$status)
+        ->nest('content', 'Error/' .$status);
+
+    return Response::make($response, $status, $headers);
 });
 
 //--------------------------------------------------------------------------

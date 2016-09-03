@@ -10,12 +10,8 @@ use View\View;
 class Template extends View
 {
 
-    public function __construct(ViewFactory $factory, $view, $path, $data = array())
+    public function __construct(ViewFactory $factory, EngineInterface $engine, $view, $path, $data = array())
     {
-        // Get the View Engine instance.
-        $engine = $factory->getEngineFromPath($path);
-
-        //
         parent::__construct($factory, $engine, $view, $path, $data);
     }
 

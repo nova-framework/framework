@@ -86,6 +86,8 @@ class Demos extends Controller
         $request = Request::instance();
 
         if ($route->matches($request)) {
+            $route->bind($request);
+        
             $content = '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
         } else {
             $content = '<pre>' .htmlspecialchars($uri) .'</pre>';

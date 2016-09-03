@@ -62,7 +62,7 @@ abstract class Controller extends BaseController
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
 
-            if (($this->layout !== false) && (! $response instanceof Layout)) {
+            if (is_string($this->layout) && (! $response instanceof Layout)) {
                 $response = Template::make($this->layout, $this->template)->with('content', $response);
             }
         }

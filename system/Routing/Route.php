@@ -193,7 +193,7 @@ class Route
 
             $this->regex = $compiler->compileRoute($uri, $optionals);
 
-            // The path is just similar with uri pattern.
+            // The path is just similar with the uri pattern.
             $this->path = $this->uri;
         } else {
             // We are using the Unnamed Parameters on Route compilation.

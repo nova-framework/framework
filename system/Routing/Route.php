@@ -504,7 +504,15 @@ class Route
      */
     protected function compileParameterNames()
     {
-        if (isset($this->regex)) {
+        if ($this->namedParams) {
+            preg_match_all('/\{(.*?)\}/', $this->uri, $matches);
+
+            return array_map(function($value)
+            {
+                return trim($value, '?');
+
+            }, $matches[1]);
+        } else if (isset($this->regex)) {
             preg_match_all('#\(\?P<(\w+)>[^\)]+\)#s', $this->regex, $matches);
 
             return end($matches);

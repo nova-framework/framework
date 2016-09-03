@@ -152,7 +152,6 @@ class Route
      * @param \Http\Request $request The dispatched Request instance
      * @param bool $includingMethod Wheter or not is matched the HTTP Method
      * @return bool Match status
-     * @internal param string $pattern URL pattern
      */
     public function matches(Request $request, $includingMethod = true)
     {

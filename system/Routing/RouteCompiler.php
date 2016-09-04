@@ -85,10 +85,10 @@ class RouteCompiler
             $tokens[] = array('text', substr($route, $pos));
         }
 
-        return $this->createPattern($tokens, $optionals);
+        return $this->createRegex($tokens, $optionals);
     }
 
-    public function compileLegacyRoute($route)
+    public function parseLegacyRoute($route)
     {
         preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
@@ -156,10 +156,10 @@ class RouteCompiler
             $tokens[] = array('text', substr($route, $pos));
         }
 
-        return $this->createPattern($tokens, $optionals);
+        return array($tokens, $optionals);
     }
 
-    protected function createPattern(array $tokens, array $optionals)
+    public function createRegex(array $tokens, array $optionals)
     {
         $pattern = '';
 
@@ -185,7 +185,35 @@ class RouteCompiler
             $pattern .= str_repeat (')?', count($optionals));
         }
 
+        $pattern = ($pattern == '/') ? '/' : '/' .$pattern;
+
         return sprintf('#^%s$#s', $pattern);
+    }
+
+    public function createPath(array $tokens, array $optionals)
+    {
+        $pattern = '';
+
+        foreach ($tokens as $token) {
+            if ($token[0] == 'text') {
+                $pattern .= $token[1];
+
+                continue;
+            }
+
+            // A token of type 'variable'; extract its information.
+            list($type, $separator, $varName, $regexp) = $token;
+
+            $pattern .= $separator .'{' .$varName;
+
+            if (in_array($varName, $optionals)) {
+                $pattern .= '?';
+            }
+
+            $pattern .= '}';
+        }
+
+        return $pattern;
     }
 
 }

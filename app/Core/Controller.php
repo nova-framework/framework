@@ -44,7 +44,7 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // Setup the used Template to default, if it is not already defined.
-        if (($this->layout !== false) && ! isset($this->template)) {
+        if (! isset($this->template)) {
             $this->template = Config::get('app.template');
         }
     }
@@ -62,7 +62,7 @@ abstract class Controller extends BaseController
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
 
-            if (($this->layout !== false) && (! $response instanceof Layout)) {
+            if (is_string($this->layout) && (! $response instanceof Layout)) {
                 $response = Template::make($this->layout, $this->template)->with('content', $response);
             }
         }

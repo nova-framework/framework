@@ -29,6 +29,19 @@ class RouteCollection implements Countable, IteratorAggregate
      */
     protected $allRoutes = array();
 
+    /**
+     * A look-up table of routes by their names.
+     *
+     * @var array
+     */
+    protected $nameList = array();
+
+    /**
+     * A look-up table of routes by controller action.
+     *
+     * @var array
+     */
+    protected $actionList = array();
 
     /**
      * Add a Route instance to the collection.
@@ -38,6 +51,21 @@ class RouteCollection implements Countable, IteratorAggregate
      */
     public function add(Route $route)
     {
+        $this->addToCollections($route);
+
+        $this->addLookups($route);
+
+        return $route;
+    }
+
+    /**
+     * Add the given route to the arrays of routes.
+     *
+     * @param  \Routing\Route  $route
+     * @return void
+     */
+    protected function addToCollections($route)
+    {
         $uri = $route->getUri();
 
         foreach ($route->methods() as $method) {
@@ -45,8 +73,39 @@ class RouteCollection implements Countable, IteratorAggregate
         }
 
         $this->allRoutes[$method .$uri] = $route;
+    }
 
-        return $route;
+    /**
+     * Add the route to any look-up tables if necessary.
+     *
+     * @param  \Routing\Route  $route
+     * @return void
+     */
+    protected function addLookups($route)
+    {
+        $action = $route->getAction();
+
+        if (isset($action['as'])) {
+            $this->nameList[$action['as']] = $route;
+        }
+
+        if (isset($action['controller'])) {
+            $this->addToActionList($action, $route);
+        }
+    }
+
+    /**
+     * Add a route to the controller action dictionary.
+     *
+     * @param  array  $action
+     * @param  \Routing\Route  $route
+     * @return void
+     */
+    protected function addToActionList($action, $route)
+    {
+        if (! isset($this->actionList[$action['controller']])) {
+            $this->actionList[$action['controller']] = $route;
+        }
     }
 
     /**
@@ -64,8 +123,9 @@ class RouteCollection implements Countable, IteratorAggregate
         // Match the Request on the Routes registered for its Method.
         $route = $this->check($routes, $request);
 
-        // If a Route matching with the Request was found, return it.
-        if (! is_null($route)) return $route;
+        if (! is_null($route)) {
+            return $route->bind($request);
+        }
 
         // No Route match found; check for the alternate HTTP Methods.
         $others = $this->checkForAlternateMethods($request);
@@ -74,7 +134,7 @@ class RouteCollection implements Countable, IteratorAggregate
             return $this->getOtherMethodsRoute($request, $others);
         }
 
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -161,6 +221,39 @@ class RouteCollection implements Countable, IteratorAggregate
         if (is_null($method)) return $this->getRoutes();
 
         return array_get($this->routes, $method, array());
+    }
+
+    /**
+     * Determine if the route collection contains a given named route.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function hasNamedRoute($name)
+    {
+        return ! is_null($this->getByName($name));
+    }
+
+    /**
+     * Get a route instance by its name.
+     *
+     * @param  string  $name
+     * @return \Routing\Route|null
+     */
+    public function getByName($name)
+    {
+        return isset($this->nameList[$name]) ? $this->nameList[$name] : null;
+    }
+
+    /**
+     * Get a route instance by its controller action.
+     *
+     * @param  string  $action
+     * @return \Routing\Route|null
+     */
+    public function getByAction($action)
+    {
+        return isset($this->actionList[$action]) ? $this->actionList[$action] : null;
     }
 
     /**

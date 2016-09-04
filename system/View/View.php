@@ -133,10 +133,8 @@ class View implements ArrayAccess, Renderable
      */
     public function nest($key, $view, array $data = array(), $module = null)
     {
-        if(empty($data)) {
-            // The nested View instance inherit parent Data if none is given.
-            $data = $this->data;
-        }
+        // The nested View instance inherit parent Data if none is given.
+        if (empty($data)) $data = $this->data;
 
         return $this->with($key, $this->factory->make($view, $data, $module));
     }

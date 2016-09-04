@@ -69,7 +69,10 @@ class Factory
         // Get the View Factory instance.
         $factory = $this->getViewFactory();
 
-        return new Template($factory, $view, $path, $data);
+        // Get the View Engine instance.
+        $engine = $factory->getEngineFromPath($path);
+
+        return new Template($factory, $engine, $view, $path, $data);
     }
 
     /**

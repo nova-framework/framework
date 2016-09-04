@@ -92,8 +92,8 @@ Config::set('app', array(
         'Session\SessionServiceProvider',
         'Validation\ValidationServiceProvider',
         'Html\HtmlServiceProvider',
-        'Template\TemplateServiceProvider',
         'View\ViewServiceProvider',
+        'Template\TemplateServiceProvider',
         'Cron\CronServiceProvider',
     ),
 

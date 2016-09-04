@@ -146,6 +146,6 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array('view', 'view.engine.resolver');
+        return array('view', 'view.finder', 'view.engine.resolver');
     }
 }

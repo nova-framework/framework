@@ -2,7 +2,13 @@
 
 namespace Exception;
 
+use Exception\PlainDisplayer;
+use Exception\WhoopsDisplayer;
+use Exception\ExceptionDisplayerInterface;
+use Exception\RedirectToException;
+
 use Support\Contracts\ResponsePreparerInterface;
+use Support\Facades\Redirect;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Debug\Exception\FatalErrorException as FatalError;
@@ -151,22 +157,25 @@ class Handler
      */
     public function handleException($exception)
     {
-        if (! $exception instanceof Exception) {
+        if ($exception instanceof RedirectToException) {
+            // Manage the Redirect comming from the Helpers\Url.
+            $url = $exception->getUrl();
+
+            if (is_null($url)) {
+                return Redirect::back($exception->getStatusCode());
+            } else {
+                return Redirect::to($url, $exception->getStatusCode());
+            }
+        } else if (! $exception instanceof Exception) {
             $exception = new FatalThrowableError($exception);
         }
 
         $response = $this->callCustomHandlers($exception);
 
-        // If one of the custom error handlers returned a response, we will send that
-        // response back to the client after preparing it. This allows a specific
-        // type of exceptions to handled by a Closure giving great flexibility.
         if (! is_null($response)) {
             return $this->prepareResponse($response);
         }
 
-        // If no response was sent by this custom exception handler, we will call the
-        // default exception displayer for the current application context and let
-        // it show the exception to the user / developer based on the situation.
         return $this->displayException($exception);
     }
 
@@ -190,9 +199,6 @@ class Handler
     {
         $error = error_get_last();
 
-        // If an error has occurred that has not been displayed, we will create a fatal
-        // error exception instance and pass it into the regular exception handling
-        // code so it can be displayed back out to the developer for information.
         if (! is_null($error)) {
             extract($error);
 
@@ -234,29 +240,18 @@ class Handler
     protected function callCustomHandlers($exception, $fromConsole = false)
     {
         foreach ($this->handlers as $handler) {
-            // If this exception handler does not handle the given exception, we will just
-            // go the next one. A handler may type-hint an exception that it handles so
-            //  we can have more granularity on the error handling for the developer.
-            if (! $this->handlesException($handler, $exception))
-            {
+            if (! $this->handlesException($handler, $exception)) {
                 continue;
             } else if ($exception instanceof HttpExceptionInterface) {
                 $code = $exception->getStatusCode();
-            }
-
-            // If the exception doesn't implement the HttpExceptionInterface, we will just
-            // use the generic 500 error code for a server side error. If it implements
-            // the HttpException interfaces we'll grab the error code from the class.
-            else
-            {
+            } else {
                 $code = 500;
             }
 
             // We will wrap this handler in a try / catch and avoid white screens of death
             // if any exceptions are thrown from a handler itself. This way we will get
             // at least some errors, and avoid errors with no data or not log writes.
-            try
-            {
+            try {
                 $response = $handler($exception, $code, $fromConsole);
             }
             catch (\Exception $e)
@@ -264,9 +259,6 @@ class Handler
                 $response = $this->formatException($e);
             }
 
-            // If this handler returns a "non-null" response, we will return it so it will
-            // get sent back to the browsers. Once the handler returns a valid response
-            // we will cease iterating through them and calling these other handlers.
             if (isset($response) && ! is_null($response)) {
                 return $response;
             }

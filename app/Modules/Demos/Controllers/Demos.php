@@ -49,26 +49,6 @@ class Demos extends Controller
             ->with('content', $content);
     }
 
-    /**
-     * Returns the next static character in the Route pattern that will serve as a separator.
-     *
-     * @param string $pattern The route pattern
-     *
-     * @return string The next static character that functions as separator (or empty string when none available)
-     */
-    private static function findNextSeparator($pattern)
-    {
-        if ('' == $pattern) {
-            // return empty string if pattern is empty or false (false which can be returned by substr)
-            return '';
-        }
-
-        // first remove all placeholders from the pattern so we can find the next real static character
-        $pattern = preg_replace('#\(:\w+\)#', '', $pattern);
-
-        return (isset($pattern[0]) && (false !== strpos(static::SEPARATORS, $pattern[0]))) ? $pattern[0] : '';
-    }
-
     public function test()
     {
         //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';

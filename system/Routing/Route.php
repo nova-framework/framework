@@ -188,16 +188,13 @@ class Route
 
         if ($this->namedParams) {
             // We are using the Named Parameters on Route compilation.
-            $this->path = $this->uri;
-
-            // Extract the optional parameters.
             $optionals = $this->extractOptionalParameters();
+
+            // The Route path is its URI pattern.
+            $this->path = $this->uri;
         } else {
             // We are using the Unnamed Parameters on Route compilation.
             list($path, $optionals, $wheres) = $compiler->parseLegacyRoute($this->uri);
-
-            // The Route path is the translated URI pattern.
-            $this->path = $path;
 
             // Setup the Route wheres.
             foreach ($wheres as $key => $value) {
@@ -206,6 +203,9 @@ class Route
 
             // Setup the new requirements on compiler.
             $compiler->setRequirements($this->wheres);
+
+            // The Route path is the translated URI pattern to named parameters style.
+            $this->path = $path;
         }
 
         return $this->compiled = $compiler->compile($this, $optionals);

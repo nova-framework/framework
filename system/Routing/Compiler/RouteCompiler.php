@@ -51,10 +51,10 @@ class RouteCompiler implements RouteCompilerInterface
         $hostTokens = array();
 
         //
-        $host = $route->domain();
+        $domain = $route->domain();
 
-        if (! empty($host)) {
-            $result = $this->compilePattern($route, $host, $optionals, true);
+        if (! is_null($domain)) {
+            $result = $this->compilePattern($route, $domain, $optionals, true);
 
             $hostVariables = $result['variables'];
 
@@ -68,8 +68,7 @@ class RouteCompiler implements RouteCompilerInterface
 
         $result = $this->compilePattern($route, $path, $optionals, false);
 
-        $staticPrefix = $result['staticPrefix'];
-
+        $staticPrefix  = $result['staticPrefix'];
         $pathVariables = $result['variables'];
 
         $variables = array_merge($variables, $pathVariables);

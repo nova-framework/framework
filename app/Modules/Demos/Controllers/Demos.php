@@ -72,7 +72,7 @@ class Demos extends Controller
     public function test()
     {
         //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
-        $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
+        $uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
         //$uri = '(:all)';
 
         //
@@ -87,13 +87,13 @@ class Demos extends Controller
 
         if ($route->matches($request)) {
             $route->bind($request);
-        
-            $content = '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
-        } else {
-            $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
 
-            $content .= '<pre>' .htmlspecialchars($route->regex()) .'</pre>';
+            $content = '<pre>Route matched!</pre>';
+        } else {
+            $content = '<pre>Route not matched!</pre>';
         }
+
+        $content .= '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))

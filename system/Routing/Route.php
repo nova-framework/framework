@@ -10,6 +10,7 @@ namespace Routing;
 
 use Http\Request;
 use Routing\Matching\UriValidator;
+use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
 use Routing\Matching\SchemeValidator;
 use Routing\RouteCompiler;
@@ -34,7 +35,7 @@ class Route
      *
      * @var string
      */
-    private $path;
+    private $path = null;
 
     /**
      * Supported HTTP methods.
@@ -86,18 +87,18 @@ class Route
     protected $parameterNames;
 
     /**
-     * The compiled regex the Route responds to.
-     *
-     * @var string
-     */
-    private $regex;
-
-    /**
      * The validators used by the routes.
      *
      * @var array
      */
     protected static $validators;
+
+    /**
+     * The compiled version of the Route.
+     *
+     * @var \Routing\CompiledRoute
+     */
+    protected $compiled = null;
 
     /**
      * Boolean indicating the use of Named Parameters on not.
@@ -162,7 +163,7 @@ class Route
      */
     public function matches(Request $request, $includingMethod = true)
     {
-        $this->compileRoute();
+        $this->compile();
 
         foreach ($this->getValidators() as $validator) {
             if (! $includingMethod && ($validator instanceof MethodValidator)) continue;
@@ -178,34 +179,36 @@ class Route
      *
      * @return string
      */
-    public function compileRoute()
+    public function compile()
     {
-        if (isset($this->regex)) return $this->regex;
+        if (isset($this->compiled)) return;
 
         //
         $compiler = $this->getCompiler();
 
         if ($this->namedParams) {
             // We are using the Named Parameters on Route compilation.
-            $optionals = $this->extractOptionalParameters();
-
-            $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-            $this->regex = $compiler->compileRoute($uri, $optionals);
-
-            // The path is just similar with the uri pattern.
             $this->path = $this->uri;
+
+            // Extract the optional parameters.
+            $optionals = $this->extractOptionalParameters();
         } else {
             // We are using the Unnamed Parameters on Route compilation.
-            list($tokens, $optionals) = $compiler->parseLegacyRoute($this->uri);
+            list($path, $optionals, $wheres) = $compiler->parseLegacyRoute($this->uri);
 
-            $this->regex = $compiler->createRegex($tokens, $optionals);
+            // The Route path is the translated URI pattern.
+            $this->path = $path;
 
-            // The path is the translated pattern to the named style.
-            $this->path = $compiler->createPath($tokens, $optionals);
+            // Setup the Route wheres.
+            foreach ($wheres as $key => $value) {
+                $this->where($key, $value);
+            }
+
+            // Setup the new compiler requirements.
+            $compiler->setRequirements($this->wheres);
         }
 
-        return $this->regex;
+        $this->compiled = $compiler->compile($this, $optionals);
     }
 
     /**
@@ -265,6 +268,7 @@ class Route
         return static::$validators = array(
             new MethodValidator(),
             new SchemeValidator(),
+            new HostValidator(),
             new UriValidator(),
         );
     }
@@ -524,8 +528,8 @@ class Route
                 return trim($value, '?');
 
             }, $matches[1]);
-        } else if (isset($this->regex)) {
-            preg_match_all('#\(\?P<(\w+)>[^\)]+\)#s', $this->regex, $matches);
+        } else if (isset($this->compiled)) {
+            preg_match_all('#\(\?P<(\w+)>[^\)]+\)#s', $this->compiled->getRegex(), $matches);
 
             return $matches[1];
         }
@@ -541,7 +545,7 @@ class Route
      */
     public function bind(Request $request)
     {
-        $this->compileRoute();
+        $this->compile();
 
         $this->bindParameters($request);
 
@@ -551,7 +555,7 @@ class Route
     /**
      * Extract the parameter list from the request.
      *
-     * @param  \Nova\Http\Request  $request
+     * @param  \Http\Request  $request
      * @return array
      */
     public function bindParameters(Request $request)
@@ -566,14 +570,28 @@ class Route
     /**
      * Get the parameter matches for the path portion of the URI.
      *
-     * @param  \Nova\Http\Request  $request
+     * @param  \Http\Request  $request
      * @return array
      */
     protected function bindPathParameters(Request $request)
     {
-        preg_match($this->getRegex(), '/' .$request->decodedPath(), $matches);
+        preg_match($this->compiled->getRegex(), '/' .$request->decodedPath(), $matches);
 
         return $matches;
+    }
+
+    /**
+     * Extract the parameter list from the host part of the request.
+     *
+     * @param  \Http\Request  $request
+     * @param  array  $parameters
+     * @return array
+     */
+    protected function bindHostParameters(Request $request, $parameters)
+    {
+        preg_match($this->compiled->getHostRegex(), $request->getHost(), $matches);
+
+        return array_merge($this->matchToKeys(array_slice($matches, 1)), $parameters);
     }
 
     /**
@@ -698,8 +716,6 @@ class Route
      */
     public function getPath()
     {
-        $this->compileRoute();
-
         return $this->path;
     }
 
@@ -852,25 +868,13 @@ class Route
     }
 
     /**
-     * Return the compiled pattern the Route responds to.
+     * Get the compiled version of the Route.
      *
-     * @return string|null
+     * @return \Routing\CompiledRoute
      */
-    public function getRegex()
+    public function getCompiled()
     {
-        return $this->regex();
-    }
-
-    /**
-     * Return the compiled pattern the Route responds to.
-     *
-     * @return string|null
-     */
-    public function regex()
-    {
-        if (isset($this->regex)) return $this->regex;
-
-        throw new \LogicException("Route regex is not compiled.");
+        return $this->compiled;
     }
 
 }

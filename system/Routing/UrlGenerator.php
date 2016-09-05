@@ -233,6 +233,9 @@ class UrlGenerator
      */
     protected function toRoute($route, array $parameters, $absolute)
     {
+        $route->compile();
+
+        //
         $domain = $this->getRouteDomain($route, $parameters);
 
         $uri = strtr(rawurlencode($this->trimUrl(

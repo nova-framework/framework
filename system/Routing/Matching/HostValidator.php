@@ -6,7 +6,7 @@ use Http\Request;
 use Routing\Route;
 
 
-class UriValidator implements ValidatorInterface
+class HostValidator implements ValidatorInterface
 {
     /**
      * Validate a given rule against a route and request.
@@ -17,9 +17,11 @@ class UriValidator implements ValidatorInterface
      */
     public function matches(Route $route, Request $request)
     {
-        $path = ($request->path() == '/') ? '/' : '/' .$request->path();
+        $hostRegex = $route->getCompiled()->getHostRegex();
 
-        return preg_match($route->getCompiled()->getRegex(), rawurldecode($path));
+        if (is_null($hostRegex)) return true;
+
+        return preg_match($hostRegex, $request->getHost());
     }
 
 }

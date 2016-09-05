@@ -629,9 +629,14 @@ class Route
      * @param  array|string  $name
      * @param  string  $expression
      * @return $this
+     * @throws \BadMethodCallException
      */
     public function where($name, $expression = null)
     {
+        if (! $this->namedParams) {
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
+        }
+
         foreach ($this->parseWhere($name, $expression) as $name => $expression) {
             $this->wheres[$name] = $expression;
         }

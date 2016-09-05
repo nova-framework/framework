@@ -175,14 +175,14 @@ class Route
     public function compileRoute()
     {
         if ($this->namedParams) {
-            // We are using the Named Parameters on Route compilation.
+            // The Route use the Named Parameters.
             $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
             $optionals = $this->extractOptionalParameters();
 
             $wheres = $this->wheres;
         } else {
-            // We are using the Unnamed Parameters on Route compilation.
+            // The Route use the Unnamed Parameters.
             list($this->pattern, $optionals, $wheres) = LegacyParser::parse($this->uri, $this->wheres);
         }
 

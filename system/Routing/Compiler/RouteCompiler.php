@@ -1,14 +1,15 @@
 <?php
 
-namespace Routing;
+namespace Routing\Compiler;
 
-use Routing\CompiledRoute;
+use Routing\Compiler\CompiledRoute;
+use Routing\Compiler\RouteCompilerInterface;
 use Routing\Route;
 
 use Closure;
 
 
-class RouteCompiler
+class RouteCompiler implements RouteCompilerInterface
 {
     const REGEX_DELIMITER = '#';
 
@@ -50,10 +51,10 @@ class RouteCompiler
         $hostTokens = array();
 
         //
-        $host = $route->domain();
+        $domain = $route->domain();
 
-        if (! empty($host)) {
-            $result = $this->compilePattern($route, $host, $optionals, true);
+        if (! is_null($domain)) {
+            $result = $this->compilePattern($route, $domain, $optionals, true);
 
             $hostVariables = $result['variables'];
 
@@ -67,8 +68,7 @@ class RouteCompiler
 
         $result = $this->compilePattern($route, $path, $optionals, false);
 
-        $staticPrefix = $result['staticPrefix'];
-
+        $staticPrefix  = $result['staticPrefix'];
         $pathVariables = $result['variables'];
 
         $variables = array_merge($variables, $pathVariables);
@@ -326,7 +326,7 @@ class RouteCompiler
         }
 
         // Create the Route translated pattern.
-        $path = $this->createPath($tokens, $optionals);
+        $path = static::createPath($tokens, $optionals);
 
         // Create the Route wheres.
         $wheres = array();
@@ -342,7 +342,7 @@ class RouteCompiler
         return array($path, $optionals, $wheres);
     }
 
-    protected function createPath(array $tokens, array $optionals)
+    private static function createPath(array $tokens, array $optionals)
     {
         $pattern = '';
 

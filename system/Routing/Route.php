@@ -13,7 +13,7 @@ use Routing\Matching\UriValidator;
 use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
 use Routing\Matching\SchemeValidator;
-use Routing\RouteCompiler;
+use Routing\Compiler\RouteCompiler;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -181,34 +181,34 @@ class Route
      */
     public function compile()
     {
-        if (isset($this->compiled)) return;
+        if (isset($this->compiled)) return $this->compiled;
 
         //
         $compiler = $this->getCompiler();
 
         if ($this->namedParams) {
             // We are using the Named Parameters on Route compilation.
-            $this->path = $this->uri;
-
-            // Extract the optional parameters.
             $optionals = $this->extractOptionalParameters();
+
+            // The Route path is its URI pattern.
+            $this->path = $this->uri;
         } else {
             // We are using the Unnamed Parameters on Route compilation.
             list($path, $optionals, $wheres) = $compiler->parseLegacyRoute($this->uri);
-
-            // The Route path is the translated URI pattern.
-            $this->path = $path;
 
             // Setup the Route wheres.
             foreach ($wheres as $key => $value) {
                 $this->where($key, $value);
             }
 
-            // Setup the new compiler requirements.
+            // Setup the new requirements on compiler.
             $compiler->setRequirements($this->wheres);
+
+            // The Route path is the URI pattern translated to named parameters style.
+            $this->path = $path;
         }
 
-        $this->compiled = $compiler->compile($this, $optionals);
+        return $this->compiled = $compiler->compile($this, $optionals);
     }
 
     /**
@@ -560,10 +560,16 @@ class Route
      */
     public function bindParameters(Request $request)
     {
+        // If the route has a regular expression for the host part of the URI, we will
+        // compile that and get the parameter matches for this domain. We will then
+        // merge them into this parameters array so that this array is completed.
         $parameters = $this->matchToKeys(
             array_slice($this->bindPathParameters($request), 1)
         );
 
+        // If the route has a regular expression for the host part of the URI, we will
+        // compile that and get the parameter matches for this domain. We will then
+        // merge them into this parameters array so that this array is completed.
         if (! is_null($this->compiled->getHostRegex())) {
             $params = $this->bindHostParameters($request, $params);
         }
@@ -825,7 +831,7 @@ class Route
      */
     public function getPrefix()
     {
-        return array_get($this->action, 'prefix');
+        return isset($this->action['prefix']) ? $this->action['prefix'] : null;
     }
 
     /**
@@ -835,7 +841,7 @@ class Route
      */
     public function getName()
     {
-        return array_get($this->action, 'as');
+        return isset($this->action['as']) ? $this->action['as'] : null;
     }
 
     /**

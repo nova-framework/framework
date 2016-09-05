@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Routing;
+namespace Routing\Compiler;
 
 /**
  * CompiledRoutes are returned by the RouteCompiler class.

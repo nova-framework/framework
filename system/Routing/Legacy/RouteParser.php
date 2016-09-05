@@ -109,7 +109,7 @@ class RouteParser
 
         return array(
             $pattern,
-            array_fill_keys($optionals, null),
+            ! empty($optionals) ? array_fill_keys($optionals, null) : array(),
             $requirements
         );
     }

@@ -13,7 +13,7 @@ use Routing\Matching\UriValidator;
 use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
 use Routing\Matching\SchemeValidator;
-use Routing\LegacyRouteParser;
+use Routing\LegacyRouteParser as LegacyParser;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
@@ -64,13 +64,6 @@ class Route
      * @var array
      */
     protected $wheres = array();
-
-    /**
-     * The route legacyParser instance.
-     *
-     * @var \Routing\LegacyRouteParser
-     */
-    protected $legacyParser;
 
     /**
      * The matched Route parameters.
@@ -188,9 +181,7 @@ class Route
             $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
         } else {
             // We are using the Unnamed Parameters on Route compilation.
-            $legacyParser = $this->getLegacyParser();
-
-            list($this->pattern, $optionals, $wheres) = $legacyParser->parse($this->uri);
+            list($this->pattern, $optionals, $wheres) = LegacyParser::parse($this->uri, $this->wheres);
 
             // Setup the Route wheres.
             foreach ($wheres as $key => $value) {
@@ -695,16 +686,6 @@ class Route
         $this->uri = ! empty($uri) ? $uri : '/';
 
         return $this;
-    }
-
-    /**
-     * Get a Route Compiler instance.
-     *
-     * @return \Routing\RouteCompiler
-     */
-    protected function getLegacyParser()
-    {
-        return $this->legacyParser ?: $this->legacyParser = new LegacyRouteParser($this->wheres);
     }
 
     /**

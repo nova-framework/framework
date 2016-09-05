@@ -16,31 +16,13 @@ class LegacyRouteParser
      */
     const SEPARATORS = '/,;.:-_~+*=@|';
 
-    /**
-     * The regular expression requirements.
-     *
-     * @var array
-     */
-    protected $patterns = array();
 
-
-    /**
-     * Create a new legacy Route Compiler instance.
-     *
-     * @param  array  $patterns
-     * @return void
-     */
-    public function __construct(array $patterns = array())
-    {
-        $this->patterns = $patterns;
-    }
-
-    public function parse($route)
+    public static function parse($route, array $patterns = array())
     {
         preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
-        $patterns = array_merge($this->patterns, array(
+        $patterns = array_merge($patterns, array(
             ':any' => '[^/]++',
             ':num' => '([0-9]+)',
             ':all' => '(.*)'

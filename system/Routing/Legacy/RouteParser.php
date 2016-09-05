@@ -17,16 +17,16 @@ class RouteParser
     const SEPARATORS = '/,;.:-_~+*=@|';
 
 
-    public static function parse($route, array $patterns = array())
+    public static function parse($route)
     {
         preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         //
-        $patterns = array_merge($patterns, array(
+        $patterns = array(
             ':any' => '[^/]++',
             ':num' => '([0-9]+)',
             ':all' => '(.*)'
-        ));
+        );
 
         //
         $optionals = array();

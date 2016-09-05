@@ -111,6 +111,8 @@ class Route
      */
     public function __construct($methods, $uri, $action, $namedParams = true)
     {
+        $this->namedParams = $namedParams;
+
         $uri = trim($uri, '/');
 
         //
@@ -126,13 +128,6 @@ class Route
 
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
-        }
-
-        if (! $namedParams) {
-            // The 'domain' option is not allowed while using Unnamed Parameters.
-            unset($this->action['domain']);
-
-            $this->namedParams = false;
         }
     }
 
@@ -175,6 +170,7 @@ class Route
      * Compile the Route pattern for matching and return it.
      *
      * @return string
+     * @throws \LogicException
      */
     public function compileRoute()
     {
@@ -185,6 +181,12 @@ class Route
             $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
         } else {
             // The Route use the (legacy) Unnamed Parameters.
+            $domain = $this->domain();
+
+            if (! is_null($domain)) {
+                throw new \LogicException("The domain option is not allowed while using Unnamed Parameters.");
+            }
+
             list($this->pattern, $optionals, $this->wheres) = RouteParser::parse($this->uri);
         }
 

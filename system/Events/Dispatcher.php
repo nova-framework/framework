@@ -318,7 +318,7 @@ class Dispatcher
     public function forgetQueued()
     {
         foreach ($this->listeners as $key => $value) {
-            if (ends_with($key, '_queue')) $this->forget($key);
+            if (str_ends_with($key, '_queue')) $this->forget($key);
         }
     }
 

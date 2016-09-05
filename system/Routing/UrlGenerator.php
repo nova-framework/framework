@@ -251,7 +251,7 @@ class UrlGenerator
     {
         $pattern = $route->uri();
 
-        if ($this->legacyRouting && preg_match('#\(:\w+\)#', $pattern)) {
+        if ($this->legacyRouting && (preg_match('#\(:\w+\)#', $pattern) === 1)) {
             list($pattern, $optionals, $wheres) = RouteParser::parse($pattern);
         }
 

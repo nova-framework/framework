@@ -5,7 +5,7 @@ namespace Routing;
 use Routing\Route;
 
 
-class LegacyRouteCompiler
+class LegacyRouteParser
 {
     const REGEX_DELIMITER = '#';
 
@@ -35,7 +35,7 @@ class LegacyRouteCompiler
         $this->patterns = $patterns;
     }
 
-    public function compile($route)
+    public function parse($route)
     {
         preg_match_all('#\(:\w+\)#', $route, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 

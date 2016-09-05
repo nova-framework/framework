@@ -216,7 +216,7 @@ class Route
      */
     protected function extractOptionalParameters()
     {
-        preg_match_all('/\{(\w+?)\?\}/', $this->path, $matches);
+        preg_match_all('/\{(\w+?)\?\}/', $this->uri, $matches);
 
         return isset($matches[1]) ? $matches[1] : array();
     }

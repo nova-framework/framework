@@ -113,10 +113,8 @@ class Route
     {
         $this->namedParams = $namedParams;
 
-        $uri = trim($uri, '/');
-
         //
-        $this->uri = ! empty($uri) ? $uri : '/';
+        $this->uri = $uri;
 
         $this->methods = (array) $methods;
 
@@ -681,9 +679,7 @@ class Route
      */
     public function prefix($prefix)
     {
-        $uri = trim(trim($prefix, '/') .'/' .trim($this->uri, '/'), '/');
-
-        $this->uri = ! empty($uri) ? $uri : '/';
+        $this->uri = trim($prefix, '/') .'/' .trim($this->uri, '/');
 
         return $this;
     }

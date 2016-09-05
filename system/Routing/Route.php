@@ -174,6 +174,8 @@ class Route
      */
     public function compileRoute()
     {
+        $domain = $this->domain();
+
         if ($this->namedParams) {
             // The Route use the (default) Named Parameters.
             $optionals = $this->extractOptionalParameters();
@@ -181,8 +183,6 @@ class Route
             $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
         } else {
             // The Route use the (legacy) Unnamed Parameters.
-            $domain = $this->domain();
-
             if (! is_null($domain)) {
                 throw new \LogicException("The domain option is not allowed while using Unnamed Parameters.");
             }
@@ -191,7 +191,7 @@ class Route
         }
 
         $this->compiled = with(
-            new SymfonyRoute($this->pattern, $optionals, $this->wheres, array(), $this->domain() ?: '')
+            new SymfonyRoute($this->pattern, $optionals, $this->wheres, array(), $domain ?: '')
         )->compile();
     }
 

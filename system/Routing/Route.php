@@ -176,21 +176,18 @@ class Route
     {
         if ($this->namedParams) {
             // We are using the Named Parameters on Route compilation.
+            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+
             $optionals = $this->extractOptionalParameters();
 
-            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
+            $wheres = $this->wheres;
         } else {
             // We are using the Unnamed Parameters on Route compilation.
             list($this->pattern, $optionals, $wheres) = LegacyParser::parse($this->uri, $this->wheres);
-
-            // Setup the Route wheres.
-            foreach ($wheres as $key => $value) {
-                $this->where($key, $value);
-            }
         }
 
         $this->compiled = with(
-            new SymfonyRoute($this->pattern, $optionals, $this->wheres, array(), $this->domain() ?: '')
+            new SymfonyRoute($this->pattern, $optionals, $wheres, array(), $this->domain() ?: '')
         )->compile();
     }
 

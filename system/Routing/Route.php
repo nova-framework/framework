@@ -13,7 +13,7 @@ use Routing\Matching\UriValidator;
 use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
 use Routing\Matching\SchemeValidator;
-use Routing\RouteCompiler;
+use Routing\Compiler\RouteCompiler;
 
 use Symfony\Component\HttpFoundation\Response;
 

@@ -72,7 +72,7 @@ class Demos extends Controller
     public function test()
     {
         //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
-        $uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
+        $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
         //$uri = '(:all)';
 
         //

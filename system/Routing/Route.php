@@ -536,16 +536,10 @@ class Route
      */
     public function bindParameters(Request $request)
     {
-        // If the route has a regular expression for the host part of the URI, we will
-        // compile that and get the parameter matches for this domain. We will then
-        // merge them into this parameters array so that this array is completed.
         $parameters = $this->matchToKeys(
             array_slice($this->bindPathParameters($request), 1)
         );
 
-        // If the route has a regular expression for the host part of the URI, we will
-        // compile that and get the parameter matches for this domain. We will then
-        // merge them into this parameters array so that this array is completed.
         if (! is_null($this->compiled->getHostRegex())) {
             $params = $this->bindHostParameters($request, $params);
         }

@@ -9,7 +9,7 @@
 namespace Routing;
 
 use Http\Request;
-use Routing\Legacy\RouteParser as LegacyRouteParser;
+use Routing\Legacy\RouteParser;
 use Routing\Matching\UriValidator;
 use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
@@ -183,7 +183,7 @@ class Route
             $wheres = $this->wheres;
         } else {
             // The Route use the Unnamed Parameters.
-            list($this->pattern, $optionals, $wheres) = LegacyRouteParser::parse($this->uri, $this->wheres);
+            list($this->pattern, $optionals, $wheres) = RouteParser::parse($this->uri, $this->wheres);
         }
 
         $this->compiled = with(
@@ -854,5 +854,5 @@ class Route
     {
         return $this->pattern;
     }
-    
+
 }

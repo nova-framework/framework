@@ -4,6 +4,7 @@ namespace Routing;
 
 use Config\Config;
 use Http\Request;
+use Routing\Legacy\RouteParser;
 use Support\Str;
 
 use InvalidArgumentException;
@@ -248,19 +249,17 @@ class UrlGenerator
      */
     protected function toRoute($route, array $parameters, $absolute)
     {
-        if ($this->legacyRouting) {
-            $route->compileRoute();
+        $pattern = $route->uri();
 
-            $uri = $route->getPattern();
-        } else {
-            $uri = $route->uri();
+        if ($this->legacyRouting && preg_match('#\(:\w+\)#', $pattern)) {
+            list($pattern, $optionals, $wheres) = RouteParser::parse($pattern);
         }
 
         $domain = $this->getRouteDomain($route, $parameters);
 
         $uri = strtr(rawurlencode($this->trimUrl(
             $root = $this->replaceRoot($route, $domain, $parameters),
-            $this->replaceRouteParameters($uri, $parameters)
+            $this->replaceRouteParameters($pattern, $parameters)
         )), $this->dontEncode) .$this->getRouteQueryString($parameters);
 
         return $absolute ? $uri : '/' .ltrim(str_replace($root, '', $uri), '/');

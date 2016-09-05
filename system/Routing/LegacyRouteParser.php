@@ -86,13 +86,6 @@ class LegacyRouteParser
         }
 
         // Create the Route wheres and translated pattern.
-        list($pattern, $wheres) = static::process($tokens, $optionals);
-
-        return array($pattern, $optionals, $wheres);
-    }
-
-    private static function process(array $tokens, array $optionals)
-    {
         $pattern = '';
 
         $wheres = array();
@@ -114,7 +107,7 @@ class LegacyRouteParser
             }
         }
 
-        return array($pattern, $wheres);
+        return array($pattern, $optionals, $wheres);
     }
 
 }

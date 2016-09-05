@@ -805,6 +805,14 @@ class Route
     }
 
     /**
+     * @return string|null
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
      * @return array
      */
     public function getParams()

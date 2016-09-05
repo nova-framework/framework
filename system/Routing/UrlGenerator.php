@@ -248,15 +248,19 @@ class UrlGenerator
      */
     protected function toRoute($route, array $parameters, $absolute)
     {
-        if ($this->legacyRouting && (preg_match('#\(:\w+\)#', $route->uri()) === 1)) {
-            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
+        if ($this->legacyRouting) {
+            $route->compileRoute();
+
+            $uri = $route->getPattern();
+        } else {
+            $uri = $route->uri();
         }
 
         $domain = $this->getRouteDomain($route, $parameters);
 
         $uri = strtr(rawurlencode($this->trimUrl(
             $root = $this->replaceRoot($route, $domain, $parameters),
-            $this->replaceRouteParameters($route->uri(), $parameters)
+            $this->replaceRouteParameters($uri, $parameters)
         )), $this->dontEncode) .$this->getRouteQueryString($parameters);
 
         return $absolute ? $uri : '/' .ltrim(str_replace($root, '', $uri), '/');

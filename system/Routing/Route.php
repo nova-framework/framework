@@ -176,11 +176,11 @@ class Route
     {
         if ($this->namedParams) {
             // The Route use the Named Parameters.
-            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
-            $optionals = $this->extractOptionalParameters();
-
-            $wheres = $this->wheres;
+            list($this->pattern, $optionals, $wheres) = array(
+                preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri),
+                $this->extractOptionalParameters(),
+                $this->wheres
+            );
         } else {
             // The Route use the Unnamed Parameters.
             list($this->pattern, $optionals, $wheres) = RouteParser::parse($this->uri, $this->wheres);

@@ -777,14 +777,6 @@ class Route
     }
 
     /**
-     * @return string|null
-     */
-    public function getPattern()
-    {
-        return $this->pattern;
-    }
-
-    /**
      * @return array
      */
     public function getParams()
@@ -855,4 +847,12 @@ class Route
         return $this->compiled;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+    
 }

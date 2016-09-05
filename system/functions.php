@@ -112,94 +112,44 @@ function __d($domain, $message, $args = null)
 }
 
 /**
- * Check value to find if it was serialized.
+ * Get the root Facade application instance.
  *
- * @param  string  $data
- * @param  bool    $strict
- * @return bool
+ * @param  string  $make
+ * @return mixed
  */
-function is_serialized($data, $strict = true)
+function app($make = null)
 {
-    if (! is_string($data)) return false;
-
-    $data = trim($data);
-
-    if ('N;' == $data) return true;
-
-    if (strlen($data) < 4) return false;
-
-    if (':' !== $data[1]) return false;
-
-    if ($strict) {
-        $lastc = substr($data, -1);
-
-        if ((';' !== $lastc) && ('}' !== $lastc)) {
-            return false;
-        }
-    } else {
-        $semicolon = strpos($data, ';');
-        $brace     = strpos($data, '}');
-
-        if ((false === $semicolon) && (false === $brace)) return false;
-
-        if ((false !== $semicolon) && ($semicolon < 3)) return false;
-
-        if ((false !== $brace) && ($brace < 4)) return false;
+    if (! is_null($make)) {
+        return app()->make($make);
     }
 
-    $token = $data[0];
-
-    switch ($token) {
-        case 's' :
-            if ($strict) {
-                if ('"' !== substr($data, -2, 1)) {
-                    return false;
-                }
-            } else if (false === strpos($data, '"')) {
-                return false;
-            }
-        case 'a' :
-        case 'O' :
-            return (bool) preg_match("/^{$token}:[0-9]+:/s", $data);
-        case 'b' :
-        case 'i' :
-        case 'd' :
-            $end = $strict ? '$' : '';
-
-            return (bool) preg_match("/^{$token}:[0-9.E-]+;$end/", $data);
-    }
-
-    return false;
+    return Support\Facades\Facade::getFacadeApplication();
 }
 
 /**
- * Serialize data, if needed.
+ * Generate a URL to a named route.
  *
- * @param  mixed  $data
- * @return mixed
+ * @param  string  $name
+ * @param  array   $parameters
+ * @param  bool  $absolute
+ * @param  \Routing\Route $route
+ * @return string
  */
-function maybe_serialize($data)
+function route($name, $parameters = array(), $absolute = true, $route = null)
 {
-    if (is_array($data) || is_object($data)) {
-        return serialize($data);
-    }
-
-    return $data;
+    return app('url')->route($name, $parameters, $absolute, $route);
 }
 
 /**
- * Unserialize value only if it was serialized.
+ * Generate a URL to a controller action.
  *
- * @param  string $original
- * @return mixed
+ * @param  string  $name
+ * @param  array   $parameters
+ * @return string
  */
-function maybe_unserialize($original)
+function action($name, $parameters = array())
 {
-    if (\is_serialized($original)) {
-        return @unserialize($original);
-    }
-
-    return $original;
+    return app('url')->action($name, $parameters);
 }
 
 /** Array helpers. */

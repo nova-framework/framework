@@ -9,11 +9,11 @@
 namespace Routing;
 
 use Http\Request;
+use Routing\Legacy\RouteParser as LegacyRouteParser;
 use Routing\Matching\UriValidator;
 use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
 use Routing\Matching\SchemeValidator;
-use Routing\LegacyRouteParser as LegacyParser;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
@@ -92,7 +92,7 @@ class Route
      * @var string
      */
     private $pattern = null;
-    
+
     /**
      * Boolean indicating the use of Named Parameters on not.
      *
@@ -183,7 +183,7 @@ class Route
             $wheres = $this->wheres;
         } else {
             // The Route use the Unnamed Parameters.
-            list($this->pattern, $optionals, $wheres) = LegacyParser::parse($this->uri, $this->wheres);
+            list($this->pattern, $optionals, $wheres) = LegacyRouteParser::parse($this->uri, $this->wheres);
         }
 
         $this->compiled = with(

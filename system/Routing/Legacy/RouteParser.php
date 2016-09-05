@@ -1,11 +1,11 @@
 <?php
 
-namespace Routing;
+namespace Routing\Legacy;
 
 use Routing\Route;
 
 
-class LegacyRouteParser
+class RouteParser
 {
     const REGEX_DELIMITER = '#';
 

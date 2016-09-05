@@ -125,13 +125,7 @@ class LegacyRouteCompiler
             // A token of type 'variable'; extract its information.
             list($type, $separator, $varName, $regexp) = $token;
 
-            $pattern .= $separator .'{' .$varName;
-
-            if (in_array($varName, $optionals)) {
-                $pattern .= '?';
-            }
-
-            $pattern .= '}';
+            $pattern .= $separator .'{' .$varName .'}';
 
             if ($regexp != '[^/]++') {
                 $wheres[$varName] = $regexp;

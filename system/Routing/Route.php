@@ -31,11 +31,11 @@ class Route
     private $uri = null;
 
     /**
-     * The processed pattern the Route responds to.
+     * The compiled pattern the Route responds to.
      *
      * @var string
      */
-    private $path = null;
+    private $pattern = null;
 
     /**
      * Supported HTTP methods.
@@ -96,7 +96,7 @@ class Route
     /**
      * The compiled version of the Route.
      *
-     * @var \Routing\CompiledRoute
+     * @var \Symfony\Component\Routing\CompiledRoute
      */
     protected $compiled = null;
 
@@ -183,17 +183,14 @@ class Route
     {
         if ($this->namedParams) {
             // We are using the Named Parameters on Route compilation.
-            $this->path = $this->uri;
+            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
             $optionals = $this->extractOptionalParameters();
         } else {
             // We are using the Unnamed Parameters on Route compilation.
             $compiler = $this->getLegacyCompiler();
 
-            list($path, $optionals, $wheres) = $compiler->compile($this->uri);
-
-            // The Route path is the URI pattern translated to named parameters style.
-            $this->path = $path;
+            list($this->pattern, $optionals, $wheres) = $compiler->compile($this->uri);
 
             // Setup the Route wheres.
             foreach ($wheres as $key => $value) {
@@ -201,11 +198,8 @@ class Route
             }
         }
 
-        //
-        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->path);
-
         $this->compiled = with(
-            new SymfonyRoute($uri, $optionals, $this->wheres, array(), $this->domain() ?: '')
+            new SymfonyRoute($this->pattern, $optionals, $this->wheres, array(), $this->domain() ?: '')
         )->compile();
     }
 
@@ -475,15 +469,15 @@ class Route
      */
     public function parameters()
     {
-        if (isset($this->parameters)) {
-            return array_map(function($value)
-            {
-                return is_string($value) ? rawurldecode($value) : $value;
-
-            }, $this->parameters);
+        if (! isset($this->parameters)) {
+            throw new \LogicException("Route is not bound.");
         }
 
-        throw new \LogicException("Route is not bound.");
+        return array_map(function($value)
+        {
+            return is_string($value) ? rawurldecode($value) : $value;
+
+        }, $this->parameters);
     }
 
     /**
@@ -518,17 +512,17 @@ class Route
      */
     protected function compileParameterNames()
     {
-        if (isset($this->path)) {
-            preg_match_all('/\{(.*?)\}/', $this->path, $matches);
-
-            return array_map(function($value)
-            {
-                return trim($value, '?');
-
-            }, $matches[1]);
+        if (! isset($this->pattern)) {
+            throw new \LogicException("Route is not compiled.");
         }
 
-        throw new \LogicException("Route is not compiled.");
+        preg_match_all('/\{(.*?)\}/', $this->pattern, $matches);
+
+        return array_map(function($value)
+        {
+            return trim($value, '?');
+
+        }, $matches[1]);
     }
 
     /**
@@ -554,16 +548,10 @@ class Route
      */
     public function bindParameters(Request $request)
     {
-        // If the route has a regular expression for the host part of the URI, we will
-        // compile that and get the parameter matches for this domain. We will then
-        // merge them into this parameters array so that this array is completed.
         $parameters = $this->matchToKeys(
             array_slice($this->bindPathParameters($request), 1)
         );
 
-        // If the route has a regular expression for the host part of the URI, we will
-        // compile that and get the parameter matches for this domain. We will then
-        // merge them into this parameters array so that this array is completed.
         if (! is_null($this->compiled->getHostRegex())) {
             $params = $this->bindHostParameters($request, $params);
         }
@@ -720,7 +708,7 @@ class Route
      */
     public function getPath()
     {
-        return $this->path;
+        return $this->uri();
     }
 
     /**

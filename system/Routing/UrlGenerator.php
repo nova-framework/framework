@@ -2,6 +2,7 @@
 
 namespace Routing;
 
+use Config\Config;
 use Http\Request;
 use Support\Str;
 
@@ -16,6 +17,13 @@ class UrlGenerator
      * @var \Routing\RouteCollection
      */
     protected $routes;
+
+    /**
+     * Flag signaling the Routing on legacy mode.
+     *
+     * @var string
+     */
+    protected $legacyRouting = false;
 
     /**
      * The request instance.
@@ -68,6 +76,11 @@ class UrlGenerator
         $this->routes = $routes;
 
         $this->setRequest($request);
+
+        // Wheter or not are used the Unnamed Parameters.
+        if ('unnamed' == Config::get('routing.parameters', 'named')) {
+            $this->legacyRouting = true;
+        }
     }
 
     /**
@@ -230,17 +243,20 @@ class UrlGenerator
      * @param  array  $parameters
      * @param  bool  $absolute
      * @return string
+     *
+     * @throws \BadMethodCallException
      */
     protected function toRoute($route, array $parameters, $absolute)
     {
-        $route->compileRoute();
+        if ($this->legacyRouting && (preg_match('#\(:\w+\)#', $route->uri()) === 1)) {
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
+        }
 
-        //
         $domain = $this->getRouteDomain($route, $parameters);
 
         $uri = strtr(rawurlencode($this->trimUrl(
             $root = $this->replaceRoot($route, $domain, $parameters),
-            $this->replaceRouteParameters($route->getPath(), $parameters)
+            $this->replaceRouteParameters($route->uri(), $parameters)
         )), $this->dontEncode) .$this->getRouteQueryString($parameters);
 
         return $absolute ? $uri : '/' .ltrim(str_replace($root, '', $uri), '/');

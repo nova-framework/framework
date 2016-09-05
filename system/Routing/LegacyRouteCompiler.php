@@ -41,8 +41,8 @@ class LegacyRouteCompiler
 
         //
         $patterns = array_merge($this->patterns, array(
-            ':any' => '[^/]+',
-            ':num' => '[0-9]+',
+            ':any' => '[^/]++',
+            ':num' => '([0-9]+)',
             ':all' => '(.*)'
         ));
 
@@ -86,7 +86,7 @@ class LegacyRouteCompiler
             if (isset($patterns[$varName])) {
                 $regexp = $patterns[$varName];
             } else {
-                $regexp = '[^/]+';
+                $regexp = '[^/]++';
             }
 
             //
@@ -133,8 +133,9 @@ class LegacyRouteCompiler
 
             $pattern .= '}';
 
-            //
-            $wheres[$varName] = $regexp;
+            if ($regexp != '[^/]++') {
+                $wheres[$varName] = $regexp;
+            }
         }
 
         return array($pattern, $wheres);

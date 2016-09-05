@@ -204,7 +204,7 @@ class Route
             // Setup the new requirements on compiler.
             $compiler->setRequirements($this->wheres);
 
-            // The Route path is the translated URI pattern to named parameters style.
+            // The Route path is the URI pattern translated to named parameters style.
             $this->path = $path;
         }
 
@@ -560,10 +560,16 @@ class Route
      */
     public function bindParameters(Request $request)
     {
+        // If the route has a regular expression for the host part of the URI, we will
+        // compile that and get the parameter matches for this domain. We will then
+        // merge them into this parameters array so that this array is completed.
         $parameters = $this->matchToKeys(
             array_slice($this->bindPathParameters($request), 1)
         );
 
+        // If the route has a regular expression for the host part of the URI, we will
+        // compile that and get the parameter matches for this domain. We will then
+        // merge them into this parameters array so that this array is completed.
         if (! is_null($this->compiled->getHostRegex())) {
             $params = $this->bindHostParameters($request, $params);
         }
@@ -825,7 +831,7 @@ class Route
      */
     public function getPrefix()
     {
-        return array_get($this->action, 'prefix');
+        return isset($this->action['prefix']) ? $this->action['prefix'] : null;
     }
 
     /**
@@ -835,7 +841,7 @@ class Route
      */
     public function getName()
     {
-        return array_get($this->action, 'as');
+        return isset($this->action['as']) ? $this->action['as'] : null;
     }
 
     /**

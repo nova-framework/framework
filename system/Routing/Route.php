@@ -31,13 +31,6 @@ class Route
     private $uri = null;
 
     /**
-     * The compiled pattern the Route responds to.
-     *
-     * @var string
-     */
-    private $pattern = null;
-
-    /**
      * Supported HTTP methods.
      *
      * @var array
@@ -93,6 +86,13 @@ class Route
      */
     protected $compiled = null;
 
+    /**
+     * The compiled pattern the Route responds to.
+     *
+     * @var string
+     */
+    private $pattern = null;
+    
     /**
      * Boolean indicating the use of Named Parameters on not.
      *

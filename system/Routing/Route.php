@@ -175,15 +175,15 @@ class Route
     public function compileRoute()
     {
         if ($this->namedParams) {
-            // The Route use the default Named Parameters.
+            // The Route use the (default) Named Parameters.
             $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
             $optionals = $this->extractOptionalParameters();
 
-            // The requrements for the compiled Symfony Route are just the wheres.
+            // The requirements for the compiled Symfony Route are just the wheres.
             $requirements = $this->wheres;
         } else {
-            // The Route use the legacy Unnamed Parameters.
+            // The Route use the (legacy) Unnamed Parameters.
             list($this->pattern, $optionals, $requirements) = RouteParser::parse(
                 $this->uri,
                 $this->wheres

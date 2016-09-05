@@ -3,6 +3,7 @@
 namespace Routing;
 
 use Http\Request;
+use Support\Str;
 
 use InvalidArgumentException;
 
@@ -158,7 +159,7 @@ class UrlGenerator
     {
         $i = 'index.php';
 
-        return str_contains($root, $i) ? str_replace('/'.$i, '', $root) : $root;
+        return Str::contains($root, $i) ? str_replace('/'.$i, '', $root) : $root;
     }
 
     /**
@@ -437,7 +438,7 @@ class UrlGenerator
             $root = $this->forcedRoot ?: $this->request->root();
         }
 
-        $start = starts_with($root, 'http://') ? 'http://' : 'https://';
+        $start = Str::startsWith($root, 'http://') ? 'http://' : 'https://';
 
         return preg_replace('~'.$start.'~', $scheme, $root, 1);
     }
@@ -461,7 +462,7 @@ class UrlGenerator
      */
     public function isValidUrl($path)
     {
-        if (starts_with($path, ['#', '//', 'mailto:', 'tel:', 'http://', 'https://'])) return true;
+        if (Str::startsWith($path, ['#', '//', 'mailto:', 'tel:', 'http://', 'https://'])) return true;
 
         return filter_var($path, FILTER_VALIDATE_URL) !== false;
     }

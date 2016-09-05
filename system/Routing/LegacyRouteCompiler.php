@@ -25,9 +25,8 @@ class LegacyRouteCompiler
 
 
     /**
-     * Create a new controller dispatcher instance.
+     * Create a new legacy Route Compiler instance.
      *
-     * @param  string $route
      * @param  array  $patterns
      * @return void
      */
@@ -104,26 +103,17 @@ class LegacyRouteCompiler
             $tokens[] = array('text', substr($route, $pos));
         }
 
-        // Create the Route translated pattern.
-        $path = static::createPath($tokens, $optionals);
-
-        // Create the Route wheres.
-        $wheres = array();
-
-        foreach ($tokens as $token) {
-            if (($token[0] == 'variable') && ($token[3] != '[^/]+')) {
-                $key = $token[2];
-
-                $wheres[$key] = $token[3];
-            }
-        }
+        // Create the Route wheres and translated pattern.
+        list($path, $wheres) = static::process($tokens, $optionals);
 
         return array($path, $optionals, $wheres);
     }
 
-    private static function createPath(array $tokens, array $optionals)
+    private static function process(array $tokens, array $optionals)
     {
         $pattern = '';
+
+        $wheres = array();
 
         foreach ($tokens as $token) {
             if ($token[0] == 'text') {
@@ -142,9 +132,12 @@ class LegacyRouteCompiler
             }
 
             $pattern .= '}';
+
+            //
+            $wheres[$varName] = $regexp;
         }
 
-        return $pattern;
+        return array($pattern, $wheres);
     }
 
 }

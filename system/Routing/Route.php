@@ -183,7 +183,10 @@ class Route
             $requirements = $this->wheres;
         } else {
             // The Route use the legacy Unnamed Parameters.
-            list($this->pattern, $optionals, $requirements) = RouteParser::parse($this->uri, $this->wheres);
+            list($this->pattern, $optionals, $requirements) = RouteParser::parse(
+                $this->uri,
+                $this->wheres
+            );
         }
 
         $this->compiled = with(

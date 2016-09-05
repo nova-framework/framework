@@ -233,7 +233,7 @@ class UrlGenerator
      */
     protected function toRoute($route, array $parameters, $absolute)
     {
-        $route->compile();
+        $route->compileRoute();
 
         //
         $domain = $this->getRouteDomain($route, $parameters);

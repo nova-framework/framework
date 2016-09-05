@@ -13,9 +13,9 @@ use Routing\Matching\UriValidator;
 use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
 use Routing\Matching\SchemeValidator;
-use Routing\Compiler\RouteCompiler;
+use Routing\LegacyRouteCompiler;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route as SymfonyRoute;
 
 
 /**
@@ -163,7 +163,7 @@ class Route
      */
     public function matches(Request $request, $includingMethod = true)
     {
-        $this->compile();
+        $this->compileRoute();
 
         foreach ($this->getValidators() as $validator) {
             if (! $includingMethod && ($validator instanceof MethodValidator)) continue;
@@ -179,36 +179,34 @@ class Route
      *
      * @return string
      */
-    public function compile()
+    public function compileRoute()
     {
-        if (isset($this->compiled)) return $this->compiled;
-
-        //
-        $compiler = $this->getCompiler();
-
         if ($this->namedParams) {
             // We are using the Named Parameters on Route compilation.
-            $optionals = $this->extractOptionalParameters();
-
-            // The Route path is its URI pattern.
             $this->path = $this->uri;
+
+            $optionals = $this->extractOptionalParameters();
         } else {
             // We are using the Unnamed Parameters on Route compilation.
-            list($path, $optionals, $wheres) = $compiler->parseLegacyRoute($this->uri);
+            $compiler = $this->getLegacyCompiler();
+
+            list($path, $optionals, $wheres) = $compiler->compile($this->uri);
+
+            // The Route path is the URI pattern translated to named parameters style.
+            $this->path = $path;
 
             // Setup the Route wheres.
             foreach ($wheres as $key => $value) {
                 $this->where($key, $value);
             }
-
-            // Setup the new requirements on compiler.
-            $compiler->setRequirements($this->wheres);
-
-            // The Route path is the URI pattern translated to named parameters style.
-            $this->path = $path;
         }
 
-        return $this->compiled = $compiler->compile($this, $optionals);
+        //
+        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->path);
+
+        $this->compiled = with(
+            new SymfonyRoute($uri, $optionals, $this->wheres, array(), $this->domain() ?: '')
+        )->compile();
     }
 
     /**
@@ -218,7 +216,7 @@ class Route
      */
     protected function extractOptionalParameters()
     {
-        preg_match_all('/\{(\w+?)\?\}/', $this->uri, $matches);
+        preg_match_all('/\{(\w+?)\?\}/', $this->path, $matches);
 
         return isset($matches[1]) ? $matches[1] : array();
     }
@@ -520,18 +518,14 @@ class Route
      */
     protected function compileParameterNames()
     {
-        if ($this->namedParams) {
-            preg_match_all('/\{(.*?)\}/', $this->uri, $matches);
+        if (isset($this->path)) {
+            preg_match_all('/\{(.*?)\}/', $this->path, $matches);
 
             return array_map(function($value)
             {
                 return trim($value, '?');
 
             }, $matches[1]);
-        } else if (isset($this->compiled)) {
-            preg_match_all('#\(\?P<(\w+)>[^\)]+\)#s', $this->compiled->getRegex(), $matches);
-
-            return $matches[1];
         }
 
         throw new \LogicException("Route is not compiled.");
@@ -545,7 +539,7 @@ class Route
      */
     public function bind(Request $request)
     {
-        $this->compile();
+        $this->compileRoute();
 
         $this->bindParameters($request);
 
@@ -714,9 +708,9 @@ class Route
      *
      * @return \Routing\RouteCompiler
      */
-    public function getCompiler()
+    protected function getLegacyCompiler()
     {
-        return $this->compiler ?: $this->compiler = new RouteCompiler($this->wheres);
+        return $this->compiler ?: $this->compiler = new LegacyRouteCompiler($this->wheres);
     }
 
     /**

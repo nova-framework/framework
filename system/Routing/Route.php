@@ -180,6 +180,7 @@ class Route
 
             $optionals = $this->extractOptionalParameters();
 
+            // The requrements for the compiled Symfony Route are just the wheres.
             $requirements = $this->wheres;
         } else {
             // The Route use the legacy Unnamed Parameters.

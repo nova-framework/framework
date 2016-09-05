@@ -1,9 +1,1 @@
 
-[2016-09-05 11:55:15] local.ERROR: exception 'Symfony\Component\Debug\Exception\FatalErrorException' with message 'Cannot make static method Routing\Compiler\RouteCompilerInterface::compile() non static in class Routing\Compiler\RouteCompiler' in /var/www/sites/novaframework/system/Routing/Compiler/RouteCompiler.php:13
-Stack trace:
-#0 [internal function]: Exception\Handler->handleShutdown()
-#1 {main} [] []
-[2016-09-05 11:55:31] local.ERROR: exception 'Symfony\Component\Debug\Exception\FatalErrorException' with message 'Declaration of Routing\Compiler\RouteCompiler::compile() must be compatible with Routing\Compiler\RouteCompilerInterface::compile(Routing\Compiler\Route $route, array $optionals = Array)' in /var/www/sites/novaframework/system/Routing/Compiler/RouteCompiler.php:13
-Stack trace:
-#0 [internal function]: Exception\Handler->handleShutdown()
-#1 {main} [] []

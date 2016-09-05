@@ -204,7 +204,7 @@ class Route
                 $this->where($key, $value);
             }
 
-            // Setup the new compiler requirements.
+            // Setup the new requirements on compiler.
             $compiler->setRequirements($this->wheres);
         }
 

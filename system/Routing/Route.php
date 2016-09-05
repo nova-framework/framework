@@ -183,9 +183,9 @@ class Route
     {
         if ($this->namedParams) {
             // We are using the Named Parameters on Route compilation.
-            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
             $optionals = $this->extractOptionalParameters();
+
+            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
         } else {
             // We are using the Unnamed Parameters on Route compilation.
             $compiler = $this->getLegacyCompiler();

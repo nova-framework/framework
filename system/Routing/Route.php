@@ -564,6 +564,10 @@ class Route
             array_slice($this->bindPathParameters($request), 1)
         );
 
+        if (! is_null($this->compiled->getHostRegex())) {
+            $params = $this->bindHostParameters($request, $params);
+        }
+
         return $this->parameters = $this->replaceDefaults($parameters);
     }
 

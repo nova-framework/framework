@@ -181,7 +181,7 @@ class Route
      */
     public function compile()
     {
-        if (isset($this->compiled)) return;
+        if (isset($this->compiled)) return $this->compiled;
 
         //
         $compiler = $this->getCompiler();
@@ -208,7 +208,7 @@ class Route
             $compiler->setRequirements($this->wheres);
         }
 
-        $this->compiled = $compiler->compile($this, $optionals);
+        return $this->compiled = $compiler->compile($this, $optionals);
     }
 
     /**

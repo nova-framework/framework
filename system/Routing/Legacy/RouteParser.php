@@ -88,7 +88,7 @@ class RouteParser
         // Create the Route wheres and translated pattern.
         $pattern = '';
 
-        $wheres = array();
+        $requirements = array();
 
         foreach ($tokens as $token) {
             if ($token[0] == 'text') {
@@ -103,11 +103,15 @@ class RouteParser
             $pattern .= $separator .'{' .$varName .'}';
 
             if ($regexp != '[^/]++') {
-                $wheres[$varName] = $regexp;
+                $requirements[$varName] = $regexp;
             }
         }
 
-        return array($pattern, $optionals, $wheres);
+        return array(
+            $pattern,
+            array_fill_keys($optionals, null),
+            $requirements
+        );
     }
 
 }

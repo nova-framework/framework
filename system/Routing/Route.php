@@ -204,7 +204,7 @@ class Route
     {
         preg_match_all('/\{(\w+?)\?\}/', $this->uri, $matches);
 
-        return isset($matches[1]) ? $matches[1] : array();
+        return isset($matches[1]) ? array_fill_keys($matches[1], null) : array();
     }
 
     /**
@@ -505,7 +505,7 @@ class Route
     protected function compileParameterNames()
     {
         if (! isset($this->pattern)) {
-            throw new \LogicException("Route is not compiled.");
+            $this->compileRoute();
         }
 
         preg_match_all('/\{(.*?)\}/', $this->domain() .$this->pattern, $matches);

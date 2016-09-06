@@ -111,10 +111,10 @@ class Route
      */
     public function __construct($methods, $uri, $action, $namedParams = true)
     {
-        $uri = trim($uri, '/');
+        $this->namedParams = $namedParams;
 
         //
-        $this->uri = ! empty($uri) ? $uri : '/';
+        $this->uri = $uri;
 
         $this->methods = (array) $methods;
 
@@ -127,9 +127,6 @@ class Route
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
         }
-
-        //
-        $this->namedParams = $namedParams;
     }
 
     /**
@@ -171,27 +168,28 @@ class Route
      * Compile the Route pattern for matching and return it.
      *
      * @return string
+     * @throws \LogicException
      */
     public function compileRoute()
     {
+        $domain = $this->domain();
+
         if ($this->namedParams) {
             // The Route use the (default) Named Parameters.
-            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
             $optionals = $this->extractOptionalParameters();
 
-            // The requirements for the compiled Symfony Route are just the wheres.
-            $requirements = $this->wheres;
+            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
         } else {
             // The Route use the (legacy) Unnamed Parameters.
-            list($this->pattern, $optionals, $requirements) = RouteParser::parse(
-                $this->uri,
-                $this->wheres
-            );
+            if (! is_null($domain)) {
+                throw new \LogicException("The domain option is not allowed while using Unnamed Parameters.");
+            }
+
+            list($this->pattern, $optionals, $this->wheres) = RouteParser::parse($this->uri);
         }
 
         $this->compiled = with(
-            new SymfonyRoute($this->pattern, $optionals, $requirements, array(), $this->domain() ?: '')
+            new SymfonyRoute($this->pattern, $optionals, $this->wheres, array(), $domain ?: '')
         )->compile();
     }
 
@@ -631,9 +629,14 @@ class Route
      * @param  array|string  $name
      * @param  string  $expression
      * @return $this
+     * @throws \BadMethodCallException
      */
     public function where($name, $expression = null)
     {
+        if (! $this->namedParams) {
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
+        }
+
         foreach ($this->parseWhere($name, $expression) as $name => $expression) {
             $this->wheres[$name] = $expression;
         }
@@ -676,9 +679,7 @@ class Route
      */
     public function prefix($prefix)
     {
-        $uri = trim(trim($prefix, '/') .'/' .trim($this->uri, '/'), '/');
-
-        $this->uri = ! empty($uri) ? $uri : '/';
+        $this->uri = trim($prefix, '/') .'/' .trim($this->uri, '/');
 
         return $this;
     }

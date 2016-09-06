@@ -809,9 +809,9 @@ class BelongsToMany extends Relation
      */
     protected function guessInverseRelation()
     {
-        $name = Str::plural(class_basename($this->getParent()));
+        $relation = Str::plural(class_basename($this->getParent()));
 
-        return Str::camel($name);
+        return Str::camel($relation);
     }
 
     /**

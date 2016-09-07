@@ -618,6 +618,10 @@ class Route
      */
     public function defaults($key, $value)
     {
+        if (! $this->namedParams) {
+            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
+        }
+        
         $this->defaults[$key] = $value;
 
         return $this;

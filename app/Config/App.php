@@ -166,11 +166,11 @@ Config::set('app', array(
         'Cron'          => 'Support\Facades\Cron',
 
         // The Compatibility Support.
-        'Errors'        => 'App\Legacy\Error',
+        'Errors'        => 'Shared\Legacy\Error',
 
         //
-        'Core\Controller' => 'App\Legacy\Controller',
-        'Core\Model'      => 'App\Legacy\Model',
+        'Core\Controller' => 'Shared\Legacy\Controller',
+        'Core\Model'      => 'Shared\Legacy\Model',
         'Core\Template'   => 'Support\Facades\Template',
         'Core\View'       => 'Support\Facades\View',
     ),

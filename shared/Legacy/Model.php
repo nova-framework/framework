@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Legacy;
+namespace Shared\Legacy;
 
 use Helpers\Database;
 

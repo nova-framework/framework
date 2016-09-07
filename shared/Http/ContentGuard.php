@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Extensions\Http;
+namespace Shared\Http;
 
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;

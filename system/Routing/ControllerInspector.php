@@ -72,6 +72,7 @@ class ControllerInspector
         switch ($method->class) {
             case 'Routing\Controller':
             case 'App\Core\Controller':
+            case 'Shared\Legacy\Controller':
                 return false;
 
             default:

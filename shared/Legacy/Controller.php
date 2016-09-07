@@ -1,6 +1,6 @@
 <?php
 /**
- * LegacyController - A base controller with legacy API support.
+ * Controller - A base controller with legacy API support.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
@@ -8,12 +8,15 @@
 
 namespace Shared\Legacy;
 
-use App\Core\Controller as BaseController;
 use Http\Request;
 use Http\Response;
+use Routing\Controller as BaseController;
 use Routing\Route;
 use Support\Facades\Language;
 use Support\Facades\View;
+use Template\Template as Layout;
+
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use BadMethodCallException;
 
@@ -41,6 +44,20 @@ abstract class Controller extends BaseController
      */
     public $language = null;
 
+    /**
+     * The currently used Template.
+     *
+     * @var string
+     */
+    protected $template = null;
+
+    /**
+     * The currently used Layout.
+     *
+     * @var string
+     */
+    protected $layout = 'default';
+
 
     /**
      * Create a new Controller instance.
@@ -48,6 +65,11 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         parent::__construct();
+
+        // Setup the used Template to default, if it is not already defined.
+        if (! isset($this->template)) {
+            $this->template = Config::get('app.template');
+        }
 
         // Initialise the Language object.
         if ($this->language !== false) {
@@ -127,6 +149,48 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Return a default View instance.
+     *
+     * @return \View\View
+     * @throw \BadMethodCallException
+     */
+    protected function getView(array $data = array())
+    {
+        list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+        $method = $caller['function'];
+
+        //
+        $path = str_replace('\\', '/', static::class);
+
+        if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
+            $view = $matches[1] .'/' .ucfirst($method);
+
+            return View::make($view, $data);
+        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $path, $matches)) {
+            $view = $matches[2] .'/' .ucfirst($method);
+
+            return View::make($view, $data, $matches[1]);
+        }
+
+        throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
+    }
+
+    /**
+     * Return a translated string.
+     *
+     * @return string
+     */
+    protected function trans($message, $code = LANGUAGE_CODE)
+    {
+        if ($this->language instanceof Language) {
+            return $this->language->get($message, $code);
+        }
+
+        return $message;
+    }
+
+    /**
      * Create from the given result a Response instance and send it.
      *
      * @param mixed  $response
@@ -135,14 +199,27 @@ abstract class Controller extends BaseController
      */
     protected function processResponse($response)
     {
-        // If the response which is returned from the Controller's Action is null and we have
-        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
+        if ($response instanceof Renderable) {
+            // If the response which is returned from the called Action is a Renderable instance,
+            // we will assume we want to render it using the Controller's templated environment.
 
-        if (is_null($response)) {
-            return $this->createLegacyResponse();
+            if (is_string($this->layout) && (! $response instanceof Layout)) {
+                $response = Template::make($this->layout, $this->template)->with('content', $response);
+            }
         }
 
-        return parent::processResponse($response);
+        // If the response which is returned from the Controller's Action is null and we have
+        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
+        else if (is_null($response)) {
+             $response = $this->createLegacyResponse();
+        }
+
+        // If the response is not a instance of Symfony Response, create a proper one.
+        if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
+        }
+
+        return $response;
     }
 
     /**
@@ -168,20 +245,6 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Return a translated string.
-     *
-     * @return string
-     */
-    protected function trans($message, $code = LANGUAGE_CODE)
-    {
-        if ($this->language instanceof Language) {
-            return $this->language->get($message, $code);
-        }
-
-        return $message;
-    }
-
-    /**
      * @return mixed
      */
     protected function getMethod()
@@ -195,6 +258,22 @@ abstract class Controller extends BaseController
     protected function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLayout()
+    {
+        return $this->layout;
     }
 
 }

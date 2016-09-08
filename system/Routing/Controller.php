@@ -2,7 +2,6 @@
 
 namespace Routing;
 
-use Container\Container;
 use Http\Response;
 use View\View;
 
@@ -42,13 +41,6 @@ abstract class Controller
      * @var \Routing\RouteFiltererInterface
      */
     protected static $filterer;
-
-    /**
-     * The IoC container instance.
-     *
-     * @var \Container\Container
-     */
-    protected static $container;
 
 
     /**

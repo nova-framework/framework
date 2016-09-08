@@ -27,16 +27,16 @@ Config::set('routing', array(
     /*
      * The style of parameters processed on Route pattern.
      */
-    'parameters' => 'named',       // Supported: 'named' and 'unnamed'.
+    'parameters' => 'named',       // Supported: "named" and "unnamed".
 
     /*
      * The Asset Files Serving configuration.
      */
     'assets' => array(
         // The driver type used for serving the Asset Files.
-        'driver' => 'default',     // Supported: 'default' and 'custom'.
+        'driver' => 'default',     // Supported: "default" and "custom".
 
-        // The name of the custom Assets Dispatcher.
+        // The name of Assets Dispatcher used as 'custom' driver.
         'dispatcher' => 'Shared\Routing\Assets\CustomDispatcher',
     ),
 ));

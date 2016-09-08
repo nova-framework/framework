@@ -5,9 +5,10 @@ namespace App\Modules\Files\Controllers\Admin;
 use App\Core\BackendController;
 
 use Http\Request;
-use Routing\FileDispatcher;
+use Routing\Asssets\DefaultDispatcher as FileDispatcher;
 use Routing\Route;
 
+use App;
 use Auth;
 use Response;
 use View;
@@ -16,11 +17,11 @@ use View;
 class Files extends BackendController
 {
     /**
-     * The Request instance.
+     * The IoC container instance.
      *
-     * @var \Http\Request
+     * @var \Container\Container
      */
-    private $request = null;
+    protected $container;
 
     /**
      * The File Dispatcher instance.
@@ -29,12 +30,22 @@ class Files extends BackendController
      */
     private $dispatcher;
 
+    /**
+     * The Request instance.
+     *
+     * @var \Http\Request
+     */
+    private $request = null;
+
 
     public function __construct()
     {
         parent::__construct();
 
-        //
+        // Setup the IoC Container instance.
+        $this->container = App::instance();
+
+        // Setup the Middleware.
         $this->beforeFilter('@filterRequests');
     }
 
@@ -115,7 +126,9 @@ class Files extends BackendController
      */
     protected function getDispatcher()
     {
-        return $this->dispatcher ?: $this->dispatcher = new FileDispatcher();
+        if (isset($this->fileDispatcher)) return $this->fileDispatcher;
+
+        return $this->fileDispatcher = $this->container->make('Routing\Assets\DispatcherInterface');
     }
 
 }

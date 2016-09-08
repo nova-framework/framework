@@ -33,7 +33,7 @@ Config::set('routing', array(
      * The Asset Files Serving configuration.
      */
     'assets' => array(
-        // The Assets Dispatcher type used for serving Asset Files.
+        // The type of Assets Dispatcher used for serving Asset Files.
         'type' => 'default',       // Supported: 'default' and 'custom'.
 
         // The name of the custom Assets Dispatcher.

@@ -1227,7 +1227,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getFileDispatcher()
     {
-        return $this->fileDispatcher ?: $this->container->make('Routing\Assets\DispatcherInterface');
+        if (isset($this->fileDispatcher)) return $this->fileDispatcher;
+
+        return $this->fileDispatcher = $this->container->make('Routing\Assets\DispatcherInterface');
     }
 
     /**

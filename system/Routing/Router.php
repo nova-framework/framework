@@ -100,6 +100,13 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected $currentRequest;
 
     /**
+     * The registered route value binders.
+     *
+     * @var array
+     */
+    protected $binders = array();
+
+    /**
      * Array of Route Groups
      *
      * @var array $groupStack
@@ -140,6 +147,12 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         $this->routes = new RouteCollection();
 
         $this->container = $container ?: new Container();
+
+        //
+        $this->bind('_missing', function($value)
+        {
+            return explode('/', $value);
+        });
 
         // Wheter or not are used the Named Parameters.
         if ('unnamed' == Config::get('routing.parameters', 'named')) {
@@ -1042,7 +1055,39 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function findRoute(Request $request)
     {
-        return $this->currentRoute = $this->routes->match($request);
+        $this->currentRoute = $route = $this->routes->match($request);
+
+        return $this->substituteBindings($route);
+    }
+
+    /**
+     * Substitute the route bindings onto the route.
+     *
+     * @param  \Routing\Route  $route
+     * @return \Routing\Route
+     */
+    protected function substituteBindings($route)
+    {
+        foreach ($route->parameters() as $key => $value) {
+            if (isset($this->binders[$key])) {
+                $route->setParameter($key, $this->performBinding($key, $value, $route));
+            }
+        }
+
+        return $route;
+    }
+
+    /**
+     * Call the binding callback for the given key.
+     *
+     * @param  string  $key
+     * @param  string  $value
+     * @param  \Routing\Route  $route
+     * @return mixed
+     */
+    protected function performBinding($key, $value, $route)
+    {
+        return call_user_func($this->binders[$key], $value, $route);
     }
 
     /**
@@ -1115,6 +1160,72 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         }
 
         return $callback;
+    }
+
+    /**
+     * Register a Model binder for a wildcard.
+     *
+     * @param  string  $key
+     * @param  string  $class
+     * @param  \Closure  $callback
+     * @return void
+     *
+     * @throws NotFoundHttpException
+     */
+    public function model($key, $class, Closure $callback = null)
+    {
+        $this->bind($key, function($value) use ($class, $callback)
+        {
+            if (is_null($value)) return null;
+
+            if ($model = (new $class)->find($value)) {
+                return $model;
+            }
+
+            if ($callback instanceof Closure) {
+                return call_user_func($callback);
+            }
+
+            throw new NotFoundHttpException;
+        });
+    }
+
+    /**
+     * Add a new route parameter binder.
+     *
+     * @param  string  $key
+     * @param  string|callable  $binder
+     * @return void
+     */
+    public function bind($key, $binder)
+    {
+        if (is_string($binder)) {
+            $binder = $this->createClassBinding($binder);
+        }
+
+        $key = str_replace('-', '_', $key);
+
+        $this->binders[$key] = $binder;
+    }
+
+    /**
+     * Create a class based binding using the IoC container.
+     *
+     * @param  string    $binding
+     * @return \Closure
+     */
+    public function createClassBinding($binding)
+    {
+        return function($value, $route) use ($binding)
+        {
+            $segments = explode('@', $binding);
+
+            $method = (count($segments) == 2) ? $segments[1] : 'bind';
+
+            $callable = array($this->container->make($segments[0]), $method);
+
+            return call_user_func($callable, $value, $route);
+        };
     }
 
     /**

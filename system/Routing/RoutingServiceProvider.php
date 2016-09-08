@@ -39,7 +39,7 @@ class RoutingServiceProvider extends ServiceProvider
     public function registerAssetsDispatcher()
     {
         // NOTE: When this method is executed, the Config Store is not yet available.
-        $driver = Config::get('routing.assets.driver');
+        $driver = Config::get('routing.assets.driver', 'default');
 
         if ($driver == 'custom') {
             $className = Config::get('routing.assets.dispatcher');

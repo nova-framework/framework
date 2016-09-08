@@ -6,6 +6,8 @@
  * @version 3.0
  */
 
+use Config\Config;
+
 /**
  * PREFER to be used in Database calls or storing Session data, default is 'nova_'
  */
@@ -17,3 +19,24 @@ define('PREFIX', 'nova_');
  */
 define('CONFIG_STORE', 'files'); // Supported: "files", "database"
 
+
+/**
+ * Routing configuration
+ */
+Config::set('routing', array(
+    /*
+     * The style of parameters processed on Route pattern.
+     */
+    'parameters' => 'named',       // Supported: 'named' and 'unnamed'.
+
+    /*
+     * The Asset Files Serving configuration.
+     */
+    'assets' => array(
+        // The Assets Dispatcher type used for serving Asset Files.
+        'type' => 'default',       // Supported: 'default' and 'custom'.
+
+        // The name of the custom Assets Dispatcher.
+        'dispatcher' => 'Shared\Routing\Assets\CustomDispatcher',
+    ),
+));

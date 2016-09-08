@@ -62,6 +62,15 @@ define('STORAGE_PATH', APPDIR .'Storage' .DS);
 define('VERSION', Application::VERSION);
 
 //--------------------------------------------------------------------------
+// Load Global Configuration
+//--------------------------------------------------------------------------
+
+// Load first the file constants file.
+$path = APPDIR .'Config.php';
+
+if (is_readable($path)) require $path;
+
+//--------------------------------------------------------------------------
 // Create New Application
 //--------------------------------------------------------------------------
 
@@ -115,11 +124,6 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 //--------------------------------------------------------------------------
 // Load The Configuration
 //--------------------------------------------------------------------------
-
-// Load first the file constants file.
-$path = app_path() .'Config.php';
-
-if (is_readable($path)) require $path;
 
 // Include all other files located on Config directory.
 foreach (glob(app_path() .'Config/*.php') as $path) {

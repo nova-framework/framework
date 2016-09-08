@@ -18,7 +18,6 @@ use Http\Request;
 use Http\Response;
 use Routing\ControllerDispatcher;
 use Routing\ControllerInspector;
-use Routing\FileDispatcher;
 use Routing\RouteCollection;
 use Routing\RouteFiltererInterface;
 use Routing\Route;
@@ -1228,7 +1227,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function getFileDispatcher()
     {
-        return $this->fileDispatcher ?: new FileDispatcher();
+        return $this->fileDispatcher ?: $this->container->make('Routing\Assets\DispatcherInterface');
     }
 
     /**

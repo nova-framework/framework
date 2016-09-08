@@ -8,6 +8,7 @@
 
 namespace Routing;
 
+use Config\Config;
 use Routing\Router;
 use Routing\Redirector;
 use Routing\UrlGenerator;
@@ -23,11 +24,31 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->registerAssetsDispatcher();
+
         $this->registerRouter();
 
         $this->registerUrlGenerator();
 
         $this->registerRedirector();
+    }
+
+    /**
+     * Register the Assets Dispatcher.
+     */
+    public function registerAssetsDispatcher()
+    {
+        // NOTE: When this method is executed, the Config Store is not yet available.
+        $dispatcher = Config::get('routing.assets.type');
+
+        if ($type == 'custom') {
+            $className = Config::get('routing.assets.dispatcher');
+        } else {
+            $className = 'Routing\Assets\\' .ucfirst($dispatcher) .'Dispatcher';
+        }
+
+        // Bind the calculated class name to the Assets Dispatcher Interface.
+        $this->app->bind('Routing\Assets\DispatcherInterface', $className);
     }
 
     /**

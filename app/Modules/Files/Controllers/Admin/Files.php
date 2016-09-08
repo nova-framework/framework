@@ -28,7 +28,7 @@ class Files extends BackendController
      *
      * @var \Routing\FileDispatcher
      */
-    private $dispatcher;
+    private $fileDispatcher;
 
     /**
      * The Request instance.
@@ -114,7 +114,7 @@ class Files extends BackendController
     protected function serveFile($path)
     {
         // Get a File Dispatcher instance.
-        $dispatcher = $this->getDispatcher();
+        $dispatcher = $this->getFileDispatcher();
 
         return $dispatcher->serve($path, $this->request);
     }
@@ -124,7 +124,7 @@ class Files extends BackendController
      *
      * @return \Routing\FileDispatcher
      */
-    protected function getDispatcher()
+    protected function getFileDispatcher()
     {
         if (isset($this->fileDispatcher)) return $this->fileDispatcher;
 

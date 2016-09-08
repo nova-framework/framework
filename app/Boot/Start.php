@@ -65,7 +65,6 @@ define('VERSION', Application::VERSION);
 // Load Global Configuration
 //--------------------------------------------------------------------------
 
-// Load first the file constants file.
 $path = APPDIR .'Config.php';
 
 if (is_readable($path)) require $path;

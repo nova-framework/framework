@@ -1196,53 +1196,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Get the controller dispatcher instance.
-     *
-     * @return \Routing\ControllerDispatcher
-     */
-    public function getControllerDispatcher()
-    {
-        if (is_null($this->controllerDispatcher)) {
-            $this->controllerDispatcher = new ControllerDispatcher($this, $this->container);
-        }
-
-        return $this->controllerDispatcher;
-    }
-
-    /**
-     * Set the controller dispatcher instance.
-     *
-     * @param  \Routing\ControllerDispatcher  $dispatcher
-     * @return void
-     */
-    public function setControllerDispatcher(ControllerDispatcher $dispatcher)
-    {
-        $this->controllerDispatcher = $dispatcher;
-    }
-
-    /**
-     * Get the controller dispatcher instance.
-     *
-     * @return \Routing\ControllerDispatcher
-     */
-    public function getFileDispatcher()
-    {
-        if (isset($this->fileDispatcher)) return $this->fileDispatcher;
-
-        return $this->fileDispatcher = $this->container->make('Routing\Assets\DispatcherInterface');
-    }
-
-    /**
-     * Get a Controller Inspector instance.
-     *
-     * @return \Routing\ControllerInspector
-     */
-    public function getInspector()
-    {
-        return $this->inspector ?: $this->inspector = new ControllerInspector();
-    }
-
-    /**
      * Run a callback with filters disable on the router.
      *
      * @param  callable  $callback
@@ -1288,6 +1241,18 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
+     * Get a route parameter for the current route.
+     *
+     * @param  string  $key
+     * @param  string  $default
+     * @return mixed
+     */
+    public function input($key, $default = null)
+    {
+        return $this->current()->parameter($key, $default);
+    }
+
+    /**
      * Return the current Matched Route, if there are any.
      *
      * @return null|Route
@@ -1308,13 +1273,94 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Return the available Routes.
+     * Check if a Route with the given name exists.
      *
-     * @return \Routing\RouteCollection
+     * @param  string  $name
+     * @return bool
      */
-    public function getRoutes()
+    public function has($name)
     {
-        return $this->routes;
+        return $this->routes->hasNamedRoute($name);
+    }
+
+    /**
+     * Get the current route name.
+     *
+     * @return string|null
+     */
+    public function currentRouteName()
+    {
+        return ($this->current()) ? $this->current()->getName() : null;
+    }
+
+    /**
+     * Alias for the "currentRouteNamed" method.
+     *
+     * @param  mixed  string
+     * @return bool
+     */
+    public function is()
+    {
+        foreach (func_get_args() as $pattern) {
+            if (str_is($pattern, $this->currentRouteName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the current route matches a given name.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function currentRouteNamed($name)
+    {
+        return ($this->current()) ? ($this->current()->getName() == $name) : false;
+    }
+
+    /**
+     * Get the current route action.
+     *
+     * @return string|null
+     */
+    public function currentRouteAction()
+    {
+        if (! $this->current()) return;
+
+        $action = $this->current()->getAction();
+
+        return isset($action['controller']) ? $action['controller'] : null;
+    }
+
+    /**
+     * Alias for the "currentRouteUses" method.
+     *
+     * @param  mixed  string
+     * @return bool
+     */
+    public function uses()
+    {
+        foreach (func_get_args() as $pattern) {
+            if (str_is($pattern, $this->currentRouteAction())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the current route action matches a given action.
+     *
+     * @param  string  $action
+     * @return bool
+     */
+    public function currentRouteUses($action)
+    {
+        return ($this->currentRouteAction() == $action);
     }
 
     /**
@@ -1325,6 +1371,63 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     public function getCurrentRequest()
     {
         return $this->currentRequest;
+    }
+
+    /**
+     * Return the available Routes.
+     *
+     * @return \Routing\RouteCollection
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * Get the controller dispatcher instance.
+     *
+     * @return \Routing\ControllerDispatcher
+     */
+    public function getControllerDispatcher()
+    {
+        if (is_null($this->controllerDispatcher)) {
+            $this->controllerDispatcher = new ControllerDispatcher($this, $this->container);
+        }
+
+        return $this->controllerDispatcher;
+    }
+
+    /**
+     * Set the controller dispatcher instance.
+     *
+     * @param  \Routing\ControllerDispatcher  $dispatcher
+     * @return void
+     */
+    public function setControllerDispatcher(ControllerDispatcher $dispatcher)
+    {
+        $this->controllerDispatcher = $dispatcher;
+    }
+
+    /**
+     * Get the controller dispatcher instance.
+     *
+     * @return \Routing\ControllerDispatcher
+     */
+    public function getFileDispatcher()
+    {
+        if (isset($this->fileDispatcher)) return $this->fileDispatcher;
+
+        return $this->fileDispatcher = $this->container->make('Routing\Assets\DispatcherInterface');
+    }
+
+    /**
+     * Get a Controller Inspector instance.
+     *
+     * @return \Routing\ControllerInspector
+     */
+    public function getInspector()
+    {
+        return $this->inspector ?: $this->inspector = new ControllerInspector();
     }
 
 }

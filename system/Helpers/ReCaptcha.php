@@ -86,7 +86,7 @@ class ReCaptcha
         if(! $this->active) return true;
 
         //
-        $response = $response ?: Request::input('g-recaptcha-response', '');
+        $response = $response ?: Request::post('g-recaptcha-response', '');
 
         if (empty($response)) return false;
 

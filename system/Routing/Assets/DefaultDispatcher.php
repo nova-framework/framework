@@ -118,19 +118,10 @@ class DefaultDispatcher implements DispatcherInterface
                 break;
         }
 
-        // Calculate the file type.
-        $type = str_is('text/*', $contentType) ? 'text' : $contentType;
-
-        switch($type) {
-            case 'application/javascript':
-            case 'text':
-                $response = $this->createFileResponse($path, $request);
-
-                break;
-            default:
-                $response = $this->createBinaryFileResponse($path);
-
-                break;
+        if (str_is('text/*', $contentType) || ($contentType == 'application/javascript')) {
+            $response = $this->createFileResponse($path, $request);
+        } else { 
+            $response = $this->createBinaryFileResponse($path);
         }
 
         // Set the Content type.

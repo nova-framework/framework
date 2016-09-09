@@ -118,9 +118,9 @@ class DefaultDispatcher implements DispatcherInterface
                 break;
         }
 
-        if (str_is('text/*', $contentType) || ($contentType == 'application/javascript')) {
+        if (($contentType == 'application/javascript') || str_is('text/*', $contentType)) {
             $response = $this->createFileResponse($path, $request);
-        } else { 
+        } else {
             $response = $this->createBinaryFileResponse($path);
         }
 

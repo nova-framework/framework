@@ -18,6 +18,14 @@ use Carbon\Carbon;
 class DefaultDispatcher implements DispatcherInterface
 {
     /**
+     * The currently accepted encodings for Response content compression.
+     *
+     * @var array
+     */
+    $algorithms = array('gzip', 'deflate');
+
+
+    /**
      * Create a new Default Dispatcher instance.
      *
      * @return void
@@ -108,20 +116,7 @@ class DefaultDispatcher implements DispatcherInterface
         }
 
         if (($contentType == 'text/css') || ($contentType == 'application/javascript')) {
-            // Get the accepted encodings from Request instance.
-            $acceptEncoding = $request->headers->get('Accept-Encoding');
-
-            if (! is_null($acceptEncoding)) {
-                $acceptEncoding = array_map('trim', explode(',', $acceptEncoding));
-            } else {
-                $acceptEncoding = array();
-            }
-
-            // Create a Text File Response instance.
-            $response = $this->createTextFileResponse($path);
-
-            // Compress the Response content.
-            $this->compressResponse($response, $acceptEncoding);
+            $response = $this->createFileResponse($path, $request);
         } else {
             $response = $this->createBinaryFileResponse($path);
         }
@@ -149,7 +144,7 @@ class DefaultDispatcher implements DispatcherInterface
         return new BinaryFileResponse($path, 200, array(), true, $contentDisposition, true, false);
     }
 
-    protected function createTextFileResponse($path, array $acceptEncoding = array())
+    protected function createFileResponse($pathe, SymfonyRequest $request)
     {
         // Create a Response instance.
         $response = new Response(file_get_contents($path), 200);
@@ -159,15 +154,22 @@ class DefaultDispatcher implements DispatcherInterface
 
         $response->headers->set('Last-Modified', $lastModified->format('D, j M Y H:i:s') .' GMT');
 
-        return $response;
+        return $this->compressResponse($response, $request);
     }
 
-    protected function compressResponse(SymfonyResponse $response, array $acceptEncoding)
+    protected function compressResponse(SymfonyResponse $response, SymfonyRequest $request)
     {
-        $enabledAlgorithms = array('gzip', 'deflate');
+        // Get the accepted encodings from Request instance.
+        $acceptEncoding = $request->headers->get('Accept-Encoding');
+
+        if (! is_null($acceptEncoding)) {
+            $acceptEncoding = array_map('trim', explode(',', $acceptEncoding));
+        } else {
+            $acceptEncoding = array();
+        }
 
         // Calculate the available algorithms.
-        $algorithms = array_values(array_intersect($acceptEncoding, $enabledAlgorithms));
+        $algorithms = array_values(array_intersect($acceptEncoding, $this->algorithms));
 
         // If there are no available compression algorithms, just return the Response instance.
         if (empty($algorithms)) {

@@ -85,7 +85,7 @@ class ReCaptcha
             'secret'   => $this->getSecretKey(),
             'response' => $response,
             'remoteip' => $request->ip()
-        );
+        ));
 
         // Calculate the (complete) request URL.
         $url = static::GOOGLEHOST .'?' .$query;

@@ -118,9 +118,12 @@ class DefaultDispatcher implements DispatcherInterface
                 break;
         }
 
-        switch($contentType) {
-            case 'text/css':
+        // Calculate the file type.
+        $type = str_is('text/*', $contentType) ? 'text' : $contentType;
+
+        switch($type) {
             case 'application/javascript':
+            case 'text':
                 $response = $this->createFileResponse($path, $request);
 
                 break;

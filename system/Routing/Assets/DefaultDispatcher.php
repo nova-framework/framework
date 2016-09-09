@@ -22,7 +22,7 @@ class DefaultDispatcher implements DispatcherInterface
      *
      * @var array
      */
-    $algorithms = array('gzip', 'deflate');
+    protected $algorithms = array('gzip', 'deflate');
 
 
     /**
@@ -106,19 +106,28 @@ class DefaultDispatcher implements DispatcherInterface
         switch ($fileExt = pathinfo($path, PATHINFO_EXTENSION)) {
             case 'css':
                 $contentType = 'text/css';
+
                 break;
             case 'js':
                 $contentType = 'application/javascript';
+
                 break;
             default:
                 $contentType = $guesser->guess($path);
+
                 break;
         }
 
-        if (($contentType == 'text/css') || ($contentType == 'application/javascript')) {
-            $response = $this->createFileResponse($path, $request);
-        } else {
-            $response = $this->createBinaryFileResponse($path);
+        switch($contentType) {
+            case 'text/css':
+            case 'application/javascript':
+                $response = $this->createFileResponse($path, $request);
+
+                break;
+            default:
+                $response = $this->createBinaryFileResponse($path);
+
+                break;
         }
 
         // Set the Content type.
@@ -144,7 +153,7 @@ class DefaultDispatcher implements DispatcherInterface
         return new BinaryFileResponse($path, 200, array(), true, $contentDisposition, true, false);
     }
 
-    protected function createFileResponse($pathe, SymfonyRequest $request)
+    protected function createFileResponse($path, SymfonyRequest $request)
     {
         // Create a Response instance.
         $response = new Response(file_get_contents($path), 200);

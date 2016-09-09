@@ -22,7 +22,7 @@ class DefaultDispatcher implements DispatcherInterface
      *
      * @var array
      */
-    protected $algorithms = array('gzip', 'deflate');
+    protected static $algorithms = array('gzip', 'deflate');
 
 
     /**
@@ -181,7 +181,7 @@ class DefaultDispatcher implements DispatcherInterface
         }
 
         // Calculate the available algorithms.
-        $algorithms = array_values(array_intersect($acceptEncoding, $this->algorithms));
+        $algorithms = array_values(array_intersect($acceptEncoding, static::$algorithms));
 
         // If there are no available compression algorithms, just return the Response instance.
         if (empty($algorithms)) {

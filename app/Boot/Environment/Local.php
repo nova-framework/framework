@@ -6,7 +6,7 @@ use Config\Config;
  * Setup the Profiler configuration
  */
 Config::set('profiler', array(
-    'useForensics' => true,
+    'useForensics' => false,
     'withDatabase' => true,
 ));
 

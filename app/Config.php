@@ -38,5 +38,8 @@ Config::set('routing', array(
 
         // The name of Assets Dispatcher used as 'custom' driver.
         'dispatcher' => 'Shared\Routing\Assets\CustomDispatcher',
+
+        // The served file Cache Time.
+        'cacheTime' => 10800,
     ),
 ));

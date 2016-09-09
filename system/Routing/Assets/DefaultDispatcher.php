@@ -2,6 +2,7 @@
 
 namespace Routing\Assets;
 
+use Config\Config;
 use Http\Request;
 use Http\Response;
 use Routing\Assets\DispatcherInterface;
@@ -61,8 +62,13 @@ class DefaultDispatcher implements DispatcherInterface
             return null;
         }
 
-        // Get the Response instance and return it.
-        return $this->serve($path, $request);
+        // Get the Response instance associated to the Asset File.
+        $response = $this->serve($path, $request);
+
+        // Prepare the Response instance.
+        $response->prepare($request);
+
+        return $response;
     }
 
     /**
@@ -105,8 +111,10 @@ class DefaultDispatcher implements DispatcherInterface
         $response->headers->set('Content-Type', $contentType);
 
         // Set the Cache Control.
+        $cacheTime = Config::get('routing.assets.cacheTime', 10800);
+
         $response->setTtl(600);
-        $response->setMaxAge(10800);
+        $response->setMaxAge($cacheTime);
         $response->setSharedMaxAge(600);
 
         // Prepare against the Request instance.

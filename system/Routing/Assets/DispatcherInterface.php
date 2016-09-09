@@ -2,9 +2,7 @@
 
 namespace Routing\Assets;
 
-use Http\Request;
-
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 
 interface DispatcherInterface
@@ -15,7 +13,7 @@ interface DispatcherInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response|null
      */
-    public function dispatch(Request $request);
+    public function dispatch(SymfonyRequest $request);
 
     /**
      * Serve a File.
@@ -24,6 +22,6 @@ interface DispatcherInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function serve($path, Request $request);
+    public function serve($path, SymfonyRequest $request);
 
 }

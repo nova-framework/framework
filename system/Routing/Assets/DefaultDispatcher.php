@@ -179,8 +179,12 @@ class DefaultDispatcher implements DispatcherInterface
         // Get the (first) compression algorithm.
         $algorithm = array_shift($algorithms);
 
-        // Compress the Response content.
-        $content = gzencode($response->getContent(), -1, ($algorithm == 'gzip') ? FORCE_GZIP : FORCE_DEFLATE);
+        // Compress the Response content using GZIP/DEFLATE.
+        if ($algorithm == 'gzip') {
+            $content = gzencode($response->getContent(), -1, FORCE_GZIP);
+        } else {
+            $content = gzencode($response->getContent(), -1, FORCE_DEFLATE);
+        }
 
         // Setup the (new) Response content.
         $response->setContent($content);

@@ -111,6 +111,8 @@ class ContentGuard implements HttpKernelInterface
 
         $response->setContent($content);
 
+        $response->headers->set('Content-Length', strlen($response->getContent()));
+
         return $response;
     }
 

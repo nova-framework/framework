@@ -28,20 +28,24 @@ Config::set('modules', array(
     //--------------------------------------------------------------------------
 
     'repository' => array(
+        'Demos'  => array(
+            'enabled' => true,
+            'order'   => 10001,
+        ),
+        'Files' => array(
+            'enabled'  => true,
+            'order'    => 9001,
+            'autoload' => array('config', 'routes'),
+        ),
         'System' => array(
             'enabled'  => true,
+            'order'    => 8001,
             'autoload' => array('config', 'routes'),
         ),
         'Users' => array(
             'enabled'  => true,
+            'order'    => 9001,
             'autoload' => array('routes'),
-        ),
-        'Files' => array(
-            'enabled'  => true,
-            'autoload' => array('config', 'routes'),
-        ),
-        'Demos'  => array(
-            'enabled' => true,
         ),
     ),
 ));

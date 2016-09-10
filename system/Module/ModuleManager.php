@@ -4,6 +4,8 @@ namespace Module;
 
 use Config\Repository as Config;
 use Foundation\Application;
+use Support\Collection;
+use Support\Str;
 
 
 class ModuleManager
@@ -39,9 +41,10 @@ class ModuleManager
      */
     public function register()
     {
-        $modules = $this->getRepository();
+        $modules = $this->getModules();
 
-        foreach ($modules as $module => $config) {
+        $modules->each(function($config)
+        {
             if (isset($config['enabled']) && is_bool($config['enabled'])) {
                 $enabled = $config['enabled'];
             } else {
@@ -51,10 +54,10 @@ class ModuleManager
             if (! $enabled) continue;
 
             //
-            $this->registerServiceProvider($module);
+            $this->registerServiceProvider($config);
 
-            $this->autoloadFiles($module, $config);
-        };
+            $this->autoloadFiles($config);
+        });
     }
 
     /**
@@ -64,9 +67,12 @@ class ModuleManager
      *
      * @return string
      */
-    protected function registerServiceProvider($module)
+    protected function registerServiceProvider($config)
     {
-        $serviceProvider = $this->getModulesNamespace() ."\\{$module}\\Providers\\{$module}ServiceProvider";
+        $namespace = $config['namespace'];
+
+        // Calculate the name of Service Provider, including the namespace.
+        $serviceProvider = $this->getModulesNamespace() ."\\{$namespace}\\Providers\\{$namespace}ServiceProvider";
 
         if (class_exists($serviceProvider)) {
             $this->app->register($serviceProvider);
@@ -78,7 +84,7 @@ class ModuleManager
      *
      * @param array $config
      */
-    protected function autoloadFiles($module, $config)
+    protected function autoloadFiles($config)
     {
         $autoload = array('config', 'events', 'filters', 'routes');
 
@@ -90,7 +96,9 @@ class ModuleManager
         array_push($autoload, 'bootstrap');
 
         // Calculate the Modules path.
-        $basePath = $this->getModulesPath() .DS .$module .DS;
+        $namespace = $config['namespace'];
+
+        $basePath = $this->getModulesPath() .DS .$namespace .DS;
 
         foreach ($autoload as $name) {
             $path = $basePath .ucfirst($name) .'.php';
@@ -109,21 +117,22 @@ class ModuleManager
         return $this->config->get('modules.namespace');
     }
 
-    public function getRepository()
-    {
-        return $this->config->get('modules.repository');
-    }
-
-    /**
-     * Return the name of the registered Modules.
-     *
-     * @return array
-     */
     public function getModules()
     {
-        $modules = $this->getRepository();
+        $modules = $this->config->get('modules.repository');
 
-        return array_keys($modules);
+        $modules = array_map(function($name, $config)
+        {
+            $result = array_merge(array(
+                'name'      => $name,
+                'namespace' => isset($config['namespace']) ? $config['namespace'] : $name,
+                'slug'      => isset($config['slug']) ? $config['slug'] : Str::slug($name),
+            ), $config);
+
+            return $result;
+        }, array_keys($modules), $modules);
+
+        return Collection::make($modules)->sortBy('order');
     }
-    
+
 }

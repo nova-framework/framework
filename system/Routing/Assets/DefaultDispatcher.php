@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 
 use Carbon\Carbon;
 
+use LogicException;
+
 
 class DefaultDispatcher implements DispatcherInterface
 {
@@ -190,7 +192,7 @@ class DefaultDispatcher implements DispatcherInterface
         } else if ($algorithm == 'deflate') {
             $content = gzencode($response->getContent(), -1, FORCE_DEFLATE);
         } else {
-            $content = $response->getContent();
+            throw new LogicException('Unknow encoding algorithm: ' .$algorithm);
         }
 
         // Setup the (new) Response content.

@@ -66,7 +66,7 @@ class ModuleManager
         $name = $config['name'];
 
         // Calculate the name of Service Provider, including the namespace.
-        $serviceProvider = $this->getModulesNamespace() ."\\{$name}\\Providers\\{$name}ServiceProvider";
+        $serviceProvider = $this->getNamespace() ."\\{$name}\\Providers\\{$name}ServiceProvider";
 
         if (class_exists($serviceProvider)) {
             $this->app->register($serviceProvider);
@@ -90,7 +90,7 @@ class ModuleManager
         // Calculate the Modules path.
         $module = $config['name'];
 
-        $basePath = $this->getModulesPath() .DS .$module .DS;
+        $basePath = $this->getPath() .DS .$module .DS;
 
         foreach ($autoload as $name) {
             $path = $basePath .ucfirst($name) .'.php';
@@ -99,12 +99,12 @@ class ModuleManager
         }
     }
 
-    public function getModulesPath()
+    public function getPath()
     {
         return $this->config->get('modules.path');
     }
 
-    public function getModulesNamespace()
+    public function getNamespace()
     {
         return $this->config->get('modules.namespace');
     }

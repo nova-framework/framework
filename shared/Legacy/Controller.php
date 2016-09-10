@@ -206,6 +206,9 @@ abstract class Controller extends BaseController
             if (is_string($this->layout) && (! $response instanceof Layout)) {
                 $response = Template::make($this->layout, $this->template)->with('content', $response);
             }
+
+            // Create a proper Response instance.
+            $response = new Response($response->render(), 200, array('Content-Type' => 'text/html'));
         }
 
         // If the response which is returned from the Controller's Action is null and we have
@@ -231,7 +234,7 @@ abstract class Controller extends BaseController
     {
         $items = View::getItems();
 
-        $headers = View::getHeaders();
+        $headers = array_merge(array('Content-Type' => 'text/html'), View::getHeaders());
 
         // Render the View instances to response.
         $response = '';

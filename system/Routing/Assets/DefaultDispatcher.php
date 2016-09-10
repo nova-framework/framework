@@ -140,13 +140,6 @@ class DefaultDispatcher implements DispatcherInterface
         return $response;
     }
 
-    protected function createBinaryFileResponse($path, $contentDisposition = null)
-    {
-        $contentDisposition = $contentDisposition ?: 'inline';
-
-        return new BinaryFileResponse($path, 200, array(), true, $contentDisposition, true, false);
-    }
-
     protected function createFileResponse($path, SymfonyRequest $request)
     {
         // Create a Response instance.
@@ -157,10 +150,17 @@ class DefaultDispatcher implements DispatcherInterface
 
         $response->headers->set('Last-Modified', $lastModified->format('D, j M Y H:i:s') .' GMT');
 
-        return $this->compressResponse($response, $request);
+        return $this->compressResponseContent($response, $request);
+    }
+    
+    protected function createBinaryFileResponse($path, $contentDisposition = null)
+    {
+        $contentDisposition = $contentDisposition ?: 'inline';
+
+        return new BinaryFileResponse($path, 200, array(), true, $contentDisposition, true, false);
     }
 
-    protected function compressResponse(SymfonyResponse $response, SymfonyRequest $request)
+    protected function compressResponseContent(SymfonyResponse $response, SymfonyRequest $request)
     {
         // Get the accepted encodings from Request instance.
         $acceptEncoding = $request->headers->get('Accept-Encoding');

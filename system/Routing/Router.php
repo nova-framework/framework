@@ -984,7 +984,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         if (! is_null($response)) return $response;
 
-        // Request Dispatching to Routes.
+        // If no response was returned from the before filter, we will call the proper
+        // route instance to get the response. If no route is found a response will
+        // still get returned based on why no routes were found for this request.
         $response = $this->callFilter('before', $request);
 
         if (is_null($response)) {
@@ -993,6 +995,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         $response = $this->prepareResponse($request, $response);
 
+        // Once this route has run and the response has been prepared, we will run the
+        // after filter to do any last work on the response or for this application
+        // before we will return the response back to the consuming code for use.
         $this->callFilter('after', $request, $response);
 
         return $response;
@@ -1011,18 +1016,21 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         $this->events->fire('router.matched', array($route, $request));
 
-        // Call the Route's Before Filters.
+        // Once we have successfully matched the incoming request to a given route we
+        // can call the before filters on that route. This works similar to global
+        // filters in that if a response is returned we will not call the route.
         $response = $this->callRouteBefore($route, $request);
 
         if (is_null($response)) {
-            // Run the Route Callback.
             $response = $route->run();
         }
 
         // Prepare the Reesponse.
         $response = $this->prepareResponse($request, $response);
 
-        // Call the Route's After Filters.
+        // After we have a prepared response from the route or filter we will call to
+        // the "after" filters to do any last minute processing on this request or
+        // response object before the response is returned back to the consumer.
         $this->callRouteAfter($route, $request, $response);
 
         return $response;

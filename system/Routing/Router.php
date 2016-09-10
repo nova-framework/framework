@@ -25,8 +25,8 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Closure;
 use BadMethodCallException;
+use Closure;
 
 
 /**

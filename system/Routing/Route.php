@@ -17,6 +17,9 @@ use Routing\Matching\SchemeValidator;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
+use BadMethodCallException;
+use LogicException;
+
 
 /**
  * The Route class is responsible for routing an HTTP request to an assigned Callback function.
@@ -182,7 +185,7 @@ class Route
         } else {
             // The Route use the (legacy) Unnamed Parameters.
             if (! is_null($domain)) {
-                throw new \LogicException("The domain option is not allowed while using Unnamed Parameters.");
+                throw new LogicException("The domain option is not allowed while using Unnamed Parameters.");
             }
 
             list($this->pattern, $optionals, $this->wheres) = RouteParser::parse($this->uri);
@@ -460,7 +463,7 @@ class Route
     public function parameters()
     {
         if (! isset($this->parameters)) {
-            throw new \LogicException("Route is not bound.");
+            throw new LogicException("Route is not bound.");
         }
 
         return array_map(function($value)
@@ -621,7 +624,7 @@ class Route
         if (! $this->namedParams) {
             throw new BadMethodCallException("Not available while using Unnamed Parameters.");
         }
-        
+
         $this->defaults[$key] = $value;
 
         return $this;

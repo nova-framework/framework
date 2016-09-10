@@ -45,13 +45,7 @@ class ModuleManager
 
         $modules->each(function($config)
         {
-            if (isset($config['enabled']) && is_bool($config['enabled'])) {
-                $enabled = $config['enabled'];
-            } else {
-                $enabled = true;
-            }
-
-            if (! $enabled) continue;
+            if ($config['enabled'] == false) continue;
 
             //
             $this->registerServiceProvider($config);
@@ -69,10 +63,10 @@ class ModuleManager
      */
     protected function registerServiceProvider($config)
     {
-        $namespace = $config['namespace'];
+        $name = $config['name'];
 
         // Calculate the name of Service Provider, including the namespace.
-        $serviceProvider = $this->getModulesNamespace() ."\\{$namespace}\\Providers\\{$namespace}ServiceProvider";
+        $serviceProvider = $this->getModulesNamespace() ."\\{$name}\\Providers\\{$name}ServiceProvider";
 
         if (class_exists($serviceProvider)) {
             $this->app->register($serviceProvider);
@@ -96,9 +90,9 @@ class ModuleManager
         array_push($autoload, 'bootstrap');
 
         // Calculate the Modules path.
-        $namespace = $config['namespace'];
+        $module = $config['name'];
 
-        $basePath = $this->getModulesPath() .DS .$namespace .DS;
+        $basePath = $this->getModulesPath() .DS .$module .DS;
 
         foreach ($autoload as $name) {
             $path = $basePath .ucfirst($name) .'.php';
@@ -123,13 +117,12 @@ class ModuleManager
 
         $modules = array_map(function($name, $config)
         {
-            $result = array_merge(array(
+            return array_merge(array(
                 'name'      => $name,
-                'namespace' => isset($config['namespace']) ? $config['namespace'] : $name,
-                'slug'      => isset($config['slug']) ? $config['slug'] : Str::slug($name),
+                'slug'      => isset($config['slug'])    ? $config['slug']    : Str::slug($name),
+                'enabled'   => isset($config['enabled']) ? $config['enabled'] : true,
+                'order'     => isset($config['order'])   ? $config['order']   : 9001,
             ), $config);
-
-            return $result;
         }, array_keys($modules), $modules);
 
         return Collection::make($modules)->sortBy('order');

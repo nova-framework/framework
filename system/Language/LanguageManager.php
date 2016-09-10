@@ -5,6 +5,8 @@ namespace Language;
 use Foundation\Application;
 use Language\Language;
 
+use Carbon\Carbon;
+
 
 class LanguageManager
 {
@@ -112,6 +114,11 @@ class LanguageManager
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
+        //
+        setlocale(LC_ALL, $locale);
+
+        Carbon::setLocale($locale);
     }
 
     /**

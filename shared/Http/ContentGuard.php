@@ -33,14 +33,7 @@ class ContentGuard implements HttpKernelInterface
      */
     protected $debug;
 
-    /**
-     * The currently accepted encodings for Response content compression.
-     *
-     * @var array
-     */
-    protected static $algorithms = array('gzip', 'deflate');
-
-
+    
     /**
      * Create a new FrameGuard instance.
      *

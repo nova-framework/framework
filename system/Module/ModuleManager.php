@@ -80,14 +80,12 @@ class ModuleManager
      */
     protected function autoloadFiles($config)
     {
-        $autoload = array('config', 'events', 'filters', 'routes');
+        $autoload = array('config', 'events', 'filters', 'routes', 'bootstrap');
 
         // Calculate the names of the files to be autoloaded.
         if (isset($config['autoload']) && is_array($config['autoload'])) {
             $autoload = array_values(array_intersect($config['autoload'], $autoload));
         }
-
-        array_push($autoload, 'bootstrap');
 
         // Calculate the Modules path.
         $module = $config['name'];

@@ -35,17 +35,14 @@ Config::set('modules', array(
         'Files' => array(
             'enabled'  => true,
             'order'    => 9001,
-            'autoload' => array('config', 'routes'),
         ),
         'System' => array(
             'enabled'  => true,
             'order'    => 8001,
-            'autoload' => array('config', 'routes'),
         ),
         'Users' => array(
             'enabled'  => true,
             'order'    => 9001,
-            'autoload' => array('routes'),
         ),
     ),
 ));

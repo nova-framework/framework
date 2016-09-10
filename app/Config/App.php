@@ -78,6 +78,7 @@ Config::set('app', array(
         'Auth\AuthServiceProvider',
         'Cache\CacheServiceProvider',
         'Routing\RoutingServiceProvider',
+        'Module\ModuleServiceProvider',
         'Cookie\CookieServiceProvider',
         'Database\DatabaseServiceProvider',
         'Encryption\EncryptionServiceProvider',

@@ -11,8 +11,37 @@ use Config\Config;
 
 
 Config::set('modules', array(
-    'System',
-    'Users',
-    'Files',
-    'Demos',
+    //--------------------------------------------------------------------------
+    // Path to Modules
+    //--------------------------------------------------------------------------
+
+    'path' => APPDIR .'Modules',
+
+    //--------------------------------------------------------------------------
+    // Modules Base Namespace
+    //--------------------------------------------------------------------------
+
+    'namespace' => 'App\Modules\\',
+
+    //--------------------------------------------------------------------------
+    // Registered Modules
+    //--------------------------------------------------------------------------
+
+    'repository' => array(
+        'System' => array(
+            'enabled'  => true,
+            'autoload' => array('config', 'routes'),
+        ),
+        'Users' => array(
+            'enabled'  => true,
+            'autoload' => array('routes'),
+        ),
+        'Files' => array(
+            'enabled'  => true,
+            'autoload' => array('config', 'routes'),
+        ),
+        'Demos'  => array(
+            'enabled' => true,
+        ),
+    ),
 ));

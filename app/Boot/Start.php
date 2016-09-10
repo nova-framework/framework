@@ -152,6 +152,13 @@ $config = $app['config']['app'];
 date_default_timezone_set($config['timezone']);
 
 //--------------------------------------------------------------------------
+// Set The Default PHP's Locale and Carbon's Locale From Configuration
+//--------------------------------------------------------------------------
+
+setlocale(LC_ALL, $app['config']['app.locale']);
+\Carbon\Carbon::setLocale($app['config']['app.locale']);
+
+//--------------------------------------------------------------------------
 // Register The Alias Loader
 //--------------------------------------------------------------------------
 

@@ -213,6 +213,9 @@ class DefaultDispatcher implements DispatcherInterface
      */
     protected static function getModulePath($module, $folder, $path)
     {
+        $path = str_replace('/', DS, $path);
+
+        //
         $basePath = APPDIR .str_replace('/', DS, "Modules/$module/Assets/");
 
         return $basePath .$folder .DS .$path;

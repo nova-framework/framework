@@ -29,8 +29,9 @@ Assets::js([
     template_url('js/bootstrap-rtl.min.js', 'Default'),
 ]);
 
-echo $js; // Place to pass data / plugable hook zone
-echo $footer; // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+
+echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <!-- DO NOT DELETE! - Forensics Profiler -->

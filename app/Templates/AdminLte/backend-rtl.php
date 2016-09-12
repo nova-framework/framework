@@ -31,7 +31,7 @@ $langMenuLinks = ob_get_clean();
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
-    <?= $meta; // Place to pass data / plugable hook zone ?>
+    <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
@@ -52,7 +52,7 @@ $langMenuLinks = ob_get_clean();
         template_url('css/style-rtl.css', 'AdminLte'),
     ));
 
-    echo $css; // Place to pass data / plugable hook zone
+    echo isset($css) ? $css . ''; // Place to pass data / plugable hook zone
 
     //Add Controller specific JS files.
     Assets::js(array(
@@ -209,8 +209,9 @@ Assets::js(array(
     site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.full.min.js')
 ));
 
-echo $js; // Place to pass data / plugable hook zone
-echo $footer; // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+
+echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <script>

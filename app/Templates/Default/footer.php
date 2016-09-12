@@ -29,7 +29,8 @@ Assets::js([
     site_url('vendor/twbs/bootstrap/dist/js/bootstrap.min.js'),
 ]);
 
-echo isset($js) ? $js : '';         // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+
 echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 

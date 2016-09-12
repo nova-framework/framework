@@ -28,19 +28,23 @@ Config::set('modules', array(
     //--------------------------------------------------------------------------
 
     'repository' => array(
-        'Demos'  => array(
+        'demos' => array(
+            'name'    => 'Demos',
             'enabled' => true,
             'order'   => 10001,
         ),
-        'Files' => array(
+        'files' => array(
+            'name'    => 'Files',
             'enabled' => true,
             'order'   => 9001,
         ),
-        'System' => array(
+        'system' => array(
+            'name'    => 'System',
             'enabled' => true,
             'order'   => 8001,
         ),
-        'Users' => array(
+        'users' => array(
+            'name'    => 'Users',
             'enabled' => true,
             'order'   => 9001,
         ),

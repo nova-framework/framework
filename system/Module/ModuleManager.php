@@ -66,18 +66,17 @@ class ModuleManager
      * @param array $properties
      *
      * @return void
+     *
+     * @throws \Nova\Module\FileMissingException
      */
     protected function registerServiceProvider($properties)
     {
-        $basePath = $this->getModulePath($properties);
+        $namespace = $this->resolveNamespace($properties);
 
-        //
-        $name = array_get($properties, 'name');
-
-        $file = $basePath .'Providers' .DS .$name .'ServiceProvider.php';
+        $file = $this->getPath() .$namespace .DS .'Providers' .DS .$namespace .'ServiceProvider.php';
 
         // Calculate the name of Service Provider, including the namespace.
-        $serviceProvider = $this->getNamespace() ."\\{$name}\\Providers\\{$name}ServiceProvider";
+        $serviceProvider = $this->getNamespace() ."\\{$namespace}\\Providers\\{$namespace}ServiceProvider";
 
         if (class_exists($serviceProvider)) {
             $this->app->register($serviceProvider);
@@ -93,10 +92,12 @@ class ModuleManager
      */
     protected function autoloadFiles($properties)
     {
-        $autoload = array_get($properties, 'autoload');
+        $namespace = $this->resolveNamespace($properties);
 
-        // Calculate the Modules path.
-        $basePath = $this->getModulePath($properties);
+        $autoload = array_get($properties, 'autoload', array());
+
+        // Calculate the Module base path.
+        $basePath = $this->getPath() .$namespace .DS;
 
         foreach ($autoload as $name) {
             $path = $basePath .ucfirst($name) .'.php';
@@ -115,20 +116,6 @@ class ModuleManager
         if (isset($properties['namespace'])) return $properties['namespace'];
 
         return Str::studly($properties['slug']);
-    }
-
-    /**
-     * Resolve the correct module path.
-     *
-     * @param array $properties
-     */
-    public function getModulePath($properties)
-    {
-        $name = array_get($properties, 'name');
-
-        if (! is_null($name)) {
-            return $this->getPath() .$name .DS;
-        }
     }
 
     public function getPath()
@@ -150,7 +137,7 @@ class ModuleManager
         //
         $modules = $this->config->get('modules.repository');
 
-        $modules = array_map(function($name, $config)
+        $modules = array_map(function($slug, $config)
         {
             $names = array('config', 'events', 'filters', 'routes');
 
@@ -162,9 +149,13 @@ class ModuleManager
 
             array_push($names, 'bootstrap');
 
+            //
+            $namespace = isset($config['name']) ? $config['name'] : Str::studly($slug);
+
             return array_merge(array(
-                'name'      => $name,
-                'slug'      => isset($config['slug'])    ? $config['slug']    : Str::slug($name),
+                'name'      => $namespace,
+                'namespace' => $namespace,
+                'slug'      => $slug,
                 'enabled'   => isset($config['enabled']) ? $config['enabled'] : true,
                 'order'     => isset($config['order'])   ? $config['order']   : 9001,
                 'autoload'  => $names,

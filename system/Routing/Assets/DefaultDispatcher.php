@@ -56,14 +56,11 @@ class DefaultDispatcher implements DispatcherInterface
         // /modules/blog/assets/css/style.css
         // /assets/css/style.css
 
-        // Check the HTTP Method on the Request.
-        if (! in_array($request->method(), array('GET', 'HEAD'))) {
-            return null;
-        }
+        $method = $request->method();
 
-        // Check the URI on the Request and prepare the Asset File path.
         $uri = $request->path();
 
+        //
         $path = null;
 
         if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
@@ -77,29 +74,25 @@ class DefaultDispatcher implements DispatcherInterface
                 $path = static::getTemplatePath($module, $matches[3], $matches[4]);
             }
         } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
-            $path = $matches[2];
+            $uriPath = $matches[2];
 
             if (strtolower($matches[1]) == 'assets') {
                 // The Asset File is located on root 'assets' folder.
-                $path = ROOTDIR .'assets' .DS .$path;
-            } else if (Str::startsWith($path, $this->paths)) {
+                $path = ROOTDIR .'assets' .DS .str_replace('/', DS, $uriPath);
+            } else if (Str::startsWith($uriPath, $this->paths)) {
                 // The Asset File is located on one of the valid Vendor paths.
-                $path = ROOTDIR .'vendor' .DS .str_replace('/', DS, $path);
-            } else {
-                $path = null;
+                $path = ROOTDIR .'vendor' .DS .str_replace('/', DS, $uriPath);
             }
         }
+        
+        if (! is_null($path) && in_array($method, array('GET', 'HEAD'))) {
+            $response = $this->serve($path, $request);
 
-        // If the path is null, then the current URI is not for a Asset File.
-        if (is_null($path)) return null;
+            // Prepare the Response instance.
+            $response->prepare($request);
 
-        // Get the Response instance associated to the Asset File.
-        $response = $this->serve($path, $request);
-
-        // Prepare the Response instance.
-        $response->prepare($request);
-
-        return $response;
+            return $response;
+        }
     }
 
     /**

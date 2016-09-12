@@ -11,6 +11,7 @@ use Config\Config;
 use Helpers\Url;
 use Support\Str;
 use Support\Facades\Crypt;
+use Support\Facades\Language;
 
 use Closure as Closure;
 

@@ -135,7 +135,7 @@ class ModuleManager
         if (isset(static::$modules)) return static::$modules;
 
         //
-        $modules = $this->config->get('modules.repository');
+        $modules = $this->config->get('modules.modules');
 
         $modules = array_map(function($slug, $config)
         {
@@ -150,12 +150,12 @@ class ModuleManager
             array_push($names, 'bootstrap');
 
             //
-            $namespace = isset($config['name']) ? $config['name'] : Str::studly($slug);
+            $namespace = isset($config['namespace']) ? $config['namespace'] : Str::studly($slug);
 
             return array_merge(array(
-                'name'      => $namespace,
-                'namespace' => $namespace,
                 'slug'      => $slug,
+                'name'      => isset($config['name']) ? $config['name'] : $namespace,
+                'namespace' => $namespace,
                 'enabled'   => isset($config['enabled']) ? $config['enabled'] : true,
                 'order'     => isset($config['order'])   ? $config['order']   : 9001,
                 'autoload'  => $names,

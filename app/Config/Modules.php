@@ -27,26 +27,26 @@ Config::set('modules', array(
     // Registered Modules
     //--------------------------------------------------------------------------
 
-    'repository' => array(
+    'modules' => array(
         'demos' => array(
-            'name'    => 'Demos',
-            'enabled' => true,
-            'order'   => 10001,
+            'namespace' => 'Demos',
+            'enabled'   => true,
+            'order'     => 10001,
         ),
         'files' => array(
-            'name'    => 'Files',
-            'enabled' => true,
-            'order'   => 9001,
+            'namespace' => 'Files',
+            'enabled'   => true,
+            'order'     => 9001,
         ),
         'system' => array(
-            'name'    => 'System',
-            'enabled' => true,
-            'order'   => 8001,
+            'namespace' => 'System',
+            'enabled'   => true,
+            'order'     => 8001,
         ),
         'users' => array(
-            'name'    => 'Users',
-            'enabled' => true,
-            'order'   => 9001,
+            'namespace' => 'Users',
+            'enabled'   => true,
+            'order'     => 9001,
         ),
     ),
 ));

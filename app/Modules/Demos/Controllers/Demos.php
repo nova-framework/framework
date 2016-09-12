@@ -304,24 +304,15 @@ class Demos extends Controller
 
         $modules->each(function($properties) use (&$content)
         {
-            $names = array('config', 'events', 'filters', 'routes');
-
-            // Calculate the names of the files to be autoloaded.
-            $autoload = array_get($properties, 'autoload');
-
-            if (is_array($autoload) && ! empty($autoload)) {
-                $names = array_values(array_intersect($names, $autoload));
-            }
-
-            array_push($names, 'bootstrap');
-
-            $autoload = implode(', ', $names);
-
             $name  = array_get($properties,'name');
             $slug  = array_get($properties,'slug');
             $order = array_get($properties,'order');
 
+            //
             $enabled = array_get($properties,'enabled', true) ? __d('demos', 'Yes') : __d('demos', 'No');
+
+            //
+            $autoload = implode(', ', array_get($properties, 'autoload'));
 
             $content .= "
     <tr>

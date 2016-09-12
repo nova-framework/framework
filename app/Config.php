@@ -44,10 +44,10 @@ Config::set('routing', array(
 
         // The valid Vendor paths.
         'paths' => array(
-            'almasaeed2010/adminlte/bootstrap/',
-            'almasaeed2010/adminlte/dist/',
-            'almasaeed2010/adminlte/plugins/',
-            'twbs/bootstrap/dist/',
+            'almasaeed2010/adminlte/bootstrap',
+            'almasaeed2010/adminlte/dist',
+            'almasaeed2010/adminlte/plugins',
+            'twbs/bootstrap/dist',
         ),
     ),
 ));

@@ -65,7 +65,7 @@ class DefaultDispatcher implements DispatcherInterface
         $uri = $request->path();
 
         $path = null;
-        
+
         if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
             $module = Str::studly($matches[2]);
 
@@ -247,27 +247,10 @@ class DefaultDispatcher implements DispatcherInterface
     {
         $path = str_replace('/', DS, $path);
 
-        // Retrieve the Template Info
-        $info = static::getTemplateInfo($template);
-
         //
-        $basePath = null;
+        $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
 
-        // Get the current Asset Folder's Mode.
-        $mode = array_get($info, 'assets.paths.' .$folder, 'local');
-
-        if ($mode == 'local') {
-            $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
-        } else if ($mode == 'vendor') {
-            // Get the Vendor name.
-            $vendor = array_get($info, 'assets.vendor', '');
-
-            if (! empty($vendor)) {
-                $basePath = ROOTDIR .str_replace('/', DS, "vendor/$vendor/");
-            }
-        }
-
-        return ! empty($basePath) ? $basePath .$folder .DS .$path : '';
+        return $basePath .$folder .DS .$path;
     }
 
     /**

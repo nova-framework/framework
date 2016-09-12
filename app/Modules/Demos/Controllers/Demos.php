@@ -292,7 +292,7 @@ class Demos extends Controller
     {
         $modules = Module::getModules();
 
-        $content = '<h4>' .__d('demos', 'The Modules configured on application') ."</h4>
+        $content = "<h3 style='text-align: center'>" .__d('demos', 'The Modules configured on this application') ."</h3>
 <table class='table table-striped table-hover responsive'>
     <tr class='bg-navy disabled'>
         <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Name') ."</th>

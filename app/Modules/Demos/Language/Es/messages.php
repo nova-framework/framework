@@ -18,7 +18,7 @@ return array (
   'Session API' => '',
   'Slug' => '',
   'Test' => '',
-  'The Modules configured on application' => '',
+  'The Modules configured on this application' => '',
   'The catch-all Route' => '',
   'This is a test!!!' => '',
   'Timestamp:' => '',

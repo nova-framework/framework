@@ -42,7 +42,12 @@ Config::set('routing', array(
         // The served file Cache Time.
         'cacheTime' => 10800,
 
-        // The valid Vendor paths.
+        // The Valid Vendor Paths - be aware that improper configuration of the Valid Vendor Paths could introduce
+        // severe security issues, try to limit the access to a precise area, where aren't present "unsafe" files.
+        //
+        // '/vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css'
+        //          ^_________________________^______________________ This is the part of path which is validated.
+        //
         'paths' => array(
             'almasaeed2010/adminlte/bootstrap',
             'almasaeed2010/adminlte/dist',

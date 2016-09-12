@@ -292,17 +292,31 @@ class Demos extends Controller
     {
         $modules = Module::getModules();
 
-        $content = "<h3 style='text-align: center'>" .__d('demos', 'The Modules configured on this application') ."</h3>
+        $content = "<h3 style='text-align: center'>" .__d('demos', 'The Modules configured on this Application') ."</h3>
 <table class='table table-striped table-hover responsive'>
     <tr class='bg-navy disabled'>
         <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Name') ."</th>
         <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Slug') ."</th>
         <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Enabled') ."</th>
         <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Order') ."</th>
+        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Autoload') ."</th>
     </tr>";
 
         $modules->each(function($properties) use (&$content)
         {
+            $names = array('config', 'events', 'filters', 'routes');
+
+            // Calculate the names of the files to be autoloaded.
+            $autoload = array_get($properties, 'autoload');
+
+            if (is_array($autoload) && ! empty($autoload)) {
+                $names = array_values(array_intersect($names, $autoload));
+            }
+
+            array_push($names, 'bootstrap');
+
+            $autoload = implode(', ', $names);
+
             $name  = array_get($properties,'name');
             $slug  = array_get($properties,'slug');
             $order = array_get($properties,'order');
@@ -311,10 +325,11 @@ class Demos extends Controller
 
             $content .= "
     <tr>
-        <td style='text-align: center; vertical-align: middle;' width='35%'>$name</td>
-        <td style='text-align: center; vertical-align: middle;' width='35%'>$slug</td>
+        <td style='text-align: center; vertical-align: middle;' width='20%'>$name</td>
+        <td style='text-align: center; vertical-align: middle;' width='20%'>$slug</td>
         <td style='text-align: center; vertical-align: middle;' width='15%'>$enabled</td>
         <td style='text-align: center; vertical-align: middle;' width='15%'>$order</td>
+        <td style='text-align: center; vertical-align: middle;' width='45%'>$autoload</td>
     <tr>";
 
         });

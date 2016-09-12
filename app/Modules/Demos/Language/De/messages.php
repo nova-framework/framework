@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  'Autoload' => '',
   'Cache' => '',
   'Database API' => '',
   'Enabled' => '',
@@ -18,7 +19,7 @@ return array (
   'Session API' => '',
   'Slug' => '',
   'Test' => '',
-  'The Modules configured on this application' => '',
+  'The Modules configured on this Application' => '',
   'The catch-all Route' => '',
   'This is a test!!!' => '',
   'Timestamp:' => '',

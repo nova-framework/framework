@@ -43,14 +43,15 @@ class ModuleManager
     {
         $modules = $this->getModules();
 
-        $modules->each(function($config)
+        $modules->each(function($properties)
         {
-            if ($config['enabled'] == false) continue;
+            $enabled = array_get($properties,'enabled', true);
 
-            //
-            $this->registerServiceProvider($config);
+            if ($enabled) {
+                $this->registerServiceProvider($properties);
 
-            $this->autoloadFiles($config);
+                $this->autoloadFiles($properties);
+            }
         });
     }
 
@@ -61,9 +62,9 @@ class ModuleManager
      *
      * @return string
      */
-    protected function registerServiceProvider($config)
+    protected function registerServiceProvider($properties)
     {
-        $name = $config['name'];
+        $name = array_get($properties, 'name');
 
         // Calculate the name of Service Provider, including the namespace.
         $serviceProvider = $this->getNamespace() ."\\{$name}\\Providers\\{$name}ServiceProvider";
@@ -78,21 +79,25 @@ class ModuleManager
      *
      * @param array $config
      */
-    protected function autoloadFiles($config)
+    protected function autoloadFiles($properties)
     {
-        $autoload = array('config', 'events', 'filters', 'routes', 'bootstrap');
+        $names = array('config', 'events', 'filters', 'routes');
 
         // Calculate the names of the files to be autoloaded.
-        if (isset($config['autoload']) && is_array($config['autoload'])) {
-            $autoload = array_values(array_intersect($config['autoload'], $autoload));
+        $autoload = array_get($properties, 'autoload');
+
+        if (is_array($autoload) && ! empty($autoload)) {
+            $names = array_values(array_intersect($names, $autoload));
         }
 
+        array_push($names, 'bootstrap');
+
         // Calculate the Modules path.
-        $module = $config['name'];
+        $module = array_get($properties, 'name');
 
         $basePath = $this->getPath() .DS .$module .DS;
 
-        foreach ($autoload as $name) {
+        foreach ($names as $name) {
             $path = $basePath .ucfirst($name) .'.php';
 
             if (is_readable($path)) require $path;

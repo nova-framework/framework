@@ -33,16 +33,16 @@ Config::set('modules', array(
             'order'   => 10001,
         ),
         'Files' => array(
-            'enabled'  => true,
-            'order'    => 9001,
+            'enabled' => true,
+            'order'   => 9001,
         ),
         'System' => array(
-            'enabled'  => true,
-            'order'    => 8001,
+            'enabled' => true,
+            'order'   => 8001,
         ),
         'Users' => array(
-            'enabled'  => true,
-            'order'    => 9001,
+            'enabled' => true,
+            'order'   => 9001,
         ),
     ),
 ));

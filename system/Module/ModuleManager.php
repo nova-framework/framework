@@ -66,6 +66,8 @@ class ModuleManager
     {
         $name = array_get($properties, 'name');
 
+        $file = $this->getModulesPath() .DS .$name .DS .'Providers' .DS .$name .'ServiceProvider.php';
+
         // Calculate the name of Service Provider, including the namespace.
         $serviceProvider = $this->getNamespace() ."\\{$name}\\Providers\\{$name}ServiceProvider";
 
@@ -95,7 +97,7 @@ class ModuleManager
         // Calculate the Modules path.
         $module = array_get($properties, 'name');
 
-        $basePath = $this->getPath() .DS .$module .DS;
+        $basePath = $this->getModulesPath() .DS .$module .DS;
 
         foreach ($names as $name) {
             $path = $basePath .ucfirst($name) .'.php';
@@ -104,14 +106,16 @@ class ModuleManager
         }
     }
 
-    public function getPath()
+    public function getModulesPath()
     {
-        return $this->config->get('modules.path');
+        $path = $this->config->get('modules.path', APPDIR .'Modules');
+
+        return str_replace('/', DS, realpath($path));
     }
 
     public function getNamespace()
     {
-        return $this->config->get('modules.namespace');
+        return $this->config->get('modules.namespace', 'App\Modules\\');
     }
 
     public function getModules()

@@ -15,6 +15,7 @@ use Event;
 use Hash;
 use Input;
 use Mailer;
+use Module;
 use Redirect;
 use Request;
 use Session;
@@ -284,6 +285,44 @@ class Demos extends Controller
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Cache'))
+            ->with('content', $content);
+    }
+
+    public function modules()
+    {
+        $modules = Module::getModules();
+
+        $content = '<h4>' .__d('demos', 'The Modules configured on application') ."</h4>
+<table class='table table-striped table-hover responsive'>
+    <tr class='bg-navy disabled'>
+        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Name') ."</th>
+        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Slug') ."</th>
+        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Enabled') ."</th>
+        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Order') ."</th>
+    </tr>";
+
+        $modules->each(function($properties) use (&$content)
+        {
+            $name  = array_get($properties,'name');
+            $slug  = array_get($properties,'slug');
+            $order = array_get($properties,'order');
+
+            $enabled = array_get($properties,'enabled', true) ? __d('demos', 'Yes') : __d('demos', 'No');
+
+            $content .= "
+    <tr>
+        <td style='text-align: center; vertical-align: middle;' width='35%'>$name</td>
+        <td style='text-align: center; vertical-align: middle;' width='35%'>$slug</td>
+        <td style='text-align: center; vertical-align: middle;' width='15%'>$enabled</td>
+        <td style='text-align: center; vertical-align: middle;' width='15%'>$order</td>
+    <tr>";
+
+        });
+
+        $content .= "</table>";
+
+        return View::make('Default')
+            ->shares('title', __d('demos', 'Modules'))
             ->with('content', $content);
     }
 

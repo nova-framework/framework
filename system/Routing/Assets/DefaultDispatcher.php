@@ -56,34 +56,37 @@ class DefaultDispatcher implements DispatcherInterface
         // /modules/blog/assets/css/style.css
         // /assets/css/style.css
 
-        $method = $request->method();
-
         $uri = $request->path();
 
         // Calculate the Asset File path, if it is a valid one.
-        $path = null;
+        $filePath = null;
 
         if (preg_match('#^(templates|modules)/([^/]+)/assets/(.*)$#i', $uri, $matches)) {
+            $path = $matches[3];
+
+            //
             $baseFolder = (strtolower($matches[1]) == 'modules') ? 'Modules' : 'Templates';
 
             $basePath = APPDIR .$baseFolder .DS .Str::studly($matches[2]) .DS .'Assets' .DS;
 
-            $path = $basePath .str_replace('/', DS, $matches[3]);
+            $filePath = $basePath .str_replace('/', DS, $path);
         } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
-            $uriPath = $matches[2];
+            $path = $matches[2];
 
             //
             $baseFolder = strtolower($matches[1]);
 
-            $basePath = ROOTDIR .$baseFolder .DS;
+            if (($baseFolder == 'vendor') && ! Str::startsWith($path, $this->paths)) {
+                // The current URI is not a valid Vendor path; nothing to do.
+            } else {
+                $basePath = ROOTDIR .$baseFolder .DS;
 
-            if (($baseFolder == 'assets') || Str::startsWith($uriPath, $this->paths)) {
-                $path = $basePath .str_replace('/', DS, $uriPath);
+                $filePath = $basePath .str_replace('/', DS, $path);
             }
         }
 
-        if (! is_null($path) && in_array($method, array('GET', 'HEAD'))) {
-            $response = $this->serve($path, $request);
+        if (! is_null($filePath) && in_array($request->method(), array('GET', 'HEAD'))) {
+            $response = $this->serve($filePath, $request);
 
             // Prepare the Response instance.
             $response->prepare($request);

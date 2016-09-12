@@ -64,22 +64,21 @@ class DefaultDispatcher implements DispatcherInterface
         $path = null;
 
         if (preg_match('#^(templates|modules)/([^/]+)/assets/(.*)$#i', $uri, $matches)) {
-            $folderName = Str::studly($matches[2]);
-
-            $filePath = str_replace('/', DS, $matches[3]);
-
             $baseFolder = (strtolower($matches[1]) == 'modules') ? 'Modules' : 'Templates';
 
-            $path = APPDIR .$baseFolder .DS .$folderName .DS .'Assets' .DS .$filePath;
-        } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
-            $filePath = $matches[2];
+            $basePath = APPDIR .$baseFolder .DS .Str::studly($matches[2]) .DS .'Assets' .DS;
 
-            if (strtolower($matches[1]) == 'assets') {
-                // The Asset File is located on root 'assets' folder.
-                $path = ROOTDIR .'assets' .DS .str_replace('/', DS, $filePath);
-            } else if (Str::startsWith($filePath, $this->paths)) {
-                // The Asset File is located on one of the valid Vendor paths.
-                $path = ROOTDIR .'vendor' .DS .str_replace('/', DS, $filePath);
+            $path = $basePath .str_replace('/', DS, $matches[3]);
+        } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
+            $uriPath = $matches[2];
+
+            //
+            $baseFolder = strtolower($matches[1]);
+
+            $basePath = ROOTDIR .$baseFolder .DS;
+
+            if (($baseFolder == 'assets') || Str::startsWith($uriPath, $this->paths)) {
+                $path = $basePath .str_replace('/', DS, $uriPath);
             }
         }
 

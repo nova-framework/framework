@@ -79,9 +79,7 @@ class DefaultDispatcher implements DispatcherInterface
             if (($baseFolder == 'vendor') && ! Str::startsWith($path, $this->paths)) {
                 // The current URI is not a valid Vendor path; nothing to do.
             } else {
-                $basePath = ROOTDIR .$baseFolder .DS;
-
-                $filePath = $basePath .str_replace('/', DS, $path);
+                $filePath = ROOTDIR .$baseFolder .DS .str_replace('/', DS, $path);
             }
         }
 

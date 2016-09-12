@@ -60,31 +60,29 @@ class DefaultDispatcher implements DispatcherInterface
 
         $uri = $request->path();
 
-        //
+        // Calculate the Asset File path, if it is a valid one.
         $path = null;
 
-        if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
-            $module = Str::studly($matches[2]);
+        if (preg_match('#^(templates|modules)/([^/]+)/assets/(.*)$#i', $uri, $matches)) {
+            $folderName = Str::studly($matches[2]);
 
-            if (strtolower($matches[1]) == 'modules') {
-                // The Asset File is located on a Module.
-                $path = static::getModulePath($module, $matches[3], $matches[4]);
-            } else {
-                // The Asset File is located on a Template.
-                $path = static::getTemplatePath($module, $matches[3], $matches[4]);
-            }
+            $filePath = str_replace('/', DS, $matches[3]);
+
+            $baseFolder = (strtolower($matches[1]) == 'modules') ? 'Modules' : 'Templates';
+
+            $path = APPDIR .$baseFolder .DS .$folderName .DS .'Assets' .DS .$filePath;
         } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
-            $uriPath = $matches[2];
+            $filePath = $matches[2];
 
             if (strtolower($matches[1]) == 'assets') {
                 // The Asset File is located on root 'assets' folder.
-                $path = ROOTDIR .'assets' .DS .str_replace('/', DS, $uriPath);
-            } else if (Str::startsWith($uriPath, $this->paths)) {
+                $path = ROOTDIR .'assets' .DS .str_replace('/', DS, $filePath);
+            } else if (Str::startsWith($filePath, $this->paths)) {
                 // The Asset File is located on one of the valid Vendor paths.
-                $path = ROOTDIR .'vendor' .DS .str_replace('/', DS, $uriPath);
+                $path = ROOTDIR .'vendor' .DS .str_replace('/', DS, $filePath);
             }
         }
-        
+
         if (! is_null($path) && in_array($method, array('GET', 'HEAD'))) {
             $response = $this->serve($path, $request);
 
@@ -216,54 +214,6 @@ class DefaultDispatcher implements DispatcherInterface
         $response->headers->set('Content-Encoding', $algorithm);
 
         return $response;
-    }
-
-    /**
-     * Get the path of a Asset file
-     * @return string|null
-     */
-    protected static function getModulePath($module, $folder, $path)
-    {
-        $path = str_replace('/', DS, $path);
-
-        //
-        $basePath = APPDIR .str_replace('/', DS, "Modules/$module/Assets/");
-
-        return $basePath .$folder .DS .$path;
-    }
-
-    /**
-     * Get the path of a Asset file
-     * @return string|null
-     */
-    protected static function getTemplatePath($template, $folder, $path)
-    {
-        $path = str_replace('/', DS, $path);
-
-        //
-        $basePath = APPDIR .str_replace('/', DS, "Templates/$template/Assets/");
-
-        return $basePath .$folder .DS .$path;
-    }
-
-    /**
-     * Get the Template Info
-     * @return array
-     */
-    protected static function getTemplateInfo($template)
-    {
-        // Retrieve the Template Info
-        $filePath = APPDIR .'Templates' .DS .$template .DS .'template.json';
-
-        if (! is_readable($filePath)) {
-            return array();
-        }
-
-        // Get the file contents and decode the JSON content.
-        $result = json_decode(file_get_contents($filePath), true);
-
-        // The Template Info should be always an array; ensure that.
-        return $result ?: array();
     }
 
 }

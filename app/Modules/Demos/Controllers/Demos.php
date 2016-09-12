@@ -334,7 +334,9 @@ class Demos extends Controller
 
         });
 
-        $content .= "</table>";
+        $content .= "
+</table>
+";
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Modules'))

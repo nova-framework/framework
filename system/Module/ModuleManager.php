@@ -20,6 +20,11 @@ class ModuleManager
      */
     protected $config;
 
+    /**
+     * @var \Support\Collection|null
+     */
+    protected static $modules;
+
 
     /**
      * Create a new ModuleRepository instance.
@@ -58,15 +63,18 @@ class ModuleManager
     /**
      * Register the Module Service Provider.
      *
-     * @param string $config
+     * @param array $properties
      *
-     * @return string
+     * @return void
      */
     protected function registerServiceProvider($properties)
     {
+        $basePath = $this->getModulePath($properties);
+
+        //
         $name = array_get($properties, 'name');
 
-        $file = $this->getModulesPath() .$name .DS .'Providers' .DS .$name .'ServiceProvider.php';
+        $file = $basePath .'Providers' .DS .$name .'ServiceProvider.php';
 
         // Calculate the name of Service Provider, including the namespace.
         $serviceProvider = $this->getNamespace() ."\\{$name}\\Providers\\{$name}ServiceProvider";
@@ -77,18 +85,18 @@ class ModuleManager
     }
 
     /**
-     * Autoload custom module files.
+     * Autoload custom Module files.
      *
-     * @param array $config
+     * @param array $properties
+     *
+     * @return void
      */
     protected function autoloadFiles($properties)
     {
         $autoload = array_get($properties, 'autoload');
 
         // Calculate the Modules path.
-        $module = array_get($properties, 'name');
-
-        $basePath = $this->getModulesPath() .$module .DS;
+        $basePath = $this->getModulePath($properties);
 
         foreach ($autoload as $name) {
             $path = $basePath .ucfirst($name) .'.php';
@@ -97,7 +105,33 @@ class ModuleManager
         }
     }
 
-    public function getModulesPath()
+    /**
+     * Resolve the correct Module namespace.
+     *
+     * @param array $properties
+     */
+    public function resolveNamespace($properties)
+    {
+        if (isset($properties['namespace'])) return $properties['namespace'];
+
+        return Str::studly($properties['slug']);
+    }
+
+    /**
+     * Resolve the correct module path.
+     *
+     * @param array $properties
+     */
+    public function getModulePath($properties)
+    {
+        $name = array_get($properties, 'name');
+
+        if (! is_null($name)) {
+            return $this->getPath() .$name .DS;
+        }
+    }
+
+    public function getPath()
     {
         $path = $this->config->get('modules.path', APPDIR .'Modules');
 
@@ -111,6 +145,9 @@ class ModuleManager
 
     public function getModules()
     {
+        if (isset(static::$modules)) return static::$modules;
+
+        //
         $modules = $this->config->get('modules.repository');
 
         $modules = array_map(function($name, $config)
@@ -135,7 +172,7 @@ class ModuleManager
 
         }, array_keys($modules), $modules);
 
-        return Collection::make($modules)->sortBy('order');
+        return static::$modules = Collection::make($modules)->sortBy('order');
     }
 
 }

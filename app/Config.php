@@ -41,5 +41,13 @@ Config::set('routing', array(
 
         // The served file Cache Time.
         'cacheTime' => 10800,
+
+        // The valid Vendor paths.
+        'paths' => array(
+            'almasaeed2010/adminlte/bootstrap/',
+            'almasaeed2010/adminlte/dist/',
+            'almasaeed2010/adminlte/plugins/',
+            'twbs/bootstrap/dist/',
+        ),
     ),
 ));

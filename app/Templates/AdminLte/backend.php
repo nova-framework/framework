@@ -37,17 +37,17 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        template_url('bootstrap/css/bootstrap.min.css', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/bootstrap/css/bootstrap.min.css'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        template_url('dist/css/AdminLTE.min.css', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css'),
         // AdminLTE Skins
-        template_url('dist/css/skins/_all-skins.min.css', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css'),
         // Select2
-        template_url('plugins/select2/select2.min.css', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.min.css'),
         // Custom CSS
         template_url('css/style.css', 'AdminLte'),
     ));
@@ -68,7 +68,7 @@ $langMenuLinks = ob_get_clean();
 <?php
     //Add Controller specific JS files.
     Assets::js(array(
-        template_url('plugins/jQuery/jquery-2.2.3.min.js', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js'),
     ));
 
     ?>
@@ -118,14 +118,14 @@ $langMenuLinks = ob_get_clean();
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="user-image" alt="User Image">
+              <img src="<?= site_url('vendor/almasaeed2010/adminlte/dist/img/avatar5.png'); ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?= $user->username; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="img-circle" alt="User Image">
+                <img src="<?= site_url('vendor/almasaeed2010/adminlte/dist/img/avatar5.png'); ?>" class="img-circle" alt="User Image">
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>
@@ -217,11 +217,11 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    template_url('bootstrap/js/bootstrap.min.js', 'AdminLte'),
+    site_url('vendor/almasaeed2010/adminlte/bootstrap/js/bootstrap.min.js'),
     // AdminLTE App
-    template_url('dist/js/app.min.js', 'AdminLte'),
+    site_url('vendor/almasaeed2010/adminlte/dist/js/app.min.js'),
     // Select2
-    template_url('plugins/select2/select2.full.min.js', 'AdminLte')
+    site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.full.min.js')
 ));
 
 echo $js; // Place to pass data / plugable hook zone

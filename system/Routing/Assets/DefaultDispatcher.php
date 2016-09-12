@@ -20,6 +20,12 @@ use LogicException;
 class DefaultDispatcher implements DispatcherInterface
 {
     /**
+     * The valid Vendor paths.
+     * @var array
+     */
+    protected $paths = array();
+
+    /**
      * The currently accepted encodings for Response content compression.
      *
      * @var array
@@ -34,7 +40,7 @@ class DefaultDispatcher implements DispatcherInterface
      */
     public function __construct()
     {
-        //
+        $this->paths = Config::get('routing.assets.paths', array());
     }
 
     /**
@@ -55,25 +61,37 @@ class DefaultDispatcher implements DispatcherInterface
             return null;
         }
 
-        // Check the URI on the Request.
+        // Check the URI on the Request and prepare the Asset File path.
         $uri = $request->path();
 
-        if (preg_match('#^assets/(.*)$#i', $uri, $matches)) {
-            $path = ROOTDIR .'assets' .DS .$matches[1];
-        } else if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
+        $path = null;
+        
+        if (preg_match('#^(templates|modules)/([^/]+)/assets/([^/]+)/(.*)$#i', $uri, $matches)) {
             $module = Str::studly($matches[2]);
 
-            if(strtolower($matches[1]) == 'modules') {
-                // A Module Asset file.
+            if (strtolower($matches[1]) == 'modules') {
+                // The Asset File is located on a Module.
                 $path = static::getModulePath($module, $matches[3], $matches[4]);
             } else {
-                // A Template Asset file.
+                // The Asset File is located on a Template.
                 $path = static::getTemplatePath($module, $matches[3], $matches[4]);
             }
-        } else {
-            // The URI is not a Asset File path.
-            return null;
+        } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
+            $path = $matches[2];
+
+            if (strtolower($matches[1]) == 'assets') {
+                // The Asset File is located on root 'assets' folder.
+                $path = ROOTDIR .'assets' .DS .$path;
+            } else if (Str::startsWith($path, $this->paths)) {
+                // The Asset File is located on one of the valid Vendor paths.
+                $path = ROOTDIR .'vendor' .DS .str_replace('/', DS, $path);
+            } else {
+                $path = null;
+            }
         }
+
+        // If the path is null, then the current URI is not for a Asset File.
+        if (is_null($path)) return null;
 
         // Get the Response instance associated to the Asset File.
         $response = $this->serve($path, $request);

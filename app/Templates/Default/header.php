@@ -30,8 +30,8 @@ $langMenuLinks = ob_get_clean();
 echo $meta; // Place to pass data / plugable hook zone
 
 Assets::css([
-    template_url('dist/css/bootstrap.min.css', 'Default'),
-    template_url('dist/css/bootstrap-theme.min.css', 'Default'),
+    site_url('vendor/twbs/bootstrap/dist/css/bootstrap.min.css'),
+    site_url('vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
     template_url('css/style.css', 'Default'),
 ]);

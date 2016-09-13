@@ -56,6 +56,10 @@ class DefaultDispatcher implements DispatcherInterface
         // /modules/blog/assets/css/style.css
         // /assets/css/style.css
 
+        if (! in_array($request->method(), array('GET', 'HEAD'))) {
+            return null;
+        }
+
         $uri = $request->path();
 
         // Calculate the Asset File path, if it is a valid one.
@@ -77,21 +81,22 @@ class DefaultDispatcher implements DispatcherInterface
             $baseFolder = strtolower($matches[1]);
 
             if (($baseFolder == 'vendor') && ! Str::startsWith($path, $this->paths)) {
-                // The current URI is not a valid Vendor path.
+                // The current URI is not a valid Asset File path on Vendor.
                 return null;
             }
 
             $filePath = ROOTDIR .$baseFolder .DS .str_replace('/', DS, $path);
+        } else {
+            // The current URI is not a valid Asset File path.
+            return null;
         }
 
-        if (! is_null($filePath) && in_array($request->method(), array('GET', 'HEAD'))) {
-            $response = $this->serve($filePath, $request);
+        $response = $this->serve($filePath, $request);
 
-            // Prepare the Response instance.
-            $response->prepare($request);
+        // Prepare the Response instance.
+        $response->prepare($request);
 
-            return $response;
-        }
+        return $response;
     }
 
     /**

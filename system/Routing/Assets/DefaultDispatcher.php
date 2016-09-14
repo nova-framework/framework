@@ -79,14 +79,14 @@ class DefaultDispatcher implements DispatcherInterface
             //
             $baseFolder = strtolower($matches[1]);
 
-            if (($baseFolder == 'vendor') && ! Str::startsWith($path, $this->paths)) {
-                // The current URI is not a valid Asset File path on Vendor.
-                return null;
-            }
-
             $filePath = ROOTDIR .$baseFolder .DS .str_replace('/', DS, $path);
         } else {
             // The current URI is not a valid Asset File path.
+            return null;
+        }
+
+        if (($baseFolder == 'vendor') && ! Str::startsWith($path, $this->paths)) {
+            // The current URI is not a valid Asset File path on Vendor.
             return null;
         }
 

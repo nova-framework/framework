@@ -139,15 +139,15 @@ class ModuleManager
 
         $modules = array_map(function($slug, $properties)
         {
-            $names = array('config', 'events', 'filters', 'routes');
+            $autoload = array('config', 'events', 'filters', 'routes');
 
-            $autoload = array_get($properties, 'autoload');
+            $options = array_get($properties, 'autoload', array());
 
-            if (is_array($autoload) && ! empty($autoload)) {
-                $names = array_values(array_intersect($names, $autoload));
+            if (! empty($options)) {
+                $autoload = array_intersect($options, $autoload);
             }
 
-            array_push($names, 'bootstrap');
+            array_push($autoload, 'bootstrap');
 
             //
             $namespace = isset($properties['namespace']) ? $properties['namespace'] : Str::studly($slug);
@@ -158,7 +158,7 @@ class ModuleManager
                 'namespace' => $namespace,
                 'enabled'   => isset($properties['enabled']) ? $properties['enabled'] : true,
                 'order'     => isset($properties['order'])   ? $properties['order']   : 9001,
-                'autoload'  => $names,
+                'autoload'  => $autoload,
             ), $properties);
 
         }, array_keys($modules), $modules);

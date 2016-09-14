@@ -61,7 +61,7 @@ class DefaultDispatcher implements DispatcherInterface
             return null;
         }
 
-        // Calculate the Asset File path, if there is a valid one.
+        // Calculate the Asset File path, looking for a valid one.
         $uri = $request->path();
 
         if (preg_match('#^(templates|modules)/([^/]+)/assets/(.*)$#i', $uri, $matches)) {

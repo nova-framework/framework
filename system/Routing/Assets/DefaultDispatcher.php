@@ -57,6 +57,7 @@ class DefaultDispatcher implements DispatcherInterface
         // /assets/css/style.css
 
         if (! in_array($request->method(), array('GET', 'HEAD'))) {
+            // The Request Method is not valid for Asset Files.
             return null;
         }
 

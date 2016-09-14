@@ -135,13 +135,13 @@ class ModuleManager
         if (isset(static::$modules)) return static::$modules;
 
         //
-        $modules = $this->config->get('modules.modules');
+        $modules = $this->config->get('modules.modules', array());
 
-        $modules = array_map(function($slug, $config)
+        $modules = array_map(function($slug, $properties)
         {
             $names = array('config', 'events', 'filters', 'routes');
 
-            $autoload = array_get($config, 'autoload');
+            $autoload = array_get($properties, 'autoload');
 
             if (is_array($autoload) && ! empty($autoload)) {
                 $names = array_values(array_intersect($names, $autoload));
@@ -150,16 +150,16 @@ class ModuleManager
             array_push($names, 'bootstrap');
 
             //
-            $namespace = isset($config['namespace']) ? $config['namespace'] : Str::studly($slug);
+            $namespace = isset($properties['namespace']) ? $properties['namespace'] : Str::studly($slug);
 
             return array_merge(array(
                 'slug'      => $slug,
-                'name'      => isset($config['name']) ? $config['name'] : $namespace,
+                'name'      => isset($properties['name']) ? $properties['name'] : $namespace,
                 'namespace' => $namespace,
-                'enabled'   => isset($config['enabled']) ? $config['enabled'] : true,
-                'order'     => isset($config['order'])   ? $config['order']   : 9001,
+                'enabled'   => isset($properties['enabled']) ? $properties['enabled'] : true,
+                'order'     => isset($properties['order'])   ? $properties['order']   : 9001,
                 'autoload'  => $names,
-            ), $config);
+            ), $properties);
 
         }, array_keys($modules), $modules);
 

@@ -70,26 +70,27 @@ class DefaultDispatcher implements DispatcherInterface
             $path = str_replace('/', DS, $matches[3]);
 
             //
-            $baseFolder = (strtolower($matches[1]) == 'modules') ? 'Modules' : 'Templates';
+            $baseName = strtolower($matches[1]);
 
-            $filePath = APPDIR .$baseFolder .DS .$folder .DS .'Assets' .DS .$path;
+            $filePath = APPDIR .ucfirst($baseName) .DS .$folder .DS .'Assets' .DS .$path;
         } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
             $path = str_replace('/', DS, $matches[2]);
 
             //
-            $baseFolder = strtolower($matches[1]);
+            $baseName = strtolower($matches[1]);
 
-            $filePath = ROOTDIR .$baseFolder .DS .$path;
+            if (($baseName == 'vendor') && ! Str::startsWith($path, $this->paths)) {
+                // The current URI is not a valid Asset File path on Vendor.
+                return null;
+            }
+
+            $filePath = ROOTDIR .$baseName .DS .$path;
         } else {
             // The current URI is not a valid Asset File path.
             return null;
         }
 
-        if (($baseFolder == 'vendor') && ! Str::startsWith($path, $this->paths)) {
-            // The current URI is not a valid Asset File path on Vendor.
-            return null;
-        }
-
+        // Create a Response for the current Asset File path.
         $response = $this->serve($filePath, $request);
 
         // Prepare the Response instance.

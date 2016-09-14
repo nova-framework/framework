@@ -65,20 +65,21 @@ class DefaultDispatcher implements DispatcherInterface
         $uri = $request->path();
 
         if (preg_match('#^(templates|modules)/([^/]+)/assets/(.*)$#i', $uri, $matches)) {
-            $path = $matches[3];
-            $module = Str::studly($matches[2]);
+            $folder = Str::studly($matches[2]);
+
+            $path = str_replace('/', DS, $matches[3]);
 
             //
             $baseFolder = (strtolower($matches[1]) == 'modules') ? 'Modules' : 'Templates';
 
-            $filePath = APPDIR .$baseFolder .DS .$module .DS .'Assets' .DS .$path;
+            $filePath = APPDIR .$baseFolder .DS .$folder .DS .'Assets' .DS .$path;
         } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
-            $path = $matches[2];
+            $path = str_replace('/', DS, $matches[2]);
 
             //
             $baseFolder = strtolower($matches[1]);
 
-            $filePath = ROOTDIR .$baseFolder .DS .str_replace('/', DS, $path);
+            $filePath = ROOTDIR .$baseFolder .DS .$path;
         } else {
             // The current URI is not a valid Asset File path.
             return null;

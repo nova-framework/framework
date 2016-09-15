@@ -33,7 +33,7 @@ class ContentGuard implements HttpKernelInterface
      */
     protected $debug;
 
-    
+
     /**
      * Create a new FrameGuard instance.
      *
@@ -103,8 +103,6 @@ class ContentGuard implements HttpKernelInterface
         }
 
         $response->setContent($content);
-
-        $response->headers->set('Content-Length', strlen($response->getContent()));
 
         return $response;
     }

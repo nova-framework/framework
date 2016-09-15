@@ -74,7 +74,7 @@ class DefaultDispatcher implements DispatcherInterface
 
             $filePath = APPDIR .ucfirst($baseName) .DS .$folder .DS .'Assets' .DS .$path;
         } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
-            $path = str_replace('/', DS, $matches[2]);
+            $path = $matches[2];
 
             //
             $baseName = strtolower($matches[1]);
@@ -84,7 +84,7 @@ class DefaultDispatcher implements DispatcherInterface
                 return null;
             }
 
-            $filePath = ROOTDIR .$baseName .DS .$path;
+            $filePath = ROOTDIR .$baseName .DS .str_replace('/', DS, $path);
         } else {
             // The current URI is not a valid Asset File path.
             return null;

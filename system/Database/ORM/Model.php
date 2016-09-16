@@ -241,7 +241,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     const UPDATED_AT = 'updated_at';
 
     /**
-     * Create a new Eloquent model instance.
+     * Create a new ORM model instance.
      *
      * @param  array  $attributes
      * @return void
@@ -1641,7 +1641,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Apply all of the global scopes to an Eloquent builder.
+     * Apply all of the global scopes to an ORM builder.
      *
      * @param  \Database\ORM\Builder  $builder
      * @return \Database\ORM\Builder
@@ -1656,7 +1656,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Remove all of the global scopes from an Eloquent builder.
+     * Remove all of the global scopes from an ORM builder.
      *
      * @param  \Database\ORM\Builder  $builder
      * @return \Database\ORM\Builder
@@ -1671,7 +1671,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a new Eloquent query builder for the model.
+     * Create a new ORM query builder for the model.
      *
      * @param  \Database\Query\Builder $query
      * @return \Database\ORM\Builder|static
@@ -1696,7 +1696,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
 
     /**
-     * Create a new Eloquent Collection instance.
+     * Create a new ORM Collection instance.
      *
      * @param  array  $models
      * @return \Database\ORM\Collection

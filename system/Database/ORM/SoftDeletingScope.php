@@ -13,7 +13,7 @@ class SoftDeletingScope implements ScopeInterface
     protected $extensions = ['ForceDelete', 'Restore', 'WithTrashed', 'OnlyTrashed'];
 
     /**
-     * Apply the scope to a given Eloquent query builder.
+     * Apply the scope to a given ORM query builder.
      *
      * @param  \Database\ORM\Builder  $builder
      * @return void
@@ -28,7 +28,7 @@ class SoftDeletingScope implements ScopeInterface
     }
 
     /**
-     * Remove the scope from the given Eloquent query builder.
+     * Remove the scope from the given ORM query builder.
      *
      * @param  \Database\ORM\Builder  $builder
      * @return void

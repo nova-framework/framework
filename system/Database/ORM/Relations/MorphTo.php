@@ -113,7 +113,7 @@ class MorphTo extends BelongsTo
     /**
      * Get the results of the relationship.
      *
-     * Called via eager load method of Eloquent query builder.
+     * Called via eager load method of ORM query builder.
      *
      * @return mixed
      */

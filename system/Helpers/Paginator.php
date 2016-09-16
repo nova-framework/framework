@@ -127,7 +127,7 @@ class Paginator
 
     /**
      * getLimit2 and getPerPage are used together
-     * when using the Eloquent Query Builder
+     * when using the ORM Query Builder
      * for the skip and take parameters.
      *
      * There are also other ORM's that need the skip and take
@@ -137,7 +137,7 @@ class Paginator
      *
      * $data['pets'] = $this->pet->getPets($pages->getLimit2(), $pages->getPerPage(), $petSearch);
      *
-     * Example model method using Eloquent Query Builder:
+     * Example model method using ORM Query Builder:
      *
      * public function getPets($offset = "", $rowsPerPage = "", $petSearch = "")
      * {

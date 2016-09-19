@@ -238,9 +238,6 @@ class DefaultDispatcher implements DispatcherInterface
         // Setup the (new) Response content.
         $response->setContent($content);
 
-        // Setup the (new) Content Length.
-        $response->headers->set('Content-Length', strlen($content));
-
         // Setup the Content Encoding.
         $response->headers->set('Content-Encoding', $algorithm);
 

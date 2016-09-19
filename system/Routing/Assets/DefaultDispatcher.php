@@ -42,10 +42,10 @@ class DefaultDispatcher implements DispatcherInterface
     {
         $config = Config::get('routing.assets.paths', array());
 
-        $this->paths = $this->parseVendorPaths($config);
+        $this->paths = $this->parsePaths($config);
     }
 
-    protected function parseVendorPaths(array $config)
+    protected function parsePaths(array $config)
     {
         $result = array();
 

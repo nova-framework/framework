@@ -49,16 +49,16 @@ class DefaultDispatcher implements DispatcherInterface
     {
         $result = array();
 
-        foreach ($config as $vendor => $paths) {
-            if (is_array($paths)) {
-                $result = array_merge($result, array_map(function($value) use ($vendor)
-                {
-                    return $vendor .'/' .$value .'/';
+        foreach ($config as $vendor => $path) {
+            $paths = (array) $path;
 
-                }, $paths));
-            } else if (is_string($paths)) {
-                $result[] = $vendor .'/' .$paths .'/';
-            }
+            $paths = array_map(function($value) use ($vendor)
+            {
+                return $vendor .'/' .$value .'/';
+
+            }, $paths);
+
+            $result = array_merge($result, $paths);
         }
 
         return $result;

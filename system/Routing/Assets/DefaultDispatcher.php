@@ -50,17 +50,15 @@ class DefaultDispatcher implements DispatcherInterface
         //
         $result = array();
 
-        foreach ($paths as $vendor => $path) {
-            if (is_array($path)) {
-                $vendorPaths = array_map(function($value) use ($vendor)
+        foreach ($paths as $vendor => $paths) {
+            if (is_array($paths)) {
+                $results = array_merge($result, array_map(function($value) use ($vendor)
                 {
                     return $vendor .'/' .$value;
 
-                }, $path);
-
-                $results = array_merge($result, $vendorPaths);
-            } else if (is_string($path)) {
-                $result[] = $vendor .'/' .$path;
+                }, $paths));
+            } else if (is_string($paths)) {
+                $result[] = $vendor .'/' .$paths;
             }
         }
 

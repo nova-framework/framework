@@ -61,7 +61,7 @@ class DefaultDispatcher implements DispatcherInterface
             $result = array_merge($result, $paths);
         }
 
-        return $result;
+        return array_unique($result);
     }
 
     /**

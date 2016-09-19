@@ -65,8 +65,12 @@ class DefaultDispatcher implements DispatcherInterface
         $uri = $request->path();
 
         if (preg_match('#^(templates|modules)/([^/]+)/assets/(.*)$#i', $uri, $matches)) {
-            $folder = Str::studly($matches[2]);
+            $folder = $matches[2];
 
+            // Adjust the name of the requested folder, the short ones becoming uppercase.
+            $folder = (strlen($folder) > 3) ? Str::studly($folder) : strtoupper($folder);
+
+            //
             $path = str_replace('/', DS, $matches[3]);
 
             //

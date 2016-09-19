@@ -46,13 +46,15 @@ Config::set('routing', array(
         // severe security issues, try to limit the access to a precise area, where aren't present "unsafe" files.
         //
         // '/vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css'
-        //          ^_________________________^______________________ This is the part of path which is validated.
+        //          ^____________________^____^______________________ This is the part of path which is validated.
         //
         'paths' => array(
-            'almasaeed2010/adminlte/bootstrap',
-            'almasaeed2010/adminlte/dist',
-            'almasaeed2010/adminlte/plugins',
-            'twbs/bootstrap/dist',
+            'almasaeed2010/adminlte' => array(
+                'bootstrap',
+                'dist',
+                'plugins'
+            ),
+            'twbs/bootstrap' => 'dist',
         ),
     ),
 ));

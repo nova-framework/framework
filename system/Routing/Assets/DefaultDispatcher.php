@@ -50,7 +50,7 @@ class DefaultDispatcher implements DispatcherInterface
         $result = array();
 
         foreach ($paths as $vendor => $value) {
-            $values = (array) $value;
+            $values = is_array($value) ? $value : array($value);
 
             $values = array_map(function($value) use ($vendor)
             {

@@ -46,7 +46,7 @@ Config::set('routing', array(
         // severe security issues, try to limit the access to a precise area, where aren't present "unsafe" files.
         //
         // '/vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css'
-        //          ^____________________^____^______________________ This is the part of path which is validated.
+        //          ^____________________^____^____________________This are the parts of path which are validated.
         //
         'paths' => array(
             'almasaeed2010/adminlte' => array(

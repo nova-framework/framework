@@ -49,8 +49,8 @@ class DefaultDispatcher implements DispatcherInterface
     {
         $result = array();
 
-        foreach ($config as $vendor => $path) {
-            $paths = (array) $path;
+        foreach ($config as $vendor => $value) {
+            $paths = (array) $value;
 
             $paths = array_map(function($value) use ($vendor)
             {

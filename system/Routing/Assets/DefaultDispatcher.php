@@ -53,11 +53,11 @@ class DefaultDispatcher implements DispatcherInterface
             if (is_array($paths)) {
                 $result = array_merge($result, array_map(function($value) use ($vendor)
                 {
-                    return $vendor .'/' .$value;
+                    return $vendor .'/' .$value .'/';
 
                 }, $paths));
             } else if (is_string($paths)) {
-                $result[] = $vendor .'/' .$paths;
+                $result[] = $vendor .'/' .$paths .'/';
             }
         }
 

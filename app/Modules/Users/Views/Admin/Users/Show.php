@@ -19,32 +19,32 @@
     <div class="box-body no-padding">
         <table id='left' class='table table-hover responsive'>
             <tr>
-                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'ID'); ?></th>
-                <td style='text-align: center; vertical-align: middle;' width='70%'><?= $user->id; ?></td>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='70%'><?= $user->id; ?></td>
             <tr>
             <tr>
-                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'Username'); ?></th>
-                <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->username; ?></td>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->username; ?></td>
             </tr>
             <tr>
-                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'Role'); ?></th>
-                <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->role->name; ?></td>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Role'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->role->name; ?></td>
             </tr>
             <tr>
-                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'Name and Surname'); ?></th>
-                <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->realname; ?></td>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Name and Surname'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->realname; ?></td>
             </tr>
             <tr>
-                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'E-mail'); ?></th>
-                <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->email; ?></td>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'E-mail'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->email; ?></td>
             </tr>
             <tr>
-                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'Created At'); ?></th>
-                <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->created_at->formatLocalized('%d %b %Y, %R'); ?></td>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Created At'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->created_at->formatLocalized('%d %b %Y, %R'); ?></td>
             </tr>
             <tr>
-                <th style='text-align: center; vertical-align: right;'><?= __d('users', 'Updated At'); ?></th>
-                <td style='text-align: center; vertical-align: middle;' width='75%'><?= $user->updated_at->formatLocalized('%d %b %Y, %R'); ?></td>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Updated At'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->updated_at->formatLocalized('%d %b %Y, %R'); ?></td>
             <tr>
         </table>
     </div>

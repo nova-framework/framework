@@ -57,7 +57,7 @@ Route::filter('referer', function($route, $request) {
 Route::filter('auth', function($route, $request) {
     if (! Auth::check()) {
          // User is not logged in, redirect him to Login Page.
-         return Redirect::to('login');
+         return Redirect::guest('login');
     }
 });
 

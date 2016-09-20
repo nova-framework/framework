@@ -27,16 +27,16 @@ $langMenuLinks = ob_get_clean();
     <meta charset="utf-8">
     <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>
 <?php
-echo $meta; // Place to pass data / plugable hook zone
+echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
-    template_url('dist/css/bootstrap.min.css', 'Default'),
-    template_url('dist/css/bootstrap-theme.min.css', 'Default'),
+    site_url('vendor/twbs/bootstrap/dist/css/bootstrap.min.css'),
+    site_url('vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
     template_url('css/style.css', 'Default'),
 ]);
 
-echo $css; // Place to pass data / plugable hook zone
+echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 ?>
 </head>
 <body style='padding-top: 28px;'>
@@ -51,7 +51,7 @@ echo $css; // Place to pass data / plugable hook zone
     </div>
 </nav>
 
-<?= $afterBody; // Place to pass data / plugable hook zone ?>
+<?= isset($afterBody) ? $afterBody : ''; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
 

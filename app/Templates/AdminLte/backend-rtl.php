@@ -31,7 +31,7 @@ $langMenuLinks = ob_get_clean();
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
-    <?= $meta; // Place to pass data / plugable hook zone ?>
+    <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
@@ -45,18 +45,18 @@ $langMenuLinks = ob_get_clean();
         // Theme style
         template_url('css/AdminLTE-rtl.min.css', 'AdminLte'),
         // AdminLTE Skins
-        template_url('dist/css/skins/_all-skins.min.css', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css'),
         // Select2
-        template_url('plugins/select2/select2.min.css', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.min.css'),
         // Custom CSS
         template_url('css/style-rtl.css', 'AdminLte'),
     ));
 
-    echo $css; // Place to pass data / plugable hook zone
+    echo isset($css) ? $css . ''; // Place to pass data / plugable hook zone
 
     //Add Controller specific JS files.
     Assets::js(array(
-        template_url('plugins/jQuery/jQuery-2.2.0.min.js', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/plugins/jQuery/jQuery-2.2.0.min.js'),
     ));
 
     ?>
@@ -106,14 +106,14 @@ $langMenuLinks = ob_get_clean();
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="user-image" alt="User Image">
+              <img src="<?= site_url('vendor/almasaeed2010/adminlte/dist/img/avatar5.png'); ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?= $user->username; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?= template_url('dist/img/avatar5.png', 'AdminLte'); ?>" class="img-circle" alt="User Image">
+                <img src="<?= site_url('vendor/almasaeed2010/adminlte/dist/img/avatar5.png'); ?>" class="img-circle" alt="User Image">
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>
@@ -204,13 +204,14 @@ Assets::js(array(
     // Bootstrap 3.3.5
     template_url('js/bootstrap-rtl.min.js', 'Default'),
     // AdminLTE App
-    template_url('dist/js/app.min.js', 'AdminLte'),
+    site_url('vendor/almasaeed2010/adminlte/dist/js/app.min.js'),
     // Select2
-    template_url('plugins/select2/select2.full.min.js', 'AdminLte')
+    site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.full.min.js')
 ));
 
-echo $js; // Place to pass data / plugable hook zone
-echo $footer; // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+
+echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <script>

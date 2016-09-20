@@ -13,7 +13,7 @@ use Closure;
 abstract class Relation
 {
     /**
-     * The Eloquent query builder instance.
+     * The ORM query builder instance.
      *
      * @var \Database\ORM\Builder
      */
@@ -192,7 +192,7 @@ abstract class Relation
     }
 
     /**
-     * Get the base query builder driving the Eloquent builder.
+     * Get the base query builder driving the ORM builder.
      *
      * @return \Database\Query\Builder
      */

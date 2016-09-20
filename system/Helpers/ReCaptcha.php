@@ -10,7 +10,8 @@ namespace Helpers;
 
 use Config\Config;
 
-use Helpers\Request;
+use Support\Facades\Request as HttpRequest;
+
 
 /**
  * ReCaptcha: Google Anti-spam protection for your website.
@@ -18,31 +19,19 @@ use Helpers\Request;
 class ReCaptcha
 {
     /**
-     * Constant holding the API url.
+     * Constant holding the Googe API url.
      */
     const GOOGLEHOST = 'https://www.google.com/recaptcha/api/siteverify';
 
-    private $active = true;
-
-    private $siteKey;
-    private $secret;
-
-    private $remoteIp;
+    /**
+     * Array holding the configuration.
+     */
+    protected $config;
 
 
     public function __construct()
     {
-        $this->remoteIp = Request::server('REMOTE_ADDR');
-
-        //
-        $config = Config::get('recaptcha');
-
-        // Wheter is active or not.
-        $this->active  = $config['active'];
-
-        // The Google keys
-        $this->siteKey = $config['siteKey'];
-        $this->secret  = $config['secret'];
+        $this->config = Config::get('recaptcha', array());
     }
 
     /**
@@ -52,7 +41,7 @@ class ReCaptcha
      */
     protected function isActive()
     {
-        return $this->active;
+        return array_get($this->config, 'active' , false);
     }
 
     /**
@@ -62,7 +51,7 @@ class ReCaptcha
      */
     protected function getSiteKey()
     {
-        return $this->siteKey;
+        return array_get($this->config, 'siteKey' , null);
     }
 
     /**
@@ -70,9 +59,9 @@ class ReCaptcha
      *
      * @return string
      */
-    protected function getSecret()
+    protected function getSecretkey()
     {
-        return $this->secret;
+        return array_get($this->config, 'secret' , null);
     }
 
     /**
@@ -83,29 +72,37 @@ class ReCaptcha
      */
     protected function check($response = null)
     {
-        if(! $this->active) return true;
+        if (! $this->isActive()) return true;
 
-        //
-        $response = $response ?: Request::input('g-recaptcha-response', '');
+        // Get the Http Request instance.
+        $request = HttpRequest::instance();
 
-        if (empty($response)) return false;
+        // Get the recaptcha response value.
+        $response = $response ?: $request->input('g-recaptcha-response', '');
 
-        $google_url = sprintf('%s?secret=%s&response=%s&remoteip=%s',
-            self::GOOGLEHOST,
-            $this->secret,
-            $response,
-            $this->remoteIp
-        );
+        // Build the query string.
+        $query = http_build_query(array(
+            'secret'   => $this->getSecretKey(),
+            'response' => $response,
+            'remoteip' => $request->ip()
+        ));
 
-        $response = file_get_contents($google_url);
+        // Calculate the (complete) request URL.
+        $url = static::GOOGLEHOST .'?' .$query;
 
-        if ($response === false) {
-            return false;
+        // Perform the request to Google server.
+        $result = file_get_contents($url);
+
+        // Evaluate the Google server response.
+        if ($result !== false) {
+            $data = json_decode($result, true);
+
+            if (is_array($data)) {
+                return ($data['success'] === true);
+            }
         }
 
-        $response = json_decode($response, true);
-
-        return ($response['success'] === true);
+        return false;
     }
 
     /**

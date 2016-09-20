@@ -6,14 +6,14 @@ namespace Database\ORM;
 class ModelNotFoundException extends \RuntimeException
 {
     /**
-     * Name of the affected Eloquent model.
+     * Name of the affected ORM model.
      *
      * @var string
      */
     protected $model;
 
     /**
-     * Set the affected Eloquent model.
+     * Set the affected ORM model.
      *
      * @param  string   $model
      * @return $this
@@ -28,7 +28,7 @@ class ModelNotFoundException extends \RuntimeException
     }
 
     /**
-     * Get the affected Eloquent model.
+     * Get the affected ORM model.
      *
      * @return string
      */

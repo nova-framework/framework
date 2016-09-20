@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>
 <?php
-echo $meta; // Place to pass data / plugable hook zone
+echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
     template_url('css/bootstrap-rtl.min.css', 'Default'),
@@ -19,7 +19,7 @@ Assets::css([
     template_url('css/style-rtl.css', 'Default'),
 ]);
 
-echo $css; // Place to pass data / plugable hook zone
+echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 ?>
 </head>
 <body>
@@ -65,7 +65,7 @@ echo $css; // Place to pass data / plugable hook zone
     </div>
 </nav>
 
-<?= $afterBody; // Place to pass data / plugable hook zone ?>
+<?= isset($afterBody) ? $afterBody : ''; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
     <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>' style="max-width: 360px; height: auto;"></p>
@@ -96,8 +96,9 @@ Assets::js([
     template_url('js/bootstrap-rtl.min.js', 'Default'),
 ]);
 
-echo $js; // Place to pass data / plugable hook zone
-echo $footer; // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+
+echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <!-- DO NOT DELETE! - Forensics Profiler -->

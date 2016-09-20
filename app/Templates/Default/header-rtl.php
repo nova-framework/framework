@@ -27,7 +27,7 @@ $langMenuLinks = ob_get_clean();
     <meta charset="utf-8">
     <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>
 <?php
-echo $meta; // Place to pass data / plugable hook zone
+echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
     template_url('css/bootstrap-rtl.min.css', 'Default'),
@@ -36,7 +36,7 @@ Assets::css([
     template_url('css/style-rtl.css', 'Default'),
 ]);
 
-echo $css; // Place to pass data / plugable hook zone
+echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 ?>
 </head>
 <body style='padding-top: 28px;'>
@@ -51,8 +51,8 @@ echo $css; // Place to pass data / plugable hook zone
     </div>
 </nav>
 
-<?= $afterBody; // Place to pass data / plugable hook zone ?>
+<?= isset($afterBody) ? $afterBody : ''; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
 
-<p><img src='<?= Url::templatePath(); ?>images/nova.png' alt='<?= Config::get('app.name', SITETITLE); ?>'></p>
+<p><img src='<?= template_path('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>'></p>

@@ -18,5 +18,5 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Files\Contro
     Route::get('files/thumbnails/{file}', array('before' => 'auth', 'uses' => 'Files@thumbnails'));
 
     // Preview Files serving.
-    Route::get('files/preview/{path}', array('before' => 'auth', 'uses' => 'Files@preview'))->where('path', '.*');
+    Route::get('files/preview/{path}', array('before' => 'auth', 'uses' => 'Files@preview'))->where('path', '(.*)');
 });

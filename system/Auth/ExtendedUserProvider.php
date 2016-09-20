@@ -15,7 +15,7 @@ class ExtendedUserProvider implements UserProviderInterface
     protected $hasher;
 
     /**
-     * The Eloquent user model.
+     * The ORM user model.
      *
      * @var string
      */
@@ -86,7 +86,7 @@ class ExtendedUserProvider implements UserProviderInterface
     {
         // First we will add each credential element to the query as a where clause.
         // Then we can execute the query and, if we found a user, return it in a
-        // Eloquent User "model" that will be utilized by the Guard instances.
+        // ORM User "model" that will be utilized by the Guard instances.
         $query = $this->createModel()->newQuery();
 
         foreach ($credentials as $key => $value) {
@@ -113,7 +113,7 @@ class ExtendedUserProvider implements UserProviderInterface
     /**
      * Create a new instance of the model.
      *
-     * @return \Database\Eloquent\Model
+     * @return \Database\ORM\Model
      */
     public function createModel()
     {

@@ -33,8 +33,9 @@
     },
     "autoload": {
         "psr-4": {
-            "" : "system/",
-            "App\\" : "app/"
+            "App\\" : "app/",
+            "Shared\\" : "shared/",
+            "" : "system/"
         },
         "files": [
             "system/functions.php"

@@ -16,16 +16,5 @@
             "role": "Developer"
         }
     ],
-    "license" : "MIT",
-    "assets" : {
-        "default" : "local",
-        "paths" : {
-            "dist" : "vendor",
-            "css" : "local",
-            "fonts" : "vendor",
-            "images" : "local",
-            "js" : "local"
-        },
-        "vendor" : "twbs/bootstrap"
-    }
+    "license" : "MIT"
 }

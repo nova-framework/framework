@@ -10,16 +10,5 @@
             "role": "Developer"
         }
     ],
-    "license" : "MIT",
-    "assets" : {
-        "default" : "local",
-        "paths" : {
-            "bootstrap" : "vendor",
-            "css" : "local",
-            "dist" : "vendor",
-            "images" : "local",
-            "plugins" : "vendor"
-        },
-        "vendor" : "almasaeed2010/adminlte"
-    }
+    "license" : "MIT"
 }

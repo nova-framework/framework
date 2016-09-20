@@ -58,7 +58,7 @@ class Builder
     );
 
     /**
-     * Create a new Eloquent query builder instance.
+     * Create a new ORM query builder instance.
      *
      * @param  \Database\Query\Builder  $query
      * @return void

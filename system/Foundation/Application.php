@@ -1075,6 +1075,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
             'events'         => 'Events\Dispatcher',
             'files'          => 'Filesystem\Filesystem',
             'hash'           => 'Hashing\HasherInterface',
+            'language'       => 'Language\LanguageManager',
             'log'            => 'Log\Writer',
             'mailer'         => 'Mail\Mailer',
             'paginator'      => 'Pagination\Environment',

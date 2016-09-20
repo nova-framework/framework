@@ -36,6 +36,9 @@ App::missing(function(NotFoundHttpException $exception)
         // An AJAX request; we'll create a JSON Response.
         $content = array('status' => $status);
 
+        // Setup propely the Content Type.
+        $headers['Content-Type'] = 'application/json';
+
         return Response::json($content, $status, $headers);
     }
 
@@ -44,7 +47,10 @@ App::missing(function(NotFoundHttpException $exception)
         ->shares('title', 'Error ' .$status)
         ->nest('content', 'Error/' .$status);
 
-    return Response::make($response, $status, $headers);
+    // Setup propely the Content Type.
+    $headers['Content-Type'] = 'text/html';
+
+    return Response::make($response->render(), $status, $headers);
 });
 
 //--------------------------------------------------------------------------
@@ -119,7 +125,7 @@ define('SITEEMAIL', $app['config']['app.email']);
  * Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
  */
 /*
-use App\Extensions\Log\Mailer as LogMailer;
+use Shared\Log\Mailer as LogMailer;
 
 LogMailer::initHandler($app);
 */

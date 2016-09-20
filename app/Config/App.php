@@ -79,11 +79,12 @@ Config::set('app', array(
         'Cache\CacheServiceProvider',
         'Routing\RoutingServiceProvider',
         'Cookie\CookieServiceProvider',
+        'Language\LanguageServiceProvider',
+        'Module\ModuleServiceProvider',
         'Database\DatabaseServiceProvider',
         'Encryption\EncryptionServiceProvider',
         'Filesystem\FilesystemServiceProvider',
         'Hashing\HashServiceProvider',
-        'Language\LanguageServiceProvider',
         'Log\LogServiceProvider',
         'Mail\MailServiceProvider',
         'Pagination\PaginationServiceProvider',
@@ -164,13 +165,14 @@ Config::set('app', array(
         'Template'      => 'Support\Facades\Template',
         'View'          => 'Support\Facades\View',
         'Cron'          => 'Support\Facades\Cron',
+        'Module'        => 'Support\Facades\Module',
 
         // The Compatibility Support.
-        'Errors'        => 'App\Legacy\Error',
+        'Errors'        => 'Shared\Legacy\Error',
 
         //
-        'Core\Controller' => 'App\Legacy\Controller',
-        'Core\Model'      => 'App\Legacy\Model',
+        'Core\Controller' => 'Shared\Legacy\Controller',
+        'Core\Model'      => 'Shared\Legacy\Model',
         'Core\Template'   => 'Support\Facades\Template',
         'Core\View'       => 'Support\Facades\View',
     ),

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Extensions\Http;
+namespace Shared\Http;
 
 use Helpers\Profiler;
 use Forensics\Profiler as QuickProfiler;
@@ -32,6 +32,7 @@ class ContentGuard implements HttpKernelInterface
      * @var bool
      */
     protected $debug;
+
 
     /**
      * Create a new FrameGuard instance.
@@ -60,10 +61,7 @@ class ContentGuard implements HttpKernelInterface
     {
         $response = $this->app->handle($request, $type, $catch);
 
-        // Minify the Response's Content.
-        $this->processContent($response);
-
-        return $response;
+        return $this->processResponseContent($response);
     }
 
     /**
@@ -72,13 +70,11 @@ class ContentGuard implements HttpKernelInterface
      * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    protected function processContent(SymfonyResponse $response)
+    protected function processResponseContent(SymfonyResponse $response)
     {
-        if (! $response instanceof Response) {
-            return;
-        }
+        $contentType = $response->headers->get('Content-Type');
 
-        $content = $response->getContent();
+        if (! str_is('text/html*', $contentType)) return $response;
 
         if ($this->debug) {
             // Insert the QuickProfiler Widget in the Response's Content.
@@ -91,7 +87,7 @@ class ContentGuard implements HttpKernelInterface
                     QuickProfiler::process(true),
                     Profiler::getReport(),
                 ),
-                $content
+                $response->getContent()
             );
         } else {
             // Minify the Response's Content.
@@ -103,10 +99,12 @@ class ContentGuard implements HttpKernelInterface
 
             $replace = array('>', '<', '\\1');
 
-            $content = preg_replace($search, $replace, $content);
+            $content = preg_replace($search, $replace, $response->getContent());
         }
 
         $response->setContent($content);
+
+        return $response;
     }
 
 }

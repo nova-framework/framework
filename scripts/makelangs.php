@@ -23,7 +23,8 @@ $languages = array(
 
 $workPaths = array(
     'system',
-    'app'
+    'shared',
+    'app',
 );
 
 //

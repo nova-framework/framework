@@ -9,16 +9,13 @@
 namespace Routing;
 
 use Config\Config;
-use App\Core\Controller;
-use Events\Dispatcher;
-
 use Container\Container;
+use Events\Dispatcher;
 use Helpers\Inflector;
 use Http\Request;
 use Http\Response;
 use Routing\ControllerDispatcher;
 use Routing\ControllerInspector;
-use Routing\FileDispatcher;
 use Routing\RouteCollection;
 use Routing\RouteFiltererInterface;
 use Routing\Route;
@@ -28,8 +25,8 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Closure;
 use BadMethodCallException;
+use Closure;
 
 
 /**
@@ -37,27 +34,6 @@ use BadMethodCallException;
  */
 class Router implements HttpKernelInterface, RouteFiltererInterface
 {
-    /**
-     * Indicates if the router is running filters.
-     *
-     * @var bool
-     */
-    protected $filtering = true;
-
-    /**
-     * The route collection instance.
-     *
-     * @var \Routing\RouteCollection
-     */
-    protected $routes;
-
-    /**
-     * Matched Route, the current found Route, if any.
-     *
-     * @var Route|null $currentRoute
-     */
-    protected $currentRoute = null;
-
     /**
      * The event dispatcher instance.
      *
@@ -73,11 +49,25 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected $container;
 
     /**
-     * The controller inspector instance.
+     * The route collection instance.
      *
-     * @var \Routing\ControllerInspector
+     * @var \Routing\RouteCollection
      */
-    protected $inspector;
+    protected $routes;
+
+    /**
+     * Matched Route, the current found Route, if any.
+     *
+     * @var Route|null $current
+     */
+    protected $current = null;
+
+    /**
+     * The request currently being dispatched.
+     *
+     * @var \Http\Request
+     */
+    protected $currentRequest;
 
     /**
      * The controller dispatcher instance.
@@ -94,11 +84,39 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected $fileDispatcher;
 
     /**
-     * The request currently being dispatched.
+     * The controller inspector instance.
      *
-     * @var \Http\Request
+     * @var \Routing\ControllerInspector
      */
-    protected $currentRequest;
+    protected $inspector;
+
+    /**
+     * Indicates if the router is running filters.
+     *
+     * @var bool
+     */
+    protected $filtering = true;
+
+    /**
+     * The registered pattern based filters.
+     *
+     * @var array
+     */
+    protected $patternFilters = array();
+
+    /**
+     * The registered regular expression based filters.
+     *
+     * @var array
+     */
+    protected $regexFilters = array();
+
+    /**
+     * The registered route value binders.
+     *
+     * @var array
+     */
+    protected $binders = array();
 
     /**
      * Array of Route Groups
@@ -142,23 +160,13 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         $this->container = $container ?: new Container();
 
+        //
+        $this->bind('_missing', function($value) { return explode('/', $value); });
+
         // Wheter or not are used the Named Parameters.
         if ('unnamed' == Config::get('routing.parameters', 'named')) {
             $this->namedParams = false;
         }
-    }
-
-    /**
-     * Get the response for a given request.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Request  $request
-     * @param  int   $type
-     * @param  bool  $catch
-     * @return \Http\Response
-     */
-    public function handle(SymfonyRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
-    {
-        return $this->dispatch(Request::createFromBase($request));
     }
 
     /**
@@ -974,11 +982,11 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         // Asset Files Dispatching.
         $response = $this->dispatchToFile($request);
 
-        if (! is_null($response)) {
-            return $this->prepareResponse($request, $response);
-        }
+        if (! is_null($response)) return $response;
 
-        // Request Dispatching to Routes.
+        // If no response was returned from the before filter, we will call the proper
+        // route instance to get the response. If no route is found a response will
+        // still get returned based on why no routes were found for this request.
         $response = $this->callFilter('before', $request);
 
         if (is_null($response)) {
@@ -987,6 +995,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         $response = $this->prepareResponse($request, $response);
 
+        // Once this route has run and the response has been prepared, we will run the
+        // after filter to do any last work on the response or for this application
+        // before we will return the response back to the consuming code for use.
         $this->callFilter('after', $request, $response);
 
         return $response;
@@ -1005,18 +1016,21 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         $this->events->fire('router.matched', array($route, $request));
 
-        // Call the Route's Before Filters.
+        // Once we have successfully matched the incoming request to a given route we
+        // can call the before filters on that route. This works similar to global
+        // filters in that if a response is returned we will not call the route.
         $response = $this->callRouteBefore($route, $request);
 
         if (is_null($response)) {
-            // Run the Route Callback.
             $response = $route->run();
         }
 
         // Prepare the Reesponse.
         $response = $this->prepareResponse($request, $response);
 
-        // Call the Route's After Filters.
+        // After we have a prepared response from the route or filter we will call to
+        // the "after" filters to do any last minute processing on this request or
+        // response object before the response is returned back to the consumer.
         $this->callRouteAfter($route, $request, $response);
 
         return $response;
@@ -1043,7 +1057,39 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function findRoute(Request $request)
     {
-        return $this->currentRoute = $this->routes->match($request);
+        $this->current = $route = $this->routes->match($request);
+
+        return $this->substituteBindings($route);
+    }
+
+    /**
+     * Substitute the route bindings onto the route.
+     *
+     * @param  \Routing\Route  $route
+     * @return \Routing\Route
+     */
+    protected function substituteBindings($route)
+    {
+        foreach ($route->parameters() as $key => $value) {
+            if (isset($this->binders[$key])) {
+                $route->setParameter($key, $this->performBinding($key, $value, $route));
+            }
+        }
+
+        return $route;
+    }
+
+    /**
+     * Call the binding callback for the given key.
+     *
+     * @param  string  $key
+     * @param  string  $value
+     * @param  \Routing\Route  $route
+     * @return mixed
+     */
+    protected function performBinding($key, $value, $route)
+    {
+        return call_user_func($this->binders[$key], $value, $route);
     }
 
     /**
@@ -1119,6 +1165,102 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
+     * Register a pattern-based filter with the router.
+     *
+     * @param  string  $pattern
+     * @param  string  $name
+     * @param  array|null  $methods
+     * @return void
+     */
+    public function when($pattern, $name, $methods = null)
+    {
+        if (! is_null($methods)) $methods = array_map('strtoupper', (array) $methods);
+
+        $this->patternFilters[$pattern][] = compact('name', 'methods');
+    }
+
+    /**
+     * Register a regular expression based filter with the router.
+     *
+     * @param  string     $pattern
+     * @param  string     $name
+     * @param  array|null $methods
+     * @return void
+     */
+    public function whenRegex($pattern, $name, $methods = null)
+    {
+        if (! is_null($methods)) $methods = array_map('strtoupper', (array) $methods);
+
+        $this->regexFilters[$pattern][] = compact('name', 'methods');
+    }
+
+    /**
+     * Register a Model binder for a wildcard.
+     *
+     * @param  string  $key
+     * @param  string  $class
+     * @param  \Closure  $callback
+     * @return void
+     *
+     * @throws NotFoundHttpException
+     */
+    public function model($key, $class, Closure $callback = null)
+    {
+        $this->bind($key, function($value) use ($class, $callback)
+        {
+            if (is_null($value)) return null;
+
+            if ($model = (new $class)->find($value)) {
+                return $model;
+            }
+
+            if ($callback instanceof Closure) {
+                return call_user_func($callback);
+            }
+
+            throw new NotFoundHttpException;
+        });
+    }
+
+    /**
+     * Add a new route parameter binder.
+     *
+     * @param  string  $key
+     * @param  string|callable  $binder
+     * @return void
+     */
+    public function bind($key, $binder)
+    {
+        if (is_string($binder)) {
+            $binder = $this->createClassBinding($binder);
+        }
+
+        $key = str_replace('-', '_', $key);
+
+        $this->binders[$key] = $binder;
+    }
+
+    /**
+     * Create a class based binding using the IoC container.
+     *
+     * @param  string    $binding
+     * @return \Closure
+     */
+    public function createClassBinding($binding)
+    {
+        return function($value, $route) use ($binding)
+        {
+            $segments = explode('@', $binding);
+
+            $method = (count($segments) == 2) ? $segments[1] : 'bind';
+
+            $callable = array($this->container->make($segments[0]), $method);
+
+            return call_user_func($callable, $value, $route);
+        };
+    }
+
+    /**
      * Call the given filter with the request and response.
      *
      * @param  string  $filter
@@ -1141,6 +1283,103 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @return mixed
      */
     public function callRouteBefore($route, $request)
+    {
+        $response = $this->callPatternFilters($route, $request);
+
+        return $response ?: $this->callAttachedBefores($route, $request);
+    }
+
+    /**
+     * Call the pattern based filters for the request.
+     *
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
+     * @return mixed|null
+     */
+    protected function callPatternFilters($route, $request)
+    {
+        foreach ($this->findPatternFilters($request) as $filter => $parameters) {
+            $response = $this->callRouteFilter($filter, $parameters, $route, $request);
+
+            if (! is_null($response)) return $response;
+        }
+    }
+
+    /**
+     * Find the patterned filters matching a request.
+     *
+     * @param  \Http\Request  $request
+     * @return array
+     */
+    public function findPatternFilters($request)
+    {
+        $results = array();
+
+        list($path, $method) = array($request->path(), $request->getMethod());
+
+        foreach ($this->patternFilters as $pattern => $filters) {
+            if (str_is($pattern, $path)) {
+                $merge = $this->patternsByMethod($method, $filters);
+
+                $results = array_merge($results, $merge);
+            }
+        }
+
+        foreach ($this->regexFilters as $pattern => $filters) {
+            if (preg_match($pattern, $path)) {
+                $merge = $this->patternsByMethod($method, $filters);
+
+                $results = array_merge($results, $merge);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Filter pattern filters that don't apply to the request verb.
+     *
+     * @param  string  $method
+     * @param  array   $filters
+     * @return array
+     */
+    protected function patternsByMethod($method, $filters)
+    {
+        $results = array();
+
+        foreach ($filters as $filter) {
+            if ($this->filterSupportsMethod($filter, $method)) {
+                $parsed = Route::parseFilters($filter['name']);
+
+                $results = array_merge($results, $parsed);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Determine if the given pattern filters applies to a given method.
+     *
+     * @param  array  $filter
+     * @param  array  $method
+     * @return bool
+     */
+    protected function filterSupportsMethod($filter, $method)
+    {
+        $methods = $filter['methods'];
+
+        return (is_null($methods) || in_array($method, $methods));
+    }
+
+    /**
+     * Call the given route's before (non-pattern) filters.
+     *
+     * @param  \Routing\Route  $route
+     * @param  \Http\Request  $request
+     * @return mixed
+     */
+    protected function callAttachedBefores($route, $request)
     {
         foreach ($route->beforeFilters() as $filter => $parameters) {
             $response = $this->callRouteFilter($filter, $parameters, $route, $request);
@@ -1197,51 +1436,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Get the controller dispatcher instance.
-     *
-     * @return \Routing\ControllerDispatcher
-     */
-    public function getControllerDispatcher()
-    {
-        if (is_null($this->controllerDispatcher)) {
-            $this->controllerDispatcher = new ControllerDispatcher($this, $this->container);
-        }
-
-        return $this->controllerDispatcher;
-    }
-
-    /**
-     * Set the controller dispatcher instance.
-     *
-     * @param  \Routing\ControllerDispatcher  $dispatcher
-     * @return void
-     */
-    public function setControllerDispatcher(ControllerDispatcher $dispatcher)
-    {
-        $this->controllerDispatcher = $dispatcher;
-    }
-
-    /**
-     * Get the controller dispatcher instance.
-     *
-     * @return \Routing\ControllerDispatcher
-     */
-    public function getFileDispatcher()
-    {
-        return $this->fileDispatcher ?: new FileDispatcher();
-    }
-
-    /**
-     * Get a Controller Inspector instance.
-     *
-     * @return \Routing\ControllerInspector
-     */
-    public function getInspector()
-    {
-        return $this->inspector ?: $this->inspector = new ControllerInspector();
-    }
-
-    /**
      * Run a callback with filters disable on the router.
      *
      * @param  callable  $callback
@@ -1287,6 +1481,18 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
+     * Get a route parameter for the current route.
+     *
+     * @param  string  $key
+     * @param  string  $default
+     * @return mixed
+     */
+    public function input($key, $default = null)
+    {
+        return $this->current()->parameter($key, $default);
+    }
+
+    /**
      * Return the current Matched Route, if there are any.
      *
      * @return null|Route
@@ -1303,7 +1509,108 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function current()
     {
-        return $this->currentRoute;
+        return $this->current;
+    }
+
+    /**
+     * Check if a Route with the given name exists.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        return $this->routes->hasNamedRoute($name);
+    }
+
+    /**
+     * Get the current route name.
+     *
+     * @return string|null
+     */
+    public function currentRouteName()
+    {
+        return ($this->current()) ? $this->current()->getName() : null;
+    }
+
+    /**
+     * Alias for the "currentRouteNamed" method.
+     *
+     * @param  mixed  string
+     * @return bool
+     */
+    public function is()
+    {
+        foreach (func_get_args() as $pattern) {
+            if (str_is($pattern, $this->currentRouteName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the current route matches a given name.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function currentRouteNamed($name)
+    {
+        return ($this->current()) ? ($this->current()->getName() == $name) : false;
+    }
+
+    /**
+     * Get the current route action.
+     *
+     * @return string|null
+     */
+    public function currentRouteAction()
+    {
+        if (! $this->current()) return;
+
+        $action = $this->current()->getAction();
+
+        return isset($action['controller']) ? $action['controller'] : null;
+    }
+
+    /**
+     * Alias for the "currentRouteUses" method.
+     *
+     * @param  mixed  string
+     * @return bool
+     */
+    public function uses()
+    {
+        foreach (func_get_args() as $pattern) {
+            if (str_is($pattern, $this->currentRouteAction())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the current route action matches a given action.
+     *
+     * @param  string  $action
+     * @return bool
+     */
+    public function currentRouteUses($action)
+    {
+        return ($this->currentRouteAction() == $action);
+    }
+
+    /**
+     * Get the request currently being dispatched.
+     *
+     * @return \Http\Request
+     */
+    public function getCurrentRequest()
+    {
+        return $this->currentRequest;
     }
 
     /**
@@ -1317,13 +1624,63 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     }
 
     /**
-     * Get the request currently being dispatched.
+     * Get the controller dispatcher instance.
      *
-     * @return \Http\Request
+     * @return \Routing\ControllerDispatcher
      */
-    public function getCurrentRequest()
+    public function getControllerDispatcher()
     {
-        return $this->currentRequest;
+        if (is_null($this->controllerDispatcher)) {
+            $this->controllerDispatcher = new ControllerDispatcher($this, $this->container);
+        }
+
+        return $this->controllerDispatcher;
+    }
+
+    /**
+     * Set the controller dispatcher instance.
+     *
+     * @param  \Routing\ControllerDispatcher  $dispatcher
+     * @return void
+     */
+    public function setControllerDispatcher(ControllerDispatcher $dispatcher)
+    {
+        $this->controllerDispatcher = $dispatcher;
+    }
+
+    /**
+     * Get the controller dispatcher instance.
+     *
+     * @return \Routing\ControllerDispatcher
+     */
+    public function getFileDispatcher()
+    {
+        if (isset($this->fileDispatcher)) return $this->fileDispatcher;
+
+        return $this->fileDispatcher = $this->container->make('Routing\Assets\DispatcherInterface');
+    }
+
+    /**
+     * Get a Controller Inspector instance.
+     *
+     * @return \Routing\ControllerInspector
+     */
+    public function getInspector()
+    {
+        return $this->inspector ?: $this->inspector = new ControllerInspector();
+    }
+
+    /**
+     * Get the response for a given request.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param  int   $type
+     * @param  bool  $catch
+     * @return \Http\Response
+     */
+    public function handle(SymfonyRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    {
+        return $this->dispatch(Request::createFromBase($request));
     }
 
 }

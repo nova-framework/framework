@@ -18,6 +18,7 @@ Route::group(array('prefix' => 'demo', 'namespace' => 'App\Modules\Demos\Control
     Route::get('validate', 'Demos@validate');
     Route::get('paginate', 'Demos@paginate');
     Route::get('cache',    'Demos@cache');
+    Route::get('modules',  'Demos@modules');
 
     Route::get('password/{password}', 'Demos@password');
 

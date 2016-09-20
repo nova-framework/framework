@@ -53,7 +53,7 @@ $langMenuLinks = ob_get_clean();
 
     //Add Controller specific JS files.
     Assets::js(array(
-            site_url('vendor/almasaeed2010/adminlte/plugins/jQuery/jQuery-2.2.0.min.js'),
+            site_url('vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js'),
         )
     );
 

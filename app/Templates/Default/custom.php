@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <title><?= $title .' - ' .Config::get('app.name', SITETITLE); ?></title>
 <?php
-echo $meta; // Place to pass data / plugable hook zone
+echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
     site_url('vendor/twbs/bootstrap/dist/css/bootstrap.min.css'),
@@ -19,7 +19,7 @@ Assets::css([
     template_url('css/style.css', 'Default'),
 ]);
 
-echo $css; // Place to pass data / plugable hook zone
+echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 ?>
 </head>
 <body>
@@ -65,7 +65,7 @@ echo $css; // Place to pass data / plugable hook zone
     </div>
 </nav>
 
-<?= $afterBody; // Place to pass data / plugable hook zone ?>
+<?= isset($afterBody) ? $afterBody : ''; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
     <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>' style="max-width: 360px; height: auto;"></p>

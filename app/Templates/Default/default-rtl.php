@@ -36,7 +36,7 @@ Assets::css([
     template_url('css/style-rtl.css', 'Default'),
 ]);
 
-echo $css; // Place to pass data / plugable hook zone
+echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 ?>
 </head>
 <body style='padding-top: 28px;'>
@@ -51,7 +51,7 @@ echo $css; // Place to pass data / plugable hook zone
     </div>
 </nav>
 
-<?= $afterBody; // Place to pass data / plugable hook zone ?>
+<?= isset($afterBody) ? $afterBody : ''; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
     <p>
@@ -84,7 +84,7 @@ Assets::js([
     template_url('js/bootstrap-rtl.min.js', 'Default'),
 ]);
 
-echo $js; // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
 
 echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
@@ -92,3 +92,4 @@ echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 <!-- DO NOT DELETE! - Forensics Profiler -->
 
 </body>
+</html>

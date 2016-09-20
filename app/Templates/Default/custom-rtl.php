@@ -68,7 +68,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 <?= isset($afterBody) ? $afterBody : ''; // Place to pass data / plugable hook zone ?>
 
 <div class="container">
-    <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= SITETITLE; ?>' style="max-width: 360px; height: auto;"></p>
+    <p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>' style="max-width: 360px; height: auto;"></p>
 
     <?= $content; ?>
 </div>

@@ -55,4 +55,4 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 
 <div class="container">
 
-<p><img src='<?= template_path('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>'></p>
+<p><img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>'></p>

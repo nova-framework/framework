@@ -30,14 +30,22 @@ App::after(function($request, $response)
 
 /** Define Route Filters. */
 
-// A simple CSRF Filter.
+// The CSRF Filter.
 Route::filter('csrf', function($route, $request) {
-    $token = $request->ajax() ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
-
     $session = $request->session();
 
-    if (($request->method() == 'POST') && ($token != $session->token())) {
-        // When CSRF Token is invalid, respond with Error 400 Page (Bad Request)
+    $ajaxRequest = $request->ajax();
+
+    $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('_token');
+
+    if ($session->token() == $token) {
+        //
+    }
+
+    // The CSRF Token is invalid, respond with Error 400 (Bad Request)
+    else if ($ajaxRequest) {
+        return Response::make('Bad Request', 400);
+    } else {
         return Response::error(400);
     }
 });
@@ -55,24 +63,45 @@ Route::filter('referer', function($route, $request) {
 
 // Authentication Filters.
 Route::filter('auth', function($route, $request) {
-    if (! Auth::check()) {
-         // User is not logged in, redirect him to Login Page.
-         return Redirect::to('login');
+    if (Auth::check()) {
+        //
+    }
+
+    // User is not authenticated.
+    else if (! $request->ajax()) {
+         return Redirect::guest('login');
+    } else {
+        return Response::make('Unauthorized Access', 403);
     }
 });
 
+Route::filter('auth.basic', function()
+{
+    return Auth::basic();
+});
+
 Route::filter('guest', function($route, $request) {
-    if (! Auth::guest()) {
-        // User is authenticated, redirect him to Dashboard Page.
-        return Redirect::to('admin/dashboard');
+    if (Auth::guest()) {
+        //
+    }
+
+    // User is authenticated.
+    else if (! $request->ajax()) {
+         return Redirect::guest('admin/dashboard');
+    } else {
+        return Response::make('Unauthorized Access', 403);
     }
 });
 
 // Role-based Authorization Filter.
 Route::filter('roles', function($route, $request, $response, $roles = null) {
-    if (! is_null($roles) && ! Auth::user()->hasRole($roles)) {
-         $status = __('You are not authorized to access this resource.');
+    if (! is_null($roles) && Auth::check()) {
+        $user = Auth::user();
 
-         return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        if (! $user->hasRole($roles)) {
+            $status = __('You are not authorized to access this resource.');
+
+            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        }
     }
 });

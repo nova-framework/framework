@@ -32,11 +32,13 @@ App::after(function($request, $response)
 
 // The CSRF Filter.
 Route::filter('csrf', function($route, $request) {
+    $session = $request->session();
+
     $ajaxRequest = $request->ajax();
 
     $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('_token');
 
-    if ($request->session()->token() == $token) {
+    if ($session->token() == $token) {
         //
     }
 

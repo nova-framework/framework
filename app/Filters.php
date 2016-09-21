@@ -41,10 +41,10 @@ Route::filter('csrf', function($route, $request) {
     }
 
     // The CSRF Token is invalid, respond with Error 400 (Bad Request)
-    else if (! $request->ajax()) {
-        return Response::error(400);
-    } else {
+    else if ($ajaxRequest) {
         return Response::make('Bad Request', 400);
+    } else {
+        return Response::error(400);
     }
 });
 

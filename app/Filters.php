@@ -53,15 +53,9 @@ Route::filter('referer', function($route, $request) {
     // Check if the visitor come to this Route from another site.
     $referer = $request->header('referer');
 
-    if(starts_with($referer, Config::get('app.url'))) {
-        //
-    }
-
-    // When Referrer is invalid, respond with Error 400 (Bad Request)
-    else if (! $request->ajax()) {
+    if(! starts_with($referer, Config::get('app.url'))) {
+        // When Referrer is invalid, respond with Error 400 Page (Bad Request)
         return Response::error(400);
-    } else {
-        return Response::make('Bad Request', 400);
     }
 });
 

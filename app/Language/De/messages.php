@@ -1,6 +1,8 @@
 <?php
 
 return array (
+  '<< Previous Page' => '',
+  'Choose a Role' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Hallo und Wilkommen im welcome-Controller in der subpage-Methode! <br />
 Dieser Inhalt kann in <code>/app/Views/Welcome/SubPage.php</code> geändert werden.',
@@ -12,9 +14,13 @@ Dieser Inhalt kann in <code>/app/Views/Welcome/Welcome.php</code> geändert werd
   'Open subpage' => 'Subpage öffnen',
   'Password Reset' => '',
   'Please verify your E-mail address' => '',
+  'Role' => '',
+  'Role not found: #{0}' => '',
+  'Search Query' => '',
   'Subpage' => 'Subpage',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
   'To reset your password, complete this form: {0}.' => '',
+  'Users' => '',
   'Welcome' => 'Willkommen',
   'You are not authorized to access this resource.' => '',
 );

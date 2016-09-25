@@ -11,7 +11,7 @@ use Config\Config;
 
 
 Config::set('languages', array(
-    'cz' => array('info' => 'Czech',     'name' => 'čeština',    'locale' => 'cz_CZ', 'dir' => 'ltr'),
+    'cs' => array('info' => 'Czech',     'name' => 'čeština',    'locale' => 'cs_CZ', 'dir' => 'ltr'),
     'da' => array('info' => 'Danish',    'name' => 'Dansk',      'locale' => 'da_DK', 'dir' => 'ltr'),
     'de' => array('info' => 'German',    'name' => 'Deutsch',    'locale' => 'de_DE', 'dir' => 'ltr'),
     'en' => array('info' => 'English',   'name' => 'English',    'locale' => 'en_US', 'dir' => 'ltr'),

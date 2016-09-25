@@ -1,6 +1,8 @@
 <?php
 
 return array (
+  '<< Previous Page' => '',
+  'Choose a Role' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'درود, به کنترل گر صفحه خوش آمد گویی و زیر صفحه خوش آمدید! <br/>
 این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/SubPage.php</code>',
@@ -12,9 +14,13 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Open subpage' => 'بازکردن زیرصفحه',
   'Password Reset' => 'بازنشانی رمزعبور',
   'Please verify your E-mail address' => 'لطفا آدرس ایمیل خود را تایید کنید',
+  'Role' => '',
+  'Role not found: #{0}' => '',
+  'Search Query' => '',
   'Subpage' => 'زیر صفحه',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'بابت ایجاد حساب کاربری با {0} سپاس گذاریم. لطفا لینک زیر را جهت فعال سازی ایمیل خود کلیک کنید: {1}',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
+  'Users' => '',
   'Welcome' => 'خوش امدید',
   'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید',
 );

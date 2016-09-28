@@ -61,19 +61,11 @@ composer create-project nova-framework/framework foldername -s dev
 
 The foldername is the desired folder to be created.
 
-#### Manual
-
-- Place the contents of `public` into your public folder (`.htaccess` and `index.php`)
-- Navigate to your project in a terminal and type `composer install` to initiate the composer installation.
-- Edit `public/.htaccess` to set the rewritebase if running on a sub folder, otherwise a single `/` will do.
-- Edit `app/Config/App.php` and change the options as desired.
-- Set a 32 character `ENCRYPT_KEY` by using the CLI tool. You can do this by typing `php nova make:key` in your command line / console. Alternatively, you can use the following tool: http://jeffreybarke.net/tools/codeigniter-encryption-key-generator/
-
-> **Note:** For additional installation instructions, for example; setting up a Virtualhost (Recommended for Local Development), Nginx or IIS with URL Rewrite, [please visit the Github Wiki](https://github.com/nova-framework/framework/wiki/Install).
+> **Note:** For additional installation instructions, for example; setting up a Virtualhost (Recommended for Local Development), Nginx or IIS with URL Rewrite, [please visit the install docs](http://novaframework.com/documentation/v3/install).
 
 ## Documentation
 
-Full docs & tutorials are available on [novaframework.com](http://novaframework.com) and the [Github Wiki](https://github.com/nova-framework/framework/wiki).
+Full docs & tutorials are available on [novaframework.com](http://novaframework.com/documentation/v3).
 
 Offline docs are available in PDF, EPUB and MOBI formats on [Leanpub](https://leanpub.com/novaframeworkmanual22).
 

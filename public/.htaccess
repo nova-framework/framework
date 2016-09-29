@@ -1,3 +1,8 @@
+#Prevent the httpoxy vulnerability see: https://httpoxy.org/
+<IfModule mod_headers.c>
+    RequestHeader unset Proxy
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews

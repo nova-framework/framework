@@ -315,7 +315,11 @@ class Model
     {
         $connection = $this->getConnection();
 
-        return new QueryBuilder($connection);
+        $grammar = $connection->getQueryGrammar();
+
+        $processor = $connection->getPostProcessor();
+
+        return new QueryBuilder($connection, $grammar, $processor);
     }
 
     /**

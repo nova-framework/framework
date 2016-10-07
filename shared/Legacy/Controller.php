@@ -211,40 +211,12 @@ abstract class Controller extends BaseController
             $response = new Response($response->render(), 200, array('Content-Type' => 'text/html'));
         }
 
-        // If the response which is returned from the Controller's Action is null and we have
-        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
-        else if (is_null($response)) {
-             $response = $this->createLegacyResponse();
-        }
-
         // If the response is not a instance of Symfony Response, create a proper one.
         if (! $response instanceof SymfonyResponse) {
             $response = new Response($response);
         }
 
         return $response;
-    }
-
-    /**
-     * Create a Response instance from the legacy View API and return it.
-     *
-     * @return \Http\Response
-     */
-    protected function createLegacyResponse()
-    {
-        $items = View::getItems();
-
-        $headers = array_merge(array('Content-Type' => 'text/html'), View::getHeaders());
-
-        // Render the View instances to response.
-        $response = '';
-
-        foreach ($items as $item) {
-            $response .= $item->render();
-        }
-
-        // Create a Response instance and return it.
-        return new Response($response, 200, $headers);
     }
 
     /**

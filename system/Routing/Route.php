@@ -9,7 +9,6 @@
 namespace Routing;
 
 use Http\Request;
-use Routing\Legacy\RouteParser;
 use Routing\Matching\UriValidator;
 use Routing\Matching\HostValidator;
 use Routing\Matching\MethodValidator;
@@ -89,20 +88,6 @@ class Route
      */
     protected $compiled = null;
 
-    /**
-     * The compiled pattern the Route responds to.
-     *
-     * @var string
-     */
-    private $pattern = null;
-
-    /**
-     * Boolean indicating the use of Named Parameters on not.
-     *
-     * @var bool $namedParams
-     */
-    private $namedParams = true;
-
 
     /**
      * Constructor.
@@ -110,13 +95,9 @@ class Route
      * @param string|array $methods HTTP methods
      * @param string $uri URL pattern
      * @param string|array|callable $action Callback function or options
-     * @param bool $namedParams Wheter or not are used the Named Parameters
      */
-    public function __construct($methods, $uri, $action, $namedParams = true)
+    public function __construct($methods, $uri, $action)
     {
-        $this->namedParams = $namedParams;
-
-        //
         $this->uri = $uri;
 
         $this->methods = (array) $methods;
@@ -175,24 +156,12 @@ class Route
      */
     public function compileRoute()
     {
-        $domain = $this->domain();
+        $optionals = $this->extractOptionalParameters();
 
-        if ($this->namedParams) {
-            // The Route use the (default) Named Parameters.
-            $optionals = $this->extractOptionalParameters();
-
-            $this->pattern = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-        } else {
-            // The Route use the (legacy) Unnamed Parameters.
-            if (! is_null($domain)) {
-                throw new LogicException("The domain option is not allowed while using Unnamed Parameters.");
-            }
-
-            list($this->pattern, $optionals, $this->wheres) = RouteParser::parse($this->uri);
-        }
+        $uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
 
         $this->compiled = with(
-            new SymfonyRoute($this->pattern, $optionals, $this->wheres, array(), $domain ?: '')
+            new SymfonyRoute($uri, $optionals, $this->wheres, array(), $this->domain() ?: '')
         )->compile();
     }
 
@@ -505,11 +474,7 @@ class Route
      */
     protected function compileParameterNames()
     {
-        if (! isset($this->pattern)) {
-            $this->compileRoute();
-        }
-
-        preg_match_all('/\{(.*?)\}/', $this->domain() .$this->pattern, $matches);
+        preg_match_all('/\{(.*?)\}/', $this->domain() .$this->uri, $matches);
 
         return array_map(function($value)
         {
@@ -621,10 +586,6 @@ class Route
      */
     public function defaults($key, $value)
     {
-        if (! $this->namedParams) {
-            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
-        }
-
         $this->defaults[$key] = $value;
 
         return $this;
@@ -640,10 +601,6 @@ class Route
      */
     public function where($name, $expression = null)
     {
-        if (! $this->namedParams) {
-            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
-        }
-
         foreach ($this->parseWhere($name, $expression) as $name => $expression) {
             $this->wheres[$name] = $expression;
         }
@@ -857,14 +814,6 @@ class Route
     public function getCompiled()
     {
         return $this->compiled;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPattern()
-    {
-        return $this->pattern;
     }
 
 }

@@ -8,10 +8,8 @@
 
 namespace Routing;
 
-use Config\Config;
 use Container\Container;
 use Events\Dispatcher;
-use Helpers\Inflector;
 use Http\Request;
 use Http\Response;
 use Routing\ControllerDispatcher;
@@ -22,7 +20,6 @@ use Routing\Route;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use BadMethodCallException;
@@ -139,13 +136,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected $resourceDefaults = array('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
 
-    /**
-     * Boolean indicating the use of Named Parameters on not.
-     *
-     * @var bool $namedParams
-     */
-    protected $namedParams = true;
-
 
     /**
      * Router constructor.
@@ -162,11 +152,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         //
         $this->bind('_missing', function($value) { return explode('/', $value); });
-
-        // Wheter or not are used the Named Parameters.
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-            $this->namedParams = false;
-        }
     }
 
     /**
@@ -294,10 +279,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function controller($uri, $controller, $names = array())
     {
-        if (! $this->namedParams) {
-            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
-        }
-
         $inspector = $this->getInspector();
 
         //
@@ -363,10 +344,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function resource($name, $controller, array $options = array())
     {
-        if (! $this->namedParams) {
-            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
-        }
-
         if (str_contains($name, '/')) {
             $this->prefixedResource($name, $controller, $options);
 
@@ -856,7 +833,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function newRoute($methods, $uri, $action)
     {
-        return new Route($methods, $uri, $action, $this->namedParams);
+        return new Route($methods, $uri, $action);
     }
 
     /**

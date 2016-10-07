@@ -866,9 +866,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function addWhereClausesToRoute($route)
     {
-        $wheres = array_merge($this->patterns, array_get($route->getAction(), 'where', array()));
-    
-        $route->where($wheres);
+        $wheres = array_get($route->getAction(), 'where', array());
+   
+        $route->where(array_merge($this->patterns, $wheres));
 
         return $route;
     }

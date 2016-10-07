@@ -61,7 +61,7 @@ class Demos extends Controller
         {
             echo 'Hello, World!';
 
-        }, false);
+        });
         
         $route->where('slug', '(.*)');
 

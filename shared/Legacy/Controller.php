@@ -12,7 +12,6 @@ use Http\Request;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Routing\Route;
-use Support\Facades\Language;
 use Support\Facades\View;
 use Template\Template as Layout;
 
@@ -36,13 +35,6 @@ abstract class Controller extends BaseController
      * @var array
      */
     private $params = array();
-
-    /**
-     * Language variable to use the languages class.
-     *
-     * @var string
-     */
-    public $language = null;
 
     /**
      * The currently used Template.
@@ -69,11 +61,6 @@ abstract class Controller extends BaseController
         // Setup the used Template to default, if it is not already defined.
         if (! isset($this->template)) {
             $this->template = Config::get('app.template');
-        }
-
-        // Initialise the Language object.
-        if ($this->language !== false) {
-            $this->language = Language::instance('legacy_api', LANGUAGE_CODE);
         }
 
         // Setup the (legacy) Middleware.
@@ -177,20 +164,6 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Return a translated string.
-     *
-     * @return string
-     */
-    protected function trans($message, $code = LANGUAGE_CODE)
-    {
-        if ($this->language instanceof Language) {
-            return $this->language->get($message, $code);
-        }
-
-        return $message;
-    }
-
-    /**
      * Create from the given result a Response instance and send it.
      *
      * @param mixed  $response
@@ -211,40 +184,12 @@ abstract class Controller extends BaseController
             $response = new Response($response->render(), 200, array('Content-Type' => 'text/html'));
         }
 
-        // If the response which is returned from the Controller's Action is null and we have
-        // View instances on View's Legacy support, we will assume that we are on Legacy Mode.
-        else if (is_null($response)) {
-             $response = $this->createLegacyResponse();
-        }
-
         // If the response is not a instance of Symfony Response, create a proper one.
         if (! $response instanceof SymfonyResponse) {
             $response = new Response($response);
         }
 
         return $response;
-    }
-
-    /**
-     * Create a Response instance from the legacy View API and return it.
-     *
-     * @return \Http\Response
-     */
-    protected function createLegacyResponse()
-    {
-        $items = View::getItems();
-
-        $headers = array_merge(array('Content-Type' => 'text/html'), View::getHeaders());
-
-        // Render the View instances to response.
-        $response = '';
-
-        foreach ($items as $item) {
-            $response .= $item->render();
-        }
-
-        // Create a Response instance and return it.
-        return new Response($response, 200, $headers);
     }
 
     /**

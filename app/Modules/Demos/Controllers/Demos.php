@@ -52,20 +52,20 @@ class Demos extends Controller
 
     public function test()
     {
-        //$uri = 'demo/test(/(:any)(/(:any)(/(:any)(/(:all)))))';
-        $uri = 'demo/test/(:any)(/(:any)(/(:any)(/(:all))))';
-        //$uri = '(:all)';
+        $request = Request::instance();
+    
+        $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
 
         //
         $route = new Route('GET', $uri, function()
         {
             echo 'Hello, World!';
 
-        }, false);
+        });
+        
+        $route->where('slug', '(.*)');
 
         // Match the Route.
-        $request = Request::instance();
-
         if ($route->matches($request)) {
             $route->bind($request);
 

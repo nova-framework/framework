@@ -47,7 +47,7 @@ class Roles extends BackendController
         // The Validation rules.
         $rules = array(
             'name'        => 'required|min:4|max:40|valid_name',
-            'slug'        => 'required|min:4|max:40|alpha_dash|unique:roles,name' .$ignore,
+            'slug'        => 'required|min:4|max:40|alpha_dash|unique:roles,slug' .$ignore,
             'description' => 'required|min:5|max:255',
         );
 

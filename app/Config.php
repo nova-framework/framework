@@ -25,11 +25,6 @@ define('CONFIG_STORE', 'files'); // Supported: "files", "database"
  */
 Config::set('routing', array(
     /*
-     * The style of parameters processed on Route pattern.
-     */
-    'parameters' => 'named',       // Supported: "named" and "unnamed".
-
-    /*
      * The Asset Files Serving configuration.
      */
     'assets' => array(

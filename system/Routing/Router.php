@@ -8,10 +8,8 @@
 
 namespace Routing;
 
-use Config\Config;
 use Container\Container;
 use Events\Dispatcher;
-use Helpers\Inflector;
 use Http\Request;
 use Http\Response;
 use Routing\ControllerDispatcher;
@@ -22,7 +20,6 @@ use Routing\Route;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use BadMethodCallException;
@@ -119,6 +116,13 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected $binders = array();
 
     /**
+     * The globally available parameter patterns.
+     *
+     * @var array
+     */
+    protected $patterns = array();
+    
+    /**
      * Array of Route Groups
      *
      * @var array $groupStack
@@ -139,13 +143,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected $resourceDefaults = array('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
 
-    /**
-     * Boolean indicating the use of Named Parameters on not.
-     *
-     * @var bool $namedParams
-     */
-    protected $namedParams = true;
-
 
     /**
      * Router constructor.
@@ -162,11 +159,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
 
         //
         $this->bind('_missing', function($value) { return explode('/', $value); });
-
-        // Wheter or not are used the Named Parameters.
-        if ('unnamed' == Config::get('routing.parameters', 'named')) {
-            $this->namedParams = false;
-        }
     }
 
     /**
@@ -294,10 +286,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function controller($uri, $controller, $names = array())
     {
-        if (! $this->namedParams) {
-            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
-        }
-
         $inspector = $this->getInspector();
 
         //
@@ -363,10 +351,6 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     public function resource($name, $controller, array $options = array())
     {
-        if (! $this->namedParams) {
-            throw new BadMethodCallException("Not available while using Unnamed Parameters.");
-        }
-
         if (str_contains($name, '/')) {
             $this->prefixedResource($name, $controller, $options);
 
@@ -843,6 +827,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
             $this->mergeController($route);
         }
 
+        $this->addWhereClausesToRoute($route);
+        
         return $route;
     }
 
@@ -856,7 +842,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      */
     protected function newRoute($methods, $uri, $action)
     {
-        return new Route($methods, $uri, $action, $this->namedParams);
+        return new Route($methods, $uri, $action);
     }
 
     /**
@@ -872,6 +858,21 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         return trim(trim($prefix, '/') .'/' .trim($uri, '/'), '/') ?: '/';
     }
 
+    /**
+     * Add the necessary where clauses to the route based on its initial registration.
+     *
+     * @param  \Routing\Route  $route
+     * @return \Routing\Route
+     */
+    protected function addWhereClausesToRoute($route)
+    {
+        $wheres = array_get($route->getAction(), 'where', array());
+   
+        $route->where(array_merge($this->patterns, $wheres));
+
+        return $route;
+    }
+      
     /**
      * Merge the group stack with the controller action.
      *
@@ -1260,6 +1261,31 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         };
     }
 
+    /**
+     * Set a global where pattern on all routes
+     *
+     * @param  string  $key
+     * @param  string  $pattern
+     * @return void
+     */
+    public function pattern($key, $pattern)
+    {
+        $this->patterns[$key] = $pattern;
+    }
+
+    /**
+     * Set a group of global where patterns on all routes
+     *
+     * @param  array  $patterns
+     * @return void
+     */
+    public function patterns($patterns)
+    {
+        foreach ($patterns as $key => $pattern) {
+            $this->pattern($key, $pattern);
+        }
+    }
+    
     /**
      * Call the given filter with the request and response.
      *

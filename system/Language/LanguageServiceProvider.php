@@ -15,6 +15,35 @@ class LanguageServiceProvider extends ServiceProvider
      */
     protected $defer = true;
 
+    
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot() 
+    {
+        $locale = $this->app['config']['app.locale'];
+
+        $language = $this->app['language'];
+        
+        $session = $this->app['session'];
+       
+        $cookie = $this->app['request']->cookie(PREFIX .'language');
+       
+        if ($session->has('language')) {
+            $locale = $session->get('language', $locale);
+        } else if(! is_null($cookie)) {
+            $session->set('language', $cookie);
+            
+            $language->setLocale($cookie);  
+            
+            return;
+        }
+        
+        $language->setLocale($locale); 
+    }
+    
     /**
      * Register the Service Provider.
      *

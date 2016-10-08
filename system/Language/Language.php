@@ -9,7 +9,7 @@
 namespace Language;
 
 use Helpers\Inflector;
-use Language\LanguageManager as Manager;
+use Language\LanguageManager;
 
 use MessageFormatter;
 
@@ -19,13 +19,6 @@ use MessageFormatter;
  */
 class Language
 {
-    /**
-     * The Language Manager Instance.
-     *
-     * @var \Language\LanguageManager
-     */
-    protected $manager;
-
     /**
      * Holds an array with the Domain's Messages.
      *
@@ -60,11 +53,8 @@ class Language
      * @param string $domain
      * @param string $code
      */
-    public function __construct(Manager $manager, $domain, $code)
+    public function __construct($domain, $code)
     {
-        $this->manager = $manager;
-
-        //
         $languages = $manager->getLanguages();
 
         if (isset($languages[$code]) && ! empty($languages[$code])) {
@@ -204,72 +194,6 @@ class Language
     public function direction()
     {
         return $this->direction;
-    }
-
-    //--------------------------------------------------------------------
-    // Legacy API Methods
-    //--------------------------------------------------------------------
-
-    /**
-     * Load language function.
-     *
-     * @param string $name
-     * @param string $code
-     * @return void
-     */
-    public function load($name, $code = null)
-    {
-        $code = $code ?: $this->getLocale();
-
-        // Language file.
-        $filePath = APPDIR .'Language' .DS .ucfirst($code) .DS .$name .'.php';
-
-        // Check if it is readable.
-        if (! is_readable($filePath)) {
-            return;
-        }
-
-        // Require the file.
-        $messages = include $filePath;
-
-        // A small sanity check.
-        $messages = is_array($messages) ? $messages : array();
-
-        if (isset($this->legacyMessages[$code])) {
-            $messages = array_merge($this->legacyMessages[$code], $messages);
-        }
-
-        $this->legacyMessages[$code] = $messages;
-    }
-
-    /**
-     * Retrieve an element from the language array by its key.
-     *
-     * @param  string $value
-     *
-     * @return string
-     */
-    public function get($value, $code = null)
-    {
-        $code = $code ?: $this->getLocale();
-
-        $messages = isset($this->legacyMessages[$code]) ? $this->legacyMessages[$code] : array();
-
-        if (isset($messages[$value]) && ! empty($messages[$value])) {
-            return $messages[$value];
-        }
-
-        return $value;
-    }
-
-    /**
-     * Get the default locale being used.
-     *
-     * @return string
-     */
-    protected function getLocale()
-    {
-        return $this->manager->getLocale();
     }
 
 }

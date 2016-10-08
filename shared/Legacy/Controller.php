@@ -12,7 +12,6 @@ use Http\Request;
 use Http\Response;
 use Routing\Controller as BaseController;
 use Routing\Route;
-use Support\Facades\Language;
 use Support\Facades\View;
 use Template\Template as Layout;
 
@@ -36,13 +35,6 @@ abstract class Controller extends BaseController
      * @var array
      */
     private $params = array();
-
-    /**
-     * Language variable to use the languages class.
-     *
-     * @var string
-     */
-    public $language = null;
 
     /**
      * The currently used Template.
@@ -69,11 +61,6 @@ abstract class Controller extends BaseController
         // Setup the used Template to default, if it is not already defined.
         if (! isset($this->template)) {
             $this->template = Config::get('app.template');
-        }
-
-        // Initialise the Language object.
-        if ($this->language !== false) {
-            $this->language = Language::instance('legacy_api', LANGUAGE_CODE);
         }
 
         // Setup the (legacy) Middleware.
@@ -174,20 +161,6 @@ abstract class Controller extends BaseController
         }
 
         throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
-    }
-
-    /**
-     * Return a translated string.
-     *
-     * @return string
-     */
-    protected function trans($message, $code = LANGUAGE_CODE)
-    {
-        if ($this->language instanceof Language) {
-            return $this->language->get($message, $code);
-        }
-
-        return $message;
     }
 
     /**

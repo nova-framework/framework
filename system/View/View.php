@@ -15,6 +15,7 @@ use View\Engines\EngineInterface;
 use View\Factory;
 
 use ArrayAccess;
+use Closure;
 use Exception;
 
 

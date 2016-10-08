@@ -7,6 +7,8 @@ use View\Engines\EngineResolver;
 use View\View;
 use View\ViewFinderInterface;
 
+use Closure;
+
 
 class Factory
 {
@@ -82,6 +84,18 @@ class Factory
         return new View($this, $engine, $view, $path, $data);
     }
 
+    /**
+     * Create a View instance and return its rendered content.
+     *
+     * @return string
+     */
+    public function render($view, $data = array(), $module = null, Closure $callback = null)
+    {
+        $instance = $this->make($view, $data, $module);
+    
+        return $instance->render($callback); 
+    }
+    
     /**
      * Parse the given data into a raw array.
      *

@@ -69,7 +69,7 @@ class LanguageManager
 
         // Initialize the domain instance, if not already exists.
         if (! isset($this->instances[$id])) {
-            $this->instances[$id] = new Language($domain, $locale);
+            $this->instances[$id] = new Language($this, $domain, $locale);
         }
 
         return $this->instances[$id];

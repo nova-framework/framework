@@ -20,6 +20,13 @@ use MessageFormatter;
 class Language
 {
     /**
+     * The Language Manager Instance.
+     *
+     * @var \Language\LanguageManager
+     */
+    protected $manager;
+
+    /**
      * Holds an array with the Domain's Messages.
      *
      * @var array
@@ -53,7 +60,7 @@ class Language
      * @param string $domain
      * @param string $code
      */
-    public function __construct($domain, $code)
+    public function __construct(LanguageManager $manager, $domain, $code)
     {
         $languages = $manager->getLanguages();
 

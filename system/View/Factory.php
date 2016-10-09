@@ -89,7 +89,7 @@ class Factory
      *
      * @return string
      */
-    public function render($view, $data = array(), $module = null, Closure $callback = null)
+    public function fetch($view, $data = array(), $module = null, Closure $callback = null)
     {
         $instance = $this->make($view, $data, $module);
     

@@ -13,7 +13,8 @@ use Support\Facades\Facade;
 
 
 class View extends Facade
-{
+{ 
+
     /**
      * Get the registered name of the component.
      *

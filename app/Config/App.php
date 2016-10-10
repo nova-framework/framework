@@ -109,7 +109,6 @@ Config::set('app', array(
     'aliases' => array(
         // The Helpers.
         'Assets'        => 'Helpers\Assets',
-        'Csrf'          => 'Helpers\Csrf',
         'Date'          => 'Helpers\Date',
         'Document'      => 'Helpers\Document',
         'Form'          => 'Helpers\Form',

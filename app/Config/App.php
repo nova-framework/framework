@@ -108,7 +108,6 @@ Config::set('app', array(
      */
     'aliases' => array(
         // The Helpers.
-        'Mail'          => 'Helpers\Mailer',
         'Assets'        => 'Helpers\Assets',
         'Csrf'          => 'Helpers\Csrf',
         'Date'          => 'Helpers\Date',
@@ -118,7 +117,6 @@ Config::set('app', array(
         'Form'          => 'Helpers\Form',
         'Ftp'           => 'Helpers\Ftp',
         'GeoCode'       => 'Helpers\GeoCode',
-        'Hooks'         => 'Helpers\Hooks',
         'Inflector'     => 'Helpers\Inflector',
         'Number'        => 'Helpers\Number',
         'RainCaptcha'   => 'Helpers\RainCaptcha',

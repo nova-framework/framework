@@ -124,7 +124,7 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 // Load The Configuration
 //--------------------------------------------------------------------------
 
-foreach (glob(app_path() .'Config/*.php') as $path) {
+foreach (glob(app_path() .DS .'Config/*.php') as $path) {
     if (is_readable($path)) require $path;
 }
 
@@ -207,7 +207,7 @@ if (is_readable($path)) require $path;
 // Load The Application Events
 //--------------------------------------------------------------------------
 
-$path = app_path() .'Events.php';
+$path = app_path() .DS .'Events.php';
 
 if (is_readable($path)) require $path;
 
@@ -215,7 +215,7 @@ if (is_readable($path)) require $path;
 // Load The Application's Route Filters
 //--------------------------------------------------------------------------
 
-$path = app_path() .'Filters.php';
+$path = app_path() .DS .'Filters.php';
 
 if (is_readable($path)) require $path;
 
@@ -223,7 +223,7 @@ if (is_readable($path)) require $path;
 // Load The Application Routes
 //--------------------------------------------------------------------------
 
-$path = app_path() .'Routes.php';
+$path = app_path() .DS .'Routes.php';
 
 if (is_readable($path)) require $path;
 
@@ -231,7 +231,7 @@ if (is_readable($path)) require $path;
 // Load The Application Bootstrap
 //--------------------------------------------------------------------------
 
-$path = app_path() .'Bootstrap.php';
+$path = app_path() .DS .'Bootstrap.php';
 
 if (is_readable($path)) require $path;
 

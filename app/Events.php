@@ -9,19 +9,6 @@
 
 /** Define Events. */
 
-// Add a Listener to the Event 'router.matched', to process the View associated Hooks.
-Event::listen('router.matched', function($route, $request) {
-    $hooks = Hooks::get();
-
-    // Run the Hooks associated to the Views.
-    foreach (array('afterBody', 'css', 'js', 'meta', 'footer') as $hook) {
-        $result = $hooks->run($hook);
-
-        // Share the result into Views.
-        View::share($hook, $result);
-    }
-});
-
 // Add a Listener to the Event 'router.matched', to process the global View variables.
 Event::listen('router.matched', function($route, $request) {
     $session = $request->session();

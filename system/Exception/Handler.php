@@ -5,7 +5,6 @@ namespace Exception;
 use Exception\PlainDisplayer;
 use Exception\WhoopsDisplayer;
 use Exception\ExceptionDisplayerInterface;
-use Exception\RedirectToException;
 
 use Support\Contracts\ResponsePreparerInterface;
 use Support\Facades\Redirect;
@@ -157,16 +156,7 @@ class Handler
      */
     public function handleException($exception)
     {
-        if ($exception instanceof RedirectToException) {
-            // Manage the Redirect comming from the Helpers\Url.
-            $url = $exception->getUrl();
-
-            if (is_null($url)) {
-                return Redirect::back($exception->getStatusCode());
-            } else {
-                return Redirect::to($url, $exception->getStatusCode());
-            }
-        } else if (! $exception instanceof Exception) {
+        if (! $exception instanceof Exception) {
             $exception = new FatalThrowableError($exception);
         }
 

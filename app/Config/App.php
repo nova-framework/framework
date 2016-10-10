@@ -171,7 +171,6 @@ Config::set('app', array(
 
         //
         'Core\Controller' => 'Shared\Legacy\Controller',
-        'Core\Model'      => 'Shared\Legacy\Model',
         'Core\Template'   => 'Support\Facades\Template',
         'Core\View'       => 'Support\Facades\View',
     ),

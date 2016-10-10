@@ -111,7 +111,6 @@ Config::set('app', array(
         'Assets'        => 'Helpers\Assets',
         'Date'          => 'Helpers\Date',
         'Document'      => 'Helpers\Document',
-        'Form'          => 'Helpers\Form',
         'Ftp'           => 'Helpers\Ftp',
         'GeoCode'       => 'Helpers\GeoCode',
         'Inflector'     => 'Helpers\Inflector',

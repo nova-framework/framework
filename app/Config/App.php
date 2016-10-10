@@ -165,13 +165,5 @@ Config::set('app', array(
         'View'          => 'Support\Facades\View',
         'Cron'          => 'Support\Facades\Cron',
         'Module'        => 'Support\Facades\Module',
-
-        // The Compatibility Support.
-        'Errors'        => 'Shared\Legacy\Error',
-
-        //
-        'Core\Controller' => 'Shared\Legacy\Controller',
-        'Core\Template'   => 'Support\Facades\Template',
-        'Core\View'       => 'Support\Facades\View',
     ),
 ));

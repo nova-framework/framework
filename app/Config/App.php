@@ -112,8 +112,6 @@ Config::set('app', array(
         'Csrf'          => 'Helpers\Csrf',
         'Date'          => 'Helpers\Date',
         'Document'      => 'Helpers\Document',
-        'Encrypter'     => 'Helpers\Encrypter',
-        'FastCache'     => 'Helpers\FastCache',
         'Form'          => 'Helpers\Form',
         'Ftp'           => 'Helpers\Ftp',
         'GeoCode'       => 'Helpers\GeoCode',

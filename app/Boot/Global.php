@@ -10,14 +10,9 @@ Log::useFiles(storage_path() .DS .'Logs' .DS .'error.log');
 // Application Error Handler
 //--------------------------------------------------------------------------
 
-use Exception\RedirectToException;
-
 App::error(function(Exception $exception, $code)
 {
-    // Do not log the Redirect Exceptions.
-    if (! $exception instanceof RedirectToException) {
-        Log::error($exception);
-    }
+    Log::error($exception);
 });
 
 //--------------------------------------------------------------------------

@@ -4,20 +4,15 @@
 // Application Error Logger
 //--------------------------------------------------------------------------
 
-Log::useFiles(storage_path() .'Logs' .DS .'error.log');
+Log::useFiles(storage_path() .DS .'Logs' .DS .'error.log');
 
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------
 
-use Exception\RedirectToException;
-
 App::error(function(Exception $exception, $code)
 {
-    // Do not log the Redirect Exceptions.
-    if (! $exception instanceof RedirectToException) {
-        Log::error($exception);
-    }
+    Log::error($exception);
 });
 
 //--------------------------------------------------------------------------
@@ -78,14 +73,6 @@ if(CONFIG_STORE == 'database') {
 } else if(CONFIG_STORE != 'files') {
     throw new \InvalidArgumentException('Invalid Config Store type.');
 }
-
-//--------------------------------------------------------------------------
-// Start the Legacy Session
-//--------------------------------------------------------------------------
-
-use Helpers\Session as LegacySession;
-
-LegacySession::init();
 
 //--------------------------------------------------------------------------
 // Boot Stage Customization

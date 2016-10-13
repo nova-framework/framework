@@ -92,10 +92,10 @@ class Factory
     public function fetch($view, $data = array(), $module = null, Closure $callback = null)
     {
         $instance = $this->make($view, $data, $module);
-    
-        return $instance->render($callback); 
+
+        return $instance->render($callback);
     }
-    
+
     /**
      * Parse the given data into a raw array.
      *

@@ -108,17 +108,11 @@ Config::set('app', array(
      */
     'aliases' => array(
         // The Helpers.
-        'Mail'          => 'Helpers\Mailer',
         'Assets'        => 'Helpers\Assets',
-        'Csrf'          => 'Helpers\Csrf',
         'Date'          => 'Helpers\Date',
         'Document'      => 'Helpers\Document',
-        'Encrypter'     => 'Helpers\Encrypter',
-        'FastCache'     => 'Helpers\FastCache',
-        'Form'          => 'Helpers\Form',
         'Ftp'           => 'Helpers\Ftp',
         'GeoCode'       => 'Helpers\GeoCode',
-        'Hooks'         => 'Helpers\Hooks',
         'Inflector'     => 'Helpers\Inflector',
         'Number'        => 'Helpers\Number',
         'RainCaptcha'   => 'Helpers\RainCaptcha',
@@ -165,13 +159,5 @@ Config::set('app', array(
         'View'          => 'Support\Facades\View',
         'Cron'          => 'Support\Facades\Cron',
         'Module'        => 'Support\Facades\Module',
-
-        // The Compatibility Support.
-        'Errors'        => 'Shared\Legacy\Error',
-
-        //
-        'Core\Controller' => 'Shared\Legacy\Controller',
-        'Core\Template'   => 'Support\Facades\Template',
-        'Core\View'       => 'Support\Facades\View',
     ),
 ));

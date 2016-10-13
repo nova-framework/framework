@@ -8,17 +8,30 @@
  */
 
 use Config\Config;
-use Helpers\Url;
+use Support\Collection;
 use Support\Str;
-use Support\Facades\Crypt;
-use Support\Facades\Language;
 
-use Closure as Closure;
+use Support\Facades\Crypt;
+use Support\Facades\Facade;
+use Support\Facades\Language;
 
 
 if (! defined('NOVA_SYSTEM_FUNCTIONS')) {
 
 define('NOVA_SYSTEM_FUNCTIONS', 1);
+
+/**
+ * Generate a url for the application.
+ *
+ * @param  string  $path
+ * @param  mixed   $parameters
+ * @param  bool    $secure
+ * @return string
+ */
+function url($path = null, $parameters = array(), $secure = null)
+{
+    return app('url')->to($path, $parameters, $secure);
+}
 
 /**
  * Site URL helper
@@ -27,10 +40,7 @@ define('NOVA_SYSTEM_FUNCTIONS', 1);
  */
 function site_url($path = '/')
 {
-    // The base URL.
-    $siteUrl = Config::get('app.url');
-
-    return $siteUrl .ltrim($path, '/');
+    return url($path);
 }
 
 /**
@@ -41,38 +51,82 @@ function site_url($path = '/')
  */
 function resource_url($path, $module = null)
 {
-    return Url::resourcePath($module) .ltrim($path, '/');
+    $basePath = ! is_null($module) ? sprintf('modules/%s', Str::snake($module)) : '';
+
+    $path = sprintf('%s/assets/%s', $basePath, ltrim($path, '/'));
+
+    return url($path);    
 }
 
 /**
  * Template URL helper
  * @param string $path
  * @param string $template
- * @param string $folder
  * @return string
  */
-function template_url($path, $template = TEMPLATE, $folder = '/assets/')
+function template_url($path, $template = null)
 {
-    return Url::templatePath($template, $folder) .ltrim($path, '/');
+    $config = app('config');
+    
+    $template = $template ?: $config['app']['template'];
+    
+    $path = sprintf('templates/%s/assets/%s', Str::snake($template), ltrim($path, '/'));
+    
+    return url($path);    
 }
 
 /**
- * Application Path helper
+ * Get the path to the application folder.
+ *
+ * @param  string  $path
  * @return string
  */
-function app_path()
+function app_path($path = '')
 {
-    return APPDIR;
+    $path = ! empty($path) ? DS .$path : '';
+
+    return app('path') .$path;
 }
 
 /**
- * Storage Path helper
+ * Get the path to the base of the install.
+ *
+ * @param  string  $path
  * @return string
  */
-function storage_path()
+function base_path($path = '')
 {
-    return STORAGE_PATH;
+    $path = ! empty($path) ? DS .$path : '';
+
+    return app('path.base') .$path;
 }
+
+/**
+ * Get the path to the storage folder.
+ *
+ * @param   string  $path
+ * @return  string
+ */
+function storage_path($path = '')
+{
+    $path = ! empty($path) ? DS .$path : '';
+
+    return app('path.storage') .$path;
+}
+
+/**
+ * Get the path to the public folder.
+ *
+ * @param  string  $path
+ * @return string
+ */
+function public_path($path = '')
+{
+    $path = ! empty($path) ? DS .$path : '';
+
+    return app('path.public') .$path;
+}
+
 
 //
 // I18N functions
@@ -124,7 +178,7 @@ function app($make = null)
         return app()->make($make);
     }
 
-    return Support\Facades\Facade::getFacadeApplication();
+    return Facade::getFacadeApplication();
 }
 
 /**
@@ -152,6 +206,18 @@ function action($name, $parameters = array())
 {
     return app('url')->action($name, $parameters);
 }
+
+/**
+ * Create a collection from the given value.
+ *
+ * @param  mixed  $value
+ * @return \Support\Collection
+ */
+function collect($value = null)
+{
+    return Collection::make($value);
+}
+
 
 /** Array helpers. */
 

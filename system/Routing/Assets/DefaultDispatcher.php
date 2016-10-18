@@ -95,10 +95,10 @@ class DefaultDispatcher implements DispatcherInterface
                 // The Asset path is on the AdminLTE Template.
                 $folder = 'AdminLTE';
             } else if (strlen($folder) > 3) {
-                // A standard Template/Module name.
+                // A standard Template or Module name.
                 $folder = Str::studly($folder);
             } else {
-                // A short Template/Module name.
+                // A short Template or Module name.
                 $folder = strtoupper($folder);
             }
 

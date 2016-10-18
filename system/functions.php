@@ -51,7 +51,13 @@ function site_url($path = '/')
  */
 function resource_url($path, $module = null)
 {
-    $basePath = ! is_null($module) ? sprintf('modules/%s', Str::snake($module, '-')) : '';
+    if (is_null($module)) {
+        $basePath = '';
+    } else {
+        $module = Str::snake($module, '-');
+
+        $basePath = 'modules/' .$module;
+    }
 
     $path = sprintf('%s/assets/%s', $basePath, ltrim($path, '/'));
 
@@ -70,7 +76,15 @@ function template_url($path, $template = null)
 
     $template = $template ?: $config['app']['template'];
 
-    $path = sprintf('templates/%s/assets/%s', Str::snake($template, '-'), ltrim($path, '/'));
+    if ($template == 'AdminLTE') {
+        $basePath = 'templates/adminlte';
+    } else {
+        $template = Str::snake($template, '-');
+
+        $basePath = 'templates/' .$template;
+    }
+
+    $path = sprintf('%s/assets/%s', $basePath, ltrim($path, '/'));
 
     return url($path);
 }

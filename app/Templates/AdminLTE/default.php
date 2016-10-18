@@ -1,6 +1,6 @@
 <?php
 /**
- * Frontend Default RTL Layout
+ * Frontend Default Layout
  */
 
 // Generate the Language Changer menu.
@@ -23,7 +23,7 @@ foreach ($languages as $code => $info) {
 $langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?= $langCode; ?>">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,19 +34,19 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        template_url('css/bootstrap-rtl.min.css', 'Default'),
+        site_url('vendor/almasaeed2010/adminlte/bootstrap/css/bootstrap.min.css'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        template_url('css/AdminLTE-rtl.min.css', 'AdminLte'),
+        site_url('vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css'),
         // AdminLTE Skins
         site_url('vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css'),
         // iCheck
         site_url('vendor/almasaeed2010/adminlte/plugins/iCheck/square/blue.css'),
         // Custom CSS
-        template_url('css/style-rtl.css', 'AdminLte'),
+        template_url('css/style.css', 'AdminLTE'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -141,7 +141,7 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    template_url('js/bootstrap-rtl.min.js', 'Default'),
+    site_url('vendor/almasaeed2010/adminlte/bootstrap/js/bootstrap.min.js'),
     // AdminLTE App
     site_url('vendor/almasaeed2010/adminlte/dist/js/app.min.js'),
     // iCheck
@@ -150,7 +150,7 @@ Assets::js(array(
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
 
-echo isset($footer) $footer : ''; // Place to pass data / plugable hook zone
+echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <script>

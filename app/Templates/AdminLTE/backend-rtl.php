@@ -43,13 +43,13 @@ $langMenuLinks = ob_get_clean();
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        template_url('css/AdminLTE-rtl.min.css', 'AdminLte'),
+        template_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
         // AdminLTE Skins
         site_url('vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css'),
         // Select2
         site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.min.css'),
         // Custom CSS
-        template_url('css/style-rtl.css', 'AdminLte'),
+        template_url('css/style-rtl.css', 'AdminLTE'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone

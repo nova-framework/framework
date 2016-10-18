@@ -51,11 +51,11 @@ function site_url($path = '/')
  */
 function resource_url($path, $module = null)
 {
-    $basePath = ! is_null($module) ? sprintf('modules/%s', Str::snake($module)) : '';
+    $basePath = ! is_null($module) ? sprintf('modules/%s', Str::snake($module, '-')) : '';
 
     $path = sprintf('%s/assets/%s', $basePath, ltrim($path, '/'));
 
-    return url($path);    
+    return url($path);
 }
 
 /**
@@ -67,12 +67,12 @@ function resource_url($path, $module = null)
 function template_url($path, $template = null)
 {
     $config = app('config');
-    
+
     $template = $template ?: $config['app']['template'];
-    
-    $path = sprintf('templates/%s/assets/%s', Str::snake($template), ltrim($path, '/'));
-    
-    return url($path);    
+
+    $path = sprintf('templates/%s/assets/%s', Str::snake($template, '-'), ltrim($path, '/'));
+
+    return url($path);
 }
 
 /**

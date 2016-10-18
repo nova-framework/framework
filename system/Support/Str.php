@@ -69,7 +69,9 @@ class Str
     public static function contains($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if (($needle != '') && (strpos($haystack, $needle) !== false)) return true;
+            if (($needle != '') && (mb_strpos($haystack, $needle) !== false)) {
+                return true;
+            }
         }
 
         return false;
@@ -85,7 +87,9 @@ class Str
     public static function endsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if ($needle == substr($haystack, -strlen($needle))) return true;
+            if (substr($haystack, -strlen($needle)) === (string) $needle) {
+                return true;
+            }
         }
 
         return false;
@@ -175,11 +179,11 @@ class Str
     {
         preg_match('/^\s*+(?:\S++\s*+){1,'.$words.'}/u', $value, $matches);
 
-        if (! isset($matches[0])) return $value;
+        if (! isset($matches[0]) || (static::length($value) === static::length($matches[0]))) {
+            return $value;
+        }
 
-        if (strlen($value) == strlen($matches[0])) return $value;
-
-        return rtrim($matches[0]).$end;
+        return rtrim($matches[0]) .$end;
     }
 
     /**
@@ -396,7 +400,9 @@ class Str
     public static function startsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if (($needle != '') && (strpos($haystack, $needle) === 0)) return true;
+            if (($needle != '') && (substr($haystack, 0, strlen($needle)) === (string) $needle)) {
+                return true;
+            }
         }
 
         return false;

@@ -76,7 +76,7 @@ function template_url($path, $template = null)
 
     $template = $template ?: $config['app']['template'];
 
-    if ($template == 'AdminLTE') {
+    if ('adminlte' == Str::lower($template)) {
         $basePath = 'templates/adminlte';
     } else {
         $template = Str::snake($template, '-');

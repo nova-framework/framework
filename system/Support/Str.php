@@ -3,17 +3,35 @@
 namespace Support;
 
 use Helpers\Inflector;
+
+use Support\Traits\MacroableTrait;
+
 use RuntimeException;
 
 
 class Str
 {
+    use MacroableTrait;
+
     /**
-     * The registered string macros.
+     * The cache of snake-cased words.
      *
      * @var array
      */
-    protected static $macros = array();
+    protected static $snakeCache = array();
+    /**
+     * The cache of camel-cased words.
+     *
+     * @var array
+     */
+    protected static $camelCache = array();
+    /**
+     * The cache of studly-cased words.
+     *
+     * @var array
+     */
+    protected static $studlyCache = array();
+
 
     /**
      * Transliterate a UTF-8 value to ASCII.
@@ -34,7 +52,11 @@ class Str
      */
     public static function camel($value)
     {
-        return lcfirst(static::studly($value));
+        if (isset(static::$camelCache[$value])) {
+            return static::$camelCache[$value];
+        }
+
+        return static::$camelCache[$value] = lcfirst(static::studly($value));
     }
 
     /**
@@ -350,9 +372,18 @@ class Str
      */
     public static function snake($value, $delimiter = '_')
     {
-        $replace = '$1'.$delimiter.'$2';
+        $key = $value;
 
-        return ctype_lower($value) ? $value : strtolower(preg_replace('/(.)([A-Z])/', $replace, $value));
+        if (isset(static::$snakeCache[$key][$delimiter])) {
+            return static::$snakeCache[$key][$delimiter];
+        }
+
+        if (! ctype_lower($value)) {
+            $value = preg_replace('/\s+/u', '', $value);
+            $value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
+        }
+
+        return static::$snakeCache[$key][$delimiter] = $value;
     }
 
     /**
@@ -379,40 +410,15 @@ class Str
      */
     public static function studly($value)
     {
-        $value = ucwords(str_replace(array('-', '_'), ' ', $value));
+        $key = $value;
 
-        return str_replace(' ', '', $value);
-    }
-
-    /**
-     * Register a custom string macro.
-     *
-     * @param  string    $name
-     * @param  callable  $macro
-     * @return void
-     */
-    public static function macro($name, $macro)
-    {
-        static::$macros[$name] = $macro;
-    }
-
-    /**
-     * Dynamically handle calls to the string class.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public static function __callStatic($method, $parameters)
-    {
-        if (isset(static::$macros[$method]))
-        {
-            return call_user_func_array(static::$macros[$method], $parameters);
+        if (isset(static::$studlyCache[$key])) {
+            return static::$studlyCache[$key];
         }
 
-        throw new \BadMethodCallException("Method {$method} does not exist.");
+        $value = ucwords(str_replace(['-', '_'], ' ', $value));
+
+        return static::$studlyCache[$key] = str_replace(' ', '', $value);
     }
 
 }

@@ -51,15 +51,19 @@ function site_url($path = '/')
  */
 function resource_url($path, $module = null)
 {
-    if (is_null($module)) {
-        $basePath = '';
-    } else {
-        $module = Str::snake($module, '-');
+    $basePath = '';
 
-        $basePath = 'modules/' .$module;
+    if (! is_null($module)) {
+        if (Str::length($module) > 3) {
+            $module = Str::snake($module, '-');
+        } else {
+            $module = Str::lower($module);
+        }
+
+        $basePath = 'modules/' .$module .'/';
     }
 
-    $path = sprintf('%s/assets/%s', $basePath, ltrim($path, '/'));
+    $path = $basePath .'assets/' .ltrim($path, '/');
 
     return url($path);
 }
@@ -77,14 +81,14 @@ function template_url($path, $template = null)
     $template = $template ?: $config['app']['template'];
 
     if ('adminlte' == Str::lower($template)) {
-        $basePath = 'templates/adminlte';
-    } else {
+        $template = 'adminlte';
+    } else if (Str::length($template) > 3) {
         $template = Str::snake($template, '-');
-
-        $basePath = 'templates/' .$template;
+    } else {
+        $template = Str::lower($template);
     }
 
-    $path = sprintf('%s/assets/%s', $basePath, ltrim($path, '/'));
+    $path = sprintf('templates/%s/assets/%s', $template, ltrim($path, '/'));
 
     return url($path);
 }

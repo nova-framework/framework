@@ -54,13 +54,15 @@ function resource_url($path, $module = null)
     $basePath = '';
 
     if (! is_null($module)) {
+        $basePath = 'modules/';
+
         if (Str::length($module) > 3) {
-            $module = Str::snake($module, '-');
+            $basePath .= Str::snake($module, '-');
         } else {
-            $module = Str::lower($module);
+            $basePath .= Str::lower($module);
         }
 
-        $basePath = 'modules/' .$module .'/';
+        $basePath .= '/';
     }
 
     $path = $basePath .'assets/' .ltrim($path, '/');

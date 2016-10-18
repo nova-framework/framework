@@ -46,14 +46,14 @@ class Factory
      *
      * @param string $view
      * @param array|string $data
-     * @param string $custom
+     * @param string|null $template
      * @return \View\View
      */
     public function make($view, $data = array(), $template = null)
     {
         if (is_string($data)) {
             if (! empty($data) && ($template === null)) {
-                // The Module name given as second parameter; adjust the information.
+                // The Template name given as second parameter; adjust the information.
                 $template = $data;
             }
 

@@ -20,12 +20,6 @@ class ProviderRepository
      */
     protected $manifestPath;
 
-    /**
-     * Default manifest structure.
-     *
-     * @var array
-     */
-    protected $default = array('when' => array());
 
     /**
      * Create a new service repository instance.
@@ -37,7 +31,8 @@ class ProviderRepository
     public function __construct(Filesystem $files, $manifestPath)
     {
         $this->files = $files;
-        $this->manifestPath = $manifestPath;
+
+        $this->manifestPath = $manifestPath .DS .'Services.php';
     }
 
     /**
@@ -161,25 +156,23 @@ class ProviderRepository
      */
     public function shouldRecompile($manifest, $providers)
     {
-        return is_null($manifest) || $manifest['providers'] != $providers;
+        return is_null($manifest) || ($manifest['providers'] != $providers);
     }
 
     /**
-     * Load the service provider manifest JSON file.
+     * Load the service provider manifest PHP file.
      *
      * @return array
      */
     public function loadManifest()
     {
-        $path = $this->manifestPath.'/services.json';
-
-        // The service manifest is a file containing a JSON representation of every
+        // The service manifest is a file containing a representation of every
         // service provided by the application and whether its provider is using
         // deferred loading or should be eagerly loaded on each request to us.
-        if ($this->files->exists($path)) {
-            $manifest = json_decode($this->files->get($path), true);
+        if ($this->files->exists($this->manifestPath)) {
+            $manifest = $this->files->getRequire($this->manifestPath);
 
-            return array_merge($this->default, $manifest);
+            return array_merge(array('when' => array()), $manifest);
         }
     }
 
@@ -191,11 +184,11 @@ class ProviderRepository
      */
     public function writeManifest($manifest)
     {
-        $path = $this->manifestPath.'/services.json';
+        $content = "<?php\n\nreturn " .var_export($manifest, true) .";\n";
 
-        $this->files->put($path, json_encode($manifest, JSON_PRETTY_PRINT));
+        $this->files->put($this->manifestPath, $content);
 
-        return $manifest;
+        return array_merge(array('when' => array()), $manifest);
     }
 
     /**

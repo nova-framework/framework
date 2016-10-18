@@ -62,7 +62,7 @@ abstract class Controller extends BaseController
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
 
-            if (is_string($this->layout) && (! $response instanceof Layout)) {
+            if (is_string($this->layout) && ! empty($this->layout) && (! $response instanceof Layout)) {
                 $response = Template::make($this->layout, $this->template)->with('content', $response);
             }
 
@@ -82,7 +82,7 @@ abstract class Controller extends BaseController
      * Return a default View instance.
      *
      * @return \View\View
-     * @throw \BadMethodCallException
+     * @throws \BadMethodCallException
      */
     protected function getView(array $data = array())
     {
@@ -107,7 +107,9 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * @return mixed
+     * Return the current Template name.
+     *
+     * @return string
      */
     public function getTemplate()
     {
@@ -115,11 +117,46 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * @return mixed
+     * Return a Layout instance.
+     *
+     * @param string|null $layout
+     * @param array $data
+     *
+     * @return \Template\Template|\View\View
+     * @throws \BadMethodCallException
      */
-    public function getLayout()
+    public function getLayout($layout = null, array $data = array())
     {
-        return $this->layout;
+        if ($this->layout instanceof View) {
+            // The Layout is already a View instance setup via the Controller's setupLayout()
+            return $this->layout->with($data);
+        } else if ($this->layout === false) {
+            // The Layout (and the automatically rendering) was disabled on this Controller.
+            return null;
+        }
+
+        // Adjust the current used Layout.
+        $layout = ! is_null($layout) ? $layout : $this->layout;
+
+        if (is_string($layout) && ! empty($layout)) {
+            return Template::make($layout, $data, $this->template);
+        }
+
+        throw new BadMethodCallException('Method not available for the current Layout');
+    }
+
+    /**
+     * Return the current Layout (class) name.
+     *
+     * @return string
+     */
+    public function getLayoutName()
+    {
+        if ($this->layout instanceof View) {
+            return class_name($this->layout);
+        } else if (is_string($this->layout)) {
+            return $this->layout;
+        }
     }
 
 }

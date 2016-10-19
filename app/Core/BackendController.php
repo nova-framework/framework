@@ -23,7 +23,7 @@ abstract class BackendController extends BaseController
      *
      * @var string
      */
-    protected $template = 'AdminLte';
+    protected $template = 'AdminLTE';
 
     /**
      * The currently used Layout.
@@ -47,7 +47,7 @@ abstract class BackendController extends BaseController
     {
         // Check the User Authorization - while using the Extended Auth Driver.
         if (! Auth::user()->hasRole('administrator')) {
-            $status = __d('users', 'You are not authorized to access this resource.');
+            $status = __('You are not authorized to access this resource.');
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
         }

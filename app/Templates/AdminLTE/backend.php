@@ -49,7 +49,7 @@ $langMenuLinks = ob_get_clean();
         // Select2
         site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.min.css'),
         // Custom CSS
-        template_url('css/style.css', 'AdminLte'),
+        template_url('css/style.css', 'AdminLTE'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone

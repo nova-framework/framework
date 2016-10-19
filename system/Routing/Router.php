@@ -121,7 +121,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @var array
      */
     protected $patterns = array();
-    
+
     /**
      * Array of Route Groups
      *
@@ -282,7 +282,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $controller
      * @param  array   $names
      * @return void
-     * @throw  \BadMethodCallException
+     * @throws  \BadMethodCallException
      */
     public function controller($uri, $controller, $names = array())
     {
@@ -332,7 +332,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $controller
      * @param  string  $uri
      * @return void
-     * @throw  \BadMethodCallException
+     * @throws  \BadMethodCallException
      */
     protected function addFallthroughRoute($controller, $uri)
     {
@@ -828,7 +828,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
         }
 
         $this->addWhereClausesToRoute($route);
-        
+
         return $route;
     }
 
@@ -867,12 +867,12 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected function addWhereClausesToRoute($route)
     {
         $wheres = array_get($route->getAction(), 'where', array());
-   
+
         $route->where(array_merge($this->patterns, $wheres));
 
         return $route;
     }
-      
+
     /**
      * Merge the group stack with the controller action.
      *
@@ -1285,7 +1285,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
             $this->pattern($key, $pattern);
         }
     }
-    
+
     /**
      * Call the given filter with the request and response.
      *

@@ -3,17 +3,35 @@
 namespace Support;
 
 use Helpers\Inflector;
+
+use Support\Traits\MacroableTrait;
+
 use RuntimeException;
 
 
 class Str
 {
+    use MacroableTrait;
+
     /**
-     * The registered string macros.
+     * The cache of snake-cased words.
      *
      * @var array
      */
-    protected static $macros = array();
+    protected static $snakeCache = array();
+    /**
+     * The cache of camel-cased words.
+     *
+     * @var array
+     */
+    protected static $camelCache = array();
+    /**
+     * The cache of studly-cased words.
+     *
+     * @var array
+     */
+    protected static $studlyCache = array();
+
 
     /**
      * Transliterate a UTF-8 value to ASCII.
@@ -34,7 +52,11 @@ class Str
      */
     public static function camel($value)
     {
-        return lcfirst(static::studly($value));
+        if (isset(static::$camelCache[$value])) {
+            return static::$camelCache[$value];
+        }
+
+        return static::$camelCache[$value] = lcfirst(static::studly($value));
     }
 
     /**
@@ -47,7 +69,9 @@ class Str
     public static function contains($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if (($needle != '') && (strpos($haystack, $needle) !== false)) return true;
+            if (($needle != '') && (mb_strpos($haystack, $needle) !== false)) {
+                return true;
+            }
         }
 
         return false;
@@ -63,7 +87,9 @@ class Str
     public static function endsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if ($needle == substr($haystack, -strlen($needle))) return true;
+            if (substr($haystack, -strlen($needle)) === (string) $needle) {
+                return true;
+            }
         }
 
         return false;
@@ -153,11 +179,11 @@ class Str
     {
         preg_match('/^\s*+(?:\S++\s*+){1,'.$words.'}/u', $value, $matches);
 
-        if (! isset($matches[0])) return $value;
+        if (! isset($matches[0]) || (static::length($value) === static::length($matches[0]))) {
+            return $value;
+        }
 
-        if (strlen($value) == strlen($matches[0])) return $value;
-
-        return rtrim($matches[0]).$end;
+        return rtrim($matches[0]) .$end;
     }
 
     /**
@@ -350,9 +376,18 @@ class Str
      */
     public static function snake($value, $delimiter = '_')
     {
-        $replace = '$1'.$delimiter.'$2';
+        $key = $value;
 
-        return ctype_lower($value) ? $value : strtolower(preg_replace('/(.)([A-Z])/', $replace, $value));
+        if (isset(static::$snakeCache[$key][$delimiter])) {
+            return static::$snakeCache[$key][$delimiter];
+        }
+
+        if (! ctype_lower($value)) {
+            $value = preg_replace('/\s+/u', '', $value);
+            $value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
+        }
+
+        return static::$snakeCache[$key][$delimiter] = $value;
     }
 
     /**
@@ -365,7 +400,9 @@ class Str
     public static function startsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if (($needle != '') && (strpos($haystack, $needle) === 0)) return true;
+            if (($needle != '') && (substr($haystack, 0, strlen($needle)) === (string) $needle)) {
+                return true;
+            }
         }
 
         return false;
@@ -379,40 +416,39 @@ class Str
      */
     public static function studly($value)
     {
-        $value = ucwords(str_replace(array('-', '_'), ' ', $value));
+        $key = $value;
 
-        return str_replace(' ', '', $value);
-    }
-
-    /**
-     * Register a custom string macro.
-     *
-     * @param  string    $name
-     * @param  callable  $macro
-     * @return void
-     */
-    public static function macro($name, $macro)
-    {
-        static::$macros[$name] = $macro;
-    }
-
-    /**
-     * Dynamically handle calls to the string class.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public static function __callStatic($method, $parameters)
-    {
-        if (isset(static::$macros[$method]))
-        {
-            return call_user_func_array(static::$macros[$method], $parameters);
+        if (isset(static::$studlyCache[$key])) {
+            return static::$studlyCache[$key];
         }
 
-        throw new \BadMethodCallException("Method {$method} does not exist.");
+        $value = ucwords(str_replace(['-', '_'], ' ', $value));
+
+        return static::$studlyCache[$key] = str_replace(' ', '', $value);
+    }
+
+    /**
+     * Returns the portion of string specified by the start and length parameters.
+     *
+     * @param  string  $string
+     * @param  int  $start
+     * @param  int|null  $length
+     * @return string
+     */
+    public static function substr($string, $start, $length = null)
+    {
+        return mb_substr($string, $start, $length, 'UTF-8');
+    }
+
+    /**
+     * Make a string's first character uppercase.
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function ucfirst($string)
+    {
+        return static::upper(static::substr($string, 0, 1)) .static::substr($string, 1);
     }
 
 }

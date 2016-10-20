@@ -1,8 +1,8 @@
-<?php namespace Log;
+<?php namespace Nova\Log;
 
-use Events\Dispatcher;
-use Support\Contracts\JsonableInterface;
-use Support\Contracts\ArrayableInterface;
+use Nova\Events\Dispatcher;
+use Nova\Support\Contracts\JsonableInterface;
+use Nova\Support\Contracts\ArrayableInterface;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonologLogger;
@@ -41,7 +41,7 @@ class Writer
     /**
      * The event dispatcher instance.
      *
-     * @var \Events\Dispatcher
+     * @var \Nova\Events\Dispatcher
      */
     protected $dispatcher;
 
@@ -49,7 +49,7 @@ class Writer
      * Create a new log writer instance.
      *
      * @param  \Monolog\Logger  $monolog
-     * @param  \Events\Dispatcher  $dispatcher
+     * @param  \Nova\Events\Dispatcher  $dispatcher
      * @return void
      */
     public function __construct(MonologLogger $monolog, Dispatcher $dispatcher = null)
@@ -219,7 +219,7 @@ class Writer
     /**
      * Set the event dispatcher instance.
      *
-     * @param  \Events\Dispatcher
+     * @param  \Nova\Events\Dispatcher
      * @return void
      */
     public function setEventDispatcher(Dispatcher $dispatcher)

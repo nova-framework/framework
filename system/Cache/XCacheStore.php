@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 
 class XCacheStore extends TaggableStore implements StoreInterface

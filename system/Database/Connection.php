@@ -1,10 +1,10 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
 
-use Events\Dispatcher;
-use Database\Query\Processors\Processor;
+use Nova\Events\Dispatcher;
+use Nova\Database\Query\Processors\Processor;
 
 use Doctrine\DBAL\Connection as DoctrineConnection;
 
@@ -39,35 +39,35 @@ class Connection implements ConnectionInterface
     /**
      * The query grammar implementation.
      *
-     * @var \Database\Query\Grammars\Grammar
+     * @var \Nova\Database\Query\Grammars\Grammar
      */
     protected $queryGrammar;
 
     /**
      * The query post processor implementation.
      *
-     * @var \Database\Query\Processors\Processor
+     * @var \Nova\Database\Query\Processors\Processor
      */
     protected $postProcessor;
 
     /**
      * The event dispatcher instance.
      *
-     * @var \Events\Dispatcher
+     * @var \Nova\Events\Dispatcher
      */
     protected $events;
 
     /**
      * The paginator environment instance.
      *
-     * @var \Pagination\Paginator
+     * @var \Nova\Pagination\Paginator
      */
     protected $paginator;
 
     /**
      * The cache manager instance.
      *
-     * @var \Cache\CacheManager
+     * @var \Nova\Cache\CacheManager
      */
     protected $cache;
 
@@ -166,7 +166,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the default query grammar instance.
      *
-     * @return \Database\Query\Grammars\Grammar
+     * @return \Nova\Database\Query\Grammars\Grammar
      */
     protected function getDefaultQueryGrammar()
     {
@@ -186,7 +186,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the default post processor instance.
      *
-     * @return \Database\Query\Processors\Processor
+     * @return \Nova\Database\Query\Processors\Processor
      */
     protected function getDefaultPostProcessor()
     {
@@ -197,7 +197,7 @@ class Connection implements ConnectionInterface
      * Begin a fluent query against a database table.
      *
      * @param  string  $table
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     public function table($table)
     {
@@ -212,7 +212,7 @@ class Connection implements ConnectionInterface
      * Get a new raw query expression.
      *
      * @param  mixed  $value
-     * @return \Database\Query\Expression
+     * @return \Nova\Database\Query\Expression
      */
     public function raw($value)
     {
@@ -556,7 +556,7 @@ class Connection implements ConnectionInterface
     /**
      * Handle a query exception that occurred during query execution.
      *
-     * @param  \Database\QueryException  $e
+     * @param  \Nova\Database\QueryException  $e
      * @param  string    $query
      * @param  array     $bindings
      * @param  \Closure  $callback
@@ -578,7 +578,7 @@ class Connection implements ConnectionInterface
     /**
      * Determine if the given exception was caused by a lost connection.
      *
-     * @param  \Database\QueryException
+     * @param  \Nova\Database\QueryException
      * @return bool
      */
     protected function causedByLostConnection(QueryException $e)
@@ -827,7 +827,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the query grammar used by the connection.
      *
-     * @return \Database\Query\Grammars\Grammar
+     * @return \Nova\Database\Query\Grammars\Grammar
      */
     public function getQueryGrammar()
     {
@@ -837,7 +837,7 @@ class Connection implements ConnectionInterface
     /**
      * Set the query grammar used by the connection.
      *
-     * @param  \Database\Query\Grammars\Grammar
+     * @param  \Nova\Database\Query\Grammars\Grammar
      * @return void
      */
     public function setQueryGrammar(Query\Grammars\Grammar $grammar)
@@ -848,7 +848,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the schema grammar used by the connection.
      *
-     * @return \Database\Query\Grammars\Grammar
+     * @return \Nova\Database\Query\Grammars\Grammar
      */
     public function getSchemaGrammar()
     {
@@ -858,7 +858,7 @@ class Connection implements ConnectionInterface
     /**
      * Set the schema grammar used by the connection.
      *
-     * @param  \Database\Schema\Grammars\Grammar
+     * @param  \Nova\Database\Schema\Grammars\Grammar
      * @return void
      */
     public function setSchemaGrammar(Schema\Grammars\Grammar $grammar)
@@ -869,7 +869,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the query post processor used by the connection.
      *
-     * @return \Database\Query\Processors\Processor
+     * @return \Nova\Database\Query\Processors\Processor
      */
     public function getPostProcessor()
     {
@@ -879,7 +879,7 @@ class Connection implements ConnectionInterface
     /**
      * Set the query post processor used by the connection.
      *
-     * @param  \Database\Query\Processors\Processor
+     * @param  \Nova\Database\Query\Processors\Processor
      * @return void
      */
     public function setPostProcessor(Processor $processor)
@@ -900,7 +900,7 @@ class Connection implements ConnectionInterface
     /**
      * Set the event dispatcher instance on the connection.
      *
-     * @param  \Events\Dispatcher
+     * @param  \Nova\Events\Dispatcher
      * @return void
      */
     public function setEventDispatcher(Dispatcher $events)
@@ -911,7 +911,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the paginator environment instance.
      *
-     * @return \Pagination\Factory
+     * @return \Nova\Pagination\Factory
      */
     public function getPaginator()
     {
@@ -925,7 +925,7 @@ class Connection implements ConnectionInterface
     /**
      * Set the pagination environment instance.
      *
-     * @param  \Pagination\Factory|\Closure  $paginator
+     * @param  \Nova\Pagination\Factory|\Closure  $paginator
      * @return void
      */
     public function setPaginator($paginator)
@@ -936,7 +936,7 @@ class Connection implements ConnectionInterface
     /**
      * Get the cache manager instance.
      *
-     * @return \Cache\CacheManager
+     * @return \Nova\Cache\CacheManager
      */
     public function getCacheManager()
     {
@@ -950,7 +950,7 @@ class Connection implements ConnectionInterface
     /**
      * Set the cache manager instance on the connection.
      *
-     * @param  \Cache\CacheManager|\Closure  $cache
+     * @param  \Nova\Cache\CacheManager|\Closure  $cache
      * @return void
      */
     public function setCacheManager($cache)
@@ -1086,8 +1086,8 @@ class Connection implements ConnectionInterface
     /**
      * Set the table prefix and return the grammar.
      *
-     * @param  \Database\Grammar  $grammar
-     * @return \Database\Grammar
+     * @param  \Nova\Database\Grammar  $grammar
+     * @return \Nova\Database\Grammar
      */
     public function withTablePrefix(Grammar $grammar)
     {

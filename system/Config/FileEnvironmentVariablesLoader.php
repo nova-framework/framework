@@ -1,8 +1,8 @@
 <?php
 
-namespace Config;
+namespace Nova\Config;
 
-use Filesystem\Filesystem;
+use Nova\Filesystem\Filesystem;
 
 
 class FileEnvironmentVariablesLoader implements EnvironmentVariablesLoaderInterface
@@ -10,7 +10,7 @@ class FileEnvironmentVariablesLoader implements EnvironmentVariablesLoaderInterf
     /**
      * The filesystem instance.
      *
-     * @var \Filesystem\Filesystem
+     * @var \Nova\Filesystem\Filesystem
      */
     protected $files;
 
@@ -24,7 +24,7 @@ class FileEnvironmentVariablesLoader implements EnvironmentVariablesLoaderInterf
     /**
      * Create a new file environment loader instance.
      *
-     * @param  \Filesystem\Filesystem  $files
+     * @param  \Nova\Filesystem\Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files, $path = null)

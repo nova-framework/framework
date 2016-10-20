@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demos\Cron\Adapters;
 
-use Cron\Adapter;
+use Nova\Cron\Adapter;
 
 
 class Test extends Adapter

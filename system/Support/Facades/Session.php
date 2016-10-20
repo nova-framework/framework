@@ -1,22 +1,22 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
-use Support\Facades\Template;
-use Support\MessageBag;
+use Nova\Support\Facades\Facade;
+use Nova\Support\Facades\Template;
+use Nova\Support\MessageBag;
 
 
 /**
- * @see \Session\SessionManager
- * @see \Session\Store
+ * @see \Nova\Session\SessionManager
+ * @see \Nova\Session\Store
  */
 class Session extends Facade
 {
     /**
      * Return the Application instance.
      *
-     * @return \Pagination\Factory
+     * @return \Nova\Pagination\Factory
      */
     public static function instance()
     {

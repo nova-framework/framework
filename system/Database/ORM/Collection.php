@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\ORM;
+namespace Nova\Database\ORM;
 
-use Support\Collection as BaseCollection;
+use Nova\Support\Collection as BaseCollection;
 
 
 class Collection extends BaseCollection
@@ -12,7 +12,7 @@ class Collection extends BaseCollection
      *
      * @param  mixed  $key
      * @param  mixed  $default
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function find($key, $default = null)
     {
@@ -238,7 +238,7 @@ class Collection extends BaseCollection
     /**
      * Get a base Support collection instance from this collection.
      *
-     * @return \Support\Collection
+     * @return \Nova\Support\Collection
      */
     public function toBase()
     {

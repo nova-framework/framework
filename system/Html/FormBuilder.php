@@ -1,10 +1,10 @@
 <?php
 
-namespace Html;
+namespace Nova\Html;
 
-use Routing\UrlGenerator;
-use Session\Store as Session;
-use Support\Traits\MacroableTrait;
+use Nova\Routing\UrlGenerator;
+use Nova\Session\Store as Session;
+use Nova\Support\Traits\MacroableTrait;
 
 class FormBuilder
 {
@@ -13,14 +13,14 @@ class FormBuilder
     /**
      * The HTML builder instance.
      *
-     * @var \Html\HtmlBuilder
+     * @var \Nova\Html\HtmlBuilder
      */
     protected $html;
 
     /**
      * The URL generator instance.
      *
-     * @var \Routing\UrlGenerator  $url
+     * @var \Nova\Routing\UrlGenerator  $url
      */
     protected $url;
 
@@ -34,7 +34,7 @@ class FormBuilder
     /**
      * The session store implementation.
      *
-     * @var \Session\Store
+     * @var \Nova\Session\Store
      */
     protected $session;
 
@@ -76,8 +76,8 @@ class FormBuilder
     /**
      * Create a new form builder instance.
      *
-     * @param  \Routing\UrlGenerator  $url
-     * @param  \Html\HtmlBuilder  $html
+     * @param  \Nova\Routing\UrlGenerator  $url
+     * @param  \Nova\Html\HtmlBuilder  $html
      * @param  string  $csrfToken
      * @return void
      */

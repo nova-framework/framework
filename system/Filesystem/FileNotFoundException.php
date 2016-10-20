@@ -1,6 +1,6 @@
 <?php
 
-namespace Filesystem;
+namespace Nova\Filesystem;
 
 
 class FileNotFoundException extends \Exception {}

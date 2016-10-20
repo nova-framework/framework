@@ -1,11 +1,11 @@
 <?php
 
-namespace Mail;
+namespace Nova\Mail;
 
-use Mail\Transport\LogTransport;
-use Mail\Transport\MailgunTransport;
-use Mail\Transport\MandrillTransport;
-use Support\ServiceProvider;
+use Nova\Mail\Transport\LogTransport;
+use Nova\Mail\Transport\MailgunTransport;
+use Nova\Mail\Transport\MandrillTransport;
+use Nova\Support\ServiceProvider;
 
 use Swift_Mailer;
 use Swift_SmtpTransport as SmtpTransport;
@@ -67,8 +67,8 @@ class MailServiceProvider extends ServiceProvider
     /**
      * Set a few dependencies on the mailer instance.
      *
-     * @param  \Mail\Mailer  $mailer
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Mail\Mailer  $mailer
+     * @param  \Nova\Foundation\Application  $app
      * @return void
      */
     protected function setMailerDependencies($mailer, $app)

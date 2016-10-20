@@ -1,6 +1,6 @@
 <?php
 
-namespace Support;
+namespace Nova\Support;
 
 use Doctrine\Common\Inflector\Inflector;
 

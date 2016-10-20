@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Query\Grammars;
+namespace Nova\Database\Query\Grammars;
 
-use Database\Query\Builder;
-use Database\Query\Grammar;
+use Nova\Database\Query\Builder;
+use Nova\Database\Query\Grammar;
 
 
 class SqlServerGrammar extends Grammar
@@ -22,7 +22,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Compile a select query into SQL.
      *
-     * @param  \Database\Query\Builder
+     * @param  \Nova\Database\Query\Builder
      * @return string
      */
     public function compileSelect(Builder $query)
@@ -39,7 +39,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Compile the "select *" portion of the query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  array  $columns
      * @return string
      */
@@ -59,7 +59,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Compile the "from" portion of the query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  string  $table
      * @return string
      */
@@ -79,7 +79,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Create a full ANSI offset clause for the query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  array  $components
      * @return string
      */
@@ -116,7 +116,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Compile the limit / offset row constraint for a query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return string
      */
     protected function compileRowConstraint($query)
@@ -148,7 +148,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Compile the "limit" portions of the query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  int  $limit
      * @return string
      */
@@ -160,7 +160,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Compile the "offset" portions of the query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  int  $offset
      * @return string
      */
@@ -172,7 +172,7 @@ class SqlServerGrammar extends Grammar
     /**
      * Compile a truncate table statement into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return array
      */
     public function compileTruncate(Builder $query)

@@ -1,9 +1,9 @@
 <?php
 
-namespace Language;
+namespace Nova\Language;
 
-use Foundation\Application;
-use Language\Language;
+use Nova\Foundation\Application;
+use Nova\Language\Language;
 
 use Carbon\Carbon;
 
@@ -13,7 +13,7 @@ class LanguageManager
     /**
      * The Application instance.
      *
-     * @var \Foundation\Application
+     * @var \Nova\Foundation\Application
      */
     protected $app;
 

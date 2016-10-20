@@ -1,6 +1,6 @@
 <?php
 
-namespace Forensics;
+namespace Nova\Forensics;
 
 /**
  * Class PdoDebugger

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Users\Providers;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class UsersServiceProvider extends ServiceProvider

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
-use Redis\Database as Redis;
+use Nova\Redis\Database as Redis;
 
 
 class RedisStore extends TaggableStore implements StoreInterface
@@ -10,7 +10,7 @@ class RedisStore extends TaggableStore implements StoreInterface
     /**
      * The Redis database connection.
      *
-     * @var \Redis\Database
+     * @var \Nova\Redis\Database
      */
     protected $redis;
 
@@ -138,7 +138,7 @@ class RedisStore extends TaggableStore implements StoreInterface
      * Begin executing a new tags operation.
      *
      * @param  array|mixed  $names
-     * @return \Cache\RedisTaggedCache
+     * @return \Nova\Cache\RedisTaggedCache
      */
     public function tags($names)
     {

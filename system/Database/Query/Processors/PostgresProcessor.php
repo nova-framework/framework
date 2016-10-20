@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Query\Processors;
+namespace Nova\Database\Query\Processors;
 
-use Database\Query\Builder;
-use Database\Query\Processor;
+use Nova\Database\Query\Builder;
+use Nova\Database\Query\Processor;
 
 
 class PostgresProcessor extends Processor
@@ -11,7 +11,7 @@ class PostgresProcessor extends Processor
     /**
      * Process an "insert get ID" query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  string  $sql
      * @param  array   $values
      * @param  string  $sequence

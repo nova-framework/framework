@@ -1,6 +1,6 @@
 <?php
 
-namespace Config;
+namespace Nova\Config;
 
 interface EnvironmentVariablesLoaderInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Http\Request;
-use Container\Container;
+use Nova\Http\Request;
+use Nova\Container\Container;
 
 use Closure;
 
@@ -13,22 +13,22 @@ class ControllerDispatcher
     /**
      * The routing filterer implementation.
      *
-     * @var \Routing\RouteFiltererInterface  $filterer
+     * @var \Nova\Routing\RouteFiltererInterface  $filterer
      */
     protected $filterer;
 
     /**
      * The IoC container instance.
      *
-     * @var \Container\Container
+     * @var \Nova\Container\Container
      */
     protected $container;
 
     /**
      * Create a new controller dispatcher instance.
      *
-     * @param  \Routing\RouteFiltererInterface  $filterer
-     * @param  \Container\Container  $container
+     * @param  \Nova\Routing\RouteFiltererInterface  $filterer
+     * @param  \Nova\Container\Container  $container
      * @return void
      */
     public function __construct(RouteFiltererInterface $filterer, Container $container = null)
@@ -41,8 +41,8 @@ class ControllerDispatcher
     /**
      * Dispatch a request to a given controller and method.
      *
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @param  string  $controller
      * @param  string  $method
      * @return mixed
@@ -79,8 +79,8 @@ class ControllerDispatcher
     /**
      * Call the given controller instance method.
      *
-     * @param  \Routing\Controller  $instance
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Controller  $instance
+     * @param  \Nova\Routing\Route  $route
      * @param  string  $method
      * @return mixed
      */
@@ -94,9 +94,9 @@ class ControllerDispatcher
     /**
      * Call the "before" filters for the controller.
      *
-     * @param  \Routing\Controller  $instance
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Controller  $instance
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @param  string  $method
      * @return mixed
      */
@@ -114,9 +114,9 @@ class ControllerDispatcher
     /**
      * Apply the applicable after filters to the route.
      *
-     * @param  \Routing\Controller  $instance
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Controller  $instance
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @param  string  $method
      * @return mixed
      */
@@ -144,7 +144,7 @@ class ControllerDispatcher
      * Determine if the given filter applies to the request.
      *
      * @param  array  $filter
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @param  string  $method
      * @return bool
      */
@@ -163,7 +163,7 @@ class ControllerDispatcher
      * Determine if the filter fails the "only" constraint.
      *
      * @param  array  $filter
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @param  string  $method
      * @return bool
      */
@@ -178,7 +178,7 @@ class ControllerDispatcher
      * Determine if the filter fails the "except" constraint.
      *
      * @param  array  $filter
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @param  string  $method
      * @return bool
      */
@@ -193,7 +193,7 @@ class ControllerDispatcher
      * Determine if the filter fails the "on" constraint.
      *
      * @param  array  $filter
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @param  string  $method
      * @return bool
      */
@@ -212,8 +212,8 @@ class ControllerDispatcher
      * Call the given controller filter method.
      *
      * @param  array  $filter
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @return mixed
      */
     protected function callFilter($filter, $route, $request)

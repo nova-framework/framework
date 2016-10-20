@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\Connections;
+namespace Nova\Database\Connections;
 
-use Database\Connection;
-use Database\Query\Grammars\SqlServerGrammar as QueryGrammar;
-use Database\Query\Processors\SqlServerProcessor as QueryProcessor;
+use Nova\Database\Connection;
+use Nova\Database\Query\Grammars\SqlServerGrammar as QueryGrammar;
+use Nova\Database\Query\Processors\SqlServerProcessor as QueryProcessor;
 
 use Closure;
 
@@ -44,7 +44,7 @@ class SqlServerConnection extends Connection
     /**
      * Get the default query grammar instance.
      *
-     * @return \Database\Query\Grammars\SqlServerGrammar
+     * @return \Nova\Database\Query\Grammars\SqlServerGrammar
      */
     protected function getDefaultQueryGrammar()
     {
@@ -54,7 +54,7 @@ class SqlServerConnection extends Connection
     /**
      * Get the default post processor instance.
      *
-     * @return \Database\Query\Processors\Processor
+     * @return \Nova\Database\Query\Processors\Processor
      */
     protected function getDefaultPostProcessor()
     {

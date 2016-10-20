@@ -1,9 +1,9 @@
 <?php
 
-namespace Auth;
+namespace Nova\Auth;
 
-use Database\Connection;
-use Hashing\HasherInterface;
+use Nova\Database\Connection;
+use Nova\Hashing\HasherInterface;
 
 
 class DatabaseUserProvider implements UserProviderInterface
@@ -11,14 +11,14 @@ class DatabaseUserProvider implements UserProviderInterface
     /**
      * The active database connection.
      *
-     * @var \Database\Connection
+     * @var \Nova\Database\Connection
      */
     protected $conn;
 
     /**
      * The hasher implementation.
      *
-     * @var \Hashing\HasherInterface
+     * @var \Nova\Hashing\HasherInterface
      */
     protected $hasher;
 
@@ -32,7 +32,7 @@ class DatabaseUserProvider implements UserProviderInterface
     /**
      * Create a new database user provider.
      *
-     * @param  \Database\Connection  $conn
+     * @param  \Nova\Database\Connection  $conn
      * @param  \Hashing\HasherInterface  $hasher
      * @param  string  $table
      * @return void
@@ -48,7 +48,7 @@ class DatabaseUserProvider implements UserProviderInterface
      * Retrieve a user by their unique identifier.
      *
      * @param  mixed  $identifier
-     * @return \Auth\UserInterface|null
+     * @return \Nova\Auth\UserInterface|null
      */
     public function retrieveById($identifier)
     {
@@ -65,7 +65,7 @@ class DatabaseUserProvider implements UserProviderInterface
      *
      * @param  mixed   $identifier
      * @param  string  $token
-     * @return \Auth\UserInterface|null
+     * @return \Nova\Auth\UserInterface|null
      */
     public function retrieveByToken($identifier, $token)
     {
@@ -98,7 +98,7 @@ class DatabaseUserProvider implements UserProviderInterface
      * Retrieve a user by the given credentials.
      *
      * @param  array  $credentials
-     * @return \Auth\UserInterface|null
+     * @return \Nova\Auth\UserInterface|null
      */
     public function retrieveByCredentials(array $credentials)
     {

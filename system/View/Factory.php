@@ -1,11 +1,11 @@
 <?php
 
-namespace View;
+namespace Nova\View;
 
-use Support\Contracts\ArrayableInterface as Arrayable;
-use View\Engines\EngineResolver;
-use View\View;
-use View\ViewFinderInterface;
+use Nova\Support\Contracts\ArrayableInterface as Arrayable;
+use Nova\View\Engines\EngineResolver;
+use Nova\View\View;
+use Nova\View\ViewFinderInterface;
 
 use Closure;
 
@@ -15,14 +15,14 @@ class Factory
     /**
      * The Engines Resolver instance.
      *
-     * @var \View\Engines\EngineResolver
+     * @var \Nova\View\Engines\EngineResolver
      */
     protected $engines;
 
     /**
      * The view finder implementation.
      *
-     * @var \View\ViewFinderInterface
+     * @var \Nova\View\ViewFinderInterface
      */
     protected $finder;
 
@@ -59,7 +59,7 @@ class Factory
      * @param string $path
      * @param array|string $data
      * @param string|null $module
-     * @return \View\View
+     * @return \Nova\View\View
      */
     public function make($view, $data = array(), $module = null)
     {
@@ -166,7 +166,7 @@ class Factory
      * Get the appropriate View Engine for the given path.
      *
      * @param  string  $path
-     * @return \View\Engines\EngineInterface
+     * @return \Nova\View\Engines\EngineInterface
      */
     public function getEngineFromPath($path)
     {
@@ -227,7 +227,7 @@ class Factory
     /**
      * Get the engine resolver instance.
      *
-     * @return \View\Engines\EngineResolver
+     * @return \Nova\View\Engines\EngineResolver
      */
     public function getEngineResolver()
     {
@@ -237,7 +237,7 @@ class Factory
     /**
      * Get the View Finder instance.
      *
-     * @return \View\ViewFinderInterface
+     * @return \Nova\View\ViewFinderInterface
      */
     public function getFinder()
     {

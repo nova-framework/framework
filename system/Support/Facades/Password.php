@@ -1,12 +1,12 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Auth\Reminders\PasswordBroker
+ * @see \Nova\Auth\Reminders\PasswordBroker
  */
 class Password extends Facade
 {

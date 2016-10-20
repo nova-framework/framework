@@ -1,8 +1,8 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class CacheServiceProvider extends ServiceProvider

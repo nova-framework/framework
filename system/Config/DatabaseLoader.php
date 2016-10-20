@@ -7,9 +7,9 @@
  * @date April 12th, 2016
  */
 
-namespace Config;
+namespace Nova\Config;
 
-use Database\Connection;
+use Nova\Database\Connection;
 
 
 class DatabaseLoader implements LoaderInterface
@@ -17,7 +17,7 @@ class DatabaseLoader implements LoaderInterface
     /**
      * The Database Connection instance.
      *
-     * @var \Database\Connection
+     * @var \Nova\Database\Connection
      */
     protected $connection;
 
@@ -153,7 +153,7 @@ class DatabaseLoader implements LoaderInterface
     /**
      * Create a new database query
      *
-     * @return \Database\Query
+     * @return \Nova\Database\Query
      */
     public function newQuery()
     {

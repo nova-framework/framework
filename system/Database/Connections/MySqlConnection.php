@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\Connections;
+namespace Nova\Database\Connections;
 
-use Database\Connection;
-use Database\Query\Grammars\MySqlGrammar as QueryGrammar;
-use Database\Query\Processors\MySqlProcessor as QueryProcessor;
+use Nova\Database\Connection;
+use Nova\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
+use Nova\Database\Query\Processors\MySqlProcessor as QueryProcessor;
 
 
 class MySqlConnection extends Connection
@@ -13,7 +13,7 @@ class MySqlConnection extends Connection
     /**
      * Get the default query grammar instance.
      *
-     * @return \Database\Query\Grammars\MySqlGrammar
+     * @return \Nova\Database\Query\Grammars\MySqlGrammar
      */
     protected function getDefaultQueryGrammar()
     {
@@ -23,7 +23,7 @@ class MySqlConnection extends Connection
     /**
      * Get the default post processor instance.
      *
-     * @return \Database\Query\Processors\Processor
+     * @return \Nova\Database\Query\Processors\Processor
      */
     protected function getDefaultPostProcessor()
     {

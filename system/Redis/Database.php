@@ -1,6 +1,6 @@
 <?php
 
-namespace Redis;
+namespace Nova\Redis;
 
 use Predis\Client;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Html;
+namespace Nova\Html;
 
-use Routing\UrlGenerator;
-use Support\Traits\MacroableTrait;
+use Nova\Routing\UrlGenerator;
+use Nova\Support\Traits\MacroableTrait;
 
 class HtmlBuilder
 {
@@ -12,14 +12,14 @@ class HtmlBuilder
     /**
      * The URL generator instance.
      *
-     * @var \Routing\UrlGenerator
+     * @var \Nova\Routing\UrlGenerator
      */
     protected $url;
 
     /**
      * Create a new HTML builder instance.
      *
-     * @param  \Routing\UrlGenerator  $url
+     * @param  \Nova\Routing\UrlGenerator  $url
      * @return void
      */
     public function __construct(UrlGenerator $url = null)

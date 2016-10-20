@@ -8,13 +8,13 @@
 
 namespace App\Core;
 
-use Config\Config;
-use Http\Response;
-use Routing\Controller as BaseController;
-use Support\Contracts\RenderableInterface as Renderable;
-use Support\Facades\Template;
-use Support\Facades\View;
-use Template\Template as Layout;
+use Nova\Config\Config;
+use Nova\Http\Response;
+use Nova\Routing\Controller as BaseController;
+use Nova\Support\Contracts\RenderableInterface as Renderable;
+use Nova\Support\Facades\Template;
+use Nova\Support\Facades\View;
+use Nova\Template\Template as Layout;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -81,7 +81,7 @@ abstract class Controller extends BaseController
     /**
      * Return a default View instance.
      *
-     * @return \View\View
+     * @return \Nova\View\View
      * @throws \BadMethodCallException
      */
     protected function getView(array $data = array())

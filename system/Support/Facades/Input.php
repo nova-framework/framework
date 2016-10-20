@@ -1,12 +1,12 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Http\Request
+ * @see \Nova\Http\Request
  */
 class Input extends Facade
 {

@@ -6,13 +6,13 @@
  * @version 3.0
  */
 
-namespace Database;
+namespace Nova\Database;
 
-use Database\ORM\Model;
-use Database\ConnectionFactory;
-use Database\DatabaseManager;
-use Database\Model as BasicModel;
-use Support\ServiceProvider;
+use Nova\Database\ORM\Model;
+use Nova\Database\ConnectionFactory;
+use Nova\Database\DatabaseManager;
+use Nova\Database\Model as BasicModel;
+use Nova\Support\ServiceProvider;
 
 
 class DatabaseServiceProvider extends ServiceProvider

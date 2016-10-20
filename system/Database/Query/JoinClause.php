@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Query;
+namespace Nova\Database\Query;
 
 class JoinClause
 {

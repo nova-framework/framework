@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail\Transport;
+namespace Nova\Mail\Transport;
 
 use GuzzleHttp\Client;
 

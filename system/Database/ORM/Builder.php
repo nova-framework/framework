@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\ORM;
+namespace Nova\Database\ORM;
 
-use Database\Query\Expression;
-use Database\ORM\Relations\Relation;
-use Database\Query\Builder as QueryBuilder;
-use Support\Str;
+use Nova\Database\Query\Expression;
+use Nova\Database\ORM\Relations\Relation;
+use Nova\Database\Query\Builder as QueryBuilder;
+use Nova\Support\Str;
 
 use Closure;
 
@@ -15,14 +15,14 @@ class Builder
     /**
      * The base query builder instance.
      *
-     * @var \Database\Query\Builder
+     * @var \Nova\Database\Query\Builder
      */
     protected $query;
 
     /**
      * The model being queried.
      *
-     * @var \Database\ORM\Model
+     * @var \Nova\Database\ORM\Model
      */
     protected $model;
 
@@ -60,7 +60,7 @@ class Builder
     /**
      * Create a new ORM query builder instance.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return void
      */
     public function __construct(QueryBuilder $query)
@@ -73,7 +73,7 @@ class Builder
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Database\ORM\Model|static|null
+     * @return \Nova\Database\ORM\Model|static|null
      */
     public function find($id, $columns = array('*'))
     {
@@ -91,7 +91,7 @@ class Builder
      *
      * @param  array  $id
      * @param  array  $columns
-     * @return \Database\ORM\Model|Collection|static
+     * @return \Nova\Database\ORM\Model|Collection|static
      */
     public function findMany($id, $columns = array('*'))
     {
@@ -107,7 +107,7 @@ class Builder
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Database\ORM\Model|static
+     * @return \Nova\Database\ORM\Model|static
      *
      * @throws \Database\ORM\ModelNotFoundException
      */
@@ -122,7 +122,7 @@ class Builder
      * Execute the query and get the first result.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Model|static|null
+     * @return \Nova\Database\ORM\Model|static|null
      */
     public function first($columns = array('*'))
     {
@@ -133,7 +133,7 @@ class Builder
      * Execute the query and get the first result or throw an exception.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Model|static
+     * @return \Nova\Database\ORM\Model|static
      *
      * @throws \Database\ORM\ModelNotFoundException
      */
@@ -148,7 +148,7 @@ class Builder
      * Execute the query as a "select" statement.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Collection|static[]
+     * @return \Nova\Database\ORM\Collection|static[]
      */
     public function get($columns = array('*'))
     {
@@ -221,7 +221,7 @@ class Builder
      *
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function paginate($perPage = null, $columns = array('*'))
     {
@@ -239,10 +239,10 @@ class Builder
     /**
      * Get a paginator for a grouped statement.
      *
-     * @param  \Pagination\Factory  $paginator
+     * @param  \Nova\Pagination\Factory  $paginator
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     protected function groupedPaginate($paginator, $perPage, $columns)
     {
@@ -254,10 +254,10 @@ class Builder
     /**
      * Get a paginator for an ungrouped statement.
      *
-     * @param  \Pagination\Factory  $paginator
+     * @param  \Nova\Pagination\Factory  $paginator
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     protected function ungroupedPaginate($paginator, $perPage, $columns)
     {
@@ -277,7 +277,7 @@ class Builder
      *
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function simplePaginate($perPage = null, $columns = array('*'))
     {
@@ -387,7 +387,7 @@ class Builder
      * Get the hydrated models without eager loading.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Model[]
+     * @return \Nova\Database\ORM\Model[]
      */
     public function getModels($columns = array('*'))
     {
@@ -450,7 +450,7 @@ class Builder
      * Get the relation instance for the given relation name.
      *
      * @param  string  $relation
-     * @return \Database\ORM\Relations\Relation
+     * @return \Nova\Database\ORM\Relations\Relation
      */
     public function getRelation($relation)
     {
@@ -531,7 +531,7 @@ class Builder
      * @param  string  $column
      * @param  string  $operator
      * @param  mixed   $value
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function orWhere($column, $operator = null, $value = null)
     {
@@ -546,7 +546,7 @@ class Builder
      * @param  int     $count
      * @param  string  $boolean
      * @param  \Closure|null  $callback
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function has($relation, $operator = '>=', $count = 1, $boolean = 'and', Closure $callback = null)
     {
@@ -571,7 +571,7 @@ class Builder
      * @param  int     $count
      * @param  string  $boolean
      * @param  \Closure  $callback
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     protected function hasNested($relations, $operator = '>=', $count = 1, $boolean = 'and', $callback = null)
     {
@@ -595,7 +595,7 @@ class Builder
      * @param  string  $relation
      * @param  string  $boolean
      * @param  \Closure|null  $callback
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function doesntHave($relation, $boolean = 'and', Closure $callback = null)
     {
@@ -609,7 +609,7 @@ class Builder
      * @param  \Closure  $callback
      * @param  string    $operator
      * @param  int       $count
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function whereHas($relation, Closure $callback, $operator = '>=', $count = 1)
     {
@@ -621,7 +621,7 @@ class Builder
      *
      * @param  string  $relation
      * @param  \Closure|null  $callback
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function whereDoesntHave($relation, Closure $callback = null)
     {
@@ -634,7 +634,7 @@ class Builder
      * @param  string  $relation
      * @param  string  $operator
      * @param  int     $count
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function orHas($relation, $operator = '>=', $count = 1)
     {
@@ -648,7 +648,7 @@ class Builder
      * @param  \Closure  $callback
      * @param  string    $operator
      * @param  int       $count
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function orWhereHas($relation, Closure $callback, $operator = '>=', $count = 1)
     {
@@ -658,12 +658,12 @@ class Builder
     /**
      * Add the "has" condition where clause to the query.
      *
-     * @param  \Database\ORM\Builder  $hasQuery
-     * @param  \Database\ORM\Relations\Relation  $relation
+     * @param  \Nova\Database\ORM\Builder  $hasQuery
+     * @param  \Nova\Database\ORM\Relations\Relation  $relation
      * @param  string  $operator
      * @param  int  $count
      * @param  string  $boolean
-     * @return \Database\ORM\Builder
+     * @return \Nova\Database\ORM\Builder
      */
     protected function addHasWhere(Builder $hasQuery, Relation $relation, $operator, $count, $boolean)
     {
@@ -679,8 +679,8 @@ class Builder
     /**
      * Merge the "wheres" from a relation query to a has query.
      *
-     * @param  \Database\ORM\Builder  $hasQuery
-     * @param  \Database\ORM\Relations\Relation  $relation
+     * @param  \Nova\Database\ORM\Builder  $hasQuery
+     * @param  \Nova\Database\ORM\Relations\Relation  $relation
      * @return void
      */
     protected function mergeWheresToHas(Builder $hasQuery, Relation $relation)
@@ -700,7 +700,7 @@ class Builder
      * Get the "has relation" base query instance.
      *
      * @param  string  $relation
-     * @return \Database\ORM\Builder
+     * @return \Nova\Database\ORM\Builder
      */
     protected function getHasRelationQuery($relation)
     {
@@ -779,7 +779,7 @@ class Builder
      *
      * @param  string  $scope
      * @param  array   $parameters
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     protected function callScope($scope, $parameters)
     {
@@ -791,7 +791,7 @@ class Builder
     /**
      * Get the underlying query builder instance.
      *
-     * @return \Database\Query\Builder|static
+     * @return \Nova\Database\Query\Builder|static
      */
     public function getQuery()
     {
@@ -801,7 +801,7 @@ class Builder
     /**
      * Set the underlying query builder instance.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return void
      */
     public function setQuery($query)
@@ -833,7 +833,7 @@ class Builder
     /**
      * Get the model instance being queried.
      *
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function getModel()
     {
@@ -843,7 +843,7 @@ class Builder
     /**
      * Set a model instance for the model being queried.
      *
-     * @param  \Database\ORM\Model  $model
+     * @param  \Nova\Database\ORM\Model  $model
      * @return $this
      */
     public function setModel(Model $model)

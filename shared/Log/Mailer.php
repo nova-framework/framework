@@ -7,7 +7,7 @@
  */
 namespace Shared\Log;
 
-use Foundation\Application;
+use Nova\Foundation\Application;
 
 use Monolog\Logger;
 use Monolog\Handler\SwiftMailerHandler;

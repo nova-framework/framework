@@ -1,6 +1,6 @@
 <?php
 
-namespace View;
+namespace Nova\View;
 
 
 interface ViewFinderInterface

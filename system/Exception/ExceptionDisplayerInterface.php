@@ -1,6 +1,6 @@
 <?php
 
-namespace Exception;
+namespace Nova\Exception;
 
 use Exception;
 

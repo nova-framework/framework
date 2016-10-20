@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
 
 abstract class Grammar
@@ -116,7 +116,7 @@ abstract class Grammar
     /**
      * Get the value of a raw expression.
      *
-     * @param  \Database\Query\Expression  $expression
+     * @param  \Nova\Database\Query\Expression  $expression
      * @return string
      */
     public function getValue($expression)

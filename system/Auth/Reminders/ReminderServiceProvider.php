@@ -1,12 +1,12 @@
 <?php
 
-namespace Auth\Reminders;
+namespace Nova\Auth\Reminders;
 
-use Support\ServiceProvider;
-use Auth\Console\RemindersTableCommand;
-use Auth\Console\ClearRemindersCommand;
-use Auth\Console\RemindersControllerCommand;
-use Auth\Reminders\DatabaseReminderRepository as DbRepository;
+use Nova\Support\ServiceProvider;
+use Nova\Auth\Console\RemindersTableCommand;
+use Nova\Auth\Console\ClearRemindersCommand;
+use Nova\Auth\Console\RemindersControllerCommand;
+use Nova\Auth\Reminders\DatabaseReminderRepository as DbRepository;
 
 
 class ReminderServiceProvider extends ServiceProvider

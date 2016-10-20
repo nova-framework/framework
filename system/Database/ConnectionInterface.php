@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
 use Closure;
 
@@ -11,7 +11,7 @@ interface ConnectionInterface
      * Begin a fluent query against a database table.
      *
      * @param  string  $table
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     public function table($table);
 
@@ -19,7 +19,7 @@ interface ConnectionInterface
      * Get a new raw query expression.
      *
      * @param  mixed  $value
-     * @return \Database\Query\Expression
+     * @return \Nova\Database\Query\Expression
      */
     public function raw($value);
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Module;
+namespace Nova\Module;
 
-use Module\ModuleManager;
-use Support\ServiceProvider;
+use Nova\Module\ModuleManager;
+use Nova\Support\ServiceProvider;
 
 
 class ModuleServiceProvider extends ServiceProvider

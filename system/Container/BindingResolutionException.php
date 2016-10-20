@@ -1,5 +1,5 @@
 <?php
 
-namespace Container;
+namespace Nova\Container;
 
 class BindingResolutionException extends \Exception {}

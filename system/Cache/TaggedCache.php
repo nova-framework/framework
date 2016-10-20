@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 use Carbon\Carbon;
 
@@ -12,22 +12,22 @@ class TaggedCache implements StoreInterface
     /**
      * The cache store implementation.
      *
-     * @var \Cache\StoreInterface
+     * @var \Nova\Cache\StoreInterface
      */
     protected $store;
 
     /**
      * The tag set instance.
      *
-     * @var \Cache\TagSet
+     * @var \Nova\Cache\TagSet
      */
     protected $tags;
 
     /**
      * Create a new tagged cache instance.
      *
-     * @param  \Cache\StoreInterface  $store
-     * @param  \Cache\TagSet  $tags
+     * @param  \Nova\Cache\StoreInterface  $store
+     * @param  \Nova\Cache\TagSet  $tags
      * @return void
      */
     public function __construct(StoreInterface $store, TagSet $tags)

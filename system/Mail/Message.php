@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail;
+namespace Nova\Mail;
 
 use Swift_Image;
 use Swift_Attachment;

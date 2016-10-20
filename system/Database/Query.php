@@ -1,9 +1,9 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
-use Database\Query\Expression;
-use Database\Query\Builder as QueryBuilder;
+use Nova\Database\Query\Expression;
+use Nova\Database\Query\Builder as QueryBuilder;
 
 use Closure;
 
@@ -13,14 +13,14 @@ class Query
     /**
      * The base Query Builder instance.
      *
-     * @var \Database\Query\Builder
+     * @var \Nova\Database\Query\Builder
      */
     protected $query;
 
     /**
      * The model being queried.
      *
-     * @var \Database\Model
+     * @var \Nova\Database\Model
      */
     protected $model;
 
@@ -28,7 +28,7 @@ class Query
     /**
      * Create a new Model Query Builder instance.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return void
      */
     public function __construct(QueryBuilder $query)
@@ -75,7 +75,7 @@ class Query
      *
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function paginate($perPage = null, $columns = array('*'))
     {
@@ -94,10 +94,10 @@ class Query
     /**
      * Get a paginator for a grouped statement.
      *
-     * @param  \Pagination\Environment  $paginator
+     * @param  \Nova\Pagination\Environment  $paginator
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     protected function groupedPaginate($paginator, $perPage, $columns)
     {
@@ -109,10 +109,10 @@ class Query
     /**
      * Get a paginator for an ungrouped statement.
      *
-     * @param  \Pagination\Environment  $paginator
+     * @param  \Nova\Pagination\Environment  $paginator
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     protected function ungroupedPaginate($paginator, $perPage, $columns)
     {
@@ -135,7 +135,7 @@ class Query
      *
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function simplePaginate($perPage = null, $columns = array('*'))
     {
@@ -157,7 +157,7 @@ class Query
     /**
      * Get the underlying query builder instance.
      *
-     * @return \Database\Query\Builder|static
+     * @return \Nova\Database\Query\Builder|static
      */
     public function getQuery()
     {
@@ -167,7 +167,7 @@ class Query
     /**
      * Set the underlying query builder instance.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return void
      */
     public function setQuery($query)
@@ -178,7 +178,7 @@ class Query
     /**
      * Get the model instance being queried.
      *
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function getModel()
     {
@@ -188,8 +188,8 @@ class Query
     /**
      * Set a model instance for the model being queried.
      *
-     * @param  \Database\ORM\Model  $model
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\Model  $model
+     * @return \Nova\Database\ORM\Builder
      */
     public function setModel(Model $model)
     {

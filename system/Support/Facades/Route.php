@@ -1,9 +1,9 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
 /**
- * @see \Routing\Router
+ * @see \Nova\Routing\Router
  */
 class Route extends Facade
 {

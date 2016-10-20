@@ -1,8 +1,8 @@
 <?php
 
-namespace Html;
+namespace Nova\Html;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class HtmlServiceProvider extends ServiceProvider

@@ -1,10 +1,10 @@
 <?php
 
-namespace Filesystem;
+namespace Nova\Filesystem;
 
 use Symfony\Component\Finder\Finder;
 
-use FilesystemIterator;
+use Nova\FilesystemIterator;
 
 
 class Filesystem

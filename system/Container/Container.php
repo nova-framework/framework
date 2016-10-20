@@ -1,6 +1,6 @@
 <?php
 
-namespace Container;
+namespace Nova\Container;
 
 use Closure;
 use ArrayAccess;

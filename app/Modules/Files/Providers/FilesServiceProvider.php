@@ -2,7 +2,7 @@
 
 namespace App\Modules\Files\Providers;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class FilesServiceProvider extends ServiceProvider

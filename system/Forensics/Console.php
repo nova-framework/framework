@@ -20,7 +20,7 @@
 
 - - - - - - - - - - - - - - - - - - - - - */
 
-namespace Forensics;
+namespace Nova\Forensics;
 
 
 class Console

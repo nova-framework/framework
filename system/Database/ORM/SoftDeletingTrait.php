@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\ORM;
+namespace Nova\Database\ORM;
 
-use Database\ORM\SoftDeletingScope;
+use Nova\Database\ORM\SoftDeletingScope;
 
 
 trait SoftDeletingTrait
@@ -102,7 +102,7 @@ trait SoftDeletingTrait
     /**
      * Get a new query builder that includes soft deletes.
      *
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public static function withTrashed()
     {
@@ -112,7 +112,7 @@ trait SoftDeletingTrait
     /**
      * Get a new query builder that only includes soft deletes.
      *
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public static function onlyTrashed()
     {

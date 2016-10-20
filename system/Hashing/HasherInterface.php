@@ -1,6 +1,6 @@
 <?php
 
-namespace Hashing;
+namespace Nova\Hashing;
 
 interface HasherInterface
 {

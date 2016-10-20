@@ -1,11 +1,11 @@
 <?php
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Config\Config;
-use Http\Request;
-use Routing\Legacy\RouteParser;
-use Support\Str;
+use Nova\Config\Config;
+use Nova\Http\Request;
+use Nova\Routing\Legacy\RouteParser;
+use Nova\Support\Str;
 
 use InvalidArgumentException;
 
@@ -15,7 +15,7 @@ class UrlGenerator
     /**
      * The route collection.
      *
-     * @var \Routing\RouteCollection
+     * @var \Nova\Routing\RouteCollection
      */
     protected $routes;
 
@@ -68,7 +68,7 @@ class UrlGenerator
     /**
      * Create a new URL Generator instance.
      *
-     * @param  \Routing\RouteCollection  $routes
+     * @param  \Nova\Routing\RouteCollection  $routes
      * @param  \Symfony\Component\HttpFoundation\Request   $request
      * @return void
      */
@@ -219,7 +219,7 @@ class UrlGenerator
      * @param  string  $name
      * @param  mixed   $parameters
      * @param  bool  $absolute
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return string
      *
      * @throws \InvalidArgumentException
@@ -240,7 +240,7 @@ class UrlGenerator
     /**
      * Get the URL for a given route instance.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @param  array  $parameters
      * @param  bool  $absolute
      * @return string
@@ -268,7 +268,7 @@ class UrlGenerator
     /**
      * Replace the parameters on the root path.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @param  string  $domain
      * @param  array  $parameters
      * @return string
@@ -358,7 +358,7 @@ class UrlGenerator
     /**
      * Get the formatted domain for a given route.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @param  array  $parameters
      * @return string
      */
@@ -370,7 +370,7 @@ class UrlGenerator
     /**
      * Format the domain and port for the route and request.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @param  array  $parameters
      * @return string
      */
@@ -382,7 +382,7 @@ class UrlGenerator
     /**
      * Get the domain and scheme for the route.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return string
      */
     protected function getDomainAndScheme($route)
@@ -408,7 +408,7 @@ class UrlGenerator
     /**
      * Get the root of the route URL.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @param  string  $domain
      * @return string
      */
@@ -420,7 +420,7 @@ class UrlGenerator
     /**
      * Get the scheme for the given route.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return string
      */
     protected function getRouteScheme($route)
@@ -515,7 +515,7 @@ class UrlGenerator
     /**
      * Set the current request instance.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return void
      */
     public function setRequest(Request $request)

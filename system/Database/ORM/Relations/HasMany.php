@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\ORM\Relations;
+namespace Nova\Database\ORM\Relations;
 
-use Database\ORM\Collection;
+use Nova\Database\ORM\Collection;
 
 
 class HasMany extends HasOneOrMany
@@ -37,7 +37,7 @@ class HasMany extends HasOneOrMany
      * Match the eagerly loaded results to their parents.
      *
      * @param  array   $models
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @param  string  $relation
      * @return array
      */

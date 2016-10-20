@@ -1,5 +1,5 @@
 <?php
-namespace Helpers;
+namespace Nova\Helpers;
 
 class Times
 {

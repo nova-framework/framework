@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Helpers;
+namespace Nova\Helpers;
 
 /**
  * A List of reserved words for php 5.x and 7

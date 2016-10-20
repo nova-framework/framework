@@ -1,10 +1,10 @@
 <?php
 
-namespace Template;
+namespace Nova\Template;
 
-use Template\Factory;
-use Support\ServiceProvider;
-use View\Engines\EngineResolver;
+use Nova\Template\Factory;
+use Nova\Support\ServiceProvider;
+use Nova\View\Engines\EngineResolver;
 
 
 class TemplateServiceProvider extends ServiceProvider

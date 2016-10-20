@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Database\ORM\Model as BaseModel;
+use Nova\Database\ORM\Model as BaseModel;
 
 
 class Role extends BaseModel

@@ -1,6 +1,6 @@
 <?php
 
-namespace Module;
+namespace Nova\Module;
 
 
 class FileMissingException extends \Exception {}

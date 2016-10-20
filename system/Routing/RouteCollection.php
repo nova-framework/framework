@@ -1,9 +1,9 @@
 <?php
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Http\Request;
-use Http\Response;
+use Nova\Http\Request;
+use Nova\Http\Response;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -46,8 +46,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add a Route instance to the collection.
      *
-     * @param  \Routing\Route  $route
-     * @return \Routing\Route
+     * @param  \Nova\Routing\Route  $route
+     * @return \Nova\Routing\Route
      */
     public function add(Route $route)
     {
@@ -61,7 +61,7 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add the given route to the arrays of routes.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return void
      */
     protected function addToCollections($route)
@@ -78,7 +78,7 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Add the route to any look-up tables if necessary.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return void
      */
     protected function addLookups($route)
@@ -98,7 +98,7 @@ class RouteCollection implements Countable, IteratorAggregate
      * Add a route to the controller action dictionary.
      *
      * @param  array  $action
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return void
      */
     protected function addToActionList($action, $route)
@@ -111,8 +111,8 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Find the first route matching a given request.
      *
-     * @param  \Http\Request  $request
-     * @return \Routing\Route
+     * @param  \Nova\Http\Request  $request
+     * @return \Nova\Routing\Route
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -140,7 +140,7 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Determine if any routes match on another HTTP verb.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return array
      */
     protected function checkForAlternateMethods($request)
@@ -162,9 +162,9 @@ class RouteCollection implements Countable, IteratorAggregate
     /**
      * Get a route (if necessary) that responds when other available methods are present.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @param  array  $others
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      *
      * @throws \Symfony\Component\Routing\Exception\MethodNotAllowedHttpException
      */
@@ -198,9 +198,9 @@ class RouteCollection implements Countable, IteratorAggregate
      * Determine if a route in the array matches the request.
      *
      * @param  array  $routes
-     * @param  \http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @param  bool  $includingMethod
-     * @return \Routing\Route|null
+     * @return \Nova\Routing\Route|null
      */
     protected function check(array $routes, $request, $includingMethod = true)
     {
@@ -238,7 +238,7 @@ class RouteCollection implements Countable, IteratorAggregate
      * Get a route instance by its name.
      *
      * @param  string  $name
-     * @return \Routing\Route|null
+     * @return \Nova\Routing\Route|null
      */
     public function getByName($name)
     {
@@ -249,7 +249,7 @@ class RouteCollection implements Countable, IteratorAggregate
      * Get a route instance by its controller action.
      *
      * @param  string  $action
-     * @return \Routing\Route|null
+     * @return \Nova\Routing\Route|null
      */
     public function getByAction($action)
     {

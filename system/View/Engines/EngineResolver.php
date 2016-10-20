@@ -1,6 +1,6 @@
 <?php
 
-namespace View\Engines;
+namespace Nova\View\Engines;
 
 use Closure;
 
@@ -40,7 +40,7 @@ class EngineResolver
      * Resolve an Engine instance by name.
      *
      * @param  string  $engine
-     * @return \View\Engines\EngineInterface
+     * @return \Nova\View\Engines\EngineInterface
      */
     public function resolve($engine)
     {

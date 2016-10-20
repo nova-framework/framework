@@ -8,9 +8,9 @@
 
 namespace Shared\Http;
 
-use Helpers\Profiler;
-use Forensics\Profiler as QuickProfiler;
-use Http\Response;
+use Nova\Helpers\Profiler;
+use Nova\Forensics\Profiler as QuickProfiler;
+use Nova\Http\Response;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;

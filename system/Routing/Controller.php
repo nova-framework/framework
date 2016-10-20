@@ -1,9 +1,9 @@
 <?php
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Http\Response;
-use View\View;
+use Nova\Http\Response;
+use Nova\View\View;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -38,7 +38,7 @@ abstract class Controller
     /**
      * The route filterer implementation.
      *
-     * @var \Routing\RouteFiltererInterface
+     * @var \Nova\Routing\RouteFiltererInterface
      */
     protected static $filterer;
 
@@ -200,7 +200,7 @@ abstract class Controller
     /**
      * Get the route filterer implementation.
      *
-     * @return \Routing\RouteFiltererInterface
+     * @return \Nova\Routing\RouteFiltererInterface
      */
     public static function getFilterer()
     {
@@ -210,7 +210,7 @@ abstract class Controller
     /**
      * Set the route filterer implementation.
      *
-     * @param  \Routing\RouteFiltererInterface  $filterer
+     * @param  \Nova\Routing\RouteFiltererInterface  $filterer
      * @return void
      */
     public static function setFilterer(RouteFiltererInterface $filterer)

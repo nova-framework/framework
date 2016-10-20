@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 class RedisTaggedCache extends TaggedCache
 {

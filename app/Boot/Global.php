@@ -52,8 +52,8 @@ App::missing(function(NotFoundHttpException $exception)
 // Try To Register Again The Config Manager
 //--------------------------------------------------------------------------
 
-use Config\Repository as ConfigRepository;
-use Support\Facades\Facade;
+use Nova\Config\Repository as ConfigRepository;
+use Nova\Support\Facades\Facade;
 
 if(CONFIG_STORE == 'database') {
     // Get the Database Connection instance.

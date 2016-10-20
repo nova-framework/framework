@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
 
 abstract class Facade
@@ -14,7 +14,7 @@ abstract class Facade
     /**
      * The application instance being facaded.
      *
-     * @var \Foundation\Application
+     * @var \Nova\Foundation\Application
      */
     protected static $app;
 
@@ -56,7 +56,7 @@ abstract class Facade
     /**
      * Set the application instance.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Foundation\Application  $app
      * @return void
      */
     public static function setFacadeApplication($app)
@@ -67,7 +67,7 @@ abstract class Facade
     /**
      * Get the application instance.
      *
-     * @return  \Foundation\Application  $app
+     * @return  \Nova\Foundation\Application  $app
      */
     public static function getFacadeApplication()
     {

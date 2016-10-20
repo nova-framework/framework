@@ -1,27 +1,27 @@
 <?php
 
-namespace Module;
+namespace Nova\Module;
 
-use Config\Repository as Config;
-use Foundation\Application;
-use Support\Collection;
-use Support\Str;
+use Nova\Config\Repository as Config;
+use Nova\Foundation\Application;
+use Nova\Support\Collection;
+use Nova\Support\Str;
 
 
 class ModuleManager
 {
     /**
-     * @var \Foundation\Application
+     * @var \Nova\Foundation\Application
      */
     protected $app;
 
     /**
-     * @var \Config\Repository
+     * @var \Nova\Config\Repository
      */
     protected $config;
 
     /**
-     * @var \Support\Collection|null
+     * @var \Nova\Support\Collection|null
      */
     protected static $modules;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Encryption;
+namespace Nova\Encryption;
 
 use RuntimeException;
 

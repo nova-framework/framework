@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\ORM\Relations;
+namespace Nova\Database\ORM\Relations;
 
-use Database\ORM\Model;
-use Database\ORM\Builder;
-use Database\Query\Expression;
-use Database\ORM\Collection;
+use Nova\Database\ORM\Model;
+use Nova\Database\ORM\Builder;
+use Nova\Database\Query\Expression;
+use Nova\Database\ORM\Collection;
 
 use Closure;
 
@@ -15,21 +15,21 @@ abstract class Relation
     /**
      * The ORM query builder instance.
      *
-     * @var \Database\ORM\Builder
+     * @var \Nova\Database\ORM\Builder
      */
     protected $query;
 
     /**
      * The parent model instance.
      *
-     * @var \Database\ORM\Model
+     * @var \Nova\Database\ORM\Model
      */
     protected $parent;
 
     /**
      * The related model instance.
      *
-     * @var \Database\ORM\Model
+     * @var \Nova\Database\ORM\Model
      */
     protected $related;
 
@@ -43,8 +43,8 @@ abstract class Relation
     /**
      * Create a new relation instance.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @param  \Database\ORM\Model  $parent
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Model  $parent
      * @return void
      */
     public function __construct(Builder $query, Model $parent)
@@ -85,7 +85,7 @@ abstract class Relation
      * Match the eagerly loaded results to their parents.
      *
      * @param  array   $models
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @param  string  $relation
      * @return array
      */
@@ -101,7 +101,7 @@ abstract class Relation
     /**
      * Get the relationship for eager loading.
      *
-     * @return \Database\ORM\Collection
+     * @return \Nova\Database\ORM\Collection
      */
     public function getEager()
     {
@@ -134,9 +134,9 @@ abstract class Relation
     /**
      * Add the constraints for a relationship count query.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @param  \Database\ORM\Builder  $parent
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Builder  $parent
+     * @return \Nova\Database\ORM\Builder
      */
     public function getRelationCountQuery(Builder $query, Builder $parent)
     {
@@ -184,7 +184,7 @@ abstract class Relation
     /**
      * Get the underlying query for the relation.
      *
-     * @return \Database\ORM\Builder
+     * @return \Nova\Database\ORM\Builder
      */
     public function getQuery()
     {
@@ -194,7 +194,7 @@ abstract class Relation
     /**
      * Get the base query builder driving the ORM builder.
      *
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     public function getBaseQuery()
     {
@@ -204,7 +204,7 @@ abstract class Relation
     /**
      * Get the parent model of the relation.
      *
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function getParent()
     {
@@ -224,7 +224,7 @@ abstract class Relation
     /**
      * Get the related model of the relation.
      *
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function getRelated()
     {

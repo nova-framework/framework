@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 
 class TagSet
@@ -8,7 +8,7 @@ class TagSet
     /**
      * The cache store implementation.
      *
-     * @var \Cache\StoreInterface
+     * @var \Nova\Cache\StoreInterface
      */
     protected $store;
 
@@ -22,7 +22,7 @@ class TagSet
     /**
      * Create a new TagSet instance.
      *
-     * @param  \Cache\StoreInterface  $store
+     * @param  \Nova\Cache\StoreInterface  $store
      * @param  array  $names
      * @return void
      */

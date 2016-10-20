@@ -6,9 +6,9 @@
  * @version 3.0
  */
 
-namespace Pagination;
+namespace Nova\Pagination;
 
-use Pagination\Presenter;
+use Nova\Pagination\Presenter;
 
 
 class BootstrapPresenter extends Presenter

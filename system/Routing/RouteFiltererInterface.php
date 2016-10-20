@@ -1,6 +1,6 @@
 <?php
 
-namespace Routing;
+namespace Nova\Routing;
 
 
 interface RouteFiltererInterface
@@ -19,9 +19,9 @@ interface RouteFiltererInterface
      *
      * @param  string  $filter
      * @param  array  $parameters
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
-     * @param  \Http\Response|null $response
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
+     * @param  \Nova\Http\Response|null $response
      * @return mixed
      */
     public function callRouteFilter($filter, $parameters, $route, $request, $response = null);

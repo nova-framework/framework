@@ -1,9 +1,9 @@
 <?php
 
-namespace Auth\Reminders;
+namespace Nova\Auth\Reminders;
 
 use Carbon\Carbon;
-use Database\Connection;
+use Nova\Database\Connection;
 
 
 class ReminderRepository implements ReminderRepositoryInterface
@@ -11,7 +11,7 @@ class ReminderRepository implements ReminderRepositoryInterface
     /**
      * The database connection instance.
      *
-     * @var \Database\Connection
+     * @var \Nova\Database\Connection
      */
     protected $connection;
 
@@ -39,7 +39,7 @@ class ReminderRepository implements ReminderRepositoryInterface
     /**
      * Create a new reminder repository instance.
      *
-     * @param  \Database\Connection  $connection
+     * @param  \Nova\Database\Connection  $connection
      * @param  string  $table
      * @param  string  $hashKey
      * @param  int  $expires
@@ -166,7 +166,7 @@ class ReminderRepository implements ReminderRepositoryInterface
     /**
      * Begin a new database query against the table.
      *
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     protected function getTable()
     {
@@ -176,7 +176,7 @@ class ReminderRepository implements ReminderRepositoryInterface
     /**
      * Get the database connection instance.
      *
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     public function getConnection()
     {

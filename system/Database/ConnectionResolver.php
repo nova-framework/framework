@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
 
 class ConnectionResolver implements ConnectionResolverInterface
@@ -36,7 +36,7 @@ class ConnectionResolver implements ConnectionResolverInterface
      * Get a database connection instance.
      *
      * @param  string  $name
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     public function connection($name = null)
     {
@@ -49,7 +49,7 @@ class ConnectionResolver implements ConnectionResolverInterface
      * Add a connection to the resolver.
      *
      * @param  string  $name
-     * @param  \Database\Connection  $connection
+     * @param  \Nova\Database\Connection  $connection
      * @return void
      */
     public function addConnection($name, Connection $connection)

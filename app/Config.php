@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-use Config\Config;
+use Nova\Config\Config;
 
 /**
  * PREFER to be used in Database calls or storing Session data, default is 'nova_'

@@ -1,8 +1,8 @@
 <?php
 
-namespace Template;
+namespace Nova\Template;
 
-use View\View;
+use Nova\View\View;
 
 
 class Template extends View {}

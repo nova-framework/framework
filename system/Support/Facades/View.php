@@ -7,13 +7,17 @@
  * @version 3.0
  */
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
+/**
+ * @see \Nova\View\Factory
+ * @see \Nova\View\View
+ */
 class View extends Facade
-{ 
+{
 
     /**
      * Get the registered name of the component.
@@ -21,5 +25,5 @@ class View extends Facade
      * @return string
      */
     protected static function getFacadeAccessor() { return 'view'; }
-    
+
 }

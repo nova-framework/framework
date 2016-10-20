@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Database;
+namespace Nova\Database;
 
 use PDO;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Cron;
+namespace Nova\Cron;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
-use Cron\Manager;
+use Nova\Cron\Manager;
 
 
 class CronServiceProvider extends ServiceProvider

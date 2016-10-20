@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\Contracts;
+namespace Nova\Support\Contracts;
 
 
 interface JsonableInterface

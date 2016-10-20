@@ -1,6 +1,6 @@
 <?php
 
-namespace Validation;
+namespace Nova\Validation;
 
 interface PresenceVerifierInterface
 {

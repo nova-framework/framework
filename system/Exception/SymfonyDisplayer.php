@@ -1,6 +1,6 @@
 <?php
 
-namespace Exception;
+namespace Nova\Exception;
 
 use Symfony\Component\Debug\ExceptionHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;

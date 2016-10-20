@@ -1,12 +1,12 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Routing\Redirector
+ * @see \Nova\Routing\Redirector
  */
 class Redirect extends Facade
 {

@@ -6,11 +6,11 @@
  * @version 3.0
  */
 
-namespace Validation;
+namespace Nova\Validation;
 
-use Database\Connection;
-use Database\Query\Builder as QueryBuilder;
-use Validation\PresenceVerifierInterface;
+use Nova\Database\Connection;
+use Nova\Database\Query\Builder as QueryBuilder;
+use Nova\Validation\PresenceVerifierInterface;
 
 
 class DatabasePresenceVerifier implements PresenceVerifierInterface
@@ -81,7 +81,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
     /**
      * Add a "WHERE" clause to the given query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  string  $key
      * @param  string  $extraValue
      * @return void
@@ -101,7 +101,7 @@ class DatabasePresenceVerifier implements PresenceVerifierInterface
      * Get a QueryBuilder instance for the given database Table.
      *
      * @param  string  $table
-     * @return \Database\Query
+     * @return \Nova\Database\Query
      */
     protected function table($table)
     {

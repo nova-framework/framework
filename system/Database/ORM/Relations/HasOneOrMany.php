@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\ORM\Relations;
+namespace Nova\Database\ORM\Relations;
 
-use Database\ORM\Model;
-use Database\ORM\Builder;
-use Database\ORM\Collection;
+use Nova\Database\ORM\Model;
+use Nova\Database\ORM\Builder;
+use Nova\Database\ORM\Collection;
 
 abstract class HasOneOrMany extends Relation
 {
@@ -25,8 +25,8 @@ abstract class HasOneOrMany extends Relation
     /**
      * Create a new has many relationship instance.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @param  \Database\ORM\Model  $parent
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Model  $parent
      * @param  string  $foreignKey
      * @param  string  $localKey
      * @return void
@@ -66,7 +66,7 @@ abstract class HasOneOrMany extends Relation
      * Match the eagerly loaded results to their single parents.
      *
      * @param  array   $models
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @param  string  $relation
      * @return array
      */
@@ -79,7 +79,7 @@ abstract class HasOneOrMany extends Relation
      * Match the eagerly loaded results to their many parents.
      *
      * @param  array   $models
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @param  string  $relation
      * @return array
      */
@@ -92,7 +92,7 @@ abstract class HasOneOrMany extends Relation
      * Match the eagerly loaded results to their many parents.
      *
      * @param  array   $models
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @param  string  $relation
      * @param  string  $type
      * @return array
@@ -132,7 +132,7 @@ abstract class HasOneOrMany extends Relation
     /**
      * Build model dictionary keyed by the relation's foreign key.
      *
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @return array
      */
     protected function buildDictionary(Collection $results)
@@ -151,8 +151,8 @@ abstract class HasOneOrMany extends Relation
     /**
      * Attach a model instance to the parent model.
      *
-     * @param  \Database\ORM\Model  $model
-     * @return \Database\ORM\Model
+     * @param  \Nova\Database\ORM\Model  $model
+     * @return \Nova\Database\ORM\Model
      */
     public function save(Model $model)
     {
@@ -178,7 +178,7 @@ abstract class HasOneOrMany extends Relation
      * Create a new instance of the related model.
      *
      * @param  array  $attributes
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function create(array $attributes)
     {

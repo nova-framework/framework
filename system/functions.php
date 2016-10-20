@@ -7,13 +7,13 @@
  * @date April 12th, 2016
  */
 
-use Config\Config;
-use Support\Collection;
-use Support\Str;
+use Nova\Config\Config;
+use Nova\Support\Collection;
+use Nova\Support\Str;
 
-use Support\Facades\Crypt;
-use Support\Facades\Facade;
-use Support\Facades\Language;
+use Nova\Support\Facades\Crypt;
+use Nova\Support\Facades\Facade;
+use Nova\Support\Facades\Language;
 
 
 if (! defined('NOVA_SYSTEM_FUNCTIONS')) {
@@ -207,7 +207,7 @@ function app($make = null)
  * @param  string  $name
  * @param  array   $parameters
  * @param  bool  $absolute
- * @param  \Routing\Route $route
+ * @param  \Nova\Routing\Route $route
  * @return string
  */
 function route($name, $parameters = array(), $absolute = true, $route = null)
@@ -231,7 +231,7 @@ function action($name, $parameters = array())
  * Create a collection from the given value.
  *
  * @param  mixed  $value
- * @return \Support\Collection
+ * @return \Nova\Support\Collection
  */
 function collect($value = null)
 {

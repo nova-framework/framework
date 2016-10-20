@@ -1,13 +1,13 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Database\DatabaseManager
- * @see \Database\Connection
+ * @see \Nova\Database\DatabaseManager
+ * @see \Nova\Database\Connection
  */
 class DB extends Facade
 {

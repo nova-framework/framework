@@ -1,13 +1,13 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Cache\CacheManager
- * @see \Cache\Repository
+ * @see \Nova\Cache\CacheManager
+ * @see \Nova\Cache\Repository
  */
 class Cache extends Facade
 {

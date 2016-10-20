@@ -8,7 +8,7 @@
 
 namespace App\Modules\System\Controllers;
 
-use Helpers\ReCaptcha;
+use Nova\Helpers\ReCaptcha;
 
 use App\Core\BackendController;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Http;
+namespace Nova\Http;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -20,7 +20,7 @@ class Request extends SymfonyRequest
     /**
      * The Nova session store implementation.
      *
-     * @var \Session\Store
+     * @var \Nova\Session\Store
      */
     protected $sessionStore;
 
@@ -566,7 +566,7 @@ class Request extends SymfonyRequest
      * Create an Nova request from a Symfony instance.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
-     * @return \Http\Request
+     * @return \Nova\Http\Request
      */
     public static function createFromBase(SymfonyRequest $request)
     {

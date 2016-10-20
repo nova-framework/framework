@@ -1,6 +1,6 @@
 <?php
 
-namespace Cookie;
+namespace Nova\Cookie;
 
 use Symfony\Component\HttpFoundation\Cookie;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Query\Processors;
+namespace Nova\Database\Query\Processors;
 
-use Database\Query\Processor;
+use Nova\Database\Query\Processor;
 
 
 class SQLiteProcessor extends Processor {}

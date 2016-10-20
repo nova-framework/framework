@@ -6,18 +6,14 @@
  * @version 3.0
  */
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Language\Language as CoreLanguage;
+use Nova\Support\Facades\Facade;
 
-use Support\Facades\Facade;
-use Support\Facades\Cookie;
-use Support\Facades\Session;
-
-use ReflectionMethod;
-use ReflectionException;
-
-
+/**
+ * @see \Nova\Language\Language
+ * @see \Nova\Language\LanguageManager
+ */
 class Language extends Facade
 {
 
@@ -27,5 +23,5 @@ class Language extends Facade
      * @return string
      */
     protected static function getFacadeAccessor() { return 'language'; }
-    
+
 }

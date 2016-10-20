@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\ORM\Relations;
+namespace Nova\Database\ORM\Relations;
 
-use Database\ORM\Model;
-use Database\ORM\Builder;
-use Database\Query\Expression;
-use Database\ORM\Collection;
+use Nova\Database\ORM\Model;
+use Nova\Database\ORM\Builder;
+use Nova\Database\Query\Expression;
+use Nova\Database\ORM\Collection;
 
 
 class BelongsTo extends Relation
@@ -34,8 +34,8 @@ class BelongsTo extends Relation
     /**
      * Create a new belongs to relationship instance.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @param  \Database\ORM\Model  $parent
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Model  $parent
      * @param  string  $foreignKey
      * @param  string  $otherKey
      * @param  string  $relation
@@ -77,9 +77,9 @@ class BelongsTo extends Relation
     /**
      * Add the constraints for a relationship count query.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @param  \Database\ORM\Builder  $parent
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Builder  $parent
+     * @return \Nova\Database\ORM\Builder
      */
     public function getRelationCountQuery(Builder $query, Builder $parent)
     {
@@ -146,7 +146,7 @@ class BelongsTo extends Relation
      * Match the eagerly loaded results to their parents.
      *
      * @param  array   $models
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @param  string  $relation
      * @return array
      */
@@ -174,8 +174,8 @@ class BelongsTo extends Relation
     /**
      * Associate the model instance to the given parent.
      *
-     * @param  \Database\ORM\Model  $model
-     * @return \Database\ORM\Model
+     * @param  \Nova\Database\ORM\Model  $model
+     * @return \Nova\Database\ORM\Model
      */
     public function associate(Model $model)
     {
@@ -187,7 +187,7 @@ class BelongsTo extends Relation
     /**
      * Dissociate previously associated model from the given parent.
      *
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function dissociate()
     {

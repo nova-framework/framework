@@ -6,11 +6,11 @@
  * @version 3.0
  */
 
-namespace Helpers;
+namespace Nova\Helpers;
 
-use Config\Config;
-use Support\Facades\DB;
-use Support\Facades\Request as HttpRequest;
+use Nova\Config\Config;
+use Nova\Support\Facades\DB;
+use Nova\Support\Facades\Request as HttpRequest;
 
 
 class Profiler

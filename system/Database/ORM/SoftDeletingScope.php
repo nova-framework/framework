@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\ORM;
+namespace Nova\Database\ORM;
 
 
 class SoftDeletingScope implements ScopeInterface
@@ -15,7 +15,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Apply the scope to a given ORM query builder.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return void
      */
     public function apply(Builder $builder)
@@ -30,7 +30,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Remove the scope from the given ORM query builder.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return void
      */
     public function remove(Builder $builder)
@@ -51,7 +51,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Extend the query builder with the needed functions.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return void
      */
     public function extend(Builder $builder)
@@ -73,7 +73,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Get the "deleted at" column for the builder.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return string
      */
     protected function getDeletedAtColumn(Builder $builder)
@@ -88,7 +88,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Add the force delete extension to the builder.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return void
      */
     protected function addForceDelete(Builder $builder)
@@ -102,7 +102,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Add the restore extension to the builder.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return void
      */
     protected function addRestore(Builder $builder)
@@ -118,7 +118,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Add the with-trashed extension to the builder.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return void
      */
     protected function addWithTrashed(Builder $builder)
@@ -134,7 +134,7 @@ class SoftDeletingScope implements ScopeInterface
     /**
      * Add the only-trashed extension to the builder.
      *
-     * @param  \Database\ORM\Builder  $builder
+     * @param  \Nova\Database\ORM\Builder  $builder
      * @return void
      */
     protected function addOnlyTrashed(Builder $builder)

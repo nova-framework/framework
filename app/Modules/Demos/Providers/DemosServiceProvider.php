@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demos\Providers;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class DemosServiceProvider extends ServiceProvider

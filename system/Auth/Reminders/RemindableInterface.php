@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth\Reminders;
+namespace Nova\Auth\Reminders;
 
 
 interface RemindableInterface

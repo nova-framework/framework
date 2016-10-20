@@ -81,7 +81,11 @@ class Language
         $this->domain = $domain;
 
         //
-        $pathName = Inflector::classify($domain);
+        if (strtolower($domain) == 'adminlte') {
+            $pathName = 'AdminLTE';
+        } else {
+            $pathName = Inflector::classify($domain);
+        }
 
         if ($pathName == 'Nova') {
             $basePath = SYSTEMDIR;

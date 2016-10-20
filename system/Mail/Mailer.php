@@ -2,7 +2,7 @@
 
 namespace Nova\Mail;
 
-use Log\Writer;
+use Nova\Log\Writer;
 use Nova\View\Factory;
 use Nova\Events\Dispatcher;
 use Nova\Container\Container;

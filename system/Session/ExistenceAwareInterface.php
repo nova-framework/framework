@@ -1,6 +1,6 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
 
 interface ExistenceAwareInterface

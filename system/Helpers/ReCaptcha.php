@@ -6,11 +6,11 @@
  * @version 3.0
  */
 
-namespace Helpers;
+namespace Nova\Helpers;
 
-use Config\Config;
+use Nova\Config\Config;
 
-use Support\Facades\Request as HttpRequest;
+use Nova\Support\Facades\Request as HttpRequest;
 
 
 /**

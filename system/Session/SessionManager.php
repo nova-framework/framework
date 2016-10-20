@@ -1,8 +1,8 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
-use Support\Manager;
+use Nova\Support\Manager;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 
@@ -81,7 +81,7 @@ class SessionManager extends Manager
     /**
      * Get the database connection for the database driver.
      *
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     protected function getDatabaseConnection()
     {

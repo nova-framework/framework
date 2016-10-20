@@ -6,9 +6,9 @@
  * @version 3.0
  * @date April 12th, 2016
  */
-namespace Config;
+namespace Nova\Config;
 
-use Config\Config;
+use Nova\Config\Config;
 
 
 class FileLoader implements LoaderInterface

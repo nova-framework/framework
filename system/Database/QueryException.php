@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
 use PDOException;
 

@@ -6,12 +6,12 @@
  * @version 3.0
  */
 
-namespace Validation;
+namespace Nova\Validation;
 
-use Validation\DatabasePresenceVerifier;
-use Validation\Factory;
-use Validation\Translator;
-use Support\ServiceProvider;
+use Nova\Validation\DatabasePresenceVerifier;
+use Nova\Validation\Factory;
+use Nova\Validation\Translator;
+use Nova\Support\ServiceProvider;
 
 
 class ValidationServiceProvider extends ServiceProvider

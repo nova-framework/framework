@@ -1,15 +1,15 @@
 <?php
 
-namespace Template;
+namespace Nova\Template;
 
-use Config\Config;
-use Foundation\Application;
-use Language\LanguageManager;
-use Support\Contracts\ArrayableInterface as Arrayable;
-use Template\Template;
-use View\Factory as ViewFactory;
-use View\ViewFinderInterface;
-use View\View;
+use Nova\Config\Config;
+use Nova\Foundation\Application;
+use Nova\Language\LanguageManager;
+use Nova\Support\Contracts\ArrayableInterface as Arrayable;
+use Nova\Template\Template;
+use Nova\View\Factory as ViewFactory;
+use Nova\View\ViewFinderInterface;
+use Nova\View\View;
 
 
 class Factory
@@ -17,14 +17,14 @@ class Factory
     /**
      * The Application instance.
      *
-     * @var \Foundation\Application
+     * @var \Nova\Foundation\Application
      */
     protected $app;
 
     /**
      * The view finder implementation.
      *
-     * @var \View\ViewFinderInterface
+     * @var \Nova\View\ViewFinderInterface
      */
     protected $finder;
 
@@ -47,7 +47,7 @@ class Factory
      * @param string $view
      * @param array|string $data
      * @param string|null $template
-     * @return \View\View
+     * @return \Nova\View\View
      */
     public function make($view, $data = array(), $template = null)
     {
@@ -143,7 +143,7 @@ class Factory
     /**
      * Return the current View Factory instance.
      *
-     * @return \View\Factory
+     * @return \Nova\View\Factory
      */
     protected function getViewFactory()
     {

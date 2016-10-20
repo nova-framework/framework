@@ -1,8 +1,8 @@
 <?php
 
-namespace Auth;
+namespace Nova\Auth;
 
-use Hashing\HasherInterface;
+use Nova\Hashing\HasherInterface;
 
 
 class ExtendedUserProvider implements UserProviderInterface
@@ -10,7 +10,7 @@ class ExtendedUserProvider implements UserProviderInterface
     /**
      * The hasher implementation.
      *
-     * @var \Hashing\HasherInterface
+     * @var \Nova\Hashing\HasherInterface
      */
     protected $hasher;
 
@@ -38,7 +38,7 @@ class ExtendedUserProvider implements UserProviderInterface
      * Retrieve a user by their unique identifier.
      *
      * @param  mixed  $identifier
-     * @return \Auth\UserInterface|null
+     * @return \Nova\Auth\UserInterface|null
      */
     public function retrieveById($identifier)
     {
@@ -50,7 +50,7 @@ class ExtendedUserProvider implements UserProviderInterface
      *
      * @param  mixed  $identifier
      * @param  string  $token
-     * @return \Auth\UserInterface|null
+     * @return \Nova\Auth\UserInterface|null
      */
     public function retrieveByToken($identifier, $token)
     {
@@ -80,7 +80,7 @@ class ExtendedUserProvider implements UserProviderInterface
      * Retrieve a user by the given credentials.
      *
      * @param  array  $credentials
-     * @return \Auth\UserInterface|null
+     * @return \Nova\Auth\UserInterface|null
      */
     public function retrieveByCredentials(array $credentials)
     {
@@ -113,7 +113,7 @@ class ExtendedUserProvider implements UserProviderInterface
     /**
      * Create a new instance of the model.
      *
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function createModel()
     {

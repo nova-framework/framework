@@ -1,8 +1,8 @@
 <?php
 
-namespace Auth;
+namespace Nova\Auth;
 
-use Support\Contracts\ArrayableInterface;
+use Nova\Support\Contracts\ArrayableInterface;
 
 
 class GenericUser implements UserInterface, ArrayableInterface

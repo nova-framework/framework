@@ -1,12 +1,12 @@
 <?php
 
-namespace Http;
+namespace Nova\Http;
 
-use Session\Store as SessionStore;
-use Support\MessageBag;
-use Support\ViewErrorBag;
-use Support\Contracts\MessageProviderInterface;
-use Support\Str;
+use Nova\Session\Store as SessionStore;
+use Nova\Support\MessageBag;
+use Nova\Support\ViewErrorBag;
+use Nova\Support\Contracts\MessageProviderInterface;
+use Nova\Support\Str;
 
 use Symfony\Component\HttpFoundation\Cookie as SymfonyCookie;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
@@ -25,7 +25,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * The session store implementation.
      *
-     * @var \Session\Store
+     * @var \Nova\Session\Store
      */
     protected $session;
 
@@ -49,7 +49,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function with($key, $value = null)
     {
@@ -124,7 +124,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      * Flash an array of input to the session.
      *
      * @param  mixed  string
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function exceptInput()
     {
@@ -137,7 +137,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      * @param string $message
      * @param string $type
      *
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function withStatus($message, $type = 'success')
     {
@@ -151,7 +151,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Flash a container of errors to the session.
      *
-     * @param  \Support\Contracts\MessageProviderInterface|array  $provider
+     * @param  \Nova\Support\Contracts\MessageProviderInterface|array  $provider
      * @param  string  $key
      * @return $this
      */
@@ -169,8 +169,8 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Parse the given errors into an appropriate value.
      *
-     * @param  \Support\Contracts\MessageProviderInterface|array  $provider
-     * @return \Support\MessageBag
+     * @param  \Nova\Support\Contracts\MessageProviderInterface|array  $provider
+     * @return \Nova\Support\MessageBag
      */
     protected function parseErrors($provider)
     {
@@ -184,7 +184,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Get the request instance.
      *
-     * @return  \Http\Request
+     * @return  \Nova\Http\Request
      */
     public function getRequest()
     {
@@ -194,7 +194,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Set the request instance.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return void
      */
     public function setRequest(Request $request)

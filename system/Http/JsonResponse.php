@@ -1,9 +1,9 @@
 <?php
 
-namespace Http;
+namespace Nova\Http;
 
-use Http\ResponseTrait;
-use Support\Contracts\JsonableInterface;
+use Nova\Http\ResponseTrait;
+use Nova\Support\Contracts\JsonableInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse as SymfonyJsonResponse;
 

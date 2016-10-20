@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Pagination;
+namespace Nova\Pagination;
 
-use Http\Request;
-use Pagination\Paginator;
+use Nova\Http\Request;
+use Nova\Pagination\Paginator;
 
 
 class Factory
@@ -61,7 +61,7 @@ class Factory
      * @param  array  $items
      * @param  int    $total
      * @param  int|null  $perPage
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function make(array $items, $total, $perPage = null)
     {

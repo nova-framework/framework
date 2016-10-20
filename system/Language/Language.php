@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Language;
+namespace Nova\Language;
 
-use Helpers\Inflector;
-use Language\LanguageManager;
+use Nova\Helpers\Inflector;
+use Nova\Language\LanguageManager;
 
 use MessageFormatter;
 
@@ -22,7 +22,7 @@ class Language
     /**
      * The Language Manager Instance.
      *
-     * @var \Language\LanguageManager
+     * @var \Nova\Language\LanguageManager
      */
     protected $manager;
 

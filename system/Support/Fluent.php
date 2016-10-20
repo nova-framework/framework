@@ -1,9 +1,9 @@
 <?php
 
-namespace Support;
+namespace Nova\Support;
 
-use Support\Contracts\JsonableInterface;
-use Support\Contracts\ArrayableInterface;
+use Nova\Support\Contracts\JsonableInterface;
+use Nova\Support\Contracts\ArrayableInterface;
 
 use ArrayAccess;
 
@@ -129,7 +129,7 @@ class Fluent implements ArrayAccess, ArrayableInterface, JsonableInterface {
      *
      * @param  string  $method
      * @param  array   $parameters
-     * @return \Support\Fluent
+     * @return \Nova\Support\Fluent
      */
     public function __call($method, $parameters)
     {

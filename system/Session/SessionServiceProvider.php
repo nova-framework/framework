@@ -1,8 +1,8 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class SessionServiceProvider extends ServiceProvider

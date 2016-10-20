@@ -7,7 +7,7 @@
  * @version 3.0
  */
 
-use Config\Config;
+use Nova\Config\Config;
 
 
 /**

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Support;
+namespace Nova\Support;
 
 
 class MessageBag {
@@ -43,7 +43,7 @@ class MessageBag {
      *
      * @param  string  $key
      * @param  string  $message
-     * @return \Support\MessageBag
+     * @return \Nova\Support\MessageBag
      */
     public function add($key, $message)
     {
@@ -58,7 +58,7 @@ class MessageBag {
      * Merge a new array of messages into the bag.
      *
      * @param  array  $messages
-     * @return \Support\MessageBag
+     * @return \Nova\Support\MessageBag
      */
     public function merge($messages)
     {
@@ -188,7 +188,7 @@ class MessageBag {
     /**
      * Get the messages for the instance.
      *
-     * @return \Support\MessageBag
+     * @return \Nova\Support\MessageBag
      */
     public function getMessageBag()
     {
@@ -209,7 +209,7 @@ class MessageBag {
      * Set the default message format.
      *
      * @param  string  $format
-     * @return \Support\MessageBag
+     * @return \Nova\Support\MessageBag
      */
     public function setFormat($format = ':message')
     {

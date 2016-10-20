@@ -6,7 +6,7 @@
 * @version 3.0
 */
 
-namespace Helpers;
+namespace Nova\Helpers;
 
 /**
  * Set some default functions and settings.

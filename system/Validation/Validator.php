@@ -1,12 +1,12 @@
 <?php
 
-namespace Validation;
+namespace Nova\Validation;
 
-use Container\Container;
-use Support\Fluent;
-use Support\MessageBag;
-use Support\Contracts\MessageProviderInterface;
-use Support\Str;
+use Nova\Container\Container;
+use Nova\Support\Fluent;
+use Nova\Support\MessageBag;
+use Nova\Support\Contracts\MessageProviderInterface;
+use Nova\Support\Str;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -43,7 +43,7 @@ class Validator implements MessageProviderInterface
     /**
      * The message bag instance.
      *
-     * @var \Support\MessageBag
+     * @var \Nova\Support\MessageBag
      */
     protected $messages;
 
@@ -2417,7 +2417,7 @@ class Validator implements MessageProviderInterface
     /**
      * Get the message container for the validator.
      *
-     * @return \Support\MessageBag
+     * @return \Nova\Support\MessageBag
      */
     public function messages()
     {
@@ -2429,7 +2429,7 @@ class Validator implements MessageProviderInterface
     /**
      * An alternative more semantic shortcut to the message container.
      *
-     * @return \Support\MessageBag
+     * @return \Nova\Support\MessageBag
      */
     public function errors()
     {
@@ -2439,7 +2439,7 @@ class Validator implements MessageProviderInterface
     /**
      * Get the messages for the instance.
      *
-     * @return \Support\MessageBag
+     * @return \Nova\Support\MessageBag
      */
     public function getMessageBag()
     {
@@ -2449,7 +2449,7 @@ class Validator implements MessageProviderInterface
     /**
      * Set the IoC container instance.
      *
-     * @param  \Container\Container  $container
+     * @param  \Nova\Container\Container  $container
      * @return void
      */
     public function setContainer(Container $container)

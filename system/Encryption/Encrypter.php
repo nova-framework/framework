@@ -6,11 +6,11 @@
  * @version 3.0
  */
 
-namespace Encryption;
+namespace Nova\Encryption;
 
-use Support\Str;
-use Encryption\EncryptException;
-use Encryption\DecryptException;
+use Nova\Support\Str;
+use Nova\Encryption\EncryptException;
+use Nova\Encryption\DecryptException;
 
 use RuntimeException;
 

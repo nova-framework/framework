@@ -1,6 +1,6 @@
 <?php
 
-namespace Support;
+namespace Nova\Support;
 
 
 class NamespacedItemResolver

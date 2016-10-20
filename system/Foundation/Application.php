@@ -1,28 +1,28 @@
 <?php
 
-namespace Foundation;
+namespace Nova\Foundation;
 
 use Closure;
 
 use Stack\Builder;
 
-use Http\Request;
-use Http\Response;
-use Config\LoaderManager;
-use Container\Container;
-use Filesystem\Filesystem;
-use Support\Facades\Facade;
-use Events\EventServiceProvider;
-use Routing\RoutingServiceProvider;
-use Exception\ExceptionServiceProvider;
-use Config\FileEnvironmentVariablesLoader;
+use Nova\Http\Request;
+use Nova\Http\Response;
+use Nova\Config\LoaderManager;
+use Nova\Container\Container;
+use Nova\Filesystem\Filesystem;
+use Nova\Support\Facades\Facade;
+use Nova\Events\EventServiceProvider;
+use Nova\Routing\RoutingServiceProvider;
+use Nova\Exception\ExceptionServiceProvider;
+use Nova\Config\FileEnvironmentVariablesLoader;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 
-use Support\Contracts\ResponsePreparerInterface;
+use Nova\Support\Contracts\ResponsePreparerInterface;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -106,12 +106,12 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      *
      * @var string
      */
-    protected static $requestClass = 'Http\Request';
+    protected static $requestClass = 'Nova\Http\Request';
 
     /**
      * Create a new Nova application instance.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return void
      */
     public function __construct(Request $request = null)
@@ -126,7 +126,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Create a new request instance from the request class.
      *
-     * @return \Http\Request
+     * @return \Nova\Http\Request
      */
     protected function createNewRequest()
     {
@@ -136,14 +136,14 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Register the basic bindings into the container.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return void
      */
     protected function registerBaseBindings($request)
     {
         $this->instance('request', $request);
 
-        $this->instance('Container\Container', $this);
+        $this->instance('Nova\Container\Container', $this);
     }
 
     /**
@@ -289,9 +289,9 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Force register a service provider with the application.
      *
-     * @param  \Support\ServiceProvider|string  $provider
+     * @param  \Nova\Support\ServiceProvider|string  $provider
      * @param  array  $options
-     * @return \Support\ServiceProvider
+     * @return \Nova\Support\ServiceProvider
      */
     public function forceRegister($provider, $options = array())
     {
@@ -301,10 +301,10 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Register a service provider with the application.
      *
-     * @param  \Support\ServiceProvider|string  $provider
+     * @param  \Nova\Support\ServiceProvider|string  $provider
      * @param  array  $options
      * @param  bool   $force
-     * @return \Support\ServiceProvider
+     * @return \Nova\Support\ServiceProvider
      */
     public function register($provider, $options = array(), $force = false)
     {
@@ -332,8 +332,8 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Get the registered service provider instance if it exists.
      *
-     * @param  \Support\ServiceProvider|string  $provider
-     * @return \Support\ServiceProvider|null
+     * @param  \Nova\Support\ServiceProvider|string  $provider
+     * @return \Nova\Support\ServiceProvider|null
      */
     public function getRegistered($provider)
     {
@@ -351,7 +351,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
      * Resolve a service provider instance from the class name.
      *
      * @param  string  $provider
-     * @return \Support\ServiceProvider
+     * @return \Nova\Support\ServiceProvider
      */
     public function resolveProviderClass($provider)
     {
@@ -361,7 +361,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Mark the given provider as registered.
      *
-     * @param  \Support\ServiceProvider
+     * @param  \Nova\Support\ServiceProvider
      * @return void
      */
     protected function markAsRegistered($provider)
@@ -629,9 +629,9 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
         $sessionReject = $this->bound('session.reject') ? $this['session.reject'] : null;
 
         $client = (new Builder)
-                    ->push('Cookie\Guard', $this['encrypter'])
-                    ->push('Cookie\Queue', $this['cookie'])
-                    ->push('Session\Middleware', $this['session'], $sessionReject);
+                    ->push('Nova\Cookie\Guard', $this['encrypter'])
+                    ->push('Nova\Cookie\Queue', $this['cookie'])
+                    ->push('Nova\Session\Middleware', $this['session'], $sessionReject);
 
         $this->mergeCustomMiddlewares($client);
 
@@ -726,7 +726,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Handle the given request and get the response.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function dispatch(Request $request)
@@ -761,7 +761,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Refresh the bound request instance in the container.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return void
      */
     protected function refreshRequest(Request $request)
@@ -801,8 +801,8 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Prepare the request by injecting any services.
      *
-     * @param  \Http\Request  $request
-     * @return \Http\Request
+     * @param  \Nova\Http\Request  $request
+     * @return \Nova\Http\Request
      */
     public function prepareRequest(Request $request)
     {
@@ -930,7 +930,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Get the configuration loader instance.
      *
-     * @return \Config\LoaderInterface
+     * @return \Nova\Config\LoaderInterface
      */
     public function getConfigLoader()
     {
@@ -940,7 +940,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Get the environment variables loader instance.
      *
-     * @return \Config\EnvironmentVariablesLoaderInterface
+     * @return \Nova\Config\EnvironmentVariablesLoaderInterface
      */
     public function getEnvironmentVariablesLoader()
     {
@@ -950,7 +950,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     /**
      * Get the service provider repository instance.
      *
-     * @return \Foundation\ProviderRepository
+     * @return \Nova\Foundation\ProviderRepository
      */
     public function getProviderRepository()
     {
@@ -1063,32 +1063,32 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
     public function registerCoreContainerAliases()
     {
         $aliases = array(
-            'app'            => 'Foundation\Application',
-            'auth'           => 'Auth\AuthManager',
-            'cache'          => 'Cache\CacheManager',
-            'cache.store'    => 'Cache\Repository',
-            'auth.reminder.repository' => 'Auth\Reminders\ReminderRepositoryInterface',
-            'config'         => 'Config\Repository',
-            'cookie'         => 'Cookie\CookieJar',
-            'encrypter'      => 'Encryption\Encrypter',
-            'db'             => 'Database\DatabaseManager',
-            'events'         => 'Events\Dispatcher',
-            'files'          => 'Filesystem\Filesystem',
-            'hash'           => 'Hashing\HasherInterface',
-            'language'       => 'Language\LanguageManager',
-            'log'            => 'Log\Writer',
-            'mailer'         => 'Mail\Mailer',
-            'paginator'      => 'Pagination\Environment',
-            'auth.reminder'  => 'Auth\Reminders\PasswordBroker',
-            'redirect'       => 'Routing\Redirector',
-            'request'        => 'Http\Request',
-            'router'         => 'Routing\Router',
-            'session'        => 'Session\SessionManager',
-            'session.store'  => 'Session\Store',
-            'url'            => 'Routing\UrlGenerator',
-            'validator'      => 'Validation\Factory',
-            'template'       => 'Template\Factory',
-            'view'           => 'View\Factory',
+            'app'            => 'Nova\Foundation\Application',
+            'auth'           => 'Nova\Auth\AuthManager',
+            'cache'          => 'Nova\Cache\CacheManager',
+            'cache.store'    => 'Nova\Cache\Repository',
+            'auth.reminder.repository' => 'Nova\Auth\Reminders\ReminderRepositoryInterface',
+            'config'         => 'Nova\Config\Repository',
+            'cookie'         => 'Nova\Cookie\CookieJar',
+            'encrypter'      => 'Nova\Encryption\Encrypter',
+            'db'             => 'Nova\Database\DatabaseManager',
+            'events'         => 'Nova\Events\Dispatcher',
+            'files'          => 'Nova\Filesystem\Filesystem',
+            'hash'           => 'Nova\Hashing\HasherInterface',
+            'language'       => 'Nova\Language\LanguageManager',
+            'log'            => 'Nova\Log\Writer',
+            'mailer'         => 'Nova\Mail\Mailer',
+            'paginator'      => 'Nova\Pagination\Environment',
+            'auth.reminder'  => 'Nova\Auth\Reminders\PasswordBroker',
+            'redirect'       => 'Nova\Routing\Redirector',
+            'request'        => 'Nova\Http\Request',
+            'router'         => 'Nova\Routing\Router',
+            'session'        => 'Nova\Session\SessionManager',
+            'session.store'  => 'Nova\Session\Store',
+            'url'            => 'Nova\Routing\UrlGenerator',
+            'validator'      => 'Nova\Validation\Factory',
+            'template'       => 'Nova\Template\Factory',
+            'view'           => 'Nova\View\Factory',
         );
 
         foreach ($aliases as $key => $alias) {

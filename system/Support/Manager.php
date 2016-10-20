@@ -1,6 +1,6 @@
 <?php
 
-namespace Support;
+namespace Nova\Support;
 
 use Closure;
 
@@ -10,7 +10,7 @@ abstract class Manager
     /**
      * The application instance.
      *
-     * @var \Foundation\Application
+     * @var \Nova\Foundation\Application
      */
     protected $app;
 
@@ -31,7 +31,7 @@ abstract class Manager
     /**
      * Create a new manager instance.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Foundation\Application  $app
      * @return void
      */
     public function __construct($app)
@@ -93,7 +93,7 @@ abstract class Manager
      *
      * @param  string   $driver
      * @param  Closure  $callback
-     * @return \Support\Manager|static
+     * @return \Nova\Support\Manager|static
      */
     public function extend($driver, Closure $callback)
     {

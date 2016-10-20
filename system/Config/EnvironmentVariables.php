@@ -1,6 +1,6 @@
 <?php
 
-namespace Config;
+namespace Nova\Config;
 
 /**
  * PHP $_ENV loader for protecting sensitive configuration options.
@@ -12,7 +12,7 @@ class EnvironmentVariables
     /**
      * The environment loader implementation.
      *
-     * @var \Config\EnvironmentLoaderInterface  $loader
+     * @var \Nova\Config\EnvironmentLoaderInterface  $loader
      */
     protected $loader;
 

@@ -1,23 +1,23 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Http\Request as HttpRequest;
-use Support\Facades\Facade;
+use Nova\Http\Request as HttpRequest;
+use Nova\Support\Facades\Facade;
 
 use ReflectionMethod;
 use ReflectionException;
 
 
 /**
- * @see \Http\Request
+ * @see \Nova\Http\Request
  */
 class Request extends Facade
 {
     /**
      * Return the Application instance.
      *
-     * @return \Http\Request
+     * @return \Nova\Http\Request
      */
     public static function instance()
     {

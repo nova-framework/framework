@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\Connections;
+namespace Nova\Database\Connections;
 
-use Database\Connection;
-use Database\Query\Grammars\SQLiteGrammar as QueryGrammar;
-use Database\Query\Processors\SQLiteProcessor as QueryProcessor;
+use Nova\Database\Connection;
+use Nova\Database\Query\Grammars\SQLiteGrammar as QueryGrammar;
+use Nova\Database\Query\Processors\SQLiteProcessor as QueryProcessor;
 
 
 class SQLiteConnection extends Connection
@@ -13,7 +13,7 @@ class SQLiteConnection extends Connection
     /**
      * Get the default query grammar instance.
      *
-     * @return \Database\Query\Grammars\SQLiteGrammar
+     * @return \Nova\Database\Query\Grammars\SQLiteGrammar
      */
     protected function getDefaultQueryGrammar()
     {
@@ -23,7 +23,7 @@ class SQLiteConnection extends Connection
     /**
      * Get the default post processor instance.
      *
-     * @return \Database\Query\Processors\Processor
+     * @return \Nova\Database\Query\Processors\Processor
      */
     protected function getDefaultPostProcessor()
     {

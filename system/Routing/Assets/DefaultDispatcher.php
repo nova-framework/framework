@@ -1,11 +1,11 @@
 <?php
 
-namespace Routing\Assets;
+namespace Nova\Routing\Assets;
 
-use Config\Config;
-use Http\Response;
-use Routing\Assets\DispatcherInterface;
-use Support\Str;
+use Nova\Config\Config;
+use Nova\Http\Response;
+use Nova\Routing\Assets\DispatcherInterface;
+use Nova\Support\Str;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;

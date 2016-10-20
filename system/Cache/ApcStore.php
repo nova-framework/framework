@@ -1,13 +1,13 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 class ApcStore extends TaggableStore implements StoreInterface
 {
     /**
      * The APC wrapper instance.
      *
-     * @var \Cache\ApcWrapper
+     * @var \Nova\Cache\ApcWrapper
      */
     protected $apc;
 
@@ -21,7 +21,7 @@ class ApcStore extends TaggableStore implements StoreInterface
     /**
      * Create a new APC store.
      *
-     * @param  \Cache\ApcWrapper  $apc
+     * @param  \Nova\Cache\ApcWrapper  $apc
      * @param  string  $prefix
      * @return void
      */

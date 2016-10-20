@@ -1,12 +1,12 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \App\Modules\Cron\Services\Manager
+ * @see \Nova\Cron\Manager
  */
 class Cron extends Facade
 {

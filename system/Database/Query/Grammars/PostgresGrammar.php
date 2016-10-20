@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Database\Query\Grammars;
+namespace Nova\Database\Query\Grammars;
 
-use Database\Query\Builder;
-use Database\Query\Grammar;
+use Nova\Database\Query\Builder;
+use Nova\Database\Query\Grammar;
 
 
 class PostgresGrammar extends Grammar
@@ -29,7 +29,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile the lock into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  bool|string  $value
      * @return string
      */
@@ -43,7 +43,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile an update statement into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
@@ -80,7 +80,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile the "from" clause for an update with a join.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return string
      */
     protected function compileUpdateFrom(Builder $query)
@@ -99,7 +99,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile the additional where clauses for updates with joins.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return string
      */
     protected function compileUpdateWheres(Builder $query)
@@ -120,7 +120,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile the "join" clauses for an update.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return string
      */
     protected function compileUpdateJoinWheres(Builder $query)
@@ -139,7 +139,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile an insert and get ID statement into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  array   $values
      * @param  string  $sequence
      * @return string
@@ -154,7 +154,7 @@ class PostgresGrammar extends Grammar
     /**
      * Compile a truncate table statement into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return array
      */
     public function compileTruncate(Builder $query)

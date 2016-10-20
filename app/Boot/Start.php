@@ -13,13 +13,13 @@
 require ROOTDIR .'vendor/autoload.php';
 
 // The used Classes.
-use Config\Config;
-use Config\Repository as ConfigRepository;
-use Foundation\AliasLoader;
-use Foundation\Application;
-use Http\Request;
-use Http\RequestProcessor;
-use Support\Facades\Facade;
+use Nova\Config\Config;
+use Nova\Config\Repository as ConfigRepository;
+use Nova\Foundation\AliasLoader;
+use Nova\Foundation\Application;
+use Nova\Http\Request;
+use Nova\Http\RequestProcessor;
+use Nova\Support\Facades\Facade;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 

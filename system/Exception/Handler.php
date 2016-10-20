@@ -1,13 +1,13 @@
 <?php
 
-namespace Exception;
+namespace Nova\Exception;
 
-use Exception\PlainDisplayer;
-use Exception\WhoopsDisplayer;
-use Exception\ExceptionDisplayerInterface;
+use Nova\Exception\PlainDisplayer;
+use Nova\Exception\WhoopsDisplayer;
+use Nova\Exception\ExceptionDisplayerInterface;
 
-use Support\Contracts\ResponsePreparerInterface;
-use Support\Facades\Redirect;
+use Nova\Support\Contracts\ResponsePreparerInterface;
+use Nova\Support\Facades\Redirect;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Debug\Exception\FatalErrorException as FatalError;
@@ -24,21 +24,21 @@ class Handler
     /**
      * The response preparer implementation.
      *
-     * @var \Support\Contracts\ResponsePreparerInterface
+     * @var \Nova\Support\Contracts\ResponsePreparerInterface
      */
     protected $responsePreparer;
 
     /**
      * The plain exception displayer.
      *
-     * @var \Exception\ExceptionDisplayerInterface
+     * @var \Nova\Exception\ExceptionDisplayerInterface
      */
     protected $plainDisplayer;
 
     /**
      * The debug exception displayer.
      *
-     * @var \Exception\ExceptionDisplayerInterface
+     * @var \Nova\Exception\ExceptionDisplayerInterface
      */
     protected $debugDisplayer;
 
@@ -66,7 +66,7 @@ class Handler
     /**
      * Create a new error handler instance.
      *
-     * @param  \Support\Contracts\ResponsePreparerInterface  $responsePreparer
+     * @param  \Nova\Support\Contracts\ResponsePreparerInterface  $responsePreparer
      * @param  \Exception\ExceptionDisplayerInterface  $plainDisplayer
      * @param  \Exception\ExceptionDisplayerInterface  $debugDisplayer
      * @param  bool  $debug
@@ -341,7 +341,7 @@ class Handler
      * Prepare the given response.
      *
      * @param  mixed  $response
-     * @return \Http\Response
+     * @return \Nova\Http\Response
      */
     protected function prepareResponse($response)
     {

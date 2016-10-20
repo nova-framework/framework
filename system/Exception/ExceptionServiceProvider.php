@@ -1,11 +1,11 @@
 <?php
 
-namespace Exception;
+namespace Nova\Exception;
 
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\JsonResponseHandler;
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 class ExceptionServiceProvider extends ServiceProvider
 {

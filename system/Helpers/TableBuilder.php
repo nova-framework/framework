@@ -6,9 +6,9 @@
  * @version 3.0
  */
 
-namespace Helpers;
+namespace Nova\Helpers;
 
-use Support\Facades\DB;
+use Nova\Support\Facades\DB;
 
 use PDO;
 
@@ -21,7 +21,7 @@ use PDO;
  *
  * Example of usage:
  *
- * // After namespace: use Helpers\TableBuilder;
+ * // After namespace: use Nova\Helpers\TableBuilder;
  *
  * // Model or Controller method
  * $tableBuilder = new tableBuilder;

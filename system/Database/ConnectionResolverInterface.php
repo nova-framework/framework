@@ -1,6 +1,6 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
 interface ConnectionResolverInterface
 {
@@ -8,7 +8,7 @@ interface ConnectionResolverInterface
      * Get a Database Connection instance.
      *
      * @param  string  $name
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     public function connection($name = null);
 

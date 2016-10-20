@@ -1,6 +1,6 @@
 <?php
 
-namespace Cookie;
+namespace Nova\Cookie;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -17,7 +17,7 @@ class Queue implements HttpKernelInterface
     /**
      * The cookie jar instance.
      *
-     * @var \Cookie\CookieJar
+     * @var \Nova\Cookie\CookieJar
      */
     protected $cookies;
 

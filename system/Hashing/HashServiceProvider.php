@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Hashing;
+namespace Nova\Hashing;
 
-use Hashing\BcryptHasher;
-use Support\ServiceProvider;
+use Nova\Hashing\BcryptHasher;
+use Nova\Support\ServiceProvider;
 
 
 class HashServiceProvider extends ServiceProvider

@@ -1,8 +1,8 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
-use Cookie\CookieJar;
+use Nova\Cookie\CookieJar;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,7 +12,7 @@ class CookieSessionHandler implements \SessionHandlerInterface
     /**
      * The cookie jar instance.
      *
-     * @var \Cookie\CookieJar
+     * @var \Nova\Cookie\CookieJar
      */
     protected $cookie;
 

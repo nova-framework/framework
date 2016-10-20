@@ -1,18 +1,18 @@
 <?php
 
-namespace Database;
+namespace Nova\Database;
 
-use Container\Container;
+use Nova\Container\Container;
 
-use Database\Connections\MySqlConnection;
-use Database\Connections\SQLiteConnection;
-use Database\Connections\PostgresConnection;
-use Database\Connections\SqlServerConnection;
+use Nova\Database\Connections\MySqlConnection;
+use Nova\Database\Connections\SQLiteConnection;
+use Nova\Database\Connections\PostgresConnection;
+use Nova\Database\Connections\SqlServerConnection;
 
-use Database\Connectors\MySqlConnector;
-use Database\Connectors\SQLiteConnector;
-use Database\Connectors\PostgresConnector;
-use Database\Connectors\SqlServerConnector;
+use Nova\Database\Connectors\MySqlConnector;
+use Nova\Database\Connectors\SQLiteConnector;
+use Nova\Database\Connectors\PostgresConnector;
+use Nova\Database\Connectors\SqlServerConnector;
 
 use PDO;
 
@@ -22,14 +22,14 @@ class ConnectionFactory
     /**
      * The IoC container instance.
      *
-     * @var \Container\Container
+     * @var \Nova\Container\Container
      */
     protected $container;
 
     /**
      * Create a new connection factory instance.
      *
-     * @param  \Container\Container  $container
+     * @param  \Nova\Container\Container  $container
      * @return void
      */
     public function __construct(Container $container)
@@ -42,7 +42,7 @@ class ConnectionFactory
      *
      * @param  array   $config
      * @param  string  $name
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     public function make(array $config, $name = null)
     {
@@ -59,7 +59,7 @@ class ConnectionFactory
      * Create a single database connection instance.
      *
      * @param  array  $config
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     protected function createSingleConnection(array $config)
     {
@@ -72,7 +72,7 @@ class ConnectionFactory
      * Create a single database connection instance.
      *
      * @param  array  $config
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     protected function createReadWriteConnection(array $config)
     {
@@ -164,7 +164,7 @@ class ConnectionFactory
      * Create a connector instance based on the configuration.
      *
      * @param  array  $config
-     * @return \Database\Connectors\ConnectorInterface
+     * @return \Nova\Database\Connectors\ConnectorInterface
      *
      * @throws \InvalidArgumentException
      */
@@ -204,7 +204,7 @@ class ConnectionFactory
      * @param  string   $database
      * @param  string   $prefix
      * @param  array    $config
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      *
      * @throws \InvalidArgumentException
      */

@@ -1,8 +1,8 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
-use Filesystem\Filesystem;
+use Nova\Filesystem\Filesystem;
 
 use Symfony\Component\Finder\Finder;
 
@@ -12,7 +12,7 @@ class FileSessionHandler implements \SessionHandlerInterface
     /**
      * The filesystem instance.
      *
-     * @var \Filesystem\Filesystem
+     * @var \Nova\Filesystem\Filesystem
      */
     protected $files;
 
@@ -26,7 +26,7 @@ class FileSessionHandler implements \SessionHandlerInterface
     /**
      * Create a new file driven handler instance.
      *
-     * @param  \Filesystem\Filesystem  $files
+     * @param  \Nova\Filesystem\Filesystem  $files
      * @param  string  $path
      * @return void
      */

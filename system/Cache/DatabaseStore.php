@@ -1,9 +1,9 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
-use Database\Connection;
-use Encryption\Encrypter;
+use Nova\Database\Connection;
+use Nova\Encryption\Encrypter;
 
 
 class DatabaseStore implements StoreInterface
@@ -11,14 +11,14 @@ class DatabaseStore implements StoreInterface
     /**
      * The database connection instance.
      *
-     * @var \Database\Connection
+     * @var \Nova\Database\Connection
      */
     protected $connection;
 
     /**
      * The encrypter instance.
      *
-     * @var \Encryption\Encrypter
+     * @var \Nova\Encryption\Encrypter
      */
     protected $encrypter;
 
@@ -39,7 +39,7 @@ class DatabaseStore implements StoreInterface
     /**
      * Create a new database store.
      *
-     * @param  \Database\Connection  $connection
+     * @param  \Nova\Database\Connection  $connection
      * @param  \Encryption\Encrypter  $encrypter
      * @param  string  $table
      * @param  string  $prefix
@@ -182,7 +182,7 @@ class DatabaseStore implements StoreInterface
     /**
      * Get a query builder for the cache table.
      *
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     protected function table()
     {
@@ -192,7 +192,7 @@ class DatabaseStore implements StoreInterface
     /**
      * Get the underlying database connection.
      *
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     public function getConnection()
     {

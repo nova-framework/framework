@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail\Transport;
+namespace Nova\Mail\Transport;
 
 use Swift_Transport;
 use Swift_Mime_Message;

@@ -7,11 +7,11 @@
  * @date April 12th, 2016
  */
 
-namespace Config;
+namespace Nova\Config;
 
-use Database\Connection;
-use Config\DatabaseLoader;
-use Config\FileLoader;
+use Nova\Database\Connection;
+use Nova\Config\DatabaseLoader;
+use Nova\Config\FileLoader;
 
 
 class LoaderManager implements LoaderInterface
@@ -19,14 +19,14 @@ class LoaderManager implements LoaderInterface
     /**
      * The File Loader implementation.
      *
-     * @var \Config\LoaderInterface
+     * @var \Nova\Config\LoaderInterface
      */
     protected $fileLoader;
 
     /**
      * The Database Loader implementation.
      *
-     * @var \Config\LoaderInterface
+     * @var \Nova\Config\LoaderInterface
      */
     protected $dbLoader;
 
@@ -76,7 +76,7 @@ class LoaderManager implements LoaderInterface
     /**
      * Set the Database Connection instance.
      *
-     * @var \Database\Connection
+     * @var \Nova\Database\Connection
      */
     public function setConnection(Connection $db)
     {
@@ -97,7 +97,7 @@ class LoaderManager implements LoaderInterface
     /**
      * Get the database connection instance.
      *
-     * @return \Database\Connection|null
+     * @return \Nova\Database\Connection|null
      */
     public function getDBLoader()
     {

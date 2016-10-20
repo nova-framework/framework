@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Database\Query\Grammars;
+namespace Nova\Database\Query\Grammars;
 
-use Database\Query\Builder;
-use Database\Query\Grammar;
+use Nova\Database\Query\Builder;
+use Nova\Database\Query\Grammar;
 
 
 class MySqlGrammar extends Grammar
@@ -37,7 +37,7 @@ class MySqlGrammar extends Grammar
     /**
      * Compile a select query into SQL.
      *
-     * @param  \Database\Query\Builder
+     * @param  \Nova\Database\Query\Builder
      * @return string
      */
     public function compileSelect(Builder $query)
@@ -67,7 +67,7 @@ class MySqlGrammar extends Grammar
     /**
      * Compile the lock into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  bool|string  $value
      * @return string
      */
@@ -81,7 +81,7 @@ class MySqlGrammar extends Grammar
     /**
      * Compile an update statement into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
@@ -103,7 +103,7 @@ class MySqlGrammar extends Grammar
     /**
      * Compile a delete statement into SQL.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @return string
      */
     public function compileDelete(Builder $query)

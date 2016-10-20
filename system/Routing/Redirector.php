@@ -1,9 +1,9 @@
 <?php
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Http\RedirectResponse;
-use Session\Store as SessionStore;
+use Nova\Http\RedirectResponse;
+use Nova\Session\Store as SessionStore;
 
 
 class Redirector
@@ -11,21 +11,21 @@ class Redirector
     /**
      * The URL generator instance.
      *
-     * @var \Routing\UrlGenerator
+     * @var \Nova\Routing\UrlGenerator
      */
     protected $generator;
 
     /**
      * The session store instance.
      *
-     * @var \Session\Store
+     * @var \Nova\Session\Store
      */
     protected $session;
 
     /**
      * Create a new Redirector instance.
      *
-     * @param  \Routing\UrlGenerator  $generator
+     * @param  \Nova\Routing\UrlGenerator  $generator
      * @return void
      */
     public function __construct(UrlGenerator $generator)
@@ -37,7 +37,7 @@ class Redirector
      * Create a new redirect response to the "home" route.
      *
      * @param  int  $status
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function home($status = 302)
     {
@@ -49,7 +49,7 @@ class Redirector
      *
      * @param  int    $status
      * @param  array  $headers
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function back($status = 302, $headers = array())
     {
@@ -63,7 +63,7 @@ class Redirector
      *
      * @param  int    $status
      * @param  array  $headers
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function refresh($status = 302, $headers = array())
     {
@@ -77,7 +77,7 @@ class Redirector
      * @param  int     $status
      * @param  array   $headers
      * @param  bool    $secure
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function guest($path, $status = 302, $headers = array(), $secure = null)
     {
@@ -93,7 +93,7 @@ class Redirector
      * @param  int     $status
      * @param  array   $headers
      * @param  bool    $secure
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function intended($default = '/', $status = 302, $headers = array(), $secure = null)
     {
@@ -109,7 +109,7 @@ class Redirector
      * @param  int     $status
      * @param  array   $headers
      * @param  bool    $secure
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function to($path, $status = 302, $headers = array(), $secure = null)
     {
@@ -124,7 +124,7 @@ class Redirector
      * @param  string  $path
      * @param  int     $status
      * @param  array   $headers
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function away($path, $status = 302, $headers = array())
     {
@@ -137,7 +137,7 @@ class Redirector
      * @param  string  $path
      * @param  int     $status
      * @param  array   $headers
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function secure($path, $status = 302, $headers = array())
     {
@@ -151,7 +151,7 @@ class Redirector
      * @param  array   $parameters
      * @param  int     $status
      * @param  array   $headers
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function route($route, $parameters = array(), $status = 302, $headers = array())
     {
@@ -167,7 +167,7 @@ class Redirector
      * @param  array   $parameters
      * @param  int     $status
      * @param  array   $headers
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     public function action($action, $parameters = array(), $status = 302, $headers = array())
     {
@@ -182,7 +182,7 @@ class Redirector
      * @param  string  $path
      * @param  int     $status
      * @param  array   $headers
-     * @return \Http\RedirectResponse
+     * @return \Nova\Http\RedirectResponse
      */
     protected function createRedirect($path, $status, $headers)
     {
@@ -200,7 +200,7 @@ class Redirector
     /**
      * Get the URL generator instance.
      *
-     * @return  \Routing\UrlGenerator
+     * @return \Nova\Routing\UrlGenerator
      */
     public function getUrlGenerator()
     {

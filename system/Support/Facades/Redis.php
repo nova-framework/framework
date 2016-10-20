@@ -1,10 +1,10 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
 
 /**
- * @see \Redis\Database
+ * @see \Nova\Redis\Database
  */
 class Redis extends Facade
 {

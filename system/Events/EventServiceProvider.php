@@ -1,8 +1,8 @@
 <?php
 
-namespace Events;
+namespace Nova\Events;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class EventServiceProvider extends ServiceProvider

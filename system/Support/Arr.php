@@ -1,8 +1,8 @@
 <?php
 
-namespace Support;
+namespace Nova\Support;
 
-use Support\Traits\MacroableTrait;
+use Nova\Support\Traits\MacroableTrait;
 
 use Closure;
 

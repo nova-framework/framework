@@ -1,8 +1,8 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
-use Database\Connection;
+use Nova\Database\Connection;
 
 
 class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAwareInterface
@@ -10,7 +10,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     /**
      * The database connection instance.
      *
-     * @var \Database\Connection
+     * @var \Nova\Database\Connection
      */
     protected $connection;
 
@@ -31,7 +31,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     /**
      * Create a new database session handler instance.
      *
-     * @param  \Database\Connection  $connection
+     * @param  \Nova\Database\Connection  $connection
      * @param  string  $table
      * @return void
      */
@@ -112,7 +112,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     /**
      * Get a fresh query builder instance for the table.
      *
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     protected function getQuery()
     {

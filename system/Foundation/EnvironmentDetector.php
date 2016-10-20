@@ -1,6 +1,6 @@
 <?php
 
-namespace Foundation;
+namespace Nova\Foundation;
 
 use Closure;
 

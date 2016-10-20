@@ -1,19 +1,19 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Pagination\Factory
+ * @see \Nova\Pagination\Factory
  */
 class Paginator extends Facade
 {
     /**
      * Return the Application instance.
      *
-     * @return \Pagination\Factory
+     * @return \Nova\Pagination\Factory
      */
     public static function instance()
     {

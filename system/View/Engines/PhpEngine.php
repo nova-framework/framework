@@ -1,8 +1,8 @@
 <?php
 
-namespace View\Engines;
+namespace Nova\View\Engines;
 
-use View\Engines\EngineInterface;
+use Nova\View\Engines\EngineInterface;
 
 use Exception;
 

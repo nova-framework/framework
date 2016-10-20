@@ -1,12 +1,12 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 /**
- * @see \Template\Factory
- * @see \View\View
+ * @see \Nova\Template\Factory
+ * @see \Nova\Template\Template
  */
 class Template extends Facade
 {

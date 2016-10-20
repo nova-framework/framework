@@ -1,17 +1,17 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Cookie\CookieJar
+ * @see \Nova\Cookie\CookieJar
  */
 class Cookie extends Facade
 {
     const FIVEYEARS = 2628000;
-    
+
     /**
      * Determine if a cookie exists on the request.
      *

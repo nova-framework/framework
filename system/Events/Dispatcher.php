@@ -1,15 +1,15 @@
 <?php
 
-namespace Events;
+namespace Nova\Events;
 
-use Container\Container;
+use Nova\Container\Container;
 
 class Dispatcher
 {
     /**
      * The IoC container instance.
      *
-     * @var \Container\Container
+     * @var \Nova\Container\Container
      */
     protected $container;
 
@@ -44,7 +44,7 @@ class Dispatcher
     /**
      * Create a new event dispatcher instance.
      *
-     * @param  \Container\Container  $container
+     * @param  \Nova\Container\Container  $container
      * @return void
      */
     public function __construct(Container $container = null)

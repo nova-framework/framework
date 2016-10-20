@@ -1,13 +1,13 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Auth\AuthManager
- * @see \Auth\Guard
+ * @see \Nova\Auth\AuthManager
+ * @see \Nova\Auth\Guard
  */
 class Auth extends Facade
 {

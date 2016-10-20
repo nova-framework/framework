@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\ORM\Relations;
+namespace Nova\Database\ORM\Relations;
 
-use Database\ORM\Model;
-use Database\ORM\Builder;
-use Database\Query\Expression;
-use Database\ORM\Collection;
-use Database\ORM\ModelNotFoundException;
+use Nova\Database\ORM\Model;
+use Nova\Database\ORM\Builder;
+use Nova\Database\Query\Expression;
+use Nova\Database\ORM\Collection;
+use Nova\Database\ORM\ModelNotFoundException;
 
 
 class HasManyThrough extends Relation
@@ -14,7 +14,7 @@ class HasManyThrough extends Relation
     /**
      * The distance parent model instance.
      *
-     * @var \Database\ORM\Model
+     * @var \Nova\Database\ORM\Model
      */
     protected $farParent;
 
@@ -35,9 +35,9 @@ class HasManyThrough extends Relation
     /**
      * Create a new has many relationship instance.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @param  \Database\ORM\Model  $farParent
-     * @param  \Database\ORM\Model  $parent
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Model  $farParent
+     * @param  \Nova\Database\ORM\Model  $parent
      * @param  string  $firstKey
      * @param  string  $secondKey
      * @return void
@@ -70,9 +70,9 @@ class HasManyThrough extends Relation
     /**
      * Add the constraints for a relationship count query.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @param  \Database\ORM\Builder  $parent
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Builder  $parent
+     * @return \Nova\Database\ORM\Builder
      */
     public function getRelationCountQuery(Builder $query, Builder $parent)
     {
@@ -90,7 +90,7 @@ class HasManyThrough extends Relation
     /**
      * Set the join clause on the query.
      *
-     * @param  \Database\ORM\Builder|null  $query
+     * @param  \Nova\Database\ORM\Builder|null  $query
      * @return void
      */
     protected function setJoin(Builder $query = null)
@@ -135,7 +135,7 @@ class HasManyThrough extends Relation
      * Match the eagerly loaded results to their parents.
      *
      * @param  array   $models
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @param  string  $relation
      * @return array
      */
@@ -159,7 +159,7 @@ class HasManyThrough extends Relation
     /**
      * Build model dictionary keyed by the relation's foreign key.
      *
-     * @param  \Database\ORM\Collection  $results
+     * @param  \Nova\Database\ORM\Collection  $results
      * @return array
      */
     protected function buildDictionary(Collection $results)
@@ -189,7 +189,7 @@ class HasManyThrough extends Relation
      * Execute the query and get the first result.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Model|static|null
+     * @return \Nova\Database\ORM\Model|static|null
      */
     public function first($columns = array('*'))
     {
@@ -202,7 +202,7 @@ class HasManyThrough extends Relation
      * Execute the query and get the first result or throw an exception.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Model|static
+     * @return \Nova\Database\ORM\Model|static
      *
      * @throws \Database\ORM\ModelNotFoundException
      */
@@ -217,7 +217,7 @@ class HasManyThrough extends Relation
      * Execute the query as a "select" statement.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Collection
+     * @return \Nova\Database\ORM\Collection
      */
     public function get($columns = array('*'))
     {
@@ -236,7 +236,7 @@ class HasManyThrough extends Relation
      * Set the select clause for the relation query.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Relations\BelongsToMany
+     * @return \Nova\Database\ORM\Relations\BelongsToMany
      */
     protected function getSelectColumns(array $columns = array('*'))
     {
@@ -252,7 +252,7 @@ class HasManyThrough extends Relation
      *
      * @param  int    $perPage
      * @param  array  $columns
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function paginate($perPage = null, $columns = array('*'))
     {

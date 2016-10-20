@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Helpers;
+namespace Nova\Helpers;
 
 /**
  * Contains methods for converting number formats and getting a percentage.
@@ -83,7 +83,7 @@ class Number
 
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
-    
+
     /**
      * returns number with ordinal prefix
      * @param  numeric number

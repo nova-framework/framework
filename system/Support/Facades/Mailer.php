@@ -1,12 +1,12 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Mail\Mailer
+ * @see \Nova\Mail\Mailer
  */
 class Mailer extends Facade
 {

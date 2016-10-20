@@ -1,13 +1,13 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Http\JsonResponse;
-use Http\Response as HttpResponse;
-use Support\Contracts\ArrayableInterface;
-use Support\Facades\Template;
-use Support\Facades\View;
-use Support\Str;
+use Nova\Http\JsonResponse;
+use Nova\Http\Response as HttpResponse;
+use Nova\Support\Contracts\ArrayableInterface;
+use Nova\Support\Facades\Template;
+use Nova\Support\Facades\View;
+use Nova\Support\Str;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -29,7 +29,7 @@ class Response
      * @param  string  $content
      * @param  int     $status
      * @param  array   $headers
-     * @return \Http\Response
+     * @return \Nova\Http\Response
      */
     public static function make($content = '', $status = 200, array $headers = array())
     {
@@ -43,7 +43,7 @@ class Response
      * @param  array   $data
      * @param  int     $status
      * @param  array   $headers
-     * @return \Http\Response
+     * @return \Nova\Http\Response
      */
     public static function view($view, $data = array(), $status = 200, array $headers = array())
     {
@@ -57,7 +57,7 @@ class Response
      * @param  int    $status
      * @param  array  $headers
      * @param  int    $options
-     * @return \Http\JsonResponse
+     * @return \Nova\Http\JsonResponse
      */
     public static function json($data = array(), $status = 200, array $headers = array(), $options = 0)
     {

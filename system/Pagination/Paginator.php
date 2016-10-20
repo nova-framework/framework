@@ -6,14 +6,14 @@
  * @version 3.0
  */
 
-namespace Pagination;
+namespace Nova\Pagination;
 
-use Pagination\Factory;
-use Pagination\BootstrapPresenter;
-use Pagination\Presenter;
-use Support\Collection;
-use Support\Contracts\JsonableInterface;
-use Support\Contracts\ArrayableInterface;
+use Nova\Pagination\Factory;
+use Nova\Pagination\BootstrapPresenter;
+use Nova\Pagination\Presenter;
+use Nova\Support\Collection;
+use Nova\Support\Contracts\JsonableInterface;
+use Nova\Support\Contracts\ArrayableInterface;
 
 use Input;
 use Request;
@@ -29,14 +29,14 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * The pagination factory.
      *
-     * @var \Pagination\Factory
+     * @var \Nova\Pagination\Factory
      */
     protected $factory;
 
     /**
      * The Presenter instance.
      *
-     * @var \Pagination\Presenter
+     * @var \Nova\Pagination\Presenter
      */
     protected $presenter;
 
@@ -129,7 +129,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * Create a new Paginator instance.
      *
-     * @param  \Pagination\Factory  $factory
+     * @param  \Nova\Pagination\Factory  $factory
      * @param  array     $items
      * @param  int       $total
      * @param  int|null  $perPage
@@ -287,7 +287,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
      *
      * @param  string  $key
      * @param  string  $value
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function appends($key, $value = null)
     {
@@ -302,7 +302,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
      * Add an array of query string values.
      *
      * @param  array  $keys
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     protected function appendArray(array $keys)
     {
@@ -318,7 +318,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
      *
      * @param  string  $key
      * @param  string  $value
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function addQuery($key, $value)
     {
@@ -395,7 +395,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * Get a collection instance containing the items.
      *
-     * @return \Support\Collection
+     * @return \Nova\Support\Collection
      */
     public function getCollection()
     {
@@ -447,7 +447,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * Get the pagination factory.
      *
-     * @return \Pagination\Factory
+     * @return \Nova\Pagination\Factory
      */
     public function getFactory()
     {
@@ -457,7 +457,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
     /**
      * Get a Presenter instance.
      *
-     * @return \Pagination\Presenter
+     * @return \Nova\Pagination\Presenter
      */
     public function getPresenter()
     {
@@ -472,7 +472,7 @@ class Paginator implements ArrayableInterface, ArrayAccess, Countable, IteratorA
      * Set the Presenter instance.
      *
      * @param \Pagination\Presenter $presenter
-     * @return \Pagination\Paginator
+     * @return \Nova\Pagination\Paginator
      */
     public function setPresenter(Presenter $presenter)
     {

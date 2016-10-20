@@ -1,6 +1,6 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
 use Cache\Repository;
 
@@ -10,7 +10,7 @@ class CacheBasedSessionHandler implements \SessionHandlerInterface
     /**
      * The cache repository instance.
      *
-     * @var \Cache\Repository
+     * @var \Nova\Cache\Repository
      */
     protected $cache;
 
@@ -24,7 +24,7 @@ class CacheBasedSessionHandler implements \SessionHandlerInterface
     /**
      * Create a new cache driven handler instance.
      *
-     * @param  \Cache\Repository  $cache
+     * @param  \Nova\Cache\Repository  $cache
      * @param  int  $minutes
      * @return void
      */
@@ -85,7 +85,7 @@ class CacheBasedSessionHandler implements \SessionHandlerInterface
     /**
      * Get the underlying cache repository.
      *
-     * @return \Cache\Repository
+     * @return \Nova\Cache\Repository
      */
     public function getCache()
     {

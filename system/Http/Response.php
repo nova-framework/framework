@@ -1,10 +1,10 @@
 <?php
 
-namespace Http;
+namespace Nova\Http;
 
-use Http\ResponseTrait;
-use Support\Contracts\JsonableInterface;
-use Support\Contracts\RenderableInterface;
+use Nova\Http\ResponseTrait;
+use Nova\Support\Contracts\JsonableInterface;
+use Nova\Support\Contracts\RenderableInterface;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 

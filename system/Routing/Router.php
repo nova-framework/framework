@@ -6,17 +6,17 @@
  * @version 3.0
  */
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Container\Container;
-use Events\Dispatcher;
-use Http\Request;
-use Http\Response;
-use Routing\ControllerDispatcher;
-use Routing\ControllerInspector;
-use Routing\RouteCollection;
-use Routing\RouteFiltererInterface;
-use Routing\Route;
+use Nova\Container\Container;
+use Nova\Events\Dispatcher;
+use Nova\Http\Request;
+use Nova\Http\Response;
+use Nova\Routing\ControllerDispatcher;
+use Nova\Routing\ControllerInspector;
+use Nova\Routing\RouteCollection;
+use Nova\Routing\RouteFiltererInterface;
+use Nova\Routing\Route;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -34,21 +34,21 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * The event dispatcher instance.
      *
-     * @var \Events\Dispatcher
+     * @var \Nova\Events\Dispatcher
      */
     protected $events;
 
     /**
      * The IoC container instance.
      *
-     * @var \Container\Container
+     * @var \Nova\Container\Container
      */
     protected $container;
 
     /**
      * The route collection instance.
      *
-     * @var \Routing\RouteCollection
+     * @var \Nova\Routing\RouteCollection
      */
     protected $routes;
 
@@ -69,21 +69,21 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * The controller dispatcher instance.
      *
-     * @var \Routing\ControllerDispatcher
+     * @var \Nova\Routing\ControllerDispatcher
      */
     protected $controllerDispatcher;
 
     /**
      * The asset file dispatcher instance.
      *
-     * @var \Routing\AssetFileDispatcher
+     * @var \Nova\Routing\AssetFileDispatcher
      */
     protected $fileDispatcher;
 
     /**
      * The controller inspector instance.
      *
-     * @var \Routing\ControllerInspector
+     * @var \Nova\Routing\ControllerInspector
      */
     protected $inspector;
 
@@ -166,7 +166,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function get($route, $action)
     {
@@ -178,7 +178,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function post($route, $action)
     {
@@ -190,7 +190,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function put($route, $action)
     {
@@ -202,7 +202,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function patch($route, $action)
     {
@@ -214,7 +214,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function delete($route, $action)
     {
@@ -226,7 +226,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function options($route, $action)
     {
@@ -238,7 +238,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function any($route, $action)
     {
@@ -253,7 +253,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  array|string  $methods
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function match($methods, $route, $action)
     {
@@ -527,7 +527,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addResourceIndex($name, $base, $controller, $options)
     {
@@ -545,7 +545,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addResourceCreate($name, $base, $controller, $options)
     {
@@ -563,7 +563,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addResourceStore($name, $base, $controller, $options)
     {
@@ -581,7 +581,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addResourceShow($name, $base, $controller, $options)
     {
@@ -599,7 +599,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addResourceEdit($name, $base, $controller, $options)
     {
@@ -633,7 +633,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addPutResourceUpdate($name, $base, $controller, $options)
     {
@@ -666,7 +666,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  string  $base
      * @param  string  $controller
      * @param  array   $options
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addResourceDestroy($name, $base, $controller, $options)
     {
@@ -794,7 +794,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  array|string  $methods
      * @param  string  $uri
      * @param  \Closure|array|string  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addRoute($methods, $route, $action = null)
     {
@@ -810,7 +810,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  array|string  $methods
      * @param  string  $uri
      * @param  mixed   $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function createRoute($methods, $uri, $action)
     {
@@ -838,7 +838,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  array|string  $methods
      * @param  string  $uri
      * @param  mixed   $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function newRoute($methods, $uri, $action)
     {
@@ -861,8 +861,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Add the necessary where clauses to the route based on its initial registration.
      *
-     * @param  \Routing\Route  $route
-     * @return \Routing\Route
+     * @param  \Nova\Routing\Route  $route
+     * @return \Nova\Routing\Route
      */
     protected function addWhereClausesToRoute($route)
     {
@@ -876,7 +876,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Merge the group stack with the controller action.
      *
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return void
      */
     protected function mergeController($route)
@@ -891,7 +891,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @param  mixed  $response
-     * @return \Http\Response
+     * @return \Nova\Http\Response
      */
     protected function prepareResponse($request, $response)
     {
@@ -1007,7 +1007,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Dispatch the request to a route and return the response.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return mixed
      */
     public function dispatchToRoute(Request $request)
@@ -1040,7 +1040,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Dispatch the request to a asset file and return the response.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return mixed
      */
     public function dispatchToFile(Request $request)
@@ -1053,8 +1053,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Find the route matching a given request.
      *
-     * @param  \Http\Request  $request
-     * @return \Routing\Route
+     * @param  \Nova\Http\Request  $request
+     * @return \Nova\Routing\Route
      */
     protected function findRoute(Request $request)
     {
@@ -1066,8 +1066,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Substitute the route bindings onto the route.
      *
-     * @param  \Routing\Route  $route
-     * @return \Routing\Route
+     * @param  \Nova\Routing\Route  $route
+     * @return \Nova\Routing\Route
      */
     protected function substituteBindings($route)
     {
@@ -1085,7 +1085,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $key
      * @param  string  $value
-     * @param  \Routing\Route  $route
+     * @param  \Nova\Routing\Route  $route
      * @return mixed
      */
     protected function performBinding($key, $value, $route)
@@ -1290,8 +1290,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * Call the given filter with the request and response.
      *
      * @param  string  $filter
-     * @param  \Http\Request   $request
-     * @param  \Http\Response  $response
+     * @param  \Nova\Http\Request   $request
+     * @param  \Nova\Http\Response  $response
      * @return mixed
      */
     protected function callFilter($filter, $request, $response = null)
@@ -1304,8 +1304,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Call the given route's before filters.
      *
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @return mixed
      */
     public function callRouteBefore($route, $request)
@@ -1318,8 +1318,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Call the pattern based filters for the request.
      *
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @return mixed|null
      */
     protected function callPatternFilters($route, $request)
@@ -1334,7 +1334,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Find the patterned filters matching a request.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return array
      */
     public function findPatternFilters($request)
@@ -1401,8 +1401,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Call the given route's before (non-pattern) filters.
      *
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @return mixed
      */
     protected function callAttachedBefores($route, $request)
@@ -1417,9 +1417,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Call the given route's before filters.
      *
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
-     * @param  \Http\Response  $response
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
+     * @param  \Nova\Http\Response  $response
      * @return mixed
      */
     public function callRouteAfter($route, $request, $response)
@@ -1434,8 +1434,8 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      *
      * @param  string  $filter
      * @param  array  $parameters
-     * @param  \Routing\Route  $route
-     * @param  \Http\Request  $request
+     * @param  \Nova\Routing\Route  $route
+     * @param  \Nova\Http\Request  $request
      * @return mixed
      */
     public function callRouteFilter($filter, $parameters, $route, $request, $response = null)
@@ -1531,7 +1531,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Get the currently dispatched route instance.
      *
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function current()
     {
@@ -1632,7 +1632,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Get the request currently being dispatched.
      *
-     * @return \Http\Request
+     * @return \Nova\Http\Request
      */
     public function getCurrentRequest()
     {
@@ -1642,7 +1642,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Return the available Routes.
      *
-     * @return \Routing\RouteCollection
+     * @return \Nova\Routing\RouteCollection
      */
     public function getRoutes()
     {
@@ -1652,7 +1652,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Get the controller dispatcher instance.
      *
-     * @return \Routing\ControllerDispatcher
+     * @return \Nova\Routing\ControllerDispatcher
      */
     public function getControllerDispatcher()
     {
@@ -1666,7 +1666,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Set the controller dispatcher instance.
      *
-     * @param  \Routing\ControllerDispatcher  $dispatcher
+     * @param  \Nova\Routing\ControllerDispatcher  $dispatcher
      * @return void
      */
     public function setControllerDispatcher(ControllerDispatcher $dispatcher)
@@ -1677,19 +1677,19 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     /**
      * Get the controller dispatcher instance.
      *
-     * @return \Routing\ControllerDispatcher
+     * @return \Nova\Routing\ControllerDispatcher
      */
     public function getFileDispatcher()
     {
         if (isset($this->fileDispatcher)) return $this->fileDispatcher;
 
-        return $this->fileDispatcher = $this->container->make('Routing\Assets\DispatcherInterface');
+        return $this->fileDispatcher = $this->container->make('Nova\Routing\Assets\DispatcherInterface');
     }
 
     /**
      * Get a Controller Inspector instance.
      *
-     * @return \Routing\ControllerInspector
+     * @return \Nova\Routing\ControllerInspector
      */
     public function getInspector()
     {
@@ -1702,7 +1702,7 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @param  int   $type
      * @param  bool  $catch
-     * @return \Http\Response
+     * @return \Nova\Http\Response
      */
     public function handle(SymfonyRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {

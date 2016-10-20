@@ -1,8 +1,8 @@
 <?php
 
-namespace Redis;
+namespace Nova\Redis;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class RedisServiceProvider extends ServiceProvider

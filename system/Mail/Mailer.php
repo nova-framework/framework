@@ -1,11 +1,11 @@
 <?php
 
-namespace Mail;
+namespace Nova\Mail;
 
 use Log\Writer;
-use View\Factory;
-use Events\Dispatcher;
-use Container\Container;
+use Nova\View\Factory;
+use Nova\Events\Dispatcher;
+use Nova\Container\Container;
 
 use Swift_Mailer;
 use Swift_Message;
@@ -18,7 +18,7 @@ class Mailer
     /**
      * The view factory instance.
      *
-     * @var \View\Factory
+     * @var \Nova\View\Factory
      */
     protected $views;
 
@@ -32,7 +32,7 @@ class Mailer
     /**
      * The event dispatcher instance.
      *
-     * @var \Events\Dispatcher
+     * @var \Nova\Events\Dispatcher
      */
     protected $events;
 
@@ -46,14 +46,14 @@ class Mailer
     /**
      * The log writer instance.
      *
-     * @var \Log\Writer
+     * @var \Nova\Log\Writer
      */
     protected $logger;
 
     /**
      * The IoC container instance.
      *
-     * @var \Container\Container
+     * @var \Nova\Container\Container
      */
     protected $container;
 
@@ -81,9 +81,9 @@ class Mailer
     /**
      * Create a new Mailer instance.
      *
-     * @param  \View\Factory  $views
+     * @param  \Nova\View\Factory  $views
      * @param  \Swift_Mailer  $swift
-     * @param  \Events\Dispatcher  $events
+     * @param  \Nova\Events\Dispatcher  $events
      * @return void
      */
     public function __construct(Factory $views, Swift_Mailer $swift, Dispatcher $events = null)
@@ -150,7 +150,7 @@ class Mailer
     /**
      * Add the content to a given message.
      *
-     * @param  \Mail\Message  $message
+     * @param  \Nova\Mail\Message  $message
      * @param  string  $view
      * @param  string  $plain
      * @param  array   $data
@@ -234,7 +234,7 @@ class Mailer
      * Call the provided message builder.
      *
      * @param  \Closure|string  $callback
-     * @param  \Mail\Message  $message
+     * @param  \Nova\Mail\Message  $message
      * @return mixed
      *
      * @throws \InvalidArgumentException
@@ -274,7 +274,7 @@ class Mailer
      *
      * @param  string  $view
      * @param  array   $data
-     * @return \View\View
+     * @return \Nova\View\View
      */
     protected function getView($view, $data)
     {
@@ -305,7 +305,7 @@ class Mailer
     /**
      * Get the view factory instance.
      *
-     * @return \View\Factory
+     * @return \Nova\View\Factory
      */
     public function getFactory()
     {
@@ -359,7 +359,7 @@ class Mailer
     /**
      * Set the IoC container instance.
      *
-     * @param  \Container\Container  $container
+     * @param  \Nova\Container\Container  $container
      * @return void
      */
     public function setContainer(Container $container)

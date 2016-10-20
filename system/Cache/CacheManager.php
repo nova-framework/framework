@@ -1,16 +1,16 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 use Closure;
-use Support\Manager;
+use Nova\Support\Manager;
 
 class CacheManager extends Manager
 {
     /**
      * Create an instance of the APC cache driver.
      *
-     * @return \Cache\ApcStore
+     * @return \Nova\Cache\ApcStore
      */
     protected function createApcDriver()
     {
@@ -20,7 +20,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the array cache driver.
      *
-     * @return \Cache\ArrayStore
+     * @return \Nova\Cache\ArrayStore
      */
     protected function createArrayDriver()
     {
@@ -30,7 +30,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the file cache driver.
      *
-     * @return \Cache\FileStore
+     * @return \Nova\Cache\FileStore
      */
     protected function createFileDriver()
     {
@@ -42,7 +42,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the Memcached cache driver.
      *
-     * @return \Cache\MemcachedStore
+     * @return \Nova\Cache\MemcachedStore
      */
     protected function createMemcachedDriver()
     {
@@ -56,7 +56,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the Null cache driver.
      *
-     * @return \Cache\NullStore
+     * @return \Nova\Cache\NullStore
      */
     protected function createNullDriver()
     {
@@ -66,7 +66,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the WinCache cache driver.
      *
-     * @return \Cache\WinCacheStore
+     * @return \Nova\Cache\WinCacheStore
      */
     protected function createWincacheDriver()
     {
@@ -76,7 +76,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the XCache cache driver.
      *
-     * @return \Cache\WinCacheStore
+     * @return \Nova\Cache\WinCacheStore
      */
     protected function createXcacheDriver()
     {
@@ -86,7 +86,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the Redis cache driver.
      *
-     * @return \Cache\RedisStore
+     * @return \Nova\Cache\RedisStore
      */
     protected function createRedisDriver()
     {
@@ -98,7 +98,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the database cache driver.
      *
-     * @return \Cache\DatabaseStore
+     * @return \Nova\Cache\DatabaseStore
      */
     protected function createDatabaseDriver()
     {
@@ -119,7 +119,7 @@ class CacheManager extends Manager
     /**
      * Get the database connection for the database driver.
      *
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     protected function getDatabaseConnection()
     {
@@ -152,8 +152,8 @@ class CacheManager extends Manager
     /**
      * Create a new cache repository with the given implementation.
      *
-     * @param  \Cache\StoreInterface  $store
-     * @return \Cache\Repository
+     * @param  \Nova\Cache\StoreInterface  $store
+     * @return \Nova\Cache\Repository
      */
     protected function repository(StoreInterface $store)
     {

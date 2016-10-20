@@ -1,7 +1,7 @@
-<?php namespace Log;
+<?php namespace Nova\Log;
 
 use Monolog\Logger;
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 class LogServiceProvider extends ServiceProvider {
 

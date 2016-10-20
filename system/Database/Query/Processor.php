@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Query;
+namespace Nova\Database\Query;
 
-use Database\Query\Builder;
+use Nova\Database\Query\Builder;
 
 
 class Processor
@@ -11,7 +11,7 @@ class Processor
     /**
      * Process the results of a "select" query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  array  $results
      * @return array
      */
@@ -23,7 +23,7 @@ class Processor
     /**
      * Process an  "insert get ID" query.
      *
-     * @param  \Database\Query\Builder  $query
+     * @param  \Nova\Database\Query\Builder  $query
      * @param  string  $sql
      * @param  array   $values
      * @param  string  $sequence

@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\Traits;
+namespace Nova\Support\Traits;
 
 
 trait MacroableTrait

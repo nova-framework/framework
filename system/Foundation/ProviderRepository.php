@@ -1,15 +1,15 @@
 <?php
 
-namespace Foundation;
+namespace Nova\Foundation;
 
-use Filesystem\Filesystem;
+use Nova\Filesystem\Filesystem;
 
 class ProviderRepository
 {
     /**
      * The filesystem instance.
      *
-     * @var \Filesystem\Filesystem
+     * @var \Nova\Filesystem\Filesystem
      */
     protected $files;
 
@@ -24,7 +24,7 @@ class ProviderRepository
     /**
      * Create a new service repository instance.
      *
-     * @param  \Filesystem\Filesystem  $files
+     * @param  \Nova\Filesystem\Filesystem  $files
      * @param  string  $manifestPath
      * @return void
      */
@@ -38,7 +38,7 @@ class ProviderRepository
     /**
      * Register the application service providers.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Foundation\Application  $app
      * @param  array  $providers
      * @return void
      */
@@ -80,7 +80,7 @@ class ProviderRepository
     /**
      * Register the load events for the given provider.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Foundation\Application  $app
      * @param  string  $provider
      * @param  array  $events
      * @return void
@@ -98,7 +98,7 @@ class ProviderRepository
     /**
      * Compile the application manifest file.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Foundation\Application  $app
      * @param  array  $providers
      * @return array
      */
@@ -138,9 +138,9 @@ class ProviderRepository
     /**
      * Create a new provider instance.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Foundation\Application  $app
      * @param  string  $provider
-     * @return \Support\ServiceProvider
+     * @return \Nova\Support\ServiceProvider
      */
     public function createProvider(Application $app, $provider)
     {

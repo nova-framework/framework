@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 
 abstract class TaggableStore
@@ -9,7 +9,7 @@ abstract class TaggableStore
      * Begin executing a new tags operation.
      *
      * @param  string  $name
-     * @return \Cache\TaggedCache
+     * @return \Nova\Cache\TaggedCache
      */
     public function section($name)
     {
@@ -20,7 +20,7 @@ abstract class TaggableStore
      * Begin executing a new tags operation.
      *
      * @param  array|mixed  $names
-     * @return \Cache\TaggedCache
+     * @return \Nova\Cache\TaggedCache
      */
     public function tags($names)
     {

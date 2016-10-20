@@ -1,6 +1,6 @@
 <?php
 
-namespace Session;
+namespace Nova\Session;
 
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ class Middleware implements HttpKernelInterface
     /**
      * The session manager.
      *
-     * @var \Session\SessionManager
+     * @var \Nova\Session\SessionManager
      */
     protected $manager;
 

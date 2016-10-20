@@ -4,9 +4,9 @@ namespace App\Modules\Files\Controllers\Admin;
 
 use App\Core\BackendController;
 
-use Http\Request;
-use Routing\Asssets\DefaultDispatcher as FileDispatcher;
-use Routing\Route;
+use Nova\Http\Request;
+use Nova\Routing\Asssets\DefaultDispatcher as FileDispatcher;
+use Nova\Routing\Route;
 
 use App;
 use Auth;
@@ -19,14 +19,14 @@ class Files extends BackendController
     /**
      * The IoC container instance.
      *
-     * @var \Container\Container
+     * @var \Nova\Container\Container
      */
     protected $container;
 
     /**
      * The File Dispatcher instance.
      *
-     * @var \Routing\FileDispatcher
+     * @var \Nova\Routing\FileDispatcher
      */
     private $fileDispatcher;
 
@@ -122,7 +122,7 @@ class Files extends BackendController
     /**
      * Return a Files Dispatcher instance
      *
-     * @return \Routing\FileDispatcher
+     * @return \Nova\Routing\FileDispatcher
      */
     protected function getFileDispatcher()
     {

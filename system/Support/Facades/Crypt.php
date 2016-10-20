@@ -1,12 +1,12 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
-use Support\Facades\Facade;
+use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Encryption\Encrypter
+ * @see \Nova\Encryption\Encrypter
  */
 class Crypt extends Facade
 {

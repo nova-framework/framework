@@ -1,6 +1,6 @@
 <?php
 
-namespace Cron;
+namespace Nova\Cron;
 
 
 abstract class Adapter

@@ -1,6 +1,6 @@
 <?php
 
-namespace Http;
+namespace Nova\Http;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;

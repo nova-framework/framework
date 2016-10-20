@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\ORM;
+namespace Nova\Database\ORM;
 
 
 class ModelNotFoundException extends \RuntimeException

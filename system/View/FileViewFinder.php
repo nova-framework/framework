@@ -1,9 +1,9 @@
 <?php
 
-namespace View;
+namespace Nova\View;
 
-use Filesystem\Filesystem;
-use View\ViewFinderInterface;
+use Nova\Filesystem\Filesystem;
+use Nova\View\ViewFinderInterface;
 
 
 class FileViewFinder implements ViewFinderInterface
@@ -11,7 +11,7 @@ class FileViewFinder implements ViewFinderInterface
     /**
      * The Filesystem instance.
      *
-     * @var \Filesystem\Filesystem
+     * @var \Nova\Filesystem\Filesystem
      */
     protected $files;
 
@@ -33,7 +33,7 @@ class FileViewFinder implements ViewFinderInterface
     /**
      * Create a new file view loader instance.
      *
-     * @param  \Filesystem\Filesystem  $files
+     * @param  \Nova\Filesystem\Filesystem  $files
      * @param  array  $extensions
      * @return void
      */

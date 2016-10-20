@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Support;
+namespace Nova\Support;
 
 
 abstract class ServiceProvider
@@ -14,7 +14,7 @@ abstract class ServiceProvider
     /**
      * The Application instance.
      *
-     * @var \Foundation\Application
+     * @var \Nova\Foundation\Application
      */
     protected $app;
 
@@ -29,7 +29,7 @@ abstract class ServiceProvider
     /**
      * Create a new service provider instance.
      *
-     * @param  \Foundation\Application     $app
+     * @param  \Nova\Foundation\Application     $app
      * @return void
      */
     public function __construct($app)

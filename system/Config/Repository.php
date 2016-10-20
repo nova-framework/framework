@@ -7,7 +7,7 @@
  * @date April 12th, 2016
  */
 
-namespace Config;
+namespace Nova\Config;
 
 
 class Repository implements \ArrayAccess
@@ -15,7 +15,7 @@ class Repository implements \ArrayAccess
     /**
      * The loader implementation.
      *
-     * @var \Config\LoaderInterface
+     * @var \Nova\Config\LoaderInterface
      */
     protected $loader;
 
@@ -136,7 +136,7 @@ class Repository implements \ArrayAccess
     /**
      * Get the loader manager instance.
      *
-     * @return \Config\LoaderInterface
+     * @return \Nova\Config\LoaderInterface
      */
     public function getLoader()
     {

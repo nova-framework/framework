@@ -8,7 +8,7 @@
  * @version 3.0
  */
 
-namespace Validation;
+namespace Nova\Validation;
 
 use Symfony\Component\Translation\TranslatorInterface;
 

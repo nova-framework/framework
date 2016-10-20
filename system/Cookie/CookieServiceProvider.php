@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Cookie;
+namespace Nova\Cookie;
 
-use Cookie\CookieJar;
-use Support\ServiceProvider;
+use Nova\Cookie\CookieJar;
+use Nova\Support\ServiceProvider;
 
 
 class CookieServiceProvider extends ServiceProvider

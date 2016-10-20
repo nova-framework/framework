@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Query\Processors;
+namespace Nova\Database\Query\Processors;
 
-use Database\Query\Builder;
-use Database\Query\Processor;
+use Nova\Database\Query\Builder;
+use Nova\Database\Query\Processor;
 
 
 class SqlServerProcessor extends Processor {}

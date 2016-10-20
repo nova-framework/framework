@@ -1,9 +1,9 @@
 <?php
 
-namespace Language;
+namespace Nova\Language;
 
-use Language\LanguageManager;
-use Support\ServiceProvider;
+use Nova\Language\LanguageManager;
+use Nova\Support\ServiceProvider;
 
 
 class LanguageServiceProvider extends ServiceProvider
@@ -15,23 +15,23 @@ class LanguageServiceProvider extends ServiceProvider
      */
     protected $defer = true;
 
-    
+
     /**
      * Bootstrap the application events.
      *
      * @return void
      */
-    public function boot() 
+    public function boot()
     {
         $config = $this->app['config'];
 
         $session = $this->app['session'];
-       
+
         $request = $this->app['request'];
-        
+
         //
         $cookie = $request->cookie(PREFIX .'language', null);
-       
+
         if ($session->has('language')) {
             // The Language was already setup on Session.
         } else if (! is_null($cookie)) {
@@ -42,11 +42,11 @@ class LanguageServiceProvider extends ServiceProvider
 
         // Always retrieve the current locale from Session.
         $locale = $session->get('language');
-        
+
         // Setup the locale on the Language Service.
-        $this->app['language']->setLocale($locale); 
+        $this->app['language']->setLocale($locale);
     }
-    
+
     /**
      * Register the Service Provider.
      *

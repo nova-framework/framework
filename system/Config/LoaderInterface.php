@@ -7,7 +7,7 @@
  * @date April 12th, 2016
  */
 
-namespace Config;
+namespace Nova\Config;
 
 
 interface LoaderInterface

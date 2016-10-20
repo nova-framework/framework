@@ -1,6 +1,6 @@
 <?php
 
-namespace Hashing;
+namespace Nova\Hashing;
 
 
 class BcryptHasher implements HasherInterface

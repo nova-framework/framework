@@ -1,9 +1,9 @@
 <?php
 
-namespace Support\Facades;
+namespace Nova\Support\Facades;
 
 /**
- * @see \Filesystem\Filesystem
+ * @see \Nova\Filesystem\Filesystem
  */
 class File extends Facade
 {

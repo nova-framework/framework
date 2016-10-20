@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Encryption;
+namespace Nova\Encryption;
 
-use Encryption\Encrypter;
-use Support\ServiceProvider;
+use Nova\Encryption\Encrypter;
+use Nova\Support\ServiceProvider;
 
 
 class EncryptionServiceProvider extends ServiceProvider

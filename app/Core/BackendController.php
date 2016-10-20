@@ -8,10 +8,10 @@
 
 namespace App\Core;
 
-use Http\Request;
-use Routing\Route;
-use Support\Facades\Auth;
-use Support\Facades\Redirect;
+use Nova\Http\Request;
+use Nova\Routing\Route;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Redirect;
 
 use App\Core\Controller as BaseController;
 

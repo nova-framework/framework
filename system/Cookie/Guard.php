@@ -1,9 +1,9 @@
 <?php
 
-namespace Cookie;
+namespace Nova\Cookie;
 
-use Encryption\Encrypter;
-use Encryption\DecryptException;
+use Nova\Encryption\Encrypter;
+use Nova\Encryption\DecryptException;
 
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ class Guard implements HttpKernelInterface
     /**
      * The encrypter instance.
      *
-     * @var \Encryption\Encrypter
+     * @var \Nova\Encryption\Encrypter
      */
     protected $encrypter;
 

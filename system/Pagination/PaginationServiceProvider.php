@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Pagination;
+namespace Nova\Pagination;
 
-use Pagination\Factory;
-use Support\ServiceProvider;
+use Nova\Pagination\Factory;
+use Nova\Support\ServiceProvider;
 
 
 class PaginationServiceProvider extends ServiceProvider

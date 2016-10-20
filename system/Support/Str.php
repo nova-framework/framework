@@ -1,10 +1,10 @@
 <?php
 
-namespace Support;
+namespace Nova\Support;
 
-use Helpers\Inflector;
+use Nova\Helpers\Inflector;
 
-use Support\Traits\MacroableTrait;
+use Nova\Support\Traits\MacroableTrait;
 
 use RuntimeException;
 

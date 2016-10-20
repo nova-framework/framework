@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Database\Connectors;
+namespace Nova\Database\Connectors;
 
-use Database\Connector;
-use Database\ConnectorInterface;
+use Nova\Database\Connector;
+use Nova\Database\ConnectorInterface;
 
 use PDO;
 

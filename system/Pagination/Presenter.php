@@ -6,9 +6,9 @@
  * @version 3.0
  */
 
-namespace Pagination;
+namespace Nova\Pagination;
 
-use Pagination\Paginator;
+use Nova\Pagination\Paginator;
 
 
 abstract class Presenter
@@ -16,7 +16,7 @@ abstract class Presenter
     /**
      * The Paginator instance.
      *
-     * @var \Pagination\Paginator
+     * @var \Nova\Pagination\Paginator
      */
     protected $paginator;
 
@@ -38,7 +38,7 @@ abstract class Presenter
     /**
      * Create a new Presenter instance.
      *
-     * @param  \Pagination\Paginator  $paginator
+     * @param  \Nova\Pagination\Paginator  $paginator
      * @return void
      */
     public function __construct(Paginator $paginator)

@@ -6,10 +6,10 @@
  * @version 3.0
  */
 
-namespace Validation;
+namespace Nova\Validation;
 
-use Helpers\Inflector;
-use Validation\Translator;
+use Nova\Helpers\Inflector;
+use Nova\Validation\Translator;
 
 use Closure;
 

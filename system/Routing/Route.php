@@ -6,13 +6,13 @@
  * @version 3.0
  */
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Http\Request;
-use Routing\Matching\UriValidator;
-use Routing\Matching\HostValidator;
-use Routing\Matching\MethodValidator;
-use Routing\Matching\SchemeValidator;
+use Nova\Http\Request;
+use Nova\Routing\Matching\UriValidator;
+use Nova\Routing\Matching\HostValidator;
+use Nova\Routing\Matching\MethodValidator;
+use Nova\Routing\Matching\SchemeValidator;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
@@ -254,7 +254,7 @@ class Route
      *
      * @param  string  $type
      * @param  string  $filters
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     protected function addFilters($type, $filters)
     {
@@ -486,7 +486,7 @@ class Route
     /**
      * Bind the Route to a given Request for execution.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return $this
      */
     public function bind(Request $request)
@@ -501,7 +501,7 @@ class Route
     /**
      * Extract the parameter list from the request.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return array
      */
     public function bindParameters(Request $request)
@@ -520,7 +520,7 @@ class Route
     /**
      * Get the parameter matches for the path portion of the URI.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @return array
      */
     protected function bindPathParameters(Request $request)
@@ -533,7 +533,7 @@ class Route
     /**
      * Extract the parameter list from the host part of the request.
      *
-     * @param  \Http\Request  $request
+     * @param  \Nova\Http\Request  $request
      * @param  array  $parameters
      * @return array
      */
@@ -639,7 +639,7 @@ class Route
      * Add a prefix to the route URI.
      *
      * @param  string  $prefix
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function prefix($prefix)
     {
@@ -736,7 +736,7 @@ class Route
      * Set the URI that the route responds to.
      *
      * @param  string  $uri
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function setUri($uri)
     {
@@ -797,7 +797,7 @@ class Route
      * Set the Action array for the Route.
      *
      * @param  array  $action
-     * @return \Routing\Route
+     * @return \Nova\Routing\Route
      */
     public function setAction(array $action)
     {

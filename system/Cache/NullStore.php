@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Nova\Cache;
 
 
 class NullStore extends TaggableStore implements StoreInterface

@@ -6,13 +6,13 @@
  * @version 4.0
  */
 
-namespace View;
+namespace Nova\View;
 
-use Support\Contracts\ArrayableInterface as Arrayable;
-use Support\Contracts\RenderableInterface as Renderable;
-use Support\MessageBag;
-use View\Engines\EngineInterface;
-use View\Factory;
+use Nova\Support\Contracts\ArrayableInterface as Arrayable;
+use Nova\Support\Contracts\RenderableInterface as Renderable;
+use Nova\Support\MessageBag;
+use Nova\View\Engines\EngineInterface;
+use Nova\View\Factory;
 
 use ArrayAccess;
 use Closure;
@@ -27,14 +27,14 @@ class View implements ArrayAccess, Renderable
     /**
      * The View Factory instance.
      *
-     * @var \View\Factory
+     * @var \Nova\View\Factory
      */
     protected $factory;
 
     /**
      * The View Engine instance.
      *
-     * @var \View\Engines\EngineInterface
+     * @var \Nova\View\Engines\EngineInterface
      */
     protected $engine;
 
@@ -163,8 +163,8 @@ class View implements ArrayAccess, Renderable
     /**
      * Add validation errors to the view.
      *
-     * @param  \Support\Contracts\MessageProviderInterface|array  $provider
-     * @return \View\View
+     * @param  \Nova\Support\Contracts\MessageProviderInterface|array  $provider
+     * @return \Nova\View\View
      */
     public function withErrors($provider)
     {
@@ -196,7 +196,7 @@ class View implements ArrayAccess, Renderable
     /**
      * Get the View Factory instance.
      *
-     * @return \View\Factory
+     * @return \Nova\View\Factory
      */
     public function getFactory()
     {
@@ -305,7 +305,7 @@ class View implements ArrayAccess, Renderable
      *
      * @param  string  $method
      * @param  array   $params
-     * @return \View\View|static|void
+     * @return \Nova\View\View|static|void
      *
      * @throws \BadMethodCallException
      */

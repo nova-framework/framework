@@ -4,7 +4,7 @@ namespace App\Modules\Demos\Controllers;
 
 use App\Core\Controller;
 
-use Routing\Route;
+use Nova\Routing\Route;
 
 use App\Models\User;
 
@@ -53,7 +53,7 @@ class Demos extends Controller
     public function test()
     {
         $request = Request::instance();
-    
+
         $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
 
         //
@@ -62,7 +62,7 @@ class Demos extends Controller
             echo 'Hello, World!';
 
         });
-        
+
         $route->where('slug', '(.*)');
 
         // Match the Route.

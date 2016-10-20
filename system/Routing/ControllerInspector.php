@@ -1,8 +1,8 @@
 <?php
 
-namespace Routing;
+namespace Nova\Routing;
 
-use Helpers\Inflector;
+use Nova\Helpers\Inflector;
 
 use ReflectionClass;
 use ReflectionMethod;

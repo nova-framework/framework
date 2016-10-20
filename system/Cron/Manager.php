@@ -1,9 +1,9 @@
 <?php
 
-namespace Cron;
+namespace Nova\Cron;
 
-use Cron\Adapter;
-use Events\Dispatcher;
+use Nova\Cron\Adapter;
+use Nova\Events\Dispatcher;
 
 
 class Manager
@@ -11,7 +11,7 @@ class Manager
     /**
      * The Event Dispatcher instance.
      *
-     * @var \Events\Dispatcher
+     * @var \Nova\Events\Dispatcher
      */
     protected $events;
 

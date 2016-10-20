@@ -1,24 +1,24 @@
 <?php
 
-namespace Database\ORM;
+namespace Nova\Database\ORM;
 
-use Events\Dispatcher;
-use Database\ORM\Relations\Pivot;
-use Database\ORM\Relations\HasOne;
-use Database\ORM\Relations\HasMany;
-use Database\ORM\Relations\MorphTo;
-use Database\ORM\Relations\Relation;
-use Database\ORM\Relations\MorphOne;
-use Database\ORM\Relations\MorphMany;
-use Database\ORM\Relations\BelongsTo;
-use Database\ORM\Relations\MorphToMany;
-use Database\ORM\Relations\BelongsToMany;
-use Database\ORM\Relations\HasManyThrough;
-use Database\Query\Builder as QueryBuilder;
-use Database\ConnectionResolverInterface as Resolver;
-use Support\Contracts\JsonableInterface;
-use Support\Contracts\ArrayableInterface;
-use Support\Str;
+use Nova\Events\Dispatcher;
+use Nova\Database\ORM\Relations\Pivot;
+use Nova\Database\ORM\Relations\HasOne;
+use Nova\Database\ORM\Relations\HasMany;
+use Nova\Database\ORM\Relations\MorphTo;
+use Nova\Database\ORM\Relations\Relation;
+use Nova\Database\ORM\Relations\MorphOne;
+use Nova\Database\ORM\Relations\MorphMany;
+use Nova\Database\ORM\Relations\BelongsTo;
+use Nova\Database\ORM\Relations\MorphToMany;
+use Nova\Database\ORM\Relations\BelongsToMany;
+use Nova\Database\ORM\Relations\HasManyThrough;
+use Nova\Database\Query\Builder as QueryBuilder;
+use Nova\Database\ConnectionResolverInterface as Resolver;
+use Nova\Support\Contracts\JsonableInterface;
+use Nova\Support\Contracts\ArrayableInterface;
+use Nova\Support\Str;
 
 use Carbon\Carbon;
 
@@ -180,14 +180,14 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * The connection resolver instance.
      *
-     * @var \Database\ConnectionResolverInterface
+     * @var \Nova\Database\ConnectionResolverInterface
      */
     protected static $resolver;
 
     /**
      * The event dispatcher instance.
      *
-     * @var \Events\Dispatcher
+     * @var \Nova\Events\Dispatcher
      */
     protected static $dispatcher;
 
@@ -314,7 +314,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Register a new global scope on the model.
      *
-     * @param  \Database\ORM\ScopeInterface  $scope
+     * @param  \Nova\Database\ORM\ScopeInterface  $scope
      * @return void
      */
     public static function addGlobalScope(ScopeInterface $scope)
@@ -325,7 +325,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Determine if a model has a global scope.
      *
-     * @param  \Database\ORM\ScopeInterface  $scope
+     * @param  \Nova\Database\ORM\ScopeInterface  $scope
      * @return bool
      */
     public static function hasGlobalScope($scope)
@@ -336,8 +336,8 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get a global scope registered with the model.
      *
-     * @param  \Database\ORM\ScopeInterface  $scope
-     * @return \Database\ORM\ScopeInterface|null
+     * @param  \Nova\Database\ORM\ScopeInterface  $scope
+     * @return \Nova\Database\ORM\ScopeInterface|null
      */
     public static function getGlobalScope($scope)
     {
@@ -350,7 +350,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get the global scopes for this class instance.
      *
-     * @return \Database\ORM\ScopeInterface[]
+     * @return \Nova\Database\ORM\ScopeInterface[]
      */
     public function getGlobalScopes()
     {
@@ -452,7 +452,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      *
      * @param  array  $items
      * @param  string  $connection
-     * @return \Database\ORM\Collection
+     * @return \Nova\Database\ORM\Collection
      */
     public static function hydrate(array $items, $connection = null)
     {
@@ -477,7 +477,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $query
      * @param  array  $bindings
      * @param  string  $connection
-     * @return \Database\ORM\Collection
+     * @return \Nova\Database\ORM\Collection
      */
     public static function hydrateRaw($query, $bindings = array(), $connection = null)
     {
@@ -567,7 +567,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Begin querying the model.
      *
-     * @return \Database\ORM\Builder
+     * @return \Nova\Database\ORM\Builder
      */
     public static function query()
     {
@@ -578,7 +578,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * Begin querying the model on a given connection.
      *
      * @param  string  $connection
-     * @return \Database\ORM\Builder
+     * @return \Nova\Database\ORM\Builder
      */
     public static function on($connection = null)
     {
@@ -592,7 +592,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Begin querying the model on the write connection.
      *
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     public static function onWriteConnection()
     {
@@ -605,7 +605,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * Get all of the models from the database.
      *
      * @param  array  $columns
-     * @return \Database\ORM\Collection|static[]
+     * @return \Nova\Database\ORM\Collection|static[]
      */
     public static function all($columns = array('*'))
     {
@@ -619,7 +619,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Support\Collection|static|null
+     * @return \Nova\Support\Collection|static|null
      */
     public static function find($id, $columns = array('*'))
     {
@@ -635,7 +635,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Support\Collection|static
+     * @return \Nova\Support\Collection|static
      */
     public static function findOrNew($id, $columns = array('*'))
     {
@@ -649,7 +649,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      *
      * @param  mixed  $id
      * @param  array  $columns
-     * @return \Support\Collection|static
+     * @return \Nova\Support\Collection|static
      *
      * @throws \Database\ORM\ModelNotFoundException
      */
@@ -681,7 +681,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * Being querying a model with eager loading.
      *
      * @param  array|string  $relations
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public static function with($relations)
     {
@@ -698,7 +698,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $related
      * @param  string  $foreignKey
      * @param  string  $localKey
-     * @return \Database\ORM\Relations\HasOne
+     * @return \Nova\Database\ORM\Relations\HasOne
      */
     public function hasOne($related, $foreignKey = null, $localKey = null)
     {
@@ -719,7 +719,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $type
      * @param  string  $id
      * @param  string  $localKey
-     * @return \Database\ORM\Relations\MorphOne
+     * @return \Nova\Database\ORM\Relations\MorphOne
      */
     public function morphOne($related, $name, $type = null, $id = null, $localKey = null)
     {
@@ -741,7 +741,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $foreignKey
      * @param  string  $otherKey
      * @param  string  $relation
-     * @return \Database\ORM\Relations\BelongsTo
+     * @return \Nova\Database\ORM\Relations\BelongsTo
      */
     public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
     {
@@ -770,7 +770,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $name
      * @param  string  $type
      * @param  string  $id
-     * @return \Database\ORM\Relations\MorphTo
+     * @return \Nova\Database\ORM\Relations\MorphTo
      */
     public function morphTo($name = null, $type = null, $id = null)
     {
@@ -801,7 +801,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $related
      * @param  string  $foreignKey
      * @param  string  $localKey
-     * @return \Database\ORM\Relations\HasMany
+     * @return \Nova\Database\ORM\Relations\HasMany
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
@@ -821,7 +821,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $through
      * @param  string|null  $firstKey
      * @param  string|null  $secondKey
-     * @return \Database\ORM\Relations\HasManyThrough
+     * @return \Nova\Database\ORM\Relations\HasManyThrough
      */
     public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null)
     {
@@ -842,7 +842,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $type
      * @param  string  $id
      * @param  string  $localKey
-     * @return \Database\ORM\Relations\MorphMany
+     * @return \Nova\Database\ORM\Relations\MorphMany
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
     {
@@ -866,7 +866,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $foreignKey
      * @param  string  $otherKey
      * @param  string  $relation
-     * @return \Database\ORM\Relations\BelongsToMany
+     * @return \Nova\Database\ORM\Relations\BelongsToMany
      */
     public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null)
     {
@@ -898,7 +898,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $foreignKey
      * @param  string  $otherKey
      * @param  bool    $inverse
-     * @return \Database\ORM\Relations\MorphToMany
+     * @return \Nova\Database\ORM\Relations\MorphToMany
      */
     public function morphToMany($related, $name, $table = null, $foreignKey = null, $otherKey = null, $inverse = false)
     {
@@ -930,7 +930,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * @param  string  $table
      * @param  string  $foreignKey
      * @param  string  $otherKey
-     * @return \Database\ORM\Relations\MorphToMany
+     * @return \Nova\Database\ORM\Relations\MorphToMany
      */
     public function morphedByMany($related, $name, $table = null, $foreignKey = null, $otherKey = null)
     {
@@ -1363,7 +1363,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Perform a model update operation.
      *
-     * @param  \Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Builder  $query
      * @param  array  $options
      * @return bool|null
      */
@@ -1395,7 +1395,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Perform a model insert operation.
      *
-     * @param  \Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Builder  $query
      * @param  array  $options
      * @return bool
      */
@@ -1425,7 +1425,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Insert the given attributes and set the ID on the model.
      *
-     * @param  \Database\ORM\Builder  $query
+     * @param  \Nova\Database\ORM\Builder  $query
      * @param  array  $attributes
      * @return void
      */
@@ -1485,8 +1485,8 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Set the keys for a save update query.
      *
-     * @param  \Database\ORM\Builder  $query
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\Builder  $query
+     * @return \Nova\Database\ORM\Builder
      */
     protected function setKeysForSaveQuery(Builder $query)
     {
@@ -1604,7 +1604,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get a new query builder for the model's table.
      *
-     * @return \Database\ORM\Builder
+     * @return \Nova\Database\ORM\Builder
      */
     public function newQuery()
     {
@@ -1616,8 +1616,8 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get a new query instance without a given scope.
      *
-     * @param  \Database\ORM\ScopeInterface  $scope
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\ScopeInterface  $scope
+     * @return \Nova\Database\ORM\Builder
      */
     public function newQueryWithoutScope($scope)
     {
@@ -1629,7 +1629,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get a new query builder that doesn't have any global scopes.
      *
-     * @return \Database\ORM\Builder|static
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function newQueryWithoutScopes()
     {
@@ -1643,8 +1643,8 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Apply all of the global scopes to an ORM builder.
      *
-     * @param  \Database\ORM\Builder  $builder
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\Builder  $builder
+     * @return \Nova\Database\ORM\Builder
      */
     public function applyGlobalScopes($builder)
     {
@@ -1658,8 +1658,8 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Remove all of the global scopes from an ORM builder.
      *
-     * @param  \Database\ORM\Builder  $builder
-     * @return \Database\ORM\Builder
+     * @param  \Nova\Database\ORM\Builder  $builder
+     * @return \Nova\Database\ORM\Builder
      */
     public function removeGlobalScopes($builder)
     {
@@ -1673,8 +1673,8 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Create a new ORM query builder for the model.
      *
-     * @param  \Database\Query\Builder $query
-     * @return \Database\ORM\Builder|static
+     * @param  \Nova\Database\Query\Builder $query
+     * @return \Nova\Database\ORM\Builder|static
      */
     public function newQueryBuilder($query)
     {
@@ -1684,7 +1684,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get a new query builder instance for the connection.
      *
-     * @return \Database\Query\Builder
+     * @return \Nova\Database\Query\Builder
      */
     protected function newBaseQueryBuilder()
     {
@@ -1699,7 +1699,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * Create a new ORM Collection instance.
      *
      * @param  array  $models
-     * @return \Database\ORM\Collection
+     * @return \Nova\Database\ORM\Collection
      */
     public function newCollection(array $models = array())
     {
@@ -1709,11 +1709,11 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Create a new pivot model instance.
      *
-     * @param  \Database\ORM\Model  $parent
+     * @param  \Nova\Database\ORM\Model  $parent
      * @param  array   $attributes
      * @param  string  $table
      * @param  bool    $exists
-     * @return \Database\ORM\Relations\Pivot
+     * @return \Nova\Database\ORM\Relations\Pivot
      */
     public function newPivot(Model $parent, array $attributes, $table, $exists)
     {
@@ -2423,7 +2423,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * Clone the model into a new, non-existing instance.
      *
      * @param  array  $except
-     * @return \Database\ORM\Model
+     * @return \Nova\Database\ORM\Model
      */
     public function replicate(array $except = null)
     {
@@ -2608,7 +2608,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get the database connection for the model.
      *
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     public function getConnection()
     {
@@ -2642,7 +2642,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
      * Resolve a connection instance.
      *
      * @param  string  $connection
-     * @return \Database\Connection
+     * @return \Nova\Database\Connection
      */
     public static function resolveConnection($connection = null)
     {
@@ -2652,7 +2652,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Get the connection resolver instance.
      *
-     * @return \Database\ConnectionResolverInterface
+     * @return \Nova\Database\ConnectionResolverInterface
      */
     public static function getConnectionResolver()
     {
@@ -2662,7 +2662,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Set the connection resolver instance.
      *
-     * @param  \Database\ConnectionResolverInterface  $resolver
+     * @param  \Nova\Database\ConnectionResolverInterface  $resolver
      * @return void
      */
     public static function setConnectionResolver(Resolver $resolver)
@@ -2693,7 +2693,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     /**
      * Set the event dispatcher instance.
      *
-     * @param  \Events\Dispatcher  $dispatcher
+     * @param  \Nova\Events\Dispatcher  $dispatcher
      * @return void
      */
     public static function setEventDispatcher(Dispatcher $dispatcher)

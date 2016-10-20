@@ -1,13 +1,13 @@
 <?php
 
-namespace View;
+namespace Nova\View;
 
-use View\Engines\EngineResolver;
-use View\Engines\PhpEngine;
-use View\Factory;
-use View\FileViewFinder;
-use Support\MessageBag;
-use Support\ServiceProvider;
+use Nova\View\Engines\EngineResolver;
+use Nova\View\Engines\PhpEngine;
+use Nova\View\Factory;
+use Nova\View\FileViewFinder;
+use Nova\Support\MessageBag;
+use Nova\Support\ServiceProvider;
 
 
 class ViewServiceProvider extends ServiceProvider
@@ -57,7 +57,7 @@ class ViewServiceProvider extends ServiceProvider
     /**
      * Register the PHP engine implementation.
      *
-     * @param  \View\Engines\EngineResolver  $resolver
+     * @param  \Nova\View\Engines\EngineResolver  $resolver
      * @return void
      */
     public function registerPhpEngine($resolver)
@@ -127,7 +127,7 @@ class ViewServiceProvider extends ServiceProvider
     /**
      * Determine if the application session has errors.
      *
-     * @param  \Foundation\Application  $app
+     * @param  \Nova\Foundation\Application  $app
      * @return bool
      */
     public function sessionHasErrors($app)

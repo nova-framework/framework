@@ -1,8 +1,8 @@
 <?php
 
-namespace Auth;
+namespace Nova\Auth;
 
-use Support\ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
 class AuthServiceProvider extends ServiceProvider

@@ -5,7 +5,6 @@ namespace App\Modules\Files\Controllers\Admin;
 use App\Core\BackendController;
 
 use Nova\Http\Request;
-use Nova\Routing\Asssets\DefaultDispatcher as FileDispatcher;
 use Nova\Routing\Route;
 
 use App;
@@ -26,7 +25,7 @@ class Files extends BackendController
     /**
      * The File Dispatcher instance.
      *
-     * @var \Nova\Routing\FileDispatcher
+     * @var \Nova\Routing\Assets\DispatcherInterface
      */
     private $fileDispatcher;
 
@@ -122,7 +121,7 @@ class Files extends BackendController
     /**
      * Return a Files Dispatcher instance
      *
-     * @return \Nova\Routing\FileDispatcher
+     * @return \Nova\Routing\Assets\DispatcherInterface
      */
     protected function getFileDispatcher()
     {

@@ -23,27 +23,18 @@ class LanguageServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $config = $this->app['config'];
-
         $session = $this->app['session'];
 
-        $request = $this->app['request'];
+        if (! $session->has('language')) {
+            $cookie = $this->app['request']->cookie(PREFIX .'language', null);
 
-        //
-        $cookie = $request->cookie(PREFIX .'language', null);
+            $locale = $cookie ?: $this->app['config']->get('app.locale');
 
-        if ($session->has('language')) {
-            // The Language was already setup on Session.
-        } else if (! is_null($cookie)) {
-            $session->set('language', $cookie);
+            $session->set('language', $locale);
         } else {
-            $session->set('language', $config['app.locale']);
+            $locale = $session->get('language');
         }
 
-        // Always retrieve the current locale from Session.
-        $locale = $session->get('language');
-
-        // Setup the locale on the Language Service.
         $this->app['language']->setLocale($locale);
     }
 

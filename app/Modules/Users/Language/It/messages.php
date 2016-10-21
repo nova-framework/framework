@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   '<< Previous Page' => '',
   'Activate your Account!' => '',
   'Activated! You can now Sign in!' => '',

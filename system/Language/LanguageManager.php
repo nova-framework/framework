@@ -113,10 +113,14 @@ class LanguageManager
      */
     public function setLocale($locale)
     {
+        // Setup the Framework locale.
         $this->locale = $locale;
 
-        //
-        setlocale(LC_ALL, $locale);
+        // Retrieve the full locale from languages list.
+        $language = array_get($this->languages, $locale .'.locale', 'en_US') .'.utf8';
+
+        // Setup the Carbon and PHP's time locale.
+        setlocale(LC_TIME, $language);
 
         Carbon::setLocale($locale);
     }

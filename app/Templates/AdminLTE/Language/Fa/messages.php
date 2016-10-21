@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   'ADMINISTRATION' => 'مدیریت کل',
   'Control Panel' => 'پنل کنترل',
   'Dashboard' => 'داشبورد',

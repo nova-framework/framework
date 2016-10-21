@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   '<< Previous Page' => '<< صفحه قبلی',
   'Activate your Account!' => 'حساب خود را فعال کنید!',
   'Activated! You can now Sign in!' => 'فعال شد! حالا میتوانید وارد شوید!',

@@ -27,10 +27,8 @@ class LanguageServiceProvider extends ServiceProvider
 
         $session = $this->app['session'];
 
-        $request = $this->app['request'];
-
         //
-        $cookie = $request->cookie(PREFIX .'language', null);
+        $cookie = $this->app['request']->cookie(PREFIX .'language', null);
 
         if ($session->has('language')) {
             // The Language was already setup on Session.
@@ -40,14 +38,13 @@ class LanguageServiceProvider extends ServiceProvider
             $session->set('language', $config->get('app.locale'));
         }
 
-        // Always retrieve the current locale from Session.
-        $lang = $session->get('language');
+        $language = $session->get('language');
 
-        $locale = $config->get('languages.' .$lang .'.locale', 'en_US');
+        $locale = $config->get('languages.' .$language .'.locale', 'en_US');
 
-        setlocale(LC_TIME, $locale .'.utf8', $lang);
+        setlocale(LC_TIME, $locale .'.utf8', $language);
 
-        $this->app['language']->setLocale($lang);
+        $this->app['language']->setLocale($language);
     }
 
     /**

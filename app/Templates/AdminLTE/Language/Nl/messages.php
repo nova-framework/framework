@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   'ADMINISTRATION' => '',
   'Control Panel' => '',
   'Dashboard' => '',

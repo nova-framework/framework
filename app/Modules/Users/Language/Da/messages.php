@@ -1,6 +1,7 @@
 <?php
 
 return array (
+  '%d %b %Y, %R' => '',
   '<< Previous Page' => '<< Sidste Side',
   'Activate your Account!' => 'Aktivere din brugerkonto!',
   'Activated! You can now Sign in!' => 'Du er nu aktiv og kan logge ind.',

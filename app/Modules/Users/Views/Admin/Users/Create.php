@@ -30,11 +30,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="role"><?= __('Role'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="role"><?= __d('users','Role'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
                     <?php $optRole = Input::old('role'); ?>
                     <select name="role" id="role" class="form-control select2">
-                        <option value="" <?php if (empty($optRole)) echo 'selected'; ?>>- <?= __('Choose a Role'); ?> -</option>
+                        <option value="" <?php if (empty($optRole)) echo 'selected'; ?>>- <?= __d('users','Choose a Role'); ?> -</option>
                         <?php foreach ($roles as $role) { ?>
                         <option value="<?= $role->id ?>" <?php if ($optRole == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>
                         <?php } ?>

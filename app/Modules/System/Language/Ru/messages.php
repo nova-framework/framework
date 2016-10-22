@@ -35,7 +35,7 @@ return array (
   'NONE' => 'отсутствует',
   'New Password' => 'Новый пароль',
   'Password' => 'Пароль',
-  'Password Confirmation' => '',
+  'Password Confirmation' => 'Подтверждение пароля',
   'Password Recovery' => 'Восстановление пароля',
   'Password Reset' => 'Сброс пароля',
   'Passwords must be strong enough and match the confirmation.' => 'Пароль должен быть достаточно сильным и совпадать с полем подтверждения.',

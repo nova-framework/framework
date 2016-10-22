@@ -6,7 +6,7 @@
 
             <hr />
 
-            <h3>Forbidded</h3>
+            <h3>Forbidden</h3>
             <p>This could be the result of an invalid Page request.</p>
 
         </div>

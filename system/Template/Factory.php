@@ -45,34 +45,22 @@ class Factory
      * Create a View instance
      *
      * @param string $view
-     * @param array|string $data
+     * @param array $data
      * @param string|null $template
      * @return \Nova\View\View
      */
-    public function make($view, $data = array(), $template = null)
+    public function make($view, array $data = array(), $template = null)
     {
-        if (is_string($data)) {
-            if (! empty($data) && ($template === null)) {
-                // The Template name given as second parameter; adjust the information.
-                $template = $data;
-            }
-
-            $data = array();
-        }
+        // Get the View Factory instance.
+        $factory = $this->getViewFactory();
 
         // Get the View file path.
         $path = $this->find($view, $template);
 
-        // Get the parsed data.
-        $data = $this->parseData($data);
-
-        // Get the View Factory instance.
-        $factory = $this->getViewFactory();
-
         // Get the View Engine instance.
         $engine = $factory->getEngineFromPath($path);
 
-        return new Template($factory, $engine, $view, $path, $data);
+        return new Template($factory, $engine, $view, $path, $this->parseData($data));
     }
 
     /**

@@ -8,6 +8,7 @@ return array (
   'Are you sure you want to delete the Role <b>{0}</b>, the operation being irreversible?' => '',
   'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?' => '',
   'Cancel' => '',
+  'Choose a Role' => '',
   'Confirm Password' => '',
   'Create Role' => '',
   'Create User' => '',

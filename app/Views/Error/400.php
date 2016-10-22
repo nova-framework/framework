@@ -4,12 +4,12 @@
 
             <h1>400</h1>
 
-            Referrer: <?= Request::header('referer'); ?>
+            <?= __('Referrer: {0}', Request::header('referer')); ?>
 
             <hr />
 
-            <h3>Bad Request</h3>
-            <p>This could be the result of an invalid Page request.</p>
+            <h3><?= __('Bad Request'); ?></h3>
+            <p><?= __('This could be the result of an invalid Page request.'); ?></p>
 
         </div>
     </div>

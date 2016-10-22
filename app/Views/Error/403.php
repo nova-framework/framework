@@ -7,7 +7,7 @@
             <hr />
 
             <h3>Forbidded</h3>
-            <p>This could be the result of a invalid Page request.</p>
+            <p>This could be the result of an invalid Page request.</p>
 
         </div>
     </div>

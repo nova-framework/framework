@@ -63,7 +63,7 @@ abstract class Controller extends BaseController
             // we will assume we want to render it using the Controller's templated environment.
 
             if (is_string($this->layout) && ! empty($this->layout) && (! $response instanceof Layout)) {
-                $response = Template::make($this->layout, $this->template)->with('content', $response);
+                $response = Template::make($this->layout, array(), $this->template)->with('content', $response);
             }
 
             // Create a proper Response instance.

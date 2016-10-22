@@ -8,6 +8,7 @@ return array (
   'Are you sure you want to delete the Role <b>{0}</b>, the operation being irreversible?' => 'آیا شما از اینکه میخواهید وظیفه <b>{0}</b> را حذف کنید مطئن هستید, عملیات غیر قابل بازگشت میباشد؟',
   'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?' => 'آیا شما مطمئن هستید از اینکه میخواهید کاربر <b>{0}</b> را حذف کنید, این عملیات غیر قابل بازگشت میباشد؟',
   'Cancel' => 'لغو',
+  'Choose a Role' => '',
   'Confirm Password' => 'تایید رمزعبور',
   'Create Role' => 'ساخت وظیفه',
   'Create User' => 'ساخت کاربر',

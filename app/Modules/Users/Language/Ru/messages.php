@@ -8,7 +8,7 @@ return array (
   'Are you sure you want to delete the Role <b>{0}</b>, the operation being irreversible?' => 'Операция является необратимой, Вы уверены, что хотите удалить роль <b>{0}</b> ?',
   'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?' => 'Операция является необратимой, Вы уверены, что хотите удалить пользователя <b>{0}</b> ?',
   'Cancel' => 'Отмена',
-  'Choose a Role'=>'Выберите роль',
+  'Choose a Role' => 'Выберите роль',
   'Confirm Password' => 'Подтвердить пароль',
   'Create Role' => 'Создать роль',
   'Create User' => 'Добавить пользователя',

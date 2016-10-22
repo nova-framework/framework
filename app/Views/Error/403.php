@@ -6,8 +6,8 @@
 
             <hr />
 
-            <h3>Forbidden</h3>
-            <p>This could be the result of an invalid Page request.</p>
+            <h3><?= __('Forbidden'); ?></h3>
+            <p><?= __('This could be the result of an invalid Page request.'); ?></p>
 
         </div>
     </div>

@@ -8,6 +8,7 @@ return array (
   'Are you sure you want to delete the Role <b>{0}</b>, the operation being irreversible?' => 'Er du sikker på at du vil slette rollen <b>{0}</b>, dette kan ikke gøres om!!!',
   'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?' => 'Er du sikker på at du vil slette brugeren <b>{0}</b>, dette kan ikke gøres om!!!',
   'Cancel' => 'Fortryd',
+  'Choose a Role' => '',
   'Confirm Password' => 'Bekræft kodeordet',
   'Create Role' => 'Opret rolle',
   'Create User' => 'Opret bruger',

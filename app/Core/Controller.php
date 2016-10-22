@@ -63,7 +63,8 @@ abstract class Controller extends BaseController
             // we will assume we want to render it using the Controller's templated environment.
 
             if (is_string($this->layout) && ! empty($this->layout) && (! $response instanceof Layout)) {
-                $response = Template::make($this->layout, array(), $this->template)->with('content', $response);
+                $response = Template::make($this->layout, array(), $this->template)
+                    ->with('content', $response);
             }
 
             // Create a proper Response instance.
@@ -127,18 +128,12 @@ abstract class Controller extends BaseController
      */
     public function getLayout($layout = null, array $data = array())
     {
-        if ($this->layout instanceof View) {
-            // The Layout is already a View instance setup via the Controller's setupLayout()
-            return $this->layout->with($data);
-        } else if ($this->layout === false) {
-            // The Layout (and the automatically rendering) was disabled on this Controller.
-            return null;
-        }
-
         // Adjust the current used Layout.
-        $layout = ! is_null($layout) ? $layout : $this->layout;
+        $layout = $layout ?: $this->layout;
 
-        if (is_string($layout) && ! empty($layout)) {
+        if ($layout instanceof View) {
+            return $layout->with($data);
+        } else if (is_string($layout)) {
             return Template::make($layout, $data, $this->template);
         }
 

@@ -12,7 +12,7 @@
 
 			<ul>
 			  <li><?= __('If you spelled the URL manually, double check the spelling.'); ?></li>
-			  <li><?= __('Go to our website\'s home page, and navigate to the content in question.'); ?></li>
+			  <li><?= __('Go to our website\'s home page and navigate to the content in question.'); ?></li>
 			</ul>
 
 		</div>

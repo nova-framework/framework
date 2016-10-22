@@ -3,7 +3,7 @@
 return array (
   'Bad Request' => '',
   'Forbidden' => '',
-  'Go to our website\'s home page, and navigate to the content in question.' => '',
+  'Go to our website\'s home page, and navigate to the content in question.' => 'به صفحه اصلی وبسایت بروید و به صفحه مورد نظر خود رجوع کنید.',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'درود, به کنترل گر صفحه خوش آمد گویی و زیر صفحه خوش آمدید! <br/>
 این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/SubPage.php</code>',
@@ -12,18 +12,18 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
 این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/Welcome.php</code>',
   'Home' => 'خانه',
   'If you have problems, please paste the above URL into your web browser.' => 'اگر مشکلی دارید، لطفا لینک بالا را در مرور گر وب خود وارد کنید.',
-  'If you spelled the URL manually, double check the spelling.' => '',
+  'If you spelled the URL manually, double check the spelling.' => 'اگر URL را هجی کرده اید, دوباره آن را بررسی کنید',
   'Open subpage' => 'بازکردن زیرصفحه',
   'Password Reset' => 'بازنشانی رمزعبور',
   'Please verify your E-mail address' => 'لطفا آدرس ایمیل خود را تایید کنید',
-  'Referrer: {0}' => '',
+  'Referrer: {0}' => 'ارجاع: {0}',
   'Subpage' => 'زیر صفحه',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'بابت ایجاد حساب کاربری با {0} سپاس گذاریم. لطفا لینک زیر را جهت فعال سازی ایمیل خود کلیک کنید: {1}',
-  'The page you are looking for can not be found.' => '',
-  'This could be the result of an invalid Page request.' => '',
-  'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => '',
+  'The page you are looking for can not be found.' => 'صفحه ای که دنبال آن هستید را نمیتوان پیدا کرد',
+  'This could be the result of an invalid Page request.' => 'این ممکن است نتیجه یک درخواست نامعتبر باشد.',
+  'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => 'این ممکن است نتیجه یک صفحه که باک, انتقال و یا اینکه موقتا دردسترس نیباشد, باشد.',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
-  'Troubleshooting' => '',
+  'Troubleshooting' => 'اشکال زدایی',
   'Welcome' => 'خوش امدید',
   'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید',
 );

@@ -14,8 +14,6 @@ use Nova\Database\Query\Builder as QueryBuilder;
 use Nova\Database\Query as Builder;
 use Nova\Helpers\Inflector;
 
-use DB;
-
 
 class Model
 {

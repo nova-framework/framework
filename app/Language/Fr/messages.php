@@ -3,7 +3,7 @@
 return array (
   'Bad Request' => '',
   'Forbidden' => '',
-  'Go to our website\'s home page and navigate to the content in question.' => '',
+  'Go to our home page and navigate to the content in question.' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Bonjour, bienvenue dans le contrôleur de bienvenue et sa sous-page ! <br/>
 Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/SubPage.php</code>',

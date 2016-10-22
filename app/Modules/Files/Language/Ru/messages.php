@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'Dashboard' => '',
-  'Files' => '',
-  'You are not authorized to access this resource.' => '',
+  'Dashboard' => 'Рабочий стол',
+  'Files' => 'Файлы',
+  'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
 );

@@ -98,6 +98,7 @@ function template_url($path, $template = null)
 /**
  * Vendor URL helper
  * @param string $path
+ * @param string $vendor
  * @return string
  */
 function vendor_url($path, $vendor)

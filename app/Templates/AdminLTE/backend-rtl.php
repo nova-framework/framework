@@ -45,9 +45,9 @@ $langMenuLinks = ob_get_clean();
         // Theme style
         template_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
         // AdminLTE Skins
-        site_url('vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css'),
+        vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // Select2
-        site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.min.css'),
+        vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         template_url('css/style-rtl.css', 'AdminLTE'),
     ));
@@ -68,7 +68,7 @@ $langMenuLinks = ob_get_clean();
 <?php
     //Add Controller specific JS files.
     Assets::js(array(
-        site_url('vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js'),
+        vendor_url('plugins/jQuery/jquery-2.2.3.min.js', 'almasaeed2010/adminlte'),
     ));
 
     ?>
@@ -118,14 +118,14 @@ $langMenuLinks = ob_get_clean();
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?= site_url('vendor/almasaeed2010/adminlte/dist/img/avatar5.png'); ?>" class="user-image" alt="User Image">
+              <img src="<?= vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte'); ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?= $user->username; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?= site_url('vendor/almasaeed2010/adminlte/dist/img/avatar5.png'); ?>" class="img-circle" alt="User Image">
+                <img src="<?= vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte'); ?>" class="img-circle" alt="User Image">
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>
@@ -220,9 +220,9 @@ Assets::js(array(
     // Bootstrap 3.3.5
     template_url('js/bootstrap-rtl.min.js', 'Default'),
     // AdminLTE App
-    site_url('vendor/almasaeed2010/adminlte/dist/js/app.min.js'),
+    vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // Select2
-    site_url('vendor/almasaeed2010/adminlte/plugins/select2/select2.full.min.js')
+    vendor_url('plugins/select2/select2.full.min.js', 'almasaeed2010/adminlte')
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone

@@ -96,6 +96,19 @@ function template_url($path, $template = null)
 }
 
 /**
+ * Vendor URL helper
+ * @param string $path
+ * @param string $vendor
+ * @return string
+ */
+function vendor_url($path, $vendor)
+{
+    $path = sprintf('vendor/%s/%s', $vendor, $path);
+
+    return url($path);
+}
+
+/**
  * Get the path to the application folder.
  *
  * @param  string  $path

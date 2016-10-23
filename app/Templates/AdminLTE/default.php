@@ -34,17 +34,17 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        site_url('vendor/almasaeed2010/adminlte/bootstrap/css/bootstrap.min.css'),
+        vendor_url('bootstrap/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        site_url('vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css'),
+        vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
-        site_url('vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css'),
+        vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // iCheck
-        site_url('vendor/almasaeed2010/adminlte/plugins/iCheck/square/blue.css'),
+        vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         template_url('css/style.css', 'AdminLTE'),
     ));
@@ -53,7 +53,7 @@ $langMenuLinks = ob_get_clean();
 
     //Add Controller specific JS files.
     Assets::js(array(
-            site_url('vendor/almasaeed2010/adminlte/plugins/jQuery/jquery-2.2.3.min.js'),
+            vendor_url('plugins/jQuery/jquery-2.2.3.min.js', 'almasaeed2010/adminlte'),
         )
     );
 
@@ -141,11 +141,11 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    site_url('vendor/almasaeed2010/adminlte/bootstrap/js/bootstrap.min.js'),
+    vendor_url('bootstrap/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
-    site_url('vendor/almasaeed2010/adminlte/dist/js/app.min.js'),
+    vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // iCheck
-    site_url('vendor/almasaeed2010/adminlte/plugins/iCheck/icheck.min.js'),
+    vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone

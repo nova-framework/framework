@@ -30,8 +30,8 @@ $langMenuLinks = ob_get_clean();
 echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
-    site_url('vendor/twbs/bootstrap/dist/css/bootstrap.min.css'),
-    site_url('vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css'),
+    vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
+    vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
     template_url('css/style.css', 'Default'),
 ]);
@@ -81,7 +81,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 <?php
 Assets::js([
     'https://code.jquery.com/jquery-1.12.4.min.js',
-    site_url('vendor/twbs/bootstrap/dist/js/bootstrap.min.js'),
+    vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
 ]);
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone

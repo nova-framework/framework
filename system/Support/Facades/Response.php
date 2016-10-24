@@ -5,7 +5,6 @@ namespace Nova\Support\Facades;
 use Nova\Http\JsonResponse;
 use Nova\Http\Response as HttpResponse;
 use Nova\Support\Contracts\ArrayableInterface;
-use Nova\Support\Facades\Template;
 use Nova\Support\Facades\View;
 use Nova\Support\Str;
 
@@ -99,34 +98,6 @@ class Response
         }
 
         return $response;
-    }
-
-    /**
-     * Create a new Error Response instance.
-     *
-     * The Response Status code will be set using the specified code.
-     *
-     * The specified error should match a View in your Views/Error directory.
-     *
-     * <code>
-     *      // Create a 404 response.
-     *      return Response::error('404');
-     *
-     *      // Create a 404 response with data.
-     *      return Response::error('404', array('message' => 'Not Found'));
-     * </code>
-     *
-     * @param  int       $code
-     * @param  array     $data
-     * @return Response
-     */
-    public static function error($status, array $data = array(), $headers = array())
-    {
-        $view = Template::make('default')
-            ->shares('title', 'Error ' .$status)
-            ->nest('content', 'Error/' .$status, $data);
-
-        return static::make($view, $status, $headers);
     }
 
     /**

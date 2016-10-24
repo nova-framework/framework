@@ -10,42 +10,45 @@ Log::useFiles(storage_path() .DS .'Logs' .DS .'error.log');
 // Application Error Handler
 //--------------------------------------------------------------------------
 
+// The standard handling of the Exceptions.
 App::error(function(Exception $exception, $code)
 {
     Log::error($exception);
 });
 
-//--------------------------------------------------------------------------
-// Application Missing Route Handler
-//--------------------------------------------------------------------------
+// Special handling for the HTTP Exceptions.
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-App::missing(function(NotFoundHttpException $exception)
+App::error(function(HttpException $exception)
 {
-    $status = $exception->getStatusCode();
+    $code = $exception->getStatusCode();
 
     $headers = $exception->getHeaders();
 
+    if ($code == 500) {
+        // We should log the Error 500 Exceptions.
+        Log::error($exception);
+    }
+
     if (Request::ajax()) {
         // An AJAX request; we'll create a JSON Response.
-        $content = array('status' => $status);
+        $content = array('status' => $code);
 
         // Setup propely the Content Type.
         $headers['Content-Type'] = 'application/json';
 
-        return Response::json($content, $status, $headers);
+        return Response::json($content, $code, $headers);
     }
 
     // We'll create the templated Error Page Response.
     $response = Template::make('default')
-        ->shares('title', 'Error ' .$status)
-        ->nest('content', 'Error/' .$status);
+        ->shares('title', 'Error ' .$code)
+        ->nest('content', 'Error/' .$code);
 
     // Setup propely the Content Type.
     $headers['Content-Type'] = 'text/html';
 
-    return Response::make($response->render(), $status, $headers);
+    return Response::make($response, $code, $headers);
 });
 
 //--------------------------------------------------------------------------

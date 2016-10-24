@@ -12,6 +12,7 @@ use Nova\Helpers\ReCaptcha;
 
 use App\Core\BackendController;
 
+use App;
 use Auth;
 use Hash;
 use Input;
@@ -116,7 +117,6 @@ class Authorize extends BackendController
      */
     public function remind()
     {
-
         return $this->getView()
             ->shares('title', __d('users', 'Password Recovery'));
     }
@@ -159,10 +159,8 @@ class Authorize extends BackendController
      * @param  string  $token
      * @return Response
      */
-    public function reset($token = null)
+    public function reset($token)
     {
-        if (is_null($token)) return Response::error(404);
-
         return $this->getView()
             ->shares('title', __d('users', 'Password Reset'))
             ->with('token', $token);

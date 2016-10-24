@@ -26,8 +26,8 @@ Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controller
     Route::post('password/remind', array('before' => 'guest|csrf', 'uses' => 'Authorize@postRemind'));
 
     // The Password Reset.
-    Route::get( 'password/reset/{token?}', array('before' => 'guest',      'uses' => 'Authorize@reset'));
-    Route::post('password/reset',          array('before' => 'guest|csrf', 'uses' => 'Authorize@postReset'));
+    Route::get( 'password/reset/{token}', array('before' => 'guest',      'uses' => 'Authorize@reset'));
+    Route::post('password/reset',         array('before' => 'guest|csrf', 'uses' => 'Authorize@postReset'));
 });
 
 // The Adminstration Routes.

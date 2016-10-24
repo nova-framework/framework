@@ -45,9 +45,9 @@ Route::filter('csrf', function($route, $request) {
     // The CSRF Token is invalid, respond with Error 400 (Bad Request)
     else if ($ajaxRequest) {
         return Response::make('Bad Request', 400);
-    } else {
-        return Response::error(400);
     }
+
+    App::abort(400, 'Bad Request');
 });
 
 // Referer checking Filter.
@@ -56,8 +56,8 @@ Route::filter('referer', function($route, $request) {
     $referer = $request->header('referer');
 
     if(! str_starts_with($referer, Config::get('app.url'))) {
-        // When Referrer is invalid, respond with Error 400 Page (Bad Request)
-        return Response::error(400);
+        // When Referrer is invalid, respond with Error 400 (Bad Request)
+        App::abort(400, 'Bad Request');
     }
 });
 

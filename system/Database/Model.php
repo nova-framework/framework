@@ -12,7 +12,7 @@ use Nova\Database\Connection;
 use Nova\Database\ConnectionResolverInterface as Resolver;
 use Nova\Database\Query\Builder as QueryBuilder;
 use Nova\Database\Query as Builder;
-use Nova\Helpers\Inflector;
+use Nova\Support\Str;
 
 
 class Model
@@ -23,13 +23,6 @@ class Model
      * @var string
      */
     protected $connection = null;
-
-    /**
-     * The database connection instance.
-     *
-     * @var \Nova\Database\Connection
-     */
-    protected $db;
 
     /**
      * The table associated with the Model.
@@ -68,16 +61,7 @@ class Model
      */
     public function __construct($connection = null)
     {
-        if ($connection === false) {
-            // Is wanted a bare Model instance.
-            return;
-        }
-
-        // Setup the Connection name.
         $this->connection = $connection;
-
-        // Setup the Connection instance.
-        $this->db = $this->getConnection();
     }
 
     /**
@@ -165,7 +149,7 @@ class Model
      */
     public static function getTableName()
     {
-        $model = new static(false);
+        $model = new static();
 
         return $model->getTable();
     }
@@ -179,9 +163,7 @@ class Model
     {
         if (isset($this->table)) return $this->table;
 
-        $baseName = class_basename($this);
-
-        return str_replace('\\', '', Inflector::tableize($baseName));
+        return str_replace('\\', '', Str::snake(class_basename($this)));
     }
 
     /**
@@ -329,6 +311,30 @@ class Model
     public function newBuilder($query)
     {
         return new Builder($query);
+    }
+
+    /**
+     * Dynamically retrieve attributes on the Model.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        if ($key == 'db') {
+            return $this->getConnection();
+        }
+    }
+
+    /**
+     * Determine if an attribute exists on the Model.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        return ($key == 'db');
     }
 
     /**

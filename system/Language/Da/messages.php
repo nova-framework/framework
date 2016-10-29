@@ -5,7 +5,8 @@ return array (
   'Database' => '',
   'Details' => 'Detaljer',
   'Duplicates' => 'Dubletter',
-  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => 'Tid brugt: <b>{0}</b> sec | Hukommelse brugt: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3, plural, one{query} other{queries}} | UMAX: <b>{4}</b>' => '',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>' => '',
   'Errors' => 'Fejl',
   'Forensics - Profiler start displaying the information' => 'Forensics - Profiler viser informationen',
   'Forensics - Profiler start gathering the information' => 'Forensics - Profiler henter informationen',
@@ -80,8 +81,6 @@ return array (
   'Total Time' => 'Samlet tid',
   'Type: <b>{0}</b>' => '',
   'Variables' => 'Variabler',
-  'queries' => '',
-  'query' => '',
   '{0} Files' => '{0} Filer',
   '{0} Queries' => '',
 );

@@ -5,7 +5,8 @@ return array (
   'Database' => 'Database',
   'Details' => 'Dettagli',
   'Duplicates' => 'Duplicati',
-  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => 'Tempo Trascorso: <b>{0}</b> sec | Uso Memoria: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3, plural, one{query} other{queries}} | UMAX: <b>{4}</b>' => '',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>' => '',
   'Errors' => 'Errori',
   'Forensics - Profiler start displaying the information' => 'Forense - Profiler inizia a mostrare le informazioni',
   'Forensics - Profiler start gathering the information' => 'Forense - Profiler inizia a raccogliere le informazioni',
@@ -80,8 +81,6 @@ return array (
   'Total Time' => 'Tempo Totale',
   'Type: <b>{0}</b>' => 'Tipo: <b>{0}</b>',
   'Variables' => 'Variabili',
-  'queries' => 'query',
-  'query' => 'query',
   '{0} Files' => '{0} File',
   '{0} Queries' => '{0} Query',
 );

@@ -9,43 +9,87 @@
 namespace Nova\Helpers;
 
 use Nova\Config\Config;
+use Nova\Helpers\Number;
 use Nova\Support\Facades\DB;
-use Nova\Support\Facades\Request as HttpRequest;
+use Nova\Support\Facades\Request;
 
 
 class Profiler
 {
+    /**
+     * Array holding the configuration.
+     */
+    protected $config = array();
 
-    public static function getReport()
+
+    protected function __construct()
     {
-        $options = Config::get('profiler');
+        $this->config = Config::get('profiler', array());
+    }
+
+    protected function getReport()
+    {
+        $withDatabase = $this->withDatabase();
 
         // Calculate the variables.
-        $execTime = microtime(true) - HttpRequest::server('REQUEST_TIME_FLOAT');
-
-        $elapsedTime = sprintf("%01.4f", $execTime);
-
         $memoryUsage = Number::humanSize(memory_get_usage());
 
-        if ($options['withDatabase'] == true) {
-            $connection = DB::connection();
+        $elapsedTime = $this->getElapsedTime();
 
-            $queries = $connection->getQueryLog();
+        $elapsedStr = sprintf("%01.4f", $elapsedTime);
 
-            $totalQueries = count($queries);
+        $umax = sprintf("%0d", intval(25 / $elapsedTime));
 
-            $queriesStr = ($totalQueries == 1) ? __d('nova', 'query') : __d('nova', 'queries');
+        if ($withDatabase) {
+            $queries = $this->getSqlQueries();
+
+            $result = __d('nova', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3, plural, one{query} other{queries}} | UMAX: <b>{4}</b>', $elapsedStr, $memoryUsage, $queries, $queries, $umax);
         } else {
-            $totalQueries = 0;
-
-            $queriesStr = __d('nova', 'queries');
+            $result = __d('nova', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>', $elapsedStr, $memoryUsage, $umax);
         }
 
-        $estimatedUsers = sprintf("%0d", intval(25 / $execTime));
+        return $result;
+    }
 
-        //
-        $retval = __d('nova', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>', $elapsedTime, $memoryUsage, $totalQueries, $queriesStr, $estimatedUsers);
+    protected function getElapsedTime()
+    {
+        $timestamp = microtime(true);
 
-        return $retval;
+        $requestTime = Request::server('REQUEST_TIME_FLOAT');
+
+        return ($timestamp - $requestTime);
+    }
+
+    protected function getSqlQueries()
+    {
+        $withDatabase = $this->withDatabase();
+
+        if (! $withDatabase) return 0;
+
+        // Calculate and return the total SQL Queries.
+        $connection = DB::connection();
+
+        $queries = $connection->getQueryLog();
+
+        return count($queries);
+    }
+
+    protected function withDatabase()
+    {
+        return array_get($this->config, 'withDatabase', false);
+    }
+
+    /**
+     * Magic Method for handling dynamic functions.
+     *
+     * @param  string  $method
+     * @param  array   $params
+     * @return void|mixed
+     */
+    public static function __callStatic($method, $params)
+    {
+        $instance = new static();
+
+        return call_user_func_array(array($instance, $method), $params);
     }
 }

@@ -5,7 +5,8 @@ return array (
   'Database' => 'База данных',
   'Details' => 'Подробности',
   'Duplicates' => 'Дубликаты',
-  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>' => 'Время генерации : <b>{0}</b> sec | Использование памяти: <b>{1}</b> | SQL: <b>{2}</b> {3} | UMAX: <b>{4}</b>',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3, plural, one{query} other{queries}} | UMAX: <b>{4}</b>' => '',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>' => '',
   'Errors' => 'Ошибки',
   'Forensics - Profiler start displaying the information' => 'Forensics - старт отображения информации Профайлера',
   'Forensics - Profiler start gathering the information' => 'Forensics - старт сбора информации Профайлера',
@@ -80,8 +81,6 @@ return array (
   'Total Time' => 'Суммарное время',
   'Type: <b>{0}</b>' => 'Тип: <b>{0}</b>',
   'Variables' => 'Переменные',
-  'queries' => 'запросов',
-  'query' => 'запрос',
   '{0} Files' => '{0} файлов',
   '{0} Queries' => '{0} запросов',
 );

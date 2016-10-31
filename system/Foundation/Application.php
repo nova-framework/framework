@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Application extends Container implements HttpKernelInterface, TerminableInterface, ResponsePreparerInterface
 {
     /**
-     * The Laravel framework version.
+     * The Nova framework version.
      *
      * @var string
      */

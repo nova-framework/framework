@@ -106,10 +106,10 @@ abstract class Controller extends BaseController
         $namespace = Config::get('modules.namespace', 'App\Modules\\');
 
         // Transform the Modules namespace on a path like variable.
-        $modules = str_replace('\\', '/', rtrim($namespace, '\\'));
+        $basePath = str_replace('\\', '/', rtrim($namespace, '\\'));
 
         // Check for a valid controller on Modules.
-        if (preg_match('#^'. $modules .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
+        if (preg_match('#^'. $basePath .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[2] .'/' .ucfirst($method);
 
             return View::make($view, $data, $matches[1]);

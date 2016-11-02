@@ -104,7 +104,14 @@ class DefaultDispatcher implements DispatcherInterface
 
             $path = str_replace('/', DS, $matches[3]);
 
-            $filePath = APPDIR .ucfirst($baseName) .DS .$folder .DS .'Assets' .DS .$path;
+            // Calculate the base path.
+            if ($baseName == 'modules') {
+                $basePath = Config::get('modules.path', APPDIR .'Modules');
+            } else {
+                $basePath = APPDIR .'Templates';
+            }
+
+            $filePath = $basePath .DS .$folder .DS .'Assets' .DS .$path;
         } else if (preg_match('#^(assets|vendor)/(.*)$#i', $uri, $matches)) {
             $baseName = strtolower($matches[1]);
 

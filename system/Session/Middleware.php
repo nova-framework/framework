@@ -66,7 +66,7 @@ class Middleware implements HttpKernelInterface
         $this->checkRequestForArraySessions($request);
 
         // If a session driver has been configured, we will need to start the session here
-        // so that the data is ready for an application. Note that the Laravel sessions
+        // so that the data is ready for an application. Note that the Nova sessions
         // do not make use of PHP "native" sessions in any way since they are crappy.
         if ($this->sessionConfigured()) {
             $session = $this->startSession($request);

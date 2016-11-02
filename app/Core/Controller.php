@@ -89,21 +89,33 @@ abstract class Controller extends BaseController
     {
         list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
+        // Retrieve the called Controller method from the caller.
         $method = $caller['function'];
 
-        //
+         // Transform the complete class name on a path like variable.
         $path = str_replace('\\', '/', static::class);
 
+        // Check for a valid controller on Application.
         if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[1] .'/' .ucfirst($method);
 
             return View::make($view, $data);
-        } else if (preg_match('#^App/Modules/(.+)/Controllers/(.*)$#i', $path, $matches)) {
+        }
+
+        // Retrieve the Modules namespace from their configuration.
+        $namespace = Config::get('modules.namespace', 'App\Modules\\');
+
+        // Transform the Modules namespace on a path like variable.
+        $modules = str_replace('\\', '/', rtrim($namespace, '\\'));
+
+        // Check for a valid controller on Modules.
+        if (preg_match('#^'. $modules .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[2] .'/' .ucfirst($method);
 
             return View::make($view, $data, $matches[1]);
         }
 
+        // If we arrived there, the called class is not a Controller; go Exception.
         throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
     }
 

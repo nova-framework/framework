@@ -92,7 +92,7 @@ class Authorize extends BackendController
         $status = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
         // Redirect to the User's Dashboard.
-        return Redirect::to('admin/dashboard')->withStatus($status);
+        return Redirect::intended('admin/dashboard')->withStatus($status);
     }
 
     /**

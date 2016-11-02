@@ -2,6 +2,7 @@
 
 namespace Nova\View;
 
+use Nova\Config\Config;
 use Nova\Support\Contracts\ArrayableInterface as Arrayable;
 use Nova\View\Engines\EngineResolver;
 use Nova\View\View;
@@ -252,13 +253,12 @@ class Factory
     protected function find($view, $module = null)
     {
         if (! is_null($module)) {
-            $path = "Modules/$module/Views/$view";
-        } else {
-            $path = "Views/$view";
-        }
+            $modulesPath = Config::get('modules.path', APPDIR .'Modules');
 
-        // Make the path absolute and adjust the directory separator.
-        $path = str_replace('/', DS, APPDIR .$path);
+            $path = str_replace('/', DS, $modulesPath ."/$module/Views/$view");
+        } else {
+            $path = str_replace('/', DS, APPDIR ."Views/$view");
+        }
 
         //
         $filePath = $this->finder->find($path);

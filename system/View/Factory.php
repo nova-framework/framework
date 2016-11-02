@@ -257,10 +257,10 @@ class Factory
 
             $path = str_replace('/', DS, $modulesPath ."/$module/Views/$view");
         } else {
-            $path = str_replace('/', DS, APPDIR ."Views/$view");
+            $path = APPDIR .str_replace('/', DS, "Views/$view");
         }
 
-        //
+        // Try to find the View file.
         $filePath = $this->finder->find($path);
 
         if (! is_null($filePath)) return $filePath;

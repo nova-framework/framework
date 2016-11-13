@@ -930,4 +930,20 @@ function add_http($url, $scheme = 'http://')
     return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
 }
 
+/**
+ * Replace a given pattern with each value in the array in sequentially.
+ *
+ * @param  string  $pattern
+ * @param  array   $replacements
+ * @param  string  $subject
+ * @return string
+ */
+function preg_replace_sub($pattern, &$replacements, $subject)
+{
+    return preg_replace_callback($pattern, function($match) use (&$replacements)
+    {
+        return array_shift($replacements);
+    }, $subject);
+}
+
 }

@@ -180,7 +180,7 @@ class FormBuilder
      */
     public function token()
     {
-        return $this->hidden('_token', $this->csrfToken);
+        return $this->hidden('csrfToken', $this->csrfToken);
     }
 
     /**

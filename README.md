@@ -56,7 +56,7 @@ The framework is located on [Packagist](https://packagist.org/packages/nova-fram
 You can install the framework from a terminal by using:
 
 ```
-composer create-project nova-framework/framework foldername 3.x -s dev
+composer create-project nova-framework/framework foldername 3.0 -s dev
 ```
 
 The foldername is the desired folder to be created.

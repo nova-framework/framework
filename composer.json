@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "nova-framework/system": "dev-origin/3.x as 3.0.x-dev",
+        "nova-framework/system": "3.*",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3"
     },

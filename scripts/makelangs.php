@@ -22,13 +22,12 @@ $languages = array(
 );
 
 $workPaths = array(
-    'system',
     'shared',
-    'app',
+    'app'
 );
 
 //
-function str_starts_with($haystack, $needle) {
+function starts_with($haystack, $needle) {
     return (($needle === '') || (strpos($haystack, $needle) === 0));
 }
 
@@ -124,7 +123,7 @@ return " .var_export(array(), true).";\n";
         if($workPath == 'app') {
             $testPath = substr($filePath, strlen(BASEPATH));
 
-            if(str_starts_with($testPath, 'app/Modules') || str_starts_with($testPath, 'app/Templates')) {
+            if(starts_with($testPath, 'app/Modules') || starts_with($testPath, 'app/Templates')) {
                 continue;
             }
         }

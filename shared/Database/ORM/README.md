@@ -9,7 +9,7 @@ In your ORM Model:
 ```php
 use Shared\Database\ORM\FileFieldTrait;
 
-public $files = (
+public $files = array(
     'image' => array(),
     'poster' => array(
         'path' => 'uploads/:class_slug/:attribute/:unique_id-:file_name',

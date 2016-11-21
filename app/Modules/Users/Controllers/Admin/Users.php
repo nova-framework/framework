@@ -56,6 +56,7 @@ class Users extends BackendController
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email',
+            'image'                 => 'max:1024|mimes:png,jpg,gif',
         );
 
         $messages = array(
@@ -70,6 +71,7 @@ class Users extends BackendController
             'password'              => __d('users', 'Password'),
             'password_confirmation' => __d('users', 'Password confirmation'),
             'email'                 => __d('users', 'E-mail'),
+            'image'                 => __d('users', 'Profile Picture'),
         );
 
         // Add the custom Validation Rule commands.
@@ -194,7 +196,7 @@ class Users extends BackendController
         }
 
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email');
+        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image');
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
             unset($input['password']);
@@ -212,37 +214,15 @@ class Users extends BackendController
             $user->realname = $input['realname'];
             $user->email    = $input['email'];
 
+            // If a file has been uploaded.
+            if (Input::hasFile('image')) {
+                $user->image = Input::file('image');
+            }
+
             if(isset($input['password'])) {
                 // Encrypt and add the given Password.
                 $user->password = Hash::make($input['password']);
             }
-
-            //if file has been uploaded
-            if (Input::hasFile('imagePath')) {
-
-                //allowable file types
-                $allowed = ['png', 'jpg', 'gif'];
-
-                //if extension is in the array above
-                if (in_array(Input::file('imagePath')->getClientOriginalExtension(), $allowed) ) {
-
-                    $imgPath = 'assets/images/users/';
-
-                    //if folder does not exist create it
-                    if (! file_exists(ROOTDIR.$imgPath.$id)) {
-                        mkdir(ROOTDIR.$imgPath.$id);
-                    }
-
-                    // location where initial upload will be moved to
-                    $target = 'images/users/'.$id.'/'.Input::file('imagePath')->getClientOriginalName();
-
-                    //move uploaded image
-                    Input::file('imagePath')->move($imgPath.$id.'/', Input::file('imagePath')->getClientOriginalName());
-        
-                    //update path 
-                    $user->imagePath = $target;
-                }
-            } 
 
             // Save the User information.
             $user->save();

@@ -24,9 +24,9 @@
             <form action="<?= site_url('admin/users/' .$user->id); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="imagePath"><?= __d('users', 'Profile Picture (to change)'); ?></label>
+                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Profile Picture (to change)'); ?></label>
                 <div class="col-sm-8">
-                    <input name="imagePath" id="imagePath" type="file" class="form-control">
+                    <input name="image" id="image" type="file" class="form-control">
                 </div>
             </div>
             <div class="form-group">

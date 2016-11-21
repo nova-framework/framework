@@ -34,6 +34,7 @@ CREATE TABLE `nova_users` (
   `realname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `active` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
+  `imagePath` varchar(255) DEFAULT 'images/users/no-image.png',
   `activation_code` varchar(255) DEFAULT NULL,
   `remember_token` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',

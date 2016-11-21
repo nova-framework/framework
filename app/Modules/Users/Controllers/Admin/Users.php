@@ -17,10 +17,12 @@ use Carbon\Carbon;
 use Auth;
 use Hash;
 use Input;
+use File;
 use Redirect;
 use Session;
 use Validator;
 use View;
+
 
 
 class Users extends BackendController
@@ -214,6 +216,33 @@ class Users extends BackendController
                 // Encrypt and add the given Password.
                 $user->password = Hash::make($input['password']);
             }
+
+            //if file has been uploaded
+            if (Input::hasFile('imagePath')) {
+
+                //allowable file types
+                $allowed = ['png', 'jpg', 'gif'];
+
+                //if extension is in the array above
+                if (in_array(Input::file('imagePath')->getClientOriginalExtension(), $allowed) ) {
+
+                    $imgPath = 'assets/images/users/';
+
+                    //if folder does not exist create it
+                    if (! file_exists(ROOTDIR.$imgPath.$id)) {
+                        mkdir(ROOTDIR.$imgPath.$id);
+                    }
+
+                    // location where initial upload will be moved to
+                    $target = 'images/users/'.$id.'/'.Input::file('imagePath')->getClientOriginalName();
+
+                    //move uploaded image
+                    Input::file('imagePath')->move($imgPath.$id.'/', Input::file('imagePath')->getClientOriginalName());
+        
+                    //update path 
+                    $user->imagePath = $target;
+                }
+            } 
 
             // Save the User information.
             $user->save();

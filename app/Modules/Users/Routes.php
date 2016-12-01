@@ -19,6 +19,9 @@ Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
+    // The Users Search.
+    Route::post('users/search', array('before' => 'auth', 'uses' => 'Users@search'));
+
     // The Users CRUD.
     Route::get( 'users',              array('before' => 'auth',      'uses' => 'Users@index'));
     Route::get( 'users/create',       array('before' => 'auth',      'uses' => 'Users@create'));
@@ -27,9 +30,6 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Contro
     Route::get( 'users/{id}/edit',    array('before' => 'auth',      'uses' => 'Users@edit'));
     Route::post('users/{id}',         array('before' => 'auth|csrf', 'uses' => 'Users@update'));
     Route::post('users/{id}/destroy', array('before' => 'auth|csrf', 'uses' => 'Users@destroy'));
-
-    // The Users Search.
-    Route::post( 'users/search', array('before' => 'auth', 'uses' => 'Users@search'));
 
     // The Roles CRUD.
     Route::get( 'roles',              array('before' => 'auth',      'uses' => 'Roles@index'));

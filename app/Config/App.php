@@ -62,7 +62,7 @@ Config::set('app', array(
 
     /**
      * The Encryption Key.
-     * This tool can be used to generate key - http://jeffreybarke.net/tools/codeigniter-encryption-key-generator
+     * This page can be used to generate key - http://novaframework.com/token-generator
      */
     'key' => 'SomeRandomStringThere_1234567890',
 

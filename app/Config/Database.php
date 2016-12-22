@@ -71,4 +71,22 @@ Config::set('database', array(
             'database' => 0,
         ),
     ),
+
+    //--------------------------------------------------------------------------
+    // Database Backup
+    //--------------------------------------------------------------------------
+
+    'backup' => array(
+        // The path where database dumps are stored.
+        'path'  => APPDIR .'Database' .DS .'Backup' .DS,
+
+        // The paths to the MySQL tools used by Forge.
+        'mysql' => array(
+            'dumpCommandPath'    => '/usr/bin/mysqldump',
+            'restoreCommandPath' => '/usr/bin/mysql',
+        ),
+
+        // Wheter or not the dump file is compressed.
+        'compress' => true,
+    ),
 ));

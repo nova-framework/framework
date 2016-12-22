@@ -138,7 +138,7 @@ with($envVariables = new EnvironmentVariables(
 // Load The Configuration
 //--------------------------------------------------------------------------
 
-foreach (glob(app_path() .DS .'Config/*.php') as $path) {
+foreach (glob($app['path'] .DS .'Config' .DS .'*.php') as $path) {
     if (is_readable($path)) require $path;
 }
 

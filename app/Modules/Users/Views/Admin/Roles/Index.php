@@ -84,7 +84,7 @@ if (! $roles->isEmpty()) {
             </div>
             <div class="modal-body">
                 <p><?= __d('users', 'Are you sure you want to delete the Role <b>{0}</b>, the operation being irreversible?', $role->name); ?></p>
-                <p><?= __d('users', 'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abbandon the operation.'); ?></p>
+                <p><?= __d('users', 'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>

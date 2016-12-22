@@ -106,7 +106,7 @@ Config::set('app', array(
         'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
         
-        // The (local) Shared Providers
+        // The (local) Shared Providers.
         'Shared\Database\Backup\BackupServiceProvider',
     ),
 

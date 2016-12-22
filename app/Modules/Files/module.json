@@ -1,0 +1,17 @@
+{
+    "name": "Files",
+    "description": "This is the description for the Files module.",
+    "homepage": "http://www.novaframework.dev",
+    "version": "1.0",
+    "authors" : [
+        {
+            "name" : "John Doe",
+            "email" : "johndoe@novaframework.dev",
+            "homepage": "http://www.novaframework.dev",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "slug": "files",
+    "namespace": "Files"
+}

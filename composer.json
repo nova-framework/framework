@@ -1,8 +1,8 @@
 {
-    "name": "nova-framework/framework",
+    "name": "nova-framework/app",
     "type": "project",
     "description": "Framework for PHP 5.5+",
-    "homepage": "https://github.com/nova-framework/framework",
+    "homepage": "https://github.com/nova-framework/bare-app",
     "license": "MIT",
     "authors": [
         {
@@ -20,15 +20,33 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "nova-framework/system": "dev-origin/3.x as 3.0.x-dev",
+        "nova-framework/system": "master",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3"
     },
     "autoload": {
+        "classmap": [
+            "app/Database/Migrations",
+            "app/Database/Seeds"
+        ],
         "psr-4": {
             "App\\" : "app/",
             "Shared\\" : "shared/"
         }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php forge optimize",
+            "php forge module:optimize"
+        ],
+        "post-update-cmd": [
+            "php forge clear-compiled",
+            "php forge optimize",
+            "php forge module:optimize"
+        ],
+        "post-create-project-cmd": [
+            "php forge key:generate"
+        ]
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

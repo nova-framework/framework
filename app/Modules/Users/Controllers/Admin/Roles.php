@@ -8,6 +8,8 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
+use Nova\Helpers\ReCaptcha;
+
 use App\Core\BackendController;
 use App\Models\Role;
 
@@ -132,7 +134,7 @@ class Roles extends BackendController
 
         if($role === null) {
             // There is no Role with this ID.
-            $status = __('Role not found: #{0}', $id);
+            $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }

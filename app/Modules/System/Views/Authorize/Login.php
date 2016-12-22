@@ -14,7 +14,7 @@
                 <div class="panel-title"><?= __d('system', 'Login to <b>{0}</b>', SITETITLE); ?></div>
             </div>
             <div class="panel-body">
-                <form method='post' role="form">
+                <form action="<?= site_url('login'); ?>" method='POST' role="form">
 
                 <div class="form-group">
                     <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('system', 'Username'); ?>"><br><br></p>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
 
                 </form>
             </div>
@@ -60,4 +60,4 @@ var captchaCallback = function() {
 
 </script>
 
-<script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?php echo LANGUAGE_CODE; ?>" async defer></script>
+<script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?= Language::code(); ?>" async defer></script>

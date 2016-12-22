@@ -18,8 +18,9 @@ use Auth;
 use Config;
 use Hash;
 use Input;
-use Mailer;
+use Mail;
 use Redirect;
+use Request;
 use Session;
 use Validator;
 use View;
@@ -27,7 +28,7 @@ use View;
 
 class Registrar extends BackendController
 {
-    protected $layout   = 'default';
+    protected $layout = 'default';
 
 
     protected function validate(array $data)
@@ -86,7 +87,7 @@ class Registrar extends BackendController
      *
      * @return Response
      *
-     * @throws \RuntimeException
+     * @thows \RuntimeException
      */
     public function store()
     {
@@ -141,7 +142,7 @@ class Registrar extends BackendController
         ));
 
         // Send the associated Activation E-mail.
-        Mailer::send('Emails/Auth/Activate', array('token' => $token), function($message) use ($user)
+        Mail::send('Emails/Auth/Activate', array('token' => $token), function($message) use ($user)
         {
             $subject = __d('users', 'Activate your Account!');
 

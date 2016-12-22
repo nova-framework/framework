@@ -8,7 +8,6 @@ use App\Core\Controller;
 use Cookie;
 use Redirect;
 use Session;
-use View;
 
 
 class Language extends Controller

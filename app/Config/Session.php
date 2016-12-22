@@ -10,7 +10,7 @@ use Nova\Config\Config;
 
 
 Config::set('session', array(
-    'driver' => 'file', // The Session Driver used for storing Session data; supported: 'file', 'database' or 'cookie'.
+    'driver' => 'file', // The Session Driver used for storing Session data; supported: 'file' or 'database'.
 
     // The Database Session Driver configuration.
     'table'      => 'sessions', // The Database Table hosting the Session data.

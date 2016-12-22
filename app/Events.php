@@ -3,40 +3,28 @@
  * Events - all standard Events are defined here.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
-
 
 /** Define Events. */
 
-// Add a Listener to the Event 'router.matched', to process the global View variables.
+// Add a Listener Closure to the Event 'router.matched'.
 Event::listen('router.matched', function($route, $request) {
-    $session = $request->session();
+    // Share the Views the current URI.
+    View::share('currentUri', $request->path());
 
-    // Share on Views the CSRF Token.
-    View::share('csrfToken', $session->token());
-
-    // Calculate the URIs and share them on Views.
-    $uri = $request->path();
-
-    // Prepare the base URI.
+    // Share the Views the Backend's base URI.
     $segments = $request->segments();
 
-    if (! empty($segments)) {
+    if(! empty($segments)) {
         // Make the path equal with the first part if it exists, i.e. 'admin'
-        $baseUri = array_shift($segments);
+        $baseUri = array_shift($segments) .'/';
 
         // Add to path the next part, if it exists, defaulting to 'dashboard'.
-        if (! empty($segments)) {
-            $baseUri .= '/' .array_shift($segments);
-        } else if ($baseUri == 'admin') {
-            $baseUri .= '/dashboard';
-        }
+        $baseUri .= ! empty($segments) ? array_shift($segments) : 'dashboard';
     } else {
-        // Respect the URI conventions.
-        $baseUri = '/';
+        $baseUri = '';
     }
 
-    View::share('currentUri', $uri);
     View::share('baseUri', $baseUri);
 });

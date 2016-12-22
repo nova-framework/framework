@@ -3,15 +3,15 @@
  * Routes - all standard Routes are defined here.
  *
  * @author David Carr - dave@daveismyname.com
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
 
 /** Define static routes. */
 
-// The default Routing
-Route::get('/',       'App\Controllers\Welcome@index');
-Route::get('subpage', 'App\Controllers\Welcome@subPage');
+// Default Routing
+Route::any('',        'App\Controllers\Welcome@index');
+Route::any('subpage', 'App\Controllers\Welcome@subPage');
 
 /** End default Routes */
+

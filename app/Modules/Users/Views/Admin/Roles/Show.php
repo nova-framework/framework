@@ -36,11 +36,11 @@
             </tr>
             <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Created At'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->created_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->created_at->formatLocalized('%d %b %Y, %H:%M'); ?></td>
             </tr>
             <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Updated At'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->updated_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $role->updated_at->formatLocalized('%d %b %Y, %H:%M'); ?></td>
             <tr>
         </table>
     </div>

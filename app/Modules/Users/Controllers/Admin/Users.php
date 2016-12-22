@@ -17,10 +17,12 @@ use Carbon\Carbon;
 use Auth;
 use Hash;
 use Input;
+use File;
 use Redirect;
 use Session;
 use Validator;
 use View;
+
 
 
 class Users extends BackendController
@@ -54,6 +56,7 @@ class Users extends BackendController
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email',
+            'image'                 => 'max:1024|mimes:png,jpg,gif',
         );
 
         $messages = array(
@@ -68,6 +71,7 @@ class Users extends BackendController
             'password'              => __d('users', 'Password'),
             'password_confirmation' => __d('users', 'Password confirmation'),
             'email'                 => __d('users', 'E-mail'),
+            'image'                 => __d('users', 'Profile Picture'),
         );
 
         // Add the custom Validation Rule commands.
@@ -192,7 +196,7 @@ class Users extends BackendController
         }
 
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email');
+        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image');
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
             unset($input['password']);
@@ -209,6 +213,11 @@ class Users extends BackendController
             $user->role_id  = $input['role'];
             $user->realname = $input['realname'];
             $user->email    = $input['email'];
+
+            // If a file has been uploaded.
+            if (Input::hasFile('image')) {
+                $user->image = Input::file('image');
+            }
 
             if(isset($input['password'])) {
                 // Encrypt and add the given Password.

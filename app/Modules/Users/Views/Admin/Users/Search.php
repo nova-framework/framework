@@ -2,7 +2,7 @@
     <h1><?= __d('users', 'Search Users'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
-        <li><a href='<?= site_url('admin/users'); ?>'><?= __('Users'); ?></a></li>
+        <li><a href='<?= site_url('admin/users'); ?>'><?= __d('users', 'Users'); ?></a></li>
         <li><?= __d('users', 'Search'); ?></li>
     </ol>
 </section>
@@ -35,7 +35,7 @@
     <td style='text-align: center; vertical-align: middle;' width='20%'>" .$user->username ."</td>
     <td style='text-align: center; vertical-align: middle;' width='25%'>" .$user->realname ."</td>
     <td style='text-align: center; vertical-align: middle;' width='20%'>" .$user->email ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$user->created_at->formatLocalized('%d %b %Y, %R') ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$user->created_at->formatLocalized('%d %b %Y, %H:%M') ."</td>
     <td style='text-align: right; vertical-align: middle;' width='15%'>
         <div class='btn-group' role='group' aria-label='...'>
             <a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<a class='btn btn-primary' href='<?= Request::header('referer'); ?>'><?= __('<< Previous Page'); ?></a>
+<a class='btn btn-primary' href='<?= Request::header('referer'); ?>'><?= __d('users', '<< Previous Page'); ?></a>
 
 </section>
 
@@ -75,12 +75,12 @@ if (! $users->isEmpty()) {
             </div>
             <div class="modal-body">
                 <p><?= __d('users', 'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?', $user->name); ?></p>
-                <p><?= __d('users', 'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+                <p><?= __d('users', 'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abbandon the operation.'); ?></p>
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
                 <form action="<?= site_url('admin/users/' .$user->id .'/destroy'); ?>" method="POST">
-                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('users', 'Delete the User'); ?>">
                 </form>
             </div>

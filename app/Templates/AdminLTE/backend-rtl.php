@@ -3,6 +3,8 @@
  * Backend Default RTL Layout
  */
 
+$version = trim(file_get_contents(ROOTDIR .'VERSION.txt'));
+
 // Prepare the current User Info.
 $user = Auth::user();
 
@@ -208,7 +210,7 @@ $langMenuLinks = ob_get_clean();
       <?php } ?>
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= VERSION; ?></b></a> - </strong> All rights reserved.
+    <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= $version; ?> / Kernel <?= VERSION; ?></b></a> - </strong> All rights reserved.
   </footer>
 
 </div>

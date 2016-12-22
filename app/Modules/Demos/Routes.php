@@ -3,7 +3,7 @@
  * Routes - all Module's specific Routes are defined here.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
 
@@ -18,7 +18,6 @@ Route::group(array('prefix' => 'demo', 'namespace' => 'App\Modules\Demos\Control
     Route::get('validate', 'Demos@validate');
     Route::get('paginate', 'Demos@paginate');
     Route::get('cache',    'Demos@cache');
-    Route::get('modules',  'Demos@modules');
 
     Route::get('password/{password}', 'Demos@password');
 

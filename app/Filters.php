@@ -3,7 +3,7 @@
  * Routing Filters - all standard Routing Filters are defined here.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
 /*
@@ -36,7 +36,7 @@ Route::filter('csrf', function($route, $request) {
 
     $ajaxRequest = $request->ajax();
 
-    $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
+    $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('_token');
 
     if ($session->token() == $token) {
         //
@@ -46,7 +46,7 @@ Route::filter('csrf', function($route, $request) {
     else if ($ajaxRequest) {
         return Response::make('Bad Request', 400);
     } else {
-        App::abort(400, 'Bad Request');
+	return Response::error(400);
     }
 });
 
@@ -56,8 +56,8 @@ Route::filter('referer', function($route, $request) {
     $referer = $request->header('referer');
 
     if(! starts_with($referer, Config::get('app.url'))) {
-        // When Referrer is invalid, respond with Error 400 (Bad Request)
-        App::abort(400, 'Bad Request');
+        // When Referrer is invalid, respond with Error 400 Page (Bad Request)
+        return Response::error(400);
     }
 });
 
@@ -69,7 +69,7 @@ Route::filter('auth', function($route, $request) {
 
     // User is not authenticated.
     else if (! $request->ajax()) {
-        return Redirect::guest('login');
+         return Redirect::guest('login');
     } else {
         return Response::make('Unauthorized Access', 403);
     }
@@ -87,21 +87,8 @@ Route::filter('guest', function($route, $request) {
 
     // User is authenticated.
     else if (! $request->ajax()) {
-        return Redirect::to('admin/dashboard');
+         return Redirect::guest('admin/dashboard');
     } else {
         return Response::make('Unauthorized Access', 403);
-    }
-});
-
-// Role-based Authorization Filter.
-Route::filter('roles', function($route, $request, $response, $roles = null) {
-    if (! is_null($roles) && Auth::check()) {
-        $user = Auth::user();
-
-        if (! $user->hasRole($roles)) {
-            $status = __('You are not authorized to access this resource.');
-
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-        }
     }
 });

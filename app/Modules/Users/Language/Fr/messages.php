@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
   '<< Previous Page' => '',
   'Activate your Account!' => '',
   'Activated! You can now Sign in!' => '',
@@ -43,8 +42,9 @@ return array (
   'Operations' => '',
   'Password' => '',
   'Password confirmation' => '',
-  'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
-  'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
+  'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => '',
+  'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abbandon the operation.' => '',
+  'Profile Picture' => '',
   'Register to <b>{0}</b>' => '',
   'Registered Roles' => '',
   'Registered Users' => '',

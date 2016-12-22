@@ -33,7 +33,6 @@ class ContentGuard implements HttpKernelInterface
      */
     protected $debug;
 
-
     /**
      * Create a new FrameGuard instance.
      *
@@ -76,7 +75,7 @@ class ContentGuard implements HttpKernelInterface
 
         if (! str_is('text/html*', $contentType)) return $response;
 
-        if ($this->debug) {
+        if($this->debug) {
             // Insert the QuickProfiler Widget in the Response's Content.
             $content = str_replace(
                 array(

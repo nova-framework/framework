@@ -2,10 +2,10 @@
 
 return array (
   '%d %b %Y, %R' => '',
-  'ADMINISTRATION' => 'مدیریت کل',
-  'Control Panel' => 'پنل کنترل',
+  'ADMINISTRATION' => 'مدیریت',
+  'Control Panel' => 'کنترل پنل',
   'Dashboard' => 'داشبورد',
-  'Files' => 'فایل ها',
+  'Files' => '',
   'Forgot Password?' => 'فراموشی رمزعبور؟',
   'Logout' => 'خروج',
   'Member since {0}' => 'عضو از {0}',

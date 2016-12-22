@@ -40,6 +40,7 @@ return array (
   'Password Reset' => '',
   'Passwords must be strong enough and match the confirmation.' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => '',
+  'Pretend' => '',
   'Purple' => 'Lilla',
   'Purple Light' => 'Lys Lilla',
   'Red' => 'Rød',

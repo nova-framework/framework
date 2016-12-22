@@ -20,7 +20,10 @@ Config::set('database', array(
     // The Default Database Connection Name.
     'default' => 'mysql',
 
-    // The Database Connections.
+    //--------------------------------------------------------------------------
+    //  The Database Connections
+    //--------------------------------------------------------------------------
+
     'connections' => array(
         'sqlite' => array(
             'driver'    => 'sqlite',
@@ -29,7 +32,7 @@ Config::set('database', array(
         ),
         'mysql' => array(
             'driver'    => 'mysql',
-            'hostname'  => 'localhost',
+            'host'      => 'localhost',
             'database'  => 'nova',
             'username'  => 'nova',
             'password'  => 'password',
@@ -46,6 +49,26 @@ Config::set('database', array(
             'charset'  => 'utf8',
             'prefix'   => PREFIX,
             'schema'   => 'public',
+        ),
+    ),
+
+    //--------------------------------------------------------------------------
+    // Migration Repository Table
+    //--------------------------------------------------------------------------
+
+    'migrations' => 'migrations',
+
+    //--------------------------------------------------------------------------
+    // Redis Databases
+    //--------------------------------------------------------------------------
+
+    'redis' => array(
+        'cluster' => false,
+
+        'default' => array(
+            'host'     => '127.0.0.1',
+            'port'     => 6379,
+            'database' => 0,
         ),
     ),
 ));

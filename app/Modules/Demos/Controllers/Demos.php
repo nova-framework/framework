@@ -3,10 +3,8 @@
 namespace App\Modules\Demos\Controllers;
 
 use App\Core\Controller;
-
-use Nova\Routing\Route;
-
 use App\Models\User;
+use Nova\Routing\Route;
 
 use App;
 use Cache;
@@ -15,7 +13,6 @@ use Event;
 use Hash;
 use Input;
 use Mailer;
-use Module;
 use Redirect;
 use Request;
 use Session;
@@ -50,31 +47,77 @@ class Demos extends Controller
             ->with('content', $content);
     }
 
+    /**
+     * Returns the next static character in the Route pattern that will serve as a separator.
+     *
+     * @param string $pattern The route pattern
+     *
+     * @return string The next static character that functions as separator (or empty string when none available)
+     */
+    private static function findNextSeparator($pattern)
+    {
+        if ('' == $pattern) {
+            // return empty string if pattern is empty or false (false which can be returned by substr)
+            return '';
+        }
+
+        // first remove all placeholders from the pattern so we can find the next real static character
+        $pattern = preg_replace('#\(:\w+\)#', '', $pattern);
+
+        return (isset($pattern[0]) && (false !== strpos(static::SEPARATORS, $pattern[0]))) ? $pattern[0] : '';
+    }
+
     public function test()
     {
-        $request = Request::instance();
-
         $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
-
+        $content = '';
+        /*
         //
-        $route = new Route('GET', $uri, function()
-        {
-            echo 'Hello, World!';
-
+        $route = new Route('GET', $uri, function() {
+            //
         });
 
         $route->where('slug', '(.*)');
 
         // Match the Route.
+        $request = Request::instance();
+
         if ($route->matches($request)) {
-            $route->bind($request);
-
-            $content = '<pre>Route matched!</pre>';
+            $content = '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
         } else {
-            $content = '<pre>Route not matched!</pre>';
+            $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
         }
+        */
 
-        $content .= '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
+        $filePath = ROOTDIR .'vendor/composer/autoload_classmap.php';
+
+        if (is_readable($filePath)) {
+            $data = include $filePath;
+
+            $classes = array_filter(array_keys($data), function($value)
+            {
+                return starts_with($value, 'Nova\\');
+            });
+
+            //
+            $content = '<table class="table table-striped table-hover table-condensed responsive">
+                            <tr><th>Class</th><th>Alias</th></tr>';
+
+            $aliases = array();
+
+            foreach ($classes as $value) {
+                $alias = preg_replace('/^Nova\\\/s', '', $value);
+                //$alias = str_replace('Nova\\', '', $value);
+
+                $aliases[$alias] = $value;
+
+                $content .= '<tr><td>' .$value .'</td><td>' .$alias .'</td></tr>';
+            }
+
+            $content .= '</table>';
+        } else {
+            $content .= __('<b>{1}</b> is not readable or does not exists!', str_replace(ROOTDIR, '', $filePath));
+        }
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))
@@ -285,52 +328,6 @@ class Demos extends Controller
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Cache'))
-            ->with('content', $content);
-    }
-
-    public function modules()
-    {
-        $modules = Module::getModules();
-
-        $content = "<h3 style='text-align: center'>" .__d('demos', 'The Modules configured on this Application') ."</h3>
-<table class='table table-striped table-hover responsive'>
-    <tr class='bg-navy disabled'>
-        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Name') ."</th>
-        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Slug') ."</th>
-        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Enabled') ."</th>
-        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Order') ."</th>
-        <th style='text-align: center; vertical-align: middle;'>" .__d('demos', 'Autoload') ."</th>
-    </tr>";
-
-        $modules->each(function($properties) use (&$content)
-        {
-            $name  = array_get($properties,'name');
-            $slug  = array_get($properties,'slug');
-            $order = array_get($properties,'order');
-
-            //
-            $enabled = array_get($properties,'enabled', true) ? __d('demos', 'Yes') : __d('demos', 'No');
-
-            //
-            $autoload = implode(', ', array_get($properties, 'autoload'));
-
-            $content .= "
-    <tr>
-        <td style='text-align: center; vertical-align: middle;' width='20%'>$name</td>
-        <td style='text-align: center; vertical-align: middle;' width='20%'>$slug</td>
-        <td style='text-align: center; vertical-align: middle;' width='15%'>$enabled</td>
-        <td style='text-align: center; vertical-align: middle;' width='15%'>$order</td>
-        <td style='text-align: center; vertical-align: middle;' width='45%'>$autoload</td>
-    <tr>";
-
-        });
-
-        $content .= "
-</table>
-";
-
-        return View::make('Default')
-            ->shares('title', __d('demos', 'Modules'))
             ->with('content', $content);
     }
 

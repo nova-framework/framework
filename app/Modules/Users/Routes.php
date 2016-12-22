@@ -3,7 +3,7 @@
  * Routes - all Module's specific Routes are defined here.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
 
@@ -19,6 +19,10 @@ Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
+
+    // The Users Search.
+    Route::post('users/search', array('before' => 'auth', 'uses' => 'Users@search'));
+
     // The Users CRUD.
     Route::get( 'users',              array('before' => 'auth',      'uses' => 'Users@index'));
     Route::get( 'users/create',       array('before' => 'auth',      'uses' => 'Users@create'));
@@ -28,8 +32,6 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Contro
     Route::post('users/{id}',         array('before' => 'auth|csrf', 'uses' => 'Users@update'));
     Route::post('users/{id}/destroy', array('before' => 'auth|csrf', 'uses' => 'Users@destroy'));
 
-    // The Users Search.
-    Route::post( 'users/search', array('before' => 'auth', 'uses' => 'Users@search'));
 
     // The Roles CRUD.
     Route::get( 'roles',              array('before' => 'auth',      'uses' => 'Roles@index'));

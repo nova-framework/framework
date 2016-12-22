@@ -22,7 +22,7 @@ Config::set('app', array(
     /**
      * The Website URL.
      */
-    'url' => 'http://www.novatesting.dev/',
+    'url' => 'http://www.novaframework.dev/',
 
     /**
     * The Administrator's E-mail Address.

@@ -37,7 +37,7 @@ Assets::js(array(
             dateFormat: 'M d, Y h:i A',
             fancyDateFormat: '$1 H:m:i',
             lang: '<?= Language::code(); ?>',
-            height: 600,
+            height: 550,
             cookie : {
                 expires: 30,
                 domain: '',

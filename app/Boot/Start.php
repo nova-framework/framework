@@ -12,7 +12,6 @@ use Nova\Config\Repository as ConfigRepository;
 use Nova\Foundation\AliasLoader;
 use Nova\Foundation\Application;
 use Nova\Http\Request;
-use Nova\Http\RequestProcessor;
 use Nova\Support\Facades\Facade;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -245,7 +244,7 @@ if(CONFIG_STORE == 'database') {
 // Load The Application Events
 //--------------------------------------------------------------------------
 
-$path = app_path() .DS .'Events.php';
+$path = $app['path'] .DS .'Events.php';
 
 if (is_readable($path)) require $path;
 
@@ -253,7 +252,7 @@ if (is_readable($path)) require $path;
 // Load The Application's Route Filters
 //--------------------------------------------------------------------------
 
-$path = app_path() .DS .'Filters.php';
+$path = $app['path'] .DS .'Filters.php';
 
 if (is_readable($path)) require $path;
 
@@ -269,7 +268,7 @@ if (is_readable($path)) require $path;
 // Load The Application Bootstrap
 //--------------------------------------------------------------------------
 
-$path = app_path() .'Bootstrap.php';
+$path = $app['path'] .'Bootstrap.php';
 
 if (is_readable($path)) require $path;
 

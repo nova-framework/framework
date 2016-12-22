@@ -1,7 +1,5 @@
 <?php
 
-use Nova\Config\Config;
-
 /**
  * Setup the Profiler configuration
  */

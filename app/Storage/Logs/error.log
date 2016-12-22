@@ -1,1 +1,26 @@
 
+[2016-12-22 09:39:38] local.ERROR: exception 'InvalidArgumentException' with message 'Unable to load the view 'backend' on template 'AdminLTE'.' in /var/www/sites/packages/novaframework/system4/src/Layout/Factory.php:128
+Stack trace:
+#0 /var/www/sites/packages/novaframework/system4/src/Layout/Factory.php(58): Nova\Layout\Factory->find('backend', 'AdminLTE')
+#1 [internal function]: Nova\Layout\Factory->make('backend', Array, 'AdminLTE')
+#2 /var/www/sites/packages/novaframework/system4/src/Support/Facades/Facade.php(111): call_user_func_array(Array, Array)
+#3 /var/www/sites/novatesting/app/Core/Controller.php(66): Nova\Support\Facades\Facade::__callStatic('make', Array)
+#4 /var/www/sites/novatesting/app/Core/Controller.php(66): Nova\Support\Facades\Layout::make('backend', Array, 'AdminLTE')
+#5 /var/www/sites/packages/novaframework/system4/src/Routing/Controller.php(250): App\Core\Controller->processResponse(Object(Nova\View\View))
+#6 /var/www/sites/packages/novaframework/system4/src/Routing/ControllerDispatcher.php(94): Nova\Routing\Controller->callAction('index', Array)
+#7 /var/www/sites/packages/novaframework/system4/src/Routing/ControllerDispatcher.php(63): Nova\Routing\ControllerDispatcher->call(Object(App\Modules\System\Controllers\Admin\Dashboard), Object(Nova\Routing\Route), 'index')
+#8 /var/www/sites/packages/novaframework/system4/src/Routing/Router.php(962): Nova\Routing\ControllerDispatcher->dispatch(Object(Nova\Routing\Route), Object(Nova\Http\Request), 'App\\Modules\\Sys...', 'index')
+#9 [internal function]: Nova\Routing\Router->Nova\Routing\{closure}()
+#10 /var/www/sites/packages/novaframework/system4/src/Routing/Route.php(113): call_user_func_array(Object(Closure), Array)
+#11 /var/www/sites/packages/novaframework/system4/src/Routing/Router.php(1031): Nova\Routing\Route->run(Object(Nova\Http\Request))
+#12 /var/www/sites/packages/novaframework/system4/src/Routing/Router.php(1000): Nova\Routing\Router->dispatchToRoute(Object(Nova\Http\Request))
+#13 /var/www/sites/packages/novaframework/system4/src/Foundation/Application.php(768): Nova\Routing\Router->dispatch(Object(Nova\Http\Request))
+#14 /var/www/sites/packages/novaframework/system4/src/Foundation/Application.php(742): Nova\Foundation\Application->dispatch(Object(Nova\Http\Request))
+#15 /var/www/sites/novatesting/shared/Http/ContentGuard.php(61): Nova\Foundation\Application->handle(Object(Nova\Http\Request), 1, true)
+#16 /var/www/sites/packages/novaframework/system4/src/Session/Middleware.php(77): Shared\Http\ContentGuard->handle(Object(Nova\Http\Request), 1, true)
+#17 /var/www/sites/packages/novaframework/system4/src/Cookie/Queue.php(49): Nova\Session\Middleware->handle(Object(Nova\Http\Request), 1, true)
+#18 /var/www/sites/packages/novaframework/system4/src/Cookie/Guard.php(54): Nova\Cookie\Queue->handle(Object(Nova\Http\Request), 1, true)
+#19 /var/www/sites/novatesting/vendor/stack/builder/src/Stack/StackedHttpKernel.php(23): Nova\Cookie\Guard->handle(Object(Nova\Http\Request), 1, true)
+#20 /var/www/sites/packages/novaframework/system4/src/Foundation/Application.php(639): Stack\StackedHttpKernel->handle(Object(Nova\Http\Request))
+#21 /var/www/sites/novatesting/public/index.php(44): Nova\Foundation\Application->run()
+#22 {main} [] []

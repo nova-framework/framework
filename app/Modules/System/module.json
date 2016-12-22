@@ -1,0 +1,18 @@
+{
+    "name": "System",
+    "version": "1.0",
+    "description": "This is the description for the System module.",
+    "homepage" : "http://www.novaframework.com/",
+    "authors" : [
+        {
+            "name" : "Virgil-Adrian Teaca",
+            "email" : "virgil@giulianaeassociati.com",
+            "homepage": "http://www.giulianaeassociati.com",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "slug": "system",
+    "namespace": "System",
+    "order" : "8001"
+}

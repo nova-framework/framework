@@ -1,6 +1,6 @@
 <?php $targetUrl = site_url('password/reset/' .$token); // Calculate the target URL. ?>
 <!DOCTYPE html>
-<html lang="<?= LANGUAGE_CODE; ?>">
+<html lang="<?= Config::get('app.locale', 'en'); ?>">
 	<head>
 		<meta charset="utf-8">
 	</head>

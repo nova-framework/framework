@@ -5,6 +5,7 @@
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
+ 
 namespace Shared\Log;
 
 use Nova\Foundation\Application;

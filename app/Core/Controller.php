@@ -12,9 +12,9 @@ use Nova\Config\Config;
 use Nova\Http\Response;
 use Nova\Routing\Controller as BaseController;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
-use Nova\Support\Facades\Template;
-use Nova\Support\Facades\View;
-use Nova\Template\Template as Layout;
+use Nova\Support\Facades\Layout as LayoutFactory;
+use Nova\Support\Facades\View as ViewFactory;
+use Nova\Layout\Layout;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -63,7 +63,7 @@ abstract class Controller extends BaseController
             // we will assume we want to render it using the Controller's templated environment.
 
             if (is_string($this->layout) && ! empty($this->layout) && (! $response instanceof Layout)) {
-                $response = Template::make($this->layout, array(), $this->template)
+                $response = LayoutFactory::make($this->layout, array(), $this->template)
                     ->with('content', $response);
             }
 
@@ -99,7 +99,7 @@ abstract class Controller extends BaseController
         if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[1] .'/' .ucfirst($method);
 
-            return View::make($view, $data);
+            return ViewFactory::make($view, $data);
         }
 
         // Retrieve the Modules namespace from their configuration.
@@ -112,7 +112,7 @@ abstract class Controller extends BaseController
         if (preg_match('#^'. $basePath .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[2] .'/' .ucfirst($method);
 
-            return View::make($view, $data, $matches[1]);
+            return ViewFactory::make($view, $data, $matches[1]);
         }
 
         // If we arrived there, the called class is not a Controller; go Exception.
@@ -146,7 +146,7 @@ abstract class Controller extends BaseController
         if ($layout instanceof View) {
             return $layout->with($data);
         } else if (is_string($layout)) {
-            return Template::make($layout, $data, $this->template);
+            return LayoutFactory::make($layout, $data, $this->template);
         }
 
         throw new BadMethodCallException('Method not available for the current Layout');

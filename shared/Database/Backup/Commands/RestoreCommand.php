@@ -49,7 +49,7 @@ class RestoreCommand extends BaseCommand
         if ($status === true) {
             $this->info(__d('shared', '{0} was successfully restored.', $fileName));
         } else {
-            $this->error('Database restore failed.');
+            $this->error(__d('shared', 'Database restore failed.'));
         }
     }
 

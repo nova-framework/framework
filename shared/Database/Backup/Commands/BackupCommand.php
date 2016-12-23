@@ -24,27 +24,23 @@ class BackupCommand extends BaseCommand
 
     public function fire()
     {
-        $database = $this->getDatabase($this->input->getOption('database'));
+        $config = $this->input->getOption('database');
+
+        $database = $this->getDatabase($config);
 
         $this->checkDumpFolder();
 
-        if ($this->argument('filename')) {
-            // Is it an absolute path?
-            if (substr($this->argument('filename'), 0, 1) == '/') {
-                $this->filePath = $this->argument('filename');
+        //
+        $fileName = $this->argument('filename');
 
-                $this->fileName = basename($this->filePath);
-            }
-            // It's relative path?
-            else {
-                $this->filePath = getcwd() . '/' . $this->argument('filename');
+        if (! empty($fileName)) {
+            $this->filePath = realpath($fileName);
 
-                $this->fileName = basename($this->filePath);
-            }
+            $this->fileName = basename($this->filePath);
         } else {
             $this->fileName = str_replace('_', '-', $database->getDatabase()) .'_' .date('Y-m-d_H-i-s') . '.' .$database->getFileExtension();
 
-            $this->filePath = rtrim($this->getDumpsPath(), '/') . '/' . $this->fileName;
+            $this->filePath = $this->getDumpsPath() . $this->fileName;
         }
 
         $status = $database->dump($this->filePath);
@@ -57,7 +53,7 @@ class BackupCommand extends BaseCommand
                 $this->filePath .= ".gz";
             }
 
-            if ($this->argument('filename')) {
+            if (! empty($fileName)) {
                 $this->info(__d('shared', 'Database backup was successful. Saved to {0}', $this->filePath));
             } else {
                 $this->info(__d('shared', 'Database backup was successful. {0} was saved in the dumps folder.', $this->fileName));

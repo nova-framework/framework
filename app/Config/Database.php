@@ -78,7 +78,7 @@ Config::set('database', array(
 
     'backup' => array(
         // The path where database dumps are stored.
-        'path'  => APPDIR .'Database' .DS .'Backup' .DS,
+        'path'  => APPDIR .'Database' .DS .'Backup',
 
         // The paths to the MySQL tools used by Forge.
         'mysql' => array(

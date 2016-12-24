@@ -10,13 +10,13 @@
 /** Define Events. */
 
 Event::listen('backend.menu', function($user) {
-    $items = array();
-
-    $items[] = array(
-        'uri'    => 'admin/dashboard',
-        'title'  => __d('system', 'Dashboard'),
-        'icon'   => 'dashboard',
-        'weight' => 0,
+    $items = array(
+        array(
+            'uri'    => 'admin/dashboard',
+            'title'  => __d('system', 'Dashboard'),
+            'icon'   => 'dashboard',
+            'weight' => 0,
+        )
     );
 
     if (! $user->hasRole('administrator')) {

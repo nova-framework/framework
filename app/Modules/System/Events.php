@@ -8,3 +8,28 @@
 
 
 /** Define Events. */
+
+Event::listen('backend.menu', function($user) {
+    $items = array();
+
+    $items[] = array(
+        'uri'    => 'admin/dashboard',
+        'title'  => __d('system', 'Dashboard'),
+        'icon'   => 'dashboard',
+        'weight' => 0,
+    );
+
+    if (! $user->hasRole('administrator')) {
+        // No other menu items for non-administrators.
+        return $items;
+    }
+
+    $items[] = array(
+        'uri'    => 'admin/settings',
+        'title'  => __d('system', 'Settings'),
+        'icon'   => 'gears',
+        'weight' => 0,
+    );
+
+    return $items;
+});

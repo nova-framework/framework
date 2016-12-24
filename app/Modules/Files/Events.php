@@ -8,3 +8,21 @@
 
 
 /** Define Events. */
+
+Event::listen('backend.menu', function($user) {
+    if (! $user->hasRole('administrator')) {
+        // No menu items for non-administrators.
+        return array();
+    }
+
+    $items = array(
+        array(
+            'uri'    => 'admin/files',
+            'title'  => __d('files', 'Files'),
+            'icon'   => 'file',
+            'weight' => 3,
+        ),
+    );
+
+    return $items;
+});

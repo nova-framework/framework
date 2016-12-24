@@ -24,3 +24,7 @@ Stack trace:
 #20 /var/www/sites/packages/novaframework/system4/src/Foundation/Application.php(639): Stack\StackedHttpKernel->handle(Object(Nova\Http\Request))
 #21 /var/www/sites/novatesting/public/index.php(44): Nova\Foundation\Application->run()
 #22 {main} [] []
+[2016-12-24 15:46:21] local.ERROR: exception 'Symfony\Component\Debug\Exception\FatalErrorException' with message 'Class 'App\Core\Event' not found' in /var/www/sites/novatesting/app/Core/BackendController.php:66
+Stack trace:
+#0 [internal function]: Nova\Exception\Handler->handleShutdown()
+#1 {main} [] []

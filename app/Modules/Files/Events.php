@@ -11,11 +11,13 @@
 
 Event::listen('backend.menu', function($user) {
     if ($user->hasRole('administrator')) {
-        $items[] = array(
-            'uri'    => 'admin/files',
-            'title'  => __d('files', 'Files'),
-            'icon'   => 'file',
-            'weight' => 3,
+        $items = array(
+            array(
+                'uri'    => 'admin/files',
+                'title'  => __d('files', 'Files'),
+                'icon'   => 'file',
+                'weight' => 3,
+            ),
         );
     } else {
         $items = array();

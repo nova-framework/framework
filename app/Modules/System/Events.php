@@ -19,17 +19,14 @@ Event::listen('backend.menu', function($user) {
         ),
     );
 
-    if (! $user->hasRole('administrator')) {
-        // No other menu items for non-administrators.
-        return $items;
+    if ($user->hasRole('administrator')) {
+        $items[] = array(
+            'uri'    => 'admin/settings',
+            'title'  => __d('system', 'Settings'),
+            'icon'   => 'gears',
+            'weight' => 0,
+        );
     }
-
-    $items[] = array(
-        'uri'    => 'admin/settings',
-        'title'  => __d('system', 'Settings'),
-        'icon'   => 'gears',
-        'weight' => 0,
-    );
 
     return $items;
 });

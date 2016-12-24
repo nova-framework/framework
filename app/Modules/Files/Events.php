@@ -10,19 +10,16 @@
 /** Define Events. */
 
 Event::listen('backend.menu', function($user) {
-    if (! $user->hasRole('administrator')) {
-        // No menu items for non-administrators.
-        return array();
-    }
-
-    $items = array(
-        array(
+    if ($user->hasRole('administrator')) {
+        $items[] = array(
             'uri'    => 'admin/files',
             'title'  => __d('files', 'Files'),
             'icon'   => 'file',
             'weight' => 3,
-        ),
-    );
+        );
+    } else {
+        $items = array();
+    }
 
     return $items;
 });

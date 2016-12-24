@@ -45,6 +45,8 @@ return array (
   'Password confirmation' => '',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
+  'Profile Picture' => '',
+  'Profile Picture (to change)' => '',
   'Register to <b>{0}</b>' => '',
   'Registered Roles' => '',
   'Registered Users' => '',

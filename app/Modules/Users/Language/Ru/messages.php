@@ -45,6 +45,8 @@ return array (
   'Password confirmation' => 'Подтверждение пароля',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, для удаления роли нажмите на кнопку <b>Удалить роль</b> или <b>Отмена</b> для отмены действия',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, для удаления пользователя нажмите на кнопку <b>Удалить пользователя</b> или <b>Отмена</b> для отмены действия',
+  'Profile Picture' => '',
+  'Profile Picture (to change)' => '',
   'Register to <b>{0}</b>' => 'Регистрация для <b>{0}</b>',
   'Registered Roles' => 'Зарегистрированные роли',
   'Registered Users' => 'Зарегистрированные пользователи',

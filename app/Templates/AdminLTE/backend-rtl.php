@@ -168,26 +168,10 @@ $langMenuLinks = ob_get_clean();
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <li class="header"><?= __d('adminlte', 'ADMINISTRATION'); ?></li>
-            <li <?php if ($baseUri == 'admin/dashboard') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span><?= __d('adminlte', 'Dashboard'); ?></span></a>
+            <?php foreach ($menuItems as $item) { ?>
+            <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
+                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>
             </li>
-
-            <?php if ($user->hasRole('administrator')) { ?>
-
-            <li <?php if ($baseUri == 'admin/settings') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/settings'); ?>"><i class="fa fa-gears"></i> <span><?= __d('adminlte', 'Settings'); ?></span></a>
-            </li>
-
-            <li <?php if ($baseUri == 'admin/users') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/users'); ?>"><i class="fa fa-users"></i> <span><?= __d('adminlte', 'Users'); ?></span></a>
-            </li>
-            <li <?php if ($baseUri == 'admin/roles') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/roles'); ?>"><i class="fa fa-book"></i> <span><?= __d('adminlte', 'Roles'); ?></span></a>
-            </li>
-            <li <?php if ($baseUri == 'admin/files') { echo "class='active'"; } ?>>
-                <a href="<?= site_url('admin/files'); ?>"><i class="fa fa-file"></i> <span><?= __d('adminlte', 'Files'); ?></span></a>
-            </li>
-
             <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->

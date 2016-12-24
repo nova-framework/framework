@@ -68,6 +68,8 @@ abstract class BackendController extends BaseController
 
     protected function getMenuItems()
     {
+        $items = array();
+
         // Prepare the Event payload.
         $payload = array(
             Auth::user()
@@ -77,8 +79,6 @@ abstract class BackendController extends BaseController
         $results = Event::fire('backend.menu', $payload);
 
         // Merge all results on a menu items array.
-        $items = array();
-
         foreach ($results as $result) {
             if (is_array($result) && ! empty($result)) {
                 $items = array_merge($items, $result);

@@ -61,19 +61,20 @@ abstract class BackendController extends BaseController
      */
     protected function setupLayout()
     {
-        $items = $this->getMenuItems();
+        $user = Auth::user();
+
+        //
+        $items = $this->getMenuItems($user);
 
         View::share('menuItems', $items);
     }
 
-    protected function getMenuItems()
+    protected function getMenuItems($user)
     {
         $items = array();
 
         // Prepare the Event payload.
-        $payload = array(
-            Auth::user()
-        );
+        $payload = array($user);
 
         // Fire the Event 'backend.menu' and store the results.
         $results = Event::fire('backend.menu', $payload);

@@ -3,8 +3,6 @@
  * Backend Default RTL Layout
  */
 
-$version = trim(file_get_contents(ROOTDIR .'VERSION.txt'));
-
 // Prepare the current User Info.
 $user = Auth::user();
 

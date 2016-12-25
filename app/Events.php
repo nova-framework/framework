@@ -11,9 +11,14 @@
 
 // Add a Listener to the Event 'router.matched', to process the global View variables.
 Event::listen('router.matched', function($route, $request) {
-    $session = $request->session();
+    // Share the Application version.
+    $version = trim(file_get_contents(ROOTDIR .'VERSION.txt'));
+
+    View::share('version', $version);
 
     // Share on Views the CSRF Token.
+    $session = $request->session();
+
     View::share('csrfToken', $session->token());
 
     // Calculate the URIs and share them on Views.

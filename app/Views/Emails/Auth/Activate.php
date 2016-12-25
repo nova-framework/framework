@@ -8,7 +8,7 @@
         <h2><?= __('Please verify your E-mail address'); ?></h2>
 
         <div>
-            <?= __('Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}', SITETITLE, $targetUrl); ?><br/>
+            <?= __('Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}', SITE_TITLE, $targetUrl); ?><br/>
             <?= __('If you have problems, please paste the above URL into your web browser.'); ?>
         </div>
     </body>

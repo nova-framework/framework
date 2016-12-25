@@ -11,7 +11,7 @@
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
             <div class="panel-heading">
-                <div class="panel-title"><?= __d('system', 'Login to <b>{0}</b>', SITETITLE); ?></div>
+                <div class="panel-title"><?= __d('system', 'Login to <b>{0}</b>', SITE_TITLE); ?></div>
             </div>
             <div class="panel-body">
                 <form action="<?= site_url('login'); ?>" method='POST' role="form">

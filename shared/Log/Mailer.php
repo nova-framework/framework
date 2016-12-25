@@ -30,7 +30,7 @@ class Mailer
         $swiftMessage = Swift_Message::newInstance('[Log] ERROR!')
             ->setContentType('text/html')
             ->setFrom($config['address'], $config['name'])
-            ->setTo(SITEEMAIL);
+            ->setTo(SITE_EMAIL);
 
         // Create a SwiftMailerHandler instance.
         $monologHandler = new SwiftMailerHandler(

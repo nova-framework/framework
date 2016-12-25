@@ -27,7 +27,7 @@ Config::set('app', array(
     /**
     * The Administrator's E-mail Address.
     */
-    'email' => 'admin@novaframework.dev',
+    'email' => 'admin@novatesting.dev',
 
     /**
      * The Website Path.
@@ -105,7 +105,7 @@ Config::set('app', array(
         'Nova\View\ViewServiceProvider',
         'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
-        
+
         // The (local) Shared Providers.
         'Shared\Database\Backup\BackupServiceProvider',
     ),

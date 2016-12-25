@@ -10,6 +10,12 @@
             "email": "dave@daveismyname.com",
             "homepage": "http://daveismyname.com",
             "role": "Developer"
+        },
+        {
+            "name": "Virgil-Adrian Teaca",
+            "email": "virgil@giulianaeassociati.com",
+            "homepage": "http://giulianaeassociati.com",
+            "role": "Developer"
         }
     ],
     "repositories": [

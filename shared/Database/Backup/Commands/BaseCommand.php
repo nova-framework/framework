@@ -27,16 +27,18 @@ class BaseCommand extends Command
 
     public function getDatabase($database)
     {
-        $database = $database ? : Config::get('database.default');
+        $database = $database ?: Config::get('database.default');
 
-        $realConfig = Config::get('database.connections.' . $database);
+        $realConfig = Config::get('database.connections.' .$database);
 
         return $this->databaseBuilder->getDatabase($realConfig);
     }
 
     protected function getDumpsPath()
     {
-        return Config::get('database.backup.path');
+        $path = Config::get('database.backup.path');
+
+        return realpath($path) .DS;
     }
 
     public function enableCompression()

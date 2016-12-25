@@ -17,7 +17,6 @@ Event::listen('router.matched', function($route, $request) {
     if (is_readable($path)) {
         $version = file_get_contents($path);
     } else {
-        // Some crazy bunny removed the VERSION.txt ?!?
         $version = VERSION;
     }
 

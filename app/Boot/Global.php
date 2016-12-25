@@ -46,9 +46,19 @@ App::error(function(HttpException $exception)
         return Response::json($content, $code, $headers);
     }
 
+    // Retrieve the Application version.
+    $path = ROOTDIR .'VERSION.txt';
+
+    if (is_readable($path)) {
+        $version = file_get_contents($path);
+    } else {
+        $version = VERSION;
+    }
+
     // We'll create the templated Error Page Response.
     $response = Layout::make('default')
         ->shares('title', 'Error ' .$code)
+        ->shares('version', $version)
         ->nest('content', 'Error/' .$code);
 
     // Setup propely the Content Type.

@@ -90,12 +90,7 @@ App::missing(function(NotFoundHttpException $exception)
 define('SITE_TITLE', $app['config']['app.name']);
 
 /**
- * Set a Site administrator email address.
- */
-define('SITE_EMAIL', $app['config']['app.email']);
-
-/**
- * Send a E-Mail to administrator (defined on SITE_EMAIL) when a Error is logged.
+ * Send a E-Mail to administrator when a Error is logged.
  */
 /*
 use Shared\Log\Mailer as LogMailer;

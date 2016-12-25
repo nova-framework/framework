@@ -217,7 +217,7 @@ class Demos extends Controller
     public function mailer()
     {
         $data = array(
-            'title'   => __d('demos', 'Welcome to {0}!', SITETITLE),
+            'title'   => __d('demos', 'Welcome to {0}!', SITE_TITLE),
             'content' => __d('demos', 'This is a test!!!'),
         );
 

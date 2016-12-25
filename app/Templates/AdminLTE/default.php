@@ -3,8 +3,6 @@
  * Frontend Default Layout
  */
 
-$version = trim(file_get_contents(ROOTDIR .'VERSION.txt'));
-
 // Generate the Language Changer menu.
 $langCode = Language::code();
 $langName = Language::name();

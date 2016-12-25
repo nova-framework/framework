@@ -5,7 +5,7 @@
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 3.0
  */
- 
+
 namespace Shared\Log;
 
 use Nova\Foundation\Application;
@@ -24,13 +24,16 @@ class Mailer
         // Retrieve the Config from Application.
         $config = $app['config']['mail.from'];
 
+        // Retrieve the Site Email.
+        $email = $app['config']['app.email'];
+
         // Prepare the instances for Swift Mailer and Message.
         $swiftMailer = $app['mailer']->getSwiftMailer();
 
         $swiftMessage = Swift_Message::newInstance('[Log] ERROR!')
             ->setContentType('text/html')
             ->setFrom($config['address'], $config['name'])
-            ->setTo(SITEEMAIL);
+            ->setTo($email);
 
         // Create a SwiftMailerHandler instance.
         $monologHandler = new SwiftMailerHandler(

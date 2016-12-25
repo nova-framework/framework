@@ -11,9 +11,15 @@
 // Add a Listener Closure to the Event 'router.matched'.
 Event::listen('router.matched', function($route, $request) {
     // Share the Application version.
-    $version = trim(file_get_contents(ROOTDIR .'VERSION.txt'));
+    $path = ROOTDIR .'VERSION.txt';
 
-    View::share('version', $version);
+    if (is_readable($path)) {
+        $version = file_get_contents($path);
+    } else {
+        $version = VERSION;
+    }
+
+    View::share('version', trim($version));
 
     // Share the Views the current URI.
     View::share('currentUri', $request->path());

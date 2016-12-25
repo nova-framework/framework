@@ -3,8 +3,6 @@
  * Default Layout - a Layout similar with the classic Header and Footer files.
  */
 
-$version = trim(file_get_contents(ROOTDIR .'VERSION.txt'));
-
 // Generate the Language Changer menu.
 $language = Language::code();
 

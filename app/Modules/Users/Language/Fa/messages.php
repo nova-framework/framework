@@ -45,6 +45,8 @@ return array (
   'Password confirmation' => 'تایید رمزعبور',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'لطفا روی دکمه <b>حذف وظیفه</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید.',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'لطفا روی دکمه <b>حذف وظیفه</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید.',
+  'Profile Picture' => '',
+  'Profile Picture (to change)' => '',
   'Register to <b>{0}</b>' => 'عضویت در <b>{0}</b>',
   'Registered Roles' => 'وظیفه های ثبت شده',
   'Registered Users' => 'کاربران ثبت شده',

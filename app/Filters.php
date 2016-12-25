@@ -46,7 +46,7 @@ Route::filter('csrf', function($route, $request) {
     else if ($ajaxRequest) {
         return Response::make('Bad Request', 400);
     } else {
-	return Response::error(400);
+        App::abort(400, 'Bad Request');
     }
 });
 
@@ -56,8 +56,8 @@ Route::filter('referer', function($route, $request) {
     $referer = $request->header('referer');
 
     if(! starts_with($referer, Config::get('app.url'))) {
-        // When Referrer is invalid, respond with Error 400 Page (Bad Request)
-        return Response::error(400);
+        // When Referrer is invalid, respond with Error 400 (Bad Request)
+        App::abort(400, 'Bad Request');
     }
 });
 
@@ -69,7 +69,7 @@ Route::filter('auth', function($route, $request) {
 
     // User is not authenticated.
     else if (! $request->ajax()) {
-         return Redirect::guest('login');
+        return Redirect::guest('login');
     } else {
         return Response::make('Unauthorized Access', 403);
     }
@@ -87,7 +87,7 @@ Route::filter('guest', function($route, $request) {
 
     // User is authenticated.
     else if (! $request->ajax()) {
-         return Redirect::guest('admin/dashboard');
+        return Redirect::to('admin/dashboard');
     } else {
         return Response::make('Unauthorized Access', 403);
     }

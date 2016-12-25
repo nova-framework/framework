@@ -30,6 +30,11 @@
             "Shared\\" : "shared/"
         }
     },
+    "scripts": {
+        "post-create-project-cmd": [
+            "php nova make:key"
+        ]
+    },
     "prefer-stable": true,
     "minimum-stability": "dev"
 }

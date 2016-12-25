@@ -61,12 +61,15 @@ abstract class BackendController extends BaseController
      */
     protected function setupLayout()
     {
-        $user = Auth::user();
+        if (Auth::check()) {
+            // The User is logged in; setup the Backend Menu.
+            $user = Auth::user();
 
-        //
-        $items = $this->getMenuItems($user);
+            //
+            $items = $this->getMenuItems($user);
 
-        View::share('menuItems', $items);
+            View::share('menuItems', $items);
+        }
     }
 
     protected function getMenuItems($user)

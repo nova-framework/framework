@@ -38,7 +38,7 @@ Config::set('assets', array(
     // Wheter or not the CSS and JS files are automatically compressed.
     'compress' => true,
 
-    // The Cache configuration.
+    // The Caching configuration.
     'cache' => array(
         // The local Assets Cache options.
         'active'   => true,

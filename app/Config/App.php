@@ -130,7 +130,6 @@ Config::set('app', array(
         'RainCaptcha'   => 'Nova\Helpers\RainCaptcha',
         'ReservedWords' => 'Nova\Helpers\ReservedWords',
         'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
-        'TableBuilder'  => 'Nova\Helpers\TableBuilder',
         'Tags'          => 'Nova\Helpers\Tags',
 
         // The Forensics Console.

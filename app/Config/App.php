@@ -83,6 +83,7 @@ Config::set('app', array(
         'Nova\Module\ModuleServiceProvider',
 
         // The Application Providers.
+        'Nova\Assets\AssetsServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
@@ -105,7 +106,7 @@ Config::set('app', array(
         'Nova\View\ViewServiceProvider',
         'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
-        
+
         // The (local) Shared Providers.
         'Shared\Database\Backup\BackupServiceProvider',
     ),
@@ -120,7 +121,6 @@ Config::set('app', array(
      */
     'aliases' => array(
         // The Helpers.
-        'Assets'        => 'Nova\Helpers\Assets',
         'Date'          => 'Nova\Helpers\Date',
         'Document'      => 'Nova\Helpers\Document',
         'Ftp'           => 'Nova\Helpers\Ftp',
@@ -145,6 +145,7 @@ Config::set('app', array(
 
         // The Support Facades.
         'App'           => 'Nova\Support\Facades\App',
+        'Assets'        => 'Nova\Support\Facades\Assets',
         'Forge'         => 'Nova\Support\Facades\Forge',
         'Auth'          => 'Nova\Support\Facades\Auth',
         'Cache'         => 'Nova\Support\Facades\Cache',

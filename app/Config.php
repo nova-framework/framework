@@ -38,8 +38,14 @@ Config::set('assets', array(
     // Wheter or not the CSS and JS files are automatically compressed.
     'compress' => true,
 
-    // The browser Cache Control options.
+    // The Cache configuration.
     'cache' => array(
+        // The local Assets Cache options.
+        'active'   => true,
+        'lifeTime' => 1440,
+        'baseUri'  => 'assets/cache',
+
+        // The browser Cache Control options.
         'ttl'          => 600,
         'maxAge'       => 10800,
         'sharedMaxAge' => 600,

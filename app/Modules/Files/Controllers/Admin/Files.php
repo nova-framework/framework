@@ -16,13 +16,6 @@ use View;
 class Files extends BackendController
 {
     /**
-     * The IoC container instance.
-     *
-     * @var \Nova\Container\Container
-     */
-    protected $container;
-
-    /**
      * The File Dispatcher instance.
      *
      * @var \Nova\Routing\Assets\DispatcherInterface
@@ -40,9 +33,6 @@ class Files extends BackendController
     public function __construct()
     {
         parent::__construct();
-
-        // Setup the IoC Container instance.
-        $this->container = App::instance();
 
         // Setup the Middleware.
         $this->beforeFilter('@filterRequests');
@@ -127,7 +117,7 @@ class Files extends BackendController
     {
         if (isset($this->fileDispatcher)) return $this->fileDispatcher;
 
-        return $this->fileDispatcher = $this->container->make('Nova\Routing\Assets\DispatcherInterface');
+        return $this->fileDispatcher = App::make('Nova\Assets\DispatcherInterface');
     }
 
 }

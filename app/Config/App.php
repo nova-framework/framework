@@ -83,6 +83,7 @@ Config::set('app', array(
         'Nova\Module\ModuleServiceProvider',
 
         // The Application Providers.
+        'Nova\Assets\AssetsServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',

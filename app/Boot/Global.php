@@ -25,17 +25,9 @@ App::error(function(HttpException $exception)
 
     $headers = $exception->getHeaders();
 
-    if ($code == 500) {
-        // We should log the Error 500 Exceptions.
-        Log::error($exception);
-    }
-
     if (Request::ajax()) {
         // An AJAX request; we'll create a JSON Response.
         $content = array('status' => $code);
-
-        // Setup propely the Content Type.
-        $headers['Content-Type'] = 'application/json';
 
         return Response::json($content, $code, $headers);
     }
@@ -51,12 +43,9 @@ App::error(function(HttpException $exception)
 
     // We'll create the templated Error Page Response.
     $response = Layout::make('default')
-        ->shares('version', $version)
+        ->shares('version', trim($version))
         ->shares('title', 'Error ' .$code)
         ->nest('content', 'Error/' .$code);
-
-    // Setup propely the Content Type.
-    $headers['Content-Type'] = 'text/html';
 
     return Response::make($response, $code, $headers);
 });

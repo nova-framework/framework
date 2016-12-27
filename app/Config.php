@@ -43,7 +43,7 @@ Config::set('assets', array(
         // The local Assets Cache options.
         'active'   => true,
         'lifeTime' => 1440,
-        'baseUri'  => 'assets/cache',
+        'baseUri'  => 'cache',
 
         // The browser Cache Control options.
         'ttl'          => 600,

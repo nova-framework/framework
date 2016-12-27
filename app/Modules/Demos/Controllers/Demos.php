@@ -89,35 +89,15 @@ class Demos extends Controller
         }
         */
 
-        $filePath = ROOTDIR .'vendor/composer/autoload_classmap.php';
+        $url = 'http://www.novatesting.dev/vendor/twbs/bootstrap/dist/css/bootstrap.min.css';
 
-        if (is_readable($filePath)) {
-            $data = include $filePath;
+        $baseUrl = dirname(dirname($url)) .'/';
 
-            $classes = array_filter(array_keys($data), function($value)
-            {
-                return starts_with($value, 'Nova\\');
-            });
+        $content = "@font-face{font-family:'Glyphicons Halflings';src:url(../fonts/glyphicons-halflings-regular.eot);src:url(../fonts/glyphicons-halflings-regular.eot?#iefix)}";
 
-            //
-            $content = '<table class="table table-striped table-hover table-condensed responsive">
-                            <tr><th>Class</th><th>Alias</th></tr>';
+        $content = '<pre>' .str_replace('src:url(../', 'src:url(' .$baseUrl, $content) .'</pre>';
 
-            $aliases = array();
-
-            foreach ($classes as $value) {
-                $alias = preg_replace('/^Nova\\\/s', '', $value);
-                //$alias = str_replace('Nova\\', '', $value);
-
-                $aliases[$alias] = $value;
-
-                $content .= '<tr><td>' .$value .'</td><td>' .$alias .'</td></tr>';
-            }
-
-            $content .= '</table>';
-        } else {
-            $content .= __('<b>{1}</b> is not readable or does not exists!', str_replace(ROOTDIR, '', $filePath));
-        }
+        $content = parse_url(ltrim($url, '/'), PHP_URL_PATH);
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))

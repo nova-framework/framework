@@ -83,6 +83,7 @@ Config::set('app', array(
         'Nova\Module\ModuleServiceProvider',
 
         // The Application Providers.
+        'Nova\Assets\AssetsServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
@@ -105,7 +106,7 @@ Config::set('app', array(
         'Nova\View\ViewServiceProvider',
         'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
-        
+
         // The (local) Shared Providers.
         'Shared\Database\Backup\BackupServiceProvider',
     ),

@@ -70,8 +70,9 @@ class Demos extends Controller
     public function test()
     {
         $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
+        
         $content = '';
-        /*
+
         //
         $route = new Route('GET', $uri, function() {
             //
@@ -87,17 +88,6 @@ class Demos extends Controller
         } else {
             $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
         }
-        */
-
-        $url = 'http://www.novatesting.dev/vendor/twbs/bootstrap/dist/css/bootstrap.min.css';
-
-        $baseUrl = dirname(dirname($url)) .'/';
-
-        $content = "@font-face{font-family:'Glyphicons Halflings';src:url(../fonts/glyphicons-halflings-regular.eot);src:url(../fonts/glyphicons-halflings-regular.eot?#iefix)}";
-
-        $content = '<pre>' .str_replace('src:url(../', 'src:url(' .$baseUrl, $content) .'</pre>';
-
-        $content = parse_url(ltrim($url, '/'), PHP_URL_PATH);
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))

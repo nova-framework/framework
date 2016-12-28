@@ -56,7 +56,6 @@ App::error(function(HttpException $exception)
     return Response::make($response, $code, $headers);
 });
 
-
 //--------------------------------------------------------------------------
 // Application Missing Route Handler
 //--------------------------------------------------------------------------
@@ -68,6 +67,37 @@ App::missing(function(NotFoundHttpException $exception)
     //
 });
 */
+
+//--------------------------------------------------------------------------
+// Application Down Handler
+//--------------------------------------------------------------------------
+
+App::down(function()
+{
+    if (Request::ajax()) {
+        // An AJAX request; we'll create a JSON Response.
+        $content = array('status' => 503);
+
+        return Response::json($content, 503);
+    }
+
+    // Retrieve first the Application version.
+    $path = ROOTDIR .'VERSION.txt';
+
+    if (is_readable($path)) {
+        $version = file_get_contents($path);
+    } else {
+        $version = VERSION;
+    }
+
+    // We'll create the templated Error Page Response.
+    $response = Layout::make('default')
+        ->shares('version', trim($version))
+        ->shares('title', __('Site Down '))
+        ->nest('content', 'Default', array('content' => __('Site Down')));
+
+    return Response::make($response, 503);
+});
 
 //--------------------------------------------------------------------------
 // Boot Stage Customization

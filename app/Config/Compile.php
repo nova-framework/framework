@@ -10,5 +10,5 @@
 use Nova\Config\Config;
 
 
-Config::set('compile', array(
-));
+return array(
+);

@@ -6,10 +6,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('modules', array(
+return array(
 
     //--------------------------------------------------------------------------
     // Path to Modules
@@ -40,4 +38,4 @@ Config::set('modules', array(
     //--------------------------------------------------------------------------
 
     'custom_driver' => 'App\Repositories\Modules\CustomRepository',
-));
+);

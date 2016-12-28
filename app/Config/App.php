@@ -7,17 +7,12 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-/**
- * The Application configuration.
- */
-Config::set('app', array(
+return array(
     /**
      * Debug Mode
      */
-    'debug' => (ENVIRONMENT == 'development'), // When enabled the actual PHP errors will be shown.
+    'debug' => true, // When enabled the actual PHP errors will be shown.
 
     /**
      * The Website URL.
@@ -177,4 +172,4 @@ Config::set('app', array(
         'Module'        => 'Nova\Support\Facades\Module',
         'Cron'          => 'Nova\Support\Facades\Cron',
     ),
-));
+);

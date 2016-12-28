@@ -7,10 +7,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('languages', array(
+return array(
     'cs' => array('info' => 'Czech',     'name' => 'čeština',    'locale' => 'cs_CZ', 'dir' => 'ltr'),
     'da' => array('info' => 'Danish',    'name' => 'Dansk',      'locale' => 'da_DK', 'dir' => 'ltr'),
     'de' => array('info' => 'German',    'name' => 'Deutsch',    'locale' => 'de_DE', 'dir' => 'ltr'),
@@ -24,4 +22,4 @@ Config::set('languages', array(
     'pl' => array('info' => 'Polish',    'name' => 'polski',     'locale' => 'pl_PL', 'dir' => 'ltr'),
     'ro' => array('info' => 'Romanian',  'name' => 'Română',     'locale' => 'ro_RO', 'dir' => 'ltr'),
     'ru' => array('info' => 'Russian',   'name' => 'ру́сский',    'locale' => 'ru_RU', 'dir' => 'ltr'),
-));
+);

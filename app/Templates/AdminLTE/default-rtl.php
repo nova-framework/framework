@@ -52,7 +52,7 @@ $langMenuLinks = ob_get_clean();
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
 
-    ), false, false);
+    ), false);
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 

@@ -9,4 +9,4 @@
 
 
 return array(
-));
+);

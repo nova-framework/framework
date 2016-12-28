@@ -6,10 +6,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
-
-
-Config::set('cache', array(
+ 
+return array(
     /*
     |--------------------------------------------------------------------------
     | Default Cache Driver
@@ -86,4 +84,4 @@ Config::set('cache', array(
 
     'prefix' => 'nova',
 
-));
+);

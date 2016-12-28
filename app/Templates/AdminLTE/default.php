@@ -43,16 +43,11 @@ $langMenuLinks = ob_get_clean();
         vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
+        // iCheck
+        vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         template_url('css/style.css', 'AdminLTE'),
     ));
-
-    // Non cacheable assets.
-    Assets::css(array(
-        // iCheck
-        vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
-
-    ), false);
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 

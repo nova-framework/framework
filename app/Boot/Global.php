@@ -6,7 +6,6 @@
 
 Log::useFiles(storage_path() .DS .'Logs' .DS .'error.log');
 
-
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------
@@ -56,7 +55,6 @@ App::error(function(HttpException $exception)
     return Response::make($response, $code, $headers);
 });
 
-
 //--------------------------------------------------------------------------
 // Application Missing Route Handler
 //--------------------------------------------------------------------------
@@ -68,7 +66,6 @@ App::missing(function(NotFoundHttpException $exception)
     //
 });
 */
-
 //--------------------------------------------------------------------------
 // Maintenance Mode Handler
 //--------------------------------------------------------------------------
@@ -77,7 +74,6 @@ App::down(function()
 {
     return Response::make("Be right back!", 503);
 });
-
 
 //--------------------------------------------------------------------------
 // Boot Stage Customization

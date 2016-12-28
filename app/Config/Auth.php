@@ -6,10 +6,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('auth', array(
+return array(
     // The default Authentication Driver
     'driver' => 'extended',               // Supported: "database", "extended"
 
@@ -38,4 +36,4 @@ Config::set('auth', array(
         'table'  => 'password_reminders',
         'expire' => 60,
     )
-));
+);

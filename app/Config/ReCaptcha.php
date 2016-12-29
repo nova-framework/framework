@@ -17,6 +17,7 @@ return array(
     | Enable Google ReCaptcha in your application.
     |
     | To obtain your ReCaptcha API keys,
+    | visit - https://www.google.com/recaptcha
     |
     */
 

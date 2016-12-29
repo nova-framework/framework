@@ -1,6 +1,6 @@
 <?php
 /**
- * All known Languages
+ * All known Languages.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0

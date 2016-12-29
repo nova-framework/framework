@@ -1,6 +1,6 @@
 <?php
 /**
- * FileField configuration
+ * FileField Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0

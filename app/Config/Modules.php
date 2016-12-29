@@ -1,6 +1,6 @@
 <?php
 /**
- * Modules Configuration
+ * Modules Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0

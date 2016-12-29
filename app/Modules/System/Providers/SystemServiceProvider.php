@@ -4,6 +4,7 @@ namespace App\Modules\System\Providers;
 
 use App\Modules\System\Models\Option;
 
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
 use Nova\Support\ServiceProvider;
 
@@ -41,7 +42,10 @@ class SystemServiceProvider extends ServiceProvider
      */
     protected function loadOptions()
     {
-        $options = Option::remember(1440, 'system_options')->get();
+        $options = Cache::remember('system_options', 1440, function()
+        {
+            return Option::all();
+        });
 
         foreach ($options as $option) {
             $key = $option->group .'.' .$option->item;

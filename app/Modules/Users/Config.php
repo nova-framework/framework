@@ -6,9 +6,3 @@
  * @author Edwin Hoksberg - info@edwinhoksberg.nl
  * @version 4.0
  */
-
-use Nova\Config\Config;
-
-/**
- * Configuration constants and options.
- */

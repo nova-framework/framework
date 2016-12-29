@@ -7,12 +7,6 @@
  * @version 4.0
  */
 
-use Nova\Config\Config;
-
-/**
- * Configuration constants and options.
- */
-
 Config::set('cron', array(
     /**
      * The CRON token.

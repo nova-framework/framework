@@ -3,7 +3,7 @@
  * Mailer Configuration
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
 

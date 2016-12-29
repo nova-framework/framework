@@ -17,14 +17,14 @@ class Option extends BaseModel
 
 
     public function getValueAttribute($value) {
-        return $this->maybeDecode($value);
+        return static::maybeDecode($value);
     }
 
     public function setValueAttribute($value) {
-        $this->attributes['value'] = $this->maybeEncode($value);
+        $this->attributes['value'] = static::maybeEncode($value);
     }
 
-    public static function set($key, $value)
+    public static function set($group, $item, $value)
     {
         // Prepare the variables.
         $attributes = array(
@@ -33,31 +33,10 @@ class Option extends BaseModel
         );
 
         $values = array(
-            'value' => $this->maybeEncode($value)
+            'value' => static::maybeEncode($value)
         );
 
         return static::updateOrCreate($attributes, $values);
-    }
-
-    /**
-     * Parse a key into group, and item.
-     *
-     * @param  string  $key
-     * @return array
-     */
-    private static function parseKey($key)
-    {
-        $segments = explode('.', $key);
-
-        $group = array_shift($segments);
-
-        if (! empty($segments)) {
-            $segments = implode('.', $segments);
-        } else {
-            $segments = null;
-        }
-
-        return array($group, $segments);
     }
 
     /**
@@ -67,7 +46,7 @@ class Option extends BaseModel
      * @param  bool    $assoc
      * @return mixed
      */
-    private function maybeDecode($original, $assoc = true)
+    private static function maybeDecode($original, $assoc = true)
     {
         if (is_numeric($original)) return $original;
 
@@ -82,7 +61,7 @@ class Option extends BaseModel
      * @param  mixed  $data
      * @return mixed
      */
-    private function maybeEncode($data)
+    private static function maybeEncode($data)
     {
         if (is_array($data) || is_object($data)) {
             return json_encode($data);

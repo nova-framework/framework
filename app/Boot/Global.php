@@ -6,7 +6,6 @@
 
 Log::useFiles(storage_path() .DS .'Logs' .DS .'error.log');
 
-
 //--------------------------------------------------------------------------
 // Application Error Handler
 //--------------------------------------------------------------------------
@@ -31,22 +30,14 @@ App::error(function(HttpException $exception)
 
     $headers = $exception->getHeaders();
 
-    if ($code == 500) {
-        // We should log the Error 500 Exceptions.
-        Log::error($exception);
-    }
-
     if (Request::ajax()) {
         // An AJAX request; we'll create a JSON Response.
         $content = array('status' => $code);
 
-        // Setup propely the Content Type.
-        $headers['Content-Type'] = 'application/json';
-
         return Response::json($content, $code, $headers);
     }
 
-    // Retrieve the Application version.
+    // Retrieve first the Application version.
     $path = ROOTDIR .'VERSION.txt';
 
     if (is_readable($path)) {
@@ -57,16 +48,12 @@ App::error(function(HttpException $exception)
 
     // We'll create the templated Error Page Response.
     $response = Layout::make('default')
-        ->shares('version', $version)
+        ->shares('version', trim($version))
         ->shares('title', 'Error ' .$code)
         ->nest('content', 'Error/' .$code);
 
-    // Setup propely the Content Type.
-    $headers['Content-Type'] = 'text/html';
-
     return Response::make($response, $code, $headers);
 });
-
 
 //--------------------------------------------------------------------------
 // Application Missing Route Handler
@@ -79,28 +66,26 @@ App::missing(function(NotFoundHttpException $exception)
     //
 });
 */
+//--------------------------------------------------------------------------
+// Maintenance Mode Handler
+//--------------------------------------------------------------------------
+
+App::down(function()
+{
+    return Response::make("Be right back!", 503);
+});
 
 //--------------------------------------------------------------------------
 // Boot Stage Customization
 //--------------------------------------------------------------------------
 
 /**
- * Create a constant for the URL of the site.
- */
-define('SITEURL', $app['config']['app.url']);
-
-/**
  * Create a constant for the name of the site.
  */
-define('SITETITLE', $app['config']['app.name']);
+define('SITE_TITLE', $app['config']['app.name']);
 
 /**
- * Set a Site administrator email address.
- */
-define('SITEEMAIL', $app['config']['app.email']);
-
-/**
- * Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
+ * Send a E-Mail to administrator when a Error is logged.
  */
 /*
 use Shared\Log\Mailer as LogMailer;

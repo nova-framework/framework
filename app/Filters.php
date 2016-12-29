@@ -19,7 +19,9 @@
 
 App::before(function($request)
 {
-    //
+    $dispatcher = App::make('Nova\Assets\DispatcherInterface');
+
+    return $dispatcher->dispatch($request);
 });
 
 
@@ -27,6 +29,7 @@ App::after(function($request, $response)
 {
     //
 });
+
 
 /** Define Route Filters. */
 

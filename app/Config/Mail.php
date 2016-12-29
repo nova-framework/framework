@@ -1,15 +1,13 @@
 <?php
 /**
- * Mailer Configuration
+ * Mailer Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('mail', array(
+return array(
     'driver' => 'smtp',
     'host'   => '',
     'port'   => 587,
@@ -24,4 +22,4 @@ Config::set('mail', array(
 
     // Whether or not the Mailer will pretend to send the messages.
     'pretend' => true,
-));
+);

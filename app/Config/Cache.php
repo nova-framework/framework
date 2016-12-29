@@ -1,15 +1,13 @@
 <?php
 /**
- * Cache configuration
+ * Cache Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('cache', array(
+return array(
     /*
     |--------------------------------------------------------------------------
     | Default Cache Driver
@@ -86,4 +84,4 @@ Config::set('cache', array(
 
     'prefix' => 'nova',
 
-));
+);

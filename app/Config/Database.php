@@ -1,19 +1,13 @@
 <?php
 /**
- * Database configuration
+ * Database Configuration.
  *
- * @author David Carr - dave@daveismyname.com
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
-use Nova\Config\Config;
 
-
-/**
- * Setup the Database configuration.
- */
-Config::set('database', array(
+return array(
     // The PDO Fetch Style.
     'fetch' => PDO::FETCH_CLASS,
 
@@ -89,4 +83,4 @@ Config::set('database', array(
         // Wheter or not the dump file is compressed.
         'compress' => true,
     ),
-));
+);

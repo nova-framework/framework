@@ -1,23 +1,17 @@
 <?php
 /**
- * Application Configuration
+ * Application Configuration.
  *
- * @author David Carr - dave@daveismyname.com
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
-use Nova\Config\Config;
 
-
-/**
- * The Application configuration.
- */
-Config::set('app', array(
+return array(
     /**
      * Debug Mode
      */
-    'debug' => (ENVIRONMENT == 'development'), // When enabled the actual PHP errors will be shown.
+    'debug' => true, // When enabled the actual PHP errors will be shown.
 
     /**
      * The Website URL.
@@ -83,6 +77,7 @@ Config::set('app', array(
         'Nova\Module\ModuleServiceProvider',
 
         // The Application Providers.
+        'Nova\Assets\AssetsServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
@@ -120,7 +115,6 @@ Config::set('app', array(
      */
     'aliases' => array(
         // The Helpers.
-        'Assets'        => 'Nova\Helpers\Assets',
         'Date'          => 'Nova\Helpers\Date',
         'Document'      => 'Nova\Helpers\Document',
         'Ftp'           => 'Nova\Helpers\Ftp',
@@ -130,7 +124,6 @@ Config::set('app', array(
         'RainCaptcha'   => 'Nova\Helpers\RainCaptcha',
         'ReservedWords' => 'Nova\Helpers\ReservedWords',
         'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
-        'TableBuilder'  => 'Nova\Helpers\TableBuilder',
         'Tags'          => 'Nova\Helpers\Tags',
 
         // The Forensics Console.
@@ -145,6 +138,7 @@ Config::set('app', array(
 
         // The Support Facades.
         'App'           => 'Nova\Support\Facades\App',
+        'Assets'        => 'Nova\Support\Facades\Assets',
         'Forge'         => 'Nova\Support\Facades\Forge',
         'Auth'          => 'Nova\Support\Facades\Auth',
         'Cache'         => 'Nova\Support\Facades\Cache',
@@ -177,4 +171,4 @@ Config::set('app', array(
         'Module'        => 'Nova\Support\Facades\Module',
         'Cron'          => 'Nova\Support\Facades\Cron',
     ),
-));
+);

@@ -1,15 +1,13 @@
 <?php
 /**
- * Auth configuration
+ * Auth Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('auth', array(
+return array(
     // The default Authentication Driver
     'driver' => 'extended',               // Supported: "database", "extended"
 
@@ -38,4 +36,4 @@ Config::set('auth', array(
         'table'  => 'password_reminders',
         'expire' => 60,
     )
-));
+);

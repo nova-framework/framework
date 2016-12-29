@@ -1,15 +1,13 @@
 <?php
 /**
- * Modules Configuration
+ * Modules Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('modules', array(
+return array(
 
     //--------------------------------------------------------------------------
     // Path to Modules
@@ -40,4 +38,4 @@ Config::set('modules', array(
     //--------------------------------------------------------------------------
 
     'custom_driver' => 'App\Repositories\Modules\CustomRepository',
-));
+);

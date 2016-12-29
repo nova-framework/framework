@@ -3,13 +3,11 @@
  * Session Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
+ * @version 4.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('session', array(
+return array(
     'driver' => 'file', // The Session Driver used for storing Session data; supported: 'file' or 'database'.
 
     // The Database Session Driver configuration.
@@ -29,4 +27,4 @@ Config::set('session', array(
     'path'     => '/',
     'domain'   => null,
     'secure'   => false,
-));
+);

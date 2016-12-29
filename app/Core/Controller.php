@@ -8,10 +8,10 @@
 
 namespace App\Core;
 
-use Nova\Config\Config;
 use Nova\Http\Response;
 use Nova\Routing\Controller as BaseController;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Layout as LayoutFactory;
 use Nova\Support\Facades\View as ViewFactory;
 use Nova\Layout\Layout;

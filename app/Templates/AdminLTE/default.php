@@ -27,7 +27,7 @@ $langMenuLinks = ob_get_clean();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
+    <title><?= $title; ?> | <?= Config::get('app.name', SITE_TITLE); ?></title>
     <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -71,7 +71,7 @@ $langMenuLinks = ob_get_clean();
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= Config::get('app.name', SITETITLE); ?></strong></a>
+          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= Config::get('app.name', SITE_TITLE); ?></strong></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>

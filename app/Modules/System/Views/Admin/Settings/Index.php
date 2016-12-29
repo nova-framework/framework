@@ -11,8 +11,6 @@
 
 <?= Session::getMessages(); ?>
 
-<?php if (CONFIG_STORE == 'database') { ?>
-
 <form name='myForm' class="form-horizontal" action="<?= site_url('admin/settings'); ?>" method="POST">
 
 <div class="box box-default">
@@ -57,7 +55,20 @@
         <h3 class="box-title"><?= __d('system', 'Mailer Settings'); ?></h3>
     </div>
     <div class="box-body">
-      <div class="form-group">
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="pretend"><?= __d('system', 'Pretend to send Emails'); ?></label>
+            <div class="col-sm-8">
+                <div class="col-sm-3" style="padding: 0;">
+                    <select name="pretend" id="pretend" class="form-control">
+                        <option value="true" <?php if ($options['pretend'] == true) { echo "selected='selected'"; }?>><?= __d('system', 'Yes'); ?></option>
+                        <option value="false" <?php if ($options['pretend'] == false) { echo "selected='selected'"; }?>><?= __d('system', 'No'); ?></option>
+                    </select>
+                </div>
+                <div class='clearfix'></div>
+                <small><?= __d('system', "When enabled emails won't be sent but a log entry will be added to app/Storage/Logs/error.log."); ?></small>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-4 control-label" for="mailDriver"><?= __d('system', 'Mail Driver'); ?></label>
             <div class="col-sm-8">
                 <div class="col-sm-3" style="padding: 0;">
@@ -71,7 +82,6 @@
                 <small><?= __d('system', 'Whether or not is used a external SMTP Server to send the E-mails.'); ?></small>
             </div>
         </div>
-
         <div class="form-group">
             <label class="col-sm-4 control-label" for="mailFromAddress"><?= __d('system', 'E-mail From Address'); ?></label>
             <div class="col-sm-8">
@@ -161,14 +171,6 @@
 <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
 
 </form>
-
-<?php } else { ?>
-
-<div class="callout callout-info">
-    <?= __d('system', 'The Settings are not available while the Config Store is on Files Mode.'); ?>
-</div>
-
-<?php } ?>
 
 </section>
 

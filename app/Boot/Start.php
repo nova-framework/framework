@@ -63,12 +63,6 @@ define('STORAGE_PATH', APPDIR .'Storage' .DS);
 define('VERSION', Application::VERSION);
 
 //--------------------------------------------------------------------------
-// Setup The Framework Environment
-//--------------------------------------------------------------------------
-
-defined('ENVIRONMENT') || define('ENVIRONMENT', 'development');
-
-//--------------------------------------------------------------------------
 // Load The Global Configuration
 //--------------------------------------------------------------------------
 
@@ -82,8 +76,6 @@ if (is_readable($path)) require $path;
 
 $app = new Application();
 
-$app->instance('app', $app);
-
 //--------------------------------------------------------------------------
 // Detect The Application Environment
 //--------------------------------------------------------------------------
@@ -96,14 +88,26 @@ $env = $app->detectEnvironment(array(
 // Bind Paths
 //--------------------------------------------------------------------------
 
-$paths = array(
+$app->bindInstallPaths(array(
     'base'    => ROOTDIR,
     'app'     => APPDIR,
     'public'  => PUBLICDIR,
     'storage' => STORAGE_PATH,
-);
+));
 
-$app->bindInstallPaths($paths);
+//--------------------------------------------------------------------------
+// Bind The Application In The Container
+//--------------------------------------------------------------------------
+
+$app->instance('app', $app);
+
+//--------------------------------------------------------------------------
+// Check For The Test Environment
+//--------------------------------------------------------------------------
+
+if (isset($unitTesting)) {
+    $app['env'] = $env = $testEnvironment;
+}
 
 //--------------------------------------------------------------------------
 // Load The Framework Facades
@@ -120,35 +124,28 @@ Facade::setFacadeApplication($app);
 $app->registerCoreContainerAliases();
 
 //--------------------------------------------------------------------------
-// Register Application Exception Handling
-//--------------------------------------------------------------------------
-
-$app->startExceptionHandling();
-
-if ($env != 'testing') ini_set('display_errors', 'Off');
-
-//--------------------------------------------------------------------------
 // Register The Environment Variables
 //--------------------------------------------------------------------------
 
 with($envVariables = new EnvironmentVariables(
-        $app->getEnvironmentVariablesLoader()))->load($env);
-
-//--------------------------------------------------------------------------
-// Load The Configuration
-//--------------------------------------------------------------------------
-
-foreach (glob($app['path'] .DS .'Config' .DS .'*.php') as $path) {
-    if (is_readable($path)) require $path;
-}
+    $app->getEnvironmentVariablesLoader()
+))->load($env);
 
 //--------------------------------------------------------------------------
 // Register The Config Manager
 //--------------------------------------------------------------------------
 
 $app->instance('config', $config = new ConfigRepository(
-    $app->getConfigLoader()
+    $app->getConfigLoader(), $env
 ));
+
+//--------------------------------------------------------------------------
+// Register Application Exception Handling
+//--------------------------------------------------------------------------
+
+$app->startExceptionHandling();
+
+if ($env != 'testing') ini_set('display_errors', 'Off');
 
 //--------------------------------------------------------------------------
 // Set The Default Timezone From Configuration
@@ -218,29 +215,6 @@ $path = $app['path'] .DS .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
 if (is_readable($path)) require $path;
 
 //--------------------------------------------------------------------------
-// Try To Register Again The Config Manager
-//--------------------------------------------------------------------------
-
-if(CONFIG_STORE == 'database') {
-    // Get the Database Connection instance.
-    $connection = $app['db']->connection();
-
-    // Get a fresh Config Loader instance.
-    $loader = $app->getConfigLoader();
-
-    // Setup Database Connection instance.
-    $loader->setConnection($connection);
-
-    // Refresh the Application's Config instance.
-    $app->instance('config', $config = new ConfigRepository($loader));
-
-    // Make the Facade to refresh its information.
-    Facade::clearResolvedInstance('config');
-} else if(CONFIG_STORE != 'files') {
-    throw new \InvalidArgumentException('Invalid Config Store type.');
-}
-
-//--------------------------------------------------------------------------
 // Load The Application Events
 //--------------------------------------------------------------------------
 
@@ -268,7 +242,7 @@ if (is_readable($path)) require $path;
 // Load The Application Bootstrap
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .'Bootstrap.php';
+$path = $app['path'] .DS .'Bootstrap.php';
 
 if (is_readable($path)) require $path;
 

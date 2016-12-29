@@ -18,8 +18,14 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (! $this->runningInConsole()) {
+        try {
             $this->loadOptions();
+        }
+        catch (\Exception $e) {
+            // Do nothing.
+        }
+        catch (\Throwable $e) {
+            // Do nothing.
         }
     }
 
@@ -56,13 +62,4 @@ class SystemServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Determine if we are running in the console.
-     *
-     * @return bool
-     */
-    protected function runningInConsole()
-    {
-        return $this->app->runningInConsole();
-    }
 }

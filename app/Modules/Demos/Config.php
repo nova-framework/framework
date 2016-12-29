@@ -5,9 +5,3 @@
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0
  */
-
-use Nova\Config\Config;
-
-/**
- * Configuration constants and options.
- */

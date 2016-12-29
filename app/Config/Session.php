@@ -89,6 +89,7 @@ return array(
     */
 
     'cookie'   => PREFIX .'session',
+    
     /*
     |--------------------------------------------------------------------------
     | Session Cookie Path

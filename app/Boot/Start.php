@@ -221,29 +221,6 @@ $path = $app['path'] .DS .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
 if (is_readable($path)) require $path;
 
 //--------------------------------------------------------------------------
-// Try To Register Again The Config Manager
-//--------------------------------------------------------------------------
-
-if(CONFIG_STORE == 'database') {
-    // Get the Database Connection instance.
-    $connection = $app['db']->connection();
-
-    // Get a fresh Config Loader instance.
-    $loader = $app->getConfigLoader();
-
-    // Setup Database Connection instance.
-    $loader->setConnection($connection);
-
-    // Refresh the Application's Config instance.
-    $app->instance('config', $config = new ConfigRepository($loader));
-
-    // Make the Facade to refresh its information.
-    Facade::clearResolvedInstance('config');
-} else if(CONFIG_STORE != 'files') {
-    throw new \InvalidArgumentException('Invalid Config Store type.');
-}
-
-//--------------------------------------------------------------------------
 // Load The Application Events
 //--------------------------------------------------------------------------
 

@@ -1,0 +1,17 @@
+{
+    "name": "Messenger",
+    "description": "This is the description for the Messenger module.",
+    "homepage": "http://www.giulianaeassociati.com",
+    "version": "1.0",
+    "authors" : [
+        {
+            "name" : "Virgil-Adrian Teaca",
+            "email" : "virgil@giulianaeassociati.com",
+            "homepage": "http://www.giulianaeassociati.com",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "slug": "messenger",
+    "namespace": "Messenger"
+}

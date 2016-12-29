@@ -2,7 +2,6 @@
 /**
  * Config - the Module's specific Configuration.
  *
- * @author David Carr - dave@daveismyname.com
- * @author Edwin Hoksberg - info@edwinhoksberg.nl
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0
  */

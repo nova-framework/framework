@@ -110,12 +110,6 @@ if (isset($unitTesting)) {
 }
 
 //--------------------------------------------------------------------------
-// Define The Environment
-//--------------------------------------------------------------------------
-
-define('ENVIRONMENT', $env);
-
-//--------------------------------------------------------------------------
 // Load The Framework Facades
 //--------------------------------------------------------------------------
 
@@ -248,7 +242,7 @@ if (is_readable($path)) require $path;
 // Load The Application Bootstrap
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .'Bootstrap.php';
+$path = $app['path'] .DS .'Bootstrap.php';
 
 if (is_readable($path)) require $path;
 

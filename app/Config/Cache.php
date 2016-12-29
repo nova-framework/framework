@@ -8,6 +8,7 @@
 
 
 return array(
+
     /*
     |--------------------------------------------------------------------------
     | Default Cache Driver
@@ -18,6 +19,7 @@ return array(
     | time you wish. This is the default when another is not specified.
     |
     | Supported: "file", "database", "apc", "memcached", "redis", "array"
+    |
     */
 
     'driver' => 'file',
@@ -30,6 +32,7 @@ return array(
     | When using the "file" cache driver, we need a location where the cache
     | files may be stored. A sensible default has been specified, but you
     | are free to change it to any other place on disk that you desire.
+    |
     */
 
     'path' => storage_path() .DS .'Cache',
@@ -42,6 +45,7 @@ return array(
     | When using the "database" cache driver you may specify the connection
     | that should be used to store the cached items. When this option is
     | null the default database connection will be utilized for cache.
+    |
     */
 
     'connection' => null,
@@ -54,6 +58,7 @@ return array(
     | When using the "database" cache driver we need to know the table that
     | should be used to store the cached items. A default table name has
     | been provided but you're free to change it however you deem fit.
+    |
     */
 
     'table' => 'cache',
@@ -66,6 +71,7 @@ return array(
     | Now you may specify an array of your Memcached servers that should be
     | used when utilizing the Memcached cache driver. All of the servers
     | should contain a value for "host", "port", and "weight" options.
+    |
     */
 
     'memcached' => array(
@@ -80,6 +86,7 @@ return array(
     | When utilizing a RAM based store such as APC or Memcached, there might
     | be other applications utilizing the same cache. So, we'll specify a
     | value to get prefixed to all our keys so we can avoid collisions.
+    |
     */
 
     'prefix' => 'nova',

@@ -1,14 +1,16 @@
 <?php
 /**
- * FileField Configuration.
+ * FileField configuration
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 4.0
+ * @version 3.0
  */
 
+use Nova\Config\Config;
 
-return array(
+
+Config::set('fileField', array(
     'path'        => base_path('files/:class_slug/:attribute/:unique_id-:file_name'),
     'defaultPath' => base_path('files/default.png')
-);
+));
 

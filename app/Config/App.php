@@ -8,66 +8,172 @@
 
 
 return array(
-    /**
-     * Debug Mode
-     */
-    'debug' => true, // When enabled the actual PHP errors will be shown.
 
-    /**
-     * The Website URL.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Application Debug Mode
+    |--------------------------------------------------------------------------
+    |
+    | When your application is in debug mode, detailed error messages with
+    | stack traces will be shown on every error that occurs within your
+    | application. If disabled, a simple generic error page is shown.
+    |
+    */
+
+    'debug' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Base Site URL
+    |--------------------------------------------------------------------------
+    |
+    | URL to your Nova root. Typically this will be your base URL,
+    | WITH a trailing slash:
+    |
+    |   http://example.com/
+    |
+    | WARNING: You MUST set this value!
+    |
+    */
+
     'url' => 'http://www.novaframework.dev/',
 
-    /**
-    * The Administrator's E-mail Address.
+   /*
+    |--------------------------------------------------------------------------
+    | The Administrator's E-mail Address
+    |--------------------------------------------------------------------------
+    |
+    | The e-mail address for your application's administrator.
+    |
     */
+
     'email' => 'admin@novaframework.dev',
 
-    /**
-     * The Website Path.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | The Website Path
+    |--------------------------------------------------------------------------
+    |
+    */
+
     'path' => '/',
 
-    /**
-     * Website Name.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application.
+    |
+    */
+
     'name' => 'Nova 4.0',
 
-    /**
-     * The default Template.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Default Template
+    |--------------------------------------------------------------------------
+    |
+    | Used for the applications default template.
+    |
+    */
+
     'template' => 'Default',
 
-    /**
-     * The Backend's Color Scheme.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Application Backend Colour Scheme
+    |--------------------------------------------------------------------------
+    |
+    | Used for the applications Backend AdminLTE template.
+    |
+    | Options:
+    | - blue
+    | - blue-light
+    | - black
+    | - black-light
+    | - purple
+    | - purple-light
+    | - yellow
+    | - yellow-light
+    | - red
+    | - red-light
+    | - green
+    | - green-light
+    |
+    */
+
     'color_scheme' => 'blue',
 
-    /**
-     * The default locale that will be used by the translation.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Application Locale Configuration
+    |--------------------------------------------------------------------------
+    |
+    | The application locale determines the default locale that will be used
+    | by the translation service provider. You are free to set this value
+    | to any of the locales which will be supported by the application.
+    |
+    */
+
     'locale' => 'en',
 
-    /**
-     * The default Timezone for your website.
-     * http://www.php.net/manual/en/timezones.php
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Application Timezone
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default timezone for your application, which
+    | will be used by the PHP date and date-time functions. We have gone
+    | ahead and set this to a sensible default for you out of the box.
+    |
+    | http://www.php.net/manual/en/timezones.php
+    |
+    */
+
     'timezone' => 'Europe/London',
 
-    /**
-     * The Encryption Key.
-     * This page can be used to generate key - http://novaframework.com/token-generator
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Encryption Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is used by the encrypter service and should be set
+    | to a random, 32 character string, otherwise these encrypted strings
+    | will not be safe. Please do this before deploying an application!
+    |
+    | This page can be used to generate key - http://novaframework.com/token-generator
+    |
+    */
+
     'key' => 'SomeRandomStringThere_1234567890',
 
-    /**
-     *  Prevents the website from CSRF attacks.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Cross Site Request Forgery (CSRF)
+    |--------------------------------------------------------------------------
+    |
+    | Enables a CSRF cookie token to be set. When set to TRUE, token will be
+    | checked on a submitted form. If you are accepting user data, it is strongly
+    | recommended CSRF protection be enabled.
+    |
+    */
+
     'csrf' => true,
 
-    /**
-     * The registered Service Providers.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Autoloaded Service Providers
+    |--------------------------------------------------------------------------
+    |
+    | The service providers listed here will be automatically loaded on the
+    | request to your application. Feel free to add your own services to
+    | this array to grant expanded functionality to your applications.
+    |
+    */
+
     'providers' => array(
         // The Forge Console Providers.
         'Nova\Foundation\Providers\ForgeServiceProvider',
@@ -105,14 +211,30 @@ return array(
         'Shared\Database\Backup\BackupServiceProvider',
     ),
 
-    /**
-     * The Service Providers Manifest path.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Service Provider Manifest
+    |--------------------------------------------------------------------------
+    |
+    | The service provider manifest is used by Nova to lazy load service
+    | providers which are not needed for each request, as well to keep a
+    | list of all of the services. Here, you may set its storage spot.
+    |
+    */
+
     'manifest' => APPDIR .'Boot' .DS .'Cache',
 
-    /**
-     * The registered Class Aliases.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Class Aliases
+    |--------------------------------------------------------------------------
+    |
+    | This array of class aliases will be registered when this application
+    | is started. However, feel free to register as many as you wish as
+    | the aliases are "lazy" loaded so they don't hinder performance.
+    |
+    */
+
     'aliases' => array(
         // The Helpers.
         'Date'          => 'Nova\Helpers\Date',

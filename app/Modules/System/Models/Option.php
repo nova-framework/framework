@@ -26,8 +26,6 @@ class Option extends BaseModel
 
     public static function set($key, $value)
     {
-        @list($group, $item) = static::parseKey($key);
-
         // Prepare the variables.
         $attributes = array(
             'group' => $group,
@@ -35,7 +33,7 @@ class Option extends BaseModel
         );
 
         $values = array(
-            'value' => $value
+            'value' => $this->maybeEncode($value)
         );
 
         return static::updateOrCreate($attributes, $values);

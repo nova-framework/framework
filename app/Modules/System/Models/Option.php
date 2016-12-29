@@ -33,7 +33,7 @@ class Option extends BaseModel
         );
 
         $values = array(
-            'value' => static::maybeEncode($value)
+            'value' => $value
         );
 
         return static::updateOrCreate($attributes, $values);

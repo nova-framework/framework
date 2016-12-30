@@ -28,13 +28,15 @@
     <div class="box-body">
 <?php if (! $threads->isEmpty()) { ?>
     <?php foreach ($threads->getItems() as $thread) { ?>
-        <?php $class = $thread->isUnread($currentUserId) ? 'callout-info' : ''; ?>
-        <div class="callout <?= $class; ?>">
-            <h4><strong><a href="<?= site_url('admin/messages/' . $thread->id); ?>" <?= empty($class) ? 'style="color:#3c8dbc;"' : ''; ?>><?= $thread->subject; ?></a></strong></h4>
+        <?php $class = $thread->isUnread($currentUserId) ? 'info' : 'default'; ?>
+        <div class="callout callout-<?= $class; ?>">
+            <h4><strong><a href="<?= site_url('admin/messages/' . $thread->id); ?>" style="text-decoration: none;"><?= $thread->subject; ?></a></strong></h4>
             <p><?= $thread->latestMessage->body; ?></p>
-            <br>
-            <p><small><strong>Creator:</strong> <?= $thread->creator()->username ?></small></p>
-            <p><small><strong>Participants:</strong> <?= $thread->participantsString($currentUserId); ?></small></p>
+            <hr style="margin-bottom: 10px;">
+            <p class="last-child <?= ($class == 'default') ? 'text-muted' : ''; ?>">
+                <small><strong>Creator:</strong> <?= $thread->creator()->username ?></small> |
+                <small><strong>Participants:</strong> <?= $thread->participantsString($currentUserId); ?></small>
+            </p>
         </div>
     <?php } ?>
 <?php } else { ?>

@@ -1,2 +1,13 @@
 /* Your styles here */
 
+.callout.callout-default {
+    color: #333;
+    background-color: #f9f9f9 !important;
+}
+
+.callout.callout-default a {
+    color: #3c8dbc;
+}
+.callout.callout-default a:hover, a:active, a:focus {
+    color: #72afd2;
+}

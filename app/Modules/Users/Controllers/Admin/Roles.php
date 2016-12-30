@@ -19,7 +19,8 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
-use App\Models\Role;
+
+use App\Modules\System\Models\Role;
 
 use Carbon\Carbon;
 

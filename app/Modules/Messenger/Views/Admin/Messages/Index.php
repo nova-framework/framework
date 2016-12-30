@@ -31,7 +31,7 @@
 <?php if (! $threads->isEmpty()) { ?>
     <?php foreach ($threads->getItems() as $thread) { ?>
         <?php $class = $thread->isUnread($userId) ? 'info' : 'default'; ?>
-        <div class="callout callout-<?= $class; ?>">
+        <div class="callout callout-<?= $class; ?>" style="margin: 0 0 10px 0; padding: 10px;">
             <h4><strong><a href="<?= site_url('admin/messages/' . $thread->id); ?>" style="text-decoration: none;"><?= e($thread->subject); ?></a></strong></h4>
             <p><?= e($thread->latestMessage->body); ?></p>
             <hr style="margin-bottom: 10px;">

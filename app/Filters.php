@@ -33,7 +33,8 @@ App::after(function($request, $response)
 /** Define Route Filters. */
 
 // The CSRF Filter.
-Route::filter('csrf', function($route, $request) {
+Route::filter('csrf', function($route, $request)
+{
     $session = $request->session();
 
     $ajaxRequest = $request->ajax();
@@ -53,7 +54,8 @@ Route::filter('csrf', function($route, $request) {
 });
 
 // Referer checking Filter.
-Route::filter('referer', function($route, $request) {
+Route::filter('referer', function($route, $request)
+{
     // Check if the visitor come to this Route from another site.
     $referer = $request->header('referer');
 
@@ -64,7 +66,8 @@ Route::filter('referer', function($route, $request) {
 });
 
 // Authentication Filters.
-Route::filter('auth', function($route, $request) {
+Route::filter('auth', function($route, $request)
+{
     if (Auth::check()) {
         //
     }
@@ -82,7 +85,8 @@ Route::filter('auth.basic', function()
     return Auth::basic();
 });
 
-Route::filter('guest', function($route, $request) {
+Route::filter('guest', function($route, $request)
+{
     if (Auth::guest()) {
         //
     }

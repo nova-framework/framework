@@ -9,7 +9,8 @@
 
 /** Define static routes. */
 
-Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers'), function() {
+Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers'), function()
+{
     // The Account Registration.
     Route::get( 'register',                 array('before' => 'guest',      'uses' => 'Registrar@create'));
     Route::post('register',                 array('before' => 'guest|csrf', 'uses' => 'Registrar@store'));
@@ -18,8 +19,8 @@ Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers
 });
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
-
+Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function()
+{
     // The Users Search.
     Route::post('users/search', array('before' => 'auth', 'uses' => 'Users@search'));
 

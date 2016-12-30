@@ -9,7 +9,8 @@
 
 /** Define static routes. */
 
-Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controllers'), function() {
+Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controllers'), function()
+{
     // The Framework's Language Changer.
     Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@change'));
 
@@ -31,7 +32,8 @@ Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controller
 });
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\System\Controllers\Admin'), function() {
+Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\System\Controllers\Admin'), function()
+{
     // The User's Dashboard.
     Route::get('/',         array('before' => 'auth', 'uses' => 'Dashboard@index'));
     Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));

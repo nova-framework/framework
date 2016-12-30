@@ -33,11 +33,11 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="message"><?= __d('messenger', 'Message'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-10">
-                    <textarea name="message" id="message" class="form-control" rows="10" placeholder="<?= __d('messenger', 'Message'); ?>"><?= Input::old('message'); ?></textarea>
+                    <textarea name="message" id="message" class="form-control" rows="10" placeholder="<?= __d('messenger', 'Write a Message'); ?>"><?= Input::old('message'); ?></textarea>
                 </div>
             </div>
-
             <?php if ($users->count() > 0) { ?>
+
             <div class="form-group">
                 <label class="col-sm-2 control-label""><?= __d('messenger', 'Recipients'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-10">
@@ -48,8 +48,8 @@
                 <?php } ?>
                 </select>
             </div>
-            <?php } ?>
 
+            <?php } ?>
             <div class="clearfix"></div>
             <br>
             <font color='#CC0000'>*</font><?= __d('messenger', 'Required field'); ?>

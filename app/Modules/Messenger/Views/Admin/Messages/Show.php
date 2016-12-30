@@ -14,7 +14,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= $thread->subject; ?></h3>
+        <h3 class="box-title"><?= e($thread->subject); ?></h3>
     </div>
     <div class="box-body">
     <?php $count = 0; $total = $thread->messages->count(); ?>
@@ -25,7 +25,7 @@
         </a>
         <div class="media-body">
             <h4 style="margin-top: 0;"><strong><?= $message->user->username; ?></strong></h4>
-            <p><?= $message->body; ?></p>
+            <p><?= e($message->body); ?></p>
             <div class="text-muted"><small>Posted <?= $message->created_at->diffForHumans(); ?></small></div>
         </div>
         <?php if ($count < $total) { ?>
@@ -41,9 +41,6 @@
     </div>
     <div class="box-body">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-            <div class="clearfix"></div>
-            <br>
-
             <form class="form-horizontal" action="<?= site_url('admin/messages/' .$thread->id); ?>" method='POST' role="form">
 
             <div class="form-group">
@@ -55,9 +52,9 @@
             <?php if ($users->count() > 0) { ?>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label""><?= __d('messenger', 'Recipients'); ?></label>
+                <label class="col-sm-2 control-label" for="recipients"><?= __d('messenger', 'Recipients'); ?></label>
                 <div class="col-sm-10">
-                <select name="recipients[]" id="terms" class="form-control select2" multiple="multiple" data-placeholder="Select a new Recipient">
+                <select name="recipients[]" id="recipients" class="form-control select2" multiple="multiple" data-placeholder="Select a new Recipient">
                 <?php $recipients = Input::old('recipients', array()); ?>
                 <?php foreach ($users as $user) { ?>
                     <option value="<?= $user->id ?>" <?php if (in_array($user->id, $recipients)) echo 'selected'; ?>><?= $user->username; ?></option>
@@ -83,6 +80,8 @@
         </div>
     </div>
 </div>
+
+<div class="clearfix"></div>
 
 <a class='btn btn-primary' href='<?= site_url('admin/messages'); ?>'><?= __d('messenger', '<< Previous Page'); ?></a>
 

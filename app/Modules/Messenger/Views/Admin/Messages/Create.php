@@ -18,9 +18,6 @@
     </div>
     <div class="box-body">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-            <div class="clearfix"></div>
-            <br>
-
             <form class="form-horizontal" action="<?= site_url('admin/messages'); ?>" method='POST' role="form">
 
             <div class="form-group">
@@ -39,14 +36,15 @@
             <?php if ($users->count() > 0) { ?>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label""><?= __d('messenger', 'Recipients'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-2 control-label" for="recipients"><?= __d('messenger', 'Recipients'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-10">
-                <select name="recipients[]" id="terms" class="form-control select2" multiple="multiple" data-placeholder="Select a Recipient">
+                <select name="recipients[]" id="recipients" class="form-control select2" multiple="multiple" data-placeholder="Select a Recipient">
                 <?php $recipients = Input::old('recipients', array()); ?>
                 <?php foreach ($users as $user) { ?>
                     <option value="<?= $user->id ?>" <?php if (in_array($user->id, $recipients)) echo 'selected'; ?>><?= $user->username; ?></option>
                 <?php } ?>
                 </select>
+                </div>
             </div>
 
             <?php } ?>

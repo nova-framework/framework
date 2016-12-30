@@ -14,7 +14,7 @@
         <h3 class="box-title"><?= __d('messenger', 'Create a new Message'); ?></h3>
     </div>
     <div class="box-body">
-        <a class='btn btn-success' href='<?= site_url('admin/messages/create'); ?>'><?= __d('messenger', 'New Message'); ?></a>
+        <a class='btn btn-success' href='<?= site_url('admin/messages/create'); ?>'><?= __d('messenger', 'Create a new Message'); ?></a>
     </div>
 </div>
 

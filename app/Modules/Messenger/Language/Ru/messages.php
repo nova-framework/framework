@@ -10,7 +10,6 @@ return array (
   'Message' => '',
   'Message Threads' => '',
   'Messages' => '',
-  'New Message' => '',
   'Recipients' => '',
   'Required field' => '',
   'Save' => '',

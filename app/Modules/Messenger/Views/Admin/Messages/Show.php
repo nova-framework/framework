@@ -57,9 +57,12 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label""><?= __d('messenger', 'Recipients'); ?></label>
                 <div class="col-sm-10">
-                <?php foreach($users as $user) { ?>
-                    <label title="<?= $user->realname; ?>"><input type="checkbox" name="recipients[]" value="<?= $user->id; ?>"> <?= $user->username; ?></label>
+                <select name="recipients[]" id="terms" class="form-control select2" multiple="multiple" data-placeholder="Select a Recipient">
+                <?php $recipients = Input::old('recipients', array()); ?>
+                <?php foreach ($users as $user) { ?>
+                    <option value="<?= $user->id ?>" <?php if (in_array($user->id, $recipients)) echo 'selected'; ?>><?= $user->username; ?></option>
                 <?php } ?>
+                </select>
                 </div>
             </div>
             <?php } ?>

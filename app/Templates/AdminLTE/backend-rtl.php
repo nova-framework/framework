@@ -42,12 +42,12 @@ $langMenuLinks = ob_get_clean();
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
+        // Select2
+        vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
         // Theme style
         template_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
-        // Select2
-        vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         template_url('css/style-rtl.css', 'AdminLTE'),
     ));

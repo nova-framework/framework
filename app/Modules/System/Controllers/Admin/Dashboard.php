@@ -8,9 +8,9 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use App\Core\BackendController;
+use Nova\Support\Facades\View;
 
-use View;
+use App\Core\BackendController;
 
 
 class Dashboard extends BackendController

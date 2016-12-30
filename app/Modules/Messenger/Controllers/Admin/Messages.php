@@ -7,6 +7,7 @@ use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
@@ -17,8 +18,6 @@ use App\Modules\Messenger\Models\Message;
 use App\Modules\Messenger\Models\Participant;
 
 use Carbon\Carbon;
-
-use Validator;
 
 
 class Messages extends BackendController
@@ -91,7 +90,7 @@ class Messages extends BackendController
         catch (ModelNotFoundException $e) {
             $status = __d('messenger', 'The thread with ID: {0} was not found.', $id);
 
-            return Redirect::to('admin/messages')->withStatus($status);
+            return Redirect::to('admin/messages')->withStatus($status, 'danger');
         }
 
         // Show current User in list if not a current participant.
@@ -185,7 +184,7 @@ class Messages extends BackendController
         catch (ModelNotFoundException $e) {
             $status = __d('messenger', 'The thread with ID: {0} was not found.', $id);
 
-            return Redirect::to('admin/messages')->withStatus($status);
+            return Redirect::to('admin/messages')->withStatus($status, 'danger');
         }
 
         // Validate the Input data.

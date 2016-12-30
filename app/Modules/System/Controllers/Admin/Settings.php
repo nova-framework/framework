@@ -8,15 +8,15 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
+use Nova\Support\Facades\Cache;
+use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
+
 use App\Core\BackendController;
 use App\Modules\System\Models\Option;
-
-use Cache;
-use Config;
-use Input;
-use Redirect;
-use Validator;
-use View;
 
 
 class Settings extends BackendController

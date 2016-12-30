@@ -2,12 +2,12 @@
 
 namespace App\Modules\System\Controllers;
 
-use Nova\Config\Config;
-use App\Core\Controller;
+use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Cookie;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Session;
 
-use Cookie;
-use Redirect;
-use Session;
+use App\Core\Controller;
 
 
 class Language extends Controller

@@ -2,28 +2,24 @@
 
 namespace App\Modules\Demos\Controllers;
 
+use Nova\Routing\Route;
+use Nova\Support\Facades\App;
+use Nova\Support\Facades\Cache;
+use Nova\Support\Facades\DB;
+use Nova\Support\Facades\Event;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Mailer;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Request;
+use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
+
 use App\Core\Controller;
 use App\Models\User;
-use Nova\Routing\Route;
-
-use App;
-use Cache;
-use DB;
-use Event;
-use Hash;
-use Input;
-use Mailer;
-use Redirect;
-use Request;
-use Session;
-use Validator;
-use View;
 
 
-/*
-*
-* Demo controller
-*/
 class Demos extends Controller
 {
     /**
@@ -69,10 +65,11 @@ class Demos extends Controller
 
     public function test()
     {
-        $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
         $content = '';
-        /*
+
         //
+        $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
+
         $route = new Route('GET', $uri, function() {
             //
         });
@@ -83,40 +80,9 @@ class Demos extends Controller
         $request = Request::instance();
 
         if ($route->matches($request)) {
-            $content = '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
+            $content = '<pre>' .e(var_export($route, true)) .'</pre>';
         } else {
-            $content = '<pre>' .htmlspecialchars($uri) .'</pre>';
-        }
-        */
-
-        $filePath = ROOTDIR .'vendor/composer/autoload_classmap.php';
-
-        if (is_readable($filePath)) {
-            $data = include $filePath;
-
-            $classes = array_filter(array_keys($data), function($value)
-            {
-                return starts_with($value, 'Nova\\');
-            });
-
-            //
-            $content = '<table class="table table-striped table-hover table-condensed responsive">
-                            <tr><th>Class</th><th>Alias</th></tr>';
-
-            $aliases = array();
-
-            foreach ($classes as $value) {
-                $alias = preg_replace('/^Nova\\\/s', '', $value);
-                //$alias = str_replace('Nova\\', '', $value);
-
-                $aliases[$alias] = $value;
-
-                $content .= '<tr><td>' .$value .'</td><td>' .$alias .'</td></tr>';
-            }
-
-            $content .= '</table>';
-        } else {
-            $content .= __('<b>{1}</b> is not readable or does not exists!', str_replace(ROOTDIR, '', $filePath));
+            $content = '<pre>' .e($uri) .'</pre>';
         }
 
         return View::make('Default')

@@ -2,15 +2,14 @@
 
 namespace App\Modules\Files\Controllers\Admin;
 
-use App\Core\BackendController;
-
 use Nova\Http\Request;
 use Nova\Routing\Route;
+use Nova\Support\Facades\App;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Response;
+use Nova\Support\Facades\View;
 
-use App;
-use Auth;
-use Response;
-use View;
+use App\Core\BackendController;
 
 
 class Files extends BackendController

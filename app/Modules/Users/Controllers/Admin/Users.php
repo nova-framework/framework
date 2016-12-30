@@ -8,21 +8,22 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
+use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\File;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
+
 use App\Core\BackendController;
-use App\Models\Role;
 use App\Models\User;
 
+use App\Modules\System\Models\Role;
+
 use Carbon\Carbon;
-
-use Auth;
-use Hash;
-use Input;
-use File;
-use Redirect;
-use Session;
-use Validator;
-use View;
-
 
 
 class Users extends BackendController
@@ -148,11 +149,11 @@ class Users extends BackendController
     public function show($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
-            // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
@@ -165,11 +166,11 @@ class Users extends BackendController
     public function edit($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
-            // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
@@ -186,11 +187,11 @@ class Users extends BackendController
     public function update($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
-            // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
@@ -242,11 +243,11 @@ class Users extends BackendController
     public function destroy($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
-            // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }

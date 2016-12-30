@@ -49,21 +49,24 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="message"><?= __d('messenger', 'Message'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-10">
-                    <textarea name="message" id="message" class="form-control" rows="10" placeholder="<?= __d('messenger', 'Message'); ?>"><?= Input::old('message'); ?></textarea>
+                    <textarea name="message" id="message" class="form-control" rows="10" placeholder="<?= __d('messenger', 'Write a Message'); ?>"><?= Input::old('message'); ?></textarea>
                 </div>
             </div>
-
             <?php if ($users->count() > 0) { ?>
+
             <div class="form-group">
                 <label class="col-sm-2 control-label""><?= __d('messenger', 'Recipients'); ?></label>
                 <div class="col-sm-10">
-                <?php foreach($users as $user) { ?>
-                    <label title="<?= $user->realname; ?>"><input type="checkbox" name="recipients[]" value="<?= $user->id; ?>"> <?= $user->username; ?></label>
+                <select name="recipients[]" id="terms" class="form-control select2" multiple="multiple" data-placeholder="Select a new Recipient">
+                <?php $recipients = Input::old('recipients', array()); ?>
+                <?php foreach ($users as $user) { ?>
+                    <option value="<?= $user->id ?>" <?php if (in_array($user->id, $recipients)) echo 'selected'; ?>><?= $user->username; ?></option>
                 <?php } ?>
+                </select>
                 </div>
             </div>
-            <?php } ?>
 
+            <?php } ?>
             <div class="clearfix"></div>
             <br>
             <font color='#CC0000'>*</font><?= __d('messenger', 'Required field'); ?>

@@ -18,4 +18,5 @@ return array (
   'Subject' => '',
   'The thread with ID: {0} was not found.' => '',
   'There are no Message Threads.' => '',
+  'Write a Message' => '',
 );

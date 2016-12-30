@@ -10,26 +10,30 @@
 <!-- Main content -->
 <section class="content">
 
+<?= Session::getMessages(); ?>
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= $thread->subject; ?></h3>
     </div>
     <div class="box-body">
+    <?php $count = 0; $total = $thread->messages->count(); ?>
     <?php foreach ($thread->messages as $message) { ?>
-        <a class="pull-left" href="#" style="margin-right: 20px;">
-            <img src="//www.gravatar.com/avatar/<?= $message->user->email; ?>?s=64" alt="<?= $message->user->realname; ?>" class="img-circle">
+        <?php $count++; ?>
+        <a class="pull-left" href="#" style="margin-right: 10px;">
+            <img src="//www.gravatar.com/avatar/<?= md5(strtolower(trim($message->user->email))); ?>?s=64&d=identicon" alt="<?= $message->user->realname; ?>" title="<?= $message->user->realname; ?>" class="img-circle">
         </a>
         <div class="media-body">
-            <h4><strong><?= $message->user->username; ?></strong></h4>
+            <h4 style="margin-top: 0;"><strong><?= $message->user->username; ?></strong></h4>
             <p><?= $message->body; ?></p>
             <div class="text-muted"><small>Posted <?= $message->created_at->diffForHumans(); ?></small></div>
         </div>
-        <hr>
+        <?php if ($count < $total) { ?>
+        <hr style="margin-top: 10px; margin-bottom: 10px;">
+        <?php } ?>
     <?php } ?>
     </div>
 </div>
-
-<?= Session::getMessages(); ?>
 
 <div class="box box-default">
     <div class="box-header with-border">

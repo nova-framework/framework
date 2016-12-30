@@ -38,14 +38,14 @@ class Thread extends Model
     protected $dates = array('created_at', 'updated_at', 'deleted_at');
 
     /**
-     * "Users" table name to use for manual queries
+     * "Users" table name to use for manual queries.
      *
      * @var string|null
      */
     private $usersTable = null;
 
     /**
-     * Messages relationship
+     * Messages relationship.
      *
      * @return \Nova\Database\ORM\Relations\HasMany
      */
@@ -55,7 +55,7 @@ class Thread extends Model
     }
 
     /**
-     * Returns the latest message from a thread
+     * Returns the latest message from a thread.
      *
      * @return \App\Modules\Messenger\Models\Message
      */
@@ -65,7 +65,7 @@ class Thread extends Model
     }
 
     /**
-     * Participants relationship
+     * Participants relationship.
      *
      * @return \Nova\Database\ORM\Relations\HasMany
      */
@@ -75,7 +75,7 @@ class Thread extends Model
     }
 
     /**
-     * Returns the user object that created the thread
+     * Returns the user object that created the thread.
      *
      * @return mixed
      */
@@ -87,17 +87,7 @@ class Thread extends Model
     }
 
     /**
-     * Returns all of the latest threads by updated_at date
-     *
-     * @return mixed
-     */
-    public static function getAllLatest()
-    {
-        return self::latest('updated_at');
-    }
-
-    /**
-     * Returns an array of user ids that are associated with the thread
+     * Returns an array of User IDs that are associated with the thread.
      *
      * @param null $userId
      * @return array
@@ -106,15 +96,15 @@ class Thread extends Model
     {
         $users = $this->participants()->withTrashed()->lists('user_id');
 
-        if ($userId) {
-            $users[] = $userId;
+        if (! is_null($userId)) {
+            array_push($users, $userId);
         }
 
         return $users;
     }
 
     /**
-     * Returns threads that the user is associated with
+     * Returns threads that the User is associated with.
      *
      * @param $query
      * @param $userId
@@ -123,15 +113,14 @@ class Thread extends Model
      */
     public function scopeForUser($query, $userId)
     {
-        return $query
-            ->join('participants', 'threads.id', '=', 'participants.thread_id')
+        return $query->join('participants', 'threads.id', '=', 'participants.thread_id')
             ->where('participants.user_id', $userId)
             ->where('participants.deleted_at', null)
             ->select('threads.*');
     }
 
     /**
-     * Returns threads with new messages that the user is associated with
+     * Returns threads with new messages that the User is associated with.
      *
      * @param $query
      * @param $userId
@@ -155,7 +144,7 @@ class Thread extends Model
     }
 
     /**
-     * Returns threads between given user IDs
+     * Returns threads between given User IDs.
      *
      * @param $query
      * @param $participants
@@ -172,7 +161,7 @@ class Thread extends Model
     }
 
     /**
-     * Adds users to this thread
+     * Adds users to this Thread.
      *
      * @param array $participants list of all participants
      * @return void
@@ -188,7 +177,7 @@ class Thread extends Model
     }
 
     /**
-     * Mark a thread as read for a User
+     * Mark a thread as read for a User.
      *
      * @param integer $userId
      */
@@ -207,7 +196,7 @@ class Thread extends Model
     }
 
     /**
-     * See if the current thread is unread by the User
+     * See if the current Thread is unread by the User.
      *
      * @param integer $userId
      * @return bool
@@ -241,7 +230,7 @@ class Thread extends Model
     }
 
     /**
-     * Restores all participants within a thread that has a new message
+     * Restores all participants within a Thread that has a new message
      */
     public function activateAllParticipants()
     {
@@ -253,7 +242,7 @@ class Thread extends Model
     }
 
     /**
-     * Generates a string of participant information
+     * Generates a string of participant information.
      *
      * @param null $userId
      * @param string $column
@@ -277,7 +266,7 @@ class Thread extends Model
     }
 
     /**
-     * Checks to see if a user is a current participant of the thread
+     * Checks to see if a User is a current participant of the Thread.
      *
      * @param $userId
      * @return bool
@@ -304,7 +293,7 @@ class Thread extends Model
     }
 
     /**
-     * Returns the "users" table name to use in manual queries
+     * Returns the "users" table name to use in manual queries.
      *
      * @return string
      */

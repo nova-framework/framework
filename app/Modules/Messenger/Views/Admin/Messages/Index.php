@@ -28,14 +28,14 @@
     <div class="box-body">
 <?php if (! $threads->isEmpty()) { ?>
     <?php foreach ($threads->getItems() as $thread) { ?>
-        <?php $class = $thread->isUnread($currentUserId) ? 'info' : 'default'; ?>
+        <?php $class = $thread->isUnread($userId) ? 'info' : 'default'; ?>
         <div class="callout callout-<?= $class; ?>">
             <h4><strong><a href="<?= site_url('admin/messages/' . $thread->id); ?>" style="text-decoration: none;"><?= $thread->subject; ?></a></strong></h4>
             <p><?= $thread->latestMessage->body; ?></p>
             <hr style="margin-bottom: 10px;">
             <p class="last-child <?= ($class == 'default') ? 'text-muted' : ''; ?>">
                 <small><strong>Creator:</strong> <?= $thread->creator()->username ?></small> |
-                <small><strong>Participants:</strong> <?= $thread->participantsString($currentUserId); ?></small>
+                <small><strong>Participants:</strong> <?= $thread->participantsString($userId); ?></small>
             </p>
         </div>
     <?php } ?>

@@ -29,21 +29,21 @@ class Messages extends BackendController
      */
     public function index()
     {
-        $currentUserId = Auth::id();
+        $userId = Auth::id();
 
-        // All threads, ignore deleted/archived participants
-        //$threads = Thread::getAllLatest()->paginate(10);
+        // All Threads, ignore deleted/archived participants.
+        $threads = Thread::latest('updated_at')->paginate(10);
 
-        // All threads that user is participating in
-        $threads = Thread::forUser($currentUserId)->latest('updated_at')->paginate(10);
+        // All Threads that User is participating in.
+        //$threads = Thread::forUser($userId)->latest('updated_at')->paginate(10);
 
-        // All threads that user is participating in, with new messages
-        // $threads = Thread::forUserWithNewMessages($currentUserId)->latest('updated_at')->paginate(10);
+        // All Threads that User is participating in, with new messages.
+        // $threads = Thread::forUserWithNewMessages($userId)->latest('updated_at')->paginate(10);
 
         return $this->getView()
             ->shares('title', __d('messenger', 'Messages'))
             ->withThreads($threads)
-            ->withCurrentUserId($currentUserId);
+            ->withUserId($userId);
     }
 
     /**
@@ -54,6 +54,8 @@ class Messages extends BackendController
      */
     public function show($id)
     {
+        $userId = Auth::id();
+
         try {
             $thread = Thread::findOrFail($id);
         }
@@ -63,12 +65,10 @@ class Messages extends BackendController
             return Redirect::to('admin/messages')->withStatus($status);
         }
 
-        // Show current user in list if not a current participant
+        // Show current User in list if not a current participant.
         // $users = User::whereNotIn('id', $thread->participantsUserIds())->get();
 
         // Don't show the current user in list
-        $userId = Auth::id();
-
         $users = User::whereNotIn('id', $thread->participantsUserIds($userId))->get();
 
         $thread->markAsRead($userId);
@@ -94,7 +94,7 @@ class Messages extends BackendController
     }
 
     /**
-     * Stores a new message thread
+     * Stores a new Message Thread
      *
      * @return mixed
      */

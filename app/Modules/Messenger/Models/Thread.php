@@ -142,20 +142,20 @@ class Thread extends Model
         return $query->join('participants', 'threads.id', '=', 'participants.thread_id')
             ->where('participants.user_id', $userId)
             ->whereNull('participants.deleted_at')
-            ->where(function ($query) {
+            ->where(function ($query)
+            {
                 $connection = $this->getConnection();
 
                 $tablePrefix = $connection->getTablePrefix();
 
-                $query
-                    ->where('threads.updated_at', '>', $connection->raw($tablePrefix .'participants.last_read'))
+                return $query->where('threads.updated_at', '>', $connection->raw($tablePrefix .'participants.last_read'))
                     ->orWhereNull('participants.last_read');
             })
             ->select('threads.*');
     }
 
     /**
-     * Returns threads between given user ids
+     * Returns threads between given user IDs
      *
      * @param $query
      * @param $participants
@@ -163,10 +163,11 @@ class Thread extends Model
      */
     public function scopeBetween($query, array $participants)
     {
-        $query->whereHas('participants', function ($query) use ($participants) {
-            $query->whereIn('user_id', $participants)
+        return $query->whereHas('participants', function ($query) use ($participants)
+        {
+            return $query->whereIn('user_id', $participants)
                 ->groupBy('thread_id')
-                ->havingRaw('COUNT(thread_id)='.count($participants));
+                ->havingRaw('COUNT(thread_id) = ' .count($participants));
         });
     }
 
@@ -178,18 +179,16 @@ class Thread extends Model
      */
     public function addParticipants(array $participants)
     {
-        if (count($participants)) {
-            foreach ($participants as $user_id) {
-                Participant::firstOrCreate(array(
-                    'user_id' => $user_id,
-                    'thread_id' => $this->id,
-                ));
-            }
+        foreach ($participants as $user_id) {
+            Participant::firstOrCreate(array(
+                'user_id'   => $user_id,
+                'thread_id' => $this->id,
+            ));
         }
     }
 
     /**
-     * Mark a thread as read for a user
+     * Mark a thread as read for a User
      *
      * @param integer $userId
      */
@@ -201,13 +200,14 @@ class Thread extends Model
             $participant->last_read = new Carbon();
 
             $participant->save();
-        } catch (ModelNotFoundException $e) {
+        }
+        catch (ModelNotFoundException $e) {
             // Do nothing.
         }
     }
 
     /**
-     * See if the current thread is unread by the user
+     * See if the current thread is unread by the User
      *
      * @param integer $userId
      * @return bool
@@ -220,7 +220,8 @@ class Thread extends Model
             if ($this->updated_at > $participant->last_read) {
                 return true;
             }
-        } catch (ModelNotFoundException $e) {
+        }
+        catch (ModelNotFoundException $e) {
             // Do nothing.
         }
 
@@ -255,27 +256,24 @@ class Thread extends Model
      * Generates a string of participant information
      *
      * @param null $userId
-     * @param array $columns
+     * @param string $column
      * @return string
      */
-    public function participantsString($userId = null, $columns = array('username'))
+    public function participantsString($userId = null, $column = 'username')
     {
-        $participantsTable = 'participants';
-
+        $connection = $this->getConnection();
         $usersTable = $this->getUsersTable();
 
-        $selectString = $this->createSelectString($columns);
-
-        $participantNames = $this->getConnection()->table($usersTable)
-            ->join($participantsTable, $usersTable . '.id', '=', $participantsTable . '.user_id')
-            ->where($participantsTable . '.thread_id', $this->id)
-            ->select($this->getConnection()->raw($selectString));
+        $participants = $connection->table($usersTable)
+            ->join('participants', $usersTable . '.id', '=', 'participants.user_id')
+            ->where('participants.thread_id', $this->id)
+            ->select($usersTable .'.' .$column);
 
         if ($userId !== null) {
-            $participantNames->where($usersTable . '.id', '!=', $userId);
+            $participants->where($usersTable . '.id', '!=', $userId);
         }
 
-        return $participantNames->implode('name', ', ');
+        return $participants->implode($column, ', ');
     }
 
     /**
@@ -293,39 +291,6 @@ class Thread extends Model
         }
 
         return false;
-    }
-
-    /**
-     * Generates a select string used in participantsString()
-     *
-     * @param $columns
-     * @return string
-     */
-    protected function createSelectString($columns)
-    {
-        $dbDriver    = $this->getConnection()->getDriverName();
-        $tablePrefix = $this->getConnection()->getTablePrefix();
-
-        $usersTable = $this->getUsersTable();
-
-        switch ($dbDriver) {
-        case 'pgsql':
-        case 'sqlite':
-            $columnString = implode(" || ' ' || " . $tablePrefix . $usersTable . '.', $columns);
-            $selectString = '(' . $tablePrefix . $usersTable . '.' . $columnString . ') as name';
-
-            break;
-        case 'sqlsrv':
-            $columnString = implode(" + ' ' + " . $tablePrefix . $usersTable . '.', $columns);
-            $selectString = '(' . $tablePrefix . $usersTable . '.' . $columnString . ') as name';
-
-            break;
-        default:
-            $columnString = implode(", ' ', " . $tablePrefix . $usersTable . '.', $columns);
-            $selectString = 'concat(' . $tablePrefix . $usersTable . '.' . $columnString . ') as name';
-        }
-
-        return $selectString;
     }
 
     /**
@@ -349,6 +314,9 @@ class Thread extends Model
             return $this->usersTable;
         }
 
-        return $this->usersTable = with(new User())->getTable();
+        // Create a new User instance.
+        $user = new User();
+
+        return $this->usersTable = $user->getTable();
     }
 }

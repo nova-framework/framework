@@ -29,13 +29,13 @@ class Messages extends BackendController
      */
     public function index()
     {
-        $currentUserId = Auth::user()->id;
+        $currentUserId = Auth::id();
 
         // All threads, ignore deleted/archived participants
-        $threads = Thread::getAllLatest()->paginate(10);
+        //$threads = Thread::getAllLatest()->paginate(10);
 
         // All threads that user is participating in
-        // $threads = Thread::forUser($currentUserId)->latest('updated_at')->get();
+        $threads = Thread::forUser($currentUserId)->latest('updated_at')->paginate(10);
 
         // All threads that user is participating in, with new messages
         // $threads = Thread::forUserWithNewMessages($currentUserId)->latest('updated_at')->get();
@@ -67,7 +67,7 @@ class Messages extends BackendController
         // $users = User::whereNotIn('id', $thread->participantsUserIds())->get();
 
         // Don't show the current user in list
-        $userId = Auth::user()->id;
+        $userId = Auth::id();
 
         $users = User::whereNotIn('id', $thread->participantsUserIds($userId))->get();
 
@@ -110,7 +110,7 @@ class Messages extends BackendController
 
         Message::create(array(
             'thread_id' => $thread->id,
-            'user_id'   => Auth::user()->id,
+            'user_id'   => Auth::id(),
             'body'      => $input['message'],
         ));
 
@@ -118,7 +118,7 @@ class Messages extends BackendController
 
         Participant::create(array(
             'thread_id' => $thread->id,
-            'user_id'   => Auth::user()->id,
+            'user_id'   => Auth::id(),
             'last_read' => new Carbon
         ));
 
@@ -162,7 +162,7 @@ class Messages extends BackendController
 
         $participant = Participant::firstOrCreate(array(
             'thread_id' => $thread->id,
-            'user_id'   => Auth::user()->id
+            'user_id'   => Auth::id()
         ));
 
         $participant->last_read = new Carbon();

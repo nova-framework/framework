@@ -10,7 +10,8 @@
 /** Define static routes. */
 
 // The Demo Routes
-Route::group(array('prefix' => 'demo', 'namespace' => 'App\Modules\Demos\Controllers'), function() {
+Route::group(array('prefix' => 'demo', 'namespace' => 'App\Modules\Demos\Controllers'), function()
+{
     Route::get('database', 'Demos@database');
     Route::get('events',   'Demos@events');
     Route::get('mailer',   'Demos@mailer');

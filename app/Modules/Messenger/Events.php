@@ -8,9 +8,18 @@
 | Here is where you can register all of the Events for the module.
 */
 
-Event::listen('backend.menu', function($user) {
-    $label = View::make('Partials/UnreadCount', array(), 'Messenger')->render();
+Event::listen('backend.menu', function($user)
+{
+    $user = Auth::user();
 
+    // Prepare the Label.
+    $data = array(
+        'count' => $user->newMessagesCount()
+    );
+
+    $label = View::make('Partials/UnreadCount', $data, 'Messenger')->render();
+
+    // Prepare the Items.
     $items = array(
         array(
             'uri'    => 'admin/messages',

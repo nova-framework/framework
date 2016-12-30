@@ -9,7 +9,8 @@
 /** Define Events. */
 
 // Add a Listener Closure to the Event 'router.matched'.
-Event::listen('router.matched', function($route, $request) {
+Event::listen('router.matched', function($route, $request)
+{
     // Share the Application version.
     $path = ROOTDIR .'VERSION.txt';
 

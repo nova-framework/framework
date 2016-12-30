@@ -11,7 +11,8 @@
 |
 */
 
-Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Messenger\Controllers\Admin'), function () {
+Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Messenger\Controllers\Admin'), function ()
+{
     Route::get( 'messages',        array('before' => 'auth',      'as' => 'messages',        'uses' => 'Messages@index'));
     Route::get( 'messages/create', array('before' => 'auth',      'as' => 'messages.create', 'uses' => 'Messages@create'));
     Route::post('messages',        array('before' => 'auth|csrf', 'as' => 'messages.store',  'uses' => 'Messages@store'));

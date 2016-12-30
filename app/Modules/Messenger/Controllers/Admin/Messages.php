@@ -18,9 +18,38 @@ use App\Modules\Messenger\Models\Participant;
 
 use Carbon\Carbon;
 
+use Validator;
+
 
 class Messages extends BackendController
 {
+
+    protected function validate(array $data)
+    {
+        // Validation rules
+        $rules = array(
+            'subject'    => 'required|min:3|valid_text',
+            'message'    => 'required|min:3|valid_text',
+            'recipients' => 'array'
+        );
+
+        $messages = array(
+            'valid_text' => __d('messenger', 'The :attribute field is not a valid text.'),
+        );
+
+        $attributes = array(
+            'subject'    => __d('messenger', 'Subject'),
+            'message'    => __d('messenger', 'Message'),
+            'recipients' => __d('messenger', 'Recipients'),
+        );
+
+        Validator::extend('valid_text', function($attribute, $value, $parameters)
+        {
+            return ($value == strip_tags($value));
+        });
+
+        return Validator::make($data, $rules, $messages, $attributes);
+    }
 
     /**
      * Show all of the message threads to the user
@@ -100,39 +129,50 @@ class Messages extends BackendController
      */
     public function store()
     {
-        $input = Input::all();
+        // Validate the Input data.
+        $input = Input::only('subject', 'message', 'recipients');
 
-        $thread = Thread::create(array(
-            'subject' => $input['subject'],
-        ));
+        $validator = $this->validate($input);
 
-        // Message
+        if ($validator->passes()) {
+            // Create the new Thread.
+            $thread = Thread::create(array(
+                'subject' => $input['subject'],
+            ));
 
-        Message::create(array(
-            'thread_id' => $thread->id,
-            'user_id'   => Auth::id(),
-            'body'      => $input['message'],
-        ));
+            // Create the new Message.
+            Message::create(array(
+                'thread_id' => $thread->id,
+                'user_id'   => Auth::id(),
+                'body'      => $input['message'],
+            ));
 
-        // Sender
+            // Handle the Sender.
+            Participant::create(array(
+                'thread_id' => $thread->id,
+                'user_id'   => Auth::id(),
+                'last_read' => new Carbon()
+            ));
 
-        Participant::create(array(
-            'thread_id' => $thread->id,
-            'user_id'   => Auth::id(),
-            'last_read' => new Carbon
-        ));
+            // Handle the Participants.
+            if (Input::has('recipients')) {
+                $thread->addParticipants($input['recipients']);
+            }
 
-        // Recipients
+            // Prepare the flash message.
+            $status = __d('users', 'The Message <b>{0}</b> was successfully added.', $thread->subject);
 
-        if (Input::has('recipients')) {
-            $thread->addParticipants($input['recipients']);
+            return Redirect::to('admin/messages')->withStatus($status);
         }
 
-        return Redirect::to('admin/messages');
+        // Errors occurred on Validation.
+        $status = $validator->errors();
+
+        return Redirect::back()->withInput()->withStatus($status, 'danger');
     }
 
     /**
-     * Adds a new message to a current thread
+     * Adds a new Message to a current Thread.
      *
      * @param $id
      * @return mixed
@@ -148,33 +188,47 @@ class Messages extends BackendController
             return Redirect::to('admin/messages')->withStatus($status);
         }
 
-        $thread->activateAllParticipants();
+        // Validate the Input data.
+        $input = Input::only('message', 'recipients');
 
-        // Message
+        // There is no Subject; we add the value from Thread instance.
+        $input['subject'] = $thread->subject;
 
-        Message::create(array(
-            'thread_id' => $thread->id,
-            'user_id'   => Auth::id(),
-            'body'      => Input::get('message'),
-        ));
+        //
+        $validator = $this->validate($input);
 
-        // Add replier as a participant
+        if ($validator->passes()) {
+            $thread->activateAllParticipants();
 
-        $participant = Participant::firstOrCreate(array(
-            'thread_id' => $thread->id,
-            'user_id'   => Auth::id()
-        ));
+            // Create the new Message.
+            Message::create(array(
+                'thread_id' => $thread->id,
+                'user_id'   => Auth::id(),
+                'body'      => $input['message'],
+            ));
 
-        $participant->last_read = new Carbon();
+            // Add the replier as a participant.
+            $participant = Participant::firstOrCreate(array(
+                'thread_id' => $thread->id,
+                'user_id'   => Auth::id()
+            ));
 
-        $participant->save();
+            $participant->last_read = new Carbon();
 
-        // Recipients
-        if (Input::has('recipients')) {
-            $thread->addParticipants(Input::get('recipients'));
+            $participant->save();
+
+            // Handle the additional participants.
+            if (Input::has('recipients')) {
+                $thread->addParticipants($input['recipients']);
+            }
+
+            return Redirect::to('admin/messages/' .$id);
         }
 
-        return Redirect::to('admin/messages/' .$id);
+        // Errors occurred on Validation.
+        $status = $validator->errors();
+
+        return Redirect::back()->withInput()->withStatus($status, 'danger');
     }
 
 }

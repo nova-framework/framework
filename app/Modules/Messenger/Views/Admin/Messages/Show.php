@@ -14,7 +14,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= $thread->subject; ?></h3>
+        <h3 class="box-title"><?= e($thread->subject); ?></h3>
     </div>
     <div class="box-body">
     <?php $count = 0; $total = $thread->messages->count(); ?>
@@ -25,7 +25,7 @@
         </a>
         <div class="media-body">
             <h4 style="margin-top: 0;"><strong><?= $message->user->username; ?></strong></h4>
-            <p><?= $message->body; ?></p>
+            <p><?= e($message->body); ?></p>
             <div class="text-muted"><small>Posted <?= $message->created_at->diffForHumans(); ?></small></div>
         </div>
         <?php if ($count < $total) { ?>

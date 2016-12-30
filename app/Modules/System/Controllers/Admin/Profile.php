@@ -8,15 +8,15 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
+
 use App\Core\BackendController;
 use App\Models\User;
-
-use Auth;
-use Hash;
-use Input;
-use Redirect;
-use Validator;
-use View;
 
 
 class Profile extends BackendController

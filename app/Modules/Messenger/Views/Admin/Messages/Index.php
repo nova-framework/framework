@@ -36,7 +36,7 @@
             <p><?= e($thread->latestMessage->body); ?></p>
             <hr style="margin-bottom: 10px;">
             <p class="last-child <?= ($class == 'default') ? 'text-muted' : ''; ?>">
-                <small><strong>Creator:</strong> <?= $thread->creator()->username ?></small> |
+                <small><strong>Creator:</strong> <?= $thread->creator()->username; ?></small> |
                 <small><strong>Participants:</strong> <?= $thread->participantsString($userId); ?></small>
             </p>
         </div>

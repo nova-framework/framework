@@ -8,20 +8,20 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
+use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Helpers\ReCaptcha;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 use App\Models\Role;
 
 use Carbon\Carbon;
-
-use Auth;
-use Hash;
-use Input;
-use Redirect;
-use Session;
-use Validator;
-use View;
 
 
 class Roles extends BackendController
@@ -113,11 +113,11 @@ class Roles extends BackendController
     public function show($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
-            // There is no Role with this ID.
-            $status = __d('users', 'Role not found: #{0}', $id);
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -130,11 +130,11 @@ class Roles extends BackendController
     public function edit($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
-            // There is no Role with this ID.
-            $status = __d('users', 'Role not found: #{0}', $id);
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -147,11 +147,11 @@ class Roles extends BackendController
     public function update($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
-            // There is no Role with this ID.
-            $status = __d('users', 'Role not found: #{0}', $id);
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -187,11 +187,11 @@ class Roles extends BackendController
     public function destroy($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
-            // There is no Role with this ID.
-            $status = __d('users', 'Role not found: #{0}', $id);
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }

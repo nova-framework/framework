@@ -38,7 +38,7 @@ class Messages extends BackendController
         //$threads = Thread::forUser($userId)->latest('updated_at')->paginate(10);
 
         // All Threads that User is participating in, with new messages.
-        // $threads = Thread::forUserWithNewMessages($userId)->latest('updated_at')->paginate(10);
+        //$threads = Thread::forUserWithNewMessages($userId)->latest('updated_at')->paginate(10);
 
         return $this->getView()
             ->shares('title', __d('messenger', 'Messages'))

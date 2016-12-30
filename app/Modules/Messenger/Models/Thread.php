@@ -133,11 +133,11 @@ class Thread extends Model
             ->whereNull('participants.deleted_at')
             ->where(function ($query)
             {
+                $grammar = $query->getGrammar();
+
                 $connection = $this->getConnection();
 
-                $tablePrefix = $connection->getTablePrefix();
-
-                return $query->where('threads.updated_at', '>', $connection->raw($tablePrefix .'participants.last_read'))
+                return $query->where('threads.updated_at', '>', $connection->raw($grammar->wrap('participants.last_read')))
                     ->orWhereNull('participants.last_read');
             })
             ->select('threads.*');

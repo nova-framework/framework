@@ -23,25 +23,35 @@ use Carbon\Carbon;
 class Messages extends BackendController
 {
 
-    protected function validate(array $data)
+    protected function validate(array $data, $updating = false)
     {
-        // Validation rules
-        $rules = array(
-            'subject'    => 'required|min:3|valid_text',
-            'message'    => 'required|min:3|valid_text',
-            'recipients' => 'array'
-        );
+        // The Validation Rules.
+        if (! $updating) {
+            $rules = array(
+                'subject'    => 'required|min:3|valid_text',
+                'message'    => 'required|min:3|valid_text',
+                'recipients' => 'required|array'
+            );
+        } else {
+            $rules = array(
+                'message'    => 'required|min:3|valid_text',
+                'recipients' => 'array'
+            );
+        }
 
+        // The Validation Messages.
         $messages = array(
             'valid_text' => __d('messenger', 'The :attribute field is not a valid text.'),
         );
 
+        // The Validation Attributes.
         $attributes = array(
             'subject'    => __d('messenger', 'Subject'),
             'message'    => __d('messenger', 'Message'),
             'recipients' => __d('messenger', 'Recipients'),
         );
 
+        // The Extensions.
         Validator::extend('valid_text', function($attribute, $value, $parameters)
         {
             return ($value == strip_tags($value));
@@ -190,11 +200,8 @@ class Messages extends BackendController
         // Validate the Input data.
         $input = Input::only('message', 'recipients');
 
-        // There is no Subject; we add the value from Thread instance.
-        $input['subject'] = $thread->subject;
-
         //
-        $validator = $this->validate($input);
+        $validator = $this->validate($input, true);
 
         if ($validator->passes()) {
             $thread->activateAllParticipants();

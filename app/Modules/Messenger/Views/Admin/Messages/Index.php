@@ -37,8 +37,8 @@
             <p><?= e($thread->latestMessage->body); ?></p>
             <hr style="margin-bottom: 10px;">
             <p class="last-child <?= ($class == 'default') ? 'text-muted' : ''; ?>">
-                <small><?=  __d('messenger', '<b>Creator:</b> {0}', $thread->creator()->username); ?></small> |
-                <small><?=  __d('messenger', '<b>Participants:</b> {0}', $thread->participantsString($userId)); ?></small>
+                <small><?= __d('messenger', '<b>Creator:</b> {0}', $thread->creator()->username); ?></small> |
+                <small><?= __d('messenger', '<b>Participants:</b> {0}', $thread->participantsString($userId)); ?></small>
             </p>
         </div>
     <?php } ?>

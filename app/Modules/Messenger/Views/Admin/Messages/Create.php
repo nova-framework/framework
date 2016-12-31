@@ -38,7 +38,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="recipients"><?= __d('messenger', 'Recipients'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-10">
-                <select name="recipients[]" id="recipients" class="form-control select2" multiple="multiple" data-placeholder="Select a Recipient">
+                <select name="recipients[]" id="recipients" class="form-control select2" multiple="multiple" data-placeholder="<?= __d('messenger', 'Select a Recipient'); ?>">
                 <?php $recipients = Input::old('recipients', array()); ?>
                 <?php foreach ($users as $user) { ?>
                     <option value="<?= $user->id ?>" <?php if (in_array($user->id, $recipients)) echo 'selected'; ?>><?= $user->username; ?></option>

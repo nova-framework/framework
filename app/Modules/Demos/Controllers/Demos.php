@@ -17,7 +17,8 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Core\Controller;
-use App\Models\User;
+
+use App\Modules\System\Models\User;
 
 
 class Demos extends Controller

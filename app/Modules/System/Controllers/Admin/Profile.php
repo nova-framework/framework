@@ -16,7 +16,8 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
-use App\Models\User;
+
+use App\Modules\System\Models\User;
 
 
 class Profile extends BackendController

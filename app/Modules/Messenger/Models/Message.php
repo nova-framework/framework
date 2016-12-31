@@ -2,8 +2,9 @@
 
 namespace App\Modules\Messenger\Models;
 
-use Nova\Support\Facades\Config;
 use Nova\Database\ORM\Model;
+use Nova\Support\Facades\Config;
+
 
 class Message extends Model
 {
@@ -54,7 +55,7 @@ class Message extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Modules\System\Models\User');
     }
 
     /**

@@ -4,8 +4,11 @@ namespace App\Modules\System\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
-use App\Models\User;
+
+use App\Modules\System\Models\User;
+
 use Hash;
+
 
 class UsersTableSeeder extends Seeder
 {

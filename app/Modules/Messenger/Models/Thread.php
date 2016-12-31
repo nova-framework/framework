@@ -7,7 +7,7 @@ use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Database\ORM\SoftDeletingTrait;
 use Nova\Support\Facades\Config;
 
-use App\Models\User;
+use App\Modules\System\Models\User;
 
 use Carbon\Carbon;
 

@@ -5,7 +5,7 @@ namespace App\Modules\System\Traits;
 use App\Modules\System\Models\Role;
 
 
-trait RoleTrait
+trait HasRoleTrait
 {
     // Cache for associated Role instance.
     private $cachedRole;

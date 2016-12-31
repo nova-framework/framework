@@ -17,12 +17,12 @@ use Nova\Database\ORM\Model as BaseModel;
 use Shared\Database\ORM\FileField\FileFieldTrait;
 
 use App\Modules\Messenger\Traits\SendMessagesTrait;
-use App\Modules\System\Traits\RoleTrait;
+use App\Modules\System\Traits\HasRoleTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, RoleTrait, FileFieldTrait, SendMessagesTrait;
+    use UserTrait, RemindableTrait, HasRoleTrait, FileFieldTrait, SendMessagesTrait;
 
     //
     protected $table = 'users';

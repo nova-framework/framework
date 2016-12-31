@@ -6,7 +6,7 @@ use App\Modules\Messenger\Models\Thread;
 use App\Modules\Messenger\Models\Participant;
 
 
-trait SendMessagesTrait
+trait UseMessengerTrait
 {
     /**
      * Message relationship

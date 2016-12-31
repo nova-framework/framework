@@ -81,7 +81,7 @@ $app = new Application();
 //--------------------------------------------------------------------------
 
 $env = $app->detectEnvironment(array(
-    'local' => array('darkstar','xtro-nout','localhost','xtro123'),
+    'local' => array('darkstar'),
 ));
 
 //--------------------------------------------------------------------------

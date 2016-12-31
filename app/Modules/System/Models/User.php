@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Models;
+namespace App\Modules\System\Models;
 
 use Nova\Auth\UserTrait;
 use Nova\Auth\UserInterface;

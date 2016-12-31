@@ -9,21 +9,21 @@
 namespace App\Modules\Users\Controllers;
 
 use Nova\Helpers\ReCaptcha;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Mail;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Request;
+use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
-use App\Models\Role;
-use App\Models\User;
 
-use Auth;
-use Config;
-use Hash;
-use Input;
-use Mail;
-use Redirect;
-use Request;
-use Session;
-use Validator;
-use View;
+use App\Modules\System\Models\Role;
+use App\Modules\System\Models\User;
 
 
 class Registrar extends BackendController

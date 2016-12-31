@@ -2,16 +2,16 @@
 
 return array (
   '<< Previous Page' => '',
+  '<b>Creator:</b> {0}' => '',
+  '<b>Participants:</b> {0}' => '',
   'Add a new Message' => '',
   'Create Message' => '',
   'Create Thread' => '',
   'Create a new Message' => '',
-  'Creator:' => '',
   'Dashboard' => '',
   'Message' => '',
   'Message Threads' => '',
   'Messages' => '',
-  'Participants:' => '',
   'Posted' => '',
   'Recipients' => '',
   'Required field' => '',

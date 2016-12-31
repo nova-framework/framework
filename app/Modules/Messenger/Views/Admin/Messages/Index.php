@@ -37,8 +37,8 @@
             <p><?= e($thread->latestMessage->body); ?></p>
             <hr style="margin-bottom: 10px;">
             <p class="last-child <?= ($class == 'default') ? 'text-muted' : ''; ?>">
-                <small><strong><?=  __d('messenger', 'Creator:'); ?></strong> <?= $thread->creator()->username; ?></small> |
-                <small><strong><?=  __d('messenger', 'Participants:'); ?></strong> <?= $thread->participantsString($userId); ?></small>
+                <small><?=  __d('messenger', '<b>Creator:</b> {0}', $thread->creator()->username); ?></small> |
+                <small><?=  __d('messenger', '<b>Participants:</b> {0}', $thread->participantsString($userId)); ?></small>
             </p>
         </div>
     <?php } ?>
@@ -48,7 +48,7 @@
 <?php } else { ?>
 
 <div class="alert alert-warning">
-    <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('messenger', 'Sorry, no threads.'); ?></h4>
+    <h4><i class="icon fa fa-warning"></i> <?= __d('messenger', 'Sorry, no threads.'); ?></h4>
     <?= __d('messenger', 'There are no Message Threads.'); ?>
 </div>
 

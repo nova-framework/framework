@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('messenger', 'Show Thread'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('messenger', 'Dashboard'); ?></a></li>
         <li><a href='<?= site_url('admin/messages'); ?>'><?= __d('messenger', 'Messages'); ?></a></li>
         <li><?= __d('messenger', 'Show Thread'); ?></li>
     </ol>
@@ -26,7 +26,7 @@
         <div class="media-body">
             <h4 style="margin-top: 0;"><strong><?= $message->user->username; ?></strong></h4>
             <p><?= e($message->body); ?></p>
-            <div class="text-muted"><small>Posted <?= $message->created_at->diffForHumans(); ?></small></div>
+            <div class="text-muted"><small><?= __d('messenger', 'Posted'); ?> <?= $message->created_at->diffForHumans(); ?></small></div>
         </div>
         <?php if ($count < $total) { ?>
         <hr style="margin-top: 10px; margin-bottom: 10px;">
@@ -54,7 +54,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="recipients"><?= __d('messenger', 'Recipients'); ?></label>
                 <div class="col-sm-10">
-                <select name="recipients[]" id="recipients" class="form-control select2" multiple="multiple" data-placeholder="Select a new Recipient">
+                <select name="recipients[]" id="recipients" class="form-control select2" multiple="multiple" data-placeholder="<?= __d('messenger', 'Select a new Recipient'); ?>">
                 <?php $recipients = Input::old('recipients', array()); ?>
                 <?php foreach ($users as $user) { ?>
                     <option value="<?= $user->id ?>" <?php if (in_array($user->id, $recipients)) echo 'selected'; ?>><?= $user->username; ?></option>

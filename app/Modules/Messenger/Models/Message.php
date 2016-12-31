@@ -55,7 +55,7 @@ class Message extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Modules\System\Models\User');
+        return $this->belongsTo('App\Modules\Users\Models\User');
     }
 
     /**
@@ -77,5 +77,5 @@ class Message extends Model
     {
         return $this->participants()->where('user_id', '!=', $this->user_id);
     }
-    
+
 }

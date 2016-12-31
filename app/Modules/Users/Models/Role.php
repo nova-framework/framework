@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\System\Models;
+namespace App\Modules\Users\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
@@ -16,7 +16,7 @@ class Role extends BaseModel
 
     public function users()
     {
-        return $this->hasMany('App\Modules\System\Models\User', 'role_id');
+        return $this->hasMany('App\Modules\Users\Models\User', 'role_id');
     }
 
 }

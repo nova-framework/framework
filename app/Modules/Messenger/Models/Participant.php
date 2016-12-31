@@ -49,7 +49,7 @@ class Participant extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Modules\System\Models\User');
+        return $this->belongsTo('App\Modules\Users\Models\User');
     }
 
 }

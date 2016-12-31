@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\System\Controllers\Admin;
+namespace App\Modules\Dashboard\Controllers\Admin;
 
 use Nova\Support\Facades\View;
 
@@ -19,7 +19,7 @@ class Dashboard extends BackendController
     public function index()
     {
         return $this->getView()
-            ->shares('title', __d('system', 'Dashboard'));
+            ->shares('title', __d('dashboard', 'Dashboard'));
     }
 
 }

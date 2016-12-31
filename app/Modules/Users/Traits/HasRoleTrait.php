@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\System\Traits;
+namespace App\Modules\Users\Traits;
 
-use App\Modules\System\Models\Role;
+use App\Modules\Users\Models\Role;
 
 
 trait HasRoleTrait
@@ -13,7 +13,7 @@ trait HasRoleTrait
 
     public function role()
     {
-        return $this->hasOne('App\Modules\System\Models\Role', 'id', 'role_id');
+        return $this->hasOne('App\Modules\Users\Models\Role', 'id', 'role_id');
     }
 
     public function hasRole($roles)

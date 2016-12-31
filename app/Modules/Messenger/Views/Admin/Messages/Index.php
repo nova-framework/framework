@@ -36,15 +36,15 @@
             <p><?= e($thread->latestMessage->body); ?></p>
             <hr style="margin-bottom: 10px;">
             <p class="last-child <?= ($class == 'default') ? 'text-muted' : ''; ?>">
-                <small><strong>Creator:</strong> <?= $thread->creator()->username; ?></small> |
-                <small><strong>Participants:</strong> <?= $thread->participantsString($userId); ?></small>
+                <small><strong><?= __d('messenger', 'Creator'); ?>:</strong> <?= $thread->creator()->username; ?></small> |
+                <small><strong><?= __d('messenger', 'Recipients'); ?>:</strong> <?= $thread->participantsString($userId); ?></small>
             </p>
         </div>
     <?php } ?>
 <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
             <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('messenger', 'Sorry, no threads.'); ?></h4>
-            <?= __d('users', 'There are no Message Threads.'); ?>
+            <?= __d('messenger', 'There are no Message Threads.'); ?>
         </div>
 <?php } ?>
     </div>

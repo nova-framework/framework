@@ -20,6 +20,8 @@
     </div>
 </div>
 
+<?php if (! $threads->isEmpty()) { ?>
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('messenger', 'Message Threads'); ?></h3>
@@ -28,7 +30,6 @@
         </div>
     </div>
     <div class="box-body">
-<?php if (! $threads->isEmpty()) { ?>
     <?php foreach ($threads->getItems() as $thread) { ?>
         <?php $class = $thread->isUnread($userId) ? 'info' : 'default'; ?>
         <div class="callout callout-<?= $class; ?>" style="margin: 0 0 10px 0; padding: 10px;">
@@ -41,13 +42,16 @@
             </p>
         </div>
     <?php } ?>
-<?php } else { ?>
-        <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('messenger', 'Sorry, no threads.'); ?></h4>
-            <?= __d('messenger', 'There are no Message Threads.'); ?>
-        </div>
-<?php } ?>
     </div>
 </div>
+
+<?php } else { ?>
+
+<div class="alert alert-warning">
+    <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('messenger', 'Sorry, no threads.'); ?></h4>
+    <?= __d('messenger', 'There are no Message Threads.'); ?>
+</div>
+
+<?php } ?>
 
 </section>

@@ -18,15 +18,7 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        try {
-            $this->loadOptions();
-        }
-        catch (\Exception $e) {
-            // Do nothing.
-        }
-        catch (\Throwable $e) {
-            // Do nothing.
-        }
+        $this->loadOptions();
     }
 
     /**
@@ -50,13 +42,20 @@ class SystemServiceProvider extends ServiceProvider
      */
     protected function loadOptions()
     {
-        $options = Cache::remember('system_options', 1440, function()
-        {
-            return Option::all();
-        });
+        try {
+            // Retrieve the Option items, caching them for 24 hours.
+            $options = Cache::remember('system_options', 1440, function()
+            {
+                return Option::all();
+            });
+        }
+        catch (\Exception $e) {
+            $options = array();
+        }
 
+        // Setup the information stored on the Option instances.
         foreach ($options as $option) {
-            $key = $option->group .'.' .$option->item;
+            $key =  sprintf('%s.%s', $option->group, $option->item);
 
             Config::set($key, $option->value);
         }

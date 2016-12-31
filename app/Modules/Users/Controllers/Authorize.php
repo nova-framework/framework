@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\System\Controllers;
+namespace App\Modules\Users\Controllers;
 
 use Nova\Helpers\ReCaptcha;
 use Nova\Support\Facades\App;
@@ -35,7 +35,7 @@ class Authorize extends BackendController
     public function login()
     {
         return $this->getView()
-            ->shares('title', __d('system', 'User Login'));
+            ->shares('title', __d('users', 'User Login'));
     }
 
     /**
@@ -47,7 +47,7 @@ class Authorize extends BackendController
     {
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check()) {
-            $status = __d('system', 'Invalid reCAPTCHA submitted.');
+            $status = __d('users', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -61,7 +61,7 @@ class Authorize extends BackendController
         // Make an attempt to login the Guest with the given credentials.
         if(! Auth::attempt($credentials, $remember)) {
             // An error has happened on authentication.
-            $status = __d('system', 'Wrong username or password.');
+            $status = __d('users', 'Wrong username or password.');
 
             return Redirect::back()
                 ->withInput(Input::except('password'))
@@ -84,13 +84,13 @@ class Authorize extends BackendController
             Auth::logout();
 
             // User not activated; go logout and redirect him back.
-            $status = __d('system', 'There is a problem. Have you activated your Account?');
+            $status = __d('users', 'There is a problem. Have you activated your Account?');
 
             return Redirect::back()->withStatus($status, 'warning');
         }
 
         // Prepare the flash message.
-        $status = __d('system', '<b>{0}</b>, you have successfully logged in.', $user->username);
+        $status = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
         // Redirect to the User's Dashboard.
         return Redirect::intended('admin/dashboard')->withStatus($status);
@@ -106,7 +106,7 @@ class Authorize extends BackendController
         Auth::logout();
 
         // Prepare the flash message.
-        $status = __d('system', 'You have successfully logged out.');
+        $status = __d('users', 'You have successfully logged out.');
 
         return Redirect::to('login')->withStatus($status);
     }
@@ -119,7 +119,7 @@ class Authorize extends BackendController
     public function remind()
     {
         return $this->getView()
-            ->shares('title', __d('system', 'Password Recovery'));
+            ->shares('title', __d('users', 'Password Recovery'));
     }
 
     /**
@@ -133,7 +133,7 @@ class Authorize extends BackendController
 
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
-            $status = __d('system', 'Invalid reCAPTCHA submitted.');
+            $status = __d('users', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -143,12 +143,12 @@ class Authorize extends BackendController
 
         switch ($response = Password::remind($credentials)) {
             case Password::INVALID_USER:
-                $status = __d('system', 'We can\'t find a User with that e-mail address.');
+                $status = __d('users', 'We can\'t find a User with that e-mail address.');
 
                 return Redirect::back()->withStatus($status, 'danger');
 
             case Password::REMINDER_SENT:
-                $status = __d('system', 'Reset instructions have been sent to your email address');
+                $status = __d('users', 'Reset instructions have been sent to your email address');
 
                 return Redirect::back()->withStatus($status);
         }
@@ -163,7 +163,7 @@ class Authorize extends BackendController
     public function reset($token)
     {
         return $this->getView()
-            ->shares('title', __d('system', 'Password Reset'))
+            ->shares('title', __d('users', 'Password Reset'))
             ->with('token', $token);
     }
 
@@ -176,7 +176,7 @@ class Authorize extends BackendController
     {
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
-            $status = __d('system', 'Invalid reCAPTCHA submitted.');
+            $status = __d('users', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -203,19 +203,19 @@ class Authorize extends BackendController
         // Parse the response.
         switch ($response) {
             case Password::INVALID_PASSWORD:
-                $status = __d('system', 'Passwords must be strong enough and match the confirmation.');
+                $status = __d('users', 'Passwords must be strong enough and match the confirmation.');
 
                 break;
             case Password::INVALID_TOKEN:
-                $status = __d('system', 'This password reset token is invalid.');
+                $status = __d('users', 'This password reset token is invalid.');
 
                 break;
             case Password::INVALID_USER:
-                $status = __d('system', 'We can\'t find a User with that e-mail address.');
+                $status = __d('users', 'We can\'t find a User with that e-mail address.');
 
                 break;
             case Password::PASSWORD_RESET:
-                $status = __d('system', 'You have successfully reset your Password.');
+                $status = __d('users', 'You have successfully reset your Password.');
 
                 return Redirect::to('login')->withStatus($status);
         }

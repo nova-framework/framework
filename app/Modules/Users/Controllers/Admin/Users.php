@@ -20,8 +20,8 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\System\Models\User;
-use App\Modules\System\Models\Role;
+use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\Role;
 
 use Carbon\Carbon;
 

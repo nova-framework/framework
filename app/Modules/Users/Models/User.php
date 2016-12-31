@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\System\Models;
+namespace App\Modules\Users\Models;
 
 use Nova\Auth\UserTrait;
 use Nova\Auth\UserInterface;
@@ -17,7 +17,7 @@ use Nova\Database\ORM\Model as BaseModel;
 use Shared\Database\ORM\FileField\FileFieldTrait;
 
 use App\Modules\Messenger\Traits\UseMessengerTrait;
-use App\Modules\System\Traits\HasRoleTrait;
+use App\Modules\Users\Traits\HasRoleTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface

@@ -5,7 +5,7 @@ namespace App\Modules\System\Database\Seeds;
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
 
-use App\Modules\System\Models\User;
+use App\Modules\Users\Models\User;
 
 use Hash;
 

@@ -18,7 +18,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\Controller;
 
-use App\Modules\System\Models\User;
+use App\Modules\Users\Models\User;
 
 
 class Demos extends Controller

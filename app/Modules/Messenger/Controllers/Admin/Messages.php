@@ -29,7 +29,7 @@ class Messages extends BackendController
         $rules = array(
             'subject'    => 'required|min:3|valid_text',
             'message'    => 'required|min:3|valid_text',
-            'recipients' => 'array'
+            'recipients' => 'array|required'
         );
 
         $messages = array(

@@ -2,8 +2,8 @@
 
 return array (
   '<< Previous Page' => '',
-  '<strong>Creator:</strong> {0}' => '',
-  '<strong>Participants:</strong> {0}' => '',
+  '<b>Creator:</b> {0}' => '',
+  '<b>Participants:</b> {0}' => '',
   'Add a new Message' => '',
   'Create Message' => '',
   'Create Thread' => '',

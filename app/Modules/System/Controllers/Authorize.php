@@ -63,7 +63,9 @@ class Authorize extends BackendController
             // An error has happened on authentication.
             $status = __d('system', 'Wrong username or password.');
 
-            return Redirect::back()->withStatus($status, 'danger');
+            return Redirect::back()
+                ->withInput(Input::except('password'))
+                ->withStatus($status, 'danger');
         }
 
         // The User is authenticated now; retrieve his Model instance.

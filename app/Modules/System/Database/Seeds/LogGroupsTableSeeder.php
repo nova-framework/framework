@@ -30,5 +30,12 @@ class LogGroupsTableSeeder extends Seeder
             'slug'        => 'database',
             'description' => 'This is the group which used for logging of the ORM actions.',
         ));
+
+        LogGroup::create(array(
+            'id'          => 3,
+            'name'        => 'Auth',
+            'slug'        => 'auth',
+            'description' => 'This is the group which used for logging of the Auth System actions.',
+        ));
     }
 }

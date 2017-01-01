@@ -21,8 +21,6 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\Logs\Helpers\Logger;
-
 
 class Authorize extends BackendController
 {
@@ -91,12 +89,6 @@ class Authorize extends BackendController
             return Redirect::back()->withStatus($status, 'warning');
         }
 
-        Logger::create(
-            __d('users', 'The User logged in.'),
-            'auth',
-            'referrer'
-        );
-
         // Prepare the flash message.
         $status = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
@@ -111,13 +103,6 @@ class Authorize extends BackendController
      */
     public function logout()
     {
-        Logger::create(
-            __d('users', 'The User logged out.'),
-            'auth',
-            'referrer'
-        );
-
-        //
         Auth::logout();
 
         // Prepare the flash message.

@@ -11,7 +11,7 @@ class Log extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('user_id', 'group_id', 'message', 'data');
+    protected $fillable = array('user_id', 'group_id', 'url', 'message', 'data');
 
 
     public function group()

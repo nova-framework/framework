@@ -18,7 +18,7 @@ class CreateLogsTable extends Migration
             $table->increments('id');
             $table->integer('group_id');
             $table->integer('user_id');
-            $table->string('uri')->nullable();
+            $table->string('url')->nullable();
             $table->text('message')->nullable();
             $table->text('data')->nullable();
             $table->timestamps();

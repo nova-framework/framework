@@ -15,11 +15,14 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Password;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Request;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
+
+use App\Modules\System\Helpers\Logger;
 
 
 class Authorize extends BackendController
@@ -89,6 +92,12 @@ class Authorize extends BackendController
             return Redirect::back()->withStatus($status, 'warning');
         }
 
+        Logger::create(
+            __d('users', 'The User logged in.'),
+            'auth',
+            Request::header('referer')
+        );
+
         // Prepare the flash message.
         $status = __d('users', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
@@ -103,6 +112,13 @@ class Authorize extends BackendController
      */
     public function logout()
     {
+        Logger::create(
+            __d('users', 'The User logged out.'),
+            'auth',
+            Request::header('referer')
+        );
+
+        //
         Auth::logout();
 
         // Prepare the flash message.

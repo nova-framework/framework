@@ -2,7 +2,7 @@
 
 namespace App\Modules\System\Models;
 
-use Nova\Database\ORM\Model as BaseModel;
+use App\Modules\System\Database\Model as BaseModel;
 
 
 class Option extends BaseModel
@@ -17,11 +17,11 @@ class Option extends BaseModel
 
 
     public function getValueAttribute($value) {
-        return static::maybeDecode($value);
+        return $this->maybeDecode($value);
     }
 
     public function setValueAttribute($value) {
-        $this->attributes['value'] = static::maybeEncode($value);
+        $this->attributes['value'] = $this->maybeEncode($value);
     }
 
     public static function set($group, $item, $value)
@@ -39,34 +39,4 @@ class Option extends BaseModel
         return static::updateOrCreate($attributes, $values);
     }
 
-    /**
-     * Decode value only if it was encoded to JSON.
-     *
-     * @param  string  $original
-     * @param  bool    $assoc
-     * @return mixed
-     */
-    private static function maybeDecode($original, $assoc = true)
-    {
-        if (is_numeric($original)) return $original;
-
-        $data = json_decode($original, $assoc);
-
-        return (is_object($data) || is_array($data)) ? $data : $original;
-    }
-
-    /**
-     * Encode data to JSON, if needed.
-     *
-     * @param  mixed  $data
-     * @return mixed
-     */
-    private static function maybeEncode($data)
-    {
-        if (is_array($data) || is_object($data)) {
-            return json_encode($data);
-        }
-
-        return $data;
-    }
 }

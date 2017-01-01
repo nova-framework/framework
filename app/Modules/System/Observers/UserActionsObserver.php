@@ -4,7 +4,7 @@ namespace App\Modules\System\Observers;
 
 use Nova\Support\Facades\Auth;
 
-use App\Modules\System\Models\UserLog;
+use App\Modules\System\Models\Log as ActionLog;
 
 
 class UserActionsObserver
@@ -22,11 +22,10 @@ class UserActionsObserver
                 $action = 'updated';
             }
 
-            UserLog::create(array(
+            ActionLog::create(array(
                 'user_id'      => $user->getKey(),
-                'action'       => $action,
-                'action_model' => get_class($model),
-                'action_id'    => $model->getKey()
+                'group_id'     => 2,
+                'message'      => $this->message($model, $action),
             ));
         }
     }
@@ -36,12 +35,16 @@ class UserActionsObserver
         if (Auth::check()) {
             $user = Auth::user();
 
-            UserLog::create(array(
+            ActionLog::create(array(
                 'user_id'      => $user->getKey(),
-                'action'       => 'deleted',
-                'action_model' => get_class($model),
-                'action_id'    => $model->getKey()
+                'group_id'     => 2,
+                'message'      => $this->message($model, 'deleted'),
             ));
         }
+    }
+
+    protected function message($model, $action)
+    {
+        return __d('system', 'Was {0} the <b>{1}</b> instance with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
     }
 }

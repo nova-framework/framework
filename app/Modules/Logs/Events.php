@@ -27,3 +27,37 @@ Event::listen('backend.menu', function($user)
 
     return $items;
 });
+
+// Log the User's login and logout.
+use App\Modules\Logs\Models\Log as AuthLog;
+use App\Modules\Logs\Models\LogGroup;
+
+Event::listen('auth.login', function($user, $remember)
+{
+    $group = LogGroup::where('slug', 'auth')
+        ->remember(1440)
+        ->first();
+
+    // Create the Log entry.
+    AuthLog::create(array(
+        'user_id'  => $user->getKey(),
+        'group_id' => $group->getKey(),
+        'message'  => __d('logs', 'The User logged in.'),
+        'url'      => Request::header('referer'),
+    ));
+});
+
+Event::listen('auth.logout', function($user)
+{
+    $group = LogGroup::where('slug', 'auth')
+        ->remember(1440)
+        ->first();
+
+    // Create the Log entry.
+    AuthLog::create(array(
+        'user_id'  => $user->getKey(),
+        'group_id' => $group->getKey(),
+        'message'  => __d('logs', 'The User logged out.'),
+        'url'      => Request::header('referer'),
+    ));
+});

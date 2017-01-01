@@ -4,7 +4,7 @@ namespace App\Modules\System\Observers;
 
 use Nova\Support\Facades\Auth;
 
-use App\Modules\System\Models\UserLogs;
+use App\Modules\System\Models\UserLog;
 
 
 class UserActionsObserver
@@ -14,23 +14,17 @@ class UserActionsObserver
         if (Auth::check()) {
             $user = Auth::user();
 
-            UserLogs::create(array(
-                'user_id'      => $user->getKey(),
-                'action'       => 'saved',
-                'action_model' => get_class($model),
-                'action_id'    => $model->getKey()
-            ));
-        }
-    }
+            if ($model->wasRecentlyCreated == true) {
+                // Data was just created
+                $action = 'created';
+            } else {
+                // Data was updated
+                $action = 'updated';
+            }
 
-    public function updated($model)
-    {
-        if (Auth::check()) {
-            $user = Auth::user();
-
-            UserLogs::create(array(
+            UserLog::create(array(
                 'user_id'      => $user->getKey(),
-                'action'       => 'updated',
+                'action'       => $action,
                 'action_model' => get_class($model),
                 'action_id'    => $model->getKey()
             ));
@@ -42,7 +36,7 @@ class UserActionsObserver
         if (Auth::check()) {
             $user = Auth::user();
 
-            UserLogs::create(array(
+            UserLog::create(array(
                 'user_id'      => $user->getKey(),
                 'action'       => 'deleted',
                 'action_model' => get_class($model),

@@ -5,7 +5,7 @@ namespace App\Modules\System\Models;
 use Nova\Database\ORM\Model;
 
 
-class UserLogs extends Model
+class UserLog extends Model
 {
     protected $fillable = array('user_id', 'action', 'action_model', 'action_id');
 

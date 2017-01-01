@@ -14,7 +14,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\System\Models\Log as ActionLog;
+use App\Modules\System\Models\Log as Logger;
 use App\Modules\Users\Models\User;
 
 
@@ -23,7 +23,7 @@ class Logs extends BackendController
 
     public function index()
     {
-        $items = ActionLog::with('group')
+        $items = Logger::with('group')
             ->orderBy('created_at', 'desc')
             ->paginate(50);
 
@@ -42,7 +42,7 @@ class Logs extends BackendController
             }
 
             array_push($logs, array(
-                'date'     => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M')),
+                'date'     => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M:%S')),
                 'username' => $username,
                 'group'    => $item->group->name,
                 'message'  => $item->message ?: '-',
@@ -57,7 +57,7 @@ class Logs extends BackendController
 
     public function clear()
     {
-        ActionLog::truncate();
+        Logger::truncate();
 
         // Prepare the flash message.
         $status = __d('system', 'The Logs was successfully cleared.');

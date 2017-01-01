@@ -11,12 +11,6 @@
 
 Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers'), function()
 {
-    // The Framework's Language Changer.
-    Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@change'));
-
-    // The CRON runner.
-    Route::get('cron/{token}', array('uses' => 'CronRunner@index'));
-
     // The default Auth Routes.
     Route::get( 'login',  array('before' => 'guest',      'uses' => 'Authorize@login'));
     Route::post('login',  array('before' => 'guest|csrf', 'uses' => 'Authorize@postLogin'));
@@ -43,7 +37,7 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Contro
     // The User's Profile.
     Route::get( 'profile', array('before' => 'auth',      'uses' => 'Profile@index'));
     Route::post('profile', array('before' => 'auth|csrf', 'uses' => 'Profile@update'));
-    
+
     // The Users Search.
     Route::post('users/search', array('before' => 'auth', 'uses' => 'Users@search'));
 

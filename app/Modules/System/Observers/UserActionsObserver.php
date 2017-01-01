@@ -4,7 +4,7 @@ namespace App\Modules\System\Observers;
 
 use Nova\Support\Facades\Auth;
 
-use App\Modules\System\Models\Log as ActionLog;
+use App\Modules\System\Models\Log as Logger;
 
 
 class UserActionsObserver
@@ -22,7 +22,7 @@ class UserActionsObserver
                 $action = 'updated';
             }
 
-            ActionLog::create(array(
+            Logger::create(array(
                 'user_id'      => $user->getKey(),
                 'group_id'     => 2,
                 'message'      => $this->message($model, $action),
@@ -35,7 +35,7 @@ class UserActionsObserver
         if (Auth::check()) {
             $user = Auth::user();
 
-            ActionLog::create(array(
+            Logger::create(array(
                 'user_id'      => $user->getKey(),
                 'group_id'     => 2,
                 'message'      => $this->message($model, 'deleted'),

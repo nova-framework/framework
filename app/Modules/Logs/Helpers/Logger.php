@@ -4,6 +4,7 @@ namespace App\Modules\Logs\Helpers;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Request;
 
 use App\Modules\Logs\Models\Log;
 use App\Modules\Logs\Models\LogGroup;
@@ -11,7 +12,7 @@ use App\Modules\Logs\Models\LogGroup;
 
 class Logger
 {
-    public static function create($message, $slug = 'generic', $url = null)
+    public static function create($message, $slug = 'generic', $url = 'current')
     {
         // Retrieve the current User instance.
         $user = Auth::user();
@@ -26,6 +27,12 @@ class Logger
             $group = LogGroup::where('slug', 'generic')
                 ->remember(1440)
                 ->first();
+        }
+
+        if ($url == 'referrer') {
+            $url = Request::header('referer');
+        } else if ($url == 'current') {
+            $url = Request::fullUrl();
         }
 
         // Create the Log entry.

@@ -16,6 +16,8 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
+
+use App\Modules\Logs\Helpers\Logger;
 use App\Modules\System\Models\Option;
 
 
@@ -116,6 +118,13 @@ class Settings extends BackendController
 
             // Invalidate the cached system options.
             Cache::forget('system_options');
+
+            // Log the User's Action.
+            Logger::create(
+                __d('system', 'The Site Settings was updated.'),
+                'generic',
+                'referrer'
+            );
 
             // Prepare the flash message.
             $status = __d('system', 'The Settings was successfully updated.');

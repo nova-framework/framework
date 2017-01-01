@@ -15,7 +15,6 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Password;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Request;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\View;
@@ -95,7 +94,7 @@ class Authorize extends BackendController
         Logger::create(
             __d('users', 'The User logged in.'),
             'auth',
-            Request::header('referer')
+            'referrer'
         );
 
         // Prepare the flash message.
@@ -115,7 +114,7 @@ class Authorize extends BackendController
         Logger::create(
             __d('users', 'The User logged out.'),
             'auth',
-            Request::header('referer')
+            'referrer'
         );
 
         //

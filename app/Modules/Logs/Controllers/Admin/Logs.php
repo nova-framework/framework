@@ -40,14 +40,21 @@ class Logs extends BackendController
         $logs = array();
 
         foreach ($items->getItems() as $item) {
-            try {
-                $user = User::findOrFail($item->user_id);
+            if ($item->user_id == 0) {
+                // The Log item have no User associated?
+                $username = '-';
+            } else {
+                // Retrieve the User's username from database.
+                try {
+                    $user = User::findOrFail($item->user_id);
 
-                //
-                $username = $user->username;
-            }
-            catch (ModelNotFoundException $e) {
-                $username = __d('logs', 'Unknow User, ID: {0}', $item->user_id);
+                    //
+                    $username = $user->username;
+                }
+                catch (ModelNotFoundException $e) {
+                    // Failure or this User was deleted previous.
+                    $username = __d('logs', 'Unknow User, ID: {0}', $item->user_id);
+                }
             }
 
             array_push($logs, array(

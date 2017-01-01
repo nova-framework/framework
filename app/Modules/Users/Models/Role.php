@@ -4,8 +4,6 @@ namespace App\Modules\Users\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
-use App\Modules\Logs\Observers\UserActionsObserver;
-
 
 class Role extends BaseModel
 {
@@ -15,13 +13,6 @@ class Role extends BaseModel
 
     protected $fillable = array('name', 'slug', 'description');
 
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::observe(new UserActionsObserver());
-    }
 
     public function users()
     {

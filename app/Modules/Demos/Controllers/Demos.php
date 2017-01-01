@@ -9,7 +9,7 @@ use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
-use Nova\Support\Facades\Mailer;
+use Nova\Support\Facades\Mail;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\Session;
@@ -188,9 +188,9 @@ class Demos extends Controller
             'content' => __d('demos', 'This is a test!!!'),
         );
 
-        Mailer::pretend(true);
+        Mail::pretend(true);
 
-        Mailer::send('Emails/Welcome', $data, function($message)
+        Mail::send('Emails/Welcome', $data, function($message)
         {
             $message->from('admin@novaframework', 'Administrator')
                 ->to('john@novaframework', 'John Smith')

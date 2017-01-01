@@ -4,6 +4,11 @@ namespace App\Modules\Logs\Providers;
 
 use Nova\Support\ServiceProvider;
 
+use App\Modules\Logs\Observers\UserActionsObserver;
+
+use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\Role;
+
 
 class LogsServiceProvider extends ServiceProvider
 {
@@ -14,7 +19,11 @@ class LogsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $observer = new UserActionsObserver();
+
         //
+        User::observe($observer);
+        Role::observe($observer);
     }
 
     /**

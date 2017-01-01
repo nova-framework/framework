@@ -18,7 +18,6 @@ use Shared\Database\ORM\FileField\FileFieldTrait;
 
 use App\Modules\Messenger\Traits\UseMessengerTrait;
 use App\Modules\Users\Traits\HasRoleTrait;
-use App\Modules\Logs\Observers\UserActionsObserver;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
@@ -40,13 +39,5 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             'defaultPath' => ROOTDIR .'assets/images/users/no-image.png',
         ),
     );
-
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::observe(new UserActionsObserver());
-    }
 
 }

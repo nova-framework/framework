@@ -12,7 +12,7 @@
         }
     ],
     "license": "MIT",
-    "slug": "Dashboard",
+    "slug": "dashboard",
     "namespace": "Dashboard",
     "order" : "8001"
 }

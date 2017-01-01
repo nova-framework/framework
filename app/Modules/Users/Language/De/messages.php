@@ -59,6 +59,7 @@ return array (
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => '',
   'Profile Picture' => '',
+  'Profile Picture (to change)' => '',
   'Register to <b>{0}</b>' => '',
   'Registered Roles' => '',
   'Registered Users' => '',

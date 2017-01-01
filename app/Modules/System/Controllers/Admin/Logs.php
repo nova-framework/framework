@@ -9,11 +9,12 @@
 namespace App\Modules\System\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\System\Models\UserLog;
+use App\Modules\System\Models\Log as ActionLog;
 use App\Modules\Users\Models\User;
 
 
@@ -22,7 +23,9 @@ class Logs extends BackendController
 
     public function index()
     {
-        $items = UserLog::orderBy('created_at', 'desc')->paginate(50);
+        $items = ActionLog::with('group')
+            ->orderBy('created_at', 'desc')
+            ->paginate(50);
 
         // Convert the information.
         $logs = array();
@@ -33,35 +36,16 @@ class Logs extends BackendController
 
                 //
                 $username = $user->username;
-                $email = $user->email;
             }
             catch (ModelNotFoundException $e) {
                 $username = $item->user_id;
-
-                $email = '-';
-            }
-
-            switch ($item->action) {
-                case 'saved':
-                    $action = __d('system', 'Saved');
-
-                    break;
-                case 'updated':
-                    $action = __d('system', 'Updated');
-
-                    break;
-                case 'removed':
-                    $action = __d('system', 'Removed');
-
-                    break;
             }
 
             array_push($logs, array(
-                'username'   => $username,
-                'email'      => $email,
-                'action'     => $action,
-                'model'      => $item->action_model,
-                'date' => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M'))
+                'date'     => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M')),
+                'username' => $username,
+                'group'    => $item->group->name,
+                'message'  => $item->message ?: '-',
             ));
         }
 
@@ -69,6 +53,16 @@ class Logs extends BackendController
             ->shares('title', __d('logs', 'Logs'))
             ->withLinks($items->links())
             ->withLogs($logs);
+    }
+
+    public function clear()
+    {
+        ActionLog::truncate();
+
+        // Prepare the flash message.
+        $status = __d('system', 'The Logs was successfully cleared.');
+
+        return Redirect::to('admin/logs')->withStatus($status);
     }
 
 }

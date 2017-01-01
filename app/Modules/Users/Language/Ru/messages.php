@@ -59,6 +59,7 @@ return array (
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, нажмите на <b>Удалить пользователя</b> для удаления или <b>Отмена</b> для отказа от оперции',
   'Please enter your e-mail address to be sent a link to reset your password.' => 'Пожалуйста, укажите Ваш адрес электронной почты, на который будет отправлена ссылка для сброса пароля.',
   'Profile Picture' => 'Изображение профиля',
+  'Profile Picture (to change)' => '',
   'Register to <b>{0}</b>' => 'Регистрация на <b>{0}</b>',
   'Registered Roles' => 'Зарегистрированные роли',
   'Registered Users' => 'Зарегистрированные пользователи',

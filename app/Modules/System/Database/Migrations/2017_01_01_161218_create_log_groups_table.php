@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateUserLogsTable extends Migration
+class CreateLogGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateUserLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_logs', function (Blueprint $table) {
+        Schema::create('log_groups', function($table)
+        {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->string('action');
-            $table->string('action_model')->nullable();
-            $table->integer('action_id')->nullable();
+            $table->string('name', 100);
+            $table->string('slug', 100)->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateUserLogsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('user_logs');
+        Schema::drop('log_groups');
     }
 }

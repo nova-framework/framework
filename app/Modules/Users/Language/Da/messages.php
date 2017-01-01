@@ -59,6 +59,7 @@ return array (
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Tryk på knappen <b>Slet brugeren</b> for at forsætte, eller <b>Fortryd</b> for at fortryde sletningen.',
   'Please enter your e-mail address to be sent a link to reset your password.' => '',
   'Profile Picture' => '',
+  'Profile Picture (to change)' => '',
   'Register to <b>{0}</b>' => 'Tilmeldt på <b>{0}</b>',
   'Registered Roles' => 'Registrerede Roller',
   'Registered Users' => 'Registrerede Brugere',

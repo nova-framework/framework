@@ -13,7 +13,19 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'User Actions'); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'Logs Management'); ?></h3>
+    </div>
+    <div class="box-body">
+        <a class='btn btn-danger pull-left' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('system', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('system', 'Clear the Logs'); ?></a>
+        <!--
+        <a class='btn btn-success pull-right' href='<?= site_url('admin/log-groups'); ?>'><i class="fa fa-clone"></i> <?= __d('system', 'Manage the Log Groups'); ?></a>
+        -->
+    </div>
+</div>
+
+<div class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= __d('system', 'User Actions'); ?></h3>
         <div class="box-tools">
         <?= $links; ?>
         </div>
@@ -22,21 +34,19 @@
 <?php if (! empty($logs)) { ?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Date'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Action'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Model'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Email'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Date'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Author'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Group'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Message'); ?></th>
             </tr>
 <?php
     foreach ($logs as $log) {
         echo "
 <tr>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['date'] ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='10%'>" .$log['action'] ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='35%'>" .$log['model'] ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='20%'>" .$log['username'] ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='20%'>" .$log['email'] ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['username'] ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['group'] ."</td>
+    <td style='text-align: left; vertical-align: middle;' width='55%'>" .$log['message'] ."</td>
 </tr>";
 
     }
@@ -44,13 +54,35 @@
         </table>
 <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('users', 'No registered Logs'); ?></h4>
-            <?= __d('users', 'There are no registered Logs.'); ?>
+            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('system', 'No registered Logs'); ?></h4>
+            <?= __d('system', 'There are no registered Logs.'); ?>
         </div>
 <?php } ?>
     </div>
 </div>
 
-</section>
+<div class="modal modal-default" id="confirm_clearing">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><?= __d('users', 'Clear the Logs?'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <p><?= __d('users', 'Are you sure you want to clear the Logs, the operation being irreversible?'); ?></p>
+                <p><?= __d('users', 'Please click the button <b>Clear the Logs</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
+                <form action="<?= site_url('admin/logs/clear'); ?>" method="POST">
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('users', 'Clear the Logs'); ?>">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
 
 </section>

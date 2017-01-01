@@ -92,6 +92,8 @@ return array (
   'The User <b>{0}</b> was successfully created.' => 'Пользователь <b>{0}</b> был успешно создан',
   'The User <b>{0}</b> was successfully deleted.' => 'Пользователь <b>{0}</b> был успешно удалён',
   'The User <b>{0}</b> was successfully updated.' => 'Пользователь <b>{0}</b> был успешно обновлён',
+  'The User logged in.' => '',
+  'The User logged out.' => '',
   'The role with ID: {0} was not found.' => 'Роль с ID: {0} не существует',
   'The user with ID: {0} was not found.' => 'Пользователь с ID: {0} не существует',
   'There are no registered Roles.' => 'Нет зарегистрированных ролей.',

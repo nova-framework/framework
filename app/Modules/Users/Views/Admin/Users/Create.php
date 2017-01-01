@@ -30,12 +30,6 @@ $opt_role = Input::old('role');
             <form class="form-horizontal" action="<?= site_url('admin/users'); ?>" method='POST' enctype="multipart/form-data" role="form">
 
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Profile Picture'); ?></label>
-                <div class="col-sm-8">
-                    <input name="image" id="image" type="file" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
                     <input name="username" id="username" type="text" class="form-control" value="<?= Input::old('username'); ?>" placeholder="<?= __d('users', 'Username'); ?>">
@@ -74,6 +68,12 @@ $opt_role = Input::old('role');
                 <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
                     <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email'); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Profile Picture'); ?></label>
+                <div class="col-sm-8">
+                    <input name="image" id="image" type="file" class="form-control">
                 </div>
             </div>
             <div class="clearfix"></div>

@@ -1,8 +1,8 @@
 <section class="content-header">
-    <h1><?= __d('system', 'Logs'); ?></h1>
+    <h1><?= __d('logs', 'Logs'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
-        <li><?= __d('system', 'Logs'); ?></li>
+        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('logs', 'Dashboard'); ?></a></li>
+        <li><?= __d('logs', 'Logs'); ?></li>
     </ol>
 </section>
 
@@ -16,12 +16,12 @@
         <h3 class="box-title"><?= __d('users', 'Logs Management'); ?></h3>
     </div>
     <div class="box-body">
-        <a class='btn btn-danger pull-left' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('system', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('system', 'Clear the Logs'); ?></a>
+        <a class='btn btn-danger pull-left' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('logs', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('logs', 'Clear the Logs'); ?></a>
         <div class="col-sm-4 pull-right">
-            <label class="col-sm-4 control-label text-right" for="group" style="margin-top: 7px;"><?= __d('system', 'Logs Group:'); ?></label>
+            <label class="col-sm-4 control-label text-right" for="group" style="margin-top: 7px;"><?= __d('logs', 'Logs Group:'); ?></label>
             <div class="col-sm-8">
                 <select name="group" id="group_select" class="form-control select2">
-                    <option value="" <?php if (empty($groupId)) echo 'selected'; ?>><?= __d('system', '-'); ?></option>
+                    <option value="" <?php if (empty($groupId)) echo 'selected'; ?>><?= __d('logs', '-'); ?></option>
                     <?php foreach ($groups as $group) { ?>
                     <option value="<?= $group->id ?>" <?php if ($groupId == $group->id) echo 'selected'; ?>><?= $group->name; ?></option>
                     <?php } ?>
@@ -43,7 +43,7 @@ $(function(){
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('system', 'User Actions'); ?></h3>
+        <h3 class="box-title"><?= __d('logs', 'User Actions'); ?></h3>
         <div class="box-tools">
         <?= $links; ?>
         </div>
@@ -52,12 +52,12 @@ $(function(){
 <?php if (! empty($logs)) { ?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'ID'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Date'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Author'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Group'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Link'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Action'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'ID'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Date'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Author'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Group'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Link'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Action'); ?></th>
             </tr>
 <?php
     foreach ($logs as $log) {
@@ -76,8 +76,8 @@ $(function(){
         </table>
 <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('system', 'No registered Logs'); ?></h4>
-            <?= __d('system', 'There are no registered Logs.'); ?>
+            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('logs', 'No registered Logs'); ?></h4>
+            <?= __d('logs', 'There are no registered Logs.'); ?>
         </div>
 <?php } ?>
     </div>

@@ -4,7 +4,7 @@ namespace App\Modules\Users\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
-use App\Modules\System\Observers\UserActionsObserver;
+use App\Modules\Logs\Observers\UserActionsObserver;
 
 
 class Role extends BaseModel

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\System\Controllers\Admin;
+namespace App\Modules\Logs\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Redirect;
@@ -14,8 +14,8 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\System\Models\Log;
-use App\Modules\System\Models\LogGroup;
+use App\Modules\Logs\Models\Log;
+use App\Modules\Logs\Models\LogGroup;
 
 use App\Modules\Users\Models\User;
 
@@ -47,7 +47,7 @@ class Logs extends BackendController
                 $username = $user->username;
             }
             catch (ModelNotFoundException $e) {
-                $username = __d('system', 'Unknow User, ID: {0}', $item->user_id);
+                $username = __d('logs', 'Unknow User, ID: {0}', $item->user_id);
             }
 
             array_push($logs, array(
@@ -76,7 +76,7 @@ class Logs extends BackendController
         Log::truncate();
 
         // Prepare the flash message.
-        $status = __d('system', 'The Logs was successfully cleared.');
+        $status = __d('logs', 'The Logs was successfully cleared.');
 
         return Redirect::to('admin/logs')->withStatus($status);
     }

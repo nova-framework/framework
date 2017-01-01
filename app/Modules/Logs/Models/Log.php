@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\System\Models;
+namespace App\Modules\Logs\Models;
 
 use App\Modules\System\Database\Model;
 
@@ -16,7 +16,7 @@ class Log extends Model
 
     public function group()
     {
-        return $this->belongsTo('App\Modules\System\Models\LogGroup', 'group_id');
+        return $this->belongsTo('App\Modules\Logs\Models\LogGroup', 'group_id');
     }
 
     public function users()

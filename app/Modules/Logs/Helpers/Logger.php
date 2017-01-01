@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\System\Helpers;
+namespace App\Modules\Logs\Helpers;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Auth;
 
-use App\Modules\System\Models\Log;
-use App\Modules\System\Models\LogGroup;
+use App\Modules\Logs\Models\Log;
+use App\Modules\Logs\Models\LogGroup;
 
 
 class Logger

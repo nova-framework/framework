@@ -24,4 +24,7 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\System\Contr
     // The Site Settings.
     Route::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));
     Route::post('settings', array('before' => 'auth|csrf', 'uses' => 'Settings@store'));
+
+    // The Site Logs.
+    Route::get( 'logs', array('before' => 'auth', 'uses' => 'Logs@index'));
 });

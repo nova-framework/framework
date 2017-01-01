@@ -2,10 +2,6 @@
 
 namespace App\Modules\Dashboard\Providers;
 
-use App\Modules\Dashboard\Models\Option;
-
-use Nova\Support\Facades\Cache;
-use Nova\Support\Facades\Config;
 use Nova\Support\ServiceProvider;
 
 

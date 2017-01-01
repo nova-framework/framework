@@ -11,25 +11,26 @@
 
 Event::listen('backend.menu', function($user)
 {
+    if (! $user->hasRole('administrator')) {
+        return array();
+    }
+
     $items = array(
         array(
-            'uri'    => 'admin/dashboard',
-            'title'  => __d('system', 'Dashboard'),
-            'label'  => '',
-            'icon'   => 'dashboard',
-            'weight' => 0,
-        ),
-    );
-
-    if ($user->hasRole('administrator')) {
-        $items[] = array(
             'uri'    => 'admin/settings',
             'title'  => __d('system', 'Settings'),
             'label'  => '',
             'icon'   => 'gears',
             'weight' => 0,
-        );
-    }
+        ),
+        array(
+            'uri'    => 'admin/logs',
+            'title'  => __d('logs', 'Logs'),
+            'label'  => '',
+            'icon'   => 'server',
+            'weight' => 7,
+        ),
+    );
 
     return $items;
 });

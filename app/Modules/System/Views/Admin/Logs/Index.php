@@ -13,7 +13,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Actions'); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'User Actions'); ?></h3>
         <div class="box-tools">
         <?= $links; ?>
         </div>

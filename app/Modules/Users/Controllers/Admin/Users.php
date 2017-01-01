@@ -57,7 +57,7 @@ class Users extends BackendController
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email',
-            'image'                 => 'max:1024|mimes:png,jpg,gif',
+            'image'                 => 'max:1024|mimes:png,jpeg,jpg,gif',
         );
 
         $messages = array(
@@ -125,14 +125,26 @@ class Users extends BackendController
             $password = Hash::make($input['password']);
 
             // Create a User Model instance.
-            User::create(array(
-                'username' => $input['username'],
-                'password' => $password,
-                'role_id'  => $input['role'],
-                'realname' => $input['realname'],
-                'email'    => $input['email'],
-                'active'   => 1,
-            ));
+            $user           = new User();
+            $user->username = $input['username'];
+            $user->password = $password;
+            $user->role_id  = $input['role'];
+            $user->realname = $input['realname'];
+            $user->email    = $input['email'];
+            $user->active   = 1;
+
+            //create user
+            $user->save();
+            $id = $user->id;
+
+            // If a file has been uploaded.
+            if (Input::hasFile('image')) {
+                $user = User::find($id);
+                $name = Input::file('image')->getClientOriginalName();
+                Input::file('image')->move(APPDIR.'Modules/Users/Assets/Images/'.$id, $name);
+                $user->imagePath = 'Images/'.$id.'/'.$name;
+                $user->save();
+            }
 
             // Prepare the flash message.
             $status = __d('users', 'The User <b>{0}</b> was successfully created.', $input['username']);
@@ -217,7 +229,9 @@ class Users extends BackendController
 
             // If a file has been uploaded.
             if (Input::hasFile('image')) {
-                $user->image = Input::file('image');
+                $name = Input::file('image')->getClientOriginalName();
+                Input::file('image')->move(APPDIR.'Modules/Users/Assets/Images/'.$id, $name);
+                $user->imagePath = 'Images/'.$id.'/'.$name;
             }
 
             if(isset($input['password'])) {

@@ -27,8 +27,14 @@ $opt_role = Input::old('role');
             <div class="clearfix"></div>
             <br>
 
-            <form class="form-horizontal" action="<?= site_url('admin/users'); ?>" method='POST' role="form">
+            <form class="form-horizontal" action="<?= site_url('admin/users'); ?>" method='POST' enctype="multipart/form-data" role="form">
 
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Profile Picture'); ?></label>
+                <div class="col-sm-8">
+                    <input name="image" id="image" type="file" class="form-control">
+                </div>
+            </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">

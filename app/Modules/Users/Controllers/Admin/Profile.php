@@ -33,14 +33,14 @@ class Profile extends BackendController
         );
 
         $messages = array(
-            'valid_password'  => __d('system', 'The :attribute field is invalid.'),
-            'strong_password' => __d('system', 'The :attribute field is not strong enough.'),
+            'valid_password'  => __d('users', 'The :attribute field is invalid.'),
+            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'current_password'      => __d('system', 'Current Password'),
-            'password'              => __d('system', 'New Password'),
-            'password_confirmation' => __d('system', 'Password Confirmation'),
+            'current_password'      => __d('users', 'Current Password'),
+            'password'              => __d('users', 'New Password'),
+            'password_confirmation' => __d('users', 'Password Confirmation'),
         );
 
         // Add the custom Validation Rule commands.
@@ -64,7 +64,7 @@ class Profile extends BackendController
         $user = Auth::user();
 
         return $this->getView()
-            ->shares('title',  __d('system', 'User Profile'))
+            ->shares('title',  __d('users', 'User Profile'))
             ->with('user', $user);
     }
 
@@ -89,7 +89,7 @@ class Profile extends BackendController
             $user->save();
 
             // Use a Redirect to avoid the reposting the data.
-            $status = __d('system', 'You have successfully updated your Password.');
+            $status = __d('users', 'You have successfully updated your Password.');
 
             return Redirect::back()->withStatus($status);
         }

@@ -42,6 +42,7 @@ class Logs extends BackendController
             }
 
             array_push($logs, array(
+                'id'       => $item->getkey(),
                 'date'     => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M:%S')),
                 'username' => $username,
                 'group'    => $item->group->name,

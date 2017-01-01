@@ -37,8 +37,14 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
             <div class="clearfix"></div>
             <br>
 
-            <form action="<?= site_url('admin/users/' .$user->id); ?>" class="form-horizontal" method='POST' role="form">
+            <form action="<?= site_url('admin/users/' .$user->id); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Profile Picture (to change)'); ?></label>
+                <div class="col-sm-8">
+                    <input name="image" id="image" type="file" class="form-control">
+                </div>
+            </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">

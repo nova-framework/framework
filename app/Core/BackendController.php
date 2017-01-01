@@ -92,7 +92,7 @@ abstract class BackendController extends BaseController
         // Sort the menu items by their weight and title.
         if (! empty($items)) {
             $items = array_sort($items, function($value) {
-                return $value['weight'] .' - ' .$value['title'];
+                return sprintf('%06d - %s', $value['weight'], $value['title']);
             });
         }
 

@@ -39,7 +39,6 @@ class Settings extends BackendController
             'siteSkin'        => 'required|alpha_dash',
 
             // The Mailer
-            'pretend'         => 'required',
             'mailDriver'      => 'required|alpha',
             'mailHost'        => 'url',
             'mailPort'        => 'numeric',
@@ -56,7 +55,6 @@ class Settings extends BackendController
             'siteSkin'        => __d('system', 'Site Skin'),
 
             // The Mailer
-            'pretend'         => __d('system', 'Pretend'),
             'mailDriver'      => __d('system', 'Mail Driver'),
             'mailHost'        => __d('system', 'Server Name'),
             'mailPort'        => __d('system', 'Server Port'),
@@ -79,7 +77,6 @@ class Settings extends BackendController
             'siteSkin'        => Input::old('siteSkin', Config::get('app.color_scheme')),
 
             // The Mailer
-            'pretend'         => Input::old('pretend',         Config::get('mail.pretend')),
             'mailDriver'      => Input::old('mailDriver',      Config::get('mail.driver')),
             'mailHost'        => Input::old('mailHost',        Config::get('mail.host')),
             'mailPort'        => Input::old('mailPort',        Config::get('mail.port')),
@@ -108,7 +105,6 @@ class Settings extends BackendController
             Option::set('app', 'color_scheme',  $input['siteSkin']);
 
             // The Mailer
-            Option::set('mail', 'pretend',      $input['pretend']);
             Option::set('mail', 'driver',       $input['mailDriver']);
             Option::set('mail', 'host',         $input['mailHost']);
             Option::set('mail', 'port',         $input['mailPort']);

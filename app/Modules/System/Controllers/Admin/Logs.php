@@ -13,7 +13,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\System\Models\UserLogs;
+use App\Modules\System\Models\UserLog;
 use App\Modules\Users\Models\User;
 
 
@@ -22,7 +22,7 @@ class Logs extends BackendController
 
     public function index()
     {
-        $items = UserLogs::orderBy('created_at', 'desc')->paginate(50);
+        $items = UserLog::orderBy('created_at', 'desc')->paginate(50);
 
         // Convert the information.
         $logs = array();

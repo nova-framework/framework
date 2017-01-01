@@ -26,7 +26,7 @@
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Action'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Model'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Real Name'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Email'); ?></th>
             </tr>
 <?php
     foreach ($logs as $log) {
@@ -34,9 +34,9 @@
 <tr>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['date'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='10%'>" .$log['action'] ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='40%'>" .$log['model'] ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['username'] ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='20%'>" .$log['realname'] ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='35%'>" .$log['model'] ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='20%'>" .$log['username'] ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='20%'>" .$log['email'] ."</td>
 </tr>";
 
     }

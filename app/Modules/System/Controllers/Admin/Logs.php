@@ -33,12 +33,12 @@ class Logs extends BackendController
 
                 //
                 $username = $user->username;
-                $realname = $user->realname;
+                $email = $user->email;
             }
             catch (ModelNotFoundException $e) {
                 $username = $item->user_id;
 
-                $realname = __d('system', 'Unknow');
+                $email = '-';
             }
 
             switch ($item->action) {
@@ -58,7 +58,7 @@ class Logs extends BackendController
 
             array_push($logs, array(
                 'username'   => $username,
-                'realname'   => $realname,
+                'email'      => $email,
                 'action'     => $action,
                 'model'      => $item->action_model,
                 'date' => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M'))

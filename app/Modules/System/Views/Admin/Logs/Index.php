@@ -31,6 +31,7 @@
 <?php if (! empty($logs)) { ?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
+                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'ID'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Date'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Author'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Group'); ?></th>
@@ -40,10 +41,11 @@
     foreach ($logs as $log) {
         echo "
 <tr>
+    <td style='text-align: center; vertical-align: middle;' width='5%'>" .$log['id'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['date'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['username'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['group'] ."</td>
-    <td style='text-align: left; vertical-align: middle;' width='55%'>" .$log['message'] ."</td>
+    <td style='text-align: left; vertical-align: middle;' width='50%'>" .$log['message'] ."</td>
 </tr>";
 
     }

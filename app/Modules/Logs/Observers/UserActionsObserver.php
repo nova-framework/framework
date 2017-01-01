@@ -26,7 +26,8 @@ class UserActionsObserver
             Log::create(array(
                 'user_id'  => $user->getKey(),
                 'group_id' => 2,
-                'message'  => $this->message($model, $action),
+                'message'  => $this->getMessage($model, $action),
+                'url'      => $this->getUrl(),
             ));
         }
     }
@@ -41,13 +42,20 @@ class UserActionsObserver
             Log::create(array(
                 'user_id'  => $user->getKey(),
                 'group_id' => 2,
-                'message'  => $this->message($model, $action),
+                'message'  => $this->getMessage($model, $action),
+                'url'      => $this->getUrl(),
             ));
         }
     }
 
-    protected function message($model, $action)
+    protected function getMessage($model, $action)
     {
         return __d('system', 'Was {0} <b>{1}</b> with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
     }
+
+    protected function getUrl()
+    {
+        return Request::fullUrl();
+    }
+
 }

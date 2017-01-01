@@ -16,10 +16,10 @@ class UserActionsObserver
 
             if ($model->wasRecentlyCreated == true) {
                 // Data was just created
-                $action = 'Create';
+                $action = __d('system', 'Created');
             } else {
                 // Data was updated
-                $action = 'Update';
+                $action = __d('system', 'Updated');
             }
 
             Logger::create(array(
@@ -35,10 +35,12 @@ class UserActionsObserver
         if (Auth::check()) {
             $user = Auth::user();
 
+            $action = __d('system', 'Deleted');
+
             Logger::create(array(
                 'user_id'  => $user->getKey(),
                 'group_id' => 2,
-                'message'  => $this->message($model, 'Delete'),
+                'message'  => $this->message($model, $action),
             ));
         }
     }

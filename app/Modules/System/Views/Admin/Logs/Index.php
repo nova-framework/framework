@@ -16,10 +16,7 @@
         <h3 class="box-title"><?= __d('users', 'Logs Management'); ?></h3>
     </div>
     <div class="box-body">
-        <a class='btn btn-danger pull-left' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('system', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('system', 'Clear the Logs'); ?></a>
-        <!--
-        <a class='btn btn-success pull-right' href='<?= site_url('admin/log-groups'); ?>'><i class="fa fa-clone"></i> <?= __d('system', 'Manage the Log Groups'); ?></a>
-        -->
+        <a class='btn btn-danger' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('system', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('system', 'Clear the Logs'); ?></a>
     </div>
 </div>
 

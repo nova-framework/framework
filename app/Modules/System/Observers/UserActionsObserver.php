@@ -16,16 +16,16 @@ class UserActionsObserver
 
             if ($model->wasRecentlyCreated == true) {
                 // Data was just created
-                $action = 'created';
+                $action = 'Create';
             } else {
                 // Data was updated
-                $action = 'updated';
+                $action = 'Update';
             }
 
             Logger::create(array(
-                'user_id'      => $user->getKey(),
-                'group_id'     => 2,
-                'message'      => $this->message($model, $action),
+                'user_id'  => $user->getKey(),
+                'group_id' => 2,
+                'message'  => $this->message($model, $action),
             ));
         }
     }
@@ -36,15 +36,15 @@ class UserActionsObserver
             $user = Auth::user();
 
             Logger::create(array(
-                'user_id'      => $user->getKey(),
-                'group_id'     => 2,
-                'message'      => $this->message($model, 'deleted'),
+                'user_id'  => $user->getKey(),
+                'group_id' => 2,
+                'message'  => $this->message($model, 'Delete'),
             ));
         }
     }
 
     protected function message($model, $action)
     {
-        return __d('system', 'Was {0} the <b>{1}</b> instance with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
+        return __d('system', '{0} the <b>{1}</b> instance with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
     }
 }

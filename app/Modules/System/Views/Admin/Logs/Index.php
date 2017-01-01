@@ -16,9 +16,30 @@
         <h3 class="box-title"><?= __d('users', 'Logs Management'); ?></h3>
     </div>
     <div class="box-body">
-        <a class='btn btn-danger' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('system', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('system', 'Clear the Logs'); ?></a>
+        <a class='btn btn-danger pull-left' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('system', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('system', 'Clear the Logs'); ?></a>
+        <div class="col-sm-4 pull-right">
+            <label class="col-sm-4 control-label text-right" for="group" style="margin-top: 7px;"><?= __d('system', 'Logs Group:'); ?></label>
+            <div class="col-sm-8">
+                <select name="group" id="group_select" class="form-control select2">
+                    <option value="" <?php if (empty($groupId)) echo 'selected'; ?>><?= __d('system', '-'); ?></option>
+                    <?php foreach ($groups as $group) { ?>
+                    <option value="<?= $group->id ?>" <?php if ($groupId == $group->id) echo 'selected'; ?>><?= $group->name; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
     </div>
 </div>
+
+<script type="text/javascript">
+
+$(function(){
+   $("#group_select").on('change', function() {
+      window .location = "<?= site_url('admin/logs'); ?>/" + this .value;
+   });
+});
+
+</script>
 
 <div class="box box-default">
     <div class="box-header with-border">

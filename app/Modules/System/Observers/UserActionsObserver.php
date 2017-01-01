@@ -5,7 +5,7 @@ namespace App\Modules\System\Observers;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Request;
 
-use App\Modules\System\Models\Log as Logger;
+use App\Modules\System\Models\Log;
 
 
 class UserActionsObserver
@@ -23,7 +23,7 @@ class UserActionsObserver
                 $action = __d('system', 'updated');
             }
 
-            Logger::create(array(
+            Log::create(array(
                 'user_id'  => $user->getKey(),
                 'group_id' => 2,
                 'message'  => $this->message($model, $action),
@@ -38,7 +38,7 @@ class UserActionsObserver
 
             $action = __d('system', 'deleted');
 
-            Logger::create(array(
+            Log::create(array(
                 'user_id'  => $user->getKey(),
                 'group_id' => 2,
                 'message'  => $this->message($model, $action),

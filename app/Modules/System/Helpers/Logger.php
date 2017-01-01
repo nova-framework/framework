@@ -5,7 +5,7 @@ namespace App\Modules\System\Helpers;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Auth;
 
-use App\Modules\System\Models\Log as ActionLog;
+use App\Modules\System\Models\Log;
 use App\Modules\System\Models\LogGroup;
 
 
@@ -29,7 +29,7 @@ class Logger
         }
 
         // Create the Log entry.
-        ActionLog::create(array(
+        Log::create(array(
             'user_id'  => $user->getKey(),
             'group_id' => $group->getKey(),
             'message'  => $message,

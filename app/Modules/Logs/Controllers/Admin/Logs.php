@@ -62,7 +62,7 @@ class Logs extends BackendController
                 'date'     => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M:%S')),
                 'username' => $username,
                 'group'    => $item->group->name,
-                'link'     => isset($item->url) ? parse_url($item->url, PHP_URL_PATH) : '-',
+                'path'     => isset($item->url) ? parse_url($item->url, PHP_URL_PATH) : '-',
                 'message'  => $item->message ?: '-',
             ));
         }

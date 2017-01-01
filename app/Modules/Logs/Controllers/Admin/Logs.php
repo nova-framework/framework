@@ -31,7 +31,7 @@ class Logs extends BackendController
             $query->where('group_id', $groupId);
         }
 
-        $items = $query->orderBy('created_at', 'desc')->paginate(50);
+        $items = $query->orderBy('created_at', 'desc')->paginate(25);
 
         // Retrieve all Log Groups.
         $groups = LogGroup::all();

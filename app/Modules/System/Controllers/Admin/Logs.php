@@ -14,20 +14,29 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\System\Models\Log as Logger;
+use App\Modules\System\Models\Log;
+use App\Modules\System\Models\LogGroup;
+
 use App\Modules\Users\Models\User;
 
 
 class Logs extends BackendController
 {
 
-    public function index()
+    public function index($groupId = null)
     {
-        $items = Logger::with('group')
-            ->orderBy('created_at', 'desc')
-            ->paginate(50);
+        $query = Log::with('group');
 
-        // Convert the information.
+        if (! is_null($groupId) && is_numeric($groupId)) {
+            $query->where('group_id', $groupId);
+        }
+
+        $items = $query->orderBy('created_at', 'desc')->paginate(50);
+
+        // Retrieve all Log Groups.
+        $groups = LogGroup::all();
+
+        // Process the Logs information.
         $logs = array();
 
         foreach ($items->getItems() as $item) {
@@ -38,7 +47,7 @@ class Logs extends BackendController
                 $username = $user->username;
             }
             catch (ModelNotFoundException $e) {
-                $username = $item->user_id;
+                $username = __d('system', 'Unknow User, ID: {0}', $item->user_id);
             }
 
             array_push($logs, array(
@@ -51,15 +60,20 @@ class Logs extends BackendController
             ));
         }
 
+        // Get the pagination links.
+        $links = $items->links();
+
         return $this->getView()
             ->shares('title', __d('logs', 'Logs'))
-            ->withLinks($items->links())
-            ->withLogs($logs);
+            ->withGroupId($groupId)
+            ->withGroups($groups)
+            ->withLogs($logs)
+            ->withLinks($links);
     }
 
     public function clear()
     {
-        Logger::truncate();
+        Log::truncate();
 
         // Prepare the flash message.
         $status = __d('system', 'The Logs was successfully cleared.');

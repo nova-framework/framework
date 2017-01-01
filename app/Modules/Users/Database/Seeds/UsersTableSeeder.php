@@ -30,6 +30,7 @@ class UsersTableSeeder extends Seeder
             'activation_code' => '',
             'remember_token'  => '',
         ]);
+
         User::create([
             'id'              => 2,
             'role_id'         => 2,
@@ -41,6 +42,7 @@ class UsersTableSeeder extends Seeder
             'activation_code' => '',
             'remember_token'  => '',
         ]);
+
         User::create([
             'id'              => 3,
             'role_id'         => 3,
@@ -52,6 +54,7 @@ class UsersTableSeeder extends Seeder
             'activation_code' => '',
             'remember_token'  => '',
         ]);
+
         User::create([
             'id'              => 4,
             'role_id'         => 5,
@@ -63,6 +66,7 @@ class UsersTableSeeder extends Seeder
             'activation_code' => '',
             'remember_token'  => '',
         ]);
+        
         User::create([
             'id'              => 5,
             'role_id'         => 5,

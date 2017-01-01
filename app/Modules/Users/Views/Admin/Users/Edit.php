@@ -40,12 +40,6 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
             <form action="<?= site_url('admin/users/' .$user->id); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Profile Picture (to change)'); ?></label>
-                <div class="col-sm-8">
-                    <input name="image" id="image" type="file" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
                     <input name="username" id="username" type="text" class="form-control" value="<?= $opt_username; ?>" placeholder="<?= __d('users', 'Username'); ?>">
@@ -83,6 +77,12 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
                 <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
                     <input name="email" id="email" type="text" class="form-control" value="<?= $opt_email; ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="image"><?= __d('users', 'Profile Picture (to change)'); ?></label>
+                <div class="col-sm-8">
+                    <input name="image" id="image" type="file" class="form-control">
                 </div>
             </div>
             <div class="clearfix"></div>

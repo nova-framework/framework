@@ -13,7 +13,7 @@ trait HasRoleTrait
 
     public function role()
     {
-        return $this->hasOne('App\Modules\Users\Models\Role', 'id', 'role_id');
+        return $this->belongsTo('App\Modules\Users\Models\Role', 'role_id');
     }
 
     public function hasRole($roles)

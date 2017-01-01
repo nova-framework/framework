@@ -22,7 +22,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use App\Modules\System\Helpers\Logger;
+use App\Modules\Logs\Helpers\Logger;
 
 
 class Authorize extends BackendController

@@ -23,13 +23,6 @@ Event::listen('backend.menu', function($user)
             'icon'   => 'gears',
             'weight' => 0,
         ),
-        array(
-            'uri'    => 'admin/logs',
-            'title'  => __d('logs', 'Logs'),
-            'label'  => '',
-            'icon'   => 'server',
-            'weight' => 7,
-        ),
     );
 
     return $items;

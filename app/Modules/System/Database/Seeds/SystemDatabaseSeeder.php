@@ -17,7 +17,6 @@ class SystemDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        //
-        $this->call('App\Modules\System\Database\Seeds\LogGroupsTableSeeder');
+        // $this->call('App\Modules\Logs\Database\Seeds\FoobarTableSeeder');
     }
 }

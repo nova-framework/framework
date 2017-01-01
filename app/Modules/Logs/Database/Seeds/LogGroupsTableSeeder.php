@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\System\Database\Seeds;
+namespace App\Modules\Logs\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
 
-use App\Modules\System\Models\LogGroup;
+use App\Modules\Logs\Models\LogGroup;
 
 
 class LogGroupsTableSeeder extends Seeder

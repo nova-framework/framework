@@ -92,6 +92,8 @@ return array (
   'The User <b>{0}</b> was successfully created.' => '',
   'The User <b>{0}</b> was successfully deleted.' => '',
   'The User <b>{0}</b> was successfully updated.' => '',
+  'The User logged in.' => '',
+  'The User logged out.' => '',
   'The role with ID: {0} was not found.' => '',
   'The user with ID: {0} was not found.' => '',
   'There are no registered Roles.' => 'Der er intet registreret brugernivauer',

@@ -18,7 +18,7 @@ use Shared\Database\ORM\FileField\FileFieldTrait;
 
 use App\Modules\Messenger\Traits\UseMessengerTrait;
 use App\Modules\Users\Traits\HasRoleTrait;
-use App\Modules\System\Observers\UserActionsObserver;
+use App\Modules\Logs\Observers\UserActionsObserver;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
@@ -41,7 +41,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
-    
+
     public static function boot()
     {
         parent::boot();

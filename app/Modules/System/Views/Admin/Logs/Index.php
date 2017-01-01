@@ -35,6 +35,7 @@
                 <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Date'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Author'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Group'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Link'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Message'); ?></th>
             </tr>
 <?php
@@ -45,7 +46,8 @@
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['date'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['username'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['group'] ."</td>
-    <td style='text-align: left; vertical-align: middle;' width='50%'>" .$log['message'] ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['link'] ."</td>
+    <td style='text-align: left; vertical-align: middle;' width='35%'>" .$log['message'] ."</td>
 </tr>";
 
     }

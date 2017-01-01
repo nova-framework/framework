@@ -3,6 +3,7 @@
 namespace App\Modules\System\Observers;
 
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Request;
 
 use App\Modules\System\Models\Log as Logger;
 
@@ -47,6 +48,6 @@ class UserActionsObserver
 
     protected function message($model, $action)
     {
-        return __d('system', '{0} the <b>{1}</b> instance with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
+        return __d('system', '{0} <b>{1}</b> with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
     }
 }

@@ -46,6 +46,7 @@ class Logs extends BackendController
                 'date'     => $item->created_at->formatLocalized(__d('system', '%d %b %Y, %H:%M:%S')),
                 'username' => $username,
                 'group'    => $item->group->name,
+                'link'     => $item->uri ?: '-',
                 'message'  => $item->message ?: '-',
             ));
         }

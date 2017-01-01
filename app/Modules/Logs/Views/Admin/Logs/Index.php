@@ -56,7 +56,7 @@ $(function(){
                 <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Date'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Author'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Group'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Link'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Path'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('logs', 'Action'); ?></th>
             </tr>
 <?php
@@ -67,7 +67,7 @@ $(function(){
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['date'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$log['username'] ."</td>
     <td style='text-align: center; vertical-align: middle;' width='10%'>" .$log['group'] ."</td>
-    <td style='text-align: left; vertical-align: middle;' width='20%'>" .e($log['link']) ."</td>
+    <td style='text-align: left; vertical-align: middle;' width='20%'>" .e($log['path']) ."</td>
     <td style='text-align: left; vertical-align: middle;' width='35%'>" .$log['message'] ."</td>
 </tr>";
 

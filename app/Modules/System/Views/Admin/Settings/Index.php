@@ -62,8 +62,8 @@
             <div class="col-sm-8">
                 <div class="col-sm-3" style="padding: 0;">
                     <select name="pretend" id="pretend" class="form-control">
-                        <option value="true" <?php if ($options['pretend'] == true) { echo "selected='selected'"; }?>><?= __d('system', 'Yes'); ?></option>
-                        <option value="false" <?php if ($options['pretend'] == false) { echo "selected='selected'"; }?>><?= __d('system', 'No'); ?></option>
+                        <option value="true" <?php if ($options['pretend'] == 'true') { echo "selected='selected'"; }?>><?= __d('system', 'Yes'); ?></option>
+                        <option value="false" <?php if ($options['pretend'] == 'false') { echo "selected='selected'"; }?>><?= __d('system', 'No'); ?></option>
                     </select>
                 </div>
                 <div class='clearfix'></div>

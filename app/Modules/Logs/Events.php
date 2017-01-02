@@ -29,7 +29,7 @@ Event::listen('backend.menu', function($user)
 });
 
 // Log the User's login and logout.
-use App\Modules\Logs\Models\Log as AuthLog;
+use App\Modules\Logs\Models\Log as Logger;
 use App\Modules\Logs\Models\LogGroup;
 
 
@@ -40,7 +40,7 @@ Event::listen('auth.login', function($user, $remember)
         ->first();
 
     // Create the Log entry.
-    AuthLog::create(array(
+    Logger::create(array(
         'user_id'  => $user->getKey(),
         'group_id' => $group->getKey(),
         'message'  => __d('logs', 'The User logged in.'),
@@ -55,10 +55,26 @@ Event::listen('auth.logout', function($user)
         ->first();
 
     // Create the Log entry.
-    AuthLog::create(array(
+    Logger::create(array(
         'user_id'  => $user->getKey(),
         'group_id' => $group->getKey(),
         'message'  => __d('logs', 'The User logged out.'),
         'url'      => Request::header('referer'),
+    ));
+});
+
+Event::listen('app.modules.system.settings.updated', function($user, $options)
+{
+    $group = LogGroup::where('slug', 'system')
+        ->remember(1440)
+        ->first();
+
+    // Create the Log entry.
+    Logger::create(array(
+        'user_id'  => $user->getKey(),
+        'group_id' => $group->getKey(),
+        'message'  => __d('logs', 'The Site Settings was updated.'),
+        'url'      => Request::header('referer'),
+        'data'     => $options,
     ));
 });

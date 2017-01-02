@@ -8,8 +8,10 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
+use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
@@ -96,7 +98,10 @@ class Settings extends BackendController
     public function store()
     {
         // Validate the Input data.
-        $input = Input::all();
+        $input = Input::only(
+            'siteName', 'siteSkin',
+            'mailDriver', 'mailHost', 'mailPort', 'mailFromAddress', 'mailFromName', 'mailEncryption', 'mailUsername', 'mailPassword'
+        );
 
         $validator = $this->validate($input);
 
@@ -117,6 +122,11 @@ class Settings extends BackendController
 
             // Invalidate the cached system options.
             Cache::forget('system_options');
+
+            // Fire the associated Event.
+            $user = Auth::user();
+
+            Event::fire('app.modules.system.settings.updated', array($user, $input));
 
             // Prepare the flash message.
             $status = __d('system', 'The Settings was successfully updated.');

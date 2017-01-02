@@ -63,6 +63,7 @@ Event::listen('auth.logout', function($user)
     ));
 });
 
+// Logs the Site Settings updates.
 Event::listen('app.modules.system.settings.updated', function($user, $options)
 {
     $group = LogGroup::where('slug', 'system')
@@ -75,6 +76,7 @@ Event::listen('app.modules.system.settings.updated', function($user, $options)
         'group_id' => $group->getKey(),
         'message'  => __d('logs', 'The Site Settings was updated.'),
         'url'      => Request::header('referer'),
+        // We store also the current options on Event Data.
         'data'     => $options,
     ));
 });

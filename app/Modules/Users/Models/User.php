@@ -15,6 +15,7 @@ use Nova\Auth\Reminders\RemindableInterface;
 use Nova\Database\ORM\Model as BaseModel;
 
 use Shared\Database\ORM\FileField\FileFieldTrait;
+use Shared\View\Presenter\PresentableTrait;
 
 use App\Modules\Messenger\Traits\UseMessengerTrait;
 use App\Modules\Users\Traits\HasRoleTrait;
@@ -22,7 +23,7 @@ use App\Modules\Users\Traits\HasRoleTrait;
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, HasRoleTrait, FileFieldTrait, UseMessengerTrait;
+    use UserTrait, RemindableTrait, HasRoleTrait, FileFieldTrait, PresentableTrait, UseMessengerTrait;
 
     //
     protected $table = 'users';
@@ -39,5 +40,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             'defaultPath' => ROOTDIR .'assets/images/users/no-image.png',
         ),
     );
+
+    protected $presenter = 'App\Modules\Users\Presenters\UserPresenter';
 
 }

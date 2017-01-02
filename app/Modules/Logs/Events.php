@@ -32,6 +32,7 @@ Event::listen('backend.menu', function($user)
 use App\Modules\Logs\Models\Log as AuthLog;
 use App\Modules\Logs\Models\LogGroup;
 
+
 Event::listen('auth.login', function($user, $remember)
 {
     $group = LogGroup::where('slug', 'auth')

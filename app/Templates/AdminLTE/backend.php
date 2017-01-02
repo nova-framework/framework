@@ -6,10 +6,12 @@
 // Prepare the current User Info.
 $user = Auth::user();
 
-if ($user->imagePath == '') {
-    $imagePath = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
+// Retrieve the User's Profile Picture.
+if (isset($user->image->name)) {
+    $imageUrl = resource_url('images/users/' .$user->image->name);
 } else {
-    $imagePath = resource_url($user->imagePath, 'Users');
+    // Fallback to AdminLTE's default image.
+    $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
 }
 
 // Generate the Language Changer menu.
@@ -125,14 +127,14 @@ $langMenuLinks = ob_get_clean();
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?= $imagePath ?>" class="user-image" alt="User Image">
+              <img src="<?= $imageUrl ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?= $user->username; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?= $imagePath ?>" class="img-circle" alt="User Image">
+                <img src="<?= $imageUrl ?>" class="img-circle" alt="User Image">
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>

@@ -207,7 +207,7 @@ return array(
         'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
 
-        // The (local) Shared Providers.
+        // The Service Providers from the Shared namespace.
         'Shared\Database\Backup\BackupServiceProvider',
     ),
 

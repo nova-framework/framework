@@ -125,7 +125,9 @@ class Users extends BackendController
             $password = Hash::make($input['password']);
 
             // Create a User Model instance.
-            $user           = new User();
+            $user = new User();
+
+            //
             $user->username = $input['username'];
             $user->password = $password;
             $user->role_id  = $input['role'];
@@ -133,18 +135,13 @@ class Users extends BackendController
             $user->email    = $input['email'];
             $user->active   = 1;
 
-            //create user
-            $user->save();
-            $id = $user->id;
-
             // If a file has been uploaded.
             if (Input::hasFile('image')) {
-                $user = User::find($id);
-                $name = Input::file('image')->getClientOriginalName();
-                Input::file('image')->move(APPDIR.'Modules/Users/Assets/Images/'.$id, $name);
-                $user->imagePath = 'Images/'.$id.'/'.$name;
-                $user->save();
+                $user->image = Input::file('image');
             }
+
+            // Save the User information.
+            $user->save();
 
             // Prepare the flash message.
             $status = __d('users', 'The User <b>{0}</b> was successfully created.', $input['username']);
@@ -229,9 +226,7 @@ class Users extends BackendController
 
             // If a file has been uploaded.
             if (Input::hasFile('image')) {
-                $name = Input::file('image')->getClientOriginalName();
-                Input::file('image')->move(APPDIR.'Modules/Users/Assets/Images/'.$id, $name);
-                $user->imagePath = 'Images/'.$id.'/'.$name;
+                $user->image = Input::file('image');
             }
 
             if(isset($input['password'])) {

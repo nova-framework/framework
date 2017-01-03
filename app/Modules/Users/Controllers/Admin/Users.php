@@ -78,7 +78,7 @@ class Users extends BackendController
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });

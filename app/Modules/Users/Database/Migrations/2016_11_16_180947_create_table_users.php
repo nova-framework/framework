@@ -20,7 +20,7 @@ class CreateTableUsers extends Migration
             $table->string('username',100)->unique();
             $table->string('password');
             $table->string('realname');
-            $table->string('imagePath');
+            $table->string('image');
             $table->string('email',100)->unique();
             $table->tinyInteger('active')->unsigned()->default(0);
             $table->string('activation_code');

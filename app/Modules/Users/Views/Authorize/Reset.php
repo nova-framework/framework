@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <p><input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Verify the new Password'); ?>"><br><br></p>
                 </div>
-                <?php if (Config::get('recaptcha.active') === true) { ?>
+                <?php if (Config::get('reCaptcha.active') === true) { ?>
                 <div class="row">
                     <div class="row pull-right" style="margin-top: 10px; margin-right: 0;">
                         <div id="captcha" style="width: 304px; height: 78px;"></div>
@@ -46,12 +46,16 @@
     </div>
 </div>
 
+<?php if (Config::get('reCaptcha.active') === true) { ?>
+
 <script type="text/javascript">
 
 var captchaCallback = function() {
-    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get('recaptcha.siteKey'); ?>'});
+    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get('reCaptcha.siteKey'); ?>'});
 };
 
 </script>
 
 <script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?= Language::code(); ?>" async defer></script>
+
+<?php } ?>

@@ -86,6 +86,10 @@ class Demos extends Controller
             $content = '<pre>' .e($uri) .'</pre>';
         }
 
+        $className = 'App\Modules\Social\Commands\FollowUserCommand';
+
+        $content = preg_replace('~Command(?!.*Command)~', 'CommandHandler', $className);
+
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))
             ->with('content', $content);

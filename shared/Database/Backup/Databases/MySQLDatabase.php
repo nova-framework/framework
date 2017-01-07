@@ -2,9 +2,9 @@
 
 namespace Shared\Database\Backup\Databases;
 
-use Shared\Database\Backup\Console;
+use Nova\Support\Facades\Config;
 
-use Config;
+use Shared\Database\Backup\Console;
 
 
 class MySQLDatabase implements DatabaseInterface

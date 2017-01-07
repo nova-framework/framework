@@ -46,7 +46,7 @@ class Authorize extends BackendController
     public function postLogin()
     {
         // Verify the submitted reCAPTCHA
-        if(! ReCaptcha::check()) {
+        if (! ReCaptcha::check()) {
             $status = __d('users', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
@@ -80,7 +80,7 @@ class Authorize extends BackendController
             $user->save();
         }
 
-        if($user->active == 0) {
+        if ($user->active == 0) {
             Auth::logout();
 
             // User not activated; go logout and redirect him back.
@@ -132,7 +132,7 @@ class Authorize extends BackendController
         $error = array();
 
         // Verify the reCAPTCHA
-        if(! ReCaptcha::check()) {
+        if (! ReCaptcha::check()) {
             $status = __d('users', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
@@ -175,7 +175,7 @@ class Authorize extends BackendController
     public function postReset()
     {
         // Verify the reCAPTCHA
-        if(! ReCaptcha::check()) {
+        if (! ReCaptcha::check()) {
             $status = __d('users', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');

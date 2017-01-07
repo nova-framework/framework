@@ -2,7 +2,7 @@
 
 namespace Shared\Database\Backup\Commands;
 
-use Nova\Supprt\Facades\File;
+use Nova\Support\Facades\File;
 
 use Shared\Database\Backup\Commands\BaseCommand;
 

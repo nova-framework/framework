@@ -12,6 +12,12 @@ $langName = Language::name();
 
 $languages = Config::get('languages');
 
+if (isset($user->image)) {
+    $imageUrl = resource_url('images/users/' .basename($user->image->path));
+} else {
+    $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
+}
+
 //
 ob_start();
 
@@ -118,14 +124,14 @@ $langMenuLinks = ob_get_clean();
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?= vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte'); ?>" class="user-image" alt="User Image">
+              <img src="<?= $imageUrl ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?= $user->username; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?= vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte'); ?>" class="img-circle" alt="User Image">
+                <img src="<?= $imageUrl ?>" class="img-circle" alt="User Image">
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>

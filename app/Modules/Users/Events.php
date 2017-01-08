@@ -15,14 +15,16 @@ Event::listen('backend.menu', function($user) {
             array(
                 'uri'    => 'admin/users',
                 'title'  => __d('users', 'Users'),
+                'label'  => '',
                 'icon'   => 'users',
                 'weight' => 1,
             ),
             array(
                 'uri'    => 'admin/roles',
                 'title'  => __d('users', 'Roles'),
+                'label'  => '',
                 'icon'   => 'book',
-                'weight' => 2,
+                'weight' => 1,
             ),
         );
     } else {

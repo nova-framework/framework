@@ -56,7 +56,7 @@ class Users extends BackendController
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email',
-            'image'                 => 'max:1024|mimes:png,jpg,gif',
+            'image'                 => 'max:1024|mimes:png,jpg,jpeg,gif',
         );
 
         $messages = array(

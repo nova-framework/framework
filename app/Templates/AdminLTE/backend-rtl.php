@@ -168,7 +168,7 @@ $langMenuLinks = ob_get_clean();
             <li class="header"><?= __d('adminlte', 'ADMINISTRATION'); ?></li>
             <?php foreach ($menuItems as $item) { ?>
             <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
-                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>
+                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span> <?= $item['label']; ?></a>
             </li>
             <?php } ?>
         </ul>

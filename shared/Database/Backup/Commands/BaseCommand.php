@@ -2,8 +2,8 @@
 
 namespace Shared\Database\Backup\Commands;
 
-use Nova\Config\Config;
 use Nova\Console\Command;
+use Nova\Support\Facades\Config;
 
 use Shared\Database\Backup\DatabaseBuilder;
 use Shared\Database\Backup\Console;

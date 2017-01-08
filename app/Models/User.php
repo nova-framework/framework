@@ -16,10 +16,12 @@ use Nova\Database\ORM\Model as BaseModel;
 
 use Shared\Database\ORM\FileField\FileFieldTrait;
 
+use App\Modules\Messenger\Traits\Messagable;
+
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, FileFieldTrait;
+    use UserTrait, RemindableTrait, FileFieldTrait, Messagable;
 
     //
     protected $table = 'users';

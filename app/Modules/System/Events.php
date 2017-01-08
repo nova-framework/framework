@@ -14,6 +14,7 @@ Event::listen('backend.menu', function($user) {
         array(
             'uri'    => 'admin/dashboard',
             'title'  => __d('system', 'Dashboard'),
+            'label'  => '',
             'icon'   => 'dashboard',
             'weight' => 0,
         )
@@ -23,6 +24,7 @@ Event::listen('backend.menu', function($user) {
         $items[] = array(
             'uri'    => 'admin/settings',
             'title'  => __d('system', 'Settings'),
+            'label'  => '',
             'icon'   => 'gears',
             'weight' => 0,
         );

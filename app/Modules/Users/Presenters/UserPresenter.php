@@ -44,7 +44,7 @@ class UserPresenter extends Presenter
     public function picture()
     {
         if (isset($this->image)) {
-            return resource_url('images/users/' .$this->image->name);
+            return resource_url('images/users/' .basename($this->image->path));
         }
 
         // Fallback to AdminLTE's default image.

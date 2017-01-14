@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
   'ADMINISTRATION' => 'ADMINISTRATION',
   'Control Panel' => 'Kontrolpanel',
   'Forgot Password?' => 'Glemt kodeord?',

@@ -53,7 +53,9 @@ class Users extends BackendController
         $rules = array(
             'username'              => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
             'role'                  => 'required|numeric|exists:roles,id',
-            'realname'              => 'required|min:5|max:100|valid_name',
+            'first_name'            => 'required|min:4|max:100|valid_name',
+            'last_name'             => 'required|min:4|max:100|valid_name',
+            'location'              => 'min:2|max:100|valid_name',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email',
@@ -68,7 +70,9 @@ class Users extends BackendController
         $attributes = array(
             'username'              => __d('users', 'Username'),
             'role'                  => __d('users', 'Role'),
-            'realname'              => __d('users', 'Name and Surname'),
+            'first_name'            => __d('users', 'First Name'),
+            'last_name'             => __d('users', 'Last Name'),
+            'location'              => __d('users', 'Location'),
             'password'              => __d('users', 'Password'),
             'password_confirmation' => __d('users', 'Password confirmation'),
             'email'                 => __d('users', 'E-mail'),
@@ -116,8 +120,11 @@ class Users extends BackendController
     public function store()
     {
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email');
+        $input = Input::only('username', 'role', 'first_name', 'last_name', 'location', 'password', 'password_confirmation', 'email');
 
+        if (empty($input['location'])) unset($input['location']);
+
+        //
         $validator = $this->validate($input);
 
         if($validator->passes()) {
@@ -128,12 +135,18 @@ class Users extends BackendController
             $user = new User();
 
             //
-            $user->username = $input['username'];
-            $user->password = $password;
-            $user->role_id  = $input['role'];
-            $user->realname = $input['realname'];
-            $user->email    = $input['email'];
-            $user->active   = 1;
+            $user->username   = $input['username'];
+            $user->password   = $password;
+            $user->role_id    = $input['role'];
+            $user->first_name = $input['first_name'];
+            $user->last_name  = $input['last_name'];
+            $user->email      = $input['email'];
+            $user->active     = 1;
+
+            // Setup the optional User location.
+            if (isset($input['location'])) {
+                $user->location = $input['location'];
+            }
 
             // If a file has been uploaded.
             if (Input::hasFile('image')) {
@@ -162,7 +175,7 @@ class Users extends BackendController
             $user = User::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The User with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
@@ -179,7 +192,7 @@ class Users extends BackendController
             $user = User::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The User with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
@@ -200,13 +213,15 @@ class Users extends BackendController
             $user = User::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The User with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image');
+        $input = Input::only('username', 'role', 'first_name', 'last_name', 'location', 'password', 'password_confirmation', 'email', 'image');
+
+        if (empty($input['location'])) unset($input['location']);
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
             unset($input['password']);
@@ -219,10 +234,16 @@ class Users extends BackendController
             $origName = $user->username;
 
             // Update the User Model instance.
-            $user->username = $input['username'];
-            $user->role_id  = $input['role'];
-            $user->realname = $input['realname'];
-            $user->email    = $input['email'];
+            $user->username   = $input['username'];
+            $user->role_id    = $input['role'];
+            $user->first_name = $input['first_name'];
+            $user->last_name  = $input['last_name'];
+            $user->email      = $input['email'];
+
+            // Setup the optional User location.
+            if (isset($input['location'])) {
+                $user->location = $input['location'];
+            }
 
             // If a file has been uploaded.
             if (Input::hasFile('image')) {
@@ -256,7 +277,7 @@ class Users extends BackendController
             $user = User::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The user with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The User with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }

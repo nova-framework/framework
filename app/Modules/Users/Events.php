@@ -11,26 +11,37 @@
 
 Event::listen('backend.menu', function($user)
 {
-    if ($user->hasRole('administrator')) {
-        $items = array(
-            array(
-                'uri'    => 'admin/users',
-                'title'  => __d('users', 'Users'),
-                'label'  => '',
-                'icon'   => 'users',
-                'weight' => 1,
-            ),
-            array(
-                'uri'    => 'admin/roles',
-                'title'  => __d('users', 'Roles'),
-                'label'  => '',
-                'icon'   => 'book',
-                'weight' => 1,
-            ),
-        );
-    } else {
-        $items = array();
+    if (! $user->hasRole('administrator')) {
+        return array();
     }
+
+    $items = array(
+        array(
+            'title'  => __d('users', 'Users'),
+            'icon'   => 'users',
+            'weight' => 1,
+            'children' => array(
+                array(
+                    'uri'    => 'admin/users/create',
+                    'title'  => __d('users', 'Create a new User'),
+                    'label'  => '',
+                    'weight' => 1,
+                ),
+                array(
+                    'uri'    => 'admin/users',
+                    'title'  => __d('users', 'Users List'),
+                    'label'  => '',
+                    'weight' => 1,
+                ),
+                array(
+                    'uri'    => 'admin/roles',
+                    'title'  => __d('users', 'User Roles'),
+                    'label'  => '',
+                    'weight' => 2,
+                ),
+            ),
+        ),
+    );
 
     return $items;
 });

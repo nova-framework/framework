@@ -10,6 +10,16 @@ use Shared\View\Presenter\Presenter;
 class UserPresenter extends Presenter
 {
     /**
+     * Present the User's name.
+     *
+     * @return string
+     */
+    public function name()
+    {
+        return $this->first_name .' ' .$this->last_name;
+    }
+    
+    /**
      * Present a localized date for User's Creation.
      *
      * @return string

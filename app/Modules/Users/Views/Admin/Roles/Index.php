@@ -13,15 +13,6 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Create a new Role'); ?></h3>
-    </div>
-    <div class="box-body">
-        <a class='btn btn-success' href='<?= site_url('admin/roles/create'); ?>'><?= __d('users', 'Create a new Role'); ?></a>
-    </div>
-</div>
-
-<div class="box box-default">
-    <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Roles'); ?></h3>
         <div class="box-tools">
         <?= $roles->links(); ?>
@@ -51,7 +42,7 @@
         <div class='btn-group' role='group' aria-label='...'>
             <a class='btn btn-sm btn-warning' href='" .site_url('admin/roles/' .$role->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>
             <a class='btn btn-sm btn-success' href='" .site_url('admin/roles/' .$role->id .'/edit') ."' title='" .__d('users', 'Edit this Role') ."' role='button'><i class='fa fa-pencil'></i></a>
-            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#confirm_" .$role->id ."' title='" .__d('users', 'Delete this Role') ."' role='button'><i class='fa fa-remove'></i></a>
+            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#modal_delete_role' data-id='" .$role->id ."' title='" .__d('users', 'Delete this Role') ."' role='button'><i class='fa fa-remove'></i></a>
         </div>
     </td>
 </tr>";
@@ -66,37 +57,54 @@
         </div>
 <?php } ?>
     </div>
+    <div class="box-footer with-border">
+        <a class='btn btn-success' href='<?= site_url('admin/roles/create'); ?>'><?= __d('users', 'Create a new Role'); ?></a>
+    </div>
 </div>
 
 </section>
 
-<?php
-if (! $roles->isEmpty()) {
-    foreach ($roles->getItems() as $role) {
-?>
-<div class="modal modal-default" id="confirm_<?= $role->id ?>">
+<?php if (! $roles->isEmpty()) { ?>
+
+<div class="modal modal-default" id="modal_delete_role">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button aria-label="Close" data-dismiss="modal" class="close" type="button">
                 <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><?= __d('users', 'Delete the Role?'); ?></h4>
+                <h4 class="modal-title"><?= __d('users', 'Delete this Role?'); ?></h4>
             </div>
             <div class="modal-body">
-                <p><?= __d('users', 'Are you sure you want to delete the Role <b>{0}</b>, the operation being irreversible?', $role->name); ?></p>
-                <p><?= __d('users', 'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+                <p><?= __d('users', 'Are you sure you want to remove this Role, the operation being irreversible?'); ?></p>
+                <p><?= __d('users', 'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
-                <form action="<?= site_url('admin/roles/' .$role->id .'/destroy'); ?>" method="POST">
+                <form id="modal_delete_form" action="" method="POST">
+                    <input type="hidden" name="user_id" id="delete_role_id" value="0" />
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
-                    <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('users', 'Delete the Role'); ?>">
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('users', 'Delete'); ?>">
                 </form>
             </div>
         </div>
         <!-- /.modal-content -->
     </div>
 </div>
-<?php
-    }
-}
+
+<script>
+$(function () {
+    $('#modal_delete_role').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id = button.data('id'); // Extract the Role ID from data-* attributes
+
+        //
+        $('#delete_user_id').val(id);
+
+        $('#modal_delete_form').attr('action', "<?= site_url('admin/roles'); ?>" + '/' + id + '/destroy');
+    });
+});
+
+</script>
+
+<?php } ?>

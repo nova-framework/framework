@@ -118,7 +118,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -135,7 +135,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -152,7 +152,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -192,7 +192,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The role with ID: {0} was not found.', $id);
+            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }

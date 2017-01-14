@@ -89,11 +89,22 @@ abstract class BackendController extends BaseController
             }
         }
 
-        // Sort the menu items by their weight and title.
-        if (! empty($items)) {
-            $items = array_sort($items, function($value) {
+        // Sort the base menu items by their weight and title.
+        $items = array_sort($items, function($value) {
+            return sprintf('%06d - %s', $value['weight'], $value['title']);
+        });
+
+        // Sort the child menu items by their weight and title.
+        foreach ($items as &$item) {
+            $children = array_get($item, 'children', array());
+
+            if (empty($children)) continue;
+
+            $children = array_sort($children, function($value) {
                 return sprintf('%06d - %s', $value['weight'], $value['title']);
             });
+
+            $item['children'] = $children;
         }
 
         return $items;

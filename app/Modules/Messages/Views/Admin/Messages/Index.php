@@ -13,7 +13,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('messages', 'Messages'); ?></h3>
+        <h3 class="box-title"><?= __d('messages', 'Private Messages'); ?></h3>
         <div class="box-tools">
         <?= $messages->links(); ?>
         </div>
@@ -39,7 +39,7 @@ if (! $messages->isEmpty()) {
             </div>
             <div class="media-body">
                 <div class="col-md-8 no-padding">
-                    <h4 class="media-heading"><?= e($message->subject); ?> <?php if ($unread >  0) echo '<small class="label label-warning">' .$unread .'</small>'; ?></h4>
+                    <h4 class="media-heading"><a href="<?= site_url('admin/messages/' .$message->id); ?>"><?= e($message->subject); ?></a> <?php if ($unread >  0) echo '<small class="label label-warning">' .$unread .'</small>'; ?></h4>
                     <p class="no-margin"><?= __d('messages', 'By <b>{0}</b>', $message->sender->present()->name()); ?></p>
                     <ul class="list-inline text-muted no-margin">
                         <li><?= __d('messages', '{0, plural, one{# reply} other{# replies}}', $message->replies->count()); ?></li>

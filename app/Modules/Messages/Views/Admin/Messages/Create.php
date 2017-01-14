@@ -1,9 +1,9 @@
 <section class="content-header">
-    <h1><?= __d('system', 'Send Message'); ?></h1>
+    <h1><?= __d('messages', 'Send Message'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
-        <li><a href='<?= site_url('admin/messages'); ?>'><i class="fa fa-envelope"></i> <?= __d('system', 'Messages'); ?></a></li>
-        <li><?= __d('system', 'Send Message'); ?></li>
+        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('messages', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('admin/messages'); ?>'><i class="fa fa-envelope"></i> <?= __d('messages', 'Messages'); ?></a></li>
+        <li><?= __d('messages', 'Send Message'); ?></li>
     </ol>
 </section>
 
@@ -14,7 +14,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('system', 'Send a new Message'); ?></h3>
+        <h3 class="box-title"><?= __d('messages', 'Send a new Private Message'); ?></h3>
     </div>
     <div class="box-body">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
@@ -35,7 +35,7 @@
             <div class="form-group <?= $errors->has('message') ? 'has-error' : ''; ?>">
                 <label class="col-sm-3 control-label" for="message"><?= __d('messages', 'Message'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-9">
-                    <textarea id="message" name="message" class="form-control" style="resize: none;" placeholder="<?= __d('system', 'Message'); ?>" rows="5" ><?= Input::old('message'); ?></textarea>
+                    <textarea id="message" name="message" class="form-control" style="resize: none;" placeholder="<?= __d('messages', 'Message'); ?>" rows="5" ><?= Input::old('message'); ?></textarea>
                     <?php if ($errors->has('message')) { ?>
                     <span class="help-block"><?= $errors->first('message'); ?></span>
                     <?php } ?>
@@ -59,7 +59,7 @@
             <hr>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <button type="submit" class="btn btn-success col-sm-2 pull-right"><i class='fa fa-send'></i> <?= __d('system', 'Send'); ?></button>
+                    <button type="submit" class="btn btn-success col-sm-2 pull-right"><i class='fa fa-send'></i> <?= __d('messages', 'Send'); ?></button>
                 </div>
             </div>
 

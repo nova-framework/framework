@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h1><?= __d('messages', 'Messages'); ?></h1>
+    <h1><?= __d('messages', 'Show Message'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('messages', 'Dashboard'); ?></a></li>
         <li><a href='<?= site_url('admin/messages'); ?>'><i class="fa fa-envelope"></i> <?= __d('messages', 'Messages'); ?></a></li>
@@ -20,7 +20,7 @@
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
             <div class="clearfix"></div>
             <br>
-            
+
         <!-- Status -->
             <div class="media">
                 <div class="pull-left">

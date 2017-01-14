@@ -43,11 +43,8 @@ class Messages extends BackendController
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        //
-        $title = __d('messages', 'Messages | {0}', $user->present()->name());
-
         return $this->getView()
-            ->shares('title', $title)
+            ->shares('title',  __d('messages', 'Messages'))
             ->withAuthUser($user)
             ->withMessages($messages);
     }
@@ -59,11 +56,8 @@ class Messages extends BackendController
         // Retrieve all other Users.
         $users = User::where('id', '!=', $authUser->id)->get();
 
-        //
-        $title = __d('messages', 'Create Message | {0}', $authUser->present()->name());
-
         return $this->getView()
-            ->shares('title', $title)
+            ->shares('title', __d('messages', 'Send Message'))
             ->withAuthUser($authUser)
             ->withUsers($users);
     }
@@ -87,6 +81,11 @@ class Messages extends BackendController
 
         // First, retrieve the user using the receiverId.
         $userId = $input['user'];
+
+        if ($userId == $authUser->id) {
+            // No talking with himself allowed.
+            return Redirect::to('admin/dashboard');
+        }
 
         try {
              $user = User::findOrFail($userId);
@@ -116,7 +115,7 @@ class Messages extends BackendController
 
     public function show($threadId)
     {
-        $user = Auth::user();
+        $authUser = Auth::user();
 
         // Find the status that we need to reply to.
         try {
@@ -127,22 +126,19 @@ class Messages extends BackendController
         }
 
         // Mark the message and its replies as seen.
-        $message->setReadBy($user);
+        $message->setReadBy($authUser);
 
         foreach ($message->replies as $reply) {
-            $reply->setReadBy($user);
+            $reply->setReadBy($authUser);
         }
 
         // Recalculate the number of unread messages.
-        $messageCount = Message::where('receiver_id', $user->id)->unread()->count();
-
-        //
-        $title = __d('messages', 'Show Message | {0}', $user->present()->name());
+        $messageCount = Message::where('receiver_id', $authUser->id)->unread()->count();
 
         return $this->getView()
-            ->shares('title', $title)
-            ->shares('messageCount', $messageCount)
-            ->withAuthUser($user)
+            ->shares('title', __d('messages', 'Show Message'))
+            ->shares('privateMessageCount', $messageCount)
+            ->withAuthUser($authUser)
             ->withMessage($message);
     }
 

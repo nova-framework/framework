@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
   'ADMINISTRATION' => 'مدیریت',
   'Control Panel' => 'کنترل پنل',
   'Forgot Password?' => 'فراموشی رمزعبور؟',

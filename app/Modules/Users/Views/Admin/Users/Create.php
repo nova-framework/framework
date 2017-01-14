@@ -47,9 +47,21 @@ $opt_role = Input::old('role');
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="realname"><?= __d('users', 'Name and Surname'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="first_name"><?= __d('users', 'First Name'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="realname" id="realname" type="text" class="form-control" value="<?= Input::old('realname'); ?>" placeholder="<?= __d('users', 'Name and Surname'); ?>">
+                    <input name="first_name" id="first_name" type="text" class="form-control" value="<?= Input::old('last_name'); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="last_name"><?= __d('users', 'Last Name'); ?> <font color='#CC0000'>*</font></label>
+                <div class="col-sm-8">
+                    <input name="last_name" id="last_name" type="text" class="form-control" value="<?= Input::old('last_name'); ?>" placeholder="<?= __d('users', 'Last Name'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="location"><?= __d('users', 'Location'); ?></label>
+                <div class="col-sm-8">
+                    <input name="location" id="location" type="text" class="form-control" value="<?= Input::old('location'); ?>" placeholder="<?= __d('users', 'Location'); ?>">
                 </div>
             </div>
             <div class="form-group">

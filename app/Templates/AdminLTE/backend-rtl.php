@@ -128,7 +128,7 @@ $langMenuLinks = ob_get_clean();
                 <img src="<?= $user->present()->picture(); ?>" class="img-circle" alt="User Image">
 
                 <p>
-                  <?= $user->realname; ?> - <?= $user->role->name; ?>
+                  <?= $user->present()->name(); ?> - <?= $user->role->name; ?>
                   <small><?= __d('adminlte', 'Member since {0}', $user->present()->memberSince()); ?></small>
                 </p>
               </li>
@@ -166,9 +166,29 @@ $langMenuLinks = ob_get_clean();
         <ul class="sidebar-menu">
             <li class="header"><?= __d('adminlte', 'ADMINISTRATION'); ?></li>
             <?php foreach ($menuItems as $item) { ?>
-            <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
-                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span> <?= $item['label']; ?></a>
+            <?php $children = array_get($item, 'children', array()); ?>
+            <?php if (! empty($children)) { ?>
+            <?php $paths = array_pluck($children, 'uri'); ?>
+            <li class="treeview<?php if (in_array($currentUri, $paths)) { echo " active"; } ?>">
+                <a href="#">
+                    <i class="fa fa-<?= $item['icon'] ?>"></i> <span></span> <?= $item['title']; ?></span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <?php foreach ($children as $child) { ?>
+                    <li <?php if ($currentUri == $child['uri']) { echo "class='active'"; } ?>>
+                        <a href="<?= site_url($child['uri']); ?>"><i class="fa fa-circle-o"></i> <span><?= $child['title']; ?> </span> <?= $child['label']; ?></a>
+                    </li>
+                    <?php } ?>
+                </ul>
             </li>
+            <?php } else { ?>
+            <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
+                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?> </span> <?= $item['label']; ?></a>
+            </li>
+            <?php } ?>
             <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->

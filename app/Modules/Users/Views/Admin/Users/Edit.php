@@ -1,16 +1,7 @@
 <?php
 
 //
-$opt_username = Input::old('username');
-$opt_realname = Input::old('realname');
-$opt_email    = Input::old('email');
-$opt_role     = Input::old('role');
-
-//
-$opt_username = ! empty($opt_username) ? $opt_username : $user->username;
-$opt_realname = ! empty($opt_realname) ? $opt_realname : $user->realname;
-$opt_email    = ! empty($opt_email)    ? $opt_email    : $user->email;
-$opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
+$opt_role = Input::old('role', $user->role_id);
 
 ?>
 
@@ -42,7 +33,7 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="username"><?= __d('users', 'Username'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="username" id="username" type="text" class="form-control" value="<?= $opt_username; ?>" placeholder="<?= __d('users', 'Username'); ?>">
+                    <input name="username" id="username" type="text" class="form-control" value="<?= Input::old('username',   $user->username); ?>" placeholder="<?= __d('users', 'Username'); ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -56,19 +47,31 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="realname"><?= __d('users', 'Name and Surname'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="first_name"><?= __d('users', 'First Name'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="realname" id="realname" type="text" class="form-control" value="<?= $opt_realname; ?>" placeholder="<?= __d('users', 'Name and Surname'); ?>">
+                    <input name="first_name" id="first_name" type="text" class="form-control" value="<?= Input::old('first_name', $user->first_name); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="password"><?= __d('users', 'Password'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="last_name"><?= __d('users', 'Last Name'); ?> <font color='#CC0000'>*</font></label>
+                <div class="col-sm-8">
+                    <input name="last_name" id="last_name" type="text" class="form-control" value="<?= Input::old('last_name', $user->last_name); ?>" placeholder="<?= __d('users', 'Last Name'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="location"><?= __d('users', 'Location'); ?></label>
+                <div class="col-sm-8">
+                    <input name="location" id="location" type="text" class="form-control" value="<?= Input::old('location', $user->location); ?>" placeholder="<?= __d('users', 'Location'); ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="password"><?= __d('users', 'Password'); ?></label>
                 <div class="col-sm-8">
                     <input name="password" id="password" type="password" class="form-control" value="" placeholder="<?= __d('users', 'Password'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="password_confirmation"><?= __d('users', 'Confirm Password'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="password_confirmation"><?= __d('users', 'Confirm Password'); ?></label>
                 <div class="col-sm-8">
                     <input name="password_confirmation" id="password_confirmation" type="password" class="form-control" value="" placeholder="<?= __d('users', 'Password confirmation'); ?>">
                 </div>
@@ -76,7 +79,7 @@ $opt_role     = ! empty($opt_role)     ? $opt_role     : $user->role_id;
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="email"><?= __d('users', 'E-mail'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="email" id="email" type="text" class="form-control" value="<?= $opt_email; ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
+                    <input name="email" id="email" type="text" class="form-control" value="<?= Input::old('email', $user->email); ?>" placeholder="<?= __d('users', 'E-mail'); ?>">
                 </div>
             </div>
             <div class="form-group">

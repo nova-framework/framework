@@ -18,7 +18,7 @@ class UserPresenter extends Presenter
     {
         return $this->first_name .' ' .$this->last_name;
     }
-    
+
     /**
      * Present a localized date for User's Creation.
      *
@@ -53,7 +53,7 @@ class UserPresenter extends Presenter
      */
     public function picture()
     {
-        if (isset($this->image)) {
+        if ($this->image->exists()) {
             return resource_url('images/users/' .basename($this->image->path));
         }
 

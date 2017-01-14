@@ -6,4 +6,13 @@
  * @version 4.0
  */
 
+use App\Modules\System\Exceptions\ValidationException;
+
+
+App::error(function(ValidationException $exception, $code)
+{
+    $errors = $exception->getErrors();
+
+    return Redirect::back()->withInput()->withErrors($errors);
+});
 

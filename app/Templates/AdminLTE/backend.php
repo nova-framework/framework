@@ -106,6 +106,18 @@ $langMenuLinks = ob_get_clean();
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav" style="margin-right: 10px;">
+          <li <?php if($baseUri == 'admin/messages') echo 'class="active"'; ?>>
+            <a href="<?= site_url('admin/messages'); ?>">
+              <i class='fa fa-envelope'></i>  <span class="hidden-xs"><?= __d('adminlte', 'Messages'); ?></span>
+              <?php if (isset($privateMessageCount) && ($privateMessageCount > 0)) echo '<span class="label label-success">' .$privateMessageCount .'</span>'; ?>
+            </a>
+          </li>
+          <li <?php if($baseUri == 'admin/notifications') echo 'class="active"'; ?>>
+            <a href="<?= site_url('admin/notifications'); ?>" title="<?= __d('adminlte', 'Notifications'); ?>">
+              <i class='fa fa-bell'></i></span>  <span class="hidden-xs"><?= __d('adminlte', 'Notifications'); ?></span>
+              <?php if (isset($notificationCount) && ($notificationCount > 0)) echo '<span class="label label-danger">' .$notificationCount .'</span>'; ?>
+            </a>
+          </li>
           <li class="dropdown language-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class='fa fa-language'></i> <?= $langName; ?>

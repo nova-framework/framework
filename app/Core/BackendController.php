@@ -17,6 +17,9 @@ use Nova\Support\Facades\View;
 
 use App\Core\Controller as BaseController;
 
+use App\Modules\Messages\Models\Message;
+use App\Modules\System\Models\Notification;
+
 
 abstract class BackendController extends BaseController
 {
@@ -69,6 +72,16 @@ abstract class BackendController extends BaseController
             $items = $this->getMenuItems($user);
 
             View::share('menuItems', $items);
+
+            //
+            $notifications = Notification::where('user_id', $user->id)->unread()->count();
+
+            View::share('notificationCount', $notifications);
+
+            //
+            $messages = Message::where('receiver_id', $user->id)->unread()->count();
+
+            View::share('privateMessageCount', $messages);
         }
     }
 

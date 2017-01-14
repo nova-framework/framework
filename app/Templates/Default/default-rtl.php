@@ -32,7 +32,7 @@ echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 Assets::css([
     template_url('css/bootstrap-rtl.min.css', 'Default'),
     template_url('css/bootstrap-rtl-theme.min.css', 'Default'),
-    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
     template_url('css/style-rtl.css', 'Default'),
 ]);
 

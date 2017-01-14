@@ -36,7 +36,7 @@ $langMenuLinks = ob_get_clean();
         // Bootstrap 3.3.5
         vendor_url('bootstrap/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Font Awesome
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style

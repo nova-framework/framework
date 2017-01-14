@@ -32,7 +32,7 @@ echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 Assets::css([
     vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
     vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
-    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
     template_url('css/style.css', 'Default'),
 ]);
 

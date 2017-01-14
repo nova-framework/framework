@@ -62,7 +62,7 @@
 <?php } ?>
     </div>
     <div class="box-footer with-border">
-        <a class='btn btn-success' href='<?= site_url('admin/users/create'); ?>'><?= __d('users', 'Create a new User'); ?></a>
+        <a class='btn btn-success' href='<?= site_url('admin/users/create'); ?>'><i class='fa fa-user-plus'></i> <?= __d('users', 'Create a new User'); ?></a>
     </div>
 </div>
 

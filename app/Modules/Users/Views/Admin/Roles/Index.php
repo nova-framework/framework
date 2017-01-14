@@ -58,7 +58,7 @@
 <?php } ?>
     </div>
     <div class="box-footer with-border">
-        <a class='btn btn-success' href='<?= site_url('admin/roles/create'); ?>'><?= __d('users', 'Create a new Role'); ?></a>
+        <a class='btn btn-success' href='<?= site_url('admin/roles/create'); ?>'><i class='fa fa-plus-square'></i> <?= __d('users', 'Create a new Role'); ?></a>
     </div>
 </div>
 

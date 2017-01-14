@@ -21,6 +21,9 @@ Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controller
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\System\Controllers\Admin'), function()
 {
+    // Notifications
+    Route::get('notifications', array('before' => 'auth', 'uses' => 'Notifications@index'));
+
     // The Site Settings.
     Route::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));
     Route::post('settings', array('before' => 'auth|csrf', 'uses' => 'Settings@store'));

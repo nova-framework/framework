@@ -17,13 +17,14 @@ use Nova\Database\ORM\Model as BaseModel;
 use Shared\Database\ORM\FileField\FileFieldTrait;
 use Shared\View\Presenter\PresentableTrait;
 
-use App\Modules\Messenger\Traits\UseMessengerTrait;
+use App\Modules\Messages\Traits\HasMessagesTrait;
+use App\Modules\System\Traits\HasNotificationsTrait;
 use App\Modules\Users\Traits\HasRoleTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, HasRoleTrait, FileFieldTrait, PresentableTrait, UseMessengerTrait;
+    use UserTrait, RemindableTrait, HasRoleTrait, FileFieldTrait, HasMessagesTrait, HasNotificationsTrait, PresentableTrait;
 
     //
     protected $table = 'users';

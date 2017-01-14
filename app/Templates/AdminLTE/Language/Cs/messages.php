@@ -6,6 +6,8 @@ return array (
   'Forgot Password?' => '',
   'Logout' => '',
   'Member since {0}' => '',
+  'Messages' => '',
+  'Notifications' => '',
   'Profile' => '',
   'Sign In' => '',
   'Sign Up' => '',

@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h1><?= __d('system', 'Messages'); ?></h1>
+    <h1><?= __d('system', 'Send Message'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
         <li><a href='<?= site_url('admin/messages'); ?>'><i class="fa fa-envelope"></i> <?= __d('system', 'Messages'); ?></a></li>

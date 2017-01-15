@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateNotificationsTable extends Migration
+class CreateTableNotifications extends Migration
 {
     /**
      * Run the migrations.

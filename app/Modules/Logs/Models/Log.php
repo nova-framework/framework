@@ -19,7 +19,7 @@ class Log extends Model
         return $this->belongsTo('App\Modules\Logs\Models\LogGroup', 'group_id');
     }
 
-    public function users()
+    public function user()
     {
         return $this->hasOne('App\Modules\Users\User', 'id', 'user_id');
     }

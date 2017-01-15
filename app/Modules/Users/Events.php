@@ -33,12 +33,6 @@ Event::listen('backend.menu', function($user)
                     'label'  => '',
                     'weight' => 1,
                 ),
-                array(
-                    'uri'    => 'admin/roles',
-                    'title'  => __d('users', 'User Roles'),
-                    'label'  => '',
-                    'weight' => 2,
-                ),
             ),
         ),
     );

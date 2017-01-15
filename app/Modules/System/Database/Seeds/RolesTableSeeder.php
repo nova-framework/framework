@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\Users\Database\Seeds;
+namespace App\Modules\System\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
 
-use App\Modules\Users\Models\Role;
+use App\Modules\System\Models\Role;
 
 
 class RolesTableSeeder extends Seeder
@@ -44,7 +44,7 @@ class RolesTableSeeder extends Seeder
             'slug'        => 'company-manager',
             'description' => 'Able to manage the company that the user belongs to, including adding sites, creating new users and assigning licences.',
         ]);
-        
+
         Role::create([
             'id'          => 5,
             'name'        => 'User',

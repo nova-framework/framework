@@ -19,7 +19,7 @@ use Shared\View\Presenter\PresentableTrait;
 
 use App\Modules\Messages\Traits\HasMessagesTrait;
 use App\Modules\System\Traits\HasNotificationsTrait;
-use App\Modules\Users\Traits\HasRoleTrait;
+use App\Modules\System\Traits\HasRoleTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface

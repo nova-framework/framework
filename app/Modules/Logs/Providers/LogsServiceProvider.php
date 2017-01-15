@@ -6,8 +6,8 @@ use Nova\Support\ServiceProvider;
 
 use App\Modules\Logs\Observers\UserActionsObserver;
 
+use App\Modules\System\Models\Role;
 use App\Modules\Users\Models\User;
-use App\Modules\Users\Models\Role;
 
 
 class LogsServiceProvider extends ServiceProvider

@@ -17,11 +17,29 @@ Event::listen('backend.menu', function($user)
 
     $items = array(
         array(
-            'uri'    => 'admin/settings',
             'title'  => __d('system', 'Settings'),
-            'label'  => '',
             'icon'   => 'gears',
             'weight' => 0,
+            'children' => array(
+                array(
+                    'uri'    => 'admin/settings',
+                    'title'  => __d('system', 'Site Configuration'),
+                    'label'  => '',
+                    'weight' => 0,
+                ),
+                array(
+                    'uri'    => 'admin/roles/create',
+                    'title'  => __d('system', 'Create a new Role'),
+                    'label'  => '',
+                    'weight' => 1,
+                ),
+                array(
+                    'uri'    => 'admin/roles',
+                    'title'  => __d('users', 'Roles List'),
+                    'label'  => '',
+                    'weight' => 2,
+                ),
+            ),
         ),
     );
 

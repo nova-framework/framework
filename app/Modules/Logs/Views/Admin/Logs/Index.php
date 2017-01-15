@@ -13,7 +13,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Logs Management'); ?></h3>
+        <h3 class="box-title"><?= __d('logs', 'Logs Management'); ?></h3>
     </div>
     <div class="box-body">
         <a class='btn btn-danger pull-left' href='#' data-toggle='modal' data-target='#confirm_clearing' title='<?= __d('logs', 'Clear the Logs'); ?>' role='button'><i class='fa fa-bomb'></i> <?= __d('logs', 'Clear the Logs'); ?></a>
@@ -89,17 +89,17 @@ $(function(){
             <div class="modal-header">
                 <button aria-label="Close" data-dismiss="modal" class="close" type="button">
                 <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><?= __d('users', 'Clear the Logs?'); ?></h4>
+                <h4 class="modal-title"><?= __d('logs', 'Clear the Logs?'); ?></h4>
             </div>
             <div class="modal-body">
-                <p><?= __d('users', 'Are you sure you want to clear the Logs, the operation being irreversible?'); ?></p>
-                <p><?= __d('users', 'Please click the button <b>Clear the Logs</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
+                <p><?= __d('logs', 'Are you sure you want to clear the Logs, the operation being irreversible?'); ?></p>
+                <p><?= __d('logs', 'Please click the button <b>Clear the Logs</b> to proceed, or <b>Cancel</b> to abandon the operation.'); ?></p>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
+                <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('logs', 'Cancel'); ?></button>
                 <form action="<?= site_url('admin/logs/clear'); ?>" method="POST">
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
-                    <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('users', 'Clear the Logs'); ?>">
+                    <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('logs', 'Clear the Logs'); ?>">
                 </form>
             </div>
         </div>

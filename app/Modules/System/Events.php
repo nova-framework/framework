@@ -28,14 +28,14 @@ Event::listen('backend.menu', function($user)
                     'weight' => 0,
                 ),
                 array(
-                    'uri'    => 'admin/roles/create',
-                    'title'  => __d('system', 'Create a new Role'),
+                    'uri'    => 'admin/roles',
+                    'title'  => __d('users', 'Roles List'),
                     'label'  => '',
                     'weight' => 1,
                 ),
                 array(
-                    'uri'    => 'admin/roles',
-                    'title'  => __d('users', 'Roles List'),
+                    'uri'    => 'admin/roles/create',
+                    'title'  => __d('system', 'Create a new Role'),
                     'label'  => '',
                     'weight' => 2,
                 ),

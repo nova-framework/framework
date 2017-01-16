@@ -22,14 +22,14 @@ Event::listen('backend.menu', function($user)
             'weight' => 1,
             'children' => array(
                 array(
-                    'uri'    => 'admin/users/create',
-                    'title'  => __d('users', 'Create a new User'),
-                    'label'  => '',
-                    'weight' => 1,
-                ),
-                array(
                     'uri'    => 'admin/users',
                     'title'  => __d('users', 'Users List'),
+                    'label'  => '',
+                    'weight' => 0,
+                ),
+                array(
+                    'uri'    => 'admin/users/create',
+                    'title'  => __d('users', 'Create a new User'),
                     'label'  => '',
                     'weight' => 1,
                 ),

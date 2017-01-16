@@ -29,7 +29,7 @@ Event::listen('backend.menu', function($user)
                 ),
                 array(
                     'uri'    => 'admin/roles',
-                    'title'  => __d('users', 'Roles List'),
+                    'title'  => __d('users', 'User Roles'),
                     'label'  => '',
                     'weight' => 1,
                 ),

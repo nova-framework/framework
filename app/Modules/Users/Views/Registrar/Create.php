@@ -5,8 +5,6 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
-
 <div class="row">
     <?php echo Session::getMessages();?>
 
@@ -19,9 +17,6 @@
                 <form action="<?= site_url('register'); ?>" method='POST' role="form">
 
                 <div class="form-group">
-                    <p><input type="text" name="realname" id="realname" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Name and Surname'); ?>"><br><br></p>
-                </div>
-                <div class="form-group">
                     <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Username'); ?>"><br><br></p>
                 </div>
                 <div class="form-group">
@@ -31,7 +26,16 @@
                     <p><input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Password confirmation'); ?>"><br><br></p>
                 </div>
                 <div class="form-group">
+                    <p><input type="text" name="first_name" id="first_name" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'First Name'); ?>"><br><br></p>
+                </div>
+                <div class="form-group">
+                    <p><input type="text" name="last_name" id="last_name" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Last Name'); ?>"><br><br></p>
+                </div>
+                <div class="form-group">
                     <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'E-Mail'); ?>"><br><br></p>
+                </div>
+                <div class="form-group">
+                    <p><input type="text" name="location" id="location" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Location'); ?>"><br><br></p>
                 </div>
                 <hr>
                 <?php if (Config::get('reCaptcha.active') === true) { ?>
@@ -65,7 +69,7 @@
 <script type="text/javascript">
 
 var captchaCallback = function() {
-    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get('reCaptcha.siteKey'); ?>'});
+    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get("reCaptcha.siteKey"); ?>'});
 };
 
 </script>

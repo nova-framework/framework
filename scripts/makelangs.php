@@ -13,6 +13,7 @@ $languages = array(
     'es',
     'fa',
     'fr',
+    'hu',
     'it',
     'ja',
     'nl',

@@ -16,6 +16,7 @@ return array(
     'es' => array('info' => 'Spanish',   'name' => 'Español',    'locale' => 'es_ES', 'dir' => 'ltr'),
     'fa' => array('info' => 'Persian',   'name' => 'پارسی',      'locale' => 'fa_IR', 'dir' => 'rtl'),
     'fr' => array('info' => 'French',    'name' => 'Français',   'locale' => 'fr_FR', 'dir' => 'ltr'),
+    'hu' => array('info' => 'Hungarian', 'name' => 'magyar',     'locale' => 'hu_HU', 'dir' => 'ltr'),
     'it' => array('info' => 'Italian',   'name' => 'italiano',   'locale' => 'it_IT', 'dir' => 'ltr'),
     'ja' => array('info' => 'Japanesse', 'name' => '日本語',      'locale' => 'ja_JA', 'dir' => 'ltr'),
     'nl' => array('info' => 'Dutch',     'name' => 'Nederlands', 'locale' => 'nl_NL', 'dir' => 'ltr'),

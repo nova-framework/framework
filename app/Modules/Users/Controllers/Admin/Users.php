@@ -58,7 +58,7 @@ class Users extends BackendController
             'location'              => 'min:2|max:100|valid_name',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
-            'email'                 => 'required|min:5|max:100|email',
+            'email'                 => 'required|min:5|max:100|email|unique:users,email' .$ignore,
             'image'                 => 'max:1024|mimes:png,jpeg,jpg,gif',
         );
 

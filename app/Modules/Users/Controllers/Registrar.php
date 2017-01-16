@@ -35,10 +35,12 @@ class Registrar extends BackendController
     {
         // Validation rules.
         $rules = array(
-            'realname' => 'required|min:6|valid_name',
-            'username' => 'required|min:6|unique:users',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|confirmed|strong_password'
+            'username'   => 'required|min:6|unique:users',
+            'first_name' => 'required|min:4|max:100|valid_name',
+            'last_name'  => 'required|min:4|max:100|valid_name',
+            'location'   => 'min:2|max:100|valid_name',
+            'email'      => 'required|email|unique:users',
+            'password'   => 'required|confirmed|strong_password'
         );
 
         $messages = array(
@@ -47,16 +49,18 @@ class Registrar extends BackendController
         );
 
         $attributes = array(
-            'username' => __d('users', 'Username'),
-            'realname' => __d('users', 'Name and Surname'),
-            'email'    => __d('users', 'E-mail'),
-            'password' => __d('users', 'Password'),
+            'username'   => __d('users', 'Username'),
+            'first_name' => __d('users', 'First Name'),
+            'last_name'  => __d('users', 'Last Name'),
+            'location'   => __d('users', 'Location'),
+            'email'      => __d('users', 'E-mail'),
+            'password'   => __d('users', 'Password'),
         );
 
         // Add the custom Validation Rule commands.
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });
@@ -93,7 +97,9 @@ class Registrar extends BackendController
     {
         $input = Input::only(
             'username',
-            'realname',
+            'first_name',
+            'last_name',
+            'location',
             'email',
             'password',
             'password_confirmation'
@@ -134,7 +140,9 @@ class Registrar extends BackendController
         // Create the User record.
         $user = User::create(array(
             'username'        => $input['username'],
-            'realname'        => $input['realname'],
+            'first_name'      => $input['first_name'],
+            'last_name'       => $input['last_name'],
+            'location'        => $input['location'],
             'email'           => $email,
             'password'        => $password,
             'activation_code' => $token,
@@ -146,7 +154,7 @@ class Registrar extends BackendController
         {
             $subject = __d('users', 'Activate your Account!');
 
-            $message->to($user->email, $user->realname);
+            $message->to($user->email, $user->present()->name());
 
             $message->subject($subject);
         });

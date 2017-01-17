@@ -66,6 +66,7 @@ return array (
   'Site Skin' => 'پوشته سایت',
   'Slug' => '',
   'Subject' => '',
+  'The :attribute field is not a valid host.' => '',
   'The :attribute field is not a valid name.' => '',
   'The From Field of any outgoing e-mails.' => 'از جانب چه کسی ایمیل ارسال شود.',
   'The Password used to connect to the external SMTP Server.' => 'رمز عبور برای اتصال به سرور خارجی SMTP.',

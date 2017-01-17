@@ -66,6 +66,7 @@ return array (
   'Site Skin' => '',
   'Slug' => '',
   'Subject' => '',
+  'The :attribute field is not a valid host.' => '',
   'The :attribute field is not a valid name.' => '',
   'The From Field of any outgoing e-mails.' => '',
   'The Password used to connect to the external SMTP Server.' => '',

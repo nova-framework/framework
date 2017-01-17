@@ -35,7 +35,16 @@
 
 $(function(){
    $("#group_select").on('change', function() {
-      window .location = "<?= site_url('admin/logs'); ?>/" + this .value;
+      var location = "<?= site_url('admin/logs'); ?>";
+
+      var groupId = this .value;
+
+      if (groupId !== '') {
+        location += '/' + groupId;
+      }
+
+      //
+      window .location = location;
    });
 });
 

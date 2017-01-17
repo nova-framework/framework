@@ -180,6 +180,8 @@
                     $('#direct-chat-button').on('click', function() {
                         var text = $('#direct-chat-message') .val();
 
+                        $('#direct-chat-message').val('');
+
                         // Prepare the message object.
                         var message = {
                             picture: '<?= $authUser->present()->picture(); ?>',

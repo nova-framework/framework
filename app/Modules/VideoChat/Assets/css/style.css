@@ -1,0 +1,28 @@
+/*** Video chat ***/
+video#chat-local-video,
+div#chat-remote-video video {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+#chat-video-panel .thumbnail .caption p {
+    margin-bottom: 0;
+}
+#chat-video-panel .thumbnail video {
+  background-color: #FFF;
+  background-image: url("../images/camera-webrtc.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: block;
+  min-width: 100%;
+  width: 100%;
+}
+
+#chat-video-panel #listFriends a .username {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 180px;
+}

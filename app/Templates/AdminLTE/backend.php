@@ -184,7 +184,7 @@ $langMenuLinks = ob_get_clean();
             <?php $paths = array_pluck($children, 'uri'); ?>
             <li class="treeview<?php if (in_array($currentUri, $paths)) { echo " active"; } ?>">
                 <a href="#">
-                    <i class="fa fa-<?= $item['icon'] ?>"></i> <span></span> <?= $item['title']; ?></span>
+                    <i class="fa fa-<?= $item['icon'] ?>"></i> <span class="hidden-xs"><?= $item['title']; ?></span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -199,7 +199,7 @@ $langMenuLinks = ob_get_clean();
             </li>
             <?php } else { ?>
             <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
-                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?> </span> <?= $item['label']; ?></a>
+                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span class="hidden-xs"><?= $item['title']; ?> </span> <?= $item['label']; ?></a>
             </li>
             <?php } ?>
             <?php } ?>

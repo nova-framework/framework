@@ -43,13 +43,17 @@ class Settings extends BackendController
 
             // The Mailer
             'mailDriver'      => 'required|alpha',
-            'mailHost'        => 'url',
+            'mailHost'        => 'valid_host',
             'mailPort'        => 'numeric',
             'mailFromAddress' => 'required|email',
             'mailFromName'    => 'required|max:100',
             'mailEncryption'  => 'alpha',
             'mailUsername'    => 'max:100',
             'mailPassword'    => 'max:100',
+        );
+
+        $messages = array(
+            'valid_host' => __d('users', 'The :attribute field is not a valid host.'),
         );
 
         $attributes = array(
@@ -68,7 +72,13 @@ class Settings extends BackendController
             'mailPassword'    => __d('system', 'Server Password'),
         );
 
-        return Validator::make($data, $rules, array(), $attributes);
+        // Add the custom Validation Rule commands.
+        Validator::extend('valid_host', function($attribute, $value, $parameters)
+        {
+            return (filter_var($value, FILTER_VALIDATE_URL, ~FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED) !== false);
+        });
+
+        return Validator::make($data, $rules, $messages, $attributes);
     }
 
     public function index()

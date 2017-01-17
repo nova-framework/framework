@@ -85,7 +85,7 @@
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
                 <form id="modal_delete_form" action="" method="POST">
-                    <input type="hidden" name="user_id" id="delete_user_id" value="0" />
+                    <input type="hidden" name="userId" id="delete_user_id" value="0" />
                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     <input type="submit" name="button" class="btn btn btn-danger pull-right col-md-3" value="<?= __d('users', 'Delete'); ?>">
                 </form>

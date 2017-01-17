@@ -18,7 +18,7 @@
                 <h3 class="box-title"><?= __d('system', 'Unread Notifications'); ?></h3>
             </div>
             <div class="box-body <?= ! $notifications->isEmpty() ? 'no-padding' : '' ?>">
-                <?php if (! $notifications->isEmpty()) {?>
+                <?php if (! $notifications->isEmpty()) { ?>
 
                 <table class='table table-striped table-hover responsive'>
                     <tr class="bg-navy disabled">

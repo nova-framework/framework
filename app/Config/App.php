@@ -222,7 +222,7 @@ return array(
     |
     */
 
-    'manifest' => APPDIR .'Boot' .DS .'Cache',
+    'manifest' => APPPATH .'Boot' .DS .'Cache',
 
     /*
     |--------------------------------------------------------------------------

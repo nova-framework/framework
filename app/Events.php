@@ -12,7 +12,7 @@
 Event::listen('router.matched', function($route, $request)
 {
     // Share the Application version.
-    $path = ROOTDIR .'VERSION.txt';
+    $path = BASEPATH .'VERSION.txt';
 
     if (is_readable($path)) {
         $version = file_get_contents($path);

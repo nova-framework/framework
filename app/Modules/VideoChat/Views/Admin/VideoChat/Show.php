@@ -211,21 +211,24 @@
 
                 startVideoChat();
 
-                window.onbeforeunload = function () {
-                    return "<?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";
-                };
+                $('#direct-chat-message').keypress( function(event) {
+                    // Send the text message on pressing Ctrl+Enter.
+                    if(event.ctrlKey && (event.keyCode == '13')) {
+                        $('#direct-chat-button').click();
+                    }
+                });
+
+                $(window).on('beforeunload', function(event) {
+                    var message = "<?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";
+
+                    event.returnValue = message; // Gecko, Trident, Chrome 34+
+
+                    return message;              // Gecko, WebKit, Chrome <34
+                });
             }
         };
 
         $(document).on('ready', function () {
-            $('#direct-chat-message').keypress(function(event) {
-                // Send the text message on pressing Ctrl+Enter.
-                if(event.ctrlKey && (event.keyCode == '13')) {
-                    $('#direct-chat-button').click();
-                }
-            });
-
-            // Init the VideoChat instance.
             VideoChat.init();
         });
     })();

@@ -180,6 +180,8 @@
                     $('#direct-chat-button').on('click', function() {
                         var text = $('#direct-chat-message') .val();
 
+                        if (text === '') return;
+
                         $('#direct-chat-message').val('');
 
                         // Prepare the message object.
@@ -216,6 +218,14 @@
         };
 
         $(document).on('ready', function () {
+            $('#direct-chat-message').keypress(function(event) {
+                // Send the text message on pressing Ctrl+Enter.
+                if(event.ctrlKey && (event.keyCode == '13')) {
+                    $('#direct-chat-button').click();
+                }
+            });
+
+            // Init the VideoChat instance.
             VideoChat.init();
         });
     })();

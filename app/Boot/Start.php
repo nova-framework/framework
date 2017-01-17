@@ -48,13 +48,13 @@ Patchwork\Utf8\Bootup::initMbstring();
 // Set The System Path
 //--------------------------------------------------------------------------
 
-define('SYSTEMDIR', ROOTDIR .str_replace('/', DS, 'vendor/nova-framework/system/'));
+define('SYSPATH', BASEPATH .str_replace('/', DS, 'vendor/nova-framework/system/'));
 
 //--------------------------------------------------------------------------
 // Set The Storage Path
 //--------------------------------------------------------------------------
 
-define('STORAGE_PATH', APPDIR .'Storage' .DS);
+define('STORAGE_PATH', APPPATH .'Storage' .DS);
 
 //--------------------------------------------------------------------------
 // Set The Framework Version
@@ -66,7 +66,7 @@ define('VERSION', Application::VERSION);
 // Load The Global Configuration
 //--------------------------------------------------------------------------
 
-$path = APPDIR .'Config.php';
+$path = APPPATH .'Config.php';
 
 if (is_readable($path)) require $path;
 
@@ -89,9 +89,9 @@ $env = $app->detectEnvironment(array(
 //--------------------------------------------------------------------------
 
 $app->bindInstallPaths(array(
-    'base'    => ROOTDIR,
-    'app'     => APPDIR,
-    'public'  => PUBLICDIR,
+    'base'    => BASEPATH,
+    'app'     => APPPATH,
+    'public'  => WEBPATH,
     'storage' => STORAGE_PATH,
 ));
 

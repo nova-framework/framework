@@ -37,8 +37,8 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public $files = array(
         'image' => array(
-            'path'        => ROOTDIR .'assets/images/users/:unique_id-:file_name',
-            'defaultPath' => ROOTDIR .'assets/images/users/no-image.png',
+            'path'        => BASEPATH .'assets/images/users/:unique_id-:file_name',
+            'defaultPath' => BASEPATH .'assets/images/users/no-image.png',
         ),
     );
 

@@ -79,7 +79,7 @@ class Files extends BackendController
     public function preview($path)
     {
         // Calculate the Preview file path.
-        $path = str_replace('/', DS, ROOTDIR .ltrim($path, '/'));
+        $path = str_replace('/', DS, BASEPATH .ltrim($path, '/'));
 
         return $this->serveFile($path);
     }
@@ -87,7 +87,7 @@ class Files extends BackendController
     public function thumbnails($thumbnail)
     {
         // Calculate the thumbnail file path.
-        $path = str_replace('/', DS, APPDIR .'Storage/Files/thumbnails/' .$thumbnail);
+        $path = str_replace('/', DS, APPPATH .'Storage/Files/thumbnails/' .$thumbnail);
 
         return $this->serveFile($path);
     }

@@ -11,7 +11,7 @@
 
 <?= Session::getMessages(); ?>
 
-<form name='myForm' class="form-horizontal" action="<?= site_url('admin/settings'); ?>" method="POST">
+<form class="form-horizontal" action="<?= site_url('admin/settings'); ?>" method="POST">
 
 <div class="box box-default">
     <div class="box-header with-border">

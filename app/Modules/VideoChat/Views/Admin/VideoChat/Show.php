@@ -197,6 +197,13 @@
                         // Show the message locally.
                         displayMessage(message, 'offline');
                     });
+
+                    $('#direct-chat-message').keypress( function(event) {
+                        if (event.ctrlKey && (event.keyCode == '13')) {
+                            // Send the text message on pressing Ctrl+Enter.
+                            $('#direct-chat-button').click();
+                        }
+                    });
                 };
 
                 if (! isCompatible) {
@@ -210,13 +217,6 @@
                 //$('#messages').remove();
 
                 startVideoChat();
-
-                $('#direct-chat-message').keypress( function(event) {
-                    // Send the text message on pressing Ctrl+Enter.
-                    if(event.ctrlKey && (event.keyCode == '13')) {
-                        $('#direct-chat-button').click();
-                    }
-                });
 
                 $(window).on('beforeunload', function(event) {
                     var message = "<?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";

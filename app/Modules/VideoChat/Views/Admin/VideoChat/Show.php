@@ -151,7 +151,7 @@
                         // Only handle messages from your dataChannel
                         if (label !== 'simplewebrtc') return;
                         else if (data.type == 'message') {
-                            displayMessage(data.payload, 'online');
+                            displayChatMessage(data.payload, 'online');
 
                             console.log('Received message: ' + data.payload + ' from ' + peer.id);
                         }
@@ -159,9 +159,9 @@
 
                     // The Direct Chat.
                     $('#direct-chat-button').on('click', function () {
-                        var text = $('#direct-chat-message') .val();
+                        var input = $('#direct-chat-message') .val();
 
-                        if (text === '') return;
+                        if (input === '') return;
 
                         $('#direct-chat-message').val('');
 
@@ -169,34 +169,29 @@
                         var message = {
                             picture: '<?= $authUser->present()->picture(); ?>',
                             userName: '<?= $authUser->present()->name(); ?>',
-                            message: text
+                            message: emojione .toShort(input)
                         };
 
                         // Send the message via Data Channel.
                         webRTC.sendDirectlyToAll('simplewebrtc', 'message', message);
 
                         // Show the message locally.
-                        displayMessage(message, 'offline');
-                    });
-
-                    $('#direct-chat-message').keypress( function (event) {
-                        if (event.ctrlKey && (event.keyCode == '13')) {
-                            // Send the text message on pressing Ctrl+Enter.
-                            $('#direct-chat-button').click();
-                        }
+                        displayChatMessage(message, 'offline');
                     });
                 };
 
-                var displayMessage = function (message, type) {
+                var displayChatMessage = function (message, type) {
                     var now = new Date(Date.now());
 
-                    var time = now.getHours() + ":" + ((now.getMinutes() < 10) ? '0' : '') + now.getMinutes() + ":" + ((now.getSeconds() < 10) ? '0' : '') + now.getSeconds();
+                    var receivedAt = now.getHours() +
+                        ":" + ((now.getMinutes() < 10) ? '0' : '') + now.getMinutes() +
+                        ":" + ((now.getSeconds() < 10) ? '0' : '') + now.getSeconds();
 
                     var html = '<div class="item">' +
                                '  <img src="' + message.picture + '" alt="user image" class="' + type + '">' +
                                '  <p class="message">' +
                                '    <a href="#" class="name">' +
-                               '      <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + time + '</small>' +
+                               '      <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + receivedAt + '</small>' +
                                message.userName +
                                '    </a>' +
                                emojione.toImage(message.message) +
@@ -237,6 +232,14 @@
 
         $(document).on('ready', function () {
             emojione.ascii = true;
+
+            // Send the text input on Direct Chat, when is pressed Ctrl+Enter.
+            $('#direct-chat-message').keypress( function (event) {
+                if (event.ctrlKey && (event.keyCode == '13')) {
+                    // Send the text message on pressing Ctrl+Enter.
+                    $('#direct-chat-button').click();
+                }
+            });
 
             // Init the VideoChat.
             VideoChat.init();

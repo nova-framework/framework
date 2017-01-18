@@ -33,15 +33,15 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <!-- Conversations are loaded here -->
-                    <div class="chat direct-chat-messages"></div>
+                    <div class="chat direct-chat-messages" id="chat-box"></div>
                     <!--/.direct-chat-messages-->
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
                     <div class="input-group">
-                        <input name="message" id="direct-chat-message" placeholder="<?= __d('video_chat', 'Type Message ...'); ?>" class="form-control" type="text">
+                        <input name="message" id="direct-chat-message" disabled="disabled" placeholder="<?= __d('video_chat', 'Type Message ...'); ?>" class="form-control" type="text">
                         <span class="input-group-btn">
-                            <button id="direct-chat-button" type="button" class="btn btn-warning btn-flat"><?= __d('video_chat', 'Send'); ?></button>
+                            <button id="direct-chat-button" disabled="disabled" type="button" class="btn btn-warning btn-flat"><?= __d('video_chat', 'Send'); ?></button>
                         </span>
                     </div>
                 </div>
@@ -69,10 +69,10 @@
 
                 var startVideoChat = function () {
                     var webRTC = new SimpleWebRTC({
-                        // The used Signaling Server.
+                        // The Signaling Server used by SimpleWebRTC.
                         url: "<?= Config::get('videoChat.url', 'https://sandbox.simplewebrtc.com:443/'); ?>",
 
-                        // The Media configuration.
+                        // The local and remote Media configuration.
                         localVideoEl: 'chat-local-video',
                         remoteVideosEl: '',
                         autoRequestMedia: true
@@ -86,6 +86,10 @@
                         $(video).addClass('skip');
 
                         $('#chat-remote-video').html(video);
+
+                        // Enable the Direct Chat input.
+                        $('#direct-chat-message').removeAttr('disabled');
+                        $('#direct-chat-button').removeAttr('disabled');
 
                         if (peer && peer.pc) {
                             peer.pc.on('iceConnectionStateChange', function () {
@@ -129,6 +133,10 @@
 
                     webRTC.on('videoRemoved', function (video, peer) {
                         video.src = '';
+
+                        // Disable the Direct Chat input.
+                        $('#direct-chat-message').attr('disabled', 'disabled');
+                        $('#direct-chat-button').attr('disabled', 'disabled');
                     });
 
                     webRTC.on('iceFailed', function (peer) {
@@ -150,10 +158,8 @@
                     webRTC.on('channelMessage', function (peer, label, data) {
                         // Only handle messages from your dataChannel
                         if (label !== 'simplewebrtc') return;
-                        else if (data.type == 'message') {
+                        else if (data.type === 'chatMessage') {
                             displayChatMessage(data.payload, 'online');
-
-                            console.log('Received message: ' + data.payload + ' from ' + peer.id);
                         }
                     });
 
@@ -169,11 +175,11 @@
                         var message = {
                             picture: '<?= $authUser->present()->picture(); ?>',
                             userName: '<?= $authUser->present()->name(); ?>',
-                            message: emojione .toShort(input)
+                            message: emojione.toShort(input)
                         };
 
-                        // Send the message via Data Channel.
-                        webRTC.sendDirectlyToAll('simplewebrtc', 'message', message);
+                        // Send the message directly via default Data Channel.
+                        webRTC.sendDirectlyToAll('simplewebrtc', 'chatMessage', message);
 
                         // Show the message locally.
                         displayChatMessage(message, 'offline');
@@ -190,8 +196,8 @@
                     var html = '<div class="item">' +
                                '  <img src="' + message.picture + '" alt="user image" class="' + type + '">' +
                                '  <p class="message">' +
-                               '    <a href="#" class="name">' +
-                               '      <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + receivedAt + '</small>' +
+                               '    <a href="javascript::void();" class="name">' +
+                               '      <small class="text-muted pull-right" style="padding-right: 5px;"><i class="fa fa-clock-o"></i> ' + receivedAt + '</small>' +
                                message.userName +
                                '    </a>' +
                                emojione.toImage(message.message) +
@@ -202,10 +208,13 @@
                     $('.direct-chat-messages').append(html);
 
                     // Scroll to bottom, to always display the last message.
-                    var scrollHeight = $('.direct-chat-messages')[0] .scrollHeight;
+                    var scrollTo = $('#chat-box').prop('scrollHeight') + 'px';
 
-                    //$(".direct-chat-messages").animate({ scrollTop: scrollHeight }, 1000);
-                    $('.direct-chat-messages').scrollTop(scrollHeight);
+                    $('#chat-box').slimScroll({
+                        scrollTo: scrollTo,
+                        railVisible: true,
+                        alwaysVisible: true
+                    });
                 };
 
                 if (! isCompatible) {
@@ -239,6 +248,14 @@
                     // Send the text message on pressing Ctrl+Enter.
                     $('#direct-chat-button').click();
                 }
+            });
+
+            // Setup the SLIMSCROLL for the Direct Chat widget.
+            $('#chat-box').slimScroll({
+                height: '250px'
+                //start: 'bottom',
+                //railVisible: true,
+                //alwaysVisible: true
             });
 
             // Init the VideoChat.

@@ -65,31 +65,6 @@
                     });
                 };
 
-                var displayMessage = function (message, type) {
-                    var now = new Date(Date.now());
-
-                    var time = now.getHours() + (now.getMinutes() < 10 ? '0' : '') + ":" + now.getMinutes() + ":" + (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
-
-                    var html = '<div class="item">' +
-                               '  <img src="' + message.picture + '" alt="user image" class="' + type + '">' +
-                               '  <p class="message">' +
-                               '    <a href="#" class="name">' +
-                               '      <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + time + '</small>' +
-                               message.userName +
-                               '    </a>' +
-                               message.message +
-                               '  </p>' +
-                               '</div>';
-
-                    $('.direct-chat-messages').append(html);
-
-                    // Scroll to bottom to always display the last message.
-                    var scrollHeight = $('.direct-chat-messages')[0] .scrollHeight;
-
-                    //$(".direct-chat-messages").animate({ scrollTop: scrollHeight }, 1000);
-                    $('.direct-chat-messages').scrollTop(scrollHeight);
-                };
-
                 var startVideoChat = function () {
                     var webRTC = new SimpleWebRTC({
                         localVideoEl: 'chat-local-video',
@@ -177,7 +152,7 @@
                     });
 
                     // The Direct Chat.
-                    $('#direct-chat-button').on('click', function() {
+                    $('#direct-chat-button').on('click', function () {
                         var text = $('#direct-chat-message') .val();
 
                         if (text === '') return;
@@ -198,12 +173,38 @@
                         displayMessage(message, 'offline');
                     });
 
-                    $('#direct-chat-message').keypress( function(event) {
+                    $('#direct-chat-message').keypress( function (event) {
                         if (event.ctrlKey && (event.keyCode == '13')) {
                             // Send the text message on pressing Ctrl+Enter.
                             $('#direct-chat-button').click();
                         }
                     });
+                };
+
+                var displayMessage = function (message, type) {
+                    var now = new Date(Date.now());
+
+                    var time = now.getHours() + ":" + ((now.getMinutes() < 10) ? '0' : '') + now.getMinutes() + ":" + ((now.getSeconds() < 10) ? '0' : '') + now.getSeconds();
+
+                    var html = '<div class="item">' +
+                               '  <img src="' + message.picture + '" alt="user image" class="' + type + '">' +
+                               '  <p class="message">' +
+                               '    <a href="#" class="name">' +
+                               '      <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + time + '</small>' +
+                               message.userName +
+                               '    </a>' +
+                               message.message +
+                               '  </p>' +
+                               '</div>';
+
+                    // Append the message's HTML to Chat messages.
+                    $('.direct-chat-messages').append(html);
+
+                    // Scroll to bottom, to always display the last message.
+                    var scrollHeight = $('.direct-chat-messages')[0] .scrollHeight;
+
+                    //$(".direct-chat-messages").animate({ scrollTop: scrollHeight }, 1000);
+                    $('.direct-chat-messages').scrollTop(scrollHeight);
                 };
 
                 if (! isCompatible) {
@@ -218,7 +219,7 @@
 
                 startVideoChat();
 
-                $(window).on('beforeunload', function(event) {
+                $(window).on('beforeunload', function (event) {
                     var message = "<?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";
 
                     event.returnValue = message; // Gecko, Trident, Chrome 34+

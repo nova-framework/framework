@@ -67,6 +67,10 @@
 
                 var startVideoChat = function () {
                     var webRTC = new SimpleWebRTC({
+                        // The used Signaling Server.
+                        url: "<?= Config::get('videoChat.url', 'https://sandbox.simplewebrtc.com:443/'); ?>",
+
+                        // The Media configuration.
                         localVideoEl: 'chat-local-video',
                         remoteVideosEl: '',
                         autoRequestMedia: true

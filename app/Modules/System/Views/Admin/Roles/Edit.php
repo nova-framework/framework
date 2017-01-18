@@ -13,11 +13,11 @@ $opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
 ?>
 
 <section class="content-header">
-    <h1><?= __d('users', 'Edit Role'); ?></h1>
+    <h1><?= __d('system', 'Edit Role'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
-        <li><a href='<?= site_url('admin/roles'); ?>'><?= __d('users', 'Roles'); ?></a></li>
-        <li><?= __d('users', 'Edit Role'); ?></li>
+        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('admin/roles'); ?>'><?= __d('system', 'Roles'); ?></a></li>
+        <li><?= __d('system', 'Edit Role'); ?></li>
     </ol>
 </section>
 
@@ -28,7 +28,7 @@ $opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Edit the Role <b>{0}</b>', $role->name); ?></h3>
+        <h3 class="box-title"><?= __d('system', 'Edit the Role <b>{0}</b>', $role->name); ?></h3>
     </div>
     <div class="box-body">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
@@ -38,30 +38,30 @@ $opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
             <form action="<?= site_url('admin/roles/' .$role->id); ?>" class="form-horizontal" method='POST' role="form">
 
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('users', 'Name'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="name"><?= __d('system', 'Name'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="name" id="name" type="text" class="form-control" value="<?= $opt_name; ?>" placeholder="<?= __d('users', 'Name'); ?>">
+                    <input name="name" id="name" type="text" class="form-control" value="<?= $opt_name; ?>" placeholder="<?= __d('system', 'Name'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="slug"><?= __d('users', 'Slug'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="slug"><?= __d('system', 'Slug'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="slug" id="slug" type="text" class="form-control" value="<?= $opt_slug; ?>" placeholder="<?= __d('users', 'Slug'); ?>">
+                    <input name="slug" id="slug" type="text" class="form-control" value="<?= $opt_slug; ?>" placeholder="<?= __d('system', 'Slug'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="description"><?= __d('users', 'Description'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="description"><?= __d('system', 'Description'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="description" id="description" type="text" class="form-control" value="<?= $opt_desc; ?>" placeholder="<?= __d('users', 'Description'); ?>">
+                    <input name="description" id="description" type="text" class="form-control" value="<?= $opt_desc; ?>" placeholder="<?= __d('system', 'Description'); ?>">
                 </div>
             </div>
             <div class="clearfix"></div>
             <br>
-            <font color='#CC0000'>*</font><?= __d('users', 'Required field'); ?>
+            <font color='#CC0000'>*</font><?= __d('system', 'Required field'); ?>
             <hr>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('users', 'Save'); ?>">
+                    <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('system', 'Save'); ?>">
                 </div>
             </div>
 
@@ -73,6 +73,6 @@ $opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
     </div>
 </div>
 
-<a class='btn btn-primary' href='<?= site_url('admin/roles'); ?>'><?= __d('users', '<< Previous Page'); ?></a>
+<a class='btn btn-primary' href='<?= site_url('admin/roles'); ?>'><?= __d('system', '<< Previous Page'); ?></a>
 
 </section>

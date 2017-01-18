@@ -114,6 +114,7 @@ class VideoChat extends BackendController
             'https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js',
             resource_url('js/simplewebrtc-latest.js', 'VideoChat'),
+            vendor_url('plugins/slimScroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
         ));
 
         //

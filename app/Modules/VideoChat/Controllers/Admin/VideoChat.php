@@ -106,11 +106,13 @@ class VideoChat extends BackendController
 
         // Additional assets required on the current View.
         $css = Assets::fetch('css', array(
+            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/css/emojione.min.css',
             resource_url('css/style.css', 'VideoChat'),
         ));
 
         $js = Assets::fetch('js', array(
             'https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js',
             resource_url('js/simplewebrtc-latest.js', 'VideoChat'),
         ));
 

@@ -52,6 +52,8 @@
     </div>
 </div>
 
+
+
 <script>
     (function () {
         var VideoChat = {
@@ -197,7 +199,7 @@
                                '      <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ' + time + '</small>' +
                                message.userName +
                                '    </a>' +
-                               message.message +
+                               emojione.toImage(message.message) +
                                '  </p>' +
                                '</div>';
 
@@ -234,6 +236,9 @@
         };
 
         $(document).on('ready', function () {
+            emojione.ascii = true;
+
+            // Init the VideoChat.
             VideoChat.init();
         });
     })();

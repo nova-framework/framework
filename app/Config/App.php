@@ -290,6 +290,7 @@ return array(
         'HTML'          => 'Nova\Support\Facades\HTML',
         'Layout'        => 'Nova\Support\Facades\Layout',
         'View'          => 'Nova\Support\Facades\View',
+        'Template'      => 'Nova\Support\Facades\Template',
         'Module'        => 'Nova\Support\Facades\Module',
         'Cron'          => 'Nova\Support\Facades\Cron',
     ),

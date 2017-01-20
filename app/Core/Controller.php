@@ -14,6 +14,7 @@ use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\View as ViewFactory;
 use Nova\View\Layout;
+use Nova\View\View;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -145,7 +146,7 @@ abstract class Controller extends BaseController
         if ($layout instanceof View) {
             return $layout->with($data);
         } else if (is_string($layout)) {
-            return LayoutFactory::make($layout, $data, $this->template);
+            return ViewFactory::makeLayout($layout, $data, $this->template);
         }
 
         throw new BadMethodCallException('Method not available for the current Layout');

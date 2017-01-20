@@ -204,7 +204,6 @@ return array(
         'Nova\Validation\ValidationServiceProvider',
         'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
-        'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
 
         // The Service Providers from the Shared namespace.
@@ -288,7 +287,6 @@ return array(
         'URL'           => 'Nova\Support\Facades\URL',
         'Form'          => 'Nova\Support\Facades\Form',
         'HTML'          => 'Nova\Support\Facades\HTML',
-        'Layout'        => 'Nova\Support\Facades\Layout',
         'View'          => 'Nova\Support\Facades\View',
         'Template'      => 'Nova\Support\Facades\Template',
         'Module'        => 'Nova\Support\Facades\Module',

@@ -62,7 +62,7 @@ abstract class Controller extends BaseController
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
 
-            if (is_string($this->layout) && ! empty($this->layout) && (! $response instanceof Layout)) {
+            if ((! $response instanceof Layout) && is_string($this->layout) && ! empty($this->layout)) {
                 $response = ViewFactory::makeLayout($this->layout, array(), $this->template)
                     ->with('content', $response);
             }
@@ -72,7 +72,7 @@ abstract class Controller extends BaseController
         }
 
         // If the response is not a instance of Symfony Response, create a proper one.
-        if (! $response instanceof SymfonyResponse) {
+        else if (! $response instanceof SymfonyResponse) {
             $response = new Response($response);
         }
 
@@ -132,21 +132,18 @@ abstract class Controller extends BaseController
     /**
      * Return a Layout instance.
      *
-     * @param string|null $layout
      * @param array $data
      *
-     * @return \Template\Template|\View\View
+     * @return \Nova\View\Layout
+     *
      * @throws \BadMethodCallException
      */
-    public function getLayout($layout = null, array $data = array())
+    public function getLayout(array $data = array())
     {
-        // Adjust the current used Layout.
-        $layout = $layout ?: $this->layout;
-
-        if ($layout instanceof View) {
-            return $layout->with($data);
-        } else if (is_string($layout)) {
-            return ViewFactory::makeLayout($layout, $data, $this->template);
+        if ($this->layout instanceof View) {
+            return $this->layout->with($data);
+        } else if (is_string($this->layout) && ! empty($this->layout)) {
+            return ViewFactory::makeLayout($this->layout, $data, $this->template);
         }
 
         throw new BadMethodCallException('Method not available for the current Layout');
@@ -156,14 +153,18 @@ abstract class Controller extends BaseController
      * Return the current Layout (class) name.
      *
      * @return string
+     *
+     * @throws \BadMethodCallException
      */
     public function getLayoutName()
     {
         if ($this->layout instanceof View) {
-            return class_name($this->layout);
+            return $this->layout->getName();
         } else if (is_string($this->layout)) {
             return $this->layout;
         }
+
+        throw new BadMethodCallException('Method not available for the current Layout');
     }
 
 }

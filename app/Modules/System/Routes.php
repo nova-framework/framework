@@ -12,7 +12,8 @@
 Route::group(array('prefix' => '', 'namespace' => 'App\Modules\System\Controllers'), function()
 {
     // The Framework's Language Changer.
-    Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@change'));
+    Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@update'))
+        ->where('code', '([a-z]{2})');
 
     // The CRON runner.
     Route::get('cron/{token}', array('uses' => 'CronRunner@index'));

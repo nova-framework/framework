@@ -14,14 +14,14 @@ class Language extends Controller
 {
 
     /**
-     * Change the Framework Language.
+     * Update the Framework's used Language.
      */
-    public function change($language)
+    public function update($language)
     {
         $languages = Config::get('languages');
 
         // Only set language if it's in the Languages array
-        if (preg_match ('/[a-z]/', $language) && in_array($language, array_keys($languages))) {
+        if (in_array($language, array_keys($languages))) {
             Session::set('language', $language);
 
             // Store the current Language in a Cookie lasting five years.

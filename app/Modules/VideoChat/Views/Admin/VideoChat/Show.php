@@ -244,7 +244,11 @@
 
             // Send the text input on Direct Chat, when is pressed Ctrl+Enter.
             $('#direct-chat-message').keypress( function (event) {
-                if (event.ctrlKey && (event.keyCode == '13')) {
+                var keyCode = (event.keyCode ? event.keyCode : event.which);
+
+                if (event.ctrlKey && (keyCode == '13')) {
+                    event.preventDefault();
+
                     // Send the text message on pressing Ctrl+Enter.
                     $('#direct-chat-button').click();
                 }

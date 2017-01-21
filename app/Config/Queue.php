@@ -38,6 +38,12 @@ return array(
         'sync' => array(
             'driver' => 'sync',
         ),
+        'database' => array(
+            'driver' => 'database',
+            'table'  => 'jobs',
+            'queue'  => 'default',
+            'expire' => 60,
+        ),
         'beanstalkd' => array(
             'driver' => 'beanstalkd',
             'host'   => 'localhost',

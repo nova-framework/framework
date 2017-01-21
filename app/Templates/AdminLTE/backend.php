@@ -12,7 +12,7 @@ $langName = Language::name();
 
 $languages = Config::get('languages');
 
-if (isset($user->image)) {
+if (isset($user->image) && $user->image->exists()) {
     $imageUrl = resource_url('images/users/' .basename($user->image->path));
 } else {
     $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');

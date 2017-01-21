@@ -5,7 +5,7 @@
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0
  */
- 
+
 return array(
 
    /*
@@ -21,16 +21,22 @@ return array(
     */
 
     'mailgun' => array(
-	'domain' => '',
-	'secret' => '',
+        'domain' => '',
+        'secret' => '',
     ),
 
     'mandrill' => array(
-	'secret' => '',
+        'secret' => '',
+    ),
+
+    'ses' => array(
+        'key' => '',
+        'secret' => '',
+        'region' => 'us-east-1',
     ),
 
     'stripe' => array(
-	'model'  => 'User',
-	'secret' => '',
+        'model'  => 'User',
+        'secret' => '',
     ),
 );

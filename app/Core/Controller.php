@@ -63,8 +63,7 @@ abstract class Controller extends BaseController
             // we will assume we want to render it using the Controller's templated environment.
 
             if ((! $response instanceof Layout) && is_string($this->layout) && ! empty($this->layout)) {
-                $response = ViewFactory::makeLayout($this->layout, array(), $this->template)
-                    ->with('content', $response);
+                $response = ViewFactory::makeLayout($this->layout, $this->template)->with('content', $response);
             }
 
             // Create a proper Response instance.
@@ -143,7 +142,7 @@ abstract class Controller extends BaseController
         if ($this->layout instanceof View) {
             return $this->layout->with($data);
         } else if (is_string($this->layout) && ! empty($this->layout)) {
-            return ViewFactory::makeLayout($this->layout, $data, $this->template);
+            return ViewFactory::makeLayout($this->layout, $this->template)->with($data);
         }
 
         throw new BadMethodCallException('Method not available for the current Layout');

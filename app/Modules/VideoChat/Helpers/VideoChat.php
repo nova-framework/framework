@@ -55,12 +55,12 @@ class VideoChat
         $fromUser = User::find($fromUserId);
         $toUser   = User::find($toUserId);
 
-        $chatName = __d('video_chat', 'Video chat between {0} and {1}', $fromUser->first_name, $toUser->first_name);
+        $roomName = __d('video_chat', 'Video chat between {0} and {1}', $fromUser->first_name, $toUser->first_name);
 
         return DB::table('chat_video')->insert(array(
             'sender_id'   => intval($fromUserId),
             'receiver_id' => intval($toUserId),
-            'room_name'   => $chatName,
+            'room_name'   => $roomName,
             'created_at'  => Carbon::now()->toDateTimeString()
         ));
     }

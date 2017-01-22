@@ -70,7 +70,7 @@
                 var startVideoChat = function () {
                     var webRTC = new SimpleWebRTC({
                         // The Signaling Server used by SimpleWebRTC.
-                        url: "<?= Config::get('videoChat.url', 'https://sandbox.simplewebrtc.com:443/'); ?>",
+                        url: "<?= $url; ?>",
 
                         // The local and remote Media configuration.
                         localVideoEl: 'chat-local-video',

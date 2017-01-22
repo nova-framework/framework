@@ -6,6 +6,7 @@ use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Assets;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
@@ -58,19 +59,16 @@ class VideoChat extends BackendController
             return Redirect::to('admin/dashboard')->withStatus($status, 'danger');
         }
 
-        // Check if the current User is associated on this chat room.
-        $isSender   = ($chatVideo->sender_id   === $authUser->id);
-        $isReceiver = ($chatVideo->receiver_id === $authUser->id);
-
-        // Calculate the other user ID, while checking if the current user belongs to this room.
-        if ($isSender) {
+        // Check if the current User is associated on this chat room and calculate the other User ID.
+        if ($chatVideo->sender_id === $authUser->id) {
             $chatUserId = $chatVideo->receiver_id;
-        } elseif ($isReceiver) {
+        } else if ($chatVideo->receiver_id === $authUser->id) {
             $chatUserId = $chatVideo->sender_id;
         } else {
-            $message = __d('video_chat', 'Trying to access a Chat Room where you do not belong.');
+            // The current User does not belong to this chat room.
+            $status = __d('video_chat', 'Trying to access a Chat Room where you do not belong.');
 
-            return Redirect::to('admin/dashboard');
+            return Redirect::to('admin/dashboard')->withStatus($status, 'danger');
         }
 
         try {
@@ -99,7 +97,10 @@ class VideoChat extends BackendController
             ->regarding($chatVideo)
             ->deliver();
 
-        // Calculate the Chat Room name, using a SHA256 string, resulting like:
+        // Retrieve the Signaling Server from configuration.
+        $url = Config::get('videoChat.url', 'https://sandbox.simplewebrtc.com:443/');
+
+        // Calculate the Chat Room name, using a SHA256 string, resulting something like:
         // f07b631f7a601cd8cbd3332d54f43142c7088a83299f859356f08d1d4d4259b3
         //
         $roomName = hash('sha256', site_url(sprintf('chat/video/%06d', $chatVideo->id)));
@@ -124,6 +125,7 @@ class VideoChat extends BackendController
             ->shares('title', $title)
             ->shares('css', $css)
             ->shares('js', $js)
+            ->with('url', $url)
             ->with('roomName', $roomName)
             ->with('authUser', $authUser)
             ->with('chatUser', $chatUser);
@@ -160,7 +162,7 @@ class VideoChat extends BackendController
             $createdRoom = ChatHelper::createRoom($authUser->id, $chatUser->id);
 
             if ($createdRoom === false) {
-                $message = __d('video_chat', 'Chatroom could not be created');
+                $status = __d('video_chat', 'Chatroom could not be created');
 
                 return Redirect::to('admin/dashboard')->withStatus($status, 'danger');
             }

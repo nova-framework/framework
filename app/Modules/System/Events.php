@@ -17,8 +17,8 @@ Event::listen('backend.menu', function($user)
 
     $items = array(
         array(
-            'title'  => __d('system', 'Settings'),
-            'icon'   => 'gears',
+            'title'  => __d('system', 'Platform'),
+            'icon'   => 'cube',
             'weight' => 0,
             'children' => array(
                 array(

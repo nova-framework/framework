@@ -1,4 +1,3 @@
-<?php
 
 return array (
   '<< Previous Page' => '<< Sidste side',

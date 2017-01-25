@@ -1,39 +1,28 @@
+<section class="content-header" style="margin: 0 15px; padding-bottom: 15px; border-bottom: 1px solid #FFF;">
+    <h1><?= __d('video_chat', 'Chat'); ?></h1>
+    <ol class="breadcrumb">
+        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('video_chat', 'Dashboard'); ?></a></li>
+        <li><?= __d('messages', 'Chat'); ?></li>
+    </ol>
+</section>
+
 <!-- Main content -->
 <section class="content">
 
 <?= Session::getMessages(); ?>
 
 <div id="chat-video-panel">
-    <div class="alert alert-warning alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h4><i class="icon fa fa-warning"></i> <?= __d('video_chat', 'Warning'); ?></h4>
-        <p><?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?></p>
-    </div>
     <div class="row">
-        <div class="col-md-8 col-sm-7">
-            <div class="thumbnail video-chat-user">
-                <div id="chat-remote-video"></div>
-                <div class="caption">
-                    <p class="text-muted text-center"><?= __d('video_chat', 'Chat with <b>{0}</b>', $chatUser->present()->name()); ?></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-5">
-            <div class="thumbnail">
-                <div id="chat-local-video"></div>
-                <div class="caption">
-                    <p class="text-muted text-center"><?= $authUser->present()->name(); ?></p>
-                </div>
-            </div>
+        <div class="col-md-9 col-sm-8">
             <!-- Direct Chat -->
-            <div class="box box-warning direct-chat direct-chat-warning">
+            <div class="box box-default direct-chat direct-chat-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><?= __d('video_chat', 'Direct Chat'); ?></h3>
+                    <h3 class="box-title"><?= __d('video_chat', 'Public Chat'); ?></h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <!-- Conversations are loaded here -->
-                    <div class="chat direct-chat-messages" id="chat-box"></div>
+                    <div class="chat direct-chat-messages" id="chat-box" style="min-height: 500px;"></div>
                     <!--/.direct-chat-messages-->
                 </div>
                 <!-- /.box-body -->
@@ -47,6 +36,21 @@
                 </div>
                 <!-- /.box-footer-->
             </div>
+        </div>
+        <div class="col-md-3 col-sm-4">
+            <!-- Direct Chat -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><?= __d('video_chat', 'On-line Users'); ?></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <!-- On-line Users are loaded here -->
+                    <div class="direct-chat-users" id="chat-users" style="min-height: 500px;"></div>
+                    <!--/.direct-chat-users-->
+                </div>
+                <!-- /.box-body -->
+            </div>
             <div id="connection-status"></div>
         </div>
     </div>
@@ -56,46 +60,57 @@
     (function () {
         var VideoChat = {
             init: function () {
-                var isCompatible = !!Modernizr.prefixed('RTCPeerConnection', window);
-
-                var notifyNotSupport = function () {
-                    $.get("<?= site_url('chat/ajax'); ?>", {
-                        action: 'notify_not_support',
-                        to: <?= $chatUser->id; ?>
-                    });
+                var userInfo = {
+                    userid:   '<?= $authUser->id; ?>',
+                    username: '<?= $authUser->username; ?>',
+                    realname: '<?= $authUser->present()->name(); ?>',
+                    picture:  '<?= $authUser->present()->picture(); ?>',
+                    role:     '<?= $authUser->role->name; ?>'
                 };
+
+                var isCompatible = !!Modernizr.prefixed('RTCPeerConnection', window);
 
                 var startVideoChat = function () {
                     var webRTC = new SimpleWebRTC({
                         // The Signaling Server used by SimpleWebRTC.
-                        url: "<?= $url; ?>",
+                        url: '<?= $url; ?>',
 
-                        // The local and remote Media configuration.
-                        localVideoEl: 'chat-local-video',
+                        // We don't do video.
+                        localVideoEl: '',
                         remoteVideosEl: '',
-                        autoRequestMedia: true,
-                        nick: {
-                            userid: '<?= $authUser->id; ?>',
-                            username: '<?= $authUser->username; ?>',
-                            realname: '<?= $authUser->present()->name(); ?>',
-                            picture: '<?= $authUser->present()->picture(); ?>',
-                            role: '<?= $authUser->role->name; ?>',
-                        }
+                        // Don't ask for camera access.
+                        autoRequestMedia: false,
+                        // Don't negotiate media.
+                        receiveMedia: {
+                            mandatory: {
+                                OfferToReceiveAudio: false,
+                                OfferToReceiveVideo: false
+                            }
+                        },
+
+                        // We pass the User information via nick.
+                        nick: userInfo
                     });
 
-                    webRTC.on('readyToCall', function () {
+                    webRTC.on('connectionReady', function() {
                         webRTC.joinRoom('<?= $roomName; ?>');
                     });
 
-                    webRTC.on('videoAdded', function (video, peer) {
-                        $(video).addClass('skip');
+                    // Called when a peer has joined the room.
+                    webRTC.on('createdPeer', function(peer) {
+                        peer.send('presence', webRTC.config.nick);
 
-                        $('#chat-remote-video').html(video);
+                        /*
+                        window.setTimeout(function () {
+                            peer.sendDirectly('simplewebrtc', 'presence', { status: 'joined' });
+                        }, 1000);
+                        */
 
                         // Enable the Direct Chat input.
                         $('#direct-chat-message').removeAttr('disabled');
                         $('#direct-chat-button').removeAttr('disabled');
 
+                        // Show the ice connection state
                         if (peer && peer.pc) {
                             peer.pc.on('iceConnectionStateChange', function () {
                                 var alertDiv = $('<div>')
@@ -136,14 +151,6 @@
                         }
                     });
 
-                    webRTC.on('videoRemoved', function (video, peer) {
-                        video.src = '';
-
-                        // Disable the Direct Chat input.
-                        $('#direct-chat-message').attr('disabled', 'disabled');
-                        $('#direct-chat-button').attr('disabled', 'disabled');
-                    });
-
                     webRTC.on('iceFailed', function (peer) {
                         var alertDiv = $('<div>')
                             .addClass('alert-danger')
@@ -160,48 +167,42 @@
                         $('#connection-status').html(alertDiv);
                     });
 
-                    // Called when a peer has joined the room.
-                    webRTC.on('createdPeer', function(peer) {
-                        // logic to add audio into a grouping element.
-                        console.log(peer);
-                    });
-
-                    webRTC.on('message', function(message) {
-                        //console.log(message);
-                    });
-
                     webRTC.on('channelMessage', function (peer, label, data) {
                         // Only handle messages from your dataChannel
                         if (label !== 'simplewebrtc') return;
-                        else if (data.type === 'chatMessage') {
-                            displayChatMessage(data.payload, 'online');
+                        else if (data.type === 'message') {
+                            displayChatMessage(peer.nick, data.payload, 'online');
+                        } else if (data.type === 'presence') {
+                            console.log('presence', data.payload, peer.id, peer.nick);
+                        }
+                    });
+
+                    webRTC.connection.on('message', function(message) {
+                        if (message .type === 'presence') {
+                            console.log('presence', message);
                         }
                     });
 
                     // The Direct Chat.
                     $('#direct-chat-button').on('click', function () {
-                        var input = $('#direct-chat-message') .val();
+                        var message = $('#direct-chat-message') .val();
 
-                        if (input === '') return;
+                        if (message === '') return;
 
                         $('#direct-chat-message').val('');
 
-                        // Prepare the message object.
-                        var message = {
-                            picture: '<?= $authUser->present()->picture(); ?>',
-                            userName: '<?= $authUser->present()->name(); ?>',
-                            message: emojione.toShort(input)
-                        };
+                        // Process the EMOJI on message.
+                        message = emojione.toShort(message);
 
                         // Send the message directly via default Data Channel.
-                        webRTC.sendDirectlyToAll('simplewebrtc', 'chatMessage', message);
+                        webRTC.sendDirectlyToAll('simplewebrtc', 'message', message);
 
                         // Show the message locally.
-                        displayChatMessage(message, 'offline');
+                        displayChatMessage(webRTC.config.nick, message, 'offline');
                     });
                 };
 
-                var displayChatMessage = function (message, type) {
+                var displayChatMessage = function (userinfo, message, type) {
                     var now = new Date(Date.now());
 
                     var receivedAt = now.getHours() +
@@ -209,15 +210,19 @@
                         ":" + ((now.getSeconds() < 10) ? '0' : '') + now.getSeconds();
 
                     var html = '<div class="item">' +
-                               '  <img src="' + message.picture + '" alt="user image" class="' + type + '">' +
+                               '  <img src="' + userinfo.picture + '" alt="user image" class="' + type + '">' +
                                '  <p class="message">' +
                                '    <a href="javascript::void();" class="name">' +
                                '      <small class="text-muted pull-right" style="padding-right: 5px;"><i class="fa fa-clock-o"></i> ' + receivedAt + '</small>' +
-                               message.userName +
+                               userinfo.realname +
                                '    </a>' +
-                               emojione.toImage(message.message) +
+                               emojione.toImage(message) +
                                '  </p>' +
                                '</div>';
+
+                    if ($.trim( $('#chat-box').html() ).length !== 0) {
+                        html = '<hr style="margin: 0 5px 10px 5px;">' + html;
+                    }
 
                     // Append the message's HTML to Chat messages.
                     $('.direct-chat-messages').append(html);
@@ -261,7 +266,7 @@
             $('#direct-chat-message').keypress( function (event) {
                 var keyCode = (event.keyCode ? event.keyCode : event.which);
 
-                if (event.ctrlKey && (keyCode == '13')) {
+                if (event.shiftKey && (keyCode == 13)) {
                     event.preventDefault();
 
                     // Send the text message on pressing Ctrl+Enter.
@@ -271,7 +276,7 @@
 
             // Setup the SLIMSCROLL for the Direct Chat widget.
             $('#chat-box').slimScroll({
-                height: '250px'
+                height: '500px'
                 //start: 'bottom',
                 //railVisible: true,
                 //alwaysVisible: true

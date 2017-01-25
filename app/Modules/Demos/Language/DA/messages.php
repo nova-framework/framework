@@ -16,5 +16,5 @@ return array (
   'This is a test!!!' => 'Dette er en test',
   'Timestamp:' => 'Tidsstemple',
   'Validation API' => '',
-  'Welcome to {0}!' => 'Velkommen til {0},
+  'Welcome to {0}!' => 'Velkommen til {0}',
 );

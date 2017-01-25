@@ -41,6 +41,7 @@ return array (
   'No registered Roles' => 'Ingen registret rolle',
   'Notifications' => 'Notifikationer',
   'Operations' => 'Funktioner',
+  'Platform' => '',
   'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Tryk på knappen <b>Slet</b> for at forsætte, eller tryk på <b>Fortryd</b> for at afbryde.',
   'Purple' => 'Lilla',
   'Purple Light' => 'Lys Lilla',

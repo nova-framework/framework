@@ -45,6 +45,43 @@ class VideoChat extends BackendController
             ->withUsers($users);
     }
 
+    public function chat()
+    {
+        $authUser = Auth::user();
+
+        // Retrieve the Signaling Server from configuration.
+        $url = Config::get('videoChat.url', 'https://sandbox.simplewebrtc.com:443/');
+
+        // Calculate the Chat Room name, using a SHA256 string, resulting something like:
+        // f07b631f7a601cd8cbd3332d54f43142c7088a83299f859356f08d1d4d4259b3
+        //
+        $roomName = hash('sha256', site_url('chat'));
+
+        // Additional assets required on the current View.
+        $css = Assets::fetch('css', array(
+            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/css/emojione.min.css',
+            resource_url('css/style.css', 'VideoChat'),
+        ));
+
+        $js = Assets::fetch('js', array(
+            'https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js',
+            resource_url('js/simplewebrtc-latest.js', 'VideoChat'),
+            vendor_url('plugins/slimScroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
+        ));
+
+        //
+        $title = __d('video_chat', 'Chat : {0}', $authUser->present()->name());
+
+        return $this->getView()
+            ->shares('title', $title)
+            ->shares('css', $css)
+            ->shares('js', $js)
+            ->with('url', $url)
+            ->with('roomName', $roomName)
+            ->with('authUser', $authUser);
+    }
+
     public function show($roomId)
     {
         $authUser = Auth::user();

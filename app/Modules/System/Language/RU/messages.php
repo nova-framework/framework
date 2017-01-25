@@ -41,6 +41,7 @@ return array (
   'No registered Roles' => 'Роли не зарегистрированы',
   'Notifications' => 'Уведомления',
   'Operations' => 'Операции',
+  'Platform' => '',
   'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, нажмите на <b>Удалить</b> для продолжения или на <b>Отмена</b> для отмены операции.',
   'Purple' => 'Пурпурный',
   'Purple Light' => 'Светло-фиолетовый',

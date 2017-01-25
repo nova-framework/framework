@@ -37,7 +37,7 @@ class UserActionsObserver
         if (Auth::check()) {
             $user = Auth::user();
 
-            $action = __d('system', 'deleted');
+            $action = __d('logs', 'deleted');
 
             Log::create(array(
                 'user_id'  => $user->getKey(),

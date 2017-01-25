@@ -277,7 +277,7 @@ class Users extends BackendController
             $user = User::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The User with ID: {0} was not found.', $id);
+            $status = __d('users', 'The User with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
@@ -328,7 +328,8 @@ class Users extends BackendController
         $search = $input['query'];
 
         $users = User::where('username', 'LIKE', '%' .$search .'%')
-            ->orWhere('realname', 'LIKE', '%' .$search .'%')
+            ->orWhere('first_name', 'LIKE', '%' .$search .'%')
+            ->orWhere('last_name', 'LIKE', '%' .$search .'%')
             ->orWhere('email', 'LIKE', '%' .$search .'%')
             ->get();
 

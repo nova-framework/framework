@@ -86,10 +86,8 @@ abstract class Controller extends BaseController
      */
     protected function getView(array $data = array())
     {
-        list(, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-
-        // Retrieve the called Controller method from the caller.
-        $method = $caller['function'];
+        // Get the currently called method.
+        $method = $this->getMethod();
 
          // Transform the complete class name on a path like variable.
         $path = str_replace('\\', '/', static::class);
@@ -109,9 +107,11 @@ abstract class Controller extends BaseController
 
         // Check for a valid controller on Modules.
         if (preg_match('#^'. $basePath .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
+            $module = $matches[1];
+
             $view = $matches[2] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data, $matches[1]);
+            return ViewFactory::make($view, $data, $module);
         }
 
         // If we arrived there, the called class is not a Controller; go Exception.
@@ -131,18 +131,16 @@ abstract class Controller extends BaseController
     /**
      * Return a Layout instance.
      *
-     * @param array $data
-     *
      * @return \Nova\View\Layout
      *
      * @throws \BadMethodCallException
      */
-    public function getLayout(array $data = array())
+    public function getLayout()
     {
         if ($this->layout instanceof View) {
-            return $this->layout->with($data);
+            return $this->layout;
         } else if (is_string($this->layout) && ! empty($this->layout)) {
-            return ViewFactory::makeLayout($this->layout, $this->template)->with($data);
+            return ViewFactory::makeLayout($this->layout, $this->template);
         }
 
         throw new BadMethodCallException('Method not available for the current Layout');

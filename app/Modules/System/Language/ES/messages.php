@@ -41,6 +41,7 @@ return array (
   'No registered Roles' => '',
   'Notifications' => '',
   'Operations' => '',
+  'Platform' => '',
   'Please click the button <b>Delete</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Purple' => '',
   'Purple Light' => '',

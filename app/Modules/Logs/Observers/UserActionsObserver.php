@@ -17,10 +17,10 @@ class UserActionsObserver
 
             if ($model->wasRecentlyCreated == true) {
                 // Data was just created
-                $action = __d('system', 'created');
+                $action = __d('logs', 'created');
             } else {
                 // Data was updated
-                $action = __d('system', 'updated');
+                $action = __d('logs', 'updated');
             }
 
             Log::create(array(

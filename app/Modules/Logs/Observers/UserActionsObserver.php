@@ -50,7 +50,7 @@ class UserActionsObserver
 
     protected function getMessage($model, $action)
     {
-        return __d('system', 'Was {0} <b>{1}</b> with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
+        return __d('logs', 'Was {0} <b>{1}</b> with <b>ID: {2}</b>', $action, get_class($model), $model->getKey());
     }
 
     protected function getUrl()

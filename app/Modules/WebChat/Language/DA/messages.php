@@ -18,6 +18,7 @@ return array (
   'Direct Chat' => 'Direkte chat',
   'Disconnected' => 'Afbrudt',
   'Local connection failed' => 'Fejl i den lokale forbindelse',
+  'New Video Call' => '',
   'On-line Users' => '',
   'Open a Video Chat' => 'Åben en video chat',
   'Open the Chat' => 'Åben en chat',
@@ -33,4 +34,5 @@ return array (
   'Video Chat : {0}' => '',
   'Video chat between {0} and {1}' => 'Video chat imellem {0} og {1}',
   'Warning' => 'Advarsel',
+  'WebRTC Chat' => '',
 );

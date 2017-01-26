@@ -13,19 +13,19 @@ Event::listen('backend.menu', function($user)
 {
     $items = array(
         array(
-            'title'  => __d('web_chat', 'Chat'),
+            'title'  => __d('web_chat', 'WebRTC Chat'),
             'icon'   => 'comments',
             'weight' => 9,
             'children' => array(
                 array(
                     'uri'    => 'admin/chat',
-                    'title'  => __d('web_chat', 'Web Chat'),
+                    'title'  => __d('web_chat', 'Public Chat'),
                     'label'  => '',
                     'weight' => 0,
                 ),
                 array(
                     'uri'    => 'admin/chat/video',
-                    'title'  => __d('web_chat', 'Video Chat'),
+                    'title'  => __d('web_chat', 'New Video Call'),
                     'label'  => '',
                     'weight' => 1,
                 ),

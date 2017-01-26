@@ -18,6 +18,7 @@ return array (
   'Direct Chat' => '',
   'Disconnected' => '',
   'Local connection failed' => '',
+  'New Video Call' => '',
   'On-line Users' => '',
   'Open a Video Chat' => '',
   'Open the Chat' => '',
@@ -33,4 +34,5 @@ return array (
   'Video Chat : {0}' => '',
   'Video chat between {0} and {1}' => '',
   'Warning' => '',
+  'WebRTC Chat' => '',
 );

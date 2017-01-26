@@ -35,7 +35,7 @@ abstract class Controller extends BaseController
      *
      * @var string
      */
-    protected $layout = 'default';
+    protected $layout = 'Default';
 
 
     /**

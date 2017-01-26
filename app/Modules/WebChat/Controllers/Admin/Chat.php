@@ -2,7 +2,6 @@
 
 namespace App\Modules\WebChat\Controllers\Admin;
 
-use Nova\Support\Facades\Assets;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 
@@ -26,26 +25,11 @@ class Chat extends Controller
         //
         $roomName = hash('sha256', site_url('chat'));
 
-        // Additional assets required on the current View.
-        $css = Assets::fetch('css', array(
-            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/css/emojione.min.css',
-            resource_url('css/style.css', 'VideoChat'),
-        ));
-
-        $js = Assets::fetch('js', array(
-            'https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js',
-            resource_url('js/simplewebrtc-latest.js', 'VideoChat'),
-            vendor_url('plugins/slimScroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
-        ));
-
         //
         $title = __d('web_chat', 'Chat : {0}', $authUser->present()->name());
 
         return $this->getView()
             ->shares('title', $title)
-            ->shares('css', $css)
-            ->shares('js', $js)
             ->with('url', $url)
             ->with('roomName', $roomName)
             ->with('authUser', $authUser);

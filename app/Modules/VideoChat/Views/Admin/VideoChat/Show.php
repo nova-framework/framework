@@ -257,14 +257,14 @@
         $(document).on('ready', function () {
             emojione.ascii = true;
 
-            // Send the text input on Direct Chat, when is pressed Ctrl+Enter.
+            // Send the text input on Direct Chat, when is pressed Shift+Enter.
             $('#direct-chat-message').keypress( function (event) {
                 var keyCode = (event.keyCode ? event.keyCode : event.which);
 
-                if (event.ctrlKey && (keyCode == '13')) {
+                if (event.shiftKey && (keyCode == 13)) {
                     event.preventDefault();
 
-                    // Send the text message on pressing Ctrl+Enter.
+                    // Send the text message on pressing Shift+Enter.
                     $('#direct-chat-button').click();
                 }
             });

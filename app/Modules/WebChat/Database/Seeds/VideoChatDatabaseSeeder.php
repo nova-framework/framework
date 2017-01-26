@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Dashboard\Database\Seeds;
+namespace App\Modules\WebChat\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
 
 
-class VideoChatDatabaseSeeder extends Seeder
+class WebChatDatabaseSeeder extends Seeder
 {
     /**
      * Run the Database Seeds.

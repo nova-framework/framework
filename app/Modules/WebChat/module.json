@@ -1,7 +1,7 @@
 {
-    "name": "VideoChat",
+    "name": "WebChat",
     "version": "1.0",
-    "description": "This is the description for the VideoChat module.",
+    "description": "This is the description for the WebChat module.",
     "homepage" : "http://www.novaframework.com/",
     "authors" : [
         {
@@ -12,7 +12,7 @@
         }
     ],
     "license": "MIT",
-    "slug": "video_chat",
-    "namespace": "VideoChat",
+    "slug": "web_chat",
+    "namespace": "WebChat",
     "order" : "8001"
 }

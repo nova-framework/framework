@@ -1,7 +1,7 @@
 <section class="content-header" style="margin: 0 15px; padding-bottom: 15px; border-bottom: 1px solid #FFF;">
-    <h1><?= __d('video_chat', 'Chat'); ?></h1>
+    <h1><?= __d('web_chat', 'Chat'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('video_chat', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('web_chat', 'Dashboard'); ?></a></li>
         <li><?= __d('messages', 'Chat'); ?></li>
     </ol>
 </section>
@@ -17,7 +17,7 @@
             <!-- Direct Chat -->
             <div class="box box-default direct-chat direct-chat-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><?= __d('video_chat', 'Public Chat'); ?></h3>
+                    <h3 class="box-title"><?= __d('web_chat', 'Public Chat'); ?></h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -28,9 +28,9 @@
                 <!-- /.box-body -->
                 <div class="box-footer">
                     <div class="input-group">
-                        <input name="message" id="direct-chat-message" disabled="disabled" placeholder="<?= __d('video_chat', 'Type Message ...'); ?>" class="form-control" type="text">
+                        <input name="message" id="direct-chat-message" disabled="disabled" placeholder="<?= __d('web_chat', 'Type Message ...'); ?>" class="form-control" type="text">
                         <span class="input-group-btn">
-                            <button id="direct-chat-button" disabled="disabled" type="button" class="btn btn-warning btn-flat"><?= __d('video_chat', 'Send'); ?></button>
+                            <button id="direct-chat-button" disabled="disabled" type="button" class="btn btn-warning btn-flat"><?= __d('web_chat', 'Send'); ?></button>
                         </span>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
             <!-- Direct Chat -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><?= __d('video_chat', 'On-line Users'); ?></h3>
+                    <h3 class="box-title"><?= __d('web_chat', 'On-line Users'); ?></h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -121,7 +121,7 @@
                     webRTC.on('iceFailed', function (peer) {
                         var alertDiv = $('<div>')
                             .addClass('alert-danger')
-                            .html('<em class="fa fa-close"></em> ' + "<?= __d('video_chat', 'Local connection failed'); ?>");
+                            .html('<em class="fa fa-close"></em> ' + "<?= __d('web_chat', 'Local connection failed'); ?>");
 
                         $('#connection-status').html(alertDiv);
                     });
@@ -129,7 +129,7 @@
                     webRTC.on('connectivityError', function (peer) {
                         var alertDiv = $('<div>')
                             .addClass('alert-danger')
-                            .html('<em class="fa fa-close"></em> ' + "<?= __d('video_chat', 'Remote connection failed'); ?>");
+                            .html('<em class="fa fa-close"></em> ' + "<?= __d('web_chat', 'Remote connection failed'); ?>");
 
                         $('#connection-status').html(alertDiv);
                     });
@@ -241,7 +241,7 @@
 
                     switch (status) {
                         case 'checking':
-                            labelSpan.addClass('label-info').html("<?= __d('video_chat', 'Connecting to peer'); ?>");
+                            labelSpan.addClass('label-info').html("<?= __d('web_chat', 'Connecting to peer'); ?>");
 
                             break;
                         case 'connected':
@@ -249,19 +249,19 @@
                         case 'completed':
                             active = 1;
 
-                            labelSpan.addClass('label-success').html("<?= __d('video_chat', 'Connection established'); ?>");
+                            labelSpan.addClass('label-success').html("<?= __d('web_chat', 'Connection established'); ?>");
 
                             break;
                         case 'disconnected':
-                            labelSpan.addClass('label-info').html("<?= __d('video_chat', 'Disconnected'); ?>");
+                            labelSpan.addClass('label-info').html("<?= __d('web_chat', 'Disconnected'); ?>");
 
                             break;
                         case 'failed':
-                            labelSpan.addClass('label-danger').html("<?= __d('video_chat', 'Connection failed'); ?>");
+                            labelSpan.addClass('label-danger').html("<?= __d('web_chat', 'Connection failed'); ?>");
 
                             break;
                         case 'closed':
-                            labelSpan.addClass('label-danger').html("<?= __d('video_chat', 'Connection closed'); ?>");
+                            labelSpan.addClass('label-danger').html("<?= __d('web_chat', 'Connection closed'); ?>");
 
                             break;
                     }
@@ -321,7 +321,7 @@
                 startVideoChat();
 
                 $(window).on('beforeunload', function (event) {
-                    var message = "<?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";
+                    var message = "<?= __d('web_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";
 
                     event.returnValue = message; // Gecko, Trident, Chrome 34+
 

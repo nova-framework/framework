@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\VideoChat\Providers;
+namespace App\Modules\WebChat\Providers;
 
 use Nova\Support\ServiceProvider;
 
 
-class VideoChatServiceProvider extends ServiceProvider
+class WebChatServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the Application Events.

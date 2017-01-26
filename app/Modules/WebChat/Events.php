@@ -14,7 +14,7 @@ Event::listen('backend.menu', function($user)
     $items = array(
         array(
             'uri'    => 'admin/chat/video',
-            'title'  => __d('video_chat', 'Video Chat'),
+            'title'  => __d('web_chat', 'Video Chat'),
             'label'  => '',
             'icon'   => 'comments',
             'weight' => 9,

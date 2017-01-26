@@ -18,6 +18,7 @@ return array (
   'Direct Chat' => 'Окно чата',
   'Disconnected' => 'Отключено',
   'Local connection failed' => 'Локальное соединение не установлено',
+  'New Video Call' => '',
   'On-line Users' => '',
   'Open a Video Chat' => 'Открыть Видео-чат',
   'Open the Chat' => 'Открыть чат',
@@ -33,4 +34,5 @@ return array (
   'Video Chat : {0}' => 'Видео-чат: {0}',
   'Video chat between {0} and {1}' => 'Видео-чат между {0} и {1}',
   'Warning' => 'Внимание',
+  'WebRTC Chat' => '',
 );

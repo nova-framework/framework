@@ -6,15 +6,15 @@
 <div id="chat-video-panel">
     <div class="alert alert-warning alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h4><i class="icon fa fa-warning"></i> <?= __d('video_chat', 'Warning'); ?></h4>
-        <p><?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?></p>
+        <h4><i class="icon fa fa-warning"></i> <?= __d('web_chat', 'Warning'); ?></h4>
+        <p><?= __d('web_chat', 'Avoid changing page as this will cut your current video chat session.'); ?></p>
     </div>
     <div class="row">
         <div class="col-md-8 col-sm-7">
             <div class="thumbnail video-chat-user">
                 <div id="chat-remote-video"></div>
                 <div class="caption">
-                    <p class="text-muted text-center"><?= __d('video_chat', 'Chat with <b>{0}</b>', $chatUser->present()->name()); ?></p>
+                    <p class="text-muted text-center"><?= __d('web_chat', 'Chat with <b>{0}</b>', $chatUser->present()->name()); ?></p>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <!-- Direct Chat -->
             <div class="box box-warning direct-chat direct-chat-warning">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><?= __d('video_chat', 'Direct Chat'); ?></h3>
+                    <h3 class="box-title"><?= __d('web_chat', 'Direct Chat'); ?></h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -39,9 +39,9 @@
                 <!-- /.box-body -->
                 <div class="box-footer">
                     <div class="input-group">
-                        <input name="message" id="direct-chat-message" disabled="disabled" placeholder="<?= __d('video_chat', 'Type Message ...'); ?>" class="form-control" type="text">
+                        <input name="message" id="direct-chat-message" disabled="disabled" placeholder="<?= __d('web_chat', 'Type Message ...'); ?>" class="form-control" type="text">
                         <span class="input-group-btn">
-                            <button id="direct-chat-button" disabled="disabled" type="button" class="btn btn-warning btn-flat"><?= __d('video_chat', 'Send'); ?></button>
+                            <button id="direct-chat-button" disabled="disabled" type="button" class="btn btn-warning btn-flat"><?= __d('web_chat', 'Send'); ?></button>
                         </span>
                     </div>
                 </div>
@@ -105,29 +105,29 @@
                                     case 'checking':
                                         alertDiv
                                             .addClass('alert-info')
-                                            .html('<em class="fa fa-spinner fa-spin"></em> ' + "<?= __d('video_chat', 'Connecting to peer'); ?>");
+                                            .html('<em class="fa fa-spinner fa-spin"></em> ' + "<?= __d('web_chat', 'Connecting to peer'); ?>");
                                         break;
                                     case 'connected':
                                         //no break
                                     case 'completed':
                                         alertDiv
                                             .addClass('alert-success')
-                                            .html('<em class="fa fa-commenting"></em> ' + "<?= __d('video_chat', 'Connection established'); ?>");
+                                            .html('<em class="fa fa-commenting"></em> ' + "<?= __d('web_chat', 'Connection established'); ?>");
                                         break;
                                     case 'disconnected':
                                         alertDiv
                                             .addClass('alert-info')
-                                            .html('<em class="fa fa-frown-o"></em> ' + "<?= __d('video_chat', 'Disconnected'); ?>");
+                                            .html('<em class="fa fa-frown-o"></em> ' + "<?= __d('web_chat', 'Disconnected'); ?>");
                                         break;
                                     case 'failed':
                                         alertDiv
                                             .addClass('alert-danger')
-                                            .html('<em class="fa fa-times"></em> ' + "<?= __d('video_chat', 'Connection failed'); ?>");
+                                            .html('<em class="fa fa-times"></em> ' + "<?= __d('web_chat', 'Connection failed'); ?>");
                                         break;
                                     case 'closed':
                                         alertDiv
                                             .addClass('alert-danger')
-                                            .html('<em class="fa fa-close"></em> ' + "<?= __d('video_chat', 'Connection closed'); ?>");
+                                            .html('<em class="fa fa-close"></em> ' + "<?= __d('web_chat', 'Connection closed'); ?>");
                                         break;
                                 }
 
@@ -147,7 +147,7 @@
                     webRTC.on('iceFailed', function (peer) {
                         var alertDiv = $('<div>')
                             .addClass('alert-danger')
-                            .html('<em class="fa fa-close"></em> ' + "<?= __d('video_chat', 'Local connection failed'); ?>");
+                            .html('<em class="fa fa-close"></em> ' + "<?= __d('web_chat', 'Local connection failed'); ?>");
 
                         $('#connection-status').html(alertDiv);
                     });
@@ -155,7 +155,7 @@
                     webRTC.on('connectivityError', function (peer) {
                         var alertDiv = $('<div>')
                             .addClass('alert-danger')
-                            .html('<em class="fa fa-close"></em> ' + "<?= __d('video_chat', 'Remote connection failed'); ?>");
+                            .html('<em class="fa fa-close"></em> ' + "<?= __d('web_chat', 'Remote connection failed'); ?>");
 
                         $('#connection-status').html(alertDiv);
                     });
@@ -245,7 +245,7 @@
                 startVideoChat();
 
                 $(window).on('beforeunload', function (event) {
-                    var message = "<?= __d('video_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";
+                    var message = "<?= __d('web_chat', 'Avoid changing page as this will cut your current video chat session.'); ?>";
 
                     event.returnValue = message; // Gecko, Trident, Chrome 34+
 

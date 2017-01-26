@@ -4,7 +4,6 @@ namespace App\Modules\VideoChat\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\App;
-use Nova\Support\Facades\Assets;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Input;
@@ -93,26 +92,11 @@ class VideoChat extends Controller
         //
         $roomName = hash('sha256', site_url(sprintf('chat/video/%06d', $chatVideo->id)));
 
-        // Additional assets required on the current View.
-        $css = Assets::fetch('css', array(
-            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/css/emojione.min.css',
-            resource_url('css/style.css', 'VideoChat'),
-        ));
-
-        $js = Assets::fetch('js', array(
-            'https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/lib/js/emojione.min.js',
-            resource_url('js/simplewebrtc-latest.js', 'VideoChat'),
-            vendor_url('plugins/slimScroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
-        ));
-
         //
         $title = __d('web_chat', 'Video Chat : {0}', $authUser->present()->name());
 
         return $this->getView()
             ->shares('title', $title)
-            ->shares('css', $css)
-            ->shares('js', $js)
             ->with('url', $url)
             ->with('roomName', $roomName)
             ->with('authUser', $authUser)

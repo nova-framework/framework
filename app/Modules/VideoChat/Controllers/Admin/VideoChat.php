@@ -32,19 +32,6 @@ class VideoChat extends BackendController
         }
     }
 
-    public function index()
-    {
-        $authUser = Auth::user();
-
-        // Retrieve all other Users.
-        $users = User::where('id', '!=', $authUser->id)->get();
-
-        return $this->getView()
-            ->shares('title', __d('video_chat', 'Video Chat'))
-            ->withAuthUser($authUser)
-            ->withUsers($users);
-    }
-
     public function chat()
     {
         $authUser = Auth::user();
@@ -82,6 +69,19 @@ class VideoChat extends BackendController
             ->with('authUser', $authUser);
     }
 
+    public function index()
+    {
+        $authUser = Auth::user();
+
+        // Retrieve all other Users.
+        $users = User::where('id', '!=', $authUser->id)->get();
+
+        return $this->getView()
+            ->shares('title', __d('video_chat', 'Video Chat'))
+            ->withAuthUser($authUser)
+            ->withUsers($users);
+    }
+    
     public function show($roomId)
     {
         $authUser = Auth::user();

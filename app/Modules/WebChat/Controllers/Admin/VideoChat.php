@@ -9,28 +9,16 @@ use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Validator;
-
-use App\Core\BackendController;
 
 use App\Modules\System\Exceptions\ValidationException;
 use App\Modules\VideoChat\Helpers\VideoChat as ChatHelper;
 use App\Modules\VideoChat\Models\ChatVideo;
 use App\Modules\Users\Models\User;
+use App\Modules\WebChat\Core\Controller;
 
 
-class VideoChat extends BackendController
+class VideoChat extends Controller
 {
-
-    protected function validate(array $data, array $rules, array $messages = array(), array $attributes = array())
-    {
-        $validator = Validator::make($data, $rules, $messages, $attributes);
-
-        // Go Exception if the data validation fails.
-        if ($validator->fails()) {
-            throw new ValidationException('Validation failed', $validator->errors());
-        }
-    }
 
     public function index()
     {
@@ -44,7 +32,7 @@ class VideoChat extends BackendController
             ->withAuthUser($authUser)
             ->withUsers($users);
     }
-    
+
     public function show($roomId)
     {
         $authUser = Auth::user();

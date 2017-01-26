@@ -28,7 +28,7 @@ use App\Modules\Users\Models\User;
 
 class Registrar extends BackendController
 {
-    protected $layout = 'default';
+    protected $layout = 'Default';
 
 
     protected function validate(array $data)

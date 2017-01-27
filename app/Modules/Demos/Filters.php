@@ -12,5 +12,5 @@
 // A Testing Filter which dump the matched Route.
 Route::filter('test', function($route, $request)
 {
-    echo '<pre style="margin: 10px;">' .htmlspecialchars(var_export($route, true)) .'</pre>';
+    echo '<pre style="margin: 10px;">' .htmlspecialchars(var_export($route->getUri(), true)) .'</pre>';
 });

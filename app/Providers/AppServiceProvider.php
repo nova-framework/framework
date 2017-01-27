@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-	//
+        //
     }
 
     /**
@@ -28,9 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register additional Service Providers.
-        $this->app->register('App\Providers\AuthServiceProvider');
-        $this->app->register('App\Providers\EventServiceProvider');
+        //
     }
 
 }

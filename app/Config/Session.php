@@ -62,7 +62,7 @@ return array(
     |
     */
 
-    'files'    => STORAGE_PATH .'Sessions',
+    'files'    => STORAGE_PATH .'Framework' .DS. 'Sessions',
 
     /*
     |--------------------------------------------------------------------------
@@ -89,7 +89,7 @@ return array(
     */
 
     'cookie'   => PREFIX .'session',
-    
+
     /*
     |--------------------------------------------------------------------------
     | Session Cookie Path

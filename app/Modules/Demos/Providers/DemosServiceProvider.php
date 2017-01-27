@@ -28,7 +28,9 @@ class DemosServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register additional Service Providers.
+        //$this->app->register('App\Modules\Demos\Providers\AuthServiceProvider');
+        //$this->app->register('App\Modules\Demos\Providers\EventServiceProvider');
     }
 
 }

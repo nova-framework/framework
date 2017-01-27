@@ -32,7 +32,9 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register additional Service Providers.
+        //$this->app->register('App\Modules\System\Providers\AuthServiceProvider');
+        //$this->app->register('App\Modules\System\Providers\EventServiceProvider');
     }
 
     /**

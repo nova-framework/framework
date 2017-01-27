@@ -28,7 +28,9 @@ class MessagesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register additional Service Providers.
+        //$this->app->register('App\Modules\Messages\Providers\AuthServiceProvider');
+        //$this->app->register('App\Modules\Messages\Providers\EventServiceProvider');
     }
 
 }

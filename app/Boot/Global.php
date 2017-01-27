@@ -10,8 +10,15 @@ Log::useFiles(storage_path() .DS .'Logs' .DS .'error.log');
 // Application Error Handler
 //--------------------------------------------------------------------------
 
+use Nova\Database\ORM\ModelNotFoundException;
+
 App::error(function(Exception $exception, $code, $fromConsole)
 {
+    if ($exception instanceof ModelNotFoundException) {
+        // Do not report this type of exception.
+        return;
+    }
+
     Log::error($exception);
 
     if ($fromConsole) {

@@ -96,7 +96,7 @@ abstract class Controller extends BaseController
         if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[1] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data);
+            return ViewFactory::make($view, $data, null, $this->template);
         }
 
         // Retrieve the Modules namespace from their configuration.
@@ -111,7 +111,7 @@ abstract class Controller extends BaseController
 
             $view = $matches[2] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data, $module);
+            return ViewFactory::make($view, $data, $module, $this->template);
         }
 
         // If we arrived there, the called class is not a Controller; go Exception.

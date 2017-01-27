@@ -182,7 +182,7 @@ return array(
         'Nova\Routing\ControllerServiceProvider',
         'Nova\Module\ModuleServiceProvider',
 
-        // The Application Providers.
+        // The base Framework Providers.
         'Nova\Assets\AssetsServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Cache\CacheServiceProvider',
@@ -209,6 +209,9 @@ return array(
 
         // The Service Providers from the Shared namespace.
         'Shared\Database\Backup\BackupServiceProvider',
+
+        // The Application Providers.
+        'App\Providers\AppServiceProvider',
     ),
 
     /*

@@ -28,7 +28,9 @@ class FilesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register additional Service Providers.
+        //$this->app->register('App\Modules\Files\Providers\AuthServiceProvider');
+        //$this->app->register('App\Modules\Files\Providers\EventServiceProvider');
     }
 
 }

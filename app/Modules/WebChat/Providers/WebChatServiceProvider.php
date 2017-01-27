@@ -28,7 +28,9 @@ class WebChatServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register additional Service Providers.
+        //$this->app->register('App\Modules\WebChat\Providers\AuthServiceProvider');
+        //$this->app->register('App\Modules\WebChat\Providers\EventServiceProvider');
     }
 
 }

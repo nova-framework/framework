@@ -81,7 +81,7 @@ class Demos extends Controller
         $request = Request::instance();
 
         if ($route->matches($request)) {
-            $content = '<pre>' .e(var_export($route, true)) .'</pre>';
+            $content = '<pre>' .e(var_export($route->getUri(), true)) .'</pre>';
         } else {
             $content = '<pre>' .e($uri) .'</pre>';
         }

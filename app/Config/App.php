@@ -191,6 +191,7 @@ return array(
         'Nova\Database\DatabaseServiceProvider',
         'Nova\Encryption\EncryptionServiceProvider',
         'Nova\Filesystem\FilesystemServiceProvider',
+        'Nova\Foundation\Providers\FoundationServiceProvider',
         'Nova\Hashing\HashServiceProvider',
         'Nova\Language\LanguageServiceProvider',
         'Nova\Log\LogServiceProvider',

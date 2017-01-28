@@ -17,8 +17,8 @@ use Nova\Support\Facades\View;
 
 use App\Core\Controller as BaseController;
 
-use App\Modules\Messages\Models\Message;
-use App\Modules\System\Models\Notification;
+use Modules\Messages\Models\Message;
+use Modules\System\Models\Notification;
 
 
 abstract class BackendController extends BaseController

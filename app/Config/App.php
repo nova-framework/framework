@@ -175,14 +175,8 @@ return array(
     */
 
     'providers' => array(
-        // The Forge Console Providers.
-        'Nova\Foundation\Providers\ForgeServiceProvider',
-        'Nova\Session\CommandsServiceProvider',
-        'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
-        'Nova\Routing\ControllerServiceProvider',
+        // The Framework Providers.
         'Nova\Module\ModuleServiceProvider',
-
-        // The base Framework Providers.
         'Nova\Assets\AssetsServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Cache\CacheServiceProvider',
@@ -207,6 +201,12 @@ return array(
         'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
         'Nova\Cron\CronServiceProvider',
+
+        // The Console Providers.
+        'Nova\Foundation\Providers\ForgeServiceProvider',
+        'Nova\Session\CommandsServiceProvider',
+        'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
+        'Nova\Routing\ControllerServiceProvider',
 
         // The Service Providers from the Shared namespace.
         'Shared\Database\Backup\BackupServiceProvider',

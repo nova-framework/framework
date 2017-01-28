@@ -35,7 +35,7 @@ return array(
     |
     */
 
-    'path' => STORAGE_PATH .'Framework' .DS. 'Cache',
+    'path' => STORAGE_PATH .'framework' .DS. 'cache',
 
     /*
     |--------------------------------------------------------------------------

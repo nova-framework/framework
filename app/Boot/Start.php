@@ -54,7 +54,7 @@ define('SYSPATH', BASEPATH .str_replace('/', DS, 'vendor/nova-framework/system/'
 // Set The Storage Path
 //--------------------------------------------------------------------------
 
-define('STORAGE_PATH', APPPATH .'Storage' .DS);
+defined('STORAGE_PATH') || define('STORAGE_PATH', BASEPATH .'storage' .DS);
 
 //--------------------------------------------------------------------------
 // Set The Framework Version

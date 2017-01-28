@@ -24,7 +24,7 @@ $languages = array(
 
 $workPaths = array(
     'shared',
-    'app'
+    'app',
 );
 
 //
@@ -54,23 +54,23 @@ function phpGrep($q, $path) {
     return $ret;
 }
 
-if(is_dir(BASEPATH .'app'.DS.'Modules')) {
-    $path = str_replace('/', DS, BASEPATH .'app/Modules/*');
+if(is_dir(BASEPATH .'modules')) {
+    $path = str_replace('/', DS, BASEPATH .'modules/*');
 
     $dirs = glob($path , GLOB_ONLYDIR);
 
     foreach($dirs as $module) {
-        $workPaths[] = str_replace('/', DS, 'app/Modules/'.basename($module));
+        $workPaths[] = str_replace('/', DS, 'modules/'.basename($module));
     }
 }
 
-if(is_dir(BASEPATH .'app'.DS.'Templates')) {
-    $path = str_replace('/', DS, BASEPATH .'app/Templates/*');
+if(is_dir(BASEPATH .'themes')) {
+    $path = str_replace('/', DS, BASEPATH .'themes/*');
 
     $dirs = glob($path , GLOB_ONLYDIR);
 
     foreach($dirs as $template) {
-        $workPaths[] = str_replace('/', DS, 'app/Templates/'.basename($template));
+        $workPaths[] = str_replace('/', DS, 'themes/'.basename($template));
     }
 }
 

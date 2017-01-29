@@ -1,6 +1,6 @@
 <?php
 
-$basePath = str_replace('/', DS, APPPATH .'Modules/Files/Lib/elFinder/');
+$basePath = realpath(__DIR__ .'/../../../Lib/elFinder') .DS;
 
 require $basePath .'elFinderConnector.class.php';
 require $basePath .'elFinder.class.php';

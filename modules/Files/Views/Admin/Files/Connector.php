@@ -1,6 +1,6 @@
 <?php
 
-$basePath = realpath(__DIR__ .'/../../../Lib/elFinder') .DS;
+$basePath = realpath(dirname(__FILE__) .'/../../../') .DS .'Lib' .DS .'elFinder' .DS;
 
 require $basePath .'elFinderConnector.class.php';
 require $basePath .'elFinder.class.php';

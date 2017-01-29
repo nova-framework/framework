@@ -228,7 +228,7 @@ return array(
     |
     */
 
-    'manifest' => APPPATH .'Boot' .DS .'Cache',
+    'manifest' => STORAGE_PATH .'framework',
 
     /*
     |--------------------------------------------------------------------------

@@ -22,11 +22,16 @@
         {
             "type": "git",
             "url": "https://github.com/nova-framework/system"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/nova-framework/module-installer"
         }
     ],
     "require": {
         "php": ">=5.5.0",
         "nova-framework/system": "~4.0",
+        "nova-framework/module-installer": "master",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3"
     },
@@ -54,6 +59,9 @@
         ],
         "post-create-project-cmd": [
             "php forge key:generate"
+        ],
+        "post-autoload-dump": [
+            "Nova\\Composer\\Installer\\ModuleInstaller::postAutoloadDump"
         ]
     },
     "prefer-stable": true,

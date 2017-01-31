@@ -19,11 +19,17 @@ class Dashboard extends BackendController
 
     public function index()
     {
-        $smallBoxUsers = Widget::smallBoxUsers();
+        $smallBoxUsers          = Widget::smallBoxUsers();
+        $smallBoxUniqueVisitors = Widget::smallBoxUniqueVisitors();
+        $smallBoxOrders         = Widget::smallBoxOrders();
+        $smallBoxBounceRate     = Widget::smallBoxBounceRate();
 
         return $this->getView()
             ->shares('title', __d('dashboard', 'Dashboard'))
-            ->withSmallBoxUsers($smallBoxUsers);
+            ->with('smallBoxUsers', $smallBoxUsers)
+            ->with('smallBoxUniqueVisitors', $smallBoxUniqueVisitors)
+            ->with('smallBoxOrders', $smallBoxOrders)
+            ->with('smallBoxBounceRate',$smallBoxBounceRate);
     }
 
 }

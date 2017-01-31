@@ -21,7 +21,10 @@ class SmallBoxUsers extends Widget
 
         $data = array(
             'color' => 'yellow',
-            'users' => $users
+            'title' => $users,
+            'text'  => __d('users', 'Registered Users'),
+            'icon'  => 'person-add',
+            'url'   => site_url('admin/users')
         );
 
         return View::make('Widgets/SmallBox', $data)->render();

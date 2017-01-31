@@ -1,4 +1,4 @@
-![Nova Framework](http://novaframework.com/app/templates/publicthemes/nova/images/nova.png)
+![Nova Framework](https://novaframework.com/templates/nova4/assets/img/nova.png)
 
 # Nova Framework 4.0
 

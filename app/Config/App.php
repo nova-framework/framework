@@ -200,6 +200,7 @@ return array(
         'Nova\Validation\ValidationServiceProvider',
         'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
+        'Nova\Widget\WidgetServiceProvider',
         'Nova\Cron\CronServiceProvider',
 
         // The Console Providers.
@@ -297,6 +298,7 @@ return array(
         'Form'          => 'Nova\Support\Facades\Form',
         'HTML'          => 'Nova\Support\Facades\HTML',
         'View'          => 'Nova\Support\Facades\View',
+        'Widget'        => 'Nova\Support\Facades\Widget',
         'Template'      => 'Nova\Support\Facades\Template',
         'Module'        => 'Nova\Support\Facades\Module',
         'Cron'          => 'Nova\Support\Facades\Cron',

@@ -1,11 +1,13 @@
 <?php
 
 return array (
+  'Bounce Rate' => '',
   'Cache' => '',
   'Database API' => 'API базы данных',
   'Events API' => 'API Событий',
   'Mailing API' => 'API отправки почты',
   'Message sent while pretending. Please, look on <code>{0}</code>' => 'Имитация отправки сообщения. Пожалуйста, обратите внимание на <code>{0}</code>',
+  'New Orders' => '',
   'Pagination' => 'Разбивка на страницы',
   'Password Sample' => 'Образец пароля',
   'Password:' => 'Пароль',
@@ -15,6 +17,7 @@ return array (
   'The catch-all Route' => 'Обобщённый маршрут',
   'This is a test!!!' => 'Это тест!!!',
   'Timestamp:' => 'Метка времени',
+  'Unique Visitors' => '',
   'Validation API' => 'API проверки',
   'Welcome to {0}!' => 'Добро пожаловать на {0}',
 );

@@ -9,6 +9,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Home' => 'Домой',
   'If you have problems, please paste the above URL into your web browser.' => 'Если у вас есть проблемы, пожалуйста, вставьте URL в адресную строку браузера.',
   'Internal Server Error' => 'Ошибка на сервере',
+  'More info' => '',
   'Open subpage' => 'Открыть подстраницу',
   'Password Reset' => 'Сброс пароля',
   'Please verify your E-mail address' => 'Пожалуйста, подтвердите ваш E-mail адрес',

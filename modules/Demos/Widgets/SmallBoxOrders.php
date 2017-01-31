@@ -5,8 +5,6 @@ namespace Modules\Demos\Widgets;
 use Nova\Support\Facades\View;
 use Nova\Widget\Widget;
 
-use Modules\Users\Models\User;
-
 
 class SmallBoxOrders extends Widget
 {

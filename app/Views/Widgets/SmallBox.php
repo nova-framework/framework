@@ -1,12 +1,12 @@
 <!-- small box -->
 <div class="small-box bg-<?= $color; ?>">
     <div class="inner">
-        <h3><?= $users ?></h3>
+        <h3><?= $title; ?></h3>
 
-        <p><?= __d('users', 'Registered Users'); ?></p>
+        <p><?= $text; ?></p>
     </div>
     <div class="icon">
-        <i class="ion ion-person-add"></i>
+        <i class="ion ion-<?= $icon; ?>"></i>
     </div>
-    <a href="<?= site_url('admin/users'); ?>" class="small-box-footer"><?= __d('users', 'More info'); ?> <i class="fa fa-arrow-circle-right"></i></a>
+    <a href="<?= $url; ?>" class="small-box-footer"><?= __d('users', 'More info'); ?> <i class="fa fa-arrow-circle-right"></i></a>
 </div>

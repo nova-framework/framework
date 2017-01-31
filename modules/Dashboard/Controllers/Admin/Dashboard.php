@@ -9,6 +9,7 @@
 namespace Modules\Dashboard\Controllers\Admin;
 
 use Nova\Support\Facades\View;
+use Nova\Support\Facades\Widget;
 
 use App\Core\BackendController;
 
@@ -18,8 +19,11 @@ class Dashboard extends BackendController
 
     public function index()
     {
+        $smallBoxUsers = Widget::smallBoxUsers();
+
         return $this->getView()
-            ->shares('title', __d('dashboard', 'Dashboard'));
+            ->shares('title', __d('dashboard', 'Dashboard'))
+            ->withSmallBoxUsers($smallBoxUsers);
     }
 
 }

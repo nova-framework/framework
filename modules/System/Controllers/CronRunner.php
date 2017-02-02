@@ -34,7 +34,7 @@ class CronRunner extends Controller
         }
 
         // Get the execution date and time as translated string.
-        $format = __d('system', '%d %b %Y, %R');
+        $format = __d('system', '%d %b %Y, %H:%M');
 
         $date = Carbon::now()->formatLocalized($format);
 

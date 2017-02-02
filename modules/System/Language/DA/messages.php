@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
+  '%d %b %Y, %H:%M' => '',
   '<< Previous Page' => '<< Sidste side',
   'All tasks successfully executed.' => 'Alle opgaver gennemført med succes',
   'Apply the changes' => 'Tilføj ændringerne',

@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
+  '%d %b %Y, %H:%M' => '',
   '<< Previous Page' => 'Предыдущая страница',
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, вы успешно вошли',
   'Activate your Account!' => 'Активируйте вашу учетную запись!',

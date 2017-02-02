@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Users\Controllers\Admin;
+namespace Users\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Auth;
@@ -20,8 +20,8 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use Modules\Users\Models\User;
-use Modules\System\Models\Role;
+use Users\Models\User;
+use System\Models\Role;
 
 use Carbon\Carbon;
 

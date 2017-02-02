@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Logs\Providers;
+namespace Logs\Providers;
 
 use Nova\Support\ServiceProvider;
 
-use Modules\Logs\Observers\UserActionsObserver;
+use Logs\Observers\UserActionsObserver;
 
-use Modules\System\Models\Role;
-use Modules\Users\Models\User;
+use System\Models\Role;
+use Users\Models\User;
 
 
 class LogsServiceProvider extends ServiceProvider
@@ -38,8 +38,8 @@ class LogsServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\Logs\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\Logs\Providers\EventServiceProvider');
+        //$this->app->register('Logs\Providers\AuthServiceProvider');
+        //$this->app->register('Logs\Providers\EventServiceProvider');
     }
 
 }

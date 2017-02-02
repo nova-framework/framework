@@ -9,6 +9,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Home' => 'خانه',
   'If you have problems, please paste the above URL into your web browser.' => 'اگر مشکلی دارید، لطفا URL بالا را در داخل مرورگر خود پیست کنید.',
   'Internal Server Error' => '',
+  'More info' => '',
   'Open subpage' => 'بازکردن زیر‎صفحه',
   'Password Reset' => 'بازنشانی رمزعبور',
   'Please verify your E-mail address' => 'لطفا آدرس ایمیل خود را بررسی کنید',

@@ -35,7 +35,7 @@ return array(
     |
     */
 
-    'model' => 'Modules\Users\Models\User',
+    'model' => 'Users\Models\User',
 
     /*
     |--------------------------------------------------------------------------

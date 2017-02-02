@@ -10,7 +10,7 @@
 /** Define Events. */
 
 // Add a Listener Class to the Event 'test'.
-Event::listen('test', 'Modules\Demos\Events\Test@handle');
+Event::listen('test', 'Demos\Events\Test@handle');
 
 // Add a Listener Closure to the Event 'test'.
 Event::listen('test', function($data)

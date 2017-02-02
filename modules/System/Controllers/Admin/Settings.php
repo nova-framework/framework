@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\System\Controllers\Admin;
+namespace System\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Cache;
@@ -19,7 +19,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use Modules\System\Models\Option;
+use System\Models\Option;
 
 
 class Settings extends BackendController

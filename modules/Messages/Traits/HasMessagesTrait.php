@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Messages\Traits;
+namespace Messages\Traits;
 
-use Modules\Messages\Models\Message;
+use Messages\Models\Message;
 
 
 trait HasMessagesTrait
@@ -13,7 +13,7 @@ trait HasMessagesTrait
 
     public function messages()
     {
-        return $this->hasMany('Modules\Messages\Models\Message', 'sender_id');
+        return $this->hasMany('Messages\Models\Message', 'sender_id');
     }
 
 }

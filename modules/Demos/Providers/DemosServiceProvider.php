@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Demos\Providers;
+namespace Demos\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -29,8 +29,8 @@ class DemosServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\Demos\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\Demos\Providers\EventServiceProvider');
+        //$this->app->register('Demos\Providers\AuthServiceProvider');
+        //$this->app->register('Demos\Providers\EventServiceProvider');
     }
 
 }

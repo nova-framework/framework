@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Users\Widgets;
+namespace Users\Widgets;
 
 use Nova\Support\Facades\View;
 use Nova\Widget\Widget;
 
-use Modules\Users\Models\User;
+use Users\Models\User;
 
 
 class SmallBoxUsers extends Widget

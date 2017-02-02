@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Users\Presenters;
+namespace Users\Presenters;
 
 use Nova\Support\Str;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\System\Models;
+namespace System\Models;
 
 use Nova\Database\ORM\Model;
 use Nova\Database\ORM\ModelNotFoundException;
@@ -21,12 +21,12 @@ class Notification extends Model
 
     public function user()
     {
-        return $this->belongsTo('Modules\Users\Models\User', 'user_id');
+        return $this->belongsTo('Users\Models\User', 'user_id');
     }
 
     public function sender()
     {
-        return $this->belongsTo('Modules\Users\Models\User', 'sender_id');
+        return $this->belongsTo('Users\Models\User', 'sender_id');
     }
 
     public function scopeUnread($query)

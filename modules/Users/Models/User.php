@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Users\Models;
+namespace Users\Models;
 
 use Nova\Auth\UserTrait;
 use Nova\Auth\UserInterface;
@@ -17,9 +17,9 @@ use Nova\Database\ORM\Model as BaseModel;
 use Shared\Database\ORM\FileField\FileFieldTrait;
 use Shared\View\Presenter\PresentableTrait;
 
-use Modules\Messages\Traits\HasMessagesTrait;
-use Modules\System\Traits\HasNotificationsTrait;
-use Modules\System\Traits\HasRoleTrait;
+use Messages\Traits\HasMessagesTrait;
+use System\Traits\HasNotificationsTrait;
+use System\Traits\HasRoleTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
@@ -42,6 +42,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
-    protected $presenter = 'Modules\Users\Presenters\UserPresenter';
+    protected $presenter = 'Users\Presenters\UserPresenter';
 
 }

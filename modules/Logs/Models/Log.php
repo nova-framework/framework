@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Logs\Models;
+namespace Logs\Models;
 
-use Modules\System\Database\Model;
+use System\Database\Model;
 
 
 class Log extends Model
@@ -16,12 +16,12 @@ class Log extends Model
 
     public function group()
     {
-        return $this->belongsTo('Modules\Logs\Models\LogGroup', 'group_id');
+        return $this->belongsTo('Logs\Models\LogGroup', 'group_id');
     }
 
     public function user()
     {
-        return $this->hasOne('Modules\Users\User', 'id', 'user_id');
+        return $this->hasOne('Users\User', 'id', 'user_id');
     }
 
     public function getDataAttribute($value) {

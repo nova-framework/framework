@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\WebChat\Providers;
+namespace WebChat\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -29,8 +29,8 @@ class WebChatServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\WebChat\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\WebChat\Providers\EventServiceProvider');
+        //$this->app->register('WebChat\Providers\AuthServiceProvider');
+        //$this->app->register('WebChat\Providers\EventServiceProvider');
     }
 
 }

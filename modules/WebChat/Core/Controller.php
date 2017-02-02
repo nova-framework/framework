@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\WebChat\Core;
+namespace WebChat\Core;
 
 use Nova\Support\Facades\Assets;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
-use Modules\System\Exceptions\ValidationException;
+use System\Exceptions\ValidationException;
 
 
 class Controller extends BackendController

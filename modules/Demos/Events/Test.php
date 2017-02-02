@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Demos\Events;
+namespace Demos\Events;
 
 class Test
 {

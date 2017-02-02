@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Users\Providers;
+namespace Users\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -29,8 +29,8 @@ class UsersServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\Users\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\Users\Providers\EventServiceProvider');
+        //$this->app->register('Users\Providers\AuthServiceProvider');
+        //$this->app->register('Users\Providers\EventServiceProvider');
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\System\Database\Seeds;
+namespace System\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
@@ -18,6 +18,6 @@ class SystemDatabaseSeeder extends Seeder
         Model::unguard();
 
         //
-        $this->call('Modules\System\Database\Seeds\RolesTableSeeder');
+        $this->call('System\Database\Seeds\RolesTableSeeder');
     }
 }

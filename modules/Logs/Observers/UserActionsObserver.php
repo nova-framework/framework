@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Logs\Observers;
+namespace Logs\Observers;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Request;
 
-use Modules\Logs\Models\Log;
+use Logs\Models\Log;
 
 
 class UserActionsObserver

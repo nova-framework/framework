@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Dashboard\Controllers\Admin;
+namespace Dashboard\Controllers\Admin;
 
 use Nova\Support\Facades\View;
 use Nova\Support\Facades\Widget;

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Users\Controllers;
+namespace Users\Controllers;
 
 use Nova\Helpers\ReCaptcha;
 use Nova\Support\Facades\App;

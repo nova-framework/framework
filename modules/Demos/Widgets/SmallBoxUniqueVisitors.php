@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Demos\Widgets;
+namespace Demos\Widgets;
 
 use Nova\Support\Facades\View;
 use Nova\Widget\Widget;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Dashboard\Providers;
+namespace Dashboard\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -29,8 +29,8 @@ class DashboardServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\Dashboard\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\Dashboard\Providers\EventServiceProvider');
+        //$this->app->register('Dashboard\Providers\AuthServiceProvider');
+        //$this->app->register('Dashboard\Providers\EventServiceProvider');
     }
 
 }

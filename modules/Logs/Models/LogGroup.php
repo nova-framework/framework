@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Logs\Models;
+namespace Logs\Models;
 
 use Nova\Database\ORM\Model;
 
@@ -16,6 +16,6 @@ class LogGroup extends Model
 
     public function logs()
     {
-        return $this->hasMany('Modules\Logs\Models\Log', 'group_id');
+        return $this->hasMany('Logs\Models\Log', 'group_id');
     }
 }

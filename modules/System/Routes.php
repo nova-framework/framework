@@ -9,7 +9,7 @@
 
 /** Define static routes. */
 
-Route::group(array('prefix' => '', 'namespace' => 'Modules\System\Controllers'), function()
+Route::group(array('prefix' => '', 'namespace' => 'System\Controllers'), function()
 {
     // The Framework's Language Changer.
     Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@update'))
@@ -20,7 +20,7 @@ Route::group(array('prefix' => '', 'namespace' => 'Modules\System\Controllers'),
 });
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\System\Controllers\Admin'), function()
+Route::group(array('prefix' => 'admin', 'namespace' => 'System\Controllers\Admin'), function()
 {
     // Notifications
     Route::get('notifications', array('before' => 'auth', 'uses' => 'Notifications@index'));

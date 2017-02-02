@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Demos\Database\Seeds;
+namespace Demos\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
@@ -17,6 +17,6 @@ class DemosDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call('Modules\Demos\Database\Seeds\FoobarTableSeeder');
+        // $this->call('Demos\Database\Seeds\FoobarTableSeeder');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Demos\Controllers;
+namespace Demos\Controllers;
 
 use Nova\Routing\Route;
 use Nova\Support\Facades\App;
@@ -18,7 +18,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\Controller;
 
-use Modules\Users\Models\User;
+use Users\Models\User;
 
 
 class Demos extends Controller
@@ -86,7 +86,7 @@ class Demos extends Controller
             $content = '<pre>' .e($uri) .'</pre>';
         }
 
-        $className = 'Modules\Social\Commands\FollowUserCommand';
+        $className = 'Social\Commands\FollowUserCommand';
 
         $content = preg_replace('~Command(?!.*Command)~', 'CommandHandler', $className);
 

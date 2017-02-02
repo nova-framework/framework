@@ -14,5 +14,5 @@
     "license": "MIT",
     "slug": "logs",
     "namespace": "Logs",
-    "order" : "8001"
+    "order" : "9001"
 }

@@ -10,7 +10,7 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Messages\Controllers\Admin'), function()
+Route::group(array('prefix' => 'admin', 'namespace' => 'Messages\Controllers\Admin'), function()
 {
     // Messages
     Route::get( 'messages',                  array('before' => 'auth',      'uses' => 'Messages@index'));

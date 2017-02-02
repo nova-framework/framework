@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Files\Providers;
+namespace Files\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -29,8 +29,8 @@ class FilesServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\Files\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\Files\Providers\EventServiceProvider');
+        //$this->app->register('Files\Providers\AuthServiceProvider');
+        //$this->app->register('Files\Providers\EventServiceProvider');
     }
 
 }

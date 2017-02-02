@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Messages\Providers;
+namespace Messages\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -29,8 +29,8 @@ class MessagesServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\Messages\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\Messages\Providers\EventServiceProvider');
+        //$this->app->register('Messages\Providers\AuthServiceProvider');
+        //$this->app->register('Messages\Providers\EventServiceProvider');
     }
 
 }

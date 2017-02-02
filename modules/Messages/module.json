@@ -14,5 +14,5 @@
     "license": "MIT",
     "slug": "messages",
     "namespace": "Messages",
-    "order" : "8001"
+    "order" : "9001"
 }

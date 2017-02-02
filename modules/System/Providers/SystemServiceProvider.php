@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\System\Providers;
+namespace System\Providers;
 
-use Modules\System\Models\Option;
+use System\Models\Option;
 
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
@@ -33,8 +33,8 @@ class SystemServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Modules\System\Providers\AuthServiceProvider');
-        //$this->app->register('Modules\System\Providers\EventServiceProvider');
+        //$this->app->register('System\Providers\AuthServiceProvider');
+        //$this->app->register('System\Providers\EventServiceProvider');
     }
 
     /**

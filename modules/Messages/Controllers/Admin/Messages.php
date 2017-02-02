@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Messages\Controllers\Admin;
+namespace Messages\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Auth;
@@ -10,9 +10,9 @@ use Nova\Support\Facades\Validator;
 
 use App\Core\BackendController;
 
-use Modules\System\Exceptions\ValidationException;
-use Modules\Messages\Models\Message;
-use Modules\Users\Models\User;
+use System\Exceptions\ValidationException;
+use Messages\Models\Message;
+use Users\Models\User;
 
 
 class Messages extends BackendController

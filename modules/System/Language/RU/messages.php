@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
+  '%d %b %Y, %H:%M' => '',
   '<< Previous Page' => 'Предыдущая страница',
   'All tasks successfully executed.' => 'Все задачи успешно выполнены',
   'Apply the changes' => 'Применить изменения',

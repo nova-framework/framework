@@ -49,7 +49,7 @@ $opt_role = Input::old('role');
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="first_name"><?= __d('users', 'First Name'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <input name="first_name" id="first_name" type="text" class="form-control" value="<?= Input::old('last_name'); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
+                    <input name="first_name" id="first_name" type="text" class="form-control" value="<?= Input::old('first_name'); ?>" placeholder="<?= __d('users', 'First Name'); ?>">
                 </div>
             </div>
             <div class="form-group">

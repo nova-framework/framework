@@ -52,7 +52,7 @@
         </table>
 <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('system', 'No registered Roles'); ?></h4>
+            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %H:%M", time()) ." - "; ?> <?= __d('system', 'No registered Roles'); ?></h4>
             <?= __d('system', 'There are no registered Roles.'); ?>
         </div>
 <?php } ?>

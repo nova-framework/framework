@@ -53,7 +53,7 @@ class UserPresenter extends Presenter
      */
     public function picture()
     {
-        if (isset($this->image) && $this->image->exists()) {
+        if ($this->image->exists()) {
             return resource_url('images/users/' .basename($this->image->path));
         }
 

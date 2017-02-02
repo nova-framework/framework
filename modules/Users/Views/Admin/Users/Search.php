@@ -50,7 +50,7 @@
         </table>
 <?php } else { ?>
         <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('users', 'No registered Users'); ?></h4>
+            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %H:%M", time()) ." - "; ?> <?= __d('users', 'No registered Users'); ?></h4>
             <?= __d('users', 'There are no registered Users for: <b>{0}</b>', $search); ?>
         </div>
 <?php } ?>

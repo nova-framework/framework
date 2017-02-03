@@ -6,13 +6,6 @@
  * @version 3.0
  */
 
-//--------------------------------------------------------------------------
-// Load The Composer Autoloader
-//--------------------------------------------------------------------------
-
-require ROOTDIR .'vendor/autoload.php';
-
-// The used Classes.
 use Nova\Config\Config;
 use Nova\Config\Repository as ConfigRepository;
 use Nova\Foundation\AliasLoader;

@@ -46,7 +46,7 @@ $langMenuLinks = ob_get_clean();
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        template_url('css/style.css', 'AdminLTE'),
+        theme_url('css/style.css', 'AdminLTE'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone

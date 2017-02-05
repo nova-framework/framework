@@ -16,12 +16,12 @@ use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
-use App\Core\Controller;
+use App\Core\ThemedController;
 
 use Users\Models\User;
 
 
-class Demos extends Controller
+class Demos extends ThemedController
 {
     /**
      * Define Index method

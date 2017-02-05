@@ -50,7 +50,7 @@ $langMenuLinks = ob_get_clean();
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
 
         // Custom CSS
-        template_url('css/style.css', 'AdminLTE'),
+        theme_url('css/style.css', 'AdminLTE'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone

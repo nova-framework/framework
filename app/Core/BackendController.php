@@ -15,7 +15,7 @@ use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\View;
 
-use App\Core\Controller as BaseController;
+use App\Core\ThemedController as BaseController;
 
 use Messages\Models\Message;
 use System\Models\Notification;
@@ -28,7 +28,7 @@ abstract class BackendController extends BaseController
      *
      * @var string
      */
-    protected $template = 'AdminLTE';
+    protected $theme = 'AdminLTE';
 
     /**
      * The currently used Layout.
@@ -37,13 +37,6 @@ abstract class BackendController extends BaseController
      */
     protected $layout = 'Backend';
 
-    /**
-     * Create a new BackendController instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * A Before Filter which permit the access to Administrators.

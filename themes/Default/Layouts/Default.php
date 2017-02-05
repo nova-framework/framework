@@ -33,7 +33,7 @@ Assets::css([
     vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
     vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
-    template_url('css/style.css', 'Default'),
+    theme_url('css/style.css', 'Default'),
 ]);
 
 echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -55,7 +55,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 
 <div class="container">
     <p>
-        <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITE_TITLE); ?>'>
+        <img src='<?= theme_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITE_TITLE); ?>'>
     </p>
 
     <?= $content; ?>

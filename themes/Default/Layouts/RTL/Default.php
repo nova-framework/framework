@@ -30,10 +30,10 @@ $langMenuLinks = ob_get_clean();
 echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
-    template_url('css/bootstrap-rtl.min.css', 'Default'),
-    template_url('css/bootstrap-rtl-theme.min.css', 'Default'),
+    theme_url('css/bootstrap-rtl.min.css', 'Default'),
+    theme_url('css/bootstrap-rtl-theme.min.css', 'Default'),
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
-    template_url('css/style-rtl.css', 'Default'),
+    theme_url('css/style-rtl.css', 'Default'),
 ]);
 
 echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -55,7 +55,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 
 <div class="container">
     <p>
-        <img src='<?= template_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITE_TITLE); ?>'>
+        <img src='<?= theme_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITE_TITLE); ?>'>
     </p>
 
     <?= $content; ?>
@@ -81,7 +81,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 <?php
 Assets::js([
     'https://code.jquery.com/jquery-1.12.4.min.js',
-    template_url('js/bootstrap-rtl.min.js', 'Default'),
+    theme_url('js/bootstrap-rtl.min.js', 'Default'),
 ]);
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone

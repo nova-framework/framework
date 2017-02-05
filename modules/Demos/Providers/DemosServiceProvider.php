@@ -31,6 +31,41 @@ class DemosServiceProvider extends ServiceProvider
         // Register additional Service Providers.
         //$this->app->register('Demos\Providers\AuthServiceProvider');
         //$this->app->register('Demos\Providers\EventServiceProvider');
+
+        /*
+        $className = get_class($this);
+
+        //$path = $this->guessPackagePath() .DS .'Demos' .DS;
+
+        $reflection = new \ReflectionClass($this);
+
+        $classPath = $reflection->getFileName();
+
+        $path = realpath(dirname($classPath) .'/../') .DS;
+
+        echo '<pre>' .var_export($path, true) .'</pre>';
+
+        // Retrieve the Composer's Module information.
+        $filePath = base_path('vendor/nova-modules.php');
+
+        //
+        $modules = array();
+
+        try {
+            $data = $this->app['files']->getRequire($filePath);
+
+            if (isset($data['modules']) && is_array($data['modules'])) {
+                $modules = array_flip($data['modules']);
+            }
+        }
+        catch (FileNotFoundException $e) {
+            // Do nothing.
+        }
+
+        $namespace = isset($modules[$path]) ? $modules[$path] : null;
+
+        echo '<pre>' .var_export($namespace, true) .'</pre>';
+        */
     }
 
 }

@@ -8,15 +8,15 @@
 
 namespace App\Controllers;
 
-use App\Core\Controller;
+use App\Core\ThemedController;
 
-use View;
+use Nova\Support\Facades\View;
 
 
 /**
  * Sample controller showing 2 methods and their typical usage.
  */
-class Welcome extends Controller
+class Welcome extends ThemedController
 {
 
     /**

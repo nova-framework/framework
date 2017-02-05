@@ -15,7 +15,7 @@ use Nova\Support\Facades\View as ViewFactory;
 use Nova\View\Layout;
 use Nova\View\View;
 
-use App\Core\Controller as BaseController;
+use App\Core\BaseController;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 

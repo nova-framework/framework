@@ -34,19 +34,19 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        template_url('css/bootstrap-rtl.min.css', 'Default'),
+        theme_url('css/bootstrap-rtl.min.css', 'Default'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        template_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
+        theme_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        template_url('css/style-rtl.css', 'AdminLTE'),
+        theme_url('css/style-rtl.css', 'AdminLTE'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -141,7 +141,7 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    template_url('js/bootstrap-rtl.min.js', 'Default'),
+    theme_url('js/bootstrap-rtl.min.js', 'Default'),
     // AdminLTE App
     vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // iCheck

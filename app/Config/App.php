@@ -76,7 +76,7 @@ return array(
     | Default Theme
     |--------------------------------------------------------------------------
     |
-    | Used for the applications default template.
+    | Used for the applications default theme.
     |
     */
 

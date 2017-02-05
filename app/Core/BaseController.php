@@ -9,7 +9,7 @@
 namespace App\Core;
 
 use Nova\Http\Response;
-use Nova\Routing\Controller as BaseController;
+use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Module;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use BadMethodCallException;
 
 
-abstract class Controller extends BaseController
+abstract class BaseController extends Controller
 {
 
     /**

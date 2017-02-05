@@ -39,28 +39,15 @@ abstract class BaseController extends Controller
          // Transform the complete class name on a path like variable.
         $path = str_replace('\\', '/', static::class);
 
-        // Check for a valid controller on Application.
-        if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
-            $view = $matches[1] .'/' .ucfirst($method);
-
-            return ViewFactory::make($view, $data);
-        }
-
-        // Retrieve the Modules namespace from their configuration.
-        $namespace = Config::get('modules.namespace', '');
-
-        if (! empty($namespace)) {
-            // Transform the Modules namespace on a path like variable.
-            $basePath = str_replace('\\', '/', rtrim($namespace, '\\')) .'/';
-        } else {
-            $basePath = '';
-        }
-
-        // Check for a valid controller on Modules.
+        // Check for a valid controller on App or Modules.
         if (preg_match('#^'. $basePath .'(.+)/Controllers/(.*)$#i', $path, $matches)) {
-            $module = $matches[1];
-
             $view = $matches[2] .'/' .ucfirst($method);
+
+            if ($matches[1] == 'App') {
+               $module = null;
+            } else {
+               $module = $matches[1];
+            }
 
             return ViewFactory::make($view, $data, $module);
         }

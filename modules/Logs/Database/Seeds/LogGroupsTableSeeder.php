@@ -19,28 +19,28 @@ class LogGroupsTableSeeder extends Seeder
     {
         LogGroup::create(array(
             'id'          => 1,
-            'name'        => 'Generic',
+            'name'        => __d('logs', 'Generic'),
             'slug'        => 'generic',
             'description' => 'This is the group which used by default on logging.',
         ));
 
         LogGroup::create(array(
             'id'          => 2,
-            'name'        => 'System',
+            'name'        => __d('logs', 'System'),
             'slug'        => 'system',
             'description' => 'This is the group which used for logging of the System actions.',
         ));
 
         LogGroup::create(array(
             'id'          => 3,
-            'name'        => 'Database',
+            'name'        => __d('logs', 'Database'),
             'slug'        => 'database',
             'description' => 'This is the group which used for logging of the ORM actions.',
         ));
 
         LogGroup::create(array(
             'id'          => 4,
-            'name'        => 'Auth',
+            'name'        => __d('logs', 'Auth'),
             'slug'        => 'auth',
             'description' => 'This is the group which used for logging of the Auth System actions.',
         ));

@@ -7,10 +7,10 @@ use Nova\Support\Facades\Cookie;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Session;
 
-use App\Core\Controller;
+use App\Core\BaseController;
 
 
-class Language extends Controller
+class Language extends BaseController
 {
 
     /**

@@ -51,7 +51,7 @@ define('SYSTEMDIR', ROOTDIR .str_replace('/', DS, 'vendor/nova-framework/system/
 // Set The Storage Path
 //--------------------------------------------------------------------------
 
-define('STORAGE_PATH', APPDIR .'Storage' .DS);
+define('STORAGE_PATH', ROOTDIR .'storage' .DS);
 
 //--------------------------------------------------------------------------
 // Set The Framework Version

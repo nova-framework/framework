@@ -34,7 +34,7 @@ Config::set('cache', array(
     | are free to change it to any other place on disk that you desire.
     */
 
-    'path' => storage_path() .DS .'Cache',
+    'path' => STORAGE_PATH .'cache',
 
     /*
     |--------------------------------------------------------------------------

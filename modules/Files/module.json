@@ -2,7 +2,7 @@
     "name": "Files",
     "description": "This is the description for the Files module.",
     "homepage": "http://www.novaframework.dev",
-    "version": "1.0",
+    "version": "1.0.0",
     "authors" : [
         {
             "name" : "John Doe",

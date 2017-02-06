@@ -28,6 +28,9 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Configure the Package.
+        $this->package('Dashboard', 'dashboard');
+
         // Register additional Service Providers.
         //$this->app->register('Dashboard\Providers\AuthServiceProvider');
         //$this->app->register('Dashboard\Providers\EventServiceProvider');

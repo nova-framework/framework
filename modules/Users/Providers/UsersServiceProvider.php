@@ -28,6 +28,9 @@ class UsersServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Configure the Package.
+        $this->package('Users', 'users');
+
         // Register additional Service Providers.
         //$this->app->register('Users\Providers\AuthServiceProvider');
         //$this->app->register('Users\Providers\EventServiceProvider');

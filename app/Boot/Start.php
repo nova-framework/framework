@@ -6,13 +6,6 @@
  * @version 3.0
  */
 
-//--------------------------------------------------------------------------
-// Load The Composer Autoloader
-//--------------------------------------------------------------------------
-
-require ROOTDIR .'vendor/autoload.php';
-
-// The used Classes.
 use Nova\Config\Config;
 use Nova\Config\Repository as ConfigRepository;
 use Nova\Foundation\AliasLoader;
@@ -58,7 +51,7 @@ define('SYSTEMDIR', ROOTDIR .str_replace('/', DS, 'vendor/nova-framework/system/
 // Set The Storage Path
 //--------------------------------------------------------------------------
 
-define('STORAGE_PATH', APPDIR .'Storage' .DS);
+define('STORAGE_PATH', ROOTDIR .'storage' .DS);
 
 //--------------------------------------------------------------------------
 // Set The Framework Version

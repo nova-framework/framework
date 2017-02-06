@@ -96,6 +96,9 @@ Config::set('app', array(
         'Nova\View\ViewServiceProvider',
         'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
+
+        // The Application Providers.
+        'App\Providers\AppServiceProvider',        
     ),
 
     /**

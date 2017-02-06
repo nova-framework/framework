@@ -1,6 +1,6 @@
 {
     "name": "Users",
-    "version": "1.0",
+    "version": "1.0.0",
     "description": "This is the description for the Users module.",
     "homepage" : "http://www.novaframework.com/",
     "authors" : [

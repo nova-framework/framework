@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Demos\Providers;
 
 use Nova\Routing\Router;
 use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -13,7 +13,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Controllers';
+    protected $namespace = '';
 
 
     /**
@@ -24,26 +24,20 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $path = app_path('Filters.php');
+        $basePath = realpath(__DIR__ .'/../') .DS;
+
+        //
+        $path = $basePath .'Filters.php';
 
         $this->loadFiltersFrom($path);
 
         //
-        parent::boot($router);
-    }
+        $path = $basePath .'Routes.php';
 
-    /**
-     * Define the routes for the application.
-     *
-     * @param  \Nova\Routing\Router  $router
-     * @return void
-     */
-    public function map(Router $router)
-    {
-        $router->group(array('namespace' => $this->namespace), function ($router)
-        {
-            require app_path('Routes.php');
-        });
+        $this->loadRoutesFrom($path);
+
+        //
+        parent::boot($router);
     }
 
 }

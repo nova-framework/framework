@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Demos\Providers;
 
 use Nova\Events\Dispatcher;
 use Nova\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -14,8 +14,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = array(
-        'App\Events\SomeEvent' => array(
-            'App\Listeners\EventListener',
+        'Demos\Events\SomeEvent' => array(
+            'Demos\Listeners\EventListener',
         ),
     );
 
@@ -31,7 +31,7 @@ class EventServiceProvider extends ServiceProvider
         parent::boot($events);
 
         //
-        $path = app_path('Events.php');
+        $path = realpath(__DIR__ .'/../') .DS .'Events.php';
 
         $this->loadEventsFrom($path);
     }

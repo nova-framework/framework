@@ -14,8 +14,13 @@ class DemosServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $basePath = realpath(__DIR__ .'/../');
+
         // Configure the Package.
-        $this->package('Demos', 'demos');
+        $this->package('Demos', 'demos', $basePath);
+
+        //
+        require $basePath .DS .'Bootstrap.php';
     }
 
     /**
@@ -30,8 +35,9 @@ class DemosServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Demos\Providers\AuthServiceProvider');
-        //$this->app->register('Demos\Providers\EventServiceProvider');
+        $this->app->register('Demos\Providers\AuthServiceProvider');
+        $this->app->register('Demos\Providers\EventServiceProvider');
+        $this->app->register('Demos\Providers\RouteServiceProvider');
 
         /*
         $className = get_class($this);

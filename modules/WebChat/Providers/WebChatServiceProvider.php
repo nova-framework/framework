@@ -14,8 +14,13 @@ class WebChatServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $basePath = realpath(__DIR__ .'/../');
+
         // Configure the Package.
-        $this->package('WebChat', 'web_chat');
+        $this->package('WebChat', 'web_chat', $basePath);
+
+        //
+        require $basePath .DS .'Bootstrap.php';
     }
 
     /**
@@ -30,8 +35,9 @@ class WebChatServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('WebChat\Providers\AuthServiceProvider');
-        //$this->app->register('WebChat\Providers\EventServiceProvider');
+        $this->app->register('WebChat\Providers\AuthServiceProvider');
+        $this->app->register('WebChat\Providers\EventServiceProvider');
+        $this->app->register('WebChat\Providers\RouteServiceProvider');
     }
 
 }

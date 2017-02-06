@@ -14,8 +14,13 @@ class FilesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $basePath = realpath(__DIR__ .'/../');
+
         // Configure the Package.
-        $this->package('Files', 'files');
+        $this->package('Files', 'files', $basePath);
+
+        //
+        require $basePath .DS .'Bootstrap.php';
     }
 
     /**
@@ -30,8 +35,9 @@ class FilesServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Files\Providers\AuthServiceProvider');
-        //$this->app->register('Files\Providers\EventServiceProvider');
+        $this->app->register('Files\Providers\AuthServiceProvider');
+        $this->app->register('Files\Providers\EventServiceProvider');
+        $this->app->register('Files\Providers\RouteServiceProvider');
     }
 
 }

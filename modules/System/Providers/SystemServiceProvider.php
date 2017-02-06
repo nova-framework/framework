@@ -18,8 +18,13 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $basePath = realpath(__DIR__ .'/../');
+
         // Configure the Package.
-        $this->package('System', 'system');
+        $this->package('System', 'system', $basePath);
+
+        //
+        require $basePath .DS .'Bootstrap.php';
 
         // Load the Options from database.
         $this->loadOptions();
@@ -37,8 +42,9 @@ class SystemServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('System\Providers\AuthServiceProvider');
-        //$this->app->register('System\Providers\EventServiceProvider');
+        $this->app->register('System\Providers\AuthServiceProvider');
+        $this->app->register('System\Providers\EventServiceProvider');
+        $this->app->register('System\Providers\RouteServiceProvider');
     }
 
     /**

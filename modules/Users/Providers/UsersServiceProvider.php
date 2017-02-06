@@ -14,8 +14,13 @@ class UsersServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $basePath = realpath(__DIR__ .'/../');
+
         // Configure the Package.
-        $this->package('Users', 'users');
+        $this->package('Users', 'users', $basePath);
+
+        //
+        require $basePath .DS .'Bootstrap.php';
     }
 
     /**
@@ -30,8 +35,9 @@ class UsersServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Users\Providers\AuthServiceProvider');
-        //$this->app->register('Users\Providers\EventServiceProvider');
+        $this->app->register('Users\Providers\AuthServiceProvider');
+        $this->app->register('Users\Providers\EventServiceProvider');
+        $this->app->register('Users\Providers\RouteServiceProvider');
     }
 
 }

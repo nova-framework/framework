@@ -14,7 +14,8 @@ class WebChatServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-	//
+        // Configure the Package.
+        $this->package('WebChat', 'web_chat');
     }
 
     /**
@@ -28,9 +29,6 @@ class WebChatServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Configure the Package.
-        $this->package('WebChat', 'web_chat');
-
         // Register additional Service Providers.
         //$this->app->register('WebChat\Providers\AuthServiceProvider');
         //$this->app->register('WebChat\Providers\EventServiceProvider');

@@ -14,7 +14,8 @@ class FilesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Configure the Package.
+        $this->package('Files', 'files');
     }
 
     /**
@@ -28,9 +29,6 @@ class FilesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Configure the Package.
-        $this->package('Files', 'files');
-
         // Register additional Service Providers.
         //$this->app->register('Files\Providers\AuthServiceProvider');
         //$this->app->register('Files\Providers\EventServiceProvider');

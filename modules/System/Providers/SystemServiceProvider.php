@@ -18,6 +18,10 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Configure the Package.
+        $this->package('System', 'system');
+
+        // Load the Options from database.
         $this->loadOptions();
     }
 
@@ -32,9 +36,6 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Configure the Package.
-        $this->package('System', 'system');
-
         // Register additional Service Providers.
         //$this->app->register('System\Providers\AuthServiceProvider');
         //$this->app->register('System\Providers\EventServiceProvider');

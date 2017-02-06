@@ -30,5 +30,8 @@ class EventServiceProvider extends ServiceProvider
         parent::boot($events);
 
         //
+        $path = app_path('Events.php');
+
+        $this->loadEventsFrom($path);
     }
 }

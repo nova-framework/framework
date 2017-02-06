@@ -14,7 +14,8 @@ class MessagesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Configure the Package.
+        $this->package('Messages', 'messages');
     }
 
     /**
@@ -28,9 +29,6 @@ class MessagesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Configure the Package.
-        $this->package('Messages', 'messages');
-
         // Register additional Service Providers.
         //$this->app->register('Messages\Providers\AuthServiceProvider');
         //$this->app->register('Messages\Providers\EventServiceProvider');

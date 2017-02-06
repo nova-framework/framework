@@ -6,7 +6,8 @@
  * @version 4.0
  */
 
-Config::set('videoChat', array(
+
+return array(
     /*
     |--------------------------------------------------------------------------
     | The Signaling Server used by SimpleWebRTC
@@ -15,4 +16,4 @@ Config::set('videoChat', array(
     | NOTE: You must use your own Signaling Server for production.
     */
     'url' => 'https://sandbox.simplewebrtc.com:443/',
-));
+);

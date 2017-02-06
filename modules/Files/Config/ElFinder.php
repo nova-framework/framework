@@ -1,12 +1,13 @@
 <?php
 /**
- * Config - the Module's specific Configuration.
+ * ElFinder - the Module's specific Configuration.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0
  */
 
-Config::set('elFinder', array(
+
+return array(
     'locale' => 'en_US.UTF-8',
     'debug'  => false,
 
@@ -48,4 +49,4 @@ Config::set('elFinder', array(
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),
         )
     )
-));
+);

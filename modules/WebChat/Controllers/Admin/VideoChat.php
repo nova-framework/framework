@@ -85,7 +85,7 @@ class VideoChat extends Controller
             ->deliver();
 
         // Retrieve the Signaling Server from configuration.
-        $url = Config::get('videoChat.url', 'https://sandbox.simplewebrtc.com:443/');
+        $url = Config::get('web_chat::videoChat.url', 'https://sandbox.simplewebrtc.com:443/');
 
         // Calculate the Chat Room name, using a SHA256 string, resulting something like:
         // f07b631f7a601cd8cbd3332d54f43142c7088a83299f859356f08d1d4d4259b3

@@ -14,6 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        require realpath(__DIR__ .'/../') .DS .'Bootstrap.php';
+
         //
     }
 

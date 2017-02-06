@@ -214,14 +214,6 @@ $path = $app['path'] .DS .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
 
 if (is_readable($path)) require $path;
 
-//--------------------------------------------------------------------------
-// Load The Application Bootstrap
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Bootstrap.php';
-
-if (is_readable($path)) require $path;
-
 });
 
 //--------------------------------------------------------------------------

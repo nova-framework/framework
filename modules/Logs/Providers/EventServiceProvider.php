@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Providers;
+namespace Logs\Providers;
 
 use Nova\Events\Dispatcher;
 use Nova\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+
+use Logs\Observers\UserActionsObserver;
+
+use System\Models\Role;
+use Users\Models\User;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -14,8 +19,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = array(
-        'App\Events\SomeEvent' => array(
-            'App\Listeners\EventListener',
+        'Logs\Events\SomeEvent' => array(
+            'Logs\Listeners\EventListener',
         ),
     );
 
@@ -31,8 +36,14 @@ class EventServiceProvider extends ServiceProvider
         parent::boot($events);
 
         //
-        $path = app_path('Events.php');
+        $path = realpath(__DIR__ .'/../') .DS .'Events.php';
 
         $this->loadEventsFrom($path);
+
+        //
+        $observer = new UserActionsObserver();
+
+        User::observe($observer);
+        Role::observe($observer);
     }
 }

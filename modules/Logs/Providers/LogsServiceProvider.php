@@ -4,11 +4,6 @@ namespace Logs\Providers;
 
 use Nova\Support\ServiceProvider;
 
-use Logs\Observers\UserActionsObserver;
-
-use System\Models\Role;
-use Users\Models\User;
-
 
 class LogsServiceProvider extends ServiceProvider
 {
@@ -19,14 +14,13 @@ class LogsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $basePath = realpath(__DIR__ .'/../');
+
         // Configure the Package.
-        $this->package('Logs', 'logs');
+        $this->package('Logs', 'logs', $basePath);
 
         //
-        $observer = new UserActionsObserver();
-
-        User::observe($observer);
-        Role::observe($observer);
+        require $basePath .DS .'Bootstrap.php';
     }
 
     /**
@@ -41,8 +35,9 @@ class LogsServiceProvider extends ServiceProvider
     public function register()
     {
         // Register additional Service Providers.
-        //$this->app->register('Logs\Providers\AuthServiceProvider');
-        //$this->app->register('Logs\Providers\EventServiceProvider');
+        $this->app->register('Logs\Providers\AuthServiceProvider');
+        $this->app->register('Logs\Providers\EventServiceProvider');
+        $this->app->register('Logs\Providers\RouteServiceProvider');
     }
 
 }

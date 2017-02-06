@@ -6,7 +6,8 @@
  * @version 4.0
  */
 
-Config::set('cron', array(
+
+return array(
     /*
     |--------------------------------------------------------------------------
     | Encryption Token
@@ -20,4 +21,4 @@ Config::set('cron', array(
     |
     */
     'token' => 'SomeRandomStringThere_1234567890',
-));
+);

@@ -7,15 +7,13 @@ use Nova\Support\Facades\Cron;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
 
-use App\Core\ThemedController;
+use App\Core\BaseController;
 
 use Carbon\Carbon;
 
 
-class CronRunner extends Controller
+class CronRunner extends BaseController
 {
-    protected $layout = false;
-
     /**
      * @var string The CRON token
      */
@@ -27,7 +25,7 @@ class CronRunner extends Controller
         parent::__construct();
 
         //
-        $this->token = Config::get('cron.token');
+        $this->token = Config::get('system::cron.token');
     }
 
     public function index($token)

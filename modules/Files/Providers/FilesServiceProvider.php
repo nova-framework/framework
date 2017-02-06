@@ -28,6 +28,9 @@ class FilesServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Configure the Package.
+        $this->package('Local/Files', 'files');
+
         // Register additional Service Providers.
         //$this->app->register('Files\Providers\AuthServiceProvider');
         //$this->app->register('Files\Providers\EventServiceProvider');

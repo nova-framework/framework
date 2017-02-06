@@ -40,7 +40,7 @@ abstract class ThemedController extends BaseController
 
 
     /**
-     * Create a new Controller instance.
+     * Create a new ThemedController instance.
      */
     public function __construct()
     {

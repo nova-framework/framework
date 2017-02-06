@@ -37,6 +37,9 @@ class LogsServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Configure the Package.
+        $this->package('Logs', 'logs');
+
         // Register additional Service Providers.
         //$this->app->register('Logs\Providers\AuthServiceProvider');
         //$this->app->register('Logs\Providers\EventServiceProvider');

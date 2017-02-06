@@ -29,7 +29,7 @@ class WebChatServiceProvider extends ServiceProvider
     public function register()
     {
         // Configure the Package.
-        $this->package('Local/WebChat', 'web_chat');
+        $this->package('WebChat', 'web_chat');
 
         // Register additional Service Providers.
         //$this->app->register('WebChat\Providers\AuthServiceProvider');

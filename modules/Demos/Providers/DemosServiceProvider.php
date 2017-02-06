@@ -28,6 +28,9 @@ class DemosServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Configure the Package.
+        $this->package('Demos', 'demos');
+
         // Register additional Service Providers.
         //$this->app->register('Demos\Providers\AuthServiceProvider');
         //$this->app->register('Demos\Providers\EventServiceProvider');

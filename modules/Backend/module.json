@@ -12,7 +12,7 @@
         }
     ],
     "license": "MIT",
-    "slug": "Backend",
+    "slug": "backend",
     "namespace": "Modules\\Backend",
     "order" : "8001"
 }

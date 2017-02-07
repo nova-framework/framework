@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Models;
+namespace Modules\System\Models;
 
-use System\Database\Model as BaseModel;
+use Modules\System\Database\Model as BaseModel;
 
 
 class Option extends BaseModel

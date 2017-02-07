@@ -1,6 +1,6 @@
 <?php
 
-namespace Logs\Database\Seeds;
+namespace Modules\Logs\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
@@ -18,6 +18,6 @@ class LogsDatabaseSeeder extends Seeder
         Model::unguard();
 
         //
-        $this->call('Logs\Database\Seeds\LogGroupsTableSeeder');
+        $this->call('Modules\Logs\Database\Seeds\LogGroupsTableSeeder');
     }
 }

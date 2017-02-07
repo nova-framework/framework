@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Users\Controllers;
+namespace Modules\Modules\Users\Controllers;
 
 use Nova\Helpers\ReCaptcha;
 use Nova\Support\Facades\Auth;
@@ -22,8 +22,8 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use System\Models\Role;
-use Users\Models\User;
+use Modules\System\Models\Role;
+use Modules\Users\Models\User;
 
 
 class Registrar extends BackendController

@@ -1,5 +1,5 @@
 {
-    "name": "System",
+    "name": "Modules/System",
     "version": "1.0.0",
     "description": "This is the description for the System module.",
     "homepage" : "http://www.novaframework.com/",
@@ -13,6 +13,6 @@
     ],
     "license": "MIT",
     "slug": "system",
-    "namespace": "System",
+    "namespace": "Modules\\System",
     "order" : "1001"
 }

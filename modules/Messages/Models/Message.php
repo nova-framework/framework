@@ -1,10 +1,10 @@
 <?php
 
-namespace Messages\Models;
+namespace Modules\Messages\Models;
 
 use Nova\Database\ORM\Model;
 
-use Users\Models\User;
+use Modules\Users\Models\User;
 
 
 class Message extends Model
@@ -18,12 +18,12 @@ class Message extends Model
 
     public function sender()
     {
-        return $this->belongsTo('Users\Models\User', 'sender_id');
+        return $this->belongsTo('Modules\Users\Models\User', 'sender_id');
     }
 
     public function receiver()
     {
-        return $this->belongsTo('Users\Models\User', 'receiver_id');
+        return $this->belongsTo('Modules\Users\Models\User', 'receiver_id');
     }
 
     public function scopeNotReply($query)
@@ -38,7 +38,7 @@ class Message extends Model
 
     public function replies()
     {
-        return $this->hasMany('Messages\Models\Message', 'parent_id');
+        return $this->hasMany('Modules\Messages\Models\Message', 'parent_id');
     }
 
     // Set seen to 1 when user reads message.

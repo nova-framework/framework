@@ -1,6 +1,6 @@
 <?php
 
-namespace Dashboard\Providers;
+namespace Modules\Dashboard\Providers;
 
 use Nova\Routing\Router;
 use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;

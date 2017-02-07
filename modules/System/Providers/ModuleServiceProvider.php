@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Providers;
+namespace Modules\System\Providers;
 
-use System\Models\Option;
+use Modules\System\Models\Option;
 
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
@@ -17,9 +17,9 @@ class ModuleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        'System\Providers\AuthServiceProvider',
-        'System\Providers\EventServiceProvider',
-        'System\Providers\RouteServiceProvider',
+        'Modules\System\Providers\AuthServiceProvider',
+        'Modules\System\Providers\EventServiceProvider',
+        'Modules\System\Providers\RouteServiceProvider',
     );
 
 
@@ -36,7 +36,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('System', 'system', $path);
+        $this->package('Modules/System', 'system', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

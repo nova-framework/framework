@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Traits;
+namespace Modules\System\Traits;
 
-use System\Models\Notification;
+use Modules\System\Models\Notification;
 
 
 trait HasNotificationsTrait
@@ -13,7 +13,7 @@ trait HasNotificationsTrait
 
     public function notifications()
     {
-        return $this->hasMany('System\Models\Notification', 'user_id');
+        return $this->hasMany('Modules\System\Models\Notification', 'user_id');
     }
 
     public function newNotification()

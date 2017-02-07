@@ -1,13 +1,13 @@
 <?php
 
-namespace Logs\Helpers;
+namespace Modules\Logs\Helpers;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Request;
 
-use Logs\Models\Log;
-use Logs\Models\LogGroup;
+use Modules\Logs\Models\Log;
+use Modules\Logs\Models\LogGroup;
 
 
 class Logger

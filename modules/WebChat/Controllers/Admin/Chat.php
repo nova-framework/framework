@@ -1,13 +1,13 @@
 <?php
 
-namespace WebChat\Controllers\Admin;
+namespace Modules\WebChat\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 
-use System\Exceptions\ValidationException;
-use Users\Models\User;
-use WebChat\Core\Controller;
+use Modules\System\Exceptions\ValidationException;
+use Modules\Users\Models\User;
+use Modules\WebChat\Core\Controller;
 
 
 class Chat extends Controller

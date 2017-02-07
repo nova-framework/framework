@@ -1,6 +1,6 @@
 <?php
 
-namespace Files\Providers;
+namespace Modules\Files\Providers;
 
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
@@ -13,9 +13,9 @@ class ModuleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        'Files\Providers\AuthServiceProvider',
-        'Files\Providers\EventServiceProvider',
-        'Files\Providers\RouteServiceProvider',
+        'Modules\Files\Providers\AuthServiceProvider',
+        'Modules\Files\Providers\EventServiceProvider',
+        'Modules\Files\Providers\RouteServiceProvider',
     );
 
 
@@ -32,7 +32,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Files', 'files', $path);
+        $this->package('Modules/Files', 'files', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

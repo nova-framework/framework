@@ -1,6 +1,6 @@
 <?php
 
-namespace WebChat\Providers;
+namespace Modules\WebChat\Providers;
 
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
@@ -13,9 +13,9 @@ class ModuleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        'WebChat\Providers\AuthServiceProvider',
-        'WebChat\Providers\EventServiceProvider',
-        'WebChat\Providers\RouteServiceProvider',
+        'Modules\WebChat\Providers\AuthServiceProvider',
+        'Modules\WebChat\Providers\EventServiceProvider',
+        'Modules\WebChat\Providers\RouteServiceProvider',
     );
 
 
@@ -32,7 +32,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('WebChat', 'web_chat', $path);
+        $this->package('Modules/WebChat', 'web_chat', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

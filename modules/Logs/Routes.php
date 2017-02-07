@@ -10,7 +10,7 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Logs\Controllers\Admin'), function()
+Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Logs\Controllers\Admin'), function()
 {
     // The Site Logs.
     Route::get( 'logs/{group?}', array('before' => 'auth',      'uses' => 'Logs@index'));

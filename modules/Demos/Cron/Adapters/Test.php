@@ -1,6 +1,6 @@
 <?php
 
-namespace Demos\Cron\Adapters;
+namespace Modules\Demos\Cron\Adapters;
 
 use Nova\Cron\Adapter;
 

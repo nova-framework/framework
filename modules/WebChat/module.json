@@ -1,5 +1,5 @@
 {
-    "name": "WebChat",
+    "name": "Modules/WebChat",
     "version": "1.0.0",
     "description": "This is the description for the WebChat module.",
     "homepage" : "http://www.novaframework.com/",
@@ -13,6 +13,6 @@
     ],
     "license": "MIT",
     "slug": "web_chat",
-    "namespace": "WebChat",
+    "namespace": "Modules\\WebChat",
     "order" : "9001"
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Controllers;
+namespace Modules\System\Controllers;
 
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Cron;

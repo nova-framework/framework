@@ -6,7 +6,7 @@
  * @version 4.0
  */
 
-use System\Exceptions\ValidationException;
+use Modules\System\Exceptions\ValidationException;
 
 
 App::error(function(ValidationException $exception, $code)

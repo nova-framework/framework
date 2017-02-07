@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace System\Controllers\Admin;
+namespace Modules\System\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Input;
@@ -16,7 +16,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use System\Models\Role;
+use Modules\System\Models\Role;
 
 
 class Roles extends BackendController

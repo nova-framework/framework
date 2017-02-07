@@ -1,14 +1,14 @@
 <?php
 
-namespace Logs\Providers;
+namespace Modules\Logs\Providers;
 
 use Nova\Events\Dispatcher;
 use Nova\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-use Logs\Observers\UserActionsObserver;
+use Modules\Logs\Observers\UserActionsObserver;
 
-use System\Models\Role;
-use Users\Models\User;
+use Modules\System\Models\Role;
+use Modules\Users\Models\User;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -19,8 +19,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = array(
-        'Logs\Events\SomeEvent' => array(
-            'Logs\Listeners\EventListener',
+        'Modules\Logs\Events\SomeEvent' => array(
+            'Modules\Logs\Listeners\EventListener',
         ),
     );
 

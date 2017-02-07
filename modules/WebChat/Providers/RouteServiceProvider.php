@@ -1,6 +1,6 @@
 <?php
 
-namespace WebChat\Providers;
+namespace Modules\WebChat\Providers;
 
 use Nova\Routing\Router;
 use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;

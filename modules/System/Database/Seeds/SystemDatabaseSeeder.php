@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Database\Seeds;
+namespace Modules\System\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;

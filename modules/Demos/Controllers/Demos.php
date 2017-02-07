@@ -1,6 +1,6 @@
 <?php
 
-namespace Demos\Controllers;
+namespace Modules\Demos\Controllers;
 
 use Nova\Routing\Route;
 use Nova\Support\Facades\App;
@@ -18,7 +18,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\ThemedController;
 
-use Users\Models\User;
+use Modules\Users\Models\User;
 
 
 class Demos extends ThemedController

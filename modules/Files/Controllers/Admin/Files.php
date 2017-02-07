@@ -1,6 +1,6 @@
 <?php
 
-namespace Files\Controllers\Admin;
+namespace Modules\Files\Controllers\Admin;
 
 use Nova\Http\Request;
 use Nova\Routing\Route;

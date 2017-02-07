@@ -9,7 +9,7 @@
 
 /** Define static routes. */
 
-Route::group(array('prefix' => '', 'namespace' => 'Users\Controllers'), function()
+Route::group(array('prefix' => '', 'namespace' => 'Modules\Users\Controllers'), function()
 {
     // The default Auth Routes.
     Route::get( 'login',  array('before' => 'guest',      'uses' => 'Authorize@login'));
@@ -32,7 +32,7 @@ Route::group(array('prefix' => '', 'namespace' => 'Users\Controllers'), function
 });
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Users\Controllers\Admin'), function()
+Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Users\Controllers\Admin'), function()
 {
     // The User's Profile.
     Route::get( 'profile', array('before' => 'auth',      'uses' => 'Profile@index'));

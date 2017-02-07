@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Users\Controllers\Admin;
+namespace Modules\Users\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Hash;
@@ -17,7 +17,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use Users\Models\User;
+use Modules\Users\Models\User;
 
 
 class Profile extends BackendController

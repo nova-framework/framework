@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace System\Controllers\Admin;
+namespace Modules\System\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Cache;

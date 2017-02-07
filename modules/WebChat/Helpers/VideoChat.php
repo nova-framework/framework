@@ -1,10 +1,10 @@
 <?php
 
-namespace VideoChat\Helpers;
+namespace Modules\VideoChat\Helpers;
 
 use Nova\Support\Facades\DB;
 
-use Users\Models\User;
+use Modules\Users\Models\User;
 
 use Carbon\Carbon;
 

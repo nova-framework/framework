@@ -1,6 +1,6 @@
 <?php
 
-namespace WebChat\Controllers\Admin;
+namespace Modules\WebChat\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\App;
@@ -9,11 +9,11 @@ use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 
-use System\Exceptions\ValidationException;
-use VideoChat\Helpers\VideoChat as ChatHelper;
-use VideoChat\Models\ChatVideo;
-use Users\Models\User;
-use WebChat\Core\Controller;
+use Modules\System\Exceptions\ValidationException;
+use Modules\VideoChat\Helpers\VideoChat as ChatHelper;
+use Modules\VideoChat\Models\ChatVideo;
+use Modules\Users\Models\User;
+use Modules\WebChat\Core\Controller;
 
 
 class VideoChat extends Controller

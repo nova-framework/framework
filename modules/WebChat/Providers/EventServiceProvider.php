@@ -1,6 +1,6 @@
 <?php
 
-namespace WebChat\Providers;
+namespace Modules\WebChat\Providers;
 
 use Nova\Events\Dispatcher;
 use Nova\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -14,8 +14,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = array(
-        'WebChat\Events\SomeEvent' => array(
-            'WebChat\Listeners\EventListener',
+        'Modules\WebChat\Events\SomeEvent' => array(
+            'Modules\WebChat\Listeners\EventListener',
         ),
     );
 

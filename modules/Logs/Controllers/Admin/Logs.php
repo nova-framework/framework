@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Logs\Controllers\Admin;
+namespace Modules\Logs\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Redirect;
@@ -14,10 +14,10 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use Logs\Models\Log;
-use Logs\Models\LogGroup;
+use Modules\Logs\Models\Log;
+use Modules\Logs\Models\LogGroup;
 
-use Users\Models\User;
+use Modules\Users\Models\User;
 
 
 class Logs extends BackendController

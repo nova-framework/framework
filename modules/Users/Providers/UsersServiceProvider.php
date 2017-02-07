@@ -2,11 +2,23 @@
 
 namespace Users\Providers;
 
-use Nova\Support\ServiceProvider;
+use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class UsersServiceProvider extends ServiceProvider
 {
+    /**
+     * The additional provider class names.
+     *
+     * @var array
+     */
+    protected $providers = array(
+        'Users\Providers\AuthServiceProvider',
+        'Users\Providers\EventServiceProvider',
+        'Users\Providers\RouteServiceProvider',
+    );
+
+
     /**
      * Bootstrap the Application Events.
      *
@@ -14,13 +26,18 @@ class UsersServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $basePath = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('Users', 'users', $basePath);
+        parent::boot();
 
         //
-        require $basePath .DS .'Bootstrap.php';
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Users', 'users', $path);
+
+        // Bootstrap the Package.
+        $path = $path .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($path);
     }
 
     /**
@@ -34,10 +51,9 @@ class UsersServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register additional Service Providers.
-        $this->app->register('Users\Providers\AuthServiceProvider');
-        $this->app->register('Users\Providers\EventServiceProvider');
-        $this->app->register('Users\Providers\RouteServiceProvider');
+        parent::register();
+
+        //
     }
 
 }

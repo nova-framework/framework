@@ -2,11 +2,23 @@
 
 namespace Messages\Providers;
 
-use Nova\Support\ServiceProvider;
+use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class MessagesServiceProvider extends ServiceProvider
 {
+    /**
+     * The additional provider class names.
+     *
+     * @var array
+     */
+    protected $providers = array(
+        'Messages\Providers\AuthServiceProvider',
+        'Messages\Providers\EventServiceProvider',
+        'Messages\Providers\RouteServiceProvider',
+    );
+
+
     /**
      * Bootstrap the Application Events.
      *
@@ -14,13 +26,18 @@ class MessagesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $basePath = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('Messages', 'messages', $basePath);
+        parent::boot();
 
         //
-        require $basePath .DS .'Bootstrap.php';
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Messages', 'messages', $path);
+
+        // Bootstrap the Package.
+        $path = $path .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($path);
     }
 
     /**
@@ -34,10 +51,9 @@ class MessagesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register additional Service Providers.
-        $this->app->register('Messages\Providers\AuthServiceProvider');
-        $this->app->register('Messages\Providers\EventServiceProvider');
-        $this->app->register('Messages\Providers\RouteServiceProvider');
+        parent::register();
+
+        //
     }
 
 }

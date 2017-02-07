@@ -2,11 +2,23 @@
 
 namespace Demos\Providers;
 
-use Nova\Support\ServiceProvider;
+use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class DemosServiceProvider extends ServiceProvider
 {
+    /**
+     * The additional provider class names.
+     *
+     * @var array
+     */
+    protected $providers = array(
+        'Demos\Providers\AuthServiceProvider',
+        'Demos\Providers\EventServiceProvider',
+        'Demos\Providers\RouteServiceProvider',
+    );
+
+
     /**
      * Bootstrap the Application Events.
      *
@@ -14,13 +26,18 @@ class DemosServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $basePath = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('Demos', 'demos', $basePath);
+        parent::boot();
 
         //
-        require $basePath .DS .'Bootstrap.php';
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Demos', 'demos', $path);
+
+        // Bootstrap the Package.
+        $path = $path .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($path);
     }
 
     /**
@@ -34,10 +51,9 @@ class DemosServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register additional Service Providers.
-        $this->app->register('Demos\Providers\AuthServiceProvider');
-        $this->app->register('Demos\Providers\EventServiceProvider');
-        $this->app->register('Demos\Providers\RouteServiceProvider');
+        parent::register();
+
+        //
 
         /*
         $className = get_class($this);

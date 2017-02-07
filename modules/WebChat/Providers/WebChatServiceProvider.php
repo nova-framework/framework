@@ -2,11 +2,23 @@
 
 namespace WebChat\Providers;
 
-use Nova\Support\ServiceProvider;
+use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class WebChatServiceProvider extends ServiceProvider
 {
+    /**
+     * The additional provider class names.
+     *
+     * @var array
+     */
+    protected $providers = array(
+        'WebChat\Providers\AuthServiceProvider',
+        'WebChat\Providers\EventServiceProvider',
+        'WebChat\Providers\RouteServiceProvider',
+    );
+
+
     /**
      * Bootstrap the Application Events.
      *
@@ -14,13 +26,18 @@ class WebChatServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $basePath = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('WebChat', 'web_chat', $basePath);
+        parent::boot();
 
         //
-        require $basePath .DS .'Bootstrap.php';
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('WebChat', 'web_chat', $path);
+
+        // Bootstrap the Package.
+        $path = $path .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($path);
     }
 
     /**
@@ -34,10 +51,9 @@ class WebChatServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register additional Service Providers.
-        $this->app->register('WebChat\Providers\AuthServiceProvider');
-        $this->app->register('WebChat\Providers\EventServiceProvider');
-        $this->app->register('WebChat\Providers\RouteServiceProvider');
+        parent::register();
+
+        //
     }
 
 }

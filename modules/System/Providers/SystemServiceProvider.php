@@ -4,13 +4,25 @@ namespace System\Providers;
 
 use System\Models\Option;
 
+use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
-use Nova\Support\ServiceProvider;
 
 
 class SystemServiceProvider extends ServiceProvider
 {
+    /**
+     * The additional provider class names.
+     *
+     * @var array
+     */
+    protected $providers = array(
+        'System\Providers\AuthServiceProvider',
+        'System\Providers\EventServiceProvider',
+        'System\Providers\RouteServiceProvider',
+    );
+
+
     /**
      * Bootstrap the Application Events.
      *
@@ -18,13 +30,18 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $basePath = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('System', 'system', $basePath);
+        parent::boot();
 
         //
-        require $basePath .DS .'Bootstrap.php';
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('System', 'system', $path);
+
+        // Bootstrap the Package.
+        $path = $path .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($path);
 
         // Load the Options from database.
         $this->loadOptions();
@@ -41,10 +58,9 @@ class SystemServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register additional Service Providers.
-        $this->app->register('System\Providers\AuthServiceProvider');
-        $this->app->register('System\Providers\EventServiceProvider');
-        $this->app->register('System\Providers\RouteServiceProvider');
+        parent::register();
+
+        //
     }
 
     /**

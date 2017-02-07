@@ -2,11 +2,23 @@
 
 namespace Dashboard\Providers;
 
-use Nova\Support\ServiceProvider;
+use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
 class DashboardServiceProvider extends ServiceProvider
 {
+    /**
+     * The additional provider class names.
+     *
+     * @var array
+     */
+    protected $providers = array(
+        'Dashboard\Providers\AuthServiceProvider',
+        'Dashboard\Providers\EventServiceProvider',
+        'Dashboard\Providers\RouteServiceProvider',
+    );
+
+
     /**
      * Bootstrap the Application Events.
      *
@@ -14,13 +26,18 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $basePath = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('Dashboard', 'dashboard', $basePath);
+        parent::boot();
 
         //
-        require $basePath .DS .'Bootstrap.php';
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Dashboard', 'dashboard', $path);
+
+        // Bootstrap the Package.
+        $path = $path .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($path);
     }
 
     /**
@@ -34,10 +51,9 @@ class DashboardServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register additional Service Providers.
-        $this->app->register('Dashboard\Providers\AuthServiceProvider');
-        $this->app->register('Dashboard\Providers\EventServiceProvider');
-        $this->app->register('Dashboard\Providers\RouteServiceProvider');
+        parent::register();
+
+        //
     }
 
 }

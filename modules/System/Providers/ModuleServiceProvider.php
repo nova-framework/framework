@@ -81,9 +81,13 @@ class ModuleServiceProvider extends ServiceProvider
             $options = array();
         }
 
-        // Setup the information stored on the Option instances.
+        // Setup the information stored on the Option instances into Configuration.
         foreach ($options as $option) {
-            $key =  sprintf('%s.%s', $option->group, $option->item);
+            if (! empty($option->namespace)) {
+                $key =  sprintf('%s::%s.%s', $option->namespace, $option->group, $option->item);
+            } else {
+                $key =  sprintf('%s.%s', $option->group, $option->item);
+            }
 
             Config::set($key, $option->value);
         }

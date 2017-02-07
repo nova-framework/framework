@@ -16,9 +16,10 @@ class CreateTableOptions extends Migration
         Schema::create('options', function($table)
         {
             $table->increments('id');
+            $table->string('namespace', 100)->nullable();
             $table->string('group', 100);
-            $table->string('item', 255);
-            $table->text('value');
+            $table->string('item', 255)->nullable();
+            $table->text('value')->nullable();
         });
     }
 

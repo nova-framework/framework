@@ -29,8 +29,8 @@ Event::listen('backend.menu', function($user)
 });
 
 // Log the User's login and logout.
-use Logs\Models\Log as Logger;
-use Logs\Models\LogGroup;
+use Modules\Logs\Models\Log as Logger;
+use Modules\Logs\Models\LogGroup;
 
 
 Event::listen('auth.login', function($user, $remember)

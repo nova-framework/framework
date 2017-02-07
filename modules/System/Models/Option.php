@@ -11,7 +11,7 @@ class Option extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('group', 'item', 'value');
+    protected $fillable = array('namespace', 'group', 'item', 'value');
 
     public $timestamps = false;
 
@@ -24,12 +24,15 @@ class Option extends BaseModel
         $this->attributes['value'] = $this->maybeEncode($value);
     }
 
-    public static function set($group, $item, $value)
+    public static function set($key, $value)
     {
-        // Prepare the variables.
+        list($namespace, $group, $item) = static::parseKey($key);
+
+        // Prepare the record variables.
         $attributes = array(
-            'group' => $group,
-            'item'  => $item
+            'namespace' => $namespace,
+            'group'     => $group,
+            'item'      => $item
         );
 
         $values = array(
@@ -39,4 +42,56 @@ class Option extends BaseModel
         return static::updateOrCreate($attributes, $values);
     }
 
+    /**
+     * Parse a key into namespace, group, and item.
+     *
+     * @param  string  $key
+     * @return array
+     */
+    protected static function parseKey($key)
+    {
+        if (strpos($key, '::') === false) {
+            $segments = explode('.', $key);
+
+            return static::parseBasicSegments($segments);
+        }
+
+        $parsed = static::parseNamespacedSegments($key);
+    }
+
+    /**
+     * Parse an array of basic segments.
+     *
+     * @param  array  $segments
+     * @return array
+     */
+    protected static function parseBasicSegments(array $segments)
+    {
+        $group = $segments[0];
+
+        if (count($segments) == 1) {
+            return array(null, $group, null);
+        }
+
+        $item = implode('.', array_slice($segments, 1));
+
+        return array(null, $group, $item);
+    }
+
+    /**
+     * Parse an array of namespaced segments.
+     *
+     * @param  string  $key
+     * @return array
+     */
+    protected static function parseNamespacedSegments($key)
+    {
+        list($namespace, $item) = explode('::', $key);
+
+        $itemSegments = explode('.', $item);
+
+        $groupAndItem = array_slice(static::parseBasicSegments($itemSegments), 1);
+
+        return array_merge(array($namespace), $groupAndItem);
+    }
 }

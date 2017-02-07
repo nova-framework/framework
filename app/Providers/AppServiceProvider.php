@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Nova\Support\ServiceProvider;
+use Nova\Foundation\Support\Providers\AppServiceProvider as ServiceProvider;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        require realpath(__DIR__ .'/../') .DS .'Bootstrap.php';
+        $path = realpath(__DIR__ .'/../') .DS .'Bootstrap.php';
+
+        $this->bootstrapFrom($path);
 
         //
     }

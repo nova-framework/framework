@@ -54,7 +54,7 @@ abstract class BaseController extends Controller
             if ($matches[1] == 'App') {
                $module = null;
             } else {
-               $module = $matches[1];
+               $module = basename($matches[1]);
             }
 
             return ViewFactory::make($view, $data, $module);

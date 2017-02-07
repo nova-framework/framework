@@ -1,6 +1,6 @@
 <?php
 
-namespace WebChat\Database\Seeds;
+namespace Modules\WebChat\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
@@ -17,6 +17,6 @@ class WebChatDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call('Dashboard\Database\Seeds\FoobarTableSeeder');
+        // $this->call('Modules\WebChat\Database\Seeds\FoobarTableSeeder');
     }
 }

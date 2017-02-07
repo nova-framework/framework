@@ -1,5 +1,5 @@
 {
-    "name": "Users",
+    "name": "Modules/Users",
     "version": "1.0.0",
     "description": "This is the description for the Users module.",
     "homepage" : "http://www.novaframework.com/",
@@ -13,5 +13,5 @@
     ],
     "license": "MIT",
     "slug": "users",
-    "namespace": "Users"
+    "namespace": "Modules\\Users"
 }

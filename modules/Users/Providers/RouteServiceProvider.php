@@ -1,6 +1,6 @@
 <?php
 
-namespace Users\Providers;
+namespace Modules\Users\Providers;
 
 use Nova\Routing\Router;
 use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;

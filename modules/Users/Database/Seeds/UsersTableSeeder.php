@@ -1,11 +1,11 @@
 <?php
 
-namespace Users\Database\Seeds;
+namespace Modules\Users\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
 
-use Users\Models\User;
+use Modules\Users\Models\User;
 
 use Hash;
 

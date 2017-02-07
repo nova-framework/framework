@@ -1,5 +1,5 @@
 {
-    "name": "Dashboard",
+    "name": "Modules/Dashboard",
     "version": "1.0.0",
     "description": "This is the description for the Dashboard module.",
     "homepage" : "http://www.novaframework.com/",
@@ -13,6 +13,6 @@
     ],
     "license": "MIT",
     "slug": "dashboard",
-    "namespace": "Dashboard",
+    "namespace": "Modules\\Dashboard",
     "order" : "8001"
 }

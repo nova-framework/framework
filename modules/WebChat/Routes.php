@@ -10,7 +10,7 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'WebChat\Controllers\Admin'), function()
+Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\WebChat\Controllers\Admin'), function()
 {
     // Chat
     Route::get( 'chat', array('before' => 'auth', 'uses' => 'Chat@index'));

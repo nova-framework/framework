@@ -1,5 +1,5 @@
 {
-    "name": "Logs",
+    "name": "Modules/Logs",
     "version": "1.0.0",
     "description": "This is the description for the Logs module.",
     "homepage" : "http://www.novaframework.com/",
@@ -13,6 +13,6 @@
     ],
     "license": "MIT",
     "slug": "logs",
-    "namespace": "Logs",
+    "namespace": "Modules\\Logs",
     "order" : "9001"
 }

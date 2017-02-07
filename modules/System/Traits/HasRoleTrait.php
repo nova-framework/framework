@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Traits;
+namespace Modules\System\Traits;
 
-use System\Models\Role;
+use Modules\System\Models\Role;
 
 
 trait HasRoleTrait
@@ -13,7 +13,7 @@ trait HasRoleTrait
 
     public function role()
     {
-        return $this->belongsTo('System\Models\Role', 'role_id');
+        return $this->belongsTo('Modules\System\Models\Role', 'role_id');
     }
 
     public function hasRole($roles)

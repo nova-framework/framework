@@ -1,6 +1,6 @@
 <?php
 
-namespace VideoChat\Models;
+namespace Modules\VideoChat\Models;
 
 use Nova\Database\ORM\Model;
 

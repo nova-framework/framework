@@ -53,8 +53,10 @@ abstract class BaseController extends Controller
 
             if ($matches[1] == 'App') {
                $module = null;
-            } else {
+            } else if (starts_with($matches[1], 'Modules/')) {
                $module = basename($matches[1]);
+            } else {
+                throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
             }
 
             return ViewFactory::make($view, $data, $module);

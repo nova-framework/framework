@@ -33,4 +33,6 @@
     <!-- ./col -->
 </div>
 
+<?= $debug; ?>
+
 </section>

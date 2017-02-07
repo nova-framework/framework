@@ -19,7 +19,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use System\Models\Option;
+use Modules\System\Models\Option;
 
 
 class Settings extends BackendController
@@ -117,18 +117,18 @@ class Settings extends BackendController
 
         if($validator->passes()) {
             // The Application.
-            Option::set('app', 'name',          $input['siteName']);
-            Option::set('app', 'color_scheme',  $input['siteSkin']);
+            Option::set('app.name',          $input['siteName']);
+            Option::set('app.color_scheme',  $input['siteSkin']);
 
             // The Mailer
-            Option::set('mail', 'driver',       $input['mailDriver']);
-            Option::set('mail', 'host',         $input['mailHost']);
-            Option::set('mail', 'port',         $input['mailPort']);
-            Option::set('mail', 'from.address', $input['mailFromAddress']);
-            Option::set('mail', 'from.name',    $input['mailFromName']);
-            Option::set('mail', 'encryption',   $input['mailEncryption']);
-            Option::set('mail', 'username',     $input['mailUsername']);
-            Option::set('mail', 'password',     $input['mailPassword']);
+            Option::set('mail.driver',       $input['mailDriver']);
+            Option::set('mail.host',         $input['mailHost']);
+            Option::set('mail.port',         $input['mailPort']);
+            Option::set('mail.from.address', $input['mailFromAddress']);
+            Option::set('mail.from.name',    $input['mailFromName']);
+            Option::set('mail.encryption',   $input['mailEncryption']);
+            Option::set('mail.username',     $input['mailUsername']);
+            Option::set('mail.password',     $input['mailPassword']);
 
             // Invalidate the cached system options.
             Cache::forget('system_options');

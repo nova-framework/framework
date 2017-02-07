@@ -8,6 +8,7 @@
 
 namespace Modules\Dashboard\Controllers\Admin;
 
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\View;
 use Nova\Support\Facades\Widget;
 
@@ -24,12 +25,15 @@ class Dashboard extends BackendController
         $smallBoxOrders         = Widget::smallBoxOrders();
         $smallBoxBounceRate     = Widget::smallBoxBounceRate();
 
+        $debug = '';
+
         return $this->getView()
             ->shares('title', __d('dashboard', 'Dashboard'))
             ->with('smallBoxUsers', $smallBoxUsers)
             ->with('smallBoxUniqueVisitors', $smallBoxUniqueVisitors)
             ->with('smallBoxOrders', $smallBoxOrders)
-            ->with('smallBoxBounceRate',$smallBoxBounceRate);
+            ->with('smallBoxBounceRate',$smallBoxBounceRate)
+            ->with('debug', $debug);
     }
 
 }

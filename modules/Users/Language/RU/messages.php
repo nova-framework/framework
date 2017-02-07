@@ -2,6 +2,7 @@
 
 return array (
   '%d %b %Y, %H:%M' => '',
+  '%d %b %Y, %R' => '',
   '<< Previous Page' => 'Предыдущая страница',
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, вы успешно вошли',
   'Activate your Account!' => 'Активируйте вашу учетную запись!',

@@ -2,6 +2,7 @@
 
 return array (
   '%d %b %Y, %H:%M' => '',
+  '%d %b %Y, %R' => '',
   '<< Previous Page' => '<< صفحه قبلی',
   '<b>{0}</b>, you have successfully logged in.' => '',
   'Activate your Account!' => 'حساب خود را فعال کنید!',

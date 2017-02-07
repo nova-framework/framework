@@ -2,6 +2,7 @@
 
 return array (
   '%d %b %Y, %H:%M' => '',
+  '%d %b %Y, %R' => '',
   '<< Previous Page' => '<< Sidste Side',
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, du er nu logget ind',
   'Activate your Account!' => 'Aktivere din brugerkonto!',

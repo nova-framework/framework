@@ -35,8 +35,7 @@
     "require": {
         "php": ">=5.5.0",
         "nova-framework/system": "~4.0",
-        "nova-framework/module-installer": "dev-master",
-        "nova-framework/theme-installer": "dev-master",
+        "nova-framework/module-installer": "*",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3"
     },
@@ -48,8 +47,7 @@
         "psr-4": {
             "App\\" : "app/",
             "Modules\\": "modules/",
-            "Shared\\": "shared/",
-            "Themes\\": "themes/"
+            "Shared\\": "shared/"
         }
     },
     "scripts": {
@@ -66,8 +64,7 @@
             "php forge key:generate"
         ],
         "post-autoload-dump": [
-            "Nova\\Composer\\Installer\\ModuleInstaller::postAutoloadDump",
-            "Nova\\Composer\\Installer\\ThemeInstaller::postAutoloadDump"
+            "Nova\\Composer\\Installer\\ModuleInstaller::postAutoloadDump"
         ]
     },
     "prefer-stable": true,

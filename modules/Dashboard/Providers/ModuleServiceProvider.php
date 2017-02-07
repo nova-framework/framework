@@ -1,11 +1,11 @@
 <?php
 
-namespace Messages\Providers;
+namespace Dashboard\Providers;
 
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
-class MessagesServiceProvider extends ServiceProvider
+class ModuleServiceProvider extends ServiceProvider
 {
     /**
      * The additional provider class names.
@@ -13,9 +13,9 @@ class MessagesServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        'Messages\Providers\AuthServiceProvider',
-        'Messages\Providers\EventServiceProvider',
-        'Messages\Providers\RouteServiceProvider',
+        'Dashboard\Providers\AuthServiceProvider',
+        'Dashboard\Providers\EventServiceProvider',
+        'Dashboard\Providers\RouteServiceProvider',
     );
 
 
@@ -32,7 +32,7 @@ class MessagesServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Messages', 'messages', $path);
+        $this->package('Dashboard', 'dashboard', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

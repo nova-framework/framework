@@ -1,11 +1,11 @@
 <?php
 
-namespace WebChat\Providers;
+namespace Files\Providers;
 
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
-class WebChatServiceProvider extends ServiceProvider
+class ModuleServiceProvider extends ServiceProvider
 {
     /**
      * The additional provider class names.
@@ -13,9 +13,9 @@ class WebChatServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        'WebChat\Providers\AuthServiceProvider',
-        'WebChat\Providers\EventServiceProvider',
-        'WebChat\Providers\RouteServiceProvider',
+        'Files\Providers\AuthServiceProvider',
+        'Files\Providers\EventServiceProvider',
+        'Files\Providers\RouteServiceProvider',
     );
 
 
@@ -32,7 +32,7 @@ class WebChatServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('WebChat', 'web_chat', $path);
+        $this->package('Files', 'files', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';
@@ -41,7 +41,7 @@ class WebChatServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Dashboard module Service Provider.
+     * Register the Files module Service Provider.
      *
      * This service provider is a convenient place to register your modules
      * services in the IoC container. If you wish, you may make additional

@@ -9,7 +9,7 @@ use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Config;
 
 
-class SystemServiceProvider extends ServiceProvider
+class ModuleServiceProvider extends ServiceProvider
 {
     /**
      * The additional provider class names.

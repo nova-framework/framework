@@ -1,11 +1,11 @@
 <?php
 
-namespace Files\Providers;
+namespace Messages\Providers;
 
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
-class FilesServiceProvider extends ServiceProvider
+class ModuleServiceProvider extends ServiceProvider
 {
     /**
      * The additional provider class names.
@@ -13,9 +13,9 @@ class FilesServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        'Files\Providers\AuthServiceProvider',
-        'Files\Providers\EventServiceProvider',
-        'Files\Providers\RouteServiceProvider',
+        'Messages\Providers\AuthServiceProvider',
+        'Messages\Providers\EventServiceProvider',
+        'Messages\Providers\RouteServiceProvider',
     );
 
 
@@ -32,7 +32,7 @@ class FilesServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Files', 'files', $path);
+        $this->package('Messages', 'messages', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';
@@ -41,7 +41,7 @@ class FilesServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the Files module Service Provider.
+     * Register the Dashboard module Service Provider.
      *
      * This service provider is a convenient place to register your modules
      * services in the IoC container. If you wish, you may make additional

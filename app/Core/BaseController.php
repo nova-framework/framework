@@ -53,8 +53,8 @@ abstract class BaseController extends Controller
 
             if ($matches[1] == 'App') {
                $module = null;
-            } else if (starts_with($matches[1], 'Modules/')) {
-               $module = basename($matches[1]);
+            } else if (count($segments = explode('/', $matches[1])) === 2)) {
+               $module = last($segments);
             } else {
                 throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
             }

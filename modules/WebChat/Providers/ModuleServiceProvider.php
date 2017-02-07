@@ -1,11 +1,11 @@
 <?php
 
-namespace Dashboard\Providers;
+namespace WebChat\Providers;
 
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
-class DashboardServiceProvider extends ServiceProvider
+class ModuleServiceProvider extends ServiceProvider
 {
     /**
      * The additional provider class names.
@@ -13,9 +13,9 @@ class DashboardServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        'Dashboard\Providers\AuthServiceProvider',
-        'Dashboard\Providers\EventServiceProvider',
-        'Dashboard\Providers\RouteServiceProvider',
+        'WebChat\Providers\AuthServiceProvider',
+        'WebChat\Providers\EventServiceProvider',
+        'WebChat\Providers\RouteServiceProvider',
     );
 
 
@@ -32,7 +32,7 @@ class DashboardServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Dashboard', 'dashboard', $path);
+        $this->package('WebChat', 'web_chat', $path);
 
         // Bootstrap the Package.
         $path = $path .DS .'Bootstrap.php';

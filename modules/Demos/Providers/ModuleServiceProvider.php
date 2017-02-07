@@ -5,7 +5,7 @@ namespace Demos\Providers;
 use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
 
 
-class DemosServiceProvider extends ServiceProvider
+class ModuleServiceProvider extends ServiceProvider
 {
     /**
      * The additional provider class names.

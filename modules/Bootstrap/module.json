@@ -14,5 +14,7 @@
     "license": "MIT",
     "slug": "bootstrap",
     "namespace": "Modules\\Bootstrap",
-    "order" : "8001"
+    "order": "8001",
+    "has-layouts": true,
+    "has-widgets": false
 }

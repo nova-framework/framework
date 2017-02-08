@@ -12,9 +12,7 @@ class ModuleServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $providers = array(
-        'Modules\Bootstrap\Providers\EventServiceProvider',
-    );
+    protected $providers = array();
 
 
     /**

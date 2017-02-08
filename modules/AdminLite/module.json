@@ -14,5 +14,7 @@
     "license": "MIT",
     "slug": "admin_lite",
     "namespace": "Modules\\AdminLite",
-    "order" : "8001"
+    "order": "8001",
+    "has-layouts": true,
+    "has-widgets": false    
 }

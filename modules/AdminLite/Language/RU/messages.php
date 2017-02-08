@@ -3,7 +3,6 @@
 return array (
   'ADMINISTRATION' => '',
   'Control Panel' => '',
-  'Dashboard' => 'Рабочий стол',
   'Forgot Password?' => '',
   'Logout' => '',
   'Member since {0}' => '',

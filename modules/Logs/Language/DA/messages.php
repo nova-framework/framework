@@ -13,7 +13,7 @@ return array (
   'Dashboard' => 'Skrivebord',
   'Database' => '',
   'Date' => 'Dato',
-  'Generic' => '',
+  'Generic' => 'Generisk',
   'Group' => 'Gruppe',
   'ID' => 'ID',
   'Logs' => 'Log',

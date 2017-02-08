@@ -28,7 +28,7 @@ abstract class BackendController extends BaseController
      *
      * @var string
      */
-    protected $theme = 'Backend';
+    protected $theme = 'AdminLite';
 
     /**
      * The currently used Layout.

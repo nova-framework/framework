@@ -17,7 +17,7 @@ class Files extends BackendController
     /**
      * The File Dispatcher instance.
      *
-     * @var \Nova\Routing\Assets\DispatcherInterface
+     * @var \Nova\Asset\DispatcherInterface
      */
     private $fileDispatcher;
 
@@ -116,7 +116,7 @@ class Files extends BackendController
     {
         if (isset($this->fileDispatcher)) return $this->fileDispatcher;
 
-        return $this->fileDispatcher = App::make('Nova\Assets\DispatcherInterface');
+        return $this->fileDispatcher = App::make('Nova\Routing\Assets\DispatcherInterface');
     }
 
 }

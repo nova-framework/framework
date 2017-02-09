@@ -97,11 +97,11 @@ class Demos extends ThemedController
 
         $uri = 'modules/admin-lite/assets/css/style.css';
 
-        $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::resolvePath($uri)), true)) .'</pre>';
+        $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::dispatch($uri)), true)) .'</pre>';
 
         $uri = 'modules/content/assets/css/style.css';
 
-        $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::resolvePath($uri)), true)) .'</pre>';
+        $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::dispatch($uri)), true)) .'</pre>';
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))

@@ -19,7 +19,7 @@
 
 App::before(function($request)
 {
-    $dispatcher = App::make('Nova\Assets\DispatcherInterface');
+    $dispatcher = App::make('Nova\Routing\Assets\DispatcherInterface');
 
     return $dispatcher->dispatch($request);
 });

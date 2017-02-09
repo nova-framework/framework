@@ -34,7 +34,7 @@ return array(
     |
     */
 
-    'dispatcher' => 'Shared\Assets\CustomDispatcher',
+    'dispatcher' => 'Shared\Routing\Assets\CustomDispatcher',
 
     /*
     |--------------------------------------------------------------------------

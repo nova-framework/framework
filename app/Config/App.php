@@ -200,6 +200,7 @@ return array(
         'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
         'Nova\Widget\WidgetServiceProvider',
+        'Nova\Assets\AssetServiceProvider',
         'Nova\Cron\CronServiceProvider',
 
         // The Console Providers.

@@ -4,6 +4,7 @@ namespace Modules\Demos\Controllers;
 
 use Nova\Routing\Route;
 use Nova\Support\Facades\App;
+use Nova\Support\Facades\Assets;
 use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Event;
@@ -89,6 +90,18 @@ class Demos extends ThemedController
         $className = 'Social\Commands\FollowUserCommand';
 
         $content = preg_replace('~Command(?!.*Command)~', 'CommandHandler', $className);
+
+        $namespaces = Assets::getNamespaces();
+
+        $content = '<pre>' .e(var_export($namespaces, true)) .'</pre>';
+
+        $uri = 'modules/admin-lite/assets/css/style.css';
+
+        $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::resolvePath($uri)), true)) .'</pre>';
+
+        $uri = 'modules/content/assets/css/style.css';
+
+        $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::resolvePath($uri)), true)) .'</pre>';
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))

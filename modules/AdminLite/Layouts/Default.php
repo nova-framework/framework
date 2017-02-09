@@ -128,7 +128,7 @@ $langMenuLinks = ob_get_clean();
     <!-- To the right -->
     <div class="pull-right hidden-xs">
       <?php if(Config::get('app.debug')) { ?>
-      <small><!-- DO NOT DELETE! - Profiler --></small>
+      <small><!-- DO NOT DELETE! - Statistics --></small>
       <?php } ?>
     </div>
     <!-- Default to the left -->
@@ -163,7 +163,7 @@ echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
   });
 </script>
 
-<!-- DO NOT DELETE! - Forensics Profiler -->
+<!-- DO NOT DELETE! - Profiler -->
 
 </body>
 </html>

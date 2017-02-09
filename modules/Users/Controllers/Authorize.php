@@ -8,7 +8,6 @@
 
 namespace Modules\Users\Controllers;
 
-use Nova\Helpers\ReCaptcha;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Hash;
@@ -18,6 +17,8 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\View;
+
+use Shared\Helpers\ReCaptcha;
 
 use App\Core\BackendController;
 

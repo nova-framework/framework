@@ -8,8 +8,8 @@
 
 namespace Shared\Http;
 
-use Nova\Helpers\Profiler;
-use Nova\Forensics\Profiler as QuickProfiler;
+use Nova\Forensics\Profiler;
+use Nova\Forensics\Statistics;
 use Nova\Http\Response;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -79,12 +79,12 @@ class ContentGuard implements HttpKernelInterface
             // Insert the QuickProfiler Widget in the Response's Content.
             $content = str_replace(
                 array(
-                    '<!-- DO NOT DELETE! - Forensics Profiler -->',
                     '<!-- DO NOT DELETE! - Profiler -->',
+                    '<!-- DO NOT DELETE! - Statistics -->',
                 ),
                 array(
-                    QuickProfiler::process(true),
-                    Profiler::getReport(),
+                    Profiler::process(true),
+                    Statistics::getReport(),
                 ),
                 $response->getContent()
             );

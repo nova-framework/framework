@@ -244,18 +244,6 @@ return array(
     */
 
     'aliases' => array(
-        // The Helpers.
-        'Date'          => 'Nova\Helpers\Date',
-        'Document'      => 'Nova\Helpers\Document',
-        'Ftp'           => 'Nova\Helpers\Ftp',
-        'GeoCode'       => 'Nova\Helpers\GeoCode',
-        'Inflector'     => 'Nova\Helpers\Inflector',
-        'Number'        => 'Nova\Helpers\Number',
-        'RainCaptcha'   => 'Nova\Helpers\RainCaptcha',
-        'ReservedWords' => 'Nova\Helpers\ReservedWords',
-        'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
-        'Tags'          => 'Nova\Helpers\Tags',
-
         // The Forensics Console.
         'Console'       => 'Nova\Forensics\Console',
 

@@ -220,7 +220,7 @@ $langMenuLinks = ob_get_clean();
     <!-- To the right -->
     <div class="pull-right hidden-xs">
       <?php if(Config::get('app.debug')) { ?>
-      <small><!-- DO NOT DELETE! - Profiler --></small>
+      <small><!-- DO NOT DELETE! - Statistics --></small>
       <?php } ?>
     </div>
     <!-- Default to the left -->
@@ -258,7 +258,7 @@ $(function () {
      user experience. Slimscroll is required when using the
      fixed layout. -->
 
-<!-- DO NOT DELETE! - Forensics Profiler -->
+<!-- DO NOT DELETE! - Profiler -->
 
 </body>
 </html>

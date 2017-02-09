@@ -70,7 +70,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
             <div class="col-lg-8">
                 <p class="text-muted pull-right">
                     <?php if(Config::get('app.debug')) { ?>
-                    <small><!-- DO NOT DELETE! - Profiler --></small>
+                    <small><!-- DO NOT DELETE! - Statistics --></small>
                     <?php } ?>
                 </p>
             </div>
@@ -89,7 +89,7 @@ echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
 echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
-<!-- DO NOT DELETE! - Forensics Profiler -->
+<!-- DO NOT DELETE! - Profiler -->
 
 </body>
 </html>

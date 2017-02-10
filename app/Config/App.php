@@ -176,6 +176,7 @@ return array(
 
     'providers' => array(
         // The Framework Providers.
+        'Nova\Plugin\PluginServiceProvider',
         'Nova\Module\ModuleServiceProvider',
         'Nova\Auth\AuthServiceProvider',
         'Nova\Cache\CacheServiceProvider',
@@ -208,9 +209,6 @@ return array(
         'Nova\Session\CommandsServiceProvider',
         'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
         'Nova\Routing\ControllerServiceProvider',
-
-        // The Service Providers from the Shared namespace.
-        'Shared\Database\Backup\BackupServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',

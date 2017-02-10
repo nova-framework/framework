@@ -19,7 +19,7 @@ use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
-use Shared\Helpers\ReCaptcha;
+use Plugins\Helpers\ReCaptcha;
 
 use App\Core\BackendController;
 

@@ -3,9 +3,10 @@
 namespace Modules\System\Controllers;
 
 use Nova\Support\Facades\Config;
-use Nova\Support\Facades\Cron;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
+
+use Plugins\Cron\Facades\Cron;
 
 use App\Core\BaseController;
 

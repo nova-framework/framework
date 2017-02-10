@@ -9,7 +9,7 @@ use Plugins\Html\FormBuilder;
 use Plugins\Html\HtmlBuilder;
 
 
-class PluginServiceProvider extends ServiceProvider
+class HtmlServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.

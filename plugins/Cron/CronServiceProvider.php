@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Cron\Providers;
+namespace Plugins\Cron;
 
 use Nova\Foundation\AliasLoader;
 use Nova\Support\ServiceProvider;
@@ -8,7 +8,7 @@ use Nova\Support\ServiceProvider;
 use Plugins\Cron\CronManager;
 
 
-class PluginServiceProvider extends ServiceProvider
+class CronServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the Provider is deferred.

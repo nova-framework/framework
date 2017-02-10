@@ -87,7 +87,7 @@ class Files extends BackendController
     public function thumbnails($thumbnail)
     {
         // Calculate the thumbnail file path.
-        $path = str_replace('/', DS, APPPATH .'Storage/Files/thumbnails/' .$thumbnail);
+        $path = str_replace('/', DS, BASEPATH .'storage/app/files/thumbnails/' .$thumbnail);
 
         return $this->serveFile($path);
     }

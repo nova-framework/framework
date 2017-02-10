@@ -48,7 +48,8 @@
         "psr-4": {
             "App\\" : "app/",
             "Modules\\": "modules/",
-            "Plugins\\": "plugins/"
+            "Plugins\\": "plugins/",
+            "Themes\\": "themes/"
         }
     },
     "scripts": {

@@ -11,6 +11,7 @@ use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Language;
 use Nova\Support\Facades\Mail;
 use Nova\Support\Facades\Plugin;
 use Nova\Support\Facades\Redirect;
@@ -78,6 +79,13 @@ class Demos extends ThemedController
 
         //
         $namespaces = Config::getNamespaces();
+
+        ksort($namespaces);
+
+        $content .= '<pre>' .e(var_export($namespaces, true)) .'</pre>';
+
+        //
+        $namespaces = Language::getNamespaces();
 
         ksort($namespaces);
 

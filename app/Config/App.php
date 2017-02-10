@@ -198,11 +198,9 @@ return array(
         'Nova\Database\SeedServiceProvider',
         'Nova\Session\SessionServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
-        'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
         'Nova\Widget\WidgetServiceProvider',
         'Nova\Assets\AssetServiceProvider',
-        'Nova\Cron\CronServiceProvider',
 
         // The Console Providers.
         'Nova\Foundation\Providers\ForgeServiceProvider',
@@ -282,12 +280,9 @@ return array(
         'Validator'     => 'Nova\Support\Facades\Validator',
         'Log'           => 'Nova\Support\Facades\Log',
         'URL'           => 'Nova\Support\Facades\URL',
-        'Form'          => 'Nova\Support\Facades\Form',
-        'HTML'          => 'Nova\Support\Facades\HTML',
         'View'          => 'Nova\Support\Facades\View',
         'Widget'        => 'Nova\Support\Facades\Widget',
         'Template'      => 'Nova\Support\Facades\Template',
         'Module'        => 'Nova\Support\Facades\Module',
-        'Cron'          => 'Nova\Support\Facades\Cron',
     ),
 );

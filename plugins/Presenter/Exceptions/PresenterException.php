@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Presenter\View\Exceptions;
+namespace Plugins\Presenter\Exceptions;
 
 
 class PresenterException extends \Exception {}

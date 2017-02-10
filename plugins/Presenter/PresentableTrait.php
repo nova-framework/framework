@@ -1,8 +1,8 @@
 <?php
 
-namespace Plugins\Presenter\View;
+namespace Plugins\Presenter;
 
-use Plugins\Presenter\View\Exceptions\PresenterException;
+use Plugins\Presenter\Exceptions\PresenterException;
 
 
 trait PresentableTrait

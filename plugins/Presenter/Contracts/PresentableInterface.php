@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Presenter\View\Contracts;
+namespace Plugins\Presenter\Contracts;
 
 
 interface PresentableInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Presenter\View;
+namespace Plugins\Presenter;
 
 
 abstract class Presenter

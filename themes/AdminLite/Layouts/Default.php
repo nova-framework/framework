@@ -1,6 +1,6 @@
 <?php
 /**
- * Frontend Default RTL Layout
+ * Frontend Default Layout
  */
 
 // Generate the Language Changer menu.
@@ -23,7 +23,7 @@ foreach ($languages as $code => $info) {
 $langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?= $langCode; ?>">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,19 +34,19 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        resource_url('css/bootstrap-rtl.min.css', 'AdminLite'),
+        vendor_url('bootstrap/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        resource_url('css/AdminLTE-rtl.min.css', 'AdminLite'),
+        vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        resource_url('css/style-rtl.css', 'AdminLite'),
+        theme_url('css/style.css', 'AdminLite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -141,7 +141,7 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    resource_url('js/bootstrap-rtl.min.js', 'AdminLite'),
+    vendor_url('bootstrap/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
     vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // iCheck

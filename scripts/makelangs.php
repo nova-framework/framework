@@ -73,6 +73,16 @@ if(is_dir(BASEPATH .'plugins')) {
     }
 }
 
+if(is_dir(BASEPATH .'themes')) {
+    $path = str_replace('/', DS, BASEPATH .'themes/*');
+
+    $dirs = glob($path , GLOB_ONLYDIR);
+
+    foreach($dirs as $template) {
+        $workPaths[] = 'themes' .DS .basename($template);
+    }
+}
+
 //
 $options = getopt('', array('path::'));
 

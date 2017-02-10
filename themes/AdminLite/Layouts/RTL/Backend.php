@@ -37,7 +37,7 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        resource_url('css/bootstrap-rtl.min.css', 'AdminLite'),
+        theme_url('css/bootstrap-rtl.min.css', 'AdminLite'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
         // Ionicons
@@ -45,11 +45,11 @@ $langMenuLinks = ob_get_clean();
         // Select2
         vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
         // Theme style
-        resource_url('css/AdminLTE-rtl.min.css', 'AdminLite'),
+        theme_url('css/AdminLTE-rtl.min.css', 'AdminLite'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        resource_url('css/style-rtl.css', 'AdminLite'),
+        theme_url('css/style-rtl.css', 'AdminLite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -221,7 +221,7 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    resource_url('js/bootstrap-rtl.min.js', 'AdminLite'),
+    theme_url('js/bootstrap-rtl.min.js', 'AdminLite'),
     // AdminLTE App
     vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // Select2

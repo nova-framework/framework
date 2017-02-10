@@ -1,19 +1,12 @@
 <?php
 
-namespace Modules\Bootstrap\Providers;
+namespace Themes\Bootstrap\Providers;
 
-use Nova\Module\Support\Providers\ModuleServiceProvider as ServiceProvider;
+use Nova\Support\ServiceProvider;
 
 
-class ModuleServiceProvider extends ServiceProvider
+class ThemeServiceProvider extends ServiceProvider
 {
-    /**
-     * The additional provider class names.
-     *
-     * @var array
-     */
-    protected $providers = array();
-
 
     /**
      * Bootstrap the Application Events.
@@ -22,18 +15,10 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        parent::boot();
-
-        //
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Modules/Bootstrap', 'bootstrap', $path);
-
-        // Bootstrap the Package.
-        $path = $path .DS .'Bootstrap.php';
-
-        $this->bootstrapFrom($path);
+        $this->package('Themes/Bootstrap', 'bootstrap', $path);
     }
 
     /**
@@ -47,8 +32,6 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        parent::register();
-
         //
     }
 

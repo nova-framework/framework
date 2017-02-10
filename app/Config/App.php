@@ -283,6 +283,7 @@ return array(
         'View'          => 'Nova\Support\Facades\View',
         'Widget'        => 'Nova\Support\Facades\Widget',
         'Template'      => 'Nova\Support\Facades\Template',
+        'Plugin'        => 'Nova\Support\Facades\Plugin',
         'Module'        => 'Nova\Support\Facades\Module',
     ),
 );

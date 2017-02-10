@@ -90,12 +90,3 @@ App::down(function()
  * Create a constant for the name of the site.
  */
 define('SITE_TITLE', $app['config']['app.name']);
-
-/**
- * Send a E-Mail to administrator when a Error is logged.
- */
-/*
-use Shared\Log\Mailer as LogMailer;
-
-LogMailer::initHandler($app);
-*/

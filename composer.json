@@ -21,21 +21,22 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/nova-framework/system"
-        },
-        {
-            "type": "git",
             "url": "https://github.com/nova-framework/module-installer"
         },
         {
             "type": "git",
-            "url": "https://github.com/nova-framework/theme-installer"
+            "url": "https://github.com/nova-framework/plugin-installer"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/nova-framework/system"
         }
     ],
     "require": {
         "php": ">=5.5.0",
-        "nova-framework/system": "~4.0",
         "nova-framework/module-installer": "*",
+        "nova-framework/plugin-installer": "*",
+        "nova-framework/system": "~4.0",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3"
     },
@@ -47,6 +48,7 @@
         "psr-4": {
             "App\\" : "app/",
             "Modules\\": "modules/",
+            "Plugins\\": "plugins/",
             "Shared\\": "shared/"
         }
     },
@@ -64,7 +66,9 @@
             "php forge key:generate"
         ],
         "post-autoload-dump": [
+            "Nova\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
             "Nova\\Composer\\Installer\\ModuleInstaller::postAutoloadDump"
+
         ]
     },
     "prefer-stable": true,

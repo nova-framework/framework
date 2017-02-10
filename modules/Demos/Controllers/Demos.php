@@ -6,11 +6,13 @@ use Nova\Routing\Route;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Assets;
 use Nova\Support\Facades\Cache;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Mail;
+use Nova\Support\Facades\Plugin;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\Session;
@@ -70,30 +72,21 @@ class Demos extends ThemedController
         $content = '';
 
         //
-        $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
+        $plugins = Plugin::all()->sortBy('slug');
 
-        $route = new Route('GET', $uri, function() {
-            //
-        });
+        $content .= '<pre>' .e(var_export($plugins, true)) .'</pre>';
 
-        $route->where('slug', '(.*)');
+        //
+        $namespaces = Config::getNamespaces();
 
-        // Match the Route.
-        $request = Request::instance();
+        ksort($namespaces);
 
-        if ($route->matches($request)) {
-            $content = '<pre>' .e(var_export($route->getUri(), true)) .'</pre>';
-        } else {
-            $content = '<pre>' .e($uri) .'</pre>';
-        }
+        $content .= '<pre>' .e(var_export($namespaces, true)) .'</pre>';
 
-        $className = 'Social\Commands\FollowUserCommand';
-
-        $content = preg_replace('~Command(?!.*Command)~', 'CommandHandler', $className);
-
+        //
         $namespaces = Assets::getNamespaces();
 
-        $content = '<pre>' .e(var_export($namespaces, true)) .'</pre>';
+        $content .= '<pre>' .e(var_export($namespaces, true)) .'</pre>';
 
         $uri = 'modules/admin-lite/assets/css/style.css';
 

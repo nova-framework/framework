@@ -14,8 +14,8 @@ use Nova\Auth\Reminders\RemindableTrait;
 use Nova\Auth\Reminders\RemindableInterface;
 use Nova\Database\ORM\Model as BaseModel;
 
-use Shared\Database\ORM\FileField\FileFieldTrait;
-use Shared\View\Presenter\PresentableTrait;
+use Plugins\FileField\Database\ORM\FileFieldTrait;
+use Plugins\Presenter\View\PresentableTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\System\Traits\HasNotificationsTrait;

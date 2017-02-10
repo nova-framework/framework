@@ -4,7 +4,7 @@ namespace Modules\Users\Presenters;
 
 use Nova\Support\Str;
 
-use Shared\View\Presenter\Presenter;
+use Plugins\Presenter\View\Presenter;
 
 
 class UserPresenter extends Presenter

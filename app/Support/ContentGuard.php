@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Support\Http;
+namespace App\Support;
 
 use Nova\Forensics\Profiler;
 use Nova\Forensics\Statistics;

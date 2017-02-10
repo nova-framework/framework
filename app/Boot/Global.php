@@ -95,7 +95,7 @@ define('SITE_TITLE', $app['config']['app.name']);
  * Send a E-Mail to administrator when a Error is logged.
  */
 /*
-use Shared\Log\Mailer as LogMailer;
+use App\Support\Log\Mailer as LogMailer;
 
 LogMailer::initHandler($app);
 */

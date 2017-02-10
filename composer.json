@@ -48,8 +48,7 @@
         "psr-4": {
             "App\\" : "app/",
             "Modules\\": "modules/",
-            "Plugins\\": "plugins/",
-            "Shared\\": "shared/"
+            "Plugins\\": "plugins/"
         }
     },
     "scripts": {

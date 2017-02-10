@@ -64,13 +64,13 @@ if(is_dir(BASEPATH .'modules')) {
     }
 }
 
-if(is_dir(BASEPATH .'themes')) {
-    $path = str_replace('/', DS, BASEPATH .'themes/*');
+if(is_dir(BASEPATH .'plugins')) {
+    $path = str_replace('/', DS, BASEPATH .'plugins/*');
 
     $dirs = glob($path , GLOB_ONLYDIR);
 
     foreach($dirs as $template) {
-        $workPaths[] = 'themes' .DS .basename($template);
+        $workPaths[] = 'plugins' .DS .basename($template);
     }
 }
 

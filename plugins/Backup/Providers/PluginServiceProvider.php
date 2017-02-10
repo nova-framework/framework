@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Backup;
+namespace Plugins\Backup\Providers;
 
 use Plugins\Backup\Console\BackupCommand;
 use Plugins\Backup\Console\RestoreCommand;

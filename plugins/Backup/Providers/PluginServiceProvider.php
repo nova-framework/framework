@@ -28,7 +28,7 @@ class PluginServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $path = realpath(__DIR__);
+        $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
         $this->package('Plugins/Backup', 'backup', $path);

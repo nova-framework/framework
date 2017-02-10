@@ -13,6 +13,7 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Language;
 use Nova\Support\Facades\Mail;
+use Nova\Support\Facades\Module;
 use Nova\Support\Facades\Plugin;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Request;
@@ -71,6 +72,11 @@ class Demos extends ThemedController
     public function test()
     {
         $content = '';
+
+        //
+        $modules = Module::all()->sortBy('slug');
+
+        $content .= '<pre>' .e(var_export($modules, true)) .'</pre>';
 
         //
         $plugins = Plugin::all()->sortBy('slug');

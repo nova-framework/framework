@@ -18,8 +18,7 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
-
-use Modules\System\Models\Option;
+use App\Models\Option;
 
 
 class Settings extends BackendController

@@ -37,6 +37,12 @@ class CronServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Plugins/Cron', 'cron', $path);
+
+        //
         $this->app->bindShared('cron', function($app)
         {
             return new CronManager($app['events']);

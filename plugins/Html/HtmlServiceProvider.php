@@ -26,6 +26,11 @@ class HtmlServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Plugins/Html', 'html', $path);
+
         // Register the Plugin's Facades.
         $loader = AliasLoader::getInstance();
 
@@ -40,12 +45,6 @@ class HtmlServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $path = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('Plugins/Html', 'html', $path);
-
-        //
         $this->registerHtmlBuilder();
 
         $this->registerFormBuilder();

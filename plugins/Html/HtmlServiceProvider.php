@@ -40,6 +40,12 @@ class HtmlServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Plugins/Html', 'html', $path);
+
+        //
         $this->registerHtmlBuilder();
 
         $this->registerFormBuilder();

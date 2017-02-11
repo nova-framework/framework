@@ -2,9 +2,9 @@
 
 namespace App\Modules\System\Controllers;
 
-use Nova\Config\Config;
 use App\Core\Controller;
 
+use Config;
 use Cookie;
 use Redirect;
 use Session;

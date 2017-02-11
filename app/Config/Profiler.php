@@ -6,13 +6,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-/**
- * Setup the Profiler configuration
- */
-Config::set('profiler', array(
+return array(
     'useForensics' => false,
     'withDatabase' => false,
-));
+);

@@ -7,13 +7,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-/**
- * The Application configuration.
- */
-Config::set('app', array(
+return array(
     /**
      * Debug Mode
      */
@@ -165,4 +160,4 @@ Config::set('app', array(
         'Cron'          => 'Nova\Support\Facades\Cron',
         'Module'        => 'Nova\Support\Facades\Module',
     ),
-));
+);

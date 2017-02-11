@@ -6,10 +6,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('session', array(
+return array(
     'driver' => 'file', // The Session Driver used for storing Session data; supported: 'file', 'database' or 'cookie'.
 
     // The Database Session Driver configuration.
@@ -29,4 +27,4 @@ Config::set('session', array(
     'path'     => '/',
     'domain'   => null,
     'secure'   => false,
-));
+);

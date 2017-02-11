@@ -6,8 +6,3 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
-
-/**
- * Configuration constants and options.
- */

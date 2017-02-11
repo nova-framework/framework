@@ -6,7 +6,6 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 use Nova\Config\Repository as ConfigRepository;
 use Nova\Foundation\AliasLoader;
 use Nova\Foundation\Application;
@@ -123,7 +122,7 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 //--------------------------------------------------------------------------
 
 $app->instance('config', $config = new ConfigRepository(
-    $app->getConfigLoader()
+    $app->getConfigLoader(), $env
 ));
 
 //--------------------------------------------------------------------------

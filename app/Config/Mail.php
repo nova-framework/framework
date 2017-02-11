@@ -6,10 +6,8 @@
  * @version 3.0
  */
 
-use Nova\Config\Config;
 
-
-Config::set('mail', array(
+return array(
     'driver' => 'smtp',
     'host'   => '',
     'port'   => 587,
@@ -24,4 +22,4 @@ Config::set('mail', array(
 
     // Whether or not the Mailer will pretend to send the messages.
     'pretend' => true,
-));
+);

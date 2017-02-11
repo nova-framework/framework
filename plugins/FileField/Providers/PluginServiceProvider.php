@@ -14,6 +14,11 @@ class PluginServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $path = realpath(__DIR__ .'/../');
+
+        // Configure the Package.
+        $this->package('Plugins/FileField', 'file_field', $path);
+
         //
     }
 
@@ -24,11 +29,6 @@ class PluginServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $path = realpath(__DIR__ .'/../');
-
-        // Configure the Package.
-        $this->package('Plugins/FileField', 'file_field', $path);
-
         //
     }
 }

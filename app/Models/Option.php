@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\System\Models;
+namespace App\Models;
 
-use Modules\System\Database\Model as BaseModel;
+use Nova\Database\ORM\Model as BaseModel;
 
 
 class Option extends BaseModel
@@ -16,7 +16,8 @@ class Option extends BaseModel
     public $timestamps = false;
 
 
-    public function getValueAttribute($value) {
+    public function getValueAttribute($value)
+    {
         return $this->maybeDecode($value);
     }
 
@@ -93,5 +94,36 @@ class Option extends BaseModel
         $groupAndItem = array_slice(static::parseBasicSegments($itemSegments), 1);
 
         return array_merge(array($namespace), $groupAndItem);
+    }
+
+    /**
+     * Decode value only if it was encoded to JSON.
+     *
+     * @param  string  $original
+     * @param  bool    $assoc
+     * @return mixed
+     */
+    protected function maybeDecode($original, $assoc = true)
+    {
+        if (is_numeric($original)) return $original;
+
+        $data = json_decode($original, $assoc);
+
+        return (is_object($data) || is_array($data)) ? $data : $original;
+    }
+
+    /**
+     * Encode data to JSON, if needed.
+     *
+     * @param  mixed  $data
+     * @return mixed
+     */
+    protected function maybeEncode($data)
+    {
+        if (is_array($data) || is_object($data)) {
+            return json_encode($data);
+        }
+
+        return $data;
     }
 }

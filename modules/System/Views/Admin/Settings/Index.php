@@ -11,6 +11,8 @@
 
 <?= Session::getMessages(); ?>
 
+<?php if (CONFIG_STORE == 'database') { ?>
+
 <form class="form-horizontal" action="<?= site_url('admin/settings'); ?>" method="POST">
 
 <div class="box box-default">
@@ -158,6 +160,14 @@
 <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
 
 </form>
+
+<?php } else { ?>
+
+<div class="callout callout-info">
+    <?= __d('system', 'The Settings are not available while the Config Store is on Files Mode.'); ?>
+</div>
+
+<?php } ?>
 
 </section>
 

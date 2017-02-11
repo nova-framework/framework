@@ -119,14 +119,6 @@ $app->startExceptionHandling();
 if ($env != 'testing') ini_set('display_errors', 'Off');
 
 //--------------------------------------------------------------------------
-// Load The Configuration
-//--------------------------------------------------------------------------
-
-foreach (glob($app['path'] .DS .'Config' .DS .'*.php') as $path) {
-    if (is_readable($path)) require $path;
-}
-
-//--------------------------------------------------------------------------
 // Register The Config Manager
 //--------------------------------------------------------------------------
 

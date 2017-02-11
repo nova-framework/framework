@@ -24,7 +24,7 @@ class CronServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $path = realpath(__DIR__ .'/../');
+        $path = realpath(__DIR__);
 
         // Configure the Package.
         $this->package('Plugins/Cron', 'cron', $path);

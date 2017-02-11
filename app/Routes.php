@@ -11,7 +11,7 @@
 /** Define static routes. */
 
 // The default Routing
-Route::get('/',       'App\Controllers\Welcome@index');
-Route::get('subpage', 'App\Controllers\Welcome@subPage');
+Route::get('/',       'Welcome@index');
+Route::get('subpage', 'Welcome@subPage');
 
 /** End default Routes */

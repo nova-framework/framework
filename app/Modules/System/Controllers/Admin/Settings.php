@@ -9,7 +9,9 @@
 namespace App\Modules\System\Controllers\Admin;
 
 use App\Core\BackendController;
+use App\Models\Option;
 
+use Cache;
 use Config;
 use Input;
 use Redirect;
@@ -99,18 +101,21 @@ class Settings extends BackendController
 
         if($validator->passes()) {
             // The Application.
-            Config::set('app.name',          $input['siteName']);
-            Config::set('app.color_scheme',  $input['siteSkin']);
+            Option::set('app.name',          $input['siteName']);
+            Option::set('app.color_scheme',  $input['siteSkin']);
 
             // The Mailer
-            Config::set('mail.driver',       $input['mailDriver']);
-            Config::set('mail.host',         $input['mailHost']);
-            Config::set('mail.port',         $input['mailPort']);
-            Config::set('mail.from.address', $input['mailFromAddress']);
-            Config::set('mail.from.name',    $input['mailFromName']);
-            Config::set('mail.encryption',   $input['mailEncryption']);
-            Config::set('mail.username',     $input['mailUsername']);
-            Config::set('mail.password',     $input['mailPassword']);
+            Option::set('mail.driver',       $input['mailDriver']);
+            Option::set('mail.host',         $input['mailHost']);
+            Option::set('mail.port',         $input['mailPort']);
+            Option::set('mail.from.address', $input['mailFromAddress']);
+            Option::set('mail.from.name',    $input['mailFromName']);
+            Option::set('mail.encryption',   $input['mailEncryption']);
+            Option::set('mail.username',     $input['mailUsername']);
+            Option::set('mail.password',     $input['mailPassword']);
+
+            // Invalidate the cached system options.
+            Cache::forget('system_options');
 
             // Prepare the flash message.
             $status = __d('system', 'The Settings was successfully updated.');

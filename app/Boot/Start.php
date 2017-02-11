@@ -201,38 +201,6 @@ $path = $app['path'] .DS .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
 
 if (is_readable($path)) require $path;
 
-//--------------------------------------------------------------------------
-// Load The Application Events
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Events.php';
-
-if (is_readable($path)) require $path;
-
-//--------------------------------------------------------------------------
-// Load The Application's Route Filters
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Filters.php';
-
-if (is_readable($path)) require $path;
-
-//--------------------------------------------------------------------------
-// Load The Application Routes
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Routes.php';
-
-if (is_readable($path)) require $path;
-
-//--------------------------------------------------------------------------
-// Load The Application Bootstrap
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Bootstrap.php';
-
-if (is_readable($path)) require $path;
-
 });
 
 //--------------------------------------------------------------------------

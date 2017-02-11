@@ -98,13 +98,15 @@ Config::set('app', array(
         'Nova\Cron\CronServiceProvider',
 
         // The Application Providers.
-        'App\Providers\AppServiceProvider',        
+        'App\Providers\AppServiceProvider',
+        'App\Providers\EventServiceProvider',
+        'App\Providers\RouteServiceProvider',
     ),
 
     /**
      * The Service Providers Manifest path.
      */
-    'manifest' => APPDIR .'Boot' .DS .'Cache',
+    'manifest' => ROOTDIR .'storage',
 
     /**
      * The registered Class Aliases.

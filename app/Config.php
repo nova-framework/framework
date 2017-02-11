@@ -19,11 +19,6 @@ define('PREFIX', 'nova_');
  */
 define('CONFIG_STORE', 'files'); // Supported: "files", "database"
 
-/**
- * Wheter or not the configuration items are cached, while on Database Mode.
- */
-define('CONFIG_CACHE', true);
-
 
 /**
  * Routing configuration

@@ -51,28 +51,38 @@ App::error(function(HttpException $exception)
 });
 
 //--------------------------------------------------------------------------
-// Try To Register Again The Config Manager
+// Maintenance Mode Handler
 //--------------------------------------------------------------------------
 
-use Nova\Config\Repository as ConfigRepository;
-use Nova\Support\Facades\Facade;
+App::down(function()
+{
+    return Response::make("Be right back!", 503);
+});
 
-if(CONFIG_STORE == 'database') {
-    // Get the Database Connection instance.
-    $connection = $app['db']->connection();
+//--------------------------------------------------------------------------
+// Load The Options
+//--------------------------------------------------------------------------
 
-    // Get a fresh Config Loader instance.
-    $loader = $app->getConfigLoader();
+use App\Models\Option;
 
-    // Setup Database Connection instance.
-    $loader->setConnection($connection);
+if (CONFIG_STORE === 'database') {
+    // Retrieve the Option items, caching them for 24 hours.
+    $options = Cache::remember('system_options', 1440, function()
+    {
+        return Option::all();
+    });
 
-    // Refresh the Application's Config instance.
-    $app->instance('config', $config = new ConfigRepository($loader));
+    // Setup the information stored on the Option instances into Configuration.
+    foreach ($options as $option) {
+        $key = $option->group;
 
-    // Make the Facade to refresh its information.
-    Facade::clearResolvedInstance('config');
-} else if(CONFIG_STORE != 'files') {
+        if (! empty($option->item)) {
+            $key .= '.' .$option->item;
+        }
+
+        Config::set($key, $option->value);
+    }
+} else if(CONFIG_STORE !== 'files') {
     throw new \InvalidArgumentException('Invalid Config Store type.');
 }
 

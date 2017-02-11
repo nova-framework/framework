@@ -6,10 +6,12 @@ use App\Core\Controller;
 
 use Nova\Routing\Route;
 
+use App\Models\Option;
 use App\Models\User;
 
 use App;
 use Cache;
+use Config;
 use DB;
 use Event;
 use Hash;
@@ -52,29 +54,9 @@ class Demos extends Controller
 
     public function test()
     {
-        $request = Request::instance();
+        $options = Option::all();
 
-        $uri = 'demo/test/{param1?}/{param2?}/{param3?}/{slug?}';
-
-        //
-        $route = new Route('GET', $uri, function()
-        {
-            echo 'Hello, World!';
-
-        });
-
-        $route->where('slug', '(.*)');
-
-        // Match the Route.
-        if ($route->matches($request)) {
-            $route->bind($request);
-
-            $content = '<pre>Route matched!</pre>';
-        } else {
-            $content = '<pre>Route not matched!</pre>';
-        }
-
-        $content .= '<pre>' .htmlspecialchars(var_export($route, true)) .'</pre>';
+        $content = '<pre>' .var_export($options->toArray(), true).'</pre>';
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))

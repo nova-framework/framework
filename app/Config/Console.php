@@ -30,5 +30,9 @@ return array(
         'Nova\Database\MigrationServiceProvider',
         'Nova\Database\SeedServiceProvider',
         'Nova\Logs\ConsoleServiceProvider',
+        'Nova\Module\Providers\ConsoleServiceProvider',
+        'Nova\Module\Providers\GeneratorServiceProvider',
+        'Nova\Plugin\Providers\ConsoleServiceProvider',
+        'Nova\Plugin\Providers\GeneratorServiceProvider'
     ),
 );

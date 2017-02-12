@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
 use App\Core\ThemedController;
 

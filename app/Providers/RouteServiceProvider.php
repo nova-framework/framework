@@ -13,7 +13,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Controllers';
+    protected $namespace = 'App\Http\Controllers';
 
 
     /**
@@ -24,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $path = app_path('Filters.php');
+        $path = app_path('Http/Filters.php');
 
         $this->loadFiltersFrom($path);
 
@@ -42,7 +42,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $router->group(array('namespace' => $this->namespace), function ($router)
         {
-            require app_path('Routes.php');
+            require app_path('Http/Routes.php');
         });
     }
 

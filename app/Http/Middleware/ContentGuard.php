@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Support;
+namespace App\Http\Middleware;
 
 use Nova\Forensics\Profiler;
 use Nova\Forensics\Statistics;

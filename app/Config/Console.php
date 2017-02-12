@@ -27,5 +27,7 @@ return array(
         'Nova\Routing\ControllerServiceProvider',
         'Nova\Auth\Reminders\ConsoleServiceProvider',
         'Nova\Cache\ConsoleServiceProvider',
+        'Nova\Database\MigrationServiceProvider',
+        'Nova\Database\SeedServiceProvider',
     ),
 );

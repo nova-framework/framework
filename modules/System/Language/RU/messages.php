@@ -76,6 +76,7 @@ return array (
   'The Role <b>{0}</b> was successfully deleted.' => 'Роль <b>{0}</b> была успешно удалена',
   'The Role <b>{0}</b> was successfully updated.' => 'Роль <b>{0}</b> была успешно обновлена',
   'The Role with ID: {0} was not found.' => 'Роль с ID: {0} не найдена',
+  'The Settings are not available while the Config Store is on Files Mode.' => '',
   'The Settings was successfully updated.' => 'Параметры были успешно обновлены',
   'The Skin used by the Site\'s Template.' => 'Оормление, используемое шаблоном сайта ',
   'The Username used to connect to the external SMTP Server.' => ' Логин, используемый для подключения к внешнему серверу SMTP.',

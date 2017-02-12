@@ -76,6 +76,7 @@ return array (
   'The Role <b>{0}</b> was successfully deleted.' => '',
   'The Role <b>{0}</b> was successfully updated.' => '',
   'The Role with ID: {0} was not found.' => '',
+  'The Settings are not available while the Config Store is on Files Mode.' => '',
   'The Settings was successfully updated.' => 'تنظیمات با موفقیت بروز شدند.',
   'The Skin used by the Site\'s Template.' => 'پوسته ای که توسط قالب سایت استفاده شود.',
   'The Username used to connect to the external SMTP Server.' => 'نام کاربری برای اتصال به سرور خارجی SMTP',

@@ -36,6 +36,7 @@ class PluginServiceProvider extends ServiceProvider
         // Configure the Services.
         if (! $this->app->runningInConsole()) return;
 
+        //
         $databaseBuilder = new DatabaseBuilder();
 
         $this->app['db.backup'] = $this->app->share(function($app) use ($databaseBuilder)

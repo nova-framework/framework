@@ -29,5 +29,6 @@ return array(
         'Nova\Cache\ConsoleServiceProvider',
         'Nova\Database\MigrationServiceProvider',
         'Nova\Database\SeedServiceProvider',
+        'Nova\Logs\ConsoleServiceProvider',
     ),
 );

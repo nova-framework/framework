@@ -29,7 +29,7 @@ return array(
         'Nova\Cache\ConsoleServiceProvider',
         'Nova\Database\MigrationServiceProvider',
         'Nova\Database\SeedServiceProvider',
-        'Nova\Logs\ConsoleServiceProvider',
+        'Nova\Log\ConsoleServiceProvider',
         'Nova\Module\Providers\ConsoleServiceProvider',
         'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Plugin\Providers\ConsoleServiceProvider',

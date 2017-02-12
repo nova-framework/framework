@@ -2,7 +2,7 @@
 
 namespace Modules\Logs\Models;
 
-use Modules\System\Database\Model;
+use Nova\Database\ORM\Model;
 
 
 class Log extends Model
@@ -32,4 +32,34 @@ class Log extends Model
         $this->attributes['data'] = $this->maybeEncode($value);
     }
 
+    /**
+     * Decode value only if it was encoded to JSON.
+     *
+     * @param  string  $original
+     * @param  bool    $assoc
+     * @return mixed
+     */
+    protected function maybeDecode($original, $assoc = true)
+    {
+        if (is_numeric($original)) return $original;
+
+        $data = json_decode($original, $assoc);
+
+        return (is_object($data) || is_array($data)) ? $data : $original;
+    }
+
+    /**
+     * Encode data to JSON, if needed.
+     *
+     * @param  mixed  $data
+     * @return mixed
+     */
+    protected function maybeEncode($data)
+    {
+        if (is_array($data) || is_object($data)) {
+            return json_encode($data);
+        }
+
+        return $data;
+    }
 }

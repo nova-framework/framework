@@ -24,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $basePath = realpath(__DIR__ .'/../') .DS;
+        $basePath = realpath(__DIR__ .'/../Http/') .DS;
 
         //
         $path = $basePath .'Filters.php';

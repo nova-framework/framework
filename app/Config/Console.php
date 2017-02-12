@@ -25,5 +25,6 @@ return array(
         'Nova\Session\CommandsServiceProvider',
         'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
         'Nova\Routing\ControllerServiceProvider',
+        'Nova\Auth\Reminders\ConsoleServiceProvider',
     ),
 );

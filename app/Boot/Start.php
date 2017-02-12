@@ -182,9 +182,9 @@ BinaryFileResponse::trustXSendfileTypeHeader();
 $providers = $config['providers'];
 
 if ($app->runningInConsole()) {
-    $consoleProviders = $app['config']->get('console.providers', array());
-
-    $providers = array_merge($providers, $consoleProviders);
+    $providers = array_merge(
+        $providers, $app['config']->get('console.providers', array())
+    );
 }
 
 $app->getProviderRepository()->load($app, $providers);

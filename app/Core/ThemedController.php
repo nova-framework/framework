@@ -94,7 +94,7 @@ abstract class ThemedController extends BaseController
         $path = str_replace('\\', '/', static::class);
 
         // Check for a valid controller on App or Modules.
-        if (preg_match('#^(.+)/Controllers/(.*)$#i', $path, $matches)) {
+        if (preg_match('#^(.+)/Http/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[2] .'/' .ucfirst($method);
 
             if ($matches[1] == 'App') {

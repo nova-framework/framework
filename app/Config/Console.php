@@ -22,9 +22,7 @@ return array(
 
     'providers' => array(
         'Nova\Foundation\Providers\ForgeServiceProvider',
-        'Nova\Session\CommandsServiceProvider',
         'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
-        'Nova\Routing\ControllerServiceProvider',
         'Nova\Auth\Reminders\ConsoleServiceProvider',
         'Nova\Cache\ConsoleServiceProvider',
         'Nova\Database\MigrationServiceProvider',
@@ -34,5 +32,8 @@ return array(
         'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Plugin\Providers\ConsoleServiceProvider',
         'Nova\Plugin\Providers\GeneratorServiceProvider'
+        'Nova\Session\ConsoleServiceProvider',
+        'Nova\Routing\ControllerServiceProvider',
+        'Nova\View\ConsoleServiceProvider',
     ),
 );

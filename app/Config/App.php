@@ -202,12 +202,6 @@ return array(
         'Nova\Widget\WidgetServiceProvider',
         'Nova\Assets\AssetServiceProvider',
 
-        // The Console Providers.
-        'Nova\Foundation\Providers\ForgeServiceProvider',
-        'Nova\Session\CommandsServiceProvider',
-        'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
-        'Nova\Routing\ControllerServiceProvider',
-
         // The Application Providers.
         'App\Providers\AppServiceProvider',
         'App\Providers\AuthServiceProvider',

@@ -76,6 +76,7 @@ return array (
   'The Role <b>{0}</b> was successfully deleted.' => 'Rollen <b>{0}</b> er nu slettet',
   'The Role <b>{0}</b> was successfully updated.' => 'Rollen <b>{0}</b> er nu opdateret',
   'The Role with ID: {0} was not found.' => 'Rollen med ID: {0} blev ikke fundet',
+  'The Settings are not available while the Config Store is on Files Mode.' => '',
   'The Settings was successfully updated.' => 'Indstillingerne er nu opdateret.',
   'The Skin used by the Site\'s Template.' => 'Design brugt på siden.',
   'The Username used to connect to the external SMTP Server.' => 'Brugernavnet (mailen) til SMTP serveren.',

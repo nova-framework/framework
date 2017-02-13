@@ -13,10 +13,10 @@
 Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\WebChat\Http\Controllers\Admin'), function()
 {
     // Chat
-    Route::get( 'chat', array('before' => 'auth', 'uses' => 'Chat@index'));
+    Route::get( 'chat', array('middleware' => 'auth', 'uses' => 'Chat@index'));
 
     // Video Chat
-    Route::get( 'chat/video',          array('before' => 'auth',      'uses' => 'VideoChat@index'));
-    Route::post('chat/video',          array('before' => 'auth|csrf', 'uses' => 'VideoChat@create'));
-    Route::get( 'chat/video/{roomId}', array('before' => 'auth',      'uses' => 'VideoChat@show'));
+    Route::get( 'chat/video',          array('middleware' => 'auth',      'uses' => 'VideoChat@index'));
+    Route::post('chat/video',          array('middleware' => 'auth|csrf', 'uses' => 'VideoChat@create'));
+    Route::get( 'chat/video/{roomId}', array('middleware' => 'auth',      'uses' => 'VideoChat@show'));
 });

@@ -165,6 +165,23 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
+    | Application Middleware
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'middleware' => array(
+        'Nova\Foundation\Http\Middleware\CheckForMaintenanceMode',
+        'Nova\Cookie\Middleware\EncryptCookies',
+        'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
+        'Nova\Session\Middleware\StartSession',
+        'Nova\Foundation\Http\Middleware\ServeAssetFile',
+        'Nova\View\Middleware\ShareErrorsFromSession',
+        'App\Http\Middleware\MinifyContent',
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -179,6 +196,7 @@ return array(
         'Nova\Plugin\PluginServiceProvider',
         'Nova\Module\ModuleServiceProvider',
         'Nova\Auth\AuthServiceProvider',
+        'Nova\Bus\BusServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
         'Nova\Cookie\CookieServiceProvider',
@@ -191,6 +209,7 @@ return array(
         'Nova\Log\LogServiceProvider',
         'Nova\Mail\MailServiceProvider',
         'Nova\Pagination\PaginationServiceProvider',
+        'Nova\Pipeline\PipelineServiceProvider',
         'Nova\Queue\QueueServiceProvider',
         'Nova\Redis\RedisServiceProvider',
         'Nova\Auth\Reminders\ReminderServiceProvider',

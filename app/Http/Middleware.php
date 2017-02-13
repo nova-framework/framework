@@ -1,39 +1,13 @@
 <?php
 /**
- * Routing Filters - all standard Routing Filters are defined here.
+ * Routing Middleware - all standard Routing Middleware are defined here.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  * @version 4.0
  */
 
-/*
-|--------------------------------------------------------------------------
-| Application & Route Filters
-|--------------------------------------------------------------------------
-|
-| Below you will find the "before" and "after" events for the application
-| which may be used to do any work before or after a request into your
-| application. Here you may also register your custom route filters.
-|
-*/
-
-App::before(function($request)
-{
-    $dispatcher = App::make('Nova\Routing\Assets\DispatcherInterface');
-
-    return $dispatcher->dispatch($request);
-});
-
-
-App::after(function($request, $response)
-{
-    //
-});
-
-/** Define Route Filters. */
-
 // The CSRF Filter.
-Route::filter('csrf', function($route, $request)
+Route::middleware('csrf', function($request, $next)
 {
     $session = $request->session();
 
@@ -42,7 +16,7 @@ Route::filter('csrf', function($route, $request)
     $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('_token');
 
     if ($session->token() == $token) {
-        //
+        return $next($request);
     }
 
     // The CSRF Token is invalid, respond with Error 400 (Bad Request)
@@ -54,7 +28,7 @@ Route::filter('csrf', function($route, $request)
 });
 
 // Referer checking Filter.
-Route::filter('referer', function($route, $request)
+Route::middleware('referer', function($request, $next)
 {
     // Check if the visitor come to this Route from another site.
     $referer = $request->header('referer');
@@ -63,13 +37,15 @@ Route::filter('referer', function($route, $request)
         // When Referrer is invalid, respond with Error 400 (Bad Request)
         App::abort(400, 'Bad Request');
     }
+
+    return $next($request);
 });
 
 // Authentication Filters.
-Route::filter('auth', function($route, $request)
+Route::middleware('auth', function($request, $next)
 {
     if (Auth::check()) {
-        //
+        return $next($request);
     }
 
     // User is not authenticated.
@@ -80,15 +56,19 @@ Route::filter('auth', function($route, $request)
     }
 });
 
-Route::filter('auth.basic', function()
+Route::middleware('auth.basic', function($request, $next)
 {
-    return Auth::basic();
+    if (! is_null($response = Auth::basic())) {
+        return $response;
+    }
+
+    return $next($request);
 });
 
-Route::filter('guest', function($route, $request)
+Route::middleware('guest', function($request, $next)
 {
     if (Auth::guest()) {
-        //
+        return $next($request);
     }
 
     // User is authenticated.

@@ -24,11 +24,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $path = app_path('Http/Middleware.php');
-
-        $this->loadMiddlewareFrom($path);
-
         //
+        
         parent::boot($router);
     }
 

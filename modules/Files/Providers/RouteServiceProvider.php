@@ -27,11 +27,6 @@ class RouteServiceProvider extends ServiceProvider
         $basePath = realpath(__DIR__ .'/../Http/') .DS;
 
         //
-        $path = $basePath .'Middleware.php';
-
-        $this->loadMiddlewareFrom($path);
-
-        //
         $path = $basePath .'Routes.php';
 
         $this->loadRoutesFrom($path);

@@ -183,6 +183,21 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
+    | Routes Middleware
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'routeMiddleware' => array(
+        'csrf'       => 'App\Http\Middleware\VerifyCsrfToken',
+        'auth'       => 'App\Http\Middleware\Authenticate',
+        'auth.basic' => 'Nova\Auth\Middleware\AuthenticateWithBasicAuth',
+        'guest'      => 'App\Http\Middleware\RedirectIfAuthenticated',
+        'referer'    => 'App\Http\Middleware\CheckForReferer',
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

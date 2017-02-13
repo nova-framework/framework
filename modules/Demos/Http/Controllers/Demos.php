@@ -110,6 +110,13 @@ class Demos extends ThemedController
 
         $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::dispatch($uri)), true)) .'</pre>';
 
+        //
+        $content = '<pre>' .e(var_export(Session::all(), true)) .'</pre>';
+
+        $content .= '<pre>' .e(var_export(Request::cookie(PREFIX .'language'), true)) .'</pre>';
+        
+        $content .= '<pre>' .e(var_export(Language::code(), true)) .'</pre>';
+
         return View::make('Default')
             ->shares('title', __d('demos', 'Test'))
             ->with('content', $content);

@@ -19,7 +19,7 @@ class Kernel extends HttpKernel
         'Nova\Session\Middleware\StartSession',
         'Nova\Foundation\Http\Middleware\ServeAssetFile',
         'Nova\View\Middleware\ShareErrorsFromSession',
-        'App\Http\Middleware\VerifyCsrfToken',
+        //'App\Http\Middleware\VerifyCsrfToken',
         'Nova\Foundation\Http\Middleware\SetupLanguage',
         'App\Http\Middleware\MinifyContent',
     );
@@ -30,6 +30,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = array(
+        'csrf'       => 'Nova\Foundation\Http\Middleware\VerifyCsrfToken',
         'auth'       => 'App\Http\Middleware\Authenticate',
         'auth.basic' => 'Nova\Auth\Middleware\AuthenticateWithBasicAuth',
         'guest'      => 'App\Http\Middleware\RedirectIfAuthenticated',

@@ -102,7 +102,7 @@ $app->bindInstallPaths(array(
 $app->instance('app', $app);
 
 //--------------------------------------------------------------------------
-// Register The Kernel
+// Register The Framework Kernel
 //--------------------------------------------------------------------------
 
 $app->singleton('Nova\Http\Contracts\KernelInterface', 'App\Http\Kernel');

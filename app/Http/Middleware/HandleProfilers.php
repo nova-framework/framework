@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Closure;
 
 
-class MinifyContent
+class HandleProfilers
 {
     /**
      * The application implementation.
@@ -52,37 +52,30 @@ class MinifyContent
     {
         $response = $next($request, $next);
 
-        //
+        // Get the debug flag from configuration.
+        $config = $this->app['config'];
+
+        $debug = $config->get('app.debug', false);
+
+        // Get the content type.
         $contentType = $response->headers->get('Content-Type');
 
-        if (! str_is('text/html*', $contentType)) {
-            return $response;
+        if ($debug && str_is('text/html*', $contentType)) {
+            return $this->insertProfilers($response);
         }
 
-        return $this->processResponseContent($response);
+        return $response;
     }
 
     /**
      * Minify the Response instance Content.
      *
      * @param  \Symfony\Component\HttpFoundation\Response $response
-     * @param bool $debug
      *
      * @return void
      */
-    protected function processResponseContent(SymfonyResponse $response)
+    protected function insertProfilers(SymfonyResponse $response)
     {
-        $config = $this->app['config'];
-
-        //
-        $debug = $config->get('app.debug', false);
-
-        if(! $debug) {
-            // Minify the Response's Content and return it.
-            return $this->minifyResponseContent($response);
-        }
-
-        // Insert the QuickProfiler Widget in the Response's Content.
         $searches = array(
             '<!-- DO NOT DELETE! - Profiler -->',
             '<!-- DO NOT DELETE! - Statistics -->',
@@ -94,24 +87,6 @@ class MinifyContent
         );
 
         $content = str_replace($searches, $replaces, $response->getContent());
-
-        //
-        $response->setContent($content);
-
-        return $response;
-    }
-
-    protected function minifyResponseContent(SymfonyResponse $response)
-    {
-        $searches = array(
-            '/\>[^\S ]+/s', // Strip whitespaces after tags, except space.
-            '/[^\S ]+\</s', // Strip whitespaces before tags, except space.
-            '/(\s)+/s'      // Shorten multiple whitespace sequences.
-        );
-
-        $replaces = array('>', '<', '\\1');
-
-        $content = preg_replace($searches, $replaces, $response->getContent());
 
         //
         $response->setContent($content);

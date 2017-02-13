@@ -164,12 +164,6 @@ $aliases = $config['aliases'];
 AliasLoader::getInstance($aliases)->register();
 
 //--------------------------------------------------------------------------
-// Enable HTTP Method Override
-//--------------------------------------------------------------------------
-
-Request::enableHttpMethodParameterOverride();
-
-//--------------------------------------------------------------------------
 // Enable Trusting Of X-Sendfile Type Header
 //--------------------------------------------------------------------------
 
@@ -188,14 +182,6 @@ if ($app->runningInConsole()) {
 }
 
 $app->getProviderRepository()->load($app, $providers);
-
-//--------------------------------------------------------------------------
-// Additional Middleware On Application
-//--------------------------------------------------------------------------
-
-App::middleware('App\Http\Middleware\ContentGuard', array(
-    $app['config']['app.debug']
-));
 
 //--------------------------------------------------------------------------
 // Register Booted Start Files

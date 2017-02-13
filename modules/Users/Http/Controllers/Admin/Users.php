@@ -34,7 +34,7 @@ class Users extends BackendController
         parent::__construct();
 
         //
-        $this->beforeFilter('@adminUsersFilter');
+        $this->middleware('admin');
     }
 
     protected function validate(array $data, $id = null)

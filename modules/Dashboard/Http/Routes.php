@@ -13,6 +13,6 @@
 Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Dashboard\Http\Controllers\Admin'), function()
 {
     // The User's Dashboard.
-    Route::get('/',         array('before' => 'auth', 'uses' => 'Dashboard@index'));
-    Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
+    Route::get('/',         array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
+    Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
 });

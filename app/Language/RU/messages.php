@@ -13,10 +13,11 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Open subpage' => 'Открыть подстраницу',
   'Password Reset' => 'Сброс пароля',
   'Please verify your E-mail address' => 'Пожалуйста, подтвердите ваш E-mail адрес',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => 'Что-то пошло не так на веб-сервере.',
   'Subpage' => 'Подстраница',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'Спасибо за создание учетной записи на {0}. Пожалуйста, перейдите по ссылке ниже, чтобы подтвердить свой адрес электронной почты:',
+  'The site is currently under maintenance.' => '',
   'To reset your password, complete this form: {0}.' => 'Чтобы сбросить пароль, заполните эту форму: {0}.',
   'Welcome' => 'Добро пожаловать!',
-  'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
 );

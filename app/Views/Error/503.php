@@ -6,8 +6,8 @@
 
             <hr />
 
-            <h3><?= __('Maintenance'); ?></h3>
-            <p><?= __('Be right back.'); ?></p>
+            <h3><?= __('Service unavailable'); ?></h3>
+            <p><?= __('The site is currently under maintenance.'); ?></p>
 
         </div>
     </div>

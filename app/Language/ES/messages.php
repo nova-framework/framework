@@ -13,10 +13,11 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Open subpage' => 'Abrir Subpágina',
   'Password Reset' => '',
   'Please verify your E-mail address' => '',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => '',
   'Subpage' => 'Subpágina',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
+  'The site is currently under maintenance.' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Welcome' => 'Bienvenido',
-  'You are not authorized to access this resource.' => '',
 );

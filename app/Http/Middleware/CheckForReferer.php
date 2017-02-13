@@ -9,14 +9,14 @@ use Nova\Support\Str;
 use Closure;
 
 
-class CheckForHttpReferrer
+class CheckForReferer
 {
     /**
-     * The Application instance.
+     * The Application URL.
      *
-     * @var \Nova\Foundation\Application
+     * @var string
      */
-    protected $app;
+    protected $url;
 
     /**
      * Create a new middleware instance.
@@ -26,7 +26,7 @@ class CheckForHttpReferrer
      */
     public function __construct(Application $app)
     {
-        $this->app = $app;
+        $this->url = $app['config']->get('app.url');
     }
 
     /**
@@ -38,12 +38,10 @@ class CheckForHttpReferrer
      */
     public function handle($request, Closure $next)
     {
-        $config = $this->app['config'];
-
         // Check if the visitor come to this Route from another site.
         $referrer = $request->header('referer');
 
-        if(! Str::startsWith($referrer, $config->get('app.url'))) {
+        if (! Str::startsWith($referrer, $this->url)) {
             // When Referrer is invalid, redirect back.
             return Redirect::back();
         }

@@ -21,7 +21,7 @@ App::error(function(ValidationException $exception, $code)
 /**
  * Permit the access only to Administrators.
  */
-Route::middleware('admin', function($request, $next)
+Route::middleware('admin', function($request, Closure $next)
 {
     $user = Auth::user();
 
@@ -41,7 +41,7 @@ Route::middleware('admin', function($request, $next)
 });
 
 // Role-based Authorization Middleware.
-Route::middleware('roles', function($request, $next, $value) {
+Route::middleware('roles', function($request, Closure $next, $value) {
     $user = Auth::user();
 
     // Explode the passed value on array of accepted User Roles.

@@ -18,15 +18,4 @@ Route::middleware('guest', 'App\Http\Middleware\RedirectIfAuthenticated');
 Route::middleware('auth.basic', 'Nova\Auth\Middleware\AuthenticateWithBasicAuth');
 
 // Referer checking Filter.
-Route::middleware('referer', function($request, $next)
-{
-    // Check if the visitor come to this Route from another site.
-    $referer = $request->header('referer');
-
-    if(! starts_with($referer, Config::get('app.url'))) {
-        // When Referrer is invalid, respond with Error 400 (Bad Request)
-        App::abort(400, 'Bad Request');
-    }
-
-    return $next($request);
-});
+Route::middleware('referer', 'App\Http\Middleware\CheckForHttpReferrer');

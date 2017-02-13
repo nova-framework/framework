@@ -18,9 +18,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 App::error(function(Exception $exception, $code, $fromConsole)
 {
-    if (($exception instanceof ModelNotFoundException) ||
-        ($exception instanceof HttpException)) {
-        // Do not report those types of exception.
+    if (($exception instanceof ModelNotFoundException) || ($exception instanceof HttpException)) {
+        // Do not report those exceptions.
         return;
     }
 
@@ -81,14 +80,6 @@ App::missing(function(NotFoundHttpException $exception)
     //
 });
 */
-//--------------------------------------------------------------------------
-// Maintenance Mode Handler
-//--------------------------------------------------------------------------
-
-App::down(function()
-{
-    return Response::make("Be right back!", 503);
-});
 
 //--------------------------------------------------------------------------
 // Load The Options

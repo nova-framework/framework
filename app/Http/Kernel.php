@@ -18,9 +18,9 @@ class Kernel extends HttpKernel
         'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
         'Nova\Session\Middleware\StartSession',
         'Nova\Foundation\Http\Middleware\ServeAssetFile',
+        'Nova\Foundation\Http\Middleware\SetupLanguage',
         'Nova\View\Middleware\ShareErrorsFromSession',
         'App\Http\Middleware\VerifyCsrfToken',
-        'Nova\Foundation\Http\Middleware\SetupLanguage',
         'App\Http\Middleware\MinifyContent',
     );
 

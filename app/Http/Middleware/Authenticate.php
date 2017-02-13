@@ -39,7 +39,7 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         if ($this->auth->guest()) {
-            if ($request->ajax()|| $request->wantsJson()) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return Response::make('Unauthorized.', 401);
             } else {
                 return Redirect::guest('login');

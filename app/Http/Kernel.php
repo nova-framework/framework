@@ -21,7 +21,7 @@ class Kernel extends HttpKernel
         'Nova\Foundation\Http\Middleware\SetupLanguage',
         'Nova\View\Middleware\ShareErrorsFromSession',
         'App\Http\Middleware\VerifyCsrfToken',
-        'App\Http\Middleware\MinifyContent',
+        'App\Http\Middleware\HandleProfilers',
     );
 
     /**

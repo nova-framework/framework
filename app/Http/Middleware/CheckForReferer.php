@@ -12,11 +12,11 @@ use Closure;
 class CheckForReferer
 {
     /**
-     * The Application URL.
+     * The Application instance.
      *
      * @var string
      */
-    protected $url;
+    protected $app;
 
     /**
      * Create a new middleware instance.
@@ -26,7 +26,7 @@ class CheckForReferer
      */
     public function __construct(Application $app)
     {
-        $this->url = $app['config']->get('app.url');
+        $this->app = $app;
     }
 
     /**
@@ -38,11 +38,12 @@ class CheckForReferer
      */
     public function handle($request, Closure $next)
     {
-        // Check if the visitor come to this Route from another site.
-        $referrer = $request->header('referer');
+        $config = $this->app['config'];
 
-        if (! Str::startsWith($referrer, $this->url)) {
-            // When Referrer is invalid, redirect back.
+        //
+        $url = $config->get('app.url');
+
+        if (! Str::startsWith($request->header('referer'), $url)) {
             return Redirect::back();
         }
 

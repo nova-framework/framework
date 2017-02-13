@@ -6,6 +6,7 @@
  * @version 4.0
  */
 
+ 
 // The CSRF Filter.
 Route::middleware('csrf', function($request, $next)
 {

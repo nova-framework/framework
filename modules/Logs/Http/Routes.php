@@ -13,6 +13,6 @@
 Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Logs\Http\Controllers\Admin'), function()
 {
     // The Site Logs.
-    Route::get( 'logs/{group?}', array('middleware' => 'auth',      'uses' => 'Logs@index'));
-    Route::post('logs/clear',    array('middleware' => 'auth|csrf', 'uses' => 'Logs@clear'));
+    Route::get( 'logs/{group?}', array('middleware' => 'auth', 'uses' => 'Logs@index'));
+    Route::post('logs/clear',    array('middleware' => 'auth', 'uses' => 'Logs@clear'));
 });

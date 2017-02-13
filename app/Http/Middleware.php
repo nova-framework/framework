@@ -18,4 +18,4 @@ Route::middleware('guest', 'App\Http\Middleware\RedirectIfAuthenticated');
 Route::middleware('auth.basic', 'Nova\Auth\Middleware\AuthenticateWithBasicAuth');
 
 // Referer checking Filter.
-Route::middleware('referer', 'App\Http\Middleware\CheckForHttpReferrer');
+Route::middleware('referer', 'App\Http\Middleware\CheckForReferer');

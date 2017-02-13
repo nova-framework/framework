@@ -17,7 +17,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Something has gone wrong on the Web Server.' => '',
   'Subpage' => 'Subpágina',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
-  'The site is currently under maintenance.' => '',
+  'This site is temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Welcome' => 'Bienvenido',
 );

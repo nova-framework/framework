@@ -13,10 +13,11 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Open subpage' => 'بازکردن زیر‎صفحه',
   'Password Reset' => 'بازنشانی رمزعبور',
   'Please verify your E-mail address' => 'لطفا آدرس ایمیل خود را بررسی کنید',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => '',
   'Subpage' => 'زیر‎صفحه',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'با تشکر بخاطر ساخت اکانت با {0}. لطفا لینک زیر را برای بررسی آدرس ایمیل خود دنبال کنید: {1}',
+  'The site is currently under maintenance.' => '',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
   'Welcome' => 'خوش آمدید',
-  'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این قسمت را ندارید.',
 );

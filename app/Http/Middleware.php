@@ -6,8 +6,11 @@
  * @version 4.0
  */
 
- 
+
 // The CSRF Filter.
+Route::middleware('csrf', 'App\Http\Middleware\VerifyCsrfToken');
+
+/*
 Route::middleware('csrf', function($request, $next)
 {
     $session = $request->session();
@@ -27,6 +30,7 @@ Route::middleware('csrf', function($request, $next)
         App::abort(400, 'Bad Request');
     }
 });
+*/
 
 // Referer checking Filter.
 Route::middleware('referer', function($request, $next)

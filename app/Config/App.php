@@ -165,39 +165,6 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Application Middleware
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    'middleware' => array(
-        'Nova\Foundation\Http\Middleware\CheckForMaintenanceMode',
-        'App\Http\Middleware\EncryptCookies',
-        'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
-        'Nova\Session\Middleware\StartSession',
-        'Nova\Foundation\Http\Middleware\ServeAssetFile',
-        'Nova\View\Middleware\ShareErrorsFromSession',
-        'Nova\Foundation\Http\Middleware\SetupLanguage',
-        'App\Http\Middleware\MinifyContent',
-    ),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Routes Middleware
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    'routeMiddleware' => array(
-        'csrf'       => 'App\Http\Middleware\VerifyCsrfToken',
-        'auth'       => 'App\Http\Middleware\Authenticate',
-        'auth.basic' => 'Nova\Auth\Middleware\AuthenticateWithBasicAuth',
-        'guest'      => 'App\Http\Middleware\RedirectIfAuthenticated',
-        'referer'    => 'App\Http\Middleware\CheckForReferer',
-    ),
-
-    /*
-    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

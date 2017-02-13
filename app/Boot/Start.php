@@ -34,7 +34,7 @@ if (function_exists('mb_internal_encoding')) {
 // Include The Compiled Class File
 //--------------------------------------------------------------------------
 
-if (file_exists($compiled = __DIR__ .DS .'Compiled.php')) {
+if (file_exists($compiled = realpath(__DIR__) .DS .'Compiled.php')) {
     require $compiled;
 }
 
@@ -162,12 +162,6 @@ date_default_timezone_set($config['timezone']);
 $aliases = $config['aliases'];
 
 AliasLoader::getInstance($aliases)->register();
-
-//--------------------------------------------------------------------------
-// Enable Trusting Of X-Sendfile Type Header
-//--------------------------------------------------------------------------
-
-BinaryFileResponse::trustXSendfileTypeHeader();
 
 //--------------------------------------------------------------------------
 // Register The Core Service Providers

@@ -16,6 +16,8 @@ use Nova\Http\Response;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use Closure;
+
 
 class MinifyContent
 {
@@ -46,7 +48,7 @@ class MinifyContent
      *
      * @return mixed
      */
-    public function handle($request, $next)
+    public function handle($request, Closure $next)
     {
         $response = $next($request, $next);
 

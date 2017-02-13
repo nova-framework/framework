@@ -26,15 +26,15 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\System\Http\Cont
     Route::get('notifications', array('middleware' => 'auth', 'uses' => 'Notifications@index'));
 
     // The Site Settings.
-    Route::get( 'settings', array('middleware' => 'auth',      'uses' => 'Settings@index'));
-    Route::post('settings', array('middleware' => 'auth|csrf', 'uses' => 'Settings@store'));
+    Route::get( 'settings', array('middleware' => 'auth', 'uses' => 'Settings@index'));
+    Route::post('settings', array('middleware' => 'auth', 'uses' => 'Settings@store'));
 
     // The Roles CRUD.
-    Route::get( 'roles',              array('middleware' => 'auth',      'uses' => 'Roles@index'));
-    Route::get( 'roles/create',       array('middleware' => 'auth',      'uses' => 'Roles@create'));
-    Route::post('roles',              array('middleware' => 'auth|csrf', 'uses' => 'Roles@store'));
-    Route::get( 'roles/{id}',         array('middleware' => 'auth',      'uses' => 'Roles@show'));
-    Route::get( 'roles/{id}/edit',    array('middleware' => 'auth',      'uses' => 'Roles@edit'));
-    Route::post('roles/{id}',         array('middleware' => 'auth|csrf', 'uses' => 'Roles@update'));
-    Route::post('roles/{id}/destroy', array('middleware' => 'auth|csrf', 'uses' => 'Roles@destroy'));
+    Route::get( 'roles',              array('middleware' => 'auth', 'uses' => 'Roles@index'));
+    Route::get( 'roles/create',       array('middleware' => 'auth', 'uses' => 'Roles@create'));
+    Route::post('roles',              array('middleware' => 'auth', 'uses' => 'Roles@store'));
+    Route::get( 'roles/{id}',         array('middleware' => 'auth', 'uses' => 'Roles@show'));
+    Route::get( 'roles/{id}/edit',    array('middleware' => 'auth', 'uses' => 'Roles@edit'));
+    Route::post('roles/{id}',         array('middleware' => 'auth', 'uses' => 'Roles@update'));
+    Route::post('roles/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Roles@destroy'));
 });

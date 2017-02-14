@@ -10,7 +10,8 @@ namespace Modules\Dashboard\Http\Controllers\Admin;
 
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\View;
-use Nova\Support\Facades\Widget;
+
+use Plugins\Widgets\Facades\Widget;
 
 use App\Core\BackendController;
 

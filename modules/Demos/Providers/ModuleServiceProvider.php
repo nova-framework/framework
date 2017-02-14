@@ -38,6 +38,9 @@ class ModuleServiceProvider extends ServiceProvider
         $path = $path .DS .'Bootstrap.php';
 
         $this->bootstrapFrom($path);
+
+        // Register the Widgets namespace.
+        $this->app['widgets']->register('Modules\Demos\Widgets');
     }
 
     /**

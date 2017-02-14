@@ -5,7 +5,7 @@ namespace Plugins\Widgets;
 use Nova\Foundation\Application;
 use Nova\Support\Str;
 
-use Plugins\Widgets\Exceptions\InvalidWidgetException;
+use Plugins\Widgets\Exception\InvalidWidgetException;
 
 
 class Factory

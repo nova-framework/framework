@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use Nova\Auth\Middleware\Authenticate as BaseAuthenticator
+use Nova\Auth\Middleware\Authenticate as BaseAuthenticator;
 use Nova\Foundation\Application;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Redirect;

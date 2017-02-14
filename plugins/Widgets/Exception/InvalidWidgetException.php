@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Widgets\Exceptions;
+namespace Plugins\Widgets\Exception;
 
 use Exception;
 

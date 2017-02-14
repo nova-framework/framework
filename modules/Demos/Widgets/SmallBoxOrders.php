@@ -3,7 +3,8 @@
 namespace Modules\Demos\Widgets;
 
 use Nova\Support\Facades\View;
-use Nova\Widget\Widget;
+
+use Plugins\Widgets\Widget;
 
 
 class SmallBoxOrders extends Widget

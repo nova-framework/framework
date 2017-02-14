@@ -182,6 +182,7 @@ return array(
         'Nova\Bus\BusServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',
+        'Nova\Assets\AssetServiceProvider',
         'Nova\Cookie\CookieServiceProvider',
         'Nova\Database\DatabaseServiceProvider',
         'Nova\Encryption\EncryptionServiceProvider',
@@ -199,8 +200,6 @@ return array(
         'Nova\Session\SessionServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
         'Nova\View\ViewServiceProvider',
-        'Nova\Widget\WidgetServiceProvider',
-        'Nova\Assets\AssetServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',

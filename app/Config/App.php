@@ -179,6 +179,7 @@ return array(
         'Nova\Plugin\PluginServiceProvider',
         'Nova\Module\ModuleServiceProvider',
         'Nova\Auth\AuthServiceProvider',
+        'Nova\Broadcasting\BroadcastServiceProvider',
         'Nova\Bus\BusServiceProvider',
         'Nova\Cache\CacheServiceProvider',
         'Nova\Routing\RoutingServiceProvider',

@@ -10,9 +10,9 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Dashboard\Http\Controllers\Admin'), function()
+$router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($router)
 {
     // The User's Dashboard.
-    Route::get('/',         array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
-    Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
+    $router->get('/',         array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
+    $router->get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
 });

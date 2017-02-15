@@ -10,7 +10,7 @@
 /** Define static routes. */
 
 // Default Routing
-Route::any('/',       'Welcome@index');
-Route::any('subpage', 'Welcome@subPage');
+$router->any('/',       'Welcome@index');
+$router->any('subpage', 'Welcome@subPage');
 
 /** End default Routes */

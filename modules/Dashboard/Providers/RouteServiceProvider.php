@@ -9,11 +9,11 @@ use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to the controller routes in your routes file.
+     * The controller namespace for the module.
      *
-     * @var string
+     * @var string|null
      */
-    protected $namespace = '';
+    protected $namespace = 'Modules\Dashboard\Http\Controllers';
 
 
     /**
@@ -24,15 +24,22 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $basePath = realpath(__DIR__ .'/../Http/') .DS;
-
-        //
-        $path = $basePath .'Routes.php';
-
-        $this->loadRoutesFrom($path);
-
-        //
         parent::boot($router);
+
+        //
     }
 
+    /**
+     * Define the routes for the module.
+     *
+     * @param  \Illuminate\Routing\Router $router
+     * @return void
+     */
+    public function map(Router $router)
+    {
+        $router->group(array('namespace' => $this->namespace), function($router)
+        {
+            require module_path('Dashboard', 'Http/Routes.php');
+        });
+    }
 }

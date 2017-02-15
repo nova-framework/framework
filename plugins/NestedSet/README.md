@@ -1,1 +1,1 @@
-# Nested Set for ORM
+# NestedSet extension for ORM

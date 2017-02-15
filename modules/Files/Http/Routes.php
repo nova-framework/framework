@@ -10,14 +10,14 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Files\Http\Controllers\Admin'), function()
+$router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($router)
 {
-    Route::get('files',           array('middleware' => 'auth', 'uses' => 'Files@index'));
-    Route::any('files/connector', array('middleware' => 'auth', 'uses' => 'Files@connector'));
+    $router->get('files',           array('middleware' => 'auth', 'uses' => 'Files@index'));
+    $router->any('files/connector', array('middleware' => 'auth', 'uses' => 'Files@connector'));
 
     // Thumbnails Files serving.
-    Route::get('files/thumbnails/{file}', array('middleware' => 'auth', 'uses' => 'Files@thumbnails'));
+    $router->get('files/thumbnails/{file}', array('middleware' => 'auth', 'uses' => 'Files@thumbnails'));
 
     // Preview Files serving.
-    Route::get('files/preview/{path}', array('middleware' => 'auth', 'uses' => 'Files@preview'))->where('path', '(.*)');
+    $router->get('files/preview/{path}', array('middleware' => 'auth', 'uses' => 'Files@preview'))->where('path', '(.*)');
 });

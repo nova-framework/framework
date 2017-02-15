@@ -10,14 +10,14 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Modules\Messages\Http\Controllers\Admin'), function()
+$router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($router)
 {
     // Messages
-    Route::get( 'messages',                  array('middleware' => 'auth', 'uses' => 'Messages@index'));
-    Route::get( 'messages/create',           array('middleware' => 'auth', 'uses' => 'Messages@create'));
-    Route::post('messages',                  array('middleware' => 'auth', 'uses' => 'Messages@store'));
-    Route::get( 'messages/{threadId}',       array('middleware' => 'auth', 'uses' => 'Messages@show'));
-    //Route::post('messages/{postId}/destroy', array('middleware' => 'auth', 'uses' => 'Messages@destroy'));
+    $router->get( 'messages',                  array('middleware' => 'auth', 'uses' => 'Messages@index'));
+    $router->get( 'messages/create',           array('middleware' => 'auth', 'uses' => 'Messages@create'));
+    $router->post('messages',                  array('middleware' => 'auth', 'uses' => 'Messages@store'));
+    $router->get( 'messages/{threadId}',       array('middleware' => 'auth', 'uses' => 'Messages@show'));
+    //$router->post('messages/{postId}/destroy', array('middleware' => 'auth', 'uses' => 'Messages@destroy'));
 
-    Route::post('messages/{threadId}', array('middleware' => 'auth', 'uses' => 'Messages@reply'));
+    $router->post('messages/{threadId}', array('middleware' => 'auth', 'uses' => 'Messages@reply'));
 });

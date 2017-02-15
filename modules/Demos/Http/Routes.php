@@ -10,26 +10,26 @@
 /** Define static routes. */
 
 // The Demo Routes
-Route::group(array('prefix' => 'demo', 'namespace' => 'Modules\Demos\Http\Controllers'), function()
+$router->group(array('prefix' => 'demo'), function($router)
 {
-    Route::get('database', 'Demos@database');
-    Route::get('events',   'Demos@events');
-    Route::get('mailer',   'Demos@mailer');
-    Route::get('session',  'Demos@session');
-    Route::get('validate', 'Demos@validate');
-    Route::get('paginate', 'Demos@paginate');
-    Route::get('cache',    'Demos@cache');
+    $router->get('database', 'Demos@database');
+    $router->get('events',   'Demos@events');
+    $router->get('mailer',   'Demos@mailer');
+    $router->get('session',  'Demos@session');
+    $router->get('validate', 'Demos@validate');
+    $router->get('paginate', 'Demos@paginate');
+    $router->get('cache',    'Demos@cache');
 
-    Route::get('password/{password}', 'Demos@password');
+    $router->get('password/{password}', 'Demos@password');
 
     //
-    Route::get('request/{param1?}/{param2?}/{slug?}', 'Demos@request')
+    $router->get('request/{param1?}/{param2?}/{slug?}', 'Demos@request')
         ->where('slug', '(.*)');
 
-    Route::get('test/{param1?}/{param2?}/{param3?}/{slug?}', array('before' => 'test', 'uses' => 'Demos@test'))
+    $router->get('test/{param1?}/{param2?}/{param3?}/{slug?}', array('before' => 'test', 'uses' => 'Demos@test'))
         ->where('slug', '(.*)');
 });
 
 
 // A catch-all Route - will match any URI, while using any HTTP Method.
-//Route::any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');
+//$router->any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');

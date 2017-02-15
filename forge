@@ -29,12 +29,7 @@ $app = require_once APPPATH .'Boot' .DS .'Start.php';
 // Load The Forge Console Application
 //--------------------------------------------------------------------------
 
-use Nova\Console\Application as ConsoleApplication;
-
-
-$app->setRequestForConsoleEnvironment();
-
-$forge = ConsoleApplication::start($app);
+$forge = $app->make('Nova\Console\Contracts\KernelInterface');
 
 //--------------------------------------------------------------------------
 // Run The Forge Application

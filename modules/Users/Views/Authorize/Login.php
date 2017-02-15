@@ -14,7 +14,7 @@
                 <div class="panel-title"><?= __d('users', 'Login to <b>{0}</b>', SITE_TITLE); ?></div>
             </div>
             <div class="panel-body">
-                <form action="<?= site_url('login'); ?>" method='POST' role="form">
+                <form action="<?= site_url('auth/login'); ?>" method='POST' role="form">
 
                 <div class="form-group">
                     <p><input type="text" name="username" id="username" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('users', 'Username'); ?>"><br><br></p>

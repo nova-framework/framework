@@ -109,7 +109,7 @@ class Authorize extends BackendController
         // Prepare the flash message.
         $status = __d('users', 'You have successfully logged out.');
 
-        return Redirect::to('login')->withStatus($status);
+        return Redirect::to('auth/login')->withStatus($status);
     }
 
     /**
@@ -218,7 +218,7 @@ class Authorize extends BackendController
             case Password::PASSWORD_RESET:
                 $status = __d('users', 'You have successfully reset your Password.');
 
-                return Redirect::to('login')->withStatus($status);
+                return Redirect::to('auth/login')->withStatus($status);
         }
 
         return Redirect::back()->withStatus($status, 'danger');

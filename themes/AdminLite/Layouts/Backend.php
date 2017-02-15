@@ -151,7 +151,7 @@ $langMenuLinks = ob_get_clean();
                   <a href="<?= site_url('admin/profile'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Profile'); ?></a>
                 </div>
                 <div class="pull-right">
-                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Sign out'); ?></a>
+                  <a href="<?= site_url('auth/logout'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Sign out'); ?></a>
                 </div>
               </li>
             </ul>

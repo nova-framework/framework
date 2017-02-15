@@ -30,7 +30,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = array(
-        'auth'       => 'App\Http\Middleware\Authenticate',
+        'auth'       => 'Nova\Auth\Middleware\Authenticate',
         'auth.basic' => 'Nova\Auth\Middleware\AuthenticateWithBasicAuth',
         'guest'      => 'App\Http\Middleware\RedirectIfAuthenticated',
         'referer'    => 'App\Http\Middleware\CheckForReferer',

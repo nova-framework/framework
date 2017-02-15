@@ -28,7 +28,7 @@ return array(
         'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Plugin\Providers\ConsoleServiceProvider',
         'Nova\Plugin\Providers\GeneratorServiceProvider',
-        'Nova\Routing\ControllerServiceProvider',
+        'Nova\Routing\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
         'Nova\View\ConsoleServiceProvider',
     ),

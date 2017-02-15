@@ -13,7 +13,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = array(
-        'Nova\Foundation\Http\Middleware\ServeAssetFile',
+        'Nova\Assets\Middleware\ServeAsset',
         'Nova\Foundation\Http\Middleware\CheckForMaintenanceMode',
         'App\Http\Middleware\EncryptCookies',
         'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',

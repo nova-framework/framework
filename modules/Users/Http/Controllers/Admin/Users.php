@@ -120,7 +120,7 @@ class Users extends BackendController
     public function store()
     {
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'first_name', 'last_name', 'location', 'password', 'password_confirmation', 'email');
+        $input = Input::only('username', 'role', 'first_name', 'last_name', 'location', 'password', 'password_confirmation', 'email', 'image');
 
         if (empty($input['location'])) unset($input['location']);
 

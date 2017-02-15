@@ -50,7 +50,7 @@
                         <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('users', 'Sign up'); ?>">
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
-                        <a href="<?= site_url('login'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Login'); ?></a>
+                        <a href="<?= site_url('auth/login'); ?>" class="btn btn-link pull-right"><?= __d('users', 'Login'); ?></a>
                     </div>
                 </div>
 

@@ -188,7 +188,7 @@ class Registrar extends BackendController
                 // Prepare the flash message.
                 $status = __d('users', 'Activated! You can now Sign in!');
 
-                return Redirect::to('login')->withStatus($status);
+                return Redirect::to('auth/login')->withStatus($status);
             }
         }
 

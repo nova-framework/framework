@@ -92,14 +92,14 @@ $langMenuLinks = ob_get_clean();
                     <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
                 </li>
                 <li>
-                    <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?></a>
+                    <a href='<?= site_url('auth/logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?></a>
                 </li>
                 <?php } else { ?>
                <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
+                    <a href='<?= site_url('auth/register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
                 </li>
-                <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
+                <li <?php if($currentUri == 'auth/login') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('auth/login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
                 </li>
                 <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
                     <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>

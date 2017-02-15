@@ -10,9 +10,15 @@
 /** Define static routes. */
 
 // The default Auth Routes.
-$router->get( 'login',  array('middleware' => 'guest', 'uses' => 'Authorize@login'));
-$router->post('login',  array('middleware' => 'guest', 'uses' => 'Authorize@postLogin'));
-$router->get( 'logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout'));
+$router->get( 'auth/login',  array('middleware' => 'guest', 'uses' => 'Authorize@login'));
+$router->post('auth/login',  array('middleware' => 'guest', 'uses' => 'Authorize@postLogin'));
+$router->get( 'auth/logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout'));
+
+// The Account Registration.
+$router->get( 'auth/register',                 array('middleware' => 'guest', 'uses' => 'Registrar@create'));
+$router->post('auth/register',                 array('middleware' => 'guest', 'uses' => 'Registrar@store'));
+$router->get( 'auth/register/verify/{token?}', array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
+$router->get( 'auth/register/status',          array('middleware' => 'guest', 'uses' => 'Registrar@status'));
 
 // The Password Remind.
 $router->get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@remind'));
@@ -21,12 +27,6 @@ $router->post('password/remind', array('middleware' => 'guest', 'uses' => 'Autho
 // The Password Reset.
 $router->get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Authorize@reset'));
 $router->post('password/reset',         array('middleware' => 'guest', 'uses' => 'Authorize@postReset'));
-
-// The Account Registration.
-$router->get( 'register',                 array('middleware' => 'guest', 'uses' => 'Registrar@create'));
-$router->post('register',                 array('middleware' => 'guest', 'uses' => 'Registrar@store'));
-$router->get( 'register/verify/{token?}', array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
-$router->get( 'register/status',          array('middleware' => 'guest', 'uses' => 'Registrar@status'));
 
 
 // The Adminstration Routes.

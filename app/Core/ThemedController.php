@@ -63,7 +63,7 @@ abstract class ThemedController extends BaseController
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
 
-            if ((! $response instanceof Layout) && is_string($this->layout) && ! empty($this->layout)) {
+            if ((! $response instanceof Layout) && $this->hasLayout()) {
                 $response = ViewFactory::makeLayout($this->layout, $this->theme)->with('content', $response);
             }
 
@@ -77,6 +77,16 @@ abstract class ThemedController extends BaseController
         }
 
         return $response;
+    }
+
+    /**
+     * Returns true if the Controller have a valid Layout.
+     *
+     * @return bool
+     */
+    protected function hasLayout()
+    {
+        return (is_string($this->layout) && ! empty($this->layout));
     }
 
     /**
@@ -131,13 +141,11 @@ abstract class ThemedController extends BaseController
      */
     public function getLayout()
     {
-        if ($this->layout instanceof View) {
-            return $this->layout;
-        } else if (is_string($this->layout) && ! empty($this->layout)) {
+        if ($this->hasLayout()) {
             return ViewFactory::makeLayout($this->layout, $this->theme);
         }
 
-        throw new BadMethodCallException('Method not available for the current Layout');
+        throw new BadMethodCallException('No valid Layout defined');
     }
 
     /**
@@ -145,17 +153,9 @@ abstract class ThemedController extends BaseController
      *
      * @return string
      *
-     * @throws \BadMethodCallException
      */
     public function getLayoutName()
     {
-        if ($this->layout instanceof View) {
-            return $this->layout->getName();
-        } else if (is_string($this->layout)) {
-            return $this->layout;
-        }
-
-        throw new BadMethodCallException('Method not available for the current Layout');
+        return $this->layout;
     }
-
 }

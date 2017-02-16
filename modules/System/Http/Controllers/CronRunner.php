@@ -23,9 +23,6 @@ class CronRunner extends BaseController
 
     public function __construct()
     {
-        parent::__construct();
-
-        //
         $this->token = Config::get('system::cron.token');
     }
 

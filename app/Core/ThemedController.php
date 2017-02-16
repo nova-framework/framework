@@ -25,7 +25,14 @@ use BadMethodCallException;
 abstract class ThemedController extends BaseController
 {
     /**
-     * The currently used Template.
+     * The currently used Layout.
+     *
+     * @var mixed
+     */
+    protected $layout;
+
+    /**
+     * The currently used Theme.
      *
      * @var string
      */
@@ -44,7 +51,7 @@ abstract class ThemedController extends BaseController
      */
     public function __construct()
     {
-        // Setup the used Template to default, if it is not already defined.
+        // Setup the used Theme to default, if it is not already defined.
         if (! isset($this->theme)) {
             $this->theme = Config::get('app.theme');
         }

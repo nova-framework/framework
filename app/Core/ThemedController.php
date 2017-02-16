@@ -25,13 +25,6 @@ use BadMethodCallException;
 abstract class ThemedController extends BaseController
 {
     /**
-     * The currently used Layout.
-     *
-     * @var mixed
-     */
-    protected $layout;
-
-    /**
      * The currently used Theme.
      *
      * @var string

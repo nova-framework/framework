@@ -26,14 +26,6 @@ abstract class BaseController extends Controller
 {
 
     /**
-     * Create a new BaseController instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Return a default View instance.
      *
      * @return \Nova\View\View

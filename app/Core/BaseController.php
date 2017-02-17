@@ -8,6 +8,9 @@
 
 namespace App\Core;
 
+use Nova\Foundation\Auth\Access\AuthorizesRequestsTrait;
+use Nova\Foundation\Bus\DispatchesJobsTrait;
+use Nova\Foundation\Validation\ValidatesRequestsTrait;
 use Nova\Http\Response;
 use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
@@ -24,7 +27,9 @@ use BadMethodCallException;
 
 abstract class BaseController extends Controller
 {
+    use DispatchesJobsTrait, AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
+    
     /**
      * Return a default View instance.
      *

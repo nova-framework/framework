@@ -37,7 +37,7 @@ class Users extends BackendController
         $this->middleware('admin');
     }
 
-    protected function validateInput(array $data, $id = null)
+    protected function validator(array $data, $id = null)
     {
         if (! is_null($id)) {
             $ignore = ',' .intval($id);
@@ -125,7 +125,7 @@ class Users extends BackendController
         if (empty($input['location'])) unset($input['location']);
 
         //
-        $validator = $this->validateInput($input);
+        $validator = $this->validator($input);
 
         if($validator->passes()) {
             // Encrypt the given Password.
@@ -228,7 +228,7 @@ class Users extends BackendController
             unset($input['password_confirmation']);
         }
 
-        $validator = $this->validateInput($input, $id);
+        $validator = $this->validator($input, $id);
 
         if($validator->passes()) {
             $origName = $user->username;

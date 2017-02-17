@@ -23,7 +23,7 @@ use Modules\Users\Models\User;
 class Profile extends BackendController
 {
 
-    protected function validateInput(array $data, User $user)
+    protected function validator(array $data, User $user)
     {
         // Prepare the Validation Rules, Messages and Attributes.
         $rules = array(
@@ -76,7 +76,7 @@ class Profile extends BackendController
         $input = Input::only('current_password', 'password', 'password_confirmation');
 
         // Create a Validator instance.
-        $validator = $this->validateInput($input, $user);
+        $validator = $this->validator($input, $user);
 
         // Validate the Input.
         if ($validator->passes()) {

@@ -32,7 +32,7 @@ class Settings extends BackendController
         $this->middleware('admin');
     }
 
-    protected function validate(array $data)
+    protected function validateInput(array $data)
     {
         // Validation rules
         $rules = array(
@@ -112,7 +112,7 @@ class Settings extends BackendController
             'mailDriver', 'mailHost', 'mailPort', 'mailFromAddress', 'mailFromName', 'mailEncryption', 'mailUsername', 'mailPassword'
         );
 
-        $validator = $this->validate($input);
+        $validator = $this->validateInput($input);
 
         if($validator->passes()) {
             // The Application.
@@ -129,7 +129,7 @@ class Settings extends BackendController
             Option::set('mail.username',     $input['mailUsername']);
             Option::set('mail.password',     $input['mailPassword']);
 
-            // Invalidate the cached system options.
+            // InvalidateInput the cached system options.
             Cache::forget('system_options');
 
             // Fire the associated Event.

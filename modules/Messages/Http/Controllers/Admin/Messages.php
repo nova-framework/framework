@@ -18,7 +18,7 @@ use Modules\Users\Models\User;
 class Messages extends BackendController
 {
 
-    protected function validate(array $data, array $rules, array $messages = array(), array $attributes = array())
+    protected function validateInput(array $data, array $rules, array $messages = array(), array $attributes = array())
     {
         $validator = Validator::make($data, $rules, $messages, $attributes);
 
@@ -73,7 +73,7 @@ class Messages extends BackendController
         $input = Input::only('subject', 'message', 'user');
 
         // Create the Validator instance.
-        $this->validate($input, array(
+        $this->validateInput($input, array(
             'subject' => 'required|min:3|max:100',
             'message' => 'required|min:3|max:1000',
             'user'    => 'required|numeric|min:1',
@@ -150,7 +150,7 @@ class Messages extends BackendController
         $input = Input::only('reply');
 
         // Create the Validator instance.
-        $this->validate($input, array(
+        $this->validateInput($input, array(
             'reply' => 'required|min:3|max:1000',
         ), array(
             'required' => __d('messages', 'You must type a reply first!')

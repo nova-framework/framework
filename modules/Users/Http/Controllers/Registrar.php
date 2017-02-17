@@ -32,7 +32,7 @@ class Registrar extends BackendController
     protected $layout = 'Default';
 
 
-    protected function validate(array $data)
+    protected function validateInput(array $data)
     {
         // Validation rules.
         $rules = array(
@@ -114,7 +114,7 @@ class Registrar extends BackendController
         }
 
         // Create a Validator instance.
-        $validator = $this->validate($input);
+        $validator = $this->validateInput($input);
 
         if ($validator->fails()) {
             // Errors occurred on Validation.

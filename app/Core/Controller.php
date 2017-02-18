@@ -28,7 +28,7 @@ abstract class Controller extends BaseController
      *
      * @var string
      */
-    protected $template = null;
+    protected $theme = null;
 
     /**
      * The currently used Layout.
@@ -44,8 +44,8 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // Setup the used Template to default, if it is not already defined.
-        if (! isset($this->template)) {
-            $this->template = Config::get('app.template');
+        if (! isset($this->theme)) {
+            $this->theme = Config::get('app.theme');
         }
     }
 
@@ -60,10 +60,10 @@ abstract class Controller extends BaseController
     {
         if ($response instanceof Renderable) {
             // If the response which is returned from the called Action is a Renderable instance,
-            // we will assume we want to render it using the Controller's templated environment.
+            // we will assume we want to render it using the Controller's themed environment.
 
             if ((! $response instanceof Layout) && is_string($this->layout) && ! empty($this->layout)) {
-                $response = ViewFactory::makeLayout($this->layout, $this->template)
+                $response = ViewFactory::makeLayout($this->layout, $this->theme)
                     ->with('content', $response);
             }
 
@@ -124,9 +124,9 @@ abstract class Controller extends BaseController
      *
      * @return string
      */
-    public function getTemplate()
+    public function getTheme()
     {
-        return $this->template;
+        return $this->theme;
     }
 
     /**
@@ -146,7 +146,7 @@ abstract class Controller extends BaseController
         if ($layout instanceof View) {
             return $layout->with($data);
         } else if (is_string($layout)) {
-            return LayoutFactory::make($layout, $data, $this->template);
+            return LayoutFactory::make($layout, $data, $this->theme);
         }
 
         throw new BadMethodCallException('Method not available for the current Layout');

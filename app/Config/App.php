@@ -35,9 +35,9 @@ return array(
     'name' => 'Nova 3.0',
 
     /**
-     * The default Template.
+     * The default Theme.
      */
-    'template' => 'Default',
+    'theme' => 'Default',
 
     /**
      * The Backend's Color Scheme.

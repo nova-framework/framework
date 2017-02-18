@@ -150,7 +150,7 @@ return " .var_export(array(), true).";\n";
         $messages = array_flip($messages);
 
         foreach($languages as $language) {
-            $langFile = BASEPATH .$workPath.'/Language/'.ucfirst($language).'/messages.php';
+            $langFile = BASEPATH .$workPath.'/Language/'.strtoupper($language).'/messages.php';
 
             if(is_readable($langFile)) {
                 $oldData = include($langFile);

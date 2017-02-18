@@ -9,6 +9,7 @@ use Nova\Cli\EncryptionCommand;
 use Nova\Cli\ClearCacheCommand;
 use Nova\Cli\ClearSessionsCommand;
 use Nova\Cli\ClearLogsCommand;
+use Nova\Cli\ClearViewsCommand;
 
 use Nova\Container\Container;
 use Nova\Config\FileLoader;
@@ -141,6 +142,7 @@ $console->add(new EncryptionCommand());
 $console->add(new ClearCacheCommand());
 $console->add(new ClearSessionsCommand());
 $console->add(new ClearLogsCommand());
+$console->add(new ClearViewsCommand());
 
 //--------------------------------------------------------------------------
 // Execute The Symfony Application

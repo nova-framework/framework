@@ -25,7 +25,7 @@ abstract class BackendController extends BaseController
      *
      * @var string
      */
-    protected $theme = 'AdminLTE';
+    protected $theme = 'AdminLite';
 
     /**
      * The currently used Layout.
@@ -34,13 +34,6 @@ abstract class BackendController extends BaseController
      */
     protected $layout = 'backend';
 
-    /**
-     * Create a new BackendController instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * A Before Filter which permit the access to Administrators.

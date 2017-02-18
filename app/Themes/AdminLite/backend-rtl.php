@@ -43,13 +43,13 @@ $langMenuLinks = ob_get_clean();
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        theme_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
+        theme_url('css/AdminLTE-rtl.min.css', 'AdminLite'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // Select2
         vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        theme_url('css/style-rtl.css', 'AdminLTE'),
+        theme_url('css/style-rtl.css', 'AdminLite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -93,7 +93,7 @@ $langMenuLinks = ob_get_clean();
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini">CP</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><?= __d('adminlte', 'Control Panel'); ?></span>
+      <span class="logo-lg"><?= __d('admin_lite', 'Control Panel'); ?></span>
     </a>
 
     <!-- Header Navbar -->
@@ -129,17 +129,17 @@ $langMenuLinks = ob_get_clean();
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>
-                  <?php $sinceDate = $user->created_at->formatLocalized(__d('adminlte', '%d %b %Y, %R')); ?>
-                  <small><?= __d('adminlte', 'Member since {0}', $sinceDate); ?></small>
+                  <?php $sinceDate = $user->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
+                  <small><?= __d('admin_lite', 'Member since {0}', $sinceDate); ?></small>
                 </p>
               </li>
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('admin/profile'); ?>" class="btn btn-default btn-flat"><?= __d('adminlte', 'Profile'); ?></a>
+                  <a href="<?= site_url('admin/profile'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Profile'); ?></a>
                 </div>
                 <div class="pull-right">
-                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __d('adminlte', 'Sign out'); ?></a>
+                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Sign out'); ?></a>
                 </div>
               </li>
             </ul>
@@ -165,7 +165,7 @@ $langMenuLinks = ob_get_clean();
         </form>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header"><?= __d('adminlte', 'ADMINISTRATION'); ?></li>
+            <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
             <?php foreach ($menuItems as $item) { ?>
             <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
                 <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>

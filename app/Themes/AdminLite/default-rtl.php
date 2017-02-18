@@ -40,13 +40,13 @@ $langMenuLinks = ob_get_clean();
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        theme_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
+        theme_url('css/AdminLTE-rtl.min.css', 'AdminLite'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // iCheck
         vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        theme_url('css/style-rtl.css', 'AdminLTE'),
+        theme_url('css/style-rtl.css', 'AdminLite'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -89,20 +89,20 @@ $langMenuLinks = ob_get_clean();
                 </li>
                 <?php if (Auth::check()) { ?>
                 <li <?php if($currentUri == 'profile') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> <?= __d('adminlte', 'Profile'); ?></a>
+                    <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
                 </li>
                 <li>
-                    <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('adminlte', 'Logout'); ?></a>
+                    <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?></a>
                 </li>
                 <?php } else { ?>
                <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('adminlte', 'Sign Up'); ?></a>
+                    <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
                 </li>
                 <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('adminlte', 'Sign In'); ?></a>
+                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
                 </li>
                 <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('adminlte', 'Forgot Password?'); ?></a>
+                    <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>
                 </li>
                 <?php } ?>
             </ul>

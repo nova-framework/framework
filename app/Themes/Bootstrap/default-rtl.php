@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Layout - a Layout similar with the classic Header and Footer files.
+ * Default RTL Layout - a Layout similar with the classic Header and Footer files.
  */
 
 // Generate the Language Changer menu.
@@ -30,10 +30,10 @@ $langMenuLinks = ob_get_clean();
 echo isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone
 
 Assets::css([
-    vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
-    vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
+    theme_url('css/bootstrap-rtl.min.css', 'Bootstrap'),
+    theme_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap'),
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
-    theme_url('css/style.css', 'Default'),
+    theme_url('css/style-rtl.css', 'Bootstrap'),
 ]);
 
 echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -55,7 +55,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 
 <div class="container">
     <p>
-        <img src='<?= theme_url('images/nova.png', 'Default'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>'>
+        <img src='<?= theme_url('images/nova.png', 'Bootstrap'); ?>' alt='<?= Config::get('app.name', SITETITLE); ?>'>
     </p>
 
     <?= $content; ?>
@@ -81,7 +81,7 @@ echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
 <?php
 Assets::js([
     'https://code.jquery.com/jquery-1.12.4.min.js',
-    vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
+    theme_url('js/bootstrap-rtl.min.js', 'Bootstrap'),
 ]);
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone

@@ -36,7 +36,7 @@ Route::filter('csrf', function($route, $request) {
 
     $ajaxRequest = $request->ajax();
 
-    $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('_token');
+    $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
 
     if ($session->token() == $token) {
         //

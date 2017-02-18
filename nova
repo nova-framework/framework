@@ -91,7 +91,9 @@ $container->instance('config', $config = new ConfigRepository(
 //--------------------------------------------------------------------------
 
 $aliases = array(
-    'Config' => 'Nova\Support\Facades\Config'
+    'App'    => 'Nova\Support\Facades\App',
+    'Config' => 'Nova\Support\Facades\Config',
+    'File'   => 'Nova\Support\Facades\File',
 );
 
 AliasLoader::getInstance($aliases)->register();

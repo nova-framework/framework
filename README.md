@@ -22,6 +22,9 @@
     - [Code Style](#code-style)
 - [License](#license)
 
+# WARNING - 18th Feb 2017
+Work to the system files is happening over this weekend, as a result it's recommended not to run any installs duing this time, there is a high chance the internal changes will break until finished.
+
 ## What is the Nova Framework?
 
 Nova Framework is a PHP 5.6 MVC system. It's designed to be lightweight and modular, allowing developers to build better and easy to maintain code with PHP.

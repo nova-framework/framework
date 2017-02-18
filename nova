@@ -62,6 +62,23 @@ $container = new Container();
 $container->instance('app', $container);
 
 //--------------------------------------------------------------------------
+// Bind Paths
+//--------------------------------------------------------------------------
+
+$paths = array(
+    'base'    => ROOTDIR,
+    'app'     => APPDIR,
+    'public'  => PUBLICDIR,
+    'storage' => STORAGE_PATH,
+);
+
+$container->instance('path', realpath($paths['app']));
+
+foreach (array_except($paths, array('app')) as $key => $value) {
+    $container->instance("path.{$key}", realpath($value));
+}
+
+//--------------------------------------------------------------------------
 // Load The Framework Facades
 //--------------------------------------------------------------------------
 

@@ -34,6 +34,12 @@ define('APPDIR', ROOTDIR .'app' .DS);
 define('PUBLICDIR', ROOTDIR .'webroot' .DS);
 
 //--------------------------------------------------------------------------
+// Define The Application Environment
+//--------------------------------------------------------------------------
+
+define('ENVIRONMENT', 'production');
+
+//--------------------------------------------------------------------------
 // Set The System Path
 //--------------------------------------------------------------------------
 
@@ -100,7 +106,7 @@ $container->bindShared('files', function()
 //--------------------------------------------------------------------------
 
 $container->instance('config', $config = new ConfigRepository(
-    new FileLoader($container['files'], APPDIR .'Config'), 'production'
+    new FileLoader($container['files'], APPDIR .'Config'), ENVIRONMENT
 ));
 
 //--------------------------------------------------------------------------

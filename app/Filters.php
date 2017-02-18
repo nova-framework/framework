@@ -55,7 +55,7 @@ Route::filter('referer', function($route, $request) {
     // Check if the visitor come to this Route from another site.
     $referer = $request->header('referer');
 
-    if (! starts_with($referer, Config::get('app.url')))  {
+    if (! starts_with($referer, Config::get('app.url'))) {
         return Redirect::back();
     }
 });

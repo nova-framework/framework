@@ -90,7 +90,9 @@ $container->instance('config', $config = new ConfigRepository(
 // Register The Alias Loader
 //--------------------------------------------------------------------------
 
-$aliases = array('Config' => 'Nova\Support\Facades\Config');
+$aliases = array(
+    'Config' => 'Nova\Support\Facades\Config'
+);
 
 AliasLoader::getInstance($aliases)->register();
 

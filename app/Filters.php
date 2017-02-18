@@ -46,7 +46,7 @@ Route::filter('csrf', function($route, $request) {
     else if ($ajaxRequest) {
         return Response::make('Bad Request', 400);
     } else {
-        App::abort(400);
+        App::abort(400, 'Bad Request');
     }
 });
 

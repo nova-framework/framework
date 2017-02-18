@@ -89,7 +89,6 @@ return array(
         'Nova\Validation\ValidationServiceProvider',
         'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
-        'Nova\Layout\LayoutServiceProvider',
         'Nova\Cron\CronServiceProvider',
 
         // The Application Providers.

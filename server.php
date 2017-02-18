@@ -4,19 +4,19 @@
 // Provides a convenient way to test the application without having installed a "real" web server software.
 
 // Usage:
-// php -S localhost:8080 -t public/ server.php
+// php -S localhost:8080 -t webroot/ server.php
 
 
-$public_path = 'public/';
+$publicPath = 'webroot/';
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $uri = urldecode($uri);
 
-$requested = $public_path .$uri;
+$requested = $publicPath .$uri;
 
 if (($uri !== '/') && file_exists($requested)) {
     return false;
 }
 
-require_once $public_path .'index.php';
+require_once $publicPath .'index.php';

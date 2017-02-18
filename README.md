@@ -46,9 +46,9 @@ The base framework comes with a range of [helper classes](https://github.com/nov
 
 ## Installation
 
-This framework was designed and is **strongly recommended** to be installed above the document root directory, with it pointing to the `public` folder.
+This framework was designed and is **strongly recommended** to be installed above the document root directory, with it pointing to the `webroot` folder.
 
-Additionally, installing in a sub-directory, on a production server, will introduce severe security issues. If there is no choice still place the framework files above the document root and have only index.php and .htacess from the public folder in the sub folder and adjust the paths accordingly.
+Additionally, installing in a sub-directory, on a production server, will introduce severe security issues. If there is no choice still place the framework files above the document root and have only index.php and .htacess from the webroot folder in the sub folder and adjust the paths accordingly.
 
 #### Recommended
 The framework is located on [Packagist](https://packagist.org/packages/nova-framework/framework).
@@ -67,9 +67,7 @@ The foldername is the desired folder to be created.
 
 Full docs & tutorials are available on [novaframework.com](http://novaframework.com/documentation/v3).
 
-Offline docs are available in PDF, EPUB and MOBI formats on [Leanpub](https://leanpub.com/novaframeworkmanual22).
-
-Screencasts are available on [Novacasts](http://novacasts.com).
+Screencasts are available on [https://novaframework.com/screencasts](https://novaframework.com/screencasts).
 
 ## Contributing
 

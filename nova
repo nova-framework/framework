@@ -1,21 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-require_once 'vendor/autoload.php';
-
 use Nova\Cli\ControllerCommand;
 use Nova\Cli\ModelCommand;
 use Nova\Cli\EncryptionCommand;
 use Nova\Cli\ClearCacheCommand;
 use Nova\Cli\ClearSessionsCommand;
 use Nova\Cli\ClearLogsCommand;
-
-use Nova\Container\Container;
-use Nova\Config\FileLoader;
-use Nova\Config\Repository as ConfigRepository;
-use Nova\Filesystem\Filesystem;
-use Nova\Foundation\AliasLoader;
-use Nova\Support\Facades\Facade;
 
 use Symfony\Component\Console\Application;
 
@@ -37,93 +28,25 @@ define('PUBLICDIR', ROOTDIR .'webroot' .DS);
 // Define The Application Environment
 //--------------------------------------------------------------------------
 
-define('ENVIRONMENT', 'production');
+define('ENVIRONMENT', 'development');
 
 //--------------------------------------------------------------------------
-// Set The System Path
+// Register The Auto Loader
 //--------------------------------------------------------------------------
 
-define('SYSTEMDIR', ROOTDIR .str_replace('/', DS, 'vendor/nova-framework/system/'));
+require ROOTDIR .'vendor' .DS .'autoload.php';
 
 //--------------------------------------------------------------------------
-// Set The Storage Path
+// Turn On The Lights
 //--------------------------------------------------------------------------
 
-define('STORAGE_PATH', ROOTDIR .'storage' .DS);
+$app = require_once APPDIR .'Boot' .DS .'Start.php';
 
-//--------------------------------------------------------------------------
-// Load Global Configuration
-//--------------------------------------------------------------------------
+// Setup the Request for Console environment.
+$app->setRequestForConsoleEnvironment();
 
-$path = APPDIR .'Config.php';
-
-if (is_readable($path)) require $path;
-
-//--------------------------------------------------------------------------
-// Setup The IoC Container
-//--------------------------------------------------------------------------
-
-$container = new Container();
-
-$container->instance('app', $container);
-
-//--------------------------------------------------------------------------
-// Bind Paths
-//--------------------------------------------------------------------------
-
-$paths = array(
-    'base'    => ROOTDIR,
-    'app'     => APPDIR,
-    'public'  => PUBLICDIR,
-    'storage' => STORAGE_PATH,
-);
-
-$container->instance('path', realpath($paths['app']));
-
-foreach (array_except($paths, array('app')) as $key => $value) {
-    $container->instance("path.{$key}", realpath($value));
-}
-
-//--------------------------------------------------------------------------
-// Load The Framework Facades
-//--------------------------------------------------------------------------
-
-Facade::clearResolvedInstances();
-
-Facade::setFacadeApplication($container);
-
-//--------------------------------------------------------------------------
-// Register The Filesystem
-//--------------------------------------------------------------------------
-
-$container->bindShared('files', function()
-{
-    return new Filesystem();
-});
-
-//--------------------------------------------------------------------------
-// Register The Config Manager
-//--------------------------------------------------------------------------
-
-$container->instance('config', $config = new ConfigRepository(
-    new FileLoader($container['files'], APPDIR .'Config'), ENVIRONMENT
-));
-
-//--------------------------------------------------------------------------
-// Set The Default Timezone From Configuration
-//--------------------------------------------------------------------------
-
-$config = $container['config']['app'];
-
-date_default_timezone_set($config['timezone']);
-
-//--------------------------------------------------------------------------
-// Register The Alias Loader
-//--------------------------------------------------------------------------
-
-$aliases = $config['aliases'];
-
-AliasLoader::getInstance($aliases)->register();
+// Boot the Nova Application.
+$app->boot();
 
 //--------------------------------------------------------------------------
 // Create New Symfony Application
@@ -146,4 +69,12 @@ $console->add(new ClearLogsCommand());
 // Execute The Symfony Application
 //--------------------------------------------------------------------------
 
-$console->run();
+$status = $console->run();
+
+//--------------------------------------------------------------------------
+// Shutdown The Nova Application
+//--------------------------------------------------------------------------
+
+$app->shutdown();
+
+exit($status);

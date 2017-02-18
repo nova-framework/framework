@@ -63,13 +63,13 @@ if(is_dir(BASEPATH .'app'.DS.'Modules')) {
     }
 }
 
-if(is_dir(BASEPATH .'app'.DS.'Templates')) {
-    $path = str_replace('/', DS, BASEPATH .'app/Templates/*');
+if(is_dir(BASEPATH .'app'.DS.'Themes')) {
+    $path = str_replace('/', DS, BASEPATH .'app/Themes/*');
 
     $dirs = glob($path , GLOB_ONLYDIR);
 
     foreach($dirs as $template) {
-        $workPaths[] = str_replace('/', DS, 'app/Templates/'.basename($template));
+        $workPaths[] = str_replace('/', DS, 'app/Themes/'.basename($template));
     }
 }
 
@@ -123,7 +123,7 @@ return " .var_export(array(), true).";\n";
         if($workPath == 'app') {
             $testPath = substr($filePath, strlen(BASEPATH));
 
-            if(starts_with($testPath, 'app/Modules') || starts_with($testPath, 'app/Templates')) {
+            if(starts_with($testPath, 'app/Modules') || starts_with($testPath, 'app/Themes')) {
                 continue;
             }
         }

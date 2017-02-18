@@ -1,6 +1,6 @@
 <?php
 /**
- * Backend Default Layout
+ * Backend Default RTL Layout
  */
 
 // Prepare the current User Info.
@@ -11,12 +11,6 @@ $langCode = Language::code();
 $langName = Language::name();
 
 $languages = Config::get('languages');
-
-if (isset($user->image) && $user->image->exists()) {
-    $imageUrl = resource_url('images/users/' .basename($user->image->path));
-} else {
-    $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
-}
 
 //
 ob_start();
@@ -32,7 +26,7 @@ foreach ($languages as $code => $info) {
 $langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
-<html lang="<?= $langCode; ?>">
+<html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -43,19 +37,19 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        vendor_url('bootstrap/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
+        theme_url('css/bootstrap-rtl.min.css', 'Default'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
-        vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
+        theme_url('css/AdminLTE-rtl.min.css', 'AdminLTE'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // Select2
         vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
-        template_url('css/style.css', 'AdminLTE'),
+        theme_url('css/style-rtl.css', 'AdminLTE'),
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
@@ -124,14 +118,14 @@ $langMenuLinks = ob_get_clean();
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="<?= $imageUrl ?>" class="user-image" alt="User Image">
+              <img src="<?= vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte'); ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?= $user->username; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?= $imageUrl ?>" class="img-circle" alt="User Image">
+                <img src="<?= vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte'); ?>" class="img-circle" alt="User Image">
 
                 <p>
                   <?= $user->realname; ?> - <?= $user->role->name; ?>
@@ -208,7 +202,7 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    vendor_url('bootstrap/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
+    theme_url('js/bootstrap-rtl.min.js', 'Default'),
     // AdminLTE App
     vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // Select2

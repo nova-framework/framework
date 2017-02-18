@@ -12,9 +12,9 @@ use Nova\Http\Response;
 use Nova\Routing\Controller as BaseController;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\Config;
-use Nova\Support\Facades\Layout as LayoutFactory;
 use Nova\Support\Facades\View as ViewFactory;
-use Nova\Layout\Layout;
+use Nova\View\Layout;
+use Nova\View\View;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -62,8 +62,8 @@ abstract class Controller extends BaseController
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's templated environment.
 
-            if (is_string($this->layout) && ! empty($this->layout) && (! $response instanceof Layout)) {
-                $response = LayoutFactory::make($this->layout, array(), $this->template)
+            if ((! $response instanceof Layout) && is_string($this->layout) && ! empty($this->layout)) {
+                $response = ViewFactory::makeLayout($this->layout, $this->template)
                     ->with('content', $response);
             }
 

@@ -87,14 +87,18 @@ $container->instance('config', $config = new ConfigRepository(
 ));
 
 //--------------------------------------------------------------------------
+// Set The Default Timezone From Configuration
+//--------------------------------------------------------------------------
+
+$config = $container['config']['app'];
+
+date_default_timezone_set($config['timezone']);
+
+//--------------------------------------------------------------------------
 // Register The Alias Loader
 //--------------------------------------------------------------------------
 
-$aliases = array(
-    'App'    => 'Nova\Support\Facades\App',
-    'Config' => 'Nova\Support\Facades\Config',
-    'File'   => 'Nova\Support\Facades\File',
-);
+$aliases = $config['aliases'];
 
 AliasLoader::getInstance($aliases)->register();
 

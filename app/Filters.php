@@ -55,9 +55,8 @@ Route::filter('referer', function($route, $request) {
     // Check if the visitor come to this Route from another site.
     $referer = $request->header('referer');
 
-    if(! starts_with($referer, Config::get('app.url'))) {
-        // When Referrer is invalid, respond with Error 400 (Bad Request)
-        App::abort(400, 'Bad Request');
+    if (! starts_with($referer, Config::get('app.url'))) {
+        return Redirect::back();
     }
 });
 
@@ -92,4 +91,3 @@ Route::filter('guest', function($route, $request) {
         return Response::make('Unauthorized Access', 403);
     }
 });
-

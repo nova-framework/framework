@@ -35,7 +35,7 @@ abstract class Controller extends BaseController
      *
      * @var string
      */
-    protected $layout = 'default';
+    protected $layout = 'Default';
 
 
     /**
@@ -99,7 +99,7 @@ abstract class Controller extends BaseController
         if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[1] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data);
+            return ViewFactory::make($view, $data, '', $this->theme);
         }
 
         // Retrieve the Modules namespace from their configuration.
@@ -110,9 +110,11 @@ abstract class Controller extends BaseController
 
         // Check for a valid controller on Modules.
         if (preg_match('#^'. $basePath .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
+            $module = $matches[1];
+
             $view = $matches[2] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data, $matches[1]);
+            return ViewFactory::make($view, $data, $module, $this->theme);
         }
 
         // If we arrived there, the called class is not a Controller; go Exception.

@@ -32,7 +32,7 @@ abstract class BackendController extends BaseController
      *
      * @var mixed
      */
-    protected $layout = 'backend';
+    protected $layout = 'Backend';
 
 
     /**

@@ -28,6 +28,11 @@ Route::post('password/remind', array('before' => 'guest|csrf', 'uses' => 'Author
 Route::get( 'password/reset/{token}', array('before' => 'guest',      'uses' => 'Authorize@reset'));
 Route::post('password/reset',         array('before' => 'guest|csrf', 'uses' => 'Authorize@postReset'));
 
+// The Account Registration.
+Route::get( 'register',                 array('before' => 'guest',      'uses' => 'Registrar@create'));
+Route::post('register',                 array('before' => 'guest|csrf', 'uses' => 'Registrar@store'));
+Route::get( 'register/verify/{token?}', array('before' => 'guest',      'uses' => 'Registrar@verify'));
+Route::get( 'register/status',          array('before' => 'guest',      'uses' => 'Registrar@status'));
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function()

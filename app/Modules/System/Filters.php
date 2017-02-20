@@ -11,7 +11,8 @@
 
 
 // Role-based Authorization Filter.
-Route::filter('roles', function($route, $request, $value) {
+Route::filter('roles', function($route, $request, $value)
+{
     $user = Auth::user();
 
     // Explode the passed value on array of accepted User Roles.

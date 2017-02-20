@@ -25,7 +25,7 @@ use View;
 
 class Authorize extends BackendController
 {
-    protected $layout = 'default';
+    protected $layout = 'Default';
 
 
     /**

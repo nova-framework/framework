@@ -24,7 +24,7 @@ use BadMethodCallException;
 abstract class Controller extends BaseController
 {
     /**
-     * The currently used Template.
+     * The currently used Theme.
      *
      * @var string
      */
@@ -35,7 +35,7 @@ abstract class Controller extends BaseController
      *
      * @var string
      */
-    protected $layout = 'default';
+    protected $layout = 'Default';
 
 
     /**
@@ -43,7 +43,7 @@ abstract class Controller extends BaseController
      */
     public function __construct()
     {
-        // Setup the used Template to default, if it is not already defined.
+        // Setup the used Theme to default, if it is not already defined.
         if (! isset($this->theme)) {
             $this->theme = Config::get('app.theme');
         }
@@ -99,7 +99,7 @@ abstract class Controller extends BaseController
         if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[1] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data);
+            return ViewFactory::make($view, $data, '', $this->theme);
         }
 
         // Retrieve the Modules namespace from their configuration.
@@ -110,9 +110,11 @@ abstract class Controller extends BaseController
 
         // Check for a valid controller on Modules.
         if (preg_match('#^'. $basePath .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
+            $module = $matches[1];
+
             $view = $matches[2] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data, $matches[1]);
+            return ViewFactory::make($view, $data, $module, $this->theme);
         }
 
         // If we arrived there, the called class is not a Controller; go Exception.
@@ -120,7 +122,7 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Return the current Template name.
+     * Return the current Theme name.
      *
      * @return string
      */
@@ -135,7 +137,7 @@ abstract class Controller extends BaseController
      * @param string|null $layout
      * @param array $data
      *
-     * @return \Template\Template|\View\View
+     * @return \Theme\Theme|\View\View
      * @throws \BadMethodCallException
      */
     public function getLayout($layout = null, array $data = array())

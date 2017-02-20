@@ -21,7 +21,7 @@ use App\Core\Controller as BaseController;
 abstract class BackendController extends BaseController
 {
     /**
-     * The currently used Template.
+     * The currently used Theme.
      *
      * @var string
      */
@@ -32,7 +32,7 @@ abstract class BackendController extends BaseController
      *
      * @var mixed
      */
-    protected $layout = 'backend';
+    protected $layout = 'Backend';
 
 
     /**

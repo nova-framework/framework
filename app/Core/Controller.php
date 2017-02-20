@@ -24,7 +24,7 @@ use BadMethodCallException;
 abstract class Controller extends BaseController
 {
     /**
-     * The currently used Template.
+     * The currently used Theme.
      *
      * @var string
      */
@@ -43,7 +43,7 @@ abstract class Controller extends BaseController
      */
     public function __construct()
     {
-        // Setup the used Template to default, if it is not already defined.
+        // Setup the used Theme to default, if it is not already defined.
         if (! isset($this->theme)) {
             $this->theme = Config::get('app.theme');
         }
@@ -122,7 +122,7 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Return the current Template name.
+     * Return the current Theme name.
      *
      * @return string
      */
@@ -137,7 +137,7 @@ abstract class Controller extends BaseController
      * @param string|null $layout
      * @param array $data
      *
-     * @return \Template\Template|\View\View
+     * @return \Theme\Theme|\View\View
      * @throws \BadMethodCallException
      */
     public function getLayout($layout = null, array $data = array())

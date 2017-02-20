@@ -21,7 +21,7 @@ use App\Core\Controller as BaseController;
 abstract class BackendController extends BaseController
 {
     /**
-     * The currently used Template.
+     * The currently used Theme.
      *
      * @var string
      */

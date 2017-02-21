@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\Users\Controllers;
+namespace App\Modules\System\Controllers;
 
 use Nova\Helpers\ReCaptcha;
 
@@ -41,15 +41,15 @@ class Registrar extends BackendController
         );
 
         $messages = array(
-            'valid_name'      => __d('users', 'The :attribute field is not a valid name.'),
-            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
+            'valid_name'      => __d('system', 'The :attribute field is not a valid name.'),
+            'strong_password' => __d('system', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'username' => __d('users', 'Username'),
-            'realname' => __d('users', 'Name and Surname'),
-            'email'    => __d('users', 'E-mail'),
-            'password' => __d('users', 'Password'),
+            'username' => __d('system', 'Username'),
+            'realname' => __d('system', 'Name and Surname'),
+            'email'    => __d('system', 'E-mail'),
+            'password' => __d('system', 'Password'),
         );
 
         // Add the custom Validation Rule commands.
@@ -78,7 +78,7 @@ class Registrar extends BackendController
     public function create()
     {
         return $this->getView()
-            ->shares('title', __d('users', 'User Registration'));
+            ->shares('title', __d('system', 'User Registration'));
     }
 
     /**
@@ -100,7 +100,7 @@ class Registrar extends BackendController
 
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check()) {
-            $status = __d('users', 'Invalid reCAPTCHA submitted.');
+            $status = __d('system', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -143,7 +143,7 @@ class Registrar extends BackendController
         // Send the associated Activation E-mail.
         Mailer::send('Emails/Auth/Activate', array('token' => $token), function($message) use ($user)
         {
-            $subject = __d('users', 'Activate your Account!');
+            $subject = __d('system', 'Activate your Account!');
 
             $message->to($user->email, $user->realname);
 
@@ -151,7 +151,7 @@ class Registrar extends BackendController
         });
 
         // Prepare the flash message.
-        $status = __d('users', 'Your Account has been created. We have sent you an E-mail to activate your Account.');
+        $status = __d('system', 'Your Account has been created. We have sent you an E-mail to activate your Account.');
 
         return Redirect::to('register/status')->withStatus($status);
     }
@@ -176,13 +176,13 @@ class Registrar extends BackendController
 
             if ($user->save()) {
                 // Prepare the flash message.
-                $status = __d('users', 'Activated! You can now Sign in!');
+                $status = __d('system', 'Activated! You can now Sign in!');
 
                 return Redirect::to('login')->withStatus($status);
             }
         }
 
-        $status = __d('users', 'We could not activate your Account. Try again later.');
+        $status = __d('system', 'We could not activate your Account. Try again later.');
 
         return Redirect::to('register/status')->withStatus($status);
     }
@@ -190,7 +190,7 @@ class Registrar extends BackendController
     public function status()
     {
         return $this->getView()
-            ->shares('title', __d('users', 'Registration Status'));
+            ->shares('title', __d('system', 'Registration Status'));
     }
 
     /**

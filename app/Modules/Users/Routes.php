@@ -9,16 +9,9 @@
 
 /** Define static routes. */
 
-Route::group(array('prefix' => '', 'namespace' => 'App\Modules\Users\Controllers'), function() {
-    // The Account Registration.
-    Route::get( 'register',                 array('before' => 'guest',      'uses' => 'Registrar@create'));
-    Route::post('register',                 array('before' => 'guest|csrf', 'uses' => 'Registrar@store'));
-    Route::get( 'register/verify/{token?}', array('before' => 'guest',      'uses' => 'Registrar@verify'));
-    Route::get( 'register/status',          array('before' => 'guest',      'uses' => 'Registrar@status'));
-});
-
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'App\Modules\Users\Controllers\Admin'), function() {
+Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function()
+{
     // The Users Search.
     Route::post('users/search', array('before' => 'auth', 'uses' => 'Users@search'));
 

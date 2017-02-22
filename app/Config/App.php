@@ -99,7 +99,6 @@ return array(
         'Nova\Module\Providers\ConsoleServiceProvider',
         'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Routing\Providers\ConsoleServiceProvider',
-        'Nova\Session\ConsoleServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',

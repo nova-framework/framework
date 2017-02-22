@@ -24,7 +24,7 @@ function access($attr, $path, $data, $volume)
 }
 
 // Retrieve the elFinder options.
-$options = Config::get('elFinder');
+$options = Config::get('files::elFinder');
 
 // Create a elFinder instance.
 $elFinder = new elFinder($options);

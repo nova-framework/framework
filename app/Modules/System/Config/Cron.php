@@ -2,16 +2,15 @@
 /**
  * Config - the Module's specific Configuration.
  *
- * @author David Carr - dave@daveismyname.com
- * @author Edwin Hoksberg - info@edwinhoksberg.nl
- * @version 3.0
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 4.0
  */
 
 
-Config::set('cron', array(
+return array(
     /*
     |--------------------------------------------------------------------------
-    | Encryption Key
+    | Encryption Token
     |--------------------------------------------------------------------------
     |
     | This key is used by the encrypter service and should be set
@@ -22,4 +21,4 @@ Config::set('cron', array(
     |
     */
     'token' => 'SomeRandomStringThere_1234567890',
-));
+);

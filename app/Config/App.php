@@ -96,6 +96,8 @@ return array(
         'Nova\Cache\ConsoleServiceProvider',
         'Nova\Foundation\Providers\ComposerServiceProvider',
         'Nova\Foundation\Providers\ForgeServiceProvider',
+        'Nova\Module\Providers\ConsoleServiceProvider',
+        'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Routing\Providers\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
 

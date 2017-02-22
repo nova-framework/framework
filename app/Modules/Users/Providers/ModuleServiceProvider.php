@@ -28,15 +28,13 @@ class ModuleServiceProvider extends ServiceProvider
         parent::boot();
 
         //
-        $basePath = realpath(__DIR__ .'/../');
+        $path = realpath(__DIR__ .'/../');
 
-        // Load the Module configuration.
-        $path = $basePath .DS .'Config.php';
-
-        $this->loadConfigFrom($path);
+        // Configure the Package.
+        $this->package('Users', 'users', $path);
 
         // Bootstrap the Module.
-        $path = $basePath .DS .'Bootstrap.php';
+        $path = $path .DS .'Bootstrap.php';
 
         $this->bootstrapFrom($path);
     }

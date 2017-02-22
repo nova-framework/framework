@@ -6,3 +6,7 @@
  * @version 3.0
  */
 
+
+return array(
+    //
+);

@@ -1,17 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-use Nova\Cli\ControllerCommand;
-use Nova\Cli\ModelCommand;
-use Nova\Cli\EncryptionCommand;
-use Nova\Cli\ClearCacheCommand;
-use Nova\Cli\ClearSessionsCommand;
-use Nova\Cli\ClearLogsCommand;
-use Nova\Cli\ClearViewsCommand;
-
-use Symfony\Component\Console\Application;
-
-
 //--------------------------------------------------------------------------
 // Define The Application Paths
 //--------------------------------------------------------------------------
@@ -23,7 +12,7 @@ define('ROOTDIR', realpath(__DIR__) .DS);
 
 define('APPDIR', ROOTDIR .'app' .DS);
 
-define('PUBLICDIR', ROOTDIR .'webroot' .DS);
+define('PUBLICDIR', ROOTDIR .'public' .DS);
 
 //--------------------------------------------------------------------------
 // Define The Application Environment
@@ -43,38 +32,25 @@ require ROOTDIR .'vendor' .DS .'autoload.php';
 
 $app = require_once APPDIR .'Boot' .DS .'Start.php';
 
-// Setup the Request for Console environment.
+//--------------------------------------------------------------------------
+// Load The Forge Console Application
+//--------------------------------------------------------------------------
+
+use Nova\Console\Application as ConsoleApplication;
+
+
 $app->setRequestForConsoleEnvironment();
 
-// Boot the Nova Application.
-$app->boot();
+$forge = ConsoleApplication::start($app);
 
 //--------------------------------------------------------------------------
-// Create New Symfony Application
+// Run The Forge Application
 //--------------------------------------------------------------------------
 
-$console = new Application('Nova Framework Command Line Interface for v3.0', '1.3.0');
+$status = $forge->run();
 
 //--------------------------------------------------------------------------
-// Register The Symfony Commands
-//--------------------------------------------------------------------------
-
-$console->add(new ControllerCommand());
-$console->add(new ModelCommand());
-$console->add(new EncryptionCommand());
-$console->add(new ClearCacheCommand());
-$console->add(new ClearSessionsCommand());
-$console->add(new ClearLogsCommand());
-$console->add(new ClearViewsCommand());
-
-//--------------------------------------------------------------------------
-// Execute The Symfony Application
-//--------------------------------------------------------------------------
-
-$status = $console->run();
-
-//--------------------------------------------------------------------------
-// Shutdown The Nova Application
+// Shutdown The Application
 //--------------------------------------------------------------------------
 
 $app->shutdown();

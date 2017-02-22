@@ -31,8 +31,14 @@
         }
     },
     "scripts": {
+        "post-install-cmd": [
+            "php forge optimize",
+        ],
+        "post-update-cmd": [
+            "php forge optimize",
+        ],
         "post-create-project-cmd": [
-            "php nova make:key"
+            "php forge key:generate"
         ]
     },
     "prefer-stable": true,

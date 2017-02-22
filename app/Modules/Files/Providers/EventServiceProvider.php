@@ -31,7 +31,10 @@ class EventServiceProvider extends ServiceProvider
         parent::boot($events);
 
         //
-        $path = realpath(__DIR__ .'/../') .DS .'Events.php';
+        $path = realpath(__DIR__ .'/../');
+
+        // Load the Events.
+        $path = $path .DS .'Events.php';
 
         $this->loadEventsFrom($path);
     }

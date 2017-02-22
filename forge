@@ -12,7 +12,7 @@ define('ROOTDIR', realpath(__DIR__) .DS);
 
 define('APPDIR', ROOTDIR .'app' .DS);
 
-define('PUBLICDIR', ROOTDIR .'public' .DS);
+define('PUBLICDIR', ROOTDIR .'webroot' .DS);
 
 //--------------------------------------------------------------------------
 // Define The Application Environment

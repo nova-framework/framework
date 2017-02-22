@@ -94,6 +94,7 @@ return array(
         // The Forge Providers.
         'Nova\Foundation\Providers\ComposerServiceProvider',
         'Nova\Foundation\Providers\ForgeServiceProvider',
+        'Nova\Routing\Providers\ConsoleServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',

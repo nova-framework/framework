@@ -91,6 +91,10 @@ return array(
         'Nova\View\ViewServiceProvider',
         'Nova\Cron\CronServiceProvider',
 
+        // The Forge Providers.
+        'Nova\Foundation\Providers\ComposerServiceProvider',
+        'Nova\Foundation\Providers\ForgeServiceProvider',
+
         // The Application Providers.
         'App\Providers\AppServiceProvider',
         'App\Providers\EventServiceProvider',

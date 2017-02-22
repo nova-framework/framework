@@ -30,6 +30,17 @@
             "Shared\\" : "shared/"
         }
     },
+    "scripts": {
+        "post-install-cmd": [
+            "php forge optimize",
+        ],
+        "post-update-cmd": [
+            "php forge optimize",
+        ],
+        "post-create-project-cmd": [
+            "php forge key:generate"
+        ]
+    },
     "prefer-stable": true,
     "minimum-stability": "dev"
 }

@@ -92,9 +92,12 @@ return array(
         'Nova\Cron\CronServiceProvider',
 
         // The Forge Providers.
+        'Nova\Auth\Reminders\ConsoleServiceProvider',
+        'Nova\Cache\ConsoleServiceProvider',
         'Nova\Foundation\Providers\ComposerServiceProvider',
         'Nova\Foundation\Providers\ForgeServiceProvider',
         'Nova\Routing\Providers\ConsoleServiceProvider',
+        'Nova\Session\ConsoleServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',

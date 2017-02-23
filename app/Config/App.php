@@ -94,7 +94,7 @@ return array(
         // The Forge Providers.
         'Nova\Auth\Reminders\ConsoleServiceProvider',
         'Nova\Cache\ConsoleServiceProvider',
-        'Nova\Foundation\Providers\ComposerServiceProvider',
+        'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
         'Nova\Foundation\Providers\ForgeServiceProvider',
         'Nova\Module\Providers\ConsoleServiceProvider',
         'Nova\Module\Providers\GeneratorServiceProvider',
@@ -146,6 +146,7 @@ return array(
         'DB'            => 'Nova\Support\Facades\DB',
         'Event'         => 'Nova\Support\Facades\Event',
         'File'          => 'Nova\Support\Facades\File',
+        'Forge'         => 'Nova\Support\Facades\Forge',
         'Hash'          => 'Nova\Support\Facades\Hash',
         'Input'         => 'Nova\Support\Facades\Input',
         'Language'      => 'Nova\Support\Facades\Language',

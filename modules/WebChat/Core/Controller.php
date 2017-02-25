@@ -13,7 +13,7 @@ use Modules\System\Exceptions\ValidationException;
 class Controller extends BackendController
 {
 
-    protected function validate(array $data, array $rules, array $messages = array(), array $attributes = array())
+    protected function validateInput(array $data, array $rules, array $messages = array(), array $attributes = array())
     {
         $validator = Validator::make($data, $rules, $messages, $attributes);
 

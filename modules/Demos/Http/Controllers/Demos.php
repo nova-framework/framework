@@ -114,7 +114,7 @@ class Demos extends ThemedController
         $content = '<pre>' .e(var_export(Session::all(), true)) .'</pre>';
 
         $content .= '<pre>' .e(var_export(Request::cookie(PREFIX .'language'), true)) .'</pre>';
-        
+
         $content .= '<pre>' .e(var_export(Language::code(), true)) .'</pre>';
 
         return View::make('Default')
@@ -251,7 +251,7 @@ class Demos extends ThemedController
             ->with('content', $content);
     }
 
-    public function validate()
+    public function validation()
     {
         $data = array(
             'username' => 'michael',

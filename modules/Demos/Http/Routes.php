@@ -12,13 +12,13 @@
 // The Demo Routes
 $router->group(array('prefix' => 'demo'), function($router)
 {
-    $router->get('database', 'Demos@database');
-    $router->get('events',   'Demos@events');
-    $router->get('mailer',   'Demos@mailer');
-    $router->get('session',  'Demos@session');
-    $router->get('validate', 'Demos@validate');
-    $router->get('paginate', 'Demos@paginate');
-    $router->get('cache',    'Demos@cache');
+    $router->get('database',   'Demos@database');
+    $router->get('events',     'Demos@events');
+    $router->get('mailer',     'Demos@mailer');
+    $router->get('session',    'Demos@session');
+    $router->get('validation', 'Demos@validation');
+    $router->get('paginate',   'Demos@paginate');
+    $router->get('cache',      'Demos@cache');
 
     $router->get('password/{password}', 'Demos@password');
 

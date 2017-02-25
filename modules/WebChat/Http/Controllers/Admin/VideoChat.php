@@ -111,7 +111,7 @@ class VideoChat extends Controller
         $input = Input::only('userId');
 
         // Create the Validator instance.
-        $this->validate($input, array(
+        $this->validateInput($input, array(
             'userId' => 'required|numeric|min:1',
         ));
 

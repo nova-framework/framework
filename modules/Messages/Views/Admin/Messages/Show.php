@@ -71,6 +71,6 @@
     </div>
 </div>
 
-<a class='btn btn-primary' href='<?= site_url('messages'); ?>'><?= __d('messages', '<< Previous Page'); ?></a>
+<a class='btn btn-primary' href='<?= site_url('admin/messages'); ?>'><?= __d('messages', '<< Previous Page'); ?></a>
 
 </section>

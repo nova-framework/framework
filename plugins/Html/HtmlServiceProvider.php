@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Html\Providers;
+namespace Plugins\Html;
 
 use Nova\Foundation\AliasLoader;
 use Nova\Support\ServiceProvider;

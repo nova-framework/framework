@@ -20,4 +20,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'This site is temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
   'Welcome' => 'خوش آمدید',
+  'Your session expired. Please try again!' => '',
 );

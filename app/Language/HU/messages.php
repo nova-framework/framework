@@ -19,4 +19,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'This site is temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Welcome' => '',
+  'Your session expired. Please try again!' => '',
 );

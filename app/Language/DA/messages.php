@@ -19,4 +19,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'This site is temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => 'For at nulstille dit kodeord, skal du udfyld denne formular: {0}.',
   'Welcome' => 'Velkommen',
+  'Your session expired. Please try again!' => 'Din session er udløbet. Prøv venligst igen.',
 );

@@ -27,7 +27,7 @@ use View;
 
 class Registrar extends BackendController
 {
-    protected $layout   = 'default';
+    protected $layout = 'Default';
 
 
     protected function validate(array $data)

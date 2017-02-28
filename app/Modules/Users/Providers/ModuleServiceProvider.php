@@ -31,7 +31,7 @@ class ModuleServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Users', 'users', $path);
+        $this->package('Modules/Users', 'users', $path);
 
         // Bootstrap the Module.
         $path = $path .DS .'Bootstrap.php';

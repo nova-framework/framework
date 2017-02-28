@@ -287,7 +287,7 @@ class Demos extends ThemedController
 
     public function paginate()
     {
-        $paginate = DB::table('posts')->paginate(2);
+        $paginate = DB::table('users')->paginate(2);
 
         $paginate->appends(array(
             'testing'  => 1,
@@ -297,9 +297,9 @@ class Demos extends ThemedController
         $content = $paginate->links();
 
         foreach ($paginate as $post) {
-            $content .= '<h3>' .$post->title .'</h3>';
+            $content .= '<h3>' .$post->username .'</h3>';
 
-            $content .= $post->content;
+            $content .= $post->first_name;
 
             $content .= '<br><br>';
         }

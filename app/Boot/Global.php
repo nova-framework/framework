@@ -25,7 +25,9 @@ App::error(function(Exception $exception, $code, $fromConsole)
 
     // When CSRF mismatch.
     else if ($exception instanceof TokenMismatchException) {
-        return Redirect::back()->withStatus(__('Your session expired. Please try again!'), 'danger');
+        $status = __('Your session expired. Please try again!');
+        
+        return Redirect::back()->withStatus($status, 'danger');
     }
 
     Log::error($exception);

@@ -6,6 +6,7 @@
  * @version 3.0
  */
 
+use Nova\Config\EnvironmentVariables;
 use Nova\Config\Repository as ConfigRepository;
 use Nova\Foundation\AliasLoader;
 use Nova\Foundation\Application;
@@ -72,8 +73,6 @@ if (is_readable($path)) require $path;
 
 $app = new Application();
 
-$app->instance('app', $app);
-
 //--------------------------------------------------------------------------
 // Detect The Application Environment
 //--------------------------------------------------------------------------
@@ -96,6 +95,12 @@ $paths = array(
 $app->bindInstallPaths($paths);
 
 //--------------------------------------------------------------------------
+// Bind The Application In The Container
+//--------------------------------------------------------------------------
+
+$app->instance('app', $app);
+
+//--------------------------------------------------------------------------
 // Load The Framework Facades
 //--------------------------------------------------------------------------
 
@@ -110,12 +115,12 @@ Facade::setFacadeApplication($app);
 $app->registerCoreContainerAliases();
 
 //--------------------------------------------------------------------------
-// Register Application Exception Handling
+// Register The Environment Variables
 //--------------------------------------------------------------------------
 
-$app->startExceptionHandling();
-
-if ($env != 'testing') ini_set('display_errors', 'Off');
+with($envVariables = new EnvironmentVariables(
+    $app->getEnvironmentVariablesLoader()
+))->load($env);
 
 //--------------------------------------------------------------------------
 // Register The Config Manager
@@ -124,6 +129,14 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 $app->instance('config', $config = new ConfigRepository(
     $app->getConfigLoader(), $env
 ));
+
+//--------------------------------------------------------------------------
+// Register Application Exception Handling
+//--------------------------------------------------------------------------
+
+$app->startExceptionHandling();
+
+if ($env != 'testing') ini_set('display_errors', 'Off');
 
 //--------------------------------------------------------------------------
 // Set The Default Timezone From Configuration

@@ -12,7 +12,7 @@ return array(
     /**
      * Debug Mode
      */
-    'debug' => (ENVIRONMENT == 'development'), // When enabled the actual PHP errors will be shown.
+    'debug' => true, // When enabled the actual PHP errors will be shown.
 
     /**
      * The Website URL.

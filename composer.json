@@ -8,8 +8,19 @@
         {
             "name": "David Carr",
             "email": "dave@daveismyname.com",
-            "homepage": "http://daveismyname.com",
-            "role": "Developer"
+            "homepage": "http://daveismyname.blog",
+            "role": "Co-author"
+        }, 
+        {
+            "name": "Taylor Otwell",
+            "email": "taylor@laravel.com",
+            "role": "Co-author"
+        }, 
+        {
+            "name": "Virgil-Adrian Teaca",
+            "email": "virgil@giulianaeassociati.com",
+            "homepage": "http://giulianaeassociati.com",
+            "role": "Co-author"
         }
     ],
     "repositories": [

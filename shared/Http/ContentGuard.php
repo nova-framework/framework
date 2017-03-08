@@ -16,6 +16,11 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class ContentGuard implements HttpKernelInterface
 {
@@ -61,7 +66,9 @@ class ContentGuard implements HttpKernelInterface
     {
         $response = $this->app->handle($request, $type, $catch);
 
-        return $this->processResponseContent($response);
+        if (! $this->isHtmlResponse($response)) return $response;
+
+        return $this->processResponse($response);
     }
 
     /**
@@ -70,12 +77,8 @@ class ContentGuard implements HttpKernelInterface
      * @param  \Symfony\Component\HttpFoundation\Response $response
      * @return void
      */
-    protected function processResponseContent(SymfonyResponse $response)
+    protected function processResponse(SymfonyResponse $response)
     {
-        $contentType = $response->headers->get('Content-Type');
-
-        if (! str_is('text/html*', $contentType)) return $response;
-
         if ($this->debug) {
             // Insert the QuickProfiler Widget in the Response's Content.
             $content = str_replace(
@@ -107,4 +110,16 @@ class ContentGuard implements HttpKernelInterface
         return $response;
     }
 
+    protected function isHtmlResponse(SymfonyResponse $response)
+    {
+        if (($response instanceof RedirectResponse) || ($response instanceof JsonResponse) || ($response instanceof BinaryFileResponse) || ($response instanceof StreamedResponse)) {
+            return false;
+        }
+
+        $contentType = $response->headers->get('Content-Type');
+
+        if (! str_is('text/html*', $contentType)) return false;
+
+        return true;
+    }
 }

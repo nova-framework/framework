@@ -229,7 +229,7 @@ class Demos extends ThemedController
         });
 
         // Prepare and return the View instance.
-        $content = __d('demos', 'Message sent while pretending. Please, look on <code>{0}</code>', 'app/Storage/Logs/messages.log');
+        $content = __d('demos', 'Message sent while pretending. Please, look on <code>{0}</code>', 'storage/logs/error.log');
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Mailing API'))

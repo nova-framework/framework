@@ -49,20 +49,22 @@ abstract class BackendController extends BaseController
     }
 
     /**
-     * While this method is supposed to setup the Controller's Layout instance, it could be
-     * used well as method which is always executed before the current action, aka before()
+     * Method executed before any action.
      */
-    protected function setupLayout()
+    protected function before()
     {
-        if (Auth::check()) {
-            // The User is logged in; setup the Backend Menu.
-            $user = Auth::user();
-
-            //
-            $items = $this->getMenuItems($user);
-
-            View::share('menuItems', $items);
+        if (! Auth::check()) {
+            // No further processing for the non authenticated users.
+            return;
         }
+
+        // The User is logged in; setup the Backend Menu.
+        $user = Auth::user();
+
+        //
+        $items = $this->getMenuItems($user);
+
+        View::share('menuItems', $items);
     }
 
     protected function getMenuItems($user)

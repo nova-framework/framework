@@ -37,23 +37,27 @@ return array(
             'enabled'  => true,
             'order'    => 10001,
         ),
+        /*
         'files' => array(
             'name'     => 'Modules/Files',
             'basename' => 'Files',
             'enabled'  => true,
             'order'    => 9001,
         ),
+        */
         'system' => array(
             'name'     => 'Modules/System',
             'basename' => 'System',
             'enabled'  => true,
             'order'    => 8001,
         ),
+        /*
         'users' => array(
             'name'     => 'Modules/Users',
             'basename' => 'Users',
             'enabled'  => true,
             'order'    => 9001,
         ),
+        */
     ),
 );

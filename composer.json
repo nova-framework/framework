@@ -10,12 +10,12 @@
             "email": "dave@daveismyname.com",
             "homepage": "http://daveismyname.blog",
             "role": "Co-author"
-        }, 
+        },
         {
             "name": "Taylor Otwell",
             "email": "taylor@laravel.com",
             "role": "Co-author"
-        }, 
+        },
         {
             "name": "Virgil-Adrian Teaca",
             "email": "virgil@giulianaeassociati.com",
@@ -30,7 +30,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6.0",
         "nova-framework/system": "^3.0",
         "almasaeed2010/adminlte": "~2.0",
         "twbs/bootstrap": "^3.3"

@@ -33,7 +33,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6.0",
         "nova-framework/module-installer": "*",
         "nova-framework/plugin-installer": "*",
         "nova-framework/system": "~4.0",

@@ -10,6 +10,17 @@
 /** Define Route Filters. */
 
 
+// Referer checking Filter.
+Route::filter('referer', function($route, $request)
+{
+    // Check if the visitor come to this Route from another site.
+    $referer = $request->header('referer');
+
+    if (! starts_with($referer, Config::get('app.url'))) {
+        return Redirect::back();
+    }
+});
+
 // Role-based Authorization Filter.
 Route::filter('roles', function($route, $request, $value)
 {

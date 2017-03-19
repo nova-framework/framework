@@ -28,13 +28,19 @@ App::after(function($request, $response)
     //
 });
 
+
 /** Define Route Filters. */
 
 // The CSRF Filter.
-Route::filter('csrf', function($route, $request) {
+Route::filter('csrf', function($route, $request)
+{
     $session = $request->session();
 
-    $ajaxRequest = $request->ajax();
+    if ($request->ajax() || $request->wantsJson()) {
+        $ajaxRequest = true;
+    } else {
+        $ajaxRequest = false;
+    }
 
     $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
 
@@ -50,44 +56,36 @@ Route::filter('csrf', function($route, $request) {
     }
 });
 
-// Referer checking Filter.
-Route::filter('referer', function($route, $request) {
-    // Check if the visitor come to this Route from another site.
-    $referer = $request->header('referer');
-
-    if (! starts_with($referer, Config::get('app.url'))) {
-        return Redirect::back();
-    }
-});
-
 // Authentication Filters.
-Route::filter('auth', function($route, $request) {
-    if (Auth::check()) {
+Route::filter('auth', function($route, $request, $guard = null)
+{
+    if (Auth::guard($guard)->check()) {
         //
     }
 
     // User is not authenticated.
-    else if (! $request->ajax()) {
-        return Redirect::guest('login');
+    else if ($request->ajax() || $request->wantsJson()) {
+        return Response::make('Unauthorized Access', 401);
     } else {
-        return Response::make('Unauthorized Access', 403);
+        return Redirect::guest('login');
     }
 });
 
-Route::filter('auth.basic', function()
+Route::filter('auth.basic', function($route, $request)
 {
     return Auth::basic();
 });
 
-Route::filter('guest', function($route, $request) {
-    if (Auth::guest()) {
+Route::filter('guest', function($route, $request, $guard = null)
+{
+    if (Auth::guard($guard)->guest()) {
         //
     }
 
     // User is authenticated.
-    else if (! $request->ajax()) {
-        return Redirect::to('admin/dashboard');
+    else if ($request->ajax() || $request->wantsJson()) {
+        return Response::make('Unauthorized Access', 401);
     } else {
-        return Response::make('Unauthorized Access', 403);
+        return Redirect::to('admin/dashboard');
     }
 });

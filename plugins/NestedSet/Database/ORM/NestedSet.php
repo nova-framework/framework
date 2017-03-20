@@ -5,7 +5,7 @@ namespace Plugins\NestedSet\Database\ORM;
 use Nova\Database\Connection;
 use Nova\Database\Schema\Blueprint;
 
-use Plugins\NestedSet\Database\ORM\\Node;
+use Plugins\NestedSet\Database\ORM\Node;
 
 
 class NestedSet

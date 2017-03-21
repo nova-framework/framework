@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\System\Models;
+namespace Modules\Users\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 

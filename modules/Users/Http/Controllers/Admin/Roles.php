@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\System\Http\Controllers\Admin;
+namespace Modules\Users\Http\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Input;
@@ -16,7 +16,7 @@ use Nova\Support\Facades\View;
 
 use App\Core\BackendController;
 
-use Modules\System\Models\Role;
+use Modules\Users\Models\Role;
 
 
 class Roles extends BackendController
@@ -112,7 +112,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
+            $status = __d('users', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -129,7 +129,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
+            $status = __d('users', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -146,7 +146,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
+            $status = __d('users', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -186,7 +186,7 @@ class Roles extends BackendController
             $role = Role::findOrFail($id);
         }
         catch (ModelNotFoundException $e) {
-            $status = __d('messenger', 'The Role with ID: {0} was not found.', $id);
+            $status = __d('users', 'The Role with ID: {0} was not found.', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }

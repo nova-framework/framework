@@ -47,4 +47,13 @@ $router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($rou
     $router->get( 'users/{id}/edit',    array('middleware' => 'auth', 'uses' => 'Users@edit'));
     $router->post('users/{id}',         array('middleware' => 'auth', 'uses' => 'Users@update'));
     $router->post('users/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Users@destroy'));
+
+    // The Roles CRUD.
+    $router->get( 'roles',              array('middleware' => 'auth', 'uses' => 'Roles@index'));
+    $router->get( 'roles/create',       array('middleware' => 'auth', 'uses' => 'Roles@create'));
+    $router->post('roles',              array('middleware' => 'auth', 'uses' => 'Roles@store'));
+    $router->get( 'roles/{id}',         array('middleware' => 'auth', 'uses' => 'Roles@show'));
+    $router->get( 'roles/{id}/edit',    array('middleware' => 'auth', 'uses' => 'Roles@edit'));
+    $router->post('roles/{id}',         array('middleware' => 'auth', 'uses' => 'Roles@update'));
+    $router->post('roles/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Roles@destroy'));
 });

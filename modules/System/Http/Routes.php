@@ -26,13 +26,4 @@ $router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($rou
     // The Site Settings.
     $router->get( 'settings', array('middleware' => 'auth', 'uses' => 'Settings@index'));
     $router->post('settings', array('middleware' => 'auth', 'uses' => 'Settings@store'));
-
-    // The Roles CRUD.
-    $router->get( 'roles',              array('middleware' => 'auth', 'uses' => 'Roles@index'));
-    $router->get( 'roles/create',       array('middleware' => 'auth', 'uses' => 'Roles@create'));
-    $router->post('roles',              array('middleware' => 'auth', 'uses' => 'Roles@store'));
-    $router->get( 'roles/{id}',         array('middleware' => 'auth', 'uses' => 'Roles@show'));
-    $router->get( 'roles/{id}/edit',    array('middleware' => 'auth', 'uses' => 'Roles@edit'));
-    $router->post('roles/{id}',         array('middleware' => 'auth', 'uses' => 'Roles@update'));
-    $router->post('roles/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Roles@destroy'));
 });

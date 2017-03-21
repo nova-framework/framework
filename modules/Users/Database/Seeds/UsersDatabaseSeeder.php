@@ -19,5 +19,6 @@ class UsersDatabaseSeeder extends Seeder
 
         //
         $this->call('Modules\Users\Database\Seeds\UsersTableSeeder');
+        $this->call('Modules\Users\Database\Seeds\RolesTableSeeder');
     }
 }

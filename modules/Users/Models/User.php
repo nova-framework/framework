@@ -19,7 +19,7 @@ use Plugins\Presenter\PresentableTrait;
 
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\System\Traits\HasNotificationsTrait;
-use Modules\System\Traits\HasRoleTrait;
+use Modules\Users\Traits\HasRoleTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface

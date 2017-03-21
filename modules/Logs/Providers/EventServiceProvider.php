@@ -7,8 +7,8 @@ use Nova\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 use Modules\Logs\Observers\UserActionsObserver;
 
-use Modules\System\Models\Role;
 use Modules\Users\Models\User;
+use Modules\Users\Models\Role;
 
 
 class EventServiceProvider extends ServiceProvider

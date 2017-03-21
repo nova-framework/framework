@@ -21,7 +21,7 @@ use Nova\Support\Facades\View;
 use App\Core\BackendController;
 
 use Modules\Users\Models\User;
-use Modules\System\Models\Role;
+use Modules\Users\Models\Role;
 
 use Carbon\Carbon;
 

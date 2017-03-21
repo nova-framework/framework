@@ -10,13 +10,13 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Templates Configuration
+    | Themes Configuration
     |--------------------------------------------------------------------------
     |
     */
 
-    'templates' => array(
-        'path' => BASEPATH .'themes',
+    'themes' => array(
+        'path' => base_path('themes'),
     ),
 
     /*

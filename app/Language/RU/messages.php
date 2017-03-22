@@ -17,8 +17,10 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Something has gone wrong on the Web Server.' => 'Что-то пошло не так на веб-сервере.',
   'Subpage' => 'Подстраница',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'Спасибо за создание учетной записи на {0}. Пожалуйста, перейдите по ссылке ниже, чтобы подтвердить свой адрес электронной почты:',
+  'This could be the result of an invalid Page request.' => '',
   'This site is temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => 'Чтобы сбросить пароль, заполните эту форму: {0}.',
+  'Unauthorized' => '',
   'Welcome' => 'Добро пожаловать!',
   'Your session expired. Please try again!' => 'Ваша сессия истекла. Пожалуйста, попробуйте снова.',
 );

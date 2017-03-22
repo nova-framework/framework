@@ -16,9 +16,10 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Something has gone wrong on the Web Server.' => 'Der er gået noget galt på web-serveren',
   'Subpage' => 'Underside',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'Tak fordi du har oprettet en bruger på {0}. Brug venligst linket her under til at bekræfte din mailadresse: <a href="{1}">{1}</a>',
+  'This could be the result of an invalid Page request.' => '',
   'This site is temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => 'For at nulstille dit kodeord, skal du udfyld denne formular: {0}.',
+  'Unauthorized' => '',
   'Welcome' => 'Velkommen',
   'Your session expired. Please try again!' => 'Din session er udløbet. Prøv venligst igen.',
-
 );

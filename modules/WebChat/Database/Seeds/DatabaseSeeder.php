@@ -6,7 +6,7 @@ use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
 
 
-class WebChatDatabaseSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
     /**
      * Run the Database Seeds.

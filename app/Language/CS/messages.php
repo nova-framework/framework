@@ -26,6 +26,7 @@ Tento obsah lze změnit v <code>/app/Views/Welcome/Welcome.php</code>',
   'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => '',
   'Troubleshooting' => '',
+  'Unauthorized' => '',
   'Welcome' => 'Vítejte',
   'You are not authorized to access this resource.' => '',
 );

@@ -26,6 +26,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => 'Это может быть результатом удаления страницы, её переименования или временной недоступности',
   'To reset your password, complete this form: {0}.' => 'Чтобы сбросить пароль, заполните эту форму: {0}',
   'Troubleshooting' => 'Исправление проблем',
+  'Unauthorized' => '',
   'Welcome' => 'Добро пожаловать!',
   'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
 );

@@ -26,6 +26,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => 'این ممکن است نتیجه یک صفحه که پاک شده باشد, انتقال یافته باشد و یا اینکه موقتا دردسترس نیباشد, باشد.',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
   'Troubleshooting' => 'اشکال زدایی',
+  'Unauthorized' => '',
   'Welcome' => 'خوش امدید',
   'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید',
 );

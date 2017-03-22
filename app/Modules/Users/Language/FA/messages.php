@@ -75,4 +75,5 @@ return array (
   'User not found: #{0}' => 'کاربر یافت نشد: #{0}',
   'Username' => 'نام کاربری',
   'Users' => 'کاربران',
+  'You are not authorized to access this resource.' => '',
 );

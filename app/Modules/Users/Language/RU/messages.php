@@ -75,4 +75,5 @@ return array (
   'User not found: #{0}' => 'Пользователь не найден: #{0}',
   'Username' => 'Имя пользователя',
   'Users' => 'Пользователи',
+  'You are not authorized to access this resource.' => '',
 );

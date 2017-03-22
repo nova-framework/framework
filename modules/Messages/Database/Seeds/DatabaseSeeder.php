@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\System\Database\Seeds;
+namespace Modules\Messages\Database\Seeds;
 
 use Nova\Database\Seeder;
 use Nova\Database\ORM\Model;
 
 
-class SystemDatabaseSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
     /**
      * Run the Database Seeds.
@@ -17,6 +17,6 @@ class SystemDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call('Modules\System\Database\Seeds\FoobarTableSeeder');
+        // $this->call('Modules\Messages\Database\Seeds\FoobarTableSeeder');
     }
 }

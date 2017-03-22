@@ -17,8 +17,10 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Something has gone wrong on the Web Server.' => '',
   'Subpage' => 'زیر‎صفحه',
   'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'با تشکر بخاطر ساخت اکانت با {0}. لطفا لینک زیر را برای بررسی آدرس ایمیل خود دنبال کنید: {1}',
+  'This could be the result of an invalid Page request.' => '',
   'This site is temporarily unavailable.' => '',
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
+  'Unauthorized' => '',
   'Welcome' => 'خوش آمدید',
   'Your session expired. Please try again!' => '',
 );

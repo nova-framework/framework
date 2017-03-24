@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Modules\Modules\Users\Http\Controllers;
+namespace Modules\Users\Http\Controllers;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;

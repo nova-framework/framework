@@ -99,7 +99,7 @@ return array(
         'users' => array(
             'provider' => 'users',
             'email'    => 'Emails/Auth/Reminder',
-            'table'    => 'password_resets',
+            'table'    => 'password_reminders',
             'expire'   => 60,
         ),
     ),

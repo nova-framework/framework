@@ -11,15 +11,17 @@
 
 
 // Role-based Authorization Filter.
-Route::filter('role', function($route, $request)
+Route::filter('role', function($route, $request, $role)
 {
-    if ((func_num_args() > 2) && Auth::check()) {
-        $roles = array_slice(func_get_args(), 2);
+    if (! Auth::check()) {
+        return Redirect::guest('login');
+    }
 
-        if (! Auth::user()->hasRole($roles)) {
-            $status = __d('users', 'You are not authorized to access this resource.');
+    $roles = array_slice(func_get_args(), 2);
 
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-        }
+    if (! Auth::user()->hasRole($roles)) {
+        $status = __d('users', 'You are not authorized to access this resource.');
+
+        return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
     }
 });

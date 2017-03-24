@@ -34,24 +34,20 @@ App::after(function($request, $response)
 // The CSRF Filter.
 Route::filter('csrf', function($route, $request)
 {
+    $usingAjax = ($request->ajax() || $request->wantsJson());
+
+    // Retrieve the CSRF token from Request instance.
+    $token = $usingAjax ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
+
+    // Retrieve the Session Store instance.
     $session = $request->session();
 
-    if ($request->ajax() || $request->wantsJson()) {
-        $ajaxRequest = true;
-    } else {
-        $ajaxRequest = false;
-    }
+    if ($token != $session->token()) {
+        // The CSRF Token is invalid, respond with Error 400 (Bad Request)
+        if ($usingAjax) {
+            return Response::make('Bad Request', 400);
+        }
 
-    $token = $ajaxRequest ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
-
-    if ($session->token() == $token) {
-        //
-    }
-
-    // The CSRF Token is invalid, respond with Error 400 (Bad Request)
-    else if ($ajaxRequest) {
-        return Response::make('Bad Request', 400);
-    } else {
         App::abort(400, 'Bad Request');
     }
 });
@@ -59,14 +55,11 @@ Route::filter('csrf', function($route, $request)
 // Authentication Filters.
 Route::filter('auth', function($route, $request, $guard = null)
 {
-    if (Auth::guard($guard)->check()) {
-        //
-    }
+    if (! Auth::guard($guard)->check()) {
+        if ($request->ajax() || $request->wantsJson()) {
+            return Response::make('Unauthorized Access', 401);
+        }
 
-    // User is not authenticated.
-    else if ($request->ajax() || $request->wantsJson()) {
-        return Response::make('Unauthorized Access', 401);
-    } else {
         return Redirect::guest('login');
     }
 });
@@ -78,14 +71,11 @@ Route::filter('auth.basic', function($route, $request)
 
 Route::filter('guest', function($route, $request, $guard = null)
 {
-    if (Auth::guard($guard)->guest()) {
-        //
-    }
+    if (! Auth::guard($guard)->guest()) {
+        if ($request->ajax() || $request->wantsJson()) {
+            return Response::make('Unauthorized Access', 401);
+        }
 
-    // User is authenticated.
-    else if ($request->ajax() || $request->wantsJson()) {
-        return Response::make('Unauthorized Access', 401);
-    } else {
         return Redirect::to('admin/dashboard');
     }
 });

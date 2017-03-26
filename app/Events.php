@@ -16,17 +16,15 @@ Event::listen('router.matched', function($route, $request)
     $path = ROOTDIR .'VERSION.txt';
 
     if (is_readable($path)) {
-        $version = file_get_contents($path);
+        $version = trim(file_get_contents($path));
     } else {
         $version = VERSION;
     }
 
-    View::share('version', trim($version));
+    View::share('version', $version);
 
     // Share on Views the CSRF Token.
-    $session = $request->session();
-
-    View::share('csrfToken', $session->token());
+    View::share('csrfToken', Session::token());
 
     // Calculate the URIs and share them on Views.
     $uri = $request->path();

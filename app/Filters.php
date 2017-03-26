@@ -40,9 +40,7 @@ Route::filter('csrf', function($route, $request)
     if (Session::token() == $token) {
         // The CSRF token match; nothing to do.
         return;
-    }
-
-    if ($request->ajax() || $request->wantsJson()) {
+    } else if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Bad Request', 400);
     }
 
@@ -61,9 +59,7 @@ Route::filter('auth', function($route, $request, $guard = null)
     if ($instance->check()) {
         // The User is authenticated; nothing to do.
         return;
-    }
-
-    if ($request->ajax() || $request->wantsJson()) {
+    } else if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Unauthorized Access', 401);
     }
 
@@ -83,9 +79,7 @@ Route::filter('guest', function($route, $request, $guard = null)
     if ($instance->guest()) {
         // The User is not authenticated; nothing to do.
         return;
-    }
-
-    if ($request->ajax() || $request->wantsJson()) {
+    } else if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Unauthorized Access', 401);
     }
 

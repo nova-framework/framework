@@ -9,13 +9,13 @@
             "name": "David Carr",
             "email": "dave@daveismyname.com",
             "homepage": "http://daveismyname.com",
-            "role": "Developer"
+            "role": "Co-author"
         },
         {
             "name": "Virgil-Adrian Teaca",
             "email": "virgil@giulianaeassociati.com",
             "homepage": "http://giulianaeassociati.com",
-            "role": "Developer"
+            "role": "Co-author"
         }
     ],
     "repositories": [

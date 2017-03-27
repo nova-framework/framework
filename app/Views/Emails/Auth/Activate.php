@@ -1,4 +1,4 @@
-<?php $targetUrl = site_url('register/verify/' .$token); // Calculate the target URL. ?>
+<?php $targetUrl = site_url('auth/register/verify/' .$token); // Calculate the target URL. ?>
 <!DOCTYPE html>
 <html lang="<?= Config::get('app.locale', 'en'); ?>">
     <head>

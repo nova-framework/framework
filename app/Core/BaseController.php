@@ -11,16 +11,8 @@ namespace App\Core;
 use Nova\Foundation\Auth\Access\AuthorizesRequestsTrait;
 use Nova\Foundation\Bus\DispatchesJobsTrait;
 use Nova\Foundation\Validation\ValidatesRequestsTrait;
-use Nova\Http\Response;
 use Nova\Routing\Controller;
-use Nova\Support\Contracts\RenderableInterface as Renderable;
-use Nova\Support\Facades\Config;
-use Nova\Support\Facades\Module;
 use Nova\Support\Facades\View as ViewFactory;
-use Nova\View\Layout;
-use Nova\View\View;
-
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use BadMethodCallException;
 
@@ -29,7 +21,7 @@ abstract class BaseController extends Controller
 {
     use DispatchesJobsTrait, AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
-    
+
     /**
      * Return a default View instance.
      *

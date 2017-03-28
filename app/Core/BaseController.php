@@ -12,7 +12,7 @@ use Nova\Foundation\Auth\Access\AuthorizesRequestsTrait;
 use Nova\Foundation\Bus\DispatchesJobsTrait;
 use Nova\Foundation\Validation\ValidatesRequestsTrait;
 use Nova\Routing\Controller;
-use Nova\Support\Facades\View as ViewFactory;
+use Nova\Support\Facades\View;
 
 use BadMethodCallException;
 
@@ -36,22 +36,21 @@ abstract class BaseController extends Controller
          // Transform the complete class name on a path like variable.
         $path = str_replace('\\', '/', static::class);
 
-        // Check for a valid controller on App or Modules.
+        // Check for a valid controller on App and Modules.
         if (preg_match('#^(.+)/Http/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[2] .'/' .ucfirst($method);
 
             if ($matches[1] == 'App') {
-               $module = null;
-            } else if (count($segments = explode('/', $matches[1])) === 2) {
-               $module = last($segments);
-            } else {
-                throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
+                return View::make($view, $data);
             }
 
-            return ViewFactory::make($view, $data, $module);
+            $segments = explode('/', $matches[1]);
+
+            if (count($segments) === 2) {
+                return View::make($view, $data, last($segments));
+            }
         }
 
-        // If we arrived there, the called class is not a Controller; go Exception.
         throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
     }
 

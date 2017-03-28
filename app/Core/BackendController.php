@@ -39,8 +39,7 @@ abstract class BackendController extends BaseController
 
 
     /**
-     * While this method is supposed to setup the Controller's Layout instance, it could be
-     * used well as method which is always executed before the current action, aka before()
+     * Method executed before any action.
      */
     protected function before()
     {

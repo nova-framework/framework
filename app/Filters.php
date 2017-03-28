@@ -63,7 +63,12 @@ Route::filter('auth', function($route, $request, $guard = null)
         return Response::make('Unauthorized Access', 401);
     }
 
-    return Redirect::guest('login');
+    if ($request->path() == 'logout') {
+        // A crazy bunny visited the logout URL as guest.
+        return Redirect::to('login');
+    } else {
+        return Redirect::guest('login');
+    }
 });
 
 Route::filter('auth.basic', function($route, $request)

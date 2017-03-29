@@ -53,22 +53,30 @@ Route::filter('csrf', function($route, $request)
 // Authentication Filters.
 Route::filter('auth', function($route, $request, $guard = null)
 {
-    // Get the requested Authentication Guard instance.
-    $instance = Auth::guard($guard);
+    $guard = $guard ?: Config::get('auth.defaults.guard', 'users');
 
-    if ($instance->check()) {
-        // The User is authenticated; nothing to do.
+    if (Auth::guard($guard)->check()) {
+        // The User is authenticated.
         return;
-    } else if ($request->ajax() || $request->wantsJson()) {
+    }
+
+    if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Unauthorized Access', 401);
     }
 
-    if ($request->path() == 'logout') {
-        // A crazy bunny visited the logout URL as guest.
-        return Redirect::to('login');
-    } else {
-        return Redirect::guest('login');
+    // Get the Guard's paths from configuration.
+    $paths = Config::get("auth.guards.{$guard}.paths", array(
+        'authorize' => 'login',
+        'nonintend' => array(
+            'logout',
+        ),
+    ));
+
+    if (in_array($request->path(), $paths['nonintend'])) {
+        return Redirect::to($paths['authorize']);
     }
+
+    return Redirect::guest($paths['authorize']);
 });
 
 Route::filter('auth.basic', function($route, $request)
@@ -78,15 +86,19 @@ Route::filter('auth.basic', function($route, $request)
 
 Route::filter('guest', function($route, $request, $guard = null)
 {
-    // Get the requested Authentication Guard instance.
-    $instance = Auth::guard($guard);
+    $guard = $guard ?: Config::get('auth.defaults.guard', 'users');
 
-    if ($instance->guest()) {
-        // The User is not authenticated; nothing to do.
+    if (Auth::guard($guard)->guest()) {
+        // The User is not authenticated.
         return;
-    } else if ($request->ajax() || $request->wantsJson()) {
+    }
+
+    if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Unauthorized Access', 401);
     }
 
-    return Redirect::to('admin/dashboard');
+    // Get the Guard's paths from configuration.
+    $dashboard = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+
+    return Redirect::to($dashboard);
 });

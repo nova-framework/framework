@@ -14,6 +14,7 @@ Dieser Inhalt kann in <code>/app/Views/Welcome/Welcome.php</code> geändert werd
   'If you have problems, please paste the above URL into your web browser.' => '',
   'If you spelled the URL manually, double check the spelling.' => '',
   'Internal Server Error' => '',
+  'Method not allowed' => '',
   'Open subpage' => 'Subpage öffnen',
   'Password Reset' => '',
   'Please verify your E-mail address' => '',
@@ -29,4 +30,5 @@ Dieser Inhalt kann in <code>/app/Views/Welcome/Welcome.php</code> geändert werd
   'Unauthorized' => '',
   'Welcome' => 'Willkommen',
   'You are not authorized to access this resource.' => '',
+  'Your session expired. Please try again!' => '',
 );

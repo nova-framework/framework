@@ -12,6 +12,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'If you have problems, please paste the above URL into your web browser.' => 'Hvis du har problemer skal du indsætte den ovenstående URL ind i din webbrowser.',
   'If you spelled the URL manually, double check the spelling.' => 'Hvis du har indtastet din URL manuelt bedes du tjekke den for evt fejl.',
   'Internal Server Error' => 'Intern serverfejl',
+  'Method not allowed' => '',
   'Open subpage' => 'Åben underside',
   'Password Reset' => 'Nulstil kodeord',
   'Please verify your E-mail address' => 'Bekræft venligst din mailadresse',
@@ -27,4 +28,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => '',
   'Welcome' => 'Velkommen',
   'You are not authorized to access this resource.' => 'Du har ikke tilladelse til at tilgå denne ressource',
+  'Your session expired. Please try again!' => '',
 );

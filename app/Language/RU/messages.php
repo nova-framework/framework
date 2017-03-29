@@ -14,6 +14,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'If you have problems, please paste the above URL into your web browser.' => 'Если у вас есть проблемы, пожалуйста, вставьте  URL выше в адресную строку браузера.',
   'If you spelled the URL manually, double check the spelling.' => 'Если вы ввели URL вручную, дважды проверьте правильность написания.',
   'Internal Server Error' => '',
+  'Method not allowed' => '',
   'Open subpage' => 'Открыть подстраницу',
   'Password Reset' => 'Сброс пароля',
   'Please verify your E-mail address' => 'Пожалуйста, подтвердите ваш email адрес',
@@ -29,4 +30,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => '',
   'Welcome' => 'Добро пожаловать!',
   'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
+  'Your session expired. Please try again!' => '',
 );

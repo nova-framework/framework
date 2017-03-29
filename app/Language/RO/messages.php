@@ -14,6 +14,7 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'If you have problems, please paste the above URL into your web browser.' => '',
   'If you spelled the URL manually, double check the spelling.' => '',
   'Internal Server Error' => '',
+  'Method not allowed' => '',
   'Open subpage' => 'Deschide subpagina',
   'Password Reset' => '',
   'Please verify your E-mail address' => '',
@@ -29,4 +30,5 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Unauthorized' => '',
   'Welcome' => 'Bun venit',
   'You are not authorized to access this resource.' => '',
+  'Your session expired. Please try again!' => '',
 );

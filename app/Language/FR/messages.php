@@ -14,6 +14,7 @@ Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.ph
   'If you have problems, please paste the above URL into your web browser.' => '',
   'If you spelled the URL manually, double check the spelling.' => '',
   'Internal Server Error' => '',
+  'Method not allowed' => '',
   'Open subpage' => 'Ouvrir la sous-page',
   'Password Reset' => '',
   'Please verify your E-mail address' => '',
@@ -29,4 +30,5 @@ Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.ph
   'Unauthorized' => '',
   'Welcome' => 'Bienvenue',
   'You are not authorized to access this resource.' => '',
+  'Your session expired. Please try again!' => '',
 );

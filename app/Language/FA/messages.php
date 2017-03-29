@@ -14,6 +14,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'If you have problems, please paste the above URL into your web browser.' => 'اگر مشکلی دارید، لطفا لینک بالا را در مرور گر وب خود وارد کنید.',
   'If you spelled the URL manually, double check the spelling.' => 'اگر URL را هجی کرده اید, دوباره آن را بررسی کنید',
   'Internal Server Error' => 'خطای داخلی سرور',
+  'Method not allowed' => '',
   'Open subpage' => 'بازکردن زیرصفحه',
   'Password Reset' => 'بازنشانی رمزعبور',
   'Please verify your E-mail address' => 'لطفا آدرس ایمیل خود را تایید کنید',
@@ -29,4 +30,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => '',
   'Welcome' => 'خوش امدید',
   'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید',
+  'Your session expired. Please try again!' => '',
 );

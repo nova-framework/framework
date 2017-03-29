@@ -12,6 +12,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'If you have problems, please paste the above URL into your web browser.' => '',
   'If you spelled the URL manually, double check the spelling.' => '',
   'Internal Server Error' => '',
+  'Method not allowed' => '',
   'Open subpage' => '',
   'Password Reset' => '',
   'Please verify your E-mail address' => '',
@@ -27,4 +28,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => '',
   'Welcome' => '',
   'You are not authorized to access this resource.' => '',
+  'Your session expired. Please try again!' => '',
 );

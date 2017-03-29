@@ -9,6 +9,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Home' => 'Strona główna',
   'If you have problems, please paste the above URL into your web browser.' => '',
   'Internal Server Error' => '',
+  'Method not allowed' => '',
   'More info' => '',
   'Open subpage' => 'Otwórz podstronę',
   'Password Reset' => '',

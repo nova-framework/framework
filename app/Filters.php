@@ -97,8 +97,8 @@ Route::filter('guest', function($route, $request, $guard = null)
         return Response::make('Unauthorized Access', 401);
     }
 
-    // Get the Guard's paths from configuration.
-    $dashboard = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+    // Get the Guard's dashboard path from configuration.
+    $path = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
 
-    return Redirect::to($dashboard);
+    return Redirect::to($path);
 });

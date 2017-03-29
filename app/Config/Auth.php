@@ -45,6 +45,16 @@ return array(
         'web' => array(
             'driver'   => 'session',
             'provider' => 'users',
+
+            'paths' => array(
+                'authorize' => 'login',
+                'dashboard' => 'admin/dashboard',
+
+                // The paths where the intended redirects can't be used.
+                'nonintend' => array(
+                    'logout',
+                ),
+            ),
         ),
         'api' => array(
             'driver'   => 'token',

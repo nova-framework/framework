@@ -53,7 +53,7 @@ Route::filter('csrf', function($route, $request)
 // Authentication Filters.
 Route::filter('auth', function($route, $request, $guard = null)
 {
-    $guard = $guard ?: Config::get('auth.defaults.guard', 'users');
+    $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
 
     if (Auth::guard($guard)->check()) {
         // The User is authenticated.
@@ -86,7 +86,7 @@ Route::filter('auth.basic', function($route, $request)
 
 Route::filter('guest', function($route, $request, $guard = null)
 {
-    $guard = $guard ?: Config::get('auth.defaults.guard', 'users');
+    $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
 
     if (Auth::guard($guard)->guest()) {
         // The User is not authenticated.

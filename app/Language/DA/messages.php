@@ -8,6 +8,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Home' => 'Hjem',
   'If you have problems, please paste the above URL into your web browser.' => 'Hvis du har problemer skal du indsætte den ovenstående URL ind i din webbrowser.',
   'Internal Server Error' => 'Intern server fejl',
+  'Method not allowed' => '',
   'More info' => '',
   'Open subpage' => 'Åben underside',
   'Password Reset' => 'Nulstil kodeord',

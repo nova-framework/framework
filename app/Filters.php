@@ -98,7 +98,7 @@ Route::filter('guest', function($route, $request, $guard = null)
     }
 
     // Get the Guard's paths from configuration.
-    $dashboard = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+    $path = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
 
-    return Redirect::to($dashboard);
+    return Redirect::to($path);
 });

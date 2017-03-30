@@ -37,8 +37,8 @@ Route::filter('csrf', function($route, $request)
     // Retrieve the CSRF token from Request instance.
     $token = $request->ajax() ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
 
-    if (Session::token() == $token) {
-        // The CSRF token match; nothing to do.
+    if ($token == Session::token()) {
+        // The CSRF token match.
         return;
     } else if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Bad Request', 400);
@@ -58,9 +58,7 @@ Route::filter('auth', function($route, $request, $guard = null)
     if (Auth::guard($guard)->check()) {
         // The User is authenticated.
         return;
-    }
-
-    if ($request->ajax() || $request->wantsJson()) {
+    } else if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Unauthorized Access', 401);
     }
 
@@ -91,14 +89,14 @@ Route::filter('guest', function($route, $request, $guard = null)
     if (Auth::guard($guard)->guest()) {
         // The User is not authenticated.
         return;
-    }
-
-    if ($request->ajax() || $request->wantsJson()) {
+    } else if ($request->ajax() || $request->wantsJson()) {
         return Response::make('Unauthorized Access', 401);
     }
 
-    // Get the Guard's dashboard path from configuration.
-    $path = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+    // Get the Guard's paths from configuration.
+    $paths = Config::get("auth.guards.{$guard}.paths", array(
+        'dashboard' => 'admin/dashboard'
+    ));
 
-    return Redirect::to($path);
+    return Redirect::to($paths['dashboard']);
 });

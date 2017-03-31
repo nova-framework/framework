@@ -57,7 +57,7 @@ return array (
   'Whether or not is used the Cryptography for connecting to the external SMTP Server.' => 'Используется или нет шифрование для подключения к внешнему серверу SMTP.',
   'Yellow' => 'Желтый',
   'Yellow Light' => 'Светло-жёлтый',
-  'You are not authorized to access this resource.' => '',
+  'You are not authorized to access this resource.' => 'У вас нет прав доступа к этому ресурсу.',
   'You have no unread notifications.' => 'Все уведомления прочитаны.',
   'executed.' => 'выполнено',
   'execution failed.' => 'не выполнено',

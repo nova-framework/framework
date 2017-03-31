@@ -57,6 +57,7 @@ return array (
   'Whether or not is used the Cryptography for connecting to the external SMTP Server.' => 'Angiv om der er eller ikke er brugt en kryptering og evt hvilken.',
   'Yellow' => 'Gul',
   'Yellow Light' => 'Lys Gul',
+  'You are not authorized to access this resource.' => '',
   'You have no unread notifications.' => 'Du har ingen ulæste notificationer',
   'executed.' => 'Udført',
   'execution failed.' => 'Udførelsen fejlede',

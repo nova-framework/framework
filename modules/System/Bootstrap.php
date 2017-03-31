@@ -21,38 +21,54 @@ App::error(function(ValidationException $exception, $code)
 /**
  * Permit the access only to Administrators.
  */
-Route::middleware('admin', function($request, Closure $next)
+Route::middleware('admin', function($request, Closure $next, $guard = null)
 {
-    $user = Auth::user();
+    $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
+
+    $user = Auth::guard($guard)->user();
 
     // Check the User Authorization - while using the Extended Auth Driver.
-    if ($user->hasRole('administrator')) {
-        return $next($request);
-    }
+    if (! is_null($user) && ! $user->hasRole('administrator')) {
+        if ($request->ajax() || $request->wantsJson()) {
+            // On an AJAX Request; just return Error 403 (Access denied)
+            return Response::make('Forbidden', 403);
+        }
 
-    if ($request->ajax()) {
-        // On an AJAX Request; just return Error 403 (Access denied)
-        return Response::make('', 403);
-    }
+        // Get the Guard's paths from configuration.
+        $paths = Config::get("auth.guards.{$guard}.paths", array(
+            'dashboard' => 'admin/dashboard'
+        ));
 
-    $status = __('You are not authorized to access this resource.');
-
-    return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-});
-
-// Role-based Authorization Middleware.
-Route::middleware('roles', function($request, Closure $next, $value) {
-    $user = Auth::user();
-
-    // Explode the passed value on array of accepted User Roles.
-    $roles = explode(';', $value);
-
-    if (! $user->hasRole($roles)) {
         $status = __('You are not authorized to access this resource.');
 
-        return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        return Redirect::to($paths['dashboard'])->withStatus($status, 'warning');
     }
 
     return $next($request);
 });
 
+/**
+ * Role-based Authorization Middleware.
+ */
+Route::middleware('role', function($request, Closure $next, $role)
+{
+    $roles = array_slice(func_get_args(), 2);
+
+    //
+    $guard = Config::get('auth.defaults.guard', 'web');
+
+    $user = Auth::guard($guard)->user();
+
+    if (! is_null($user) && ! $user->hasRole($roles)) {
+        // Get the Guard's paths from configuration.
+        $paths = Config::get("auth.guards.{$guard}.paths", array(
+            'dashboard' => 'admin/dashboard'
+        ));
+
+        $status = __d('system', 'You are not authorized to access this resource.');
+
+        return Redirect::to($paths['dashboard'])->withStatus($status, 'warning');
+    }
+
+    return $next($request);
+});

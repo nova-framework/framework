@@ -57,6 +57,7 @@ return array (
   'Whether or not is used the Cryptography for connecting to the external SMTP Server.' => '',
   'Yellow' => '',
   'Yellow Light' => '',
+  'You are not authorized to access this resource.' => '',
   'You have no unread notifications.' => '',
   'executed.' => '',
   'execution failed.' => '',

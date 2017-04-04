@@ -8,42 +8,18 @@
 
 namespace App\Http\Middleware;
 
-use Nova\Foundation\Application;
 use Nova\Forensics\Profiler;
 use Nova\Forensics\Statistics;
 use Nova\Http\Response;
+use Nova\Support\Facades\Config;
 
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use Closure;
 
 
 class HandleProfilers
 {
-    /**
-     * The application implementation.
-     *
-     * @var \Nova\Foundation\Application
-     */
-    protected $app;
-
-
-    /**
-     * Create a new FrameGuard instance.
-     *
-     * @param  \Nova\Foundation\Application  $app
-     * @return void
-     */
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
 
     /**
      * Handle the given request and get the response.
@@ -57,14 +33,7 @@ class HandleProfilers
     {
         $response = $next($request, $next);
 
-        // Get the debug flag from configuration.
-        $debug = $this->app['config']->get('app.debug', false);
-
-        if ($debug && $this->isHtmlResponse($response)) {
-            return $this->processResponse($response);
-        }
-
-        return $response;
+        return $this->processResponse($response);
     }
 
     /**
@@ -76,34 +45,37 @@ class HandleProfilers
      */
     protected function processResponse(SymfonyResponse $response)
     {
-        $searches = array(
-            '<!-- DO NOT DELETE! - Profiler -->',
-            '<!-- DO NOT DELETE! - Statistics -->',
-        );
+        // Get the debug flag from configuration.
+        $debug = Config::get('app.debug', false);
 
-        $replaces = array(
-            Profiler::process(true),
-            Statistics::getReport(),
-        );
+        if ($debug && $this->canPatchContent($response)) {
+            $content = str_replace(
+                array(
+                    '<!-- DO NOT DELETE! - Profiler -->',
+                    '<!-- DO NOT DELETE! - Statistics -->',
+                ),
+                array(
+                    Profiler::process(true),
+                    Statistics::getReport(),
+                ),
+                $response->getContent()
+            );
 
-        $content = str_replace($searches, $replaces, $response->getContent());
-
-        //
-        $response->setContent($content);
+            //
+            $response->setContent($content);
+        }
 
         return $response;
     }
 
-    protected function isHtmlResponse(SymfonyResponse $response)
+    protected function canPatchContent(SymfonyResponse $response)
     {
-        if (($response instanceof RedirectResponse) || ($response instanceof JsonResponse) || ($response instanceof BinaryFileResponse) || ($response instanceof StreamedResponse)) {
+        if ((! $response instanceof Response) && is_subclass_of($response, 'Symfony\Component\Http\Foundation\Response')) {
             return false;
         }
 
         $contentType = $response->headers->get('Content-Type');
 
-        if (! str_is('text/html*', $contentType)) return false;
-
-        return true;
+        return str_is('text/html*', $contentType);
     }
 }

@@ -37,7 +37,7 @@ Route::filter('csrf', function($route, $request)
     // Retrieve the CSRF token from Request instance.
     $token = $request->ajax() ? $request->header('X-CSRF-Token') : $request->input('csrfToken');
 
-    if ($token == Session::token()) {
+    if ($token === Session::token()) {
         // The CSRF token match.
         return;
     } else if ($request->ajax() || $request->wantsJson()) {

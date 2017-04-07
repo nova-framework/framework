@@ -18,7 +18,7 @@ trait PresentableTrait
      * Prepare a new or cached Presenter instance.
      *
      * @return mixed
-     * @throws \Plugins\Presenter\View\Exceptions\PresenterException
+     * @throws \Plugins\Presenter\Exceptions\PresenterException
      */
     public function present()
     {

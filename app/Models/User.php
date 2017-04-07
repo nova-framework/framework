@@ -13,13 +13,14 @@ use Nova\Auth\UserInterface;
 use Nova\Auth\Reminders\RemindableTrait;
 use Nova\Auth\Reminders\RemindableInterface;
 use Nova\Database\ORM\Model as BaseModel;
+use Nova\Foundation\Auth\Access\AuthorizableTrait;
 
 use Shared\Database\ORM\FileField\FileFieldTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, FileFieldTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, FileFieldTrait;
 
     //
     protected $table = 'users';

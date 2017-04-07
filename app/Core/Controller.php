@@ -8,6 +8,7 @@
 
 namespace App\Core;
 
+use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
 use Nova\Http\Response;
 use Nova\Routing\Controller as BaseController;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
@@ -23,6 +24,8 @@ use BadMethodCallException;
 
 abstract class Controller extends BaseController
 {
+    use AuthorizeRequestsTrait;
+    
     /**
      * The currently used Theme.
      *

@@ -111,7 +111,7 @@ class Demos extends ThemedController
         $content .= '<pre>' .e(var_export(array('uri' => $uri, 'path' => Assets::dispatch($uri)), true)) .'</pre>';
 
         //
-        $content = '<pre>' .e(var_export(Session::all(), true)) .'</pre>';
+        $content .= '<pre>' .e(var_export(Session::all(), true)) .'</pre>';
 
         $content .= '<pre>' .e(var_export(Request::cookie(PREFIX .'language'), true)) .'</pre>';
 

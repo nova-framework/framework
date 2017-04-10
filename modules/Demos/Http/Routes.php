@@ -32,4 +32,4 @@ $router->group(array('prefix' => 'demo'), function($router)
 
 
 // A catch-all Route - will match any URI, while using any HTTP Method.
-//$router->any('{slug}', 'App\Controllers\Demo@catchAll')->where('slug', '(.*)');
+//$router->any('{slug}', 'Demos@catchAll')->where('slug', '(.*)');

@@ -36,7 +36,7 @@ class Users extends BackendController
         $this->beforeFilter('@adminUsersFilter');
     }
 
-    protected function validate(array $data, $id = null)
+    protected function validator(array $data, $id = null)
     {
         if (! is_null($id)) {
             $ignore = ',' .intval($id);
@@ -95,7 +95,7 @@ class Users extends BackendController
     public function index()
     {
         // Get all User records for current page.
-        $users = User::where('active', 1)->paginate(25);
+        $users = User::where('activated', 1)->paginate(25);
 
         return $this->getView()
             ->shares('title', __d('users', 'Users'))
@@ -117,7 +117,7 @@ class Users extends BackendController
         // Validate the Input data.
         $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email');
 
-        $validator = $this->validate($input);
+        $validator = $this->validator($input);
 
         if($validator->passes()) {
             // Encrypt the given Password.
@@ -125,12 +125,12 @@ class Users extends BackendController
 
             // Create a User Model instance.
             User::create(array(
-                'username' => $input['username'],
-                'password' => $password,
-                'role_id'  => $input['role'],
-                'realname' => $input['realname'],
-                'email'    => $input['email'],
-                'active'   => 1,
+                'username'  => $input['username'],
+                'password'  => $password,
+                'role_id'   => $input['role'],
+                'realname'  => $input['realname'],
+                'email'     => $input['email'],
+                'activated' => 1,
             ));
 
             // Prepare the flash message.
@@ -203,7 +203,7 @@ class Users extends BackendController
             unset($input['password_confirmation']);
         }
 
-        $validator = $this->validate($input, $id);
+        $validator = $this->validator($input, $id);
 
         if($validator->passes()) {
             $origName = $user->username;

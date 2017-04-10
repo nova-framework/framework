@@ -3,6 +3,8 @@
  * Backend Default Layout
  */
 
+$siteName = Config::get('app.name', SITETITLE);
+
 // Prepare the current User Info.
 $user = Auth::user();
 
@@ -36,7 +38,7 @@ $langMenuLinks = ob_get_clean();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
+    <title><?= $title; ?> | <?= $siteName; ?></title>
     <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -45,7 +47,7 @@ $langMenuLinks = ob_get_clean();
         // Bootstrap 3.3.5
         vendor_url('bootstrap/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Font Awesome
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
@@ -106,7 +108,7 @@ $langMenuLinks = ob_get_clean();
     <nav class="navbar navbar-static-top" role="navigation">
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-        <span class="sr-only">Toggle navigation</span>
+        <span class="sr-only"><?= __d('admin_lite', 'Toggle navigation'); ?></span>
       </a>
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
@@ -193,9 +195,7 @@ $langMenuLinks = ob_get_clean();
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      <?php if(Config::get('app.debug')) { ?>
       <small><!-- DO NOT DELETE! - Profiler --></small>
-      <?php } ?>
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= $version; ?> / Kernel <?= VERSION; ?></b></a> - </strong> All rights reserved.

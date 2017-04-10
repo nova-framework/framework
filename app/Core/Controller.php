@@ -9,13 +9,13 @@
 namespace App\Core;
 
 use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
-use Nova\Http\Response;
+use Nova\Foundation\Validation\ValidateRequestsTrait;
 use Nova\Routing\Controller as BaseController;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\Config;
-use Nova\Support\Facades\View as ViewFactory;
+use Nova\Support\Facades\Response;
+use Nova\Support\Facades\View;
 use Nova\View\Layout;
-use Nova\View\View;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -24,8 +24,8 @@ use BadMethodCallException;
 
 abstract class Controller extends BaseController
 {
-    use AuthorizeRequestsTrait;
-    
+    use AuthorizeRequestsTrait, ValidateRequestsTrait;
+
     /**
      * The currently used Theme.
      *
@@ -48,38 +48,34 @@ abstract class Controller extends BaseController
     {
         // Setup the used Theme to default, if it is not already defined.
         if (! isset($this->theme)) {
-            $this->theme = Config::get('app.theme');
+            $this->theme = Config::get('app.theme', 'Bootstrap');
         }
     }
 
     /**
-     * Create from the given result a Response instance and send it.
+     * Method executed after any action.
      *
      * @param mixed  $response
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function processResponse($response)
+    protected function after($response)
     {
         if ($response instanceof Renderable) {
             // If the response which is returned from the called Action is a Renderable instance,
             // we will assume we want to render it using the Controller's themed environment.
 
-            if ((! $response instanceof Layout) && is_string($this->layout) && ! empty($this->layout)) {
-                $response = ViewFactory::makeLayout($this->layout, $this->theme)
-                    ->with('content', $response);
+            if ((! $response instanceof Layout) && ! empty($this->layout)) {
+                $response = $this->getLayout()->with('content', $response);
             }
 
-            // Create a proper Response instance.
-            $response = new Response($response->render(), 200, array('Content-Type' => 'text/html'));
+            // Create and return a proper Response instance.
+            $content = $response->render();
+
+            return Response::make($content);
         }
 
-        // If the response is not a instance of Symfony Response, create a proper one.
-        if (! $response instanceof SymfonyResponse) {
-            $response = new Response($response);
-        }
-
-        return $response;
+        return parent::after($response);
     }
 
     /**
@@ -100,7 +96,7 @@ abstract class Controller extends BaseController
         if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
             $view = $matches[1] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data, '', $this->theme);
+            return View::make($view, $data, '', $this->theme);
         }
 
         // Retrieve the Modules namespace from their configuration.
@@ -115,7 +111,7 @@ abstract class Controller extends BaseController
 
             $view = $matches[2] .'/' .ucfirst($method);
 
-            return ViewFactory::make($view, $data, $module, $this->theme);
+            return View::make($view, $data, $module, $this->theme);
         }
 
         // If we arrived there, the called class is not a Controller; go Exception.
@@ -135,38 +131,21 @@ abstract class Controller extends BaseController
     /**
      * Return a Layout instance.
      *
-     * @param string|null $layout
-     * @param array $data
-     *
-     * @return \Theme\Theme|\View\View
-     * @throws \BadMethodCallException
+     * @return \View\Layout
      */
-    public function getLayout($layout = null, array $data = array())
+    public function getLayout()
     {
-        // Adjust the current used Layout.
-        $layout = $layout ?: $this->layout;
-
-        if ($layout instanceof View) {
-            return $layout->with($data);
-        } else if (is_string($layout)) {
-            return LayoutFactory::make($layout, $data, $this->theme);
-        }
-
-        throw new BadMethodCallException('Method not available for the current Layout');
+        return View::createLayout($this->layout, $this->theme);
     }
 
     /**
-     * Return the current Layout (class) name.
+     * Return the current Layout name.
      *
      * @return string
      */
     public function getLayoutName()
     {
-        if ($this->layout instanceof View) {
-            return class_name($this->layout);
-        } else if (is_string($this->layout)) {
-            return $this->layout;
-        }
+        return $this->layout;
     }
 
 }

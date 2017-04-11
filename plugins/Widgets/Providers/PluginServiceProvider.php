@@ -33,7 +33,7 @@ class PluginServiceProvider extends ServiceProvider
         // Register the Plugin's Facades.
         $loader = AliasLoader::getInstance();
 
-        $loader->alias('widget', 'Plugins\Widgets\Facades\Widget');
+        $loader->alias('Widget', 'Plugins\Widgets\Facades\Widget');
     }
 
     /**

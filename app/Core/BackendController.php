@@ -11,6 +11,7 @@ namespace App\Core;
 use Nova\Http\Request;
 use Nova\Routing\Route;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\View;
@@ -38,10 +39,14 @@ abstract class BackendController extends BaseController
     /**
      * A Before Filter which permit the access to Administrators.
      */
-    public function adminUsersFilter(Route $route, Request $request)
+    public function adminUsersFilter(Route $route, Request $request, $guard = null)
     {
-        // Check the User Authorization - while using the Extended Auth Driver.
-        if (! Auth::user()->hasRole('administrator')) {
+        $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
+
+        // Check the User Authorization.
+        $user = Auth::guard($guard)->user();
+
+        if (! is_null($user) && ! $user->hasRole('administrator')) {
             $status = __('You are not authorized to access this resource.');
 
             return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
@@ -53,23 +58,18 @@ abstract class BackendController extends BaseController
      */
     protected function before()
     {
-        if (! Auth::check()) {
-            // No further processing for the non authenticated users.
-            return;
-        }
-
-        // The User is logged in; setup the Backend Menu.
-        $user = Auth::user();
-
-        //
-        $items = $this->getMenuItems($user);
-
-        View::share('menuItems', $items);
+        // Setup the main Menu.
+        View::share('menuItems', $this->getMenuItems());
     }
 
-    protected function getMenuItems($user)
+    protected function getMenuItems()
     {
-        $items = array();
+        $user = Auth::user();
+
+        if (is_null($user)) {
+            // The User is not authenticated.
+            return array();
+        }
 
         // Prepare the Event payload.
         $payload = array($user);
@@ -78,6 +78,8 @@ abstract class BackendController extends BaseController
         $results = Event::fire('backend.menu', $payload);
 
         // Merge all results on a menu items array.
+        $items = array();
+
         foreach ($results as $result) {
             if (is_array($result) && ! empty($result)) {
                 $items = array_merge($items, $result);
@@ -85,11 +87,10 @@ abstract class BackendController extends BaseController
         }
 
         // Sort the menu items by their weight and title.
-        if (! empty($items)) {
-            $items = array_sort($items, function($value) {
-                return $value['weight'] .' - ' .$value['title'];
-            });
-        }
+        $items = array_sort($items, function($value)
+        {
+            return $value['weight'] .' - ' .$value['title'];
+        });
 
         return $items;
     }

@@ -33,7 +33,7 @@ class Roles extends BackendController
         $this->beforeFilter('@adminUsersFilter');
     }
 
-    protected function validate(array $data, $id = null)
+    protected function validator(array $data, $id = null)
     {
         if (! is_null($id)) {
             $ignore = ',' .intval($id);
@@ -90,7 +90,7 @@ class Roles extends BackendController
         // Validate the Input data.
         $input = Input::only('name', 'slug', 'description');
 
-        $validator = $this->validate($input);
+        $validator = $this->validator($input);
 
         if($validator->passes()) {
             // Create a Role Model instance.
@@ -157,7 +157,7 @@ class Roles extends BackendController
         // Validate the Input data.
         $input = Input::only('name', 'slug', 'description');
 
-        $validator = $this->validate($input, $id);
+        $validator = $this->validator($input, $id);
 
         if($validator->passes()) {
             $origName = $role->name;

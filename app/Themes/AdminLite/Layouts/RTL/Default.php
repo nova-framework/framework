@@ -3,6 +3,8 @@
  * Frontend Default RTL Layout
  */
 
+$siteName = Config::get('app.name', SITETITLE);
+
 // Generate the Language Changer menu.
 $langCode = Language::code();
 $langName = Language::name();
@@ -27,7 +29,7 @@ $langMenuLinks = ob_get_clean();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= $title; ?> | <?= Config::get('app.name', SITETITLE); ?></title>
+    <title><?= $title; ?> | <?= $siteName; ?></title>
     <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -36,7 +38,7 @@ $langMenuLinks = ob_get_clean();
         // Bootstrap 3.3.5
         theme_url('css/bootstrap-rtl.min.css', 'Default'),
         // Font Awesome
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
         // Ionicons
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Theme style
@@ -71,7 +73,7 @@ $langMenuLinks = ob_get_clean();
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= Config::get('app.name', SITETITLE); ?></strong></a>
+          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= $siteName; ?></strong></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
@@ -127,9 +129,7 @@ $langMenuLinks = ob_get_clean();
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      <?php if(Config::get('app.debug')) { ?>
       <small><!-- DO NOT DELETE! - Profiler --></small>
-      <?php } ?>
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= $version; ?> / Kernel <?= VERSION; ?></b></a> - </strong> All rights reserved.

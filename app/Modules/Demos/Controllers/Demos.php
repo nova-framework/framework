@@ -192,7 +192,7 @@ class Demos extends Controller
             ->with('content', $content);
     }
 
-    public function validate()
+    public function validation()
     {
         $data = array(
             'username' => 'michael',
@@ -226,7 +226,7 @@ class Demos extends Controller
             ->with('content', $content);
     }
 
-    public function paginate()
+    public function pagination()
     {
         $paginate = DB::table('posts')->paginate(2);
 

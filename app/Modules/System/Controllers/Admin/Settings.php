@@ -30,7 +30,7 @@ class Settings extends BackendController
         $this->beforeFilter('@adminUsersFilter');
     }
 
-    protected function validate(array $data)
+    protected function validator(array $data)
     {
         // Validation rules
         $rules = array(
@@ -97,7 +97,7 @@ class Settings extends BackendController
         // Validate the Input data.
         $input = Input::all();
 
-        $validator = $this->validate($input);
+        $validator = $this->validator($input);
 
         if($validator->passes()) {
             // The Application.

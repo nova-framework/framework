@@ -30,7 +30,7 @@ class Registrar extends BackendController
     protected $layout = 'Default';
 
 
-    protected function validate(array $data)
+    protected function validator(array $data)
     {
         // Validation rules.
         $rules = array(
@@ -106,7 +106,7 @@ class Registrar extends BackendController
         }
 
         // Create a Validator instance.
-        $validator = $this->validate($input);
+        $validator = $this->validator($input);
 
         if ($validator->fails()) {
             // Errors occurred on Validation.
@@ -163,14 +163,14 @@ class Registrar extends BackendController
      */
     public function verify($token)
     {
-        $user = User::where('activation_code', $token)->where('active', '=', 0);
+        $query = User::where('activation_code', $token)->where('activated', '=', 0);
 
         // If the User is available.
-        if ($user->count()) {
-            $user = $user->first();
+        if ($query->count() > 0) {
+            $user = $query->first();
 
             // Update the User status to active.
-            $user->active = 1;
+            $user->activated = 1;
 
             $user->activation_code = null;
 

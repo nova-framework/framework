@@ -90,6 +90,7 @@ return array (
   'Sign up' => 'عضویت',
   'Slug' => '',
   'The :attribute field is invalid.' => '',
+  'The :attribute field is not a valid location.' => '',
   'The :attribute field is not a valid name.' => '',
   'The :attribute field is not a valid query string.' => '',
   'The :attribute field is not strong enough.' => 'فیلد :attribute به اندازه کافی قوی نیست.',

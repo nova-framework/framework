@@ -41,6 +41,7 @@ The base framework comes with a range of [helper classes](https://github.com/nov
 - Fileinfo (edit php.ini and uncomment php_fileinfo.dll or use php selector within cpanel if available.)
 - OpenSSL
 - INTL
+- MBString
 
 > **Note:** Although a database is not required, if a database is to be used, the system is designed to work with a MySQL database using PDO.
 

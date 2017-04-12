@@ -90,6 +90,7 @@ return array (
   'Sign up' => 'Tilmeld',
   'Slug' => '',
   'The :attribute field is invalid.' => ':attribute feltet er ugyldigt',
+  'The :attribute field is not a valid location.' => '',
   'The :attribute field is not a valid name.' => ':attribute feltet er ikke et gyldigt navn.',
   'The :attribute field is not a valid query string.' => ':attribute feltet er ikke et gyldigt query string.',
   'The :attribute field is not strong enough.' => ':attribute feltet er ikke stærkt nok.',

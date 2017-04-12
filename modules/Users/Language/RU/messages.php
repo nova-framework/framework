@@ -90,6 +90,7 @@ return array (
   'Sign up' => 'Зарегистрироваться',
   'Slug' => '',
   'The :attribute field is invalid.' => 'Неправильное поле :attribute',
+  'The :attribute field is not a valid location.' => '',
   'The :attribute field is not a valid name.' => 'Поле :attribute имеет неправильное имя',
   'The :attribute field is not a valid query string.' => 'Поле :attribute имеет неправильную строку запроса',
   'The :attribute field is not strong enough.' => 'Поле :attribute не достаточно сильное',

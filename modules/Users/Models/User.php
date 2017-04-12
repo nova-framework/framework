@@ -17,6 +17,7 @@ use Nova\Database\ORM\Model as BaseModel;
 use Plugins\FileField\Database\ORM\FileFieldTrait;
 use Plugins\Presenter\PresentableTrait;
 
+use Modules\Chatty\Traits\ChattyUserTrait;
 use Modules\Messages\Traits\HasMessagesTrait;
 use Modules\System\Traits\HasNotificationsTrait;
 use Modules\Users\Traits\HasRoleTrait;
@@ -24,7 +25,7 @@ use Modules\Users\Traits\HasRoleTrait;
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, HasRoleTrait, FileFieldTrait, HasMessagesTrait, HasNotificationsTrait, PresentableTrait;
+    use UserTrait, RemindableTrait, HasRoleTrait, FileFieldTrait, HasMessagesTrait, HasNotificationsTrait, ChattyUserTrait, PresentableTrait;
 
     //
     protected $table = 'users';

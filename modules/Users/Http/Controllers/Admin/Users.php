@@ -55,7 +55,7 @@ class Users extends BackendController
             'role'                  => 'required|numeric|exists:roles,id',
             'first_name'            => 'required|min:4|max:100|valid_name',
             'last_name'             => 'required|min:4|max:100|valid_name',
-            'location'              => 'min:2|max:100|valid_name',
+            'location'              => 'min:2|max:100|valid_location',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email|unique:users,email' .$ignore,
@@ -64,6 +64,7 @@ class Users extends BackendController
 
         $messages = array(
             'valid_name'      => __d('users', 'The :attribute field is not a valid name.'),
+            'valid_location'  => __d('users', 'The :attribute field is not a valid location.'),
             'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
         );
 
@@ -83,6 +84,13 @@ class Users extends BackendController
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
             $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+
+            return (preg_match($pattern, $value) === 1);
+        });
+
+        Validator::extend('valid_location', function($attribute, $value, $parameters)
+        {
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\',\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });

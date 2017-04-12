@@ -2,10 +2,8 @@
 
 return array (
   'ADMINISTRATION' => '',
-  'Administration' => '',
   'Control Panel' => '',
   'Forgot Password?' => '',
-  'Friends' => '',
   'Logout' => '',
   'Member since {0}' => '',
   'Messages' => '',
@@ -14,5 +12,4 @@ return array (
   'Sign In' => '',
   'Sign Up' => '',
   'Sign out' => '',
-  'Timeline' => '',
 );

@@ -35,13 +35,13 @@ Event::listen('backend.menu', function($user)
                 ),
                 array(
                     'uri'    => 'admin/roles',
-                    'title'  => __d('system', 'User Roles'),
+                    'title'  => __d('users', 'User Roles'),
                     'label'  => '',
                     'weight' => 2,
                 ),
                 array(
                     'uri'    => 'admin/roles/create',
-                    'title'  => __d('system', 'Create a new Role'),
+                    'title'  => __d('users', 'Create a new Role'),
                     'label'  => '',
                     'weight' => 3,
                 ),

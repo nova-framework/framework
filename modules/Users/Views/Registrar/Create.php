@@ -69,7 +69,7 @@
 <script type="text/javascript">
 
 var captchaCallback = function() {
-    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get("reCaptcha.siteKey"); ?>'});
+    recaptcha.render('captcha', {'sitekey' : '<?= Config::get("reCaptcha.siteKey"); ?>'});
 };
 
 </script>

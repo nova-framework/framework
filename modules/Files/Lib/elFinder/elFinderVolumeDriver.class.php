@@ -580,7 +580,7 @@ abstract class elFinderVolumeDriver {
 	 **/
 	public function mount(array $opts) {
 		if (!isset($opts['path']) || $opts['path'] === '') {
-			return $this->setError('Path undefined.');;
+			return $this->setError('Path undefined.');
 		}
 		
 		$this->options = array_merge($this->options, $opts);

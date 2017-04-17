@@ -102,7 +102,7 @@ $langMenuLinks = ob_get_clean();
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
-      </a>$menuItems
+      </a>
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav" style="margin-right: 10px;">

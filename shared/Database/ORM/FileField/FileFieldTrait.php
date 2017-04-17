@@ -3,6 +3,8 @@
 namespace Shared\Database\ORM\FileField;
 
 use Nova\Database\ORM\Model;
+use Nova\Support\Facades\File;
+use Nova\Support\Facades\Log;
 use Nova\Support\Str;
 
 use Shared\Database\ORM\FileField\FileField;
@@ -38,12 +40,12 @@ trait FileFieldTrait
                     }
 
                     try {
-                        app('files')->delete($filePath);
+                        File::delete($filePath);
                     }
 
                     // Catch all exceptions.
                     catch (Exception $e) {
-                        app('log')->error($e->getMessage());
+                        Log::error($e->getMessage());
                     }
                 }
             }

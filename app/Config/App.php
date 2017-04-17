@@ -105,6 +105,7 @@ return array(
         'App\Providers\AuthServiceProvider',
         'App\Providers\EventServiceProvider',
         'App\Providers\RouteServiceProvider',
+        'App\Providers\ThemeServiceProvider',
     ),
 
     /**

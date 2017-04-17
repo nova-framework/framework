@@ -57,7 +57,7 @@
 <script type="text/javascript">
 
 var captchaCallback = function() {
-    recaptcha.render('captcha', {'sitekey' : '<?= Config::get("reCaptcha.siteKey"); ?>'});
+    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get("reCaptcha.siteKey"); ?>'});
 };
 
 </script>

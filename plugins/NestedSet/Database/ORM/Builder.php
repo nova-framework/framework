@@ -111,12 +111,9 @@ class Builder extends BaseBuilder
     /**
      * Get ancestors of specified node.
      *
-     * @since 2.0
-     *
-     * @param mixed $id
+     * @param $id
      * @param array $columns
-     *
-     * @return \Kalnoy\Nestedset\Collection
+     * @return Packages\NestedSet\Database\ORM\Collection
      */
     public function ancestorsOf($id, array $columns = array('*'))
     {
@@ -213,12 +210,9 @@ class Builder extends BaseBuilder
     /**
      * Get descendants of specified node.
      *
-     * @since 2.0
-     *
-     * @param mixed $id
+     * @param $id
      * @param array $columns
-     *
-     * @return \Kalnoy\Nestedset\Collection
+     * @return Packages\NestedSet\Database\ORM\Collection
      */
     public function descendantsOf($id, array $columns = array('*'))
     {

@@ -114,7 +114,7 @@ $langMenuLinks = ob_get_clean();
           </li>
           <li <?php if($baseUri == 'admin/notifications') echo 'class="active"'; ?>>
             <a href="<?= site_url('admin/notifications'); ?>" title="<?= __d('admin_lite', 'Notifications'); ?>">
-              <i class='fa fa-bell'></i></span>  <span class="hidden-xs"><?= __d('admin_lite', 'Notifications'); ?></span>
+              <i class='fa fa-bell'></i>  <span class="hidden-xs"><?= __d('admin_lite', 'Notifications'); ?></span>
               <?php if (isset($notificationCount) && ($notificationCount > 0)) echo '<span class="label label-danger">' .$notificationCount .'</span>'; ?>
             </a>
           </li>

@@ -3,6 +3,8 @@
 namespace Shared\Database\ORM\FileField;
 
 use Nova\Database\ORM\Model;
+use Nova\Support\Facades\App;
+use Nova\Support\Facades\Log;
 use Nova\Support\Str;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -53,7 +55,7 @@ class FileField implements JsonSerializable
      */
     public function __construct(Model $model, $key, $fileName = null)
     {
-        $config = app('config');
+        $config = App::make('config');
 
         // If filename wasn't given, take it from the model
         if ($model->exists) {
@@ -77,7 +79,7 @@ class FileField implements JsonSerializable
 
         $this->fileName = $fileName;
 
-        $this->files = app('files');
+        $this->files = App::make('files');
     }
 
     /**
@@ -92,7 +94,7 @@ class FileField implements JsonSerializable
         //
         $className = class_basename($this->model);
 
-        $classSlug = Str::slug(snake_case(str_plural($className)));
+        $classSlug = Str::slug(Str::snake(Str::plural($className)));
 
         //
         $search = array(':extension', ':attribute', ':unique_id', ':class_slug', ':file_name');
@@ -157,7 +159,7 @@ class FileField implements JsonSerializable
 
         // Catch all exceptions.
         catch (Exception $e) {
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
         }
     }
 

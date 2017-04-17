@@ -113,7 +113,7 @@ class Builder extends BaseBuilder
      *
      * @param $id
      * @param array $columns
-     * @return \Nova\Database\ORM\Collection|static[]
+     * @return Packages\NestedSet\Database\ORM\Collection
      */
     public function ancestorsOf($id, array $columns = array('*'))
     {
@@ -212,7 +212,7 @@ class Builder extends BaseBuilder
      *
      * @param $id
      * @param array $columns
-     * @return \Nova\Database\ORM\Collection|Collection|static[]
+     * @return Packages\NestedSet\Database\ORM\Collection
      */
     public function descendantsOf($id, array $columns = array('*'))
     {

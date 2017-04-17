@@ -15,13 +15,13 @@ use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\View;
 
-use App\Core\ThemedController as BaseController;
+use App\Core\ThemedController;
 
 use Modules\Messages\Models\Message;
 use Modules\System\Models\Notification;
 
 
-abstract class BackendController extends BaseController
+abstract class BackendController extends ThemedController
 {
     /**
      * The currently used Template.

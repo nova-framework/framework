@@ -212,7 +212,7 @@ class Builder extends BaseBuilder
      *
      * @param $id
      * @param array $columns
-     * @return Packages\NestedSet\Database\ORM\Collection
+     * @return \Plugins\NestedSet\Database\ORM\Collection
      */
     public function descendantsOf($id, array $columns = array('*'))
     {

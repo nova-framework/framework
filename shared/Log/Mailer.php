@@ -26,7 +26,7 @@ class Mailer
         // Prepare the instances for Swift Mailer and Message.
         $swiftMailer = $app['mailer']->getSwiftMailer();
 
-        $swiftMessage = Swift_Message::newInstance('[Log] ERROR!')
+        $swiftMessage = Swift_Message::newInstance(SITETITLE.' [Log] ERROR!')
             ->setContentType('text/html')
             ->setFrom($config['address'], $config['name'])
             ->setTo(SITEEMAIL);

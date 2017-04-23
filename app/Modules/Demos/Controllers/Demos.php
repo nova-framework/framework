@@ -243,37 +243,49 @@ class Demos extends Controller
         }, range(1, 100));
 
         //
-        $perPage = 5;
+        if (Input::get('mode', 'default') == 'simple') {
+            $defaultMode = false;
+        } else {
+            $defaultMode = true;
+        }
 
+        //
         $page = Input::get('offset', 1);
 
         if (($page > count($items)) || ($page < 1)) {
             $page = 1;
         }
 
-        // Standard Pagination.
-        $offset = ($page * $perPage) - $perPage;
+        //
+        $perPage = 5;
 
-        $slices = array_slice($items, $offset, $perPage);
+        if ($defaultMode) {
+            // We use the Standard Pagination.
+            $offset = ($page * $perPage) - $perPage;
 
-        $posts = Paginator::make($slices, count($items), $perPage);
+            $slices = array_slice($items, $offset, $perPage);
 
-        /*
-        // Simple Pagination.
-        $offset = ($page - 1) * $perPage;
+            $posts = Paginator::make($slices, count($items), $perPage);
+        } else {
+            // We use the Simple Pagination.
+            $offset = ($page - 1) * $perPage;
 
-        $slices = array_slice($items, $offset, $perPage + 1);
+            $slices = array_slice($items, $offset, $perPage + 1);
 
-        $posts = Paginator::make($slices, $perPage);
-        */
+            $posts = Paginator::make($slices, $perPage);
+        }
 
         //
+        $posts->appends(array(
+            'mode' => $defaultMode ? 'default' : 'simple',
+        ));
+
         $content = $posts->links();
 
         foreach ($posts->getItems() as $post) {
             $content .= '<h4><a href="' .site_url($post['url']) .'"><strong>' .$post['name'] .'</strong></a></h4>';
 
-            $content .= '<p>' .$post['body'] .'</p>';
+            $content .= '<p style="text-align: justify">' .$post['body'] .'</p><br>';
         }
 
         $content .= $posts->links();

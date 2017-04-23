@@ -111,9 +111,9 @@ define('SITETITLE', $app['config']['app.name']);
 define('LANGUAGE_CODE', $app['config']['app.locale']);
 
 /**
- * Set the default template.
+ * Set the default theme.
  */
-define('TEMPLATE', $app['config']['app.template']);
+define('THEME', $app['config']['app.theme']);
 
 /**
  * Set a Site administrator email address.

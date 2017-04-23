@@ -18,6 +18,7 @@ use Hash;
 use Input;
 use Mailer;
 use Module;
+use Paginator;
 use Redirect;
 use Request;
 use Session;
@@ -228,20 +229,54 @@ class Demos extends Controller
 
     public function pagination()
     {
-        $paginate = DB::table('users')->paginate(2);
+        // Populate the items.
+        $items = array_map(function ($value)
+        {
+            $data = array(
+                'name' => 'Blog post #' .$value,
+                'url'  => 'posts/' .$value,
+                'body' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi bibendum viverra aliquet. Cras sed auctor erat. Curabitur lobortis lacinia risus, et imperdiet dolor vehicula ac. Nullam venenatis lectus non nisl molestie iaculis. Pellentesque eleifend porta arcu et efficitur. Praesent pulvinar non nulla vitae consectetur. Curabitur a odio nec neque euismod luctus. Curabitur euismod felis sed lacus tempor pharetra.',
+            );
 
-        $paginate->appends(array(
-            'testing'  => 1,
-            'example' => 'the_example_string',
-        ));
+            return $data;
 
-        $content = $paginate->links();
+        }, range(1, 100));
 
-        foreach ($paginate as $post) {
-            $content .= '<h3>' .$post->username .'</h3>';
+        //
+        $perPage = 5;
 
-            $content .= '<br><br>';
+        $page = Input::get('offset', 1);
+
+        if (($page > count($items)) || ($page < 1)) {
+            $page = 1;
         }
+
+        // Standard Pagination.
+        $offset = ($page * $perPage) - $perPage;
+
+        $slices = array_slice($items, $offset, $perPage);
+
+        $posts = Paginator::make($slices, count($items), $perPage);
+
+        /*
+        // Simple Pagination.
+        $offset = ($page - 1) * $perPage;
+
+        $slices = array_slice($items, $offset, $perPage + 1);
+
+        $posts = Paginator::make($slices, $perPage);
+        */
+
+        //
+        $content = $posts->links();
+
+        foreach ($posts->getItems() as $post) {
+            $content .= '<h4><a href="' .site_url($post['url']) .'"><strong>' .$post['name'] .'</strong></a></h4>';
+
+            $content .= '<p>' .$post['body'] .'</p>';
+        }
+
+        $content .= $posts->links();
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Pagination'))

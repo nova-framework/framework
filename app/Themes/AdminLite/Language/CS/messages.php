@@ -11,4 +11,5 @@ return array (
   'Sign In' => '',
   'Sign Up' => '',
   'Sign out' => '',
+  'Toggle navigation' => '',
 );

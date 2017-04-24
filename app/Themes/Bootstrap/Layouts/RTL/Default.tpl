@@ -2,7 +2,7 @@
 <html lang="{{ Language::code() }}">
 <head>
     <meta charset="utf-8">
-    <title>{{ $title }} - {{ Config::get('app.name') }}</title>
+    <title>{{ $title or __d('bootstrap', 'Page') }} - {{ Config::get('app.name') }}</title>
     {{ $meta or '' }}
 
 @php

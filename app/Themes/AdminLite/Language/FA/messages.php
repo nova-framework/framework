@@ -11,4 +11,5 @@ return array (
   'Sign In' => 'ورود',
   'Sign Up' => 'عضویت',
   'Sign out' => 'خروج',
+  'Toggle navigation' => '',
 );

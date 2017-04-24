@@ -11,4 +11,5 @@ return array (
   'Sign In' => 'Вход',
   'Sign Up' => 'Регистрация',
   'Sign out' => 'Выход',
+  'Toggle navigation' => '',
 );

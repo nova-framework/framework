@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  'Autoload' => '',
   'Cache' => '',
   'Database API' => '',
   'Enabled' => 'Aktiver',

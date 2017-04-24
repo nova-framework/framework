@@ -2,14 +2,14 @@
 
 @section('header')
     @partial('Partials/Navbar', 'Bootstrap')
-@stop
+@show
 
 @section('content')
     @partial('Partials/Logo', 'Bootstrap')
-    
+
     @parent
 @stop
 
 @section('footer')
     @partial('Partials/Footer', 'Bootstrap')
-@stop
+@show

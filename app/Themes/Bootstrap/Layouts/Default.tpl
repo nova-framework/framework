@@ -21,7 +21,7 @@ Assets::css(array(
 <body>
 
 @section('header')
-@show
+@stop
 
 {{ $afterBody or '' }}
 
@@ -32,7 +32,7 @@ Assets::css(array(
 </div>
 
 @section('footer')
-@show
+@stop
 
 @php
 

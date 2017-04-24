@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  'Autoload' => 'Автозагрузка',
   'Cache' => 'Кэш',
   'Database API' => '',
   'Enabled' => 'Доступно',

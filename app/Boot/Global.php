@@ -25,29 +25,19 @@ App::error(function(HttpException $exception)
 
     $headers = $exception->getHeaders();
 
-    if (Request::ajax()) {
+    if (Request::ajax() || Request::wantsJson()) {
         // An AJAX request; we'll create a JSON Response.
         $content = array('status' => $code);
 
         return Response::json($content, $code, $headers);
     }
 
-    // Retrieve the Application version.
-    $path = ROOTDIR .'VERSION.txt';
-
-    if (is_readable($path)) {
-        $version = file_get_contents($path);
-    } else {
-        $version = VERSION;
-    }
-
     // We'll create the templated Error Page Response.
-    $response = View::makeLayout('Default')
-        ->shares('version', trim($version))
+    $content = View::makeLayout('Default', 'Bootstrap')
         ->shares('title', 'Error ' .$code)
         ->nest('content', 'Error/' .$code);
 
-    return Response::make($response, $code, $headers);
+    return Response::make($content, $code, $headers);
 });
 
 //--------------------------------------------------------------------------

@@ -18,7 +18,14 @@ use View;
  */
 class Welcome extends Controller
 {
+    /**
+     * The currently used Layout.
+     *
+     * @var string
+     */
+    protected $layout = 'Welcome';
 
+    
     /**
      * Create and return a View instance.
      */

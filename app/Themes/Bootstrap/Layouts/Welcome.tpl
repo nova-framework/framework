@@ -2,7 +2,7 @@
 
 @section('header')
     @partial('Partials/Navbar', 'Bootstrap')
-@show
+@stop
 
 @section('content')
     @partial('Partials/Logo', 'Bootstrap')
@@ -12,4 +12,4 @@
 
 @section('footer')
     @partial('Partials/Footer', 'Bootstrap')
-@show
+@stop

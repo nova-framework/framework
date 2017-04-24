@@ -16,7 +16,8 @@
 <body>
 
 @section('header')
-@stop
+
+@show
 
 <div class="container">
 
@@ -27,7 +28,8 @@
 </div>
 
 @section('footer')
-@stop
+
+@show
 
 @assets('js', array(
     'https://code.jquery.com/jquery-1.12.4.min.js',

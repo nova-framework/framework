@@ -25,7 +25,7 @@ App::error(function(HttpException $exception)
 
     $headers = $exception->getHeaders();
 
-    if (Request::ajax()) {
+    if (Request::ajax() || Request::wantsJson()) {
         // An AJAX request; we'll create a JSON Response.
         $content = array('status' => $code);
 
@@ -33,11 +33,11 @@ App::error(function(HttpException $exception)
     }
 
     // We'll create the templated Error Page Response.
-    $view = View::makeLayout('Default', 'Bootstrap')
+    $content = View::makeLayout('Default', 'Bootstrap')
         ->shares('title', 'Error ' .$code)
         ->nest('content', 'Error/' .$code);
 
-    return Response::make($view, $code, $headers);
+    return Response::make($content, $code, $headers);
 });
 
 //--------------------------------------------------------------------------

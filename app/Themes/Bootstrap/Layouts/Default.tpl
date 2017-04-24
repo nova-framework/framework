@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>{{ $title or __d('bootstrap', 'Page') }} - {{ Config::get('app.name') }}</title>
-    {{ $meta or '' }}
 
     @assets('css', array(
         vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
@@ -12,14 +11,11 @@
         theme_url('css/style.css', 'Bootstrap'),
     ))
 
-    {{ $css or '' }}
 </head>
 <body>
 
 @section('header')
 @stop
-
-{{ $afterBody or '' }}
 
 <div class="container">
     @section('content')
@@ -34,10 +30,6 @@
     'https://code.jquery.com/jquery-1.12.4.min.js',
     vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
 ))
-
-{{ $js or '' }}
-
-{{ $footer or '' }}
 
 <!-- DO NOT DELETE! - Forensics Profiler -->
 

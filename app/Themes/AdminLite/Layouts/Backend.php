@@ -217,7 +217,6 @@ Assets::js(array(
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
 
-echo isset($footer) ? $footer : ''; // Place to pass data / plugable hook zone
 ?>
 
 <script>

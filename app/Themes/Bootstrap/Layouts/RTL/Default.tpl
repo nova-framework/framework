@@ -20,7 +20,7 @@ Assets::css(array(
 </head>
 <body>
 
-@section('navbar')
+@section('header')
 @show
 
 {{ $afterBody or '' }}

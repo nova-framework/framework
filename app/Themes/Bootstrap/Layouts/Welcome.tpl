@@ -1,6 +1,6 @@
 @layout('Default', 'Bootstrap')
 
-@section('navbar')
+@section('header')
     @partial('Partials/Navbar', 'Bootstrap')
 @stop
 

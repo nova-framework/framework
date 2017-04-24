@@ -44,6 +44,7 @@ Assets::js(array(
 @endphp
 
 {{ $js or '' }}
+
 {{ $footer or '' }}
 
 <!-- DO NOT DELETE! - Forensics Profiler -->

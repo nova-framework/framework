@@ -2,6 +2,7 @@
 <html lang="{{ Language::code() }}">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title or __d('bootstrap', 'Page') }} - {{ Config::get('app.name') }}</title>
 
     @assets('css', array(

@@ -1,18 +1,12 @@
 @layout('Default', 'Bootstrap')
 
-@php
-
-$siteName = Config::get('app.name');
-
-@endphp
-
 @section('navbar')
     @partial('Partials/Navbar', 'Bootstrap')
 @stop
 
 @section('content')
     <p>
-        <img src='<?= theme_url('images/nova.png', 'Bootstrap'); ?>' alt='{{ $siteName }}'>
+        <img src='<?= theme_url('images/nova.png', 'Bootstrap'); ?>' alt='{{ Config::get('app.name') }}'>
     </p>
 
     @parent

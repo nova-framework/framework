@@ -5,16 +5,12 @@
     <title>{{ $title or __d('bootstrap', 'Page') }} - {{ Config::get('app.name') }}</title>
     {{ $meta or '' }}
 
-@php
-
-Assets::css(array(
-    theme_url('css/bootstrap-rtl.min.css', 'Bootstrap'),
-    theme_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap'),
-    'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-    theme_url('css/style-rtl.css', 'Bootstrap'),
-));
-
-@endphp
+    @assets('css', array(
+        theme_url('css/bootstrap-rtl.min.css', 'Bootstrap'),
+        theme_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap'),
+        'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+        theme_url('css/style-rtl.css', 'Bootstrap'),
+    ))
 
     {{ $css or '' }}
 </head>
@@ -34,14 +30,10 @@ Assets::css(array(
 @section('footer')
 @stop
 
-@php
-
-Assets::js(array(
+@assets('js', array(
     'https://code.jquery.com/jquery-1.12.4.min.js',
     theme_url('js/bootstrap-rtl.min.js', 'Bootstrap'),
-));
-
-@endphp
+))
 
 {{ $js or '' }}
 

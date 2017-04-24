@@ -19,9 +19,11 @@
 @stop
 
 <div class="container">
-    @section('content')
-        {{ $content }}
-    @show
+
+@section('content')
+    {{ $content }}
+@show
+
 </div>
 
 @section('footer')

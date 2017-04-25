@@ -17,7 +17,7 @@
 
 @section('header')
 
-@how
+@show
 
 <div class="container">
 

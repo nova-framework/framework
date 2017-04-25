@@ -18,6 +18,13 @@ use Nova\Support\Facades\View;
  */
 class Welcome extends ThemedController
 {
+    /**
+     * The currently used Layout.
+     *
+     * @var string
+     */
+    protected $layout = 'Welcome';
+    
 
     /**
      * Create and return a View instance.

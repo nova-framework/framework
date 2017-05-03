@@ -352,7 +352,7 @@ class Users extends BackendController
     }
 
     //------------------------------------------------------------------------------
-    // A Users list using DataTables
+    // An Users list using DataTables
     //------------------------------------------------------------------------------
 
     public function listUsers()

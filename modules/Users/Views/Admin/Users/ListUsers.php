@@ -28,7 +28,8 @@
                     <th><?= __d('users', 'ID'); ?></th>
                     <th><?= __d('users', 'Username'); ?></th>
                     <th><?= __d('users', 'Role'); ?></th>
-                    <th><?= __d('users', 'Name and Surname'); ?></th>
+                    <th><?= __d('users', 'First Name'); ?></th>
+                    <th><?= __d('users', 'Last Name'); ?></th>
                     <th><?= __d('users', 'E-mail'); ?></th>
                     <th><?= __d('users', 'Created At'); ?></th>
                 </tr>
@@ -62,12 +63,13 @@ $(document).ready(function ()
 
         // We need to disable the ordering in some columns.
         columns: [
-            { data: 'id',         orderable: true,  searchable: false },
-            { data: 'username',   orderable: true,  searchable: true  },
-            { data: 'role',       orderable: false, searchable: false },
-            { data: 'realname',   orderable: false, searchable: false },
-            { data: 'email',      orderable: true,  searchable: true  },
-            { data: 'created_at', orderable: true,  searchable: false },
+            { data: 'id',       orderable: true,  searchable: false },
+            { data: 'username', orderable: true,  searchable: true  },
+            { data: 'role',     orderable: false, searchable: false },
+            { data: 'name',     orderable: true,  searchable: true  },
+            { data: 'surname',  orderable: true,  searchable: true  },
+            { data: 'email',    orderable: true,  searchable: true  },
+            { data: 'joindate', orderable: true,  searchable: false },
         ]
     });
 });

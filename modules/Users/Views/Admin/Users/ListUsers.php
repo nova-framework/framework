@@ -64,12 +64,12 @@ $(document).ready(function ()
 
         // We need to disable the ordering in some columns.
         columns: [
-            null,
-            null,
-            { "orderable": false },
-            { "orderable": false },
-            null,
-            null
+            { data: 'id',         orderable: true,  searchable: false },
+            { data: 'username',   orderable: true,  searchable: true  },
+            { data: 'role',       orderable: false, searchable: false },
+            { data: 'realname',   orderable: false, searchable: false },
+            { data: 'email',      orderable: true,  searchable: true  },
+            { data: 'created_at', orderable: true,  searchable: false },
         ]
     });
 });

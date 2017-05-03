@@ -364,22 +364,18 @@ class Users extends BackendController
     public function dataTable()
     {
         $columns = array(
-            array('dt' => 0, 'field' => 'id'),
-            array('dt' => 1, 'field' => 'username'),
-
-            array('dt' => 2, 'field' => 'role', 'formatter' => function($user, $role)
+            array('dt' => 'id',       'db' => 'id'),
+            array('dt' => 'username', 'db' => 'username'),
+            array('dt' => 'email',    'db' => 'email'),
+            array('dt' => 'role',     'db' => 'role', 'formatter' => function($user, $role)
             {
                 return $role->name;
             }),
-
-            array('dt' => 3, 'formatter' => function($user)
+            array('dt' => 'realname', 'formatter' => function($user)
             {
                 return $user->present()->name();
             }),
-
-            array('dt' => 4, 'field' => 'email'),
-
-            array('dt' => 5, 'field' => 'created_at', 'formatter' => function($user, $date)
+            array('dt' => 'created_at', 'db' => 'created_at', 'formatter' => function($user, $date)
             {
                 return $date->formatLocalized('%d %b %Y, %H:%M');
             }),
@@ -395,9 +391,9 @@ class Users extends BackendController
         //
         $query = User::with('role')->where('active', 1);
 
-        $total = $query->count();
+        $totalCount = $query->count();
 
-        // Handle the ordering by columns.
+        // Handle the column ordering.
         if (! empty($order)) {
             foreach ($order as $options) {
                 $columnIdx = intval($options['column']);
@@ -405,52 +401,55 @@ class Users extends BackendController
                 $requestColumn = Input::get('columns.' .$columnIdx, array());
 
                 //
-                $dt = $requestColumn['data'];
+                $data = $requestColumn['data'];
 
-                $column = array_first($columns, function ($key, $value) use ($dt)
+                $column = array_first($columns, function ($key, $value) use ($data)
                 {
-                    return ($value['dt'] == $dt);
+                    return ($value['dt'] == $data);
                 });
 
                 if ($requestColumn['orderable'] == 'true') {
                     $dir = ($options['dir'] === 'asc') ? 'ASC' : 'DESC';
 
-                    $query->orderBy($column['field'], $dir);
+                    $query->orderBy($column['db'], $dir);
                 }
             }
         }
 
         // Handle the global searching.
-        if (! empty($search)) {
-            $query->where('username', 'LIKE', '%' .$search .'%')
-                ->orWhere('first_name', 'LIKE', '%' .$search .'%')
-                ->orWhere('last_name', 'LIKE', '%' .$search .'%')
-                ->orWhere('email', 'LIKE', '%' .$search .'%');
+        $search = trim($search);
 
-            $filtered = $query->count();
+        if (! empty($search)) {
+            $requestColumns = Input::get('columns', array());
+
+            $query->whereNested(function($query) use($requestColumns, $columns, $search)
+            {
+                foreach($requestColumns as $requestColumn) {
+                    $data = $requestColumn['data'];
+
+                    $column = array_first($columns, function ($key, $value) use ($data)
+                    {
+                        return ($value['dt'] == $data);
+                    });
+
+                    if ($requestColumn['searchable'] == 'true') {
+                        $query->orWhere($column['db'], 'LIKE', '%' .$search .'%');
+                    }
+                }
+            });
+
+            $filteredCount = $query->count();
         } else {
-            $filtered = $total;
+            $filteredCount = $totalCount;
         }
 
-        // Handle the pagination and get the data from database.
+        // Handle the pagination and retrieve the data from database.
         $users = $query->skip($start)->take($length)->get();
 
-        // Format the output data.
-        $data = static::formatData($users, $columns);
-
-        return Response::json(array(
-            "draw"            => intval($draw),
-            "recordsTotal"    => $total,
-            "recordsFiltered" => $filtered,
-            "data"            => $data
-        ));
-    }
-
-    protected static function formatData($results, array $columns)
-    {
+        // Format the data.
         $data = array();
 
-        foreach ($results as $result) {
+        foreach ($users as $user) {
             $record = array();
 
             foreach ($columns as $column) {
@@ -458,24 +457,21 @@ class Users extends BackendController
 
                 $formatter = array_get($column, 'formatter');
 
-                $field = array_get($column, 'field');
+                $field = array_get($column, 'db');
 
-                // Handle the dynamic fields.
-                if (is_null($field)) {
+                if (! is_null($field)) {
+                    $value = $user->{$field};
+
                     if (! is_null($formatter)) {
-                        $record[$key] = call_user_func($formatter, $result);
-
-                        continue;
+                        $value = call_user_func($formatter, $user, $value);
                     }
-
-                    throw new \Exception("Field not defined for DT [$key]");
                 }
 
-                // Handle the standard fields.
-                $value = $result->getAttribute($field);
-
-                if (! is_null($formatter)) {
-                    $value = call_user_func($formatter, $result, $value);
+                // Handle the dynamic fields.
+                else if (is_null($formatter)) {
+                    throw new \Exception("Field and formatter not defined for data [$key]");
+                } else {
+                    $value = call_user_func($formatter, $user);
                 }
 
                 $record[$key] = $value;
@@ -484,6 +480,12 @@ class Users extends BackendController
             $data[] = $record;
         }
 
-        return $data;
+        return Response::json(array(
+            "draw"            => intval($draw),
+            "recordsTotal"    => $totalCount,
+            "recordsFiltered" => $filteredCount,
+            "data"            => $data
+        ));
     }
+
 }

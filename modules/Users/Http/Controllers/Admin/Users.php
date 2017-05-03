@@ -365,16 +365,16 @@ class Users extends BackendController
         $columns = array(
             array('dt' => 'id',       'db' => 'id'),
             array('dt' => 'username', 'db' => 'username'),
+            array('dt' => 'name',     'db' => 'first_name'),
+            array('dt' => 'surname',  'db' => 'last_name'),
             array('dt' => 'email',    'db' => 'email'),
-            array('dt' => 'role',     'db' => 'role', 'formatter' => function($user, $role)
+
+            array('dt' => 'role', 'db' => 'role', 'formatter' => function($user, $role)
             {
                 return $role->name;
             }),
-            array('dt' => 'realname', 'formatter' => function($user)
-            {
-                return $user->present()->name();
-            }),
-            array('dt' => 'created_at', 'db' => 'created_at', 'formatter' => function($user, $date)
+
+            array('dt' => 'joindate', 'db' => 'created_at', 'formatter' => function($user, $date)
             {
                 return $date->formatLocalized('%d %b %Y, %H:%M');
             }),

@@ -117,19 +117,60 @@ abstract class BackendController extends ThemedController
      */
     protected function dataTable($query, array $columns)
     {
-        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order');
+        $totalCount = $query->count();
 
         // Retrieve the request variables.
+        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order');
+
         $requestColumns = array_get($input, 'columns', array());
 
-        $draw   = array_get($input, 'draw', 0);
-        $start  = array_get($input, 'start', 0);
+        $draw   = array_get($input, 'draw',   0);
+        $start  = array_get($input, 'start',  0);
         $length = array_get($input, 'length', 25);
-        $search = array_get($input, 'search.value', '');
-        $order  = array_get($input, 'order', array());
+        $order  = array_get($input, 'order',  array());
 
-        //
-        $totalCount = $query->count();
+        // Handle the global searching.
+        $search = trim(array_get($input, 'search.value', ''));
+
+        if (! empty($search)) {
+            $query->whereNested(function($query) use($requestColumns, $columns, $search)
+            {
+                foreach($requestColumns as $requestColumn) {
+                    $data = $requestColumn['data'];
+
+                    $column = array_first($columns, function ($key, $value) use ($data)
+                    {
+                        return ($value['dt'] == $data);
+                    });
+
+                    if ($requestColumn['searchable'] == 'true') {
+                        $field = $column['db'];
+
+                        $query->orWhere($field, 'LIKE', '%' .$search .'%');
+                    }
+                }
+            });
+        }
+
+        // Handle the column searching.
+        foreach($requestColumns as $requestColumn) {
+            $data = $requestColumn['data'];
+
+            $column = array_first($columns, function ($key, $value) use ($data)
+            {
+                return ($value['dt'] == $data);
+            });
+
+            $search = trim(array_get($requestColumn, 'search.value', ''));
+
+            if (($requestColumn['searchable'] == 'true') && (strlen($search) > 0)) {
+                $field = $column['db'];
+
+                $query->where($field, 'LIKE', '%' .$search .'%');
+            }
+        }
+
+        $filteredCount = $query->count();
 
         // Handle the column ordering.
         if (! empty($order)) {
@@ -147,51 +188,14 @@ abstract class BackendController extends ThemedController
                 });
 
                 if ($requestColumn['orderable'] == 'true') {
+                    $field = $column['db'];
+
                     $dir = ($options['dir'] === 'asc') ? 'ASC' : 'DESC';
 
-                    $query->orderBy($column['db'], $dir);
+                    $query->orderBy($field, $dir);
                 }
             }
         }
-
-        // Handle the global searching.
-        $search = trim($search);
-
-        if (! empty($search)) {
-            $query->whereNested(function($query) use($requestColumns, $columns, $search)
-            {
-                foreach($requestColumns as $requestColumn) {
-                    $data = $requestColumn['data'];
-
-                    $column = array_first($columns, function ($key, $value) use ($data)
-                    {
-                        return ($value['dt'] == $data);
-                    });
-
-                    if ($requestColumn['searchable'] == 'true') {
-                        $query->orWhere($column['db'], 'LIKE', '%' .$search .'%');
-                    }
-                }
-            });
-        }
-
-        // Handle the column searching.
-        foreach($requestColumns as $requestColumn) {
-            $data = $requestColumn['data'];
-
-            $column = array_first($columns, function ($key, $value) use ($data)
-            {
-                return ($value['dt'] == $data);
-            });
-
-            $search = trim($requestColumn['search']['value']);
-
-            if (($requestColumn['searchable'] == 'true') && (strlen($search) > 0)) {
-                $query->where($column['db'], 'LIKE', '%'.$searchValue.'%');
-            }
-        }
-
-        $filteredCount = $query->count();
 
         // Handle the pagination and retrieve the data from database.
         $results = $query->skip($start)->take($length)->get();

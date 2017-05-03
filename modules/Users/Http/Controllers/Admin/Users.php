@@ -399,18 +399,21 @@ class Users extends BackendController
 
         // Handle the ordering by columns.
         if (! empty($order)) {
-            for ($i = 0, $ien = count($order); $i < $ien; $i++) {
-                $columnIdx = intval($order[$i]['column']);
+            foreach ($order as $options) {
+                $columnIdx = intval($options['column']);
 
                 $requestColumn = Input::get('columns.' .$columnIdx, array());
 
-                $column = array_first($columns, function ($key, $value) use ($requestColumn)
+                //
+                $dt = $requestColumn['data'];
+
+                $column = array_first($columns, function ($key, $value) use ($dt)
                 {
-                    return ($value['dt'] == $requestColumn['data']);
+                    return ($value['dt'] == $dt);
                 });
 
                 if ($requestColumn['orderable'] == 'true') {
-                    $dir = ($order[$i]['dir'] === 'asc') ? 'ASC' : 'DESC';
+                    $dir = ($options['dir'] === 'asc') ? 'ASC' : 'DESC';
 
                     $query->orderBy($column['field'], $dir);
                 }
@@ -429,7 +432,7 @@ class Users extends BackendController
             $filtered = $total;
         }
 
-        //
+        // Handle the pagination and get the data from database.
         $users = $query->skip($start)->take($length)->get();
 
         // Format the output data.

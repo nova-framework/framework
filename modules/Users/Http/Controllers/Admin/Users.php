@@ -380,11 +380,9 @@ class Users extends BackendController
             }),
         );
 
-        $input = Input::all();
-
         $query = User::with('role')->where('active', 1);
 
-        return $this->dataTable($query, $input, $columns);
+        return $this->dataTable($query, $columns);
     }
 
 }

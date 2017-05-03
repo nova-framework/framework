@@ -12,6 +12,7 @@ use Nova\Http\Request;
 use Nova\Routing\Route;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Event;
+use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
@@ -68,8 +69,56 @@ abstract class BackendController extends ThemedController
         View::share('privateMessageCount', $messages);
     }
 
-    protected function dataTable($query, array $input, array $columns)
+    private function getMenuItems($user)
     {
+        $items = array();
+
+        // Prepare the Event payload.
+        $payload = array($user);
+
+        // Fire the Event 'backend.menu' and store the results.
+        $results = Event::fire('backend.menu', $payload);
+
+        // Merge all results on a menu items array.
+        foreach ($results as $result) {
+            if (is_array($result) && ! empty($result)) {
+                $items = array_merge($items, $result);
+            }
+        }
+
+        // Sort the base menu items by their weight and title.
+        $items = array_sort($items, function($value) {
+            return sprintf('%06d - %s', $value['weight'], $value['title']);
+        });
+
+        // Sort the child menu items by their weight and title.
+        foreach ($items as &$item) {
+            $children = array_get($item, 'children', array());
+
+            if (empty($children)) continue;
+
+            $children = array_sort($children, function($value) {
+                return sprintf('%06d - %s', $value['weight'], $value['title']);
+            });
+
+            $item['children'] = $children;
+        }
+
+        return $items;
+    }
+
+    /**
+     * Server Side Processor for DataTables.
+     *
+     * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
+     * @param array $columns
+     *
+     * @return \Nova\Http\JsonResponse
+     */
+    protected function dataTable($query, array $columns)
+    {
+        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order');
+
         // Retrieve the request variables.
         $requestColumns = array_get($input, 'columns', array());
 
@@ -126,6 +175,7 @@ abstract class BackendController extends ThemedController
             });
         }
 
+        // Handle the column searching.
         foreach($requestColumns as $requestColumn) {
             $data = $requestColumn['data'];
 
@@ -146,7 +196,7 @@ abstract class BackendController extends ThemedController
         // Handle the pagination and retrieve the data from database.
         $results = $query->skip($start)->take($length)->get();
 
-        // Format the data.
+        // Format the retrieved data to respect the DataTables specs.
         $data = array();
 
         foreach ($results as $result) {
@@ -186,44 +236,6 @@ abstract class BackendController extends ThemedController
             "recordsFiltered" => $filteredCount,
             "data"            => $data
         ));
-    }
-
-    private function getMenuItems($user)
-    {
-        $items = array();
-
-        // Prepare the Event payload.
-        $payload = array($user);
-
-        // Fire the Event 'backend.menu' and store the results.
-        $results = Event::fire('backend.menu', $payload);
-
-        // Merge all results on a menu items array.
-        foreach ($results as $result) {
-            if (is_array($result) && ! empty($result)) {
-                $items = array_merge($items, $result);
-            }
-        }
-
-        // Sort the base menu items by their weight and title.
-        $items = array_sort($items, function($value) {
-            return sprintf('%06d - %s', $value['weight'], $value['title']);
-        });
-
-        // Sort the child menu items by their weight and title.
-        foreach ($items as &$item) {
-            $children = array_get($item, 'children', array());
-
-            if (empty($children)) continue;
-
-            $children = array_sort($children, function($value) {
-                return sprintf('%06d - %s', $value['weight'], $value['title']);
-            });
-
-            $item['children'] = $children;
-        }
-
-        return $items;
     }
 
 }

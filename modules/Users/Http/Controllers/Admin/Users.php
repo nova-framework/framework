@@ -361,7 +361,34 @@ class Users extends BackendController
             ->shares('title', __d('users', 'Users'));
     }
 
-    public function dataTable()
+    public function processor()
+    {
+        $columns = array(
+            array('dt' => 'id',       'db' => 'id'),
+            array('dt' => 'username', 'db' => 'username'),
+            array('dt' => 'email',    'db' => 'email'),
+            array('dt' => 'role',     'db' => 'role', 'formatter' => function($user, $role)
+            {
+                return $role->name;
+            }),
+            array('dt' => 'realname', 'formatter' => function($user)
+            {
+                return $user->present()->name();
+            }),
+            array('dt' => 'created_at', 'db' => 'created_at', 'formatter' => function($user, $date)
+            {
+                return $date->formatLocalized('%d %b %Y, %H:%M');
+            }),
+        );
+
+        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order');
+
+        $query = User::with('role')->where('active', 1);
+
+        return $this->dataTable($query, $input, $columns);
+    }
+
+    protected function dataTable($query, array $input, array $columns)
     {
         $columns = array(
             array('dt' => 'id',       'db' => 'id'),
@@ -382,15 +409,15 @@ class Users extends BackendController
         );
 
         // Retrieve the request variables.
-        $draw   = Input::get('draw', 0);
-        $start  = Input::get('start', 0);
-        $length = Input::get('length', 25);
-        $search = Input::get('search.value', '');
-        $order  = Input::get('order', array());
+        $requestColumns = array_get($input, 'columns', array());
+
+        $draw   = array_get($input, 'draw', 0);
+        $start  = array_get($input, 'start', 0);
+        $length = array_get($input, 'length', 25);
+        $search = array_get($input, 'search.value', '');
+        $order  = array_get($input, 'order', array());
 
         //
-        $query = User::with('role')->where('active', 1);
-
         $totalCount = $query->count();
 
         // Handle the column ordering.
@@ -398,7 +425,7 @@ class Users extends BackendController
             foreach ($order as $options) {
                 $columnIdx = intval($options['column']);
 
-                $requestColumn = Input::get('columns.' .$columnIdx, array());
+                $requestColumn = array_get($input, 'columns.' .$columnIdx, array());
 
                 //
                 $data = $requestColumn['data'];
@@ -420,8 +447,6 @@ class Users extends BackendController
         $search = trim($search);
 
         if (! empty($search)) {
-            $requestColumns = Input::get('columns', array());
-
             $query->whereNested(function($query) use($requestColumns, $columns, $search)
             {
                 foreach($requestColumns as $requestColumn) {
@@ -437,19 +462,32 @@ class Users extends BackendController
                     }
                 }
             });
-
-            $filteredCount = $query->count();
-        } else {
-            $filteredCount = $totalCount;
         }
 
+        foreach($requestColumns as $requestColumn) {
+            $data = $requestColumn['data'];
+
+            $column = array_first($columns, function ($key, $value) use ($data)
+            {
+                return ($value['dt'] == $data);
+            });
+
+            $search = trim($requestColumn['search']['value']);
+
+            if (($requestColumn['searchable'] == 'true') && (strlen($search) > 0)) {
+                $query->where($column['db'], 'LIKE', '%'.$searchValue.'%');
+            }
+        }
+
+        $filteredCount = $query->count();
+
         // Handle the pagination and retrieve the data from database.
-        $users = $query->skip($start)->take($length)->get();
+        $results = $query->skip($start)->take($length)->get();
 
         // Format the data.
         $data = array();
 
-        foreach ($users as $user) {
+        foreach ($results as $result) {
             $record = array();
 
             foreach ($columns as $column) {
@@ -460,10 +498,10 @@ class Users extends BackendController
                 $field = array_get($column, 'db');
 
                 if (! is_null($field)) {
-                    $value = $user->{$field};
+                    $value = $result->{$field};
 
                     if (! is_null($formatter)) {
-                        $value = call_user_func($formatter, $user, $value);
+                        $value = call_user_func($formatter, $result, $value);
                     }
                 }
 
@@ -471,7 +509,7 @@ class Users extends BackendController
                 else if (is_null($formatter)) {
                     throw new \Exception("Field and formatter not defined for data [$key]");
                 } else {
-                    $value = call_user_func($formatter, $user);
+                    $value = call_user_func($formatter, $result);
                 }
 
                 $record[$key] = $value;

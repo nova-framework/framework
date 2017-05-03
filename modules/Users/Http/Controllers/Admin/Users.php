@@ -14,6 +14,7 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
@@ -348,5 +349,116 @@ class Users extends BackendController
             ->shares('title', __d('users', 'Searching Users for: {0}', $search))
             ->with('search', $search)
             ->with('users', $users);
+    }
+
+    //------------------------------------------------------------------------------
+    // A Users list using DataTables
+    //------------------------------------------------------------------------------
+
+    public function listUsers()
+    {
+        return $this->getView()
+            ->shares('title', __d('users', 'Users'));
+    }
+
+    public function dataTable()
+    {
+        $columns = array(
+            array('dt' => 0, 'field' => 'id'),
+            array('dt' => 1, 'field' => 'username'),
+
+            array('dt' => 2, 'field' => 'role', 'formatter' => function($user, $role)
+            {
+                return $role->name;
+            }),
+
+            array('dt' => 3, 'formatter' => function($user)
+            {
+                return $user->present()->name();
+            }),
+
+            array('dt' => 4, 'field' => 'email'),
+
+            array('dt' => 5, 'field' => 'created_at', 'formatter' => function($user, $date)
+            {
+                return $date->formatLocalized('%d %b %Y, %H:%M');
+            }),
+        );
+
+        // Retrieve the request variables.
+        $draw   = Input::get('draw', 0);
+        $start  = Input::get('start', 0);
+        $length = Input::get('length', 25);
+        $search = Input::get('search.value');
+
+        //
+        $query = User::with('role')->where('active', 1);
+
+        $total = $query->count();
+
+        if (! empty($search)) {
+            $query->where('username', 'LIKE', '%' .$search .'%')
+                ->orWhere('first_name', 'LIKE', '%' .$search .'%')
+                ->orWhere('last_name', 'LIKE', '%' .$search .'%')
+                ->orWhere('email', 'LIKE', '%' .$search .'%');
+
+            $filtered = $query->count();
+        } else {
+            $filtered = $total;
+        }
+
+        //
+        $users = $query->skip($start)->take($length)->get();
+
+        // Format the output data.
+        $data = static::formatData($users, $columns);
+
+        return Response::json(array(
+            "draw"            => (int) $draw,
+            "recordsTotal"    => $total,
+            "recordsFiltered" => $filtered,
+            "data"            => $data
+        ));
+    }
+
+    protected static function formatData($results, array $columns)
+    {
+        $data = array();
+
+        foreach ($results as $result) {
+            $record = array();
+
+            foreach ($columns as $column) {
+                $key = $column['dt'];
+
+                $formatter = array_get($column, 'formatter');
+
+                $field = array_get($column, 'field');
+
+                // Handle the dynamic fields.
+                if (is_null($field)) {
+                    if (! is_null($formatter)) {
+                        $record[$key] = call_user_func($formatter, $result);
+
+                        continue;
+                    }
+
+                    throw new \Exception("Field not defined for DT [$key]");
+                }
+
+                // Handle the standard fields.
+                $value = $result->getAttribute($field);
+
+                if (! is_null($formatter)) {
+                    $value = call_user_func($formatter, $result, $value);
+                }
+
+                $record[$key] = $value;
+            }
+
+            $data[] = $record;
+        }
+
+        return $data;
     }
 }

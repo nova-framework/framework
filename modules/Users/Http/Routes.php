@@ -39,7 +39,7 @@ $router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($rou
     // The Users Search.
     $router->post('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
 
-    // A Users list using DataTables.
+    // An Users list using DataTables.
     $router->get( 'users/list',         array('middleware' => 'auth', 'uses' => 'Users@listUsers'));
     $router->post('users/data',         array('middleware' => 'auth', 'uses' => 'Users@processor'));
 

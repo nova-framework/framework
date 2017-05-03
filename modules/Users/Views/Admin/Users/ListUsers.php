@@ -11,14 +11,20 @@
 
 <?= Session::getMessages(); ?>
 
+<style>
+#usersTable .even {
+    border-bottom: 1px solid #f9f9f9;
+}
+</style>
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
     </div>
     <div class="box-body">
-        <table id='usersTable' class='table table-bordered table-striped table-hover responsive' style="width: 100%;">
+        <table id='usersTable' class='table table-striped table-hover responsive' style="width: 100%;">
             <thead>
-                <tr>
+                <tr class="bg-navy disabled">
                     <th><?= __d('users', 'ID'); ?></th>
                     <th><?= __d('users', 'Username'); ?></th>
                     <th><?= __d('users', 'Role'); ?></th>

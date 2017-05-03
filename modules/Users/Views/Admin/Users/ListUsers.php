@@ -28,25 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
             </tbody>
-            <tfoot>
-                <tr>
-                    <th><?= __d('users', 'ID'); ?></th>
-                    <th><?= __d('users', 'Username'); ?></th>
-                    <th><?= __d('users', 'Role'); ?></th>
-                    <th><?= __d('users', 'Name and Surname'); ?></th>
-                    <th><?= __d('users', 'E-mail'); ?></th>
-                    <th><?= __d('users', 'Created At'); ?></th>
-                </tr>
-            </tfoot>
         </table>
     </div>
 </div>

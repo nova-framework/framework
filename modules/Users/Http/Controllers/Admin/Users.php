@@ -389,13 +389,35 @@ class Users extends BackendController
         $draw   = Input::get('draw', 0);
         $start  = Input::get('start', 0);
         $length = Input::get('length', 25);
-        $search = Input::get('search.value');
+        $search = Input::get('search.value', '');
+        $order  = Input::get('order', array());
 
         //
         $query = User::with('role')->where('active', 1);
 
         $total = $query->count();
 
+        // Handle the ordering by columns.
+        if (! empty($order)) {
+            for ($i = 0, $ien = count($order); $i < $ien; $i++) {
+                $columnIdx = intval($order[$i]['column']);
+
+                $requestColumn = Input::get('columns.' .$columnIdx, array());
+
+                $column = array_first($columns, function ($key, $value) use ($requestColumn)
+                {
+                    return ($value['dt'] == $requestColumn['data']);
+                });
+
+                if ($requestColumn['orderable'] == 'true') {
+                    $dir = ($order[$i]['dir'] === 'asc') ? 'ASC' : 'DESC';
+
+                    $query->orderBy($column['field'], $dir);
+                }
+            }
+        }
+
+        // Handle the global searching.
         if (! empty($search)) {
             $query->where('username', 'LIKE', '%' .$search .'%')
                 ->orWhere('first_name', 'LIKE', '%' .$search .'%')
@@ -414,7 +436,7 @@ class Users extends BackendController
         $data = static::formatData($users, $columns);
 
         return Response::json(array(
-            "draw"            => (int) $draw,
+            "draw"            => intval($draw),
             "recordsTotal"    => $total,
             "recordsFiltered" => $filtered,
             "data"            => $data

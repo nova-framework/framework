@@ -14,7 +14,6 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
@@ -381,131 +380,11 @@ class Users extends BackendController
             }),
         );
 
-        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order');
+        $input = Input::all();
 
         $query = User::with('role')->where('active', 1);
 
         return $this->dataTable($query, $input, $columns);
-    }
-
-    protected function dataTable($query, array $input, array $columns)
-    {
-        // Retrieve the request variables.
-        $requestColumns = array_get($input, 'columns', array());
-
-        $draw   = array_get($input, 'draw', 0);
-        $start  = array_get($input, 'start', 0);
-        $length = array_get($input, 'length', 25);
-        $search = array_get($input, 'search.value', '');
-        $order  = array_get($input, 'order', array());
-
-        //
-        $totalCount = $query->count();
-
-        // Handle the column ordering.
-        if (! empty($order)) {
-            foreach ($order as $options) {
-                $columnIdx = intval($options['column']);
-
-                $requestColumn = array_get($input, 'columns.' .$columnIdx, array());
-
-                //
-                $data = $requestColumn['data'];
-
-                $column = array_first($columns, function ($key, $value) use ($data)
-                {
-                    return ($value['dt'] == $data);
-                });
-
-                if ($requestColumn['orderable'] == 'true') {
-                    $dir = ($options['dir'] === 'asc') ? 'ASC' : 'DESC';
-
-                    $query->orderBy($column['db'], $dir);
-                }
-            }
-        }
-
-        // Handle the global searching.
-        $search = trim($search);
-
-        if (! empty($search)) {
-            $query->whereNested(function($query) use($requestColumns, $columns, $search)
-            {
-                foreach($requestColumns as $requestColumn) {
-                    $data = $requestColumn['data'];
-
-                    $column = array_first($columns, function ($key, $value) use ($data)
-                    {
-                        return ($value['dt'] == $data);
-                    });
-
-                    if ($requestColumn['searchable'] == 'true') {
-                        $query->orWhere($column['db'], 'LIKE', '%' .$search .'%');
-                    }
-                }
-            });
-        }
-
-        foreach($requestColumns as $requestColumn) {
-            $data = $requestColumn['data'];
-
-            $column = array_first($columns, function ($key, $value) use ($data)
-            {
-                return ($value['dt'] == $data);
-            });
-
-            $search = trim($requestColumn['search']['value']);
-
-            if (($requestColumn['searchable'] == 'true') && (strlen($search) > 0)) {
-                $query->where($column['db'], 'LIKE', '%'.$searchValue.'%');
-            }
-        }
-
-        $filteredCount = $query->count();
-
-        // Handle the pagination and retrieve the data from database.
-        $results = $query->skip($start)->take($length)->get();
-
-        // Format the data.
-        $data = array();
-
-        foreach ($results as $result) {
-            $record = array();
-
-            foreach ($columns as $column) {
-                $key = $column['dt'];
-
-                $formatter = array_get($column, 'formatter');
-
-                $field = array_get($column, 'db');
-
-                if (! is_null($field)) {
-                    $value = $result->{$field};
-
-                    if (! is_null($formatter)) {
-                        $value = call_user_func($formatter, $result, $value);
-                    }
-                }
-
-                // Handle the dynamic fields.
-                else if (is_null($formatter)) {
-                    throw new \Exception("Field and formatter not defined for data [$key]");
-                } else {
-                    $value = call_user_func($formatter, $result);
-                }
-
-                $record[$key] = $value;
-            }
-
-            $data[] = $record;
-        }
-
-        return Response::json(array(
-            "draw"            => intval($draw),
-            "recordsTotal"    => $totalCount,
-            "recordsFiltered" => $filteredCount,
-            "data"            => $data
-        ));
     }
 
 }

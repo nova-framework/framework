@@ -27,6 +27,16 @@
                     <th><?= __d('users', 'Created At'); ?></th>
                 </tr>
             </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
             <tfoot>
                 <tr>
                     <th><?= __d('users', 'ID'); ?></th>

@@ -44,6 +44,8 @@ $langMenuLinks = ob_get_clean();
         'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
         // Select2
         vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
+        // DataTables
+        vendor_url('plugins/datatables/dataTables.bootstrap.css', 'almasaeed2010/adminlte'),
         // Theme style
         vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
@@ -238,7 +240,10 @@ Assets::js(array(
     // AdminLTE App
     vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // Select2
-    vendor_url('plugins/select2/select2.full.min.js', 'almasaeed2010/adminlte')
+    vendor_url('plugins/select2/select2.full.min.js', 'almasaeed2010/adminlte'),
+    // DataTables
+    vendor_url('plugins/datatables/jquery.dataTables.min.js', 'almasaeed2010/adminlte'),
+    vendor_url('plugins/datatables/dataTables.bootstrap.min.js', 'almasaeed2010/adminlte'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone

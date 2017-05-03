@@ -390,24 +390,6 @@ class Users extends BackendController
 
     protected function dataTable($query, array $input, array $columns)
     {
-        $columns = array(
-            array('dt' => 'id',       'db' => 'id'),
-            array('dt' => 'username', 'db' => 'username'),
-            array('dt' => 'email',    'db' => 'email'),
-            array('dt' => 'role',     'db' => 'role', 'formatter' => function($user, $role)
-            {
-                return $role->name;
-            }),
-            array('dt' => 'realname', 'formatter' => function($user)
-            {
-                return $user->present()->name();
-            }),
-            array('dt' => 'created_at', 'db' => 'created_at', 'formatter' => function($user, $date)
-            {
-                return $date->formatLocalized('%d %b %Y, %H:%M');
-            }),
-        );
-
         // Retrieve the request variables.
         $requestColumns = array_get($input, 'columns', array());
 

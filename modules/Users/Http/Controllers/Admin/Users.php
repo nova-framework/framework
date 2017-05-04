@@ -356,7 +356,7 @@ class Users extends BackendController
 
     public function listUsers()
     {
-        $pageLength = 25;
+        $pageLength = intval(Input::get('items', 25)) ?: 25;
 
         $offset = intval(Input::get('offset', 1)) ?: 1;
 

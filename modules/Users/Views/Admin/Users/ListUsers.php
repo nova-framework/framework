@@ -51,6 +51,7 @@ foreach ($users as $user) {
         $actions = View::make('Partials/UsersTableActions', array(), 'Users')
             ->with('user', $user)
             ->with('offset', $offset)
+            ->with('pageLength', $pageLength)
             ->render();
 
         echo "
@@ -111,7 +112,6 @@ $(function ()
         processing: true,
         serverSide: true,
         deferLoading: <?= $totalCount; ?>,
-        displayStart: <?= $start; ?>,
         ajax: {
             type: 'POST',
             url: '<?= site_url('admin/users/data'); ?>',
@@ -120,6 +120,7 @@ $(function ()
                 data.offset = $('#usersTable').DataTable().page() + 1;
             }
         },
+        displayStart: <?= $start; ?>,
         pageLength: <?= $pageLength; ?>,
         lengthMenu: [ 3, 10, 25, 50, 75, 100 ],
 

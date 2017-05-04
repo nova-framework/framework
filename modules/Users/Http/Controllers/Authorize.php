@@ -81,7 +81,7 @@ class Authorize extends BackendController
             $user->save();
         }
 
-        if ($user->active == 0) {
+        if ($user->activated == 0) {
             Auth::logout();
 
             // User not activated; go logout and redirect him back.

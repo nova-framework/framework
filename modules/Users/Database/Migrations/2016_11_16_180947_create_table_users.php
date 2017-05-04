@@ -24,7 +24,7 @@ class CreateTableUsers extends Migration
             $table->string('location')->nullable();
             $table->string('image')->nullable();
             $table->string('email', 100)->unique();
-            $table->tinyInteger('active')->unsigned()->default(0);
+            $table->tinyInteger('activated')->unsigned()->default(0);
             $table->string('activation_code')->nullable();
             $table->string('remember_token')->nullable();
             $table->timestamps();

@@ -367,7 +367,7 @@ class Users extends BackendController
 
         $count = $query->count();
 
-        $users = $query->skip($start)->take($pageLength)->get();
+        $users = $query->skip($start)->take($length)->get();
 
         return $this->getView()
             ->shares('title', __d('users', 'Users'))

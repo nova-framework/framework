@@ -15,7 +15,6 @@
 
 #rolesTable {
     border-bottom: 1px solid #d2d6de;
-    width: 100%;
 }
 
 #rolesTable_paginate .pagination {
@@ -29,7 +28,7 @@
         <h3 class="box-title"><?= __d('users', 'Registered Roles'); ?></h3>
     </div>
     <div class="box-body">
-        <table id='rolesTable' class='table table-striped table-hover responsive'>
+        <table id='rolesTable' class='table table-striped table-hover responsive' style="width: 100%;">
             <thead>
             <tr class="bg-primary disabled">
                 <th width='5%'><?= __d('users', 'ID'); ?></th>

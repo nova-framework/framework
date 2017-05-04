@@ -15,7 +15,6 @@
 
 #usersTable {
     border-bottom: 1px solid #d2d6de;
-    width: 100%;
 }
 
 #usersTable td {
@@ -45,7 +44,7 @@ tfoot input {
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
     </div>
     <div class="box-body">
-        <table id='usersTable' class='table table-striped table-hover responsive'>
+        <table id='usersTable' class='table table-striped table-hover responsive' style="width: 100%;">
             <thead>
                 <tr class="bg-primary disabled">
                     <th width='5%'><?= __d('users', 'ID'); ?></th>

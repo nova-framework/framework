@@ -399,12 +399,12 @@ class Users extends BackendController
                 return $user->created_at->formatLocalized($format);
             }),
 
-            array('data' => 'actions', 'uses' => function($user, $offset, $items)
+            array('data' => 'actions', 'uses' => function($user, $length, $offset)
             {
                 return View::make('Partials/UsersTableActions', array(), 'Users')
                     ->with('user', $user)
+                    ->with('length', $length)
                     ->with('offset', $offset)
-                    ->with('pageLength', $items)
                     ->render();
             }),
         );

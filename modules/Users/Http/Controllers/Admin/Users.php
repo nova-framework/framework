@@ -15,6 +15,7 @@ use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Language;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
@@ -139,7 +140,10 @@ class Users extends BackendController
 
         $query = User::with('role')->where('active', 1);
 
-        return $this->dataTable($query, $input, $columns);
+        //
+        $data = $this->dataTable($query, $input, $columns);
+
+        return Response::json($data);
     }
 
     public function index()

@@ -13,7 +13,6 @@ use Nova\Routing\Route;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
 
 use App\Core\ThemedController;
@@ -53,9 +52,9 @@ abstract class BackendController extends ThemedController
         $user = Auth::user();
 
         //
-        $items = $this->getMenuItems($user);
+        $columns = $this->getMenuItems($user);
 
-        View::share('menuItems', $items);
+        View::share('menuItems', $columns);
 
         //
         $notifications = Notification::where('user_id', $user->id)->unread()->count();
@@ -70,7 +69,7 @@ abstract class BackendController extends ThemedController
 
     private function getMenuItems($user)
     {
-        $items = array();
+        $columns = array();
 
         // Prepare the Event payload.
         $payload = array($user);
@@ -81,18 +80,18 @@ abstract class BackendController extends ThemedController
         // Merge all results on a menu items array.
         foreach ($results as $result) {
             if (is_array($result) && ! empty($result)) {
-                $items = array_merge($items, $result);
+                $columns = array_merge($columns, $result);
             }
         }
 
         // Sort the base menu items by their weight and title.
-        $items = array_sort($items, function($value) {
+        $columns = array_sort($columns, function($value) {
             return sprintf('%06d - %s', $value['weight'], $value['title']);
         });
 
         // Sort the child menu items by their weight and title.
-        foreach ($items as &$item) {
-            $children = array_get($item, 'children', array());
+        foreach ($columns as &$column) {
+            $children = array_get($column, 'children', array());
 
             if (empty($children)) continue;
 
@@ -100,10 +99,10 @@ abstract class BackendController extends ThemedController
                 return sprintf('%06d - %s', $value['weight'], $value['title']);
             });
 
-            $item['children'] = $children;
+            $column['children'] = $children;
         }
 
-        return $items;
+        return $columns;
     }
 
     /**
@@ -111,125 +110,121 @@ abstract class BackendController extends ThemedController
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
      * @param array $input
-     * @param array $columns
+     * @param array $options
      *
-     * @return \Nova\Http\JsonResponse
+     * @return array
      */
-    protected function dataTable($query, array $input, array $columns)
+    protected function dataTable($query, array $input, array $options)
     {
+        $columns = array_get($input, 'columns', array());
+
+        // Compute the total count.
         $totalCount = $query->count();
 
-        // Retrieve the request variables.
-        $requestColumns = array_get($input, 'columns', array());
-
-        $draw   = array_get($input, 'draw',   0);
-        $start  = array_get($input, 'start',  0);
-        $length = array_get($input, 'length', 25);
-
-        $order = array_get($input, 'order',  array());
+        // Compute the draw.
+        $draw = intval(array_get($input, 'draw', 0));
 
         // Handle the global searching.
         $search = trim(array_get($input, 'search.value'));
 
         if (! empty($search)) {
-            $query->whereNested(function($query) use($requestColumns, $columns, $search)
+            $query->whereNested(function($query) use($columns, $options, $search)
             {
-                foreach($requestColumns as $requestColumn) {
-                    $data = $requestColumn['data'];
+                foreach($columns as $column) {
+                    $data = $column['data'];
 
-                    $column = array_first($columns, function ($key, $value) use ($data)
+                    $option = array_first($options, function ($key, $value) use ($data)
                     {
                         return ($value['data'] == $data);
                     });
 
-                    if ($requestColumn['searchable'] == 'true') {
-                        $field = $column['field'];
-
-                        $query->orWhere($field, 'LIKE', '%' .$search .'%');
+                    if ($column['searchable'] == 'true') {
+                        $query->orWhere($option['field'], 'LIKE', '%' .$search .'%');
                     }
                 }
             });
         }
 
         // Handle the column searching.
-        foreach($requestColumns as $requestColumn) {
-            $data = $requestColumn['data'];
+        foreach($columns as $column) {
+            $data = $column['data'];
 
-            $column = array_first($columns, function ($key, $value) use ($data)
+            $option = array_first($options, function ($key, $value) use ($data)
             {
                 return ($value['data'] == $data);
             });
 
-            $search = trim(array_get($requestColumn, 'search.value'));
+            $search = trim(array_get($column, 'search.value'));
 
-            if (($requestColumn['searchable'] == 'true') && (strlen($search) > 0)) {
-                $field = $column['field'];
-
-                $query->where($field, 'LIKE', '%' .$search .'%');
+            if (($column['searchable'] == 'true') && (strlen($search) > 0)) {
+                $query->where($option['field'], 'LIKE', '%' .$search .'%');
             }
         }
 
+        // Compute the filtered count.
         $filteredCount = $query->count();
 
         // Handle the column ordering.
-        if (! empty($order)) {
-            foreach ($order as $options) {
-                $columnIdx = intval($options['column']);
+        $orders = array_get($input, 'order', array());
 
-                $requestColumn = array_get($input, 'columns.' .$columnIdx, array());
+        foreach ($orders as $order) {
+            $index = intval($order['column']);
 
-                //
-                $data = $requestColumn['data'];
+            $column = array_get($input, 'columns.' .$index, array());
 
-                $column = array_first($columns, function ($key, $value) use ($data)
-                {
-                    return ($value['data'] == $data);
-                });
+            //
+            $data = $column['data'];
 
-                if ($requestColumn['orderable'] == 'true') {
-                    $field = $column['field'];
+            $option = array_first($options, function ($key, $value) use ($data)
+            {
+                return ($value['data'] == $data);
+            });
 
-                    $dir = ($options['dir'] === 'asc') ? 'ASC' : 'DESC';
+            if ($column['orderable'] == 'true') {
+                $dir = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
 
-                    $query->orderBy($field, $dir);
-                }
+                $query->orderBy($option['field'], $dir);
             }
         }
 
         // Handle the pagination.
+        $start  = array_get($input, 'start',  0);
+        $length = array_get($input, 'length', 25);
+
         $query->skip($start)->take($length);
 
-        // Retrieve and format the data to respect the DataTables specs.
+        // Retrieve the data from database.
+        $results = $query->get();
+
+        // Format the data on respect of DataTables specs.
         $data = array();
 
-        foreach ($query->get() as $result) {
+        foreach ($results as $result) {
             $record = array();
 
-            foreach ($columns as $column) {
-                $key = $column['data'];
+            foreach ($options as $option) {
+                $key = $option['data'];
 
-                 // Process for the dynamic columns.
-                if (! is_null($callable = array_get($column, 'uses'))) {
+                 // Process for dynamic columns.
+                if (! is_null($callable = array_get($option, 'uses'))) {
                     $record[$key] = call_user_func($callable, $result, $key);
                 }
 
-                // Process for the standard columns.
-                else if (isset($column['field'])) {
-                    $field = $column['field'];
-
-                    $record[$key] = $result->{$field};
+                // Process for standard columns.
+                else if (isset($option['field'])) {
+                    $record[$key] = $result->{$option['field']};
                 }
             }
 
             $data[] = $record;
         }
 
-        return Response::json(array(
-            "draw"            => intval($draw),
+        return array(
+            "draw"            => $draw,
             "recordsTotal"    => $totalCount,
             "recordsFiltered" => $filteredCount,
             "data"            => $data
-        ));
+        );
     }
 
 }

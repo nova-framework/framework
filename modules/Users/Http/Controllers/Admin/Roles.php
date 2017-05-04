@@ -12,6 +12,7 @@ use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Language;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
@@ -92,7 +93,10 @@ class Roles extends BackendController
 
         $query = Role::with('users');
 
-        return $this->dataTable($query, $input, $columns);
+        //
+        $data = $this->dataTable($query, $input, $columns);
+
+        return Response::json($data);
     }
 
     public function index()

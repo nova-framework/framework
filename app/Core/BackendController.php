@@ -213,7 +213,7 @@ abstract class BackendController extends ThemedController
                 if (! is_null($callable = array_get($column, 'uses'))) {
                     $offset = intval(array_get($input, 'offset', 1)) ?: 1;
 
-                    $record[$key] = call_user_func($callable, $result, $offset);
+                    $record[$key] = call_user_func($callable, $result, $offset, $length);
                 }
 
                 // Process for the standard columns.

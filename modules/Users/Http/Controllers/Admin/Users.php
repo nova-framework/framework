@@ -106,6 +106,42 @@ class Users extends BackendController
         return Validator::make($data, $rules, $messages, $attributes);
     }
 
+    public function data()
+    {
+        $format = __d('users', '%d %b %Y, %H:%M');
+
+        $columns = array(
+            array('data' => 'userid',   'field' => 'id'),
+            array('data' => 'username', 'field' => 'username'),
+            array('data' => 'name',     'field' => 'first_name'),
+            array('data' => 'surname',  'field' => 'last_name'),
+            array('data' => 'email',    'field' => 'email'),
+
+            array('data' => 'role', 'field' => 'role_id', 'uses' => function($user)
+            {
+                return $user->role->name;
+            }),
+
+            array('data' => 'date', 'uses' => function($user) use ($format)
+            {
+                return $user->created_at->formatLocalized($format);
+            }),
+
+            array('data' => 'actions', 'uses' => function($user)
+            {
+                return View::make('Partials/UsersTableActions', array(), 'Users')
+                    ->with('user', $user)
+                    ->render();
+            }),
+        );
+
+        $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
+
+        $query = User::with('role')->where('active', 1);
+
+        return $this->dataTable($query, $input, $columns);
+    }
+    
     public function index()
     {
         $langInfo = Language::info();
@@ -348,46 +384,6 @@ class Users extends BackendController
             ->shares('title', __d('users', 'Searching Users for: {0}', $search))
             ->with('search', $search)
             ->with('users', $users);
-    }
-
-    //------------------------------------------------------------------------------
-    // Server Side Processor for DataTables
-    //------------------------------------------------------------------------------
-
-    public function data()
-    {
-        $format = __d('users', '%d %b %Y, %H:%M');
-
-        $columns = array(
-            array('data' => 'userid',   'field' => 'id'),
-            array('data' => 'username', 'field' => 'username'),
-            array('data' => 'name',     'field' => 'first_name'),
-            array('data' => 'surname',  'field' => 'last_name'),
-            array('data' => 'email',    'field' => 'email'),
-
-            array('data' => 'role', 'field' => 'role_id', 'uses' => function($user)
-            {
-                return $user->role->name;
-            }),
-
-            array('data' => 'date', 'uses' => function($user) use ($format)
-            {
-                return $user->created_at->formatLocalized($format);
-            }),
-
-            array('data' => 'actions', 'uses' => function($user)
-            {
-                return View::make('Partials/UsersTableActions', array(), 'Users')
-                    ->with('user', $user)
-                    ->render();
-            }),
-        );
-
-        $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
-
-        $query = User::with('role')->where('active', 1);
-
-        return $this->dataTable($query, $input, $columns);
     }
 
 }

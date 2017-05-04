@@ -138,7 +138,7 @@ class Users extends BackendController
 
         $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
 
-        $query = User::with('role')->where('active', 1);
+        $query = User::with('role')->where('activated', 1);
 
         //
         $data = $this->dataTable($query, $input, $columns);

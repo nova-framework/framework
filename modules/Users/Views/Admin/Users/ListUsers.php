@@ -50,8 +50,8 @@ $format = __d('users', '%d %b %Y, %H:%M');
 foreach ($users as $user) {
         $actions = View::make('Partials/UsersTableActions', array(), 'Users')
             ->with('user', $user)
+            ->with('length', $pageLength)
             ->with('offset', $offset)
-            ->with('pageLength', $pageLength)
             ->render();
 
         echo "

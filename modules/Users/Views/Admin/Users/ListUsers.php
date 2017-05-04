@@ -42,25 +42,6 @@
                 </tr>
             </thead>
             <tbody>
-<?php
-$format = __d('users', '%d %b %Y, %H:%M');
-
-foreach ($users as $user) {
-        $actions = View::fetch('Partials/UsersTableActions', array('user' => $user), 'Users');
-
-        echo "
-<tr>
-    <td>" .$user->id ."</td>
-    <td>" .$user->username ."</td>
-    <td>" .$user->role->name ."</td>
-    <td>" .$user->first_name ."</td>
-    <td>" .$user->last_name ."</td>
-    <td>" .$user->email ."</td>
-    <td>" .$user->created_at->formatLocalized($format) ."</td>
-    <td>" .$actions ."</td>
-</tr>";
-}
-?>
             </tbody>
         </table>
     </div>
@@ -101,11 +82,11 @@ $(function ()
 {
     $('#usersTable').DataTable({
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $language; ?>.json'
+            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $langInfo; ?>.json'
         },
+        stateSave: true,
         processing: true,
         serverSide: true,
-        deferLoading: <?= $totalCount; ?>,
         ajax: {
             type: 'POST',
             url: '<?= site_url('admin/users/data'); ?>',
@@ -113,8 +94,8 @@ $(function ()
                 data._token = '<?= csrf_token(); ?>';
             }
         },
-        pageLength: <?= $pageLength; ?>,
-        lengthMenu: [ 3, 10, 25, 50, 75, 100 ],
+        pageLength: 15,
+        lengthMenu: [ 3, 10, 15, 20, 25, 50, 75, 100 ],
 
         // We need to disable the ordering and searching in some column(s).
         columns: [
@@ -126,7 +107,7 @@ $(function ()
             { data: 'email',    orderable: true,  searchable: true  },
             { data: 'date',     orderable: true,  searchable: false },
             { data: 'actions',  orderable: false, searchable: false },
-        ]
+        ],
     });
 
     $('#modal_delete_user').on('show.bs.modal', function (event) {

@@ -357,21 +357,11 @@ class Users extends BackendController
 
     public function listUsers()
     {
-        $pageLength = 25;
-
-        //
-        $query = User::with('role')->where('active', 1);
-
-        $totalCount = $query->count();
-
-        $users = $query->take($pageLength)->get();
+        $langInfo = Language::info();
 
         return $this->getView()
             ->shares('title', __d('users', 'Users'))
-            ->with('users', $users)
-            ->with('totalCount', $totalCount)
-            ->with('pageLength', $pageLength)
-            ->with('language', Language::info());
+            ->with('langInfo', $langInfo);
     }
 
     public function processor()

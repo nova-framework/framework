@@ -13,12 +13,29 @@
 
 <style>
 
+#usersTable {
+    border-bottom: 1px solid #d2d6de;
+    width: 100%;
+}
+
 #usersTable td {
     vertical-align: middle;
 }
 
 #usersTable_paginate .pagination {
     margin: 5px 0 -3px;
+}
+
+tfoot input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+#usersTable .dataTables_wrapper {
+    clear: both;
+    min-height: 400px;
+    position: relative;
 }
 
 </style>
@@ -28,7 +45,7 @@
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
     </div>
     <div class="box-body">
-        <table id='usersTable' class='table table-striped table-hover responsive' style="width: 100%;">
+        <table id='usersTable' class='table table-striped table-hover responsive'>
             <thead>
                 <tr class="bg-primary disabled">
                     <th width='5%'><?= __d('users', 'ID'); ?></th>
@@ -43,18 +60,6 @@
             </thead>
             <tbody>
             </tbody>
-            <tfoot>
-                <tr class="bg-primary disabled">
-                    <th><?= __d('users', 'ID'); ?></th>
-                    <th><?= __d('users', 'Username'); ?></th>
-                    <th><?= __d('users', 'Role'); ?></th>
-                    <th><?= __d('users', 'First Name'); ?></th>
-                    <th><?= __d('users', 'Last Name'); ?></th>
-                    <th><?= __d('users', 'E-mail'); ?></th>
-                    <th><?= __d('users', 'Created At'); ?></th>
-                    <th><?= __d('users', 'Actions'); ?></th>
-                </tr>
-            </tfoot>
         </table>
     </div>
     <div class="box-footer with-border">
@@ -120,7 +125,8 @@ $(function () {
             { data: 'date',     orderable: true,  searchable: false },
             { data: 'actions',  orderable: false, searchable: false },
         ],
-        drawCallback: function(settings) {
+        drawCallback: function(settings)
+        {
             var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
 
             pagination.toggle(this.api().page.info().pages > 1);

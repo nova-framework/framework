@@ -127,8 +127,9 @@ abstract class BackendController extends ThemedController
         $draw   = array_get($input, 'draw',   0);
         $start  = array_get($input, 'start',  0);
         $length = array_get($input, 'length', 25);
-        $order  = array_get($input, 'order',  array());
         $offset = array_get($input, 'offset', 1);
+
+        $order = array_get($input, 'order',  array());
 
         // Handle the global searching.
         $search = trim(array_get($input, 'search.value'));

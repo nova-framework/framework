@@ -39,7 +39,7 @@ $router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($rou
     // The Users Search.
     $router->post('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
 
-    // Server Side Processor for DataTables.
+    // Server Side Processor for Users DataTable.
     $router->post('users/data', array('middleware' => 'auth', 'uses' => 'Users@data'));
 
     // The Users CRUD.
@@ -50,6 +50,9 @@ $router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($rou
     $router->get( 'users/{id}/edit',    array('middleware' => 'auth', 'uses' => 'Users@edit'));
     $router->post('users/{id}',         array('middleware' => 'auth', 'uses' => 'Users@update'));
     $router->post('users/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Users@destroy'));
+
+    // Server Side Processor for Roles DataTable.
+    $router->post('roles/data', array('middleware' => 'auth', 'uses' => 'Roles@data'));
 
     // The Roles CRUD.
     $router->get( 'roles',              array('middleware' => 'auth', 'uses' => 'Roles@index'));

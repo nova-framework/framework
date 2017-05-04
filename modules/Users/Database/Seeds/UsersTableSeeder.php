@@ -83,5 +83,36 @@ class UsersTableSeeder extends Seeder
             'activation_code' => '',
             'remember_token'  => '',
         ]);
+
+        //------------------------------------------------------------------------------
+        // Mock Data
+        //------------------------------------------------------------------------------
+
+        $mockPath = dirname(__FILE__) .DS .'MOCK_DATA.json';
+
+        $users = json_decode(file_get_contents($mockPath), true);
+
+        //
+        $id = 6;
+
+        foreach ($users as $user) {
+            $username = $user['username'];
+
+            User::create([
+                'id'              => $id,
+                'role_id'         => 5,
+                'username'        => $username,
+                'password'        => Hash::make($username),
+                'first_name'      => $user['first_name'],
+                'last_name'       => $user['last_name'],
+                'location'        => $user['location'] .', ' .$user['country'],
+                'email'           => $user['email'],
+                'active'          => 1,
+                'activation_code' => '',
+                'remember_token'  => '',
+            ]);
+
+            $id++;
+        }
     }
 }

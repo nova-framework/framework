@@ -35,6 +35,10 @@
                 <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->present()->name; ?></td>
             </tr>
             <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Location'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->location ?: '-'; ?></td>
+            </tr>
+            <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'E-mail'); ?></th>
                 <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->email; ?></td>
             </tr>

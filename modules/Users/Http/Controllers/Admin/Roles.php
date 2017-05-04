@@ -10,6 +10,7 @@ namespace Modules\Users\Http\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Language;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
@@ -66,14 +67,41 @@ class Roles extends BackendController
         return Validator::make($data, $rules, $messages, $attributes);
     }
 
+    public function data()
+    {
+        $columns = array(
+            array('data' => 'roleid',  'field' => 'id'),
+            array('data' => 'name',    'field' => 'name'),
+            array('data' => 'slug',    'field' => 'slug'),
+            array('data' => 'details', 'field' => 'description'),
+
+            array('data' => 'users', 'uses' => function($role)
+            {
+                return $role->users->count();
+            }),
+
+            array('data' => 'actions', 'uses' => function($role)
+            {
+                return View::make('Partials/RolesTableActions', array(), 'Users')
+                    ->with('role', $role)
+                    ->render();
+            }),
+        );
+
+        $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
+
+        $query = Role::with('users');
+
+        return $this->dataTable($query, $input, $columns);
+    }
+
     public function index()
     {
-        // Get all Role records for current page.
-        $roles = Role::with('users')->paginate(25);
+        $langInfo = Language::info();
 
         return $this->getView()
             ->shares('title', __d('users', 'Roles'))
-            ->with('roles', $roles);
+            ->with('langInfo', $langInfo);
     }
 
     public function create()

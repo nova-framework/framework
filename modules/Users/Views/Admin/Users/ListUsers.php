@@ -48,11 +48,7 @@
 $format = __d('users', '%d %b %Y, %H:%M');
 
 foreach ($users as $user) {
-        $actions = View::make('Partials/UsersTableActions', array(), 'Users')
-            ->with('user', $user)
-            ->with('length', $pageLength)
-            ->with('offset', $offset)
-            ->render();
+        $actions = View::fetch('Partials/UsersTableActions', array('user' => $user), 'Users');
 
         echo "
 <tr>
@@ -117,10 +113,8 @@ $(function ()
             url: '<?= site_url('admin/users/data'); ?>',
             data: function (data) {
                 data._token = '<?= csrf_token(); ?>';
-                data.offset = $('#usersTable').DataTable().page() + 1;
             }
         },
-        displayStart: <?= $start; ?>,
         pageLength: <?= $pageLength; ?>,
         lengthMenu: [ 3, 10, 25, 50, 75, 100 ],
 

@@ -111,23 +111,21 @@ abstract class BackendController extends ThemedController
      * Server Side Processor for DataTables.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
+     * @param array $input
      * @param array $columns
      *
      * @return \Nova\Http\JsonResponse
      */
-    protected function dataTable($query, array $columns)
+    protected function dataTable($query, array $input, array $columns)
     {
         $totalCount = $query->count();
 
         // Retrieve the request variables.
-        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order', 'offset');
-
         $requestColumns = array_get($input, 'columns', array());
 
         $draw   = array_get($input, 'draw',   0);
         $start  = array_get($input, 'start',  0);
         $length = array_get($input, 'length', 25);
-        $offset = array_get($input, 'offset', 1);
 
         $order = array_get($input, 'order',  array());
 
@@ -213,12 +211,7 @@ abstract class BackendController extends ThemedController
 
                  // Process for the dynamic columns.
                 if (! is_null($callable = array_get($column, 'uses'))) {
-                    $record[$key] = call_user_func(
-                        $callable,
-                        $result,
-                        intval($length) ?: 25,
-                        intval($offset) ?: 1
-                    );
+                    $record[$key] = call_user_func($callable, $result);
                 }
 
                 // Process for the standard columns.

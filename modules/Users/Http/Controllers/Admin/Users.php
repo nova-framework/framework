@@ -356,26 +356,20 @@ class Users extends BackendController
 
     public function listUsers()
     {
-        $length = intval(Input::get('length', 25)) ?: 25;
-
-        $offset = intval(Input::get('offset', 1)) ?: 1;
-
-        $start = ($offset - 1) * $length;
+        $pageLength = 25;
 
         //
         $query = User::with('role')->where('active', 1);
 
-        $count = $query->count();
+        $totalCount = $query->count();
 
-        $users = $query->skip($start)->take($length)->get();
+        $users = $query->take($pageLength)->get();
 
         return $this->getView()
             ->shares('title', __d('users', 'Users'))
             ->with('users', $users)
-            ->with('totalCount', $count)
-            ->with('pageLength', $length)
-            ->with('offset', $offset)
-            ->with('start', $start);
+            ->with('totalCount', $totalCount)
+            ->with('pageLength', $pageLength);
     }
 
     public function processor()
@@ -399,19 +393,19 @@ class Users extends BackendController
                 return $user->created_at->formatLocalized($format);
             }),
 
-            array('data' => 'actions', 'uses' => function($user, $length, $offset)
+            array('data' => 'actions', 'uses' => function($user)
             {
                 return View::make('Partials/UsersTableActions', array(), 'Users')
                     ->with('user', $user)
-                    ->with('length', $length)
-                    ->with('offset', $offset)
                     ->render();
             }),
         );
 
+        $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
+
         $query = User::with('role')->where('active', 1);
 
-        return $this->dataTable($query, $columns);
+        return $this->dataTable($query, $input, $columns);
     }
 
 }

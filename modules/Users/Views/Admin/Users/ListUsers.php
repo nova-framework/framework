@@ -104,17 +104,6 @@ foreach ($users as $user) {
 <script>
 $(function ()
 {
-    $('#modal_delete_user').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-
-        var id = button.data('id'); // Extract the Role ID from data-* attributes
-
-        //
-        $('#delete_user_id').val(id);
-
-        $('#modal_delete_form').attr('action', "<?= site_url('admin/users'); ?>" + '/' + id + '/destroy');
-    });
-
     $('#usersTable').DataTable({
         language: {
             url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $language; ?>.json'
@@ -144,6 +133,17 @@ $(function ()
             { data: 'date',     orderable: true,  searchable: false },
             { data: 'actions',  orderable: false, searchable: false },
         ]
+    });
+
+    $('#modal_delete_user').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+
+        var id = button.data('id'); // Extract the Role ID from data-* attributes
+
+        //
+        $('#delete_user_id').val(id);
+
+        $('#modal_delete_form').attr('action', "<?= site_url('admin/users'); ?>" + '/' + id + '/destroy');
     });
 });
 

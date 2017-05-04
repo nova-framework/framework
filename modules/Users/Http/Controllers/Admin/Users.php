@@ -121,7 +121,7 @@ class Users extends BackendController
                 return $user->role->name;
             }),
 
-            array('data' => 'date', 'uses' => function($user)
+            array('data' => 'date', 'field' => 'created_at', 'uses' => function($user)
             {
                 $format = __d('users', '%d %b %Y, %H:%M');
 

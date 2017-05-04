@@ -370,7 +370,7 @@ class Users extends BackendController
             ->shares('title', __d('users', 'Users'))
             ->with('users', $users)
             ->with('totalCount', $totalCount)
-            ->with('pageLength', $pageLength),
+            ->with('pageLength', $pageLength)
             ->with('language', Language::info());
     }
 

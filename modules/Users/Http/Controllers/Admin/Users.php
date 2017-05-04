@@ -371,19 +371,23 @@ class Users extends BackendController
             array('data' => 'surname',  'field' => 'last_name'),
             array('data' => 'email',    'field' => 'email'),
 
-            array('data' => 'role', 'uses' => function($model)
+            array('data' => 'role', 'uses' => function($user)
             {
-                return $model->role->name;
+                return $user->role->name;
             }),
 
-            array('data' => 'date', 'uses' => function($model) use ($format)
+            array('data' => 'date', 'uses' => function($user) use ($format)
             {
-                return $model->created_at->formatLocalized($format);
+                return $user->created_at->formatLocalized($format);
             }),
 
-            array('data' => 'actions', 'uses' => function($model)
+            array('data' => 'actions', 'uses' => function($user)
             {
-                return '<div class="pull-right">-</div>';
+                return "<div class='btn-group pull-right' role='group' aria-label='...'>
+                            <a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>
+                            <a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>
+                            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#modal_delete_user' data-id='" .$user->id ."' title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>
+                        </div>";
             }),
         );
 

@@ -211,7 +211,7 @@ abstract class BackendController extends ThemedController
 
                  // Process for the dynamic columns.
                 if (! is_null($callable = array_get($column, 'uses'))) {
-                    $record[$key] = call_user_func($callable, $result);
+                    $record[$key] = call_user_func($callable, $result, $key);
                 }
 
                 // Process for the standard columns.

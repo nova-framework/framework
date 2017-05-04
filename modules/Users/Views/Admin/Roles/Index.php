@@ -13,6 +13,11 @@
 
 <style>
 
+#rolesTable {
+    border-bottom: 1px solid #d2d6de;
+    width: 100%;
+}
+
 #rolesTable_paginate .pagination {
     margin: 5px 0 -3px;
 }
@@ -24,7 +29,7 @@
         <h3 class="box-title"><?= __d('users', 'Registered Roles'); ?></h3>
     </div>
     <div class="box-body">
-        <table id='rolesTable' class='table table-striped table-hover responsive' style="width: 100%;">
+        <table id='rolesTable' class='table table-striped table-hover responsive'>
             <thead>
             <tr class="bg-primary disabled">
                 <th width='5%'><?= __d('users', 'ID'); ?></th>
@@ -37,16 +42,6 @@
             </thead>
             <tbody>
             </tbody>
-            <tfoot>
-            <tr class="bg-primary disabled">
-                <th><?= __d('users', 'ID'); ?></th>
-                <th><?= __d('users', 'Name'); ?></th>
-                <th><?= __d('users', 'Slug'); ?></th>
-                <th><?= __d('users', 'Description'); ?></th>
-                <th><?= __d('users', 'Users'); ?></th>
-                <th><?= __d('users', 'Operations'); ?></th>
-            </tr>
-            </tfoot>
         </table>
     </div>
     <div class="box-footer with-border">

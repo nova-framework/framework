@@ -180,7 +180,7 @@ class Registrar extends BackendController
             $user = $user->first();
 
             // Update the User status to active.
-            $user->active = 1;
+            $user->activated = 1;
 
             $user->activation_code = null;
 

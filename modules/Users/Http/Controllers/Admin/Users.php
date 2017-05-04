@@ -189,7 +189,7 @@ class Users extends BackendController
             $user->first_name = $input['first_name'];
             $user->last_name  = $input['last_name'];
             $user->email      = $input['email'];
-            $user->active     = 1;
+            $user->activated  = 1;
 
             // Setup the optional User location.
             if (isset($input['location'])) {

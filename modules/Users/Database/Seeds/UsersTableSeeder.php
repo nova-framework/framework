@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Site',
             'last_name'       => 'Administrator',
             'email'           => 'admin@novaframework.dev',
-            'active'          => 1,
+            'activated'       => 1,
             'activation_code' => '',
             'remember_token'  => '',
         ]);
@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Marcus',
             'last_name'       => 'Spears',
             'email'           => 'marcus@novaframework.dev',
-            'active'          => 1,
+            'activated'       => 1,
             'activation_code' => '',
             'remember_token'  => '',
         ]);
@@ -53,7 +53,7 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Michael',
             'last_name'       => 'White',
             'email'           => 'michael@novaframework.dev',
-            'active'          => 1,
+            'activated'       => 1,
             'activation_code' => '',
             'remember_token'  => '',
         ]);
@@ -66,7 +66,7 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'John',
             'last_name'       => 'Kennedy',
             'email'           => 'john@novaframework.dev',
-            'active'          => 1,
+            'activated'       => 1,
             'activation_code' => '',
             'remember_token'  => '',
         ]);
@@ -79,7 +79,7 @@ class UsersTableSeeder extends Seeder
             'first_name'      => 'Mark',
             'last_name'       => 'Black',
             'email'           => 'mark@novaframework.dev',
-            'active'          => 1,
+            'activated'       => 1,
             'activation_code' => '',
             'remember_token'  => '',
         ]);
@@ -107,7 +107,7 @@ class UsersTableSeeder extends Seeder
                 'last_name'       => $user['last_name'],
                 'location'        => $user['location'] .', ' .$user['country'],
                 'email'           => $user['email'],
-                'active'          => 1,
+                'activated'       => 1,
                 'activation_code' => '',
                 'remember_token'  => '',
             ]);

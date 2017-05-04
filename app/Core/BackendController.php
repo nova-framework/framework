@@ -128,6 +128,7 @@ abstract class BackendController extends ThemedController
         $start  = array_get($input, 'start',  0);
         $length = array_get($input, 'length', 25);
         $order  = array_get($input, 'order',  array());
+        $offset = array_get($input, 'offset', 1);
 
         // Handle the global searching.
         $search = trim(array_get($input, 'search.value'));
@@ -211,9 +212,12 @@ abstract class BackendController extends ThemedController
 
                  // Process for the dynamic columns.
                 if (! is_null($callable = array_get($column, 'uses'))) {
-                    $offset = intval(array_get($input, 'offset', 1)) ?: 1;
-
-                    $record[$key] = call_user_func($callable, $result, $length, $offset);
+                    $record[$key] = call_user_func(
+                        $callable,
+                        $result,
+                        intval($length) ?: 25,
+                        intval($offset) ?: 1
+                    );
                 }
 
                 // Process for the standard columns.

@@ -23,8 +23,6 @@
 
 </style>
 
-<?php $language = Language::info(); ?>
-
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>

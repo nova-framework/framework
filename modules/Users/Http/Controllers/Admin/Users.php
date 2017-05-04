@@ -13,6 +13,7 @@ use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
+use Nova\Support\Facades\Language;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
@@ -369,7 +370,8 @@ class Users extends BackendController
             ->shares('title', __d('users', 'Users'))
             ->with('users', $users)
             ->with('totalCount', $totalCount)
-            ->with('pageLength', $pageLength);
+            ->with('pageLength', $pageLength),
+            ->with('language', Language::info());
     }
 
     public function processor()

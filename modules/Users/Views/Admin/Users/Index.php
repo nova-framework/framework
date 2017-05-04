@@ -38,21 +38,21 @@
                     <th width='13%'><?= __d('users', 'Last Name'); ?></th>
                     <th width='18%'><?= __d('users', 'E-mail'); ?></th>
                     <th width='13%'><?= __d('users', 'Created At'); ?></th>
-                    <th class="text-right" width='13%'><?= __d('users', 'Actions'); ?></th>
+                    <th width='13%'><?= __d('users', 'Actions'); ?></th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
             <tfoot>
                 <tr class="bg-primary disabled">
-                    <th width='5%'><?= __d('users', 'ID'); ?></th>
-                    <th width='13%'><?= __d('users', 'Username'); ?></th>
-                    <th width='12%'><?= __d('users', 'Role'); ?></th>
-                    <th width='13%'><?= __d('users', 'First Name'); ?></th>
-                    <th width='13%'><?= __d('users', 'Last Name'); ?></th>
-                    <th width='18%'><?= __d('users', 'E-mail'); ?></th>
-                    <th width='13%'><?= __d('users', 'Created At'); ?></th>
-                    <th class="text-right" width='13%'><?= __d('users', 'Actions'); ?></th>
+                    <th><?= __d('users', 'ID'); ?></th>
+                    <th><?= __d('users', 'Username'); ?></th>
+                    <th><?= __d('users', 'Role'); ?></th>
+                    <th><?= __d('users', 'First Name'); ?></th>
+                    <th><?= __d('users', 'Last Name'); ?></th>
+                    <th><?= __d('users', 'E-mail'); ?></th>
+                    <th><?= __d('users', 'Created At'); ?></th>
+                    <th><?= __d('users', 'Actions'); ?></th>
                 </tr>
             </tfoot>
         </table>
@@ -90,8 +90,8 @@
 </div>
 
 <script>
-$(function ()
-{
+
+$(function () {
     $('#usersTable').DataTable({
         language: {
             url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $langInfo; ?>.json'

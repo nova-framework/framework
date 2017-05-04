@@ -108,8 +108,6 @@ class Users extends BackendController
 
     public function data()
     {
-        $format = __d('users', '%d %b %Y, %H:%M');
-
         $columns = array(
             array('data' => 'userid',   'field' => 'id'),
             array('data' => 'username', 'field' => 'username'),
@@ -122,8 +120,10 @@ class Users extends BackendController
                 return $user->role->name;
             }),
 
-            array('data' => 'date', 'uses' => function($user) use ($format)
+            array('data' => 'date', 'uses' => function($user)
             {
+                $format = __d('users', '%d %b %Y, %H:%M');
+
                 return $user->created_at->formatLocalized($format);
             }),
 
@@ -141,7 +141,7 @@ class Users extends BackendController
 
         return $this->dataTable($query, $input, $columns);
     }
-    
+
     public function index()
     {
         $langInfo = Language::info();

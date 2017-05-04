@@ -356,8 +356,20 @@ class Users extends BackendController
 
     public function listUsers()
     {
+        $pageLength = 25;
+
+        //
+        $query = User::with('role')->where('active', 1);
+
+        $totalCount = $query->count();
+
+        $users = $query->take($pageLength)->get();
+
         return $this->getView()
-            ->shares('title', __d('users', 'Users'));
+            ->shares('title', __d('users', 'Users'))
+            ->with('users', $users)
+            ->with('totalCount', $totalCount)
+            ->with('pageLength', $pageLength);
     }
 
     public function processor()
@@ -371,7 +383,7 @@ class Users extends BackendController
             array('data' => 'surname',  'field' => 'last_name'),
             array('data' => 'email',    'field' => 'email'),
 
-            array('data' => 'role', 'uses' => function($user)
+            array('data' => 'role', 'field' => 'role_id', 'uses' => function($user)
             {
                 return $user->role->name;
             }),
@@ -381,13 +393,12 @@ class Users extends BackendController
                 return $user->created_at->formatLocalized($format);
             }),
 
-            array('data' => 'actions', 'uses' => function($user)
+            array('data' => 'actions', 'uses' => function($user, $offset)
             {
-                return "<div class='btn-group pull-right' role='group' aria-label='...'>
-                            <a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>
-                            <a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>
-                            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#modal_delete_user' data-id='" .$user->id ."' title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>
-                        </div>";
+                return View::make('Partials/UsersTableActions', array(), 'Users')
+                    ->with('user', $user)
+                    ->with('offset', $offset)
+                    ->render();
             }),
         );
 

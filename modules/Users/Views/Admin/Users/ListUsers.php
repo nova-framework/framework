@@ -12,6 +12,7 @@
 <?= Session::getMessages(); ?>
 
 <style>
+
 #usersTable .even {
     border-bottom: 1px solid #f9f9f9;
 }
@@ -19,7 +20,10 @@
 #usersTable td {
     vertical-align: middle;
 }
+
 </style>
+
+<?php $language = Language::info(); ?>
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -40,8 +44,33 @@
                 </tr>
             </thead>
             <tbody>
+<?php
+$format = __d('users', '%d %b %Y, %H:%M');
+
+foreach ($users as $user) {
+        $actions = View::make('Partials/UsersTableActions', array(), 'Users')
+            ->with('user', $user)
+            ->with('offset', 1)
+            ->render();
+
+        echo "
+<tr>
+    <td>" .$user->id ."</td>
+    <td>" .$user->username ."</td>
+    <td>" .$user->role->name ."</td>
+    <td>" .$user->first_name ."</td>
+    <td>" .$user->last_name ."</td>
+    <td>" .$user->email ."</td>
+    <td>" .$user->created_at->formatLocalized($format) ."</td>
+    <td>" .$actions ."</td>
+</tr>";
+}
+?>
             </tbody>
         </table>
+    </div>
+    <div class="box-footer with-border">
+        <a class='btn btn-success' href='<?= site_url('admin/users/create'); ?>'><i class='fa fa-user-plus'></i> <?= __d('users', 'Create a new User'); ?></a>
     </div>
 </div>
 
@@ -87,24 +116,28 @@ $(function ()
     });
 
     $('#usersTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $language; ?>.json'
+        },
         processing: true,
         serverSide: true,
+        deferLoading: <?= $totalCount; ?>,
         ajax: {
             type: 'POST',
             url: '<?= site_url('admin/users/data'); ?>',
             data: function (data) {
                 data._token = '<?= csrf_token(); ?>';
-                data.offset = $('#usersTable').DataTable().page();
+                data.offset = $('#usersTable').DataTable().page() + 1;
             }
         },
-        pageLength: 25,
+        pageLength: <?= $pageLength; ?>,
         lengthMenu: [ 3, 10, 25, 50, 75, 100 ],
 
-        // We need to disable the ordering in some columns.
+        // We need to disable the ordering and searching in some column(s).
         columns: [
             { data: 'userid',   orderable: true,  searchable: false },
             { data: 'username', orderable: true,  searchable: true  },
-            { data: 'role',     orderable: false, searchable: false },
+            { data: 'role',     orderable: true,  searchable: false },
             { data: 'name',     orderable: true,  searchable: true  },
             { data: 'surname',  orderable: true,  searchable: true  },
             { data: 'email',    orderable: true,  searchable: true  },

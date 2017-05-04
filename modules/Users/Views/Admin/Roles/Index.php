@@ -99,7 +99,7 @@ $(function () {
             }
         },
         pageLength: 15,
-        lengthMenu: [ 15, 20, 25, 50, 75, 100 ],
+        lengthMenu: [ 5, 10, 15, 20, 25, 50, 75, 100 ],
 
         // We need to disable the ordering and searching in some column(s).
         columns: [

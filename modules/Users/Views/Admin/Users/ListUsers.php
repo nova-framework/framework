@@ -50,7 +50,7 @@ $format = __d('users', '%d %b %Y, %H:%M');
 foreach ($users as $user) {
         $actions = View::make('Partials/UsersTableActions', array(), 'Users')
             ->with('user', $user)
-            ->with('offset', 1)
+            ->with('offset', $offset)
             ->render();
 
         echo "
@@ -111,6 +111,7 @@ $(function ()
         processing: true,
         serverSide: true,
         deferLoading: <?= $totalCount; ?>,
+        displayStart: <?= $start; ?>,
         ajax: {
             type: 'POST',
             url: '<?= site_url('admin/users/data'); ?>',

@@ -358,18 +358,24 @@ class Users extends BackendController
     {
         $pageLength = 25;
 
+        $offset = intval(Input::get('offset', 1)) ?: 1;
+
+        $start = ($offset - 1) * $pageLength;
+
         //
         $query = User::with('role')->where('active', 1);
 
         $totalCount = $query->count();
 
-        $users = $query->take($pageLength)->get();
+        $users = $query->skip($start)->take($pageLength)->get();
 
         return $this->getView()
             ->shares('title', __d('users', 'Users'))
             ->with('users', $users)
             ->with('totalCount', $totalCount)
-            ->with('pageLength', $pageLength);
+            ->with('pageLength', $pageLength)
+            ->with('offset', $offset)
+            ->with('start', $start);
     }
 
     public function processor()

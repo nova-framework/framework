@@ -130,7 +130,7 @@ abstract class BackendController extends ThemedController
         $order  = array_get($input, 'order',  array());
 
         // Handle the global searching.
-        $search = trim(array_get($input, 'search.value', ''));
+        $search = trim(array_get($input, 'search.value'));
 
         if (! empty($search)) {
             $query->whereNested(function($query) use($requestColumns, $columns, $search)
@@ -140,11 +140,11 @@ abstract class BackendController extends ThemedController
 
                     $column = array_first($columns, function ($key, $value) use ($data)
                     {
-                        return ($value['dt'] == $data);
+                        return ($value['data'] == $data);
                     });
 
                     if ($requestColumn['searchable'] == 'true') {
-                        $field = $column['db'];
+                        $field = $column['field'];
 
                         $query->orWhere($field, 'LIKE', '%' .$search .'%');
                     }
@@ -158,13 +158,13 @@ abstract class BackendController extends ThemedController
 
             $column = array_first($columns, function ($key, $value) use ($data)
             {
-                return ($value['dt'] == $data);
+                return ($value['data'] == $data);
             });
 
-            $search = trim(array_get($requestColumn, 'search.value', ''));
+            $search = trim(array_get($requestColumn, 'search.value'));
 
             if (($requestColumn['searchable'] == 'true') && (strlen($search) > 0)) {
-                $field = $column['db'];
+                $field = $column['field'];
 
                 $query->where($field, 'LIKE', '%' .$search .'%');
             }
@@ -184,11 +184,11 @@ abstract class BackendController extends ThemedController
 
                 $column = array_first($columns, function ($key, $value) use ($data)
                 {
-                    return ($value['dt'] == $data);
+                    return ($value['data'] == $data);
                 });
 
                 if ($requestColumn['orderable'] == 'true') {
-                    $field = $column['db'];
+                    $field = $column['field'];
 
                     $dir = ($options['dir'] === 'asc') ? 'ASC' : 'DESC';
 
@@ -197,38 +197,25 @@ abstract class BackendController extends ThemedController
             }
         }
 
-        // Handle the pagination and retrieve the data from database.
-        $results = $query->skip($start)->take($length)->get();
+        // Handle the pagination.
+        $query->skip($start)->take($length);
 
-        // Format the retrieved data to respect the DataTables specs.
+        // Retrieve and format the data to respect the DataTables specs.
         $data = array();
 
-        foreach ($results as $result) {
+        foreach ($query->get() as $result) {
             $record = array();
 
             foreach ($columns as $column) {
-                $key = $column['dt'];
+                $key = $column['data'];
 
-                $formatter = array_get($column, 'formatter');
+                if (! is_null($callable = array_get($column, 'uses'))) {
+                    $record[$key] = call_user_func($callable, $result);
+                } else if (isset($column['field'])) {
+                    $field = $column['field'];
 
-                $field = array_get($column, 'db');
-
-                if (! is_null($field)) {
-                    $value = $result->{$field};
-
-                    if (! is_null($formatter)) {
-                        $value = call_user_func($formatter, $result, $value);
-                    }
+                    $record[$key] = $result->{$field};
                 }
-
-                // Handle the dynamic fields.
-                else if (is_null($formatter)) {
-                    throw new \Exception("Formatter not defined for column [$key]");
-                } else {
-                    $value = call_user_func($formatter, $result);
-                }
-
-                $record[$key] = $value;
             }
 
             $data[] = $record;

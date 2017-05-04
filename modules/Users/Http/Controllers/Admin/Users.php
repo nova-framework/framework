@@ -362,21 +362,28 @@ class Users extends BackendController
 
     public function processor()
     {
-        $columns = array(
-            array('dt' => 'id',       'db' => 'id'),
-            array('dt' => 'username', 'db' => 'username'),
-            array('dt' => 'name',     'db' => 'first_name'),
-            array('dt' => 'surname',  'db' => 'last_name'),
-            array('dt' => 'email',    'db' => 'email'),
+        $format = __d('users', '%d %b %Y, %H:%M');
 
-            array('dt' => 'role', 'db' => 'role', 'formatter' => function($user, $role)
+        $columns = array(
+            array('data' => 'userid',   'field' => 'id'),
+            array('data' => 'username', 'field' => 'username'),
+            array('data' => 'name',     'field' => 'first_name'),
+            array('data' => 'surname',  'field' => 'last_name'),
+            array('data' => 'email',    'field' => 'email'),
+
+            array('data' => 'role', 'uses' => function($model)
             {
-                return $role->name;
+                return $model->role->name;
             }),
 
-            array('dt' => 'joindate', 'db' => 'created_at', 'formatter' => function($user, $date)
+            array('data' => 'date', 'uses' => function($model) use ($format)
             {
-                return $date->formatLocalized('%d %b %Y, %H:%M');
+                return $model->created_at->formatLocalized($format);
+            }),
+
+            array('data' => 'actions', 'uses' => function($model)
+            {
+                return '<div class="pull-right">-</div>';
             }),
         );
 

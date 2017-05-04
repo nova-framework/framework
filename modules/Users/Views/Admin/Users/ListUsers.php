@@ -32,6 +32,7 @@
                     <th><?= __d('users', 'Last Name'); ?></th>
                     <th><?= __d('users', 'E-mail'); ?></th>
                     <th><?= __d('users', 'Created At'); ?></th>
+                    <th class="text-right"><?= __d('users', 'Actions'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -63,13 +64,14 @@ $(document).ready(function ()
 
         // We need to disable the ordering in some columns.
         columns: [
-            { data: 'id',       orderable: true,  searchable: false },
+            { data: 'userid',   orderable: true,  searchable: false },
             { data: 'username', orderable: true,  searchable: true  },
             { data: 'role',     orderable: false, searchable: false },
             { data: 'name',     orderable: true,  searchable: true  },
             { data: 'surname',  orderable: true,  searchable: true  },
             { data: 'email',    orderable: true,  searchable: true  },
-            { data: 'joindate', orderable: true,  searchable: false },
+            { data: 'date',     orderable: true,  searchable: false },
+            { data: 'actions',  orderable: false, searchable: false },
         ]
     });
 });

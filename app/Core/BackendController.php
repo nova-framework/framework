@@ -120,7 +120,7 @@ abstract class BackendController extends ThemedController
         $totalCount = $query->count();
 
         // Retrieve the request variables.
-        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order');
+        $input = Input::only('columns', 'draw', 'start', 'length', 'search', 'order', 'offset');
 
         $requestColumns = array_get($input, 'columns', array());
 
@@ -209,9 +209,15 @@ abstract class BackendController extends ThemedController
             foreach ($columns as $column) {
                 $key = $column['data'];
 
+                 // Process for the dynamic columns.
                 if (! is_null($callable = array_get($column, 'uses'))) {
-                    $record[$key] = call_user_func($callable, $result);
-                } else if (isset($column['field'])) {
+                    $offset = intval(array_get($input, 'offset', 1)) ?: 1;
+
+                    $record[$key] = call_user_func($callable, $result, $offset);
+                }
+
+                // Process for the standard columns.
+                else if (isset($column['field'])) {
                     $field = $column['field'];
 
                     $record[$key] = $result->{$field};

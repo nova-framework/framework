@@ -12,7 +12,6 @@ use Nova\Http\Request;
 use Nova\Routing\Route;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Event;
-use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;

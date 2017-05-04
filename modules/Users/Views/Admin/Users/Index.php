@@ -11,55 +11,51 @@
 
 <?= Session::getMessages(); ?>
 
+<style>
+
+#usersTable td {
+    vertical-align: middle;
+}
+
+#usersTable_paginate .pagination {
+    margin: 5px 0 -3px;
+}
+
+</style>
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
-        <div class="box-tools">
-        <?= $users->links(); ?>
-        </div>
     </div>
-    <div class="box-body no-padding">
-<?php if (! $users->isEmpty()) { ?>
-        <table id='left' class='table table-striped table-hover responsive'>
-            <tr class="bg-navy disabled">
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Role'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Name and Surname'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'E-mail'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Created At'); ?></th>
-                <th style='text-align: right; vertical-align: middle;'><?= __d('users', 'Operations'); ?></th>
-            </tr>
-<?php
-    $format = __d('users', '%d %b %Y, %H:%M');
-
-    foreach ($users->getItems() as $user) {
-        echo "
-<tr>
-    <td style='text-align: center; vertical-align: middle;' width='5%'>" .$user->id ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->username ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='11%'>" .$user->role->name ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->present()->name() ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->email ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='15%'>" .$user->created_at->formatLocalized($format) ."</td>
-    <td style='text-align: right; vertical-align: middle;' width='15%'>
-        <div class='btn-group' role='group' aria-label='...'>
-            <a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>
-            <a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>
-            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#modal_delete_user' data-id='" .$user->id ."' title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>
-        </div>
-    </td>
-</tr>";
-
-    }
-?>
+    <div class="box-body">
+        <table id='usersTable' class='table table-striped table-hover responsive' style="width: 100%;">
+            <thead>
+                <tr class="bg-primary disabled">
+                    <th width='5%'><?= __d('users', 'ID'); ?></th>
+                    <th width='13%'><?= __d('users', 'Username'); ?></th>
+                    <th width='12%'><?= __d('users', 'Role'); ?></th>
+                    <th width='13%'><?= __d('users', 'First Name'); ?></th>
+                    <th width='13%'><?= __d('users', 'Last Name'); ?></th>
+                    <th width='18%'><?= __d('users', 'E-mail'); ?></th>
+                    <th width='13%'><?= __d('users', 'Created At'); ?></th>
+                    <th class="text-right" width='13%'><?= __d('users', 'Actions'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr class="bg-primary disabled">
+                    <th width='5%'><?= __d('users', 'ID'); ?></th>
+                    <th width='13%'><?= __d('users', 'Username'); ?></th>
+                    <th width='12%'><?= __d('users', 'Role'); ?></th>
+                    <th width='13%'><?= __d('users', 'First Name'); ?></th>
+                    <th width='13%'><?= __d('users', 'Last Name'); ?></th>
+                    <th width='18%'><?= __d('users', 'E-mail'); ?></th>
+                    <th width='13%'><?= __d('users', 'Created At'); ?></th>
+                    <th class="text-right" width='13%'><?= __d('users', 'Actions'); ?></th>
+                </tr>
+            </tfoot>
         </table>
-<?php } else { ?>
-        <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %H:%M", time()) ." - "; ?> <?= __d('users', 'No registered Users'); ?></h4>
-            <?= __d('users', 'There are no registered Users.'); ?>
-        </div>
-<?php } ?>
     </div>
     <div class="box-footer with-border">
         <a class='btn btn-success' href='<?= site_url('admin/users/create'); ?>'><i class='fa fa-user-plus'></i> <?= __d('users', 'Create a new User'); ?></a>
@@ -67,8 +63,6 @@
 </div>
 
 </section>
-
-<?php if (! $users->isEmpty()) { ?>
 
 <div class="modal modal-default" id="modal_delete_user">
     <div class="modal-dialog">
@@ -96,7 +90,43 @@
 </div>
 
 <script>
-$(function () {
+$(function ()
+{
+    $('#usersTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/<?= $langInfo; ?>.json'
+        },
+        stateSave: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: 'POST',
+            url: '<?= site_url('admin/users/data'); ?>',
+            data: function (data) {
+                data._token = '<?= csrf_token(); ?>';
+            }
+        },
+        pageLength: 15,
+        lengthMenu: [ 3, 10, 15, 20, 25, 50, 75, 100 ],
+
+        // We need to disable the ordering and searching in some column(s).
+        columns: [
+            { data: 'userid',   orderable: true,  searchable: false },
+            { data: 'username', orderable: true,  searchable: true  },
+            { data: 'role',     orderable: true,  searchable: false },
+            { data: 'name',     orderable: true,  searchable: true  },
+            { data: 'surname',  orderable: true,  searchable: true  },
+            { data: 'email',    orderable: true,  searchable: true  },
+            { data: 'date',     orderable: true,  searchable: false },
+            { data: 'actions',  orderable: false, searchable: false },
+        ],
+        drawCallback: function(settings) {
+            var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+
+            pagination.toggle(this.api().page.info().pages > 1);
+        },
+    });
+
     $('#modal_delete_user').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
 
@@ -110,5 +140,3 @@ $(function () {
 });
 
 </script>
-
-<?php } ?>

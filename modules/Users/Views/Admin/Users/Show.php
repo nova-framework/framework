@@ -32,7 +32,7 @@
             </tr>
             <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Name and Surname'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->realname; ?></td>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->present()->name; ?></td>
             </tr>
             <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'E-mail'); ?></th>

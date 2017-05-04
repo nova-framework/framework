@@ -108,12 +108,11 @@ class Users extends BackendController
 
     public function index()
     {
-        // Get all User records for current page.
-        $users = User::where('active', 1)->paginate(25);
+        $langInfo = Language::info();
 
         return $this->getView()
             ->shares('title', __d('users', 'Users'))
-            ->with('users', $users);
+            ->with('langInfo', $langInfo);
     }
 
     public function create()
@@ -352,19 +351,10 @@ class Users extends BackendController
     }
 
     //------------------------------------------------------------------------------
-    // An Users list using DataTables
+    // Server Side Processor for DataTables
     //------------------------------------------------------------------------------
 
-    public function listUsers()
-    {
-        $langInfo = Language::info();
-
-        return $this->getView()
-            ->shares('title', __d('users', 'Users'))
-            ->with('langInfo', $langInfo);
-    }
-
-    public function processor()
+    public function data()
     {
         $format = __d('users', '%d %b %Y, %H:%M');
 

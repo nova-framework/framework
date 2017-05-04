@@ -39,9 +39,8 @@ $router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($rou
     // The Users Search.
     $router->post('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
 
-    // An Users list using DataTables.
-    $router->get( 'users/list',         array('middleware' => 'auth', 'uses' => 'Users@listUsers'));
-    $router->post('users/data',         array('middleware' => 'auth', 'uses' => 'Users@processor'));
+    // Server Side Processor for DataTables.
+    $router->post('users/data', array('middleware' => 'auth', 'uses' => 'Users@data'));
 
     // The Users CRUD.
     $router->get( 'users',              array('middleware' => 'auth', 'uses' => 'Users@index'));

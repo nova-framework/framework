@@ -113,7 +113,6 @@ $(function () {
         pageLength: 15,
         lengthMenu: [ 5, 10, 15, 20, 25, 50, 75, 100 ],
 
-        // We need to disable the ordering and searching in some column(s).
         columns: [
             { data: 'userid',   orderable: true,  searchable: false },
             { data: 'username', orderable: true,  searchable: true  },
@@ -124,6 +123,7 @@ $(function () {
             { data: 'date',     orderable: true,  searchable: false },
             { data: 'actions',  orderable: false, searchable: false },
         ],
+
         drawCallback: function(settings)
         {
             var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');

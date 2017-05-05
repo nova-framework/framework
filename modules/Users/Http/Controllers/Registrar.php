@@ -173,7 +173,7 @@ class Registrar extends BackendController
      */
     public function verify($token)
     {
-        $user = User::where('activation_code', $token)->where('active', '=', 0);
+        $user = User::where('activation_code', $token)->where('activated', '=', 0);
 
         // If the User is available.
         if ($user->count()) {

@@ -24,14 +24,16 @@ class Files extends BackendController
     /**
      * The Request instance.
      *
-     * @var \Http\Request
+     * @var \Nova\Http\Request
      */
     private $request = null;
 
 
-    public function __construct()
+    public function __construct(Request $request)
     {
         parent::__construct();
+
+        $this->request = $request;
 
         // Setup the Middleware.
         $this->middleware('admin');

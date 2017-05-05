@@ -18,7 +18,7 @@ class SmallBoxUsers extends Widget
      */
     public function handle()
     {
-        $users = User::where('active', 1)->count();
+        $users = User::where('activated', 1)->count();
 
         $data = array(
             'color' => 'yellow',

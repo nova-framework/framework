@@ -208,12 +208,12 @@ abstract class BackendController extends ThemedController
                  // Process for dynamic columns.
                 if (! is_null($callable = array_get($option, 'uses'))) {
                     $record[$key] = call_user_func($callable, $result, $key);
+
+                    continue;
                 }
 
                 // Process for standard columns.
-                else if (isset($option['field'])) {
-                    $record[$key] = $result->{$option['field']};
-                }
+                $record[$key] = $result->{$option['field']};
             }
 
             $data[] = $record;

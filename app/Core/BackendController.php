@@ -196,24 +196,36 @@ abstract class BackendController extends ThemedController
         // Retrieve the data from database.
         $results = $query->get();
 
+        //
         // Format the data on respect of DataTables specs.
+
+        $columns = array();
+
+        foreach ($options as $option) {
+            $key = $option['data'];
+
+            //
+            $field = array_get($option, 'field');
+
+            $columns[$key] = array_get($option, 'uses', $field);
+        }
+
+        //
         $data = array();
 
         foreach ($results as $result) {
             $record = array();
 
-            foreach ($options as $option) {
-                $key = $option['data'];
-
-                 // Process for dynamic columns.
-                if (! is_null($callable = array_get($option, 'uses'))) {
-                    $record[$key] = call_user_func($callable, $result, $key);
+            foreach ($columns as $key => $value) {
+                // Process for standard columns.
+                if (is_string($value)) {
+                    $record[$key] = $result->{$value};
 
                     continue;
                 }
 
-                // Process for standard columns.
-                $record[$key] = $result->{$option['field']};
+                // Process for dynamic columns.
+                $record[$key] = call_user_func($value, $result, $key);
             }
 
             $data[] = $record;

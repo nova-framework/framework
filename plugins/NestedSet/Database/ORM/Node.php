@@ -1222,8 +1222,8 @@ class Node extends Model
         $columns = array(
             $model->getKeyName(),
             $model->getParentIdName(),
-            $model->getLftName(),
-            $model->getRgtName(),
+            $model->getLeftName(),
+            $model->getRightName(),
         );
 
         $nodes = $model->newQuery()
@@ -1265,4 +1265,26 @@ class Node extends Model
 
         return $cut;
     }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setLeft($value)
+    {
+        $this->attributes[$this->getLeftName()] = $value;
+        return $this;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setRight($value)
+    {
+        $this->attributes[$this->getRightName()] = $value;
+        return $this;
+    }
+
+
 }

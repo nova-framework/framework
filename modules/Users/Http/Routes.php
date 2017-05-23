@@ -33,7 +33,7 @@ $router->post('password/reset',         array('middleware' => 'guest', 'uses' =>
 $router->group(array('prefix' => 'admin', 'namespace' => 'Admin'), function($router)
 {
     // The User's Profile.
-    $router->get( 'profile', array('middleware' => 'auth',      'uses' => 'Profile@index'));
+    $router->get( 'profile', array('middleware' => 'auth', 'uses' => 'Profile@index'));
     $router->post('profile', array('middleware' => 'auth', 'uses' => 'Profile@update'));
 
     // The Users Search.

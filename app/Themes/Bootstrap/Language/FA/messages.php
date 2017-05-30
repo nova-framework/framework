@@ -1,6 +1,6 @@
 <?php
 
 return array (
-  'Page' => '',
+  'Page' => 'صفحه',
   'Toggle navigation' => '',
 );

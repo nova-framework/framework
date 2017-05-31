@@ -26,7 +26,7 @@
                     <p><label><input name="remember" type="checkbox"> <?= __d('system', 'Remember me'); ?></label></p>
                 </div>
                 <hr>
-                <?php if (Config::get('recaptcha.active') === true) { ?>
+                <?php if (Config::get('reCaptcha.active') === true) { ?>
                 <div class="row pull-right" style="margin-right: 0;">
                     <div id="captcha" style="width: 304px; height: 78px;"></div>
                 </div>
@@ -55,7 +55,7 @@
 <script type="text/javascript">
 
 var captchaCallback = function() {
-    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get('recaptcha.siteKey'); ?>'});
+    grecaptcha.render('captcha', {'sitekey' : '<?= Config::get('reCaptcha.siteKey'); ?>'});
 };
 
 </script>

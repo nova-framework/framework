@@ -39,7 +39,7 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        theme_url('css/bootstrap-rtl.min.css', 'Default'),
+        theme_url('css/bootstrap-rtl.min.css', 'Bootstrap'),
         // Font Awesome
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
         // Ionicons
@@ -202,7 +202,7 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    theme_url('js/bootstrap-rtl.min.js', 'Default'),
+    theme_url('js/bootstrap-rtl.min.js', 'Bootstrap'),
     // AdminLTE App
     vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
     // Select2

@@ -30,5 +30,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => '',
   'Welcome' => 'خوش امدید',
   'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید',
-  'Your session expired. Please try again!' => '',
+  'Your session expired. Please try again!' => 'جلسه شما منقضی شده است. لطفا دوباره تلاش نمایید!',
 );

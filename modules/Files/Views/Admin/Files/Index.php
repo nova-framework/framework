@@ -25,7 +25,7 @@ Assets::css(array(
 Assets::js(array(
     'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js',
     site_url('modules/files/assets/js/elfinder.full.js'),
-    site_url('modules/files/assets/js/i18n/elfinder.' .$language .'.js', 'FileManager')
+    site_url('modules/files/assets/js/i18n/elfinder.' .$language .'.js')
 ));
 
 ?>

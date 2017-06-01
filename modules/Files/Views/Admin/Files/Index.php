@@ -14,6 +14,7 @@
 </section>
 
 <?php
+$language = Language::code();
 
 Assets::css(array(
     'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css',
@@ -23,7 +24,8 @@ Assets::css(array(
 
 Assets::js(array(
     'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js',
-    site_url('modules/files/assets/js/elfinder.full.js')
+    site_url('modules/files/assets/js/elfinder.full.js'),
+    site_url('modules/files/assets/js/i18n/elfinder.' .$language .'.js', 'FileManager')
 ));
 
 ?>
@@ -36,7 +38,7 @@ Assets::js(array(
             url : '<?= site_url('admin/files/connector'); ?>',
             dateFormat: 'M d, Y h:i A',
             fancyDateFormat: '$1 H:m:i',
-            lang: '<?= Language::code(); ?>',
+            lang: '<?= $language; ?>',
             height: 550,
             cookie : {
                 expires: 30,

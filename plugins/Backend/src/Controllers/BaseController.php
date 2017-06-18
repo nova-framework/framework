@@ -44,15 +44,6 @@ class BaseController extends Controller
 		//
 		$request = Request::instance();
 
-		Activity::updateCurrent($request);
-
-		// Get the current User instance.
-		if (is_null($user = Auth::user())) {
-			return;
-		}
-
-		View::share('currentUser', $user);
-
 		// Share the Views the Backend's base URI.
 		$segments = $request->segments();
 
@@ -72,6 +63,15 @@ class BaseController extends Controller
 		}
 
 		View::share('baseUri', $path);
+
+		// Get the current User instance.
+		if (is_null($user = Auth::user())) {
+			return;
+		}
+
+		Activity::updateCurrent($request);
+
+		View::share('currentUser', $user);
 
 		// Prepare the Backend Menu.
 		$items = array();

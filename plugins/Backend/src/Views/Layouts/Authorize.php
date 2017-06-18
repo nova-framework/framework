@@ -38,7 +38,7 @@
 					<?php foreach (Config::get('languages') as $code => $info) { ?>
 						<li <?= ($code == Language::code()) ? 'class="active"' : ''; ?>>
 							<a href='<?= site_url('language/' .$code) ?>' title='<?= $info['info'] ?>'>
-								<img src="<?= resource_url('plugins/flags/blank.png', 'Backend'); ?>" class="flag flag-<?= ($code !== 'en') ? $code : 'gb'; ?>" alt="<?= $info['name']; ?>" />
+								<img src="<?= resource_url('plugins/flags/blank.png', 'Backend'); ?>" class="flag flag-<?= $info['flag']; ?>" alt="<?= $info['name']; ?>" />
 								<?= $info['name'] ?>
 							</a>
 						</li>

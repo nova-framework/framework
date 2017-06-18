@@ -64,7 +64,7 @@
 	<div class="container-fluid">
 		<div class="row" style="margin: 15px 0 0;">
 			<div class="col-lg-4">
-				Nova Framework <strong><?= VERSION; ?></strong> / Kernel <strong><?= App::version(); ?></strong>
+				Copyright &copy; <?= date('Y') ?> <a href="http://www.novaframework.com/" target="_blank"><strong>Nova Framework <?= VERSION; ?> / Kernel <?= App::version(); ?></strong></a> - All rights reserved.
 			</div>
 			<div class="col-lg-8">
 				<p class="text-muted pull-right">

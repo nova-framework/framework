@@ -1,0 +1,42 @@
+/* Your styles here */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    height: 100%;
+    /* Margin bottom by footer height */
+    margin-bottom: 70px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    min-height: 50px;
+    padding-top: 10px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #dddddd;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+@media(min-width:768px) {
+
+#footer {
+    padding-top: 15px;
+    padding-left: 230px;
+}
+
+#footer.toggled {
+    padding-left: 0;
+}
+
+}
+

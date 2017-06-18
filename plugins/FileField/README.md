@@ -7,7 +7,7 @@ Easily upload files to a directory and save the filename to database attribute.
 In your ORM Model:
 
 ```php
-use Plugins\FileField\Database\ORM\FileFieldTrait;
+use FileField\Database\ORM\FileFieldTrait;
 
 public $files = array(
     'image' => array(),

@@ -8,7 +8,7 @@
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 
 /** Define the absolute paths for configured directories. */
-define('BASEPATH', realpath(__DIR__) .DS);
+define('BASEPATH', realpath(dirname(__FILE__)) .DS);
 
 define('APPPATH', BASEPATH .'app' .DS);
 define('WEBPATH', BASEPATH .'webroot' .DS);
@@ -26,21 +26,20 @@ require BASEPATH .'vendor' .DS .'autoload.php';
 $app = require_once APPPATH .'Boot' .DS .'Start.php';
 
 //--------------------------------------------------------------------------
-// Load The Forge Console Application
-//--------------------------------------------------------------------------
-
-$forge = $app->make('Nova\Console\Contracts\KernelInterface');
-
-//--------------------------------------------------------------------------
 // Run The Forge Application
 //--------------------------------------------------------------------------
 
-$status = $forge->run();
+$kernel = $app->make('Nova\Console\Contracts\KernelInterface');
+
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
 
 //--------------------------------------------------------------------------
 // Shutdown The Application
 //--------------------------------------------------------------------------
 
-$app->shutdown();
+$kernel->terminate($input, $status);
 
 exit($status);

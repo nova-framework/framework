@@ -1,0 +1,26 @@
+{
+    "name": "acme-corp/notifications",
+    "type": "mininova-plugin",
+    "description": "Notifications is a plugin for Mini MVC Framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Virgil-Adrian Teaca",
+            "email": "virgil@giulianaeassociati.com",
+            "homepage": "http://giulianaeassociati.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "nova-framework/mini-system": "*",
+        "ramsey/uuid": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Notifications\\": "src/"
+        }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}

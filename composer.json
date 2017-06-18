@@ -21,10 +21,6 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/nova-framework/module-installer"
-        },
-        {
-            "type": "git",
             "url": "https://github.com/nova-framework/plugin-installer"
         },
         {
@@ -34,11 +30,14 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "nova-framework/module-installer": "*",
         "nova-framework/plugin-installer": "*",
         "nova-framework/system": "~4.0",
         "almasaeed2010/adminlte": "~2.0",
-        "twbs/bootstrap": "^3.3"
+        "twbs/bootstrap": "^3.3",
+        "ramsey/uuid": "~3.0"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "^1.6"
     },
     "autoload": {
         "classmap": [
@@ -47,28 +46,28 @@
         ],
         "psr-4": {
             "App\\" : "app/",
-            "Modules\\": "modules/",
-            "Plugins\\": "plugins/",
-            "Themes\\": "themes/"
+            "FileField\\": "plugins/FileField/src/",
+            "Bootstrap\\": "plugins/Bootstrap/src/",
+            "Backend\\": "plugins/Backend/src/",
+            "Widgets\\": "plugins/Widgets/src/",
+            "Backup\\": "plugins/Backup/src/",
+            "FileManager\\": "plugins/FileManager/src/",
+            "Notifications\\": "plugins/Notifications/src/"
         }
     },
     "scripts": {
         "post-install-cmd": [
-            "php forge optimize",
-            "php forge module:optimize"
+            "php forge optimize"
         ],
         "post-update-cmd": [
             "php forge clear-compiled",
-            "php forge optimize",
-            "php forge module:optimize"
+            "php forge optimize"
         ],
         "post-create-project-cmd": [
             "php forge key:generate"
         ],
         "post-autoload-dump": [
-            "Nova\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
-            "Nova\\Composer\\Installer\\ModuleInstaller::postAutoloadDump"
-
+            "Nova\\Composer\\Installer\\PluginInstaller::postAutoloadDump"
         ]
     },
     "prefer-stable": true,

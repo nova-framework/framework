@@ -1,0 +1,25 @@
+{
+    "name": "acme-corp/backup",
+    "type": "mininova-plugin",
+    "description": "Backup is a plugin for Mini MVC Framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Virgil-Adrian Teaca",
+            "email": "virgil@giulianaeassociati.com",
+            "homepage": "http://giulianaeassociati.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "nova-framework/mini-system": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Backup\\": "src/"
+        }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}

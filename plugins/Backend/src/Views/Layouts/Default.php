@@ -130,10 +130,10 @@
 	</div>
 	<div id="footer" class="footer">
 		<div class="container-fluid">
-			<div class="col-lg-5">
+			<div class="col-lg-6">
 				Copyright &copy; <?= date('Y') ?> <a href="http://www.novaframework.com/" target="_blank"><strong>Nova Framework <?= VERSION; ?> / Kernel <?= App::version(); ?></strong></a> - All rights reserved.
 			</div>
-			<div class="col-lg-7">
+			<div class="col-lg-6">
 				<p class="text-muted pull-right">
 					<small><!-- DO NOT DELETE! - Statistics --></small>
 				</p>

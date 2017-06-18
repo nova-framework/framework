@@ -1,10 +1,10 @@
 <footer class="footer">
     <div class="container-fluid">
         <div class="row" style="margin: 15px 0 0;">
-            <div class="col-lg-5">
+            <div class="col-lg-6">
                 <p class="text-muted">Copyright &copy; {{ date('Y') }} <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework {{ $version; }} / Kernel {{ VERSION }}</b></a></p>
             </div>
-            <div class="col-lg-7">
+            <div class="col-lg-6">
                 <p class="text-muted pull-right">
                     <small><!-- DO NOT DELETE! - Statistics --></small>
                 </p>

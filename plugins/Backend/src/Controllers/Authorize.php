@@ -18,8 +18,6 @@ class Authorize extends BaseController
 	use AuthenticatesUsersTrait;
 
 	//
-	protected $theme = 'Backend';
-
 	protected $layout = 'Authorize';
 
 	protected $redirectTo = 'admin/dashboard';

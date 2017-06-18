@@ -6,20 +6,20 @@ define("DS", DIRECTORY_SEPARATOR);
 define("BASEPATH", dirname(dirname(__FILE__)) .DS);
 
 $languages = array(
-    'cs',
-    'da',
-    'de',
-    'en',
-    'es',
-    'fa',
-    'fr',
-    'hu',
-    'it',
-    'ja',
-    'nl',
-    'pl',
-    'ro',
-    'ru',
+	'cs',
+	'da',
+	'de',
+	'en',
+	'es',
+	'fa',
+	'fr',
+	'hu',
+	'it',
+	'ja',
+	'nl',
+	'pl',
+	'ro',
+	'ru',
 );
 
 $workPaths = array(

@@ -9,6 +9,7 @@ use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Language;
 use Nova\Support\Facades\View;
 use Nova\Support\Str;
 
@@ -127,7 +128,17 @@ class BaseController extends Controller
 		}
 
 		if ($this->autoLayout() && ($response instanceof RenderableInterface)) {
-			$view = $this->getLayoutName();
+			$direction = Language::direction();
+
+			if ($direction === 'ltr') {
+				$view = $this->getLayoutName();
+			} else {
+				$layout = 'RTL/' .$this->layout;
+
+				if (! View::exists($view = $this->getLayoutName($layout))) {
+					$view = $this->getLayoutName();
+				}
+			}
 
 			return View::make($view, $this->viewData)->with('content', $response);
 		}

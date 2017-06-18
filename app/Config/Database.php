@@ -54,7 +54,7 @@ return array(
 	'connections' => array(
 		'sqlite' => array(
 			'driver'	=> 'sqlite',
-			'database'  => APPPATH .'Storage' .DS .'database.sqlite',
+			'database'  => STORAGE_PATH .'database.sqlite',
 			'prefix'	=> '',
 		),
 		'mysql' => array(
@@ -107,30 +107,9 @@ return array(
 		'cluster' => false,
 
 		'default' => array(
-			'host'	 => '127.0.0.1',
-			'port'	 => 6379,
-			'database' => 0,
+			'host'		=> '127.0.0.1',
+			'port'		=> 6379,
+			'database'	=> 0,
 		),
-	),
-
-	/*
-	|--------------------------------------------------------------------------
-	| Database Backup
-	|--------------------------------------------------------------------------
-	|
-	*/
-
-	'backup' => array(
-		// The path where database dumps are stored.
-		'path'  => APPPATH .'Database' .DS .'Backup',
-
-		// The paths to the MySQL tools used by Forge.
-		'mysql' => array(
-			'dumpCommandPath'	=> '/usr/bin/mysqldump',
-			'restoreCommandPath' => '/usr/bin/mysql',
-		),
-
-		// Wheter or not the dump file is compressed.
-		'compress' => true,
 	),
 );

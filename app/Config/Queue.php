@@ -17,7 +17,7 @@ return array(
 	| API, giving you convenient access to each back-end using the same
 	| syntax for each one. Here you may set the default queue driver.
 	|
-	| Supported: "sync", "beanstalkd", "sqs", "iron", "redis"
+	| Supported: "sync", "database", "beanstalkd", "sqs", "iron", "redis", "async"
 	|
 	*/
 
@@ -39,35 +39,41 @@ return array(
 			'driver' => 'sync',
 		),
 		'database' => array(
-			'driver' => 'database',
-			'table'  => 'jobs',
-			'queue'  => 'default',
-			'expire' => 60,
+			'driver'	=> 'database',
+			'table'		=> 'jobs',
+			'queue'		=> 'default',
+			'expire'	=> 60,
 		),
-		'beanstalkd' => array(
-			'driver' => 'beanstalkd',
-			'host'   => 'localhost',
-			'queue'  => 'default',
-			'ttr'	=> 60,
+		'beanstalkd'	=> array(
+			'driver'	=> 'beanstalkd',
+			'host'		=> 'localhost',
+			'queue'		=> 'default',
+			'ttr'		=> 60,
 		),
 		'sqs' => array(
-			'driver' => 'sqs',
-			'key'	=> 'your-public-key',
-			'secret' => 'your-secret-key',
-			'queue'  => 'your-queue-url',
-			'region' => 'us-east-1',
+			'driver'	=> 'sqs',
+			'key'		=> 'your-public-key',
+			'secret'	=> 'your-secret-key',
+			'queue'		=> 'your-queue-url',
+			'region'	=> 'us-east-1',
 		),
 		'iron' => array(
-			'driver'  => 'iron',
-			'host'	=> 'mq-aws-us-east-1.iron.io',
-			'token'   => 'your-token',
-			'project' => 'your-project-id',
-			'queue'   => 'your-queue-name',
-			'encrypt' => true,
+			'driver'	=> 'iron',
+			'host'		=> 'mq-aws-us-east-1.iron.io',
+			'token'		=> 'your-token',
+			'project'	=> 'your-project-id',
+			'queue'		=> 'your-queue-name',
+			'encrypt'	=> true,
 		),
 		'redis' => array(
-			'driver' => 'redis',
-			'queue'  => 'default',
+			'driver'	=> 'redis',
+			'queue'		=> 'default',
+		),
+		'async' => array(
+			'driver'	=> 'async',
+			'table'		=> 'jobs',
+			'queue'		=> 'default',
+			'expire'	=> 60,
 		),
 	),
 
@@ -83,6 +89,7 @@ return array(
 	*/
 
 	'failed' => array(
-		'database' => 'mysql', 'table' => 'failed_jobs',
+		'database'	=> 'mysql',
+		'table'		=> 'failed_jobs',
 	),
 );

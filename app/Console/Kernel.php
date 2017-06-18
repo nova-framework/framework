@@ -24,7 +24,6 @@ class Kernel extends ConsoleKernel
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('mailer:queue:flush')
-			->everyMinute();
+		//
 	}
 }

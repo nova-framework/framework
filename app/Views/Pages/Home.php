@@ -61,6 +61,12 @@ endif;
 		<hr style="margin-top: 0">
 
 		<ul class="list-unstyled">
+		<?php if (is_writable(base_path('assets'))): ?>
+			<li><i class='fa fa-check'></i> Your assets directory is writable.</li>
+		<?php else: ?>
+			<li><i class='fa fa-close'></i> Your assets directory is NOT writable.</li>
+		<?php endif; ?>
+
 		<?php if (is_writable(storage_path('cache'))): ?>
 			<li><i class='fa fa-check'></i> Your cache directory is writable.</li>
 		<?php else: ?>
@@ -77,12 +83,6 @@ endif;
 			<li><i class='fa fa-check'></i> Your sessions directory is writable.</li>
 		<?php else: ?>
 			<li><i class='fa fa-close'></i> Your sessions directory is NOT writable.</li>
-		<?php endif; ?>
-
-		<?php if (is_writable(storage_path('spool'))): ?>
-			<li><i class='fa fa-check'></i> Your mailer spool directory is writable.</li>
-		<?php else: ?>
-			<li><i class='fa fa-close'></i> Your mailer spool directory is NOT writable.</li>
 		<?php endif; ?>
 
 		<?php if (is_writable(storage_path('views'))): ?>

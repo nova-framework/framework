@@ -10,23 +10,13 @@
 
 
 /**
- * Listener Closure to the Event 'backend.menu'.
+ * Listener Closure to the Event 'backend.menu.sidebar'.
  */
-Event::listen('backend.menu', function($user)
+Event::listen('backend.menu.sidebar', function($menu, $user)
 {
 	if (! $user->hasRole('administrator')) {
-		return array();
+		return;
 	}
 
-	$items = array(
-		array(
-			'uri'		=> 'admin/files',
-			'title'		=> __d('file_manager', 'Files'),
-			'label'		=> '',
-			'icon'		=> 'file',
-			'weight'	=> 4,
-		),
-	);
-
-	return $items;
+	$menu->addItem('fileManager', __d('file_manager', 'Files'), site_url('admin/files'), 4, 'file');
 });

@@ -20,6 +20,10 @@ use Backend\Notifications\Sample as SampleNotification;
 
 use Carbon\Carbon;
 
+// For testing.
+use Nova\Support\Facades\Event;
+use Backend\Support\Menu;
+
 
 class Dashboard extends BaseController
 {

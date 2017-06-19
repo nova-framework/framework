@@ -13,7 +13,7 @@ use App\Controllers\BaseController as Controller;
 use Backend\Models\Activity;
 
 use Backend\Models\Message;
-
+use Backend\Support\Menu;
 
 class BaseController extends Controller
 {
@@ -44,6 +44,37 @@ class BaseController extends Controller
 		//
 		$request = Request::instance();
 
+		Activity::updateCurrent($request);
+
+		//
+		if ($request->ajax() || $request->wantsJson()) {
+			return;
+		} else if (is_null($user = Auth::user())) {
+			return;
+		}
+
+		View::share('currentUser', $user);
+
+		// Prepare the SideBar Menu.
+		$menu = Menu::create('Backend::Partials/SideBarMenu', function ($menu) use ($user)
+		{
+			$payload = array($menu, $user);
+
+			Event::fire('backend.menu.sidebar', $payload);
+		});
+
+		View::share('sideBarMenu', $menu->render());
+
+		// Prepare the notifications count.
+		$notifications = $user->unreadNotifications()->count();
+
+		View::share('notificationCount', $notifications);
+
+		// Prepare the messages count.
+		$messages = Message::where('receiver_id', $user->id)->unread()->count();
+
+		View::share('privateMessageCount', $messages);
+
 		// Share the Views the Backend's base URI.
 		$segments = $request->segments();
 
@@ -63,66 +94,6 @@ class BaseController extends Controller
 		}
 
 		View::share('baseUri', $path);
-
-		// Get the current User instance.
-		if (is_null($user = Auth::user())) {
-			return;
-		}
-
-		Activity::updateCurrent($request);
-
-		View::share('currentUser', $user);
-
-		// Prepare the Backend Menu.
-		$items = array();
-
-		$results = Event::fire('backend.menu', array($user));
-
-		foreach ($results as $result) {
-			if (is_array($result)) {
-				$items = array_merge($items, $result);
-			}
-		}
-
-		$items = array_map(function ($item)
-		{
-			if (isset($item['children']) && is_array($item['children'])) {
-				usort($item['children'], array($this, 'itemCompare'));
-			}
-
-			return $item;
-
-		}, $items);
-
-		usort($items, array($this, 'itemCompare'));
-
-		View::share('menuItems', $items);
-
-		// Prepare the notifications count.
-		$notifications = $user->unreadNotifications()->count();
-
-		View::share('notificationCount', $notifications);
-
-		// Prepare the messages count.
-		$messages = Message::where('receiver_id', $user->id)->unread()->count();
-
-		View::share('privateMessageCount', $messages);
-	}
-
-	/**
-	 * Compare two menu item arrays.
-	 *
-	 * @param array $a
-	 * @param array $b
-	 * @return int
-	 */
-	private function itemCompare($a, $b)
-	{
-		if ($a['weight'] == $b['weight']) {
-			return strcmp($a['title'], $b['title']);
-		}
-
-		return ($a['weight'] < $b['weight']) ? -1 : 1;
 	}
 
 	/**

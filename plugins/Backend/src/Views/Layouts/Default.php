@@ -90,34 +90,7 @@
 				</ul>
 
 				<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-				<ul class="nav navbar-nav side-nav" id="side-menu">
-					<li class="header">ADMINISTRATION</li>
-					<?php foreach ($menuItems as $count => $item) { ?>
-					<?php $children = Arr::get($item, 'children', array()); ?>
-					<?php if (! empty($children)) { ?>
-					<?php $active = in_array($currentUri, Arr::pluck($children, 'uri')); ?>
-					<li <?= $active ? 'class="active"' : ''; ?>>
-						<a href="javascript:;" class="collapse-toggle <?= ! $active ? 'collapsed' : ''; ?>" data-toggle="collapse" data-target="#menu-children-<?= $count; ?>" aria-expanded="false" role="button">
-							<i class="fa fa-<?= $item['icon'] ?>"></i> <?= $item['title']; ?>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul id="menu-children-<?= $count; ?>" class="nav nav-second-level collapse <?= $active ? 'in' : ''; ?>">
-						<?php foreach ($children as $child) { ?>
-							<li <?= ($currentUri == $child['uri']) ? 'class="active"' : ''; ?>>
-								<a href="<?= site_url($child['uri']); ?>"><i class="fa fa-circle-o"></i> <?= $child['title']; ?> <?= $child['label']; ?></a>
-							</li>
-						<?php } ?>
-						</ul>
-					</li>
-					<?php } else { ?>
-					<li <?= ($baseUri == $item['uri']) ? 'class="active"' : ''; ?>>
-						<a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <?= $item['title']; ?> <?= $item['label']; ?></a>
-					</li>
-					<?php } ?>
-					<?php } ?>
-				</ul>
+				<?= $sideBarMenu; ?>
 			</div>
 		<!-- /.container -->
 		</nav>

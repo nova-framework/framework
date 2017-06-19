@@ -11,35 +11,35 @@ use AsyncQueue\Console\AsyncCommand;
 class PluginServiceProvider extends ServiceProvider
 {
 
-    /**
-     * Bootstrap the Application Events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $path = realpath(__DIR__ .'/../');
+	/**
+	 * Bootstrap the Application Events.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		$path = realpath(__DIR__ .'/../');
 
-        // Configure the Package.
-        $this->package('AsyncQueue', 'async_queue', $path);
+		// Configure the Package.
+		$this->package('AsyncQueue', 'async_queue', $path);
 
-        //
-        $manager = $this->app['queue'];
+		//
+		$manager = $this->app['queue'];
 
 		$this->registerAsyncConnector($manager);
 
 		$this->commands('command.queue.async');
-    }
+	}
 
-    /**
-     * Register the AsyncQueue plugin Service Provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
+	/**
+	 * Register the AsyncQueue plugin Service Provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
 		$this->registerAsyncCommand();
-    }
+	}
 
 	/**
 	 * Register the queue async command.
@@ -64,17 +64,17 @@ class PluginServiceProvider extends ServiceProvider
 	{
 		$manager->addConnector('async', function ()
 		{
-            return new AsyncConnector($this->app['db']);
-        });
+			return new AsyncConnector($this->app['db']);
+		});
 	}
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return array('command.queue.async');
-    }
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return array('command.queue.async');
+	}
 }

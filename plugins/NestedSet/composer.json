@@ -1,7 +1,7 @@
 {
-    "name": "acme-corp/async-queue",
+    "name": "acme-corp/nested-set",
     "type": "nova-plugin",
-    "description": "AsyncQueue is a plugin for Nova Framework",
+    "description": "NestedSet is a plugin for Nova Framework",
     "license": "MIT",
     "authors": [
         {
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AsyncQueue\\": "src/"
+            "NestedSet\\": "src/"
         }
     },
     "prefer-stable": true,

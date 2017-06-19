@@ -1,7 +1,7 @@
 {
     "name": "acme-corp/bootstrap",
     "type": "nova-plugin",
-    "description": "Bootstrap is a plugin for Mini MVC Framework",
+    "description": "Bootstrap is a plugin for Nova Framework",
     "license": "MIT",
     "authors": [
         {

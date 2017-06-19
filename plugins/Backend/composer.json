@@ -1,7 +1,7 @@
 {
     "name": "acme-corp/backend",
     "type": "nova-plugin",
-    "description": "Backend is a plugin for Mini MVC Framework",
+    "description": "Backend is a plugin for Nova Framework",
     "license": "MIT",
     "authors": [
         {

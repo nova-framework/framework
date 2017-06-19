@@ -1,7 +1,7 @@
 {
     "name": "acme-corp/widgets",
     "type": "nova-plugin",
-    "description": "Widgets is a plugin for Mini MVC Framework",
+    "description": "Widgets is a plugin for Nova Framework",
     "license": "MIT",
     "authors": [
         {

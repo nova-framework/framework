@@ -43,7 +43,7 @@
             "app/Database/Seeds"
         ],
         "psr-4": {
-            "App\\" : "app/",
+            "App\\": "app/",
             "FileField\\": "plugins/FileField/src/",
             "Bootstrap\\": "plugins/Bootstrap/src/",
             "Backend\\": "plugins/Backend/src/",
@@ -51,7 +51,8 @@
             "Backup\\": "plugins/Backup/src/",
             "FileManager\\": "plugins/FileManager/src/",
             "Notifications\\": "plugins/Notifications/src/",
-            "AsyncQueue\\": "plugins/AsyncQueue/src/"
+            "AsyncQueue\\": "plugins/AsyncQueue/src/",
+            "NestedSet\\": "plugins/NestedSet/src/"
         }
     },
     "scripts": {

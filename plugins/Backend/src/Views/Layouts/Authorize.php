@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><?= isset($title) ? $title : 'Page'; ?> - <?= Config::get('app.name'); ?></title>
+	<title><?= isset($title) ? $title : __d('backend', 'Authorize'); ?> - <?= Config::get('app.name'); ?></title>
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -46,7 +46,7 @@
 					</ul>
 				</li>
 				<!-- Authentication Links -->
-				<li <?= ($baseUri == 'auth/login') ? 'class="active"' : ''; ?>>
+				<li <?= ($currentUri == 'auth/login') ? 'class="active"' : ''; ?>>
 					<a href="<?= site_url('auth/login'); ?>"><?= __d('backend', 'User Login'); ?></a>
 				</li>
 			</ul>

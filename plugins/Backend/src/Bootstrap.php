@@ -30,62 +30,31 @@ Route::middleware('role', function(Request $request, Closure $next, $role)
 
 
 /**
- * Listener Closure to the Event 'backend.menu'.
+ * Listener Closure to the Event 'backend.menu.sidebar'.
  */
-Event::listen('backend.menu', function($user)
+Event::listen('backend.menu.sidebar', function($menu, $user)
 {
-	$items = array(
-		array(
-			'uri'		=> 'admin/dashboard',
-			'title'		=> __d('backend', 'Dashboard'),
-			'label'		=> '',
-			'icon'		=> 'dashboard',
-			'weight'	=> 0,
-		),
-	);
+	$menu->addItem('dashboard', __d('backend', 'Dashboard'), site_url('admin/dashboard'), 0, 'dashboard');
 
 	if (! $user->hasRole('administrator')) {
-		return $items;
+		return;
 	}
 
-	$items = array_merge($items, array(
-		array(
-			'title'  => __d('backend', 'Platform'),
-			'icon'   => 'cube',
-			'weight' => 0,
-			'children' => array(
-				array(
-					'uri'		=> 'admin/settings',
-					'title'		=> __d('backend', 'Site Configuration'),
-					'label'		=> '',
-					'weight'	=> 0,
-				),
-			),
-		),
-		array(
-			'title'  => __d('backend', 'Users'),
-			'icon'   => 'users',
-			'weight' => 1,
-			'children' => array(
-				array(
-					'uri'		=> 'admin/users',
-					'title'		=> __d('backend', 'Users List'),
-					'label'		=> '',
-					'weight'	=> 0,
-				),
-				array(
-					'uri'		=> 'admin/roles',
-					'title'		=> __d('backend', 'User Roles'),
-					'label'		=> '',
-					'weight'	=> 2,
-				),
-			),
-		),
-	));
+	//
+	$menu->addItem('platform', __d('backend', 'Platform'), '', 0, 'cube');
 
-	return $items;
+	$menu->addItem('platform.settings', __d('backend', 'Settings'), site_url('admin/settings'));
+
+	$menu->addItem('platform.roles', __d('backend', 'User Roles'), site_url('admin/roles'));
+
+	//
+	$menu->addItem('users', __d('backend', 'Users'), '', 1, 'users');
+
+	$menu->addItem('users.list',  __d('backend', 'Users List'), site_url('admin/users'));
+
+	$menu->addItem('users.create',  __d('backend', 'Create a new User'), site_url('admin/users/create'));
+
 });
-
 
 /**
  * Register the Plugin's Widgets.

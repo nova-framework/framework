@@ -12,7 +12,7 @@ return array(
 	| you may specify any of the other wonderful drivers provided here.
 	|
 	| Supported: "native", "cookie", "database", "apc",
-	|            "memcached", "redis", "array"
+	|			"memcached", "redis", "array"
 	|
 	*/
 

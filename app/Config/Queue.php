@@ -70,7 +70,7 @@ return array(
 			'queue'		=> 'default',
 		),
 
-		// Asynchronous execution of database jobs. NOT GOOD FOR A HEAVY LOAD!
+		// NOTE: ONLY FOR RUNNING INCIDENTAL TASKS IN THE BACKGROUND!
 		'async' => array(
 			'driver'	=> 'async',
 			'table'		=> 'jobs',

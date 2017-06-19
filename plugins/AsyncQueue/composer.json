@@ -1,7 +1,7 @@
 {
-    "name": "acme-corp/file-manager",
+    "name": "acme-corp/async-queue",
     "type": "nova-plugin",
-    "description": "FileManager is a plugin for Mini MVC Framework",
+    "description": "AsyncQueue is a plugin for Mini MVC Framework",
     "license": "MIT",
     "authors": [
         {
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "FileManager\\": "src/"
+            "AsyncQueue\\": "src/"
         }
     },
     "prefer-stable": true,

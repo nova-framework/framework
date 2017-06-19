@@ -50,7 +50,8 @@
             "Widgets\\": "plugins/Widgets/src/",
             "Backup\\": "plugins/Backup/src/",
             "FileManager\\": "plugins/FileManager/src/",
-            "Notifications\\": "plugins/Notifications/src/"
+            "Notifications\\": "plugins/Notifications/src/",
+            "AsyncQueue\\": "plugins/AsyncQueue/src/"
         }
     },
     "scripts": {

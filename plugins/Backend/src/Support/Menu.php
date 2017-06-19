@@ -58,7 +58,7 @@ class Menu
 	 * @param callable $callback Callback to use after the menu creation
 	 * @return object
 	 */
-	public static function create($view, $callback)
+	public static function make($view, $callback)
 	{
 		$menu = new static($view);
 
@@ -94,12 +94,17 @@ class Menu
 			'url'		=> $url,
 			'sort'		=> $sort,
 			'icon'		=> $icon,
+
+			// Add the children for convenience.
 			'children'	=> array(),
 		);
 
-		$children = str_replace('.', '.children.', $key);
+		// Get the qualified item key.
+		$key = str_replace('.', '.children.', $key);
 
-		Arr::set($this->items, $children, $item);
+		if (! Arr::has($this->items, $key)) {
+			Arr::set($this->items, $key, $item);
+		}
 
 		if ($url == $this->currentUrl) {
 			$this->currentKey = $key;

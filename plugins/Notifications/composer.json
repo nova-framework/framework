@@ -1,7 +1,7 @@
 {
     "name": "acme-corp/notifications",
     "type": "nova-plugin",
-    "description": "Notifications is a plugin for Mini MVC Framework",
+    "description": "Notifications is a plugin for Nova Framework",
     "license": "MIT",
     "authors": [
         {

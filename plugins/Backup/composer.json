@@ -1,7 +1,7 @@
 {
     "name": "acme-corp/backup",
     "type": "nova-plugin",
-    "description": "Backup is a plugin for Mini MVC Framework",
+    "description": "Backup is a plugin for Nova Framework",
     "license": "MIT",
     "authors": [
         {

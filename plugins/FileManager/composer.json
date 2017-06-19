@@ -1,7 +1,7 @@
 {
     "name": "acme-corp/file-manager",
     "type": "nova-plugin",
-    "description": "FileManager is a plugin for Mini MVC Framework",
+    "description": "FileManager is a plugin for Nova Framework",
     "license": "MIT",
     "authors": [
         {

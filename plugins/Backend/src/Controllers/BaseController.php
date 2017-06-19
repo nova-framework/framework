@@ -46,7 +46,6 @@ class BaseController extends Controller
 
 		Activity::updateCurrent($request);
 
-		//
 		if ($request->ajax() || $request->wantsJson()) {
 			return;
 		} else if (is_null($user = Auth::user())) {
@@ -56,7 +55,7 @@ class BaseController extends Controller
 		View::share('currentUser', $user);
 
 		// Prepare the SideBar Menu.
-		$menu = Menu::create('Backend::Partials/SideBarMenu', function ($menu) use ($user)
+		$menu = Menu::make('Backend::Partials/SideBarMenu', function ($menu) use ($user)
 		{
 			$payload = array($menu, $user);
 

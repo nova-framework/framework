@@ -7,7 +7,7 @@ use Nova\Database\ORM\Collection as ModelCollection;
 use Nova\Database\ORM\Model;
 use Nova\Events\Dispatcher;
 use Nova\Foundation\Application;
-use Nova\Queue\Contracts\ShouldQueueInterface as ShouldQueue;
+use Nova\Queue\Contracts\ShouldQueueInterface;
 use Nova\Support\Collection;
 use Nova\Support\Manager;
 
@@ -64,7 +64,7 @@ class ChannelManager extends Manager implements DispatcherInterface
 	{
 		$notifiables = $this->formatNotifiables($notifiables);
 
-		if ($notification instanceof ShouldQueue) {
+		if ($notification instanceof ShouldQueueInterface) {
 			return $this->queueNotification($notifiables, $notification);
 		}
 

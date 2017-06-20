@@ -2,16 +2,22 @@
 
 namespace Notifications;
 
+use Nova\Bus\Contracts\DispatcherInterface as Bus;
+use Nova\Database\ORM\Collection as ModelCollection;
+use Nova\Database\ORM\Model;
 use Nova\Events\Dispatcher;
 use Nova\Foundation\Application;
+use Nova\Queue\Contracts\ShouldQueueInterface as ShouldQueue;
 use Nova\Support\Collection;
 use Nova\Support\Manager;
 
 use Notifications\Channels\DatabaseChannel;
 use Notifications\Channels\MailChannel;
 use Notifications\Contracts\DispatcherInterface;
+use Notifications\Events\BroadcastNotificationCreated;
 use Notifications\Events\NotificationSending;
 use Notifications\Events\NotificationSent;
+use Notifications\SendQueuedNotifications;
 
 use Ramsey\Uuid\Uuid;
 
@@ -53,14 +59,30 @@ class ChannelManager extends Manager implements DispatcherInterface
 	 *
 	 * @param  \Nova\Support\Collection|array|mixed  $notifiables
 	 * @param  mixed  $notification
+	 * @return void
+	 */
+	public function send($notifiables, $notification)
+	{
+		$notifiables = $this->formatNotifiables($notifiables);
+
+		if ($notification instanceof ShouldQueue) {
+			return $this->queueNotification($notifiables, $notification);
+		}
+
+		return $this->sendNow($notifiables, $notification);
+	}
+
+	/**
+	 * Send the given notification to the given notifiable entities.
+	 *
+	 * @param  \Nova\Support\Collection|array|mixed  $notifiables
+	 * @param  mixed  $notification
 	 * @param  array|null  $channels
 	 * @return void
 	 */
-	public function send($notifiables, $notification, array $channels = null)
+	public function sendNow($notifiables, $notification, array $channels = null)
 	{
-		if ((! $notifiables instanceof Collection) && ! is_array($notifiables)) {
-			$notifiables = array($notifiables);
-		}
+		$notifiables = $this->formatNotifiables($notifiables);
 
 		$original = clone $notification;
 
@@ -108,6 +130,60 @@ class ChannelManager extends Manager implements DispatcherInterface
 		);
 
 		return ($result !== false);
+	}
+
+	/**
+	 * Queue the given notification instances.
+	 *
+	 * @param  mixed  $notifiables
+	 * @param  array  $notification
+	 * @return void
+	 */
+	protected function queueNotification($notifiables, $notification)
+	{
+		$notifiables = $this->formatNotifiables($notifiables);
+
+		$bus = $this->app->make(Bus::class);
+
+		$original = clone $notification;
+
+		foreach ($notifiables as $notifiable) {
+			$notificationId = Uuid::uuid4()->toString();
+
+			foreach ($notification->via($notifiable) as $channel) {
+				$notification = clone $original;
+
+				$notification->id = $notificationId;
+
+				//
+				$notifiable = $this->formatNotifiables($notifiable);
+
+				$bus->dispatch(
+					with(new SendQueuedNotifications($notifiable, $notification, array($channel)))
+						->onConnection($notification->connection)
+						->onQueue($notification->queue)
+						->delay($notification->delay)
+				);
+			}
+		}
+	}
+
+	/**
+	 * Format the notifiables into a Collection / array if necessary.
+	 *
+	 * @param  mixed  $notifiables
+	 * @return ModelCollection|array
+	 */
+	protected function formatNotifiables($notifiables)
+	{
+		if ((! $notifiables instanceof Collection) && ! is_array($notifiables)) {
+			$notifiables = array($notifiables);
+
+			return ($notifiables instanceof Model)
+				? new ModelCollection($notifiables) : $notifiables;
+		}
+
+		return $notifiables;
 	}
 
 	/**

@@ -2,14 +2,17 @@
 
 namespace Notifications;
 
-use Nova\Bus\Contracts\ShouldQueueInterface;
-use Nova\Bus\Command;
+use Nova\Bus\QueueableTrait;
+use Nova\Queue\Contracts\ShouldQueueInterface;
+use Nova\Queue\SerializesModelsTrait;
 
 use Notifications\ChannelManager;
 
 
-class SendQueuedNotifications extends Command implements ShouldQueueInterface
+class SendQueuedNotifications implements ShouldQueueInterface
 {
+	use QueueableTrait, SerializesModelsTrait;
+
 	/**
 	 * The notifiable entities that should receive the notification.
 	 *
@@ -42,11 +45,9 @@ class SendQueuedNotifications extends Command implements ShouldQueueInterface
 	 */
 	public function __construct($notifiables, $notification, array $channels = null)
 	{
-		$this->notifiables = $notifiables;
-
-		$this->notification = $notification;
-
 		$this->channels = $channels;
+		$this->notifiables = $notifiables;
+		$this->notification = $notification;
 	}
 
 	/**

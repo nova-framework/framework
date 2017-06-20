@@ -14,7 +14,6 @@ use Nova\Support\Manager;
 use Notifications\Channels\DatabaseChannel;
 use Notifications\Channels\MailChannel;
 use Notifications\Contracts\DispatcherInterface;
-use Notifications\Events\BroadcastNotificationCreated;
 use Notifications\Events\NotificationSending;
 use Notifications\Events\NotificationSent;
 use Notifications\SendQueuedNotifications;

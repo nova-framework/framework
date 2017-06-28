@@ -42,4 +42,3 @@ $router->fallback(function($slug)
 	return View::make('Layouts/Default')->with('content', $view);
 });
 */
-

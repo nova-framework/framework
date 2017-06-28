@@ -12,6 +12,9 @@
     <!-- Local customizations -->
     <link rel="stylesheet" type="text/css" href="<?= resource_url('css/bootstrap-xl-mod.min.css', 'Bootstrap'); ?>">
     <link rel="stylesheet" type="text/css" href="<?= resource_url('css/style.css', 'Bootstrap'); ?>">
+
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 <body>
 
@@ -31,10 +34,7 @@
 
 @show
 
-@assets('js', array(
-    'https://code.jquery.com/jquery-1.12.4.min.js',
-    vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
-))
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <!-- DO NOT DELETE! - Profiler -->
 

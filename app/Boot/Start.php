@@ -14,7 +14,7 @@ mb_internal_encoding('UTF-8');
 //--------------------------------------------------------------------------
 
 if (file_exists($compiled = realpath(__DIR__) .DS .'Compiled.php')) {
-    require $compiled;
+	require $compiled;
 }
 
 //--------------------------------------------------------------------------

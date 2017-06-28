@@ -128,19 +128,7 @@ class BaseController extends Controller
 		}
 
 		if ($this->autoLayout() && ($response instanceof RenderableInterface)) {
-			$direction = Language::direction();
-
-			if ($direction === 'ltr') {
-				$view = $this->getLayoutName();
-			} else {
-				$layout = 'RTL/' .$this->layout;
-
-				if (! View::exists($view = $this->getLayoutName($layout))) {
-					$view = $this->getLayoutName();
-				}
-			}
-
-			return View::make($view, $this->viewData)->with('content', $response);
+			return $this->createLayout()->with('content', $response);
 		}
 
 		return $response;
@@ -165,15 +153,13 @@ class BaseController extends Controller
 			$view = $this->getViewName($view);
 		}
 
-		$view = View::make($view, $this->viewData);
+		$response = View::make($view, $this->viewData);
 
 		if ($this->autoLayout()) {
-			$layout = $this->getLayoutName($layout);
-
-			$view = View::make($layout, $this->viewData)->with('content', $view);
+			$response = $this->createLayout($layout)->with('content', $response);
 		}
 
-		return $this->response = new Response($view);
+		return $this->response = new Response($response);
 	}
 
 	/**
@@ -193,6 +179,33 @@ class BaseController extends Controller
 	}
 
 	/**
+	 * Create a View instance for the specified Layout name.
+	 *
+	 * @param  string|null  $layout
+	 * @return \Nova\View\View
+	 */
+	protected function createLayout($layout = null)
+	{
+		if (is_null($layout)) {
+			$layout = $this->layout;
+		}
+
+		$direction = Language::direction();
+
+		if ($direction == 'ltr') {
+			$view = $this->getLayoutName($layout);
+		} else {
+			$view = $this->getLayoutName($layout, true);
+
+			if (! View::exists($view)) {
+				$view = $this->getLayoutName($layout);
+			}
+		}
+
+		return View::make($view, $this->viewData);
+	}
+
+	/**
 	 * Gets a qualified View name.
 	 *
 	 * @return string
@@ -200,44 +213,62 @@ class BaseController extends Controller
 	 */
 	protected function getViewName($view)
 	{
-		if (! isset($this->viewPath)) {
-			$classPath = str_replace('\\', '/', static::class);
-
-			if (preg_match('#^(.+)/Controllers/(.*)$#s', $classPath, $matches) !== 1) {
-				throw new BadMethodCallException('Invalid controller namespace');
-			}
-
-			if ($matches[1] !== 'App') {
-				// A Controller within a Plugin namespace.
-				$viewPath = $matches[1] .'::' .$matches[2];
-			} else {
-				$viewPath = $matches[2];
-			}
-
-			$this->viewPath = $viewPath;
-		}
-
-		return $this->viewPath .'/' .ucfirst($view);
+		return $this->getViewPath() .'/' .ucfirst($view);
 	}
 
 	/**
 	 * Gets a qualified View name for a Layout.
 	 *
 	 * @param  string|null  $layout
+	 * @param  bool  $rtl
 	 * @return string
-	 * @throws \BadMethodCallException
 	 */
-	protected function getLayoutName($layout = null)
+	protected function getLayoutName($layout = null, $rtl = false)
 	{
 		if (is_null($layout)) {
 			$layout = $this->layout;
 		}
 
+		$view = sprintf('Layouts/%s%s', $rtl ? 'RTL/' : '', $layout);
+
 		if (! empty($this->theme)) {
-			return $this->theme .'::Layouts/' .$layout;
+			return $this->theme .'::' .$view;
 		}
 
-		return 'Layouts/' .$layout;
+		return $view;
+	}
+
+	/**
+	 * Gets a qualified View path.
+	 *
+	 * @return string
+	 * @throws \BadMethodCallException
+	 */
+	protected function getViewPath()
+	{
+		if (isset($this->viewPath)) {
+			return $this->viewPath;
+		}
+
+		$basePath = trim(str_replace('\\', '/', App::getNamespace()), '/');
+
+		$classPath = str_replace('\\', '/', static::class);
+
+		if (preg_match('#^(.+)/Controllers/(.*)$#', $classPath, $matches) === 1) {
+			$viewPath = $matches[2];
+
+			//
+			$namespace = $matches[1];
+
+			if ($namespace !== $basePath) {
+				// A Controller within a Plugin namespace.
+				$viewPath = $namespace .'::' .$viewPath;
+			}
+
+			return $this->viewPath = $viewPath;
+		}
+
+		throw new BadMethodCallException('Invalid controller namespace');
 	}
 
 	/**

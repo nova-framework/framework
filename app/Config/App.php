@@ -190,7 +190,6 @@ return array(
 		'Nova\Language\LanguageServiceProvider',
 		'Nova\Mail\MailServiceProvider',
 		'Nova\Pagination\PaginationServiceProvider',
-		'Nova\Pipeline\PipelineServiceProvider',
 		'Nova\Queue\QueueServiceProvider',
 		'Nova\Redis\RedisServiceProvider',
 		'Nova\Auth\Reminders\ReminderServiceProvider',

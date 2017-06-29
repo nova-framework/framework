@@ -8,10 +8,11 @@
 
 namespace App\Http\Middleware;
 
-use Nova\Forensics\Profiler;
-use Nova\Forensics\Statistics;
 use Nova\Http\Response;
 use Nova\Support\Facades\Config;
+
+use Forensics\Profiler;
+use Forensics\Statistics;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 

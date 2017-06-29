@@ -44,9 +44,9 @@ class Statistics
 		if ($withDatabase) {
 			$queries = $this->getSqlQueries();
 
-			$result = __d('nova', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3, plural, one{query} other{queries}} | UMAX: <b>{4}</b>', $elapsedStr, $memoryUsage, $queries, $queries, $umax);
+			$result = __d('forensics', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3, plural, one{query} other{queries}} | UMAX: <b>{4}</b>', $elapsedStr, $memoryUsage, $queries, $queries, $umax);
 		} else {
-			$result = __d('nova', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>', $elapsedStr, $memoryUsage, $umax);
+			$result = __d('forensics', 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>', $elapsedStr, $memoryUsage, $umax);
 		}
 
 		return $result;

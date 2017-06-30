@@ -21,7 +21,7 @@ class PluginServiceProvider extends ServiceProvider
 		$this->package('Forensics', 'forensics', $path);
 
 		//
-		$this->app['router']->prependMiddlewareToGroup('web', 'Forensics\Http\Middleware\HandleProfilers');
+		$this->setupMiddleware();
 	}
 
 	/**
@@ -34,4 +34,15 @@ class PluginServiceProvider extends ServiceProvider
 		//
 	}
 
+	/**
+	 * Setup the Plugin's Middleware.
+	 *
+	 * @return void
+	 */
+	protected function setupMiddleware()
+	{
+		$router = $this->app['router'];
+
+		$router->prependMiddlewareToGroup('web', 'Forensics\Http\Middleware\HandleProfiling');
+	}
 }

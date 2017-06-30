@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Http\Middleware;
+namespace Forensics\Http\Middleware;
 
 use Nova\Http\Response;
 use Nova\Support\Facades\Config;

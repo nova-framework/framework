@@ -180,7 +180,6 @@ return array(
 		'Nova\Auth\AuthServiceProvider',
 		'Nova\Bus\BusServiceProvider',
 		'Nova\Cache\CacheServiceProvider',
-		'Nova\Routing\RoutingServiceProvider',
 		'Nova\Cookie\CookieServiceProvider',
 		'Nova\Database\DatabaseServiceProvider',
 		'Nova\Encryption\EncryptionServiceProvider',
@@ -205,7 +204,6 @@ return array(
 		'Nova\Cache\ConsoleServiceProvider',
 		'Nova\Database\MigrationServiceProvider',
 		'Nova\Database\SeedServiceProvider',
-		'Nova\Log\ConsoleServiceProvider',
 		'Nova\Plugins\ConsoleServiceProvider',
 		'Nova\Routing\ConsoleServiceProvider',
 		'Nova\Session\ConsoleServiceProvider',
@@ -213,9 +211,9 @@ return array(
 		// The Application Providers.
 		'App\Providers\AppServiceProvider',
 		'App\Providers\AuthServiceProvider',
+		'App\Providers\BroadcastServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
-		'App\Providers\BroadcastServiceProvider',
 	),
 
 	/*

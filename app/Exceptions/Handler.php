@@ -8,8 +8,6 @@ use Nova\Session\TokenMismatchException;
 use Nova\Support\Facades\View;
 use Nova\Support\Facades\Redirect;
 
-use Symfony\Component\HttpKernel\Exception\HttpException;
-
 use Exception;
 
 
@@ -52,7 +50,7 @@ class Handler extends ExceptionHandler
 		}
 
 		// If we got a HttpException, we will render a themed error page.
-		else if ($e instanceof HttpException) {
+		else if ($this->isHttpException($e)) {
 			$status = $e->getStatusCode();
 
 			if (View::exists("Errors/{$status}")) {

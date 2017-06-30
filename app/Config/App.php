@@ -204,7 +204,6 @@ return array(
 		'Nova\Cache\ConsoleServiceProvider',
 		'Nova\Database\MigrationServiceProvider',
 		'Nova\Database\SeedServiceProvider',
-		'Nova\Log\ConsoleServiceProvider',
 		'Nova\Plugins\ConsoleServiceProvider',
 		'Nova\Routing\ConsoleServiceProvider',
 		'Nova\Session\ConsoleServiceProvider',

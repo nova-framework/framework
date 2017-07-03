@@ -141,7 +141,7 @@ $fontFamily = 'font-family: Arial, \'Helvetica Neue\', Helvetica, sans-serif;';
 
 										<!-- Salutation -->
 										<p style="{{ $style['paragraph'] }}">
-											Regards,<br>{{ config('app.name') }}
+											{{ __d('notifications', 'Regards,') }}<br>{{ config('app.name') }}
 										</p>
 
 										<!-- Sub Copy -->

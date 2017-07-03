@@ -17,9 +17,12 @@ class MailMessage extends SimpleMessage
 	/**
 	 * The view for the message.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	public $view = 'Notifications::Email';
+	public $view = array(
+		'Notifications::Emails/Default',
+		'Notifications::Emails/Plain',
+	);
 
 	/**
 	 * The view data for the message.

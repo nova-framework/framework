@@ -53,7 +53,8 @@
             "Notifications\\": "plugins/Notifications/src/",
             "AsyncQueue\\": "plugins/AsyncQueue/src/",
             "NestedSet\\": "plugins/NestedSet/src/",
-            "Forensics\\": "plugins/Forensics/src/"
+            "Forensics\\": "plugins/Forensics/src/",
+            "Reminders\\": "plugins/Reminders/src/"
         }
     },
     "scripts": {

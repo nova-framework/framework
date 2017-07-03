@@ -8,7 +8,7 @@
 
 namespace Backend\Controllers;
 
-use Nova\Foundation\Auth\ResetsPasswordsTrait;
+use Reminders\ResetsPasswordsTrait;
 
 use Backend\Controllers\BaseController;
 

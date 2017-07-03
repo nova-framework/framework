@@ -52,5 +52,5 @@ return array (
   'This could be the result of an invalid Page request.' => 'Это может быть результатом неверного запроса страницы.',
   'This site is temporarily unavailable.' => 'Сайт временно недоступен.',
   'Unauthorized' => 'Неразрешенный',
-  'Your session has expired. Please try again!' => '',
+  'Validation Token has expired. Please try again!' => '',
 );

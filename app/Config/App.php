@@ -206,7 +206,6 @@ return array(
 		'Nova\Pagination\PaginationServiceProvider',
 		'Nova\Queue\QueueServiceProvider',
 		'Nova\Redis\RedisServiceProvider',
-		'Nova\Auth\Reminders\ReminderServiceProvider',
 		'Nova\Session\SessionServiceProvider',
 		'Nova\Validation\ValidationServiceProvider',
 		'Nova\View\ViewServiceProvider',
@@ -215,7 +214,6 @@ return array(
 		// The Forge/Console Providers.
 		'Nova\Foundation\Providers\ForgeServiceProvider',
 		'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
-		'Nova\Auth\Reminders\ConsoleServiceProvider',
 		'Nova\Cache\ConsoleServiceProvider',
 		'Nova\Database\MigrationServiceProvider',
 		'Nova\Database\SeedServiceProvider',
@@ -286,7 +284,6 @@ return array(
 		'Language'		=> 'Nova\Support\Facades\Language',
 		'Mail'			=> 'Nova\Support\Facades\Mail',
 		'Paginator'		=> 'Nova\Support\Facades\Paginator',
-		'Password'		=> 'Nova\Support\Facades\Password',
 		'Queue'			=> 'Nova\Support\Facades\Queue',
 		'Redirect'		=> 'Nova\Support\Facades\Redirect',
 		'Redis'			=> 'Nova\Support\Facades\Redis',

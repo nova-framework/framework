@@ -2,9 +2,10 @@
 
 namespace Backend\Models;
 
-use Nova\Foundation\Auth\User as BaseModel;
+use Nova\Auth\Contracts\UserInterface;
+use Nova\Auth\UserTrait;
+use Nova\Database\ORM\Model as BaseModel;
 use Nova\Support\Str;
-
 
 use FileField\Database\ORM\FileFieldTrait;
 use Notifications\NotifiableTrait;
@@ -12,9 +13,9 @@ use Reminders\Contracts\RemindableInterface;
 use Reminders\RemindableTrait;
 
 
-class User extends BaseModel implements RemindableInterface
+class User extends BaseModel implements UserInterface, RemindableInterface
 {
-	use FileFieldTrait, NotifiableTrait, RemindableTrait;
+	use UserTrait, RemindableTrait, NotifiableTrait, FileFieldTrait;
 
 	//
 	protected $table = 'users';

@@ -3,10 +3,6 @@
 return array (
   'Internal Server Error' => '',
   'Method not allowed' => '',
-  'Password Reset' => '',
-  'Password has been reset!' => '',
-  'Password reminder sent!' => '',
-  'Passwords must be at least six characters and match the confirmation.' => '',
   'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => '',
   'The :attribute and :other must be different.' => '',
@@ -54,9 +50,7 @@ return array (
   'The :attribute must have between :min and :max items.' => '',
   'The selected :attribute is invalid.' => '',
   'This could be the result of an invalid Page request.' => '',
-  'This password reset token is invalid.' => '',
   'This site is temporarily unavailable.' => '',
-  'To reset your password, complete this form: {0}.' => '',
   'Unauthorized' => '',
-  'We can\'t find a user with that e-mail address.' => '',
+  'Your session has expired. Please try again!' => '',
 );

@@ -41,8 +41,7 @@ class Sample extends Notification
 		return with(new MailMessage)
 			->line('This is just a sample notification.')
 			->action('View your Dashboard', site_url('admin/dashboard'))
-			->line('Thank you for using our application!')
-			->queued();
+			->line('Thank you for using our application!');
 	}
 
 	/**
@@ -54,8 +53,8 @@ class Sample extends Notification
 	public function toArray($notifiable)
 	{
 		return array(
-			'message' => 'Just a sample notification.',
-			'link'	=> site_url('admin/dashboard'),
+			'message'	=> 'Just a sample notification.',
+			'link'		=> site_url('admin/dashboard'),
 		);
 	}
 }

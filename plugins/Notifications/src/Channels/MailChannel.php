@@ -38,18 +38,32 @@ class MailChannel
 	 */
 	public function send($notifiable, Notification $notification)
 	{
-		if (is_null($recipient = $notifiable->routeNotificationFor('mail'))) {
+		if (! $notifiable->routeNotificationFor('mail')) {
 			return;
 		}
 
 		$mail = $notification->toMail($notifiable);
 
-		$parameters = array($mail->view, $mail->data(), function ($message) use ($notification, $recipient, $mail)
+		$this->mailer->send($mail->view, $mail->data(), function ($message) use ($notifiable, $notification, $mail)
 		{
-			if (is_array($recipient)) {
-				$message->bcc($recipient);
+			$recipients = empty($mail->to) ? $notifiable->routeNotificationFor('mail') : $mail->to;
+
+			if (! empty($mail->from)) {
+				$message->from($mail->from[0], isset($mail->from[1]) ? $mail->from[1] : null);
+			}
+
+			if (is_array($recipients)) {
+				$message->bcc($recipients);
 			} else {
-				$message->to($recipient);
+				$message->to($recipients);
+			}
+
+			if (! empty($mail->cc)) {
+				$message->cc($mail->cc);
+			}
+
+			if (! empty($mail->replyTo)) {
+				$message->replyTo($mail->replyTo[0], isset($mail->replyTo[1]) ? $mail->replyTo[1] : null);
 			}
 
 			$message->subject($mail->subject ?: Str::title(
@@ -63,10 +77,10 @@ class MailChannel
 			foreach ($mail->rawAttachments as $attachment) {
 				$message->attachData($attachment['data'], $attachment['name'], $attachment['options']);
 			}
+
+			if (! is_null($mail->priority)) {
+				$message->setPriority($mail->priority);
+			}
 		});
-
-		$method = $mail->queued ? 'queue' : 'send';
-
-		call_user_func_array(array($this->mailer, $method), $parameters);
 	}
 }

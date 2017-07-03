@@ -47,10 +47,10 @@
 				</li>
 				<!-- Authentication Links -->
 				<li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
-					<a href='<?= site_url('auth/register'); ?>'><i class='fa fa-user'></i> <?= __d('backend', 'Sign Up'); ?></a>
+					<a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('backend', 'Sign Up'); ?></a>
 				</li>
-				<li <?php if($currentUri == 'auth/login') echo 'class="active"'; ?>>
-					<a href='<?= site_url('auth/login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('backend', 'Sign In'); ?></a>
+				<li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
+					<a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('backend', 'Sign In'); ?></a>
 				</li>
 				<li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
 					<a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('backend', 'Forgot Password?'); ?></a>

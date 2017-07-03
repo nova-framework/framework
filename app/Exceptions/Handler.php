@@ -2,11 +2,12 @@
 
 namespace App\Exceptions;
 
-use Nova\Http\Response;
+use Nova\Auth\AuthenticationException;
 use Nova\Foundation\Exceptions\Handler as ExceptionHandler;
 use Nova\Session\TokenMismatchException;
 use Nova\Support\Facades\View;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
 
 use Exception;
 
@@ -19,9 +20,11 @@ class Handler extends ExceptionHandler
 	 * @var array
 	 */
 	protected $dontReport = array(
+		'Nova\Auth\AuthenticationException',
 		'Symfony\Component\HttpKernel\Exception\HttpException',
 		'Nova\Database\ORM\ModelNotFoundException',
 		'Nova\Session\TokenMismatchException',
+		'Nova\Validation\ValidationException',
 	);
 
 
@@ -46,7 +49,7 @@ class Handler extends ExceptionHandler
 	public function render($request, Exception $e)
 	{
 		if ($e instanceof TokenMismatchException) {
-			return Redirect::guest('auth/login');
+			return Redirect::guest('login');
 		}
 
 		// If we got a HttpException, we will render a themed error page.
@@ -61,11 +64,26 @@ class Handler extends ExceptionHandler
 					->nest('content', "Errors/{$status}", $data)
 					->render();
 
-				return new Response($content, $status, $e->getHeaders());
+				return Response::make($content, $status, $e->getHeaders());
 			}
 		}
 
 		return parent::render($request, $e);
 	}
 
+	/**
+	 * Convert an authentication exception into an unauthenticated response.
+	 *
+	 * @param  \Nova\Http\Request  $request
+	 * @param  \Nova\Auth\AuthenticationException  $exception
+	 * @return \Nova\Http\Response
+	 */
+	protected function unauthenticated($request, AuthenticationException $exception)
+	{
+		if ($request->expectsJson()) {
+			return Response::json(array('error' => 'Unauthenticated.'), 401);
+		}
+
+		return Redirect::guest('login');
+	}
 }

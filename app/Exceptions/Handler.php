@@ -49,7 +49,9 @@ class Handler extends ExceptionHandler
 	public function render($request, Exception $e)
 	{
 		if ($e instanceof TokenMismatchException) {
-			return Redirect::guest('login');
+			return Redirect::back()
+				->withInput()
+				->with('warning', __('Your session has expired. Please try again!'));
 		}
 
 		// If we got a HttpException, we will render a themed error page.

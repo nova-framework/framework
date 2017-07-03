@@ -1,10 +1,17 @@
 <?php
 
 return array (
+  'If you have problems, please paste the above URL into your web browser.' => '',
   'Internal Server Error' => 'Внутрення ошибка сервера',
   'Method not allowed' => 'Метод не разрешен',
+  'Password Reset' => '',
+  'Password has been reset!' => '',
+  'Password reminder sent!' => '',
+  'Passwords must be at least six characters and match the confirmation.' => '',
+  'Please verify your E-mail address' => '',
   'Service unavailable' => 'Сервис недоступен',
   'Something has gone wrong on the Web Server.' => 'Ошибка на сервере',
+  'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
   'The :attribute and :other must be different.' => ':attribute и :other должны отличаться',
   'The :attribute and :other must match.' => ':attribute и :other должны совпадать',
   'The :attribute confirmation does not match.' => ':attribute не совпадает подтверждение. ',
@@ -50,6 +57,9 @@ return array (
   'The :attribute must have between :min and :max items.' => ':attribute должно быть между значениями: :min и :max .',
   'The selected :attribute is invalid.' => 'Выбранный :attribute недопустим.',
   'This could be the result of an invalid Page request.' => 'Это может быть результатом неверного запроса страницы.',
+  'This password reset token is invalid.' => '',
   'This site is temporarily unavailable.' => 'Сайт временно недоступен.',
+  'To reset your password, complete this form: {0}.' => '',
   'Unauthorized' => 'Неразрешенный',
+  'We can\'t find a user with that e-mail address.' => '',
 );

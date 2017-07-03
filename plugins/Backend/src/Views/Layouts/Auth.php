@@ -46,8 +46,14 @@
 					</ul>
 				</li>
 				<!-- Authentication Links -->
-				<li <?= ($currentUri == 'auth/login') ? 'class="active"' : ''; ?>>
-					<a href="<?= site_url('auth/login'); ?>"><?= __d('backend', 'User Login'); ?></a>
+				<li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
+					<a href='<?= site_url('auth/register'); ?>'><i class='fa fa-user'></i> <?= __d('backend', 'Sign Up'); ?></a>
+				</li>
+				<li <?php if($currentUri == 'auth/login') echo 'class="active"'; ?>>
+					<a href='<?= site_url('auth/login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('backend', 'Sign In'); ?></a>
+				</li>
+				<li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
+					<a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('backend', 'Forgot Password?'); ?></a>
 				</li>
 			</ul>
 		</div>
@@ -60,9 +66,9 @@
 	<?= $content; ?>
 </div>
 
-<footer class="footer">
+<div id="footer" class="footer">
 	<div class="container-fluid">
-		<div class="row" style="margin: 15px 0 0;">
+		<div class="row">
 			<div class="col-lg-6">
 				Copyright &copy; <?= date('Y') ?> <a href="http://www.novaframework.com/" target="_blank"><strong>Nova Framework <?= VERSION; ?> / Kernel <?= App::version(); ?></strong></a> - All rights reserved.
 			</div>
@@ -73,7 +79,7 @@
 			</div>
 		</div>
 	</div>
-</footer>
+</div>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

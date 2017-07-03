@@ -1,9 +1,21 @@
 <?php
 
 // The default Auth Routes.
-$router->get( 'auth/login',  array('middleware' => 'guest', 'uses' => 'Authorize@login'));
+$router->get( 'auth/login',  array('middleware' => 'guest', 'uses' => 'Authorize@getLogin'));
 $router->post('auth/login',  array('middleware' => 'guest', 'uses' => 'Authorize@postLogin'));
 $router->post('auth/logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout'));
+
+// The Account Registration.
+$router->get( 'auth/register', array('middleware' => 'guest', 'uses' => 'Registrar@getRegister'));
+$router->post('auth/register', array('middleware' => 'guest', 'uses' => 'Registrar@postRegister'));
+
+// The Password Remind.
+$router->get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@getEmail'));
+$router->post('password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@postEmail'));
+
+// The Password Reset.
+$router->get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Reminders@getReset'));
+$router->post('password/reset',		 array('middleware' => 'guest', 'uses' => 'Reminders@postReset'));
 
 // The Adminstration Routes.
 $router->group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function($router)

@@ -49,4 +49,23 @@ return array(
 			'expire'	=> 60,
 		),
 	),
+
+	/*
+	|--------------------------------------------------------------------------
+	| Password Reminder Language Lines
+	|--------------------------------------------------------------------------
+	|
+	| The following language lines are the default lines which match reasons
+	| that are given by the password broker for a password update attempt
+	| has failed, such as for an invalid token or invalid new password.
+	|
+	*/
+
+	'messages' => array(
+		'password'	=> __d('reminders', 'Passwords must be at least six characters and match the confirmation.'),
+		'user'		=> __d('reminders', 'We can\'t find a user with that e-mail address.'),
+		'token'		=> __d('reminders', 'This password reset token is invalid.'),
+		'sent'		=> __d('reminders', 'Password reminder sent!'),
+		'reset'		=> __d('reminders', 'Password has been reset!'),
+	),
 );

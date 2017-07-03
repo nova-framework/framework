@@ -18,7 +18,7 @@ class User extends BaseModel
 
 	protected $primaryKey = 'id';
 
-	protected $fillable = array('role_id', 'username', 'password', 'first_name', 'last_name', 'email', 'image');
+	protected $fillable = array('role_id', 'username', 'password', 'first_name', 'last_name', 'email', 'image', 'location');
 
 	protected $hidden = array('password', 'remember_token');
 

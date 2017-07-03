@@ -1,17 +1,14 @@
 <?php
 
 return array (
-  'If you have problems, please paste the above URL into your web browser.' => '',
   'Internal Server Error' => 'Внутрення ошибка сервера',
   'Method not allowed' => 'Метод не разрешен',
   'Password Reset' => '',
   'Password has been reset!' => '',
   'Password reminder sent!' => '',
   'Passwords must be at least six characters and match the confirmation.' => '',
-  'Please verify your E-mail address' => '',
   'Service unavailable' => 'Сервис недоступен',
   'Something has gone wrong on the Web Server.' => 'Ошибка на сервере',
-  'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => '',
   'The :attribute and :other must be different.' => ':attribute и :other должны отличаться',
   'The :attribute and :other must match.' => ':attribute и :other должны совпадать',
   'The :attribute confirmation does not match.' => ':attribute не совпадает подтверждение. ',

@@ -8,6 +8,7 @@
 
 namespace Backend\Controllers;
 
+use Nova\Auth\Contracts\RegistrarInterface;
 use Nova\Foundation\Auth\RegistersUsersTrait;
 use Nova\Http\Request;
 use Nova\Support\Facades\Hash;
@@ -18,7 +19,7 @@ use Backend\Models\User;
 use Backend\Models\Role;
 
 
-class Registrar extends BaseController
+class Registrar extends BaseController implements RegistrarInterface
 {
 	use RegistersUsersTrait;
 

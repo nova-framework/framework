@@ -59,12 +59,15 @@ trait ResetsPasswordsTrait
 
 		$response = Password::broker($broker)->sendResetLink($request->only('email'));
 
+		//
+		$message = Config::get('reminders::messages.' .$response);
+
 		switch ($response) {
 			case Password::RESET_LINK_SENT:
-				return Redirect::back()->with('success', Config::get($response));
+				return Redirect::back()->with('success', $message);
 
 			case Password::INVALID_USER:
-				return Redirect::back()->withErrors(array('email' => Config::get($response)));
+				return Redirect::back()->withErrors(array('email' => $message));
 		}
 	}
 
@@ -122,14 +125,17 @@ trait ResetsPasswordsTrait
 			$this->resetPassword($user, $password);
 		});
 
+		//
+		$message = Config::get('reminders::messages.' .$response);
+
 		switch ($response) {
 			case Password::PASSWORD_RESET:
-				return Redirect::to($this->redirectPath())->with('success', Config::get($response));
+				return Redirect::to($this->redirectPath())->with('success', $message);
 
 			default:
 				return Redirect::back()
 					->withInput($request->only('email'))
-					->withErrors('email', Config::get($response));
+					->withErrors('email', $message);
 		}
 	}
 

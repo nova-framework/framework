@@ -79,11 +79,11 @@
 							</li>
 							<li role="separator" class="divider"></li>
 							<li>
-								<a href="<?= site_url('auth/logout'); ?>"
+								<a href="<?= site_url('logout'); ?>"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 									<i class='fa fa-sign-out'></i> <?= __d('backend', 'Logout'); ?>
 								</a>
-								<form id="logout-form" action="<?= site_url('auth/logout'); ?>" method="POST" style="display: none;"></form>
+								<form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;"></form>
 							</li>
 						</ul>
 					</li>

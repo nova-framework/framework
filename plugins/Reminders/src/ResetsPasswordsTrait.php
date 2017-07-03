@@ -135,7 +135,7 @@ trait ResetsPasswordsTrait
 			default:
 				return Redirect::back()
 					->withInput($request->only('email'))
-					->withErrors('email', $message);
+					->withErrors(array('email' => $message));
 		}
 	}
 

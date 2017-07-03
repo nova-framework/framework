@@ -1,24 +1,19 @@
 <?php
-/**
- * Authorize - A Controller for managing the User Authentication.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace Backend\Controllers;
 
 use Nova\Foundation\Auth\AuthenticatesUsersTrait;
+use Nova\Foundation\Auth\ThrottlesLoginsTrait;
 
 use Backend\Controllers\BaseController;
 
 
 class Authorize extends BaseController
 {
-	use AuthenticatesUsersTrait;
+	use AuthenticatesUsersTrait, ThrottlesLoginsTrait;
 
 	//
-	protected $layout = 'Authorize';
+	protected $layout = 'Auth';
 
 	protected $redirectTo = 'admin/dashboard';
 }

@@ -1,6 +1,5 @@
 <?php
 
-use Nova\Config\EnvironmentVariables;
 use Nova\Foundation\Application;
 
 //--------------------------------------------------------------------------

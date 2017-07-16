@@ -51,6 +51,6 @@ return array (
   'The selected :attribute is invalid.' => 'Выбранный :attribute недопустим.',
   'This could be the result of an invalid Page request.' => 'Это может быть результатом неверного запроса страницы.',
   'This site is temporarily unavailable.' => 'Сайт временно недоступен.',
-  'Unauthorized' => 'Неразрешенный',
-  'Validation Token has expired. Please try again!' => '',
+  'Unauthorized' => 'Запрещено',
+  'Validation Token has expired. Please try again!' => 'Время токена проверки закончилось.Пожалуйста, попробуйте ещё раз.',
 );

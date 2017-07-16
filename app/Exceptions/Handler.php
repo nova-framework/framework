@@ -82,7 +82,7 @@ class Handler extends ExceptionHandler
 	 */
 	protected function unauthenticated($request, AuthenticationException $exception)
 	{
-		if ($request->expectsJson()) {
+		if ($request->ajax() || $request->wantsJson()) {
 			return Response::json(array('error' => 'Unauthenticated.'), 401);
 		}
 

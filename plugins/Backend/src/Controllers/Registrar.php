@@ -8,7 +8,6 @@
 
 namespace Backend\Controllers;
 
-use Nova\Auth\Contracts\RegistrarInterface;
 use Nova\Foundation\Auth\RegistersUsersTrait;
 use Nova\Http\Request;
 use Nova\Support\Facades\Hash;
@@ -19,7 +18,7 @@ use Backend\Models\User;
 use Backend\Models\Role;
 
 
-class Registrar extends BaseController implements RegistrarInterface
+class Registrar extends BaseController
 {
 	use RegistersUsersTrait;
 
@@ -29,7 +28,7 @@ class Registrar extends BaseController implements RegistrarInterface
 	protected $redirectTo = 'admin/dashboard';
 
 
-	public function validator(Request $request)
+	protected function validator(Request $request)
 	{
 		$data = $request->all();
 

@@ -29,7 +29,7 @@ class Registrar extends BaseController implements RegistrarInterface
 	protected $redirectTo = 'admin/dashboard';
 
 
-	protected function validator(Request $request)
+	public function validator(Request $request)
 	{
 		$data = $request->all();
 

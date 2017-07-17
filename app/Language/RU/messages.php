@@ -7,7 +7,7 @@ return array (
   'Something has gone wrong on the Web Server.' => 'Ошибка на сервере',
   'The :attribute and :other must be different.' => ':attribute и :other должны отличаться',
   'The :attribute and :other must match.' => ':attribute и :other должны совпадать',
-  'The :attribute confirmation does not match.' => ':attribute не совпадает подтверждение. ',
+  'The :attribute confirmation does not match.' => 'Не совпадает подтверждение поля :attribute.',
   'The :attribute does not match the format :format.' => ':attribute не соответствует формату :format.',
   'The :attribute field is required when :other is :value.' => 'Поле :attribute обязательно, когда  :other является :value',
   'The :attribute field is required when :values is not present.' => 'Поле :attribute обязательно, если :values не указано.',

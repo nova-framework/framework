@@ -16,7 +16,7 @@
 		<ul id="menu-children-<?= $count; ?>" class="nav nav-second-level collapse <?= $active ? 'in' : ''; ?>">
 			<?php foreach ($children as $child) { ?>
 			<li <?= $menu->itemIsActive($child) ? 'class="active"' : ''; ?>>
-				<a href="<?= $child['url']; ?>"><i class="fa fa-circle-o"></i> <?= $child['name']; ?></a>
+				<a href="<?= $child['url']; ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <?= $child['name']; ?></a>
 			</li>
 			<?php } ?>
 		</ul>

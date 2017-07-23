@@ -5,21 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title or __d('bootstrap', 'Page') }} - {{ Config::get('app.name') }}</title>
 
-    <link rel="stylesheet" type="text/css" href="<?= resource_url('css/bootstrap-rtl.min.css', 'Bootstrap'); ?>">
-    <link rel="stylesheet" type="text/css" href="<?= resource_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap'); ?>">
+    <link rel="stylesheet" type="text/css" href="{{ resource_url('css/bootstrap-rtl.min.css', 'Bootstrap') }}">
+    <link rel="stylesheet" type="text/css" href="{{ resource_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap') }}">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Local customizations -->
-    <link rel="stylesheet" type="text/css" href="<?= resource_url('css/bootstrap-xl-mod.min.css', 'Bootstrap'); ?>">
-    <link rel="stylesheet" type="text/css" href="<?= resource_url('css/style.css', 'Bootstrap'); ?>">
+    <link rel="stylesheet" type="text/css" href="{{ resource_url('css/bootstrap-xl-mod.min.css', 'Bootstrap') }}">
+    <link rel="stylesheet" type="text/css" href="{{ resource_url('css/style-rtl.css', 'Bootstrap') }}">
 
-    @assets('css', array(
-        theme_url('css/bootstrap-rtl.min.css', 'Bootstrap'),
-        theme_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap'),
-        'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-        theme_url('css/style-rtl.css', 'Bootstrap'),
-    ))
-
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 <body>
 
@@ -39,10 +33,7 @@
 
 @show
 
-@assets('js', array(
-    'https://code.jquery.com/jquery-1.12.4.min.js',
-    theme_url('js/bootstrap-rtl.min.js', 'Bootstrap'),
-))
+<script type="text/javascript" src="{{ resource_url('js/bootstrap-rtl.min.js', 'Bootstrap') }}"></script>
 
 <!-- DO NOT DELETE! - Forensics Profiler -->
 

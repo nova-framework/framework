@@ -266,7 +266,6 @@ return array(
 
 		// The Support Facades.
 		'App'			=> 'Nova\Support\Facades\App',
-		'Assets'		=> 'Nova\Support\Facades\Assets',
 		'Forge'			=> 'Nova\Support\Facades\Forge',
 		'Auth'			=> 'Nova\Support\Facades\Auth',
 		'Broadcast'		=> 'Nova\Support\Facades\Broadcast',

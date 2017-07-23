@@ -10,8 +10,8 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Local customizations -->
-    <link rel="stylesheet" type="text/css" href="<?= resource_url('css/bootstrap-xl-mod.min.css', 'Bootstrap'); ?>">
-    <link rel="stylesheet" type="text/css" href="<?= resource_url('css/style.css', 'Bootstrap'); ?>">
+    <link rel="stylesheet" type="text/css" href="{{ resource_url('css/bootstrap-xl-mod.min.css', 'Bootstrap') }}">
+    <link rel="stylesheet" type="text/css" href="{{ resource_url('css/style.css', 'Bootstrap') }}">
 
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>

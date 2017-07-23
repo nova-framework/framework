@@ -34,26 +34,26 @@ class Registrar extends BaseController
 
 		// Validation rules.
 		$rules = array(
-			'username'   => 'required|min:6|unique:users',
-			'first_name' => 'required|min:4|max:100|valid_name',
-			'last_name'  => 'required|min:4|max:100|valid_name',
-			'location'   => 'min:2|max:100|valid_name',
-			'email'	  => 'required|email|unique:users',
-			'password'   => 'required|confirmed|strong_password'
+			'username'		=> 'required|min:6|unique:users',
+			'first_name'	=> 'required|min:4|max:100|valid_name',
+			'last_name'		=> 'required|min:4|max:100|valid_name',
+			'location'		=> 'min:2|max:100|valid_name',
+			'email'			=> 'required|email|unique:users',
+			'password'		=> 'required|confirmed|strong_password'
 		);
 
 		$messages = array(
-			'valid_name'	  => __d('backend', 'The :attribute field is not a valid name.'),
-			'strong_password' => __d('backend', 'The :attribute field is not strong enough.'),
+			'valid_name'	  	=> __d('backend', 'The :attribute field is not a valid name.'),
+			'strong_password'	=> __d('backend', 'The :attribute field is not strong enough.'),
 		);
 
 		$attributes = array(
-			'username'   => __d('backend', 'Username'),
-			'first_name' => __d('backend', 'First Name'),
-			'last_name'  => __d('backend', 'Last Name'),
-			'location'   => __d('backend', 'Location'),
-			'email'	  => __d('backend', 'E-mail'),
-			'password'   => __d('backend', 'Password'),
+			'username'		=> __d('backend', 'Username'),
+			'first_name'	=> __d('backend', 'First Name'),
+			'last_name'		=> __d('backend', 'Last Name'),
+			'location'		=> __d('backend', 'Location'),
+			'email'			=> __d('backend', 'E-mail'),
+			'password'		=> __d('backend', 'Password'),
 		);
 
 		// Add the custom Validation Rule commands.

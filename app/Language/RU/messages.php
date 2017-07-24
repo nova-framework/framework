@@ -15,7 +15,7 @@ return array (
   'The :attribute field is required.' => 'Поле :attribute является обязательным',
   'The :attribute field must be true or false' => 'Поле :attribute должно быть Истина или Ложь. ',
   'The :attribute format is invalid.' => 'Формат :attribute является неправильным',
-  'The :attribute has already been taken.' => ':attribute уже был взят.',
+  'The :attribute has already been taken.' => ':attribute уже был использован.',
   'The :attribute is not a valid URL.' => 'attribute является неправильным URL',
   'The :attribute is not a valid date.' => 'attribute является неправильной датой',
   'The :attribute may not be greater than :max characters.' => ':attribute не может быть больше :max символов',

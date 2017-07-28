@@ -25,92 +25,92 @@ namespace Forensics;
 
 class Console
 {
-	/*
-	 * Contains all of the logs that are collected.
-	 */
-	private static $logs = array(
-		'console'	 => array(),
-		'logCount'	=> 0,
-		'memoryCount' => 0,
-		'errorCount'  => 0,
-		'speedCount'  => 0,
-	);
+    /*
+     * Contains all of the logs that are collected.
+     */
+    private static $logs = array(
+        'console'     => array(),
+        'logCount'    => 0,
+        'memoryCount' => 0,
+        'errorCount'  => 0,
+        'speedCount'  => 0,
+    );
 
-	/*
-	 *  Log a variable to console.
-	 */
-	public static function log($data)
-	{
-		$logItem = array(
-			"data" => $data,
-			"type" => 'log'
-		);
+    /*
+     *  Log a variable to console.
+     */
+    public static function log($data)
+    {
+        $logItem = array(
+            "data" => $data,
+            "type" => 'log'
+        );
 
-		self::$logs['console'][] = $logItem;
+        self::$logs['console'][] = $logItem;
 
-		self::$logs['logCount'] += 1;
-	}
+        self::$logs['logCount'] += 1;
+    }
 
-	/*
-	 * Log memory usage of variable or entire script.
-	 */
-	public static function logMemory($object = false, $name = 'PHP')
-	{
-		$memory = memory_get_usage();
+    /*
+     * Log memory usage of variable or entire script.
+     */
+    public static function logMemory($object = false, $name = 'PHP')
+    {
+        $memory = memory_get_usage();
 
-		if($object) $memory = strlen(serialize($object));
+        if($object) $memory = strlen(serialize($object));
 
-		$logItem = array(
-			"data" => $memory,
-			"type" => 'memory',
-			"name" => $name,
-			"dataType" => gettype($object)
-		);
+        $logItem = array(
+            "data" => $memory,
+            "type" => 'memory',
+            "name" => $name,
+            "dataType" => gettype($object)
+        );
 
-		self::$logs['console'][] = $logItem;
+        self::$logs['console'][] = $logItem;
 
-		self::$logs['memoryCount'] += 1;
-	}
+        self::$logs['memoryCount'] += 1;
+    }
 
-	/*
-	 * Log a php exception object.
-	 */
-	public static function logError($exception, $message)
-	{
-		$logItem = array(
-			"data" => $message,
-			"type" => 'error',
-			"file" => $exception->getFile(),
-			"line" => $exception->getLine()
-		);
+    /*
+     * Log a php exception object.
+     */
+    public static function logError($exception, $message)
+    {
+        $logItem = array(
+            "data" => $message,
+            "type" => 'error',
+            "file" => $exception->getFile(),
+            "line" => $exception->getLine()
+        );
 
-		self::$logs['console'][] = $logItem;
+        self::$logs['console'][] = $logItem;
 
-		self::$logs['errorCount'] += 1;
-	}
+        self::$logs['errorCount'] += 1;
+    }
 
-	/*
-	 * Point in time speed snapshot.
-	 */
-	public static function logSpeed($name = 'Point in Time')
-	{
-		$logItem = array(
-			"data" => microtime(true),
-			"type" => 'speed',
-			"name" => $name
-		);
+    /*
+     * Point in time speed snapshot.
+     */
+    public static function logSpeed($name = 'Point in Time')
+    {
+        $logItem = array(
+            "data" => microtime(true),
+            "type" => 'speed',
+            "name" => $name
+        );
 
-		self::$logs['console'][] = $logItem;
+        self::$logs['console'][] = $logItem;
 
-		self::$logs['speedCount'] += 1;
-	}
+        self::$logs['speedCount'] += 1;
+    }
 
-	/*
-	 * Return the logs.
-	 */
-	public static function getLogs()
-	{
-		return self::$logs;
-	}
+    /*
+     * Return the logs.
+     */
+    public static function getLogs()
+    {
+        return self::$logs;
+    }
 
 }

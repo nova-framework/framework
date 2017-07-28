@@ -10,10 +10,10 @@ use Backend\Controllers\BaseController;
 
 class Authorize extends BaseController
 {
-	use AuthenticatesUsersTrait, ThrottlesLoginsTrait;
+    use AuthenticatesUsersTrait, ThrottlesLoginsTrait;
 
-	//
-	protected $layout = 'Auth';
+    //
+    protected $layout = 'Auth';
 
-	protected $redirectTo = 'admin/dashboard';
+    protected $redirectTo = 'admin/dashboard';
 }

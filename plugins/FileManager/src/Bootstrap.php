@@ -14,9 +14,9 @@
  */
 Event::listen('backend.menu.sidebar', function($menu, $user)
 {
-	if (! $user->hasRole('administrator')) {
-		return;
-	}
+    if (! $user->hasRole('administrator')) {
+        return;
+    }
 
-	$menu->addItem('fileManager', __d('file_manager', 'Files'), site_url('admin/files'), 4, 'file');
+    $menu->addItem('fileManager', __d('file_manager', 'Files'), site_url('admin/files'), 4, 'file');
 });

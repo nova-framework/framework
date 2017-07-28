@@ -17,285 +17,285 @@ use BadMethodCallException;
 
 class BaseController extends Controller
 {
-	use AuthorizesRequestsTrait, ValidatesRequestsTrait;
+    use AuthorizesRequestsTrait, ValidatesRequestsTrait;
 
-	/**
-	 * The currently called action.
-	 *
-	 * @var string
-	 */
-	protected $action;
+    /**
+     * The currently called action.
+     *
+     * @var string
+     */
+    protected $action;
 
-	/**
-	 * The currently used Theme.
-	 *
-	 * @var string
-	 */
-	protected $theme;
+    /**
+     * The currently used Theme.
+     *
+     * @var string
+     */
+    protected $theme;
 
-	/**
-	 * The currently used Layout.
-	 *
-	 * @var string
-	 */
-	protected $layout = 'Default';
+    /**
+     * The currently used Layout.
+     *
+     * @var string
+     */
+    protected $layout = 'Default';
 
-	/**
-	 * True when the auto-rendering is active.
-	 *
-	 * @var bool
-	 */
-	protected $autoRender = true;
+    /**
+     * True when the auto-rendering is active.
+     *
+     * @var bool
+     */
+    protected $autoRender = true;
 
-	/**
-	 * True when the auto-layouting is active.
-	 *
-	 * @var bool
-	 */
-	protected $autoLayout = true;
+    /**
+     * True when the auto-layouting is active.
+     *
+     * @var bool
+     */
+    protected $autoLayout = true;
 
-	/**
-	 * The View path for views of this Controller.
-	 *
-	 * @var array
-	 */
-	protected $viewPath;
+    /**
+     * The View path for views of this Controller.
+     *
+     * @var array
+     */
+    protected $viewPath;
 
-	/**
-	 * The View variables.
-	 *
-	 * @var array
-	 */
-	protected $viewData = array();
+    /**
+     * The View variables.
+     *
+     * @var array
+     */
+    protected $viewData = array();
 
 
-	/**
-	 * Method executed before any action.
-	 *
-	 * @return void
-	 */
-	protected function initialize()
-	{
-		// Setup the used Theme to default, if it is not already defined.
-		if (is_null($this->theme)) {
-			$this->theme = Config::get('app.theme', 'Bootstrap');
-		}
-	}
+    /**
+     * Method executed before any action.
+     *
+     * @return void
+     */
+    protected function initialize()
+    {
+        // Setup the used Theme to default, if it is not already defined.
+        if (is_null($this->theme)) {
+            $this->theme = Config::get('app.theme', 'Bootstrap');
+        }
+    }
 
-	/**
-	 * Execute an action on the controller.
-	 *
-	 * @param string  $method
-	 * @param array   $params
-	 * @return mixed
-	 */
-	public function callAction($method, array $parameters)
-	{
-		$this->action = $method;
+    /**
+     * Execute an action on the controller.
+     *
+     * @param string  $method
+     * @param array   $params
+     * @return mixed
+     */
+    public function callAction($method, array $parameters)
+    {
+        $this->action = $method;
 
-		//
-		$this->initialize();
+        //
+        $this->initialize();
 
-		$response = call_user_func_array(array($this, $method), $parameters);
+        $response = call_user_func_array(array($this, $method), $parameters);
 
-		return $this->processResponse($response);
-	}
+        return $this->processResponse($response);
+    }
 
-	/**
-	 * Process a Controller action response.
-	 *
-	 * @param  mixed   $response
-	 * @return mixed
-	 */
-	protected function processResponse($response)
-	{
-		if (! $this->autoRender()) {
-			return $response;
-		}
+    /**
+     * Process a Controller action response.
+     *
+     * @param  mixed   $response
+     * @return mixed
+     */
+    protected function processResponse($response)
+    {
+        if (! $this->autoRender()) {
+            return $response;
+        }
 
-		// The auto-rendering is active.
-		else if (is_null($response)) {
-			$response = $this->createView();
-		}
+        // The auto-rendering is active.
+        else if (is_null($response)) {
+            $response = $this->createView();
+        }
 
-		if (! $response instanceof RenderableInterface) {
-			return $response;
-		}
+        if (! $response instanceof RenderableInterface) {
+            return $response;
+        }
 
-		// The response is a RenderableInterface implementation.
-		else if ($this->autoLayout()) {
-			$view = $this->getQualifiedLayout();
+        // The response is a RenderableInterface implementation.
+        else if ($this->autoLayout()) {
+            $view = $this->getQualifiedLayout();
 
-			if ('rtl' == Language::direction()) {
-				$layout = sprintf('RTL/%s', $this->layout);
+            if ('rtl' == Language::direction()) {
+                $layout = sprintf('RTL/%s', $this->layout);
 
-				$localized = $this->getQualifiedLayout($layout);
+                $localized = $this->getQualifiedLayout($layout);
 
-				$view = View::exists($localized) ? $localized : $view;
-			}
+                $view = View::exists($localized) ? $localized : $view;
+            }
 
-			return View::make($view, $this->viewData)->with('content', $response);
-		}
+            return View::make($view, $this->viewData)->with('content', $response);
+        }
 
-		return $response;
-	}
+        return $response;
+    }
 
-	/**
-	 * Gets a qualified View name for the implicit or given Layout.
-	 *
-	 * @param  string|null  $layout
-	 * @return string
-	 */
-	protected function getQualifiedLayout($layout = null)
-	{
-		if (is_null($layout)) {
-			$layout = $this->layout;
-		}
+    /**
+     * Gets a qualified View name for the implicit or given Layout.
+     *
+     * @param  string|null  $layout
+     * @return string
+     */
+    protected function getQualifiedLayout($layout = null)
+    {
+        if (is_null($layout)) {
+            $layout = $this->layout;
+        }
 
-		$view = sprintf('Layouts/%s', $layout);
+        $view = sprintf('Layouts/%s', $layout);
 
-		if (! empty($this->theme)) {
-			return sprintf('%s::%s', $this->theme, $view);
-		}
+        if (! empty($this->theme)) {
+            return sprintf('%s::%s', $this->theme, $view);
+        }
 
-		return $view;
-	}
+        return $view;
+    }
 
-	/**
-	 * Create a View instance for the implicit (or specified) View name.
-	 *
-	 * @param  array  $data
-	 * @param  string|null  $view
-	 * @return \Nova\View\View
-	 */
-	protected function createView(array $data = array(), $view = null)
-	{
-		if (is_null($view)) {
-			$view = $this->action;
-		}
+    /**
+     * Create a View instance for the implicit (or specified) View name.
+     *
+     * @param  array  $data
+     * @param  string|null  $view
+     * @return \Nova\View\View
+     */
+    protected function createView(array $data = array(), $view = null)
+    {
+        if (is_null($view)) {
+            $view = $this->action;
+        }
 
-		// Compute the qualified View name.
-		$view = sprintf('%s/%s', $this->getViewPath(), ucfirst($view));
+        // Compute the qualified View name.
+        $view = sprintf('%s/%s', $this->getViewPath(), ucfirst($view));
 
-		return View::make($view, array_merge($this->viewData, $data));
-	}
+        return View::make($view, array_merge($this->viewData, $data));
+    }
 
-	/**
-	 * Gets a qualified View path.
-	 *
-	 * @return string
-	 * @throws \BadMethodCallException
-	 */
-	protected function getViewPath()
-	{
-		if (isset($this->viewPath)) {
-			return $this->viewPath;
-		}
+    /**
+     * Gets a qualified View path.
+     *
+     * @return string
+     * @throws \BadMethodCallException
+     */
+    protected function getViewPath()
+    {
+        if (isset($this->viewPath)) {
+            return $this->viewPath;
+        }
 
-		$basePath = trim(str_replace('\\', '/', App::getNamespace()), '/');
+        $basePath = trim(str_replace('\\', '/', App::getNamespace()), '/');
 
-		$classPath = str_replace('\\', '/', static::class);
+        $classPath = str_replace('\\', '/', static::class);
 
-		if (preg_match('#^(.+)/Controllers/(.*)$#', $classPath, $matches) === 1) {
-			$viewPath = $matches[2];
+        if (preg_match('#^(.+)/Controllers/(.*)$#', $classPath, $matches) === 1) {
+            $viewPath = $matches[2];
 
-			//
-			$namespace = $matches[1];
+            //
+            $namespace = $matches[1];
 
-			if ($namespace !== $basePath) {
-				// A Controller within a Plugin namespace.
-				$viewPath = $namespace .'::' .$viewPath;
-			}
+            if ($namespace !== $basePath) {
+                // A Controller within a Plugin namespace.
+                $viewPath = $namespace .'::' .$viewPath;
+            }
 
-			return $this->viewPath = $viewPath;
-		}
+            return $this->viewPath = $viewPath;
+        }
 
-		throw new BadMethodCallException('Invalid controller namespace');
-	}
+        throw new BadMethodCallException('Invalid controller namespace');
+    }
 
-	/**
-	 * Add a key / value pair to the view data.
-	 *
-	 * Bound data will be available to the view as variables.
-	 *
-	 * @param  string|array  $one
-	 * @param  string|array  $two
-	 * @return View
-	 */
-	public function set($one, $two = null)
-	{
-		if (is_array($one)) {
-			$data = is_array($two) ? array_combine($one, $two) : $one;
-		} else {
-			$data = array($one => $two);
-		}
+    /**
+     * Add a key / value pair to the view data.
+     *
+     * Bound data will be available to the view as variables.
+     *
+     * @param  string|array  $one
+     * @param  string|array  $two
+     * @return View
+     */
+    public function set($one, $two = null)
+    {
+        if (is_array($one)) {
+            $data = is_array($two) ? array_combine($one, $two) : $one;
+        } else {
+            $data = array($one => $two);
+        }
 
-		$this->viewData = $data + $this->viewData;
+        $this->viewData = $data + $this->viewData;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Turns on or off Nova's conventional mode of auto-rendering.
-	 *
-	 * @param bool|null  $enable
-	 * @return bool
-	 */
-	public function autoRender($enable = null)
-	{
-		if (! is_null($enable)) {
-			$this->autoRender = (bool) $enable;
+    /**
+     * Turns on or off Nova's conventional mode of auto-rendering.
+     *
+     * @param bool|null  $enable
+     * @return bool
+     */
+    public function autoRender($enable = null)
+    {
+        if (! is_null($enable)) {
+            $this->autoRender = (bool) $enable;
 
-			return $this;
-		}
+            return $this;
+        }
 
-		return $this->autoRender;
-	}
+        return $this->autoRender;
+    }
 
-	/**
-	 * Turns on or off Nova's conventional mode of applying layout files.
-	 *
-	 * @param bool|null  $enable
-	 * @return bool
-	 */
-	public function autoLayout($enable = null)
-	{
-		if (! is_null($enable)) {
-			$this->autoLayout = (bool) $enable;
+    /**
+     * Turns on or off Nova's conventional mode of applying layout files.
+     *
+     * @param bool|null  $enable
+     * @return bool
+     */
+    public function autoLayout($enable = null)
+    {
+        if (! is_null($enable)) {
+            $this->autoLayout = (bool) $enable;
 
-			return $this;
-		}
+            return $this;
+        }
 
-		return $this->autoLayout;
-	}
+        return $this->autoLayout;
+    }
 
-	/**
-	 * Return the current Theme.
-	 *
-	 * @return string
-	 */
-	public function getTheme()
-	{
-		return $this->theme;
-	}
+    /**
+     * Return the current Theme.
+     *
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
 
-	/**
-	 * Return the current Layout.
-	 *
-	 * @return string
-	 */
-	public function getLayout()
-	{
-		return $this->layout;
-	}
+    /**
+     * Return the current Layout.
+     *
+     * @return string
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
 
-	/**
-	 * Return the current View data.
-	 *
-	 * @return string
-	 */
-	public function getViewData()
-	{
-		return $this->viewData;
-	}
+    /**
+     * Return the current View data.
+     *
+     * @return string
+     */
+    public function getViewData()
+    {
+        return $this->viewData;
+    }
 }

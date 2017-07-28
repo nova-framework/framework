@@ -64,7 +64,8 @@ foreach($workPaths as $workPath) {
 			continue;
 		}
 
-		$content = str_replace(array("    ", "\r"), array("\t", ""), file_get_contents($path));
+		//$content = str_replace(array("    ", "\r"), array("\t", ""), file_get_contents($path));
+		$content = str_replace(array("\t", "\r"), array("    ", ""), file_get_contents($path));
 
 		file_put_contents($path, $content);
 	}

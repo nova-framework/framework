@@ -13,13 +13,13 @@
 // The Adminstration Routes.
 $router->group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function($router)
 {
-	$router->get('files',			'Files@index');
-	$router->any('files/connector', 'Files@connector');
+    $router->get('files',            'Files@index');
+    $router->any('files/connector', 'Files@connector');
 
-	// Thumbnails Files serving.
-	$router->get('files/thumbnails/{file}', 'Files@thumbnails');
+    // Thumbnails Files serving.
+    $router->get('files/thumbnails/{file}', 'Files@thumbnails');
 
-	// Preview Files serving.
-	$router->get('files/preview/{path}', 'Files@preview')->where('path', '(.*)');
+    // Preview Files serving.
+    $router->get('files/preview/{path}', 'Files@preview')->where('path', '(.*)');
 });
 

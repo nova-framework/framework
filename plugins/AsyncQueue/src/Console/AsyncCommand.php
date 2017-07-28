@@ -13,110 +13,110 @@ use Symfony\Component\Console\Input\InputOption;
 
 class AsyncCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'queue:async';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'queue:async';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Run a queue job from the database';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Run a queue job from the database';
 
-	/**
-	 * The queue worker instance.
-	 *
-	 * @var \Nova\Queue\Worker
-	 */
-	protected $worker;
-
-
-	/**
-	 * Create a new queue listen command.
-	 *
-	 * @param  \Nova\Queue\Worker  $worker
-	 * @return void
-	 */
-	public function __construct(Worker $worker)
-	{
-		parent::__construct();
-
-		$this->worker = $worker;
-	}
-
-	/**
-	 * Execute the console command.
-	 *
-	 * @return void
-	 */
-	public function fire()
-	{
-		$id = $this->argument('id');
-
-		$connection = $this->argument('connection');
-
-		$this->processJob(
-			$connection, $id
-		);
-	}
+    /**
+     * The queue worker instance.
+     *
+     * @var \Nova\Queue\Worker
+     */
+    protected $worker;
 
 
-	/**
-	 *  Process the job
-	 *
-	 */
-	protected function processJob($connectionName, $id)
-	{
-		$manager = $this->worker->getManager();
+    /**
+     * Create a new queue listen command.
+     *
+     * @param  \Nova\Queue\Worker  $worker
+     * @return void
+     */
+    public function __construct(Worker $worker)
+    {
+        parent::__construct();
 
-		$connection = $manager->connection($connectionName);
+        $this->worker = $worker;
+    }
 
-		$job = $connection->getJobFromId($id);
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function fire()
+    {
+        $id = $this->argument('id');
 
-		// If we're able to pull a job off of the stack, we will process it and
-		// then immediately return back out. If there is no job on the queue
-		// we will "sleep" the worker for the specified number of seconds.
+        $connection = $this->argument('connection');
 
-		if (! is_null($job)) {
-			$sleep = max($job->getDatabaseJob()->available_at - time(), 0);
+        $this->processJob(
+            $connection, $id
+        );
+    }
 
-			sleep($sleep);
 
-			return $this->worker->process(
-				$manager->getName($connectionName), $job
-			);
-		}
+    /**
+     *  Process the job
+     *
+     */
+    protected function processJob($connectionName, $id)
+    {
+        $manager = $this->worker->getManager();
 
-		return array('job' => null, 'failed' => false);
-	}
+        $connection = $manager->connection($connectionName);
 
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getArguments()
-	{
-		return array(
-			array('id', InputArgument::REQUIRED, 'The Job ID'),
+        $job = $connection->getJobFromId($id);
 
-			array('connection', InputArgument::OPTIONAL, 'The name of connection'),
-		);
-	}
+        // If we're able to pull a job off of the stack, we will process it and
+        // then immediately return back out. If there is no job on the queue
+        // we will "sleep" the worker for the specified number of seconds.
 
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		return array(
+        if (! is_null($job)) {
+            $sleep = max($job->getDatabaseJob()->available_at - time(), 0);
 
-		);
-	}
+            sleep($sleep);
+
+            return $this->worker->process(
+                $manager->getName($connectionName), $job
+            );
+        }
+
+        return array('job' => null, 'failed' => false);
+    }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return array(
+            array('id', InputArgument::REQUIRED, 'The Job ID'),
+
+            array('connection', InputArgument::OPTIONAL, 'The name of connection'),
+        );
+    }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return array(
+
+        );
+    }
 }

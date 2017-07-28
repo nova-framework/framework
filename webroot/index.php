@@ -40,7 +40,7 @@ use Nova\Http\Request;
 $kernel = $app->make('Nova\Http\Contracts\KernelInterface');
 
 $response = $kernel->handle(
-	$request = Request::capture()
+    $request = Request::capture()
 );
 
 $response->send();

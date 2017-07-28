@@ -13,7 +13,7 @@ mb_internal_encoding('UTF-8');
 //--------------------------------------------------------------------------
 
 if (file_exists($compiled = realpath(__DIR__) .DS .'Compiled.php')) {
-	require $compiled;
+    require $compiled;
 }
 
 //--------------------------------------------------------------------------
@@ -39,10 +39,10 @@ $app = new Application();
 //--------------------------------------------------------------------------
 
 $app->bindInstallPaths(array(
-	'base'		=> BASEPATH,
-	'app'		=> APPPATH,
-	'public'	=> WEBPATH,
-	'storage'	=> STORAGE_PATH,
+    'base'        => BASEPATH,
+    'app'        => APPPATH,
+    'public'    => WEBPATH,
+    'storage'    => STORAGE_PATH,
 ));
 
 //--------------------------------------------------------------------------
@@ -56,18 +56,18 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $app->singleton(
-	'Nova\Http\Contracts\KernelInterface',
-	'App\Http\Kernel'
+    'Nova\Http\Contracts\KernelInterface',
+    'App\Http\Kernel'
 );
 
 $app->singleton(
-	'Nova\Console\Contracts\KernelInterface',
-	'App\Console\Kernel'
+    'Nova\Console\Contracts\KernelInterface',
+    'App\Console\Kernel'
 );
 
 $app->singleton(
-	'Nova\Foundation\Contracts\ExceptionHandlerInterface',
-	'App\Exceptions\Handler'
+    'Nova\Foundation\Contracts\ExceptionHandlerInterface',
+    'App\Exceptions\Handler'
 );
 
 //--------------------------------------------------------------------------
@@ -75,7 +75,7 @@ $app->singleton(
 //--------------------------------------------------------------------------
 
 $env = $app->detectEnvironment(array(
-	'local' => array('darkstar'),
+    'local' => array('darkstar'),
 ));
 
 //--------------------------------------------------------------------------
@@ -83,7 +83,7 @@ $env = $app->detectEnvironment(array(
 //--------------------------------------------------------------------------
 
 if (isset($unitTesting)) {
-	$app['env'] = $env = $testEnvironment;
+    $app['env'] = $env = $testEnvironment;
 }
 
 //--------------------------------------------------------------------------

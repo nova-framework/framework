@@ -15,11 +15,11 @@ use Backend\Controllers\BaseController;
 
 class Reminders extends BaseController
 {
-	use ResetsPasswordsTrait;
+    use ResetsPasswordsTrait;
 
-	//
-	protected $layout = 'Auth';
+    //
+    protected $layout = 'Auth';
 
-	protected $redirectTo = 'admin/dashboard';
+    protected $redirectTo = 'admin/dashboard';
 
 }

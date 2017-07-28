@@ -13,49 +13,49 @@ use Carbon\Carbon;
 
 class Activity extends BaseModel
 {
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	public $table = 'activities';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    public $table = 'activities';
 
-	protected $primaryKey = 'id';
+    protected $primaryKey = 'id';
 
-	protected $fillable = array('session', 'user_id', 'ip', 'last_activity');
+    protected $fillable = array('session', 'user_id', 'ip', 'last_activity');
 
-	public $timestamps = false;
+    public $timestamps = false;
 
 
-	/**
-	 * Returns the user that belongs to this entry.
-	 */
-	public function user()
-	{
-		return $this->belongsTo('Backend\Models\User', 'user_id', 'id');
-	}
+    /**
+     * Returns the user that belongs to this entry.
+     */
+    public function user()
+    {
+        return $this->belongsTo('Backend\Models\User', 'user_id', 'id');
+    }
 
-	/**
-	 * Updates the session of the current user.
-	 *
-	 * @param  $query
-	 * @return \Backend\Models\Activity
-	 */
-	public static function updateCurrent($request)
-	{
-		if (! Auth::check()) {
-			// We track only the authenticated users.
-			return;
-		}
+    /**
+     * Updates the session of the current user.
+     *
+     * @param  $query
+     * @return \Backend\Models\Activity
+     */
+    public static function updateCurrent($request)
+    {
+        if (! Auth::check()) {
+            // We track only the authenticated users.
+            return;
+        }
 
-		$attributes = array(
-			'session' => Session::getId(),
-			'user_id' => Auth::id(),
-		);
+        $attributes = array(
+            'session' => Session::getId(),
+            'user_id' => Auth::id(),
+        );
 
-		$model = static::updateOrCreate($attributes, array(
-			'last_activity'	=> strtotime(Carbon::now()),
-			'ip'			=> $request->ip()
-		));
-	}
+        $model = static::updateOrCreate($attributes, array(
+            'last_activity'    => strtotime(Carbon::now()),
+            'ip'            => $request->ip()
+        ));
+    }
 }

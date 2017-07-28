@@ -28,70 +28,70 @@ use Backend\Support\Menu;
 class Dashboard extends BaseController
 {
 
-	public function data()
-	{
-		$format = __d('backend', '%d %b %Y, %H:%M');
+    public function data()
+    {
+        $format = __d('backend', '%d %b %Y, %H:%M');
 
-		$columns = array(
-			array('data' => 'userid',   'field' => 'id'),
-			array('data' => 'username', 'field' => 'username'),
+        $columns = array(
+            array('data' => 'userid',   'field' => 'id'),
+            array('data' => 'username', 'field' => 'username'),
 
-			array('data' => 'role', 'field' => 'role_id', 'uses' => function($user)
-			{
-				return $user->role->name;
-			}),
+            array('data' => 'role', 'field' => 'role_id', 'uses' => function($user)
+            {
+                return $user->role->name;
+            }),
 
-			array('data' => 'first_name',	'field' => 'first_name'),
-			array('data' => 'last_name',	'field' => 'last_name'),
-			array('data' => 'email',		'field' => 'email'),
+            array('data' => 'first_name',    'field' => 'first_name'),
+            array('data' => 'last_name',    'field' => 'last_name'),
+            array('data' => 'email',        'field' => 'email'),
 
-			array('data' => 'date', 'uses' => function($user) use ($format)
-			{
-				$activity = $user->activities->first();
+            array('data' => 'date', 'uses' => function($user) use ($format)
+            {
+                $activity = $user->activities->first();
 
-				return Carbon::createFromTimestamp($activity->last_activity)
-					->formatLocalized($format);
-			}),
+                return Carbon::createFromTimestamp($activity->last_activity)
+                    ->formatLocalized($format);
+            }),
 
-			array('data' => 'actions', 'uses' => function($online)
-			{
-				return '-';
-			}),
-		);
+            array('data' => 'actions', 'uses' => function($online)
+            {
+                return '-';
+            }),
+        );
 
-		$input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
+        $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
 
-		//
-		$activityLimit = Config::get('backend::activityLimit');
+        //
+        $activityLimit = Config::get('backend::activityLimit');
 
-		$since = Carbon::now()->subMinutes($activityLimit)->timestamp;
+        $since = Carbon::now()->subMinutes($activityLimit)->timestamp;
 
-		$query = User::with('role')->activeSince($since);
+        $query = User::with('role')->activeSince($since);
 
-		//
-		$data = $this->dataTable($query, $input, $columns);
+        //
+        $data = $this->dataTable($query, $input, $columns);
 
-		return Response::json($data);
-	}
+        return Response::json($data);
+    }
 
-	public function index()
-	{
-		$debug = '';
+    public function index()
+    {
+        $debug = '';
 
-		//
-		$langInfo = Language::info();
+        //
+        $langInfo = Language::info();
 
-		return $this->createView(compact('langInfo', 'debug'))
-			->shares('title', __d('backend', 'Dashboard'));
-	}
+        return $this->createView(compact('langInfo', 'debug'))
+            ->shares('title', __d('backend', 'Dashboard'));
+    }
 
-	public function notify()
-	{
-		$authUser = Auth::user();
+    public function notify()
+    {
+        $authUser = Auth::user();
 
-		//
-		$authUser->notify(new SampleNotification());
+        //
+        $authUser->notify(new SampleNotification());
 
-		return Redirect::to('admin/dashboard')->with('success', 'A sample notification was sent to yourself.');
-	}
+        return Redirect::to('admin/dashboard')->with('success', 'A sample notification was sent to yourself.');
+    }
 }

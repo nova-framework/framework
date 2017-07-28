@@ -20,76 +20,76 @@ use Backend\Models\Role;
 
 class Registrar extends BaseController
 {
-	use RegistersUsersTrait;
+    use RegistersUsersTrait;
 
-	//
-	protected $layout = 'Auth';
+    //
+    protected $layout = 'Auth';
 
-	protected $redirectTo = 'admin/dashboard';
+    protected $redirectTo = 'admin/dashboard';
 
 
-	protected function validator(Request $request)
-	{
-		$data = $request->all();
+    protected function validator(Request $request)
+    {
+        $data = $request->all();
 
-		// Validation rules.
-		$rules = array(
-			'username'		=> 'required|min:6|unique:users',
-			'first_name'	=> 'required|min:4|max:100|valid_name',
-			'last_name'		=> 'required|min:4|max:100|valid_name',
-			'location'		=> 'min:2|max:100|valid_name',
-			'email'			=> 'required|email|unique:users',
-			'password'		=> 'required|confirmed|strong_password'
-		);
+        // Validation rules.
+        $rules = array(
+            'username'        => 'required|min:6|unique:users',
+            'first_name'    => 'required|min:4|max:100|valid_name',
+            'last_name'        => 'required|min:4|max:100|valid_name',
+            'location'        => 'min:2|max:100|valid_name',
+            'email'            => 'required|email|unique:users',
+            'password'        => 'required|confirmed|strong_password'
+        );
 
-		$messages = array(
-			'valid_name'	  	=> __d('backend', 'The :attribute field is not a valid name.'),
-			'strong_password'	=> __d('backend', 'The :attribute field is not strong enough.'),
-		);
+        $messages = array(
+            'valid_name'          => __d('backend', 'The :attribute field is not a valid name.'),
+            'strong_password'    => __d('backend', 'The :attribute field is not strong enough.'),
+        );
 
-		$attributes = array(
-			'username'		=> __d('backend', 'Username'),
-			'first_name'	=> __d('backend', 'First Name'),
-			'last_name'		=> __d('backend', 'Last Name'),
-			'location'		=> __d('backend', 'Location'),
-			'email'			=> __d('backend', 'E-mail'),
-			'password'		=> __d('backend', 'Password'),
-		);
+        $attributes = array(
+            'username'        => __d('backend', 'Username'),
+            'first_name'    => __d('backend', 'First Name'),
+            'last_name'        => __d('backend', 'Last Name'),
+            'location'        => __d('backend', 'Location'),
+            'email'            => __d('backend', 'E-mail'),
+            'password'        => __d('backend', 'Password'),
+        );
 
-		// Add the custom Validation Rule commands.
-		Validator::extend('valid_name', function($attribute, $value, $parameters)
-		{
-			$pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+        // Add the custom Validation Rule commands.
+        Validator::extend('valid_name', function($attribute, $value, $parameters)
+        {
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
-			return (preg_match($pattern, $value) === 1);
-		});
+            return (preg_match($pattern, $value) === 1);
+        });
 
-		Validator::extend('strong_password', function($attribute, $value, $parameters)
-		{
-			$pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
+        Validator::extend('strong_password', function($attribute, $value, $parameters)
+        {
+            $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
 
-			return (preg_match($pattern, $value) === 1);
-		});
+            return (preg_match($pattern, $value) === 1);
+        });
 
-		return Validator::make($data, $rules, $messages, $attributes);
-	}
+        return Validator::make($data, $rules, $messages, $attributes);
+    }
 
-	protected function create($input)
-	{
-		// Encrypt the given Password.
-		$password = Hash::make($input['password']);
+    protected function create($input)
+    {
+        // Encrypt the given Password.
+        $password = Hash::make($input['password']);
 
-		// Retrieve the default 'user' Role.
-		$role = Role::where('slug', 'user')->first();
+        // Retrieve the default 'user' Role.
+        $role = Role::where('slug', 'user')->first();
 
-		return User::create(array(
-			'username'		=> $input['username'],
-			'first_name'	=> $input['first_name'],
-			'last_name'		=> $input['last_name'],
-			'location'		=> $input['location'],
-			'email'			=> $input['email'],
-			'password'		=> $password,
-			'role_id'		=> $role->getKey(),
-		));
-	}
+        return User::create(array(
+            'username'        => $input['username'],
+            'first_name'    => $input['first_name'],
+            'last_name'        => $input['last_name'],
+            'location'        => $input['location'],
+            'email'            => $input['email'],
+            'password'        => $password,
+            'role_id'        => $role->getKey(),
+        ));
+    }
 }

@@ -8,39 +8,39 @@ use Nova\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
-	/**
-	 * This namespace is applied to the controller routes in your routes file.
-	 *
-	 * @var string
-	 */
-	protected $namespace = 'App\Controllers';
+    /**
+     * This namespace is applied to the controller routes in your routes file.
+     *
+     * @var string
+     */
+    protected $namespace = 'App\Controllers';
 
 
-	/**
-	 * Define your route pattern filters, etc.
-	 *
-	 * @param  \Nova\Routing\Router  $router
-	 * @return void
-	 */
-	public function boot(Router $router)
-	{
-		//
+    /**
+     * Define your route pattern filters, etc.
+     *
+     * @param  \Nova\Routing\Router  $router
+     * @return void
+     */
+    public function boot(Router $router)
+    {
+        //
 
-		parent::boot($router);
-	}
+        parent::boot($router);
+    }
 
-	/**
-	 * Define the routes for the application.
-	 *
-	 * @param  \Nova\Routing\Router  $router
-	 * @return void
-	 */
-	public function map(Router $router)
-	{
-		// Load the Routes for the WEB group.
-		$router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router)
-		{
-			require APPPATH .'Routes.php';
-		});
-	}
+    /**
+     * Define the routes for the application.
+     *
+     * @param  \Nova\Routing\Router  $router
+     * @return void
+     */
+    public function map(Router $router)
+    {
+        // Load the Routes for the WEB group.
+        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router)
+        {
+            require APPPATH .'Routes.php';
+        });
+    }
 }

@@ -7,35 +7,35 @@ use Nova\Console\Command;
 
 class ClearRemindersCommand extends Command
 {
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'auth:clear-reminders';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'auth:clear-reminders';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Flush expired reminders.';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Flush expired reminders.';
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return void
-	 */
-	public function fire()
-	{
-		$name = $this->argument('name');
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function fire()
+    {
+        $name = $this->argument('name');
 
-		$broker = $this->container['auth.password']->broker($name);
+        $broker = $this->container['auth.password']->broker($name);
 
-		//
-		$broker->getRepository()->deleteExpired();
+        //
+        $broker->getRepository()->deleteExpired();
 
-		$this->info('Expired reminders cleared!');
-	}
+        $this->info('Expired reminders cleared!');
+    }
 
 }

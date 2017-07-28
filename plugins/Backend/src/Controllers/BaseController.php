@@ -17,223 +17,223 @@ use Backend\Support\Menu;
 
 class BaseController extends Controller
 {
-	/**
-	 * The currently used Theme.
-	 *
-	 * @var string
-	 */
-	protected $theme = 'Backend';
+    /**
+     * The currently used Theme.
+     *
+     * @var string
+     */
+    protected $theme = 'Backend';
 
-	/**
-	 * The currently used Layout.
-	 *
-	 * @var string
-	 */
-	protected $layout = 'Default';
+    /**
+     * The currently used Layout.
+     *
+     * @var string
+     */
+    protected $layout = 'Default';
 
 
-	/**
-	 * Method executed before any action.
-	 *
-	 * @return void
-	 */
-	protected function initialize()
-	{
-		parent::initialize();
+    /**
+     * Method executed before any action.
+     *
+     * @return void
+     */
+    protected function initialize()
+    {
+        parent::initialize();
 
-		//
-		$request = Request::instance();
+        //
+        $request = Request::instance();
 
-		Activity::updateCurrent($request);
+        Activity::updateCurrent($request);
 
-		if ($request->ajax() || $request->wantsJson()) {
-			return;
-		} else if (is_null($user = Auth::user())) {
-			return;
-		}
+        if ($request->ajax() || $request->wantsJson()) {
+            return;
+        } else if (is_null($user = Auth::user())) {
+            return;
+        }
 
-		View::share('currentUser', $user);
+        View::share('currentUser', $user);
 
-		// Prepare the SideBar Menu.
-		$menu = Menu::make('Backend::Partials/SideBarMenu', function ($menu) use ($user)
-		{
-			$payload = array($menu, $user);
+        // Prepare the SideBar Menu.
+        $menu = Menu::make('Backend::Partials/SideBarMenu', function ($menu) use ($user)
+        {
+            $payload = array($menu, $user);
 
-			Event::fire('backend.menu.sidebar', $payload);
-		});
+            Event::fire('backend.menu.sidebar', $payload);
+        });
 
-		View::share('sideBarMenu', $menu->render());
+        View::share('sideBarMenu', $menu->render());
 
-		// Prepare the notifications count.
-		$notifications = $user->unreadNotifications()->count();
+        // Prepare the notifications count.
+        $notifications = $user->unreadNotifications()->count();
 
-		View::share('notificationCount', $notifications);
+        View::share('notificationCount', $notifications);
 
-		// Prepare the messages count.
-		$messages = Message::where('receiver_id', $user->id)->unread()->count();
+        // Prepare the messages count.
+        $messages = Message::where('receiver_id', $user->id)->unread()->count();
 
-		View::share('privateMessageCount', $messages);
+        View::share('privateMessageCount', $messages);
 
-		// Share the Views the Backend's base URI.
-		$segments = $request->segments();
+        // Share the Views the Backend's base URI.
+        $segments = $request->segments();
 
-		$path = '';
+        $path = '';
 
-		if(! empty($segments)) {
-			// Make the path equal with the first part if it exists, i.e. 'admin'
-			$path = array_shift($segments);
+        if(! empty($segments)) {
+            // Make the path equal with the first part if it exists, i.e. 'admin'
+            $path = array_shift($segments);
 
-			$segment = ! empty($segments) ? array_shift($segments) : '';
+            $segment = ! empty($segments) ? array_shift($segments) : '';
 
-			if (($path == 'admin') && empty($segment)) {
-				$path = 'admin/dashboard';
-			} else if (! empty($segment)) {
-				$path .= '/' .$segment;
-			}
-		}
+            if (($path == 'admin') && empty($segment)) {
+                $path = 'admin/dashboard';
+            } else if (! empty($segment)) {
+                $path .= '/' .$segment;
+            }
+        }
 
-		View::share('baseUri', $path);
-	}
+        View::share('baseUri', $path);
+    }
 
-	/**
-	 * Server Side Processor for DataTables.
-	 *
-	 * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
-	 * @param array $input
-	 * @param array $options
-	 *
-	 * @return array
-	 */
-	protected function dataTable($query, array $input, array $options)
-	{
-		$columns = Arr::get($input, 'columns', array());
+    /**
+     * Server Side Processor for DataTables.
+     *
+     * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
+     * @param array $input
+     * @param array $options
+     *
+     * @return array
+     */
+    protected function dataTable($query, array $input, array $options)
+    {
+        $columns = Arr::get($input, 'columns', array());
 
-		// Compute the total count.
-		$totalCount = $query->count();
+        // Compute the total count.
+        $totalCount = $query->count();
 
-		// Compute the draw.
-		$draw = intval(Arr::get($input, 'draw', 0));
+        // Compute the draw.
+        $draw = intval(Arr::get($input, 'draw', 0));
 
-		// Handle the global searching.
-		$search = trim(Arr::get($input, 'search.value'));
+        // Handle the global searching.
+        $search = trim(Arr::get($input, 'search.value'));
 
-		if (! empty($search)) {
-			$query->whereNested(function($query) use($columns, $options, $search)
-			{
-				foreach($columns as $column) {
-					$data = $column['data'];
+        if (! empty($search)) {
+            $query->whereNested(function($query) use($columns, $options, $search)
+            {
+                foreach($columns as $column) {
+                    $data = $column['data'];
 
-					$option = Arr::first($options, function ($key, $value) use ($data)
-					{
-						return ($value['data'] == $data);
-					});
+                    $option = Arr::first($options, function ($key, $value) use ($data)
+                    {
+                        return ($value['data'] == $data);
+                    });
 
-					if ($column['searchable'] == 'true') {
-						$query->orWhere($option['field'], 'LIKE', '%' .$search .'%');
-					}
-				}
-			});
-		}
+                    if ($column['searchable'] == 'true') {
+                        $query->orWhere($option['field'], 'LIKE', '%' .$search .'%');
+                    }
+                }
+            });
+        }
 
-		// Handle the column searching.
-		foreach($columns as $column) {
-			$data = $column['data'];
+        // Handle the column searching.
+        foreach($columns as $column) {
+            $data = $column['data'];
 
-			$option = Arr::first($options, function ($key, $value) use ($data)
-			{
-				return ($value['data'] == $data);
-			});
+            $option = Arr::first($options, function ($key, $value) use ($data)
+            {
+                return ($value['data'] == $data);
+            });
 
-			$search = trim(Arr::get($column, 'search.value'));
+            $search = trim(Arr::get($column, 'search.value'));
 
-			if (($column['searchable'] == 'true') && (strlen($search) > 0)) {
-				$query->where($option['field'], 'LIKE', '%' .$search .'%');
-			}
-		}
+            if (($column['searchable'] == 'true') && (strlen($search) > 0)) {
+                $query->where($option['field'], 'LIKE', '%' .$search .'%');
+            }
+        }
 
-		// Compute the filtered count.
-		$filteredCount = $query->count();
+        // Compute the filtered count.
+        $filteredCount = $query->count();
 
-		// Handle the column ordering.
-		$orders = Arr::get($input, 'order', array());
+        // Handle the column ordering.
+        $orders = Arr::get($input, 'order', array());
 
-		foreach ($orders as $order) {
-			$index = intval($order['column']);
+        foreach ($orders as $order) {
+            $index = intval($order['column']);
 
-			$column = Arr::get($input, 'columns.' .$index, array());
+            $column = Arr::get($input, 'columns.' .$index, array());
 
-			//
-			$data = $column['data'];
+            //
+            $data = $column['data'];
 
-			$option = Arr::first($options, function ($key, $value) use ($data)
-			{
-				return ($value['data'] == $data);
-			});
+            $option = Arr::first($options, function ($key, $value) use ($data)
+            {
+                return ($value['data'] == $data);
+            });
 
-			if ($column['orderable'] == 'true') {
-				$dir = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
+            if ($column['orderable'] == 'true') {
+                $dir = ($order['dir'] === 'asc') ? 'ASC' : 'DESC';
 
-				$field = $option['field'];
+                $field = $option['field'];
 
-				if ($query instanceof ModelBuilder) {
-					$model = $query->getModel();
+                if ($query instanceof ModelBuilder) {
+                    $model = $query->getModel();
 
-					$field = $model->getTable() .'.' .$field;
-				}
+                    $field = $model->getTable() .'.' .$field;
+                }
 
-				$query->orderBy($field, $dir);
-			}
-		}
+                $query->orderBy($field, $dir);
+            }
+        }
 
-		// Handle the pagination.
-		$start  = Arr::get($input, 'start',  0);
-		$length = Arr::get($input, 'length', 25);
+        // Handle the pagination.
+        $start  = Arr::get($input, 'start',  0);
+        $length = Arr::get($input, 'length', 25);
 
-		$query->skip($start)->take($length);
+        $query->skip($start)->take($length);
 
-		// Retrieve the data from database.
-		$results = $query->get();
+        // Retrieve the data from database.
+        $results = $query->get();
 
-		//
-		// Format the data on respect of DataTables specs.
+        //
+        // Format the data on respect of DataTables specs.
 
-		$columns = array();
+        $columns = array();
 
-		foreach ($options as $option) {
-			$key = $option['data'];
+        foreach ($options as $option) {
+            $key = $option['data'];
 
-			//
-			$field = Arr::get($option, 'field');
+            //
+            $field = Arr::get($option, 'field');
 
-			$columns[$key] = Arr::get($option, 'uses', $field);
-		}
+            $columns[$key] = Arr::get($option, 'uses', $field);
+        }
 
-		//
-		$data = array();
+        //
+        $data = array();
 
-		foreach ($results as $result) {
-			$record = array();
+        foreach ($results as $result) {
+            $record = array();
 
-			foreach ($columns as $key => $value) {
-				// Process for standard columns.
-				if (is_string($value)) {
-					$record[$key] = $result->{$value};
+            foreach ($columns as $key => $value) {
+                // Process for standard columns.
+                if (is_string($value)) {
+                    $record[$key] = $result->{$value};
 
-					continue;
-				}
+                    continue;
+                }
 
-				// Process for dynamic columns.
-				$record[$key] = call_user_func($value, $result, $key);
-			}
+                // Process for dynamic columns.
+                $record[$key] = call_user_func($value, $result, $key);
+            }
 
-			$data[] = $record;
-		}
+            $data[] = $record;
+        }
 
-		return array(
-			"draw"			=> $draw,
-			"recordsTotal"	=> $totalCount,
-			"recordsFiltered" => $filteredCount,
-			"data"			=> $data
-		);
-	}
+        return array(
+            "draw"            => $draw,
+            "recordsTotal"    => $totalCount,
+            "recordsFiltered" => $filteredCount,
+            "data"            => $data
+        );
+    }
 }

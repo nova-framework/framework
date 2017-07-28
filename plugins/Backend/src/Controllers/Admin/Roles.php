@@ -22,205 +22,205 @@ use Backend\Models\Role;
 class Roles extends BaseController
 {
 
-	public function __construct()
-	{
-		$this->middleware('role:administrator');
-	}
+    public function __construct()
+    {
+        $this->middleware('role:administrator');
+    }
 
-	protected function validator(array $data, $id = null)
-	{
-		if (! is_null($id)) {
-			$ignore = ',' .intval($id);
-		} else {
-			$ignore =  '';
-		}
+    protected function validator(array $data, $id = null)
+    {
+        if (! is_null($id)) {
+            $ignore = ',' .intval($id);
+        } else {
+            $ignore =  '';
+        }
 
-		// The Validation rules.
-		$rules = array(
-			'name'			=> 'required|min:4|max:40|valid_name',
-			'slug'			=> 'required|min:4|max:40|alpha_dash|unique:roles,slug' .$ignore,
-			'description'	=> 'required|min:5|max:255',
-		);
+        // The Validation rules.
+        $rules = array(
+            'name'            => 'required|min:4|max:40|valid_name',
+            'slug'            => 'required|min:4|max:40|alpha_dash|unique:roles,slug' .$ignore,
+            'description'    => 'required|min:5|max:255',
+        );
 
-		$messages = array(
-			'valid_name' => __d('backend', 'The :attribute field is not a valid name.'),
-		);
+        $messages = array(
+            'valid_name' => __d('backend', 'The :attribute field is not a valid name.'),
+        );
 
-		$attributes = array(
-			'name'			=> __d('backend', 'Name'),
-			'slug'			=> __d('backend', 'Slug'),
-			'description'	=> __d('backend', 'Description'),
-		);
+        $attributes = array(
+            'name'            => __d('backend', 'Name'),
+            'slug'            => __d('backend', 'Slug'),
+            'description'    => __d('backend', 'Description'),
+        );
 
-		// Add the custom Validation Rule commands.
-		Validator::extend('valid_name', function($attribute, $value, $parameters)
-		{
-			$pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
+        // Add the custom Validation Rule commands.
+        Validator::extend('valid_name', function($attribute, $value, $parameters)
+        {
+            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
 
-			return (preg_match($pattern, $value) === 1);
-		});
+            return (preg_match($pattern, $value) === 1);
+        });
 
-		return Validator::make($data, $rules, $messages, $attributes);
-	}
+        return Validator::make($data, $rules, $messages, $attributes);
+    }
 
-	public function data()
-	{
-		$columns = array(
-			array('data' => 'roleid',	'field' => 'id'),
-			array('data' => 'name',		'field' => 'name'),
-			array('data' => 'slug',		'field' => 'slug'),
-			array('data' => 'details',	'field' => 'description'),
+    public function data()
+    {
+        $columns = array(
+            array('data' => 'roleid',    'field' => 'id'),
+            array('data' => 'name',        'field' => 'name'),
+            array('data' => 'slug',        'field' => 'slug'),
+            array('data' => 'details',    'field' => 'description'),
 
-			array('data' => 'users', 'uses' => function($role)
-			{
-				return $role->users->count();
-			}),
+            array('data' => 'users', 'uses' => function($role)
+            {
+                return $role->users->count();
+            }),
 
-			array('data' => 'actions', 'uses' => function($role)
-			{
-				return View::make('Backend::Partials/RolesTableActions')
-					->with('role', $role)
-					->render();
-			}),
-		);
+            array('data' => 'actions', 'uses' => function($role)
+            {
+                return View::make('Backend::Partials/RolesTableActions')
+                    ->with('role', $role)
+                    ->render();
+            }),
+        );
 
-		$input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
+        $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
 
-		$query = Role::with('users');
+        $query = Role::with('users');
 
-		//
-		$data = $this->dataTable($query, $input, $columns);
+        //
+        $data = $this->dataTable($query, $input, $columns);
 
-		return Response::json($data);
-	}
+        return Response::json($data);
+    }
 
-	public function index()
-	{
-		$langInfo = Language::info();
+    public function index()
+    {
+        $langInfo = Language::info();
 
-		return $this->createView()
-			->shares('title', __d('backend', 'Roles'))
-			->with('langInfo', $langInfo);
-	}
+        return $this->createView()
+            ->shares('title', __d('backend', 'Roles'))
+            ->with('langInfo', $langInfo);
+    }
 
-	public function create()
-	{
-		return $this->createView()
-			->shares('title', __d('backend', 'Create Role'));
-	}
+    public function create()
+    {
+        return $this->createView()
+            ->shares('title', __d('backend', 'Create Role'));
+    }
 
-	public function store()
-	{
-		// Validate the Input data.
-		$input = Input::only('name', 'slug', 'description');
+    public function store()
+    {
+        // Validate the Input data.
+        $input = Input::only('name', 'slug', 'description');
 
-		$validator = $this->validator($input);
+        $validator = $this->validator($input);
 
-		if($validator->passes()) {
-			// Create a Role Model instance.
-			Role::create($input);
+        if($validator->passes()) {
+            // Create a Role Model instance.
+            Role::create($input);
 
-			// Prepare the flash message.
-			$status = __d('backend', 'The Role <b>{0}</b> was successfully created.', $input['name']);
+            // Prepare the flash message.
+            $status = __d('backend', 'The Role <b>{0}</b> was successfully created.', $input['name']);
 
-			return Redirect::to('admin/roles')->with('success', $status);
-		}
+            return Redirect::to('admin/roles')->with('success', $status);
+        }
 
-		// Errors occurred on Validation.
-		return Redirect::back()->withInput()->withErrors($validator->errors());
-	}
+        // Errors occurred on Validation.
+        return Redirect::back()->withInput()->withErrors($validator->errors());
+    }
 
-	public function show($id)
-	{
-		// Get the Role Model instance.
-		try {
-			$role = Role::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$status = __d('backend', 'The Role with ID: {0} was not found.', $id);
+    public function show($id)
+    {
+        // Get the Role Model instance.
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('backend', 'The Role with ID: {0} was not found.', $id);
 
-			return Redirect::to('admin/roles')->with('warning', $status);
-		}
+            return Redirect::to('admin/roles')->with('warning', $status);
+        }
 
-		return $this->createView()
-			->shares('title', __d('backend', 'Show Role'))
-			->with('role', $role);
-	}
+        return $this->createView()
+            ->shares('title', __d('backend', 'Show Role'))
+            ->with('role', $role);
+    }
 
-	public function edit($id)
-	{
-		// Get the Role Model instance.
-		try {
-			$role = Role::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$status = __d('backend', 'The Role with ID: {0} was not found.', $id);
+    public function edit($id)
+    {
+        // Get the Role Model instance.
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('backend', 'The Role with ID: {0} was not found.', $id);
 
-			return Redirect::to('admin/roles')->with('warning', $status);
-		}
+            return Redirect::to('admin/roles')->with('warning', $status);
+        }
 
-		return $this->createView()
-			->shares('title', __d('backend', 'Edit Role'))
-			->with('role', $role);
-	}
+        return $this->createView()
+            ->shares('title', __d('backend', 'Edit Role'))
+            ->with('role', $role);
+    }
 
-	public function update($id)
-	{
-		// Get the Role Model instance.
-		try {
-			$role = Role::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$status = __d('backend', 'The Role with ID: {0} was not found.', $id);
+    public function update($id)
+    {
+        // Get the Role Model instance.
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('backend', 'The Role with ID: {0} was not found.', $id);
 
-			return Redirect::to('admin/roles')->with('warning', $status);
-		}
+            return Redirect::to('admin/roles')->with('warning', $status);
+        }
 
-		// Validate the Input data.
-		$input = Input::only('name', 'slug', 'description');
+        // Validate the Input data.
+        $input = Input::only('name', 'slug', 'description');
 
-		$validator = $this->validator($input, $id);
+        $validator = $this->validator($input, $id);
 
-		if($validator->passes()) {
-			$origName = $role->name;
+        if($validator->passes()) {
+            $origName = $role->name;
 
-			// Update the Role Model instance.
-			$role->name		= $input['name'];
-			$role->slug		= $input['slug'];
-			$role->description = $input['description'];
+            // Update the Role Model instance.
+            $role->name        = $input['name'];
+            $role->slug        = $input['slug'];
+            $role->description = $input['description'];
 
-			// Save the Role information.
-			$role->save();
+            // Save the Role information.
+            $role->save();
 
-			// Prepare the flash message.
-			$status = __d('backend', 'The Role <b>{0}</b> was successfully updated.', $origName);
+            // Prepare the flash message.
+            $status = __d('backend', 'The Role <b>{0}</b> was successfully updated.', $origName);
 
-			return Redirect::to('admin/roles')->with('success', $status);
-		}
+            return Redirect::to('admin/roles')->with('success', $status);
+        }
 
-		// Errors occurred on Validation.
-		return Redirect::back()->withInput()->withErrors($validator->errors());
-	}
+        // Errors occurred on Validation.
+        return Redirect::back()->withInput()->withErrors($validator->errors());
+    }
 
-	public function destroy($id)
-	{
-		// Get the Role Model instance.
-		try {
-			$role = Role::findOrFail($id);
-		}
-		catch (ModelNotFoundException $e) {
-			$status = __d('backend', 'The Role with ID: {0} was not found.', $id);
+    public function destroy($id)
+    {
+        // Get the Role Model instance.
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            $status = __d('backend', 'The Role with ID: {0} was not found.', $id);
 
-			return Redirect::to('admin/roles')->with('warning', $status);
-		}
+            return Redirect::to('admin/roles')->with('warning', $status);
+        }
 
-		// Destroy the requested Role record.
-		$role->delete();
+        // Destroy the requested Role record.
+        $role->delete();
 
-		// Prepare the flash message.
-		$status = __d('backend', 'The Role <b>{0}</b> was successfully deleted.', $role->name);
+        // Prepare the flash message.
+        $status = __d('backend', 'The Role <b>{0}</b> was successfully deleted.', $role->name);
 
-		return Redirect::to('admin/roles')->with('success', $status);
-	}
+        return Redirect::to('admin/roles')->with('success', $status);
+    }
 
 }

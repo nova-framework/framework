@@ -8,15 +8,15 @@ use Nova\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-	/**
-	 * Run the Database Seeds.
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		Model::unguard();
+    /**
+     * Run the Database Seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        Model::unguard();
 
-		// $this->call('Reminders\Database\Seeds\FoobarTableSeeder');
-	}
+        // $this->call('Reminders\Database\Seeds\FoobarTableSeeder');
+    }
 }

@@ -36,46 +36,46 @@ return array(
 
     'connections' => array(
         'sync' => array(
-            'driver' => 'sync',
+            'driver'  => 'sync',
         ),
         'database' => array(
-            'driver'    => 'database',
-            'table'        => 'jobs',
-            'queue'        => 'default',
-            'expire'    => 60,
+            'driver'  => 'database',
+            'table'   => 'jobs',
+            'queue'   => 'default',
+            'expire'  => 60,
         ),
-        'beanstalkd'    => array(
-            'driver'    => 'beanstalkd',
-            'host'        => 'localhost',
-            'queue'        => 'default',
-            'ttr'        => 60,
+        'beanstalkd' => array(
+            'driver'  => 'beanstalkd',
+            'host'    => 'localhost',
+            'queue'   => 'default',
+            'ttr'     => 60,
         ),
         'sqs' => array(
-            'driver'    => 'sqs',
-            'key'        => 'your-public-key',
-            'secret'    => 'your-secret-key',
-            'queue'        => 'your-queue-url',
-            'region'    => 'us-east-1',
+            'driver'  => 'sqs',
+            'key'     => 'your-public-key',
+            'secret'  => 'your-secret-key',
+            'queue'   => 'your-queue-url',
+            'region'  => 'us-east-1',
         ),
         'iron' => array(
-            'driver'    => 'iron',
-            'host'        => 'mq-aws-us-east-1.iron.io',
-            'token'        => 'your-token',
-            'project'    => 'your-project-id',
-            'queue'        => 'your-queue-name',
-            'encrypt'    => true,
+            'driver'  => 'iron',
+            'host'    => 'mq-aws-us-east-1.iron.io',
+            'token'   => 'your-token',
+            'project' => 'your-project-id',
+            'queue'   => 'your-queue-name',
+            'encrypt' => true,
         ),
         'redis' => array(
-            'driver'    => 'redis',
-            'queue'        => 'default',
+            'driver'  => 'redis',
+            'queue'   => 'default',
         ),
 
         // NOTE: ONLY FOR RUNNING INCIDENTAL TASKS IN THE BACKGROUND!
         'async' => array(
-            'driver'    => 'async',
-            'table'        => 'jobs',
-            'queue'        => 'default',
-            'expire'    => 60,
+            'driver'  => 'async',
+            'table'   => 'jobs',
+            'queue'   => 'default',
+            'expire'  => 60,
         ),
     ),
 
@@ -91,7 +91,7 @@ return array(
     */
 
     'failed' => array(
-        'database'    => 'mysql',
-        'table'        => 'failed_jobs',
+        'database' => 'mysql',
+        'table'    => 'failed_jobs',
     ),
 );

@@ -1,15 +1,15 @@
-@layout('Bootstrap::Layouts/Default')
+@extends('Bootstrap::Layouts/Default')
 
 @section('header')
-    @partial('Bootstrap::Layouts/Partials/Navbar')
+    @include('Bootstrap::Layouts/Partials/Navbar')
 @stop
 
 @section('content')
-    @partial('Bootstrap::Layouts/Partials/Logo')
+    @include('Bootstrap::Layouts/Partials/Logo')
 
     @parent
 @stop
 
 @section('footer')
-    @partial('Bootstrap::Layouts/Partials/Footer')
+    @include('Bootstrap::Layouts/Partials/Footer')
 @stop

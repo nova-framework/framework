@@ -1,8 +1,8 @@
 <?php
 
 return array (
-  'Dashboard' => '',
-  'Files' => '',
-  'Site Assets' => '',
-  'Site Root' => '',
+  'Dashboard' => 'داشبورد',
+  'Files' => 'فایل ها',
+  'Site Assets' => 'دارایی های سایت',
+  'Site Root' => 'ریشه سایت',
 );

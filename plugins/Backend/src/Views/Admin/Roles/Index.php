@@ -117,7 +117,7 @@ $(function () {
         var id = button.data('id'); // Extract the Role ID from data-* attributes
 
         //
-        $('#delete_user_id').val(id);
+        $('#delete_role_id').val(id);
 
         $('#modal_delete_form').attr('action', "<?= site_url('admin/roles'); ?>" + '/' + id + '/destroy');
     });

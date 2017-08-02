@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'Bad Request' => '',
+  'Bad Request' => 'Ugyldig anmodning',
   'Forbidden' => 'Forbudt',
   'Go to our home page and navigate to the content in question.' => 'Gå til vores hjemmeside og find det pågældende indhold.',
   'Hello, welcome from the welcome controller and subpage method! <br/>
@@ -12,7 +12,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'If you have problems, please paste the above URL into your web browser.' => 'Hvis du har problemer skal du indsætte den ovenstående URL ind i din webbrowser.',
   'If you spelled the URL manually, double check the spelling.' => 'Hvis du har indtastet din URL manuelt bedes du tjekke den for evt fejl.',
   'Internal Server Error' => 'Intern serverfejl',
-  'Method not allowed' => '',
+  'Method not allowed' => 'Ikke gyldig "method"',
   'Open subpage' => 'Åben underside',
   'Password Reset' => 'Nulstil kodeord',
   'Please verify your E-mail address' => 'Bekræft venligst din mailadresse',
@@ -25,8 +25,8 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => 'Dette kan være et resultat af at siden er blevet flyttet, navnet blevet ændret eller at siden er midlertidigt nede.',
   'To reset your password, complete this form: {0}.' => 'For at nulstille dit kodeord, skal du udfyld denne formular: {0}.',
   'Troubleshooting' => 'Fejlfinding',
-  'Unauthorized' => '',
+  'Unauthorized' => 'uautoriseret',
   'Welcome' => 'Velkommen',
   'You are not authorized to access this resource.' => 'Du har ikke tilladelse til at tilgå denne ressource',
-  'Your session expired. Please try again!' => '',
+  'Your session expired. Please try again!' => 'Din session er udløbet. Prøv venligst igen!',
 );

@@ -11,5 +11,5 @@ return array (
   'Sign In' => 'Log ind',
   'Sign Up' => 'Tilmeld',
   'Sign out' => 'Log ud',
-  'Toggle navigation' => '',
+  'Toggle navigation' => 'Skift navigation',
 );

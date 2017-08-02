@@ -75,5 +75,5 @@ return array (
   'User not found: #{0}' => 'Brugeren: #{0} blev ikke fundet',
   'Username' => 'Brugernavn',
   'Users' => 'Brugere',
-  'You are not authorized to access this resource.' => '',
+  'You are not authorized to access this resource.' => 'Du har ikke tilladelse til at få adgang til denne ressource',
 );

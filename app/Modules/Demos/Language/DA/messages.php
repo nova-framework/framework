@@ -10,7 +10,7 @@ return array (
   'Modules' => 'Moduler',
   'Name' => 'Navn',
   'No' => 'Nej',
-  'Order' => '',
+  'Order' => 'Rækkefølge',
   'Pagination' => 'Sideinddeling',
   'Password Sample' => 'Kodeords eksempel',
   'Password:' => 'Kodeord:',

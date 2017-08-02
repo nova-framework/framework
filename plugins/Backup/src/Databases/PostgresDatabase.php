@@ -2,39 +2,33 @@
 
 namespace Backup\Databases;
 
-use Nova\Support\Facades\Config;
-
-use Backup\Console;
+use Backup\Database\Console;
 
 
-class MySQLDatabase implements DatabaseInterface
+class PostgresDatabase implements DatabaseInterface
 {
     protected $console;
     protected $database;
     protected $user;
     protected $password;
     protected $host;
-    protected $port;
 
 
-    public function __construct(Console $console, $database, $user, $password, $host, $port)
+    public function __construct(Console $console, $database, $user, $password, $host)
     {
         $this->console  = $console;
         $this->database = $database;
         $this->user     = $user;
         $this->password = $password;
         $this->host     = $host;
-        $this->port     = $port;
     }
 
     public function dump($destinationFile)
     {
-        $command = sprintf('%s --user=%s --password=%s --host=%s --port=%s %s > %s',
-            $this->getDumpCommandPath(),
-            escapeshellarg($this->user),
+        $command = sprintf('PGPASSWORD=%s pg_dump -Fc --no-acl --no-owner -h %s -U %s %s > %s',
             escapeshellarg($this->password),
             escapeshellarg($this->host),
-            escapeshellarg($this->port),
+            escapeshellarg($this->user),
             escapeshellarg($this->database),
             escapeshellarg($destinationFile)
         );
@@ -44,12 +38,10 @@ class MySQLDatabase implements DatabaseInterface
 
     public function restore($sourceFile)
     {
-        $command = sprintf('% --user=%s --password=%s --host=%s --port=%s %s < %s',
-            $this->getRestoreCommandPath(),
-            escapeshellarg($this->user),
+        $command = sprintf('PGPASSWORD=%s pg_restore --verbose --clean --no-acl --no-owner -h %s -U %s -d %s %s',
             escapeshellarg($this->password),
             escapeshellarg($this->host),
-            escapeshellarg($this->port),
+            escapeshellarg($this->user),
             escapeshellarg($this->database),
             escapeshellarg($sourceFile)
         );
@@ -64,16 +56,6 @@ class MySQLDatabase implements DatabaseInterface
 
     public function getFileExtension()
     {
-        return 'sql';
-    }
-
-    protected function getDumpCommandPath()
-    {
-        return Config::get('backup::config.mysql.dumpCommandPath');
-    }
-
-    protected function getRestoreCommandPath()
-    {
-        return Config::get('backup::config.mysql.restoreCommandPath');
+        return 'dump';
     }
 }

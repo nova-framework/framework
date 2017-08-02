@@ -1,8 +1,8 @@
 <?php
 
 return array (
-  'Dashboard' => '',
-  'Files' => '',
-  'Site Assets' => '',
-  'Site Root' => '',
+  'Dashboard' => 'Skrivebord',
+  'Files' => 'Filer',
+  'Site Assets' => 'Sidens aktiver',
+  'Site Root' => 'Sidens rod',
 );

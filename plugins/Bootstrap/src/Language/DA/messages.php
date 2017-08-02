@@ -1,6 +1,6 @@
 <?php
 
 return array (
-  'Page' => '',
-  'Toggle navigation' => '',
+  'Page' => 'Side',
+  'Toggle navigation' => 'Skift navigation',
 );

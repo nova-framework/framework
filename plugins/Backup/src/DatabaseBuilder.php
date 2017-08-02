@@ -17,19 +17,19 @@ class DatabaseBuilder
         $this->console = new Console();
     }
 
-    public function getDatabase(array $realConfig)
+    public function getDatabase(array $config)
     {
-        switch ($realConfig['driver']) {
+        switch ($config['driver']) {
             case 'mysql':
-                $this->buildMySQL($realConfig);
+                $this->buildMySQL($config);
 
                 break;
             case 'sqlite':
-                $this->buildSqlite($realConfig);
+                $this->buildSqlite($config);
 
                 break;
             case 'pgsql':
-                $this->buildPostgres($realConfig);
+                $this->buildPostgres($config);
 
                 break;
             default:

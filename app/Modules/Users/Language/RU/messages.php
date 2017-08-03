@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
+  '%d %b %Y, %R' => '%d %b %Y, %R',
   '<< Previous Page' => 'Предыдущая страница',
   'Are you sure you want to delete the Role <b>{0}</b>, the operation being irreversible?' => 'Операция является необратимой, Вы уверены, что хотите удалить роль <b>{0}</b> ?',
   'Are you sure you want to delete the User <b>{0}</b>, the operation being irreversible?' => 'Операция является необратимой, Вы уверены, что хотите удалить пользователя <b>{0}</b> ?',
@@ -40,8 +40,8 @@ return array (
   'Password confirmation' => 'Подтверждение пароля',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, для удаления роли нажмите на кнопку <b>Удалить роль</b> или <b>Отмена</b> для отмены действия',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'Пожалуйста, для удаления пользователя нажмите на кнопку <b>Удалить пользователя</b> или <b>Отмена</b> для отмены действия',
-  'Profile Picture' => '',
-  'Profile Picture (to change)' => '',
+  'Profile Picture' => 'Изображение профиля',
+  'Profile Picture (to change)' => 'Изображение профиля (для изменения)',
   'Registered Roles' => 'Зарегистрированные роли',
   'Registered Users' => 'Зарегистрированные пользователи',
   'Registered Users for: <b>{0}</b>' => 'Зарегистрированные пользователи для <b>{0}</b>',

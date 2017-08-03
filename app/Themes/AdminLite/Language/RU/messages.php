@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
+  '%d %b %Y, %R' => '%d %b %Y, %R',
   'ADMINISTRATION' => 'Управление',
   'Control Panel' => 'Панель управления',
   'Forgot Password?' => 'Забыли пароль?',
@@ -11,5 +11,5 @@ return array (
   'Sign In' => 'Вход',
   'Sign Up' => 'Регистрация',
   'Sign out' => 'Выход',
-  'Toggle navigation' => '',
+  'Toggle navigation' => 'Свернуть навигацию',
 );

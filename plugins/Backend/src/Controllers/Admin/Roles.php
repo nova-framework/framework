@@ -37,9 +37,9 @@ class Roles extends BaseController
 
         // The Validation rules.
         $rules = array(
-            'name'            => 'required|min:4|max:40|valid_name',
-            'slug'            => 'required|min:4|max:40|alpha_dash|unique:roles,slug' .$ignore,
-            'description'    => 'required|min:5|max:255',
+            'name'        => 'required|min:4|max:40|valid_name',
+            'slug'        => 'required|min:4|max:40|alpha_dash|unique:roles,slug' .$ignore,
+            'description' => 'required|min:5|max:255',
         );
 
         $messages = array(
@@ -47,9 +47,9 @@ class Roles extends BaseController
         );
 
         $attributes = array(
-            'name'            => __d('backend', 'Name'),
-            'slug'            => __d('backend', 'Slug'),
-            'description'    => __d('backend', 'Description'),
+            'name'        => __d('backend', 'Name'),
+            'slug'        => __d('backend', 'Slug'),
+            'description' => __d('backend', 'Description'),
         );
 
         // Add the custom Validation Rule commands.

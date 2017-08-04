@@ -41,9 +41,9 @@ class Dashboard extends BaseController
                 return $user->role->name;
             }),
 
-            array('data' => 'first_name',    'field' => 'first_name'),
-            array('data' => 'last_name',    'field' => 'last_name'),
-            array('data' => 'email',        'field' => 'email'),
+            array('data' => 'first_name', 'field' => 'first_name'),
+            array('data' => 'last_name',  'field' => 'last_name'),
+            array('data' => 'email',      'field' => 'email'),
 
             array('data' => 'date', 'uses' => function($user) use ($format)
             {

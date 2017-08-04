@@ -48,13 +48,13 @@ class Users extends BaseController
 
         // The Validation rules.
         $rules = array(
-            'username'                => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
-            'role'                    => 'required|numeric|exists:roles,id',
+            'username'              => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
+            'role'                  => 'required|numeric|exists:roles,id',
             'first_name'            => 'required|min:4|max:100|valid_name',
-            'last_name'                => 'required|min:4|max:100|valid_name',
-            'location'                => 'min:2|max:100|valid_location',
-            'password'                => $required .'|confirmed|strong_password',
-            'password_confirmation'    => $required .'|same:password',
+            'last_name'             => 'required|min:4|max:100|valid_name',
+            'location'              => 'min:2|max:100|valid_location',
+            'password'              => $required .'|confirmed|strong_password',
+            'password_confirmation' => $required .'|same:password',
             'email'                    => 'required|min:5|max:100|email|unique:users,email' .$ignore,
             'image'                    => 'max:1024|mimes:png,jpeg,jpg,gif',
         );
@@ -66,15 +66,15 @@ class Users extends BaseController
         );
 
         $attributes = array(
-            'username'                => __d('backend', 'Username'),
-            'role'                    => __d('backend', 'Role'),
+            'username'              => __d('backend', 'Username'),
+            'role'                  => __d('backend', 'Role'),
             'first_name'            => __d('backend', 'First Name'),
-            'last_name'                => __d('backend', 'Last Name'),
-            'location'                => __d('backend', 'Location'),
-            'password'                => __d('backend', 'Password'),
-            'password_confirmation'    => __d('backend', 'Password confirmation'),
-            'email'                    => __d('backend', 'E-mail'),
-            'image'                    => __d('backend', 'Profile Picture'),
+            'last_name'             => __d('backend', 'Last Name'),
+            'location'              => __d('backend', 'Location'),
+            'password'              => __d('backend', 'Password'),
+            'password_confirmation' => __d('backend', 'Password confirmation'),
+            'email'                 => __d('backend', 'E-mail'),
+            'image'                 => __d('backend', 'Profile Picture'),
         );
 
         // Add the custom Validation Rule commands.

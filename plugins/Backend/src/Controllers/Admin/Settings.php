@@ -34,17 +34,17 @@ class Settings extends BaseController
         // Validation rules
         $rules = array(
             // The Application.
-            'siteName'            => 'required|max:100',
+            'siteName'        => 'required|max:100',
 
             // The Mailer
-            'mailDriver'        => 'required|alpha',
-            'mailHost'            => 'valid_host',
-            'mailPort'            => 'numeric',
-            'mailFromAddress'    => 'required|email',
-            'mailFromName'        => 'required|max:100',
-            'mailEncryption'    => 'alpha',
-            'mailUsername'        => 'max:100',
-            'mailPassword'        => 'max:100',
+            'mailDriver'      => 'required|alpha',
+            'mailHost'        => 'valid_host',
+            'mailPort'        => 'numeric',
+            'mailFromAddress' => 'required|email',
+            'mailFromName'    => 'required|max:100',
+            'mailEncryption'  => 'alpha',
+            'mailUsername'    => 'max:100',
+            'mailPassword'    => 'max:100',
         );
 
         $messages = array(
@@ -53,18 +53,18 @@ class Settings extends BaseController
 
         $attributes = array(
             // The Application.
-            'siteName'            => __d('backend', 'Site Name'),
-            'siteSkin'            => __d('backend', 'Site Skin'),
+            'siteName'        => __d('backend', 'Site Name'),
+            'siteSkin'        => __d('backend', 'Site Skin'),
 
             // The Mailer
-            'mailDriver'        => __d('backend', 'Mail Driver'),
-            'mailHost'            => __d('backend', 'Server Name'),
-            'mailPort'            => __d('backend', 'Server Port'),
-            'mailFromAddress'    => __d('backend', 'Mail from Adress'),
-            'mailFromName'        => __d('backend', 'Mail from Name'),
-            'mailEncryption'    => __d('backend', 'Encryption'),
-            'mailUsername'        => __d('backend', 'Server Username'),
-            'mailPassword'        => __d('backend', 'Server Password'),
+            'mailDriver'      => __d('backend', 'Mail Driver'),
+            'mailHost'        => __d('backend', 'Server Name'),
+            'mailPort'        => __d('backend', 'Server Port'),
+            'mailFromAddress' => __d('backend', 'Mail from Adress'),
+            'mailFromName'    => __d('backend', 'Mail from Name'),
+            'mailEncryption'  => __d('backend', 'Encryption'),
+            'mailUsername'    => __d('backend', 'Server Username'),
+            'mailPassword'    => __d('backend', 'Server Password'),
         );
 
         // Add the custom Validation Rule commands.

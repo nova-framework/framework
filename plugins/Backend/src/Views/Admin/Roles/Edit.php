@@ -60,7 +60,7 @@ $opt_desc = ! empty($opt_desc) ? $opt_desc : $role->description;
         </div>
 
         <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
-        <input type="hidden" name="userId" value="<?= $role->id; ?>" />
+        <input type="hidden" name="roleId" value="<?= $role->id; ?>" />
 
         </form>
     </div>

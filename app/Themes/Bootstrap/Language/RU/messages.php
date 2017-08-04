@@ -1,6 +1,6 @@
 <?php
 
 return array (
-  'Page' => '',
-  'Toggle navigation' => '',
+  'Page' => 'Страница',
+  'Toggle navigation' => 'Свернуть навигацию',
 );

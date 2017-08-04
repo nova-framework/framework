@@ -2,7 +2,7 @@
 
 return array (
   'Cache' => 'Кэш',
-  'Database API' => '',
+  'Database API' => 'API БД',
   'Enabled' => 'Доступно',
   'Events API' => 'API событий',
   'Mailing API' => 'API почты',

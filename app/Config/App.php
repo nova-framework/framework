@@ -125,7 +125,6 @@ return array(
         'GeoCode'       => 'Nova\Helpers\GeoCode',
         'Inflector'     => 'Nova\Helpers\Inflector',
         'Number'        => 'Nova\Helpers\Number',
-        'RainCaptcha'   => 'Nova\Helpers\RainCaptcha',
         'ReservedWords' => 'Nova\Helpers\ReservedWords',
         'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
         'TableBuilder'  => 'Nova\Helpers\TableBuilder',

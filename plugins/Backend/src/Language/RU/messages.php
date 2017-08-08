@@ -131,6 +131,7 @@ return array (
   'The From Field of any outgoing e-mails.' => 'Поле От для любых исходящих email.',
   'The Password used to connect to the external SMTP Server.' => 'Пароль, используемый для подключения к внешнему SMTP-серверу.',
   'The Port used for connecting to the external SMTP Server.' => 'Порт, используемый для подключения к внешнему SMTP-серверу.',
+  'The Role <b>{0}</b> cannot be deleted because is assigned to <b>{1}</b> Users.' => '',
   'The Role <b>{0}</b> was successfully created.' => 'Роль <b>{0}</b> успешно создана',
   'The Role <b>{0}</b> was successfully deleted.' => 'Роль <b>{0}</b> успешно удалена',
   'The Role <b>{0}</b> was successfully updated.' => 'Роль <b>{0}</b> успешно обновлена',

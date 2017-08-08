@@ -214,6 +214,14 @@ class Roles extends BaseController
             return Redirect::to('admin/roles')->with('warning', $status);
         }
 
+        $users = $role->users()->count();
+
+        if ($users > 0) {
+            $status = __d('backend', 'The Role <b>{0}</b> cannot be deleted because is assigned to <b>{1}</b> Users.', $role->name, $users);
+
+            return Redirect::to('admin/roles')->with('danger', $status);
+        }
+
         // Destroy the requested Role record.
         $role->delete();
 

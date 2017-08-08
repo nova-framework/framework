@@ -131,6 +131,7 @@ return array (
   'The From Field of any outgoing e-mails.' => 'Formular feltet for udgående e-mails.',
   'The Password used to connect to the external SMTP Server.' => 'Adgangskoden til den eksterne SMTP forbindelse.',
   'The Port used for connecting to the external SMTP Server.' => 'Porten til den eksterne SMTP forbindelse',
+  'The Role <b>{0}</b> cannot be deleted because is assigned to <b>{1}</b> Users.' => '',
   'The Role <b>{0}</b> was successfully created.' => 'Rollen <b>{0}</b> blev oprettet.',
   'The Role <b>{0}</b> was successfully deleted.' => 'Rollen <b>{0}</b> blev slettet.',
   'The Role <b>{0}</b> was successfully updated.' => 'Rollen <b>{0}</b> blev opdateret.',

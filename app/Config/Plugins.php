@@ -10,9 +10,9 @@ return array(
     */
 
     'author' => array(
-        'name'        => 'John Doe',
-        'email'        => 'john.doe@novaframework.dev',
-        'homepage'    => 'http://novaframework.dev',
+        'name'     => 'John Doe',
+        'email'    => 'john.doe@novaframework.dev',
+        'homepage' => 'http://novaframework.dev',
     ),
 
     /*

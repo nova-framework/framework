@@ -131,7 +131,7 @@ return array (
   'The From Field of any outgoing e-mails.' => 'فیلد فرستنده تمام ایمیل های ارسالی.',
   'The Password used to connect to the external SMTP Server.' => 'رمزعبور برای اتصال به سرور خارجی SMTP.',
   'The Port used for connecting to the external SMTP Server.' => 'پورت برای اتصال به سرور خارجی SMTP',
-  'The Role <b>{0}</b> cannot be deleted because is assigned to <b>{1}</b> Users.' => '',
+  'The Role <b>{0}</b> cannot be deleted because it is assigned to <b>{1}</b> User(s).' => '',
   'The Role <b>{0}</b> was successfully created.' => 'وظیفه <b>{0}</b> با موفقیت ساخته شد.',
   'The Role <b>{0}</b> was successfully deleted.' => 'وظیفه <b>{0}</b> با موفقیت حذف شد.',
   'The Role <b>{0}</b> was successfully updated.' => 'وظیفه <b>{0}</b> با موفقیت بروز شد.',

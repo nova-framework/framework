@@ -109,7 +109,7 @@ class BaseController extends Controller
         $columns = Arr::get($input, 'columns', array());
 
         // Compute the total count.
-        $totalCount = $query->count();
+        $recordsTotal = $query->count();
 
         // Compute the draw.
         $draw = intval(Arr::get($input, 'draw', 0));
@@ -152,7 +152,7 @@ class BaseController extends Controller
         }
 
         // Compute the filtered count.
-        $filteredCount = $query->count();
+        $recordsFiltered = $query->count();
 
         // Handle the column ordering.
         $orders = Arr::get($input, 'order', array());
@@ -231,8 +231,8 @@ class BaseController extends Controller
 
         return array(
             "draw"            => $draw,
-            "recordsTotal"    => $totalCount,
-            "recordsFiltered" => $filteredCount,
+            "recordsTotal"    => $recordsTotal,
+            "recordsFiltered" => $recordsFiltered,
             "data"            => $data
         );
     }

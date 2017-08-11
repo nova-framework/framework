@@ -66,10 +66,10 @@ class Roles extends BaseController
     public function data()
     {
         $columns = array(
-            array('data' => 'roleid',    'field' => 'id'),
-            array('data' => 'name',        'field' => 'name'),
-            array('data' => 'slug',        'field' => 'slug'),
-            array('data' => 'details',    'field' => 'description'),
+            array('data' => 'roleid',  'field' => 'id'),
+            array('data' => 'name',    'field' => 'name'),
+            array('data' => 'slug',    'field' => 'slug'),
+            array('data' => 'details', 'field' => 'description'),
 
             array('data' => 'users', 'uses' => function($role)
             {

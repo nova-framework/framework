@@ -24,9 +24,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        //
-
         parent::boot($router);
+
+        //
     }
 
     /**
@@ -37,10 +37,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        // Load the Routes for the WEB group.
-        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router)
+        $path = realpath(__DIR__ .'/../');
+
+        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router) use ($path)
         {
-            require APPPATH .'Routes.php';
+            require $path .DS .'Routes.php';
         });
     }
 }

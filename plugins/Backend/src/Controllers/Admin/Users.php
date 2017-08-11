@@ -55,8 +55,8 @@ class Users extends BaseController
             'location'              => 'min:2|max:100|valid_location',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
-            'email'                    => 'required|min:5|max:100|email|unique:users,email' .$ignore,
-            'image'                    => 'max:1024|mimes:png,jpeg,jpg,gif',
+            'email'                 => 'required|min:5|max:100|email|unique:users,email' .$ignore,
+            'image'                 => 'max:1024|mimes:png,jpeg,jpg,gif',
         );
 
         $messages = array(
@@ -107,7 +107,7 @@ class Users extends BaseController
         $columns = array(
             array('data' => 'userid',   'field' => 'id'),
             array('data' => 'username', 'field' => 'username'),
-            array('data' => 'name',         'field' => 'first_name'),
+            array('data' => 'name',     'field' => 'first_name'),
             array('data' => 'surname',  'field' => 'last_name'),
             array('data' => 'email',    'field' => 'email'),
 

@@ -6,7 +6,7 @@ return array (
   'Details' => 'Detaljer',
   'Duplicates' => 'Dubletter',
   'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | SQL: <b>{2}</b> {3, plural, one{query} other{queries}} | UMAX: <b>{4}</b>' => '',
-  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>' => 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</ b> | UMAX: <b>{2}</b>',
+  'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>' => 'Elapsed Time: <b>{0}</b> sec | Memory Usage: <b>{1}</b> | UMAX: <b>{2}</b>',
   'Errors' => 'Fejl',
   'Forensics - Profiler start displaying the information' => 'Forensics - Profiler begynder at vise oplysningerne',
   'Forensics - Profiler start gathering the information' => 'Forensics - Profiler begynder at indsamle oplysningerne',

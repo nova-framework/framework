@@ -18,7 +18,7 @@ $router->get('language/{language}', array('middleware' => 'referer', function($l
 {
     $languages = Config::get('languages');
 
-    if (in_array($language, array_keys($languages))) {
+    if (array_key_exists($language,$languages)) {
         Session::set('language', $language);
 
         // Store also the current Language in a Cookie lasting five years.

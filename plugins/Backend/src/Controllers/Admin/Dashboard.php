@@ -1,6 +1,6 @@
 <?php
 /**
- * Dasboard - Implements a simple Administration Dashboard.
+ * Dashboard - Implements a simple Administration Dashboard.
  *
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  */

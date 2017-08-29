@@ -17,7 +17,7 @@ $router->post('password/remind', array('middleware' => 'guest', 'uses' => 'Remin
 $router->get( 'password/reset/{token}',    array('middleware' => 'guest', 'uses' => 'Reminders@getReset'));
 $router->post('password/reset',            array('middleware' => 'guest', 'uses' => 'Reminders@postReset'));
 
-// The Adminstration Routes.
+// The Administration Routes.
 $router->group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function($router)
 {
     // The User's Dashboard

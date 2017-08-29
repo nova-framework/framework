@@ -10,7 +10,7 @@
 */
 
 
-// The Adminstration Routes.
+// The Administration Routes.
 $router->group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function($router)
 {
     $router->get('files',            'Files@index');

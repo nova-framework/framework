@@ -20,6 +20,6 @@ return array(
     ),
 
 
-    // Wheter or not the dump file is compressed.
+    // Whether or not the dump file is compressed.
     'compress' => true,
 );

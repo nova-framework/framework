@@ -58,7 +58,7 @@ class Option extends BaseModel
             return static::parseBasicSegments($segments);
         }
 
-        $parsed = static::parseNamespacedSegments($key);
+        return static::parseNamespacedSegments($key);
     }
 
     /**

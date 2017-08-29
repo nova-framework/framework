@@ -11,7 +11,7 @@ class Option extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('group', 'item', 'value');
+    protected $fillable = array('namespace', 'group', 'item', 'value');
 
     public $timestamps = false;
 
@@ -92,7 +92,9 @@ class Option extends BaseModel
 
         $itemSegments = explode('.', $item);
 
-        $groupAndItem = array_slice(static::parseBasicSegments($itemSegments), 1);
+        $groupAndItem = array_slice(
+            static::parseBasicSegments($itemSegments), 1
+        );
 
         return array_merge(array($namespace), $groupAndItem);
     }

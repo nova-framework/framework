@@ -128,7 +128,6 @@ class Authorize extends BackendController
      */
     public function postRemind()
     {
-        $error = array();
 
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {

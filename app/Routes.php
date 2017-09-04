@@ -2,6 +2,7 @@
 
 use Nova\Http\Request;
 
+
 /**
  * The static Pages.
  */
@@ -29,3 +30,14 @@ $router->get('language/{language}', function (Request $request, $language)
     return Redirect::back();
 
 })->where('language', '([a-z]{2})');
+
+$router->get('test', function ()
+{
+    $view = View::make('Test')
+        ->shares('title', 'Test')
+        ->with('content', 'This is the page content');
+
+    return View::make('Layouts/Default')
+        ->with('title', 'Test')
+        ->with('content', $view);
+});

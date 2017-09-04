@@ -287,6 +287,7 @@ return array(
         'Response'      => 'Nova\Support\Facades\Response',
         'Route'         => 'Nova\Support\Facades\Route',
         'Schema'        => 'Nova\Support\Facades\Schema',
+        'Section'       => 'Nova\Support\Facades\Section',
         'Session'       => 'Nova\Support\Facades\Session',
         'Validator'     => 'Nova\Support\Facades\Validator',
         'Log'           => 'Nova\Support\Facades\Log',

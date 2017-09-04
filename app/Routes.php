@@ -31,13 +31,16 @@ $router->get('language/{language}', function (Request $request, $language)
 
 })->where('language', '([a-z]{2})');
 
+/**
+ * A test for the Layout/View logic.
+ */
 $router->get('test', function ()
 {
-    $view = View::make('Test')
+    // Create a View instance for the Layout content.
+    $content = View::make('Test')
         ->shares('title', 'Test')
         ->with('content', 'This is the page content');
 
-    return View::make('Layouts/Default')
-        ->with('title', 'Test')
-        ->with('content', $view);
+    // Create and return the View instance for the Layout.
+    return View::make('Layouts/Default')->with('content', $content);
 });

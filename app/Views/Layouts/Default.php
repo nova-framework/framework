@@ -13,6 +13,9 @@
 </head>
 <body>
 
+<?php Section::start('page-top'); ?>
+<?php Section::show(); ?>
+
 <div class="container">
     <?= $content; ?>
 </div>

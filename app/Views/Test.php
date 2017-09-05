@@ -5,5 +5,9 @@
 <?= $content; ?>
 
 <?php Section::start('page-top'); ?>
-This is my shiny Section from View.
+
+<div style="padding: 20px;">
+This is my shiny new Section from the View.
+</div>
+
 <?php Section::stop(); ?>

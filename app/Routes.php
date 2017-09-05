@@ -42,5 +42,5 @@ $router->get('test', function ()
         ->with('content', 'This is the page content');
 
     // Create and return the View instance for the Layout.
-    return View::make('Layouts/Default')->with('content', $content);
+    return View::make('Layouts/Test')->with('content', $content);
 });

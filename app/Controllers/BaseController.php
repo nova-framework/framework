@@ -123,21 +123,31 @@ class BaseController extends Controller
         }
 
         // The response is a RenderableInterface implementation.
-        else if ($this->autoLayout()) {
-            $view = $this->getQualifiedLayout();
-
-            if ('rtl' == Language::direction()) {
-                $layout = sprintf('RTL/%s', $this->layout);
-
-                $localized = $this->getQualifiedLayout($layout);
-
-                $view = View::exists($localized) ? $localized : $view;
-            }
+        else if ($this->autoLayout() && ! empty($this->layout)) {
+            $view = $this->getLocalizedLayout();
 
             return View::make($view, $this->viewData)->with('content', $response);
         }
 
         return $response;
+    }
+
+    /**
+     * Gets a localized View name for the implicit Layout.
+     *
+     * @return string
+     */
+    protected function getLocalizedLayout()
+    {
+        if ('rtl' == Language::direction()) {
+            $layout = sprintf('RTL/%s', $this->layout);
+
+            if (View::exists($view = $this->getQualifiedLayout($layout))) {
+                return $view;
+            }
+        }
+
+        return $this->getQualifiedLayout();
     }
 
     /**
@@ -148,14 +158,10 @@ class BaseController extends Controller
      */
     protected function getQualifiedLayout($layout = null)
     {
-        if (is_null($layout)) {
-            $layout = $this->layout;
-        }
+        $view = sprintf('Layouts/%s', $layout ?: $this->layout);
 
-        $view = sprintf('Layouts/%s', $layout);
-
-        if (! empty($this->theme)) {
-            return sprintf('%s::%s', $this->theme, $view);
+        if (! empty($theme = $this->getTheme())) {
+            return sprintf('%s::%s', $theme, $view);
         }
 
         return $view;
@@ -171,11 +177,11 @@ class BaseController extends Controller
     protected function createView(array $data = array(), $view = null)
     {
         if (is_null($view)) {
-            $view = $this->action;
+            $view = ucfirst($this->action);
         }
 
         // Compute the qualified View name.
-        $view = sprintf('%s/%s', $this->getViewPath(), ucfirst($view));
+        $view = sprintf('%s/%s', $this->getViewPath(), $view);
 
         return View::make($view, array_merge($this->viewData, $data));
     }
@@ -276,7 +282,7 @@ class BaseController extends Controller
      */
     public function getTheme()
     {
-        return $this->theme;
+        return $this->theme ?: null;
     }
 
     /**

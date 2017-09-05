@@ -13,6 +13,14 @@
 </head>
 <body>
 
+<?php Section::start('page-top'); ?>
+
+<div style="padding: 20px;">
+This is my top page Section.
+</div>
+
+<?php Section::show(); ?>
+
 <div class="container">
     <?= $content; ?>
 </div>

@@ -49,7 +49,7 @@ return array (
   'Purple Light' => 'Lys Lilla',
   'Red' => 'Rød',
   'Red Light' => 'Lys Rød',
-  'Register to <b>{0}</b>' => 'Tilmeld dig <b> {0} </ b>',
+  'Register to <b>{0}</b>' => 'Tilmeld dig <b> {0} </b>',
   'Registration Status' => 'Registreringsstatus',
   'Remember me' => 'Husk mig',
   'Required field' => 'Skal udfyldes',

@@ -17,9 +17,9 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $this->loadRoutes($router);
+        $this->loadBroadcastRoutes($router);
 
-        $this->loadChannels();
+        $this->loadBroadcastChannels();
     }
 
     /**
@@ -37,7 +37,7 @@ class BroadcastServiceProvider extends ServiceProvider
      *
      * @param Nova\Routing\Router $router
      */
-    protected function loadRoutes(Router $router)
+    protected function loadBroadcastRoutes(Router $router)
     {
         $router->group(array('middleware' => 'web'), function ($router)
         {
@@ -51,9 +51,11 @@ class BroadcastServiceProvider extends ServiceProvider
     /**
      * Load the Broadcasting Channels.
      */
-    protected function loadChannels()
+    protected function loadBroadcastChannels()
     {
-        require app_path('Channels.php');
+        $path = app_path('Broadcast.php');
+
+        if (is_readable($path)) require $path;
     }
 }
 

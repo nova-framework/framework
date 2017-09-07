@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Nova\Routing\Router;
 use Nova\Support\Facades\Broadcast;
 use Nova\Support\ServiceProvider;
 
@@ -14,12 +15,11 @@ class BroadcastServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
-        $this->loadRoutes();
+        $this->loadRoutes($router);
 
-        //
-        require app_path('Channels.php');
+        $this->loadChannels();
     }
 
     /**
@@ -34,16 +34,26 @@ class BroadcastServiceProvider extends ServiceProvider
 
     /**
      * Load the Broadcasting Routes.
+     *
+     * @param Nova\Routing\Router $router
      */
-    protected function loadRoutes()
+    protected function loadRoutes(Router $router)
     {
-        $this->app['router']->group(array('middleware' => 'web'), function ($router)
+        $router->group(array('middleware' => 'web'), function ($router)
         {
             $router->post('broadcasting/auth', function (Request $request)
             {
                 return Broadcast::authenticate($request);
             });
         });
+    }
+
+    /**
+     * Load the Broadcasting Channels.
+     */
+    protected function loadChannels()
+    {
+        require app_path('Channels.php');
     }
 }
 

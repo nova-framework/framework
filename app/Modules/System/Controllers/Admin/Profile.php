@@ -8,7 +8,7 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use App\Core\BackendController;
+use App\Modules\System\Controllers\BaseController;
 use App\Models\User;
 
 use Auth;
@@ -19,7 +19,7 @@ use Validator;
 use View;
 
 
-class Profile extends BackendController
+class Profile extends BaseController
 {
 
     protected function validator(array $data, User $user)

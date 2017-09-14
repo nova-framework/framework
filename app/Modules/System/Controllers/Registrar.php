@@ -10,9 +10,10 @@ namespace App\Modules\System\Controllers;
 
 use Nova\Helpers\ReCaptcha;
 
-use App\Core\BackendController;
 use App\Models\Role;
 use App\Models\User;
+
+use App\Modules\System\Controllers\BaseController;
 
 use Auth;
 use Config;
@@ -25,7 +26,7 @@ use Validator;
 use View;
 
 
-class Registrar extends BackendController
+class Registrar extends BaseController
 {
     protected $layout = 'Default';
 

@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Core;
+namespace App\Modules\System\Controllers;
 
 use Nova\Http\Request;
 use Nova\Routing\Route;
@@ -16,10 +16,10 @@ use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\View;
 
-use App\Core\Controller as BaseController;
+use App\Controllers\BaseController as Controller;
 
 
-abstract class BackendController extends BaseController
+abstract class BaseController extends Controller
 {
     /**
      * The currently used Theme.

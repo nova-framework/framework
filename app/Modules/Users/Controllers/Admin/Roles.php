@@ -8,7 +8,7 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use App\Core\BackendController;
+use App\Modules\System\Controllers\BaseController;
 use App\Models\Role;
 
 use Carbon\Carbon;
@@ -22,7 +22,7 @@ use Validator;
 use View;
 
 
-class Roles extends BackendController
+class Roles extends BaseController
 {
 
     public function __construct()

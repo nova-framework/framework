@@ -6,12 +6,13 @@
  * @version 3.0
  */
 
-namespace App\Core;
+namespace App\Controllers;
 
 use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
 use Nova\Foundation\Validation\ValidateRequestsTrait;
-use Nova\Routing\Controller as BaseController;
+use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
+use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use BadMethodCallException;
 
 
-abstract class Controller extends BaseController
+abstract class BaseController extends Controller
 {
     use AuthorizeRequestsTrait, ValidateRequestsTrait;
 
@@ -92,24 +93,11 @@ abstract class Controller extends BaseController
          // Transform the complete class name on a path like variable.
         $path = str_replace('\\', '/', static::class);
 
-        // Check for a valid controller on Application.
-        if (preg_match('#^App/Controllers/(.*)$#i', $path, $matches)) {
-            $view = $matches[1] .'/' .ucfirst($method);
+        // Check for a valid controller on App and its Modules.
+        if (preg_match('#^App(?:/Modules/(.+))?/Controllers/(.*)$#', $path, $matches) === 1) {
+            $module = ! empty($matches[1]) ? $matches[1] : '';
 
-            return View::make($view, $data, '', $this->theme);
-        }
-
-        // Retrieve the Modules namespace from their configuration.
-        $namespace = Config::get('modules.namespace', 'App\Modules\\');
-
-        // Transform the Modules namespace on a path like variable.
-        $basePath = str_replace('\\', '/', rtrim($namespace, '\\'));
-
-        // Check for a valid controller on Modules.
-        if (preg_match('#^'. $basePath .'/(.+)/Controllers/(.*)$#i', $path, $matches)) {
-            $module = $matches[1];
-
-            $view = $matches[2] .'/' .ucfirst($method);
+            $view = sprintf('%s/%s', $matches[2], ucfirst($method));
 
             return View::make($view, $data, $module, $this->theme);
         }

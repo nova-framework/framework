@@ -2,7 +2,7 @@
 
 namespace App\Modules\Files\Controllers\Admin;
 
-use App\Core\BackendController;
+use App\Modules\System\Controllers\BaseController;
 
 use Nova\Http\Request;
 use Nova\Routing\Route;
@@ -13,7 +13,7 @@ use Response;
 use View;
 
 
-class Files extends BackendController
+class Files extends BaseController
 {
     /**
      * The IoC container instance.

@@ -39,10 +39,10 @@ $app = new Application();
 //--------------------------------------------------------------------------
 
 $app->bindInstallPaths(array(
-    'base'        => BASEPATH,
-    'app'        => APPPATH,
-    'public'    => WEBPATH,
-    'storage'    => STORAGE_PATH,
+    'base'    => BASEPATH,
+    'app'     => APPPATH,
+    'public'  => WEBPATH,
+    'storage' => STORAGE_PATH,
 ));
 
 //--------------------------------------------------------------------------

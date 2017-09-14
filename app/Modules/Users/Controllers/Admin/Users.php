@@ -8,7 +8,7 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use App\Core\BackendController;
+use App\Modules\System\Controllers\BaseController;
 use App\Models\Role;
 use App\Models\User;
 
@@ -25,7 +25,7 @@ use View;
 
 
 
-class Users extends BackendController
+class Users extends BaseController
 {
 
     public function __construct()

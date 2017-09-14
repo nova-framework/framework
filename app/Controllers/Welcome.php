@@ -8,7 +8,7 @@
 
 namespace App\Controllers;
 
-use App\Core\Controller;
+use App\Controllers\BaseController;
 
 use View;
 
@@ -16,7 +16,7 @@ use View;
 /**
  * Sample controller showing 2 methods and their typical usage.
  */
-class Welcome extends Controller
+class Welcome extends BaseController
 {
     /**
      * The currently used Layout.
@@ -25,7 +25,7 @@ class Welcome extends Controller
      */
     protected $layout = 'Welcome';
 
-    
+
     /**
      * Create and return a View instance.
      */

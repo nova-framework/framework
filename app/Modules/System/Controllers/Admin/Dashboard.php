@@ -8,12 +8,12 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use App\Core\BackendController;
+use App\Modules\System\Controllers\BaseController;
 
 use View;
 
 
-class Dashboard extends BackendController
+class Dashboard extends BaseController
 {
 
     public function index()

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Demos\Controllers;
 
-use App\Core\Controller;
+use App\Controllers\BaseController;
 
 use Nova\Routing\Route;
 
@@ -30,7 +30,7 @@ use View;
 *
 * Demo controller
 */
-class Demos extends Controller
+class Demos extends BaseController
 {
     /**
      * Define Index method

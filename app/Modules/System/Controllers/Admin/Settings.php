@@ -8,7 +8,7 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
-use App\Core\BackendController;
+use App\Modules\System\Controllers\BaseController;
 use App\Models\Option;
 
 use Cache;
@@ -19,7 +19,7 @@ use Validator;
 use View;
 
 
-class Settings extends BackendController
+class Settings extends BaseController
 {
 
     public function __construct()

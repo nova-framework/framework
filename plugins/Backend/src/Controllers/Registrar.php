@@ -37,7 +37,6 @@ class Registrar extends BaseController
             'username'   => 'required|min:6|unique:users',
             'first_name' => 'required|min:4|max:100|valid_name',
             'last_name'  => 'required|min:4|max:100|valid_name',
-            'location'   => 'min:2|max:100|valid_name',
             'email'      => 'required|email|unique:users',
             'password'   => 'required|confirmed|strong_password'
         );
@@ -51,7 +50,6 @@ class Registrar extends BaseController
             'username'   => __d('backend', 'Username'),
             'first_name' => __d('backend', 'First Name'),
             'last_name'  => __d('backend', 'Last Name'),
-            'location'   => __d('backend', 'Location'),
             'email'      => __d('backend', 'E-mail'),
             'password'   => __d('backend', 'Password'),
         );
@@ -86,7 +84,6 @@ class Registrar extends BaseController
             'username'   => $input['username'],
             'first_name' => $input['first_name'],
             'last_name'  => $input['last_name'],
-            'location'   => $input['location'],
             'email'      => $input['email'],
             'password'   => $password,
             'role_id'    => $role->getKey(),

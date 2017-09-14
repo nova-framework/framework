@@ -116,11 +116,11 @@ $(function () {
         columns: [
             { data: 'userid',   orderable: true,  searchable: false },
             { data: 'username', orderable: true,  searchable: true,  className: "text-center"  },
-            { data: 'role',         orderable: true,  searchable: false, className: "text-center" },
-            { data: 'name',         orderable: true,  searchable: true,  className: "text-center"  },
+            { data: 'role',     orderable: true,  searchable: false, className: "text-center" },
+            { data: 'name',     orderable: true,  searchable: true,  className: "text-center"  },
             { data: 'surname',  orderable: true,  searchable: true,  className: "text-center"  },
             { data: 'email',    orderable: true,  searchable: true,  className: "text-center" },
-            { data: 'date',         orderable: true,  searchable: false, className: "text-center" },
+            { data: 'date',     orderable: true,  searchable: false, className: "text-center" },
             { data: 'actions',  orderable: false, searchable: false, className: "text-right compact" },
         ],
 

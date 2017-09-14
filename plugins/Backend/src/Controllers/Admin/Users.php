@@ -52,7 +52,6 @@ class Users extends BaseController
             'role'                  => 'required|numeric|exists:roles,id',
             'first_name'            => 'required|min:4|max:100|valid_name',
             'last_name'             => 'required|min:4|max:100|valid_name',
-            'location'              => 'min:2|max:100|valid_location',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
             'email'                 => 'required|min:5|max:100|email|unique:users,email' .$ignore,
@@ -61,7 +60,6 @@ class Users extends BaseController
 
         $messages = array(
             'valid_name'      => __d('backend', 'The :attribute field is not a valid name.'),
-            'valid_location'  => __d('backend', 'The :attribute field is not a valid location.'),
             'strong_password' => __d('backend', 'The :attribute field is not strong enough.'),
         );
 
@@ -70,7 +68,6 @@ class Users extends BaseController
             'role'                  => __d('backend', 'Role'),
             'first_name'            => __d('backend', 'First Name'),
             'last_name'             => __d('backend', 'Last Name'),
-            'location'              => __d('backend', 'Location'),
             'password'              => __d('backend', 'Password'),
             'password_confirmation' => __d('backend', 'Password confirmation'),
             'email'                 => __d('backend', 'E-mail'),
@@ -81,13 +78,6 @@ class Users extends BaseController
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
             $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){1,}$~u';
-
-            return (preg_match($pattern, $value) === 1);
-        });
-
-        Validator::extend('valid_location', function($attribute, $value, $parameters)
-        {
-            $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\',\x{2019}]+(?:$|\s+)){1,}$~u';
 
             return (preg_match($pattern, $value) === 1);
         });
@@ -163,9 +153,7 @@ class Users extends BaseController
     public function store()
     {
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'first_name', 'last_name', 'location', 'password', 'password_confirmation', 'email', 'image');
-
-        if (empty($input['location'])) unset($input['location']);
+        $input = Input::only('username', 'role', 'first_name', 'last_name', 'password', 'password_confirmation', 'email', 'image');
 
         //
         $validator = $this->validator($input);
@@ -248,11 +236,9 @@ class Users extends BaseController
         }
 
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'first_name', 'last_name', 'location', 'password', 'password_confirmation', 'email', 'image');
+        $input = Input::only('username', 'role', 'first_name', 'last_name', 'password', 'password_confirmation', 'email', 'image');
 
-        if (empty($input['location'])) unset($input['location']);
-
-        if(empty($input['password']) && empty($input['password_confirm'])) {
+        if (empty($input['password']) && empty($input['password_confirm'])) {
             unset($input['password']);
             unset($input['password_confirmation']);
         }

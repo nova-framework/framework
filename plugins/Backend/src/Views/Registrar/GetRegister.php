@@ -33,9 +33,6 @@
                 <div class="form-group">
                     <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('backend', 'E-Mail'); ?>"><br><br></p>
                 </div>
-                <div class="form-group">
-                    <p><input type="text" name="location" id="location" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('backend', 'Location'); ?>"><br><br></p>
-                </div>
                 <hr>
                 <div class="form-group" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">

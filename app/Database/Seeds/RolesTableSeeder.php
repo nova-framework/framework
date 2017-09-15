@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Database\Seeds;
-
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 

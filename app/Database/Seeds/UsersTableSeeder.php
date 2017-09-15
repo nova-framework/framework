@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Database\Seeds;
-
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 use Nova\Support\Facades\Hash;
 
 use App\Models\User;
-
-use Faker\Factory as FakerFactory;
 
 
 class UsersTableSeeder extends Seeder

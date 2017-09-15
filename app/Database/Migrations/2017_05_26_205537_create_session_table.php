@@ -13,7 +13,7 @@ class CreateSessionTable extends Migration
      */
     public function up()
     {
-        Schema::create('sessions', function(Blueprint $table)
+        Schema::create('sessions', function (Blueprint $table)
         {
             $table->string('id')->unique();
             $table->text('payload');
@@ -28,7 +28,7 @@ class CreateSessionTable extends Migration
      */
     public function down()
     {
-        Schema::drop('sessions');
+        Schema::dropIfExists('sessions');
     }
 
 }

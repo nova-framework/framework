@@ -96,9 +96,13 @@ return array(
         'Nova\Cache\ConsoleServiceProvider',
         'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
         'Nova\Foundation\Providers\ForgeServiceProvider',
+        'Nova\Database\MigrationServiceProvider',
+        'Nova\Database\SeedServiceProvider',
         'Nova\Module\Providers\ConsoleServiceProvider',
         'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Routing\Providers\ConsoleServiceProvider',
+        'Nova\Cache\ConsoleServiceProvider',
+        'Nova\Session\ConsoleServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',
@@ -137,6 +141,9 @@ return array(
         'Arr'           => 'Nova\Support\Arr',
         'Str'           => 'Nova\Support\Str',
 
+        // The Database Seeder.
+        'Seeder'        => 'Nova\Database\Seeder',
+
         // The Support Facades.
         'App'           => 'Nova\Support\Facades\App',
         'Auth'          => 'Nova\Support\Facades\Auth',
@@ -159,6 +166,7 @@ return array(
         'Request'       => 'Nova\Support\Facades\Request',
         'Response'      => 'Nova\Support\Facades\Response',
         'Route'         => 'Nova\Support\Facades\Route',
+        'Schema'        => 'Nova\Support\Facades\Schema',
         'Session'       => 'Nova\Support\Facades\Session',
         'Validator'     => 'Nova\Support\Facades\Validator',
         'Log'           => 'Nova\Support\Facades\Log',

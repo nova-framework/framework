@@ -57,7 +57,7 @@ class BaseController extends Controller
     /**
      * The View path for views of this Controller.
      *
-     * @var array
+     * @var string
      */
     protected $viewPath;
 

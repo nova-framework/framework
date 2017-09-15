@@ -1,6 +1,7 @@
 <?php
 
 use Nova\Database\ORM\Model;
+use Nova\Database\Seeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -15,7 +16,6 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         //
-        //$this->call('App\Database\Seeds\FoobarTableSeeder');
         $this->call('App\Database\Seeds\RolesTableSeeder');
         $this->call('App\Database\Seeds\UsersTableSeeder');
     }

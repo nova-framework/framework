@@ -1,5 +1,6 @@
 <?php
 
+use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
@@ -13,7 +14,7 @@ class CreateSessionTable extends Migration
      */
     public function up()
     {
-        Schema::create('sessions', function($table)
+        Schema::create('sessions', function (Blueprint $table)
         {
             $table->string('id')->unique();
             $table->text('payload');

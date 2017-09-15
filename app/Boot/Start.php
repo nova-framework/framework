@@ -3,7 +3,7 @@
 use Nova\Foundation\Application;
 
 //--------------------------------------------------------------------------
-// Setup The Application Version.
+// Setup The Application Version
 //--------------------------------------------------------------------------
 
 define('VERSION', '4.0.0');

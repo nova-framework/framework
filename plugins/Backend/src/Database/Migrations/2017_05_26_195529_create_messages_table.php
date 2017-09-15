@@ -6,6 +6,7 @@ use Nova\Database\Migrations\Migration;
 
 class CreateMessagesTable extends Migration
 {
+
     /**
      * Run the migrations.
      *

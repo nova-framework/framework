@@ -6,6 +6,7 @@ use Nova\Foundation\AliasLoader;
 use Nova\Support\ServiceProvider;
 
 use Reminders\Console\ClearRemindersCommand;
+use Reminders\Console\RemindersTableCommand;
 use Reminders\PasswordBrokerManager;
 
 
@@ -63,7 +64,12 @@ class PluginServiceProvider extends ServiceProvider
             return new ClearRemindersCommand;
         });
 
-        $this->commands('command.auth.reminders.clear');
+        $this->app->bindShared('command.auth.reminders', function($app)
+        {
+            return new RemindersTableCommand($app['files']);
+        });
+
+        $this->commands('command.auth.reminders.clear', 'command.auth.reminders');
     }
 
     /**

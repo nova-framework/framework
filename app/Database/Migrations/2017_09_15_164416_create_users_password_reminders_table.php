@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreatePasswordRemindersTable extends Migration
+class CreateUsersPasswordRemindersTable extends Migration
 {
 
     /**

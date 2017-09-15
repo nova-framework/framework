@@ -101,7 +101,6 @@ return array(
         'Nova\Module\Providers\ConsoleServiceProvider',
         'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Routing\Providers\ConsoleServiceProvider',
-        'Nova\Cache\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
 
         // The Application Providers.

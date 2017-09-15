@@ -6,6 +6,7 @@ use Nova\Database\Migrations\Migration;
 
 class CreateNotificationsTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -15,7 +16,7 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table)
         {
-			$table->increments('id');
+            $table->increments('id');
             $table->string('uuid', 40)->unique();
             $table->string('type');
             $table->morphs('notifiable');
@@ -32,6 +33,6 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('notifications');
+        Schema::dropIfExists('notifications');
     }
 }

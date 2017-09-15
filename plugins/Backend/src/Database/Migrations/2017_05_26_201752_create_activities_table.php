@@ -6,6 +6,7 @@ use Nova\Database\Migrations\Migration;
 
 class CreateActivitiesTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -30,6 +31,6 @@ class CreateActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('activities');
+        Schema::dropIfExists('activities');
     }
 }

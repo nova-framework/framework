@@ -4,6 +4,8 @@ namespace Reminders\Console;
 
 use Nova\Console\Command;
 
+use Symfony\Component\Console\Input\InputArgument;
+
 
 class ClearRemindersCommand extends Command
 {
@@ -38,4 +40,15 @@ class ClearRemindersCommand extends Command
         $this->info('Expired reminders cleared!');
     }
 
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return array(
+            array('name', InputArgument::OPTIONAL, 'The name of the password broker.'),
+        );
+    }
 }

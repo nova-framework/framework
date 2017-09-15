@@ -251,7 +251,7 @@ class PasswordBroker
      *
      * @return \Reminders\Contracts\ReminderRepositoryInterface
      */
-    protected function getRepository()
+    public function getRepository()
     {
         return $this->reminders;
     }

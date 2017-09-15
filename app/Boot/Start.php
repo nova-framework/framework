@@ -9,14 +9,6 @@ use Nova\Foundation\Application;
 mb_internal_encoding('UTF-8');
 
 //--------------------------------------------------------------------------
-// Include The Compiled Class File
-//--------------------------------------------------------------------------
-
-if (file_exists($compiled = realpath(__DIR__) .DS .'Compiled.php')) {
-    require $compiled;
-}
-
-//--------------------------------------------------------------------------
 // Setup The Application Version
 //--------------------------------------------------------------------------
 

@@ -1,6 +1,7 @@
 <?php
 
 use Nova\Database\ORM\Model;
+use Nova\Database\Seeder;
 
 
 class DatabaseSeeder extends Seeder

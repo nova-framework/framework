@@ -54,6 +54,5 @@ class RolesTableSeeder extends Seeder
             'slug'        => 'user',
             'description' => 'A standard user that can have a licence assigned to them. No administrative features.',
         ));
-
     }
 }

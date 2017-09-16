@@ -10,11 +10,11 @@ namespace App\Controllers;
 
 use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
 use Nova\Foundation\Validation\ValidateRequestsTrait;
+use Nova\Http\Response;
 use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
-use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
 use Nova\View\Layout;
 
@@ -79,10 +79,12 @@ abstract class BaseController extends Controller
                 $content = $response->render();
             }
 
-            return Response::make($content);
+            $response = new Response($content);
+        } else if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
         }
 
-        return parent::after($response);
+        return $response;
     }
 
     /**

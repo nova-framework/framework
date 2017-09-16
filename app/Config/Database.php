@@ -43,4 +43,7 @@ return array(
             'schema'   => 'public',
         ),
     ),
+
+    // Migration Repository Table
+    'migrations' => 'migrations',
 );

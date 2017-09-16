@@ -29,6 +29,5 @@ Este contenido puede ser cambiado en <code>/app/Views/Welcome/Welcome.php</code>
   'Troubleshooting' => '',
   'Unauthorized' => '',
   'Welcome' => 'Bienvenido',
-  'You are not authorized to access this resource.' => '',
   'Your session expired. Please try again!' => '',
 );

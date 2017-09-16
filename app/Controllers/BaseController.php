@@ -10,11 +10,11 @@ namespace App\Controllers;
 
 use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
 use Nova\Foundation\Validation\ValidateRequestsTrait;
+use Nova\Http\Response;
 use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
-use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
 use Nova\View\Layout;
 
@@ -40,6 +40,13 @@ abstract class BaseController extends Controller
      * @var string
      */
     protected $layout = 'Default';
+
+    /**
+     * The View path (and module name) for views of this Controller.
+     *
+     * @var array
+     */
+    protected $viewInfo;
 
 
     /**
@@ -67,43 +74,85 @@ abstract class BaseController extends Controller
             // we will assume we want to render it using the Controller's themed environment.
 
             if ((! $response instanceof Layout) && ! empty($this->layout)) {
-                $response = $this->getLayout()->with('content', $response);
+                $content = $this->createLayout()->with('content', $response)->render();
+            } else {
+                $content = $response->render();
             }
 
-            // Create and return a proper Response instance.
-            $content = $response->render();
-
-            return Response::make($content);
+            $response = new Response($content);
+        } else if (! $response instanceof SymfonyResponse) {
+            $response = new Response($response);
         }
 
-        return parent::after($response);
+        return $response;
+    }
+
+    /**
+     * Create a Layout instance.
+     *
+     * @param  string|null  $layout
+     * @return \Nova\View\Layout
+     */
+    protected function createLayout($layout = null)
+    {
+        return View::createLayout($layout ?: $this->layout, $this->theme);
+    }
+
+    /**
+     * Create a View instance for the implicit (or specified) View name.
+     *
+     * @param  array  $data
+     * @param  string|null  $view
+     * @return \Nova\View\View
+     */
+    protected function createView(array $data = array(), $view = null)
+    {
+        if (is_null($view)) {
+            $view = $this->getMethod();
+        }
+
+        list ($module, $viewPath) = $this->getViewInfo();
+
+        // Compute the qualified View name.
+        $view = sprintf('%s/%s', $viewPath, ucfirst($view));
+
+        return View::make($view, $data, $module, $this->theme);
+    }
+
+    /**
+     * Gets the default View's path and module.
+     *
+     * @return string
+     * @throws \BadMethodCallException
+     */
+    protected function getViewInfo()
+    {
+        if (isset($this->viewInfo)) {
+            return $this->viewInfo;
+        }
+
+        // Cumpute the (application) base path - usually it is: 'App'
+        $basePath = str_replace('\\', '/', trim(App::getNamespace(), '\\'));
+
+         // Transform the complete class name on a path like variable.
+        $classPath = str_replace('\\', '/', static::class);
+
+        // Check for a valid controller on App and its Modules.
+        if (preg_match('#^' .$basePath .'(?:/Modules/(.+))?/Controllers/(.*)$#', $classPath, $matches) === 1) {
+            return $this->viewInfo = array_slice($matches, 1);
+        }
+
+        throw new BadMethodCallException('Invalid Controller namespace');
     }
 
     /**
      * Return a default View instance.
      *
      * @return \Nova\View\View
-     * @throws \BadMethodCallException
      */
     protected function getView(array $data = array())
     {
-        // Get the currently called method.
-        $method = $this->getMethod();
-
-         // Transform the complete class name on a path like variable.
-        $path = str_replace('\\', '/', static::class);
-
-        // Check for a valid controller on App and its Modules.
-        if (preg_match('#^App(?:/Modules/(.+))?/Controllers/(.*)$#', $path, $matches) === 1) {
-            $module = ! empty($matches[1]) ? $matches[1] : '';
-
-            $view = sprintf('%s/%s', $matches[2], ucfirst($method));
-
-            return View::make($view, $data, $module, $this->theme);
-        }
-
-        // If we arrived there, the called class is not a Controller; go Exception.
-        throw new BadMethodCallException('Invalid Controller namespace: ' .static::class);
+        return $this->createView($data);
     }
 
     /**
@@ -117,21 +166,11 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Return a Layout instance.
-     *
-     * @return \View\Layout
-     */
-    public function getLayout()
-    {
-        return View::createLayout($this->layout, $this->theme);
-    }
-
-    /**
      * Return the current Layout name.
      *
      * @return string
      */
-    public function getLayoutName()
+    public function getLayout()
     {
         return $this->layout;
     }

@@ -29,6 +29,5 @@ Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.ph
   'Troubleshooting' => 'Dépannage',
   'Unauthorized' => 'Interdit',
   'Welcome' => 'Bienvenue',
-  'You are not authorized to access this resource.' => 'Vous n\'êtes pas autorisé à accéder à cette ressource.',
   'Your session expired. Please try again!' => 'Votre session a expiré, merci d\'essayer de nouveau.',
 );

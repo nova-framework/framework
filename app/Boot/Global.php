@@ -11,7 +11,7 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
 //--------------------------------------------------------------------------
 
 // The standard handling of the Exceptions.
-App::error(function(Exception $exception, $code)
+App::error(function (Exception $exception, $code)
 {
     Log::error($exception);
 });
@@ -19,7 +19,7 @@ App::error(function(Exception $exception, $code)
 // Special handling for the HTTP Exceptions.
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-App::error(function(HttpException $exception)
+App::error(function (HttpException $exception)
 {
     $code = $exception->getStatusCode();
 
@@ -44,7 +44,7 @@ App::error(function(HttpException $exception)
 // Maintenance Mode Handler
 //--------------------------------------------------------------------------
 
-App::down(function()
+App::down(function ()
 {
     return Response::make("Be right back!", 503);
 });
@@ -53,27 +53,33 @@ App::down(function()
 // Load The Options
 //--------------------------------------------------------------------------
 
+use Nova\Database\QueryException;
+
 use App\Models\Option;
 
 if (CONFIG_STORE === 'database') {
     // Retrieve the Option items, caching them for 24 hours.
-    $options = Cache::remember('system_options', 1440, function()
+    $options = Cache::remember('system_options', 1440, function ()
     {
-        return Option::all();
+        try {
+            return Option::all();
+        }
+        catch (QueryException $e) {
+            return collect();
+        }
     });
 
     // Setup the information stored on the Option instances into Configuration.
     foreach ($options as $option) {
-        $key = $option->group;
+        list ($key, $value) = $option->getConfigItem();
 
-        if (! empty($option->item)) {
-            $key .= '.' .$option->item;
-        }
-
-        Config::set($key, $option->value);
+        Config::set($key, $value);
     }
-} else if(CONFIG_STORE !== 'files') {
-    throw new \InvalidArgumentException('Invalid Config Store type.');
+}
+
+// If the CONFIG_STORE is not in 'files' mode, go Exception.
+else if(CONFIG_STORE !== 'files') {
+    throw new InvalidArgumentException('Invalid Config Store type.');
 }
 
 //--------------------------------------------------------------------------

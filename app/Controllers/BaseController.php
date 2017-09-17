@@ -28,6 +28,20 @@ abstract class BaseController extends Controller
     use AuthorizeRequestsTrait, ValidateRequestsTrait;
 
     /**
+     * The currently called action.
+     *
+     * @var string
+     */
+    private $action;
+
+    /**
+     * The View path (and module name) for views of this Controller.
+     *
+     * @var array
+     */
+    protected $viewInfo;
+
+    /**
      * The currently used Theme.
      *
      * @var string
@@ -41,18 +55,13 @@ abstract class BaseController extends Controller
      */
     protected $layout = 'Default';
 
+
     /**
-     * The View path (and module name) for views of this Controller.
+     * Method executed before any action.
      *
-     * @var array
+     * @return void
      */
-    protected $viewInfo;
-
-
-    /**
-     * Create a new Controller instance.
-     */
-    public function __construct()
+    protected function initialize()
     {
         // Setup the used Theme to default, if it is not already defined.
         if (! isset($this->theme)) {
@@ -61,27 +70,39 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Method executed after any action.
+     * Execute an action on the controller.
      *
-     * @param mixed  $response
-     *
+     * @param string  $method
+     * @param array   $params
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function after($response)
+    public function callAction($method, $parameters)
     {
-        if ($response instanceof Renderable) {
-            // If the response which is returned from the called Action is a Renderable instance,
-            // we will assume we want to render it using the Controller's themed environment.
+        $this->action = $method;
 
-            if ((! $response instanceof Layout) && ! empty($this->layout)) {
-                $content = $this->createLayout()->with('content', $response)->render();
-            } else {
-                $content = $response->render();
-            }
+        //
+        $this->initialize();
 
-            $response = new Response($content);
-        } else if (! $response instanceof SymfonyResponse) {
-            $response = new Response($response);
+        $response = call_user_func_array(array($this, $method), $parameters);
+
+        return $this->processResponse($response);
+    }
+
+    /**
+     * Process a Controller action response.
+     *
+     * @param  mixed   $response
+     * @return mixed
+     */
+    protected function processResponse($response)
+    {
+        if (! $response instanceof Renderable) {
+            return $response;
+        }
+
+        // The auto-rendering in a Layout of the returned View instance.
+        else if ((! $response instanceof Layout) && ! empty($this->layout)) {
+            return $this->createLayout()->with('content', $response);
         }
 
         return $response;
@@ -108,13 +129,13 @@ abstract class BaseController extends Controller
     protected function createView(array $data = array(), $view = null)
     {
         if (is_null($view)) {
-            $view = $this->getMethod();
+            $view = ucfirst($this->action);
         }
 
         list ($module, $viewPath) = $this->getViewInfo();
 
-        // Compute the qualified View name.
-        $view = sprintf('%s/%s', $viewPath, ucfirst($view));
+        // Compute the full qualified View name.
+        $view = $viewPath .'/' .$view;
 
         return View::make($view, $data, $module, $this->theme);
     }
@@ -131,7 +152,7 @@ abstract class BaseController extends Controller
             return $this->viewInfo;
         }
 
-        // Cumpute the (application) base path - usually it is: 'App'
+        // Cumpute the (application) base path - usually, it is: 'App'
         $basePath = str_replace('\\', '/', trim(App::getNamespace(), '\\'));
 
          // Transform the complete class name on a path like variable.
@@ -162,6 +183,10 @@ abstract class BaseController extends Controller
      */
     public function getTheme()
     {
+        if (! isset($this->theme)) {
+            return $this->theme = Config::get('app.theme', 'Bootstrap');
+        }
+
         return $this->theme;
     }
 

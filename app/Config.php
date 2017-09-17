@@ -13,6 +13,6 @@ define('PREFIX', 'nova_');
 /**
  * Setup the Config API Mode.
  *
- * For using the 'database' mode, you need to have a database including the table 'nova_options'
+ * For using the 'database' mode, you need a database having the table 'nova_options'
  */
 define('CONFIG_STORE', 'database'); // Supported: "files", "database"

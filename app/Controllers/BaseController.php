@@ -282,7 +282,11 @@ class BaseController extends Controller
      */
     public function getTheme()
     {
-        return $this->theme ?: null;
+        if (! isset($this->theme)) {
+            return $this->theme = Config::get('app.theme', 'Bootstrap');
+        }
+
+        return $this->theme;
     }
 
     /**

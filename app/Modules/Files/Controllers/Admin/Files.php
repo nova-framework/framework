@@ -42,7 +42,7 @@ class Files extends BaseController
 
     public function connector()
     {
-        // Disable the auto-rendering on a (Template) Layout.
+        // Disable the auto-rendering on a (Theme) Layout.
         $this->layout = false;
 
         return $this->getView();
@@ -53,7 +53,7 @@ class Files extends BaseController
         // Calculate the Preview file path.
         $path = str_replace('/', DS, ROOTDIR .ltrim($path, '/'));
 
-        return $this->serveFile($path, $request);
+        return $this->getFileDispatcher()->serve($path, $request);
     }
 
     public function thumbnails(Request $request, $thumbnail)
@@ -61,19 +61,6 @@ class Files extends BaseController
         // Calculate the thumbnail file path.
         $path = str_replace('/', DS, STORAGE_PATH .'files/thumbnails/' .$thumbnail);
 
-        return $this->serveFile($path, $request);
-    }
-
-    /**
-     * Return a Symfony Response instance for serving a File
-     *
-     * @param string $path
-     * @param \Nova\Http\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function serveFile($path, Request $request)
-    {
         return $this->getFileDispatcher()->serve($path, $request);
     }
 

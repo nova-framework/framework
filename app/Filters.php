@@ -51,7 +51,7 @@ Route::filter('csrf', function($route, $request)
 });
 
 // Authentication Filters.
-Route::filter('auth', function($route, $request, $guard = null)
+Route::filter('auth', function ($route, $request, $guard = null)
 {
     $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
 
@@ -77,12 +77,12 @@ Route::filter('auth', function($route, $request, $guard = null)
     return Redirect::guest($paths['authorize']);
 });
 
-Route::filter('auth.basic', function($route, $request)
+Route::filter('auth.basic', function ($route, $request)
 {
     return Auth::basic();
 });
 
-Route::filter('guest', function($route, $request, $guard = null)
+Route::filter('guest', function ($route, $request, $guard = null)
 {
     $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
 
@@ -94,9 +94,7 @@ Route::filter('guest', function($route, $request, $guard = null)
     }
 
     // Get the Guard's paths from configuration.
-    $paths = Config::get("auth.guards.{$guard}.paths", array(
-        'dashboard' => 'admin/dashboard'
-    ));
+    $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
 
-    return Redirect::to($paths['dashboard']);
+    return Redirect::to($uri);
 });

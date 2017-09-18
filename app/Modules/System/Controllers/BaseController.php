@@ -37,23 +37,6 @@ abstract class BaseController extends Controller
 
 
     /**
-     * A Before Filter which permit the access to Administrators.
-     */
-    public function adminUsersFilter(Route $route, Request $request, $guard = null)
-    {
-        $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
-
-        // Check the User Authorization.
-        $user = Auth::guard($guard)->user();
-
-        if (! is_null($user) && ! $user->hasRole('administrator')) {
-            $status = __('You are not authorized to access this resource.');
-
-            return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
-        }
-    }
-
-    /**
      * Method executed before any action.
      */
     protected function initialize()

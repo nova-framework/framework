@@ -4,13 +4,9 @@ namespace App\Modules\Files\Controllers\Admin;
 
 use App\Modules\System\Controllers\BaseController;
 
+use Nova\Container\Container;
 use Nova\Http\Request;
 use Nova\Routing\Route;
-
-use App;
-use Auth;
-use Response;
-use View;
 
 
 class Files extends BaseController
@@ -29,46 +25,13 @@ class Files extends BaseController
      */
     private $fileDispatcher;
 
-    /**
-     * The Request instance.
-     *
-     * @var \Http\Request
-     */
-    private $request = null;
 
-
-    public function __construct()
+    public function __construct(Container $container)
     {
-        // Setup the Middleware.
-        $this->beforeFilter('@filterRequests');
+        $this->container = $container;
 
-        // Setup the IoC Container instance.
-        $this->container = App::instance();
-    }
-
-    /**
-     * Filter the incoming requests.
-     */
-    public function filterRequests(Route $route, Request $request)
-    {
-        // Store the Request instance for further processing.
-        $this->request = $request;
-
-        // Check the User Authorization.
-        if (Auth::user()->hasRole('administrator')) {
-            // The User is authorized; continue the Execution Flow.
-            return null;
-        }
-
-        if ($request->ajax()) {
-            // On an AJAX Request; just return Error 403 (Access denied)
-            return Response::make('', 403);
-        }
-
-        // Redirect the User to his/hers Dashboard with a warning message.
-        $status = __d('files', 'You are not authorized to access this resource.');
-
-        return Redirect::to('admin/dashboard')->withStatus($status, 'warning');
+        //
+        $this->beforeFilter('role:administrator');
     }
 
     public function index()
@@ -85,35 +48,33 @@ class Files extends BaseController
         return $this->getView();
     }
 
-    public function preview($path)
+    public function preview(Request $request, $path)
     {
         // Calculate the Preview file path.
         $path = str_replace('/', DS, ROOTDIR .ltrim($path, '/'));
 
-        return $this->serveFile($path);
+        return $this->serveFile($path, $request);
     }
 
-    public function thumbnails($thumbnail)
+    public function thumbnails(Request $request, $thumbnail)
     {
         // Calculate the thumbnail file path.
         $path = str_replace('/', DS, STORAGE_PATH .'files/thumbnails/' .$thumbnail);
 
-        return $this->serveFile($path);
+        return $this->serveFile($path, $request);
     }
 
     /**
      * Return a Symfony Response instance for serving a File
      *
      * @param string $path
+     * @param \Nova\Http\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function serveFile($path)
+    protected function serveFile($path, Request $request)
     {
-        // Get a File Dispatcher instance.
-        $dispatcher = $this->getFileDispatcher();
-
-        return $dispatcher->serve($path, $this->request);
+        return $this->getFileDispatcher()->serve($path, $request);
     }
 
     /**
@@ -123,7 +84,9 @@ class Files extends BaseController
      */
     protected function getFileDispatcher()
     {
-        if (isset($this->fileDispatcher)) return $this->fileDispatcher;
+        if (isset($this->fileDispatcher)) {
+            return $this->fileDispatcher;
+        }
 
         return $this->fileDispatcher = $this->container->make('Nova\Routing\Assets\DispatcherInterface');
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
+use Nova\Support\NamespacedItemResolver;
 
 
 class Option extends BaseModel
@@ -11,22 +12,13 @@ class Option extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('group', 'item', 'value');
+    protected $fillable = array('namespace', 'group', 'item', 'value');
 
     public $timestamps = false;
 
+    //
+    protected static $itemResolver;
 
-    public static function set($key, $value)
-    {
-        list($group, $item) = static::parseKey($key);
-
-        //
-        $attributes = array('group' => $group, 'item'  => $item);
-
-        $values = array('value' => $value);
-
-        return static::updateOrCreate($attributes, $values);
-    }
 
     public function getValueAttribute($value)
     {
@@ -38,11 +30,46 @@ class Option extends BaseModel
         $this->attributes['value'] = $this->maybeEncode($value);
     }
 
+    public function getConfigItem()
+    {
+        if (! empty($namespace = $this->getAttribute('namespace'))) {
+            $key = $namespace .'::';
+        } else {
+            $key = '';
+        }
+
+        $key .= $this->getAttribute('group');
+
+        if (! empty($item = $this->getAttribute('item'))) {
+            $key .= '.' .$item;
+        }
+
+        return array($key, $this->getAttribute('value'));
+    }
+
+    public static function set($key, $value)
+    {
+        list($namespace, $group, $item) = static::getItemResolver()->parseKey($key);
+
+        return static::updateOrCreate(
+            compact('namespace', 'group', 'item'), compact('value')
+        );
+    }
+
+    protected static function getItemResolver()
+    {
+        if (! isset(static::$itemResolver)) {
+            return static::$itemResolver = new NamespacedItemResolver();
+        }
+
+        return static::$itemResolver;
+    }
+
     /**
      * Decode value only if it was encoded to JSON.
      *
      * @param  string  $original
-     * @param  bool    $assoc
+     * @param  bool  $assoc
      * @return mixed
      */
     protected function maybeDecode($original, $assoc = true)
@@ -67,26 +94,5 @@ class Option extends BaseModel
         }
 
         return $data;
-    }
-
-    /**
-     * Parse a key into namespace, group, and item.
-     *
-     * @param  string  $key
-     * @return array
-     */
-    protected static function parseKey($key)
-    {
-        $segments = explode('.', $key);
-
-        $group = head($segments);
-
-        if (count($segments) == 1) {
-            return array($group, null);
-        }
-
-        $item = implode('.', array_slice($segments, 1));
-
-        return array($group, $item);
     }
 }

@@ -163,7 +163,7 @@ class Demos extends BaseController
 
         Mailer::pretend(true);
 
-        Mailer::send('Emails/Welcome', $data, function($message)
+        Mailer::send('Emails/Default', $data, function($message)
         {
             $message->from('admin@novaframework', 'Administrator')
                 ->to('john@novaframework', 'John Smith')

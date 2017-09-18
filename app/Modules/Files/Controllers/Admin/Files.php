@@ -39,13 +39,11 @@ class Files extends BaseController
 
     public function __construct()
     {
-        parent::__construct();
+        // Setup the Middleware.
+        $this->beforeFilter('@filterRequests');
 
         // Setup the IoC Container instance.
         $this->container = App::instance();
-
-        // Setup the Middleware.
-        $this->beforeFilter('@filterRequests');
     }
 
     /**

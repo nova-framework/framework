@@ -56,8 +56,10 @@ abstract class BaseController extends Controller
     /**
      * Method executed before any action.
      */
-    protected function before()
+    protected function initialize()
     {
+        parent::initialize();
+
         // Setup the main Menu.
         View::share('menuItems', $this->getMenuItems());
     }

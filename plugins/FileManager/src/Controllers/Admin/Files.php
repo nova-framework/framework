@@ -4,11 +4,6 @@ namespace FileManager\Controllers\Admin;
 
 use Nova\Container\Container;
 use Nova\Http\Request;
-use Nova\Routing\Route;
-use Nova\Support\Facades\App;
-use Nova\Support\Facades\Auth;
-use Nova\Support\Facades\Response;
-use Nova\Support\Facades\View;
 
 use Backend\Controllers\BaseController;
 
@@ -55,7 +50,7 @@ class Files extends BaseController
         // Calculate the Preview file path.
         $path = str_replace('/', DS, BASEPATH .ltrim($path, '/'));
 
-        return $this->serveFile($path, $request);
+        return $this->getFileDispatcher()->serve($path, $request);
     }
 
     public function thumbnails(Request $request, $thumbnail)
@@ -63,19 +58,6 @@ class Files extends BaseController
         // Calculate the thumbnail file path.
         $path = str_replace('/', DS, BASEPATH .'storage/files/thumbnails/' .$thumbnail);
 
-        return $this->serveFile($path, $request);
-    }
-
-    /**
-     * Return a Symfony Response instance for serving a File
-     *
-     * @param string $path
-     * @param \Nova\Http\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function serveFile($path, $request)
-    {
         return $this->getFileDispatcher()->serve($path, $request);
     }
 

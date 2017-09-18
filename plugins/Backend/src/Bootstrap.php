@@ -18,6 +18,11 @@ Route::middleware('role', function(Request $request, Closure $next, $role)
     $user = Auth::guard($guard)->user();
 
     if (! is_null($user) && ! $user->hasRole($roles)) {
+        if ($request->ajax() || $request->wantsJson()) {
+            // On an AJAX Request; we return a response: Error 403 (Access denied)
+            return Response::make('', 403);
+        }
+
         $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
 
         $status = __('You are not authorized to access this resource.');

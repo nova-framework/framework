@@ -2,6 +2,7 @@
 
 namespace FileManager\Controllers\Admin;
 
+use Nova\Container\Container;
 use Nova\Http\Request;
 use Nova\Routing\Route;
 use Nova\Support\Facades\App;
@@ -21,9 +22,19 @@ class Files extends BaseController
      */
     private $fileDispatcher;
 
+    /**
+     * The IoC container instance.
+     *
+     * @var \Nova\Container\Container
+     */
+    protected $container;
 
-    public function __construct()
+
+    public function __construct(Container $container)
     {
+        $this->container = $container;
+
+        //
         $this->middleware('role:administrator');
     }
 
@@ -65,9 +76,7 @@ class Files extends BaseController
      */
     protected function serveFile($path, $request)
     {
-        $dispatcher = $this->getFileDispatcher();
-
-        return $dispatcher->serve($path, $request);
+        return $this->getFileDispatcher()->serve($path, $request);
     }
 
     /**
@@ -81,6 +90,6 @@ class Files extends BaseController
             return $this->fileDispatcher;
         }
 
-        return $this->fileDispatcher = App::make('asset.dispatcher');
+        return $this->fileDispatcher = $this->container->make('assets.dispatcher');
     }
 }

@@ -38,9 +38,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
-    // Cache for associated Role instance.
-    private $cachedRole;
-
 
     public function role()
     {
@@ -49,35 +46,23 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function hasRole($roles)
     {
-        if (! isset($this->cachedRole)) {
-            $this->cachedRole = $this->role()->getResults();
+        if (! array_key_exists('role', $this->relations)) {
+            $this->load('role');
         }
 
+        $slug = strtolower($this->role->slug);
+
         // Check if the User is a Root account.
-        if (! is_null($this->cachedRole) && ($this->cachedRole->slug == 'root')) {
+        if ($slug == 'root') {
             return true;
         }
 
-        if (! is_array($roles)) {
-            return $this->checkUserRole($roles);
-        }
-
-        foreach ($roles as $role) {
-            if ($this->checkUserRole($role)) {
+        foreach ((array) $roles as $role) {
+            if (strtolower($role) == $slug) {
                 return true;
             }
         }
 
         return false;
     }
-
-    private function checkUserRole($wantedRole)
-    {
-        if(isset($this->cachedRole) && ($this->cachedRole instanceof Role)) {
-            return (strtolower($wantedRole) == strtolower($this->cachedRole->slug));
-        }
-
-        return false;
-    }
-
 }

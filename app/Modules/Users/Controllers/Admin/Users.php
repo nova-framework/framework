@@ -30,7 +30,7 @@ class Users extends BaseController
 
     public function __construct()
     {
-        $this->beforeFilter('@adminUsersFilter');
+        $this->beforeFilter('role:administrator');
     }
 
     protected function validator(array $data, $id = null)

@@ -100,7 +100,7 @@ return array(
         'Nova\Database\SeedServiceProvider',
         'Nova\Module\Providers\ConsoleServiceProvider',
         'Nova\Module\Providers\GeneratorServiceProvider',
-        'Nova\Routing\Providers\ConsoleServiceProvider',
+        'Nova\Routing\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
 
         // The Application Providers.

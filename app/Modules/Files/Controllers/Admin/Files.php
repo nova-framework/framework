@@ -2,11 +2,10 @@
 
 namespace App\Modules\Files\Controllers\Admin;
 
-use App\Modules\System\Controllers\BaseController;
-
 use Nova\Container\Container;
 use Nova\Http\Request;
-use Nova\Routing\Route;
+
+use App\Modules\System\Controllers\BaseController;
 
 
 class Files extends BaseController

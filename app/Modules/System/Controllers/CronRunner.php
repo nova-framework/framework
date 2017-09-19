@@ -2,12 +2,12 @@
 
 namespace App\Modules\System\Controllers;
 
-use App\Core\Controller;
+use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Cron;
+use Nova\Support\Facades\Response;
+use Nova\Support\Facades\View;
 
-use Config;
-use Cron;
-use Response;
-use View;
+use App\Core\Controller;
 
 use Carbon\Carbon;
 

@@ -9,18 +9,16 @@
 namespace App\Modules\System\Controllers;
 
 use Nova\Helpers\ReCaptcha;
+use Nova\Support\Facades\App;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Password;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
+use Nova\Support\Facades\Session;
 
 use App\Modules\System\Controllers\BaseController;
-
-use App;
-use Auth;
-use Hash;
-use Input;
-use Password;
-use Redirect;
-use Response;
-use Session;
-use View;
 
 
 class Authorize extends BaseController
@@ -98,7 +96,7 @@ class Authorize extends BaseController
     /**
      * Handle a GET request to logout the current User.
      *
-     * @return Response
+     * @return \Nova\Http\RedirectResponse
      */
     public function logout()
     {
@@ -124,7 +122,7 @@ class Authorize extends BaseController
     /**
      * Handle a POST request to remind a User of their password.
      *
-     * @return Response
+     * @return \Nova\Http\RedirectResponse
      */
     public function postRemind()
     {
@@ -168,7 +166,7 @@ class Authorize extends BaseController
     /**
      * Handle a POST request to reset a User's password.
      *
-     * @return Response
+     * @return \Nova\Http\RedirectResponse
      */
     public function postReset()
     {

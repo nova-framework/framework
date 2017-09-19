@@ -19,6 +19,9 @@ if (CONFIG_STORE === 'database') {
         catch (QueryException $e) {
             return collect();
         }
+        catch (PDOException $e) {
+            return collect();
+        }
     });
 
     foreach ($options as $option) {

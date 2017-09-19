@@ -17,11 +17,13 @@ if (CONFIG_STORE === 'database') {
             return Option::all();
         }
         catch (QueryException $e) {
-            return collect();
+            //
         }
         catch (PDOException $e) {
-            return collect();
+            //
         }
+
+        return collect();
     });
 
     foreach ($options as $option) {

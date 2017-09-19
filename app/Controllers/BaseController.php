@@ -10,7 +10,6 @@ namespace App\Controllers;
 
 use Nova\Foundation\Auth\Access\AuthorizeRequestsTrait;
 use Nova\Foundation\Validation\ValidateRequestsTrait;
-use Nova\Http\Response;
 use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\App;

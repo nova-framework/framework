@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
+use Nova\Database\QueryException;
 use Nova\Support\NamespacedItemResolver;
+
+use PDOException;
 
 
 class Option extends BaseModel
@@ -45,6 +48,23 @@ class Option extends BaseModel
         }
 
         return array($key, $this->getAttribute('value'));
+    }
+
+    public static function getResults()
+    {
+        $instance = new static;
+
+        try {
+            return $instance->newQuery()->get();
+        }
+        catch (QueryException $e) {
+            //
+        }
+        catch (PDOException $e) {
+            //
+        }
+
+        return $instance->newCollection();
     }
 
     public static function set($key, $value)

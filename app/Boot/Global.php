@@ -67,6 +67,9 @@ if (CONFIG_STORE === 'database') {
         catch (QueryException $e) {
             return collect();
         }
+        catch (PDOException $e) {
+            return collect();
+        }
     });
 
     // Setup the information stored on the Option instances into Configuration.

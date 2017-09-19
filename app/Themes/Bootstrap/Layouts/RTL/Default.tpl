@@ -9,6 +9,7 @@
         theme_url('css/bootstrap-rtl.min.css', 'Bootstrap'),
         theme_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap'),
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+        theme_url('css/bootstrap-xl-mod.min.css', 'Bootstrap'),
         theme_url('css/style-rtl.css', 'Bootstrap'),
     ))
 

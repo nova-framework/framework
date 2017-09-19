@@ -8,18 +8,17 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
+
 use App\Modules\System\Controllers\BaseController;
 use App\Models\Role;
 
 use Carbon\Carbon;
-
-use Auth;
-use Hash;
-use Input;
-use Redirect;
-use Session;
-use Validator;
-use View;
 
 
 class Roles extends BaseController

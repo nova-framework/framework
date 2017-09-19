@@ -53,23 +53,13 @@ App::down(function ()
 // Load The Options
 //--------------------------------------------------------------------------
 
-use Nova\Database\QueryException;
-
 use App\Models\Option;
 
 if (CONFIG_STORE === 'database') {
     // Retrieve the Option items, caching them for 24 hours.
     $options = Cache::remember('system_options', 1440, function ()
     {
-        try {
-            return Option::all();
-        }
-        catch (QueryException $e) {
-            return collect();
-        }
-        catch (PDOException $e) {
-            return collect();
-        }
+        return Option::getResults();
     });
 
     // Setup the information stored on the Option instances into Configuration.

@@ -9,21 +9,19 @@
 namespace App\Modules\System\Controllers;
 
 use Nova\Helpers\ReCaptcha;
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Mailer;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
 
 use App\Models\Role;
 use App\Models\User;
 
 use App\Modules\System\Controllers\BaseController;
-
-use Auth;
-use Config;
-use Hash;
-use Input;
-use Mailer;
-use Redirect;
-use Session;
-use Validator;
-use View;
 
 
 class Registrar extends BaseController
@@ -74,7 +72,7 @@ class Registrar extends BaseController
     /**
      * Display the register view.
      *
-     * @return \Core\View
+     * @return \Nova\View\View
      */
     public function create()
     {
@@ -85,7 +83,7 @@ class Registrar extends BaseController
     /**
      * Handle a POST request to login the User.
      *
-     * @return Response
+     * @return \Nova\Http\RedirectResponse
      *
      * @throws \RuntimeException
      */

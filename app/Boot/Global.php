@@ -65,11 +65,13 @@ if (CONFIG_STORE === 'database') {
             return Option::all();
         }
         catch (QueryException $e) {
-            return collect();
+            //
         }
         catch (PDOException $e) {
-            return collect();
+            //
         }
+
+        return collect();
     });
 
     // Setup the information stored on the Option instances into Configuration.

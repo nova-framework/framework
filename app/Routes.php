@@ -30,17 +30,3 @@ $router->get('language/{language}', function (Request $request, $language)
     return Redirect::back();
 
 })->where('language', '([a-z]{2})');
-
-/**
- * A test for the Layout/View logic.
- */
-$router->get('test', function ()
-{
-    // Create a View instance for the Layout content.
-    $content = View::make('Test')
-        ->shares('title', 'Test')
-        ->with('content', 'This is the page content');
-
-    // Create and return the View instance for the Layout.
-    return View::make('Layouts/Test')->with('content', $content);
-});

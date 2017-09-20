@@ -11,10 +11,11 @@
 
 
 // The Administration Routes.
-$router->group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function($router)
+$router->group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function ($router)
 {
     $router->get('files',            'Files@index');
-    $router->any('files/connector', 'Files@connector');
+
+    $router->match(array('GET', 'POST'), 'files/connector', 'Files@connector');
 
     // Thumbnails Files serving.
     $router->get('files/thumbnails/{file}', 'Files@thumbnails');

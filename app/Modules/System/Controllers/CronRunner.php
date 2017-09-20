@@ -7,12 +7,12 @@ use Nova\Support\Facades\Cron;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\View;
 
-use App\Core\Controller;
+use App\Controllers\BaseController;
 
 use Carbon\Carbon;
 
 
-class CronRunner extends Controller
+class CronRunner extends BaseController
 {
     protected $layout = false;
 

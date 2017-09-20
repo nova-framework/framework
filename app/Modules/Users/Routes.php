@@ -10,7 +10,7 @@
 /** Define static routes. */
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function()
+Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
     // The Users Search.
     Route::post('users/search', array('before' => 'auth', 'uses' => 'Users@search'));

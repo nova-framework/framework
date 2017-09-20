@@ -35,7 +35,7 @@ Route::get( 'register/verify/{token?}', array('before' => 'guest',      'uses' =
 Route::get( 'register/status',          array('before' => 'guest',      'uses' => 'Registrar@status'));
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function()
+Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
     // The User's Dashboard.
     Route::get('/',         array('before' => 'auth', 'uses' => 'Dashboard@index'));

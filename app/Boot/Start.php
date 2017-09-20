@@ -1,10 +1,4 @@
 <?php
-/**
- * Boot Handler - perform the Application's boot stage.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 use Nova\Config\EnvironmentVariables;
 use Nova\Config\Repository as ConfigRepository;
@@ -14,6 +8,7 @@ use Nova\Http\Request;
 use Nova\Support\Facades\Facade;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 
 //--------------------------------------------------------------------------
 // Set PHP Error Reporting Options

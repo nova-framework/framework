@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\Option;
+
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+
 //--------------------------------------------------------------------------
 // Application Error Logger
 //--------------------------------------------------------------------------
@@ -10,16 +15,12 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
 // Application Error Handler
 //--------------------------------------------------------------------------
 
-// The standard handling of the Exceptions.
 App::error(function (Exception $exception, $code)
 {
     Log::error($exception);
 });
 
-// Special handling for the HTTP Exceptions.
-use Symfony\Component\HttpKernel\Exception\HttpException;
-
-App::error(function (HttpException $exception)
+App::error(function (HttpException $exception, $code)
 {
     $code = $exception->getStatusCode();
 
@@ -52,8 +53,6 @@ App::down(function ()
 //--------------------------------------------------------------------------
 // Load The Options
 //--------------------------------------------------------------------------
-
-use App\Models\Option;
 
 if (CONFIG_STORE === 'database') {
     // Retrieve the Option items, caching them for 24 hours.

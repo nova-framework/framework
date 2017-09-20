@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\Option;
+
+
 //--------------------------------------------------------------------------
 // Load The Options
 //--------------------------------------------------------------------------
-
-use App\Models\Option;
-
 
 if (CONFIG_STORE === 'database') {
     // Retrieve the Option items, caching them for 24 hours.

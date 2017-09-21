@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Register The Forge Commands
+| Register The Forge Commands and Schedule
 |--------------------------------------------------------------------------
 |
 | Each available Forge command must be registered with the console so
@@ -10,3 +10,4 @@
 | the console gets access to each of the command object instances.
 |
 */
+

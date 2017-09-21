@@ -44,7 +44,7 @@ class MySQLDatabase implements DatabaseInterface
 
     public function restore($sourceFile)
     {
-        $command = sprintf('% --user=%s --password=%s --host=%s --port=%s %s < %s',
+        $command = sprintf('%s --user=%s --password=%s --host=%s --port=%s %s < %s',
             $this->getRestoreCommandPath(),
             escapeshellarg($this->user),
             escapeshellarg($this->password),

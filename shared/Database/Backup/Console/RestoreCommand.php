@@ -37,14 +37,19 @@ class RestoreCommand extends BaseCommand
     {
         $sourceFile = $this->getDumpsPath() . $fileName;
 
+        $compressed = false;
+
         if ($this->isCompressed($sourceFile)) {
             $sourceFile = $this->uncompress($sourceFile);
+
+            $compressed = true;
         }
 
         $status = $this->database->restore($this->getUncompressedFileName($sourceFile));
 
-        if ($this->isCompressed($sourceFile))
-            $this->uncompressCleanup($this->getUncompressedFileName($sourceFile));
+        if ($compressed) {
+            File::delete($sourceFile);
+        }
 
         if ($status === true) {
             $this->info(__d('shared', '{0} was successfully restored.', $fileName));

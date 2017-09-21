@@ -103,6 +103,10 @@ return array(
         'Nova\Routing\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
 
+        // The Shared Providers.
+        'Shared\Database\Backup\ConsoleServiceProvider',
+        'Shared\Routing\RoutingServiceProvider',
+
         // The Application Providers.
         'App\Providers\AppServiceProvider',
         'App\Providers\AuthServiceProvider',

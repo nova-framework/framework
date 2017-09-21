@@ -1,11 +1,9 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, du er logget ind.',
   'Activate your Account!' => 'Aktivér din konto!',
   'Activated! You can now Sign in!' => 'Aktiveret! Du kan nu logge ind!',
-  'All tasks successfully executed.' => 'Alle opgaver med succes gennemført',
   'Apply the changes' => 'Tilføj ændringerne',
   'Backend Skin' => 'Backend design',
   'Black' => 'Sort',
@@ -105,8 +103,4 @@ return array (
   'You have successfully updated your Password.' => 'Du har med succes opdateret dit kodeord.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => '',
   'Yup. This is the Dashboard.' => 'Jeps. Dette er skrivebordet',
-  'executed.' => 'Udført.',
-  'execution failed.' => 'Udførelse mislykkedes',
-  'successfully executed.' => 'Succesfuld udførelse',
-  '{0} - Cron executed on {1}' => '{0} - Cron udførsel af {1}',
 );

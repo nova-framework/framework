@@ -1,11 +1,9 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, شما با موفقیت وارد شدید.',
   'Activate your Account!' => 'حساب خود را فعال کنید!',
   'Activated! You can now Sign in!' => 'فعال شد! اکنون میتوانید وارد شوید!',
-  'All tasks successfully executed.' => 'تمامی وظایف با موفقیت اجرا شدند.',
   'Apply the changes' => 'اعمال تغییرات',
   'Backend Skin' => 'پوسته ظاهر',
   'Black' => 'سیاه',
@@ -105,8 +103,4 @@ return array (
   'You have successfully updated your Password.' => 'شما با موفقیت رمزعبور خود را بروز کردید.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => '',
   'Yup. This is the Dashboard.' => 'آره، این داشبورد میباشد.',
-  'executed.' => 'اجرا شده.',
-  'execution failed.' => 'شکست در اجرا',
-  'successfully executed.' => 'با موفقیت اجرا شد.',
-  '{0} - Cron executed on {1}' => '',
 );

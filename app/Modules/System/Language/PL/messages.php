@@ -1,11 +1,9 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '',
   '<b>{0}</b>, you have successfully logged in.' => '',
   'Activate your Account!' => '',
   'Activated! You can now Sign in!' => '',
-  'All tasks successfully executed.' => '',
   'Apply the changes' => '',
   'Backend Skin' => '',
   'Black' => '',
@@ -105,8 +103,4 @@ return array (
   'You have successfully updated your Password.' => '',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => '',
   'Yup. This is the Dashboard.' => '',
-  'executed.' => '',
-  'execution failed.' => '',
-  'successfully executed.' => '',
-  '{0} - Cron executed on {1}' => '',
 );

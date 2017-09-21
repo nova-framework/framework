@@ -25,7 +25,7 @@ Route::middleware('role', function(Request $request, Closure $next, $role)
 
         $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
 
-        $status = __('You are not authorized to access this resource.');
+        $status = __d('backend', 'You are not authorized to access this resource.');
 
         return Redirect::to($uri)->with('warning', $status);
     }

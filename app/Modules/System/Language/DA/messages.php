@@ -99,6 +99,7 @@ return array (
   'Wrong username or password.' => 'Forkert brugernavn eller kodeord.',
   'Yellow' => 'Gul',
   'Yellow Light' => 'Lys Gul',
+  'You are not authorized to access this resource.' => '',
   'You have successfully logged out.' => 'Du er logget ud.',
   'You have successfully reset your Password.' => 'Du har med succes nulstillet dit kodeord.',
   'You have successfully updated your Password.' => 'Du har med succes opdateret dit kodeord.',

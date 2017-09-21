@@ -11,3 +11,9 @@
 |
 */
 
+
+Schedule::call(function ()
+{
+    echo 'This is a sample command.' ."\n\n";
+
+})->everyMinute();

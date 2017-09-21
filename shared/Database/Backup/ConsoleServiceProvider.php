@@ -62,6 +62,10 @@ class ConsoleServiceProvider extends ServiceProvider
      */
     public function provides()
     {
+        if (! $this->app->runningInConsole()) {
+            return array();
+        }
+
         return array(
             'command.db.backup', 'command.db.restore'
         );

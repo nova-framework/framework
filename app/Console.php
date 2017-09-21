@@ -1,13 +1,10 @@
 <?php
 
 /**
- *--------------------------------------------------------------------------
  * Register The Forge Commands and Schedule
- *--------------------------------------------------------------------------
  *
- * Each available Forge command must be registered with the console so
- * that it is available to be called. We'll register every command so
- * the console gets access to each of the command object instances.
+ * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
+ * @version 3.0
  *
  */
 

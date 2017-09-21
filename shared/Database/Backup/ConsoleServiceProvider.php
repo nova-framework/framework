@@ -12,6 +12,14 @@ use Nova\Support\ServiceProvider;
 class ConsoleServiceProvider extends ServiceProvider
 {
     /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
+
+    /**
      * Bootstrap the Application events.
      *
      * @return void
@@ -34,16 +42,28 @@ class ConsoleServiceProvider extends ServiceProvider
 
         $builder = new DatabaseBuilder();
 
-        $this->app['db.backup'] = $this->app->share(function($app) use ($builder)
+        $this->app['command.db.backup'] = $this->app->share(function($app) use ($builder)
         {
             return new BackupCommand($builder);
         });
 
-        $this->app['db.restore'] = $this->app->share(function($app) use ($builder)
+        $this->app['command.db.restore'] = $this->app->share(function($app) use ($builder)
         {
             return new RestoreCommand($builder);
         });
 
-        $this->commands('db.backup', 'db.restore');
+        $this->commands('command.db.backup', 'command.db.restore');
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array(
+            'command.db.backup', 'command.db.restore'
+        );
     }
 }

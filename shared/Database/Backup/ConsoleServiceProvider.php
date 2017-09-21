@@ -20,16 +20,6 @@ class ConsoleServiceProvider extends ServiceProvider
 
 
     /**
-     * Bootstrap the Application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
-
-    /**
      * Register the Service Provider.
      *
      * @return void

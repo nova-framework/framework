@@ -99,7 +99,7 @@ return array (
   'Wrong username or password.' => 'Неправильный логин или пароль',
   'Yellow' => 'желтый',
   'Yellow Light' => 'Светло-жёлтый',
-  'You are not authorized to access this resource.' => '',
+  'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
   'You have successfully logged out.' => 'Вы успешно вышли.',
   'You have successfully reset your Password.' => 'Вы успешно сбросили пароль.',
   'You have successfully updated your Password.' => 'Вы успешно обновили свой пароль.',

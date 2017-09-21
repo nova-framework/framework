@@ -99,7 +99,7 @@ return array (
   'Wrong username or password.' => 'نام کاربری یا رمزعبور اشتباه است.',
   'Yellow' => 'زرد',
   'Yellow Light' => 'زرد سفید',
-  'You are not authorized to access this resource.' => '',
+  'You are not authorized to access this resource.' => 'شما مجوز دسترسی به این منبع را ندارید.',
   'You have successfully logged out.' => 'شما با موفقیت خارج شدید.',
   'You have successfully reset your Password.' => 'شما با موفقیت رمزعبور خود را بازنشانی کردید.',
   'You have successfully updated your Password.' => 'شما با موفقیت رمزعبور خود را بروز کردید.',

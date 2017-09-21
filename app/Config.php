@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Config - the Global Configuration loaded BEFORE the Nova Application starts.
  *

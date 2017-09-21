@@ -44,9 +44,10 @@ class ControllerInspector
     {
         $prepended = $controller;
 
-        if ($this->router->hasGroupStack()) {
-            $groupStack = $this->router->getGroupStack();
+        // Compute the Controller's class name, including its namespace.
+        $groupStack = $this->router->getGroupStack();
 
+        if (! empty($groupStack)) {
             $prepended = $this->prependGroupUses($controller, last($groupStack));
         }
 

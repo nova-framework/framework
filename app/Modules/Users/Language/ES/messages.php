@@ -75,5 +75,4 @@ return array (
   'User not found: #{0}' => '',
   'Username' => '',
   'Users' => '',
-  'You are not authorized to access this resource.' => '',
 );

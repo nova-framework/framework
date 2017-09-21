@@ -1,11 +1,9 @@
 <?php
 
 return array (
-  '%d %b %Y, %R' => '%d %b %Y, %R',
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, Вы успешо вошли',
   'Activate your Account!' => 'Активируйте вашу учетную запись!',
   'Activated! You can now Sign in!' => 'Активировано! Теперь вы можете Войти!',
-  'All tasks successfully executed.' => 'Все задачи успешно выполнены.',
   'Apply the changes' => 'Применить изменения',
   'Backend Skin' => 'Внешний вид админки',
   'Black' => 'Чёрный',
@@ -99,13 +97,10 @@ return array (
   'Wrong username or password.' => 'Неправильный логин или пароль',
   'Yellow' => 'желтый',
   'Yellow Light' => 'Светло-жёлтый',
+  'You are not authorized to access this resource.' => 'Вы не имеете права доступа к данному ресурсу.',
   'You have successfully logged out.' => 'Вы успешно вышли.',
   'You have successfully reset your Password.' => 'Вы успешно сбросили пароль.',
   'You have successfully updated your Password.' => 'Вы успешно обновили свой пароль.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => 'Ваш аккаунт был создан. Мы отправили вам email для его активации.',
   'Yup. This is the Dashboard.' => 'Здесь рабочий стол',
-  'executed.' => 'выполненный',
-  'execution failed.' => 'исполнение не удалось.',
-  'successfully executed.' => 'успешно выполнено.',
-  '{0} - Cron executed on {1}' => 'Cron выполнен {1}',
 );

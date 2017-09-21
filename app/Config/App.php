@@ -89,7 +89,6 @@ return array(
         'Nova\Validation\ValidationServiceProvider',
         'Nova\Html\HtmlServiceProvider',
         'Nova\View\ViewServiceProvider',
-        'Nova\Cron\CronServiceProvider',
 
         // The Forge Providers.
         'Nova\Auth\Reminders\ConsoleServiceProvider',
@@ -102,6 +101,10 @@ return array(
         'Nova\Module\Providers\GeneratorServiceProvider',
         'Nova\Routing\ConsoleServiceProvider',
         'Nova\Session\ConsoleServiceProvider',
+
+        // The Shared Providers.
+        'Shared\Database\Backup\ConsoleServiceProvider',
+        'Shared\Routing\RoutingServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',
@@ -165,6 +168,7 @@ return array(
         'Request'       => 'Nova\Support\Facades\Request',
         'Response'      => 'Nova\Support\Facades\Response',
         'Route'         => 'Nova\Support\Facades\Route',
+        'Schedule'      => 'Nova\Support\Facades\Schedule',
         'Schema'        => 'Nova\Support\Facades\Schema',
         'Session'       => 'Nova\Support\Facades\Session',
         'Validator'     => 'Nova\Support\Facades\Validator',

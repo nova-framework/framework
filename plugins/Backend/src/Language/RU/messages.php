@@ -162,7 +162,7 @@ return array (
   'View this message and its replies' => 'Просмотреть это сообщение и его ответы',
   'Whether or not is used a external SMTP Server to send the E-mails.' => 'Независимо от того, используется ли внешний SMTP-сервер для отправки сообщений электронной почты.',
   'Whether or not is used the Cryptography for connecting to the external SMTP Server.' => 'Используется ли шифврования для подключения к внешнему серверу SMTP.',
-  'You are not authorized to access this resource.' => '',
+  'You are not authorized to access this resource.' => 'У вас нет доступа к этому ресурсу',
   'You have no messages sent or received.' => 'У вас нет сообщений, отправленных или полученных.',
   'You have no unread notifications.' => 'У вас нет непрочитанных уведомлений.',
   'You have successfully updated your Password.' => 'Вы успешно обновили свой пароль.',

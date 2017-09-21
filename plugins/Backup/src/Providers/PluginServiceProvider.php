@@ -41,16 +41,16 @@ class PluginServiceProvider extends ServiceProvider
         //
         $builder = new DatabaseBuilder();
 
-        $this->app['db.backup'] = $this->app->share(function($app) use ($builder)
+        $this->app['command.db.backup'] = $this->app->share(function($app) use ($builder)
         {
             return new BackupCommand($builder);
         });
 
-        $this->app['db.restore'] = $this->app->share(function($app) use ($builder)
+        $this->app['command.db.restore'] = $this->app->share(function($app) use ($builder)
         {
             return new RestoreCommand($builder);
         });
 
-        $this->commands('db.backup', 'db.restore');
+        $this->commands('command.db.backup', 'command.db.restore');
     }
 }

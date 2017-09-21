@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, Вы успешо вошли',
+  '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, Вы успешно вошли',
   'Activate your Account!' => 'Активируйте вашу учетную запись!',
   'Activated! You can now Sign in!' => 'Активировано! Теперь вы можете Войти!',
   'Apply the changes' => 'Применить изменения',
@@ -80,7 +80,7 @@ return array (
   'The Username used to connect to the external SMTP Server.' => ' Логин, используемый для подключения к внешнему серверу SMTP.',
   'The name of the external SMTP Server.' => ' Имя внешнего сервера SMTP.',
   'The outgoing E-mail address.' => 'E-mail адрес исходящих писем.',
-  'There is a problem. Have you activated your Account?' => '',
+  'There is a problem. Have you activated your Account?' => 'Существует проблема. Вы активировали свою учетную запись?',
   'This password reset token is invalid.' => 'Неправильный токен сброса пароля',
   'Use the Cryptography' => 'Использовать шифрование',
   'User Login' => 'Вход пользователя',

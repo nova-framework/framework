@@ -9,8 +9,7 @@
  */
 
 
-Schedule::call(function ()
-{
-    echo 'This is a sample command.' ."\n\n";
-
-})->everyMinute();
+/**
+ * Schedule the Mailer Spool queue flushing.
+ */
+Schedule::command('mailer:spool:flush')->everyMinute();

@@ -1,5 +1,9 @@
 *
 !cache/
+!crons/
+!emails/
+!files/
+!logs/
 !sessions/
 !views/
 !.gitignore

@@ -21,3 +21,8 @@ Forge::resolveCommands(array(
  * Schedule the Mailer Spool queue flushing.
  */
 Schedule::command('mailer:spool:send')->everyMinute();
+
+/**
+ * Schedule the Database Backup.
+ */
+Schedule::command('db:backup')->dailyAt('4:30');

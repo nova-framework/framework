@@ -13,7 +13,7 @@
  * Resolve the Forge commands from application.
  */
 Forge::resolveCommands(array(
-    //'App\Console\Commands\MagicWand'
+    //'App\Console\Commands\MagicWand',
 ));
 
 

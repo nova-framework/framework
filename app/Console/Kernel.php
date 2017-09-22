@@ -24,6 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //
+         // Schedule the flushing of expired password reminders.
+        $schedule->command('auth:clear-reminders')->daily();
+
+        // Schedule the Database Backup.
+        $schedule->command('db:backup')->dailyAt('4:30');
     }
 }

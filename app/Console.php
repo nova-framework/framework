@@ -23,6 +23,11 @@ Forge::resolveCommands(array(
 Schedule::command('mailer:spool:send')->everyMinute();
 
 /**
+ * Schedule the flushing of expired password reminders.
+ */
+Schedule::command('auth:clear-reminders')->daily();
+
+/**
  * Schedule the Database Backup.
  */
 Schedule::command('db:backup')->dailyAt('4:30');

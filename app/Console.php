@@ -10,6 +10,14 @@
 
 
 /**
+ * Resolve the Forge commands from application.
+ */
+Forge::resolveCommands(array(
+    //'App\Console\Commands\MagicWand'
+));
+
+
+/**
  * Schedule the Mailer Spool queue flushing.
  */
 Schedule::command('mailer:spool:send')->everyMinute();

@@ -42,8 +42,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = array(
-        'auth'        => 'Nova\Auth\Middleware\Authenticate',
-        'guest'        => 'App\Http\Middleware\RedirectIfAuthenticated',
-        'throttle'    => 'Nova\Routing\Middleware\ThrottleRequests',
+        'auth'     => 'Nova\Auth\Middleware\Authenticate',
+        'guest'    => 'App\Http\Middleware\RedirectIfAuthenticated',
+        'throttle' => 'Nova\Routing\Middleware\ThrottleRequests',
     );
 }

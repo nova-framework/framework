@@ -84,14 +84,14 @@ class Settings extends BaseController
             'siteName' => Input::old('siteName', Config::get('app.name')),
 
             // The Mailer
-            'mailDriver'        => Input::old('mailDriver',              Config::get('mail.driver')),
-            'mailHost'            => Input::old('mailHost',            Config::get('mail.host')),
-            'mailPort'            => Input::old('mailPort',            Config::get('mail.port')),
-            'mailFromAddress'    => Input::old('mailFromAddress',    Config::get('mail.from.address')),
-            'mailFromName'        => Input::old('mailFromName',        Config::get('mail.from.name')),
-            'mailEncryption'    => Input::old('mailEncryption',        Config::get('mail.encryption')),
-            'mailUsername'        => Input::old('mailUsername',        Config::get('mail.username')),
-            'mailPassword'        => Input::old('mailPassword',        Config::get('mail.password')),
+            'mailDriver'      => Input::old('mailDriver',      Config::get('mail.driver')),
+            'mailHost'        => Input::old('mailHost',        Config::get('mail.host')),
+            'mailPort'        => Input::old('mailPort',        Config::get('mail.port')),
+            'mailFromAddress' => Input::old('mailFromAddress', Config::get('mail.from.address')),
+            'mailFromName'    => Input::old('mailFromName',    Config::get('mail.from.name')),
+            'mailEncryption'  => Input::old('mailEncryption',  Config::get('mail.encryption')),
+            'mailUsername'    => Input::old('mailUsername',    Config::get('mail.username')),
+            'mailPassword'    => Input::old('mailPassword',    Config::get('mail.password')),
         );
 
         return $this->createView()
@@ -114,14 +114,14 @@ class Settings extends BaseController
             Option::set('app.name', $input['siteName']);
 
             // The Mailer
-            Option::set('mail.driver',            $input['mailDriver']);
-            Option::set('mail.host',            $input['mailHost']);
-            Option::set('mail.port',            $input['mailPort']);
-            Option::set('mail.from.address',    $input['mailFromAddress']);
-            Option::set('mail.from.name',        $input['mailFromName']);
-            Option::set('mail.encryption',        $input['mailEncryption']);
-            Option::set('mail.username',        $input['mailUsername']);
-            Option::set('mail.password',        $input['mailPassword']);
+            Option::set('mail.driver',       $input['mailDriver']);
+            Option::set('mail.host',         $input['mailHost']);
+            Option::set('mail.port',         $input['mailPort']);
+            Option::set('mail.from.address', $input['mailFromAddress']);
+            Option::set('mail.from.name',    $input['mailFromName']);
+            Option::set('mail.encryption',   $input['mailEncryption']);
+            Option::set('mail.username',     $input['mailUsername']);
+            Option::set('mail.password',     $input['mailPassword']);
 
             // Invalidator the cached system options.
             Cache::forget('system_options');

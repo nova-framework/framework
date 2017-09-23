@@ -16,4 +16,14 @@
 Route::get('/',       'Welcome@index');
 Route::get('subpage', 'Welcome@subPage');
 
+// Show the PHP information
+Route::get('phpinfo', function ()
+{
+    ob_start();
+
+    phpinfo();
+
+    return Response::make(ob_get_clean(), 200);
+});
+
 /** End default Routes */

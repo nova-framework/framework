@@ -30,3 +30,16 @@ $router->get('language/{language}', function (Request $request, $language)
     return Redirect::back();
 
 })->where('language', '([a-z]{2})');
+
+
+/**
+ * Show the PHP information
+ */
+Route::get('phpinfo', function ()
+{
+    ob_start();
+
+    phpinfo();
+
+    return Response::make(ob_get_clean(), 200);
+});

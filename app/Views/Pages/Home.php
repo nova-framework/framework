@@ -9,7 +9,8 @@ endif;
 ?>
 
 <div class="row">
-    <h2 class="text-center" style="margin-bottom: 25px;">Welcome to Nova <?= VERSION; ?></h2>
+    <h1 class="text-center" style="margin-bottom: 25px;">Welcome to Nova <?= VERSION; ?></h1>
+    <br>
 
     <div class="alert alert-warning text-center">
         <p>Please be aware that this page will not be shown if you turn off debug mode unless you replace <code>app/Views/Pages/Home.php</code> with your own version.</p>

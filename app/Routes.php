@@ -9,6 +9,8 @@
  *
  */
 
+use Nova\Http\Request;
+
 
 /** Define static routes. */
 

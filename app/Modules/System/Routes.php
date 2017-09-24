@@ -9,9 +9,6 @@
 
 /** Define static routes. */
 
-// The Framework's Language Changer.
-Route::get('language/{code}', array('before' => 'referer', 'uses' => 'Language@change'));
-
 // The default Auth Routes.
 Route::get( 'login',  array('before' => 'guest',      'uses' => 'Authorize@login'));
 Route::post('login',  array('before' => 'guest|csrf', 'uses' => 'Authorize@postLogin'));

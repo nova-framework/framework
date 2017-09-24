@@ -19,7 +19,7 @@ Route::get('/',       'Welcome@index');
 Route::get('subpage', 'Welcome@subPage');
 
 
-// The Language Changer.
+// The Language Changer
 Route::get('language/{language}', function (Request $request, $language)
 {
     $url = Config::get('app.url');

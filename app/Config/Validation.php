@@ -58,7 +58,7 @@ return array(
         'array'         => __('The :attribute must have at least :min items.'),
     ),
 
-    'not_in'            => __('The selected :attribute is invalid.'),
+    'notIn'             => __('The selected :attribute is invalid.'),
     'numeric'           => __('The :attribute must be a number.'),
     'regex'             => __('The :attribute format is invalid.'),
     'required'          => __('The :attribute field is required.'),

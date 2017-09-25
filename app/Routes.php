@@ -33,7 +33,7 @@ $router->get('language/{language}', function (Request $request, $language)
 
 
 /**
- * Show the PHP information
+ * Show the PHP information.
  */
 Route::get('phpinfo', function ()
 {

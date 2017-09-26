@@ -1,5 +1,8 @@
 *
 !cache/
+!emails/
+!files/
+!logs/
 !sessions/
 !views/
 !.gitignore

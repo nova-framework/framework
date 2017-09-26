@@ -33,14 +33,3 @@ Route::filter('role', function ($route, $request, $role)
         return Redirect::to($uri)->withStatus($status, 'warning');
     }
 });
-
-// Referer checking Filter.
-Route::filter('referer', function ($route, $request)
-{
-    // Check if the visitor come to this Route from another site.
-    $referer = $request->header('referer');
-
-    if (! starts_with($referer, Config::get('app.url'))) {
-        return Redirect::back();
-    }
-});

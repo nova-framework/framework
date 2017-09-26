@@ -9,8 +9,25 @@
  */
 
 
-Schedule::call(function ()
-{
-    echo 'This is a sample command.' ."\n\n";
+/**
+ * Resolve the Forge commands from application.
+ */
+Forge::resolveCommands(array(
+    //'App\Console\Commands\MagicWand',
+));
 
-})->everyMinute();
+
+/**
+ * Schedule the Mailer Spool queue flushing.
+ */
+Schedule::command('mailer:spool:send')->everyMinute();
+
+/**
+ * Schedule the flushing of expired password reminders.
+ */
+Schedule::command('auth:clear-reminders')->daily();
+
+/**
+ * Schedule the Database Backup.
+ */
+Schedule::command('db:backup')->dailyAt('4:30');

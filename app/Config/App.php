@@ -181,4 +181,5 @@ return array(
         'Cron'          => 'Nova\Support\Facades\Cron',
         'Module'        => 'Nova\Support\Facades\Module',
     ),
+
 );

@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Response;
 
 use Closure;
 
@@ -19,18 +21,23 @@ class RedirectIfAuthenticated
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next, $guard = null)
     {
         if (is_null($guard)) {
             $guard = Config::get('auth.default', 'web');
         }
 
-        if (Auth::guard($guard)->check()) {
-            $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
-
-            return Redirect::to($uri);
+        if (Auth::guard($guard)->guest()) {
+            return $next($request);
         }
 
-        return $next($request);
+        // The User is authenticated.
+        else if ($request->ajax() || $request->wantsJson()) {
+            return Response::make('Unauthorized Access', 401);
+        }
+
+        $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+
+        return Redirect::to($uri);
     }
 }

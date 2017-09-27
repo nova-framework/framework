@@ -83,7 +83,9 @@
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class='fa fa-sign-out'></i> <?= __d('backend', 'Logout'); ?>
                                 </a>
-                                <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;"></form>
+                                <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
+                                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                                </form>
                             </li>
                         </ul>
                     </li>

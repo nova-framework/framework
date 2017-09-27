@@ -30,4 +30,14 @@ class Kernel extends ConsoleKernel
         // Schedule the Database Backup.
         $schedule->command('db:backup')->dailyAt('4:30');
     }
+
+    /**
+     * Register the Closure based commands for the application.
+     *
+     * @return void
+     */
+    protected function commands()
+    {
+        require app_path('Console.php');
+    }
 }

@@ -25,7 +25,7 @@ Route::filter('role', function ($route, $request, $role)
             return Response::make('', 403);
         }
 
-        // Get the Guard's paths from configuration.
+        // Get the Guard's dashboard path from configuration.
         $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
 
         $status = __d('system', 'You are not authorized to access this resource.');

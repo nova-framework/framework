@@ -94,7 +94,12 @@ $langMenuLinks = ob_get_clean();
                     <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
                 </li>
                 <li>
-                    <a href='<?= site_url('logout'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?></a>
+                    <a href='<?= site_url('logout'); ?>' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?>
+                    </a>
+                    <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
+                        <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                    </form>
                 </li>
                 <?php } else { ?>
                <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>

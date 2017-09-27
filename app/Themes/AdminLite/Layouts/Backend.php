@@ -147,7 +147,13 @@ $langMenuLinks = ob_get_clean();
                   <a href="<?= site_url('admin/profile'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Profile'); ?></a>
                 </div>
                 <div class="pull-right">
-                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Sign out'); ?></a>
+                  <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"
+                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <?= __d('admin_lite', 'Sign out'); ?>
+                  </a>
+                  <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
+                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                  </form>
                 </div>
               </li>
             </ul>

@@ -49,11 +49,6 @@ return array(
             'paths' => array(
                 'authorize' => 'login',
                 'dashboard' => 'admin/dashboard',
-
-                // The paths where the intended redirects can't be used.
-                'nonintend' => array(
-                    'logout',
-                ),
             ),
         ),
         'api' => array(

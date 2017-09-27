@@ -12,7 +12,7 @@
 // The default Auth Routes.
 Route::get( 'login',  array('before' => 'guest',      'uses' => 'Authorize@login'));
 Route::post('login',  array('before' => 'guest|csrf', 'uses' => 'Authorize@postLogin'));
-Route::get( 'logout', array('before' => 'auth',       'uses' => 'Authorize@logout'));
+Route::post('logout', array('before' => 'auth|csrf',  'uses' => 'Authorize@logout'));
 
 // The Password Remind.
 Route::get( 'password/remind', array('before' => 'guest',      'uses' => 'Authorize@remind'));

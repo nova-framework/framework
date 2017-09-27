@@ -297,4 +297,5 @@ return array(
         'Template'      => 'Nova\Support\Facades\Template',
         'Plugin'        => 'Nova\Support\Facades\Plugin',
     ),
+
 );

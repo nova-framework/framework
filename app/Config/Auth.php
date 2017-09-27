@@ -41,6 +41,11 @@ return array(
         'web' => array(
             'driver'   => 'session',
             'provider' => 'users',
+
+            'paths' => array(
+                'authorize' => 'login',
+                'dashboard' => 'admin/dashboard',
+            ),
         ),
         'api' => array(
             'driver'   => 'token',

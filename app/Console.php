@@ -16,6 +16,14 @@ Forge::resolveCommands(array(
     //'App\Console\Commands\MagicWand',
 ));
 
+/**
+ * Add a sample Closure based command.
+ */
+Forge::command('hello', function ()
+{
+    $this->comment('Hello, World!');
+
+})->describe('Display a Hello World message');
 
 /**
  * Schedule the Mailer Spool queue flushing.

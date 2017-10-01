@@ -37,16 +37,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        $path = realpath(__DIR__ .'/../Routes');
-
-        $router->group(array('prefix' => 'api', 'middleware' => 'api', 'namespace' => $this->namespace), function ($router) use ($path)
+        $router->group(array('prefix' => 'api', 'middleware' => 'api', 'namespace' => $this->namespace), function ($router)
         {
-            require $path .DS .'Api.php';
+            require app_path('Routes/Api.php');
         });
 
-        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router) use ($path)
+        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router)
         {
-            require $path .DS .'Web.php';
+            require app_path('Routes/Web.php');
         });
     }
 }

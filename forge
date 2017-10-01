@@ -17,13 +17,13 @@ define('WEBPATH', BASEPATH .'webroot' .DS);
 // Register The Auto Loader
 //--------------------------------------------------------------------------
 
-require BASEPATH .'vendor' .DS .'autoload.php';
+require BASEPATH .str_replace('/', DS, 'vendor/autoload.php');
 
 //--------------------------------------------------------------------------
 // Turn On The Lights
 //--------------------------------------------------------------------------
 
-$app = require_once APPPATH .'Foundation' .DS .'Start.php';
+$app = require_once APPPATH .str_replace('/', DS, 'Foundation/Boot/Start.php');
 
 //--------------------------------------------------------------------------
 // Run The Forge Application

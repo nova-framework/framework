@@ -53,9 +53,8 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     protected function loadBroadcastChannels()
     {
-        $path = app_path('Broadcast.php');
+        $path = app_path('Routes/Channels.php');
 
         if (is_readable($path)) require $path;
     }
 }
-

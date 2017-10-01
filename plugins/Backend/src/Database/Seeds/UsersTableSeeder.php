@@ -109,7 +109,7 @@ class UsersTableSeeder extends Seeder
         }
     }
 
-    protected function uniqueToken($length = 32)
+    protected function uniqueToken($length = 60)
     {
         while (true) {
             $token = Str::random($length);

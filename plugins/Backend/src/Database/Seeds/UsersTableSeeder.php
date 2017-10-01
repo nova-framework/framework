@@ -16,6 +16,7 @@ class UsersTableSeeder extends Seeder
 {
     protected $tokens = array();
 
+
     /**
      * Run the database seeds.
      *

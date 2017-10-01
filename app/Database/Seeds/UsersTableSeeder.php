@@ -5,12 +5,16 @@ namespace App\Database\Seeds;
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 use Nova\Support\Facades\Hash;
+use Nova\Support\Str;
 
 use App\Models\User;
 
 
 class UsersTableSeeder extends Seeder
 {
+    protected $tokens = array();
+
+
     /**
      * Run the database seeds.
      *
@@ -30,6 +34,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'admin@novaframework.dev',
             'activated'      => 1,
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -41,6 +46,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'marcus@novaframework.dev',
             'activated'      => 1,
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -52,6 +58,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'michael@novaframework.dev',
             'activated'      => 1,
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -63,6 +70,7 @@ class UsersTableSeeder extends Seeder
             'email'          => 'john@novaframework.dev',
             'activated'      => 1,
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -74,6 +82,20 @@ class UsersTableSeeder extends Seeder
             'email'          => 'mark@novaframework.dev',
             'activated'      => 1,
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
+    }
+
+    protected function uniqueToken($length = 60)
+    {
+        while (true) {
+            $token = Str::random($length);
+
+            if (! in_array($token, $this->tokens)) {
+                array_push($this->tokens, $token);
+
+                return $token;
+            }
+        }
     }
 }

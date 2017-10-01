@@ -5,6 +5,7 @@ namespace Backend\Database\Seeds;
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 use Nova\Support\Facades\Hash;
+use Nova\Support\Str;
 
 use Backend\Models\User;
 
@@ -13,6 +14,8 @@ use Faker\Factory as FakerFactory;
 
 class UsersTableSeeder extends Seeder
 {
+    protected $tokens = array();
+
     /**
      * Run the database seeds.
      *
@@ -32,6 +35,7 @@ class UsersTableSeeder extends Seeder
             'last_name'      => 'Administrator',
             'email'          => 'admin@novaframework.dev',
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -43,6 +47,7 @@ class UsersTableSeeder extends Seeder
             'last_name'      => 'Spears',
             'email'          => 'marcus@novaframework.dev',
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -54,6 +59,7 @@ class UsersTableSeeder extends Seeder
             'last_name'      => 'White',
             'email'          => 'michael@novaframework.dev',
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -65,6 +71,7 @@ class UsersTableSeeder extends Seeder
             'last_name'      => 'Kennedy',
             'email'          => 'john@novaframework.dev',
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         User::create(array(
@@ -76,6 +83,7 @@ class UsersTableSeeder extends Seeder
             'last_name'      => 'Black',
             'email'          => 'mark@novaframework.dev',
             'remember_token' => '',
+            'api_token'      => $this->uniqueToken(),
         ));
 
         //------------------------------------------------------------------------------
@@ -96,7 +104,21 @@ class UsersTableSeeder extends Seeder
                 'last_name'      => $faker->lastName,
                 'email'          => $faker->unique()->email,
                 'remember_token' => '',
+                'api_token'      => $this->uniqueToken(),
             ));
+        }
+    }
+
+    protected function uniqueToken($length = 32)
+    {
+        while (true) {
+            $token = Str::random($length);
+
+            if (! in_array($token, $this->tokens)) {
+                array_push($this->tokens, $token);
+
+                return $token;
+            }
         }
     }
 }

@@ -46,7 +46,7 @@ $router->get('language/{language}', function (Request $request, $language)
 /**
  * Show the PHP information.
  */
-Route::get('phpinfo', function ()
+$router->get('phpinfo', function ()
 {
     ob_start();
 

@@ -49,15 +49,15 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $app->singleton(
-    'Nova\Http\Contracts\KernelInterface', 'App\Http\Kernel'
+    'Nova\Http\Contracts\KernelInterface', 'App\Foundation\Http\Kernel'
 );
 
 $app->singleton(
-    'Nova\Console\Contracts\KernelInterface', 'App\Console\Kernel'
+    'Nova\Console\Contracts\KernelInterface', 'App\Foundation\Console\Kernel'
 );
 
 $app->singleton(
-    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Exceptions\Handler'
+    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Foundation\Exceptions\Handler'
 );
 
 //--------------------------------------------------------------------------

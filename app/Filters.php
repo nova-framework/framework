@@ -71,7 +71,7 @@ Route::filter('auth', function ($route, $request, $guard = null)
 
     // The User is not authenticated.
     else if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
-        return Response::make('Unauthorized Access', 401);
+        return Response::json(array('error' => 'Unauthorized Access'), 401);
     }
 
     // Get the Guard's authorize path from configuration.
@@ -95,7 +95,7 @@ Route::filter('guest', function ($route, $request, $guard = null)
 
     // The User is authenticated.
     else if ($request->ajax() || $request->wantsJson()) {
-        return Response::make('Unauthorized Access', 401);
+        return Response::json(array('error' => 'Unauthorized Access'), 401);
     }
 
     // Get the Guard's dashboard path from configuration.

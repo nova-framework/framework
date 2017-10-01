@@ -21,10 +21,10 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = array(
         'Nova\Auth\AuthenticationException',
-        'Symfony\Component\HttpKernel\Exception\HttpException',
         'Nova\Database\ORM\ModelNotFoundException',
         'Nova\Session\TokenMismatchException',
         'Nova\Validation\ValidationException',
+        'Symfony\Component\HttpKernel\Exception\HttpException',
     );
 
 

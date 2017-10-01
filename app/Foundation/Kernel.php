@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Http;
+namespace App\Foundation;
 
 use Nova\Foundation\Http\Kernel as HttpKernel;
 
@@ -24,12 +24,12 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = array(
         'web' => array(
-            'App\Foundation\Http\Middleware\EncryptCookies',
+            'App\Foundation\Middleware\EncryptCookies',
             'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
             'Nova\Session\Middleware\StartSession',
             'Nova\Foundation\Http\Middleware\SetupLanguage',
             'Nova\View\Middleware\ShareErrorsFromSession',
-            'App\Foundation\Http\Middleware\VerifyCsrfToken',
+            'App\Foundation\Middleware\VerifyCsrfToken',
         ),
         'api' => array(
             'throttle:60,1',
@@ -43,7 +43,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = array(
         'auth'     => 'Nova\Auth\Middleware\Authenticate',
-        'guest'    => 'App\Foundation\Http\Middleware\RedirectIfAuthenticated',
+        'guest'    => 'App\Foundation\Middleware\RedirectIfAuthenticated',
         'throttle' => 'Nova\Routing\Middleware\ThrottleRequests',
     );
 }

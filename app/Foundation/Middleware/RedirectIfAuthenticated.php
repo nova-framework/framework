@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Http\Middleware;
+namespace App\Foundation\Middleware;
 
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;

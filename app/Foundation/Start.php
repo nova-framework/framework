@@ -53,7 +53,7 @@ $app->singleton(
 );
 
 $app->singleton(
-    'Nova\Console\Contracts\KernelInterface', 'App\Foundation\Console\Kernel'
+    'Nova\Console\Contracts\KernelInterface', 'App\Console\Kernel'
 );
 
 $app->singleton(

@@ -94,7 +94,7 @@ Route::filter('guest', function ($route, $request, $guard = null)
     }
 
     // The User is authenticated.
-    else if ($request->ajax() || $request->wantsJson()) {
+    else if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
         return Response::json(array('error' => 'Unauthorized Access'), 401);
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console;
+namespace App\Foundation\Console;
 
 use Nova\Console\Scheduling\Schedule;
 use Nova\Foundation\Console\Kernel as ConsoleKernel;

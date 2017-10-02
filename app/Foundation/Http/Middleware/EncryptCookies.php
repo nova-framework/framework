@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Middleware;
+namespace App\Foundation\Http\Middleware;
 
 use Nova\Cookie\Middleware\EncryptCookies as BaseEncrypter;
 

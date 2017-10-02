@@ -49,11 +49,11 @@ $app->instance('app', $app);
 //--------------------------------------------------------------------------
 
 $app->singleton(
-    'Nova\Http\Contracts\KernelInterface', 'App\Foundation\Kernel'
+    'Nova\Http\Contracts\KernelInterface', 'App\Foundation\Http\Kernel'
 );
 
 $app->singleton(
-    'Nova\Console\Contracts\KernelInterface', 'App\Console\Kernel'
+    'Nova\Console\Contracts\KernelInterface', 'App\Foundation\Console\Kernel'
 );
 
 $app->singleton(

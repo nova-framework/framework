@@ -22,13 +22,13 @@ define('APPPATH', BASEPATH .'app' .DS);
 // Load the Composer Autoloader
 //--------------------------------------------------------------------------
 
-require BASEPATH .str_replace('/', DS, 'vendor/autoload.php');
+require BASEPATH .'vendor' .DS .'autoload.php';
 
 //--------------------------------------------------------------------------
 // Bootstrap the Framework and get the Application instance
 //--------------------------------------------------------------------------
 
-$app = require_once APPPATH .str_replace('/', DS, 'Foundation/Boot/Start.php');
+$app = require_once APPPATH .'Foundation' .DS .'App.php';
 
 //--------------------------------------------------------------------------
 // Run the Application

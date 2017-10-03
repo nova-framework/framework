@@ -36,7 +36,7 @@ return array(
         //
         'paths' => array(
             'almasaeed2010/adminlte' => array(
-                'bootstrap',
+                'bower_components',
                 'dist',
                 'plugins'
             ),

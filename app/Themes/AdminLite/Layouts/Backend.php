@@ -45,17 +45,17 @@ $langMenuLinks = ob_get_clean();
     <?php
     Assets::css(array(
         // Bootstrap 3.3.5
-        vendor_url('bootstrap/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
+        vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Font Awesome
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
+        vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
         // Ionicons
-        'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css',
+        vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
         // Theme style
         vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // Select2
-        vendor_url('plugins/select2/select2.min.css', 'almasaeed2010/adminlte'),
+        vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         theme_url('css/style.css', 'AdminLite'),
     ));
@@ -76,7 +76,7 @@ $langMenuLinks = ob_get_clean();
 <?php
     //Add Controller specific JS files.
     Assets::js(array(
-        vendor_url('plugins/jQuery/jquery-2.2.3.min.js', 'almasaeed2010/adminlte'),
+        vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
     ));
 
     ?>
@@ -88,6 +88,8 @@ $langMenuLinks = ob_get_clean();
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
 <body class="hold-transition skin-<?= Config::get('app.color_scheme', 'blue'); ?> sidebar-mini">
@@ -214,11 +216,11 @@ $langMenuLinks = ob_get_clean();
 <?php
 Assets::js(array(
     // Bootstrap 3.3.5
-    vendor_url('bootstrap/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
+    vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
-    vendor_url('dist/js/app.min.js', 'almasaeed2010/adminlte'),
+    vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
     // Select2
-    vendor_url('plugins/select2/select2.full.min.js', 'almasaeed2010/adminlte')
+    vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte')
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone

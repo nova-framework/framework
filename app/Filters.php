@@ -64,9 +64,7 @@ Route::filter('auth', function ($route, $request, $guard = null)
 
     if (Auth::guard($guard)->check()) {
         // User authenticated with this Guard, then we will use it as default.
-        Auth::shouldUse($guard);
-
-        return;
+        return Auth::shouldUse($guard);
     }
 
     // The User is not authenticated.

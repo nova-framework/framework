@@ -114,13 +114,13 @@ class AsyncQueue extends DatabaseQueue
         $availableAt = ($delay instanceof DateTime) ? $delay : Carbon::now()->addSeconds($delay);
 
         $attributes = array(
-            'queue'            => $this->getQueue($queue),
-            'payload'        => $payload,
-            'attempts'        => $attempts,
-            'reserved'        => 1,
-            'reserved_at'    => $this->getTime(),
-            'available_at'    => $availableAt->getTimestamp(),
-            'created_at'    => $this->getTime(),
+            'queue'        => $this->getQueue($queue),
+            'payload'      => $payload,
+            'attempts'     => $attempts,
+            'reserved'     => 1,
+            'reserved_at'  => $this->getTime(),
+            'available_at' => $availableAt->getTimestamp(),
+            'created_at'   => $this->getTime(),
         );
 
         return $this->getQuery()->insertGetId($attributes);
@@ -144,7 +144,7 @@ class AsyncQueue extends DatabaseQueue
     }
 
     /**
-     * Make a Process for the Artisan command for the job id.
+     * Make a Process for the Forge command for the job id.
      *
      * @param int $jobId
      * @param int $delay
@@ -163,7 +163,7 @@ class AsyncQueue extends DatabaseQueue
     }
 
     /**
-     * Get the Artisan command as a string for the job id.
+     * Get the Forge command as a string for the job id.
      *
      * @param int $jobId
      * @param int $delay

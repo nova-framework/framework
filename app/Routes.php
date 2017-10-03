@@ -14,9 +14,16 @@ use Nova\Http\Request;
 
 /** Define static routes. */
 
-// The default Routing
+// The Web Routes
 Route::get('/',       'Welcome@index');
 Route::get('subpage', 'Welcome@subPage');
+
+
+// The API Routes
+Route::get('api/user', array('before' => 'auth:api', function (Request $request)
+{
+    return $request->user();
+}));
 
 
 // The Language Changer

@@ -63,12 +63,15 @@ Route::filter('auth', function ($route, $request, $guard = null)
     $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
 
     if (Auth::guard($guard)->check()) {
+        // User authenticated with this Guard, then we will use it as default.
+        Auth::shouldUse($guard);
+
         return;
     }
 
     // The User is not authenticated.
-    else if ($request->ajax() || $request->wantsJson()) {
-        return Response::make('Unauthorized Access', 401);
+    else if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
+        return Response::json(array('error' => 'Unauthorized Access'), 401);
     }
 
     // Get the Guard's authorize path from configuration.
@@ -91,8 +94,8 @@ Route::filter('guest', function ($route, $request, $guard = null)
     }
 
     // The User is authenticated.
-    else if ($request->ajax() || $request->wantsJson()) {
-        return Response::make('Unauthorized Access', 401);
+    else if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
+        return Response::json(array('error' => 'Unauthorized Access'), 401);
     }
 
     // Get the Guard's dashboard path from configuration.

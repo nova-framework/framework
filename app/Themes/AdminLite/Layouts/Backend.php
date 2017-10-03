@@ -109,7 +109,7 @@ $langMenuLinks = ob_get_clean();
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
       <!-- Sidebar toggle button-->
-      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
         <span class="sr-only"><?= __d('admin_lite', 'Toggle navigation'); ?></span>
       </a>
       <!-- Navbar Right Menu -->
@@ -180,7 +180,7 @@ $langMenuLinks = ob_get_clean();
             </div>
         </form>
         <!-- Sidebar Menu -->
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" data-widget="tree">
             <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
             <?php foreach ($menuItems as $item) { ?>
             <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>

@@ -9,7 +9,8 @@
 
 /** Define Events. */
 
-Event::listen('backend.menu', function($user) {
+Event::listen('backend.menu', function ($user)
+{
     if ($user->hasRole('administrator')) {
         $items = array(
             array(

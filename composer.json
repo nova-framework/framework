@@ -27,7 +27,7 @@
     "require": {
         "php": ">=5.6.0",
         "nova-framework/system": "^3.0",
-        "almasaeed2010/adminlte": "~2.0",
+        "almasaeed2010/adminlte": "^2.4",
         "twbs/bootstrap": "^3.3"
     },
     "autoload": {

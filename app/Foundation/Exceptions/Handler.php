@@ -59,14 +59,11 @@ class Handler extends ExceptionHandler
             $status = $e->getStatusCode();
 
             if (View::exists("Errors/{$status}")) {
-                $data = array('exception' => $e);
-
-                $content = View::make('Layouts/Default')
+                $view = View::make('Layouts/Default')
                     ->shares('title', "Error {$status}")
-                    ->nest('content', "Errors/{$status}", $data)
-                    ->render();
+                    ->nest('content', "Errors/{$status}", array('exception' => $e));
 
-                return Response::make($content, $status, $e->getHeaders());
+                return Response::make($view->render(), $status, $e->getHeaders());
             }
         }
 

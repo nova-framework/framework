@@ -44,18 +44,18 @@ $langMenuLinks = ob_get_clean();
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
     Assets::css(array(
-        // Bootstrap 3.3.5
+        // Bootstrap 3.3.7
         vendor_url('bower_components/bootstrap/dist/css/bootstrap.min.css', 'almasaeed2010/adminlte'),
         // Font Awesome
         vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
         // Ionicons
         vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
+        // Select2
+        vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
         // Theme style
         vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
-        // Select2
-        vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         theme_url('css/style.css', 'AdminLite'),
     ));

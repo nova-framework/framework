@@ -26,19 +26,17 @@ App::error(function (HttpException $exception, $code)
 
     $headers = $exception->getHeaders();
 
-    if (Request::ajax() || Request::wantsJson()) {
-        // An AJAX request; we'll create a JSON Response.
-        $content = array('status' => $code);
-
-        return Response::json($content, $code, $headers);
+    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
+        // An AJAX request; we'll create and return a JSON Response.
+        return Response::json(array('status' => $code), $code, $headers);
     }
 
-    // We'll create the templated Error Page Response.
-    $content = View::makeLayout('Default', 'Bootstrap')
+    // We'll create a themed Error Page as response.
+    $view = View::makeLayout('Default', 'Bootstrap')
         ->shares('title', 'Error ' .$code)
-        ->nest('content', 'Errors/' .$code);
+        ->nest('content', 'Errors/' .$code, compact('exception'));
 
-    return Response::make($content, $code, $headers);
+    return Response::make($view->render(), $code, $headers);
 });
 
 //--------------------------------------------------------------------------

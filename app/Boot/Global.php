@@ -31,7 +31,7 @@ App::error(function (HttpException $exception, $code)
         return Response::json(array('status' => $code), $code, $headers);
     }
 
-    // We'll create a themed Error Page as response.
+    // We'll create and return a themed Error Page as response.
     $view = View::makeLayout('Default', 'Bootstrap')
         ->shares('title', 'Error ' .$code)
         ->nest('content', 'Errors/' .$code, compact('exception'));

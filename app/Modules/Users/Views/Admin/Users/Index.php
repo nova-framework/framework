@@ -11,6 +11,8 @@
 
 <?= Session::getMessages(); ?>
 
+<?php if (Gate::allows('create', 'App\Models\User')) { ?>
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Create a new User'); ?></h3>
@@ -19,6 +21,8 @@
         <a class='btn btn-success' href='<?= site_url('admin/users/create'); ?>'><?= __d('users', 'Create a new User'); ?></a>
     </div>
 </div>
+
+<?php } ?>
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -50,10 +54,21 @@
     <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->email ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')) ."</td>
     <td style='text-align: right; vertical-align: middle;' width='15%'>
-        <div class='btn-group' role='group' aria-label='...'>
-            <a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>
-            <a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>
-            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#confirm_" .$user->id ."' title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>
+        <div class='btn-group' role='group' aria-label='...'>";
+
+        if (Gate::allows('delete', $user)) {
+            echo "<a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#confirm_" .$user->id ."' title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>";
+        }
+
+        if (Gate::allows('update', $user)) {
+            echo "<a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>";
+        }
+
+        if (Gate::allows('view', $user)) {
+            echo "<a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>";
+        }
+
+        echo "
         </div>
     </td>
 </tr>";
@@ -73,8 +88,8 @@
 </section>
 
 <?php
-if (! $users->isEmpty()) {
-    foreach ($users->getItems() as $user) {
+foreach ($users->getItems() as $user) {
+    if (Gate::allows('delete', $user)) {
 ?>
 <div class="modal modal-default" id="confirm_<?= $user->id ?>">
     <div class="modal-dialog">

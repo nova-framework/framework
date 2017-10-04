@@ -8,7 +8,9 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
+use Nova\Auth\Access\AuthorizationException;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
@@ -25,11 +27,6 @@ use Carbon\Carbon;
 
 class Users extends BaseController
 {
-
-    public function __construct()
-    {
-        $this->beforeFilter('role:administrator');
-    }
 
     protected function validator(array $data, $id = null)
     {
@@ -89,6 +86,10 @@ class Users extends BaseController
 
     public function index()
     {
+        if (Gate::denies('index', User::class)) {
+            throw new AuthorizationException();
+        }
+
         // Get all User records for current page.
         $users = User::where('activated', 1)->paginate(25);
 
@@ -99,6 +100,10 @@ class Users extends BaseController
 
     public function create()
     {
+        if (Gate::denies('create', User::class)) {
+            throw new AuthorizationException();
+        }
+
         // Get all available User Roles.
         $roles = Role::all();
 
@@ -109,6 +114,10 @@ class Users extends BaseController
 
     public function store()
     {
+        if (Gate::denies('create', User::class)) {
+            throw new AuthorizationException();
+        }
+
         // Validate the Input data.
         $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email');
 
@@ -152,6 +161,10 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
+        if (Gate::denies('view', $user)) {
+            throw new AuthorizationException();
+        }
+
         return $this->getView()
             ->shares('title', __d('users', 'Show User'))
             ->with('user', $user);
@@ -167,6 +180,10 @@ class Users extends BaseController
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
+        }
+
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
         }
 
         // Get all available User Roles.
@@ -188,6 +205,10 @@ class Users extends BaseController
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
+        }
+
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
         }
 
         // Validate the Input data.
@@ -246,6 +267,10 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
+        if (Gate::denies('delete', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Destroy the requested User record.
         $user->delete();
 
@@ -257,6 +282,10 @@ class Users extends BaseController
 
     public function search()
     {
+        if (Gate::denies('search', User::class)) {
+            throw new AuthorizationException();
+        }
+
         // Validation rules
         $rules = array(
             'query' => 'required|min:4|valid_query'

@@ -2,6 +2,8 @@
 
 use App\Models\Option;
 
+use Nova\Auth\Access\AuthorizationException;
+
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
@@ -35,6 +37,23 @@ App::error(function (HttpException $e, $code)
         ->nest('content', 'Errors/' .$code, array('exception' => $e));
 
     return Response::make($view->render(), $code, $e->getHeaders());
+});
+
+App::error(function (AuthorizationException $e, $code)
+{
+    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
+        // On an AJAX Request; we return a response: Error 403 (Access denied)
+        return Response::make(array('error' => $e->getMessage()), 403);
+    }
+
+    // Get the Guard's dashboard path from configuration.
+    $guard = Config::get('auth.defaults.guard', 'web');
+
+    $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+
+    $status = __('You are not authorized to access this resource.');
+
+    return Redirect::to($uri)->withStatus($status, 'warning');
 });
 
 //--------------------------------------------------------------------------

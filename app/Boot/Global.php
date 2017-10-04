@@ -24,11 +24,9 @@ App::error(function (HttpException $e, $code)
 {
     $code = $e->getStatusCode();
 
-    $headers = $e->getHeaders();
-
     if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
         // An AJAX request; we'll create and return a JSON Response.
-        return Response::json(array('error' => $e->getMessage()), $code, $headers);
+        return Response::json(array('error' => $e->getMessage()), $code, $e->getHeaders());
     }
 
     // We'll create and return a themed Error Page as response.
@@ -36,7 +34,7 @@ App::error(function (HttpException $e, $code)
         ->shares('title', 'Error ' .$code)
         ->nest('content', 'Errors/' .$code, array('exception' => $e));
 
-    return Response::make($view->render(), $code, $headers);
+    return Response::make($view->render(), $code, $e->getHeaders());
 });
 
 //--------------------------------------------------------------------------

@@ -6,8 +6,9 @@
     <title>{{ $title or __d('bootstrap', 'Page') }} - {{ Config::get('app.name') }}</title>
 
     @assets('css', array(
+        vendor_url('dist/css/bootstrap.min.css', 'twbs/bootstrap'),
+        vendor_url('dist/css/bootstrap-theme.min.css', 'twbs/bootstrap'),
         theme_url('css/bootstrap-rtl.min.css', 'Bootstrap'),
-        theme_url('css/bootstrap-rtl-theme.min.css', 'Bootstrap'),
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
         theme_url('css/bootstrap-xl-mod.min.css', 'Bootstrap'),
         theme_url('css/style-rtl.css', 'Bootstrap'),

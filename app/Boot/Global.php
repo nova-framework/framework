@@ -15,30 +15,26 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
 // Application Error Handler
 //--------------------------------------------------------------------------
 
-App::error(function (Exception $exception, $code)
+App::error(function (Exception $e, $code)
 {
-    Log::error($exception);
+    Log::error($e);
 });
 
-App::error(function (HttpException $exception, $code)
+App::error(function (HttpException $e, $code)
 {
-    $code = $exception->getStatusCode();
+    $code = $e->getStatusCode();
 
-    $headers = $exception->getHeaders();
-
-    if (Request::ajax() || Request::wantsJson()) {
-        // An AJAX request; we'll create a JSON Response.
-        $content = array('status' => $code);
-
-        return Response::json($content, $code, $headers);
+    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
+        // An AJAX request; we'll create and return a JSON Response.
+        return Response::json(array('error' => $e->getMessage()), $code, $e->getHeaders());
     }
 
-    // We'll create the templated Error Page Response.
-    $content = View::makeLayout('Default', 'Bootstrap')
+    // We'll create and return a themed Error Page as response.
+    $view = View::makeLayout('Default', 'Bootstrap')
         ->shares('title', 'Error ' .$code)
-        ->nest('content', 'Errors/' .$code);
+        ->nest('content', 'Errors/' .$code, array('exception' => $e));
 
-    return Response::make($content, $code, $headers);
+    return Response::make($view->render(), $code, $e->getHeaders());
 });
 
 //--------------------------------------------------------------------------

@@ -37,7 +37,7 @@ App::after(function($request, $response)
  */
 
 // The CSRF Filter.
-Route::filter('csrf', function($route, $request)
+Route::filter('csrf', function ($route, $request)
 {
     // Retrieve the CSRF token from Request instance.
     $token = $request->ajax() ? $request->header('X-CSRF-Token') : $request->input('csrfToken');

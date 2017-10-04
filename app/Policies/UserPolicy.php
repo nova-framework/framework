@@ -13,17 +13,6 @@ class UserPolicy
 
 
     /**
-     * Determine whether the user can view the users.
-     *
-     * @param  \App\Models\User  $authUser
-     * @return mixed
-     */
-    public function index(User $authUser)
-    {
-        return true;
-    }
-
-    /**
      * Determine whether the user can view the user.
      *
      * @param  \App\Models\User  $authUser

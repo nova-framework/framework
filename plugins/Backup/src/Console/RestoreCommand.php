@@ -20,7 +20,7 @@ class RestoreCommand extends BaseCommand
     protected $database;
 
 
-    public function fire()
+    public function handle()
     {
         $this->database = $this->getDatabase($this->input->getOption('database'));
 

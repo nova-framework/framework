@@ -27,6 +27,17 @@ class Handler extends ExceptionHandler
         'Symfony\Component\HttpKernel\Exception\HttpException',
     );
 
+    /**
+     * A list of the inputs that are never flashed for validation exceptions.
+     *
+     * @var array
+     */
+    protected $dontFlash = array(
+        'password',
+        'password_confirmation',
+        '_token',
+    );
+
 
     /**
      * Report or log an exception.
@@ -50,7 +61,7 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof TokenMismatchException) {
             return Redirect::back()
-                ->withInput($request->except('password', '_token'))
+                ->withInput($request->except($this->dontFlash))
                 ->with('danger', __('Validation Token has expired. Please try again!'));
         }
 

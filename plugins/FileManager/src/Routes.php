@@ -13,7 +13,7 @@
 // The Administration Routes.
 $router->group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function ($router)
 {
-    $router->get('files',            'Files@index');
+    $router->get('files', 'Files@index');
 
     $router->match(array('GET', 'POST'), 'files/connector', 'Files@connector');
 

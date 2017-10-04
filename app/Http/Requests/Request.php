@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Requests;
+namespace App\Http\Requests;
 
 use Nova\Foundation\Http\FormRequest;
 

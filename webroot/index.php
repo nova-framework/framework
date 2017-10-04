@@ -28,7 +28,7 @@ require BASEPATH .'vendor' .DS .'autoload.php';
 // Bootstrap the Framework and get the Application instance
 //--------------------------------------------------------------------------
 
-$app = require_once APPPATH .'Foundation' .DS .'Bootstrap' .DS .'App.php';
+$app = require_once APPPATH .'Foundation' .DS .'App.php';
 
 //--------------------------------------------------------------------------
 // Run the Application

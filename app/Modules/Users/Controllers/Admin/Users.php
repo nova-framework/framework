@@ -282,7 +282,7 @@ class Users extends BaseController
 
     public function search()
     {
-        if (Gate::denies('search', User::class)) {
+        if (Gate::denies('index', User::class)) {
             throw new AuthorizationException();
         }
 

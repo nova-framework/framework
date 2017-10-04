@@ -73,15 +73,4 @@ class UserPolicy
     {
         return $authUser->hasRole('administrator');
     }
-
-    /**
-     * Determine whether the user can search the users.
-     *
-     * @param  \App\Models\User  $authUser
-     * @return mixed
-     */
-    public function search(User $authUser)
-    {
-        return true;
-    }
 }

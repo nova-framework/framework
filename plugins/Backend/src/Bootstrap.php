@@ -8,7 +8,7 @@ use Backend\Controllers\BaseController as BackendController;
 /**
  * Role-based Authorization Middleware.
  */
-Route::middleware('role', function(Request $request, Closure $next, $role)
+Route::middleware('role', function (Request $request, Closure $next, $role)
 {
     $roles = array_slice(func_get_args(), 2);
 
@@ -37,7 +37,7 @@ Route::middleware('role', function(Request $request, Closure $next, $role)
 /**
  * Listener Closure to the Event 'backend.menu.sidebar'.
  */
-Event::listen('backend.menu.sidebar', function($menu, $user)
+Event::listen('backend.menu.sidebar', function ($menu, $user)
 {
     $menu->addItem('dashboard', __d('backend', 'Dashboard'), site_url('admin/dashboard'), 0, 'dashboard');
 

@@ -12,7 +12,7 @@
 /**
  * Listener Closure to the Event 'backend.menu.sidebar'.
  */
-Event::listen('backend.menu.sidebar', function($menu, $user)
+Event::listen('backend.menu.sidebar', function ($menu, $user)
 {
     if (! $user->hasRole('administrator')) {
         return;

@@ -6,6 +6,8 @@
  * @version 3.0
  */
 
+use App\Models\User;
+
 
 /** Define Events. */
 
@@ -13,7 +15,7 @@ Event::listen('backend.menu', function ($user)
 {
     $items = array();
 
-    if ($user->can('list', 'App\Models\User')) {
+    if ($user->can('list', User::class)) {
         $items[] = array(
             'uri'    => 'admin/users',
             'title'  => __d('users', 'Users'),

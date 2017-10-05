@@ -77,8 +77,8 @@ class RolePolicy
      * @param  \App\Models\User  $authUser
      * @return bool
      */
-    protected function authorize(User $user)
+    protected function authorize(User $authUser)
     {
-        return $user->hasRole('administrator');
+        return $authUser->hasRole('administrator');
     }
 }

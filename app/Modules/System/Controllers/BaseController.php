@@ -41,10 +41,16 @@ abstract class BaseController extends Controller
         parent::initialize();
 
         // Setup the main Menu.
-        View::share('menuItems', $this->getMenuItems());
+        View::share('menuItems', $this->getMenuItems('backend.menu'));
     }
 
-    protected function getMenuItems($event = 'backend.menu')
+    /**
+     * Get the menu items for the specified Event.
+     *
+     * @param string $event
+     * @return array
+     */
+    protected function getMenuItems($event)
     {
         if (is_null($user = Auth::user())) {
             // The User is not authenticated.

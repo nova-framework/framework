@@ -163,7 +163,7 @@ class Demos extends BaseController
 
         Mailer::pretend(true);
 
-        Mailer::send('Emails/Default', $data, function($message)
+        Mailer::send('Emails/Default', $data, function ($message)
         {
             $message->from('admin@novaframework', 'Administrator')
                 ->to('john@novaframework', 'John Smith')
@@ -172,6 +172,30 @@ class Demos extends BaseController
 
         // Prepare and return the View instance.
         $content = __d('demos', 'Message sent while pretending. Please, look on <code>{0}</code>', 'app/Storage/Logs/messages.log');
+
+        return View::make('Default')
+            ->shares('title', __d('demos', 'Mailing API'))
+            ->with('content', $content);
+    }
+
+    public function mailerSpool()
+    {
+        $data = array(
+            'title'   => __d('demos', 'Welcome to {0}!', SITETITLE),
+            'content' => __d('demos', 'This is a test!!!'),
+        );
+
+        Mailer::queue('Emails/Default', $data, function ($message)
+        {
+            $from = Config::get('mail.from');
+
+            $message->from('admin@novaframework', 'Administrator')
+                ->to($from['address'], $from['name'])
+                ->subject('Welcome!');
+        });
+
+        // Prepare and return the View instance.
+        $content = __d('demos', 'A message was enqueued in the Mailer Spool.');
 
         return View::make('Default')
             ->shares('title', __d('demos', 'Mailing API'))

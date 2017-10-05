@@ -57,7 +57,7 @@ abstract class BaseController extends Controller
     protected function getMenuItems($event, $user)
     {
         if (is_null($user)) {
-            return array();  // The User is not authenticated.
+            return array(); // The User is not authenticated.
         }
 
         // Fire the specified Event.

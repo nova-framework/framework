@@ -39,15 +39,18 @@
     <td style='text-align: right; vertical-align: middle;' width='15%'>";
 
         if (Gate::allows('delete', $user)) {
-            echo "<a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#confirm_" .$user->id ."' title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>";
+            echo "
+            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#confirm_" .$user->id ."' title='" .__d('users', 'Delete this User') ."' role='button'><i class='fa fa-remove'></i></a>";
         }
 
         if (Gate::allows('update', $user)) {
-            echo "<a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>";
+            echo "
+            <a class='btn btn-sm btn-success' href='" .site_url('admin/users/' .$user->id .'/edit') ."' title='" .__d('users', 'Edit this User') ."' role='button'><i class='fa fa-pencil'></i></a>";
         }
 
         if (Gate::allows('view', $user)) {
-            echo "<a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>";
+            echo "
+            <a class='btn btn-sm btn-warning' href='" .site_url('admin/users/' .$user->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>";
         }
 
         echo "

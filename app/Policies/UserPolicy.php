@@ -13,6 +13,17 @@ class UserPolicy
 
 
     /**
+     * Determine whether the user can view the users list.
+     *
+     * @param  \App\Models\User  $authUser
+     * @return mixed
+     */
+    public function list(User $authUser)
+    {
+        return true;
+    }
+
+    /**
      * Determine whether the user can view the user.
      *
      * @param  \App\Models\User  $authUser

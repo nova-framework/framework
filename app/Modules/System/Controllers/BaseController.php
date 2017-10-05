@@ -44,11 +44,9 @@ abstract class BaseController extends Controller
         View::share('menuItems', $this->getMenuItems());
     }
 
-    protected function getMenuItems()
+    protected function getMenuItems($event = 'backend.menu')
     {
-        $user = Auth::user();
-
-        if (is_null($user)) {
+        if (is_null($user = Auth::user())) {
             // The User is not authenticated.
             return array();
         }
@@ -57,7 +55,7 @@ abstract class BaseController extends Controller
         $payload = array($user);
 
         // Fire the Event 'backend.menu' and store the results.
-        $results = Event::fire('backend.menu', $payload);
+        $results = Event::fire($event, array($user));
 
         // Merge all results on a menu items array.
         $items = array();

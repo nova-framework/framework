@@ -8,12 +8,13 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use Nova\Support\Facades\Auth;
+use Nova\Auth\Access\AuthorizationException;
+use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 
 use App\Modules\System\Controllers\BaseController;
@@ -25,11 +26,6 @@ use Carbon\Carbon;
 
 class Users extends BaseController
 {
-
-    public function __construct()
-    {
-        $this->beforeFilter('role:administrator');
-    }
 
     protected function validator(array $data, $id = null)
     {
@@ -89,6 +85,11 @@ class Users extends BaseController
 
     public function index()
     {
+        // Authorize the current User.
+        if (Gate::denies('lists', User::class)) {
+            throw new AuthorizationException();
+        }
+
         // Get all User records for current page.
         $users = User::where('activated', 1)->paginate(25);
 
@@ -99,6 +100,11 @@ class Users extends BaseController
 
     public function create()
     {
+        // Authorize the current User.
+        if (Gate::denies('create', User::class)) {
+            throw new AuthorizationException();
+        }
+
         // Get all available User Roles.
         $roles = Role::all();
 
@@ -109,47 +115,58 @@ class Users extends BaseController
 
     public function store()
     {
-        // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email');
+        $input = Input::only(
+            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+        );
 
-        $validator = $this->validator($input);
-
-        if($validator->passes()) {
-            // Encrypt the given Password.
-            $password = Hash::make($input['password']);
-
-            // Create a User Model instance.
-            User::create(array(
-                'username'  => $input['username'],
-                'password'  => $password,
-                'role_id'   => $input['role'],
-                'realname'  => $input['realname'],
-                'email'     => $input['email'],
-                'activated' => 1,
-            ));
-
-            // Prepare the flash message.
-            $status = __d('users', 'The User <b>{0}</b> was successfully created.', $input['username']);
-
-            return Redirect::to('admin/users')->withStatus($status);
+        // Authorize the current User.
+        if (Gate::denies('create', User::class)) {
+            throw new AuthorizationException();
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // Validate the Input data.
+        $validator = $this->validator($input);
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+        }
+
+        // Encrypt the given Password.
+        $password = Hash::make($input['password']);
+
+        // Create a User Model instance.
+        $user = User::create(array(
+            'username'  => $input['username'],
+            'password'  => $password,
+            'role_id'   => $input['role'],
+            'realname'  => $input['realname'],
+            'email'     => $input['email'],
+            'image'     => Input::file('image'),
+            'activated' => 1,
+        ));
+
+        // Prepare the flash message.
+        $status = __d('users', 'The User <b>{0}</b> was successfully created.', $user->username);
+
+        return Redirect::to('admin/users')->withStatus($status);
     }
 
     public function show($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no User with this ID.
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('view', $user)) {
+            throw new AuthorizationException();
         }
 
         return $this->getView()
@@ -160,13 +177,19 @@ class Users extends BaseController
     public function edit($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no User with this ID.
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
         }
 
         // Get all available User Roles.
@@ -180,70 +203,82 @@ class Users extends BaseController
 
     public function update($id)
     {
-        // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
-            // There is no User with this ID.
-            $status = __d('users', 'User not found: #{0}', $id);
-
-            return Redirect::to('admin/users')->withStatus($status, 'danger');
-        }
-
-        // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image');
+        $input = Input::only(
+            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+        );
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
             unset($input['password']);
             unset($input['password_confirmation']);
         }
 
-        $validator = $this->validator($input, $id);
+        // Get the User Model instance.
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
+            // There is no User with this ID.
+            $status = __d('users', 'User not found: #{0}', $id);
 
-        if($validator->passes()) {
-            $origName = $user->username;
-
-            // Update the User Model instance.
-            $user->username = $input['username'];
-            $user->role_id  = $input['role'];
-            $user->realname = $input['realname'];
-            $user->email    = $input['email'];
-
-            // If a file has been uploaded.
-            if (Input::hasFile('image')) {
-                $user->image = Input::file('image');
-            }
-
-            if(isset($input['password'])) {
-                // Encrypt and add the given Password.
-                $user->password = Hash::make($input['password']);
-            }
-
-            // Save the User information.
-            $user->save();
-
-            // Prepare the flash message.
-            $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $origName);
-
-            return Redirect::to('admin/users')->withStatus($status);
+            return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // Authorize the current User.
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
+        }
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        // Validate the Input data.
+        $validator = $this->validator($input, $id);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+        }
+
+        // Update the User Model instance.
+        $username = $user->username;
+
+        //
+        $user->username = $input['username'];
+        $user->role_id  = $input['role'];
+        $user->realname = $input['realname'];
+        $user->email    = $input['email'];
+
+        // If a file has been uploaded.
+        if (Input::hasFile('image')) {
+            $user->image = Input::file('image');
+        }
+
+        if(isset($input['password'])) {
+            // Encrypt and add the given Password.
+            $user->password = Hash::make($input['password']);
+        }
+
+        // Save the User information.
+        $user->save();
+
+        // Prepare the flash message.
+        $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $username);
+
+        return Redirect::to('admin/users')->withStatus($status);
     }
 
     public function destroy($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no User with this ID.
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('delete', $user)) {
+            throw new AuthorizationException();
         }
 
         // Destroy the requested User record.
@@ -257,6 +292,11 @@ class Users extends BaseController
 
     public function search()
     {
+        // Authorize the current User.
+        if (Gate::denies('lists', User::class)) {
+            throw new AuthorizationException();
+        }
+
         // Validation rules
         $rules = array(
             'query' => 'required|min:4|valid_query'
@@ -282,10 +322,7 @@ class Users extends BaseController
         $validator = Validator::make($input, $rules, $messages, $attributes);
 
         if($validator->fails()) {
-            // Prepare the flash message.
-            $status = $validator->errors();
-
-            return Redirect::back()->withStatus($status, 'danger');
+            return Redirect::back()->withStatus($validator->errors(), 'danger');
         }
 
         // Search the Records on Database.

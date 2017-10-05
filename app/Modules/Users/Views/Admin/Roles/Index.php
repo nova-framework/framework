@@ -11,6 +11,8 @@
 
 <?= Session::getMessages(); ?>
 
+<?php if (Gate::allows('create', 'App\Models\Role')) { ?>
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Create a new Role'); ?></h3>
@@ -19,6 +21,8 @@
         <a class='btn btn-success' href='<?= site_url('admin/roles/create'); ?>'><?= __d('users', 'Create a new Role'); ?></a>
     </div>
 </div>
+
+<?php } ?>
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -48,10 +52,24 @@
     <td style='text-align: left; vertical-align: middle;' width='40%'>" .$role->description ."</td>
     <td style='text-align: center; vertical-align: middle;' width='6%'>" .$role->users->count() ."</td>
     <td style='text-align: right; vertical-align: middle;' width='15%'>
-        <div class='btn-group' role='group' aria-label='...'>
-            <a class='btn btn-sm btn-warning' href='" .site_url('admin/roles/' .$role->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>
-            <a class='btn btn-sm btn-success' href='" .site_url('admin/roles/' .$role->id .'/edit') ."' title='" .__d('users', 'Edit this Role') ."' role='button'><i class='fa fa-pencil'></i></a>
-            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#confirm_" .$role->id ."' title='" .__d('users', 'Delete this Role') ."' role='button'><i class='fa fa-remove'></i></a>
+        <div class='btn-group' role='group' aria-label='...'>";
+
+        if (Gate::allows('delete', $role)) {
+            echo "
+            <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#confirm_" .$role->id ."' title='" .__d('users', 'Delete this Role') ."' role='button'><i class='fa fa-remove'></i></a>";
+        }
+
+        if (Gate::allows('update', $role)) {
+            echo "
+            <a class='btn btn-sm btn-success' href='" .site_url('admin/roles/' .$role->id .'/edit') ."' title='" .__d('users', 'Edit this Role') ."' role='button'><i class='fa fa-pencil'></i></a>";
+        }
+
+        if (Gate::allows('view', $role)) {
+            echo "
+            <a class='btn btn-sm btn-warning' href='" .site_url('admin/roles/' .$role->id). "' title='". __d('users', 'Show the Details') ."' role='button'><i class='fa fa-search'></i></a>";
+        }
+
+        echo "
         </div>
     </td>
 </tr>";
@@ -71,8 +89,8 @@
 </section>
 
 <?php
-if (! $roles->isEmpty()) {
-    foreach ($roles->getItems() as $role) {
+foreach ($roles->getItems() as $role) {
+    if (Gate::allows('delete', $role)) {
 ?>
 <div class="modal modal-default" id="confirm_<?= $role->id ?>">
     <div class="modal-dialog">

@@ -157,6 +157,7 @@ return array(
         'Event'         => 'Nova\Support\Facades\Event',
         'File'          => 'Nova\Support\Facades\File',
         'Forge'         => 'Nova\Support\Facades\Forge',
+        'Gate'          => 'Nova\Support\Facades\Gate',
         'Hash'          => 'Nova\Support\Facades\Hash',
         'Input'         => 'Nova\Support\Facades\Input',
         'Language'      => 'Nova\Support\Facades\Language',

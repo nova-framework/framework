@@ -8,11 +8,11 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use Nova\Support\Facades\Auth;
-use Nova\Support\Facades\Hash;
+use Nova\Auth\Access\AuthorizationException;
+use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 
 use App\Modules\System\Controllers\BaseController;
@@ -24,18 +24,9 @@ use Carbon\Carbon;
 class Roles extends BaseController
 {
 
-    public function __construct()
-    {
-        $this->beforeFilter('role:administrator');
-    }
-
     protected function validator(array $data, $id = null)
     {
-        if (! is_null($id)) {
-            $ignore = ',' .intval($id);
-        } else {
-            $ignore =  '';
-        }
+        $ignore = ! is_null($id) ? ',' .intval($id) : '';
 
         // The Validation rules.
         $rules = array(
@@ -67,6 +58,11 @@ class Roles extends BaseController
 
     public function index()
     {
+        // Authorize the current User.
+        if (Gate::denies('lists', Role::class)) {
+            throw new AuthorizationException();
+        }
+
         // Get all Role records for current page.
         $roles = Role::with('users')->paginate(25);
 
@@ -77,43 +73,56 @@ class Roles extends BaseController
 
     public function create()
     {
+        // Authorize the current User.
+        if (Gate::denies('create', Role::class)) {
+            throw new AuthorizationException();
+        }
+
         return $this->getView()
             ->shares('title', __d('users', 'Create Role'));
     }
 
     public function store()
     {
-        // Validate the Input data.
         $input = Input::only('name', 'slug', 'description');
 
-        $validator = $this->validator($input);
-
-        if($validator->passes()) {
-            // Create a Role Model instance.
-            Role::create($input);
-
-            // Prepare the flash message.
-            $status = __d('users', 'The Role <b>{0}</b> was successfully created.', $input['name']);
-
-            return Redirect::to('admin/roles')->withStatus($status);
+        // Authorize the current User.
+        if (Gate::denies('create', Role::class)) {
+            throw new AuthorizationException();
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // Validate the Input data.
+        $validator = $this->validator($input);
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        if($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+        }
+
+        // Create a Role Model instance.
+        Role::create($input);
+
+        // Prepare the flash message.
+        $status = __d('users', 'The Role <b>{0}</b> was successfully created.', $input['name']);
+
+        return Redirect::to('admin/roles')->withStatus($status);
     }
 
     public function show($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('view', $role)) {
+            throw new AuthorizationException();
         }
 
         return $this->getView()
@@ -124,13 +133,19 @@ class Roles extends BaseController
     public function edit($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __('Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('update', $role)) {
+            throw new AuthorizationException();
         }
 
         return $this->getView()
@@ -140,54 +155,64 @@ class Roles extends BaseController
 
     public function update($id)
     {
-        // Get the Role Model instance.
-        $role = Role::find($id);
+        $input = Input::only('name', 'slug', 'description');
 
-        if($role === null) {
+        // Get the Role Model instance.
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
 
-        // Validate the Input data.
-        $input = Input::only('name', 'slug', 'description');
-
-        $validator = $this->validator($input, $id);
-
-        if($validator->passes()) {
-            $origName = $role->name;
-
-            // Update the Role Model instance.
-            $role->name        = $input['name'];
-            $role->slug        = $input['slug'];
-            $role->description = $input['description'];
-
-            // Save the Role information.
-            $role->save();
-
-            // Prepare the flash message.
-            $status = __d('users', 'The Role <b>{0}</b> was successfully updated.', $origName);
-
-            return Redirect::to('admin/roles')->withStatus($status);
+        // Authorize the current User.
+        if (Gate::denies('update', $role)) {
+            throw new AuthorizationException();
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // Validate the Input data.
+        $validator = $this->validator($input, $id);
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        if($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
+        }
+
+        // Update the Role Model instance.
+        $name = $role->name;
+
+        //
+        $role->name        = $input['name'];
+        $role->slug        = $input['slug'];
+        $role->description = $input['description'];
+
+        // Save the Role information.
+        $role->save();
+
+        // Prepare the flash message.
+        $status = __d('users', 'The Role <b>{0}</b> was successfully updated.', $name);
+
+        return Redirect::to('admin/roles')->withStatus($status);
     }
 
     public function destroy($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('delete', $role)) {
+            throw new AuthorizationException();
         }
 
         // Destroy the requested Role record.

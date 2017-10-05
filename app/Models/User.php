@@ -44,7 +44,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         return $this->hasOne('App\Models\Role', 'id', 'role_id');
     }
 
-    public function hasRole($roles)
+    public function hasRole($roles, $strict = false)
     {
         if (! array_key_exists('role', $this->relations)) {
             $this->load('role');
@@ -53,7 +53,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         $slug = strtolower($this->role->slug);
 
         // Check if the User is a Root account.
-        if ($slug == 'root') {
+        if (($slug == 'root') && ! $strict) {
             return true;
         }
 

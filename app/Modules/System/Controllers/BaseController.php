@@ -51,9 +51,6 @@ abstract class BaseController extends Controller
             return array();
         }
 
-        // Prepare the Event payload.
-        $payload = array($user);
-
         // Fire the Event 'backend.menu' and store the results.
         $results = Event::fire($event, array($user));
 

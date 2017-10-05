@@ -58,6 +58,7 @@ class Roles extends BaseController
 
     public function index()
     {
+        // Authorize the current User.
         if (Gate::denies('lists', Role::class)) {
             throw new AuthorizationException();
         }
@@ -72,6 +73,7 @@ class Roles extends BaseController
 
     public function create()
     {
+        // Authorize the current User.
         if (Gate::denies('create', Role::class)) {
             throw new AuthorizationException();
         }
@@ -82,29 +84,27 @@ class Roles extends BaseController
 
     public function store()
     {
+        $input = Input::only('name', 'slug', 'description');
+
+        // Authorize the current User.
         if (Gate::denies('create', Role::class)) {
             throw new AuthorizationException();
         }
 
         // Validate the Input data.
-        $input = Input::only('name', 'slug', 'description');
-
         $validator = $this->validator($input);
 
-        if($validator->passes()) {
-            // Create a Role Model instance.
-            Role::create($input);
-
-            // Prepare the flash message.
-            $status = __d('users', 'The Role <b>{0}</b> was successfully created.', $input['name']);
-
-            return Redirect::to('admin/roles')->withStatus($status);
+        if($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // Create a Role Model instance.
+        Role::create($input);
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        // Prepare the flash message.
+        $status = __d('users', 'The Role <b>{0}</b> was successfully created.', $input['name']);
+
+        return Redirect::to('admin/roles')->withStatus($status);
     }
 
     public function show($id)
@@ -120,6 +120,7 @@ class Roles extends BaseController
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('view', $role)) {
             throw new AuthorizationException();
         }
@@ -142,6 +143,7 @@ class Roles extends BaseController
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('update', $role)) {
             throw new AuthorizationException();
         }
@@ -153,6 +155,8 @@ class Roles extends BaseController
 
     public function update($id)
     {
+        $input = Input::only('name', 'slug', 'description');
+
         // Get the Role Model instance.
         try {
             $role = Role::findOrFail($id);
@@ -164,36 +168,33 @@ class Roles extends BaseController
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('update', $role)) {
             throw new AuthorizationException();
         }
 
         // Validate the Input data.
-        $input = Input::only('name', 'slug', 'description');
-
         $validator = $this->validator($input, $id);
 
-        if($validator->passes()) {
-            $origName = $role->name;
-
-            // Update the Role Model instance.
-            $role->name        = $input['name'];
-            $role->slug        = $input['slug'];
-            $role->description = $input['description'];
-
-            // Save the Role information.
-            $role->save();
-
-            // Prepare the flash message.
-            $status = __d('users', 'The Role <b>{0}</b> was successfully updated.', $origName);
-
-            return Redirect::to('admin/roles')->withStatus($status);
+        if($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // Update the Role Model instance.
+        $name = $role->name;
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        //
+        $role->name        = $input['name'];
+        $role->slug        = $input['slug'];
+        $role->description = $input['description'];
+
+        // Save the Role information.
+        $role->save();
+
+        // Prepare the flash message.
+        $status = __d('users', 'The Role <b>{0}</b> was successfully updated.', $name);
+
+        return Redirect::to('admin/roles')->withStatus($status);
     }
 
     public function destroy($id)
@@ -209,6 +210,7 @@ class Roles extends BaseController
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('delete', $role)) {
             throw new AuthorizationException();
         }

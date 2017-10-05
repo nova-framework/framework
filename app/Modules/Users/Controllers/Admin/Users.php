@@ -85,6 +85,7 @@ class Users extends BaseController
 
     public function index()
     {
+        // Authorize the current User.
         if (Gate::denies('lists', User::class)) {
             throw new AuthorizationException();
         }
@@ -99,6 +100,7 @@ class Users extends BaseController
 
     public function create()
     {
+        // Authorize the current User.
         if (Gate::denies('create', User::class)) {
             throw new AuthorizationException();
         }
@@ -113,39 +115,42 @@ class Users extends BaseController
 
     public function store()
     {
+        $input = Input::only(
+            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+        );
+
+        // Authorize the current User.
         if (Gate::denies('create', User::class)) {
             throw new AuthorizationException();
         }
 
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email');
-
         $validator = $this->validator($input);
 
-        if($validator->passes()) {
-            // Encrypt the given Password.
-            $password = Hash::make($input['password']);
-
-            // Create a User Model instance.
-            User::create(array(
-                'username'  => $input['username'],
-                'password'  => $password,
-                'role_id'   => $input['role'],
-                'realname'  => $input['realname'],
-                'email'     => $input['email'],
-                'activated' => 1,
-            ));
-
-            // Prepare the flash message.
-            $status = __d('users', 'The User <b>{0}</b> was successfully created.', $input['username']);
-
-            return Redirect::to('admin/users')->withStatus($status);
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        $image = Input::hasFile('image') ? Input::file('image') : null;
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        // Encrypt the given Password.
+        $password = Hash::make($input['password']);
+
+        // Create a User Model instance.
+        $user = User::create(array(
+            'username'  => $input['username'],
+            'password'  => $password,
+            'role_id'   => $input['role'],
+            'realname'  => $input['realname'],
+            'email'     => $input['email'],
+            'image'     => $image,
+            'activated' => 1,
+        ));
+
+        // Prepare the flash message.
+        $status = __d('users', 'The User <b>{0}</b> was successfully created.', $user->username);
+
+        return Redirect::to('admin/users')->withStatus($status);
     }
 
     public function show($id)
@@ -161,6 +166,7 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('view', $user)) {
             throw new AuthorizationException();
         }
@@ -183,6 +189,7 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('update', $user)) {
             throw new AuthorizationException();
         }
@@ -198,6 +205,15 @@ class Users extends BaseController
 
     public function update($id)
     {
+        $input = Input::only(
+            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+        );
+
+        if(empty($input['password']) && empty($input['password_confirm'])) {
+            unset($input['password']);
+            unset($input['password_confirmation']);
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -209,52 +225,44 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('update', $user)) {
             throw new AuthorizationException();
         }
 
         // Validate the Input data.
-        $input = Input::only('username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image');
-
-        if(empty($input['password']) && empty($input['password_confirm'])) {
-            unset($input['password']);
-            unset($input['password_confirmation']);
-        }
-
         $validator = $this->validator($input, $id);
 
-        if($validator->passes()) {
-            $origName = $user->username;
-
-            // Update the User Model instance.
-            $user->username = $input['username'];
-            $user->role_id  = $input['role'];
-            $user->realname = $input['realname'];
-            $user->email    = $input['email'];
-
-            // If a file has been uploaded.
-            if (Input::hasFile('image')) {
-                $user->image = Input::file('image');
-            }
-
-            if(isset($input['password'])) {
-                // Encrypt and add the given Password.
-                $user->password = Hash::make($input['password']);
-            }
-
-            // Save the User information.
-            $user->save();
-
-            // Prepare the flash message.
-            $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $origName);
-
-            return Redirect::to('admin/users')->withStatus($status);
+        if ($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // Update the User Model instance.
+        $username = $user->username;
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        //
+        $user->username = $input['username'];
+        $user->role_id  = $input['role'];
+        $user->realname = $input['realname'];
+        $user->email    = $input['email'];
+
+        // If a file has been uploaded.
+        if (Input::hasFile('image')) {
+            $user->image = Input::file('image');
+        }
+
+        if(isset($input['password'])) {
+            // Encrypt and add the given Password.
+            $user->password = Hash::make($input['password']);
+        }
+
+        // Save the User information.
+        $user->save();
+
+        // Prepare the flash message.
+        $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $username);
+
+        return Redirect::to('admin/users')->withStatus($status);
     }
 
     public function destroy($id)
@@ -270,6 +278,7 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
         if (Gate::denies('delete', $user)) {
             throw new AuthorizationException();
         }
@@ -285,6 +294,7 @@ class Users extends BaseController
 
     public function search()
     {
+        // Authorize the current User.
         if (Gate::denies('lists', User::class)) {
             throw new AuthorizationException();
         }
@@ -314,10 +324,7 @@ class Users extends BaseController
         $validator = Validator::make($input, $rules, $messages, $attributes);
 
         if($validator->fails()) {
-            // Prepare the flash message.
-            $status = $validator->errors();
-
-            return Redirect::back()->withStatus($status, 'danger');
+            return Redirect::back()->withStatus($validator->errors(), 'danger');
         }
 
         // Search the Records on Database.

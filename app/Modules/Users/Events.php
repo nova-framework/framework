@@ -13,7 +13,7 @@ Event::listen('backend.menu', function ($user)
 {
     $items = array();
 
-    if ($user->can('index', 'App\Models\User')) {
+    if ($user->can('list', 'App\Models\User')) {
         $items[] = array(
             'uri'    => 'admin/users',
             'title'  => __d('users', 'Users'),

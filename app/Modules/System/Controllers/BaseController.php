@@ -40,27 +40,31 @@ abstract class BaseController extends Controller
     {
         parent::initialize();
 
+        // Get the current User.
+        $user = Auth::user();
+
         // Setup the main Menu.
-        View::share('menuItems', $this->getMenuItems('backend.menu'));
+        View::share('menuItems', $this->getMenuItems($user, 'backend.menu'));
     }
 
     /**
      * Get the menu items for the specified Event.
      *
-     * @param string $event
+     * @param  mixed  $user
+     * @param  string  $event
      * @return array
      */
-    protected function getMenuItems($event)
+    protected function getMenuItems($user, $event)
     {
-        if (is_null($user = Auth::user())) {
+        if (is_null($user)) {
             // The User is not authenticated.
             return array();
         }
 
-        // Fire the Event 'backend.menu' and store the results.
+        // Fire the specified Event and retrieve its results.
         $results = Event::fire($event, array($user));
 
-        // Merge all results on a menu items array.
+        // Prepare the menu items from the Event results.
         $items = array();
 
         foreach ($results as $result) {

@@ -16,7 +16,7 @@ Event::listen('backend.menu', function ($user)
 {
     $items = array();
 
-    if ($user->can('list', User::class)) {
+    if ($user->can('lists', User::class)) {
         $items[] = array(
             'uri'    => 'admin/users',
             'title'  => __d('users', 'Users'),
@@ -25,7 +25,7 @@ Event::listen('backend.menu', function ($user)
         );
     }
 
-    if ($user->can('list', Role::class)) {
+    if ($user->can('lists', Role::class)) {
         $items[] = array(
             'uri'    => 'admin/roles',
             'title'  => __d('users', 'Roles'),

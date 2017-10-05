@@ -85,7 +85,7 @@ class Users extends BaseController
 
     public function index()
     {
-        if (Gate::denies('list', User::class)) {
+        if (Gate::denies('lists', User::class)) {
             throw new AuthorizationException();
         }
 
@@ -285,7 +285,7 @@ class Users extends BaseController
 
     public function search()
     {
-        if (Gate::denies('list', User::class)) {
+        if (Gate::denies('lists', User::class)) {
             throw new AuthorizationException();
         }
 

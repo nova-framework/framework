@@ -18,7 +18,7 @@ class UserPolicy
      * @param  \App\Models\User  $authUser
      * @return mixed
      */
-    public function list(User $authUser)
+    public function lists(User $authUser)
     {
         return true;
     }

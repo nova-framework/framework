@@ -58,7 +58,7 @@ class Roles extends BaseController
 
     public function index()
     {
-        if (Gate::denies('list', Role::class)) {
+        if (Gate::denies('lists', Role::class)) {
             throw new AuthorizationException();
         }
 

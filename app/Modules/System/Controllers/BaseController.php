@@ -69,7 +69,7 @@ abstract class BaseController extends Controller
         }
 
         // Sort the menu items by their weight and title.
-        usort($items, function($a, $b)
+        usort($items, function ($a, $b)
         {
             if ($a['weight'] === $b['weight']) {
                 return strcmp($a['title'], $b['title']);

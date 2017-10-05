@@ -131,8 +131,6 @@ class Users extends BaseController
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
-        $image = Input::file('image');
-
         // Encrypt the given Password.
         $password = Hash::make($input['password']);
 
@@ -143,7 +141,7 @@ class Users extends BaseController
             'role_id'   => $input['role'],
             'realname'  => $input['realname'],
             'email'     => $input['email'],
-            'image'     => $image,
+            'image'     => Input::file('image'),
             'activated' => 1,
         ));
 

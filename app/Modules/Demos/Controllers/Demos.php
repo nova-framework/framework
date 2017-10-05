@@ -165,7 +165,7 @@ class Demos extends BaseController
 
         Mailer::send('Emails/Default', $data, function ($message)
         {
-            $message->from('admin@novaframework', 'Administrator')
+            $message->from('admin@novaframework.dev', 'Administrator')
                 ->to('john@novaframework', 'John Smith')
                 ->subject('Welcome!');
         });
@@ -189,7 +189,7 @@ class Demos extends BaseController
         {
             $from = Config::get('mail.from');
 
-            $message->from('admin@novaframework', 'Administrator')
+            $message->from('admin@novaframework.dev', 'Administrator')
                 ->to($from['address'], $from['name'])
                 ->subject('Welcome!');
         });

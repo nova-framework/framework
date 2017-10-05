@@ -61,7 +61,7 @@ abstract class BaseController extends Controller
             return array();
         }
 
-        // Fire the specified Event and retrieve its results.
+        // Fire the specified Event.
         $results = Event::fire($event, array($user));
 
         // Prepare the menu items from the Event results.

@@ -8,11 +8,11 @@
 
 namespace App\Modules\Users\Controllers\Admin;
 
-use Nova\Support\Facades\Auth;
-use Nova\Support\Facades\Hash;
+use Nova\Auth\Access\AuthorizationException;
+use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 
 use App\Modules\System\Controllers\BaseController;
@@ -23,11 +23,6 @@ use Carbon\Carbon;
 
 class Roles extends BaseController
 {
-
-    public function __construct()
-    {
-        $this->beforeFilter('role:administrator');
-    }
 
     protected function validator(array $data, $id = null)
     {
@@ -67,6 +62,10 @@ class Roles extends BaseController
 
     public function index()
     {
+        if (Gate::denies('list', Role::class)) {
+            throw new AuthorizationException();
+        }
+
         // Get all Role records for current page.
         $roles = Role::with('users')->paginate(25);
 
@@ -77,12 +76,20 @@ class Roles extends BaseController
 
     public function create()
     {
+        if (Gate::denies('create', Role::class)) {
+            throw new AuthorizationException();
+        }
+
         return $this->getView()
             ->shares('title', __d('users', 'Create Role'));
     }
 
     public function store()
     {
+        if (Gate::denies('create', Role::class)) {
+            throw new AuthorizationException();
+        }
+
         // Validate the Input data.
         $input = Input::only('name', 'slug', 'description');
 
@@ -107,13 +114,18 @@ class Roles extends BaseController
     public function show($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        if (Gate::denies('view', $role)) {
+            throw new AuthorizationException();
         }
 
         return $this->getView()
@@ -124,13 +136,18 @@ class Roles extends BaseController
     public function edit($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __('Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        if (Gate::denies('update', $role)) {
+            throw new AuthorizationException();
         }
 
         return $this->getView()
@@ -141,13 +158,18 @@ class Roles extends BaseController
     public function update($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        if (Gate::denies('update', $role)) {
+            throw new AuthorizationException();
         }
 
         // Validate the Input data.
@@ -181,13 +203,18 @@ class Roles extends BaseController
     public function destroy($id)
     {
         // Get the Role Model instance.
-        $role = Role::find($id);
-
-        if($role === null) {
+        try {
+            $role = Role::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        if (Gate::denies('delete', $role)) {
+            throw new AuthorizationException();
         }
 
         // Destroy the requested Role record.

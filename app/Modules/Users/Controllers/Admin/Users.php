@@ -9,13 +9,12 @@
 namespace App\Modules\Users\Controllers\Admin;
 
 use Nova\Auth\Access\AuthorizationException;
-use Nova\Support\Facades\Auth;
+use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
-use Nova\Support\Facades\Session;
 use Nova\Support\Facades\Validator;
 
 use App\Modules\System\Controllers\BaseController;
@@ -152,9 +151,10 @@ class Users extends BaseController
     public function show($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no User with this ID.
             $status = __d('users', 'User not found: #{0}', $id);
 
@@ -173,9 +173,10 @@ class Users extends BaseController
     public function edit($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no User with this ID.
             $status = __d('users', 'User not found: #{0}', $id);
 
@@ -198,9 +199,10 @@ class Users extends BaseController
     public function update($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no User with this ID.
             $status = __d('users', 'User not found: #{0}', $id);
 
@@ -258,9 +260,10 @@ class Users extends BaseController
     public function destroy($id)
     {
         // Get the User Model instance.
-        $user = User::find($id);
-
-        if($user === null) {
+        try {
+            $user = User::findOrFail($id);
+        }
+        catch (ModelNotFoundException $e) {
             // There is no User with this ID.
             $status = __d('users', 'User not found: #{0}', $id);
 

@@ -6,6 +6,7 @@
  * @version 3.0
  */
 
+use App\Models\Role;
 use App\Models\User;
 
 
@@ -24,7 +25,7 @@ Event::listen('backend.menu', function ($user)
         );
     }
 
-    if ($user->hasRole('administrator')) {
+    if ($user->can('list', Role::class)) {
         $items[] = array(
             'uri'    => 'admin/roles',
             'title'  => __d('users', 'Roles'),

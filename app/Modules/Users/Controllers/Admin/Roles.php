@@ -26,11 +26,7 @@ class Roles extends BaseController
 
     protected function validator(array $data, $id = null)
     {
-        if (! is_null($id)) {
-            $ignore = ',' .intval($id);
-        } else {
-            $ignore =  '';
-        }
+        $ignore = ! is_null($id) ? ',' .intval($id) : '';
 
         // The Validation rules.
         $rules = array(

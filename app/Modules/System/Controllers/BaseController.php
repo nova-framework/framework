@@ -96,7 +96,7 @@ abstract class BaseController extends Controller
                 }
 
                 // Check if the user is allowed to use this menu item.
-                if (! $this->itemIsAllowed($gate, $user, $item)) {
+                if (! $this->itemIsAllowed($item, $gate, $user)) {
                     continue;
                 }
 
@@ -120,7 +120,7 @@ abstract class BaseController extends Controller
      * @param  array  $item
      * @return boolean
      */
-    protected function itemIsAllowed(GateInterface $gate, $user, array $item)
+    protected function itemIsAllowed(array $item, GateInterface $gate, $user)
     {
         if (isset($item['role']) && ($item['role'] !== 'any')) {
             $roles = explode(',', $item['role']);

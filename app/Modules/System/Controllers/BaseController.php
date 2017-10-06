@@ -48,7 +48,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Get the menu items for the specified Event.
+     * Get the menu items for the specified Event and User.
      *
      * @param  string  $event
      * @param  mixed  $user
@@ -72,7 +72,17 @@ abstract class BaseController extends Controller
             }
         }
 
-        // Sort the menu items by their weight and title.
+        return $this->sortMenuItems($items);
+    }
+
+    /**
+     * Sort the menu items by their weight and title.
+     *
+     * @param  array  $items
+     * @return array
+     */
+    protected function sortMenuItems(array $items)
+    {
         usort($items, function ($a, $b)
         {
             if ($a['weight'] === $b['weight']) {

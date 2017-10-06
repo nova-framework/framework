@@ -198,7 +198,7 @@ class Demos extends BaseController
         $content = __d('demos', 'A message was enqueued in the Mailer Spool.');
 
         return View::make('Default')
-            ->shares('title', __d('demos', 'Mailing API'))
+            ->shares('title', __d('demos', 'Mailer Spool'))
             ->with('content', $content);
     }
 

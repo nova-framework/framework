@@ -120,10 +120,8 @@ abstract class BaseController extends Controller
 
             $item['active'] = $active;
 
-            //
-            $children = Arr::get($item, 'children', array());
-
-            $item['children'] = $this->prepareItems($children, $path, $url);
+            // Recursivelly prepare also the item children.
+            $item['children'] = $this->prepareItems($item['children'], $path, $url);
         }
 
         // Sort the menu items by their weight and title.

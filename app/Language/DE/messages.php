@@ -73,5 +73,6 @@ Dieser Inhalt kann in <code>/app/Views/Welcome/Welcome.php</code> geändert werd
   'Troubleshooting' => '',
   'Unauthorized' => '',
   'Welcome' => 'Willkommen',
+  'You are not authorized to access this resource.' => '',
   'Your session expired. Please try again!' => '',
 );

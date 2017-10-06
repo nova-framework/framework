@@ -42,6 +42,7 @@ return array (
   'Password Reset' => 'Сброс пароля',
   'Password confirmation' => 'Подтверждение пароля',
   'Passwords must be strong enough and match the confirmation.' => 'Пароль должен быть достаточно сильным и совпадать с полем подтверждения.',
+  'Platform' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => 'Пожалуйста, введите Ваш адрес электронной почты, на который будет отправлена ссылка для сброса пароля.',
   'Purple' => 'Пурпурный',
   'Purple Light' => 'Светло-фиолетовый',

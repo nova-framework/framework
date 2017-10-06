@@ -72,7 +72,9 @@ return array (
   'Updated At' => '',
   'User Account : <b>{0}</b>' => '',
   'User Role : <b>{0}</b>' => '',
+  'User Roles' => '',
   'User not found: #{0}' => '',
   'Username' => '',
   'Users' => '',
+  'Users List' => '',
 );

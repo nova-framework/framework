@@ -73,5 +73,6 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Troubleshooting' => 'Исправление проблем',
   'Unauthorized' => 'Неразрешенный',
   'Welcome' => 'Добро пожаловать!',
+  'You are not authorized to access this resource.' => '',
   'Your session expired. Please try again!' => 'Ваша сессия устарела. Пожалуйста, повторите снова.',
 );

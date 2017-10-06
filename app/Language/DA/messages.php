@@ -71,5 +71,6 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Troubleshooting' => 'Fejlfinding',
   'Unauthorized' => 'uautoriseret',
   'Welcome' => 'Velkommen',
+  'You are not authorized to access this resource.' => '',
   'Your session expired. Please try again!' => 'Din session er udløbet. Prøv venligst igen!',
 );

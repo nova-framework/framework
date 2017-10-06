@@ -72,7 +72,9 @@ return array (
   'Updated At' => 'Opdateret den',
   'User Account : <b>{0}</b>' => 'Brugerkonto: <b>{0}</b>',
   'User Role : <b>{0}</b>' => 'Rolle: <b>{0}</b>',
+  'User Roles' => '',
   'User not found: #{0}' => 'Brugeren: #{0} blev ikke fundet',
   'Username' => 'Brugernavn',
   'Users' => 'Brugere',
+  'Users List' => '',
 );

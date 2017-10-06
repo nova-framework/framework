@@ -72,7 +72,9 @@ return array (
   'Updated At' => 'بروزشده در',
   'User Account : <b>{0}</b>' => 'حساب کاربری : <b>{0}</b>',
   'User Role : <b>{0}</b>' => 'وظیفه کاربر : <b>{0}</b>',
+  'User Roles' => '',
   'User not found: #{0}' => 'کاربر یافت نشد: #{0}',
   'Username' => 'نام کاربری',
   'Users' => 'کاربران',
+  'Users List' => '',
 );

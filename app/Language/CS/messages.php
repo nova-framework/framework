@@ -73,5 +73,6 @@ Tento obsah lze změnit v <code>/app/Views/Welcome/Welcome.php</code>',
   'Troubleshooting' => '',
   'Unauthorized' => '',
   'Welcome' => 'Vítejte',
+  'You are not authorized to access this resource.' => '',
   'Your session expired. Please try again!' => '',
 );

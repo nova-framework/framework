@@ -103,7 +103,7 @@ abstract class BaseController extends Controller
                     }
                 }
 
-                if (isset($item['can']) && ! $this->itemAllowedByGate($item['can'], $gate)) {
+                if (isset($item['can']) && $this->itemDeniedByGate($gate, $item['can'])) {
                     continue;
                 }
 
@@ -119,13 +119,13 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Determine if the Authorization Gate allows the ability specified by the item.
+     * Determine if the Authorization Gate denies the ability specified by the item.
      *
-     * @param  string  $value
      * @param  \Nova\Auth\Access\GateInterface $gate
+     * @param  string  $value
      * @return boolean
      */
-    protected function itemAllowedByGate($value, GateInterface $gate)
+    protected function itemDeniedByGate(GateInterface $gate, $value)
     {
         list($ability, $parameters) = array_pad(explode(':', $value, 2), 2, array());
 
@@ -133,7 +133,7 @@ abstract class BaseController extends Controller
             $parameters = explode(',', $parameters);
         }
 
-        return call_user_func(array($gate, 'allows'), $ability, $parameters);
+        return call_user_func(array($gate, 'denies'), $ability, $parameters);
     }
 
     /**

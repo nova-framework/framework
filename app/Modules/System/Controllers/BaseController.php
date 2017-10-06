@@ -80,7 +80,7 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Build the menu items array from results.
+     * Build the menu items array and find the current item path.
      *
      * @param  array  $results
      * @param  string $url

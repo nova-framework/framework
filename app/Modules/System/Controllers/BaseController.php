@@ -43,7 +43,6 @@ abstract class BaseController extends Controller
     {
         parent::initialize();
 
-        // Get the items of the Backend Menu.
         if (! is_null($user = Auth::user())) {
             $menuItems = $this->getMenuItems('backend.menu', $user);
         } else {

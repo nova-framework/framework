@@ -49,7 +49,7 @@ class BackendMenu
         $path = '';
 
         // Fire the Event and retrieve the results.
-        $results = Event::fire($name, array($user));
+        $results = Event::fire($name, array($user, $url));
 
         // Process the Event results.
         $items = array();

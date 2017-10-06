@@ -19,13 +19,18 @@ class BackendMenu
      *
      * @param  string  $name
      * @param  mixed  $user
+     * @param  string|null  $url
      * @return array
      */
-    public static function getItems($name, UserInterface $user)
+    public static function getItems($name, UserInterface $user, $url = null)
     {
+        if (is_null($url)) {
+            $url = Request::url();
+        }
+
         $instance = new static();
 
-        return $instance->handle($name, $user);
+        return $instance->handle($name, $user, $url);
     }
 
     /**
@@ -33,14 +38,12 @@ class BackendMenu
      *
      * @param  string  $name
      * @param  mixed  $user
+     * @param  string|null  $url
      * @return array
      */
-    protected function handle($name, UserInterface $user)
+    protected function handle($name, UserInterface $user, $url)
     {
         $gate = Gate::forUser($user);
-
-        // The current URL.
-        $url = Request::url();
 
         // The item path which coresponds with the current URL.
         $path = '';

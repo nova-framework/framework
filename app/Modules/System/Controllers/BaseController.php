@@ -64,8 +64,6 @@ abstract class BaseController extends Controller
      */
     protected function getMenuItems($event, $user)
     {
-        $gate = Gate::forUser($user);
-
         // The current URL.
         $url = Request::url();
 
@@ -75,7 +73,7 @@ abstract class BaseController extends Controller
         // Fire the Event and retrieve the results.
         $results = Event::fire($event, array($user));
 
-        //
+        // Process the Event results.
         $items = array();
 
         foreach ($results as $result) {
@@ -95,17 +93,8 @@ abstract class BaseController extends Controller
                     $item['children'] = array();
                 }
 
-                // Check the availability againsts User Roles.
-                if (isset($item['role']) && ($item['role'] !== 'any')) {
-                    $roles = explode(',', $item['role']);
-
-                    if (! $user->hasRole($roles)) {
-                        continue;
-                    }
-                }
-
-                // Check the availability againsts Gate Abilities.
-                if (! $this->itemIsAllowedByGate($gate, $item)) {
+                // Check if the user is allowed to use this menu item.
+                if (! $this->itemIsAllowed($user, $item)) {
                     continue;
                 }
 
@@ -122,23 +111,33 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Determine if the menu item usage is allowed by the Gate Abilities.
+     * Determine if the menu item usage is allowed by the specified User Roles.
      *
-     * @param  \Nova\Auth\Access\GateInterface  $gate
-     * @param  array $item
+     * @param  mixed  $user
+     * @param  array  $item
      * @return boolean
      */
-    protected function itemIsAllowedByGate(GateInterface $gate, array $item)
+    protected function itemIsAllowed($user, array $item)
     {
+        if (isset($item['role']) && ($item['role'] !== 'any')) {
+            $roles = explode(',', $item['role']);
+
+            if (! $user->hasRole($roles)) {
+                return false;
+            }
+        }
+
         if (! isset($item['can'])) {
             return true;
         }
 
-        $entries = explode('|', $item['can']);
+        $abilities = explode('|', $item['can']);
 
-        foreach ($entries as $entry) {
+        $gate = Gate::forUser($user);
+
+        foreach ($abilities as $ability) {
             // Parse the ability string.
-            list($ability, $parameters) = array_pad(explode(':', $entry, 2), 2, array());
+            list($ability, $parameters) = array_pad(explode(':', $ability, 2), 2, array());
 
             if (is_string($parameters)) {
                 $parameters = explode(',', $parameters);

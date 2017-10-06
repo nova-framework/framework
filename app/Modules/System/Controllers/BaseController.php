@@ -72,7 +72,7 @@ abstract class BaseController extends Controller
             }
         }
 
-        return $this->sortMenuItems($items);
+        return static::sortMenuItems($items);
     }
 
     /**
@@ -81,7 +81,7 @@ abstract class BaseController extends Controller
      * @param  array  $items
      * @return array
      */
-    protected function sortMenuItems(array $items)
+    protected static function sortMenuItems(array $items)
     {
         usort($items, function ($a, $b)
         {

@@ -11,6 +11,7 @@ namespace App\Modules\System\Controllers;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 
 use App\Controllers\BaseController as Controller;
@@ -60,6 +61,8 @@ abstract class BaseController extends Controller
             return array(); // The User is not authenticated.
         }
 
+        $path = Request::path();
+
         // Fire the specified Event.
         $results = Event::fire($event, array($user));
 
@@ -72,17 +75,34 @@ abstract class BaseController extends Controller
             }
         }
 
-        return static::sortMenuItems($items);
+        // Prepare first the item children, if they exists.
+        foreach ($items as &$item) {
+            if (isset($item['children']) && is_array($item['children'])) {
+                $item['children'] = static::prepareItems($item['children'], $path);
+            }
+        }
+
+        return static::prepareItems($items, $path);
     }
 
     /**
-     * Sort the menu items by their weight and title.
+     * Prepare the given menu items.
      *
      * @param  array  $items
+     * @param  string $path
      * @return array
      */
-    protected static function sortMenuItems(array $items)
+    protected static function prepareItems(array $items, $path)
     {
+        foreach ($items as &$item) {
+            if (isset($item['uri']) && ($item['uri'] == $path)) {
+                $item['active'] = true;
+            } else {
+                $item['active'] = false;
+            }
+        }
+
+        // Sort the menu items by their weight and title.
         usort($items, function ($a, $b)
         {
             if ($a['weight'] === $b['weight']) {

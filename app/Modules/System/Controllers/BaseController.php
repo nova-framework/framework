@@ -44,7 +44,7 @@ abstract class BaseController extends Controller
         $url = Request::url();
 
         if (! is_null($user = Auth::user())) {
-            $menuItems = BackendMenu::getItems('backend.menu', $url, $user);
+            $menuItems = BackendMenu::getItems('backend.menu', $user, $url);
         } else {
             $menuItems = array();
         }

@@ -9,6 +9,7 @@
 namespace App\Modules\System\Controllers;
 
 use Nova\Auth\Access\GateInterface;
+use Nova\Auth\UserInterface;
 use Nova\Database\ORM\Builder as ModelBuilder;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Gate;
@@ -62,7 +63,7 @@ abstract class BaseController extends Controller
      * @param  mixed  $user
      * @return array
      */
-    protected function getMenuItems($event, $user)
+    protected function getMenuItems($event, UserInterface $user)
     {
         $gate = Gate::forUser($user);
 
@@ -120,7 +121,7 @@ abstract class BaseController extends Controller
      * @param  \Nova\Auth\Access\GateInterface  $gate
      * @return boolean
      */
-    protected function itemIsAllowed(array $item, $user, GateInterface $gate)
+    protected function itemIsAllowed(array $item, UserInterface $user, GateInterface $gate)
     {
         if (isset($item['role']) && ($item['role'] !== 'any')) {
             $roles = explode(',', $item['role']);

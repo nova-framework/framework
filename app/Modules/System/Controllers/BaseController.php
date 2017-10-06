@@ -111,6 +111,7 @@ abstract class BaseController extends Controller
      */
     protected static function prepareItems(array $items, $url, $path)
     {
+        // Setup the 'active' flag of the menu items.
         foreach ($items as &$item) {
             $active = false;
 

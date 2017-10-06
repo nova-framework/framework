@@ -8,6 +8,7 @@
 
 namespace App\Modules\System\Controllers;
 
+use Nova\Auth\Access\GateInterface;
 use Nova\Database\ORM\Builder as ModelBuilder;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Gate;
@@ -94,7 +95,15 @@ abstract class BaseController extends Controller
                     $item['children'] = array();
                 }
 
-                if (! $this->itemIsAllowed($item, $gate, $user)) {
+                if (isset($item['role']) && ($item['role'] !== 'any')) {
+                    $roles = explode(',', $item['role']);
+
+                    if (! $user->hasRole($roles)) {
+                        continue;
+                    }
+                }
+
+                if (isset($item['can']) && ! $this->itemAllowedByGate($item['can'], $gate)) {
                     continue;
                 }
 
@@ -109,22 +118,16 @@ abstract class BaseController extends Controller
         return $this->prepareItems($items, $path, $url);
     }
 
-    protected function itemIsAllowed(array $item, $gate, $user)
+    /**
+     * Determine if the Authorization Gate allows the ability specified by the item.
+     *
+     * @param  string  $value
+     * @param  \Nova\Auth\Access\GateInterface $gate
+     * @return boolean
+     */
+    protected function itemAllowedByGate($value, GateInterface $gate)
     {
-        if (isset($item['role']) && ($item['role'] !== 'any')) {
-            $roles = explode(',', $item['role']);
-
-            if (! $user->hasRole($roles)) {
-                return false;
-            }
-        }
-
-        // Not ability specified?
-        else if (! isset($item['can'])) {
-            return true;
-        }
-
-        list($ability, $parameters) = array_pad(explode(':', $item['can'], 2), 2, array());
+        list($ability, $parameters) = array_pad(explode(':', $value, 2), 2, array());
 
         if (is_string($parameters)) {
             $parameters = explode(',', $parameters);

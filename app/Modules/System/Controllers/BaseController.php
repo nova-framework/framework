@@ -96,7 +96,7 @@ abstract class BaseController extends Controller
                 }
 
                 // Check if the user is allowed to use this menu item.
-                if (! $this->itemIsAllowed($item, $gate, $user)) {
+                if (! $this->itemIsAllowed($item, $user, $gate)) {
                     continue;
                 }
 
@@ -116,11 +116,11 @@ abstract class BaseController extends Controller
      * Determine if the menu item usage is allowed by the specified User Roles.
      *
      * @param  array  $item
-     * @param  \Nova\Auth\Access\GateInterface  $gate
      * @param  mixed  $user
+     * @param  \Nova\Auth\Access\GateInterface  $gate
      * @return boolean
      */
-    protected function itemIsAllowed(array $item, GateInterface $gate, $user)
+    protected function itemIsAllowed(array $item, $user, GateInterface $gate)
     {
         if (isset($item['role']) && ($item['role'] !== 'any')) {
             $roles = explode(',', $item['role']);

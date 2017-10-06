@@ -117,7 +117,7 @@ abstract class BaseController extends Controller
             }
         }
 
-        return $items);
+        return $items;
     }
 
     /**

@@ -125,7 +125,7 @@ abstract class BaseController extends Controller
             list ($ability, $parameters) = $this->parseItemAbility($item);
 
             if (call_user_func(array($gate, 'denies'), $ability, $parameters)) {
-                return false;;
+                return false;
             }
         }
 

@@ -11,7 +11,7 @@
 
 Event::listen('backend.menu', function ()
 {
-    $items = array(
+    return array(
         array(
             'path'   => 'dashboard',
             'url'    => site_url('admin/dashboard'),
@@ -35,6 +35,4 @@ Event::listen('backend.menu', function ()
             'weight' => 0,
         ),
     );
-
-    return $items;
 });

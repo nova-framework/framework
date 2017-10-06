@@ -11,7 +11,7 @@
 
 Event::listen('backend.menu', function ()
 {
-    $items = array(
+    return array(
         array(
             'path'   => 'files',
             'role'   => 'administrator',
@@ -21,6 +21,4 @@ Event::listen('backend.menu', function ()
             'weight' => 3,
         ),
     );
-
-    return $items;
 });

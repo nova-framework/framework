@@ -14,7 +14,7 @@ use App\Models\User;
 
 Event::listen('backend.menu', function ()
 {
-    $items = array(
+    return array(
         array(
             'path'   => 'platform',
             'url'    => '#',
@@ -54,6 +54,4 @@ Event::listen('backend.menu', function ()
             'weight' => 1,
         ),
     );
-
-    return $items;
 });

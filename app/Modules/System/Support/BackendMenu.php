@@ -72,7 +72,7 @@ class BackendMenu
                 }
 
                 // Check if the user is allowed to use this menu item.
-                if (! $this->itemIsAllowed($item, $user, $gate)) {
+                if (! $this->userIsAllowed($item, $user, $gate)) {
                     continue;
                 }
 
@@ -96,7 +96,7 @@ class BackendMenu
      * @param  \Nova\Auth\Access\GateInterface  $gate
      * @return boolean
      */
-    protected function itemIsAllowed(array $item, UserInterface $user, GateInterface $gate)
+    protected function userIsAllowed(array $item, UserInterface $user, GateInterface $gate)
     {
         if (isset($item['role']) && ($item['role'] !== 'any')) {
             $roles = explode(',', $item['role']);

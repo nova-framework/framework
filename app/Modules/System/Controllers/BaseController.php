@@ -67,7 +67,7 @@ abstract class BaseController extends Controller
         $items = array();
 
         foreach ($results as $result) {
-            if (is_array($result) && ! empty($result)) {
+            if (is_array($result) && is_array(reset($result))) {
                 $items = array_merge($items, $result);
             }
         }

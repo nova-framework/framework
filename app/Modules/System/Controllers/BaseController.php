@@ -78,7 +78,7 @@ abstract class BaseController extends Controller
         // Prepare first the item children, if they exists.
         foreach ($items as &$item) {
             if (isset($item['children']) && is_array($item['children'])) {
-                $item['children'] = static::prepareItems($item['children'], $path);
+                static::prepareItems($item['children'], $path);
             }
         }
 
@@ -92,7 +92,7 @@ abstract class BaseController extends Controller
      * @param  string $path
      * @return array
      */
-    protected static function prepareItems(array $items, $path)
+    protected static function prepareItems(array &$items, $path)
     {
         foreach ($items as &$item) {
             if (isset($item['uri']) && ($item['uri'] == $path)) {

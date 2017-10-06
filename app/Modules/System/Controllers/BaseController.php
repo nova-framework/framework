@@ -62,14 +62,15 @@ abstract class BaseController extends Controller
      */
     protected function getMenuItems($event, $user)
     {
-        $url = Request::url();
-
-        // Fire the specified Event and retrieve the responses.
         $results = Event::fire($event, array($user));
 
         // The item path which coresponds with the current URL.
         $path = '';
 
+        // The current URL.
+        $url = Request::url();
+
+        // The processed menu items.
         $items = array();
 
         foreach ($results as $result) {

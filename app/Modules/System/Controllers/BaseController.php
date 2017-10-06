@@ -130,11 +130,11 @@ abstract class BaseController extends Controller
      */
     protected function itemDeniedByGate(GateInterface $gate, $value)
     {
-        $abilities = explode('|', $value);
+        $items = explode('|', $value);
 
-        foreach ($abilities as $ability) {
+        foreach ($items as $item) {
             // Parse the ability string.
-            list($ability, $parameters) = array_pad(explode(':', $ability, 2), 2, array());
+            list($ability, $parameters) = array_pad(explode(':', $item, 2), 2, array());
 
             if (is_string($parameters)) {
                 $parameters = explode(',', $parameters);

@@ -67,27 +67,7 @@ abstract class BaseController extends Controller
         // Fire the specified Event and retrieve the responses.
         $results = Event::fire($event, array($user));
 
-        // Build the menu items and find the current item path.
-        list ($items, $path) = $this->buildMenuData($results, $url);
-
-        foreach ($items as &$item) {
-            $children = Arr::get($item, 'children', array());
-
-            $item['children'] = $this->prepareItems($children, $path, $url);
-        }
-
-        return $this->prepareItems($items, $path, $url);
-    }
-
-    /**
-     * Build the menu items array and find the current item path.
-     *
-     * @param  array  $results
-     * @param  string $url
-     * @return array
-     */
-    protected function buildMenuData(array $results, $url)
-    {
+        // The item path which coresponds with the current URL.
         $path = '';
 
         $items = array();
@@ -117,7 +97,7 @@ abstract class BaseController extends Controller
             }
         }
 
-        return array($items, $path);
+        return $this->prepareItems($items, $path, $url);
     }
 
     /**
@@ -139,6 +119,11 @@ abstract class BaseController extends Controller
             }
 
             $item['active'] = $active;
+
+            //
+            $children = Arr::get($item, 'children', array());
+
+            $item['children'] = $this->prepareItems($children, $path, $url);
         }
 
         // Sort the menu items by their weight and title.

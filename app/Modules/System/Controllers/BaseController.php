@@ -105,7 +105,7 @@ abstract class BaseController extends Controller
                 }
 
                 // Check the availability againsts Gate Abilities.
-                if (isset($item['can']) && $this->itemDeniedByGate($gate, $item['can'])) {
+                if (! $this->itemAllowedByGate($gate, $item)) {
                     continue;
                 }
 
@@ -122,30 +122,34 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Determine if the menu item usage is denied by the Gate Abilities.
+     * Determine if the menu item usage is allowed by the Gate Abilities.
      *
      * @param  \Nova\Auth\Access\GateInterface  $gate
-     * @param  string $value
+     * @param  array $item
      * @return boolean
      */
-    protected function itemDeniedByGate(GateInterface $gate, $value)
+    protected function itemAllowedByGate(GateInterface $gate, array $item)
     {
-        $items = explode('|', $value);
+        if (! isset($item['can'])) {
+            return true;
+        }
 
-        foreach ($items as $item) {
+        $entries = explode('|', $item['can']);
+
+        foreach ($entries as $entry) {
             // Parse the ability string.
-            list($ability, $parameters) = array_pad(explode(':', $item, 2), 2, array());
+            list($ability, $parameters) = array_pad(explode(':', $entry, 2), 2, array());
 
             if (is_string($parameters)) {
                 $parameters = explode(',', $parameters);
             }
 
             if (call_user_func(array($gate, 'allows'), $ability, $parameters)) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**

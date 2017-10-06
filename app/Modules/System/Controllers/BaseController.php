@@ -136,7 +136,6 @@ abstract class BaseController extends Controller
         $gate = Gate::forUser($user);
 
         foreach ($abilities as $ability) {
-            // Parse the ability string.
             list($ability, $parameters) = array_pad(explode(':', $ability, 2), 2, array());
 
             if (is_string($parameters)) {

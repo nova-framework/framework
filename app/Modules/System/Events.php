@@ -37,7 +37,7 @@ Event::listen('backend.menu', function ($user)
         'path'   => 'platform.settings',
         'url'    => site_url('admin/settings'),
         'title'  => __d('system', 'Settings'),
-        'icon'   => 'gears',
+        'icon'   => 'circle-o',
         'weight' => 0,
     );
 

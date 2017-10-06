@@ -183,27 +183,7 @@ $langMenuLinks = ob_get_clean();
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
             <?php foreach ($menuItems as $item) { ?>
-            <?php $children = Arr::get($item, 'children', array()); ?>
-            <?php if (! empty($children)) { ?>
-            <li class="treeview <?= $item['active'] ? 'active' : ''; ?>">
-                <a href="#"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                <?php foreach ($children as $child) { ?>
-                    <li <?= $child['active'] ? "class='active'" : ""; ?>>
-                        <a href="<?= $child['url']; ?>"><i class="fa fa-<?= $child['icon'] ?>"></i> <span><?= $child['title']; ?></span></a>
-                    </li>
-                <?php } ?>
-                </ul>
-            </li>
-            <?php } else if ($item['url'] !== '#') { ?>
-            <li <?= $item['active'] ? "class='active'" : ""; ?>>
-                <a href="<?= $item['url']; ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>
-            </li>
-            <?php } ?>
+                <?= View::partial('Partials/Backend/SideBarItems', 'AdminLite', array('item' => $item)); ?>
             <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->

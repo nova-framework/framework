@@ -18,7 +18,7 @@ Event::listen('backend.menu', function ($user)
         array(
             'path'   => 'users',
             'url'    => '#',
-            'title'  => __d('system', 'Users'),
+            'title'  => __d('users', 'Users'),
             'icon'   => 'users',
             'weight' => 0,
         )

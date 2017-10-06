@@ -105,7 +105,7 @@ abstract class BaseController extends Controller
                 }
 
                 // Check the availability againsts Gate Abilities.
-                if (! $this->itemAllowedByGate($gate, $item)) {
+                if (! $this->itemIsAllowedByGate($gate, $item)) {
                     continue;
                 }
 
@@ -128,7 +128,7 @@ abstract class BaseController extends Controller
      * @param  array $item
      * @return boolean
      */
-    protected function itemAllowedByGate(GateInterface $gate, array $item)
+    protected function itemIsAllowedByGate(GateInterface $gate, array $item)
     {
         if (! isset($item['can'])) {
             return true;

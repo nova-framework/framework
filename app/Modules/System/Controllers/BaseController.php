@@ -64,6 +64,8 @@ abstract class BaseController extends Controller
      */
     protected function getMenuItems($event, $user)
     {
+        $gate = Gate::forUser($user);
+
         // The current URL.
         $url = Request::url();
 
@@ -94,7 +96,7 @@ abstract class BaseController extends Controller
                 }
 
                 // Check if the user is allowed to use this menu item.
-                if (! $this->itemIsAllowedForUser($user, $item)) {
+                if (! $this->itemIsAllowedForUser($gate, $user, $item)) {
                     continue;
                 }
 
@@ -113,11 +115,12 @@ abstract class BaseController extends Controller
     /**
      * Determine if the menu item usage is allowed by the specified User Roles.
      *
+     * @param  \Nova\Auth\Access\GateInterface  $gate
      * @param  mixed  $user
      * @param  array  $item
      * @return boolean
      */
-    protected function itemIsAllowedForUser($user, array $item)
+    protected function itemIsAllowedForUser(GateInterface $gate, $user, array $item)
     {
         if (isset($item['role']) && ($item['role'] !== 'any')) {
             $roles = explode(',', $item['role']);
@@ -132,8 +135,6 @@ abstract class BaseController extends Controller
         }
 
         $abilities = explode('|', $item['can']);
-
-        $gate = Gate::forUser($user);
 
         foreach ($abilities as $ability) {
             list($ability, $parameters) = array_pad(explode(':', $ability, 2), 2, array());

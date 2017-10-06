@@ -38,6 +38,7 @@ return array (
   'Operations' => '',
   'Password' => '',
   'Password confirmation' => '',
+  'Platform' => '',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Profile Picture' => '',

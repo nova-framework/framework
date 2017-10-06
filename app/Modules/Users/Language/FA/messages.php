@@ -38,6 +38,7 @@ return array (
   'Operations' => 'عملیات ها',
   'Password' => 'رمزعبور',
   'Password confirmation' => 'تایید رمزعبور',
+  'Platform' => '',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'لطفا روی دکمه <b>حذف وظیفه</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید.',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'لطفا روی دکمه <b>حذف وظیفه</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید.',
   'Profile Picture' => '',

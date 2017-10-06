@@ -16,6 +16,13 @@ Event::listen('backend.menu', function ($user)
 {
     $items = array(
         array(
+            'path'   => 'platform',
+            'url'    => '#',
+            'title'  => __d('users', 'Platform'),
+            'icon'   => 'cube',
+            'weight' => 0,
+        ),
+        array(
             'path'   => 'users',
             'url'    => '#',
             'title'  => __d('users', 'Users'),

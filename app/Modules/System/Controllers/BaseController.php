@@ -112,7 +112,7 @@ abstract class BaseController extends Controller
     protected function itemIsAllowed(array $item, $gate, $user)
     {
         // Check the roles.
-        if (isset($item['role'])) {
+        if (isset($item['role']) && ($item['role'] !== 'any')) {
             $roles = explode(',', $item['role']);
 
             if (! $user->hasRole($roles)) {
@@ -140,9 +140,7 @@ abstract class BaseController extends Controller
      */
     protected function parseItemAbility(array $item)
     {
-        list($ability, $parameters) = array_pad(
-            explode(':', $item['can'], 2), 2, array()
-        );
+        list($ability, $parameters) = array_pad(explode(':', $item['can'], 2), 2, array());
 
         if (is_string($parameters)) {
             $parameters = explode(',', $parameters);

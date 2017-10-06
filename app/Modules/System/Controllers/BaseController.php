@@ -85,7 +85,9 @@ abstract class BaseController extends Controller
 
                 $key = str_replace('.', '.children.', $item['path']);
 
-                Arr::set($items, $key, $item);
+                if (! Arr::has($items, $key)) {
+                    Arr::set($items, $key, $item);
+                }
 
                 if ($item['url'] == $url) {
                     $path = $item['path'];

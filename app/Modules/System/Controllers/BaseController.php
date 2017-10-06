@@ -121,7 +121,7 @@ abstract class BaseController extends Controller
 
             $item['active'] = $active;
 
-            // Recursivelly prepare also the item children.
+            // Recursivelly prepare the children.
             $item['children'] = $this->prepareItems($item['children'], $path, $url);
         }
 

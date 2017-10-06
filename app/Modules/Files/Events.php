@@ -14,7 +14,8 @@ Event::listen('backend.menu', function ($user)
     if ($user->hasRole('administrator')) {
         $items = array(
             array(
-                'uri'    => 'admin/files',
+                'path'   => 'files',
+                'url'    => site_url('admin/files'),
                 'title'  => __d('files', 'Files'),
                 'icon'   => 'file',
                 'weight' => 3,

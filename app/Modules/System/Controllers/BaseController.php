@@ -13,6 +13,8 @@ use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
+use Nova\Support\Arr;
+use Nova\Support\Str;
 
 use App\Controllers\BaseController as Controller;
 
@@ -58,52 +60,65 @@ abstract class BaseController extends Controller
     protected function getMenuItems($event, $user)
     {
         if (is_null($user)) {
-            return array(); // The User is not authenticated.
+            return array(); // The User is not authenticated?
         }
 
-        $path = Request::path();
+        $url = Request::url();
 
         // Fire the specified Event.
         $results = Event::fire($event, array($user));
 
-        // Prepare the menu items from the Event results.
+        //
+        $path = '';
+
         $items = array();
 
         foreach ($results as $result) {
-            if (is_array($result) && is_array(reset($result))) {
-                $items = array_merge($items, $result);
+            if (! is_array($result)) {
+                continue;
+            }
+
+            foreach ($result as $item) {
+                if (! isset($item['children'])) {
+                    $item['children'] = array();
+                }
+
+                $key = str_replace('.', '.children.', $item['path']);
+
+                Arr::set($items, $key, $item);
+
+                if ($item['url'] == $url) {
+                    $path = $item['path'];
+                }
             }
         }
 
-        // Prepare first the item children, if they exists.
         foreach ($items as &$item) {
-            if (isset($item['children']) && is_array($item['children'])) {
-                static::prepareItems($item['children'], $path);
-            } else {
-                $item['children'] = array();
-            }
+            $children = Arr::get($item, 'children', array());
+
+            $item['children'] = static::prepareItems($children, $url, $path);
         }
 
-        return static::prepareItems($items, $path);
+        return static::prepareItems($items, $url, $path);
     }
 
     /**
      * Prepare the given menu items.
      *
      * @param  array  $items
-     * @param  string $path
+     * @param  string $url
      * @return array
      */
-    protected static function prepareItems(array &$items, $path)
+    protected static function prepareItems(array $items, $url, $path)
     {
         foreach ($items as &$item) {
-            if (isset($item['uri']) && ($item['uri'] == $path)) {
-                $item['active'] = true;
-            } else {
-                $item['active'] = false;
+            $active = false;
+
+            if (($item['url'] == $url) || Str::startsWith($path, $item['path'])) {
+                $active = true;
             }
 
-            ksort($item);
+            $item['active'] = $active;
         }
 
         // Sort the menu items by their weight and title.

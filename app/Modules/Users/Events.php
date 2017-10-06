@@ -18,7 +18,8 @@ Event::listen('backend.menu', function ($user)
 
     if ($user->can('lists', User::class)) {
         $items[] = array(
-            'uri'    => 'admin/users',
+            'path'   => 'users',
+            'url'    => site_url('admin/users'),
             'title'  => __d('users', 'Users'),
             'icon'   => 'users',
             'weight' => 1,
@@ -27,8 +28,9 @@ Event::listen('backend.menu', function ($user)
 
     if ($user->can('lists', Role::class)) {
         $items[] = array(
-            'uri'    => 'admin/roles',
-            'title'  => __d('users', 'Roles'),
+            'path'   => 'platform.roles',
+            'url'    => site_url('admin/roles'),
+            'title'  => __d('users', 'User Roles'),
             'icon'   => 'book',
             'weight' => 2,
         );

@@ -183,9 +183,27 @@ $langMenuLinks = ob_get_clean();
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
             <?php foreach ($menuItems as $item) { ?>
-            <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
-                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>
+            <?php $children = Arr::get($item, 'children', array()); ?>
+            <?php if (! empty($children)) { ?>
+            <li class="treeview <?= $item['active'] ? 'active' : ''; ?>">
+                <a href="#"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                <?php foreach ($children as $child) { ?>
+                    <li <?= $child['active'] ? "class='active'" : ""; ?>>
+                        <a href="<?= $child['url']; ?>"><i class="fa fa-<?= $child['icon'] ?>"></i> <span><?= $child['title']; ?></span></a>
+                    </li>
+                <?php } ?>
+                </ul>
             </li>
+            <?php } else if ($item['url'] !== '#') { ?>
+            <li <?= $item['active'] ? "class='active'" : ""; ?>>
+                <a href="<?= $item['url']; ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>
+            </li>
+            <?php } ?>
             <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->
@@ -217,6 +235,10 @@ $langMenuLinks = ob_get_clean();
 Assets::js(array(
     // Bootstrap 3.3.5
     vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
+    // SlimScroll
+    vendor_url('bower_components/jquery-slimscroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
+    // FastClick
+    vendor_url('bower_components/fastclick/lib/fastclick.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
     // Select2
@@ -229,6 +251,9 @@ echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
 
 <script>
 $(function () {
+    // Initialize the sidebar menu.
+    $('.sidebar-menu').tree();
+
     //Initialize Select2 Elements
     $(".select2").select2();
 });

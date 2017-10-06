@@ -13,21 +13,33 @@ Event::listen('backend.menu', function ($user)
 {
     $items = array(
         array(
-            'uri'    => 'admin/dashboard',
+            'path'   => 'dashboard',
+            'url'    => site_url('admin/dashboard'),
             'title'  => __d('system', 'Dashboard'),
             'icon'   => 'dashboard',
             'weight' => 0,
         )
     );
 
-    if ($user->hasRole('administrator')) {
-        $items[] = array(
-            'uri'    => 'admin/settings',
-            'title'  => __d('system', 'Settings'),
-            'icon'   => 'gears',
-            'weight' => 0,
-        );
+    if (! $user->hasRole('administrator')) {
+        return $items;
     }
+
+    $items[] = array(
+        'path'   => 'platform',
+        'url'    => '#',
+        'title'  => __d('system', 'Platform'),
+        'icon'   => 'cube',
+        'weight' => 0,
+    );
+
+    $items[] = array(
+        'path'   => 'platform.settings',
+        'url'    => site_url('admin/settings'),
+        'title'  => __d('system', 'Settings'),
+        'icon'   => 'gears',
+        'weight' => 0,
+    );
 
     return $items;
 });

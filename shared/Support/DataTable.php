@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\System\Support;
+namespace Shared\Support;
 
 use Nova\Database\ORM\Builder as ModelBuilder;
 use Nova\Support\Arr;

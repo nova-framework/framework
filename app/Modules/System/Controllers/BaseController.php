@@ -68,10 +68,17 @@ abstract class BaseController extends Controller
         $results = Event::fire($event, array($user));
 
         // Build the menu items array from results.
-        list ($items, $path) = $this->buildMenuItems($results, $url);
+        $items = $this->buildMenuItems($results);
+
+        // The path of the item curresponding to the curent URL.
+        $path = '';
 
         foreach ($items as &$item) {
             $children = Arr::get($item, 'children', array());
+
+            if (($item['url'] == $url) && empty($path)) {
+                $path = $item['path'];
+            }
 
             $item['children'] = $this->prepareItems($children, $path, $url);
         }
@@ -83,13 +90,10 @@ abstract class BaseController extends Controller
      * Build the menu items array from results.
      *
      * @param  array  $results
-     * @param  string $url
      * @return array
      */
-    protected function buildMenuItems(array $results, $url)
+    protected function buildMenuItems(array $results)
     {
-        $path = '';
-
         $items = array();
 
         foreach ($results as $result) {
@@ -110,14 +114,10 @@ abstract class BaseController extends Controller
                 }
 
                 Arr::set($items, $key, $item);
-
-                if (($item['url'] == $url) && empty($path)) {
-                    $path = $item['path'];
-                }
             }
         }
 
-        return array($items, $path);
+        return $items);
     }
 
     /**

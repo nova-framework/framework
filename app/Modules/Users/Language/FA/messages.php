@@ -38,6 +38,7 @@ return array (
   'Operations' => 'عملیات ها',
   'Password' => 'رمزعبور',
   'Password confirmation' => 'تایید رمزعبور',
+  'Platform' => '',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'لطفا روی دکمه <b>حذف وظیفه</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید.',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => 'لطفا روی دکمه <b>حذف وظیفه</b> برای حذف, یا <b>لغو</b> برای لغو عملیات کلیک کنید.',
   'Profile Picture' => '',
@@ -72,7 +73,9 @@ return array (
   'Updated At' => 'بروزشده در',
   'User Account : <b>{0}</b>' => 'حساب کاربری : <b>{0}</b>',
   'User Role : <b>{0}</b>' => 'وظیفه کاربر : <b>{0}</b>',
+  'User Roles' => '',
   'User not found: #{0}' => 'کاربر یافت نشد: #{0}',
   'Username' => 'نام کاربری',
   'Users' => 'کاربران',
+  'Users List' => '',
 );

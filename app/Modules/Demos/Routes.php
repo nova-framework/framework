@@ -12,14 +12,15 @@
 // The Demo Routes
 Route::group(array('prefix' => 'demo'), function ()
 {
-    Route::get('database',   'Demos@database');
-    Route::get('events',     'Demos@events');
-    Route::get('mailer',     'Demos@mailer');
-    Route::get('session',    'Demos@session');
-    Route::get('validation', 'Demos@validation');
-    Route::get('pagination', 'Demos@pagination');
-    Route::get('cache',      'Demos@cache');
-    Route::get('modules',    'Demos@modules');
+    Route::get('database',     'Demos@database');
+    Route::get('events',       'Demos@events');
+    Route::get('mailer',       'Demos@mailer');
+    Route::get('mailer-spool', 'Demos@mailerSpool');
+    Route::get('session',      'Demos@session');
+    Route::get('validation',   'Demos@validation');
+    Route::get('pagination',   'Demos@pagination');
+    Route::get('cache',        'Demos@cache');
+    Route::get('modules',      'Demos@modules');
 
     Route::get('password/{password}', 'Demos@password');
 

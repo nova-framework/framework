@@ -42,6 +42,7 @@ return array (
   'Password Reset' => 'بازنشانی رمزعبور',
   'Password confirmation' => 'تایید رمزعبور',
   'Passwords must be strong enough and match the confirmation.' => 'رمزعبور باید به اندازه کافی قوی و مطابق با تایید آن باشد.',
+  'Platform' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => 'لطفا آدرس ایمیل خود را برای ارسال لینک بازنشانی رمزعبور وارد کنید.',
   'Purple' => 'بنفش',
   'Purple Light' => 'بنفش سفید',

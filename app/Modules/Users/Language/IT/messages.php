@@ -38,6 +38,7 @@ return array (
   'Operations' => '',
   'Password' => '',
   'Password confirmation' => '',
+  'Platform' => '',
   'Please click the button <b>Delete the Role</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Please click the button <b>Delete the User</b> to proceed, or <b>Cancel</b> to abandon the operation.' => '',
   'Profile Picture' => '',
@@ -72,7 +73,9 @@ return array (
   'Updated At' => '',
   'User Account : <b>{0}</b>' => '',
   'User Role : <b>{0}</b>' => '',
+  'User Roles' => '',
   'User not found: #{0}' => '',
   'Username' => '',
   'Users' => '',
+  'Users List' => '',
 );

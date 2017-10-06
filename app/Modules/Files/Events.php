@@ -9,20 +9,18 @@
 
 /** Define Events. */
 
-Event::listen('backend.menu', function ($user)
+Event::listen('backend.menu', function ()
 {
-    if ($user->hasRole('administrator')) {
-        $items = array(
-            array(
-                'uri'    => 'admin/files',
-                'title'  => __d('files', 'Files'),
-                'icon'   => 'file',
-                'weight' => 3,
-            ),
-        );
-    } else {
-        $items = array();
-    }
+    return array(
+        array(
+            'url'    => site_url('admin/files'),
+            'title'  => __d('files', 'Files'),
+            'icon'   => 'file',
+            'weight' => 3,
 
-    return $items;
+            //
+            'path'   => 'files',
+            'role'   => 'administrator',
+        ),
+    );
 });

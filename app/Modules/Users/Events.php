@@ -12,27 +12,56 @@ use App\Models\User;
 
 /** Define Events. */
 
-Event::listen('backend.menu', function ($user)
+Event::listen('backend.menu', function ()
 {
-    $items = array();
+    return array(
+        array(
+            'url'    => '#',
+            'title'  => __d('users', 'Platform'),
+            'icon'   => 'cube',
+            'weight' => 0,
 
-    if ($user->can('lists', User::class)) {
-        $items[] = array(
-            'uri'    => 'admin/users',
+            //
+            'path'   => 'platform',
+        ),
+        array(
+            'url'    => '#',
             'title'  => __d('users', 'Users'),
             'icon'   => 'users',
+            'weight' => 0,
+
+            //
+            'path'   => 'users',
+        ),
+        array(
+            'url'    => site_url('admin/users'),
+            'title'  => __d('users', 'Users List'),
+            'icon'   => 'circle-o',
+            'weight' => 0,
+
+            //
+            'path'   => 'users.list',
+            'can'    => 'lists:' .User::class,
+        ),
+        array(
+            'url'    => site_url('admin/users/create'),
+            'title'  => __d('users', 'Create a new User'),
+            'icon'   => 'circle-o',
             'weight' => 1,
-        );
-    }
 
-    if ($user->can('lists', Role::class)) {
-        $items[] = array(
-            'uri'    => 'admin/roles',
-            'title'  => __d('users', 'Roles'),
-            'icon'   => 'book',
-            'weight' => 2,
-        );
-    }
+            //
+            'path'   => 'users.create',
+            'can'    => 'create:' .User::class,
+        ),
+        array(
+            'url'    => site_url('admin/roles'),
+            'title'  => __d('users', 'User Roles'),
+            'icon'   => 'circle-o',
+            'weight' => 1,
 
-    return $items;
+            //
+            'path'   => 'platform.roles',
+            'can'    => 'lists:' .Role::class,
+        ),
+    );
 });

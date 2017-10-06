@@ -1,10 +1,12 @@
 <?php
 
 return array (
+  'A message was enqueued in the Mailer Spool.' => '',
   'Cache' => '',
   'Database API' => '',
   'Enabled' => 'Aktiver',
   'Events API' => 'Event API',
+  'Mailer Spool' => '',
   'Mailing API' => 'Mail API',
   'Message sent while pretending. Please, look on <code>{0}</code>' => '',
   'Modules' => 'Moduler',

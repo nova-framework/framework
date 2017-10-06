@@ -73,5 +73,6 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Troubleshooting' => '',
   'Unauthorized' => '',
   'Welcome' => 'Bun venit',
+  'You are not authorized to access this resource.' => '',
   'Your session expired. Please try again!' => '',
 );

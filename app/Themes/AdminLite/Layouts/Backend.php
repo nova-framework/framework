@@ -183,9 +183,7 @@ $langMenuLinks = ob_get_clean();
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
             <?php foreach ($menuItems as $item) { ?>
-            <li <?php if ($baseUri == $item['uri']) { echo "class='active'"; } ?>>
-                <a href="<?= site_url($item['uri']); ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>
-            </li>
+                <?= View::partial('Partials/Backend/SideBarItems', 'AdminLite', array('item' => $item)); ?>
             <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->
@@ -217,6 +215,10 @@ $langMenuLinks = ob_get_clean();
 Assets::js(array(
     // Bootstrap 3.3.5
     vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
+    // SlimScroll
+    vendor_url('bower_components/jquery-slimscroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
+    // FastClick
+    vendor_url('bower_components/fastclick/lib/fastclick.js', 'almasaeed2010/adminlte'),
     // AdminLTE App
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
     // Select2
@@ -229,6 +231,9 @@ echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
 
 <script>
 $(function () {
+    // Initialize the sidebar menu.
+    $('.sidebar-menu').tree();
+
     //Initialize Select2 Elements
     $(".select2").select2();
 });

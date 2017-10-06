@@ -9,25 +9,36 @@
 
 /** Define Events. */
 
-Event::listen('backend.menu', function ($user)
+Event::listen('backend.menu', function ()
 {
-    $items = array(
+    return array(
         array(
-            'uri'    => 'admin/dashboard',
+            'url'    => site_url('admin/dashboard'),
             'title'  => __d('system', 'Dashboard'),
             'icon'   => 'dashboard',
             'weight' => 0,
-        )
-    );
 
-    if ($user->hasRole('administrator')) {
-        $items[] = array(
-            'uri'    => 'admin/settings',
-            'title'  => __d('system', 'Settings'),
-            'icon'   => 'gears',
+            //
+            'path'   => 'dashboard',
+        ),
+        array(
+            'url'    => '#',
+            'title'  => __d('system', 'Platform'),
+            'icon'   => 'cube',
             'weight' => 0,
-        );
-    }
 
-    return $items;
+            //
+            'path'   => 'platform',
+        ),
+        array(
+            'url'    => site_url('admin/settings'),
+            'title'  => __d('system', 'Settings'),
+            'icon'   => 'circle-o',
+            'weight' => 0,
+
+            //
+            'path'   => 'platform.settings',
+            'role'   => 'administrator',
+        ),
+    );
 });

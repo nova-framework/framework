@@ -4,5 +4,6 @@
 !files/
 !logs/
 !sessions/
+!spool/
 !views/
 !.gitignore

@@ -95,6 +95,7 @@ abstract class BaseController extends Controller
                     $item['children'] = array();
                 }
 
+                // Check the availability againsts User Roles.
                 if (isset($item['role']) && ($item['role'] !== 'any')) {
                     $roles = explode(',', $item['role']);
 
@@ -103,10 +104,20 @@ abstract class BaseController extends Controller
                     }
                 }
 
-                if (isset($item['can']) && $this->itemDeniedByGate($gate, $item['can'])) {
-                    continue;
+                // Check the availability againsts Gate Abilities.
+                if (isset($item['can'])) {
+                    list($ability, $parameters) = array_pad(explode(':', $item['can'], 2), 2, array());
+
+                    if (is_string($parameters)) {
+                        $parameters = explode(',', $parameters);
+                    }
+
+                    if (call_user_func(array($gate, 'denies'), $ability, $parameters)) {
+                        continue;
+                    }
                 }
 
+                // Add the item to the menu items array.
                 Arr::set($items, $key, $item);
 
                 if (($item['url'] == $url) && empty($path)) {
@@ -116,24 +127,6 @@ abstract class BaseController extends Controller
         }
 
         return $this->prepareItems($items, $path, $url);
-    }
-
-    /**
-     * Determine if the Authorization Gate denies the ability specified by the item.
-     *
-     * @param  \Nova\Auth\Access\GateInterface $gate
-     * @param  string  $value
-     * @return boolean
-     */
-    protected function itemDeniedByGate(GateInterface $gate, $value)
-    {
-        list($ability, $parameters) = array_pad(explode(':', $value, 2), 2, array());
-
-        if (is_string($parameters)) {
-            $parameters = explode(',', $parameters);
-        }
-
-        return call_user_func(array($gate, 'denies'), $ability, $parameters);
     }
 
     /**

@@ -69,7 +69,6 @@ abstract class BaseController extends Controller
         // The item path which coresponds with the current URL.
         $path = '';
 
-        // The processed menu items.
         $items = array();
 
         foreach ($results as $result) {

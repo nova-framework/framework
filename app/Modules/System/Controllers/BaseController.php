@@ -43,11 +43,14 @@ abstract class BaseController extends Controller
     {
         parent::initialize();
 
-        // Get the current User.
-        $user = Auth::user();
+        // Setup the items of the Backend Menu.
+        if (! is_null($user = Auth::user())) {
+            $menuItems = $this->getMenuItems('backend.menu', $user);
+        } else {
+            $menuItems = array();
+        }
 
-        // Setup the main Menu.
-        View::share('menuItems', $this->getMenuItems('backend.menu', $user));
+        View::share('menuItems', $menuItems);
     }
 
     /**
@@ -59,16 +62,12 @@ abstract class BaseController extends Controller
      */
     protected function getMenuItems($event, $user)
     {
-        if (is_null($user)) {
-            return array(); // The User is not authenticated?
-        }
-
         $url = Request::url();
 
-        // Fire the specified Event.
+        // Fire the specified Event and retrieve the responses.
         $results = Event::fire($event, array($user));
 
-        //
+        // The path in the items array which match the current URL.
         $path = '';
 
         $items = array();
@@ -79,17 +78,20 @@ abstract class BaseController extends Controller
             }
 
             foreach ($result as $item) {
-                if (! isset($item['children'])) {
+                $key = str_replace('.', '.children.', $item['path']);
+
+                if (Arr::has($items, $key)) {
+                    continue;
+                }
+
+                // Ensure the children array existence.
+                else if (! isset($item['children'])) {
                     $item['children'] = array();
                 }
 
-                $key = str_replace('.', '.children.', $item['path']);
+                Arr::set($items, $key, $item);
 
-                if (! Arr::has($items, $key)) {
-                    Arr::set($items, $key, $item);
-                }
-
-                if ($item['url'] == $url) {
+                if (($item['url'] == $url) && empty($path)) {
                     $path = $item['path'];
                 }
             }
@@ -98,20 +100,21 @@ abstract class BaseController extends Controller
         foreach ($items as &$item) {
             $children = Arr::get($item, 'children', array());
 
-            $item['children'] = static::prepareItems($children, $url, $path);
+            $item['children'] = static::prepareItems($children, $path, $url);
         }
 
-        return static::prepareItems($items, $url, $path);
+        return static::prepareItems($items, $path, $url);
     }
 
     /**
      * Prepare the given menu items.
      *
      * @param  array  $items
+     * @param  string $path
      * @param  string $url
      * @return array
      */
-    protected static function prepareItems(array $items, $url, $path)
+    protected static function prepareItems(array $items, $path, $url)
     {
         // Setup the 'active' flag of the menu items.
         foreach ($items as &$item) {

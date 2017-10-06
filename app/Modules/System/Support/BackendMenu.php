@@ -18,7 +18,7 @@ class BackendMenu
      * Get the menu items for the specified Menu and User.
      *
      * @param  string  $name
-     * @param  mixed  $user
+     * @param  \Nova\Auth\UserInterface   $user
      * @param  string|null  $url
      * @return array
      */
@@ -37,7 +37,7 @@ class BackendMenu
      * Get the menu items for the specified Menu and User.
      *
      * @param  string  $name
-     * @param  mixed  $user
+     * @param  \Nova\Auth\UserInterface  $user
      * @param  string|null  $url
      * @return array
      */

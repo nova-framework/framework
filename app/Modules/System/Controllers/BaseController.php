@@ -9,6 +9,7 @@
 namespace App\Modules\System\Controllers;
 
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 
 use App\Controllers\BaseController as Controller;
@@ -39,8 +40,11 @@ abstract class BaseController extends Controller
     {
         parent::initialize();
 
+        //
+        $url = Request::url();
+
         if (! is_null($user = Auth::user())) {
-            $menuItems = BackendMenu::getItems('backend.menu', $user);
+            $menuItems = BackendMenu::getItems('backend.menu', $url, $user);
         } else {
             $menuItems = array();
         }

@@ -13,12 +13,14 @@ Event::listen('backend.menu', function ()
 {
     return array(
         array(
-            'path'   => 'files',
-            'role'   => 'administrator',
             'url'    => site_url('admin/files'),
             'title'  => __d('files', 'Files'),
             'icon'   => 'file',
             'weight' => 3,
+
+            //
+            'path'   => 'files',
+            'role'   => 'administrator',
         ),
     );
 });

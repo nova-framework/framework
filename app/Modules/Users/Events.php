@@ -16,42 +16,52 @@ Event::listen('backend.menu', function ()
 {
     return array(
         array(
-            'path'   => 'platform',
             'url'    => '#',
             'title'  => __d('users', 'Platform'),
             'icon'   => 'cube',
             'weight' => 0,
+
+            //
+            'path'   => 'platform',
         ),
         array(
-            'path'   => 'users',
             'url'    => '#',
             'title'  => __d('users', 'Users'),
             'icon'   => 'users',
             'weight' => 0,
+
+            //
+            'path'   => 'users',
         ),
         array(
-            'path'   => 'users.list',
-            'can'    => 'lists:' .User::class,
             'url'    => site_url('admin/users'),
             'title'  => __d('users', 'Users List'),
             'icon'   => 'circle-o',
             'weight' => 0,
+
+            //
+            'path'   => 'users.list',
+            'can'    => 'lists:' .User::class,
         ),
         array(
-            'path'   => 'users.create',
-            'can'    => 'create:' .User::class,
             'url'    => site_url('admin/users/create'),
             'title'  => __d('users', 'Create a new User'),
             'icon'   => 'circle-o',
             'weight' => 1,
+
+            //
+            'path'   => 'users.create',
+            'can'    => 'create:' .User::class,
         ),
         array(
-            'path'   => 'platform.roles',
-            'can'    => 'lists:' .Role::class,
             'url'    => site_url('admin/roles'),
             'title'  => __d('users', 'User Roles'),
             'icon'   => 'circle-o',
             'weight' => 1,
+
+            //
+            'path'   => 'platform.roles',
+            'can'    => 'lists:' .Role::class,
         ),
     );
 });

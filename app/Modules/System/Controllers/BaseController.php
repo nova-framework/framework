@@ -79,6 +79,8 @@ abstract class BaseController extends Controller
         foreach ($items as &$item) {
             if (isset($item['children']) && is_array($item['children'])) {
                 static::prepareItems($item['children'], $path);
+            } else {
+                $item['children'] = array();
             }
         }
 
@@ -100,6 +102,8 @@ abstract class BaseController extends Controller
             } else {
                 $item['active'] = false;
             }
+
+            ksort($item);
         }
 
         // Sort the menu items by their weight and title.

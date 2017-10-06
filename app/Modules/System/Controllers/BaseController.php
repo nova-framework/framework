@@ -43,7 +43,7 @@ abstract class BaseController extends Controller
     {
         parent::initialize();
 
-        // Setup the items of the Backend Menu.
+        // Get the items of the Backend Menu.
         if (! is_null($user = Auth::user())) {
             $menuItems = $this->getMenuItems('backend.menu', $user);
         } else {
@@ -67,7 +67,27 @@ abstract class BaseController extends Controller
         // Fire the specified Event and retrieve the responses.
         $results = Event::fire($event, array($user));
 
-        // The path in the items array which match the current URL.
+        // Build the menu items array from results.
+        list ($items, $path) = $this->buildMenuItems($results, $url);
+
+        foreach ($items as &$item) {
+            $children = Arr::get($item, 'children', array());
+
+            $item['children'] = $this->prepareItems($children, $path, $url);
+        }
+
+        return $this->prepareItems($items, $path, $url);
+    }
+
+    /**
+     * Build the menu items array from results.
+     *
+     * @param  array  $results
+     * @param  string $url
+     * @return array
+     */
+    protected function buildMenuItems(array $results, $url)
+    {
         $path = '';
 
         $items = array();
@@ -97,13 +117,7 @@ abstract class BaseController extends Controller
             }
         }
 
-        foreach ($items as &$item) {
-            $children = Arr::get($item, 'children', array());
-
-            $item['children'] = static::prepareItems($children, $path, $url);
-        }
-
-        return static::prepareItems($items, $path, $url);
+        return array($items, $path);
     }
 
     /**
@@ -114,7 +128,7 @@ abstract class BaseController extends Controller
      * @param  string $url
      * @return array
      */
-    protected static function prepareItems(array $items, $path, $url)
+    protected function prepareItems(array $items, $path, $url)
     {
         // Setup the 'active' flag of the menu items.
         foreach ($items as &$item) {

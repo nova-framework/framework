@@ -63,11 +63,11 @@ abstract class BaseController extends Controller
     {
         $results = Event::fire($event, array($user));
 
-        // The item path which coresponds with the current URL.
-        $path = '';
-
         // The current URL.
         $url = Request::url();
+
+        // The item path which coresponds with the current URL.
+        $path = '';
 
         // The processed menu items.
         $items = array();

@@ -97,7 +97,7 @@ abstract class BaseController extends Controller
             }
         }
 
-        return $this->prepareItems($items, $path, $url);
+        return $this->prepareMenuItems($items, $path, $url);
     }
 
     /**
@@ -108,7 +108,7 @@ abstract class BaseController extends Controller
      * @param  string $url
      * @return array
      */
-    protected function prepareItems(array $items, $path, $url)
+    protected function prepareMenuItems(array $items, $path, $url)
     {
         // Setup the 'active' flag of the menu items.
         foreach ($items as &$item) {
@@ -121,7 +121,7 @@ abstract class BaseController extends Controller
             $item['active'] = $active;
 
             // Recursivelly prepare the children.
-            $item['children'] = $this->prepareItems($item['children'], $path, $url);
+            $item['children'] = $this->prepareMenuItems($item['children'], $path, $url);
         }
 
         // Sort the menu items by their weight and title.

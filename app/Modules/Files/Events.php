@@ -9,15 +9,12 @@
 
 /** Define Events. */
 
-Event::listen('backend.menu', function ($user)
+Event::listen('backend.menu', function ()
 {
-    if (! $user->hasRole('administrator')) {
-        return array();
-    }
-
     $items = array(
         array(
             'path'   => 'files',
+            'role'   => 'administrator',
             'url'    => site_url('admin/files'),
             'title'  => __d('files', 'Files'),
             'icon'   => 'file',

@@ -10,6 +10,7 @@ namespace App\Modules\System\Controllers;
 
 use Nova\Database\ORM\Builder as ModelBuilder;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Event;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Request;
@@ -62,7 +63,7 @@ abstract class BaseController extends Controller
      */
     protected function getMenuItems($event, $user)
     {
-        $results = Event::fire($event, array($user));
+        $gate = Gate::forUser($user);
 
         // The current URL.
         $url = Request::url();
@@ -70,6 +71,10 @@ abstract class BaseController extends Controller
         // The item path which coresponds with the current URL.
         $path = '';
 
+        // Fire the Event and retrieve the results.
+        $results = Event::fire($event, array($user));
+
+        //
         $items = array();
 
         foreach ($results as $result) {
@@ -89,6 +94,10 @@ abstract class BaseController extends Controller
                     $item['children'] = array();
                 }
 
+                if (! $this->itemIsAllowed($item, $gate, $user)) {
+                    continue;
+                }
+
                 Arr::set($items, $key, $item);
 
                 if (($item['url'] == $url) && empty($path)) {
@@ -97,7 +106,49 @@ abstract class BaseController extends Controller
             }
         }
 
-        return $this->prepareMenuItems($items, $path, $url);
+        return $this->prepareItems($items, $path, $url);
+    }
+
+    protected function itemIsAllowed(array $item, $gate, $user)
+    {
+        // Check the roles.
+        if (isset($item['role'])) {
+            $roles = explode(',', $item['role']);
+
+            if (! $user->hasRole($roles)) {
+                return false;
+            }
+        }
+
+        // Check the abilities.
+        if (isset($item['can'])) {
+            list ($ability, $parameters) = $this->parseItemAbility($item);
+
+            if (call_user_func(array($gate, 'denies'), $ability, $parameters)) {
+                return false;;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Parse an menu item ability.
+     *
+     * @param  array $item
+     * @return array
+     */
+    protected function parseItemAbility(array $item)
+    {
+        list($ability, $parameters) = array_pad(
+            explode(':', $item['can'], 2), 2, array()
+        );
+
+        if (is_string($parameters)) {
+            $parameters = explode(',', $parameters);
+        }
+
+        return array($ability, $parameters);
     }
 
     /**
@@ -108,7 +159,7 @@ abstract class BaseController extends Controller
      * @param  string $url
      * @return array
      */
-    protected function prepareMenuItems(array $items, $path, $url)
+    protected function prepareItems(array $items, $path, $url)
     {
         foreach ($items as &$item) {
             $active = false;
@@ -120,7 +171,7 @@ abstract class BaseController extends Controller
             $item['active'] = $active;
 
             if (! empty($children = $item['children'])) {
-                $item['children'] = $this->prepareMenuItems($children, $path, $url);
+                $item['children'] = $this->prepareItems($children, $path, $url);
             }
         }
 

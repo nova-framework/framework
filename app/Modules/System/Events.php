@@ -9,7 +9,7 @@
 
 /** Define Events. */
 
-Event::listen('backend.menu', function ($user)
+Event::listen('backend.menu', function ()
 {
     $items = array(
         array(
@@ -26,17 +26,15 @@ Event::listen('backend.menu', function ($user)
             'icon'   => 'cube',
             'weight' => 0,
         ),
-    );
-
-    if ($user->hasRole('administrator')) {
-        $items[] = array(
+        array(
             'path'   => 'platform.settings',
+            'role'   => 'administrator',
             'url'    => site_url('admin/settings'),
             'title'  => __d('system', 'Settings'),
             'icon'   => 'circle-o',
             'weight' => 0,
-        );
-    }
+        ),
+    );
 
     return $items;
 });

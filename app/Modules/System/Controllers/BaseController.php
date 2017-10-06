@@ -111,7 +111,6 @@ abstract class BaseController extends Controller
 
     protected function itemIsAllowed(array $item, $gate, $user)
     {
-        // Check the roles.
         if (isset($item['role']) && ($item['role'] !== 'any')) {
             $roles = explode(',', $item['role']);
 
@@ -120,33 +119,18 @@ abstract class BaseController extends Controller
             }
         }
 
-        // Check the abilities.
-        if (isset($item['can'])) {
-            list ($ability, $parameters) = $this->parseItemAbility($item);
-
-            if (call_user_func(array($gate, 'denies'), $ability, $parameters)) {
-                return false;
-            }
+        // Not ability specified?
+        else if (! isset($item['can'])) {
+            return true;
         }
 
-        return true;
-    }
-
-    /**
-     * Parse an menu item ability.
-     *
-     * @param  array $item
-     * @return array
-     */
-    protected function parseItemAbility(array $item)
-    {
         list($ability, $parameters) = array_pad(explode(':', $item['can'], 2), 2, array());
 
         if (is_string($parameters)) {
             $parameters = explode(',', $parameters);
         }
 
-        return array($ability, $parameters);
+        return call_user_func(array($gate, 'allows'), $ability, $parameters);
     }
 
     /**

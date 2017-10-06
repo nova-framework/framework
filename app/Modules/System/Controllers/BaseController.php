@@ -115,9 +115,9 @@ abstract class BaseController extends Controller
     /**
      * Determine if the menu item usage is allowed by the specified User Roles.
      *
+     * @param  array  $item
      * @param  \Nova\Auth\Access\GateInterface  $gate
      * @param  mixed  $user
-     * @param  array  $item
      * @return boolean
      */
     protected function itemIsAllowed(array $item, GateInterface $gate, $user)

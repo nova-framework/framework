@@ -199,7 +199,7 @@ $langMenuLinks = ob_get_clean();
                 <?php } ?>
                 </ul>
             </li>
-            <?php } else { ?>
+            <?php } else if ($item['url'] !== '#') { ?>
             <li <?= $item['active'] ? "class='active'" : ""; ?>>
                 <a href="<?= $item['url']; ?>"><i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span></a>
             </li>

@@ -119,8 +119,9 @@ abstract class BaseController extends Controller
 
             $item['active'] = $active;
 
-            // Prepare the children.
-            $item['children'] = $this->prepareMenuItems($item['children'], $path, $url);
+            if (! empty($children = $item['children'])) {
+                $item['children'] = $this->prepareMenuItems($children, $path, $url);
+            }
         }
 
         // Sort the menu items by their weight and title.

@@ -22,7 +22,7 @@ class BackendMenu
      * @param  string|null  $url
      * @return array
      */
-    public static function handle($name, UserInterface $user, $url = null)
+    public static function get($name, UserInterface $user, $url = null)
     {
         if (is_null($url)) {
             $url = Request::url();
@@ -41,7 +41,7 @@ class BackendMenu
      * @param  string|null  $url
      * @return array
      */
-    protected function getItems($name, UserInterface $user, $url)
+    public function getItems($name, UserInterface $user, $url)
     {
         $gate = Gate::forUser($user);
 

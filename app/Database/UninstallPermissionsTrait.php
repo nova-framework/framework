@@ -9,8 +9,9 @@ use App\Models\Permission;
 
 trait UninstallPermissionsTrait
 {
+
     /**
-     * Uninstall the given permissions.
+     * Uninstall the permissions from the given group.
      *
      * @return void
      */

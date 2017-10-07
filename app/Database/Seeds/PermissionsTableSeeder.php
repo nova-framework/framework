@@ -4,7 +4,6 @@ namespace App\Database\Seeds;
 
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
-use Nova\Support\Facades\Cache;
 
 use App\Database\InstallPermissionsTrait;
 

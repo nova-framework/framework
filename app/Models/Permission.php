@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
+use Nova\Database\QueryException;
+
+use PDOException;
 
 
 class Permission extends BaseModel
@@ -17,5 +20,22 @@ class Permission extends BaseModel
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role', 'permission_role', 'permission_id', 'role_id');
+    }
+
+    public static function getResults()
+    {
+        $instance = new static;
+
+        try {
+            return $instance->newQuery()->get();
+        }
+        catch (QueryException $e) {
+            //
+        }
+        catch (PDOException $e) {
+            //
+        }
+
+        return $instance->newCollection();
     }
 }

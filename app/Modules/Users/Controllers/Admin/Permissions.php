@@ -5,6 +5,7 @@ namespace App\Modules\Users\Controllers\Admin;
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Module;
@@ -45,9 +46,9 @@ class Permissions extends BaseController
             throw new AuthorizationException();
         }
 
-        $permissionIds = Input::get('permission_id', array());
+        $permissionMap = Input::get('permission_id', array());
 
-        foreach ($permissionIds as $id => $roles) {
+        foreach ($permissionMap as $id => $roles) {
             // We will skip the permissions which cannot be found by ID.
 
             try {
@@ -59,6 +60,9 @@ class Permissions extends BaseController
 
             $permission->roles()->sync($roles);
         }
+
+        // Invalidate the cached system permissions.
+        Cache::forget('system_permissions');
 
         // Prepare the flash message.
         $status = __d('users', 'The permissions was successfully updated.');

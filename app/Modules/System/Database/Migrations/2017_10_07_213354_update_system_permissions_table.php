@@ -4,9 +4,12 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 use Nova\Support\Facades\Cache;
 
+use App\Models\Permission;
 
-class CreatePermissionsTable extends Migration
+
+class UpdateSystemPermissionsTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -14,14 +17,7 @@ class CreatePermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('permissions', function (Blueprint $table)
-        {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('slug', 100)->unique();
-            $table->string('group', 100)->nullable();
-            $table->timestamps();
-        });
+        //
     }
 
     /**
@@ -31,10 +27,15 @@ class CreatePermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permissions');
+        $permissions = Permission::where('group', 'system')->get();
+
+        foreach ($permissions as $permission) {
+            $permission->roles()->detach();
+
+            $permission->delete();
+        }
 
         // Invalidate the cached system permissions.
         Cache::forget('system_permissions');
     }
-
 }

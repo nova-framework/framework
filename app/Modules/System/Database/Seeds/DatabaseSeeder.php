@@ -17,6 +17,6 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call('App\Modules\System\Database\Seeds\FoobarTableSeeder');
+        $this->call('App\Modules\System\Database\Seeds\UpdatePermissions');
     }
 }

@@ -11,7 +11,9 @@
 
 <?= Session::getMessages(); ?>
 
-<?php $perms = $permissions->where('group', null); ?>
+<?php $perms = $permissions->where('group', 'app'); ?>
+
+<form action="<?= site_url('admin/permissions/'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
 <div class="box box-default">
     <div class="box-header <?= $perms->isEmpty() ? 'with-border' : ''; ?>">
@@ -54,6 +56,10 @@
     </div>
     <?php } ?>
 </div>
+
+<input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+
+</form>
 
 <?php foreach ($modules as $module) { ?>
 <?php $perms = $permissions->where('group', $module['slug']); ?>

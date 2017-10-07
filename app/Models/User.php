@@ -75,6 +75,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             $this->permissions = $this->roles->load('permissions')->pluck('permissions')->lists('slug');
         }
 
-        return count(array_intersect($this->permissions, $permissions));
+        return (bool) count(array_intersect($this->permissions, $permissions));
     }
 }

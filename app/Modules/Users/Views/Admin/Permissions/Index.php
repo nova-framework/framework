@@ -21,16 +21,27 @@
         <?php if (! $perms->isEmpty()) { ?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;' width='<?= 100 - (10 * $roles->count()); ?>%'><?= __d('users', 'Permission'); ?></th>
+                <?php $count = $roles->count(); ?>
+                <th style='text-align: left; vertical-align: middle;' width='<?= (85 - (10 * $count)); ?>%'><?= __d('users', 'Permission'); ?></th>
+                <th style='text-align: left; vertical-align: middle;' width='15%'><?= __d('users', 'Slug'); ?></th>
                 <?php foreach ($roles as $role) { ?>
                 <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
                 <?php } ?>
             </tr>
-            <?php foreach ($perms as $perm) { ?>
+            <?php foreach ($perms as $permission) { ?>
             <tr>
-                <td style='text-align: left; vertical-align: middle;'><?= $perm->name; ?></td>
+                <td style='text-align: left; vertical-align: middle;'><?= $permission->name; ?></td>
+                <td style='text-align: left; vertical-align: middle;'><?= $permission->slug; ?></td>
+                <?php $ids = $permission->roles->lists('id'); ?>
                 <?php foreach ($roles as $role) { ?>
-                <td style='text-align: center; vertical-align: middle;'>-</td>
+                <td style='text-align: center; vertical-align: middle;'>
+                    <input
+                        type="checkbox"
+                        name="permission_id[<?= $permission->id; ?>][]"
+                        value="<?= $role->id; ?>"
+                        <?= in_array($role->id, $ids) ? 'checked="checked"' : ''; ?>
+                    />
+                </td>
                 <?php } ?>
             </tr>
             <?php } ?>
@@ -50,6 +61,8 @@
 <?php $perms = $permissions->where('group', $module['slug']); ?>
 <?php if ($perms->isEmpty()) continue; ?>
 
+<form action="<?= site_url('admin/permissions/'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
+
 <div class="box box-widget">
     <div class="box-header">
         <h3 class="box-title"><?= __d('users', 'Permissions registered by the <b>{0}</b> module', $module['basename']); ?></h3>
@@ -57,16 +70,28 @@
     <div class="box-body no-padding">
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;' width='<?= 100 - (10 * $roles->count()); ?>%'><?= __d('users', 'Permission'); ?></th>
+                <?php $count = $roles->count(); ?>
+                <th style='text-align: left; vertical-align: middle;' width='<?= (85 - (10 * $count)); ?>%'><?= __d('users', 'Permission'); ?></th>
+                <th style='text-align: left; vertical-align: middle;' width='15%'><?= __d('users', 'Slug'); ?></th>
                 <?php foreach ($roles as $role) { ?>
                 <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
                 <?php } ?>
             </tr>
-            <?php foreach ($perms as $perm) { ?>
+            <?php foreach ($perms as $permission) { ?>
             <tr>
-                <td style='text-align: left; vertical-align: middle;'><?= $perm->name; ?></td>
+                <td style='text-align: left; vertical-align: middle;'><?= $permission->name; ?></td>
+                <td style='text-align: left; vertical-align: middle;'><?= $permission->slug; ?></td>
+
+                <?php $ids = $permission->roles->lists('id'); ?>
                 <?php foreach ($roles as $role) { ?>
-                <td style='text-align: center; vertical-align: middle;'>-</td>
+                <td style='text-align: center; vertical-align: middle;'>
+                    <input
+                        type="checkbox"
+                        name="permission_id[<?= $permission->id; ?>][]"
+                        value="<?= $role->id; ?>"
+                        <?= in_array($role->id, $ids) ? 'checked="checked"' : ''; ?>
+                    />
+                </td>
                 <?php } ?>
             </tr>
             <?php } ?>
@@ -76,6 +101,10 @@
         <input class="btn btn-success col-sm-2 pull-right" type="submit" id="submit" name="submit" value="<?= __d('users', 'Apply the changes') ?>" />&nbsp;
     </div>
 </div>
+
+<input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+
+</form>
 
 <?php } ?>
 

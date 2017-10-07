@@ -99,7 +99,9 @@ class BackendMenu
     protected function userIsAllowed(array $item, UserInterface $user, GateInterface $gate)
     {
         if (isset($item['role']) && ($item['role'] !== 'any')) {
-            $roles = explode(',', $item['role']);
+            if (is_string($roles = $item['role'])) {
+                $roles = explode(',', $roles);
+            }
 
             if (! $user->hasRole($roles)) {
                 return false;

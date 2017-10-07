@@ -40,11 +40,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         foreach ($permissions as $permission) {
-            $this->registerPermissionToGate($gate, $permission);
+            $this->registerPermission($gate, $permission);
         }
     }
 
-    protected function registerPermissionToGate(Gate $gate, Permission $permission)
+    protected function registerPermission(Gate $gate, Permission $permission)
     {
         $slug = $permission->slug;
 

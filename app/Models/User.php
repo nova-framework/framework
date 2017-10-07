@@ -38,6 +38,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
+    // For caching the permission slugs.
     protected $permissions;
 
 

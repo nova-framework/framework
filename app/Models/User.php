@@ -47,28 +47,20 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
     }
 
-    public function hasRole($roles, $strict = false)
+    public function hasRole($role, $strict = false)
     {
-        $slugs = $this->roles->lists('slug');
+        $roles = $this->roles->lists('slug');
 
-        if (in_array('root', $slugs) && ! $strict) {
+        if (in_array('root', $roles) && ! $strict) {
             return true;
         }
 
-        $roles = is_array($roles) ? $roles : array($roles);
-
-        foreach ($roles as $role) {
-            if (in_array(strtolower($role), $slugs)) {
-                return true;
-            }
-        }
-
-        return false;
+        return (bool) count(array_intersect($roles, (array) $role));
     }
 
-    public function hasPermission($permissions)
+    public function hasPermission($permission)
     {
-        $permissions = is_array($permissions) ? $permissions : func_get_args();
+        $permissions = is_array($permission) ? $permission : func_get_args();
 
         if (! isset($this->permissions)) {
             $this->permissions = $this->roles->load('permissions')->pluck('permissions')->lists('slug');

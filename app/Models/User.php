@@ -88,6 +88,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             $this->permissions = $collection->unique()->lists('slug');
         }
 
-        return in_array(strtolower($permission), $this->permissions);
+        return in_array($permission, $this->permissions);
     }
 }

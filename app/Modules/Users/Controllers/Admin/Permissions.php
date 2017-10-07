@@ -28,7 +28,7 @@ class Permissions extends BaseController
 
         $modules = Module::enabled();
 
-        $permissions = Permission::all();
+        $permissions = Permission::with('roles')->get();
 
         $roles = Role::all();
 

@@ -42,7 +42,7 @@ class Users extends BaseController
         // The Validation rules.
         $rules = array(
             'username'              => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
-            'role'                  => 'required|numeric|exists:roles,id',
+            'roles'                 => 'required|array|exists:roles,id',
             'realname'              => 'required|min:5|max:100|valid_name',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
@@ -116,7 +116,7 @@ class Users extends BaseController
     public function store()
     {
         $input = Input::only(
-            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+            'username', 'roles', 'realname', 'password', 'password_confirmation', 'email', 'image'
         );
 
         // Authorize the current User.
@@ -138,12 +138,13 @@ class Users extends BaseController
         $user = User::create(array(
             'username'  => $input['username'],
             'password'  => $password,
-            'role_id'   => $input['role'],
             'realname'  => $input['realname'],
             'email'     => $input['email'],
             'image'     => Input::file('image'),
             'activated' => 1,
         ));
+
+        $user->roles()->attach($input['roles']);
 
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully created.', $user->username);
@@ -204,7 +205,7 @@ class Users extends BaseController
     public function update($id)
     {
         $input = Input::only(
-            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+            'username', 'roles', 'realname', 'password', 'password_confirmation', 'email', 'image'
         );
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
@@ -240,7 +241,6 @@ class Users extends BaseController
 
         //
         $user->username = $input['username'];
-        $user->role_id  = $input['role'];
         $user->realname = $input['realname'];
         $user->email    = $input['email'];
 
@@ -256,6 +256,9 @@ class Users extends BaseController
 
         // Save the User information.
         $user->save();
+
+        // Sync the Roles.
+        $user->roles()->sync($input['roles']);
 
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $username);
@@ -280,6 +283,9 @@ class Users extends BaseController
         if (Gate::denies('delete', $user)) {
             throw new AuthorizationException();
         }
+
+        // Detach the Roles.
+        $user->roles()->detach();
 
         // Destroy the requested User record.
         $user->delete();

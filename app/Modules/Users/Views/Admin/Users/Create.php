@@ -30,13 +30,12 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="role"><?= __d('users','Role'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="role"><?= __d('users','Roles'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
-                    <?php $optRole = Input::old('role'); ?>
-                    <select name="role" id="role" class="form-control select2">
-                        <option value="" <?php if (empty($optRole)) echo 'selected'; ?>>- <?= __d('users','Choose a Role'); ?> -</option>
+                    <?php $optRoles = Input::old('roles', array()); ?>
+                    <select name="roles[]" id="roles" class="form-control select2" multiple="multiple" data-placeholder="<?= __d('users', 'Select a Role'); ?>" style="width: 100%;">
                         <?php foreach ($roles as $role) { ?>
-                        <option value="<?= $role->id ?>" <?php if ($optRole == $role->id) echo 'selected'; ?>><?= $role->name; ?></option>
+                        <option value="<?= $role->id ?>" <?= in_array($role->id, $optRoles) ? 'selected' : ''; ?>><?= $role->name; ?></option>
                         <?php } ?>
                     </select>
                 </div>

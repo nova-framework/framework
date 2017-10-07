@@ -11,7 +11,7 @@ class Permission extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('name', 'slug', 'description', 'group');
+    protected $fillable = array('name', 'slug', 'group');
 
 
     public function roles()

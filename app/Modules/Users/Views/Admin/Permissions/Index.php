@@ -21,10 +21,9 @@
         <?php if (! $perms->isEmpty()) { ?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;' width='40%'><?= __d('users', 'Permission'); ?></th>
-                <?php $width = round(60 / $roles->count()); ?>
+                <th style='text-align: left; vertical-align: middle;' width='<?= 100 - (10 * $roles->count()); ?>%'><?= __d('users', 'Permission'); ?></th>
                 <?php foreach ($roles as $role) { ?>
-                <th style='text-align: center; vertical-align: middle;' width='<?= $width; ?>%'><?= $role->name; ?></th>
+                <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
                 <?php } ?>
             </tr>
             <?php foreach ($perms as $perm) { ?>
@@ -58,10 +57,9 @@
     <div class="box-body no-padding">
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;' width='40%'><?= __d('users', 'Permission'); ?></th>
-                <?php $width = round(60 / $roles->count()); ?>
+                <th style='text-align: left; vertical-align: middle;' width='<?= 100 - (10 * $roles->count()); ?>%'><?= __d('users', 'Permission'); ?></th>
                 <?php foreach ($roles as $role) { ?>
-                <th style='text-align: center; vertical-align: middle;' width='<?= $width; ?>%'><?= $role->name; ?></th>
+                <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
                 <?php } ?>
             </tr>
             <?php foreach ($perms as $perm) { ?>

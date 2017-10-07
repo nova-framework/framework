@@ -72,7 +72,7 @@ Event::listen('backend.menu', function ()
 
             //
             'path'   => 'platform.permissions',
-            //'can'    => 'lists:' .Permission::class,
+            'can'    => 'manage:' .Permission::class,
         ),
     );
 });

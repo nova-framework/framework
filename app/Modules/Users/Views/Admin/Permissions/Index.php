@@ -19,11 +19,10 @@
     </div>
     <div class="box-body <?= ! $perms->isEmpty() ? 'no-padding' : ''; ?>">
         <?php if (! $perms->isEmpty()) { ?>
+        <?php $count = $roles->count(); ?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <?php $count = $roles->count(); ?>
-                <th style='text-align: left; vertical-align: middle;' width='<?= (85 - (10 * $count)); ?>%'><?= __d('users', 'Permission'); ?></th>
-                <th style='text-align: left; vertical-align: middle;' width='15%'><?= __d('users', 'Slug'); ?></th>
+                <th style='text-align: left; vertical-align: middle;' width='<?= (100 - (10 * $count)); ?>%'><?= __d('users', 'Permission'); ?></th>
                 <?php foreach ($roles as $role) { ?>
                 <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
                 <?php } ?>
@@ -31,8 +30,7 @@
             <?php foreach ($perms as $permission) { ?>
             <tr>
                 <td style='text-align: left; vertical-align: middle;'><?= $permission->name; ?></td>
-                <td style='text-align: left; vertical-align: middle;'><?= $permission->slug; ?></td>
-                <?php $ids = $permission->roles->lists('id'); ?>
+                <?php $ids = Input::get('permission_id.' .$permission->id, $permission->roles->lists('id')); ?>
                 <?php foreach ($roles as $role) { ?>
                 <td style='text-align: center; vertical-align: middle;'>
                     <input
@@ -60,6 +58,7 @@
 <?php foreach ($modules as $module) { ?>
 <?php $perms = $permissions->where('group', $module['slug']); ?>
 <?php if ($perms->isEmpty()) continue; ?>
+<?php $count = $roles->count(); ?>
 
 <form action="<?= site_url('admin/permissions/'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
@@ -70,9 +69,7 @@
     <div class="box-body no-padding">
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
-                <?php $count = $roles->count(); ?>
-                <th style='text-align: left; vertical-align: middle;' width='<?= (85 - (10 * $count)); ?>%'><?= __d('users', 'Permission'); ?></th>
-                <th style='text-align: left; vertical-align: middle;' width='15%'><?= __d('users', 'Slug'); ?></th>
+                <th style='text-align: left; vertical-align: middle;' width='<?= (100 - (10 * $count)); ?>%'><?= __d('users', 'Permission'); ?></th>
                 <?php foreach ($roles as $role) { ?>
                 <th style='text-align: center; vertical-align: middle;' width='10%'><?= $role->name; ?></th>
                 <?php } ?>
@@ -80,9 +77,7 @@
             <?php foreach ($perms as $permission) { ?>
             <tr>
                 <td style='text-align: left; vertical-align: middle;'><?= $permission->name; ?></td>
-                <td style='text-align: left; vertical-align: middle;'><?= $permission->slug; ?></td>
-
-                <?php $ids = $permission->roles->lists('id'); ?>
+                <?php $ids = Input::get('permission_id.' .$permission->id, $permission->roles->lists('id')); ?>
                 <?php foreach ($roles as $role) { ?>
                 <td style='text-align: center; vertical-align: middle;'>
                     <input

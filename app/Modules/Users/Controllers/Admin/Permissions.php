@@ -5,6 +5,7 @@ namespace App\Modules\Users\Controllers\Admin;
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Http\Request;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Module;
 use Nova\Support\Facades\Redirect;
@@ -19,18 +20,16 @@ class Permissions extends BaseController
 
     public function index()
     {
-        /*
         // Authorize the current User.
         if (Gate::denies('manage', Permission::class)) {
             throw new AuthorizationException();
         }
-        */
+
+        $modules = Module::enabled();
 
         $permissions = Permission::all();
 
         $roles = Role::all();
-
-        $modules = Module::all();
 
         return $this->createView()
             ->shares('title', __d('users', 'Permissions'))
@@ -41,23 +40,21 @@ class Permissions extends BaseController
 
     public function update(Request $request)
     {
-        /*
         // Authorize the current User.
         if (Gate::denies('manage', Permission::class)) {
             throw new AuthorizationException();
         }
-        */
 
         $permissionIds = Input::get('permission_id', array());
 
         foreach ($permissionIds as $id => $roles) {
+            // We will skip the permissions which cannot be found by ID.
+
             try {
                 $permission = Permission::with('roles')->findOrFail($id);
             }
             catch (ModelNotFoundException $e) {
-                $status = __d('users', 'Permission not found: #{0}', $id);
-
-                return Redirect::to('admin/users')->withStatus($status, 'danger');
+                continue;
             }
 
             $permission->roles()->sync($roles);

@@ -7,7 +7,7 @@ use Nova\Support\Facades\Cache;
 use App\Models\Permission;
 
 
-class UpdateFilesPermissionsTable extends Migration
+class FilesUpdatePermissionsTable extends Migration
 {
 
     /**

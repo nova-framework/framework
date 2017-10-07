@@ -7,7 +7,7 @@ use Nova\Support\Facades\Cache;
 use App\Models\Permission;
 
 
-class UpdateSystemPermissionsTable extends Migration
+class SystemUpdatePermissionsTable extends Migration
 {
 
     /**

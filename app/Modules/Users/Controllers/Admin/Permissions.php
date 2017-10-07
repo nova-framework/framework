@@ -65,7 +65,11 @@ class Permissions extends BaseController
                 continue;
             }
 
-            $permission->roles()->sync(array_intersect($roleIds, $roles));
+            if (! empty($roles)) {
+                $permission->roles()->sync(array_intersect($roleIds, $roles));
+            } else {
+                $permission->roles()->detach();
+            }
         }
 
         // Invalidate the cached system permissions.

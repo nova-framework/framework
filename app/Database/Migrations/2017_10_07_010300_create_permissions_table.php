@@ -4,7 +4,7 @@ use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
 
-class CreateRolesTable extends Migration
+class CreatePermissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table)
+        Schema::create('permissions', function (Blueprint $table)
         {
             $table->increments('id');
             $table->string('name', 100);
             $table->string('slug', 100)->unique();
             $table->string('description', 255);
-            $table->timestamps();
+            $table->string('group', 100)->nullable();
         });
     }
 
@@ -30,6 +30,7 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('permissions');
     }
+
 }

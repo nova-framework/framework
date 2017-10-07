@@ -38,31 +38,53 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
+    protected $permissions;
 
-    public function role()
+
+    public function roles()
     {
-        return $this->hasOne('App\Models\Role', 'id', 'role_id');
+        return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
     }
 
     public function hasRole($roles, $strict = false)
     {
-        if (! array_key_exists('role', $this->relations)) {
-            $this->load('role');
+        if (! array_key_exists('roles', $this->relations)) {
+            $this->load('roles');
         }
 
-        $slug = strtolower($this->role->slug);
+        $roles = ! is_array($roles) ? $roles : array($roles);
 
-        // Check if the User is a Root account.
-        if (($slug == 'root') && ! $strict) {
-            return true;
-        }
+        foreach ($this->roles->lists('slug') as $slug) {
+            if (($slug === 'root') && ! $strict) {
+                return true;
+            }
 
-        foreach ((array) $roles as $role) {
-            if (strtolower($role) == $slug) {
+            if (in_array($slug, $roles)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public function hasPermission($slug)
+    {
+        if (! isset($this->permissions)) {
+            $collection = $this->newCollection();
+
+            if (! array_key_exists('roles', $this->relations)) {
+                $this->load('roles');
+            }
+
+            foreach ($this->roles as $role) {
+                $role->load('permissions');
+
+                $collection = $collection->merge($role->permissions);
+            }
+
+            $this->permissions = $collection->unique()->lists('slug');
+        }
+
+        return in_array($slug, $this->permissions);
     }
 }

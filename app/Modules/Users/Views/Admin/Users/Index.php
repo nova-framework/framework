@@ -37,7 +37,7 @@
             <tr class="bg-navy disabled">
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
-                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Role'); ?></th>
+                <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Roles'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Name and Surname'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'E-mail'); ?></th>
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'Created At'); ?></th>
@@ -49,7 +49,7 @@
 <tr>
     <td style='text-align: center; vertical-align: middle;' width='5%'>" .$user->id ."</td>
     <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->username ."</td>
-    <td style='text-align: center; vertical-align: middle;' width='11%'>" .$user->role->name ."</td>
+    <td style='text-align: center; vertical-align: middle;' width='11%'>" .implode(', ', $user->roles->lists('name')) ."</td>
     <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->realname ."</td>
     <td style='text-align: center; vertical-align: middle;' width='18%'>" .$user->email ."</td>
     <td style='text-align: center; vertical-align: middle;' width='15%'>" .$user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')) ."</td>

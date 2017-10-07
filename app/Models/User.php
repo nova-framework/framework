@@ -49,9 +49,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function hasRole($role, $strict = false)
     {
-        $roles = $this->roles->lists('slug');
-
-        if (in_array('root', $roles) && ! $strict) {
+        if (in_array('root', $roles = $this->roles->lists('slug')) && ! $strict) {
             return true;
         }
 
@@ -61,7 +59,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     public function hasPermission($permission)
     {
         if (in_array('root', $this->roles->lists('slug'))) {
-            // The ROOT has all permissions.
+            // The ROOT get all permissions.
             return true;
         }
 

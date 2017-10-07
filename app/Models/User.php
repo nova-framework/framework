@@ -60,6 +60,11 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function hasPermission($permission)
     {
+        if (in_array('root', $this->roles->lists('slug'))) {
+            // The ROOT has all permissions.
+            return true;
+        }
+
         $permissions = is_array($permission) ? $permission : func_get_args();
 
         if (! isset($this->permissions)) {

@@ -53,14 +53,16 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             $this->load('roles');
         }
 
+        $slugs = $this->roles->lists('slug');
+
+        if (in_array('root', $slugs) && ! $strict) {
+            return true;
+        }
+
         $roles = is_array($roles) ? $roles : array($roles);
 
-        foreach ($this->roles->lists('slug') as $slug) {
-            if (($slug === 'root') && ! $strict) {
-                return true;
-            }
-
-            if (in_array($slug, $roles)) {
+        foreach ($roles as $role) {
+            if (in_array(strtolower($role), $slugs)) {
                 return true;
             }
         }
@@ -68,7 +70,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         return false;
     }
 
-    public function hasPermission($slug)
+    public function hasPermission($permission)
     {
         if (! isset($this->permissions)) {
             $collection = $this->newCollection();
@@ -86,6 +88,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             $this->permissions = $collection->unique()->lists('slug');
         }
 
-        return in_array($slug, $this->permissions);
+        return in_array(strtolower($permission), $this->permissions);
     }
 }

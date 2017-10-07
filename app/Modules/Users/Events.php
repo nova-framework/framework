@@ -6,6 +6,7 @@
  * @version 3.0
  */
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 
@@ -62,6 +63,16 @@ Event::listen('backend.menu', function ()
             //
             'path'   => 'platform.roles',
             'can'    => 'lists:' .Role::class,
+        ),
+        array(
+            'url'    => site_url('admin/permissions'),
+            'title'  => __d('users', 'Permissions'),
+            'icon'   => 'circle-o',
+            'weight' => 1,
+
+            //
+            'path'   => 'platform.permissions',
+            //'can'    => 'lists:' .Permission::class,
         ),
     );
 });

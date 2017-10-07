@@ -32,4 +32,8 @@ Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
     Route::get( 'roles/{id}/edit',    array('before' => 'auth',      'uses' => 'Roles@edit'));
     Route::post('roles/{id}',         array('before' => 'auth|csrf', 'uses' => 'Roles@update'));
     Route::post('roles/{id}/destroy', array('before' => 'auth|csrf', 'uses' => 'Roles@destroy'));
+
+    // The Permissions Editor.
+    Route::get( 'permissions',       array('before' => 'auth',      'uses' => 'Permissions@index'));
+    Route::post('permissions',       array('before' => 'auth|csrf', 'uses' => 'Permissions@update'));
 });

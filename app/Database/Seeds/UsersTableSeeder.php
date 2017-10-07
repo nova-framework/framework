@@ -79,7 +79,7 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->roles()->attach(array(5));
+        $user->roles()->attach(array(4));
 
         //
         $user = User::create(array(
@@ -93,7 +93,7 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        $user->roles()->attach(array(5));
+        $user->roles()->attach(array(4));
     }
 
     protected function uniqueToken($length = 60)

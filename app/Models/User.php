@@ -44,7 +44,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function roles()
     {
-        return $this->belongsToMany('App\Models\Role', 'role_user', 'role_id', 'user_id');
+        return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
     }
 
 

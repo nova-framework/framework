@@ -16,12 +16,12 @@ class Role extends BaseModel
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\User', 'role_user', 'user_id', 'role_id');
+        return $this->belongsToMany('App\Models\User', 'role_user', 'role_id', 'user_id');
     }
 
     public function permissions()
     {
-        return $this->belongsToMany('App\Models\Permission', 'permission_role', 'permission_id', 'role_id');
+        return $this->belongsToMany('App\Models\Permission', 'permission_role', 'role_id', 'permission_id');
     }
 
 }

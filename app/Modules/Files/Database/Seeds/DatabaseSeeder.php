@@ -18,6 +18,6 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         //
-        $this->call('App\Modules\Files\Database\Seeds\UpdatePermissions');
+        $this->call('App\Modules\Files\Database\Seeds\PermissionsTableSeeder');
     }
 }

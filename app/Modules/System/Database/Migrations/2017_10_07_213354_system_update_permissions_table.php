@@ -2,13 +2,14 @@
 
 use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
-use Nova\Support\Facades\Cache;
 
-use App\Models\Permission;
+use App\Database\UninstallPermissionsTrait;
 
 
 class SystemUpdatePermissionsTable extends Migration
 {
+    use UninstallPermissionsTrait;
+
 
     /**
      * Run the migrations.
@@ -27,15 +28,6 @@ class SystemUpdatePermissionsTable extends Migration
      */
     public function down()
     {
-        $permissions = Permission::where('group', 'system')->get();
-
-        foreach ($permissions as $permission) {
-            $permission->roles()->detach();
-
-            $permission->delete();
-        }
-
-        // Invalidate the cached system permissions.
-        Cache::forget('system_permissions');
+        $this->uninstallPermissions('system');
     }
 }

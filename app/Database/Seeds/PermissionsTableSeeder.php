@@ -6,11 +6,14 @@ use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 use Nova\Support\Facades\Cache;
 
-use App\Models\Permission;
+use App\Database\InstallPermissionsTrait;
 
 
 class PermissionsTableSeeder extends Seeder
 {
+    use InstallPermissionsTrait;
+
+
     /**
      * Run the database seeds.
      *
@@ -18,7 +21,7 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $items = array(
+        $permissions = array(
             // Roles.
             array(
                 'name'  => 'View the Roles List',
@@ -124,32 +127,6 @@ class PermissionsTableSeeder extends Seeder
             ),
         );
 
-        // Remove the old permissions before seeding.
-        $permissions = Permission::where('group', 'app')->get();
-
-        foreach ($permissions as $permission) {
-            $permission->roles()->detach();
-
-            $permission->delete();
-        }
-
-        foreach ($items as $item) {
-            $permission = Permission::create(array(
-                'name'  => $item['name'],
-                'slug'  => $item['slug'],
-                'group' => $item['group'],
-            ));
-
-            if (isset($item['roles'])) {
-                $roles = $item['roles'];
-
-                $permission->roles()->sync($roles);
-            } else {
-                $permission->roles()->detach();
-            }
-        }
-
-        // Invalidate the cached system permissions.
-        Cache::forget('system_permissions');
+        $this->installPermissions($permissions);
     }
 }

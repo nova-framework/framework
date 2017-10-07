@@ -1,43 +1,24 @@
 <?php
 
-namespace App\Modules\Files\Database\Seeds;
+namespace App\Database;
 
-use Nova\Database\ORM\Model;
-use Nova\Database\Seeder;
 use Nova\Support\Facades\Cache;
 
 use App\Models\Permission;
 
 
-class UpdatePermissions extends Seeder
+trait InstallPermissionsTrait
 {
 
     /**
-     * Run the database seeds.
+     * Install the given permissions.
      *
      * @return void
      */
-    public function run()
+    public function installPermissions(array $items)
     {
-        $items = array(
-            array(
-                'name'  => 'Manage the Files',
-                'slug'  => 'module.files.manage',
-                'group' => 'files',
-
-                'roles' => array(1, 2, 3),
-            ),
-            array(
-                'name'  => 'View the Site Root',
-                'slug'  => 'module.files.site.view',
-                'group' => 'files',
-
-                'roles' => array(1),
-            ),
-        );
-
         // Remove the old permissions before seeding.
-        $permissions = Permission::where('group', 'files')->get();
+        $permissions = Permission::where('group', 'system')->get();
 
         foreach ($permissions as $permission) {
             $permission->roles()->detach();

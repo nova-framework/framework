@@ -93,7 +93,7 @@ class Users extends BaseController
         // Get all User records for current page.
         $users = User::where('activated', 1)->paginate(25);
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Users'))
             ->with('users', $users);
     }
@@ -108,7 +108,7 @@ class Users extends BaseController
         // Get all available User Roles.
         $roles = Role::all();
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Create User'))
             ->with('roles', $roles);
     }
@@ -170,7 +170,7 @@ class Users extends BaseController
             throw new AuthorizationException();
         }
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Show User'))
             ->with('user', $user);
     }
@@ -196,7 +196,7 @@ class Users extends BaseController
         // Get all available User Roles.
         $roles = Role::all();
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
             ->with('roles', $roles)
             ->with('user', $user);
@@ -342,7 +342,7 @@ class Users extends BaseController
         // Prepare the Query for displaying.
         $search = htmlentities($search);
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Searching Users for: {0}', $search))
             ->with('search', $search)
             ->with('users', $users);

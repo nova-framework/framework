@@ -18,7 +18,7 @@ class Dashboard extends BaseController
 
     public function index()
     {
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('system', 'Dashboard'));
     }
 

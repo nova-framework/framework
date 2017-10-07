@@ -66,7 +66,7 @@ class Roles extends BaseController
         // Get all Role records for current page.
         $roles = Role::with('users')->paginate(25);
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Roles'))
             ->with('roles', $roles);
     }
@@ -78,7 +78,7 @@ class Roles extends BaseController
             throw new AuthorizationException();
         }
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Create Role'));
     }
 
@@ -125,7 +125,7 @@ class Roles extends BaseController
             throw new AuthorizationException();
         }
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Show Role'))
             ->with('role', $role);
     }
@@ -148,7 +148,7 @@ class Roles extends BaseController
             throw new AuthorizationException();
         }
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Edit Role'))
             ->with('role', $role);
     }

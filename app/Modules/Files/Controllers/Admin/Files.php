@@ -35,7 +35,7 @@ class Files extends BaseController
 
     public function index()
     {
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('files', 'Files'));
     }
 
@@ -44,7 +44,7 @@ class Files extends BaseController
         // Disable the auto-rendering on a (Theme) Layout.
         $this->layout = false;
 
-        return $this->getView();
+        return $this->createView();
     }
 
     public function preview(Request $request, $path)

@@ -33,7 +33,7 @@ class Authorize extends BaseController
      */
     public function login()
     {
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('system', 'User Login'));
     }
 
@@ -115,7 +115,7 @@ class Authorize extends BaseController
      */
     public function remind()
     {
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('system', 'Password Recovery'));
     }
 
@@ -158,7 +158,7 @@ class Authorize extends BaseController
      */
     public function reset($token)
     {
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('system', 'Password Reset'))
             ->with('token', $token);
     }

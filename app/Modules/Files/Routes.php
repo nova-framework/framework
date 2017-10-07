@@ -12,7 +12,7 @@
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
-    Route::get('files',           array('before' => 'auth', 'uses' => 'Files@index'));
+    Route::get('files', array('before' => 'auth', 'uses' => 'Files@index'));
 
     Route::match(array('GET', 'POST'), 'files/connector', array('before' => 'auth', 'uses' => 'Files@connector'));
 

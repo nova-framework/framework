@@ -15,8 +15,12 @@ class CreateRoleUserTable extends Migration
     {
         Schema::create('role_user', function (Blueprint $table)
         {
-            $table->integer('role_id', false);
-            $table->integer('user_id', false);
+            $table->integer('role_id');
+            $table->integer('user_id');
+
+            $table->primary(array(
+                'role_id', 'user_id'
+            ));
         });
     }
 

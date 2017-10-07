@@ -44,15 +44,12 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function roles()
     {
-        return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
+        return $this->belongsToMany('App\Models\Role', 'role_user', 'role_id', 'user_id');
     }
+
 
     public function hasRole($roles, $strict = false)
     {
-        if (! array_key_exists('roles', $this->relations)) {
-            $this->load('roles');
-        }
-
         $slugs = $this->roles->lists('slug');
 
         if (in_array('root', $slugs) && ! $strict) {
@@ -70,24 +67,14 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         return false;
     }
 
-    public function hasPermission($permission)
+    public function hasPermission($permissions)
     {
+        $permissions = is_array($permissions) ? $permissions : func_get_args();
+
         if (! isset($this->permissions)) {
-            $collection = $this->newCollection();
-
-            if (! array_key_exists('roles', $this->relations)) {
-                $this->load('roles');
-            }
-
-            foreach ($this->roles as $role) {
-                $role->load('permissions');
-
-                $collection = $collection->merge($role->permissions);
-            }
-
-            $this->permissions = $collection->unique()->lists('slug');
+            $this->permissions = $this->roles->load('permissions')->pluck('permissions')->lists('slug');
         }
 
-        return in_array($permission, $this->permissions);
+        return count(array_intersect($this->permissions, $permissions));
     }
 }

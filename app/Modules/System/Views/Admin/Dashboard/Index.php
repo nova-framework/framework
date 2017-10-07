@@ -17,4 +17,6 @@
     </div>
 </div>
 
+<?php dump(get_defined_vars()); ?>
+
 </section>

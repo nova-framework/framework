@@ -46,10 +46,17 @@ class Permissions extends BaseController
             throw new AuthorizationException();
         }
 
-        $permissionMap = Input::get('permission_id', array());
+        $roleIds = Role::all()->lists('id');
 
-        foreach ($permissionMap as $id => $roles) {
-            // We will skip the permissions which cannot be found by ID.
+        foreach ($request->input('permission_id', array()) as $id => $roles) {
+            // We will filter the input variables, because of no validation.
+            $id = intval($id);
+
+            $roles = array_unique(array_map(function ($value)
+            {
+                return intval($value);
+
+            }, (array) $roles));
 
             try {
                 $permission = Permission::with('roles')->findOrFail($id);
@@ -58,7 +65,7 @@ class Permissions extends BaseController
                 continue;
             }
 
-            $permission->roles()->sync($roles);
+            $permission->roles()->sync(array_intersect($roleIds, $roles));
         }
 
         // Invalidate the cached system permissions.

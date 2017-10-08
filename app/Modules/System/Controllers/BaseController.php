@@ -44,8 +44,7 @@ abstract class BaseController extends Controller
         $url = Request::url();
 
         if (! is_null($user = Auth::user())) {
-            $navbarLeftItems = EventedMenu::get('frontend.menu.left', $user, $url);
-
+            $navbarLeftItems  = EventedMenu::get('frontend.menu.left',  $user, $url);
             $navbarRightItems = EventedMenu::get('frontend.menu.right', $user, $url);
         } else {
             $navbarLeftItems  = array();

@@ -50,10 +50,8 @@ abstract class BaseController extends Controller
         $url = Request::url();
 
         if (! is_null($user = Auth::user())) {
-            $navbarItems = EventedMenu::get('backend.menu.navbar', $user, $url);
-
+            $navbarItems  = EventedMenu::get('backend.menu.navbar',  $user, $url);
             $sidebarItems = EventedMenu::get('backend.menu.sidebar', $user, $url);
-
         } else {
             $navbarItems =  array();
             $sidebarItems = array();

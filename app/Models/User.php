@@ -66,10 +66,10 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             return true;
         }
 
-        return (bool) count(array_intersect($permissions, $this->getCachedPermissions()));
+        return (bool) count(array_intersect($permissions, $this->getPermissions()));
     }
 
-    protected function getCachedPermissions()
+    protected function getPermissions()
     {
         if (isset($this->permissions)) {
             $this->permissions;

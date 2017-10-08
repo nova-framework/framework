@@ -20,7 +20,7 @@ class UserPolicy
      */
     public function lists(User $authUser)
     {
-        return true;
+        return $authUser->hasPermission('app.users.lists');
     }
 
     /**
@@ -32,7 +32,13 @@ class UserPolicy
      */
     public function view(User $authUser, User $user)
     {
-        return true;
+        if ($authUser->hasPermission('app.users.view')) {
+            return true;
+        } else if ($authUser->id === $user->id) {
+            return $authUser->hasPermission('app.users.view.own');
+        }
+
+        return false;
     }
 
     /**
@@ -43,7 +49,7 @@ class UserPolicy
      */
     public function create(User $authUser)
     {
-        return $authUser->hasRole('administrator');
+        return $authUser->hasPermission('app.users.create');
     }
 
     /**
@@ -55,11 +61,13 @@ class UserPolicy
      */
     public function update(User $authUser, User $user)
     {
-        if ($authUser->id === $user->id) {
+        if ($authUser->hasPermission('app.users.update')) {
             return true;
+        } else if ($authUser->id === $user->id) {
+            return $authUser->hasPermission('app.users.update.own');
         }
 
-        return $authUser->hasRole('administrator');
+        return false;
     }
 
     /**
@@ -71,6 +79,12 @@ class UserPolicy
      */
     public function delete(User $authUser, User $user)
     {
-        return $authUser->hasRole('administrator');
+        if ($authUser->hasPermission('app.users.delete')) {
+            return true;
+        } else if ($authUser->id === $user->id) {
+            return $authUser->hasPermission('app.users.delete.own');
+        }
+
+        return false;
     }
 }

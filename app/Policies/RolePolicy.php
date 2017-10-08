@@ -21,7 +21,7 @@ class RolePolicy
      */
     public function lists(User $authUser)
     {
-        return $this->authorize($authUser);
+        return $authUser->hasPermission('app.roles.lists');
     }
 
     /**
@@ -33,7 +33,7 @@ class RolePolicy
      */
     public function view(User $authUser, Role $role)
     {
-        return $this->authorize($authUser);
+        return $authUser->hasPermission('app.roles.view');
     }
 
     /**
@@ -44,7 +44,7 @@ class RolePolicy
      */
     public function create(User $authUser)
     {
-        return $this->authorize($authUser);
+        return $authUser->hasPermission('app.roles.create');
     }
 
     /**
@@ -56,7 +56,7 @@ class RolePolicy
      */
     public function update(User $authUser, Role $role)
     {
-        return $this->authorize($authUser);
+        return $authUser->hasPermission('app.roles.update');
     }
 
     /**
@@ -68,17 +68,6 @@ class RolePolicy
      */
     public function delete(User $authUser, Role $role)
     {
-        return $this->authorize($authUser);
-    }
-
-    /**
-     * Determine whether the user is an administrator.
-     *
-     * @param  \App\Models\User  $authUser
-     * @return bool
-     */
-    protected function authorize(User $authUser)
-    {
-        return $authUser->hasRole('administrator');
+        return $authUser->hasPermission('app.roles.delete');
     }
 }

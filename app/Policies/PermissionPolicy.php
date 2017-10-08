@@ -21,6 +21,6 @@ class PermissionPolicy
      */
     public function manage(User $authUser)
     {
-        return $authUser->hasRole('administrator');
+        return $authUser->hasPermission('app.permissions.manage');
     }
 }

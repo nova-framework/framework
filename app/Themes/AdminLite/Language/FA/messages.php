@@ -10,7 +10,7 @@ return array (
   'Logout' => 'خروج',
   'Member since {0}' => 'عضو از {0}',
   'Profile' => 'پروفایل',
-  'Search' => '',
+  'Search...' => '',
   'Sign In' => 'ورود',
   'Sign Up' => 'عضویت',
   'Sign out' => 'خروج',

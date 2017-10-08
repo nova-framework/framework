@@ -10,7 +10,7 @@ return array (
   'Logout' => 'Выйти',
   'Member since {0}' => 'Участник с {0}',
   'Profile' => 'Профиль',
-  'Search' => '',
+  'Search...' => '',
   'Sign In' => 'Вход',
   'Sign Up' => 'Регистрация',
   'Sign out' => 'Выход',

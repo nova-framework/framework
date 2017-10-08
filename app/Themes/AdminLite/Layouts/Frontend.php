@@ -102,7 +102,7 @@ $langMenuLinks = ob_get_clean();
             <!-- Search Form -->
             <form class="navbar-form navbar-left" role="search" action="<?= site_url('search'); ?>" method="GET">
                 <div class="form-group">
-                    <input type="text" name="query" class="form-control" id="navbar-search-input" placeholder="<?= __d('admin_lite', 'Search'); ?>">
+                    <input type="text" name="query" class="form-control" id="navbar-search-input" placeholder="<?= __d('admin_lite', 'Search...'); ?>">
                 </div>
             </form>
         </div>

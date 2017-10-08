@@ -10,7 +10,7 @@ class FilesUpdatePermissionsTable extends Migration
 {
     use UninstallPermissionsTrait;
 
-    
+
     /**
      * Run the migrations.
      *

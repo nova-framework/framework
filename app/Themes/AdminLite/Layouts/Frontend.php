@@ -92,6 +92,14 @@ $langMenuLinks = ob_get_clean();
             <i class="fa fa-bars"></i>
           </button>
         </div>
+        <!-- Navbar Left Menu -->
+        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li <?php if($currentUri == 'dashboard') echo 'class="active"'; ?>>
+                    <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-dashboard'></i> <?= __d('admin_lite', 'Dashboard'); ?></a>
+                </li>
+            </ul>
+        </div>
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">

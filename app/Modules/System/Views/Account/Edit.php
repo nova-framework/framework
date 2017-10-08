@@ -1,8 +1,7 @@
 <section class="content-header">
     <h1><?= __d('system', 'User Profile : {0}', $user->username); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('users/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
-        <li><a href='<?= site_url('admin/users'); ?>'><?= __d('system', 'Users'); ?></a></li>
+        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
         <li><?= __d('system', 'User Profile'); ?></li>
     </ol>
 </section>

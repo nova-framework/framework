@@ -4,6 +4,7 @@ return array (
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, شما با موفقیت وارد شدید.',
   'Activate your Account!' => 'حساب خود را فعال کنید!',
   'Activated! You can now Sign in!' => 'فعال شد! اکنون میتوانید وارد شوید!',
+  'Administration' => '',
   'Apply the changes' => 'اعمال تغییرات',
   'Backend Skin' => 'پوسته ظاهر',
   'Black' => 'سیاه',

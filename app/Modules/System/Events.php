@@ -11,6 +11,37 @@ use App\Models\Option;
 
 /** Define Events. */
 
+Event::listen('frontend.menu.left', function ()
+{
+    return array(
+        array(
+            'url'    => site_url('dashboard'),
+            'title'  => __d('system', 'Dashboard'),
+            'icon'   => 'dashboard',
+            'weight' => 0,
+
+            //
+            'path'   => 'dashboard',
+        ),
+    );
+});
+
+Event::listen('frontend.menu.right', function ()
+{
+    return array(
+        array(
+            'url'    => site_url('admin/dashboard'),
+            'title'  => __d('system', 'Administration'),
+            'icon'   => 'server',
+            'weight' => 101,
+
+            //
+            'path'   => 'backend',
+            'can'    => 'platform.backend.manage'
+        ),
+    );
+});
+
 Event::listen('backend.menu', function ()
 {
     return array(

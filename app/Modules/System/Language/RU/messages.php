@@ -4,6 +4,7 @@ return array (
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, Вы успешно вошли',
   'Activate your Account!' => 'Активируйте вашу учетную запись!',
   'Activated! You can now Sign in!' => 'Активировано! Теперь вы можете Войти!',
+  'Administration' => '',
   'Apply the changes' => 'Применить изменения',
   'Backend Skin' => 'Внешний вид админки',
   'Black' => 'Чёрный',

@@ -95,18 +95,16 @@ $langMenuLinks = ob_get_clean();
         <!-- Navbar Left Menu -->
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
             <ul class="nav navbar-nav">
-                <li <?php if($currentUri == 'dashboard') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-dashboard'></i> <?= __d('admin_lite', 'Dashboard'); ?></a>
-                </li>
+                <?php foreach ($leftMenuItems as $item) { ?>
+                    <?= View::partial('Partials/Frontend/NavbarMenuItems', 'AdminLite', array('item' => $item)); ?>
+                <?php } ?>
             </ul>
         </div>
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <?php if (Gate::allows('platform.backend.manage')) { ?>
-                <li>
-                    <a href='<?= site_url('admin/dashboard'); ?>'><i class='fa fa-server'></i> <?= __d('admin_lite', 'Administration'); ?></a>
-                </li>
+                <?php foreach ($rightMenuItems as $item) { ?>
+                    <?= View::partial('Partials/Frontend/NavbarMenuItems', 'AdminLite', array('item' => $item)); ?>
                 <?php } ?>
                 <li class="dropdown language-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">

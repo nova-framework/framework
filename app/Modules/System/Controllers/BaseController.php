@@ -41,5 +41,18 @@ abstract class BaseController extends Controller
         parent::initialize();
 
         //
+        $url = Request::url();
+
+        if (! is_null($user = Auth::user())) {
+            $leftMenuItems = EventedMenu::get('frontend.menu.left', $user, $url);
+
+            $rightMenuItems = EventedMenu::get('frontend.menu.right', $user, $url);
+        } else {
+            $leftMenuItems  = array();
+            $rightMenuItems = array();
+        }
+
+        View::share('leftMenuItems',  $leftMenuItems);
+        View::share('rightMenuItems', $rightMenuItems);
     }
 }

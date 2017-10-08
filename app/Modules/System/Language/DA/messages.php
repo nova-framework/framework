@@ -4,6 +4,7 @@ return array (
   '<b>{0}</b>, you have successfully logged in.' => '<b>{0}</b>, du er logget ind.',
   'Activate your Account!' => 'Aktivér din konto!',
   'Activated! You can now Sign in!' => 'Aktiveret! Du kan nu logge ind!',
+  'Administration' => '',
   'Apply the changes' => 'Tilføj ændringerne',
   'Backend Skin' => 'Backend design',
   'Black' => 'Sort',

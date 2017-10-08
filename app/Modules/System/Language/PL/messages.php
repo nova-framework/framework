@@ -4,6 +4,7 @@ return array (
   '<b>{0}</b>, you have successfully logged in.' => '',
   'Activate your Account!' => '',
   'Activated! You can now Sign in!' => '',
+  'Administration' => '',
   'Apply the changes' => '',
   'Backend Skin' => '',
   'Black' => '',

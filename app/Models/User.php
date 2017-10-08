@@ -33,8 +33,9 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
-    // Cache for the slugs of permissions inherited from the associated role(s)
-    protected $permissions;
+    // Caches for Roles and Permissions.
+    protected $cachedRoles;
+    protected $cachedPermissions;
 
 
     public function roles()
@@ -44,12 +45,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function hasRole($role, $strict = false)
     {
-        $roles = Cache::remember('user.roles.' .$this->getKey(), 1440, function ()
-        {
-            return $this->roles->lists('slug');
-        });
-
-        if (in_array('root', $roles) && ! $strict) {
+        if (in_array('root', $roles = $this->getCachedRoles()) && ! $strict) {
             // The ROOT is allowed for all permissions.
             return true;
         }
@@ -61,21 +57,33 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     {
         $permissions = is_array($permission) ? $permission : func_get_args();
 
-        if (in_array('root', $this->roles->lists('slug'))) {
+        if (in_array('root', $this->getCachedRoles())) {
             // The ROOT is allowed for all permissions.
             return true;
         }
 
-        return (bool) count(array_intersect($permissions, $this->getPermissions()));
+        return (bool) count(array_intersect($permissions, $this->getCachedPermissions()));
     }
 
-    protected function getPermissions()
+    protected function getCachedRoles()
     {
-        if (isset($this->permissions)) {
-            return $this->permissions;
+        if (isset($this->cachedRoles)) {
+            return $this->cachedRoles;
         }
 
-        return $this->permissions = Cache::remember('user.permissions.' .$this->getKey(), 1440, function ()
+        return $this->cachedRoles = Cache::remember('user.roles.' .$this->getKey(), 1440, function ()
+        {
+            return $this->roles->lists('slug');
+        });
+    }
+
+    protected function getCachedPermissions()
+    {
+        if (isset($this->cachedPermissions)) {
+            return $this->cachedPermissions;
+        }
+
+        return $this->cachedPermissions = Cache::remember('user.permissions.' .$this->getKey(), 1440, function ()
         {
             return $this->roles->load('permissions')->pluck('permissions')->lists('slug');
         });

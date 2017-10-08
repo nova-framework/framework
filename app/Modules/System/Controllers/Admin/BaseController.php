@@ -8,7 +8,9 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
+use Nova\Auth\Access\AuthorizationException;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 
@@ -40,7 +42,11 @@ abstract class BaseController extends Controller
     {
         parent::initialize();
 
-        //
+        // Authorize the current User.
+        if (Gate::denies('platform.backend.manage')) {
+            throw new AuthorizationException();
+        }
+
         $url = Request::url();
 
         if (! is_null($user = Auth::user())) {

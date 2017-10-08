@@ -24,11 +24,6 @@ use App\Models\Option;
 class Settings extends BaseController
 {
 
-    public function __construct()
-    {
-        $this->beforeFilter('role:administrator');
-    }
-
     protected function validator(array $data)
     {
         // Validation rules

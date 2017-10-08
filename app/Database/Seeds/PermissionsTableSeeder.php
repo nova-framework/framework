@@ -21,6 +21,15 @@ class PermissionsTableSeeder extends Seeder
     public function run()
     {
         $permissions = array(
+            // Options.
+            array(
+                'name'  => 'Manage the Platform Options',
+                'slug'  => 'app.options.manage',
+                'group' => 'app',
+
+                'roles' => array(1, 2),
+            ),
+
             // Roles.
             array(
                 'name'  => 'View the Roles List',
@@ -108,7 +117,7 @@ class PermissionsTableSeeder extends Seeder
                 'slug'  => 'app.users.update.own',
                 'group' => 'app',
 
-                'roles' => array(1, 2, 4),
+                'roles' => array(1, 2, 3),
             ),
             array(
                 'name'  => 'Delete User accounts',
@@ -123,15 +132,6 @@ class PermissionsTableSeeder extends Seeder
                 'group' => 'app',
 
                 'roles' => array(1, 2, 3),
-            ),
-
-            //
-            array(
-                'name'  => 'Manage the Options',
-                'slug'  => 'app.options.manage',
-                'group' => 'app',
-
-                'roles' => array(1, 2),
             ),
         );
 

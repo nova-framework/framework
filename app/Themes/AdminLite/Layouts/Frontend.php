@@ -5,11 +5,20 @@
 
 $siteName = Config::get('app.name', SITETITLE);
 
+// Prepare the current User Info.
+$user = Auth::user();
+
 // Generate the Language Changer menu.
 $langCode = Language::code();
 $langName = Language::name();
 
 $languages = Config::get('languages');
+
+if (isset($user->image) && $user->image->exists()) {
+    $imageUrl = resource_url('images/users/' .basename($user->image->path));
+} else {
+    $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
+}
 
 //
 ob_start();
@@ -76,7 +85,7 @@ $langMenuLinks = ob_get_clean();
 <div class="wrapper">
   <header class="main-header">
     <nav class="navbar navbar-static-top">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= $siteName; ?></strong></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
@@ -86,6 +95,11 @@ $langMenuLinks = ob_get_clean();
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+                <?php if ($user->hasRole('administrator')) { ?>
+                <li>
+                    <a href='<?= site_url('admin/dashboard'); ?>'><i class='fa fa-server'></i> <?= __d('admin_lite', 'Administration'); ?></a>
+                </li>
+                <?php } ?>
                 <li class="dropdown language-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class='fa fa-language'></i> <?= $langName; ?>
@@ -94,29 +108,43 @@ $langMenuLinks = ob_get_clean();
                         <?= $langMenuLinks; ?>
                     </ul>
                 </li>
-                <?php if (Auth::check()) { ?>
-                <li <?php if($currentUri == 'account') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('account'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
-                </li>
-                <li>
-                    <a href='<?= site_url('logout'); ?>' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?>
+                <!-- User Account Menu -->
+                <li class="dropdown user user-menu">
+                    <!-- Menu Toggle Button -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <!-- The user image in the navbar-->
+                        <img src="<?= $imageUrl ?>" class="user-image" alt="User Image">
+                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                        <span class="hidden-xs"><?= $user->username; ?></span>
                     </a>
-                    <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                        <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
-                    </form>
+                    <ul class="dropdown-menu">
+                        <!-- The user image in the menu -->
+                        <li class="user-header">
+                        <img src="<?= $imageUrl ?>" class="img-circle" alt="User Image">
+
+                        <p>
+                            <?= $user->realname; ?> - <?= implode(', ', $user->roles->lists('name')); ?>
+                            <?php $sinceDate = $user->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
+                            <small><?= __d('admin_lite', 'Member since {0}', $sinceDate); ?></small>
+                        </p>
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="<?= site_url('account'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Account'); ?></a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <?= __d('admin_lite', 'Sign out'); ?>
+                                </a>
+                                <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
+                                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
                 </li>
-                <?php } else { ?>
-                <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
-                </li>
-                <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
-                </li>
-                <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>
-                </li>
-                <?php } ?>
             </ul>
         </div>
         <!-- /.navbar-custom-menu -->

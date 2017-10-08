@@ -6,21 +6,29 @@
  * @version 3.0
  */
 
-namespace App\Modules\System\Controllers\Admin;
+namespace App\Modules\System\Controllers;
+
+use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Gate;
+use Nova\Support\Facades\Hash;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
 
 use App\Modules\System\Controllers\BaseController;
 use App\Models\User;
 
-use Auth;
-use Hash;
-use Input;
-use Redirect;
-use Validator;
-use View;
 
-
-class Profile extends BaseController
+class Account extends BaseController
 {
+    /**
+     * The currently used Layout.
+     *
+     * @var mixed
+     */
+    protected $layout = 'Frontend';
+
 
     protected function validator(array $data, User $user)
     {
@@ -58,7 +66,7 @@ class Profile extends BaseController
         return Validator::make($data, $rules, $messages, $attributes);
     }
 
-    public function index()
+    public function edit()
     {
         $user = Auth::user();
 

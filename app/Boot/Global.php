@@ -49,7 +49,7 @@ App::error(function (AuthorizationException $e, $code)
     // Get the Guard's dashboard path from configuration.
     $guard = Config::get('auth.defaults.guard', 'web');
 
-    $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+    $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
 
     $status = __('You are not authorized to access this resource.');
 

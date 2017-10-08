@@ -11,7 +11,7 @@ use Nova\Support\Arr;
 use Nova\Support\Str;
 
 
-class BackendMenu
+class EventedMenu
 {
 
     /**

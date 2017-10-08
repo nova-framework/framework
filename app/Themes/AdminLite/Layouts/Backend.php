@@ -115,6 +115,9 @@ $langMenuLinks = ob_get_clean();
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav" style="margin-right: 10px;">
+          <li>
+            <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-home'></i> <?= __d('admin_lite', 'Frontend'); ?></a>
+          </li>
           <li class="dropdown language-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class='fa fa-language'></i> <?= $langName; ?>
@@ -136,7 +139,6 @@ $langMenuLinks = ob_get_clean();
               <!-- The user image in the menu -->
               <li class="user-header">
                 <img src="<?= $imageUrl ?>" class="img-circle" alt="User Image">
-
                 <p>
                   <?= $user->realname; ?> - <?= implode(', ', $user->roles->lists('name')); ?>
                   <?php $sinceDate = $user->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
@@ -146,7 +148,7 @@ $langMenuLinks = ob_get_clean();
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('admin/profile'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Profile'); ?></a>
+                  <a href="<?= site_url('account'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Account'); ?></a>
                 </div>
                 <div class="pull-right">
                   <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"

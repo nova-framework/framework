@@ -6,11 +6,9 @@
  * @version 3.0
  */
 
-namespace App\Modules\System\Controllers\Admin;
+namespace App\Modules\System\Controllers;
 
-use App\Modules\System\Controllers\Admin\BaseController;
-
-use View;
+use App\Modules\System\Controllers\BaseController;
 
 
 class Dashboard extends BaseController
@@ -21,5 +19,4 @@ class Dashboard extends BaseController
         return $this->createView()
             ->shares('title', __d('system', 'Dashboard'));
     }
-
 }

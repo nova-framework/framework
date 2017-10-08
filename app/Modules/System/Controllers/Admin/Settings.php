@@ -17,7 +17,7 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
-use App\Modules\System\Controllers\BaseController;
+use App\Modules\System\Controllers\Admin\BaseController;
 use App\Models\Option;
 
 

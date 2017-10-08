@@ -3,8 +3,11 @@
 return array (
   '%d %b %Y, %R' => '',
   'ADMINISTRATION' => '',
+  'Account' => '',
+  'Administration' => '',
   'Control Panel' => '',
   'Forgot Password?' => '',
+  'Frontend' => '',
   'Logout' => '',
   'Member since {0}' => '',
   'Profile' => '',

@@ -28,16 +28,20 @@ Route::post('register',                 array('before' => 'guest|csrf', 'uses' =
 Route::get( 'register/verify/{token?}', array('before' => 'guest',      'uses' => 'Registrar@verify'));
 Route::get( 'register/status',          array('before' => 'guest',      'uses' => 'Registrar@status'));
 
+// The User's Dashboard.
+Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
+
+// The User's Account.
+Route::get( 'account', array('before' => 'auth',      'uses' => 'Account@edit'));
+Route::post('account', array('before' => 'auth|csrf', 'uses' => 'Account@update'));
+
+
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
-    // The User's Dashboard.
+    // The Administration Dashboard.
     Route::get('/',         array('before' => 'auth', 'uses' => 'Dashboard@index'));
     Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
-
-    // The User's Profile.
-    Route::get( 'profile', array('before' => 'auth',      'uses' => 'Profile@index'));
-    Route::post('profile', array('before' => 'auth|csrf', 'uses' => 'Profile@update'));
 
     // The Site Settings.
     Route::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));

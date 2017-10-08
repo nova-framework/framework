@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\System\Controllers;
+namespace App\Modules\System\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Request;
@@ -30,7 +30,7 @@ abstract class BaseController extends Controller
      *
      * @var mixed
      */
-    protected $layout = 'Frontend';
+    protected $layout = 'Backend';
 
 
     /**
@@ -41,5 +41,14 @@ abstract class BaseController extends Controller
         parent::initialize();
 
         //
+        $url = Request::url();
+
+        if (! is_null($user = Auth::user())) {
+            $menuItems = EventedMenu::get('backend.menu', $user, $url);
+        } else {
+            $menuItems = array();
+        }
+
+        View::share('menuItems', $menuItems);
     }
 }

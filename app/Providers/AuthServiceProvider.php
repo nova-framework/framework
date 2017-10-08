@@ -34,6 +34,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies($gate);
 
+        $this->registerPermissionsToGate($gate);
+    }
+
+    protected function registerPermissionsToGate(Gate $gate)
+    {
         // Retrieve the Permission items, caching them for 24 hours.
         $permissions = Cache::remember('system_permissions', 1440, function ()
         {
@@ -41,17 +46,13 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         foreach ($permissions as $permission) {
-            $this->registerPermission($gate, $permission);
+            // For convenience, we will define the Permission by its slug as Gate ability,
+            // and resolving it as a callable using the native User's permissions checking.
+
+            $gate->define($permission->slug, function ($user) use ($permission)
+            {
+                return $user->hasPermission($permission->slug);
+            });
         }
-    }
-
-    protected function registerPermission(Gate $gate, Permission $permission)
-    {
-        $slug = $permission->slug;
-
-        $gate->define($slug, function ($user) use ($slug)
-        {
-            return $user->hasPermission($slug);
-        });
     }
 }

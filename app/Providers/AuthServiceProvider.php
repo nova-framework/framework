@@ -34,10 +34,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies($gate);
 
-        $this->registerPermissionsToGate($gate);
+        $this->registerPermissions($gate);
     }
 
-    protected function registerPermissionsToGate(Gate $gate)
+    protected function registerPermissions(Gate $gate)
     {
         // Retrieve the Permission items, caching them for 24 hours.
         $permissions = Cache::remember('system_permissions', 1440, function ()

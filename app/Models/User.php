@@ -46,7 +46,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     public function hasRole($role, $strict = false)
     {
         if (in_array('root', $roles = $this->getCachedRoles()) && ! $strict) {
-            // The ROOT is allowed for all permissions.
+            // The ROOT can impersonate any Role.
             return true;
         }
 
@@ -57,8 +57,8 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     {
         $permissions = is_array($permission) ? $permission : func_get_args();
 
-        if (in_array('root', $this->getCachedRoles())) {
-            // The ROOT is allowed for all permissions.
+        if (($this->getKey() === 1) || in_array('root', $this->getCachedRoles())) {
+            // The USER ONE and all ROOT users are allowed for all permissions.
             return true;
         }
 

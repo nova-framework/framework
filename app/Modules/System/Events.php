@@ -75,3 +75,20 @@ Event::listen('backend.menu.sidebar', function ()
         ),
     );
 });
+
+
+Event::listen('backend.menu.navbar', function ()
+{
+    return array(
+        array(
+            'url'    => site_url('dashboard'),
+            'title'  => __d('system', 'Frontend'),
+            'icon'   => 'home',
+            'weight' => 0,
+
+            //
+            'path'   => 'frontend',
+            'can'    => 'platform.backend.manage'
+        ),
+    );
+});

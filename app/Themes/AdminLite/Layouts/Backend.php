@@ -103,9 +103,9 @@ if (isset($user->image) && $user->image->exists()) {
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav" style="margin-right: 10px;">
-          <li>
-            <a href='<?= site_url('dashboard'); ?>'><i class='fa fa-home'></i> <?= __d('admin_lite', 'Frontend'); ?></a>
-          </li>
+          <?php foreach ($navbarItems as $item) { ?>
+            <?= View::partial('Partials/Backend/NavbarItems', 'AdminLite', array('item' => $item)); ?>
+          <?php } ?>
           <li class="dropdown language-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class='fa fa-language'></i> <?= $langName; ?>

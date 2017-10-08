@@ -42,7 +42,7 @@ Event::listen('frontend.menu.right', function ()
     );
 });
 
-Event::listen('backend.menu', function ()
+Event::listen('backend.menu.sidebar', function ()
 {
     return array(
         array(

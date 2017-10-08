@@ -96,7 +96,7 @@ $langMenuLinks = ob_get_clean();
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
             <ul class="nav navbar-nav">
                 <?php foreach ($leftMenuItems as $item) { ?>
-                    <?= View::partial('Partials/Frontend/NavbarMenuItems', 'AdminLite', array('item' => $item)); ?>
+                    <?= View::partial('Partials/Frontend/NavbarItems', 'AdminLite', array('item' => $item)); ?>
                 <?php } ?>
             </ul>
             <!-- Search Form -->
@@ -112,7 +112,7 @@ $langMenuLinks = ob_get_clean();
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <?php foreach ($rightMenuItems as $item) { ?>
-                    <?= View::partial('Partials/Frontend/NavbarMenuItems', 'AdminLite', array('item' => $item)); ?>
+                    <?= View::partial('Partials/Frontend/NavbarItems', 'AdminLite', array('item' => $item)); ?>
                 <?php } ?>
                 <li class="dropdown language-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">

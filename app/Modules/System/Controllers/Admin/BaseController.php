@@ -50,11 +50,11 @@ abstract class BaseController extends Controller
         $url = Request::url();
 
         if (! is_null($user = Auth::user())) {
-            $menuItems = EventedMenu::get('backend.menu', $user, $url);
+            $sidebarMenuItems = EventedMenu::get('backend.menu.sidebar', $user, $url);
         } else {
-            $menuItems = array();
+            $sidebarMenuItems = array();
         }
 
-        View::share('menuItems', $menuItems);
+        View::share('sidebarMenuItems', $sidebarMenuItems);
     }
 }

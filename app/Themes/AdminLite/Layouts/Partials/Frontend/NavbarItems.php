@@ -6,7 +6,7 @@
     </a>
     <ul class="dropdown-menu" role="menu">
     <?php foreach ($children as $child) { ?>
-        <?= View::partial('Partials/Frontend/NavbarMenuItems', 'AdminLite', array('item' => $child)); ?>
+        <?= View::partial('Partials/Frontend/NavbarItems', 'AdminLite', array('item' => $child)); ?>
     <?php } ?>
     </ul>
 </li>

@@ -8,15 +8,17 @@
 
 namespace App\Modules\System\Controllers\Admin;
 
+use Nova\Auth\Access\AuthorizationException;
+use Nova\Support\Facades\Cache;
+use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Gate;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Redirect;
+use Nova\Support\Facades\Validator;
+use Nova\Support\Facades\View;
+
 use App\Modules\System\Controllers\BaseController;
 use App\Models\Option;
-
-use Cache;
-use Config;
-use Input;
-use Redirect;
-use Validator;
-use View;
 
 
 class Settings extends BaseController
@@ -67,6 +69,11 @@ class Settings extends BaseController
 
     public function index()
     {
+        // Authorize the current User.
+        if (Gate::denies('manage', Option::class)) {
+            throw new AuthorizationException();
+        }
+
         // Load the Options from database.
         $options = array(
             // The Application.
@@ -91,6 +98,11 @@ class Settings extends BaseController
 
     public function store()
     {
+        // Authorize the current User.
+        if (Gate::denies('manage', Option::class)) {
+            throw new AuthorizationException();
+        }
+
         // Validate the Input data.
         $input = Input::all();
 

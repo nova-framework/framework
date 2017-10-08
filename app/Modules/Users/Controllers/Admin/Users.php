@@ -261,7 +261,8 @@ class Users extends BaseController
         // Sync the Roles.
         $user->roles()->sync($input['roles']);
 
-        // Invalidate the cached system permissions.
+        // Invalidate the cached user roles and permissions.
+        Cache::forget('user.roles.' .$id);
         Cache::forget('user.permissions.' .$id);
 
         // Prepare the flash message.
@@ -288,7 +289,8 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
-        // Invalidate the cached system permissions.
+        // Invalidate the cached user roles and permissions.
+        Cache::forget('user.roles.' .$id);
         Cache::forget('user.permissions.' .$user->id);
 
         // Detach the Roles.

@@ -44,7 +44,12 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function hasRole($role, $strict = false)
     {
-        if (in_array('root', $roles = $this->roles->lists('slug')) && ! $strict) {
+        $roles = Cache::remember('user.roles.' .$this->getKey(), 1440, function ()
+        {
+            return $this->roles->lists('slug');
+        });
+
+        if (in_array('root', $roles) && ! $strict) {
             return true;
         }
 

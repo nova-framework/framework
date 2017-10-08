@@ -14,6 +14,7 @@ use Nova\Auth\Reminders\RemindableTrait;
 use Nova\Auth\Reminders\RemindableInterface;
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Foundation\Auth\Access\AuthorizableTrait;
+use Nova\Support\Facades\Cache;
 
 use Shared\Database\ORM\FileField\FileFieldTrait;
 
@@ -64,7 +65,10 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             // The ROOT is allowed for all permissions.
             return true;
         } else if (! isset($this->permissions)) {
-            $this->permissions = $this->roles->load('permissions')->pluck('permissions')->lists('slug');
+            $this->permissions = Cache::remember('user.permissions.' .$this->getKey(), 1440, function ()
+            {
+                return $this->roles->load('permissions')->pluck('permissions')->lists('slug');
+            });
         }
 
         return (bool) count(array_intersect($this->permissions, $permissions));

@@ -10,6 +10,7 @@ namespace App\Modules\Users\Controllers\Admin;
 
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
@@ -260,6 +261,9 @@ class Users extends BaseController
         // Sync the Roles.
         $user->roles()->sync($input['roles']);
 
+        // Invalidate the cached system permissions.
+        Cache::forget('user.permissions.' .$id);
+
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $username);
 
@@ -289,6 +293,9 @@ class Users extends BaseController
 
         // Destroy the requested User record.
         $user->delete();
+
+        // Invalidate the cached system permissions.
+        Cache::forget('user.permissions.' .$id);
 
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully deleted.', $user->username);

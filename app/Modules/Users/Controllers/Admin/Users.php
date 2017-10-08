@@ -155,6 +155,11 @@ class Users extends BaseController
 
     public function show($id)
     {
+        // Authorize the current User.
+        if (Gate::denies('view', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -164,11 +169,6 @@ class Users extends BaseController
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
-        }
-
-        // Authorize the current User.
-        if (Gate::denies('view', $user)) {
-            throw new AuthorizationException();
         }
 
         return $this->createView()
@@ -178,6 +178,11 @@ class Users extends BaseController
 
     public function edit($id)
     {
+        // Authorize the current User.
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -187,11 +192,6 @@ class Users extends BaseController
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
-        }
-
-        // Authorize the current User.
-        if (Gate::denies('update', $user)) {
-            throw new AuthorizationException();
         }
 
         // Get all available User Roles.
@@ -214,6 +214,11 @@ class Users extends BaseController
             unset($input['password_confirmation']);
         }
 
+        // Authorize the current User.
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -223,11 +228,6 @@ class Users extends BaseController
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
-        }
-
-        // Authorize the current User.
-        if (Gate::denies('update', $user)) {
-            throw new AuthorizationException();
         }
 
         // Validate the Input data.
@@ -272,6 +272,11 @@ class Users extends BaseController
 
     public function destroy($id)
     {
+        // Authorize the current User.
+        if (Gate::denies('delete', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -283,19 +288,14 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
-        // Authorize the current User.
-        if (Gate::denies('delete', $user)) {
-            throw new AuthorizationException();
-        }
+        // Invalidate the cached system permissions.
+        Cache::forget('user.permissions.' .$user->id);
 
         // Detach the Roles.
         $user->roles()->detach();
 
         // Destroy the requested User record.
         $user->delete();
-
-        // Invalidate the cached system permissions.
-        Cache::forget('user.permissions.' .$id);
 
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully deleted.', $user->username);

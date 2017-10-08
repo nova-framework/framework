@@ -117,7 +117,7 @@ class PermissionsTableSeeder extends Seeder
                 'slug'  => 'app.users.update.own',
                 'group' => 'app',
 
-                'roles' => array(1, 2, 3),
+                'roles' => array(1, 2),
             ),
             array(
                 'name'  => 'Delete User accounts',

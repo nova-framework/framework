@@ -20,18 +20,6 @@ if (isset($user->image) && $user->image->exists()) {
     $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
 }
 
-//
-ob_start();
-
-foreach ($languages as $code => $info) {
-?>
-<li class="header <?php if ($code == $langCode) { echo 'active'; } ?>">
-    <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
-</li>
-<?php
-}
-
-$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html lang="<?= $langCode; ?>">
@@ -123,7 +111,11 @@ $langMenuLinks = ob_get_clean();
               <i class='fa fa-language'></i> <?= $langName; ?>
             </a>
             <ul class="dropdown-menu">
-              <?= $langMenuLinks; ?>
+            <?php foreach ($languages as $code => $info) { ?>
+              <li <?= ($code == $langCode) ? 'class="active"' : ''; ?>>
+                <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
+              </li>
+            <?php } ?>
             </ul>
           </li>
           <!-- User Account Menu -->

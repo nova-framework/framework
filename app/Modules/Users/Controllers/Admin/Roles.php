@@ -109,11 +109,6 @@ class Roles extends BaseController
 
     public function show($id)
     {
-        // Authorize the current User.
-        if (Gate::denies('view', $role)) {
-            throw new AuthorizationException();
-        }
-
         // Get the Role Model instance.
         try {
             $role = Role::findOrFail($id);
@@ -125,6 +120,11 @@ class Roles extends BaseController
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
+        if (Gate::denies('view', $role)) {
+            throw new AuthorizationException();
+        }
+
         return $this->createView()
             ->shares('title', __d('users', 'Show Role'))
             ->with('role', $role);
@@ -132,11 +132,6 @@ class Roles extends BaseController
 
     public function edit($id)
     {
-        // Authorize the current User.
-        if (Gate::denies('update', $role)) {
-            throw new AuthorizationException();
-        }
-
         // Get the Role Model instance.
         try {
             $role = Role::findOrFail($id);
@@ -148,6 +143,11 @@ class Roles extends BaseController
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
 
+        // Authorize the current User.
+        if (Gate::denies('update', $role)) {
+            throw new AuthorizationException();
+        }
+
         return $this->createView()
             ->shares('title', __d('users', 'Edit Role'))
             ->with('role', $role);
@@ -156,11 +156,6 @@ class Roles extends BaseController
     public function update($id)
     {
         $input = Input::only('name', 'slug', 'description');
-
-        // Authorize the current User.
-        if (Gate::denies('update', $role)) {
-            throw new AuthorizationException();
-        }
 
         // Get the Role Model instance.
         try {
@@ -171,6 +166,11 @@ class Roles extends BaseController
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('update', $role)) {
+            throw new AuthorizationException();
         }
 
         // Validate the Input data.
@@ -199,11 +199,6 @@ class Roles extends BaseController
 
     public function destroy($id)
     {
-        // Authorize the current User.
-        if (Gate::denies('delete', $role)) {
-            throw new AuthorizationException();
-        }
-
         // Get the Role Model instance.
         try {
             $role = Role::findOrFail($id);
@@ -213,6 +208,11 @@ class Roles extends BaseController
             $status = __d('users', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('delete', $role)) {
+            throw new AuthorizationException();
         }
 
         // Destroy the requested Role record.

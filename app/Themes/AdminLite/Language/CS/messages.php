@@ -10,6 +10,7 @@ return array (
   'Logout' => '',
   'Member since {0}' => '',
   'Profile' => '',
+  'Search' => '',
   'Sign In' => '',
   'Sign Up' => '',
   'Sign out' => '',

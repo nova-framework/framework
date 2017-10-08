@@ -72,7 +72,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     protected function getPermissions()
     {
         if (isset($this->permissions)) {
-            $this->permissions;
+            return $this->permissions;
         }
 
         return $this->permissions = Cache::remember('user.permissions.' .$this->getKey(), 1440, function ()

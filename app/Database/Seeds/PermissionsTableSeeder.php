@@ -124,6 +124,15 @@ class PermissionsTableSeeder extends Seeder
 
                 'roles' => array(1, 2, 3),
             ),
+
+            //
+            array(
+                'name'  => 'Manage the Options',
+                'slug'  => 'app.options.manage',
+                'group' => 'app',
+
+                'roles' => array(1, 2),
+            ),
         );
 
         $this->installPermissions($permissions);

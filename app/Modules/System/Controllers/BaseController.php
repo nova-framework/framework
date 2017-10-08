@@ -44,15 +44,15 @@ abstract class BaseController extends Controller
         $url = Request::url();
 
         if (! is_null($user = Auth::user())) {
-            $leftMenuItems = EventedMenu::get('frontend.menu.left', $user, $url);
+            $navbarLeftItems = EventedMenu::get('frontend.menu.left', $user, $url);
 
-            $rightMenuItems = EventedMenu::get('frontend.menu.right', $user, $url);
+            $navbarRightItems = EventedMenu::get('frontend.menu.right', $user, $url);
         } else {
-            $leftMenuItems  = array();
-            $rightMenuItems = array();
+            $navbarLeftItems  = array();
+            $navbarRightItems = array();
         }
 
-        View::share('leftMenuItems',  $leftMenuItems);
-        View::share('rightMenuItems', $rightMenuItems);
+        View::share('navbarLeftItems',  $navbarLeftItems);
+        View::share('navbarRightItems', $navbarRightItems);
     }
 }

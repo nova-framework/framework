@@ -95,7 +95,7 @@ $langMenuLinks = ob_get_clean();
         <!-- Navbar Left Menu -->
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
             <ul class="nav navbar-nav">
-                <?php foreach ($leftMenuItems as $item) { ?>
+                <?php foreach ($navbarLeftItems as $item) { ?>
                     <?= View::partial('Partials/Frontend/NavbarItems', 'AdminLite', array('item' => $item)); ?>
                 <?php } ?>
             </ul>
@@ -111,7 +111,7 @@ $langMenuLinks = ob_get_clean();
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <?php foreach ($rightMenuItems as $item) { ?>
+                <?php foreach ($navbarRightItems as $item) { ?>
                     <?= View::partial('Partials/Frontend/NavbarItems', 'AdminLite', array('item' => $item)); ?>
                 <?php } ?>
                 <li class="dropdown language-menu">

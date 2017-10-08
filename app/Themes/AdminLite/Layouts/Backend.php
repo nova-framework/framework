@@ -184,7 +184,7 @@ $langMenuLinks = ob_get_clean();
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
-            <?php foreach ($sidebarMenuItems as $item) { ?>
+            <?php foreach ($sidebarItems as $item) { ?>
                 <?= View::partial('Partials/Backend/SidebarItems', 'AdminLite', array('item' => $item)); ?>
             <?php } ?>
         </ul>

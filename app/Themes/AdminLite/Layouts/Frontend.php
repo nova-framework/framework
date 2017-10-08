@@ -95,7 +95,7 @@ $langMenuLinks = ob_get_clean();
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <?php if ($user->hasRole('administrator')) { ?>
+                <?php if (Gate::allows('platform.backend.manage')) { ?>
                 <li>
                     <a href='<?= site_url('admin/dashboard'); ?>'><i class='fa fa-server'></i> <?= __d('admin_lite', 'Administration'); ?></a>
                 </li>

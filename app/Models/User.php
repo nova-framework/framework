@@ -71,7 +71,9 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             return $this->cachedRoles;
         }
 
-        return $this->cachedRoles = Cache::remember('user.roles.' .$this->getKey(), 1440, function ()
+        $cacheKey = 'user.roles.' .$this->getKey();
+
+        return $this->cachedRoles = Cache::remember($cacheKey, 1440, function ()
         {
             return $this->roles->lists('slug');
         });
@@ -83,7 +85,9 @@ class User extends BaseModel implements UserInterface, RemindableInterface
             return $this->cachedPermissions;
         }
 
-        return $this->cachedPermissions = Cache::remember('user.permissions.' .$this->getKey(), 1440, function ()
+        $cacheKey = 'user.permissions.' .$this->getKey();
+
+        return $this->cachedPermissions = Cache::remember($cacheKey, 1440, function ()
         {
             return $this->roles->load('permissions')->pluck('permissions')->lists('slug');
         });

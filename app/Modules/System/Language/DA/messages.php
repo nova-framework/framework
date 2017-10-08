@@ -89,7 +89,6 @@ return array (
   'User Profile : {0}' => 'Brugerkonto : {0}',
   'User Registration' => 'Brugerregistrering',
   'Username' => 'Brugernavn',
-  'Users' => 'Brugere',
   'Verify the new Password' => 'Bekræft det nye kodeord',
   'We can\'t find a User with that e-mail address.' => 'Vi kan ikke finde en bruger med den email',
   'We could not activate your Account. Try again later.' => 'Din konto blev ikke aktiveret. Prøv igen senere',
@@ -103,5 +102,6 @@ return array (
   'You have successfully reset your Password.' => 'Du har med succes nulstillet dit kodeord.',
   'You have successfully updated your Password.' => 'Du har med succes opdateret dit kodeord.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => '',
+  'Yup. This is the Administration Dashboard.' => '',
   'Yup. This is the Dashboard.' => 'Jeps. Dette er skrivebordet',
 );

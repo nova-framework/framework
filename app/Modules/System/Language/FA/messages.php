@@ -89,7 +89,6 @@ return array (
   'User Profile : {0}' => 'پروفایل کاربر: {0}',
   'User Registration' => 'ثبت نام کاربر',
   'Username' => 'نام کاربری',
-  'Users' => 'کاربران',
   'Verify the new Password' => 'رمز عبور جدید را بررسی کنید',
   'We can\'t find a User with that e-mail address.' => 'ما نتوانستیم یک کاربر با آن ایمیل پیدا کنیم.',
   'We could not activate your Account. Try again later.' => '',
@@ -103,5 +102,6 @@ return array (
   'You have successfully reset your Password.' => 'شما با موفقیت رمزعبور خود را بازنشانی کردید.',
   'You have successfully updated your Password.' => 'شما با موفقیت رمزعبور خود را بروز کردید.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => '',
+  'Yup. This is the Administration Dashboard.' => '',
   'Yup. This is the Dashboard.' => 'آره، این داشبورد میباشد.',
 );

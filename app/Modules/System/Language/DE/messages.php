@@ -89,7 +89,6 @@ return array (
   'User Profile : {0}' => '',
   'User Registration' => '',
   'Username' => '',
-  'Users' => '',
   'Verify the new Password' => '',
   'We can\'t find a User with that e-mail address.' => '',
   'We could not activate your Account. Try again later.' => '',
@@ -103,5 +102,6 @@ return array (
   'You have successfully reset your Password.' => '',
   'You have successfully updated your Password.' => '',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => '',
+  'Yup. This is the Administration Dashboard.' => '',
   'Yup. This is the Dashboard.' => '',
 );

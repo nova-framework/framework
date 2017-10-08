@@ -6,6 +6,7 @@ return array (
   'Account' => '',
   'Administration' => '',
   'Control Panel' => 'Панель управления',
+  'Dashboard' => '',
   'Forgot Password?' => 'Забыли пароль?',
   'Frontend' => '',
   'Logout' => 'Выйти',

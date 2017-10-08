@@ -6,6 +6,7 @@ return array (
   'Account' => '',
   'Administration' => '',
   'Control Panel' => '',
+  'Dashboard' => '',
   'Forgot Password?' => '',
   'Frontend' => '',
   'Logout' => '',

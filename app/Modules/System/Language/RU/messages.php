@@ -89,7 +89,6 @@ return array (
   'User Profile : {0}' => 'Профиль пользователя : {0}',
   'User Registration' => 'Регистрация пользователя',
   'Username' => 'Логин',
-  'Users' => 'Пользователи',
   'Verify the new Password' => 'Подтвердите новый пароль',
   'We can\'t find a User with that e-mail address.' => 'Мы не можем найти пользователя с таким адресом электронной почты.',
   'We could not activate your Account. Try again later.' => 'Мы не смогли активировать вашу учетную запись. Попробуйте позже.',
@@ -103,5 +102,6 @@ return array (
   'You have successfully reset your Password.' => 'Вы успешно сбросили пароль.',
   'You have successfully updated your Password.' => 'Вы успешно обновили свой пароль.',
   'Your Account has been created. We have sent you an E-mail to activate your Account.' => 'Ваш аккаунт был создан. Мы отправили вам email для его активации.',
+  'Yup. This is the Administration Dashboard.' => '',
   'Yup. This is the Dashboard.' => 'Здесь рабочий стол',
 );

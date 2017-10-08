@@ -12,7 +12,7 @@
 
 <div class="box box-widget">
     <div class="box-body">
-        <h4><strong><?= __d('system', 'Yup. This is the Dashboard.'); ?></strong></h4>
+        <h4><strong><?= __d('system', 'Yup. This is the Administration Dashboard.'); ?></strong></h4>
         <p><?= __d('system', 'Someday, we\'ll have widgets and stuff on here...'); ?></p>
     </div>
 </div>

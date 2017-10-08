@@ -155,11 +155,6 @@ class Users extends BaseController
 
     public function show($id)
     {
-        // Authorize the current User.
-        if (Gate::denies('view', $user)) {
-            throw new AuthorizationException();
-        }
-
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -169,6 +164,11 @@ class Users extends BaseController
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('view', $user)) {
+            throw new AuthorizationException();
         }
 
         return $this->createView()

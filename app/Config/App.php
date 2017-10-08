@@ -105,6 +105,7 @@ return array(
         // The Shared Providers.
         'Shared\Database\Backup\ConsoleServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
+        'Shared\Widgets\WidgetServiceProvider',
 
         // The Application Providers.
         'App\Providers\AppServiceProvider',
@@ -181,6 +182,9 @@ return array(
         'View'          => 'Nova\Support\Facades\View',
         'Cron'          => 'Nova\Support\Facades\Cron',
         'Module'        => 'Nova\Support\Facades\Module',
+
+        // The Shared Facades.
+        'Widget'        => 'Shared\Support\Facades\Widget',
     ),
 
 );

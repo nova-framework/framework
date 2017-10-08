@@ -6,6 +6,8 @@
  * @version 3.0
  */
 
+use App\Models\Option;
+
 
 /** Define Events. */
 
@@ -38,7 +40,7 @@ Event::listen('backend.menu', function ()
 
             //
             'path'   => 'platform.settings',
-            'role'   => 'administrator',
+            'can'    => 'manage:' .Option::class,
         ),
     );
 });

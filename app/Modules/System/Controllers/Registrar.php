@@ -76,7 +76,7 @@ class Registrar extends BaseController
      */
     public function create()
     {
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('system', 'User Registration'));
     }
 
@@ -188,7 +188,7 @@ class Registrar extends BaseController
 
     public function status()
     {
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('system', 'Registration Status'));
     }
 

@@ -25,9 +25,9 @@ class UsersTableSeeder extends Seeder
         // Truncate the table before seeding.
         User::truncate();
 
-        User::create(array(
+        //
+        $user = User::create(array(
             'id'             => 1,
-            'role_id'        => 1,
             'username'       => 'admin',
             'password'       => Hash::make('admin'),
             'realname'       => 'Site Administrator',
@@ -37,9 +37,11 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        User::create(array(
+        $user->roles()->attach(array(1));
+
+        //
+        $user = User::create(array(
             'id'             => 2,
-            'role_id'        => 2,
             'username'       => 'marcus',
             'password'       => Hash::make('marcus'),
             'realname'      => 'Marcus Spears',
@@ -49,9 +51,11 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        User::create(array(
+        $user->roles()->attach(array(2));
+
+        //
+        $user = User::create(array(
             'id'             => 3,
-            'role_id'        => 3,
             'username'       => 'michael',
             'password'       => Hash::make('michael'),
             'realname'       => 'Michael White',
@@ -61,9 +65,11 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        User::create(array(
+        $user->roles()->attach(array(3));
+
+        //
+        $user = User::create(array(
             'id'             => 4,
-            'role_id'        => 5,
             'username'       => 'john',
             'password'       => Hash::make('john'),
             'realname'       => 'John Kennedy',
@@ -73,9 +79,11 @@ class UsersTableSeeder extends Seeder
             'api_token'      => $this->uniqueToken(),
         ));
 
-        User::create(array(
+        $user->roles()->attach(array(4));
+
+        //
+        $user = User::create(array(
             'id'             => 5,
-            'role_id'        => 5,
             'username'       => 'mark',
             'password'       => Hash::make('mark'),
             'realname'       => 'Mark Black',
@@ -84,6 +92,8 @@ class UsersTableSeeder extends Seeder
             'remember_token' => '',
             'api_token'      => $this->uniqueToken(),
         ));
+
+        $user->roles()->attach(array(4));
     }
 
     protected function uniqueToken($length = 60)

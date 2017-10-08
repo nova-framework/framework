@@ -13,13 +13,13 @@ return array(
 
     'roots' => array(
         array(
-            'alias'         => 'Site Assets',
+            'alias'         => __d('files', 'Site Assets'),
             'driver'        => 'LocalFileSystem',
             'path'          => ROOTDIR .'assets/',
             'URL'           => site_url('assets/'),
             'mimeDetect'    => 'internal',
-            'tmbPath'       => ROOTDIR .'storage/files/thumbnails',
-            'quarantine'    => ROOTDIR .'storage/files/quarantine',
+            'tmbPath'       => STORAGE_PATH .'files/thumbnails',
+            'quarantine'    => STORAGE_PATH .'files/quarantine',
             'tmbURL'        => site_url('admin/files/thumbnails/'),
             'utf8fix'       => true,
             'tmbCrop'       => false,
@@ -31,13 +31,13 @@ return array(
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),
         ),
         array(
-            'alias'         => 'Site Root',
+            'alias'         => __d('files', 'Site Root'),
             'driver'        => 'LocalFileSystem',
             'path'          => ROOTDIR,
             'URL'           => site_url('admin/files/preview/'),
             'mimeDetect'    => 'internal',
-            'tmbPath'       => ROOTDIR .'storage/files/thumbnails',
-            'quarantine'    => ROOTDIR .'storage/files/quarantine',
+            'tmbPath'       => STORAGE_PATH .'files/thumbnails',
+            'quarantine'    => STORAGE_PATH .'files/quarantine',
             'tmbURL'        => site_url('admin/files/thumbnails/'),
             'utf8fix'       => true,
             'tmbCrop'       => false,

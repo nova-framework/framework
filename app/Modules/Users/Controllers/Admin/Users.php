@@ -10,6 +10,7 @@ namespace App\Modules\Users\Controllers\Admin;
 
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Cache;
 use Nova\Support\Facades\Gate;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
@@ -42,7 +43,7 @@ class Users extends BaseController
         // The Validation rules.
         $rules = array(
             'username'              => 'required|min:4|max:100|alpha_dash|unique:users,username' .$ignore,
-            'role'                  => 'required|numeric|exists:roles,id',
+            'roles'                 => 'required|array|exists:roles,id',
             'realname'              => 'required|min:5|max:100|valid_name',
             'password'              => $required .'|confirmed|strong_password',
             'password_confirmation' => $required .'|same:password',
@@ -93,7 +94,7 @@ class Users extends BaseController
         // Get all User records for current page.
         $users = User::where('activated', 1)->paginate(25);
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Users'))
             ->with('users', $users);
     }
@@ -108,7 +109,7 @@ class Users extends BaseController
         // Get all available User Roles.
         $roles = Role::all();
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Create User'))
             ->with('roles', $roles);
     }
@@ -116,7 +117,7 @@ class Users extends BaseController
     public function store()
     {
         $input = Input::only(
-            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+            'username', 'roles', 'realname', 'password', 'password_confirmation', 'email', 'image'
         );
 
         // Authorize the current User.
@@ -138,12 +139,13 @@ class Users extends BaseController
         $user = User::create(array(
             'username'  => $input['username'],
             'password'  => $password,
-            'role_id'   => $input['role'],
             'realname'  => $input['realname'],
             'email'     => $input['email'],
             'image'     => Input::file('image'),
             'activated' => 1,
         ));
+
+        $user->roles()->attach($input['roles']);
 
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully created.', $user->username);
@@ -153,6 +155,11 @@ class Users extends BaseController
 
     public function show($id)
     {
+        // Authorize the current User.
+        if (Gate::denies('view', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -164,18 +171,18 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
-        // Authorize the current User.
-        if (Gate::denies('view', $user)) {
-            throw new AuthorizationException();
-        }
-
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Show User'))
             ->with('user', $user);
     }
 
     public function edit($id)
     {
+        // Authorize the current User.
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -187,15 +194,10 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
-        // Authorize the current User.
-        if (Gate::denies('update', $user)) {
-            throw new AuthorizationException();
-        }
-
         // Get all available User Roles.
         $roles = Role::all();
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Edit User'))
             ->with('roles', $roles)
             ->with('user', $user);
@@ -204,12 +206,17 @@ class Users extends BaseController
     public function update($id)
     {
         $input = Input::only(
-            'username', 'role', 'realname', 'password', 'password_confirmation', 'email', 'image'
+            'username', 'roles', 'realname', 'password', 'password_confirmation', 'email', 'image'
         );
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
             unset($input['password']);
             unset($input['password_confirmation']);
+        }
+
+        // Authorize the current User.
+        if (Gate::denies('update', $user)) {
+            throw new AuthorizationException();
         }
 
         // Get the User Model instance.
@@ -221,11 +228,6 @@ class Users extends BaseController
             $status = __d('users', 'User not found: #{0}', $id);
 
             return Redirect::to('admin/users')->withStatus($status, 'danger');
-        }
-
-        // Authorize the current User.
-        if (Gate::denies('update', $user)) {
-            throw new AuthorizationException();
         }
 
         // Validate the Input data.
@@ -240,7 +242,6 @@ class Users extends BaseController
 
         //
         $user->username = $input['username'];
-        $user->role_id  = $input['role'];
         $user->realname = $input['realname'];
         $user->email    = $input['email'];
 
@@ -257,6 +258,13 @@ class Users extends BaseController
         // Save the User information.
         $user->save();
 
+        // Sync the Roles.
+        $user->roles()->sync($input['roles']);
+
+        // Invalidate the cached user roles and permissions.
+        Cache::forget('user.roles.' .$id);
+        Cache::forget('user.permissions.' .$id);
+
         // Prepare the flash message.
         $status = __d('users', 'The User <b>{0}</b> was successfully updated.', $username);
 
@@ -265,6 +273,11 @@ class Users extends BaseController
 
     public function destroy($id)
     {
+        // Authorize the current User.
+        if (Gate::denies('delete', $user)) {
+            throw new AuthorizationException();
+        }
+
         // Get the User Model instance.
         try {
             $user = User::findOrFail($id);
@@ -276,10 +289,12 @@ class Users extends BaseController
             return Redirect::to('admin/users')->withStatus($status, 'danger');
         }
 
-        // Authorize the current User.
-        if (Gate::denies('delete', $user)) {
-            throw new AuthorizationException();
-        }
+        // Invalidate the cached user roles and permissions.
+        Cache::forget('user.roles.' .$id);
+        Cache::forget('user.permissions.' .$user->id);
+
+        // Detach the Roles.
+        $user->roles()->detach();
 
         // Destroy the requested User record.
         $user->delete();
@@ -336,7 +351,7 @@ class Users extends BaseController
         // Prepare the Query for displaying.
         $search = htmlentities($search);
 
-        return $this->getView()
+        return $this->createView()
             ->shares('title', __d('users', 'Searching Users for: {0}', $search))
             ->with('search', $search)
             ->with('users', $users);

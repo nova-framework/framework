@@ -43,13 +43,6 @@ class RolesTableSeeder extends Seeder
 
         Role::create(array(
             'id'          => 4,
-            'name'        => 'Company Manager',
-            'slug'        => 'company-manager',
-            'description' => 'Able to manage the company that the user belongs to, including adding sites, creating new users and assigning licences.',
-        ));
-
-        Role::create(array(
-            'id'          => 5,
             'name'        => 'User',
             'slug'        => 'user',
             'description' => 'A standard user that can have a licence assigned to them. No administrative features.',

@@ -1,10 +1,4 @@
 <?php
-/**
- * Users - A Users Model.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace App\Models;
 
@@ -14,6 +8,7 @@ use Nova\Auth\Reminders\RemindableTrait;
 use Nova\Auth\Reminders\RemindableInterface;
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Foundation\Auth\Access\AuthorizableTrait;
+use Nova\Support\Facades\Cache;
 
 use Shared\Database\ORM\FileField\FileFieldTrait;
 
@@ -38,31 +33,63 @@ class User extends BaseModel implements UserInterface, RemindableInterface
         ),
     );
 
+    // Caches for Roles and Permissions.
+    protected $cachedRoles;
+    protected $cachedPermissions;
 
-    public function role()
+
+    public function roles()
     {
-        return $this->hasOne('App\Models\Role', 'id', 'role_id');
+        return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
     }
 
-    public function hasRole($roles, $strict = false)
+    public function hasRole($role, $strict = false)
     {
-        if (! array_key_exists('role', $this->relations)) {
-            $this->load('role');
-        }
-
-        $slug = strtolower($this->role->slug);
-
-        // Check if the User is a Root account.
-        if (($slug == 'root') && ! $strict) {
+        if (in_array('root', $roles = $this->getCachedRoles()) && ! $strict) {
+            // The ROOT is allowed for all permissions.
             return true;
         }
 
-        foreach ((array) $roles as $role) {
-            if (strtolower($role) == $slug) {
-                return true;
-            }
+        return (bool) count(array_intersect($roles, (array) $role));
+    }
+
+    public function hasPermission($permission)
+    {
+        $permissions = is_array($permission) ? $permission : func_get_args();
+
+        if (in_array('root', $this->getCachedRoles())) {
+            // The ROOT is allowed for all permissions.
+            return true;
         }
 
-        return false;
+        return (bool) count(array_intersect($permissions, $this->getCachedPermissions()));
+    }
+
+    protected function getCachedRoles()
+    {
+        if (isset($this->cachedRoles)) {
+            return $this->cachedRoles;
+        }
+
+        $cacheKey = 'user.roles.' .$this->getKey();
+
+        return $this->cachedRoles = Cache::remember($cacheKey, 1440, function ()
+        {
+            return $this->roles->lists('slug');
+        });
+    }
+
+    protected function getCachedPermissions()
+    {
+        if (isset($this->cachedPermissions)) {
+            return $this->cachedPermissions;
+        }
+
+        $cacheKey = 'user.permissions.' .$this->getKey();
+
+        return $this->cachedPermissions = Cache::remember($cacheKey, 1440, function ()
+        {
+            return $this->roles->load('permissions')->pluck('permissions')->lists('slug');
+        });
     }
 }

@@ -87,7 +87,7 @@ $languages = Config::get('languages');
                     </ul>
                 </li>
                 <?php if (Auth::check()) { ?>
-                <li <?php if($currentUri == 'account') echo 'class="active"'; ?>>
+                <li <?= ($currentUri == 'account') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('account'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
                 </li>
                 <li>
@@ -99,13 +99,13 @@ $languages = Config::get('languages');
                     </form>
                 </li>
                 <?php } else { ?>
-                <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
+                <li <?= ($currentUri == 'register') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
                 </li>
-                <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
+                <li <?= ($currentUri == 'login') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
                 </li>
-                <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
+                <li <?= ($currentUri == 'password/remind') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>
                 </li>
                 <?php } ?>

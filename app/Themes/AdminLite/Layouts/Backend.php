@@ -284,9 +284,10 @@ $(function () {
 
     parseNotificationItems = function (items) {
         return items.map(function (item) {
-            var icon = item.icon ? item.icon : 'bell';
+            var icon  = item.icon  ? item.icon  : 'bell';
+            var color = item.color ? item.color : 'aqua';
 
-            return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-aqua"></i> %s</s><li>', item.link, item.id, icon, item.message);
+            return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-%s"></i> %s</s><li>', item.link, item.id, icon, color, item.message);
         });
     }
 

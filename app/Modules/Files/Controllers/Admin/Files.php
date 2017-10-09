@@ -29,7 +29,6 @@ class Files extends BaseController
     {
         parent::__construct();
 
-        //
         $this->container = $container;
 
         //

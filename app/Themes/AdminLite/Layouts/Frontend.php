@@ -241,12 +241,15 @@ $(function () {
 
             menuLabel.show();
 
-            notificationsHeader.html('<b>' + sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", notificationsCount) + '<b>');
+            //
+            var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", notificationsCount);
+
+            notificationsHeader.html(title);
 
             var html = data.items.map(function (item) {
                 var icon = item.icon ? item.icon : 'bell';
 
-                return '<li><a href="' + item.link + '?read=' + item.id + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
+                return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-aqua"></i> %s</s><li>', item.link, item.id, icon, item.message);
             });
 
             notificationsList.prepend(html);

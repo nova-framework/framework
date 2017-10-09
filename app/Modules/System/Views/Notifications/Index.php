@@ -39,8 +39,8 @@
             <?php $data = $item->data; ?>
                 <tr>
                     <td style="text-align: center; vertical-align: middle; padding: 5px;" width="5%"><i class='fa fa-<?= isset($data['icon']) ? $data['icon'] : 'bell'; ?> text-<?= isset($data['color']) ? $data['color'] : 'aqua'; ?>'></i></td>
-                    <td style="text-align: left; vertical-align: middle;" width='35%'><?= $data['message']; ?></td>
-                    <td style="text-align: center; vertical-align: middle;" width='25%'><a href="<?= $data['link'] .'?read=' .$item->uuid; ?>" target="_blank"><?= str_replace($url, '/', $data['link']); ?></td>
+                    <td style="text-align: left; vertical-align: middle;" width='40%'><?= $data['message']; ?></td>
+                    <td style="text-align: center; vertical-align: middle;" width='20%'><a href="<?= $data['link'] .'?read=' .$item->uuid; ?>" target="_blank"><?= str_replace($url, '/', $data['link']); ?></td>
                     <td style="text-align: center; vertical-align: middle;" width="15%"><?= $item->created_at->formatLocalized($format); ?></td>
                     <td style="text-align: center; vertical-align: middle;" width="15%"><?= ! empty($item->read_at) ? $item->read_at->formatLocalized($format) : '-'; ?></td>
                     <td style="text-align: center; vertical-align: middle; padding: 5px;" width="5%"><?php if (empty($item->read_at)) { ?><input type="checkbox" name="nid[]" value="<?= $item->id; ?>" class="checkGroup1"><?php } else { ?>-<?php } ?></td>

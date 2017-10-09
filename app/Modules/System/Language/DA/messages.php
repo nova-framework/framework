@@ -21,6 +21,7 @@ return array (
   'E-mail From Name' => 'Afsender navn',
   'Encryption' => 'Kryptering',
   'Forgot Password?' => 'Glemt kodeord?',
+  'Frontend' => '',
   'Green' => 'Grøn',
   'Green Light' => 'Lys Grøn',
   'Insert the current E-Mail' => 'Indtast den nuværende Email',

@@ -21,6 +21,7 @@ return array (
   'E-mail From Name' => 'نام فرستنده ایمیل',
   'Encryption' => 'رمزنگاری',
   'Forgot Password?' => 'فراموشی رمزعبور؟',
+  'Frontend' => '',
   'Green' => 'سبز',
   'Green Light' => 'سبز سفید',
   'Insert the current E-Mail' => 'ایمیل فعلی را وارد کنید',

@@ -21,6 +21,7 @@ return array (
   'E-mail From Name' => 'E-mail от имени',
   'Encryption' => 'Шифрование',
   'Forgot Password?' => 'Забыли пароль',
+  'Frontend' => '',
   'Green' => 'Зелёный',
   'Green Light' => 'Светло-зелёный',
   'Insert the current E-Mail' => 'Укажите текущий E-mail',

@@ -21,6 +21,7 @@ return array (
   'E-mail From Name' => '',
   'Encryption' => '',
   'Forgot Password?' => '',
+  'Frontend' => '',
   'Green' => '',
   'Green Light' => '',
   'Insert the current E-Mail' => '',

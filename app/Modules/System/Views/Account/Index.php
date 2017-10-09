@@ -63,7 +63,7 @@ if (isset($user->image) && $user->image->exists()) {
     </div>
     <div class="box-body">
         <div class="col-md-4">
-            <img src="<?= $imageUrl ?>" class="thumbnail" alt="Profile Image" style="margin-bottom: 0;">
+            <img src="<?= $imageUrl ?>" class="img-thumbnail img-responsive" alt="Profile Image" style="margin-bottom: 0;">
         </div>
         <div class="col-md-8">
             <div class="form-group">

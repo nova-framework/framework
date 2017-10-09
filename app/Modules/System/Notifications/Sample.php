@@ -10,16 +10,6 @@ class Sample extends Notification
 {
 
     /**
-     * Create a new Sample instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Get the notification's delivery channels.
      *
      * @param  mixed  $notifiable

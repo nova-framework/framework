@@ -47,7 +47,9 @@ class Notifications extends BaseController
         $notifications = $query->where('id', '>', $lastId)->limit(10)->get();
 
         if (! $notifications->isEmpty()) {
-            $lastId = $notifications->first()->id;
+            $notification = $notifications->first();
+
+            $lastId = $notification->id;
         } else {
             $lastId = 0;
         }

@@ -14,4 +14,5 @@ return array (
   'Sign Up' => 'Регистрация',
   'Sign out' => 'Выход',
   'Toggle navigation' => 'Свернуть навигацию',
+  'You have %d notification(s)' => '',
 );

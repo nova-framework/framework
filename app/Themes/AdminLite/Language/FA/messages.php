@@ -14,4 +14,5 @@ return array (
   'Sign Up' => 'عضویت',
   'Sign out' => 'خروج',
   'Toggle navigation' => '',
+  'You have %d notification(s)' => '',
 );

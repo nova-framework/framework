@@ -14,4 +14,5 @@ return array (
   'Sign Up' => 'Tilmeld',
   'Sign out' => 'Log ud',
   'Toggle navigation' => 'Skift navigation',
+  'You have %d notification(s)' => '',
 );

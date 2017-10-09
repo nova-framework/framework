@@ -43,8 +43,13 @@ class Notifications extends BaseController
         // Get the total number of unread notifications.
         $count = $query->count();
 
+        // Handle the last notification ID if requested.
+        if ($lastId > 0) {
+            $query->where('id', '>', $lastId);
+        }
+
         // Get the first 5 unread notifications.
-        $notifications = $query->where('id', '>', $lastId)->limit(10)->get();
+        $notifications = $query->limit(10)->get();
 
         if (! $notifications->isEmpty()) {
             $notification = $notifications->first();

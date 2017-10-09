@@ -212,7 +212,6 @@ $(function () {
 
 $(function () {
     var lastNotificationId = 0;
-    var notificationsCount = 0;
 
     var handleNotifications = function () {
         var notificationsHeader = $('#notifications-header');
@@ -225,23 +224,23 @@ $(function () {
             lastId: lastNotificationId
         },
         function (data) {
-            if (data.count === 0) {
+            var count = data.count;
+
+            if (count === 0) {
                 return;
             }
-
-            notificationsCount += data.count;
 
             lastNotificationId = data.lastId;
 
             //
             var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
 
-            menuLabel.html(notificationsCount);
+            menuLabel.html(count);
 
             menuLabel.show();
 
             //
-            var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", notificationsCount);
+            var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", count);
 
             notificationsHeader.html(title);
 

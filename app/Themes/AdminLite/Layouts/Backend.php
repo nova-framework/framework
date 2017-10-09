@@ -270,6 +270,10 @@ $(function () {
 
             notificationsHeader.html(title);
 
+            if (data.items.length === 0) {
+                return;
+            }
+
             var html = data.items.map(function (item) {
                 var icon = item.icon ? item.icon : 'bell';
 

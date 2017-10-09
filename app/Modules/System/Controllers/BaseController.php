@@ -27,6 +27,11 @@ abstract class BaseController extends Controller
     protected $layout = 'Frontend';
 
 
+    public function __construct()
+    {
+        $this->beforeFilter('notifier');
+    }
+
     /**
      * Method executed before any action.
      */

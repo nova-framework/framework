@@ -27,6 +27,9 @@ class Files extends BaseController
 
     public function __construct(Container $container)
     {
+        parent::__construct();
+
+        //
         $this->container = $container;
 
         //

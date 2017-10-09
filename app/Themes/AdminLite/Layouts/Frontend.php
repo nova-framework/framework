@@ -214,35 +214,49 @@ $(function () {
     var showNotifications = function (data) {
         var total = data.total;
 
-        if (total > 0) {
-            $('.notifications-menu > a.dropdown-toggle > span.label').html(total);
+        var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
 
-            $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", total));
+        if (total === 0) {
+            menuLabel.hide();
 
-            var html = data.items.map(function (item) {
-                var icon = item.icon ? item.icon : 'bell';
-
-                return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
-            });
-
-            $('#notifications-list') .html(html);
-        } else {
-            $('.notifications-menu > a.dropdown-toggle > span.label') .hide();
-
-            $('#notifications-header').html("<?= __d('system', 'You have no notifications'); ?>");
-
-            $('#notifications-list') .html('');
+            return;
         }
+
+        menuLabel.html(total);
+
+        //
+        var notifications = $('#notifications-list');
+
+        var existingItems = notifications.html();
+
+        $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", total));
+
+        var html = data.items.map(function (item) {
+            var icon = item.icon ? item.icon : 'bell';
+
+            return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
+        });
+
+        notifications.prepend(html);
     };
 
-    $.post("<?= site_url('notifications/data'); ?>",
-    {
-        csrfToken: "<?= $csrfToken; ?>",
-        path: "<?= Request::path(); ?>"
-    },
-    function (data) {
-        showNotifications(data);
-    });
+    var readNotification = function () {
+        $.post("<?= site_url('notifications/data'); ?>",
+        {
+            csrfToken: "<?= $csrfToken; ?>",
+            path: "<?= Request::path(); ?>"
+        },
+        function (data) {
+            showNotifications(data);
+        });
+    };
+
+    readNotification();
+
+    setInterval(function() {
+        readNotification();
+
+    }, 60000);
 });
 
 </script>

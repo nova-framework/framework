@@ -269,11 +269,9 @@ $(function () {
             notificationsHeader.html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", notificationsCount));
 
             var html = data.items.map(function (item) {
-                var data = item.data;
+                var icon = item.icon ? item.icon : 'bell';
 
-                var icon = data.icon ? data.icon : 'bell';
-
-                return '<li><a href="' + data.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + data.message + '</s><li>';
+                return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
             });
 
             notificationsList.prepend(html);

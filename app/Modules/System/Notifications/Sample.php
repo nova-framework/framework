@@ -46,6 +46,7 @@ class Sample extends Notification
         return array(
             'message' => 'Just a sample notification.',
             'link'    => site_url('dashboard'),
+            'icon'    => 'globe',
         );
     }
 }

@@ -36,7 +36,7 @@ class Notifications extends BaseController
         return Response::json(array(
             'count'  => $count,
             'lastId' => $lastId,
-            'items'  => $notifications->toArray(),
+            'items'  => $notifications->lists('data'),
         ));
     }
 }

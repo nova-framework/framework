@@ -62,7 +62,9 @@ class Notifications extends BaseController
         $items = array();
 
         foreach ($notifications as $notification) {
-            $items[] = array_merge(array('id' => $notification->uuid), $notification->data);
+            $items[] = array_merge(
+                array('id' => $notification->uuid), $notification->data
+            );
         }
 
         return Response::json(array(

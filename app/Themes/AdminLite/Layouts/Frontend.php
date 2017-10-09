@@ -212,9 +212,12 @@ $(function () {
 
 $(function () {
     var showNotifications = function (data) {
-        var total = data.total;
-
         var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
+
+        var notifications = $('#notifications-list');
+
+        //
+        var total = data.total ? data.total : 0;
 
         if (total === 0) {
             menuLabel.hide();
@@ -224,11 +227,6 @@ $(function () {
 
         menuLabel.html(total);
 
-        //
-        var notifications = $('#notifications-list');
-
-        var existingItems = notifications.html();
-
         $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", total));
 
         var html = data.items.map(function (item) {
@@ -237,7 +235,7 @@ $(function () {
             return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
         });
 
-        notifications.prepend(html);
+        $('#notifications-list').prepend(html);
     };
 
     var readNotification = function () {

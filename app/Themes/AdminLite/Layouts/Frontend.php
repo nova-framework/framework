@@ -213,7 +213,7 @@ $(function () {
 $(function () {
     var lastNotificationId = 0;
 
-    var handleNotifications = function () {
+    handleNotifications = function () {
         var notificationsHeader = $('#notifications-header');
 
         var notificationsList = $('#notifications-list');
@@ -228,9 +228,9 @@ $(function () {
 
             if (count === 0) {
                 return;
+            } else if (data.lastId > 0) {
+                lastNotificationId = data.lastId;
             }
-
-            lastNotificationId = data.lastId;
 
             //
             var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');

@@ -37,6 +37,8 @@ Route::get('dashboard/notify', array('before' => 'auth', 'uses' => 'Dashboard@no
 Route::get( 'account', array('before' => 'auth',      'uses' => 'Account@edit'));
 Route::post('account', array('before' => 'auth|csrf', 'uses' => 'Account@update'));
 
+// The Notifications.
+Route::get( 'notifications/data', array('before' => 'auth', 'uses' => 'Notifications@data'));
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()

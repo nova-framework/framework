@@ -40,6 +40,7 @@ Event::listen('frontend.menu.right', function ()
 
             // Custom content
             'class'   => 'notifications-menu',
+            'label'   => array('warning', 0),
             'content' => View::fetch('Partials/NavbarNotifications', array(), 'System'),
         ),
         array(
@@ -104,6 +105,7 @@ Event::listen('backend.menu.navbar', function ()
 
             // Custom content
             'class'   => 'notifications-menu',
+            'label'   => array('warning', 0),
             'content' => View::fetch('Partials/NavbarNotifications', array(), 'System'),
         ),
         array(

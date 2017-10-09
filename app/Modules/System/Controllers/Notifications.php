@@ -22,11 +22,11 @@ class Notifications extends BaseController
         $count = $query->count();
 
         // Get the first 5 unread notifications.
-        $notifications = $query->limit(5)->get();
+        $notifications = $query->limit(10)->get();
 
         return Response::json(array(
             'total' => $count,
-            'items' => $notifications->toArray()
+            'items' => $notifications->lists('data'),
         ));
     }
 }

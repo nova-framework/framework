@@ -55,6 +55,7 @@ if (isset($user->image) && $user->image->exists()) {
     //Add Controller specific JS files.
     Assets::js(array(
             vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+            resource_url('js/sprintf.min.js'),
         )
     );
 
@@ -197,13 +198,44 @@ echo isset($js) ? $js : ''; // Place to pass data
 ?>
 
 <script>
-  $(function () {
+
+$(function () {
     $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' // optional
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%' // optional
     });
-  });
+});
+</script>
+
+<script>
+
+$(function () {
+    $.get("<?= site_url('notifications/data'); ?>", function (data) {
+        var html = '';
+
+        var total = data.total;
+
+        if (total > 0) {
+            $('.notifications-menu > a.dropdown-toggle > span.label').html(total);
+
+            $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", total));
+
+            html = data.items.map(function (item) {
+                var icon = item.icon ? item.icon : 'bell';
+
+                return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
+            });
+        } else {
+            $('.notifications-menu > a.dropdown-toggle > span.label') .hide();
+
+            $('#notifications-header').html("<?= __d('system', 'You have no notifications'); ?>");
+        }
+
+        $('#notifications-list') .html(html);
+    });
+});
+
 </script>
 
 <!-- DO NOT DELETE! - Forensics Profiler -->

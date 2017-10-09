@@ -23,7 +23,7 @@ if (isset($user->image) && $user->image->exists()) {
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'User Account : <b>{0}</b>', $user->username); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'Account Details'); ?></h3>
     </div>
     <div class="box-body no-padding">
         <table id='left' class='table table-hover responsive'>

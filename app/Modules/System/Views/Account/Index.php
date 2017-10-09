@@ -103,16 +103,12 @@ if (isset($user->image) && $user->image->exists()) {
                     <input name="current_password" id="current_password" type="password" class="form-control" value="" placeholder="<?= __d('system', 'Insert the current Password'); ?>">
                 </div>
             </div>
-            <div class="clearfix"></div>
-            <br>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="name"><?= __d('system', 'New Password'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
                     <input name="password" id="password" type="password" class="form-control" value="" placeholder="<?= __d('system', 'Insert the new Password'); ?>">
                 </div>
             </div>
-            <div class="clearfix"></div>
-            <br>
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="name"><?= __d('system', 'Confirm Password'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">

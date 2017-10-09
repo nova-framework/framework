@@ -109,7 +109,6 @@ return array (
   'User Account' => '',
   'User Account : <b>{0}</b>' => '',
   'User Login' => 'Bruger log ind',
-  'User Profile' => 'Brugerkonto',
   'User Registration' => 'Brugerregistrering',
   'Username' => 'Brugernavn',
   'Verify the new Password' => 'Bekræft det nye kodeord',

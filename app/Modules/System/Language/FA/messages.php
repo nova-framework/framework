@@ -109,7 +109,6 @@ return array (
   'User Account' => '',
   'User Account : <b>{0}</b>' => '',
   'User Login' => 'ورود کاربر',
-  'User Profile' => 'پروفایل کاربر',
   'User Registration' => 'ثبت نام کاربر',
   'Username' => 'نام کاربری',
   'Verify the new Password' => 'رمز عبور جدید را بررسی کنید',

@@ -109,7 +109,6 @@ return array (
   'User Account' => '',
   'User Account : <b>{0}</b>' => '',
   'User Login' => 'Вход пользователя',
-  'User Profile' => 'Профиль пользователя',
   'User Registration' => 'Регистрация пользователя',
   'Username' => 'Логин',
   'Verify the new Password' => 'Подтвердите новый пароль',

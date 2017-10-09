@@ -71,7 +71,7 @@ class Account extends BaseController
         $user = Auth::user();
 
         return $this->createView()
-            ->shares('title',  __d('system', 'User Profile'))
+            ->shares('title',  __d('system', 'User Account'))
             ->with('user', $user);
     }
 

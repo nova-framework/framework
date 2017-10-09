@@ -3,6 +3,7 @@
 namespace Shared\Support;
 
 use Nova\Database\ORM\Builder as ModelBuilder;
+use Nova\Support\Facades\Response;
 use Nova\Support\Arr;
 
 
@@ -142,11 +143,11 @@ class DataTable
             $data[] = $record;
         }
 
-        return array(
+        return Response::json(array(
             "draw"            => $draw,
             "recordsTotal"    => $recordsTotal,
             "recordsFiltered" => $recordsFiltered,
             "data"            => $data
-        );
+        ));
     }
 }

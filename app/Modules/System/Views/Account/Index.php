@@ -1,8 +1,8 @@
 <section class="content-header">
-    <h1><?= __d('system', 'User Account'); ?></h1>
+    <h1><?= __d('system', 'Account'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
-        <li><?= __d('system', 'User Account'); ?></li>
+        <li><?= __d('system', 'Account'); ?></li>
     </ol>
 </section>
 

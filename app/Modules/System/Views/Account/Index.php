@@ -1,8 +1,8 @@
 <section class="content-header">
-    <h1><?= __d('system', 'User Profile : <b>{0}</b>', $user->username); ?></h1>
+    <h1><?= __d('system', 'User Account'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
-        <li><?= __d('system', 'User Profile'); ?></li>
+        <li><?= __d('system', 'User Account'); ?></li>
     </ol>
 </section>
 
@@ -21,9 +21,47 @@ if (isset($user->image) && $user->image->exists()) {
 
 ?>
 
+<div class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= __d('users', 'User Account : <b>{0}</b>', $user->username); ?></h3>
+    </div>
+    <div class="box-body no-padding">
+        <table id='left' class='table table-hover responsive'>
+            <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='70%'><?= $user->id; ?></td>
+            <tr>
+            <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->username; ?></td>
+            </tr>
+            <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Roles'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= implode(', ', $user->roles->lists('name')); ?></td>
+            </tr>
+            <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Name and Surname'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->realname; ?></td>
+            </tr>
+            <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'E-mail'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->email; ?></td>
+            </tr>
+            <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Created At'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
+            </tr>
+            <tr>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Updated At'); ?></th>
+                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->updated_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
+            <tr>
+        </table>
+    </div>
+</div>
+
 <form action="<?= site_url('account/picture'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
 
-<div  class="box box-default">
+<div  class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('system', 'Profile Picture'); ?></h3>
     </div>
@@ -56,7 +94,7 @@ if (isset($user->image) && $user->image->exists()) {
 
 <form action="<?= site_url('account'); ?>" class="form-horizontal" method='POST' role="form">
 
-<div  class="box box-default">
+<div  class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('system', 'Change Password'); ?></h3>
     </div>

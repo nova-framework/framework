@@ -254,35 +254,41 @@ $(function () {
 
             if (count === 0) {
                 return;
-            } else if (data.lastId > 0) {
+            }
+
+            // We store the last notification ID.
+            else if (data.lastId > 0) {
                 lastNotificationId = data.lastId;
             }
 
-            //
+            // Handle the menu item label.
             var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
 
             menuLabel.html(count);
 
             menuLabel.show();
 
-            //
+            // Handle the dropdown header.
             var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", count);
 
             notificationsHeader.html(title);
 
-            if (data.items.length === 0) {
-                return;
+            // Handle the notifications list.
+            if (data.items.length > 0) {
+                var html = parseNotificationItems(data.items);
+
+                notificationsList.prepend(html);
             }
-
-            var html = data.items.map(function (item) {
-                var icon = item.icon ? item.icon : 'bell';
-
-                return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-aqua"></i> %s</s><li>', item.link, item.id, icon, item.message);
-            });
-
-            notificationsList.prepend(html);
         });
     };
+
+    parseNotificationItems = function (items) {
+        return items.map(function (item) {
+            var icon = item.icon ? item.icon : 'bell';
+
+            return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-aqua"></i> %s</s><li>', item.link, item.id, icon, item.message);
+        });
+    }
 
     // Setup the CSRF header on AJAX requests.
     $.ajaxSetup({

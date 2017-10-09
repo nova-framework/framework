@@ -4,6 +4,7 @@ namespace App\Modules\System\Controllers;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 
 use App\Modules\System\Controllers\BaseController;
@@ -21,6 +22,13 @@ class Notifications extends BaseController
         return $this->createView()
             ->shares('title', __d('system', 'Notifications'))
             ->with('notifications', $notifications);
+    }
+
+    public function update()
+    {
+        $authUser = Auth::user();
+
+        return Redirect::back();
     }
 
     public function data()

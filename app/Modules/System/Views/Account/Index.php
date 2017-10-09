@@ -47,10 +47,6 @@ if (isset($user->image) && $user->image->exists()) {
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Created At'); ?></th>
                 <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->created_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
             </tr>
-            <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Updated At'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->updated_at->formatLocalized(__d('users', '%d %b %Y, %R')); ?></td>
-            <tr>
         </table>
     </div>
 </div>

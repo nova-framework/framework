@@ -9,7 +9,50 @@
 <!-- Main content -->
 <section class="content">
 
-<?= Session::getMessages(); ?>
+<?php
+
+echo Session::getMessages();
+
+if (isset($user->image) && $user->image->exists()) {
+    $imageUrl = resource_url('images/users/' .basename($user->image->path));
+} else {
+    $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
+}
+
+?>
+
+<form action="<?= site_url('account/picture'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
+
+<div  class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= __d('system', 'Profile Picture'); ?></h3>
+    </div>
+    <div class="box-body">
+        <div class="col-md-4">
+            <img src="<?= $imageUrl ?>" class="thumbnail" alt="Profile Image" style="margin-bottom: 0;">
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="image"><?= __d('system', 'Profile Picture (to change)'); ?></label>
+                <div class="input-group">
+                    <input type="text" id="file_path" class="form-control" placeholder="Browse...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="file_browser">
+                        <i class="fa fa-search"></i> Browse</button>
+                    </span>
+                </div>
+                <input type="file" class="hidden" id="image" name="image">
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <input type="submit" name="submit" class="btn btn-success col-sm-2 pull-right" value="<?= __d('system', 'Update'); ?>">
+    </div>
+</div>
+
+<input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+
+</form>
 
 <form action="<?= site_url('account'); ?>" class="form-horizontal" method='POST' role="form">
 
@@ -49,49 +92,6 @@
     </div>
     <div class="box-footer">
         <input type="submit" name="submit" class="btn btn-success col-sm-2 pull-right" value="<?= __d('system', 'Save'); ?>">
-    </div>
-</div>
-
-<input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
-
-</form>
-
-<?php
-
-if (isset($user->image) && $user->image->exists()) {
-    $imageUrl = resource_url('images/users/' .basename($user->image->path));
-} else {
-    $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
-}
-
-?>
-
-<form action="<?= site_url('account/picture'); ?>" class="form-horizontal" method='POST' enctype="multipart/form-data" role="form">
-
-<div  class="box box-default">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('system', 'Profile Picture'); ?></h3>
-    </div>
-    <div class="box-body">
-        <div class="col-md-4">
-            <img src="<?= $imageUrl ?>" class="thumbnail" alt="Profile Image" style="margin-bottom: 0;">
-        </div>
-        <div class="col-md-8">
-            <div class="form-group">
-                <label class="col-sm-4 control-label" for="image"><?= __d('system', 'Profile Picture (to change)'); ?></label>
-                <div class="input-group">
-                    <input type="text" id="file_path" class="form-control" placeholder="Browse...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" id="file_browser">
-                        <i class="fa fa-search"></i> Browse</button>
-                    </span>
-                </div>
-                <input type="file" class="hidden" id="image" name="image">
-            </div>
-        </div>
-    </div>
-    <div class="box-footer">
-        <input type="submit" name="submit" class="btn btn-success col-sm-2 pull-right" value="<?= __d('system', 'Update'); ?>">
     </div>
 </div>
 

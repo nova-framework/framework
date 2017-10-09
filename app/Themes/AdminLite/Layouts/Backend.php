@@ -20,18 +20,6 @@ if (isset($user->image) && $user->image->exists()) {
     $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
 }
 
-//
-ob_start();
-
-foreach ($languages as $code => $info) {
-?>
-<li class="header <?php if ($code == $langCode) { echo 'active'; } ?>">
-    <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
-</li>
-<?php
-}
-
-$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html lang="<?= $langCode; ?>">
@@ -39,7 +27,7 @@ $langMenuLinks = ob_get_clean();
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title; ?> | <?= $siteName; ?></title>
-    <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
+    <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
@@ -60,7 +48,7 @@ $langMenuLinks = ob_get_clean();
         theme_url('css/style.css', 'AdminLite'),
     ));
 
-    echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
+    echo isset($css) ? $css : ''; // Place to pass data
 ?>
 
 <style>
@@ -77,6 +65,7 @@ $langMenuLinks = ob_get_clean();
     //Add Controller specific JS files.
     Assets::js(array(
         vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+        resource_url('js/sprintf.min.js'),
     ));
 
     ?>
@@ -115,12 +104,19 @@ $langMenuLinks = ob_get_clean();
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav" style="margin-right: 10px;">
+          <?php foreach ($navbarItems as $item) { ?>
+            <?= View::partial('Partials/Backend/NavbarItems', 'AdminLite', array('item' => $item)); ?>
+          <?php } ?>
           <li class="dropdown language-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class='fa fa-language'></i> <?= $langName; ?>
             </a>
             <ul class="dropdown-menu">
-              <?= $langMenuLinks; ?>
+            <?php foreach ($languages as $code => $info) { ?>
+              <li <?= ($code == $langCode) ? 'class="active"' : ''; ?>>
+                <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
+              </li>
+            <?php } ?>
             </ul>
           </li>
           <!-- User Account Menu -->
@@ -136,7 +132,6 @@ $langMenuLinks = ob_get_clean();
               <!-- The user image in the menu -->
               <li class="user-header">
                 <img src="<?= $imageUrl ?>" class="img-circle" alt="User Image">
-
                 <p>
                   <?= $user->realname; ?> - <?= implode(', ', $user->roles->lists('name')); ?>
                   <?php $sinceDate = $user->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
@@ -146,7 +141,7 @@ $langMenuLinks = ob_get_clean();
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?= site_url('admin/profile'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Profile'); ?></a>
+                  <a href="<?= site_url('account'); ?>" class="btn btn-default btn-flat"><?= __d('admin_lite', 'Account'); ?></a>
                 </div>
                 <div class="pull-right">
                   <a href="<?= site_url('logout'); ?>" class="btn btn-default btn-flat"
@@ -182,8 +177,8 @@ $langMenuLinks = ob_get_clean();
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header"><?= __d('admin_lite', 'ADMINISTRATION'); ?></li>
-            <?php foreach ($menuItems as $item) { ?>
-                <?= View::partial('Partials/Backend/SideBarItems', 'AdminLite', array('item' => $item)); ?>
+            <?php foreach ($sidebarItems as $item) { ?>
+                <?= View::partial('Partials/Backend/SidebarItems', 'AdminLite', array('item' => $item)); ?>
             <?php } ?>
         </ul>
         <!-- /.sidebar-menu -->
@@ -225,7 +220,7 @@ Assets::js(array(
     vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte')
 ));
 
-echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data
 
 ?>
 
@@ -237,6 +232,80 @@ $(function () {
     //Initialize Select2 Elements
     $(".select2").select2();
 });
+</script>
+
+<script>
+$(function () {
+    var lastNotificationId = 0;
+
+    handleNotifications = function () {
+        var notificationsHeader = $('#notifications-header');
+
+        var notificationsList = $('#notifications-list');
+
+        $.post("<?= site_url('notifications/data'); ?>",
+        {
+            path: '<?= Request::path(); ?>',
+            lastId: lastNotificationId
+        })
+        .done(function (data) {
+            var count = data.count;
+
+            if (count === 0) {
+                return;
+            }
+
+            // We store the last notification ID.
+            else if (data.lastId > 0) {
+                lastNotificationId = data.lastId;
+            }
+
+            // Handle the menu item label.
+            var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
+
+            menuLabel.html(count);
+
+            menuLabel.show();
+
+            // Handle the dropdown header.
+            var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", count);
+
+            notificationsHeader.html(title);
+
+            // Handle the notifications list.
+            if (data.items.length > 0) {
+                var html = parseNotificationItems(data.items);
+
+                notificationsList.prepend(html);
+            }
+        });
+    };
+
+    parseNotificationItems = function (items) {
+        return items.map(function (item) {
+            var icon  = item.icon  ? item.icon  : 'bell';
+            var color = item.color ? item.color : 'aqua';
+
+            return sprintf('<li><a href="%s?read=%s" target="_blank"><i class="fa fa-%s text-%s"></i> %s</s><li>', item.link, item.id, icon, color, item.message);
+        });
+    }
+
+    // Setup the CSRF header on AJAX requests.
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': '<?= $csrfToken; ?>'
+        }
+    });
+
+    // We refresh the notifications every minute.
+    setInterval(function() {
+        handleNotifications();
+
+    }, 10000);
+
+    handleNotifications();
+});
+
 </script>
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.

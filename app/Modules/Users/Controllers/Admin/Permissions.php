@@ -13,7 +13,7 @@ use Nova\Support\Facades\Redirect;
 
 use App\Models\Permission;
 use App\Models\Role;
-use App\Modules\System\Controllers\BaseController;
+use App\Modules\System\Controllers\Admin\BaseController;
 
 
 class Permissions extends BaseController

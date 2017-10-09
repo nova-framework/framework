@@ -90,7 +90,7 @@ class Authorize extends BaseController
         $status = __d('system', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
         // Redirect to the User's Dashboard.
-        return Redirect::intended('admin/dashboard')->withStatus($status);
+        return Redirect::intended('dashboard')->withStatus($status);
     }
 
     /**

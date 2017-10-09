@@ -104,6 +104,7 @@ return array(
 
         // The Shared Providers.
         'Shared\Database\Backup\ConsoleServiceProvider',
+        'Shared\Notifications\NotificationServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
         'Shared\Widgets\WidgetServiceProvider',
 
@@ -184,6 +185,7 @@ return array(
         'Module'        => 'Nova\Support\Facades\Module',
 
         // The Shared Facades.
+        'Notification'  => 'Shared\Support\Facades\Notification',
         'Widget'        => 'Shared\Support\Facades\Widget',
     ),
 

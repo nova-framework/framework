@@ -22,11 +22,11 @@ class PermissionsTableSeeder extends Seeder
     {
         $permissions = array(
             array(
-                'name'  => 'Manage the Platform Settings',
-                'slug'  => 'app.settings.manage',
+                'name'  => 'Access the Administration area',
+                'slug'  => 'platform.backend.manage',
                 'group' => 'system',
 
-                'roles' => array(1, 2),
+                'roles' => array(1, 2, 3),
             ),
         );
 

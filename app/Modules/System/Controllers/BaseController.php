@@ -1,10 +1,4 @@
 <?php
-/**
- * BackendController - A backend Controller for the included example Modules.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace App\Modules\System\Controllers;
 
@@ -13,7 +7,7 @@ use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 
 use App\Controllers\BaseController as Controller;
-use App\Modules\System\Support\BackendMenu;
+use App\Modules\System\Support\EventedMenu;
 
 
 abstract class BaseController extends Controller
@@ -30,8 +24,13 @@ abstract class BaseController extends Controller
      *
      * @var mixed
      */
-    protected $layout = 'Backend';
+    protected $layout = 'Frontend';
 
+
+    public function __construct()
+    {
+        $this->beforeFilter('notifier');
+    }
 
     /**
      * Method executed before any action.
@@ -44,11 +43,14 @@ abstract class BaseController extends Controller
         $url = Request::url();
 
         if (! is_null($user = Auth::user())) {
-            $menuItems = BackendMenu::get('backend.menu', $user, $url);
+            $navbarLeftItems  = EventedMenu::get('frontend.menu.left',  $user, $url);
+            $navbarRightItems = EventedMenu::get('frontend.menu.right', $user, $url);
         } else {
-            $menuItems = array();
+            $navbarLeftItems  = array();
+            $navbarRightItems = array();
         }
 
-        View::share('menuItems', $menuItems);
+        View::share('navbarLeftItems',  $navbarLeftItems);
+        View::share('navbarRightItems', $navbarRightItems);
     }
 }

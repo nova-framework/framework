@@ -13,7 +13,7 @@ use App\Models\User;
 
 /** Define Events. */
 
-Event::listen('backend.menu', function ()
+Event::listen('backend.menu.sidebar', function ()
 {
     return array(
         array(

@@ -48,7 +48,7 @@ return array(
 
             'paths' => array(
                 'authorize' => 'login',
-                'dashboard' => 'admin/dashboard',
+                'dashboard' => 'dashboard',
             ),
         ),
         'api' => array(

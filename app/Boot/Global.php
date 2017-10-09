@@ -49,7 +49,7 @@ App::error(function (AuthorizationException $e, $code)
     // Get the Guard's dashboard path from configuration.
     $guard = Config::get('auth.defaults.guard', 'web');
 
-    $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+    $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
 
     $status = __('You are not authorized to access this resource.');
 
@@ -122,12 +122,3 @@ define('THEME', $app['config']['app.theme']);
  * Set a Site administrator email address.
  */
 define('SITEEMAIL', $app['config']['app.email']);
-
-/**
- * Send a E-Mail to administrator (defined on SITEEMAIL) when a Error is logged.
- */
-/*
-use Shared\Log\Mailer as LogMailer;
-
-LogMailer::initHandler($app);
-*/

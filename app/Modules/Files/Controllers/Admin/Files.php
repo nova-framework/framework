@@ -5,7 +5,7 @@ namespace App\Modules\Files\Controllers\Admin;
 use Nova\Container\Container;
 use Nova\Http\Request;
 
-use App\Modules\System\Controllers\BaseController;
+use App\Modules\System\Controllers\Admin\BaseController;
 
 
 class Files extends BaseController
@@ -27,6 +27,8 @@ class Files extends BaseController
 
     public function __construct(Container $container)
     {
+        parent::__construct();
+
         $this->container = $container;
 
         //

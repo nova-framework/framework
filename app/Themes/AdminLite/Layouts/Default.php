@@ -11,18 +11,6 @@ $langName = Language::name();
 
 $languages = Config::get('languages');
 
-//
-ob_start();
-
-foreach ($languages as $code => $info) {
-?>
-<li class="header <?php if ($code == $langCode) { echo 'active'; } ?>">
-    <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
-</li>
-<?php
-}
-
-$langMenuLinks = ob_get_clean();
 ?>
 <!DOCTYPE html>
 <html lang="<?= $langCode; ?>">
@@ -30,7 +18,7 @@ $langMenuLinks = ob_get_clean();
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title; ?> | <?= $siteName; ?></title>
-    <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
+    <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
@@ -53,7 +41,7 @@ $langMenuLinks = ob_get_clean();
         theme_url('css/style.css', 'AdminLite'),
     ));
 
-    echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
+    echo isset($css) ? $css : ''; // Place to pass data
 
     //Add Controller specific JS files.
     Assets::js(array(
@@ -91,12 +79,16 @@ $langMenuLinks = ob_get_clean();
                         <i class='fa fa-language'></i> <?= $langName; ?>
                     </a>
                     <ul class="dropdown-menu">
-                        <?= $langMenuLinks; ?>
+                    <?php foreach ($languages as $code => $info) { ?>
+                        <li <?= ($code == $langCode) ? 'class="active"' : ''; ?>>
+                            <a href='<?= site_url('language/' .$code); ?>' title='<?= $info['info']; ?>'><?= $info['name']; ?></a>
+                        </li>
+                    <?php } ?>
                     </ul>
                 </li>
                 <?php if (Auth::check()) { ?>
-                <li <?php if($currentUri == 'profile') echo 'class="active"'; ?>>
-                    <a href='<?= site_url('profile'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
+                <li <?= ($currentUri == 'account') ? 'class="active"' : ''; ?>>
+                    <a href='<?= site_url('account'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Profile'); ?></a>
                 </li>
                 <li>
                     <a href='<?= site_url('logout'); ?>' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -107,13 +99,13 @@ $langMenuLinks = ob_get_clean();
                     </form>
                 </li>
                 <?php } else { ?>
-               <li <?php if($currentUri == 'register') echo 'class="active"'; ?>>
+                <li <?= ($currentUri == 'register') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
                 </li>
-                <li <?php if($currentUri == 'login') echo 'class="active"'; ?>>
+                <li <?= ($currentUri == 'login') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
                 </li>
-                <li <?php if($currentUri == 'password/remind') echo 'class="active"'; ?>>
+                <li <?= ($currentUri == 'password/remind') ? 'class="active"' : ''; ?>>
                     <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>
                 </li>
                 <?php } ?>

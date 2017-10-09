@@ -3,7 +3,11 @@
 namespace Shared\Support;
 
 use Nova\Database\ORM\Builder as ModelBuilder;
+use Nova\Support\Facades\Input;
+use Nova\Support\Facades\Response;
 use Nova\Support\Arr;
+
+use Closure;
 
 
 class DataTable
@@ -12,13 +16,17 @@ class DataTable
      * Server Side Processor for DataTables.
      *
      * @param Nova\Database\Query\Builder|Nova\Database\ORM\Builder $query
-     * @param array $input
      * @param array $options
+     * @param array $input
      *
      * @return array
      */
-    public static function handle($query, array $input, array $options)
+    public static function handle($query, array $options, array $input = array())
     {
+        if (empty($input)) {
+            $input = Input::only('draw', 'columns', 'start', 'length', 'search', 'order');
+        }
+
         $columns = Arr::get($input, 'columns', array());
 
         // Compute the total count.
@@ -104,12 +112,7 @@ class DataTable
 
         $query->skip($start)->take($length);
 
-        // Retrieve the data from database.
-        $results = $query->get();
-
-        //
-        // Format the data on respect of DataTables specs.
-
+        // Calculate the columns.
         $columns = array();
 
         foreach ($options as $option) {
@@ -121,32 +124,40 @@ class DataTable
             $columns[$key] = Arr::get($option, 'uses', $field);
         }
 
-        //
+        // Retrieve the data from database and it on respect of DataTables specs.
+        $results = $query->get();
+
         $data = array();
 
         foreach ($results as $result) {
             $record = array();
 
-            foreach ($columns as $key => $value) {
-                // Process for standard columns.
-                if (is_string($value)) {
-                    $record[$key] = $result->{$value};
-
+            foreach ($columns as $key => $field) {
+                if (is_null($field)) {
                     continue;
                 }
 
                 // Process for dynamic columns.
-                $record[$key] = call_user_func($value, $result, $key);
+                else if ($field instanceof Closure) {
+                    $value = call_user_func($field, $result, $key);
+                }
+
+                // Process for standard columns.
+                else {
+                    $value = $result->{$field};
+                }
+
+                $record[$key] = $value;
             }
 
             $data[] = $record;
         }
 
-        return array(
+        return Response::json(array(
             "draw"            => $draw,
             "recordsTotal"    => $recordsTotal,
             "recordsFiltered" => $recordsFiltered,
             "data"            => $data
-        );
+        ));
     }
 }

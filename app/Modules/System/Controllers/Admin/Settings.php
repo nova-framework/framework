@@ -1,10 +1,4 @@
 <?php
-/**
- * Settings - Implements a simple Administration Settings.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace App\Modules\System\Controllers\Admin;
 
@@ -17,7 +11,7 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
-use App\Modules\System\Controllers\BaseController;
+use App\Modules\System\Controllers\Admin\BaseController;
 use App\Models\Option;
 
 

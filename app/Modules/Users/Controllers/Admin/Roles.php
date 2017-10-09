@@ -15,7 +15,7 @@ use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 
-use App\Modules\System\Controllers\BaseController;
+use App\Modules\System\Controllers\Admin\BaseController;
 use App\Models\Role;
 
 use Carbon\Carbon;

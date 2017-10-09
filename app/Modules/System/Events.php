@@ -94,10 +94,23 @@ Event::listen('backend.menu.navbar', function ()
 {
     return array(
         array(
+            'url'    => '#',
+            'title'  => '',
+            'icon'   => 'bell-o',
+            'weight' => 1,
+
+            //
+            'path'   => 'notifications',
+
+            // Custom content
+            'class'   => 'notifications-menu',
+            'content' => View::fetch('Partials/NavbarNotifications', array(), 'System'),
+        ),
+        array(
             'url'    => site_url('dashboard'),
             'title'  => __d('system', 'Frontend'),
             'icon'   => 'home',
-            'weight' => 0,
+            'weight' => 101,
 
             //
             'path'   => 'frontend',

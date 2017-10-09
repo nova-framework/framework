@@ -38,13 +38,13 @@ class Notifications extends BaseController
         $lastId = (int) Input::get('lastId', 0);
 
         //Retrieve the unread notifications for the current User.
-        $query = $authUser->unreadNotifications()->where('id', '>', $lastId);
+        $query = $authUser->unreadNotifications();
 
         // Get the total number of unread notifications.
         $count = $query->count();
 
         // Get the first 5 unread notifications.
-        $notifications = $query->limit(10)->get();
+        $notifications = $query->where('id', '>', $lastId)->limit(10)->get();
 
         if (! $notifications->isEmpty()) {
             $lastId = $notifications->first()->id;

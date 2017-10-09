@@ -2,7 +2,13 @@
 <?php if (! empty($children) || isset($item['content'])) { ?>
 <li class="dropdown <?= $item['active'] ? 'active' : ''; ?> <?= isset($item['class']) ? $item['class'] : ''; ?>">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span> <?= isset($item['label']) ? $item['label'] : (! empty($children) ? '<span class="caret"></span>': ''); ?>
+        <i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span>
+        <?php if (isset($item['label']) && is_array($item['label'])) { ?>
+        <?php list ($class, $count) = $item['label']; ?>
+        <span class="label label-<?= $class; ?>"><?= $count; ?></span>
+        <?php } else if (! empty($children)) { ?>
+        <span class="caret"></span>
+        <?php } ?>
     </a>
     <ul class="dropdown-menu" role="menu">
     <?php if (isset($item['content'])) { ?>

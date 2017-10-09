@@ -66,7 +66,7 @@ class Account extends BaseController
         return Validator::make($data, $rules, $messages, $attributes);
     }
 
-    public function edit()
+    public function index()
     {
         $user = Auth::user();
 

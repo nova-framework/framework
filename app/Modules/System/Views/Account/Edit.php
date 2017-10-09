@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h1><?= __d('system', 'User Profile : {0}', $user->username); ?></h1>
+    <h1><?= __d('system', 'User Profile : <b>{0}</b>', $user->username); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
         <li><?= __d('system', 'User Profile'); ?></li>
@@ -11,6 +11,8 @@
 
 <?= Session::getMessages(); ?>
 
+<form method='POST' role="form">
+
 <div  class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('system', 'Change Password'); ?></h3>
@@ -18,8 +20,6 @@
 
     <div class="box-body">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
-            <form method='post' role="form">
-
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="name"><?= __d('system', 'Current Password'); ?> <font color='#CC0000'>*</font></label>
                 <div class="col-sm-8">
@@ -45,19 +45,15 @@
             <div class="clearfix"></div>
             <br>
             <font color='#CC0000'>*</font><?= __d('system', 'Required field'); ?>
-            <hr>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <input type="submit" name="submit" class="btn btn-success col-sm-3 pull-right" value="<?= __d('system', 'Save'); ?>">
-                </div>
-            </div>
-            <br>
-
-            <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
-
-            </form>
         </div>
     </div>
+    <div class="box-footer">
+        <input type="submit" name="submit" class="btn btn-success col-sm-2 pull-right" value="<?= __d('system', 'Save'); ?>">
+    </div>
 </div>
+
+<input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+
+</form>
 
 </section>

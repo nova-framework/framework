@@ -211,9 +211,7 @@ $(function () {
 <script>
 
 $(function () {
-    $.get("<?= site_url('notifications/data'); ?>", function (data) {
-        var html = '';
-
+    var showNotifications = function (data) {
         var total = data.total;
 
         if (total > 0) {
@@ -221,18 +219,29 @@ $(function () {
 
             $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", total));
 
-            html = data.items.map(function (item) {
+            var html = data.items.map(function (item) {
                 var icon = item.icon ? item.icon : 'bell';
 
                 return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
             });
+
+            $('#notifications-list') .html(html);
         } else {
             $('.notifications-menu > a.dropdown-toggle > span.label') .hide();
 
             $('#notifications-header').html("<?= __d('system', 'You have no notifications'); ?>");
-        }
 
-        $('#notifications-list') .html(html);
+            $('#notifications-list') .html('');
+        }
+    };
+
+    $.post("<?= site_url('notifications/data'); ?>",
+    {
+        csrfToken: "<?= $csrfToken; ?>",
+        path: "<?= Request::path(); ?>"
+    },
+    function (data) {
+        showNotifications(data);
     });
 });
 

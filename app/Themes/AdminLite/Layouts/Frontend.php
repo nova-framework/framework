@@ -211,50 +211,48 @@ $(function () {
 <script>
 
 $(function () {
-    var showNotifications = function (data) {
-        var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
-
-        var notifications = $('#notifications-list');
-
-        //
-        var total = data.total ? data.total : 0;
-
-        if (total === 0) {
-            menuLabel.hide();
-
-            return;
-        }
-
-        menuLabel.html(total);
-
-        $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", total));
-
-        var html = data.items.map(function (item) {
-            var icon = item.icon ? item.icon : 'bell';
-
-            return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
-        });
-
-        $('#notifications-list').prepend(html);
-    };
-
-    var readNotification = function () {
+    var handleNotifications = function () {
         $.post("<?= site_url('notifications/data'); ?>",
         {
             csrfToken: "<?= $csrfToken; ?>",
             path: "<?= Request::path(); ?>"
         },
         function (data) {
-            showNotifications(data);
+            var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
+
+            var notifications = $('#notifications-list');
+
+            if (data.total === 0) {
+                return;
+            }
+
+            menuLabel.html(data.total);
+
+            menuLabel.show();
+
+            $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", data.total));
+
+            var html = data.items.map(function (item) {
+                var icon = item.icon ? item.icon : 'bell';
+
+                return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
+            });
+
+            notifications.prepend(html);
+
+            var notificationsCount = parseInt(notifications.data('last-id'));
+
+
         });
     };
 
-    readNotification();
-
+    // We refresh the notifications every minute.
     setInterval(function() {
-        readNotification();
+        //handleNotifications();
 
     }, 60000);
+
+    handleNotifications();
 });
 
 </script>

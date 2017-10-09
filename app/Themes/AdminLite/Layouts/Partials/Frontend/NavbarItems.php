@@ -5,7 +5,7 @@
         <i class="fa fa-<?= $item['icon'] ?>"></i> <span><?= $item['title']; ?></span>
         <?php if (isset($item['label']) && is_array($item['label'])) { ?>
         <?php list ($class, $count) = $item['label']; ?>
-        <span class="label label-<?= $class; ?>"><?= $count; ?></span>
+        <span class="label label-<?= $class; ?>" <?= ($count === 0) ? 'style="display: none;"' : ''; ?>><?= $count; ?></span>
         <?php } else if (! empty($children)) { ?>
         <span class="caret"></span>
         <?php } ?>

@@ -245,11 +245,10 @@ $(function () {
 
         $.post("<?= site_url('notifications/data'); ?>",
         {
-            csrfToken: "<?= $csrfToken; ?>",
-            path: "<?= Request::path(); ?>",
+            path: '<?= Request::path(); ?>',
             lastId: lastNotificationId
-        },
-        function (data) {
+        })
+        .done(function (data) {
             var count = data.count;
 
             if (count === 0) {

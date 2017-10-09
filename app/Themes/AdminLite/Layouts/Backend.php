@@ -65,6 +65,7 @@ if (isset($user->image) && $user->image->exists()) {
     //Add Controller specific JS files.
     Assets::js(array(
         vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
+        resource_url('js/sprintf.min.js'),
     ));
 
     ?>
@@ -231,6 +232,63 @@ $(function () {
     //Initialize Select2 Elements
     $(".select2").select2();
 });
+</script>
+
+<script>
+$(function () {
+    var lastNotificationId = 0;
+    var notificationsCount = 0;
+
+    var handleNotifications = function () {
+        var notificationsHeader = $('#notifications-header');
+
+        var notificationsList = $('#notifications-list');
+
+        $.post("<?= site_url('notifications/data'); ?>",
+        {
+            csrfToken: "<?= $csrfToken; ?>",
+            path: "<?= Request::path(); ?>",
+            lastId: lastNotificationId
+        },
+        function (data) {
+            if (data.count === 0) {
+                return;
+            }
+
+            notificationsCount += data.count;
+
+            lastNotificationId = data.lastId;
+
+
+            var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
+
+            menuLabel.html(notificationsCount);
+
+            menuLabel.show();
+
+            notificationsHeader.html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", notificationsCount));
+
+            var html = data.items.map(function (item) {
+                var data = item.data;
+
+                var icon = data.icon ? data.icon : 'bell';
+
+                return '<li><a href="' + data.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + data.message + '</s><li>';
+            });
+
+            notificationsList.prepend(html);
+        });
+    };
+
+    // We refresh the notifications every minute.
+    setInterval(function() {
+        handleNotifications();
+
+    }, 10000);
+
+    handleNotifications();
+});
+
 </script>
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.

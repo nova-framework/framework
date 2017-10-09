@@ -211,46 +211,55 @@ $(function () {
 <script>
 
 $(function () {
+    var lastNotificationId = 0;
+    var notificationsCount = 0;
+
     var handleNotifications = function () {
+        var notificationsHeader = $('#notifications-header');
+
+        var notificationsList = $('#notifications-list');
+
         $.post("<?= site_url('notifications/data'); ?>",
         {
             csrfToken: "<?= $csrfToken; ?>",
-            path: "<?= Request::path(); ?>"
+            path: "<?= Request::path(); ?>",
+            lastId: lastNotificationId
         },
         function (data) {
-            var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
-
-            var notifications = $('#notifications-list');
-
-            if (data.total === 0) {
+            if (data.count === 0) {
                 return;
             }
 
-            menuLabel.html(data.total);
+            notificationsCount += data.count;
+
+            lastNotificationId = data.lastId;
+
+
+            var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
+
+            menuLabel.html(notificationsCount);
 
             menuLabel.show();
 
-            $('#notifications-header').html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", data.total));
+            notificationsHeader.html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", notificationsCount));
 
             var html = data.items.map(function (item) {
-                var icon = item.icon ? item.icon : 'bell';
+                var data = item.data;
 
-                return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
+                var icon = data.icon ? data.icon : 'bell';
+
+                return '<li><a href="' + data.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + data.message + '</s><li>';
             });
 
-            notifications.prepend(html);
-
-            var notificationsCount = parseInt(notifications.data('last-id'));
-
-
+            notificationsList.prepend(html);
         });
     };
 
     // We refresh the notifications every minute.
     setInterval(function() {
-        //handleNotifications();
+        handleNotifications();
 
-    }, 60000);
+    }, 10000);
 
     handleNotifications();
 });

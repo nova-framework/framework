@@ -48,6 +48,8 @@ class Notifications extends BaseController
             $query->where('id', '>', $lastId);
         }
 
+        $lastId = 0;
+
         // Get the first 5 unread notifications.
         $notifications = $query->limit(10)->get();
 
@@ -55,8 +57,6 @@ class Notifications extends BaseController
             $notification = $notifications->first();
 
             $lastId = $notification->id;
-        } else {
-            $lastId = 0;
         }
 
         $items = array();

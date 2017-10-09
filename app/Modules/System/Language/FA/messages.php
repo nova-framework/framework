@@ -27,7 +27,6 @@ return array (
   'Frontend' => '',
   'Green' => 'سبز',
   'Green Light' => 'سبز سفید',
-  'ID' => '',
   'Image' => '',
   'Insert the current E-Mail' => 'ایمیل فعلی را وارد کنید',
   'Insert the current Password' => 'رمزعبور فعلی را وارد کنید',

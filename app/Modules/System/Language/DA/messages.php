@@ -27,7 +27,6 @@ return array (
   'Frontend' => '',
   'Green' => 'Grøn',
   'Green Light' => 'Lys Grøn',
-  'ID' => '',
   'Image' => '',
   'Insert the current E-Mail' => 'Indtast den nuværende Email',
   'Insert the current Password' => 'Indtast det nuværende kodeord',

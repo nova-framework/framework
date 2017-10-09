@@ -27,7 +27,6 @@ return array (
   'Frontend' => '',
   'Green' => '',
   'Green Light' => '',
-  'ID' => '',
   'Image' => '',
   'Insert the current E-Mail' => '',
   'Insert the current Password' => '',

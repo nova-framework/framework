@@ -28,10 +28,6 @@ if (isset($user->image) && $user->image->exists()) {
     <div class="box-body no-padding">
         <table id='left' class='table table-hover responsive'>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='70%'><?= $user->id; ?></td>
-            <tr>
-            <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Username'); ?></th>
                 <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->username; ?></td>
             </tr>

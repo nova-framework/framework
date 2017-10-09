@@ -27,7 +27,6 @@ return array (
   'Frontend' => '',
   'Green' => 'Зелёный',
   'Green Light' => 'Светло-зелёный',
-  'ID' => '',
   'Image' => '',
   'Insert the current E-Mail' => 'Укажите текущий E-mail',
   'Insert the current Password' => 'Укажите текущий пароль',

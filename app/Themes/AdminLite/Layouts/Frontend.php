@@ -221,7 +221,6 @@ $(function () {
 
         $.post("<?= site_url('notifications/data'); ?>",
         {
-            csrfToken: "<?= $csrfToken; ?>",
             path: "<?= Request::path(); ?>",
             lastId: lastNotificationId
         },
@@ -255,6 +254,13 @@ $(function () {
             notificationsList.prepend(html);
         });
     };
+
+    // Setup the CSRF header on AJAX requests.
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': '<?= $csrfToken; ?>'
+        }
+    });
 
     // We refresh the notifications every minute.
     setInterval(function() {

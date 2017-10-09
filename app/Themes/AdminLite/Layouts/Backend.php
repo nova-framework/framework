@@ -281,6 +281,13 @@ $(function () {
         });
     };
 
+    // Setup the CSRF header on AJAX requests.
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': '<?= $csrfToken; ?>'
+        }
+    });
+
     // We refresh the notifications every minute.
     setInterval(function() {
         handleNotifications();

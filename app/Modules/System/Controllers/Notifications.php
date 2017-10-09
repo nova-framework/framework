@@ -12,6 +12,17 @@ use App\Modules\System\Controllers\BaseController;
 class Notifications extends BaseController
 {
 
+    public function index()
+    {
+        $authUser = Auth::user();
+
+        $notifications = $authUser->notifications()->paginate(25);
+
+        return $this->createView()
+            ->shares('title', __d('system', 'Notifications'))
+            ->with('notifications', $notifications);
+    }
+
     public function data()
     {
         $authUser = Auth::user();

@@ -34,8 +34,9 @@ Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
 Route::get('dashboard/notify', array('before' => 'auth', 'uses' => 'Dashboard@notify'));
 
 // The User's Account.
-Route::get( 'account', array('before' => 'auth',      'uses' => 'Account@edit'));
-Route::post('account', array('before' => 'auth|csrf', 'uses' => 'Account@update'));
+Route::get( 'account',         array('before' => 'auth',      'uses' => 'Account@edit'));
+Route::post('account',         array('before' => 'auth|csrf', 'uses' => 'Account@update'));
+Route::post('account/picture', array('before' => 'auth|csrf', 'uses' => 'Account@picture'));
 
 // The Notifications.
 Route::get( 'notifications',      array('before' => 'auth',      'uses' => 'Notifications@index'));

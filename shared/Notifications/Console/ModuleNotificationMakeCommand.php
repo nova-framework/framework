@@ -69,9 +69,8 @@ class ModuleNotificationMakeCommand extends MakeCommand
     protected function resolveByPath($filePath)
     {
         $this->data['filename']  = $this->makeFileName($filePath);
-        $this->data['namespace'] = $this->getNamespace($filePath);
 
-        $this->data['path'] = $this->getBaseNamespace();
+        $this->data['namespace'] = $this->getBaseNamespace() .'\\' .$this->getNamespace($filePath);
 
         $this->data['className'] = basename($filePath);
     }
@@ -86,14 +85,12 @@ class ModuleNotificationMakeCommand extends MakeCommand
         $searches = array(
             '{{filename}}',
             '{{namespace}}',
-            '{{path}}',
             '{{className}}',
         );
 
         $replaces = array(
             $this->data['filename'],
             $this->data['namespace'],
-            $this->data['path'],
             $this->data['className'],
         );
 
@@ -101,13 +98,17 @@ class ModuleNotificationMakeCommand extends MakeCommand
     }
 
     /**
-     * Get stubs path.
+     * Get stub content by key.
+     *
+     * @param int $key
      *
      * @return string
      */
-    protected function getStubsPath()
+    protected function getStubContent($stubName)
     {
-        return dirname(__FILE__) .DS .'stubs' .DS;
+        $content = $this->files->get(__DIR__ .DS .'stubs' .DS .$stubName);
+
+        return $this->formatContent($content);
     }
 
     /**

@@ -30,6 +30,19 @@ Event::listen('frontend.menu.right', function ()
 {
     return array(
         array(
+            'url'    => '#',
+            'title'  => '',
+            'icon'   => 'bell-o',
+            'weight' => 1,
+
+            //
+            'path'   => 'notifications',
+
+            // Custom content
+            'class'   => 'notifications-menu',
+            'content' => View::fetch('Partials/NavbarNotifications', array(), 'System'),
+        ),
+        array(
             'url'    => site_url('admin/dashboard'),
             'title'  => __d('system', 'Administration'),
             'icon'   => 'server',

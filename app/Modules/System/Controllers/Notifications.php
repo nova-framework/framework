@@ -33,10 +33,16 @@ class Notifications extends BaseController
             $lastId = 0;
         }
 
+        $items = array();
+
+        foreach ($notifications as $notification) {
+            $items[] = array_merge(array('id' => $notification->uuid), $notification->data);
+        }
+
         return Response::json(array(
             'count'  => $count,
             'lastId' => $lastId,
-            'items'  => $notifications->lists('data'),
+            'items'  => $items,
         ));
     }
 }

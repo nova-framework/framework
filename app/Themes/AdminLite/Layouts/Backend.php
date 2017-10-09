@@ -259,19 +259,19 @@ $(function () {
 
             lastNotificationId = data.lastId;
 
-
+            //
             var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
 
             menuLabel.html(notificationsCount);
 
             menuLabel.show();
 
-            notificationsHeader.html(sprintf("<?= __d('system', 'You have %d notifications'); ?>", notificationsCount));
+            notificationsHeader.html('<b>' + sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", notificationsCount) + '<b>');
 
             var html = data.items.map(function (item) {
                 var icon = item.icon ? item.icon : 'bell';
 
-                return '<li><a href="' + item.link + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
+                return '<li><a href="' + item.link + '?read=' + item.id + '" target="_blank"><i class="fa fa-' + icon + ' text-aqua"></i> ' + item.message + '</s><li>';
             });
 
             notificationsList.prepend(html);

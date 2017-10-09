@@ -51,7 +51,19 @@ if (isset($user->image) && $user->image->exists()) {
     ));
 
     echo isset($css) ? $css : ''; // Place to pass data
+?>
 
+<style>
+.pagination {
+    margin: 0;
+}
+
+.pagination > li > a, .pagination > li > span {
+  padding: 5px 10px;
+}
+</style>
+
+<?php
     //Add Controller specific JS files.
     Assets::js(array(
             vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),

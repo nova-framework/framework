@@ -39,6 +39,7 @@ Route::post('account', array('before' => 'auth|csrf', 'uses' => 'Account@update'
 
 // The Notifications.
 Route::get( 'notifications',      array('before' => 'auth',      'uses' => 'Notifications@index'));
+Route::post('notifications',      array('before' => 'auth|csrf', 'uses' => 'Notifications@update'));
 Route::post('notifications/data', array('before' => 'auth|csrf', 'uses' => 'Notifications@data'));
 
 // The Adminstration Routes.

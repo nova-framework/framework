@@ -18,7 +18,7 @@ $languages = Config::get('languages');
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title; ?> | <?= $siteName; ?></title>
-    <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
+    <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
@@ -41,7 +41,7 @@ $languages = Config::get('languages');
         theme_url('css/style.css', 'AdminLite'),
     ));
 
-    echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
+    echo isset($css) ? $css : ''; // Place to pass data
 
     //Add Controller specific JS files.
     Assets::js(array(

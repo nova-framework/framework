@@ -1,10 +1,4 @@
 <?php
-/**
- * Settings - Implements a simple Administration Settings.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace App\Modules\System\Controllers\Admin;
 

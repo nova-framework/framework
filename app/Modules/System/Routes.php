@@ -31,6 +31,8 @@ Route::get( 'register/status',          array('before' => 'guest',      'uses' =
 // The User's Dashboard.
 Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
 
+Route::get('dashboard/notify', array('before' => 'auth', 'uses' => 'Dashboard@notify'));
+
 // The User's Account.
 Route::get( 'account', array('before' => 'auth',      'uses' => 'Account@edit'));
 Route::post('account', array('before' => 'auth|csrf', 'uses' => 'Account@update'));

@@ -1,10 +1,4 @@
 <?php
-/**
- * BackendController - A backend Controller for the included example Modules.
- *
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- */
 
 namespace App\Modules\System\Controllers\Admin;
 

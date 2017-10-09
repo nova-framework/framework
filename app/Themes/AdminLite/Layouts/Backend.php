@@ -27,7 +27,7 @@ if (isset($user->image) && $user->image->exists()) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title; ?> | <?= $siteName; ?></title>
-    <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
+    <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
@@ -48,7 +48,7 @@ if (isset($user->image) && $user->image->exists()) {
         theme_url('css/style.css', 'AdminLite'),
     ));
 
-    echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
+    echo isset($css) ? $css : ''; // Place to pass data
 ?>
 
 <style>
@@ -219,7 +219,7 @@ Assets::js(array(
     vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte')
 ));
 
-echo isset($js) ? $js : ''; // Place to pass data / plugable hook zone
+echo isset($js) ? $js : ''; // Place to pass data
 
 ?>
 

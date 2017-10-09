@@ -27,7 +27,7 @@ if (isset($user->image) && $user->image->exists()) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title; ?> | <?= $siteName; ?></title>
-    <?= isset($meta) ? $meta : ''; // Place to pass data / plugable hook zone ?>
+    <?= isset($meta) ? $meta : ''; // Place to pass data ?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <?php
@@ -41,7 +41,7 @@ if (isset($user->image) && $user->image->exists()) {
         // Ionicons
         vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
         // Theme style
-        vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
+        vendor_url('dist/css/AdminLTE.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
         // iCheck
@@ -50,7 +50,7 @@ if (isset($user->image) && $user->image->exists()) {
         theme_url('css/style.css', 'AdminLite'),
     ));
 
-    echo isset($css) ? $css : ''; // Place to pass data / plugable hook zone
+    echo isset($css) ? $css : ''; // Place to pass data
 
     //Add Controller specific JS files.
     Assets::js(array(

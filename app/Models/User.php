@@ -11,11 +11,12 @@ use Nova\Foundation\Auth\Access\AuthorizableTrait;
 use Nova\Support\Facades\Cache;
 
 use Shared\Database\ORM\FileField\FileFieldTrait;
+use Shared\Notifications\NotifiableTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, FileFieldTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, NotifiableTrait, FileFieldTrait;
 
     //
     protected $table = 'users';

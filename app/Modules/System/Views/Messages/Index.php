@@ -30,13 +30,13 @@
 </style>
 
 <div class="box box-widget">
-    <div class="box-header with-border">
-        <h3 class="box-title"><strong><?= __d('system', 'Conversations'); ?></strong></h3>
+    <div class="box-header <?= ! $messages->isEmpty() ? 'with-border' : '' ?>">
+        <h2 class="box-title"><?= __d('system', 'Conversations'); ?></h2>
         <div class="box-tools">
         <?= $messages->links(); ?>
         </div>
     </div>
-    <div class="box-body">
+    <div class="box-body no-padding">
 <?php
 if (! $messages->isEmpty()) {
     $count = 0;
@@ -54,9 +54,9 @@ if (! $messages->isEmpty()) {
 
         if ($count > 0) {
 ?>
-        <hr style="margin: 10px 0;">
+        <hr style="margin: 0;">
         <?php } ?>
-        <div class="media" style="margin-top: 0;">
+        <div class="media" style="margin-top: 0; padding: 10px;">
             <div class="pull-left">
                 <img class="img-thumbnail media-object img-responsive" style="height: 80px; width: 80px" alt="<?= $message->sender->realname; ?>" src="<?= $message->sender->picture(); ?>">
             </div>

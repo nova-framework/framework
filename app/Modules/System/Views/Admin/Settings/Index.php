@@ -50,9 +50,12 @@
             </div>
         </div>
     </div>
+    <div class="box-footer">
+        <input class="btn btn-success col-sm-2 pull-right" type="submit" id="submit" name="submit" value="<?= __d('system', 'Apply the changes') ?>" />&nbsp;
+    </div>
 </div>
 
-<div class="box box-default">
+<div class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('system', 'Mailer Settings'); ?></h3>
     </div>
@@ -148,13 +151,8 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class="box box-widget">
-    <div class="box-body">
-        <div class="col-lg-12" style="padding-right: 0;">
-            <input class="btn btn-success col-sm-3 pull-right" type="submit" id="submit" name="submit" value="<?= __d('system', 'Apply the changes') ?>" />&nbsp;
-        </div>
+    <div class="box-footer">
+        <input class="btn btn-success col-sm-2 pull-right" type="submit" id="submit" name="submit" value="<?= __d('system', 'Apply the changes') ?>" />&nbsp;
     </div>
 </div>
 

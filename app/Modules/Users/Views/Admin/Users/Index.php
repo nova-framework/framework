@@ -18,13 +18,13 @@
         <h3 class="box-title"><?= __d('users', 'Create a new User'); ?></h3>
     </div>
     <div class="box-body">
-        <a class='btn btn-success' href='<?= site_url('admin/users/create'); ?>'><?= __d('users', 'Create a new User'); ?></a>
+        <a class='btn btn-success col-sm-2 pull-right' href='<?= site_url('admin/users/create'); ?>'><?= __d('users', 'Create a new User'); ?></a>
     </div>
 </div>
 
 <?php } ?>
 
-<div class="box box-default">
+<div class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Registered Users'); ?></h3>
         <div class="box-tools">

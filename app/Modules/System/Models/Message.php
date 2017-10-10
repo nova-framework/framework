@@ -13,9 +13,9 @@ class Message extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('subject', 'body', 'seen', 'is_read');
+    protected $fillable = array('subject', 'body', 'is_read');
 
-    protected $touches = ['parent'];
+    protected $touches = array('parent');
 
 
     public function sender()

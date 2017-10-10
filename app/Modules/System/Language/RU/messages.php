@@ -88,7 +88,6 @@ return array (
   'Send Reset Link' => 'Отправить ссылку сброса',
   'Send a Message' => '',
   'Send a new Message' => '',
-  'Send a new Private Message' => '',
   'Sendmail' => 'Sendmail',
   'Sent At' => '',
   'Server Name' => 'Имя сервера',

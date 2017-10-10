@@ -88,7 +88,6 @@ return array (
   'Send Reset Link' => '',
   'Send a Message' => '',
   'Send a new Message' => '',
-  'Send a new Private Message' => '',
   'Sendmail' => '',
   'Sent At' => '',
   'Server Name' => '',

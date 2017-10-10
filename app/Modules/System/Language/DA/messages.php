@@ -88,7 +88,6 @@ return array (
   'Send Reset Link' => 'Send nulstillings link',
   'Send a Message' => '',
   'Send a new Message' => '',
-  'Send a new Private Message' => '',
   'Sendmail' => 'Afsender mail',
   'Sent At' => '',
   'Server Name' => 'Udgående server adresse',

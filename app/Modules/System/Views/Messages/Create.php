@@ -16,7 +16,7 @@
 
 <div class="box box-default">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Send a new Private Message'); ?></h3>
+        <h3 class="box-title"><?= __d('users', 'Send a new Message'); ?></h3>
     </div>
     <div class="box-body ">
         <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">

@@ -88,7 +88,6 @@ return array (
   'Send Reset Link' => 'ارسال لینک بازنشانی',
   'Send a Message' => '',
   'Send a new Message' => '',
-  'Send a new Private Message' => '',
   'Sendmail' => 'ارسال ایمیل',
   'Sent At' => '',
   'Server Name' => 'نام سرور',

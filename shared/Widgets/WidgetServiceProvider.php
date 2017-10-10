@@ -18,7 +18,7 @@ class WidgetServiceProvider extends ServiceProvider
     {
         //
     }
-    
+
     /**
      * Register the Service Provider.
      *

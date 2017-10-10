@@ -229,7 +229,7 @@ $(function () {
         $.post("<?= site_url('heartbeat'); ?>",
         {
             path: '<?= Request::path(); ?>',
-            lastNotificationId: lastNotificationId
+            last_id: lastNotificationId
         })
         .done(function (data) {
             handleMessagesMenu(data.messages);

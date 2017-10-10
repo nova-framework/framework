@@ -16,7 +16,7 @@ class Heartbeat extends BaseController
     {
         $authUser = Auth::user();
 
-        $lastId = (int) Input::get('lastNotificationId', 0);
+        $lastId = (int) Input::get('last_id', 0);
 
         //Retrieve the unread notifications for the current User.
         $query = $authUser->unreadNotifications();

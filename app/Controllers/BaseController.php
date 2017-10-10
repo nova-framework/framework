@@ -63,14 +63,14 @@ abstract class BaseController extends Controller
      */
     protected function initialize()
     {
+        $request = Request::instance();
+
         // Setup the used Theme to default, if it is not already defined.
         if (! isset($this->theme)) {
             $this->theme = Config::get('app.theme', 'Bootstrap');
         }
 
         // Mark as read the notification, if it exists.
-        $request = Request::instance();
-
         if ($request->has('read') && ! is_null($user = $request->user())) {
             $uuid = $request->input('read');
 

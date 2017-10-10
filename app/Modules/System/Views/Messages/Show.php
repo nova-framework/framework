@@ -38,8 +38,8 @@ use App\Models\User;
 
             <!-- Replies -->
             <?php foreach($message->replies as $reply) { ?>
-            <hr style="margin: 5px 0;">
-            <div class="media comment-block">
+            <hr style="margin: 0;">
+            <div class="media comment-block" style="margin-top: 10px;">
                 <a class="pull-left" href="<?= site_url('user/' .$reply->sender->username); ?>">
                     <img class="img-thumbnail" style="height: 75px; width: 75px" src="<?= $reply->sender->picture(); ?>" alt="<?= $reply->sender->realname; ?>" class="media-object">
                 </a>
@@ -63,7 +63,7 @@ use App\Models\User;
                 <span class="help-block"><?= $errors->first(); ?></span>
                 <?php } ?>
             </div>
-            <button type="submit" class="btn btn-success col-sm-2 pull-right"><i class='fa fa-reply'></i> <?= __d('backend', 'Reply'); ?></button>
+            <button type="submit" class="btn btn-success col-sm-2 pull-right" style="margin-bottom: 5px;"><i class='fa fa-reply'></i> <?= __d('backend', 'Reply'); ?></button>
             <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>">
 
             </form>

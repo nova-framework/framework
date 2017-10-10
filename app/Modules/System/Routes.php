@@ -38,10 +38,22 @@ Route::get( 'account',         array('before' => 'auth',      'uses' => 'Account
 Route::post('account',         array('before' => 'auth|csrf', 'uses' => 'Account@update'));
 Route::post('account/picture', array('before' => 'auth|csrf', 'uses' => 'Account@picture'));
 
+// The Heartbeat
+Route::post('heartbeat', array('before' => 'auth|csrf', 'uses' => 'Heartbeat@update'));
+
 // The Notifications.
 Route::get( 'notifications',      array('before' => 'auth',      'uses' => 'Notifications@index'));
 Route::post('notifications',      array('before' => 'auth|csrf', 'uses' => 'Notifications@update'));
-Route::post('notifications/data', array('before' => 'auth|csrf', 'uses' => 'Notifications@data'));
+
+// The Private Messages.
+Route::get( 'messages',            'Messages@index');
+Route::get( 'messages/create',     'Messages@create');
+Route::post('messages',            'Messages@store');
+Route::get( 'messages/{threadId}', 'Messages@show');
+//Route::post('messages/{postId}/destroy',    'Messages@destroy');
+
+Route::post('messages/{threadId}', 'Messages@reply');
+
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()

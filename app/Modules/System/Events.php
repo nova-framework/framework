@@ -30,6 +30,19 @@ Event::listen('frontend.menu.right', function ()
 {
     return array(
         array(
+            'url'    => site_url('messages'),
+            'title'  => '',
+            'icon'   => 'envelope-o',
+            'weight' => 1,
+
+            //
+            'path'   => 'messages',
+
+            // Custom content
+            'class'   => 'messages-menu',
+            'label'   => array('success', 0),
+        ),
+        array(
             'url'    => '#',
             'title'  => '',
             'icon'   => 'bell-o',
@@ -94,6 +107,19 @@ Event::listen('backend.menu.sidebar', function ()
 Event::listen('backend.menu.navbar', function ()
 {
     return array(
+        array(
+            'url'    => site_url('messages'),
+            'title'  => '',
+            'icon'   => 'envelope-o',
+            'weight' => 1,
+
+            //
+            'path'   => 'messages',
+
+            // Custom content
+            'class'   => 'messages-menu',
+            'label'   => array('success', 0),
+        ),
         array(
             'url'    => '#',
             'title'  => '',

@@ -9,17 +9,7 @@
 <!-- Main content -->
 <section class="content">
 
-<?php
-
-echo Session::getMessages();
-
-if (isset($user->image) && $user->image->exists()) {
-    $imageUrl = resource_url('images/users/' .basename($user->image->path));
-} else {
-    $imageUrl = vendor_url('dist/img/avatar5.png', 'almasaeed2010/adminlte');
-}
-
-?>
+<?= Session::getMessages(); ?>
 
 <div class="box box-default">
     <div class="box-header with-border">
@@ -59,7 +49,7 @@ if (isset($user->image) && $user->image->exists()) {
     </div>
     <div class="box-body">
         <div class="col-md-4">
-            <img src="<?= $imageUrl ?>" class="img-thumbnail img-responsive" alt="Profile Image" style="margin-bottom: 0; max-height: 200px; width:auto;">
+            <img src="<?= $user->picture() ?>" class="img-thumbnail img-responsive" alt="Profile Image" style="margin-bottom: 0; max-height: 200px; width:auto;">
         </div>
         <div class="col-md-8">
             <div class="form-group">

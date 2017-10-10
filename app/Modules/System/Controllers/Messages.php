@@ -40,7 +40,7 @@ class Messages extends BaseController
                 $query->where('sender_id', $authUser->id)->orWhere('receiver_id', $authUser->id);
 
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->paginate(10);
 
         return $this->createView()

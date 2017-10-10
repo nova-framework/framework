@@ -70,7 +70,7 @@ abstract class BaseController extends Controller
             $this->theme = Config::get('app.theme', 'Bootstrap');
         }
 
-        // Mark as read the Notification, if it is specified the in query string.
+        // Mark as read the Notification, if it is specified in the query.
         if ($request->has('read') && ! is_null($user = $request->user())) {
             $uuid = $request->input('read');
 

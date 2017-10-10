@@ -21,7 +21,7 @@
 
 <div class="box box-default">
     <div class="box-header <?= ! $messages->isEmpty() ? 'with-border' : '' ?>">
-        <h2 class="box-title"><?= __d('system', 'Message Threads'); ?></h2>
+        <h3 class="box-title"><?= __d('system', 'Message Threads'); ?></h3>
         <div class="box-tools">
         <?= $messages->links(); ?>
         </div>

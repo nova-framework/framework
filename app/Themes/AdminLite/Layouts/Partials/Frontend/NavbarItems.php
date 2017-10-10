@@ -1,7 +1,7 @@
 <?php $children = Arr::get($item, 'children', array()); ?>
 <?php if (! empty($children) || isset($item['content'])) { ?>
 <li class="dropdown <?= $item['active'] ? 'active' : ''; ?> <?= isset($item['class']) ? $item['class'] : ''; ?>">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="<?= (empty($children) && ! isset($item['content'])) ? $item['url'] : '#'; ?>">
         <?php if (isset($item['icon'])) { ?>
         <i class="fa fa-<?= $item['icon']; ?>"></i>
         <?php } ?>

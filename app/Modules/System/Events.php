@@ -43,7 +43,7 @@ Event::listen('frontend.menu.right', function ()
             'label'   => array('success', 0),
         ),
         array(
-            'url'    => '#',
+            'url'    => site_url('notifications'),
             'title'  => '',
             'icon'   => 'bell-o',
             'weight' => 1,
@@ -121,7 +121,7 @@ Event::listen('backend.menu.navbar', function ()
             'label'   => array('success', 0),
         ),
         array(
-            'url'    => '#',
+            'url'    => site_url('notifications'),
             'title'  => '',
             'icon'   => 'bell-o',
             'weight' => 1,

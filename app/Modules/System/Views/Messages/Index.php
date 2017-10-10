@@ -11,16 +11,6 @@
 
 <?= Session::getMessages(); ?>
 
-<!-- Main content -->
-<div class="box box-default">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= __d('users', 'Manage the Messages'); ?></h3>
-    </div>
-    <div class="box-body ">
-        <a class='btn btn-success col-sm-2 pull-right' href='<?= site_url('messages/create'); ?>'><i class='fa fa-send'></i> <?= __d('system', 'Send a new Message'); ?></a>
-    </div>
-</div>
-
 <style>
 
 .pagination {
@@ -29,9 +19,9 @@
 
 </style>
 
-<div class="box box-widget">
+<div class="box box-default">
     <div class="box-header <?= ! $messages->isEmpty() ? 'with-border' : '' ?>">
-        <h2 class="box-title"><?= __d('system', 'Conversations'); ?></h2>
+        <h2 class="box-title"><?= __d('system', 'Message Threads'); ?></h2>
         <div class="box-tools">
         <?= $messages->links(); ?>
         </div>
@@ -86,6 +76,9 @@ if (! $messages->isEmpty()) {
             <?= __d('system', 'You have no messages sent or received.'); ?>
         </div>
 <?php } ?>
+    </div>
+    <div class="box-footer">
+        <a class='btn btn-success col-sm-2 pull-right' href='<?= site_url('messages/create'); ?>'><i class='fa fa-send'></i> <?= __d('system', 'Send a new Message'); ?></a>
     </div>
 </div>
 

@@ -15,6 +15,8 @@ class Message extends BaseModel
 
     protected $fillable = array('subject', 'body', 'seen', 'is_read');
 
+    protected $touches = ['parent'];
+
 
     public function sender()
     {
@@ -26,6 +28,16 @@ class Message extends BaseModel
         return $this->belongsTo('App\Models\User', 'receiver_id', 'id');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo('App\Modules\System\Models\Message', 'parent_id');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany('App\Modules\System\Models\Message', 'parent_id');
+    }
+
     public function scopeNotReply($query)
     {
         return $query->whereNull('parent_id');
@@ -34,11 +46,6 @@ class Message extends BaseModel
     public function scopeUnread($query)
     {
         return $query->where('is_read', '=', 0);
-    }
-
-    public function replies()
-    {
-        return $this->hasMany('App\Modules\System\Models\Message', 'parent_id');
     }
 
     // Set seen to 1 when user reads message.

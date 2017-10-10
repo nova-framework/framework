@@ -72,7 +72,9 @@ abstract class BaseController extends Controller
         $request = Request::instance();
 
         if ($request->has('read') && ! is_null($user = $request->user())) {
-           $notification = $user->notifications()->where('uuid', $request->read)->first();
+            $uuid = $request->input('read');
+
+            $notification = $user->notifications()->where('uuid', $uuid)->first();
 
             if (! is_null($notification)) {
                 $notification->markAsRead();

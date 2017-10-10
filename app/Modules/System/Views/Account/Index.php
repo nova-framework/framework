@@ -55,7 +55,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label" for="image"><?= __d('system', 'Profile Picture (to change)'); ?></label>
                 <div class="input-group">
-                    <input type="text" id="file_path" class="form-control" placeholder="Browse...">
+                    <input type="text" id="file_path" class="form-control" placeholder="Browse..." readonly>
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="button" id="file_browser">
                         <i class="fa fa-search"></i> Browse</button>

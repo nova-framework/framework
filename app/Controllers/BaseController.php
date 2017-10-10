@@ -65,11 +65,6 @@ abstract class BaseController extends Controller
     {
         $request = Request::instance();
 
-        // Setup the used Theme to default, if it is not already defined.
-        if (! isset($this->theme)) {
-            $this->theme = Config::get('app.theme', 'Bootstrap');
-        }
-
         // Mark as read the Notification, if it is specified in the query.
         if ($request->has('read') && ! is_null($user = $request->user())) {
             $uuid = $request->input('read');
@@ -79,6 +74,11 @@ abstract class BaseController extends Controller
             if (! is_null($notification)) {
                 $notification->markAsRead();
             }
+        }
+
+        // Setup the used Theme to default, if it is not already defined.
+        if (! isset($this->theme)) {
+            $this->theme = Config::get('app.theme', 'Bootstrap');
         }
     }
 

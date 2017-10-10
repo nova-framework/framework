@@ -29,11 +29,6 @@ abstract class BaseController extends Controller
     protected $layout = 'Backend';
 
 
-    public function __construct()
-    {
-        $this->beforeFilter('notifier');
-    }
-
     /**
      * Method executed before any action.
      */
@@ -46,9 +41,9 @@ abstract class BaseController extends Controller
             throw new AuthorizationException();
         }
 
-        $url = Request::url();
-
         if (! is_null($user = Auth::user())) {
+            $url = Request::url();
+
             $navbarItems  = EventedMenu::get('backend.menu.navbar',  $user, $url);
             $sidebarItems = EventedMenu::get('backend.menu.sidebar', $user, $url);
         } else {

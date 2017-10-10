@@ -225,7 +225,7 @@ $(function () {
 $(function () {
     var lastNotificationId = 0;
 
-    handleNotifications = function () {
+    handleHeartbeat = function () {
         $.post("<?= site_url('heartbeat'); ?>",
         {
             path: '<?= Request::path(); ?>',
@@ -306,11 +306,11 @@ $(function () {
 
     // We refresh the notifications every minute.
     setInterval(function() {
-        handleNotifications();
+        handleHeartbeat();
 
     }, 10000);
 
-    handleNotifications();
+    handleHeartbeat();
 });
 
 </script>

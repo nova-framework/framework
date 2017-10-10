@@ -86,25 +86,22 @@ class Account extends BaseController
         $validator = $this->validator($input, $user);
 
         // Validate the Input.
-        if ($validator->passes()) {
-            $password = $input['password'];
-
-            // Update the password on the User Model instance.
-            $user->password = Hash::make($password);
-
-            // Save the User Model instance.
-            $user->save();
-
-            // Use a Redirect to avoid the reposting the data.
-            $status = __d('system', 'You have successfully updated your Password.');
-
-            return Redirect::back()->withStatus($status);
+        if ($validator->fails()) {
+            return Redirect::back()->withStatus($validator->errors(), 'danger');
         }
 
-        // Collect the Validation errors.
-        $status = $validator->errors()->all();
+        $password = $input['password'];
 
-        return Redirect::back()->withStatus($status, 'danger');
+        // Update the password on the User Model instance.
+        $user->password = Hash::make($password);
+
+        // Save the User Model instance.
+        $user->save();
+
+        // Use a Redirect to avoid the reposting the data.
+        $status = __d('system', 'You have successfully updated your Password.');
+
+        return Redirect::back()->withStatus($status);
     }
 
     public function picture()
@@ -116,7 +113,7 @@ class Account extends BaseController
 
         // Create a Validator instance.
         $validator = Validator::make($input,
-            array('image' => 'max:1024|mimes:png,jpg,jpeg,gif'), array(), array('id' => __d('system', 'Image'))
+            array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'), array(), array('id' => __d('system', 'Image'))
         );
 
         // Validate the Input.

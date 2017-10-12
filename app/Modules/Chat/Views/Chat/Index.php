@@ -216,8 +216,6 @@ channel.openSignalingChannel = function(config) {
 channel.ondatachannel = function(dataChannel) {
     channel.join(dataChannel);
 
-    console.warn('channel.ondatachannel', dataChannel, channel.channels);
-
     setTimeout(function() {
         sendUserInfo();
 
@@ -249,7 +247,6 @@ channel.onmessage = function(message, userid, latency) {
     console.log('Latency:', latency, 'milliseconds');
 
     console.debug('Message from', userid, ':', message);
-    console.debug('channel.channels', channel.channels);
 
     var data = JSON.parse(message);
 
@@ -299,9 +296,19 @@ function sendUserInfo(userid) {
     });
 
     if (userid) {
+        console.debug('Sending User info to', userid);
+
         channel.channels[userid].send(value);
-    } else {
-        channel.send(value);
+
+        return;
+    }
+
+    console.debug('channel.channels', JSON.stringify(channel.channels, null, '\t'));
+
+    for (var userid in channel.channels) {
+        console.debug('Sending User info to', userid);
+
+        channel.channels[userid].send(value);
     }
 }
 

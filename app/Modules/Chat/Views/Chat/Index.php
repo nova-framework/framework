@@ -229,6 +229,8 @@ channel.onopen = function (userid) {
     chatButton.attr("disabled", false);
     chatTarget.attr("disabled", false);
 
+    console.warn('channel.onopen', userid);
+
     chatInput.focus();
 };
 

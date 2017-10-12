@@ -225,47 +225,67 @@ $(function () {
 $(function () {
     var lastNotificationId = 0;
 
-    handleNotifications = function () {
+    handleHeartbeat = function () {
+        $.post("<?= site_url('heartbeat'); ?>",
+        {
+            path: '<?= Request::path(); ?>',
+            last_id: lastNotificationId
+        })
+        .done(function (data) {
+            handleMessagesMenu(data.messages);
+
+            handleNotificationsMenu(data.notifications);
+        });
+    };
+
+    handleMessagesMenu = function (data) {
+        var count = data.count;
+
+        if (count === 0) {
+            return;
+        }
+
+        var menuLabel = $('li.messages-menu > a > span.label');
+
+        menuLabel.html(count);
+
+        menuLabel.show();
+    };
+
+    handleNotificationsMenu = function (data) {
+        var count = data.count;
+
+        if (count === 0) {
+            return;
+        }
+
+        // We store the last notification ID.
+        else if (data.lastId > 0) {
+            lastNotificationId = data.lastId;
+        }
+
         var notificationsHeader = $('#notifications-header');
 
         var notificationsList = $('#notifications-list');
 
-        $.post("<?= site_url('notifications/data'); ?>",
-        {
-            path: '<?= Request::path(); ?>',
-            lastId: lastNotificationId
-        })
-        .done(function (data) {
-            var count = data.count;
+        // Handle the menu item label.
+        var menuLabel = $('li.notifications-menu > a.dropdown-toggle > span.label');
 
-            if (count === 0) {
-                return;
-            }
+        menuLabel.html(count);
 
-            // We store the last notification ID.
-            else if (data.lastId > 0) {
-                lastNotificationId = data.lastId;
-            }
+        menuLabel.show();
 
-            // Handle the menu item label.
-            var menuLabel = $('.notifications-menu a.dropdown-toggle span.label');
+        // Handle the dropdown header.
+        var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", count);
 
-            menuLabel.html(count);
+        notificationsHeader.html(title);
 
-            menuLabel.show();
+        // Handle the notifications list.
+        if (data.items.length > 0) {
+            var html = parseNotificationItems(data.items);
 
-            // Handle the dropdown header.
-            var title = sprintf("<?= __d('system', 'You have %d notification(s)'); ?>", count);
-
-            notificationsHeader.html(title);
-
-            // Handle the notifications list.
-            if (data.items.length > 0) {
-                var html = parseNotificationItems(data.items);
-
-                notificationsList.prepend(html);
-            }
-        });
+            notificationsList.prepend(html);
+        }
     };
 
     parseNotificationItems = function (items) {
@@ -286,11 +306,11 @@ $(function () {
 
     // We refresh the notifications every minute.
     setInterval(function() {
-        handleNotifications();
+        handleHeartbeat();
 
     }, 10000);
 
-    handleNotifications();
+    handleHeartbeat();
 });
 
 </script>

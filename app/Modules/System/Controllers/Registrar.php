@@ -108,10 +108,7 @@ class Registrar extends BaseController
         $validator = $this->validator($input);
 
         if ($validator->fails()) {
-            // Errors occurred on Validation.
-            $status = $validator->errors();
-
-            return Redirect::back()->withInput()->withStatus($status, 'danger');
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
         // Encrypt the given Password.
@@ -122,13 +119,6 @@ class Registrar extends BaseController
 
         $token = $this->createNewToken($email);
 
-        // Retrieve the default 'user' Role.
-        $role = Role::where('slug', 'user')->first();
-
-        if($role === null) {
-            throw new \RuntimeException('Default Role not found.');
-        }
-
         // Create the User record.
         $user = User::create(array(
             'username'        => $input['username'],
@@ -136,8 +126,13 @@ class Registrar extends BaseController
             'email'           => $email,
             'password'        => $password,
             'activation_code' => $token,
-            'role_id'         => $role->getKey(),
         ));
+
+        // Retrieve the default 'user' Role.
+        $role = Role::where('slug', 'user')->firstOrFail();
+
+        // Update the user's associated Roles.
+        $user->roles()->attach($role);
 
         // Send the associated Activation E-mail.
         Mailer::send('Emails/Auth/Activate', array('token' => $token), function($message) use ($user)

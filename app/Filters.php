@@ -36,18 +36,6 @@ App::after(function($request, $response)
  * Define the Route Filters.
  */
 
-Route::filter('notifier', function ($route, $request)
-{
-    if ($request->has('read') && ! is_null($user = $request->user())) {
-        $notification = $user->notifications()->where('uuid', $request->read)->first();
-
-        if (! is_null($notification)) {
-            $notification->markAsRead();
-        }
-    }
-});
-
-
 // The CSRF Filter.
 Route::filter('csrf', function ($route, $request)
 {

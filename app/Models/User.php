@@ -39,6 +39,22 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     protected $cachedPermissions;
 
 
+    public function messages()
+    {
+        return $this->hasMany('App\Modules\System\Models\Message', 'sender_id', 'id');
+    }
+
+    public function picture()
+    {
+        $path = str_replace(ROOTDIR, '', (string) $this->getAttribute('image'));
+
+        return site_url($path);
+    }
+
+    /**
+     * Roles and Permissions (ACL)
+     */
+
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');

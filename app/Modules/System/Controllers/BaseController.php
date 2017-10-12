@@ -27,11 +27,6 @@ abstract class BaseController extends Controller
     protected $layout = 'Frontend';
 
 
-    public function __construct()
-    {
-        $this->beforeFilter('notifier');
-    }
-
     /**
      * Method executed before any action.
      */
@@ -39,10 +34,10 @@ abstract class BaseController extends Controller
     {
         parent::initialize();
 
-        //
-        $url = Request::url();
-
+        // Update the Frontend Menus.
         if (! is_null($user = Auth::user())) {
+            $url = Request::url();
+
             $navbarLeftItems  = EventedMenu::get('frontend.menu.left',  $user, $url);
             $navbarRightItems = EventedMenu::get('frontend.menu.right', $user, $url);
         } else {

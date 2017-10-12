@@ -66,12 +66,12 @@ class Account extends BaseController
         return Validator::make($data, $rules, $messages, $attributes);
     }
 
-    public function edit()
+    public function index()
     {
         $user = Auth::user();
 
         return $this->createView()
-            ->shares('title',  __d('system', 'User Profile'))
+            ->shares('title',  __d('system', 'Account'))
             ->with('user', $user);
     }
 
@@ -86,25 +86,49 @@ class Account extends BaseController
         $validator = $this->validator($input, $user);
 
         // Validate the Input.
-        if ($validator->passes()) {
-            $password = $input['password'];
-
-            // Update the password on the User Model instance.
-            $user->password = Hash::make($password);
-
-            // Save the User Model instance.
-            $user->save();
-
-            // Use a Redirect to avoid the reposting the data.
-            $status = __d('system', 'You have successfully updated your Password.');
-
-            return Redirect::back()->withStatus($status);
+        if ($validator->fails()) {
+            return Redirect::back()->withStatus($validator->errors(), 'danger');
         }
 
-        // Collect the Validation errors.
-        $status = $validator->errors()->all();
+        $password = $input['password'];
 
-        return Redirect::back()->withStatus($status, 'danger');
+        // Update the password on the User Model instance.
+        $user->password = Hash::make($password);
+
+        // Save the User Model instance.
+        $user->save();
+
+        // Use a Redirect to avoid the reposting the data.
+        $status = __d('system', 'You have successfully updated your Password.');
+
+        return Redirect::back()->withStatus($status);
     }
 
+    public function picture()
+    {
+        $user = Auth::user();
+
+        // Retrieve the Input data.
+        $input = Input::only('image');
+
+        // Create a Validator instance.
+        $validator = Validator::make($input,
+            array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'), array(), array('id' => __d('system', 'Image'))
+        );
+
+        // Validate the Input.
+        if ($validator->fails()) {
+            return Redirect::back()->withStatus($validator->errors(), 'danger');
+        }
+
+        // Update the User record.
+        $user->image = $input['image'];
+
+        $user->save();
+
+        // Prepare the flash message.
+        $status = __d('system', 'The Profile Picture was successfully updated.');
+
+        return Redirect::to('account')->withStatus($status);
+    }
 }

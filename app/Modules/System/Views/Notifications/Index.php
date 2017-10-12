@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('system', 'Notifications'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
     </ol>
 </section>
 
@@ -49,15 +49,17 @@
             </tbody>
         </table>
         <?php } else { ?>
-        <div class="alert alert-warning" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-warning"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('system', 'No notifications'); ?></h4>
+        <div class="alert alert-info" style="margin: 0 5px 5px;">
+            <h4><i class="icon fa fa-info"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('system', 'No notifications'); ?></h4>
             <?= __d('system', 'You have no notifications.'); ?>
         </div>
         <?php } ?>
     </div>
+    <?php if (! $notifications->isEmpty()) { ?>
     <div class="box-footer">
         <input type="submit" name="submit" id="submitButton1" class="btn btn-success col-sm-2 pull-right" value="<?= __d('users', 'Mark as read'); ?>" disabled="disabled">
     </div>
+    <?php } ?>
 </div>
 
 <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />

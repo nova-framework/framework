@@ -13,6 +13,10 @@
         theme_url('css/style.css', 'Bootstrap'),
     ))
 
+    @assets('js', array(
+        'https://code.jquery.com/jquery-1.12.4.min.js',
+    ))
+
 </head>
 <body>
 
@@ -33,7 +37,6 @@
 @show
 
 @assets('js', array(
-    'https://code.jquery.com/jquery-1.12.4.min.js',
     vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
 ))
 

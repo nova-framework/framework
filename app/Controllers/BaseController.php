@@ -14,6 +14,7 @@ use Nova\Routing\Controller;
 use Nova\Support\Contracts\RenderableInterface as Renderable;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Config;
+use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 use Nova\View\Layout;
 
@@ -62,6 +63,19 @@ abstract class BaseController extends Controller
      */
     protected function initialize()
     {
+        $request = Request::instance();
+
+        // Mark as read the Notification, if it is specified in the query.
+        if ($request->has('read') && ! is_null($user = $request->user())) {
+            $uuid = $request->input('read');
+
+            $notification = $user->notifications()->where('uuid', $uuid)->first();
+
+            if (! is_null($notification)) {
+                $notification->markAsRead();
+            }
+        }
+
         // Setup the used Theme to default, if it is not already defined.
         if (! isset($this->theme)) {
             $this->theme = Config::get('app.theme', 'Bootstrap');

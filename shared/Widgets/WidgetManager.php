@@ -36,6 +36,11 @@ class WidgetManager
     protected $positions = array();
 
 
+    /**
+     * Create a new Widget Manager instance.
+     *
+     * @return void
+     */
     public function __construct(Container $container = null)
     {
         $this->container = $container ?: new Container();
@@ -67,27 +72,37 @@ class WidgetManager
      */
     public function show($name)
     {
+        $parameters = array_slice(func_get_args(), 1);
+
+        return $this->render($name, $parameters);
+    }
+
+    protected function render($name, array $parameters = array())
+    {
         if (! array_key_exists($name, $this->widgets)) {
             return;
         }
 
-        if (! array_key_exists($name, $this->instances)) {
-            $widget = $this->widgets[$name];
-
-            $instance = $this->container->make($widget);
-
-            $this->addInstance($instance, $name);
-        } else {
-            $instance = $this->instances[$name];
-        }
-
-        $parameters = array_slice(func_get_args(), 1);
+        $instance = $this->getWidget($name);
 
         return call_user_func_array(array($instance, 'render'), $parameters);
     }
 
+    protected function getWidget($name)
+    {
+        if (isset($this->instances[$name])) {
+            return $this->instances[$name];
+        }
+
+        $widget = $this->widgets[$name];
+
+        return $this->instances[$name] = $this->container->make($widget);
+    }
+
     public function position($position)
     {
+        $parameters = array_slice(func_get_args(), 1);
+
         if (! array_key_exists($position, $this->positions)) {
             return;
         }
@@ -99,17 +114,13 @@ class WidgetManager
             return ($a['order'] > $b['order']) ? -1 : 1;
         });
 
-        $arguments = array_slice(func_get_args(), 1);
-
         // We render each registered Widget for this position.
         $result = '';
 
         foreach ($this->positions[$position] as $widget) {
-            $parameters = $arguments;
+            $name = $widget['name'];
 
-            array_unshift($parameters, $widget['name']);
-
-            $result .= call_user_func_array(array($this, 'show'), $parameters);
+            $result .= $this->render($name, $parameters);
         }
 
         return $result;
@@ -124,7 +135,7 @@ class WidgetManager
     {
         if (! array_key_exists($position, $this->positions)) {
             return true;
-        } else if (! count($this->positions[$position])) {
+        } else if (count($this->positions[$position]) === 0) {
             return true;
         }
 
@@ -132,25 +143,12 @@ class WidgetManager
     }
 
     /**
-     * @param        $widget
-     * @param string $name
-     * @return void
-     */
-    protected function addInstance($widget, $name)
-    {
-        $this->instances[$name] = $widget;
-    }
-
-    /**
      * @param string $method
-     * @param array  $arguments
+     * @param array  $parameters
      * @return mixed
      */
-    public function __call($method, array $arguments)
+    public function __call($method, array $parameters)
     {
-        array_unshift($arguments, $method);
-
-        return call_user_func_array(array($this, 'show'), $arguments);
+        return $this->render($method, $parameters);
     }
 }
-

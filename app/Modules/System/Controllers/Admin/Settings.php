@@ -97,34 +97,31 @@ class Settings extends BaseController
 
         $validator = $this->validator($input);
 
-        if($validator->passes()) {
-            // The Application.
-            Option::set('app.name',          $input['siteName']);
-            Option::set('app.color_scheme',  $input['siteSkin']);
-
-            // The Mailer
-            Option::set('mail.driver',       $input['mailDriver']);
-            Option::set('mail.host',         $input['mailHost']);
-            Option::set('mail.port',         $input['mailPort']);
-            Option::set('mail.from.address', $input['mailFromAddress']);
-            Option::set('mail.from.name',    $input['mailFromName']);
-            Option::set('mail.encryption',   $input['mailEncryption']);
-            Option::set('mail.username',     $input['mailUsername']);
-            Option::set('mail.password',     $input['mailPassword']);
-
-            // Invalidate the cached system options.
-            Cache::forget('system_options');
-
-            // Prepare the flash message.
-            $status = __d('system', 'The Settings was successfully updated.');
-
-            return Redirect::to('admin/settings')->withStatus($status);
+        if($validator->fails()) {
+            return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
         }
 
-        // Errors occurred on Validation.
-        $status = $validator->errors();
+        // The Application.
+        Option::set('app.name',          $input['siteName']);
+        Option::set('app.color_scheme',  $input['siteSkin']);
 
-        return Redirect::back()->withInput()->withStatus($status, 'danger');
+        // The Mailer
+        Option::set('mail.driver',       $input['mailDriver']);
+        Option::set('mail.host',         $input['mailHost']);
+        Option::set('mail.port',         $input['mailPort']);
+        Option::set('mail.from.address', $input['mailFromAddress']);
+        Option::set('mail.from.name',    $input['mailFromName']);
+        Option::set('mail.encryption',   $input['mailEncryption']);
+        Option::set('mail.username',     $input['mailUsername']);
+        Option::set('mail.password',     $input['mailPassword']);
+
+        // Invalidate the cached system options.
+        Cache::forget('system_options');
+
+        // Prepare the flash message.
+        $status = __d('system', 'The Settings was successfully updated.');
+
+        return Redirect::to('admin/settings')->withStatus($status);
     }
 
 }

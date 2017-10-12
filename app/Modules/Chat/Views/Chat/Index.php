@@ -59,6 +59,7 @@ var userInfo = {
     userid:   '<?= $authUser->id; ?>',
     username: '<?= $authUser->username; ?>',
     realname: '<?= $authUser->realname; ?>',
+    roles:    '<?= implode(', ', $authUser->roles->lists("name")); ?>',
     picture:  '<?= $authUser->picture(); ?>'
 };
 
@@ -129,11 +130,12 @@ var addOnlineUser = function(userid, data) {
     var value = '<div id="user-' + userid + '">'+
                 '  <div class="media" style="margin-top: 0;">' +
                 '    <a class="pull-left" href="javascript::void();">' +
-                '      <img class="img-responsive img-circle" style="height: 45px; width: 45px" alt="' + data.realname + '" src="' + data.picture + '">' +
+                '      <img class="img-responsive img-circle" style="height: 60px; width: 60px" alt="' + data.realname + '" src="' + data.picture + '">' +
                 '    </a>' +
                 '    <div class="media-body">' +
-                '      <h4 class="media-heading">' + data.realname + '</h4>' +
-                '      <p class="text-muted">' + data.username + '</p>' +
+                '      <h4 class="media-heading"><strong>' + data.realname + '</strong></h4>' +
+                '      <p class="no-margin">' + data.username + '</p>' +
+                '      <p class="text-muted" style="margin-bottom: 5px;">' + data.roles + '</p>' +
                 '    </div>' +
                 '  </div>' +
                 '  <div class="clearfix"></div>' +
@@ -305,6 +307,7 @@ function sendUserInfo(userid) {
         type:     'info',
         username: userInfo.username,
         realname: userInfo.realname,
+        roles:    userInfo.roles,
         picture:  userInfo.picture,
     });
 

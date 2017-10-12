@@ -147,23 +147,6 @@ var addOnlineUser = function(userid, data) {
     chatList.append(value);
 }
 
-var removeOnlineUser = function(userid, isOnlineUser) {
-    var text = '';
-
-    if (isOnlineUser) {
-        var data = chatUsers[userid];
-
-        text = sprintf("<?= __d('chat', '%s (%s) left the chat.'); ?>", data.realname, data.username);
-    } else {
-        text = sprintf("<?= __d('chat', '%s left the chat.'); ?>", userid);
-    }
-
-    addLogMessage(text, 'warning');
-
-    // Update the Online Users.
-    $('#user-' + userid).remove();
-}
-
 function getTimestamp() {
   var totalSec = new Date().getTime() / 1000;
 
@@ -264,28 +247,30 @@ channel.onmessage = function(message, userid, latency) {
         return;
     }
 
-    var isOnlineUser = !! chatUsers[userid];
+    if (! chatUsers[userid]) {
+        chatUsers[userid] = data;
 
-    if (isOnlineUser) {
-        return;
+        addOnlineUser(userid, data);
+
+        //
+        var text = sprintf("<?= __d('chat', '%s (%s) joined the chat.'); ?>", data.realname, data.username);
+
+        addLogMessage(text, 'success');
     }
-
-    chatUsers[userid] = data;
-
-    addOnlineUser(userid, data);
-
-    //
-    var text = sprintf("<?= __d('chat', '%s (%s) joined the chat.'); ?>", data.realname, data.username);
-
-    addLogMessage(text, 'success');
 };
 
 channel.onleave = function(userid) {
-    var isOnlineUser = !! chatUsers[userid];
+    if (!! chatUsers[userid]) {
+        var data = chatUsers[userid];
 
-    removeOnlineUser(userid, isOnlineUser);
+        var text = sprintf("<?= __d('chat', '%s (%s) left the chat.'); ?>", data.realname, data.username);
 
-    if (isOnlineUser) {
+        addLogMessage(text, 'warning');
+
+        // Update the Online Users.
+        $('#user-' + userid).remove();
+
+        // Finally, we will delete the record.
         delete chatUsers[userid];
     }
 

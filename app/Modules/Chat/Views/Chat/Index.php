@@ -225,7 +225,7 @@ channel.ondatachannel = function(dataChannel) {
 };
 
 channel.onopen = function (userid) {
-    console.debug('channel.onopen', userid);
+    console.debug(userid, 'is connected with you.');
 
     //
     chatInput.attr("disabled", false);

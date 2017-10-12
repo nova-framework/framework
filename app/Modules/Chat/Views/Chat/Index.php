@@ -274,8 +274,6 @@ channel.onmessage = function(message, userid, latency) {
 
     addOnlineUser(userid, data);
 
-    //sendUserInfo(userid);
-
     //
     var text = sprintf("<?= __d('chat', '%s (%s) joined the chat.'); ?>", data.realname, data.username);
 

@@ -225,11 +225,12 @@ channel.ondatachannel = function(dataChannel) {
 };
 
 channel.onopen = function (userid) {
+    console.debug('channel.onopen', userid);
+
+    //
     chatInput.attr("disabled", false);
     chatButton.attr("disabled", false);
     chatTarget.attr("disabled", false);
-
-    console.warn('channel.onopen', userid);
 
     chatInput.focus();
 };

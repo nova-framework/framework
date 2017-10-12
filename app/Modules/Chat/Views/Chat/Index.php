@@ -197,13 +197,13 @@ channel.openSignalingChannel = function(config) {
 
     socket.channel = channel;
 
-    socket.on('connect', function () {
+    socket.on('connect', function() {
         if (config.callback) {
             config.callback(socket);
         }
     });
 
-    socket.send = function (message) {
+    socket.send = function(message) {
         socket.emit('message', {
             sender: sender,
             data  : message
@@ -245,7 +245,7 @@ channel.onclose = function(event) {
     console.warn('channel.onerror', event);
 }
 
-channel.onmessage = function (message, userid, latency) {
+channel.onmessage = function(message, userid, latency) {
     console.log('Latency:', latency, 'milliseconds');
 
     console.debug('Message from', userid, ':', message);
@@ -280,7 +280,7 @@ channel.onmessage = function (message, userid, latency) {
     addLogMessage(text, 'success');
 };
 
-channel.onleave = function (userid) {
+channel.onleave = function(userid) {
     var isOnlineUser = !! chatUsers[userid];
 
     removeOnlineUser(userid, isOnlineUser);

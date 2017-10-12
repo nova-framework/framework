@@ -254,7 +254,7 @@ channel.onmessage = function (message, userid, latency) {
         addChatMessage(data.message, data.realname, data.picture, 'left');
     }
 
-    // We will handle only the INFO messages.
+    // Further, we will handle only the INFO messages.
     else if (data.type != 'info') {
         return;
     }

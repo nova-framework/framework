@@ -87,10 +87,11 @@ chatButton.click(function (e) {
 // ......................................................
 
 var addLogMessage = function(message, type) {
-    $('#chat-spinner').hide();
-
     var value = '<div class="callout callout-' + type + '" style="padding: 6px 12px 6px 12px;">' + message + '<span class="pull-right">' + getTimestamp() + '</span></div>' +
                 '<div class="clearfix"></div>'
+
+    // Hide the spinner.
+    $('#chat-spinner').hide();
 
     chatOutput.append(value);
 
@@ -113,6 +114,9 @@ var addChatMessage = function(message, name, image, position) {
                 '  </div>' +
                 '</div>' +
                 '<div class="clearfix"></div>';
+
+     // Hide the spinner.
+    $('#chat-spinner').hide();
 
     chatOutput.append(value);
 

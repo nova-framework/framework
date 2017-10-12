@@ -144,7 +144,7 @@ var addOnlineUser = function(userid, data) {
 
     $('#chat-alone').hide();
 
-    chatList.append(value);
+    chatList.prepend(value);
 }
 
 function getTimestamp() {

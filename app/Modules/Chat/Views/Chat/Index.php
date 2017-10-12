@@ -19,7 +19,7 @@
             </div>
             <div class="box-body">
                 <div class="direct-chat-messages" id="chat-output" style="height: 550px;">
-                    <div id="chat-spinner" class="spinner" align="center">
+                    <div id="chat-spinner" align="center">
                         <img src="<?= resource_url('images/spinner.gif', 'Chat'); ?>"></img>
                     </div>
                 </div>
@@ -40,7 +40,9 @@
                 <h3 class="box-title"><?= __d('users', 'On-line Users'); ?></h3>
             </div>
             <div class="box-body">
-                <div id="chat-list" style="height: 586px; overflow:auto;"></div>
+                <div id="chat-list" style="height: 586px; overflow:auto;">
+                    <p id="chat-alone" align="center"><?= __d('chat', 'No Users are on-line.'); ?></p>
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +139,8 @@ var addOnlineUser = function(userid, data) {
                 '  <div class="clearfix"></div>' +
                 '  <hr style="margin-top: 0; margin-bottom: 10px;">' +
                 '</div>';
+
+    $('#chat-alone').hide();
 
     chatList.append(value);
 }
@@ -289,6 +293,10 @@ channel.onleave = function(userid) {
 
     if (isOnlineUser) {
         delete chatUsers[userid];
+    }
+
+    if (chatUsers.length === 0) {
+        $('#chat-alone').show();
     }
 };
 

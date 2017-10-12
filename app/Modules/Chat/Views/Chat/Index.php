@@ -229,12 +229,13 @@ channel.onopen = function (userid) {
     setTimeout(function() {
         sendUserInfo(userid);
 
+        // Enable the input.
+        chatInput.attr("disabled", false);
+        chatButton.attr("disabled", false);
+
+        chatInput.focus();
+
     }, 5000);
-
-    chatInput.attr("disabled", false);
-    chatButton.attr("disabled", false);
-
-    chatInput.focus();
 };
 
 // Error to open data ports.

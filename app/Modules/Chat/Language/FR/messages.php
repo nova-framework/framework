@@ -3,7 +3,7 @@
 return array (
   '%s (%s) joined the chat.' => '',
   '%s (%s) left the chat.' => '',
-  '%s left chat.' => '',
+  '%s left the chat.' => '',
   'Chat' => '',
   'Dashboard' => '',
   'No Users are on-line.' => '',

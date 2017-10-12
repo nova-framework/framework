@@ -155,7 +155,7 @@ var removeOnlineUser = function(userid, isOnlineUser) {
 
         text = sprintf("<?= __d('chat', '%s (%s) left the chat.'); ?>", data.realname, data.username);
     } else {
-        text = sprintf("<?= __d('chat', '%s left chat.'); ?>", userid);
+        text = sprintf("<?= __d('chat', '%s left the chat.'); ?>", userid);
     }
 
     addLogMessage(text, 'warning');

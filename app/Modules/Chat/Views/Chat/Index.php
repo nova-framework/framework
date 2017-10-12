@@ -18,19 +18,18 @@
                 <h3 class="box-title"><?= __d('users', 'WebRTC Chat'); ?></h3>
             </div>
             <div class="box-body">
-                <div class="direct-chat-messages" id="chat-output" style="height: 550px;"></div>
+                <div class="direct-chat-messages" id="chat-output" style="height: 550px;">
+                    <div id="chat-spinner" class="spinner" align="center">
+                        <img src="<?= resource_url('images/spinner.gif', 'Chat'); ?>"></img>
+                    </div>
+                </div>
             </div>
             <div class="box-footer">
-                <div class="col-sm-2" style="padding: 0 10px 0 0;">
-                    <input type="text" id="chat-target" class="form-control" placeholder="<?= __d('chat', 'All'); ?>" disabled="disabled">
-                </div>
-                <div class="col-sm-10" style="padding: 0;">
-                    <div class="input-group">
-                        <input type="text" id="chat-input" class="form-control" placeholder="<?= __d('chat', 'Type Message ...'); ?>" disabled="disabled">
-                        <span class="input-group-btn">
-                            <button type="submit" id="chat-button" class="btn btn-primary btn-flat" disabled="disabled"><?= __d('chat', 'Send'); ?></button>
-                        </span>
-                    </div>
+                <div class="input-group">
+                    <input type="text" id="chat-input" class="form-control" placeholder="<?= __d('chat', 'Type Message ...'); ?>" disabled="disabled">
+                    <span class="input-group-btn">
+                        <button type="submit" id="chat-button" class="btn btn-primary btn-flat" disabled="disabled"><?= __d('chat', 'Send'); ?></button>
+                    </span>
                 </div>
             </div>
         </div>
@@ -69,7 +68,6 @@ var userInfo = {
 var chatOutput = $('#chat-output');
 var chatInput = $('#chat-input');
 var chatButton = $('#chat-button');
-var chatTarget = $('#chat-target');
 var chatList = $('#chat-list');
 
 //
@@ -89,6 +87,8 @@ chatButton.click(function (e) {
 // ......................................................
 
 var addLogMessage = function(message, type) {
+    $('#chat-spinner').hide();
+
     var value = '<div class="callout callout-' + type + '" style="padding: 6px 12px 6px 12px;">' + message + '<span class="pull-right">' + getTimestamp() + '</span></div>' +
                 '<div class="clearfix"></div>'
 
@@ -219,18 +219,19 @@ channel.ondatachannel = function(dataChannel) {
     setTimeout(function() {
         sendUserInfo();
 
-    }, 1000);
+    }, 5000);
 };
 
 channel.onopen = function (userid) {
     console.debug(userid, 'is connected with you.');
 
-    //
-    chatInput.attr("disabled", false);
-    chatButton.attr("disabled", false);
-    chatTarget.attr("disabled", false);
+    setTimeout(function() {
+        chatInput.attr("disabled", false);
+        chatButton.attr("disabled", false);
 
-    chatInput.focus();
+        chatInput.focus();
+
+    }, 5000);
 };
 
 // Error to open data ports.
@@ -303,7 +304,7 @@ function sendUserInfo(userid) {
         return;
     }
 
-    console.debug('channel.channels', JSON.stringify(channel.channels, null, '\t'));
+    console.debug('sendUserInfo has channel.channels', JSON.stringify(channel.channels, null, '\t'));
 
     for (var userid in channel.channels) {
         console.debug('Sending User info to', userid);

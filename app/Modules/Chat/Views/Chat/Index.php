@@ -229,13 +229,12 @@ channel.onopen = function (userid) {
     setTimeout(function() {
         sendUserInfo(userid);
 
-        //
-        chatInput.attr("disabled", false);
-        chatButton.attr("disabled", false);
-
-        chatInput.focus();
-
     }, 5000);
+
+    chatInput.attr("disabled", false);
+    chatButton.attr("disabled", false);
+
+    chatInput.focus();
 };
 
 // Error to open data ports.
@@ -303,21 +302,9 @@ function sendUserInfo(userid) {
         picture:  userInfo.picture,
     });
 
-    if (userid) {
-        console.debug('Sending User info to', userid);
+    console.debug('Sending User info to', userid);
 
-        channel.channels[userid].send(value);
-
-        return;
-    }
-
-    console.debug('sendUserInfo has channel.channels', JSON.stringify(channel.channels, null, '\t'));
-
-    for (var userid in channel.channels) {
-        console.debug('Sending User info to', userid);
-
-        channel.channels[userid].send(value);
-    }
+    channel.channels[userid].send(value);
 }
 
 function sendMessage() {

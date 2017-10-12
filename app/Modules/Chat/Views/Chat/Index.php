@@ -223,25 +223,19 @@ channel.openSignalingChannel = function(config) {
     socket.on('message', config.onmessage);
 };
 
-channel.ondatachannel = function(dataChannel) {
-    channel.join(dataChannel);
-
-    setTimeout(function() {
-        sendUserInfo();
-
-    }, 3000);
-};
-
 channel.onopen = function (userid) {
     console.debug(userid, 'is connected with you.');
 
     setTimeout(function() {
+        sendUserInfo(userid);
+
+        //
         chatInput.attr("disabled", false);
         chatButton.attr("disabled", false);
 
         chatInput.focus();
 
-    }, 3000);
+    }, 5000);
 };
 
 // Error to open data ports.
@@ -280,7 +274,7 @@ channel.onmessage = function(message, userid, latency) {
 
     addOnlineUser(userid, data);
 
-    sendUserInfo(userid);
+    //sendUserInfo(userid);
 
     //
     var text = sprintf("<?= __d('chat', '%s (%s) joined the chat.'); ?>", data.realname, data.username);

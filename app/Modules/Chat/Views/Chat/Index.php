@@ -229,7 +229,7 @@ channel.ondatachannel = function(dataChannel) {
     setTimeout(function() {
         sendUserInfo();
 
-    }, 5000);
+    }, 3000);
 };
 
 channel.onopen = function (userid) {
@@ -241,7 +241,7 @@ channel.onopen = function (userid) {
 
         chatInput.focus();
 
-    }, 5000);
+    }, 3000);
 };
 
 // Error to open data ports.

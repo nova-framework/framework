@@ -31,7 +31,7 @@ Event::listen('frontend.menu.right', function ()
     return array(
         array(
             'url'    => site_url('messages'),
-            'title'  => '',
+            'title'  => __d('system', 'Messages'),
             'icon'   => 'envelope-o',
             'weight' => 1,
 
@@ -44,7 +44,7 @@ Event::listen('frontend.menu.right', function ()
         ),
         array(
             'url'    => site_url('notifications'),
-            'title'  => '',
+            'title'  => __d('system', 'Notifications'),
             'icon'   => 'bell-o',
             'weight' => 1,
 
@@ -109,7 +109,7 @@ Event::listen('backend.menu.navbar', function ()
     return array(
         array(
             'url'    => site_url('messages'),
-            'title'  => '',
+            'title'  => __d('system', 'Messages'),
             'icon'   => 'envelope-o',
             'weight' => 1,
 
@@ -122,7 +122,7 @@ Event::listen('backend.menu.navbar', function ()
         ),
         array(
             'url'    => site_url('notifications'),
-            'title'  => '',
+            'title'  => __d('system', 'Notifications'),
             'icon'   => 'bell-o',
             'weight' => 1,
 

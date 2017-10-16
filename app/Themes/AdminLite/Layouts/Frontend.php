@@ -40,12 +40,12 @@ if (isset($user->image) && $user->image->exists()) {
         vendor_url('bower_components/font-awesome/css/font-awesome.min.css', 'almasaeed2010/adminlte'),
         // Ionicons
         vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
+        // iCheck
+        vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Theme style
         vendor_url('dist/css/AdminLTE.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
         vendor_url('dist/css/skins/_all-skins.min.css', 'almasaeed2010/adminlte'),
-        // iCheck
-        vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Custom CSS
         theme_url('css/style.css', 'AdminLite'),
     ));

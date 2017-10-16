@@ -40,6 +40,8 @@ if (isset($user->image) && $user->image->exists()) {
         vendor_url('bower_components/Ionicons/css/ionicons.min.css', 'almasaeed2010/adminlte'),
         // Select2
         vendor_url('bower_components/select2/dist/css/select2.min.css', 'almasaeed2010/adminlte'),
+        // iCheck
+        vendor_url('plugins/iCheck/square/blue.css', 'almasaeed2010/adminlte'),
         // Theme style
         vendor_url('dist/css/AdminLTE.min.css', 'almasaeed2010/adminlte'),
         // AdminLTE Skins
@@ -217,7 +219,9 @@ Assets::js(array(
     // AdminLTE App
     vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
     // Select2
-    vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte')
+    vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte'),
+    // iCheck
+    vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data
@@ -225,12 +229,19 @@ echo isset($js) ? $js : ''; // Place to pass data
 ?>
 
 <script>
+
 $(function () {
     // Initialize the sidebar menu.
     $('.sidebar-menu').tree();
 
     //Initialize Select2 Elements
     $(".select2").select2();
+
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%' // optional
+    });
 });
 </script>
 

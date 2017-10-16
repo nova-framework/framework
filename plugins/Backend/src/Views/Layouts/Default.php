@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css">
 
     <!-- Local customizations -->
+    <link rel="stylesheet" type="text/css" href="<?= resource_url('css/bootstrap-dropmenu.min.css', 'Backend'); ?>">
     <link rel="stylesheet" type="text/css" href="<?= resource_url('plugins/flags/flags.css', 'Backend'); ?>">
 
     <link rel="stylesheet" type="text/css" href="<?= resource_url('css/backend.css', 'Backend'); ?>">
@@ -68,26 +69,33 @@
                             <?php } ?>
                         </ul>
                     </li>
-                    <!-- Authentication Links -->
+                   <!-- Authentication Links -->
                     <li class="dropdown <?= ($baseUri == 'admin/profile') ? 'active' : ''; ?>">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="<?= $currentUser->fullName() ?>">
                             <img src="<?= $currentUser->picture(); ?>" class="user-image" alt="User Image"> <?= $currentUser->username ?> <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li <?= ($baseUri == 'admin/profile') ? 'class="active"' : ''; ?>>
-                                <a href="<?= site_url('admin/profile'); ?>"><i class='fa fa-circle-o'></i> <?= __d('backend', 'Profile'); ?></a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="<?= site_url('logout'); ?>"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <div class="dropdown-container dropdown-position-bottomright" style="width: 275px;">
+                            <div class="dropdown-toolbar text-center" style="color: #222; border-bottom: 0;">
+                                <img src="<?= $currentUser->picture(); ?>" style="width: 100px; height: auto; margin: 10px auto; border: 2px solid #CCC;" class="img-circle img-responsive" alt="User Image">
+                                <h4><strong><?= $currentUser->fullName(); ?></strong></h4>
+                                <div><?= $currentUser->role->name; ?></div>
+                                <?php $sinceDate = $currentUser->created_at->formatLocalized(__d('admin_lite', '%d %b %Y, %R')); ?>
+                                <div class="text-muted" style="margin-bottom: 10px;"><?= __d('backend', 'Member since {0}', $sinceDate); ?></div>
+                            </div><!-- /dropdown-toolbar -->
+                            <div class="dropdown-footer" style="padding: 10px;">
+                                <a class="btn btn-success pull-left" href="<?= site_url('admin/profile'); ?>"><i class='fa fa-user'></i> <?= __d('backend', 'Account'); ?></a>
+
+                                <a class="btn btn-primary pull-right" href="<?= site_url('logout'); ?>"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class='fa fa-sign-out'></i> <?= __d('backend', 'Logout'); ?>
                                 </a>
+                                <div class="clearfix"></div>
+
                                 <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
                                     <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                                 </form>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </li>
                 </ul>
 

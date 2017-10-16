@@ -1,6 +1,6 @@
 <?php
 
-namespace Widgets\Support;
+namespace AcmeCorp\Widgets\Support;
 
 use Nova\Container\Container;
 

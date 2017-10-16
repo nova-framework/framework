@@ -1,12 +1,12 @@
 <?php
 
-namespace Notifications\Channels;
+namespace AcmeCorp\Notifications\Channels;
 
 use Nova\Events\Dispatcher;
 
-use Notifications\Messages\BroadcastMessage;
-use Notifications\Events\BroadcastNotificationCreated;
-use Notifications\Notification;
+use AcmeCorp\Notifications\Messages\BroadcastMessage;
+use AcmeCorp\Notifications\Events\BroadcastNotificationCreated;
+use AcmeCorp\Notifications\Notification;
 
 use RuntimeException;
 
@@ -35,7 +35,7 @@ class BroadcastChannel
      * Send the given notification.
      *
      * @param  mixed  $notifiable
-     * @param  \Notifications\Notification  $notification
+     * @param  \AcmeCorp\Notifications\Notification  $notification
      * @return array|null
      */
     public function send($notifiable, Notification $notification)
@@ -58,7 +58,7 @@ class BroadcastChannel
      * Get the data for the notification.
      *
      * @param  mixed  $notifiable
-     * @param  \Notifications\Notification  $notification
+     * @param  \AcmeCorp\Notifications\Notification  $notification
      * @return mixed
      *
      * @throws \RuntimeException

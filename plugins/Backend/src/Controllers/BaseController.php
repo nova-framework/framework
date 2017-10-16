@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\Controllers;
+namespace AcmeCorp\Backend\Controllers;
 
 use Nova\Database\ORM\Builder as ModelBuilder;
 use Nova\Support\Facades\Auth;
@@ -10,10 +10,10 @@ use Nova\Support\Facades\View;
 use Nova\Support\Arr;
 
 use App\Controllers\BaseController as Controller;
-use Backend\Models\Activity;
+use AcmeCorp\Backend\Models\Activity;
 
-use Backend\Models\Message;
-use Backend\Support\Menu;
+use AcmeCorp\Backend\Models\Message;
+use AcmeCorp\Backend\Support\Menu;
 
 use Closure;
 
@@ -25,7 +25,7 @@ class BaseController extends Controller
      *
      * @var string
      */
-    protected $theme = 'Backend';
+    protected $theme = 'AcmeCorp/Backend';
 
     /**
      * The currently used Layout.
@@ -58,7 +58,7 @@ class BaseController extends Controller
         View::share('currentUser', $user);
 
         // Prepare the SideBar Menu.
-        $menu = Menu::make('Backend::Partials/SideBarMenu', function ($menu) use ($user)
+        $menu = Menu::make('AcmeCorp/Backend::Partials/SideBarMenu', function ($menu) use ($user)
         {
             $payload = array($menu, $user);
 

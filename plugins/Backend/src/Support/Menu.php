@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\Support;
+namespace AcmeCorp\Backend\Support;
 
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;

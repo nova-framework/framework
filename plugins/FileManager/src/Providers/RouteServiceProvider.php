@@ -1,6 +1,6 @@
 <?php
 
-namespace FileManager\Providers;
+namespace AcmeCorp\FileManager\Providers;
 
 use Nova\Routing\Router;
 use Nova\Plugins\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -13,7 +13,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string|null
      */
-    protected $namespace = 'FileManager\Controllers';
+    protected $namespace = 'AcmeCorp\FileManager\Controllers';
 
 
     /**

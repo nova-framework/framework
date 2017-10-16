@@ -1,6 +1,6 @@
 <?php
 
-namespace Forensics;
+namespace AcmeCorp\Forensics;
 
 /**
  * Class PdoDebugger

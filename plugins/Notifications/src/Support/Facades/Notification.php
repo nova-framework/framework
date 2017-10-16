@@ -1,12 +1,12 @@
 <?php
 
-namespace Notifications\Support\Facades;
+namespace AcmeCorp\Notifications\Support\Facades;
 
 use Nova\Support\Facades\Facade;
 
 
 /**
- * @see \Notifications\ChannelManager
+ * @see \AcmeCorp\Notifications\ChannelManager
  */
 class Notification extends Facade
 {

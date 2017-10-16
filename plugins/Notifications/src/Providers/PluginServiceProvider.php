@@ -1,15 +1,15 @@
 <?php
 
-namespace Notifications\Providers;
+namespace AcmeCorp\Notifications\Providers;
 
 use Nova\Foundation\AliasLoader;
 use Nova\Support\ServiceProvider;
 
-use Notifications\Console\NotificationMakeCommand;
-use Notifications\Console\NotificationTableCommand;
-use Notifications\Console\PluginNotificationMakeCommand;
-use Notifications\Contracts\DispatcherInterface;
-use Notifications\ChannelManager;
+use AcmeCorp\Notifications\Console\NotificationMakeCommand;
+use AcmeCorp\Notifications\Console\NotificationTableCommand;
+use AcmeCorp\Notifications\Console\PluginNotificationMakeCommand;
+use AcmeCorp\Notifications\Contracts\DispatcherInterface;
+use AcmeCorp\Notifications\ChannelManager;
 
 
 class PluginServiceProvider extends ServiceProvider
@@ -25,7 +25,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Notifications', 'notifications', $path);
+        $this->package('AcmeCorp/Notifications', 'notifications', $path);
 
         //
     }
@@ -60,7 +60,7 @@ class PluginServiceProvider extends ServiceProvider
     {
         $loader = AliasLoader::getInstance();
 
-        $loader->alias('Notification', 'Notifications\Support\Facades\Notification');
+        $loader->alias('Notification', 'AcmeCorp\Notifications\Support\Facades\Notification');
     }
 
     protected function registerCommands()

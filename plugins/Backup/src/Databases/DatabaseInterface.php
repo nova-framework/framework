@@ -1,6 +1,6 @@
 <?php
 
-namespace Backup\Databases;
+namespace AcmeCorp\Backup\Databases;
 
 
 interface DatabaseInterface

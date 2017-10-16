@@ -1,11 +1,11 @@
 <?php
 
-namespace FileField\Database\ORM;
+namespace AcmeCorp\FileField\Database\ORM;
 
 use Nova\Database\ORM\Model;
 use Nova\Support\Str;
 
-use FileField\Database\ORM\FileField;
+use AcmeCorp\FileField\Database\ORM\FileField;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

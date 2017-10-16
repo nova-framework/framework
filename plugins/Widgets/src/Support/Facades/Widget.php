@@ -1,6 +1,6 @@
 <?php
 
-namespace Widgets\Support\Facades;
+namespace AcmeCorp\Widgets\Support\Facades;
 
 use Nova\Support\Facades\Facade;
 

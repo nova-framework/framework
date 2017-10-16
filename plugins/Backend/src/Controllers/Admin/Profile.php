@@ -5,7 +5,7 @@
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  */
 
-namespace Backend\Controllers\Admin;
+namespace AcmeCorp\Backend\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Hash;
@@ -13,8 +13,8 @@ use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 
-use Backend\Controllers\BaseController;
-use Backend\Models\User;
+use AcmeCorp\Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Models\User;
 
 
 class Profile extends BaseController

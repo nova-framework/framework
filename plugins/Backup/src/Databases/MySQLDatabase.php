@@ -1,10 +1,10 @@
 <?php
 
-namespace Backup\Databases;
+namespace AcmeCorp\Backup\Databases;
 
 use Nova\Support\Facades\Config;
 
-use Backup\Console;
+use AcmeCorp\Backup\Console;
 
 
 class MySQLDatabase implements DatabaseInterface

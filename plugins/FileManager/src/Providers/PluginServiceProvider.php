@@ -1,6 +1,6 @@
 <?php
 
-namespace FileManager\Providers;
+namespace AcmeCorp\FileManager\Providers;
 
 use Nova\Plugins\Support\Providers\PluginServiceProvider as ServiceProvider;
 
@@ -13,9 +13,9 @@ class PluginServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        //'FileManager\Providers\AuthServiceProvider',
-        //'FileManager\Providers\EventServiceProvider',
-        'FileManager\Providers\RouteServiceProvider'
+        //'AcmeCorp\FileManager\Providers\AuthServiceProvider',
+        //'AcmeCorp\FileManager\Providers\EventServiceProvider',
+        'AcmeCorp\FileManager\Providers\RouteServiceProvider'
     );
 
 
@@ -29,7 +29,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('FileManager', 'file_manager', $path);
+        $this->package('AcmeCorp/FileManager', 'file_manager', $path);
 
         // Bootstrap the Plugin.
         require $path .DS .'Bootstrap.php';

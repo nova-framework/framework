@@ -1,6 +1,6 @@
 <?php
 
-namespace Notifications\Support;
+namespace AcmeCorp\Notifications\Support;
 
 use Nova\Database\ORM\Collection as BaseCollection;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace AsyncQueue\Providers;
+namespace AcmeCorp\AsyncQueue\Providers;
 
 use Nova\Support\ServiceProvider;
 
-use AsyncQueue\Connectors\AsyncConnector;
-use AsyncQueue\Console\AsyncCommand;
+use AcmeCorp\AsyncQueue\Connectors\AsyncConnector;
+use AcmeCorp\AsyncQueue\Console\AsyncCommand;
 
 
 class PluginServiceProvider extends ServiceProvider
@@ -21,7 +21,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('AsyncQueue', 'async_queue', $path);
+        $this->package('AcmeCorp/AsyncQueue', 'async_queue', $path);
 
         //
         $manager = $this->app['queue'];

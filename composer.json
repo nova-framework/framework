@@ -44,17 +44,18 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "FileField\\": "plugins/FileField/src/",
-            "Bootstrap\\": "plugins/Bootstrap/src/",
-            "Backend\\": "plugins/Backend/src/",
-            "Widgets\\": "plugins/Widgets/src/",
-            "Backup\\": "plugins/Backup/src/",
-            "FileManager\\": "plugins/FileManager/src/",
-            "Notifications\\": "plugins/Notifications/src/",
-            "AsyncQueue\\": "plugins/AsyncQueue/src/",
-            "NestedSet\\": "plugins/NestedSet/src/",
-            "Forensics\\": "plugins/Forensics/src/",
-            "Reminders\\": "plugins/Reminders/src/"
+            "AcmeCorp\\FileField\\": "plugins/FileField/src/",
+            "AcmeCorp\\Bootstrap\\": "plugins/Bootstrap/src/",
+            "AcmeCorp\\Backend\\": "plugins/Backend/src/",
+            "AcmeCorp\\Widgets\\": "plugins/Widgets/src/",
+            "AcmeCorp\\Backup\\": "plugins/Backup/src/",
+            "AcmeCorp\\FileManager\\": "plugins/FileManager/src/",
+            "AcmeCorp\\Notifications\\": "plugins/Notifications/src/",
+            "AcmeCorp\\AsyncQueue\\": "plugins/AsyncQueue/src/",
+            "AcmeCorp\\NestedSet\\": "plugins/NestedSet/src/",
+            "AcmeCorp\\Forensics\\": "plugins/Forensics/src/",
+            "AcmeCorp\\Reminders\\": "plugins/Reminders/src/",
+            "AcmeCorp\\Platform\\": "plugins/Platform/src/"
         }
     },
     "scripts": {

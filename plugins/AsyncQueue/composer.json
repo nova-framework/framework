@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AsyncQueue\\": "src/"
+            "AcmeCorp\\AsyncQueue\\": "src/"
         }
     },
     "prefer-stable": true,

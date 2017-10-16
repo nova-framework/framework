@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\Models;
+namespace AcmeCorp\Backend\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
@@ -32,7 +32,7 @@ class Activity extends BaseModel
      */
     public function user()
     {
-        return $this->belongsTo('Backend\Models\User', 'user_id', 'id');
+        return $this->belongsTo('AcmeCorp\Backend\Models\User', 'user_id', 'id');
     }
 
     /**

@@ -1,14 +1,14 @@
 <?php
 
-namespace Reminders;
+namespace AcmeCorp\Reminders;
 
-use Reminders\Notifications\ResetPassword as ResetPasswordNotification;
+use AcmeCorp\Reminders\Notifications\ResetPassword as ResetPasswordNotification;
 
 
 trait RemindableTrait
 {
     /**
-     * Get the e-mail address where password reminders are sent.
+     * Get the e-mail address where password Reminders are sent.
      *
      * @return string
      */

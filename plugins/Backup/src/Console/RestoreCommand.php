@@ -1,10 +1,10 @@
 <?php
 
-namespace Backup\Console;
+namespace AcmeCorp\Backup\Console;
 
 use Nova\Support\Facades\File;
 
-use Backup\Console\BaseCommand;
+use AcmeCorp\Backup\Console\BaseCommand;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;

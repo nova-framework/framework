@@ -1,11 +1,11 @@
 <?php
 
-namespace Widgets\Providers;
+namespace AcmeCorp\Widgets\Providers;
 
 use Nova\Foundation\AliasLoader;
 use Nova\Support\ServiceProvider;
 
-use Widgets\Support\WidgetManager;
+use AcmeCorp\Widgets\Support\WidgetManager;
 
 
 class PluginServiceProvider extends ServiceProvider
@@ -21,7 +21,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Widgets', 'widgets', $path);
+        $this->package('AcmeCorp/Widgets', 'widgets', $path);
     }
 
     /**
@@ -39,6 +39,6 @@ class PluginServiceProvider extends ServiceProvider
         // Register the Facades.
         $loader = AliasLoader::getInstance();
 
-        $loader->alias('Widget', 'Widgets\Support\Facades\Widget');
+        $loader->alias('Widget', 'AcmeCorp\Widgets\Support\Facades\Widget');
     }
 }

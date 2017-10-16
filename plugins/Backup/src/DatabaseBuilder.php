@@ -1,8 +1,8 @@
 <?php
 
-namespace Backup;
+namespace AcmeCorp\Backup;
 
-use Backup\Console;
+use AcmeCorp\Backup\Console;
 
 
 class DatabaseBuilder

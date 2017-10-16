@@ -1,6 +1,6 @@
 <?php
 
-namespace Notifications;
+namespace AcmeCorp\Notifications;
 
 class Action
 {

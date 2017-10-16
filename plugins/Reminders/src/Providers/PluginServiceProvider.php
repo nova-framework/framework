@@ -1,13 +1,13 @@
 <?php
 
-namespace Reminders\Providers;
+namespace AcmeCorp\Reminders\Providers;
 
 use Nova\Foundation\AliasLoader;
 use Nova\Support\ServiceProvider;
 
-use Reminders\Console\ClearRemindersCommand;
-use Reminders\Console\RemindersTableCommand;
-use Reminders\PasswordBrokerManager;
+use AcmeCorp\Reminders\Console\ClearRemindersCommand;
+use AcmeCorp\Reminders\Console\RemindersTableCommand;
+use AcmeCorp\Reminders\PasswordBrokerManager;
 
 
 class PluginServiceProvider extends ServiceProvider
@@ -23,7 +23,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Reminders', 'reminders', $path);
+        $this->package('AcmeCorp/Reminders', 'reminders', $path);
 
         //
     }

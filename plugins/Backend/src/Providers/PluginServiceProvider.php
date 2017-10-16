@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\Providers;
+namespace AcmeCorp\Backend\Providers;
 
 use Nova\Plugins\Support\Providers\PluginServiceProvider as ServiceProvider;
 
@@ -13,9 +13,9 @@ class PluginServiceProvider extends ServiceProvider
      * @var array
      */
     protected $providers = array(
-        //'Backend\Providers\AuthServiceProvider',
-        //'Backend\Providers\EventServiceProvider',
-        'Backend\Providers\RouteServiceProvider',
+        //'AcmeCorp\Backend\Providers\AuthServiceProvider',
+        //'AcmeCorp\Backend\Providers\EventServiceProvider',
+        'AcmeCorp\Backend\Providers\RouteServiceProvider',
     );
 
 
@@ -29,7 +29,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Backend', 'backend', $path);
+        $this->package('AcmeCorp/Backend', 'backend', $path);
 
         // Bootstrap the Plugin.
         require $path .DS .'Bootstrap.php';

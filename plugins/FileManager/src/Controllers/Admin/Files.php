@@ -1,11 +1,11 @@
 <?php
 
-namespace FileManager\Controllers\Admin;
+namespace AcmeCorp\FileManager\Controllers\Admin;
 
 use Nova\Container\Container;
 use Nova\Http\Request;
 
-use Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Controllers\BaseController;
 
 
 class Files extends BaseController

@@ -1,6 +1,6 @@
 <?php
 
-namespace FileManager\Providers;
+namespace AcmeCorp\AcmeCorp\FileManager\Providers;
 
 use Nova\Auth\Contracts\Access\GateInterface as Gate;
 use Nova\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -14,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = array(
-        'FileManager\Models\SomeModel' => 'FileManager\Policies\ModelPolicy',
+        'AcmeCorp\FileManager\Models\SomeModel' => 'AcmeCorp\FileManager\Policies\ModelPolicy',
     );
 
 

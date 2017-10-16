@@ -5,7 +5,7 @@
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  */
 
-namespace Backend\Controllers\Admin;
+namespace AcmeCorp\Backend\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
@@ -14,15 +14,15 @@ use Nova\Support\Facades\Language;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 
-use Backend\Controllers\BaseController;
-use Backend\Models\User;
-use Backend\Notifications\Sample as SampleNotification;
+use AcmeCorp\Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Models\User;
+use AcmeCorp\Backend\Notifications\Sample as SampleNotification;
 
 use Carbon\Carbon;
 
 // For testing.
 use Nova\Support\Facades\Event;
-use Backend\Support\Menu;
+use AcmeCorp\Backend\Support\Menu;
 
 
 class Dashboard extends BaseController

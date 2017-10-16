@@ -1,12 +1,12 @@
 <?php
 
-namespace Backup\Console;
+namespace AcmeCorp\Backup\Console;
 
 use Nova\Console\Command;
 use Nova\Support\Facades\Config;
 
-use Backup\DatabaseBuilder;
-use Backup\Console;
+use AcmeCorp\Backup\DatabaseBuilder;
+use AcmeCorp\Backup\Console;
 
 
 class BaseCommand extends Command

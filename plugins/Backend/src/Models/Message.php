@@ -1,10 +1,10 @@
 <?php
 
-namespace Backend\Models;
+namespace AcmeCorp\Backend\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 
-use Backend\Models\User;
+use AcmeCorp\Backend\Models\User;
 
 
 class Message extends BaseModel
@@ -18,12 +18,12 @@ class Message extends BaseModel
 
     public function sender()
     {
-        return $this->belongsTo('Backend\Models\User', 'sender_id');
+        return $this->belongsTo('AcmeCorp\Backend\Models\User', 'sender_id');
     }
 
     public function receiver()
     {
-        return $this->belongsTo('Backend\Models\User', 'receiver_id');
+        return $this->belongsTo('AcmeCorp\Backend\Models\User', 'receiver_id');
     }
 
     public function scopeNotReply($query)
@@ -38,7 +38,7 @@ class Message extends BaseModel
 
     public function replies()
     {
-        return $this->hasMany('Backend\Models\Message', 'parent_id');
+        return $this->hasMany('AcmeCorp\Backend\Models\Message', 'parent_id');
     }
 
     // Set seen to 1 when user reads message.

@@ -20,7 +20,7 @@
 
 - - - - - - - - - - - - - - - - - - - - - */
 
-namespace Forensics;
+namespace AcmeCorp\Forensics;
 
 
 class Console

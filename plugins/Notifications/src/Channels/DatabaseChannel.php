@@ -1,8 +1,8 @@
 <?php
 
-namespace Notifications\Channels;
+namespace AcmeCorp\Notifications\Channels;
 
-use Notifications\Notification;
+use AcmeCorp\Notifications\Notification;
 
 use RuntimeException;
 
@@ -13,7 +13,7 @@ class DatabaseChannel
      * Send the given notification.
      *
      * @param  mixed  $notifiable
-     * @param  \Notifications\Notification  $notification
+     * @param  \AcmeCorp\Notifications\Notification  $notification
      * @return \Nova\Database\ORM\Model
      */
     public function send($notifiable, Notification $notification)
@@ -30,7 +30,7 @@ class DatabaseChannel
      * Get the data for the notification.
      *
      * @param  mixed  $notifiable
-     * @param  \Notifications\Notification  $notification
+     * @param  \AcmeCorp\Notifications\Notification  $notification
      * @return array
      *
      * @throws \RuntimeException

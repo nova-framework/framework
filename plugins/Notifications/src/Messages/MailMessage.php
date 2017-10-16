@@ -1,8 +1,8 @@
 <?php
 
-namespace Notifications\Messages;
+namespace AcmeCorp\Notifications\Messages;
 
-use Notifications\Messages\SimpleMessage;
+use AcmeCorp\Notifications\Messages\SimpleMessage;
 
 
 class MailMessage extends SimpleMessage

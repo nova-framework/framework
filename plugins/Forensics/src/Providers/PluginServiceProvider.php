@@ -1,6 +1,6 @@
 <?php
 
-namespace Forensics\Providers;
+namespace AcmeCorp\Forensics\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Forensics', 'forensics', $path);
+        $this->package('AcmeCorp/Forensics', 'forensics', $path);
 
         //
         $this->setupMiddleware();
@@ -43,6 +43,6 @@ class PluginServiceProvider extends ServiceProvider
     {
         $router = $this->app['router'];
 
-        $router->prependMiddlewareToGroup('web', 'Forensics\Http\Middleware\HandleProfiling');
+        $router->prependMiddlewareToGroup('web', 'AcmeCorp\Forensics\Http\Middleware\HandleProfiling');
     }
 }

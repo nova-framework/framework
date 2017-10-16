@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace Backend\Controllers\Admin;
+namespace AcmeCorp\Backend\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Cache;
@@ -17,7 +17,7 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
-use Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Controllers\BaseController;
 use App\Models\Option;
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Backup;
+namespace AcmeCorp\Backup;
 
 use Symfony\Component\Process\Process;
 

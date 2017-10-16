@@ -1,6 +1,6 @@
 <?php
 
-namespace NestedSet\Database\ORM;
+namespace AcmeCorp\NestedSet\Database\ORM;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Database\ORM\Builder as BaseBuilder;
@@ -180,7 +180,7 @@ class Builder extends BaseBuilder
     /**
      * @param mixed $id
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function whereNotDescendantOf($id)
     {
@@ -190,7 +190,7 @@ class Builder extends BaseBuilder
     /**
      * @param mixed $id
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function orWhereDescendantOf($id)
     {
@@ -200,7 +200,7 @@ class Builder extends BaseBuilder
     /**
      * @param mixed $id
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function orWhereNotDescendantOf($id)
     {
@@ -212,7 +212,7 @@ class Builder extends BaseBuilder
      *
      * @param $id
      * @param array $columns
-     * @return \NestedSet\Database\ORM\Collection
+     * @return \AcmeCorp\NestedSet\Database\ORM\Collection
      */
     public function descendantsOf($id, array $columns = array('*'))
     {

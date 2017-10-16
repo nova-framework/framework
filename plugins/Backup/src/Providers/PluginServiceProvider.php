@@ -1,10 +1,10 @@
 <?php
 
-namespace Backup\Providers;
+namespace AcmeCorp\Backup\Providers;
 
-use Backup\Console\BackupCommand;
-use Backup\Console\RestoreCommand;
-use Backup\DatabaseBuilder;
+use AcmeCorp\Backup\Console\BackupCommand;
+use AcmeCorp\Backup\Console\RestoreCommand;
+use AcmeCorp\Backup\DatabaseBuilder;
 
 use Nova\Support\ServiceProvider;
 
@@ -31,7 +31,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Backup', 'backup', $path);
+        $this->package('AcmeCorp/Backup', 'backup', $path);
 
         // Configure the Services.
         if (! $this->app->runningInConsole()) {

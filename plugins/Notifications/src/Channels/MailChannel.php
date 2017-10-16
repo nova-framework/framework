@@ -1,11 +1,11 @@
 <?php
 
-namespace Notifications\Channels;
+namespace AcmeCorp\Notifications\Channels;
 
 use Nova\Mail\Mailer;
 use Nova\Support\Str;
 
-use Notifications\Notification;
+use AcmeCorp\Notifications\Notification;
 
 
 class MailChannel
@@ -33,7 +33,7 @@ class MailChannel
      * Send the given notification.
      *
      * @param  mixed  $notifiable
-     * @param  \Notifications\Notification  $notification
+     * @param  \AcmeCorp\Notifications\Notification  $notification
      * @return void
      */
     public function send($notifiable, Notification $notification)

@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Forensics\\": "src/"
+            "AcmeCorp\\Forensics\\": "src/"
         }
     },
     "prefer-stable": true,

@@ -283,7 +283,7 @@ class BaseController extends Controller
     public function getTheme()
     {
         if (! isset($this->theme)) {
-            return $this->theme = Config::get('app.theme', 'Bootstrap');
+            return $this->theme = Config::get('app.theme', 'AcmeCorp/Bootstrap');
         }
 
         return $this->theme;

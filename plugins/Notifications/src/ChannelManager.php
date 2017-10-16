@@ -1,6 +1,6 @@
 <?php
 
-namespace Notifications;
+namespace AcmeCorp\Notifications;
 
 use Nova\Bus\Contracts\DispatcherInterface as Bus;
 use Nova\Database\ORM\Collection as ModelCollection;
@@ -11,12 +11,12 @@ use Nova\Queue\Contracts\ShouldQueueInterface;
 use Nova\Support\Collection;
 use Nova\Support\Manager;
 
-use Notifications\Channels\DatabaseChannel;
-use Notifications\Channels\MailChannel;
-use Notifications\Contracts\DispatcherInterface;
-use Notifications\Events\NotificationSending;
-use Notifications\Events\NotificationSent;
-use Notifications\SendQueuedNotifications;
+use AcmeCorp\Notifications\Channels\DatabaseChannel;
+use AcmeCorp\Notifications\Channels\MailChannel;
+use AcmeCorp\Notifications\Contracts\DispatcherInterface;
+use AcmeCorp\Notifications\Events\NotificationSending;
+use AcmeCorp\Notifications\Events\NotificationSent;
+use AcmeCorp\Notifications\SendQueuedNotifications;
 
 use Ramsey\Uuid\Uuid;
 
@@ -199,7 +199,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     /**
      * Create an instance of the database driver.
      *
-     * @return \Notifications\Channels\DatabaseChannel
+     * @return \AcmeCorp\Notifications\Channels\DatabaseChannel
      */
     protected function createDatabaseDriver()
     {
@@ -209,7 +209,7 @@ class ChannelManager extends Manager implements DispatcherInterface
     /**
      * Create an instance of the mail driver.
      *
-     * @return \Notifications\Channels\MailChannel
+     * @return \AcmeCorp\Notifications\Channels\MailChannel
      */
     protected function createMailDriver()
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace AsyncQueue\Console;
+namespace AcmeCorp\AsyncQueue\Console;
 
 use Nova\Console\Command;
 use Nova\Queue\Worker;
 
-use AsyncQueue\Queues\AsyncQueue;
+use AcmeCorp\AsyncQueue\Queues\AsyncQueue;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

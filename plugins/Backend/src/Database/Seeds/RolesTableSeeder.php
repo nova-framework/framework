@@ -1,11 +1,11 @@
 <?php
 
-namespace Backend\Database\Seeds;
+namespace AcmeCorp\Backend\Database\Seeds;
 
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 
-use Backend\Models\Role;
+use AcmeCorp\Backend\Models\Role;
 
 
 class RolesTableSeeder extends Seeder

@@ -1,6 +1,6 @@
 <?php
 
-namespace NestedSet\Database\ORM;
+namespace AcmeCorp\NestedSet\Database\ORM;
 
 use Nova\Database\ORM\Collection as BaseCollection;
 

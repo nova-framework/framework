@@ -1,5 +1,5 @@
 <?php
-namespace AsyncQueue\Queues;
+namespace AcmeCorp\AsyncQueue\Queues;
 
 use Nova\Database\Connection;
 use Nova\Queue\Queues\DatabaseQueue;

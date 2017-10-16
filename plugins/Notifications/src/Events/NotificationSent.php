@@ -1,6 +1,6 @@
 <?php
 
-namespace Notifications\Events;
+namespace AcmeCorp\Notifications\Events;
 
 
 class NotificationSent
@@ -15,7 +15,7 @@ class NotificationSent
     /**
      * The notification instance.
      *
-     * @var \Notifications\Notification
+     * @var \AcmeCorp\Notifications\Notification
      */
     public $notification;
 
@@ -37,7 +37,7 @@ class NotificationSent
      * Create a new event instance.
      *
      * @param  mixed  $notifiable
-     * @param  \Notifications\Notification  $notification
+     * @param  \AcmeCorp\Notifications\Notification  $notification
      * @param  string  $channel
      * @param  mixed  $response
      * @return void

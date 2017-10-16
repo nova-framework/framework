@@ -1,6 +1,6 @@
 <?php
 
-namespace FileManager\Providers;
+namespace AcmeCorp\FileManager\Providers;
 
 use Nova\Events\Dispatcher;
 use Nova\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -14,8 +14,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = array(
-        'FileManager\Events\SomeEvent' => array(
-            'FileManager\Listeners\EventListener',
+        'AcmeCorp\FileManager\Events\SomeEvent' => array(
+            'AcmeCorp\FileManager\Listeners\EventListener',
         ),
     );
 

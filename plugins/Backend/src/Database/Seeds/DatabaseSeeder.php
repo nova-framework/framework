@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\Database\Seeds;
+namespace AcmeCorp\Backend\Database\Seeds;
 
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         //
-        //$this->call('Backend\Database\Seeds\FoobarTableSeeder');
-        $this->call('Backend\Database\Seeds\RolesTableSeeder');
-        $this->call('Backend\Database\Seeds\UsersTableSeeder');
+        //$this->call('AcmeCorp\Backend\Database\Seeds\FoobarTableSeeder');
+        $this->call('AcmeCorp\Backend\Database\Seeds\RolesTableSeeder');
+        $this->call('AcmeCorp\Backend\Database\Seeds\UsersTableSeeder');
     }
 
 }

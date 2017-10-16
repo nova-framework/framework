@@ -1,11 +1,11 @@
 <?php
 
-namespace AsyncQueue\Connectors;
+namespace AcmeCorp\AsyncQueue\Connectors;
 
 use Nova\Queue\Connectors\DatabaseConnector;
 use Nova\Support\Arr;
 
-use AsyncQueue\Queues\AsyncQueue;
+use AcmeCorp\AsyncQueue\Queues\AsyncQueue;
 
 
 class AsyncConnector extends DatabaseConnector

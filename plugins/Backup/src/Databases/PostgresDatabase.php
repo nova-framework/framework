@@ -1,8 +1,8 @@
 <?php
 
-namespace Backup\Databases;
+namespace AcmeCorp\Backup\Databases;
 
-use Backup\Database\Console;
+use AcmeCorp\Backup\Database\Console;
 
 
 class PostgresDatabase implements DatabaseInterface

@@ -1,12 +1,12 @@
 <?php
 
-namespace Reminders;
+namespace AcmeCorp\Reminders;
 
 use Nova\Auth\Contracts\UserProviderInterface;
 use Nova\Mail\Mailer;
 
-use Reminders\Contracts\ReminderRepositoryInterface;
-use Reminders\Contracts\RemindableInterface;
+use AcmeCorp\Reminders\Contracts\ReminderRepositoryInterface;
+use AcmeCorp\Reminders\Contracts\RemindableInterface;
 
 use Closure;
 
@@ -51,7 +51,7 @@ class PasswordBroker
     /**
      * The password reminder repository.
      *
-     * @var \Reminders\Contracts\ReminderRepositoryInterface  $reminders
+     * @var \Nova\Reminders\Contracts\ReminderRepositoryInterface  $reminders
      */
     protected $reminders;
 
@@ -86,7 +86,7 @@ class PasswordBroker
     /**
      * Create a new password broker instance.
      *
-     * @param  \Reminders\Contracts\ReminderRepositoryInterface  $reminders
+     * @param  \Nova\Reminders\Contracts\ReminderRepositoryInterface  $reminders
      * @param  \Nova\Auth\Contracts\UserProviderInterface  $users
      * @param  \Nova\Mail\Mailer  $mailer
      * @param  string  $reminderView
@@ -229,7 +229,7 @@ class PasswordBroker
      * Get the user for the given credentials.
      *
      * @param  array  $credentials
-     * @return \Reminders\Contracts\RemindableInterface
+     * @return \Nova\Reminders\Contracts\RemindableInterface
      *
      * @throws \UnexpectedValueException
      */
@@ -249,7 +249,7 @@ class PasswordBroker
     /**
      * Get the password reminder repository implementation.
      *
-     * @return \Reminders\Contracts\ReminderRepositoryInterface
+     * @return \Nova\Reminders\Contracts\ReminderRepositoryInterface
      */
     public function getRepository()
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace NestedSet\Database\ORM;
+namespace AcmeCorp\NestedSet\Database\ORM;
 
 use Nova\Database\Connection;
 use Nova\Database\Schema\Blueprint;
 
-use NestedSet\Database\ORM\Node;
+use AcmeCorp\NestedSet\Database\ORM\Node;
 
 
 class NestedSet

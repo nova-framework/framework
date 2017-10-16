@@ -73,7 +73,7 @@ return array(
     'providers' => array(
         'users' => array(
             'driver' => 'extended',
-            'model'  => 'Backend\Models\User',
+            'model'  => 'AcmeCorp\Backend\Models\User',
         ),
     ),
 

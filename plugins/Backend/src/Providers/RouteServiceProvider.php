@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\Providers;
+namespace AcmeCorp\Backend\Providers;
 
 use Nova\Routing\Router;
 use Nova\Plugins\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -13,7 +13,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string|null
      */
-    protected $namespace = 'Backend\Controllers';
+    protected $namespace = 'AcmeCorp\Backend\Controllers';
 
 
     /**

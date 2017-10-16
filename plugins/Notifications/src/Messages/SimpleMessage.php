@@ -1,8 +1,8 @@
 <?php
 
-namespace Notifications\Messages;
+namespace AcmeCorp\Notifications\Messages;
 
-use Notifications\Action;
+use AcmeCorp\Notifications\Action;
 
 
 class SimpleMessage
@@ -123,7 +123,7 @@ class SimpleMessage
     /**
      * Add a line of text to the notification.
      *
-     * @param  \Notifications\Action|string  $line
+     * @param  \AcmeCorp\Notifications\Action|string  $line
      * @return $this
      */
     public function line($line)
@@ -134,7 +134,7 @@ class SimpleMessage
     /**
      * Add a line of text to the notification.
      *
-     * @param  \Notifications\Action|string|array  $line
+     * @param  \AcmeCorp\Notifications\Action|string|array  $line
      * @return $this
      */
     public function with($line)

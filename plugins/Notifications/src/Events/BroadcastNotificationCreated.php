@@ -1,6 +1,6 @@
 <?php
 
-namespace Notifications\Events;
+namespace AcmeCorp\Notifications\Events;
 
 use Nova\Bus\QueueableTrait;
 use Nova\Queue\SerializesModelsTrait;

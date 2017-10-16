@@ -1,6 +1,6 @@
 <?php
 
-namespace Bootstrap\Providers;
+namespace AcmeCorp\Bootstrap\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('Bootstrap', 'bootstrap', $path);
+        $this->package('AcmeCorp/Bootstrap', 'bootstrap', $path);
 
         //
     }

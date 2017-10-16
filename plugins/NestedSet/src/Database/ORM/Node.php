@@ -1,14 +1,14 @@
 <?php
 
-namespace NestedSet\Database\ORM;
+namespace AcmeCorp\NestedSet\Database\ORM;
 
 use Nova\Database\ORM\Relations\BelongsTo;
 use Nova\Database\ORM\Relations\HasMany;
 use Nova\Database\ORM\Model;
 use Nova\Database\ORM\Collection as BaseCollection;
 
-use NestedSet\Database\ORM\Builder;
-use NestedSet\Database\ORM\Collection;
+use AcmeCorp\NestedSet\Database\ORM\Builder;
+use AcmeCorp\NestedSet\Database\ORM\Collection;
 
 use Exception;
 use LogicException;
@@ -420,7 +420,7 @@ class Node extends Model
     /**
      * Get query for descendants of the node.
      *
-     * @return  \NestedSet\Database\ORM\Builder
+     * @return  \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function descendants()
     {
@@ -432,7 +432,7 @@ class Node extends Model
      *
      * @param self::AFTER|self::BEFORE|null $dir
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function siblings($dir = null)
     {
@@ -461,7 +461,7 @@ class Node extends Model
     /**
      * Get query for siblings after the node.
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function nextSiblings()
     {
@@ -471,7 +471,7 @@ class Node extends Model
     /**
      * Get query for siblings before the node.
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function prevSiblings()
     {
@@ -481,7 +481,7 @@ class Node extends Model
     /**
      * Get query for nodes after current node.
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function next()
     {
@@ -493,7 +493,7 @@ class Node extends Model
     /**
      * Get query for nodes before current node in reversed order.
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function prev()
     {
@@ -505,7 +505,7 @@ class Node extends Model
     /**
      * Get query for ancestors to the node not including the node itself.
      *
-     * @return  \NestedSet\Database\ORM\Builder
+     * @return  \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function ancestors()
     {
@@ -795,7 +795,7 @@ class Node extends Model
      *
      * @since 1.1
      *
-     * @return \NestedSet\Database\ORM\Builder
+     * @return \AcmeCorp\NestedSet\Database\ORM\Builder
      */
     public function newServiceQuery()
     {
@@ -1237,7 +1237,7 @@ class Node extends Model
     }
 
     /**
-     * @param NestedSet\Database\ORM\Collection $models
+     * @param \AcmeCorp\NestedSet\Database\ORM\Collection $models
      * @param int $fixed
      * @param $parentId
      * @param int $cut

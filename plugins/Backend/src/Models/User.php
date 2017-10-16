@@ -1,16 +1,16 @@
 <?php
 
-namespace Backend\Models;
+namespace AcmeCorp\Backend\Models;
 
 use Nova\Auth\Contracts\UserInterface;
 use Nova\Auth\UserTrait;
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Support\Str;
 
-use FileField\Database\ORM\FileFieldTrait;
-use Notifications\NotifiableTrait;
-use Reminders\Contracts\RemindableInterface;
-use Reminders\RemindableTrait;
+use AcmeCorp\FileField\Database\ORM\FileFieldTrait;
+use AcmeCorp\Notifications\NotifiableTrait;
+use AcmeCorp\Reminders\Contracts\RemindableInterface;
+use AcmeCorp\Reminders\RemindableTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
@@ -35,17 +35,17 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function activities()
     {
-        return $this->hasMany('Backend\Models\Activity', 'user_id', 'id');
+        return $this->hasMany('AcmeCorp\Backend\Models\Activity', 'user_id', 'id');
     }
 
     public function role()
     {
-        return $this->belongsTo('Backend\Models\Role', 'role_id', 'id', 'role');
+        return $this->belongsTo('AcmeCorp\Backend\Models\Role', 'role_id', 'id', 'role');
     }
 
     public function messages()
     {
-        return $this->hasMany('Backend\Models\Message', 'sender_id', 'id');
+        return $this->hasMany('AcmeCorp\Backend\Models\Message', 'sender_id', 'id');
     }
 
     public function scopeActiveSince($query, $since)

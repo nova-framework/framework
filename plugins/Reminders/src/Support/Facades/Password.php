@@ -1,6 +1,6 @@
 <?php
 
-namespace Reminders\Support\Facades;
+namespace AcmeCorp\Reminders\Support\Facades;
 
 use Nova\Support\Facades\Facade;
 

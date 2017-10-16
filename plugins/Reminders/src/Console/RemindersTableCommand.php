@@ -1,6 +1,6 @@
 <?php
 
-namespace Reminders\Console;
+namespace AcmeCorp\Reminders\Console;
 
 use Nova\Console\Command;
 use Nova\Filesystem\Filesystem;

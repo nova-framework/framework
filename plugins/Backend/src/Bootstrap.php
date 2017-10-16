@@ -2,7 +2,7 @@
 
 use Nova\Http\Request;
 
-use Backend\Controllers\BaseController as BackendController;
+use AcmeCorp\Backend\Controllers\BaseController as BackendController;
 
 
 /**
@@ -64,6 +64,6 @@ Event::listen('backend.menu.sidebar', function ($menu, $user)
 /**
  * Register the Plugin's Widgets.
  */
-Widget::register('Backend\Widgets\DashboardUsersPanel', 'dashboardUsersPanel');
-Widget::register('Backend\Widgets\DashboardDummyPanel', 'dashboardDummyPanel');
+Widget::register('AcmeCorp\Backend\Widgets\DashboardUsersPanel', 'dashboardUsersPanel');
+Widget::register('AcmeCorp\Backend\Widgets\DashboardDummyPanel', 'dashboardDummyPanel');
 

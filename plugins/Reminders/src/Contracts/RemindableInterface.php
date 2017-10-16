@@ -1,6 +1,6 @@
 <?php
 
-namespace Reminders\Contracts;
+namespace AcmeCorp\Reminders\Contracts;
 
 
 interface RemindableInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace FileField\Database\ORM;
+namespace AcmeCorp\FileField\Database\ORM;
 
 use Nova\Database\ORM\Model;
 use Nova\Support\Str;

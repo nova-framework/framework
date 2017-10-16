@@ -22,14 +22,14 @@
 
 - - - - - - - - - - - - - - - - - - - - - */
 
-namespace Forensics;
+namespace AcmeCorp\Forensics;
 
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Request;
 
-use Forensics\Console;
-use Forensics\PdoDebugger;
+use AcmeCorp\Forensics\Console;
+use AcmeCorp\Forensics\PdoDebugger;
 
 use PDO;
 

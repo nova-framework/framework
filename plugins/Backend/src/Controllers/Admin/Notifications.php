@@ -1,12 +1,12 @@
 <?php
 
-namespace Backend\Controllers\Admin;
+namespace AcmeCorp\Backend\Controllers\Admin;
 
 use Nova\Support\Facades\Auth;
 
-use Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Controllers\BaseController;
 
-use Backend\Models\User;
+use AcmeCorp\Backend\Models\User;
 
 
 class Notifications extends BaseController

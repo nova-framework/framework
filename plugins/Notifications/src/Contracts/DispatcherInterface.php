@@ -1,6 +1,6 @@
 <?php
 
-namespace Notifications\Contracts;
+namespace AcmeCorp\Notifications\Contracts;
 
 
 interface DispatcherInterface

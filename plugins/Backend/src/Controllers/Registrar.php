@@ -6,16 +6,16 @@
  * @version 3.0
  */
 
-namespace Backend\Controllers;
+namespace AcmeCorp\Backend\Controllers;
 
 use Nova\Foundation\Auth\RegistersUsersTrait;
 use Nova\Http\Request;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Validator;
 
-use Backend\Controllers\BaseController;
-use Backend\Models\User;
-use Backend\Models\Role;
+use AcmeCorp\Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Models\User;
+use AcmeCorp\Backend\Models\Role;
 
 
 class Registrar extends BaseController

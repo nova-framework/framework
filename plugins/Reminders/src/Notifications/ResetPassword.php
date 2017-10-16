@@ -1,6 +1,6 @@
 <?php
 
-namespace Reminders\Notifications;
+namespace AcmeCorp\Reminders\Notifications;
 
 use Notifications\Notification;
 use Notifications\Messages\MailMessage;

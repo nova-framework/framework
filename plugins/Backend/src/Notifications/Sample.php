@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend\Notifications;
+namespace AcmeCorp\Backend\Notifications;
 
 use Notifications\Messages\MailMessage;
 use Notifications\Notification;

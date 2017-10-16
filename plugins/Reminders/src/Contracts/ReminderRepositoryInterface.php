@@ -1,8 +1,8 @@
 <?php
 
-namespace Reminders\Contracts;
+namespace AcmeCorp\Reminders\Contracts;
 
-use Reminders\Contracts\RemindableInterface;
+use AcmeCorp\Reminders\Contracts\RemindableInterface;
 
 
 interface ReminderRepositoryInterface

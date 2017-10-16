@@ -1,12 +1,12 @@
 <?php
 
-namespace Reminders;
+namespace AcmeCorp\Reminders;
 
 use Nova\Foundation\Application;
 use Nova\Support\Str;
 
-use Reminders\DatabaseReminderRepository;
-use Reminders\PasswordBroker;
+use AcmeCorp\Reminders\DatabaseReminderRepository;
+use AcmeCorp\Reminders\PasswordBroker;
 
 use InvalidArgumentException;
 
@@ -88,7 +88,7 @@ class PasswordBrokerManager
      * Create a token repository instance based on the given configuration.
      *
      * @param  array  $config
-     * @return \Reminders\Contracts\ReminderRepositoryInterface
+     * @return \AcmeCorp\Reminders\Contracts\ReminderRepositoryInterface
      */
     protected function createReminderRepository(array $config)
     {

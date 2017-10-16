@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Backup\\": "src/"
+            "AcmeCorp\\Backup\\": "src/"
         }
     },
     "prefer-stable": true,

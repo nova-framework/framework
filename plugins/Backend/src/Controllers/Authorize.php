@@ -1,11 +1,11 @@
 <?php
 
-namespace Backend\Controllers;
+namespace AcmeCorp\Backend\Controllers;
 
 use Nova\Foundation\Auth\AuthenticatesUsersTrait;
 use Nova\Foundation\Auth\ThrottlesLoginsTrait;
 
-use Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Controllers\BaseController;
 
 
 class Authorize extends BaseController

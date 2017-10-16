@@ -1,6 +1,6 @@
 <?php
 
-namespace NestedSet\Providers;
+namespace AcmeCorp\NestedSet\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('NestedSet', 'nested_set', $path);
+        $this->package('AcmeCorp/NestedSet', 'nested_set', $path);
 
         //
     }

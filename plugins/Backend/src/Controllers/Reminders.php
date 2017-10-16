@@ -6,11 +6,11 @@
  * @version 3.0
  */
 
-namespace Backend\Controllers;
+namespace AcmeCorp\Backend\Controllers;
 
 use Reminders\ResetsPasswordsTrait;
 
-use Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Controllers\BaseController;
 
 
 class Reminders extends BaseController

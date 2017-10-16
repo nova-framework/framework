@@ -1,6 +1,6 @@
 <?php
 
-namespace FileField\Providers;
+namespace AcmeCorp\FileField\Providers;
 
 use Nova\Support\ServiceProvider;
 
@@ -17,7 +17,7 @@ class PluginServiceProvider extends ServiceProvider
         $path = realpath(__DIR__ .'/../');
 
         // Configure the Package.
-        $this->package('FileField', 'file_field', $path);
+        $this->package('AcmeCorp/FileField', 'file_field', $path);
 
         //
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Reminders;
+namespace AcmeCorp\Reminders;
 
 use Nova\Database\Connection;
 
-use Reminders\Contracts\ReminderRepositoryInterface;
-use Reminders\Contracts\RemindableInterface;
+use AcmeCorp\Reminders\Contracts\ReminderRepositoryInterface;
+use AcmeCorp\Reminders\Contracts\RemindableInterface;
 
 use Carbon\Carbon;
 
@@ -60,7 +60,7 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface
     /**
      * Create a new reminder record and token.
      *
-     * @param  \Reminders\Contracts\RemindableInterface  $user
+     * @param  \Nova\Reminders\Contracts\RemindableInterface  $user
      * @return string
      */
     public function create(RemindableInterface $user)
@@ -82,7 +82,7 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface
     /**
      * Delete all existing reset tokens from the database.
      *
-     * @param  \Reminders\Contracts\RemindableInterface  $user
+     * @param  \Nova\Reminders\Contracts\RemindableInterface  $user
      * @return int
      */
     protected function deleteExisting(RemindableInterface $user)
@@ -105,7 +105,7 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface
     /**
      * Determine if a reminder record exists and is valid.
      *
-     * @param  \Reminders\Contracts\RemindableInterface  $user
+     * @param  \Nova\Reminders\Contracts\RemindableInterface  $user
      * @param  string  $token
      * @return bool
      */
@@ -153,7 +153,7 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface
     }
 
     /**
-     * Delete expired reminders.
+     * Delete expired Reminders.
      *
      * @return void
      */
@@ -167,7 +167,7 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface
     /**
      * Create a new token for the user.
      *
-     * @param  \Reminders\Contracts\RemindableInterface  $user
+     * @param  \Nova\Reminders\Contracts\RemindableInterface  $user
      * @return string
      */
     public function createNewToken(RemindableInterface $user)

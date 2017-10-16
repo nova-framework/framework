@@ -1,10 +1,10 @@
 <?php
 
-namespace Backend\Widgets;
+namespace AcmeCorp\Backend\Widgets;
 
 use Nova\Support\Facades\View;
 
-use Backend\Models\User;
+use AcmeCorp\Backend\Models\User;
 
 
 class DashboardUsersPanel
@@ -22,6 +22,6 @@ class DashboardUsersPanel
             'link'  => site_url('admin/users'),
         );
 
-        return View::fetch('Backend::Widgets/DashboardPanel', $data);
+        return View::fetch('AcmeCorp/Backend::Widgets/DashboardPanel', $data);
     }
 }

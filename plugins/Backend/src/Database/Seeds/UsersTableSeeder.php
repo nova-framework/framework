@@ -1,13 +1,13 @@
 <?php
 
-namespace Backend\Database\Seeds;
+namespace AcmeCorp\Backend\Database\Seeds;
 
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Str;
 
-use Backend\Models\User;
+use AcmeCorp\Backend\Models\User;
 
 use Faker\Factory as FakerFactory;
 

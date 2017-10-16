@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Notifications\\": "src/"
+            "AcmeCorp\\Notifications\\": "src/"
         }
     },
     "prefer-stable": true,

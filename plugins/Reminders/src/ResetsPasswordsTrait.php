@@ -1,6 +1,6 @@
 <?php
 
-namespace Reminders;
+namespace AcmeCorp\Reminders;
 
 use Nova\Foundation\Auth\RedirectsUsersTrait;
 use Nova\Http\Request;
@@ -12,7 +12,7 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\View;
 use Nova\Support\Str;
 
-use Reminders\Support\Facades\Password;
+use AcmeCorp\Reminders\Support\Facades\Password;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

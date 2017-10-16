@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "FileField\\": "src/"
+            "AcmeCorp\\FileField\\": "src/"
         }
     },
     "prefer-stable": true,

@@ -1,12 +1,12 @@
 <?php
 
-namespace Notifications\Models;
+namespace AcmeCorp\Notifications\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Contracts\ArrayableInterface;
 
-use Notifications\Support\Collection;
+use AcmeCorp\Notifications\Support\Collection;
 
 
 class Notification extends BaseModel

@@ -1,6 +1,6 @@
 <?php
 
-namespace Notifications\Messages;
+namespace AcmeCorp\Notifications\Messages;
 
 use Nova\Bus\QueueableTrait;
 

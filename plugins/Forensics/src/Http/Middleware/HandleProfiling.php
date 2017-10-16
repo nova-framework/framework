@@ -6,13 +6,13 @@
  * @version 3.0
  */
 
-namespace Forensics\Http\Middleware;
+namespace AcmeCorp\Forensics\Http\Middleware;
 
 use Nova\Foundation\Application;
 use Nova\Http\Response;
 use Nova\Support\Str;
 
-use Forensics\Profiler;
+use AcmeCorp\Forensics\Profiler;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;

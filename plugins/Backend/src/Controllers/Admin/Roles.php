@@ -5,7 +5,7 @@
  * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
  */
 
-namespace Backend\Controllers\Admin;
+namespace AcmeCorp\Backend\Controllers\Admin;
 
 use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Support\Facades\Input;
@@ -15,8 +15,8 @@ use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
-use Backend\Controllers\BaseController;
-use Backend\Models\Role;
+use AcmeCorp\Backend\Controllers\BaseController;
+use AcmeCorp\Backend\Models\Role;
 
 
 class Roles extends BaseController

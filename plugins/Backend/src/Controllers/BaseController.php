@@ -15,6 +15,9 @@ use Backend\Models\Activity;
 use Backend\Models\Message;
 use Backend\Support\Menu;
 
+use Closure;
+
+
 class BaseController extends Controller
 {
     /**
@@ -191,12 +194,7 @@ class BaseController extends Controller
 
         $query->skip($start)->take($length);
 
-        // Retrieve the data from database.
-        $results = $query->get();
-
-        //
-        // Format the data on respect of DataTables specs.
-
+        // Calculate the columns.
         $columns = array();
 
         foreach ($options as $option) {
@@ -208,22 +206,30 @@ class BaseController extends Controller
             $columns[$key] = Arr::get($option, 'uses', $field);
         }
 
-        //
+        // Retrieve the data from database and it on respect of DataTables specs.
+        $results = $query->get();
+
         $data = array();
 
         foreach ($results as $result) {
             $record = array();
 
-            foreach ($columns as $key => $value) {
-                // Process for standard columns.
-                if (is_string($value)) {
-                    $record[$key] = $result->{$value};
-
+            foreach ($columns as $key => $field) {
+                if (is_null($field)) {
                     continue;
                 }
 
                 // Process for dynamic columns.
-                $record[$key] = call_user_func($value, $result, $key);
+                else if ($field instanceof Closure) {
+                    $value = call_user_func($field, $result, $key);
+                }
+
+                // Process for standard columns.
+                else {
+                    $value = $result->{$field};
+                }
+
+                $record[$key] = $value;
             }
 
             $data[] = $record;

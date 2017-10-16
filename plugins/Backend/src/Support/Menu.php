@@ -89,14 +89,14 @@ class Menu
     public function addItem($key, $name, $url, $sort = 0, $icon = null)
     {
         $item = array(
-            'key'        => $key,
-            'name'        => $name,
-            'url'        => $url,
-            'sort'        => $sort,
-            'icon'        => $icon,
+            'key'  => $key,
+            'name' => $name,
+            'url'  => $url,
+            'sort' => $sort,
+            'icon' => $icon,
 
             // Add the children for convenience.
-            'children'    => array(),
+            'children' => array(),
         );
 
         // Get the qualified item key.

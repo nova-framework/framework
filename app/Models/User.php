@@ -46,7 +46,7 @@ class User extends BaseModel implements UserInterface, RemindableInterface
 
     public function picture()
     {
-        $path = str_replace(ROOTDIR, '', (string) $this->getAttribute('image'));
+        $path = 'assets/images/users/' .basename((string) $this->getAttribute('image'));
 
         return site_url($path);
     }

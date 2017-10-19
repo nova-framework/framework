@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\Platform\Controllers;
+namespace App\Modules\Users\Controllers;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Gate;
@@ -40,14 +40,14 @@ class Account extends BaseController
         );
 
         $messages = array(
-            'valid_password'  => __d('system', 'The :attribute field is invalid.'),
-            'strong_password' => __d('system', 'The :attribute field is not strong enough.'),
+            'valid_password'  => __d('users', 'The :attribute field is invalid.'),
+            'strong_password' => __d('users', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'current_password'      => __d('system', 'Current Password'),
-            'password'              => __d('system', 'New Password'),
-            'password_confirmation' => __d('system', 'Password Confirmation'),
+            'current_password'      => __d('users', 'Current Password'),
+            'password'              => __d('users', 'New Password'),
+            'password_confirmation' => __d('users', 'Password Confirmation'),
         );
 
         // Add the custom Validation Rule commands.
@@ -71,7 +71,7 @@ class Account extends BaseController
         $user = Auth::user();
 
         return $this->createView()
-            ->shares('title',  __d('system', 'Account'))
+            ->shares('title',  __d('users', 'Account'))
             ->with('user', $user);
     }
 
@@ -99,7 +99,7 @@ class Account extends BaseController
         $user->save();
 
         // Use a Redirect to avoid the reposting the data.
-        $status = __d('system', 'You have successfully updated your Password.');
+        $status = __d('users', 'You have successfully updated your Password.');
 
         return Redirect::back()->withStatus($status);
     }
@@ -113,7 +113,7 @@ class Account extends BaseController
 
         // Create a Validator instance.
         $validator = Validator::make($input,
-            array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'), array(), array('id' => __d('system', 'Image'))
+            array('image' => 'required|max:1024|mimes:png,jpg,jpeg,gif'), array(), array('id' => __d('users', 'Image'))
         );
 
         // Validate the Input.
@@ -127,7 +127,7 @@ class Account extends BaseController
         $user->save();
 
         // Prepare the flash message.
-        $status = __d('system', 'The Profile Picture was successfully updated.');
+        $status = __d('users', 'The Profile Picture was successfully updated.');
 
         return Redirect::to('account')->withStatus($status);
     }

@@ -9,6 +9,12 @@
 
 /** Define static routes. */
 
+// The User's Account.
+Route::get( 'account',         array('before' => 'auth',      'uses' => 'Account@index'));
+Route::post('account',         array('before' => 'auth|csrf', 'uses' => 'Account@update'));
+Route::post('account/picture', array('before' => 'auth|csrf', 'uses' => 'Account@picture'));
+
+
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {

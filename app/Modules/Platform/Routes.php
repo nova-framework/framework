@@ -27,11 +27,6 @@ Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
 
 Route::get('dashboard/notify', array('before' => 'auth', 'uses' => 'Dashboard@notify'));
 
-// The User's Account.
-Route::get( 'account',         array('before' => 'auth',      'uses' => 'Account@index'));
-Route::post('account',         array('before' => 'auth|csrf', 'uses' => 'Account@update'));
-Route::post('account/picture', array('before' => 'auth|csrf', 'uses' => 'Account@picture'));
-
 // The Heartbeat
 Route::post('heartbeat', array('before' => 'auth|csrf', 'uses' => 'Heartbeat@update'));
 

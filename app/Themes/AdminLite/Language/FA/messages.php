@@ -8,6 +8,7 @@ return array (
   'Forgot Password?' => 'فراموشی رمزعبور؟',
   'Logout' => 'خروج',
   'Member since {0}' => 'عضو از {0}',
+  'Private Area' => '',
   'Profile' => 'پروفایل',
   'Search...' => '',
   'Sign In' => 'ورود',

@@ -8,6 +8,7 @@ return array (
   'Forgot Password?' => '',
   'Logout' => '',
   'Member since {0}' => '',
+  'Private Area' => '',
   'Profile' => '',
   'Search...' => '',
   'Sign In' => '',

@@ -31,33 +31,35 @@ return array(
     //--------------------------------------------------------------------------
 
     'modules' => array(
-        'demos' => array(
-            'name'     => 'Modules/Demos',
-            'basename' => 'Demos',
+        'platform' => array(
+            'name'     => 'Modules/Platform',
+            'basename' => 'Platform',
             'enabled'  => true,
-            'order'    => 10001,
+            'order'    => 7001,
         ),
-        /*
-        'files' => array(
-            'name'     => 'Modules/Files',
-            'basename' => 'Files',
-            'enabled'  => true,
-            'order'    => 9001,
-        ),
-        */
-        'system' => array(
-            'name'     => 'Modules/System',
-            'basename' => 'System',
+        'permissions' => array(
+            'name'     => 'Modules/Permissions',
+            'basename' => 'Permissions',
             'enabled'  => true,
             'order'    => 8001,
         ),
-        /*
+        'roles' => array(
+            'name'     => 'Modules/Roles',
+            'basename' => 'Roles',
+            'enabled'  => true,
+            'order'    => 8002,
+        ),
         'users' => array(
             'name'     => 'Modules/Users',
             'basename' => 'Users',
             'enabled'  => true,
+            'order'    => 8003,
+        ),
+        'messages' => array(
+            'name'     => 'Modules/Messages',
+            'basename' => 'Messages',
+            'enabled'  => true,
             'order'    => 9001,
         ),
-        */
     ),
 );

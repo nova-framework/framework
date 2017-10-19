@@ -6,7 +6,7 @@ use Nova\Auth\Access\GateInterface as Gate;
 use Nova\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Nova\Support\Facades\Cache;
 
-use App\Models\Permission;
+use App\Modules\Permissions\Models\Permission;
 
 
 class AuthServiceProvider extends ServiceProvider
@@ -17,10 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = array(
-        'App\Models\Option'     => 'App\Policies\OptionPolicy',
-        'App\Models\Permission' => 'App\Policies\PermissionPolicy',
-        'App\Models\Role'       => 'App\Policies\RolePolicy',
-        'App\Models\User'       => 'App\Policies\UserPolicy',
+        'App\Models\SomeModel' => 'App\Policies\ModelPolicy',
     );
 
 

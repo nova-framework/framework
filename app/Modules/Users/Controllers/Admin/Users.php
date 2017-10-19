@@ -18,9 +18,9 @@ use Nova\Support\Facades\File;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 
-use App\Modules\System\Controllers\Admin\BaseController;
-use App\Models\Role;
-use App\Models\User;
+use App\Modules\Platform\Controllers\Admin\BaseController;
+use App\Modules\Roles\Models\Role;
+use App\Modules\Users\Models\User;
 
 use Carbon\Carbon;
 

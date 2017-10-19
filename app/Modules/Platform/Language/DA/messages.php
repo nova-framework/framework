@@ -55,7 +55,6 @@ return array (
   'Password Recovery' => 'Gendannelse af kodeord',
   'Password Reset' => 'Nulstil kodeord',
   'Passwords must be strong enough and match the confirmation.' => 'Koden skal være stærkt nok og passe med bekræftelsen',
-  'Platform' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => 'Indtast din e-mail for at få tilsendt nulstillings linket.',
   'Profile Picture' => '',
   'Profile Picture (to change)' => '',

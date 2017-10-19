@@ -55,7 +55,6 @@ return array (
   'Password Recovery' => '',
   'Password Reset' => '',
   'Passwords must be strong enough and match the confirmation.' => '',
-  'Platform' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => '',
   'Profile Picture' => '',
   'Profile Picture (to change)' => '',

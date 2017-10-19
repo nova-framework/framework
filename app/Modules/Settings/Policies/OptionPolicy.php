@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Platform\Policies;
+namespace App\Modules\Settings\Policies;
 
 use App\Modules\Users\Models\User;
 use App\Models\Option;
@@ -21,6 +21,6 @@ class OptionPolicy
      */
     public function manage(User $authUser)
     {
-        return $authUser->hasPermission('platform.options.manage');
+        return $authUser->hasPermission('module.settings.manage');
     }
 }

@@ -8,7 +8,7 @@
 | Here is where you can register all of the Events for the module.
 */
 
-use App\Models\Option;
+use App\Modules\Settings\Models\Option;
 
 
 Event::listen('backend.menu.sidebar', function ()

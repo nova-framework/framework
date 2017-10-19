@@ -3,7 +3,7 @@
 namespace App\Modules\Settings\Policies;
 
 use App\Modules\Users\Models\User;
-use App\Models\Option;
+use App\Modules\Settings\Models\Option;
 
 use Nova\Auth\Access\HandlesAuthorizationTrait;
 

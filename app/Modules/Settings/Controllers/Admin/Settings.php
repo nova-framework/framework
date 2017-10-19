@@ -12,7 +12,7 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Modules\Platform\Controllers\Admin\BaseController;
-use App\Models\Option;
+use App\Modules\Settings\Models\Option;
 
 
 class Settings extends BaseController

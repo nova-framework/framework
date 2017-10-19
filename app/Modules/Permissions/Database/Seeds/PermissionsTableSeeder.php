@@ -26,7 +26,7 @@ class PermissionsTableSeeder extends Seeder
                 'slug'  => 'module.permissions.manage',
                 'group' => 'permissions',
 
-                'roles' => array(1),
+                'roles' => array(1, 2),
             ),
         );
 

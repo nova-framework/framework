@@ -13,7 +13,7 @@ return array (
   'Receiver' => '',
   'Reply' => '',
   'Reply to this {0, select, 0 {message} other {thread}}...' => '',
-  'Required field' => 'Skal udfyldes',
+  'Required field' => '',
   'Send' => '',
   'Send Message' => '',
   'Send a Message' => '',

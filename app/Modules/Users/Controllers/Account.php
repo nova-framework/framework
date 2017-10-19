@@ -17,7 +17,7 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Modules\Platform\Controllers\BaseController;
-use App\Models\User;
+use App\Modules\Users\Models\User;
 
 
 class Account extends BaseController

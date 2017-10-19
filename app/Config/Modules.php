@@ -37,6 +37,12 @@ return array(
             'enabled'  => true,
             'order'    => 7001,
         ),
+        'settings' => array(
+            'name'     => 'Modules/Settings',
+            'basename' => 'Settings',
+            'enabled'  => true,
+            'order'    => 7002,
+        ),
         'permissions' => array(
             'name'     => 'Modules/Permissions',
             'basename' => 'Permissions',
@@ -54,12 +60,6 @@ return array(
             'basename' => 'Users',
             'enabled'  => true,
             'order'    => 8003,
-        ),
-        'settings' => array(
-            'name'     => 'Modules/Settings',
-            'basename' => 'Settings',
-            'enabled'  => true,
-            'order'    => 8005,
         ),
         'messages' => array(
             'name'     => 'Modules/Messages',

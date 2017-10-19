@@ -36,4 +36,28 @@ trait CreatePermissionsTrait
         // Invalidate the cached system permissions.
         Cache::forget('system_permissions');
     }
+
+    /**
+     * Uninstall the permissions from the given group.
+     *
+     * @return void
+     */
+    public function deletePermissions($group)
+    {
+        try {
+            $permissions = Permission::where('group', $group)->get();
+
+            foreach ($permissions as $permission) {
+                $permission->roles()->detach();
+
+                $permission->delete();
+            }
+        }
+        catch (QueryException $e) {
+            //
+        }
+
+        // Invalidate the cached system permissions.
+        Cache::forget('system_permissions');
+    }
 }

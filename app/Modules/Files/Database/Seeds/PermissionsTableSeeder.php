@@ -5,12 +5,12 @@ namespace App\Modules\Files\Database\Seeds;
 use Nova\Database\ORM\Model;
 use Nova\Database\Seeder;
 
-use App\Modules\Platform\Database\InstallPermissionsTrait;
+use App\Modules\Platform\Database\CreatePermissionsTrait;
 
 
 class PermissionsTableSeeder extends Seeder
 {
-    use InstallPermissionsTrait;
+    use CreatePermissionsTrait;
 
 
     /**
@@ -37,6 +37,6 @@ class PermissionsTableSeeder extends Seeder
             ),
         );
 
-        $this->installPermissions($permissions);
+        $this->createPermissions($permissions);
     }
 }

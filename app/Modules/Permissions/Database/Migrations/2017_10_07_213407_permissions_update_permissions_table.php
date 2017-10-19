@@ -6,7 +6,7 @@ use Nova\Database\Migrations\Migration;
 use App\Modules\Platform\Database\DeletePermissionsTrait;
 
 
-class RolesUpdatePermissionsTable extends Migration
+class PermissionsUpdatePermissionsTable extends Migration
 {
     use DeletePermissionsTrait;
 
@@ -28,6 +28,6 @@ class RolesUpdatePermissionsTable extends Migration
      */
     public function down()
     {
-        $this->deletePermissions('roles');
+        $this->deletePermissions('permissions');
     }
 }

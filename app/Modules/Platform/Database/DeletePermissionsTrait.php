@@ -8,7 +8,7 @@ use Nova\Support\Facades\Cache;
 use App\Modules\Permissions\Models\Permission;
 
 
-trait UninstallPermissionsTrait
+trait DeletePermissionsTrait
 {
 
     /**
@@ -16,7 +16,7 @@ trait UninstallPermissionsTrait
      *
      * @return void
      */
-    public function uninstallPermissions($group)
+    public function deletePermissions($group)
     {
         try {
             $permissions = Permission::where('group', $group)->get();

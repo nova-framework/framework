@@ -3,12 +3,12 @@
 use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
-use App\Modules\Platform\Database\UninstallPermissionsTrait;
+use App\Modules\Platform\Database\DeletePermissionsTrait;
 
 
 class SystemUpdatePermissionsTable extends Migration
 {
-    use UninstallPermissionsTrait;
+    use DeletePermissionsTrait;
 
 
     /**
@@ -28,6 +28,6 @@ class SystemUpdatePermissionsTable extends Migration
      */
     public function down()
     {
-        $this->uninstallPermissions('platform');
+        $this->deletePermissions('platform');
     }
 }

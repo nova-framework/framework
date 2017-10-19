@@ -7,7 +7,7 @@ use Nova\Support\Facades\Cache;
 use App\Modules\Permissions\Models\Permission;
 
 
-trait InstallPermissionsTrait
+trait CreatePermissionsTrait
 {
 
     /**
@@ -15,7 +15,7 @@ trait InstallPermissionsTrait
      *
      * @return void
      */
-    public function installPermissions(array $items)
+    public function createPermissions(array $items)
     {
         foreach ($items as $item) {
             $permission = Permission::create(array(

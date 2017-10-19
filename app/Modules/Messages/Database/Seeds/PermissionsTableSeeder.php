@@ -29,15 +29,15 @@ class PermissionsTableSeeder extends Seeder
                 'roles' => array(1, 2, 3, 4),
             ),
             array(
-                'name'  => 'Send Messages to other Users',
-                'slug'  => 'module.messages.send',
+                'name'  => 'View the Messages',
+                'slug'  => 'module.messages.view',
                 'group' => 'messages',
 
                 'roles' => array(1, 2, 3, 4),
             ),
             array(
-                'name'  => 'Receive Messages from other Users',
-                'slug'  => 'module.messages.receive',
+                'name'  => 'Create new Messages',
+                'slug'  => 'module.messages.create',
                 'group' => 'messages',
 
                 'roles' => array(1, 2, 3, 4),

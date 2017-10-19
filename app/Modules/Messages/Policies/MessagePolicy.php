@@ -25,24 +25,24 @@ class MessagePolicy
     }
 
     /**
-     * Determine whether the user can send messages.
+     * Determine whether the user can view messages.
      *
      * @param  \App\Moudules\Users\Models\User  $authUser
      * @return mixed
      */
-    public function send(User $authUser)
+    public function view(User $authUser)
     {
-        return $authUser->hasPermission('module.messages.send');
+        return $authUser->hasPermission('module.messages.view');
     }
 
     /**
-     * Determine whether the user can receive messages.
+     * Determine whether the user can create messages.
      *
      * @param  \App\Moudules\Users\Models\User  $authUser
      * @return mixed
      */
-    public function receive(User $authUser)
+    public function create(User $authUser)
     {
-        return $authUser->hasPermission('module.messages.receive');
+        return $authUser->hasPermission('module.messages.create');
     }
 }

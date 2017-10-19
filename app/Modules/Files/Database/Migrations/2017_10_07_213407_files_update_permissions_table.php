@@ -3,7 +3,7 @@
 use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
-use App\Database\UninstallPermissionsTrait;
+use App\Modules\Platform\Database\UninstallPermissionsTrait;
 
 
 class FilesUpdatePermissionsTable extends Migration

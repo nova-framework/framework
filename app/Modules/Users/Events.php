@@ -6,9 +6,7 @@
  * @version 3.0
  */
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\User;
+use App\Modules\Users\Models\User;
 
 
 /** Define Events. */
@@ -16,15 +14,6 @@ use App\Models\User;
 Event::listen('backend.menu.sidebar', function ()
 {
     return array(
-        array(
-            'url'    => '#',
-            'title'  => __d('users', 'Platform'),
-            'icon'   => 'cube',
-            'weight' => 0,
-
-            //
-            'path'   => 'platform',
-        ),
         array(
             'url'    => '#',
             'title'  => __d('users', 'Users'),
@@ -53,26 +42,6 @@ Event::listen('backend.menu.sidebar', function ()
             //
             'path'   => 'users.create',
             'can'    => 'create:' .User::class,
-        ),
-        array(
-            'url'    => site_url('admin/roles'),
-            'title'  => __d('users', 'User Roles'),
-            'icon'   => 'circle-o',
-            'weight' => 1,
-
-            //
-            'path'   => 'platform.roles',
-            'can'    => 'lists:' .Role::class,
-        ),
-        array(
-            'url'    => site_url('admin/permissions'),
-            'title'  => __d('users', 'Permissions'),
-            'icon'   => 'circle-o',
-            'weight' => 1,
-
-            //
-            'path'   => 'platform.permissions',
-            'can'    => 'manage:' .Permission::class,
         ),
     );
 });

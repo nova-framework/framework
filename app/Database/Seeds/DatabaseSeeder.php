@@ -17,8 +17,5 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         //
-        $this->call('App\Database\Seeds\RolesTableSeeder');
-        $this->call('App\Database\Seeds\PermissionsTableSeeder');
-        $this->call('App\Database\Seeds\UsersTableSeeder');
     }
 }

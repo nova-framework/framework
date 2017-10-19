@@ -2,12 +2,14 @@
 
 namespace App\Modules\Platform\Database;
 
+use Nova\Database\QueryException;
 use Nova\Support\Facades\Cache;
+use Nova\Support\Facades\Schema;
 
 use App\Modules\Permissions\Models\Permission;
 
 
-trait CreatePermissionsTrait
+trait ManagePermissionsTrait
 {
 
     /**
@@ -18,23 +20,24 @@ trait CreatePermissionsTrait
     public function createPermissions(array $items)
     {
         foreach ($items as $item) {
-            $permission = Permission::create(array(
-                'name'  => $item['name'],
-                'slug'  => $item['slug'],
-                'group' => $item['group'],
-            ));
-
-            if (isset($item['roles'])) {
-                $roles = $item['roles'];
-
-                $permission->roles()->sync($roles);
-            } else {
-                $permission->roles()->detach();
-            }
+            $this->createPermission($item);
         }
 
         // Invalidate the cached system permissions.
         Cache::forget('system_permissions');
+    }
+
+    protected function createPermission(array $item)
+    {
+        $roles = isset($item['roles']) ? $item['roles'] : array();
+
+        $permission = Permission::create(array(
+            'name'  => $item['name'],
+            'slug'  => $item['slug'],
+            'group' => $item['group'],
+        ));
+
+        $permission->roles()->sync($roles);
     }
 
     /**
@@ -44,17 +47,14 @@ trait CreatePermissionsTrait
      */
     public function deletePermissions($group)
     {
-        try {
-            $permissions = Permission::where('group', $group)->get();
+        $permissions = Permission::where('group', $group)->get();
 
-            foreach ($permissions as $permission) {
+        foreach ($permissions as $permission) {
+            if (Schema::hasTable('role_permission')) {
                 $permission->roles()->detach();
-
-                $permission->delete();
             }
-        }
-        catch (QueryException $e) {
-            //
+
+            $permission->delete();
         }
 
         // Invalidate the cached system permissions.

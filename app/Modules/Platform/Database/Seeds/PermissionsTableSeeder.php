@@ -28,6 +28,13 @@ class PermissionsTableSeeder extends Seeder
 
                 'roles' => array(1, 2),
             ),
+            array(
+                'name'  => 'Manage the Platform Settings',
+                'slug'  => 'platform.settings.manage',
+                'group' => 'platform',
+
+                'roles' => array(1, 2),
+            ),
         );
 
         $this->installPermissions($permissions);

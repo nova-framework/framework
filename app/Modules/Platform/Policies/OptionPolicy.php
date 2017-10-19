@@ -21,6 +21,6 @@ class OptionPolicy
      */
     public function manage(User $authUser)
     {
-        return $authUser->hasPermission('module.settings.manage');
+        return $authUser->hasPermission('platform.settings.manage');
     }
 }

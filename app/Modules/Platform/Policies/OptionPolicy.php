@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Settings\Policies;
+namespace App\Modules\Platform\Policies;
 
 use App\Modules\Users\Models\User;
-use App\Modules\Settings\Models\Option;
+use App\Modules\Platform\Models\Option;
 
 use Nova\Auth\Access\HandlesAuthorizationTrait;
 

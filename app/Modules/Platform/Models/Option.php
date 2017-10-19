@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Settings\Models;
+namespace App\Modules\Platform\Models;
 
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Database\QueryException;

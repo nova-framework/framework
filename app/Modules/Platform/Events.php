@@ -6,6 +6,8 @@
  * @version 3.0
  */
 
+use App\Modules\Platform\Models\Option;
+
 
 Event::listen('frontend.menu.left', function ()
 {
@@ -76,6 +78,25 @@ Event::listen('backend.menu.sidebar', function ()
 
             //
             'path'   => 'dashboard',
+        ),
+        array(
+            'url'    => '#',
+            'title'  => __d('settings', 'Platform'),
+            'icon'   => 'cube',
+            'weight' => 0,
+
+            //
+            'path'   => 'platform',
+        ),
+        array(
+            'url'    => site_url('admin/settings'),
+            'title'  => __d('settings', 'Settings'),
+            'icon'   => 'circle-o',
+            'weight' => 0,
+
+            //
+            'path'   => 'platform.settings',
+            'can'    => 'manage:' .Option::class,
         ),
     );
 });

@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Settings\Models\Option;
+use App\Modules\Platform\Models\Option;
 
 use Nova\Auth\Access\AuthorizationException;
 

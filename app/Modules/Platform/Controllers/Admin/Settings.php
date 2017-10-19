@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Settings\Controllers\Admin;
+namespace App\Modules\Platform\Controllers\Admin;
 
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Support\Facades\Cache;
@@ -12,7 +12,7 @@ use Nova\Support\Facades\Validator;
 use Nova\Support\Facades\View;
 
 use App\Modules\Platform\Controllers\Admin\BaseController;
-use App\Modules\Settings\Models\Option;
+use App\Modules\Platform\Models\Option;
 
 
 class Settings extends BaseController

@@ -8,7 +8,7 @@ use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Response;
 
-use App\Modules\System\Controllers\BaseController;
+use App\Modules\Platform\Controllers\BaseController;
 use App\Models\User;
 
 use App\Modules\Chat\Models\Message;

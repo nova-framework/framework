@@ -27,17 +27,21 @@ trait ManagePermissionsTrait
         Cache::forget('system_permissions');
     }
 
-    protected function createPermission(array $item)
+    protected function createPermission(array $permission)
     {
-        $roles = isset($item['roles']) ? $item['roles'] : array();
-
-        $permission = Permission::create(array(
-            'name'  => $item['name'],
-            'slug'  => $item['slug'],
-            'group' => $item['group'],
+        $instance = Permission::create(array(
+            'name'  => $permission['name'],
+            'slug'  => $permission['slug'],
+            'group' => $permission['group'],
         ));
 
-        $permission->roles()->sync($roles);
+        if (! Schema::hasTable('role_permission')) {
+            return;
+        }
+
+        $roles = isset($permission['roles']) ? $permission['roles'] : array();
+
+        $instance->roles()->sync($roles);
     }
 
     /**

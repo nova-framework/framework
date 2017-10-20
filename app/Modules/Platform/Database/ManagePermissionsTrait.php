@@ -13,7 +13,7 @@ trait ManagePermissionsTrait
 {
 
     /**
-     * Install the given permissions.
+     * Create permissions from the given array of permission attributes.
      *
      * @return void
      */
@@ -27,23 +27,20 @@ trait ManagePermissionsTrait
         Cache::forget('system_permissions');
     }
 
+    /**
+     * Create a new Permission from an array of attributes.
+     *
+     * @return void
+     */
     protected function createPermission(array $attributes)
     {
         $updateRoles = Schema::hasTable('role_permission');
 
-        // Extract the attributes.
+        //
         extract($attributes);
 
-        // We will remove the Permission with this slug.
-        $permission = Permission::where('slug', $slug)->first();
-
-        if (! is_null($permission)) {
-            if ($updateRoles) {
-                $permission->roles()->dettach();
-            }
-
-            $permission->delete();
-        }
+        // First, we will remove the existent Permission with this slug.
+        $this->deletePermission($slug);
 
         // Create the new Permission instance.
         $permission = Permission::create(array(
@@ -60,7 +57,25 @@ trait ManagePermissionsTrait
     }
 
     /**
-     * Uninstall the permissions from the given group.
+     * Delete the Permission with the given slug.
+     *
+     * @return void
+     */
+    protected function deletePermission($slug, $updateRoles = true)
+    {
+        $permission = Permission::where('slug', $slug)->first();
+
+        if (is_null($permission)) {
+            return;
+        } else if ($updateRoles) {
+            $permission->roles()->dettach();
+        }
+
+        $permission->delete();
+    }
+
+    /**
+     * Delete all permissions from the given group.
      *
      * @return void
      */
@@ -68,14 +83,10 @@ trait ManagePermissionsTrait
     {
         $updateRoles = Schema::hasTable('role_permission');
 
-        $permissions = Permission::where('group', $group)->get();
+        $permissions = Permission::where('group', $group)->lists('slug');
 
-        foreach ($permissions as $permission) {
-            if ($updateRoles) {
-                $permission->roles()->dettach();
-            }
-
-            $permission->delete();
+        foreach ($permissions as $slug) {
+            $this->deletePermission($slug, $updateRoles);
         }
 
         // Invalidate the cached system permissions.

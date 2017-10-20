@@ -60,31 +60,17 @@ trait ManagePermissionsTrait
     {
         $updateRoles = Schema::hasTable('role_permission');
 
-        $permissions = Permission::where('group', $group)->lists('slug');
+        $permissions = Permission::where('group', $group)->get();
 
-        foreach ($permissions as $slug) {
-            $this->deletePermission($slug, $updateRoles);
+        foreach ($permissions as $permission) {
+            if ($updateRoles) {
+                $permission->roles()->dettach();
+            }
+
+            $permission->delete();
         }
 
         // Invalidate the cached system permissions.
         Cache::forget('system_permissions');
-    }
-
-    /**
-     * Delete the Permission with the given slug.
-     *
-     * @return void
-     */
-    protected function deletePermission($slug, $updateRoles = true)
-    {
-        $permission = Permission::where('slug', $slug)->first();
-
-        if (is_null($permission)) {
-            return;
-        } else if ($updateRoles) {
-            $permission->roles()->dettach();
-        }
-
-        $permission->delete();
     }
 }

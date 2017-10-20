@@ -44,6 +44,9 @@ Assets::js(array(
                 path: '/',
                 secure: false,
             },
+            customData: {
+                csrfToken: "<?= csrf_token(); ?>"
+            }
         }).elfinder('instance');
     });
 </script>

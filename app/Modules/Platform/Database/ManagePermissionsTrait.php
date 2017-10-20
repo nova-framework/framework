@@ -45,7 +45,9 @@ trait ManagePermissionsTrait
         $permission = Permission::updateOrCreate(array('slug' => $slug), $attributes);
 
         if (isset($roles) && $updateRoles) {
-            if (! is_array($roles)) $roles = array($roles);
+            if (! is_array($roles)) {
+                $roles = array($roles);
+            }
 
             $permission->roles()->sync($roles);
         }

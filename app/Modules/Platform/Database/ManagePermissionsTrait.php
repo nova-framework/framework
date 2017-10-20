@@ -39,39 +39,16 @@ trait ManagePermissionsTrait
         //
         extract($attributes);
 
-        // First, we will remove the existent Permission with this slug.
-        $this->deletePermission($slug);
+        unset($attributes['roles']);
 
-        // Create the new Permission instance.
-        $permission = Permission::create(array(
-            'name'  => $name,
-            'slug'  => $slug,
-            'group' => $group,
-        ));
+        // Update or create a new Permission instance.
+        $permission = Permission::updateOrCreate(array('slug' => $slug), $attributes);
 
         if (isset($roles) && $updateRoles) {
             if (! is_array($roles)) $roles = array($roles);
 
             $permission->roles()->sync($roles);
         }
-    }
-
-    /**
-     * Delete the Permission with the given slug.
-     *
-     * @return void
-     */
-    protected function deletePermission($slug, $updateRoles = true)
-    {
-        $permission = Permission::where('slug', $slug)->first();
-
-        if (is_null($permission)) {
-            return;
-        } else if ($updateRoles) {
-            $permission->roles()->dettach();
-        }
-
-        $permission->delete();
     }
 
     /**
@@ -91,5 +68,23 @@ trait ManagePermissionsTrait
 
         // Invalidate the cached system permissions.
         Cache::forget('system_permissions');
+    }
+
+    /**
+     * Delete the Permission with the given slug.
+     *
+     * @return void
+     */
+    protected function deletePermission($slug, $updateRoles = true)
+    {
+        $permission = Permission::where('slug', $slug)->first();
+
+        if (is_null($permission)) {
+            return;
+        } else if ($updateRoles) {
+            $permission->roles()->dettach();
+        }
+
+        $permission->delete();
     }
 }

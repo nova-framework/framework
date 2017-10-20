@@ -2,11 +2,11 @@
 
 namespace App\Modules\Platform\Controllers;
 
+use Nova\Routing\Controller;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Response;
 
-use App\Modules\Platform\Controllers\BaseController;
 use App\Modules\Messages\Models\Message;
 
 

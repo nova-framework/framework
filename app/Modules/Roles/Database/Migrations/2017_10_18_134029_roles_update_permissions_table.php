@@ -3,12 +3,12 @@
 use Nova\Database\Schema\Blueprint;
 use Nova\Database\Migrations\Migration;
 
-use App\Modules\Platform\Database\DeletePermissionsTrait;
+use App\Modules\Platform\Database\ManagePermissionsTrait;
 
 
 class RolesUpdatePermissionsTable extends Migration
 {
-    use DeletePermissionsTrait;
+    use ManagePermissionsTrait;
 
 
     /**

@@ -9,15 +9,8 @@
 <section class="content">
 
 <?= Session::getMessages(); ?>
-<!--
-<div class="box box-widget">
-    <div class="box-body">
 
-    </div>
-</div>
--->
-
-<div class="box box-widget">
+<div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('users', 'Users on-line'); ?></h3>
         <div class="box-tools">

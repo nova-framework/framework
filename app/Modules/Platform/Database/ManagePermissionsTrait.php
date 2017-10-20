@@ -29,15 +29,30 @@ trait ManagePermissionsTrait
 
     protected function createPermission(array $attributes)
     {
+        $updateRoles = Schema::hasTable('role_permission');
+
+        // Extract the attributes.
         extract($attributes);
 
+        // We will remove the Permission with this slug.
+        $permission = Permission::where('slug', $slug)->first();
+
+        if (! is_null($permission)) {
+            if ($updateRoles) {
+                $permission->roles()->dettach();
+            }
+
+            $permission->delete();
+        }
+
+        // Create the new Permission instance.
         $permission = Permission::create(array(
             'name'  => $name,
             'slug'  => $slug,
             'group' => $group,
         ));
 
-        if (isset($roles) && Schema::hasTable('role_permission')) {
+        if (isset($roles) && $updateRoles) {
             if (! is_array($roles)) $roles = array($roles);
 
             $permission->roles()->sync($roles);

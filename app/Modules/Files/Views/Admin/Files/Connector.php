@@ -1,12 +1,5 @@
 <?php
 
-$basePath = str_replace('/', DS, APPDIR .'Modules/Files/Lib/elFinder/');
-
-require $basePath .'elFinderConnector.class.php';
-require $basePath .'elFinder.class.php';
-require $basePath .'elFinderVolumeDriver.class.php';
-require $basePath .'elFinderVolumeLocalFileSystem.class.php';
-
 /**
  * Simple function to demonstrate how to control file access using "accessControl" callback.
  * This method will disable accessing files/folders starting from '.' (dot)

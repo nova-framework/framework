@@ -16,14 +16,14 @@
 <?php
 
 Assets::css(array(
-    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css',
-    site_url('modules/files/assets/css/elfinder.min.css'),
-    site_url('modules/files/assets/css/theme.css')
+    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css',
+    vendor_url('css/elfinder.min.css', 'studio-42/elfinder'),
+    vendor_url('css/theme.css', 'studio-42/elfinder')
 ));
 
 Assets::js(array(
-    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js',
-    site_url('modules/files/assets/js/elfinder.full.js')
+    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
+    vendor_url('js/elfinder.full.js', 'studio-42/elfinder')
 ));
 
 ?>

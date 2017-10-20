@@ -112,16 +112,27 @@ trait FileFieldTrait
 
         // Handle the string values - files specified by path.
         else if (is_string($value)) {
+            $rawValue = false;
+
+            if (Str::startsWith($value, 'raw:')) {
+                $rawValue = true;
+
+                $value = substr($value, 4);
+            }
+
             $name = pathinfo($value, PATHINFO_FILENAME);
 
             $extension = pathinfo($value, PATHINFO_EXTENSION);
 
             $fileName = join('.', array($name, $extension));
 
-            //
-            $fileField = new FileField($this, $key, $fileName);
+            if (! $rawValue) {
+                $fileField = new FileField($this, $key, $fileName);
 
-            $this->attributes[$key] = $fileField->copyLocal($value);
+                $value = $fileField->copyLocal($value);
+            }
+
+            $this->attributes[$key] = $value;
         }
     }
 }

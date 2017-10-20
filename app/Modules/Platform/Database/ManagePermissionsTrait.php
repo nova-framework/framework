@@ -53,10 +53,12 @@ trait ManagePermissionsTrait
      */
     public function deletePermissions($group)
     {
+        $detachRoles = Schema::hasTable('role_permission');
+
         $permissions = Permission::where('group', $group)->get();
 
         foreach ($permissions as $permission) {
-            if (Schema::hasTable('role_permission')) {
+            if ($detachRoles) {
                 $permission->roles()->detach();
             }
 

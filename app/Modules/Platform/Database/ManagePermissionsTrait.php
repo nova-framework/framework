@@ -41,6 +41,8 @@ trait ManagePermissionsTrait
 
         $roles = isset($permission['roles']) ? $permission['roles'] : array();
 
+        if (! is_array($roles)) $roles = array($roles);
+
         $instance->roles()->sync($roles);
     }
 

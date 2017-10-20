@@ -2,6 +2,7 @@
 
 namespace App\Modules\Platform\Controllers;
 
+use Nova\Http\Request;
 use Nova\Routing\Controller;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Input;
@@ -13,8 +14,12 @@ use App\Modules\Messages\Models\Message;
 class Heartbeat extends BaseController
 {
 
-    public function update()
+    public function update(Request $request)
     {
+        // Update the User Activity.
+        Activity::updateCurrent($request);
+
+        //
         $authUser = Auth::user();
 
         $lastId = (int) Input::get('last_id', 0);

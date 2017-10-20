@@ -47,7 +47,7 @@ return array(
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),
         ),
         array(
-            'alias'         => 'root',
+            'alias'         => 'rootdir',
             'driver'        => 'LocalFileSystem',
             'path'          => ROOTDIR,
             'URL'           => site_url('admin/files/preview/'),

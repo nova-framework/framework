@@ -6,6 +6,22 @@
  * @version 3.0
  */
 
+/**
+ * Simple function to demonstrate how to control file access using "accessControl" callback.
+ * This method will disable accessing files/folders starting from '.' (dot)
+ *
+ * @param  string  $attr  attribute name (read|write|locked|hidden)
+ * @param  string  $path  file path relative to volume root directory started with directory separator
+ * @return bool|null
+ **/
+
+$callback = function ($attr, $path, $data, $volume)
+{
+    return (strpos(basename($path), '.') === 0)       // if file/folder begins with '.' (dot)
+            ? ! ($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
+            :  null;                                  // else elFinder decide it itself
+};
+
 
 return array(
     'locale' => 'en_US.UTF-8',
@@ -25,7 +41,7 @@ return array(
             'tmbCrop'       => false,
             'tmbSize'       => 48,
             'acceptedName'  => '/^[^\.].*$/',
-            'accessControl' => 'access',
+            'accessControl' => $callback,
             'dateFormat'    => 'j M Y H:i',
             'defaults'      => array('read' => true, 'write' => true),
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),
@@ -43,7 +59,7 @@ return array(
             'tmbCrop'       => false,
             'tmbSize'       => 48,
             'acceptedName'  => '/^[^\.].*$/',
-            'accessControl' => 'access',
+            'accessControl' => $callback,
             'dateFormat'    => 'j M Y H:i',
             'defaults'      => array('read' => true, 'write' => false),
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),

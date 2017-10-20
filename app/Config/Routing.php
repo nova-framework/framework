@@ -35,12 +35,24 @@ return array(
         //          ^____________________^____^____________________Those are the parts of path which are validated.
         //
         'paths' => array(
+
+            // AdminLTE
             'almasaeed2010/adminlte' => array(
                 'bower_components',
                 'dist',
                 'plugins'
             ),
+
+            // Bootstrap
             'twbs/bootstrap' => 'dist',
+
+            // elFinder
+            'studio-42/elfinder' => array(
+                'css',
+                'img',
+                'js',
+                'sounds'
+            ),
         ),
     ),
 );

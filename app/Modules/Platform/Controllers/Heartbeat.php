@@ -9,6 +9,7 @@ use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Response;
 
 use App\Modules\Messages\Models\Message;
+use App\Modules\Platform\Models\Activity;
 
 
 class Heartbeat extends BaseController

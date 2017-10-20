@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h1><?= __d('files', 'Files'); ?></h1>
+    <h1><?= __d('files', 'Files Manager'); ?></h1>
     <ol class="breadcrumb">
         <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
         <li><?= __d('files', 'Files'); ?></li>

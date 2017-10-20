@@ -4,8 +4,12 @@ namespace App\Modules\Files\Controllers\Admin;
 
 use Nova\Container\Container;
 use Nova\Http\Request;
+use Nova\Support\Facades\Config;
 
 use App\Modules\Platform\Controllers\Admin\BaseController;
+
+use elFinder;
+use elFinderConnector;
 
 
 class Files extends BaseController
@@ -44,7 +48,16 @@ class Files extends BaseController
         // Disable the auto-rendering on a (Theme) Layout.
         $this->layout = false;
 
-        return $this->createView();
+        // Retrieve the elFinder options.
+        $options = Config::get('files::elFinder');
+
+        // Create a elFinder instance.
+        $elFinder = new elFinder($options);
+
+        // Create a elFinder Connector instance.
+        $connector = new elFinderConnector($elFinder, true);
+
+        return $this->createView()->withConnector($connector);
     }
 
     public function preview(Request $request, $path)

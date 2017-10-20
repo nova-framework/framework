@@ -7,6 +7,14 @@
  */
 
 
+$callback = function ($attr, $path, $data, $volume)
+{
+    return (strpos(basename($path), '.') === 0)       // if file/folder begins with '.' (dot)
+            ? ! ($attr == 'read' || $attr == 'write') // set read+write to false, other (locked+hidden) set to true
+            :  null;                                  // else elFinder decide it itself
+};
+
+
 return array(
     'locale' => 'en_US.UTF-8',
     'debug'  => false,
@@ -25,7 +33,7 @@ return array(
             'tmbCrop'       => false,
             'tmbSize'       => 48,
             'acceptedName'  => '/^[^\.].*$/',
-            'accessControl' => 'access',
+            'accessControl' => $callback,
             'dateFormat'    => 'j M Y H:i',
             'defaults'      => array('read' => true, 'write' => true),
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),
@@ -43,7 +51,7 @@ return array(
             'tmbCrop'       => false,
             'tmbSize'       => 48,
             'acceptedName'  => '/^[^\.].*$/',
-            'accessControl' => 'access',
+            'accessControl' => $callback,
             'dateFormat'    => 'j M Y H:i',
             'defaults'      => array('read' => true, 'write' => false),
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),

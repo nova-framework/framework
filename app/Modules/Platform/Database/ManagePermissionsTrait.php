@@ -17,10 +17,10 @@ trait ManagePermissionsTrait
      *
      * @return void
      */
-    public function createPermissions(array $items)
+    public function createPermissions(array $permissions)
     {
-        foreach ($items as $item) {
-            $this->createPermission($item);
+        foreach ($permissions as $permission) {
+            $this->createPermission($permission);
         }
 
         // Invalidate the cached system permissions.
@@ -34,15 +34,15 @@ trait ManagePermissionsTrait
      */
     protected function createPermission(array $attributes)
     {
-        $updateRoles = Schema::hasTable('role_permission');
+        $updateRoles = Schema::hasTable('permission_role');
 
         //
-        extract($attributes);
+        $roles = isset($attributes['roles']) ? $attributes['roles'] : array();
 
         unset($attributes['roles']);
 
         // Update or create a new Permission instance.
-        $permission = Permission::updateOrCreate(array('slug' => $slug), $attributes);
+        $permission = Permission::updateOrCreate(array('slug' => $attributes['slug']), $attributes);
 
         if (isset($roles) && $updateRoles) {
             if (! is_array($roles)) {
@@ -60,13 +60,13 @@ trait ManagePermissionsTrait
      */
     public function deletePermissions($group)
     {
-        $updateRoles = Schema::hasTable('role_permission');
+        $updateRoles = Schema::hasTable('permission_role');
 
         $permissions = Permission::where('group', $group)->get();
 
         foreach ($permissions as $permission) {
             if ($updateRoles) {
-                $permission->roles()->dettach();
+                $permission->roles()->detach();
             }
 
             $permission->delete();

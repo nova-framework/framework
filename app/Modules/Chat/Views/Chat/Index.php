@@ -19,8 +19,9 @@
             </div>
             <div class="box-body">
                 <div class="direct-chat-messages" id="chat-output" style="height: 550px;">
-                    <div id="chat-spinner" align="center">
-                        <img src="<?= resource_url('images/spinner.gif', 'Chat'); ?>"></img>
+                    <div id="chat-spinner" align="center" style="padding-top: 40px;">
+                        <i class="fa fa-circle-o-notch fa-spin fa-5x fa-fw" style="color: #d2d6de;"></i>
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>

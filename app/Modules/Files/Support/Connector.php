@@ -6,73 +6,87 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+use elFinderConnector;
 
-/**
- * Extended elFinder connector
- *
- * @author Dmitry (dio) Levashov
- **/
-class Connector extends \elFinderConnector
+
+class Connector extends elFinderConnector
 {
     /**
-     * @var Response
+     * @var \Symfony\Component\HttpFoundation\Response
      */
     protected $response;
 
 
     /**
-     * @return Response
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * Output json
+     * Originally, output the data in a JSON form.
      *
-     * @param  array  data to output
+     * @param  array  $data
      * @return void
-     * @author Dmitry (dio) Levashov
-     **/
+     */
     protected function output(array $data)
     {
         $header = isset($data['header']) ? $data['header'] : $this->header;
 
         unset($data['header']);
 
+        // Prepare the headers.
         $headers = array();
 
-        if ($header) {
-            foreach((array) $header as $headerString) {
-                if(strpos($headerString, ':') !== false) {
-                    list($key, $value) = explode(':', $headerString, 2);
-
-                    $headers[$key] = $value;
-                }
-            }
+        if (! empty($header)) {
+            $headers = $this->parseHeader($header);
         }
 
         if (isset($data['pointer'])) {
-            $this->response = new StreamedResponse(function () use($data)
-            {
-                rewind($data['pointer']);
-
-                fpassthru($data['pointer']);
-
-                if (!empty($data['volume'])) {
-                    $data['volume']->close($data['pointer'], $data['info']['hash']);
-                }
-
-            }, 200, $headers);
-
-            return;
+            $this->response = new StreamedResponse($this->getStreamCallback($data), 200, $headers);
         }
 
-        if (! empty($data['raw']) && ! empty($data['error'])) {
+        // A non-streamed response is needed.
+        else if (isset($data['raw']) && isset($data['error'])) {
             $this->response = new JsonResponse($data['error'], 500);
         } else {
             $this->response = new JsonResponse($data, 200, $headers);
         }
+    }
+
+    protected function parseHeader($value)
+    {
+        $headers = array();
+
+        foreach((array) $value as $header) {
+            if (strpos($header, ':') !== false) {
+                list($key, $value) = explode(':', $header, 2);
+
+                $headers[$key] = $value;
+            }
+        }
+
+        return $headers;
+    }
+
+    protected function getStreamCallback(array $data)
+    {
+        return function () use ($data)
+        {
+            extract($data);
+
+            // Handle the file pointer.
+            rewind($pointer);
+
+            fpassthru($pointer);
+
+            if (! empty($volume)) {
+                $volume->close($pointer, $info['hash']);
+            }
+        };
+    }
+
+    /**
+     * Returns the Response instance.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }

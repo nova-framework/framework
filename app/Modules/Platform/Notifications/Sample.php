@@ -29,6 +29,7 @@ class Sample extends Notification
     public function toMail($notifiable)
     {
         return with(new MailMessage)
+            ->subject('A sample notification')
             ->line('This is just a sample notification.')
             ->action('View your Dashboard', site_url('dashboard'))
             ->line('Thank you for using our application!')

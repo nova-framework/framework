@@ -29,7 +29,7 @@ return array(
 
     'roots' => array(
         array(
-            'alias'         => __d('files', 'Site Assets'),
+            'alias'         => 'assets',
             'driver'        => 'LocalFileSystem',
             'path'          => ROOTDIR .'assets/',
             'URL'           => site_url('assets/'),
@@ -47,7 +47,7 @@ return array(
             'icon'          => site_url('modules/files/assets/img/volume_icon_local.png'),
         ),
         array(
-            'alias'         => __d('files', 'Site Root'),
+            'alias'         => 'rootdir',
             'driver'        => 'LocalFileSystem',
             'path'          => ROOTDIR,
             'URL'           => site_url('admin/files/preview/'),

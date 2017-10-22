@@ -23,10 +23,7 @@ class CreateMessagesTable extends Migration
             $table->string('subject')->nullable();
             $table->text('body');
             $table->tinyInteger('is_read')->default(0);
-
-            // Custom timestamps.
-            $table->timestamp('created_at')->default('0000-00-00 00:00:00');
-            $table->timestamp('updated_at')->default('0000-00-00 00:00:00');
+            $table->timestamps();
         });
     }
 

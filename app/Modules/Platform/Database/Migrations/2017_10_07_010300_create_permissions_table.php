@@ -20,10 +20,7 @@ class CreatePermissionsTable extends Migration
             $table->string('name');
             $table->string('slug', 100)->unique();
             $table->string('group', 100)->nullable();
-
-            // Custom timestamps.
-            $table->timestamp('created_at')->default('0000-00-00 00:00:00');
-            $table->timestamp('updated_at')->default('0000-00-00 00:00:00');
+            $table->timestamps();
         });
     }
 

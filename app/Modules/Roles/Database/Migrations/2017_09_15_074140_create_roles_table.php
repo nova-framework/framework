@@ -19,10 +19,7 @@ class CreateRolesTable extends Migration
             $table->string('name', 100);
             $table->string('slug', 100)->unique();
             $table->string('description', 255);
-
-            // Custom timestamps.
-            $table->timestamp('created_at')->default('0000-00-00 00:00:00');
-            $table->timestamp('updated_at')->default('0000-00-00 00:00:00');
+            $table->timestamps();
         });
     }
 

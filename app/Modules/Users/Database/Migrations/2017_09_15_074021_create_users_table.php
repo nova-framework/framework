@@ -25,10 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('activation_code')->nullable();
             $table->string('remember_token')->nullable();
             $table->string('api_token', 100)->unique()->nullable();
-
-            // Custom timestamps.
-            $table->timestamp('created_at')->default('0000-00-00 00:00:00');
-            $table->timestamp('updated_at')->default('0000-00-00 00:00:00');
+            $table->timestamps();
         });
     }
 

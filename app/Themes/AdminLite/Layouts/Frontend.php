@@ -199,10 +199,10 @@ if (isset($user->image) && $user->image->exists()) {
 Assets::js(array(
     // Bootstrap 3.3.5
     vendor_url('bower_components/bootstrap/dist/js/bootstrap.min.js', 'almasaeed2010/adminlte'),
-    // AdminLTE App
-    vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
     // iCheck
     vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
+    // AdminLTE App
+    vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data

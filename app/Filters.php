@@ -58,21 +58,30 @@ Route::filter('csrf', function ($route, $request)
 });
 
 // Authentication Filters.
-Route::filter('auth', function ($route, $request, $guard = null)
+Route::filter('auth', function ($route, $request)
 {
-    $guard = $guard ?: Config::get('auth.defaults.guard', 'web');
+    $guards = array_slice(func_get_args(), 2);
 
-    if (Auth::guard($guard)->check()) {
-        // User authenticated with this Guard, then we will use it as default.
-        return Auth::shouldUse($guard);
+    if (empty($guards)) {
+        $guards[] = Config::get('auth.defaults.guard', 'web');
     }
 
-    // The User is not authenticated.
-    else if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
+    foreach ($guards as $guard) {
+        if (Auth::guard($guard)->check()) {
+            Auth::shouldUse($guard);
+
+            return;
+        }
+    }
+
+    // The User is not authenticated by any specified guards.
+    if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
         return Response::json(array('error' => 'Unauthorized Access'), 401);
     }
 
-    // Get the Guard's authorize path from configuration.
+    // Redirect to the authorization page of the first guard.
+    $guard = array_shift($guards);
+
     $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');
 
     return Redirect::guest($uri);

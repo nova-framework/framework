@@ -216,12 +216,13 @@ Assets::js(array(
     vendor_url('bower_components/jquery-slimscroll/jquery.slimscroll.min.js', 'almasaeed2010/adminlte'),
     // FastClick
     vendor_url('bower_components/fastclick/lib/fastclick.js', 'almasaeed2010/adminlte'),
-    // AdminLTE App
-    vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
     // Select2
     vendor_url('bower_components/select2/dist/js/select2.full.min.js', 'almasaeed2010/adminlte'),
+    vendor_url('bower_components/select2/dist/js/i18n/' .$langCode .'.js', 'almasaeed2010/adminlte'),
     // iCheck
     vendor_url('plugins/iCheck/icheck.min.js', 'almasaeed2010/adminlte'),
+    // AdminLTE App
+    vendor_url('dist/js/adminlte.min.js', 'almasaeed2010/adminlte'),
 ));
 
 echo isset($js) ? $js : ''; // Place to pass data

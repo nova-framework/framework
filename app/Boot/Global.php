@@ -4,6 +4,7 @@ use App\Modules\Platform\Models\Option;
 
 use Nova\Auth\Access\AuthorizationException;
 use Nova\Auth\AuthenticationException;
+use Nova\Session\TokenMismatchException;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -20,6 +21,12 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
 
 App::error(function (Exception $e, $code)
 {
+    if ($e instanceof TokenMismatchException) {
+        return Redirect::back()
+            ->withInput(Input::except(array('password', 'password_confirmation')))
+            ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
+    }
+
     Log::error($e);
 });
 

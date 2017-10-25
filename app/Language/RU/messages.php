@@ -72,7 +72,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'To reset your password, complete this form: {0}.' => 'Чтобы сбросить пароль, заполните эту форму: {0}',
   'Troubleshooting' => 'Исправление проблем',
   'Unauthorized' => 'Неразрешенный',
+  'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Добро пожаловать!',
   'You are not authorized to access this resource.' => '',
-  'Your session expired. Please try again!' => 'Ваша сессия устарела. Пожалуйста, повторите снова.',
 );

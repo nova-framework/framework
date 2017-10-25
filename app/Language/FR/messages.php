@@ -72,7 +72,7 @@ Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.ph
   'To reset your password, complete this form: {0}.' => 'Pour réinitialiser votre mot de passe, remplisser ce formulaire : {0}.',
   'Troubleshooting' => 'Dépannage',
   'Unauthorized' => 'Interdit',
+  'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Bienvenue',
   'You are not authorized to access this resource.' => '',
-  'Your session expired. Please try again!' => 'Votre session a expiré, merci d\'essayer de nouveau.',
 );

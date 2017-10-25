@@ -72,7 +72,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
   'Troubleshooting' => 'اشکال زدایی',
   'Unauthorized' => '',
+  'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'خوش امدید',
   'You are not authorized to access this resource.' => '',
-  'Your session expired. Please try again!' => 'جلسه شما منقضی شده است. لطفا دوباره تلاش نمایید!',
 );

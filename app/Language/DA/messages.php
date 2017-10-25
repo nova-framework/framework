@@ -70,7 +70,7 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'To reset your password, complete this form: {0}.' => 'For at nulstille dit kodeord, skal du udfyld denne formular: {0}.',
   'Troubleshooting' => 'Fejlfinding',
   'Unauthorized' => 'uautoriseret',
+  'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Velkommen',
   'You are not authorized to access this resource.' => '',
-  'Your session expired. Please try again!' => 'Din session er udløbet. Prøv venligst igen!',
 );

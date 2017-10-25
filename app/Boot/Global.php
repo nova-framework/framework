@@ -52,7 +52,7 @@ App::error(function (HttpException $e, $code)
 App::error(function (AuthenticationException $e, $code)
 {
     if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        return Response::make(array('error' => $e->getMessage(), 'guards' => $e->guards()), 403);
+        return Response::make(array('error' => $e->getMessage()), 403);
     }
 
     // Get the Guard's dashboard path from configuration.

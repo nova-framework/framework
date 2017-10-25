@@ -12,5 +12,5 @@
 */
 
 
-Route::get('chat', array('before' => 'auth', 'uses' => 'Chat@index'));
+Route::get('chat', array('middleware' => 'auth', 'uses' => 'Chat@index'));
 

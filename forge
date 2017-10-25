@@ -47,6 +47,6 @@ $status = $forge->run();
 // Shutdown The Application
 //--------------------------------------------------------------------------
 
-$app->shutdown();
+$app->terminate();
 
 exit($status);

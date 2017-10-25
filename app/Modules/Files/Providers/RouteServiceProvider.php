@@ -24,15 +24,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $basePath = realpath(__DIR__ .'/../');
-
-        // Load the Route Filters.
-        $path = $basePath .DS .'Filters.php';
-
-        $this->loadFiltersFrom($path);
+        parent::boot($router);
 
         //
-        parent::boot($router);
     }
 
     /**
@@ -45,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $path = realpath(__DIR__ .'/../');
 
-        $router->group(array('namespace' => $this->namespace), function($router) use ($path)
+        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function($router) use ($path)
         {
             require $path .DS .'Routes.php';
         });

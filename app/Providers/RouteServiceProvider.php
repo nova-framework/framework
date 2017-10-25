@@ -24,12 +24,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $path = app_path('Filters.php');
-
-        $this->loadFiltersFrom($path);
+        parent::boot($router);
 
         //
-        parent::boot($router);
     }
 
     /**
@@ -40,9 +37,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        $router->group(array('namespace' => $this->namespace), function ($router)
+        $router->group(array('prefix' => 'api', 'middleware' => 'api', 'namespace' => $this->namespace), function ($router)
         {
-            require app_path('Routes.php');
+            require app_path('Routes/Api.php');
+        });
+
+        $router->group(array('middleware' => 'web', 'namespace' => $this->namespace), function ($router)
+        {
+            require app_path('Routes/Web.php');
         });
     }
 

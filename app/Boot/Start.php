@@ -128,10 +128,18 @@ $app->startExceptionHandling();
 if ($env != 'testing') ini_set('display_errors', 'Off');
 
 //--------------------------------------------------------------------------
-// Set The Default Timezone From Configuration
+// Set The Application Middleware
 //--------------------------------------------------------------------------
 
 $config = $app['config']['app'];
+
+$middleware = $config['middleware'];
+
+$app->middleware($middleware);
+
+//--------------------------------------------------------------------------
+// Set The Default Timezone From Configuration
+//--------------------------------------------------------------------------
 
 date_default_timezone_set($config['timezone']);
 
@@ -162,14 +170,6 @@ BinaryFileResponse::trustXSendfileTypeHeader();
 $providers = $config['providers'];
 
 $app->getProviderRepository()->load($app, $providers);
-
-//--------------------------------------------------------------------------
-// Additional Middleware On Application
-//--------------------------------------------------------------------------
-
-App::middleware('Shared\Http\ContentGuard', array(
-    $app['config']['app.debug']
-));
 
 //--------------------------------------------------------------------------
 // Register Booted Start Files

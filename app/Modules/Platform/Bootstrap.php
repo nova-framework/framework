@@ -6,6 +6,8 @@
  * @version 3.0
  */
 
+use Nova\Http\Request;
+
 
 /**
  * Role-based Authorization Middleware.

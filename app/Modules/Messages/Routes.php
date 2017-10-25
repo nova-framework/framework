@@ -13,10 +13,11 @@
 
 
 // The Private Messages.
-Route::get( 'messages',            'Messages@index');
-Route::get( 'messages/create',     'Messages@create');
-Route::post('messages',            'Messages@store');
-Route::get( 'messages/{threadId}', 'Messages@show');
-//Route::post('messages/{postId}/destroy',    'Messages@destroy');
+Route::get( 'messages',            array('before' => 'auth', 'uses' => 'Messages@index'));
+Route::get( 'messages/create',     array('before' => 'auth', 'uses' => 'Messages@create'));
+Route::post('messages',            array('before' => 'auth', 'uses' => 'Messages@store'));
+Route::get( 'messages/{threadId}', array('before' => 'auth', 'uses' => 'Messages@show'));
 
-Route::post('messages/{threadId}', 'Messages@reply');
+//Route::post('messages/{postId}/destroy', array('before' => 'auth', 'uses' => 'Messages@destroy'));
+
+Route::post('messages/{threadId}', array('before' => 'auth', 'uses' => 'Messages@reply'));

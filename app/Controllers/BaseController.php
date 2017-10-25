@@ -66,7 +66,7 @@ abstract class BaseController extends Controller
     {
         $request = Request::instance();
 
-        //
+        // Broadcast the event of BaseController's initialization.
         Event::fire('base.controller.initialize', array($this, $request));
 
         // Mark as read the Notification, if it is specified in the query.

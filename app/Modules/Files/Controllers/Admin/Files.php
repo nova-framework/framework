@@ -86,7 +86,7 @@ class Files extends BaseController
             return $this->fileDispatcher;
         }
 
-        return $this->fileDispatcher = $this->container->make('Nova\Routing\Assets\DispatcherInterface');
+        return $this->fileDispatcher = $this->container->make('assets.dispatcher');
     }
 
 }

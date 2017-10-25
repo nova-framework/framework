@@ -66,7 +66,8 @@ abstract class BaseController extends Controller
     {
         $request = Request::instance();
 
-        Event::fire('controller.executing', array($this, $request));
+        //
+        Event::fire('base.controller.initialize', array($this, $request));
 
         // Mark as read the Notification, if it is specified in the query.
         if ($request->has('read') && ! is_null($user = $request->user())) {

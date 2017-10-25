@@ -62,11 +62,6 @@ return array(
     'key' => 'SomeRandomStringThere_1234567890',
 
     /**
-     *  Prevents the website from CSRF attacks.
-     */
-    'csrf' => true,
-
-    /**
      * The Application's Middleware stack.
      */
     'middleware' => array(

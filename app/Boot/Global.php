@@ -22,8 +22,10 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
 App::error(function (Exception $e, $code)
 {
     if ($e instanceof TokenMismatchException) {
+        $input = Input::except(array('password', 'password_confirmation'));
+
         return Redirect::back()
-            ->withInput(Input::except(array('password', 'password_confirmation')))
+            ->withInput($input)
             ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
     }
 

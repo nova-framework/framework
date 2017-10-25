@@ -49,6 +49,20 @@ App::error(function (HttpException $e, $code)
     return Response::make($view->render(), $code, $e->getHeaders());
 });
 
+App::error(function (AuthenticationException $e, $code)
+{
+    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
+        return Response::make(array('error' => $e->getMessage(), 'guards' => $e->guards()), 403);
+    }
+
+    // Get the Guard's dashboard path from configuration.
+    $guard = Config::get('auth.defaults.guard', 'web');
+
+    $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');
+
+    return Redirect::to($uri);
+});
+
 App::error(function (AuthorizationException $e, $code)
 {
     if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
@@ -62,20 +76,6 @@ App::error(function (AuthorizationException $e, $code)
 
     return Redirect::to($uri)
         ->withStatus(__('You are not authorized to access this resource.'), 'warning');
-});
-
-App::error(function (AuthenticationException $e, $code)
-{
-    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        return Response::make(array('error' => $e->getMessage(), 'guards' => $e->guards()), 403);
-    }
-
-    // Get the Guard's dashboard path from configuration.
-    $guard = Config::get('auth.defaults.guard', 'web');
-
-    $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');
-
-    return Redirect::to($uri);
 });
 
 //--------------------------------------------------------------------------

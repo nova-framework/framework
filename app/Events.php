@@ -11,7 +11,7 @@
 /** Define Events. */
 
 // Add a Listener to the Event 'router.matched', to process the global View variables.
-Event::listen('router.matched', function($route, $request)
+Event::listen('controller.executing', function($controller, $request)
 {
     // Share the Application version.
     $path = ROOTDIR .'VERSION.txt';

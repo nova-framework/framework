@@ -62,9 +62,8 @@ App::error(function (AuthorizationException $e, $code)
 
     $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
 
-    $status = __('You are not authorized to access this resource.');
-
-    return Redirect::to($uri)->withStatus($status, 'warning');
+    return Redirect::to($uri)
+        ->withStatus(__('You are not authorized to access this resource.'), 'warning');
 });
 
 App::error(function (AuthenticationException $e, $code)

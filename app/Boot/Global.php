@@ -3,7 +3,7 @@
 use App\Modules\Platform\Models\Option;
 
 use Nova\Auth\Access\AuthorizationException;
-use Nova\Auth\Access\AuthenticationException;
+use Nova\Auth\AuthenticationException;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

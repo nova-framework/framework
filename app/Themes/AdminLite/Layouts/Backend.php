@@ -198,7 +198,7 @@ if (isset($user->image) && $user->image->exists()) {
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      <small><!-- DO NOT DELETE! - Profiler --></small>
+      <small><!-- DO NOT DELETE! - Statistics --></small>
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= $version; ?> / Kernel <?= VERSION; ?></b></a> - </strong> All rights reserved.
@@ -345,7 +345,7 @@ $(function () {
      user experience. Slimscroll is required when using the
      fixed layout. -->
 
-<!-- DO NOT DELETE! - Forensics Profiler -->
+<!-- DO NOT DELETE! - Profiler -->
 
 </body>
 </html>

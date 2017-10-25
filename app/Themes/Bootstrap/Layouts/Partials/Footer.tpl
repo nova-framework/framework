@@ -6,7 +6,7 @@
             </div>
             <div class="col-lg-7">
                 <p class="text-muted pull-right">
-                    <small><!-- DO NOT DELETE! - Profiler --></small>
+                    <small><!-- DO NOT DELETE! - Statistics --></small>
                 </p>
             </div>
         </div>

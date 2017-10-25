@@ -89,7 +89,7 @@ abstract class BaseController extends Controller
      * @param array   $params
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function callAction($method, $parameters)
+    public function callAction($method, array $parameters)
     {
         $this->action = $method;
 

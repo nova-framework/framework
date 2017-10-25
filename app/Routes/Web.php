@@ -1,32 +1,25 @@
 <?php
 
-/**
- * Routes - all standard Routes are defined here.
- *
- * @author David Carr - dave@daveismyname.com
- * @author Virgil-Adrian Teaca - virgil@giulianaeassociati.com
- * @version 3.0
- *
- */
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
 use Nova\Http\Request;
 
-
-/** Define static routes. */
-
-// The Web Routes
+// The Default Routes
 Route::get('/',       'Welcome@index');
 Route::get('subpage', 'Welcome@subPage');
 
-
-// The API Routes
-Route::get('api/user', array('before' => 'auth:api', function (Request $request)
-{
-    return $request->user();
-}));
-
-
-// The Language Changer
+/**
+ * The Language Changer.
+ */
 Route::get('language/{language}', function (Request $request, $language)
 {
     $url = Config::get('app.url');
@@ -45,7 +38,9 @@ Route::get('language/{language}', function (Request $request, $language)
 })->where('language', '([a-z]{2})');
 
 
-// Show the PHP information
+/**
+ * Show the PHP information.
+ */
 Route::get('phpinfo', function ()
 {
     ob_start();
@@ -54,5 +49,3 @@ Route::get('phpinfo', function ()
 
     return Response::make(ob_get_clean(), 200);
 });
-
-/** End default Routes */

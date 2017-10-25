@@ -67,6 +67,40 @@ return array(
     'csrf' => true,
 
     /**
+     * The Application's Middleware stack.
+     */
+    'middleware' => array(
+        'Nova\Foundation\Http\Middleware\CheckForMaintenanceMode',
+        'Nova\Routing\Middleware\DispatchAssetFiles',
+    ),
+
+    /**
+     * The Application's route Middleware Groups.
+     */
+    'middlewareGroups' => array(
+        'web' => array(
+            'App\Middleware\EncryptCookies',
+            'Nova\Cookie\Middleware\AddQueuedCookiesToResponse',
+            'Nova\Session\Middleware\StartSession',
+            'Nova\Foundation\Http\Middleware\SetupLanguage',
+            'Nova\View\Middleware\ShareErrorsFromSession',
+            'App\Middleware\VerifyCsrfToken',
+        ),
+        'api' => array(
+            'throttle:60,1',
+        )
+    ),
+
+    /**
+     * The Application's route Middleware.
+     */
+    'routeMiddleware' => array(
+        'auth'     => 'Nova\Auth\Middleware\Authenticate',
+        'guest'    => 'App\Middleware\RedirectIfAuthenticated',
+        'throttle' => 'Nova\Routing\Middleware\ThrottleRequests',
+    ),
+
+    /**
      * The registered Service Providers.
      */
     'providers' => array(

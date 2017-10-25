@@ -13,9 +13,13 @@
 
 use Nova\Http\Request;
 
-// The Default Routes
+
+/**
+ * The Default Routes.
+ */
 Route::get('/',       'Welcome@index');
 Route::get('subpage', 'Welcome@subPage');
+
 
 /**
  * The Language Changer.

@@ -131,7 +131,7 @@ $languages = Config::get('languages');
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      <small><!-- DO NOT DELETE! - Profiler --></small>
+      <small><!-- DO NOT DELETE! - Statisticss --></small>
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.novaframework.com/" target="_blank"><b>Nova Framework <?= $version; ?> / Kernel <?= VERSION; ?></b></a> - </strong> All rights reserved.
@@ -164,7 +164,7 @@ echo isset($js) ? $js : ''; // Place to pass data
   });
 </script>
 
-<!-- DO NOT DELETE! - Forensics Profiler -->
+<!-- DO NOT DELETE! - Profiler -->
 
 </body>
 </html>

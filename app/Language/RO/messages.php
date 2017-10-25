@@ -72,7 +72,7 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'To reset your password, complete this form: {0}.' => '',
   'Troubleshooting' => '',
   'Unauthorized' => '',
+  'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Bun venit',
   'You are not authorized to access this resource.' => '',
-  'Your session expired. Please try again!' => '',
 );

@@ -3,7 +3,8 @@
 use App\Modules\Platform\Models\Option;
 
 use Nova\Auth\Access\AuthorizationException;
-use Nova\Auth\Access\AuthenticationException;
+use Nova\Auth\AuthenticationException;
+use Nova\Session\TokenMismatchException;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -21,6 +22,15 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
 App::error(function (Exception $e, $code)
 {
     Log::error($e);
+});
+
+App::error(function (TokenMismatchException $e, $code)
+{
+    $input = Input::except(array('password', 'password_confirmation'));
+
+    return Redirect::back()
+        ->withInput($input)
+        ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
 });
 
 App::error(function (HttpException $e, $code)
@@ -61,7 +71,7 @@ App::error(function (AuthenticationException $e, $code)
 {
     if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
         // On an AJAX Request; we return a response: Error 403 (Access denied)
-        return Response::make(array('error' => $e->getMessage()), 403);
+        return Response::make(array('error' => $e->getMessage(), 'guards' => $e->guards()), 403);
     }
 
     // Get the Guard's dashboard path from configuration.

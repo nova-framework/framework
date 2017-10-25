@@ -40,7 +40,7 @@
     vendor_url('dist/js/bootstrap.min.js', 'twbs/bootstrap'),
 ))
 
-<!-- DO NOT DELETE! - Forensics Profiler -->
+<!-- DO NOT DELETE! - Profiler -->
 
 </body>
 </html>

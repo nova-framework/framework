@@ -34,7 +34,7 @@ class Files extends BaseController
         $this->container = $container;
 
         //
-        $this->beforeFilter('role:administrator');
+        $this->middleware('role:administrator');
     }
 
     public function index()
@@ -86,7 +86,7 @@ class Files extends BaseController
             return $this->fileDispatcher;
         }
 
-        return $this->fileDispatcher = $this->container->make('Nova\Routing\Assets\DispatcherInterface');
+        return $this->fileDispatcher = $this->container->make('assets.dispatcher');
     }
 
 }

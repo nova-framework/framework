@@ -12,15 +12,6 @@ return array(
      * The Asset Files Serving configuration.
      */
     'assets' => array(
-        // The driver type used for serving the Asset Files.
-        'driver' => 'default',                                  // Supported: "default", "custom".
-
-        // The Assets Dispatcher used while the driver is on 'custom' mode.
-        'dispatcher' => 'Shared\Routing\Assets\CustomDispatcher',
-
-        // Wheter or not the CSS and JS files are automatically compressed.
-        'compress' => true,
-
         // The browser Cache Control options.
         'cache' => array(
             'ttl'          => 600,

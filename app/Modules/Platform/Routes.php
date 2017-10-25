@@ -10,39 +10,39 @@
 /** Define static routes. */
 
 // The default Auth Routes.
-Route::get( 'login',  array('before' => 'guest',      'uses' => 'Authorize@login'));
-Route::post('login',  array('before' => 'guest|csrf', 'uses' => 'Authorize@postLogin'));
-Route::post('logout', array('before' => 'auth|csrf',  'uses' => 'Authorize@logout'));
+Route::get( 'login',  array('middleware' => 'guest', 'uses' => 'Authorize@login'));
+Route::post('login',  array('middleware' => 'guest', 'uses' => 'Authorize@postLogin'));
+Route::post('logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout'));
 
 // The Password Remind.
-Route::get( 'password/remind', array('before' => 'guest',      'uses' => 'Authorize@remind'));
-Route::post('password/remind', array('before' => 'guest|csrf', 'uses' => 'Authorize@postRemind'));
+Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@remind'));
+Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@postRemind'));
 
 // The Password Reset.
-Route::get( 'password/reset/{token}', array('before' => 'guest',      'uses' => 'Authorize@reset'));
-Route::post('password/reset',         array('before' => 'guest|csrf', 'uses' => 'Authorize@postReset'));
+Route::get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Authorize@reset'));
+Route::post('password/reset',         array('middleware' => 'guest', 'uses' => 'Authorize@postReset'));
 
 // The User's Dashboard.
-Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
+Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
 
-Route::get('dashboard/notify', array('before' => 'auth', 'uses' => 'Dashboard@notify'));
+Route::get('dashboard/notify', array('middleware' => 'auth', 'uses' => 'Dashboard@notify'));
 
 // The Heartbeat
-Route::post('heartbeat', array('before' => 'auth|csrf', 'uses' => 'Heartbeat@update'));
+Route::post('heartbeat', array('middleware' => 'auth', 'uses' => 'Heartbeat@update'));
 
 // The Notifications.
-Route::get( 'notifications',      array('before' => 'auth',      'uses' => 'Notifications@index'));
-Route::post('notifications',      array('before' => 'auth|csrf', 'uses' => 'Notifications@update'));
+Route::get( 'notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@index'));
+Route::post('notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@update'));
 
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
     // The Administration Dashboard.
-    Route::get('/',         array('before' => 'auth', 'uses' => 'Dashboard@index'));
-    Route::get('dashboard', array('before' => 'auth', 'uses' => 'Dashboard@index'));
+    Route::get('/',         array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
+    Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
 
     // The Site Settings.
-    Route::get( 'settings', array('before' => 'auth',      'uses' => 'Settings@index'));
-    Route::post('settings', array('before' => 'auth|csrf', 'uses' => 'Settings@store'));
+    Route::get( 'settings', array('middleware' => 'auth', 'uses' => 'Settings@index'));
+    Route::post('settings', array('middleware' => 'auth', 'uses' => 'Settings@store'));
 });

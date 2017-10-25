@@ -34,7 +34,7 @@ class Files extends BaseController
         $this->container = $container;
 
         //
-        $this->beforeFilter('role:administrator');
+        $this->middleware('role:administrator');
     }
 
     public function index()

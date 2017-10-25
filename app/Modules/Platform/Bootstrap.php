@@ -27,11 +27,10 @@ Route::middleware('role', function (Request $request, Closure $next, $role)
             return Response::make('', 403);
         }
 
-        $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'admin/dashboard');
+        $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
 
-        $status = __d('backend', 'You are not authorized to access this resource.');
-
-        return Redirect::to($uri)->with('warning', $status);
+        return Redirect::to($uri)
+            ->withStatus(__d('platform', 'You are not authorized to access this resource.'), 'warning');
     }
 
     return $next($request);

@@ -38,7 +38,6 @@ App::error(function (HttpException $e, $code)
     $code = $e->getStatusCode();
 
     if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        // An AJAX request; we'll create and return a JSON Response.
         return Response::json(array('error' => $e->getMessage()), $code, $e->getHeaders());
     }
 
@@ -53,7 +52,6 @@ App::error(function (HttpException $e, $code)
 App::error(function (AuthorizationException $e, $code)
 {
     if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        // On an AJAX Request; we return a response: Error 403 (Access denied)
         return Response::make(array('error' => $e->getMessage()), 403);
     }
 
@@ -69,7 +67,6 @@ App::error(function (AuthorizationException $e, $code)
 App::error(function (AuthenticationException $e, $code)
 {
     if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        // On an AJAX Request; we return a response: Error 403 (Access denied)
         return Response::make(array('error' => $e->getMessage(), 'guards' => $e->guards()), 403);
     }
 

@@ -7,11 +7,13 @@
  *
  */
 
+use Nova\Http\Request;
+
 
 /** Define Events. */
 
 // Add a Listener to the Event 'router.matched', to process the global View variables.
-Event::listen('base.controller.initialize', function($controller, $request)
+Event::listen('base.controller.initialize', function(Request $request)
 {
     // Share the Application version.
     $path = ROOTDIR .'VERSION.txt';

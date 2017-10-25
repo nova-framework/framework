@@ -133,6 +133,7 @@ if ($env != 'testing') ini_set('display_errors', 'Off');
 
 $config = $app['config']['app'];
 
+//
 $middleware = $config['middleware'];
 
 $app->middleware($middleware);

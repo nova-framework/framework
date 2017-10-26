@@ -64,7 +64,7 @@ use App\Models\User;
                 <?php } ?>
             </div>
             <button type="submit" class="btn btn-success col-sm-2 pull-right" style="margin-bottom: 5px;"><i class='fa fa-reply'></i> <?= __d('backend', 'Reply'); ?></button>
-            <input type="hidden" name="csrfToken" value="<?= csrf_token(); ?>">
+            <input type="hidden" name="_token" value="<?= csrf_token(); ?>">
 
             </form>
         </div>

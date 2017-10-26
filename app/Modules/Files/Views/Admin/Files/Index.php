@@ -45,7 +45,7 @@ Assets::js(array(
                 secure: false,
             },
             customData: {
-                csrfToken: "<?= csrf_token(); ?>"
+                _token: "<?= csrf_token(); ?>"
             }
         }).elfinder('instance');
     });

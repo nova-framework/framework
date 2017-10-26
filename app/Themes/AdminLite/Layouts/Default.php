@@ -95,7 +95,7 @@ $languages = Config::get('languages');
                         <i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?>
                     </a>
                     <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                        <input type="hidden" name="csrfToken" value="<?= csrf_token(); ?>" />
+                        <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     </form>
                 </li>
                 <?php } else { ?>

@@ -151,7 +151,7 @@ if (isset($user->image) && $user->image->exists()) {
                     <?= __d('admin_lite', 'Sign out'); ?>
                   </a>
                   <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                    <input type="hidden" name="csrfToken" value="<?= csrf_token(); ?>" />
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                   </form>
                 </div>
               </li>

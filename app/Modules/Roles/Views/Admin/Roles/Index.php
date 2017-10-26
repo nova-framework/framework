@@ -107,7 +107,7 @@ foreach ($roles->getItems() as $role) {
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
                 <form action="<?= site_url('admin/roles/' .$role->id .'/destroy'); ?>" method="POST">
-                    <input type="hidden" name="csrfToken" value="<?= csrf_token(); ?>" />
+                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
                     <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('users', 'Delete the Role'); ?>">
                 </form>
             </div>

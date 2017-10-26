@@ -70,5 +70,4 @@ Tento obsah lze změnit v <code>/app/Views/Welcome/Welcome.php</code>',
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Vítejte',
-  'You are not authorized to access this resource.' => '',
 );

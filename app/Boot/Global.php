@@ -50,6 +50,8 @@ App::error(function (Exception $e, $code)
     // Prepare the exception.
     if ($e instanceof ModelNotFoundException) {
         $e = new NotFoundHttpException($e->getMessage(), $e);
+    } else if ($e instanceof AuthorizationException) {
+        $e = new HttpException(403, $e->getMessage());
     }
 
     $request = Request::instance();
@@ -85,13 +87,6 @@ App::error(function (Exception $e, $code)
 
         return Redirect::to($uri)
             ->withStatus(__('Please login to access this resource.'), 'info');
-    } else if ($e instanceof AuthorizationException) {
-        $guard = Config::get('auth.defaults.guard', 'web');
-
-        $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
-
-        return Redirect::to($uri)
-            ->withStatus(__('You are not authorized to access this resource.'), 'danger');
     } else if ($e instanceof HttpException) {
         $code = $e->getStatusCode();
 

@@ -68,5 +68,4 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => 'uautoriseret',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Velkommen',
-  'You are not authorized to access this resource.' => '',
 );

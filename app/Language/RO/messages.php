@@ -70,5 +70,4 @@ Acest conținut poate fi modificat în <code>/app/Views/Welcome/Welcome.php</cod
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Bun venit',
-  'You are not authorized to access this resource.' => '',
 );

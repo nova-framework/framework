@@ -70,5 +70,4 @@ Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.ph
   'Unauthorized' => 'Interdit',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Bienvenue',
-  'You are not authorized to access this resource.' => '',
 );

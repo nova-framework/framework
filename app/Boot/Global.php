@@ -56,6 +56,7 @@ App::error(function (Exception $e, $code)
 
     $request = Request::instance();
 
+    // AJAX/API processing.
     if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
         $headers = array();
 

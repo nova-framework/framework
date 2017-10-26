@@ -51,7 +51,10 @@ App::error(function (Exception $e, $code)
         }
 
         return Response::json(array('error' => $e->getMessage()), $code, $headers);
-    } else if ($e instanceof HttpException) {
+    }
+
+    // Non-API processing.
+    else if ($e instanceof HttpException) {
         $code = $e->getStatusCode();
 
         $view = View::makeLayout('Default', 'Bootstrap')

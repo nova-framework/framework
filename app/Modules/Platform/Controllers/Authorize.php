@@ -34,7 +34,7 @@ class Authorize extends BaseController
     public function login()
     {
         return $this->createView()
-            ->shares('title', __d('system', 'User Login'));
+            ->shares('title', __d('platform', 'User Login'));
     }
 
     /**
@@ -46,7 +46,7 @@ class Authorize extends BaseController
     {
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check()) {
-            $status = __d('system', 'Invalid reCAPTCHA submitted.');
+            $status = __d('platform', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -60,7 +60,7 @@ class Authorize extends BaseController
         // Make an attempt to login the Guest with the given credentials.
         if(! Auth::attempt($credentials, $remember)) {
             // An error has happened on authentication.
-            $status = __d('system', 'Wrong username or password.');
+            $status = __d('platform', 'Wrong username or password.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -81,13 +81,13 @@ class Authorize extends BaseController
             Auth::logout();
 
             // User not activated; go logout and redirect him back.
-            $status = __d('system', 'There is a problem. Have you activated your Account?');
+            $status = __d('platform', 'There is a problem. Have you activated your Account?');
 
             return Redirect::back()->withStatus($status, 'warning');
         }
 
         // Prepare the flash message.
-        $status = __d('system', '<b>{0}</b>, you have successfully logged in.', $user->username);
+        $status = __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username);
 
         // Redirect to the User's Dashboard.
         return Redirect::intended('dashboard')->withStatus($status);
@@ -103,7 +103,7 @@ class Authorize extends BaseController
         Auth::logout();
 
         // Prepare the flash message.
-        $status = __d('system', 'You have successfully logged out.');
+        $status = __d('platform', 'You have successfully logged out.');
 
         return Redirect::to('login')->withStatus($status);
     }
@@ -116,7 +116,7 @@ class Authorize extends BaseController
     public function remind()
     {
         return $this->createView()
-            ->shares('title', __d('system', 'Password Recovery'));
+            ->shares('title', __d('platform', 'Password Recovery'));
     }
 
     /**
@@ -129,7 +129,7 @@ class Authorize extends BaseController
 
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
-            $status = __d('system', 'Invalid reCAPTCHA submitted.');
+            $status = __d('platform', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -139,12 +139,12 @@ class Authorize extends BaseController
 
         switch ($response = Password::remind($credentials)) {
             case Password::INVALID_USER:
-                $status = __d('system', 'We can\'t find a User with that e-mail address.');
+                $status = __d('platform', 'We can\'t find a User with that e-mail address.');
 
                 return Redirect::back()->withStatus($status, 'danger');
 
             case Password::REMINDER_SENT:
-                $status = __d('system', 'Reset instructions have been sent to your email address');
+                $status = __d('platform', 'Reset instructions have been sent to your email address');
 
                 return Redirect::back()->withStatus($status);
         }
@@ -159,7 +159,7 @@ class Authorize extends BaseController
     public function reset($token)
     {
         return $this->createView()
-            ->shares('title', __d('system', 'Password Reset'))
+            ->shares('title', __d('platform', 'Password Reset'))
             ->with('token', $token);
     }
 
@@ -172,7 +172,7 @@ class Authorize extends BaseController
     {
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
-            $status = __d('system', 'Invalid reCAPTCHA submitted.');
+            $status = __d('platform', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -199,19 +199,19 @@ class Authorize extends BaseController
         // Parse the response.
         switch ($response) {
             case Password::INVALID_PASSWORD:
-                $status = __d('system', 'Passwords must be strong enough and match the confirmation.');
+                $status = __d('platform', 'Passwords must be strong enough and match the confirmation.');
 
                 break;
             case Password::INVALID_TOKEN:
-                $status = __d('system', 'This password reset token is invalid.');
+                $status = __d('platform', 'This password reset token is invalid.');
 
                 break;
             case Password::INVALID_USER:
-                $status = __d('system', 'We can\'t find a User with that e-mail address.');
+                $status = __d('platform', 'We can\'t find a User with that e-mail address.');
 
                 break;
             case Password::PASSWORD_RESET:
-                $status = __d('system', 'You have successfully reset your Password.');
+                $status = __d('platform', 'You have successfully reset your Password.');
 
                 return Redirect::to('login')->withStatus($status);
         }

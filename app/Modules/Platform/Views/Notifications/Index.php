@@ -1,7 +1,7 @@
 <section class="content-header">
-    <h1><?= __d('system', 'Notifications'); ?></h1>
+    <h1><?= __d('platform', 'Notifications'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
     </ol>
 </section>
 
@@ -14,22 +14,22 @@
 
 <div class="box box-default">
     <div class="box-header">
-        <h3 class="box-title"><?= __d('system', 'Notifications'); ?></h3>
+        <h3 class="box-title"><?= __d('platform', 'Notifications'); ?></h3>
         <div class="box-tools">
         <?= $notifications->links(); ?>
         </div>
     </div>
     <div class="box-body no-padding">
-        <?php $format = __d('system', '%d %b %Y, %H:%M'); ?>
+        <?php $format = __d('platform', '%d %b %Y, %H:%M'); ?>
         <?php if (! $notifications->isEmpty()) { ?>
         <table class='table table-bordered table-striped table-hover responsive'>
             <thead>
                 <tr class="bg-navy disabled">
                     <th style='text-align: center; vertical-align: middle;'>-</th>
-                    <th style='text-align: left; vertical-align: middle;'><?= __d('system', 'Message'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'URL'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Sent At'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;'><?= __d('system', 'Read At'); ?></th>
+                    <th style='text-align: left; vertical-align: middle;'><?= __d('platform', 'Message'); ?></th>
+                    <th style='text-align: center; vertical-align: middle;'><?= __d('platform', 'URL'); ?></th>
+                    <th style='text-align: center; vertical-align: middle;'><?= __d('platform', 'Sent At'); ?></th>
+                    <th style='text-align: center; vertical-align: middle;'><?= __d('platform', 'Read At'); ?></th>
                     <th style='text-align: center; vertical-align: middle;'><input type="checkbox" value="" class="checkLeft1"></th>
                 </tr>
             </thead>
@@ -50,8 +50,8 @@
         </table>
         <?php } else { ?>
         <div class="alert alert-info" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-info"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('system', 'No notifications'); ?></h4>
-            <?= __d('system', 'You have no notifications.'); ?>
+            <h4><i class="icon fa fa-info"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('platform', 'No notifications'); ?></h4>
+            <?= __d('platform', 'You have no notifications.'); ?>
         </div>
         <?php } ?>
     </div>

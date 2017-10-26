@@ -14,7 +14,7 @@ Event::listen('frontend.menu.left', function ()
     return array(
         array(
             'url'    => site_url('dashboard'),
-            'title'  => __d('system', 'Dashboard'),
+            'title'  => __d('platform', 'Dashboard'),
             'icon'   => 'dashboard',
             'weight' => 0,
 
@@ -29,7 +29,7 @@ Event::listen('frontend.menu.right', function ()
     return array(
         array(
             'url'    => site_url('messages'),
-            'title'  => __d('system', 'Messages'),
+            'title'  => __d('platform', 'Messages'),
             'icon'   => 'envelope-o',
             'weight' => 1,
 
@@ -42,7 +42,7 @@ Event::listen('frontend.menu.right', function ()
         ),
         array(
             'url'    => site_url('notifications'),
-            'title'  => __d('system', 'Notifications'),
+            'title'  => __d('platform', 'Notifications'),
             'icon'   => 'bell-o',
             'weight' => 1,
 
@@ -56,7 +56,7 @@ Event::listen('frontend.menu.right', function ()
         ),
         array(
             'url'    => site_url('admin/dashboard'),
-            'title'  => __d('system', 'Administration'),
+            'title'  => __d('platform', 'Administration'),
             'icon'   => 'server',
             'weight' => 101,
 
@@ -72,7 +72,7 @@ Event::listen('backend.menu.sidebar', function ()
     return array(
         array(
             'url'    => site_url('admin/dashboard'),
-            'title'  => __d('system', 'Dashboard'),
+            'title'  => __d('platform', 'Dashboard'),
             'icon'   => 'dashboard',
             'weight' => 0,
 
@@ -107,7 +107,7 @@ Event::listen('backend.menu.navbar', function ()
     return array(
         array(
             'url'    => site_url('messages'),
-            'title'  => __d('system', 'Messages'),
+            'title'  => __d('platform', 'Messages'),
             'icon'   => 'envelope-o',
             'weight' => 1,
 
@@ -120,7 +120,7 @@ Event::listen('backend.menu.navbar', function ()
         ),
         array(
             'url'    => site_url('notifications'),
-            'title'  => __d('system', 'Notifications'),
+            'title'  => __d('platform', 'Notifications'),
             'icon'   => 'bell-o',
             'weight' => 1,
 
@@ -134,7 +134,7 @@ Event::listen('backend.menu.navbar', function ()
         ),
         array(
             'url'    => site_url('dashboard'),
-            'title'  => __d('system', 'Frontend'),
+            'title'  => __d('platform', 'Frontend'),
             'icon'   => 'home',
             'weight' => 101,
 

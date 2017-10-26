@@ -75,6 +75,10 @@ abstract class BaseController extends Controller
                 $notification->markAsRead();
             }
         }
+
+        if (! isset($this->theme)) {
+            return $this->theme = Config::get('app.theme', 'Bootstrap');
+        }
     }
 
     /**

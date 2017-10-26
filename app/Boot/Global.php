@@ -53,15 +53,13 @@ App::error(function (Exception $e, $code)
         return Response::json(array('error' => $e->getMessage()), $code, $headers);
     }
 
-    // Non-API processing.
-    else if ($e instanceof HttpException) {
-        $code = $e->getStatusCode();
+    // Standard processing.
+    else if ($e instanceof TokenMismatchException) {
+        $except = array('password', 'password_confirmation');
 
-        $view = View::makeLayout('Default', 'Bootstrap')
-            ->shares('title', 'Error ' .$code)
-            ->nest('content', 'Errors/' .$code, array('exception' => $e));
-
-        return Response::make($view->render(), $code, $e->getHeaders());
+        return Redirect::back()
+            ->withInput($request->except($except))
+            ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
     } else if ($e instanceof AuthenticationException) {
         $guards = $e->guards();
 
@@ -69,19 +67,25 @@ App::error(function (Exception $e, $code)
 
         $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');
 
-        return Redirect::to($uri);
+        return Redirect::to($uri)
+            ->withStatus(__('Please login to access this resource.'), 'info');
     } else if ($e instanceof AuthorizationException) {
         $guard = Config::get('auth.defaults.guard', 'web');
 
         $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
 
-        return Redirect::to($uri)->withStatus(__('You are not authorized to access this resource.'), 'danger');
-    } else if ($e instanceof TokenMismatchException) {
-        $except = array('password', 'password_confirmation');
+        return Redirect::to($uri)
+            ->withStatus(__('You are not authorized to access this resource.'), 'danger');
+    } else if ($e instanceof HttpException) {
+        $code = $e->getStatusCode();
 
-        return Redirect::back()
-            ->withInput($request->except($except))
-            ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
+        if (View::exists('Errors/' .$code)) {
+            $view = View::makeLayout('Default', 'Bootstrap')
+                ->shares('title', 'Error ' .$code)
+                ->nest('content', 'Errors/' .$code, array('exception' => $e));
+
+            return Response::make($view->render(), $code, $e->getHeaders());
+        }
     }
 });
 

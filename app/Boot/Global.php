@@ -26,6 +26,10 @@ App::error(function (Exception $e, $code)
 
 App::error(function (TokenMismatchException $e, $code)
 {
+    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
+        return Response::make(array('error' => $e->getMessage()), 403);
+    }
+
     $input = Input::except(array('password', 'password_confirmation'));
 
     return Redirect::back()

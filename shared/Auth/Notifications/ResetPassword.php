@@ -15,6 +15,7 @@ class ResetPassword extends Notification
      */
     public $token;
 
+
     /**
      * Create a notification instance.
      *
@@ -49,6 +50,7 @@ class ResetPassword extends Notification
             ->subject(__d('shared', 'Reset Password'))
             ->line(__d('shared', 'You are receiving this email because we received a password reset request for your account.'))
             ->action(__d('shared', 'Reset Password'), site_url('password/reset', $this->token))
-            ->line(__d('shared', 'If you did not request a password reset, no further action is required.'));
+            ->line(__d('shared', 'If you did not request a password reset, no further action is required.'))
+            ->queued();
     }
 }

@@ -15,6 +15,7 @@ class AccountActivation extends Notification
      */
     public $token;
 
+
     /**
      * Create a notification instance.
      *
@@ -46,8 +47,9 @@ class AccountActivation extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__d('shared', 'Account Activation'))
-            ->line(__d('shared', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
-            ->action(__d('shared', 'Activate Account'), site_url('register/verify/', $this->token));
+            ->subject(__d('platform', 'Account Activation'))
+            ->line(__d('platform', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
+            ->action(__d('platform', 'Activate Account'), site_url('register/verify/', $this->token))
+            ->queued();
     }
 }

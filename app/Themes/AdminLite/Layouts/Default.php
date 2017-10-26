@@ -3,7 +3,7 @@
  * Frontend Default Layout
  */
 
-$siteName = Config::get('app.name', SITETITLE);
+$siteName = Config::get('app.name');
 
 // Generate the Language Changer menu.
 $langCode = Language::code();

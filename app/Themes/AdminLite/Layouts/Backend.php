@@ -3,7 +3,7 @@
  * Backend Default Layout
  */
 
-$siteName = Config::get('app.name', SITETITLE);
+$siteName = Config::get('app.name');
 
 // Prepare the current User Info.
 $user = Auth::user();

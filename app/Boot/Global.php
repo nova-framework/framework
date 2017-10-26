@@ -30,6 +30,8 @@ App::error(function (Exception $e, $code)
         'Symfony\Component\HttpKernel\Exception\HttpException',
     );
 
+    static $dontFlash = array('password', 'password_confirmation');
+
     // Report the Exception.
     $shouldReport = true;
 
@@ -66,10 +68,8 @@ App::error(function (Exception $e, $code)
 
     // Standard processing.
     else if ($e instanceof TokenMismatchException) {
-        $except = array('password', 'password_confirmation');
-
         return Redirect::back()
-            ->withInput($request->except($except))
+            ->withInput($request->except($dontFlash))
             ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
     } else if ($e instanceof AuthenticationException) {
         $guards = $e->guards();

@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 // Application Error Logger
 //--------------------------------------------------------------------------
 
-Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
+Log::useFiles(STORAGE_PATH .'logs' .DS .'framework.log');
 
 //--------------------------------------------------------------------------
 // Application Error Handler

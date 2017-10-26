@@ -151,7 +151,7 @@ if (isset($user->image) && $user->image->exists()) {
                     <?= __d('admin_lite', 'Sign out'); ?>
                   </a>
                   <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                    <input type="hidden" name="csrfToken" value="<?= csrf_token(); ?>" />
                   </form>
                 </div>
               </li>
@@ -325,7 +325,7 @@ $(function () {
     // Setup the CSRF header on AJAX requests.
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': '<?= $csrfToken; ?>'
+            'X-CSRF-TOKEN': '<?= csrf_token(); ?>'
         }
     });
 

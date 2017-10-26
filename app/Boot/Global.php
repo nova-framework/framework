@@ -30,7 +30,18 @@ App::error(function (Exception $e, $code)
         'Symfony\Component\HttpKernel\Exception\HttpException',
     );
 
-    if (! in_array(get_class($e), $dontReport)) {
+    // Report the Exception.
+    $shouldReport = true;
+
+    foreach ($dontReport as $type) {
+        if ($e instanceof $type) {
+            $shouldReport = false;
+
+            break;
+        }
+    }
+
+    if ($shouldReport) {
         Log::error($e);
     }
 

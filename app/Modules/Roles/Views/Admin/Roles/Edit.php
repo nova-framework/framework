@@ -51,7 +51,8 @@
                 </div>
             </div>
 
-            <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+            <?= csrf_field(); ?>
+            
             <input type="hidden" name="roleId" value="<?= $role->id; ?>" />
 
             </form>

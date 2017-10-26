@@ -109,7 +109,8 @@ foreach ($users->getItems() as $user) {
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
                 <form action="<?= site_url('admin/users/' .$user->id .'/destroy'); ?>" method="POST">
-                    <input type="hidden" name="_token" value="<?= csrf_token(); ?>" />
+                    <?= csrf_field(); ?>
+                    
                     <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('users', 'Delete the User'); ?>">
                 </form>
             </div>

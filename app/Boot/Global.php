@@ -86,8 +86,7 @@ App::error(function (Exception $e, $code)
 
         $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');
 
-        return Redirect::to($uri)
-            ->withStatus(__('Please login to access this resource.'), 'info');
+        return Redirect::to($uri);
     } else if ($e instanceof HttpException) {
         $code = $e->getStatusCode();
 

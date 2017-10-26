@@ -49,7 +49,7 @@ class AccountActivation extends Notification
         return (new MailMessage)
             ->subject(__d('platform', 'Account Activation'))
             ->line(__d('platform', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
-            ->action(__d('platform', 'Activate Account'), site_url('register/verify/', $this->token))
+            ->action(__d('platform', 'Activate Account'), url('register/verify/', $this->token))
             ->queued();
     }
 }

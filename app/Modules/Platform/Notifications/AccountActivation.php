@@ -6,7 +6,7 @@ use Shared\Notifications\Notification;
 use Shared\Notifications\Messages\MailMessage;
 
 
-class ResetPassword extends Notification
+class AccountActivation extends Notification
 {
     /**
      * The password reset token.
@@ -46,9 +46,8 @@ class ResetPassword extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(__d('shared', 'Reset Password'))
-            ->line(__d('shared', 'You are receiving this email because we received a password reset request for your account.'))
-            ->action(__d('shared', 'Reset Password'), site_url('password/reset', $this->token))
-            ->line(__d('shared', 'If you did not request a password reset, no further action is required.'));
+            ->subject(__d('shared', 'Account Activation'))
+            ->line(__d('shared', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
+            ->action(__d('shared', 'Activate Account'), site_url('register/verify/', $this->token));
     }
 }

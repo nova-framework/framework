@@ -22,6 +22,12 @@ Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Authori
 Route::get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Authorize@reset'));
 Route::post('password/reset',         array('middleware' => 'guest', 'uses' => 'Authorize@postReset'));
 
+// The Account Registration.
+Route::get( 'register',                 array('before' => 'guest', 'uses' => 'Registrar@create'));
+Route::post('register',                 array('before' => 'guest', 'uses' => 'Registrar@store'));
+Route::get( 'register/verify/{token?}', array('before' => 'guest', 'uses' => 'Registrar@verify'));
+Route::get( 'register/status',          array('before' => 'guest', 'uses' => 'Registrar@status'));
+
 // The User's Dashboard.
 Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
 

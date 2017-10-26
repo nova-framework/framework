@@ -13,10 +13,11 @@ use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
-use Nova\Support\Facades\Password;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
+
+use Shared\Support\Facades\Password;
 
 use App\Modules\Platform\Controllers\BaseController;
 

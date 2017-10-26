@@ -113,7 +113,6 @@ return array(
         'Nova\Mail\MailServiceProvider',
         'Nova\Pagination\PaginationServiceProvider',
         'Nova\Redis\RedisServiceProvider',
-        'Nova\Auth\Reminders\ReminderServiceProvider',
         'Nova\Session\SessionServiceProvider',
         'Nova\Language\LanguageServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
@@ -121,7 +120,6 @@ return array(
         'Nova\View\ViewServiceProvider',
 
         // The Forge Providers.
-        'Nova\Auth\Reminders\ConsoleServiceProvider',
         'Nova\Cache\ConsoleServiceProvider',
         'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
         'Nova\Foundation\Providers\ForgeServiceProvider',
@@ -133,6 +131,8 @@ return array(
         'Nova\Session\ConsoleServiceProvider',
 
         // The Shared Providers.
+        'Shared\Auth\Reminders\ReminderServiceProvider',
+        'Shared\Auth\ConsoleServiceProvider',
         'Shared\Database\Backup\ConsoleServiceProvider',
         'Shared\Notifications\NotificationServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
@@ -195,7 +195,6 @@ return array(
         'Language'      => 'Nova\Support\Facades\Language',
         'Mailer'        => 'Nova\Support\Facades\Mailer',
         'Paginator'     => 'Nova\Support\Facades\Paginator',
-        'Password'      => 'Nova\Support\Facades\Password',
         'Redirect'      => 'Nova\Support\Facades\Redirect',
         'Redis'         => 'Nova\Support\Facades\Redis',
         'Request'       => 'Nova\Support\Facades\Request',
@@ -216,6 +215,7 @@ return array(
 
         // The Shared Facades.
         'Notification'  => 'Shared\Support\Facades\Notification',
+        'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',
     ),
 

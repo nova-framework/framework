@@ -4,12 +4,12 @@ namespace App\Modules\Users\Models;
 
 use Nova\Auth\UserTrait;
 use Nova\Auth\UserInterface;
-use Nova\Auth\Reminders\RemindableTrait;
-use Nova\Auth\Reminders\RemindableInterface;
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Foundation\Auth\Access\AuthorizableTrait;
 use Nova\Support\Facades\Cache;
 
+use Shared\Auth\Reminders\RemindableTrait;
+use Shared\Auth\Reminders\RemindableInterface;
 use Shared\Database\ORM\FileField\FileFieldTrait;
 use Shared\Notifications\NotifiableTrait;
 

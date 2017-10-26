@@ -7,6 +7,7 @@ use Nova\Auth\AuthenticationException;
 use Nova\Session\TokenMismatchException;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 //--------------------------------------------------------------------------
@@ -21,65 +22,64 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'error.log');
 
 App::error(function (Exception $e, $code)
 {
-    Log::error($e);
-});
+    static $dontReport = array(
+        'Nova\Auth\AuthenticationException',
+        'Nova\Database\ORM\ModelNotFoundException',
+        'Nova\Session\TokenMismatchException',
+        'Nova\Validation\ValidationException',
+        'Symfony\Component\HttpKernel\Exception\HttpException',
+    );
 
-App::error(function (TokenMismatchException $e, $code)
-{
-    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        return Response::make(array('error' => $e->getMessage()), 403);
+    if (! in_array(get_class($e), $dontReport)) {
+        Log::error($e);
     }
 
-    $input = Input::except(array('password', 'password_confirmation'));
-
-    return Redirect::back()
-        ->withInput($input)
-        ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
-});
-
-App::error(function (HttpException $e, $code)
-{
-    $code = $e->getStatusCode();
-
-    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        return Response::json(array('error' => $e->getMessage()), $code, $e->getHeaders());
+    // Prepare the exception.
+    if ($e instanceof ModelNotFoundException) {
+        $e = new NotFoundHttpException($e->getMessage(), $e);
     }
 
-    // We'll create and return a themed Error Page as response.
-    $view = View::makeLayout('Default', 'Bootstrap')
-        ->shares('title', 'Error ' .$code)
-        ->nest('content', 'Errors/' .$code, array('exception' => $e));
+    $request = Request::instance();
 
-    return Response::make($view->render(), $code, $e->getHeaders());
-});
+    if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
+        if ($e instanceof HttpException) {
+            $code    = $e->getStatusCode();
+            $headers = $e->getHeaders();
+        } else {
+            $code    = 403;
+            $headers = array();
+        }
 
-App::error(function (AuthenticationException $e, $code)
-{
-    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        return Response::make(array('error' => $e->getMessage()), 403);
+        return Response::json(array('error' => $e->getMessage()), $code, $headers);
+    } else if ($e instanceof HttpException) {
+        $code = $e->getStatusCode();
+
+        $view = View::makeLayout('Default', 'Bootstrap')
+            ->shares('title', 'Error ' .$code)
+            ->nest('content', 'Errors/' .$code, array('exception' => $e));
+
+        return Response::make($view->render(), $code, $e->getHeaders());
+    } else if ($e instanceof AuthenticationException) {
+        $guards = $e->guards();
+
+        $guard = array_shift($guards);
+
+        $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');
+
+        return Redirect::to($uri);
+    } else if ($e instanceof AuthorizationException) {
+        $guard = Config::get('auth.defaults.guard', 'web');
+
+        $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
+
+        return Redirect::to($uri)->withStatus(__('You are not authorized to access this resource.'), 'danger');
+    } else if ($e instanceof TokenMismatchException) {
+        $except = array('password', 'password_confirmation');
+
+        return Redirect::back()
+            ->withInput($request->except($except))
+            ->withStatus(__('Validation Token has expired. Please try again!'), 'danger');
     }
-
-    // Get the Guard's dashboard path from configuration.
-    $guard = Config::get('auth.defaults.guard', 'web');
-
-    $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');
-
-    return Redirect::to($uri);
-});
-
-App::error(function (AuthorizationException $e, $code)
-{
-    if (Request::ajax() || Request::wantsJson() || Request::is('api/*')) {
-        return Response::make(array('error' => $e->getMessage()), 403);
-    }
-
-    // Get the Guard's dashboard path from configuration.
-    $guard = Config::get('auth.defaults.guard', 'web');
-
-    $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
-
-    return Redirect::to($uri)
-        ->withStatus(__('You are not authorized to access this resource.'), 'warning');
 });
 
 //--------------------------------------------------------------------------

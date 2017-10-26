@@ -63,6 +63,7 @@ App::error(function (Exception $e, $code)
     } else if ($e instanceof AuthenticationException) {
         $guards = $e->guards();
 
+        // We will use the first exception guard.
         $guard = array_shift($guards);
 
         $uri = Config::get("auth.guards.{$guard}.paths.authorize", 'login');

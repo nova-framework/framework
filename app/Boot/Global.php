@@ -55,12 +55,15 @@ App::error(function (Exception $e, $code)
     $request = Request::instance();
 
     if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
+        $headers = array();
+
+        $code = 403;
+
         if ($e instanceof HttpException) {
             $code    = $e->getStatusCode();
             $headers = $e->getHeaders();
-        } else {
-            $code    = 403;
-            $headers = array();
+        } else if ($e instanceof AuthenticationException) {
+            $code = 401;
         }
 
         return Response::json(array('error' => $e->getMessage()), $code, $headers);

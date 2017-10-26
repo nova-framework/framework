@@ -1,6 +1,6 @@
 <?php
 
-namespace Shared\Auth\Notifications;
+namespace App\Modules\Platform\Notifications;
 
 use Shared\Notifications\Notification;
 use Shared\Notifications\Messages\MailMessage;

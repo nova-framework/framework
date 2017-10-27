@@ -107,13 +107,15 @@ class Handler extends ExceptionHandler
     {
         $debug = Config::get('app.debug');
 
-        //
-        $e = FlattenException::create($e);
-
         if (! $debug) {
+            $e = FlattenException::create($e);
+
             return $this->renderHttpException($e, $request);
         }
 
+        $headers = method_exists($e, 'getHeaders') ? $e->getHeaders() : array();
+
+        //
         $whoops = new WhoopsRun();
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -124,7 +126,7 @@ class Handler extends ExceptionHandler
 
         $whoops->pushHandler($handler);
 
-        return Response::make($whoops->handleException($e), $e->getStatusCode(), $e->getHeaders());
+        return Response::make($whoops->handleException($e), 500, $headers);
     }
 
     /**

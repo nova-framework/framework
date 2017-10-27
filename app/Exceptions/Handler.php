@@ -105,7 +105,9 @@ class Handler extends ExceptionHandler
         $debug = Config::get('app.debug');
 
         if (! $debug) {
-            return parent::convertExceptionToResponse($e);
+            $e = new HttpException(500, $e->getMessage(), $e, array(), $e->getCode());
+
+            return $this->renderHttpException($e);
         }
 
         $whoops = new WhoopsRun();

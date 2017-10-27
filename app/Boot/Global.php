@@ -20,7 +20,7 @@ Log::useFiles(STORAGE_PATH .'logs' .DS .'framework.log');
 // Application Error Handler
 //--------------------------------------------------------------------------
 
-App::error(function (Exception $e, $code)
+App::error(function (Exception $e, $code, $fromConsole)
 {
     static $dontReport = array(
         'Nova\Auth\AuthenticationException',

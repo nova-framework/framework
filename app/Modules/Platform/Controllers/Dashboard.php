@@ -28,3 +28,4 @@ class Dashboard extends BaseController
         return Redirect::to('dashboard')->withStatus('A sample notification was sent to yourself.', 'success');
     }
 }
+

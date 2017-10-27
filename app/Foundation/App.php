@@ -90,6 +90,14 @@ $app->bindInstallPaths($paths);
 $app->instance('app', $app);
 
 //--------------------------------------------------------------------------
+// Bind The Exception Handler Interface
+//--------------------------------------------------------------------------
+
+$app->singleton(
+    'Nova\Foundation\Contracts\ExceptionHandlerInterface', 'App\Foundation\Exceptions\Handler'
+);
+
+//--------------------------------------------------------------------------
 // Load The Framework Facades
 //--------------------------------------------------------------------------
 
@@ -180,18 +188,10 @@ $app->booted(function() use ($app, $env)
 {
 
 //--------------------------------------------------------------------------
-// Load The Application Start Script
+// Load The Boootstrap Script
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .DS .'Boot' .DS .'Global.php';
-
-if (is_readable($path)) require $path;
-
-//--------------------------------------------------------------------------
-// Load The Environment Start Script
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Boot' .DS .'Environment' .DS .ucfirst($env) .'.php';
+$path = $app['path'] .DS .'Bootstrap.php';
 
 if (is_readable($path)) require $path;
 

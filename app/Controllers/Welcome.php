@@ -51,5 +51,4 @@ This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>');
             ->shares('title', __('Subpage'))
             ->withWelcomeMessage($message);
     }
-
 }

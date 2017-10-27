@@ -10,6 +10,11 @@ use Nova\Support\Facades\View;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+use Whoops\Run as Whoops;
+use Whoops\Handler\PrettyPageHandler as WhoopsHandler;
+
 use Exception;
 
 
@@ -65,20 +70,49 @@ class Handler extends ExceptionHandler
                 ->with('danger', __('Validation Token has expired. Please try again!'));
         }
 
-        // If we got a HttpException, we will render a themed error page.
-        else if ($this->isHttpException($e)) {
-            $status = $e->getStatusCode();
+        return parent::render($request, $e);
+    }
 
-            if (View::exists("Errors/{$status}")) {
-                $view = View::makeLayout('Default', 'Bootstrap')
-                    ->shares('title', "Error {$status}")
-                    ->nest('content', "Errors/{$status}", array('exception' => $e));
+    /**
+     * Render the given HttpException.
+     *
+     * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function renderHttpException(HttpException $e)
+    {
+        $status = $e->getStatusCode();
 
-                return Response::make($view->render(), $status, $e->getHeaders());
-            }
+        if (View::exists("Errors/{$status}")) {
+            $view = View::makeLayout('Default', 'Bootstrap')
+                ->shares('title', "Error {$status}")
+                ->nest('content', "Errors/{$status}", array('exception' => $e));
+
+            return Response::make($view->render(), $status, $e->getHeaders());
         }
 
-        return parent::render($request, $e);
+        return parent::renderHttpException($e);
+    }
+
+    /**
+     * Convert the given exception into a Response instance.
+     *
+     * @param  \Exception  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function convertExceptionToResponse(Exception $e)
+    {
+        $debug = Config::get('app.debug');
+
+        if (! $debug) {
+            return parent::convertExceptionToResponse($e);
+        }
+
+        $whoops = new Whoops();
+
+        $whoops->pushHandler(new WhoopsHandler());
+
+        return Response::make($whoops->handleException($e), $e->getStatusCode(), $e->getHeaders());
     }
 
     /**

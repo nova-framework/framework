@@ -12,7 +12,7 @@ use Nova\Support\Facades\Response;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-use Whoops\Run as Whoops;
+use Whoops\Run as WhoopsRun;
 use Whoops\Handler\PrettyPageHandler as WhoopsHandler;
 
 use Exception;
@@ -108,7 +108,7 @@ class Handler extends ExceptionHandler
             return parent::convertExceptionToResponse($e);
         }
 
-        $whoops = new Whoops();
+        $whoops = new WhoopsRun();
 
         $whoops->pushHandler(new WhoopsHandler());
 

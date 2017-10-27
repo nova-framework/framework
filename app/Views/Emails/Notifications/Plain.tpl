@@ -3,7 +3,7 @@
 if (! empty($greeting)) {
     echo $greeting, "\n\n";
 } else {
-    echo ($level == 'error') ? __d('notifications', 'Whoops!') : __d('notifications', 'Hello!'), "\n\n";
+    echo ($level == 'error') ? __('Whoops!') : __('Hello!'), "\n\n";
 }
 
 if (! empty($introLines)) {
@@ -18,6 +18,6 @@ if (! empty($outroLines)) {
     echo implode("\n", $outroLines), "\n\n";
 }
 
-echo __d('notifications', 'Regards,'), "\n";
+echo __('Regards,'), "\n";
 
 echo config('app.name'), "\n";

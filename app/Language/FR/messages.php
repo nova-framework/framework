@@ -2,8 +2,10 @@
 
 return array (
   'Bad Request' => 'Requète incorrect',
+  'Be right back.' => '',
   'Forbidden' => 'Accès interdit',
   'Go to our home page and navigate to the content in question.' => 'Retournez sur l\'accueil et naviguez vers le contenu en question.',
+  'Hello!' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Bonjour, bienvenue dans le contrôleur de bienvenue et sa sous-page ! <br/>
 Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/SubPage.php</code>',
@@ -12,11 +14,13 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
 Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.php</code>',
   'Home' => 'Accueil',
   'If you spelled the URL manually, double check the spelling.' => 'Si vous avez écrit l\'URL manuellement, vérifiez l\'orthographe.',
+  'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => 'Erreur interne du serveur',
   'Method not allowed' => 'Méthode non autorisée',
   'Open subpage' => 'Ouvrir la sous-page',
-  'Please login to access this resource.' => '',
   'Referrer: {0}' => 'Referrer: {0}',
+  'Regards,' => '',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => 'Une erreur inconnue est apparue sur le serveur Web.',
   'Subpage' => 'Sous-page',
   'The :attribute and :other must be different.' => '',
@@ -70,4 +74,5 @@ Ce contenu peut être changé via le fichier: <code>app/Views/Welcome/Welcome.ph
   'Unauthorized' => 'Interdit',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Bienvenue',
+  'Whoops!' => '',
 );

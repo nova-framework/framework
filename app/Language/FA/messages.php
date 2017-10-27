@@ -2,8 +2,10 @@
 
 return array (
   'Bad Request' => '',
+  'Be right back.' => '',
   'Forbidden' => '',
   'Go to our home page and navigate to the content in question.' => 'به صفحه اصلی بروید و به صفحه مورد نظر خود رجوع کنید.',
+  'Hello!' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'درود, به کنترل گر صفحه خوش آمد گویی و زیر صفحه خوش آمدید! <br/>
 این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/SubPage.php</code>',
@@ -12,11 +14,13 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
 این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/Welcome.php</code>',
   'Home' => 'خانه',
   'If you spelled the URL manually, double check the spelling.' => 'اگر URL را هجی کرده اید, دوباره آن را بررسی کنید',
+  'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => 'خطای داخلی سرور',
   'Method not allowed' => '',
   'Open subpage' => 'بازکردن زیرصفحه',
-  'Please login to access this resource.' => '',
   'Referrer: {0}' => 'ارجاع: {0}',
+  'Regards,' => '',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => 'خطایی در سرور وب بوجود آمده است',
   'Subpage' => 'زیر صفحه',
   'The :attribute and :other must be different.' => ':attribute و :other باید متفاوت باشد.',
@@ -70,4 +74,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'خوش امدید',
+  'Whoops!' => '',
 );

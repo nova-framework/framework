@@ -2,8 +2,10 @@
 
 return array (
   'Bad Request' => 'Неправильный запрос',
+  'Be right back.' => '',
   'Forbidden' => 'Запрещено',
   'Go to our home page and navigate to the content in question.' => 'Перейдите на нашу домашнюю страницу к соответствующему контенту.',
+  'Hello!' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Здравствуйте, добро пожаловать в метод подстраницы стартового контролера! <br/>
 Содержимое этого файла можеть быть изменено в файле <code>app/Views/Welcome/SubPage.php</code>',
@@ -12,11 +14,13 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
 Содержимое этого файла может быть изменено в файле <code>app/Views/Welcome/Welcome.php</code>',
   'Home' => 'Домой',
   'If you spelled the URL manually, double check the spelling.' => 'Если вы ввели URL вручную, дважды проверьте правильность написания.',
+  'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => 'Внутрення ошибка сервера',
   'Method not allowed' => 'Метод не разрешен',
   'Open subpage' => 'Открыть подстраницу',
-  'Please login to access this resource.' => '',
   'Referrer: {0}' => 'Ссылающийся: {0}',
+  'Regards,' => '',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => 'На веб-сервере что-то пошло не так.',
   'Subpage' => 'Подстраница',
   'The :attribute and :other must be different.' => ':attribute и :other должны быть разными',
@@ -70,4 +74,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => 'Неразрешенный',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Добро пожаловать!',
+  'Whoops!' => '',
 );

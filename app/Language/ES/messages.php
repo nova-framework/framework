@@ -2,8 +2,10 @@
 
 return array (
   'Bad Request' => '',
+  'Be right back.' => '',
   'Forbidden' => '',
   'Go to our home page and navigate to the content in question.' => '',
+  'Hello!' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Hola, bienvenido desde el controlador welcome y el método subpage! <br/>
 Este contenido puede ser cambiado en <code>/app/Views/Welcome/SubPage.php</code>',
@@ -12,11 +14,13 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
 Este contenido puede ser cambiado en <code>/app/Views/Welcome/Welcome.php</code>',
   'Home' => 'Inicio',
   'If you spelled the URL manually, double check the spelling.' => '',
+  'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => '',
   'Method not allowed' => '',
   'Open subpage' => 'Abrir Subpágina',
-  'Please login to access this resource.' => '',
   'Referrer: {0}' => '',
+  'Regards,' => '',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => '',
   'Subpage' => 'Subpágina',
   'The :attribute and :other must be different.' => '',
@@ -70,4 +74,5 @@ Este contenido puede ser cambiado en <code>/app/Views/Welcome/Welcome.php</code>
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Bienvenido',
+  'Whoops!' => '',
 );

@@ -2,19 +2,23 @@
 
 return array (
   'Bad Request' => 'Ugyldig anmodning',
+  'Be right back.' => '',
   'Forbidden' => 'Forbudt',
   'Go to our home page and navigate to the content in question.' => 'Gå til vores hjemmeside og find det pågældende indhold.',
+  'Hello!' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'Hej. Velkommen fra "Welcome" controlleren og "Subpage" funktionen!<br/>Dette indhold kan ændres i <code>/app/Views/Welcome/SubPage.php</code>.',
   'Hello, welcome from the welcome controller! <br/>
 this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => 'Hej. Velkommen fra "Welcome" controlleren!<br/>Dette indhold kan ændres i <code>/app/Views/Welcome/Welcome.php</code>.',
   'Home' => 'Hjem',
   'If you spelled the URL manually, double check the spelling.' => 'Hvis du har indtastet din URL manuelt bedes du tjekke den for evt fejl.',
+  'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => 'Intern serverfejl',
   'Method not allowed' => 'Ikke gyldig "method"',
   'Open subpage' => 'Åben underside',
-  'Please login to access this resource.' => '',
   'Referrer: {0}' => 'Henvisninger: {0}',
+  'Regards,' => '',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => 'Der er sket en fejl på web-serveren',
   'Subpage' => 'Underside',
   'The :attribute and :other must be different.' => ':attribute og :other skal være forskellige.',
@@ -68,4 +72,5 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'Unauthorized' => 'uautoriseret',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'Velkommen',
+  'Whoops!' => '',
 );

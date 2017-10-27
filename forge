@@ -41,7 +41,10 @@ $forge = ConsoleApplication::start($app);
 // Run The Forge Application
 //--------------------------------------------------------------------------
 
-$status = $forge->run();
+$status = $forge->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
 
 //--------------------------------------------------------------------------
 // Shutdown The Application

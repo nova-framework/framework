@@ -4,16 +4,18 @@ namespace App\Exceptions;
 
 use Nova\Auth\AuthenticationException;
 use Nova\Foundation\Exceptions\Handler as ExceptionHandler;
+use Nova\Http\Request;
 use Nova\Session\TokenMismatchException;
 use Nova\Support\Facades\Config;
-use Nova\Support\Facades\View;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
+use Nova\Support\Facades\View;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use Whoops\Run as WhoopsRun;
-use Whoops\Handler\PrettyPageHandler as WhoopsHandler;
+use Whoops\Handler\JsonResponseHandler as WhoopsJsonResponseHandler;
+use Whoops\Handler\PrettyPageHandler as WhoopsPrettyPageHandler;
 
 use Exception;
 
@@ -62,7 +64,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $e
      * @return \Nova\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render(Request $request, Exception $e)
     {
         if ($e instanceof TokenMismatchException) {
             return Redirect::back()
@@ -79,7 +81,7 @@ class Handler extends ExceptionHandler
      * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function renderHttpException(HttpException $e)
+    protected function renderHttpException(HttpException $e, Request $request)
     {
         $status = $e->getStatusCode();
 
@@ -91,7 +93,7 @@ class Handler extends ExceptionHandler
             return Response::make($view->render(), $status, $e->getHeaders());
         }
 
-        return parent::renderHttpException($e);
+        return parent::renderHttpException($e, $request);
     }
 
     /**
@@ -100,7 +102,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function convertExceptionToResponse(Exception $e)
+    protected function convertExceptionToResponse(Exception $e, Request $request)
     {
         $code = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
 
@@ -115,9 +117,14 @@ class Handler extends ExceptionHandler
             return $this->renderHttpException($e);
         }
 
+        // Create the Whoops! handler.
         $whoops = new WhoopsRun();
 
-        $whoops->pushHandler(new WhoopsHandler());
+        if ($request->ajax() || $request->wantsJson()) {
+            $whoops->pushHandler(new WhoopsJsonResponseHandler());
+        } else {
+            $whoops->pushHandler(new WhoopsPrettyPageHandler());
+        }
 
         return Response::make($whoops->handleException($e), $code, $headers);
     }
@@ -129,7 +136,7 @@ class Handler extends ExceptionHandler
      * @param  \Nova\Auth\AuthenticationException  $exception
      * @return \Nova\Http\Response
      */
-    protected function unauthenticated($request, AuthenticationException $exception)
+    protected function unauthenticated(Request $request, AuthenticationException $exception)
     {
         if ($request->ajax() || $request->wantsJson() || $request->is('api/*')) {
             return Response::json(array('error' => 'Unauthenticated.'), 401);

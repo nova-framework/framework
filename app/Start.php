@@ -188,18 +188,18 @@ $app->booted(function() use ($app, $env)
 {
 
 //--------------------------------------------------------------------------
-// Load The Environment Start Script
-//--------------------------------------------------------------------------
-
-$path = $app['path'] .DS .'Environment' .DS .ucfirst($env) .'.php';
-
-if (is_readable($path)) require $path;
-
-//--------------------------------------------------------------------------
 // Load The Boootstrap Script
 //--------------------------------------------------------------------------
 
 $path = $app['path'] .DS .'Bootstrap.php';
+
+if (is_readable($path)) require $path;
+
+//--------------------------------------------------------------------------
+// Load The Environment Start Script
+//--------------------------------------------------------------------------
+
+$path = $app['path'] .DS .'Environment' .DS .ucfirst($env) .'.php';
 
 if (is_readable($path)) require $path;
 

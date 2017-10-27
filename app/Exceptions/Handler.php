@@ -102,10 +102,15 @@ class Handler extends ExceptionHandler
      */
     protected function convertExceptionToResponse(Exception $e)
     {
+        $code = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+
+        $headers = method_exists($e, 'getHeaders') ? $e->getHeaders() : array();
+
+        // When the debugging is disabled, we will render a HttpException.
         $debug = Config::get('app.debug');
 
         if (! $debug) {
-            $e = new HttpException(500, $e->getMessage(), $e, array(), $e->getCode());
+            $e = new HttpException($code, $e->getMessage(), $e, $headers, $e->getCode());
 
             return $this->renderHttpException($e);
         }
@@ -113,11 +118,6 @@ class Handler extends ExceptionHandler
         $whoops = new WhoopsRun();
 
         $whoops->pushHandler(new WhoopsHandler());
-
-        // Create and return a Response instance.
-        $code = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
-
-        $headers = method_exists($e, 'getHeaders') ? $e->getHeaders() : array();
 
         return Response::make($whoops->handleException($e), $code, $headers);
     }

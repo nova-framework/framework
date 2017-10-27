@@ -106,7 +106,7 @@ class Handler extends ExceptionHandler
 
         $headers = method_exists($e, 'getHeaders') ? $e->getHeaders() : array();
 
-        // When the debugging is disabled, we will render a HttpException.
+        // When the debugging is disabled, we will just render a HttpException.
         $debug = Config::get('app.debug');
 
         if (! $debug) {

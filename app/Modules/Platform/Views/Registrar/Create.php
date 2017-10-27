@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                <?= csrf_field(); ?>
 
                 </form>
             </div>

@@ -38,7 +38,7 @@
                 </div>
 
                 <?= csrf_field(); ?>
-                
+
                 <input type="hidden" name="token" value="<?= e($token); ?>" />
 
                 </form>

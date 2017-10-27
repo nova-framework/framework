@@ -112,7 +112,12 @@ class Handler extends ExceptionHandler
 
         $whoops->pushHandler(new WhoopsHandler());
 
-        return Response::make($whoops->handleException($e), $e->getStatusCode(), $e->getHeaders());
+        // Create and return a Response instance.
+        $code = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+
+        $headers = method_exists($e, 'getHeaders') ? $e->getHeaders() : array();
+
+        return Response::make($whoops->handleException($e), $code, $headers);
     }
 
     /**

@@ -114,10 +114,9 @@ class Handler extends ExceptionHandler
         if (! $debug) {
             $e = new HttpException($code, $e->getMessage(), $e, $headers, $e->getCode());
 
-            return $this->renderHttpException($e);
+            return $this->renderHttpException($e, $request);
         }
 
-        // Create the Whoops! handler.
         $whoops = new WhoopsRun();
 
         if ($request->ajax() || $request->wantsJson()) {

@@ -155,11 +155,11 @@ class Reminders extends BaseController
         // Calculate the User's Dashboard URI.
         $guard = $this->getGuard();
 
-        $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
+        $dashboard = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
 
         switch ($response) {
             case Password::PASSWORD_RESET:
-                return Redirect::to($uri)->withStatus($message, 'success');
+                return Redirect::to($dashboard)->withStatus($message, 'success');
 
             case Password::INVALID_TOKEN:
                 return Redirect::to('password/remind')->withStatus($message, 'danger');

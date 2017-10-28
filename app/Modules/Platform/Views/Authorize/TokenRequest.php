@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('centers', 'Center Login'); ?></h2>
+    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('centers', 'User Login'); ?></h2>
 </section>
 
 <!-- Main content -->

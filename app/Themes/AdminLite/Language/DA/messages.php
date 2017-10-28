@@ -8,6 +8,7 @@ return array (
   'Forgot Password?' => 'Glemt kodeord?',
   'Logout' => 'Log ud',
   'Member since {0}' => 'Medlem siden {0}',
+  'On-Time Login' => '',
   'Private Area' => '',
   'Profile' => 'Brugerkonto',
   'Search...' => '',

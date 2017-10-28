@@ -58,9 +58,7 @@ class Authorize extends BaseController
     {
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            $status = __d('platform', 'The reCaptcha verification failed.');
-
-            return Redirect::back()->withStatus($status, 'danger');
+            return Redirect::back()->withStatus(__d('platform', 'The reCaptcha verification failed.'), 'danger');
         }
 
         // Retrieve the Authentication credentials.
@@ -71,10 +69,7 @@ class Authorize extends BaseController
 
         // Make an attempt to login the Guest with the given credentials.
         if(! Auth::attempt($credentials, $remember)) {
-            // An error has happened on authentication.
-            $status = __d('platform', 'Wrong username or password.');
-
-            return Redirect::back()->withStatus($status, 'danger');
+            return Redirect::back()->withStatus(__d('platform', 'Wrong username or password.'), 'danger');
         }
 
         // The User is authenticated now; retrieve his Model instance.

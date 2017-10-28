@@ -29,6 +29,6 @@
 
 </form>
 
-<?= View::fetch('Partials/Attachments', array('attachments' => $attachments), 'Attachments'); ?>
+<?= View::fetch('Partials/Attachments', get_defined_vars(), 'Attachments'); ?>
 
 </section>

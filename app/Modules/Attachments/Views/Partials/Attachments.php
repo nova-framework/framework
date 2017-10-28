@@ -1,3 +1,14 @@
+<?php
+
+$deletable = isset($deletable) ? $deletable : true;
+
+// Prepare the existing files for javascript.
+$existingFiles = json_encode(
+    Input::get('attachment', isset($attachments) ? $attachments : array())
+);
+
+?>
+
 <div id ="dropzone" class="box box-widget">
     <div class="box-header with-border">
         <h3 class="box-title "><?= __d('attachments', 'Attachments'); ?></h3>
@@ -37,7 +48,9 @@
                         <div class="btn-group pull-right actions" role="group" aria-label='...' style="display: none;">
                             <a class="btn btn-sm btn-warning preview" href="#" data-toggle="modal" data-target="#modal-preview-dialog" title="<?= __d('attachments', 'Show this Attachment'); ?>" role="button"><i class="fa fa-search"></i></a>
                             <a class="btn btn-sm btn-success download" href="#" title="<?= __d('requests', 'Download this Attachment'); ?>" role="button"><i class="fa fa-download"></i></a>
+                            <?php if ($deletable) { ?>
                             <a data-dz-remove class="btn btn-sm btn-danger" href="#" title="<?= __d('attachments', 'Delete this Attachment'); ?>" role="button"><i class="fa fa-remove"></i></a>
+                            <?php } ?>
                         </div>
                     </td>
                 </tr>
@@ -50,6 +63,8 @@
         </div>
     </div>
 </div>
+
+<?php if ($deletable) { ?>
 
 <div class="modal modal-default" id="modal-confirm-dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
@@ -71,6 +86,8 @@
     </div>
 </div>
 
+<?php } ?>
+
 <div class="modal modal-default" id="modal-preview-dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog" style="width: 97% !important; margin-left: 2%;">
         <div class="modal-content">
@@ -89,15 +106,6 @@
         <!-- /.modal-content -->
     </div>
 </div>
-
-<?php
-
-// Prepare the existing files for javascript.
-$existingFiles = json_encode(
-    Input::get('attachment', isset($attachments) ? $attachments : array())
-);
-
-?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.js"></script>
 
@@ -147,7 +155,7 @@ $(function () {
         preview.find('.download').attr('href', download);
 
         if (! type.match(/image.*/) && ! type.match(/audio.*/) && ! type.match(/video.*/) && (type !== 'application/pdf')) {
-            preview.find('.preview').hide();
+            preview.find('.preview').remove();
         } else {
             preview.find('.preview').attr('data-name', name);
             preview.find('.preview').attr('data-url', url);

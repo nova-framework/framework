@@ -16,6 +16,8 @@
             <div class="panel-body">
                 <form method='POST' role="form">
 
+                <p><?= __d('platform', 'Please enter your e-mail address to be sent a link to login one time.'); ?></p>
+
                 <div class="form-group">
                     <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Email'); ?>" value="<?= Input::old('email'); ?>"><br><br></p>
                 </div>

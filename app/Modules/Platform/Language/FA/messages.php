@@ -73,6 +73,7 @@ return array (
   'Passwords must be at least six characters and match the confirmation.' => '',
   'Platform' => '',
   'Please activate your Account!' => '',
+  'Please enter your e-mail address to be sent a link to login one time.' => '',
   'Please enter your e-mail address to be sent a link to reset your password.' => 'لطفا آدرس ایمیل خود را برای ارسال لینک بازنشانی رمزعبور وارد کنید.',
   'Profile Picture' => '',
   'Profile Picture (to change)' => '',

@@ -30,6 +30,11 @@ use Carbon\Carbon;
 
 class Authorize extends BaseController
 {
+    /**
+     * The currently used Layout.
+     *
+     * @var mixed
+     */
     protected $layout = 'Default';
 
 

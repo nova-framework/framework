@@ -9,12 +9,6 @@
 
 /** Define static routes. */
 
-// The User's Account.
-Route::get( 'account',         array('middleware' => 'auth', 'uses' => 'Account@index'));
-Route::post('account',         array('middleware' => 'auth', 'uses' => 'Account@update'));
-Route::post('account/picture', array('middleware' => 'auth', 'uses' => 'Account@picture'));
-
-
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {

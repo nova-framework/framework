@@ -6,7 +6,7 @@
  * @version 3.0
  */
 
-namespace App\Modules\Users\Controllers;
+namespace App\Modules\Platform\Controllers;
 
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Gate;

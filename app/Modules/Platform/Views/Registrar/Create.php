@@ -13,7 +13,7 @@
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
             <div class="panel-heading">
-                <div class="panel-title"><?= __d('platform', 'Register to <b>{0}</b>', SITETITLE); ?></div>
+                <div class="panel-title"><?= __d('platform', 'Register to <b>{0}</b>', Config::get('app.name')); ?></div>
             </div>
             <div class="panel-body">
                 <form method='post' role="form">
@@ -70,7 +70,7 @@ var captchaCallback = function() {
 
 </script>
 
-<script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?php echo LANGUAGE_CODE; ?>" async defer></script>
+<script src="//www.google.com/recaptcha/api.js?onload=captchaCallback&render=explicit&hl=<?= Language::code(); ?>" async defer></script>
 
 <?php } ?>
 

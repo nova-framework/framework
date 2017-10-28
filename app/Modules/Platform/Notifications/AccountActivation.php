@@ -2,6 +2,8 @@
 
 namespace App\Modules\Platform\Notifications;
 
+use Nova\Support\Facades\Config;
+
 use Shared\Notifications\Notification;
 use Shared\Notifications\Messages\MailMessage;
 
@@ -9,7 +11,14 @@ use Shared\Notifications\Messages\MailMessage;
 class AccountActivation extends Notification
 {
     /**
-     * The password reset token.
+     * The account activation hash.
+     *
+     * @var string
+     */
+    public $hash;
+
+    /**
+     * The account activation token.
      *
      * @var string
      */
@@ -22,8 +31,9 @@ class AccountActivation extends Notification
      * @param  string  $token
      * @return void
      */
-    public function __construct($token)
+    public function __construct($hash, $token)
     {
+        $this->hash  = $hash;
         $this->token = $token;
     }
 
@@ -49,7 +59,7 @@ class AccountActivation extends Notification
         return (new MailMessage)
             ->subject(__d('platform', 'Account Activation'))
             ->line(__d('platform', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
-            ->action(__d('platform', 'Activate your Account'), url('register', $this->token))
+            ->action(__d('platform', 'Activate your Account'), url('register', array($this->hash, $this->token)))
             ->line(__d('platform', 'If you did not made an account registration, no further action is required.'))
             ->queued();
     }

@@ -9,12 +9,15 @@
 namespace App\Modules\Platform\Controllers;
 
 use Nova\Helpers\ReCaptcha;
+use Nova\Http\Request;
+use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
+use Nova\Support\Str;
 
 use App\Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
 use App\Modules\Roles\Models\Role;
@@ -39,15 +42,15 @@ class Registrar extends BaseController
         );
 
         $messages = array(
-            'valid_name'      => __d('system', 'The :attribute field is not a valid name.'),
-            'strong_password' => __d('system', 'The :attribute field is not strong enough.'),
+            'valid_name'      => __d('platform', 'The :attribute field is not a valid name.'),
+            'strong_password' => __d('platform', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'username' => __d('system', 'Username'),
-            'realname' => __d('system', 'Name and Surname'),
-            'email'    => __d('system', 'E-mail'),
-            'password' => __d('system', 'Password'),
+            'username' => __d('platform', 'Username'),
+            'realname' => __d('platform', 'Name and Surname'),
+            'email'    => __d('platform', 'E-mail'),
+            'password' => __d('platform', 'Password'),
         );
 
         // Add the custom Validation Rule commands.
@@ -76,7 +79,7 @@ class Registrar extends BaseController
     public function create()
     {
         return $this->createView()
-            ->shares('title', __d('system', 'User Registration'));
+            ->shares('title', __d('platform', 'User Registration'));
     }
 
     /**
@@ -86,19 +89,15 @@ class Registrar extends BaseController
      *
      * @throws \RuntimeException
      */
-    public function store()
+    public function store(Request $request)
     {
-        $input = Input::only(
-            'username',
-            'realname',
-            'email',
-            'password',
-            'password_confirmation'
+        $input = $request->only(
+            'username', 'realname', 'email', 'password', 'password_confirmation'
         );
 
         // Verify the submitted reCAPTCHA
-        if(! ReCaptcha::check()) {
-            $status = __d('system', 'Invalid reCAPTCHA submitted.');
+        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
+            $status = __d('platform', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
@@ -114,15 +113,13 @@ class Registrar extends BaseController
         $password = Hash::make($input['password']);
 
         // Create the Activation code.
-        $email = $input['email'];
-
-        $token = $this->createNewToken($email);
+        $token = $this->createNewToken();
 
         // Create the User record.
         $user = User::create(array(
             'username'        => $input['username'],
             'realname'        => $input['realname'],
-            'email'           => $email,
+            'email'           => $input['email'],
             'password'        => $password,
             'activation_code' => $token,
         ));
@@ -134,10 +131,14 @@ class Registrar extends BaseController
         $user->roles()->attach($role);
 
         // Send the associated Activation Notification.
-        $user->notify(new AccountActivationNotification($token));
+        $hashKey = Config::get('app.key');
+
+        $hash = hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey);
+
+        $user->notify(new AccountActivationNotification($hash, $token));
 
         // Prepare the flash message.
-        $status = __d('system', 'Your Account has been created. We have sent you an E-mail to activate your Account.');
+        $status = __d('platform', 'Your Account has been created. We have sent you an E-mail to activate your Account.');
 
         return Redirect::to('register/status')->withStatus($status);
     }
@@ -145,50 +146,84 @@ class Registrar extends BaseController
     /**
      * Display the password reminder view.
      *
-     * @return Response
+     * @return \Nova\Http\RedirectResponse
      */
-    public function verify($token)
+    public function verify(Request $request, $hash, $token)
     {
-        $query = User::where('activation_code', $token)->where('activated', '=', 0);
+        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
 
-        // If the User is available.
-        if ($query->count() > 0) {
-            $user = $query->first();
+        // Compute the throttle key.
+        $throttleKey = 'registrar.verify|' .$request->ip();
 
-            // Update the User status to active.
-            $user->activated = 1;
+        // Make a Rate Limiter instance, via Container.
+        $limiter = App::make('Nova\Cache\RateLimiter');
 
-            $user->activation_code = null;
+       if ($limiter->tooManyAttempts($throttleKey, $maxAttempts, $lockoutTime)) {
+            $seconds = $limiter->availableIn($throttleKey);
 
-            if ($user->save()) {
-                // Prepare the flash message.
-                $status = __d('system', 'Activated! You can now Sign in!');
-
-                return Redirect::to('login')->withStatus($status);
-            }
+            return Redirect::to('register/status')
+                ->withStatus(__d('platform', 'Too many verification attempts, please try again in {0} seconds.', $seconds), 'danger');
         }
 
-        $status = __d('system', 'We could not activate your Account. Try again later.');
+        $hashKey = Config::get('app.key');
 
-        return Redirect::to('register/status')->withStatus($status);
-    }
+        if ($hash !== hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey)) {
+            $limiter->hit($throttleKey, $lockoutTime);
 
-    public function status()
-    {
-        return $this->createView()
-            ->shares('title', __d('system', 'Registration Status'));
+            return Redirect::to('register/status')
+                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+        }
+
+        $user = User::where('activation_code', $token)->where('activated', '=', 0)->first();
+
+        if (is_null($user)) {
+            $limiter->hit($throttleKey, $lockoutTime);
+
+            return Redirect::to('password/remind')
+                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+        }
+
+        $user->activated = 1;
+
+        $user->activation_code = null;
+
+        $user->save();
+
+        // Redirect to the login page.
+        $guard = Config::get('auth.defaults.guard', 'web');
+
+        $uri = Config::get("auth.guards.{$guard}.authorize", 'login');
+
+        return Redirect::to($uri)
+            ->withStatus(__d('platform', 'Activated! You can now Sign in!'), 'success');
     }
 
     /**
-     * Create a new Token for the User.
+     * Display the registration status.
      *
-     * @param  string $email
+     * @return \Nova\View\View
+     */
+    public function status()
+    {
+        return $this->createView()
+            ->shares('title', __d('platform', 'Registration Status'));
+    }
+
+    /**
+     * Create a new unique Token for the User.
+     *
      * @return string
      */
-    public function createNewToken($email)
+    public function createNewToken()
     {
-        $value = str_shuffle(sha1($email .spl_object_hash($this) .microtime(true)));
+        $tokens = User::lists('activation_code');
 
-        return hash_hmac('sha256', $value, Config::get('app.key'));
+        do {
+            $token = Str::random(100);
+        }
+        while (in_array($token, $tokens));
+
+        return $token;
     }
 }

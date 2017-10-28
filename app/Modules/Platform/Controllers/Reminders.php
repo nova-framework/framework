@@ -77,8 +77,8 @@ class Reminders extends BaseController
      */
     public function reset(Request $request, $hash, $token)
     {
-        $maxAttempts = Config::get('platform::reminders.maxAttempts', 5);
-        $lockoutTime = Config::get('platform::reminders.lockoutTime', 1); // In minutes.
+        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
         $throttleKey = $this->getGuard() .'|reminders|' .$request->ip();

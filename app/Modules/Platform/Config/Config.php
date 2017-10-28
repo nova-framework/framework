@@ -10,16 +10,16 @@
 return array(
     'activityLimit' => 5,
 
-    'tokenLogin' => array(
+    'throttle' => array(
         'lockoutTime' => 1,  // In minutes.
         'maxAttempts' => 5,
-        'validity'    => 15, // In minutes.
+    ),
+
+    'tokenLogin' => array(
+        'validity' => 15, // In minutes.
     ),
 
     'reminders' => array(
-        'lockoutTime' => 1,  // In minutes.
-        'maxAttempts' => 5,
-
         'messages' => array(
             'password' => __d('platform', 'Passwords must be at least six characters and match the confirmation.'),
             'user'     => __d('platform', 'We can\'t find an User with that e-mail address.'),

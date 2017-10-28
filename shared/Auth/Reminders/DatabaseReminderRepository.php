@@ -170,7 +170,7 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface
      */
     public function createNewToken(RemindableInterface $user)
     {
-       $tokens = $this->getTable()->lists('token');
+        $tokens = $this->getTable()->lists('token');
 
         do {
             $token = Str::random(100);

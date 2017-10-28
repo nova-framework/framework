@@ -30,6 +30,7 @@ Route::get( 'password/reset/{hash}/{token}', array('middleware' => 'guest', 'use
 // The Account Registration.
 Route::get( 'register',                 array('before' => 'guest', 'uses' => 'Registrar@create'));
 Route::post('register',                 array('before' => 'guest', 'uses' => 'Registrar@store'));
+Route::post('register/status',          array('before' => 'guest', 'uses' => 'Registrar@status'));
 Route::get( 'register/{hash}/{token?}', array('before' => 'guest', 'uses' => 'Registrar@verify'));
 
 // The User's Dashboard.

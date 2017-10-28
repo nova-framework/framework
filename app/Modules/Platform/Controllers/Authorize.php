@@ -178,8 +178,8 @@ class Authorize extends BaseController
      */
     public function tokenLogin(Request $request, $hash, $token)
     {
-        $maxAttempts = Config::get('platform::tokenLogin.maxAttempts', 5);
-        $lockoutTime = Config::get('platform::tokenLogin.lockoutTime', 1); // In minutes.
+        $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
+        $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
         $throttleKey = 'users.tokenLogin|' .$request->ip();

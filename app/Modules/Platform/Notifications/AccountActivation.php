@@ -49,7 +49,8 @@ class AccountActivation extends Notification
         return (new MailMessage)
             ->subject(__d('platform', 'Account Activation'))
             ->line(__d('platform', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
-            ->action(__d('platform', 'Activate Account'), url('register/verify', $this->token))
+            ->action(__d('platform', 'Activate your Account'), url('register', $this->token))
+            ->line(__d('platform', 'If you did not made an account registration, no further action is required.'))
             ->queued();
     }
 }

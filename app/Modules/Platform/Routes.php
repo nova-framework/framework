@@ -20,18 +20,18 @@ Route::post('authorize',         array('middleware' => 'guest', 'uses' => 'Autho
 Route::get( 'authorize/{token}', array('middleware' => 'guest', 'uses' => 'Authorize@tokenLogin'));
 
 // The Password Remind.
-Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@remind'));
-Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@postRemind'));
+Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@remind'));
+Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@postRemind'));
 
 // The Password Reset.
-Route::get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Authorize@reset'));
-Route::post('password/reset',         array('middleware' => 'guest', 'uses' => 'Authorize@postReset'));
+Route::get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Reminders@reset'));
+Route::post('password/reset',         array('middleware' => 'guest', 'uses' => 'Reminders@postReset'));
 
 // The Account Registration.
-Route::get( 'register',                 array('before' => 'guest', 'uses' => 'Registrar@create'));
-Route::post('register',                 array('before' => 'guest', 'uses' => 'Registrar@store'));
-Route::get( 'register/verify/{token?}', array('before' => 'guest', 'uses' => 'Registrar@verify'));
-Route::get( 'register/status',          array('before' => 'guest', 'uses' => 'Registrar@status'));
+Route::get( 'register',          array('before' => 'guest', 'uses' => 'Registrar@create'));
+Route::post('register',          array('before' => 'guest', 'uses' => 'Registrar@store'));
+Route::get( 'register/status',   array('before' => 'guest', 'uses' => 'Registrar@status'));
+Route::get( 'register/{token?}', array('before' => 'guest', 'uses' => 'Registrar@verify'));
 
 // The User's Dashboard.
 Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));

@@ -246,9 +246,13 @@ class Registrar extends BaseController
                 ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
         }
 
-        $user = User::where('activation_code', $token)->where('activated', '=', 0)->first();
-
-        if (is_null($user)) {
+        try {
+            $user = User::whereNotNull('activation_code')
+                ->where('activation_code', $token)
+                ->where('activated', '=', 0)
+                ->firstOrFail();
+        }
+        catch (ModelNotFoundException $e) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')

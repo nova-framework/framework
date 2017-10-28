@@ -84,20 +84,18 @@ class Authorize extends BaseController
             $user->save();
         }
 
-        if($user->activated == 0) {
+        if ($user->activated == 0) {
             Auth::logout();
 
-            // User not activated; go logout and redirect him back.
-            $status = __d('platform', 'There is a problem. Have you activated your Account?');
-
-            return Redirect::back()->withStatus($status, 'warning');
+            // User not activated; go logout and redirect him to account activation page.
+            return Redirect::to('register/verify')
+                ->withInput(array('email' => $user->email))
+                ->withStatus(__d('platform', 'Please activate your Account!'), 'danger');
         }
 
-        // Prepare the flash message.
-        $status = __d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username);
-
         // Redirect to the User's Dashboard.
-        return Redirect::intended('dashboard')->withStatus($status);
+        return Redirect::intended('dashboard')
+            ->withStatus(__d('platform', '<b>{0}</b>, you have successfully logged in.', $user->username), 'success');
     }
 
     /**
@@ -109,10 +107,12 @@ class Authorize extends BaseController
     {
         Auth::logout();
 
-        // Prepare the flash message.
-        $status = __d('platform', 'You have successfully logged out.');
+        // Redirect to the login page.
+        $guard = Config::get('auth.defaults.guard', 'web');
 
-        return Redirect::to('login')->withStatus($status);
+        $uri = Config::get("auth.guards.{$guard}.authorize", 'login');
+
+        return Redirect::to($uri)->withStatus( __d('platform', 'You have successfully logged out.'), 'success');
     }
 
     /**

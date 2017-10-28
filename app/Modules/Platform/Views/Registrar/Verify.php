@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('platform', 'One-Time Login'); ?></h2>
+    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('platform', 'Account Verification'); ?></h2>
 </section>
 
 <!-- Main content -->
@@ -11,7 +11,7 @@
     <div style="margin-top: 50px" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
             <div class="panel-heading">
-                <div class="panel-title"><?= __d('platform', 'One-Time Login request for <b>{0}</b>', Config::get('app.name')); ?></div>
+                <div class="panel-title"><?= __d('platform', 'Account Verification for <b>{0}</b>', Config::get('app.name')); ?></div>
             </div>
             <div class="panel-body">
                 <form method='POST' role="form">

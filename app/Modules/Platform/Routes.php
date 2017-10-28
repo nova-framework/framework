@@ -31,7 +31,9 @@ Route::get( 'password/reset/{hash}/{token}', array('middleware' => 'guest', 'use
 Route::get( 'register',                 array('before' => 'guest', 'uses' => 'Registrar@create'));
 Route::post('register',                 array('before' => 'guest', 'uses' => 'Registrar@store'));
 Route::post('register/status',          array('before' => 'guest', 'uses' => 'Registrar@status'));
-Route::get( 'register/{hash}/{token?}', array('before' => 'guest', 'uses' => 'Registrar@verify'));
+Route::get( 'register/verify',          array('before' => 'guest', 'uses' => 'Registrar@verify'));
+Route::post('register/verify',          array('before' => 'guest', 'uses' => 'Registrar@verifyPost'));
+Route::get( 'register/{hash}/{token?}', array('before' => 'guest', 'uses' => 'Registrar@tokenVerify'));
 
 // The User's Dashboard.
 Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));

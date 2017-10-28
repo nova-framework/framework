@@ -8,6 +8,7 @@
 
 namespace App\Modules\Platform\Controllers;
 
+use Nova\Database\ORM\ModelNotFoundException;
 use Nova\Helpers\ReCaptcha;
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
@@ -144,11 +145,75 @@ class Registrar extends BaseController
     }
 
     /**
-     * Display the password reminder view.
+     * Display the email verification view.
+     *
+     * @return \Nova\View\View
+     */
+    public function verify()
+    {
+        return $this->createView()
+            ->shares('title', __d('platform', 'Account Verification'));
+    }
+
+    /**
+     * Process the verification token.
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function verify(Request $request, $hash, $token)
+    public function verifyPost(Request $request)
+    {
+        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($request)
+        {
+            return ReCaptcha::check($value, $request->ip());
+        });
+
+        $validator = Validator::make(
+            $input = $request->only('email', 'g-recaptcha-response'),
+            array(
+                'email'                => 'required|email|exists:users',
+                'g-recaptcha-response' => 'required|recaptcha'
+            ),
+            array(
+                'recaptcha' => __d('platform', 'The reCaptcha verification failed. Try again.'),
+            )
+        );
+
+        if ($validator->fails()) {
+            return Redirect::back()->withStatus($validator->errors(), 'danger');
+        }
+
+        $email = $input['email'];
+
+        try {
+            $user = User::where('email', $email)->where('activated', '=', 0)->firstOrFail();
+        }
+        catch (ModelNotFoundException $e) {
+            return Redirect::back()
+                ->withInput(array('email' => $email))
+                ->withStatus(__d('platform', 'This E-mail cannot receive Account Activation links.', $email), 'danger');
+        }
+
+        $user->activation_code = $token = $this->createNewToken();
+
+        $user->save();
+
+        // Send the associated Activation Notification.
+        $hashKey = Config::get('app.key');
+
+        $hash = hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey);
+
+        $user->notify(new AccountActivationNotification($hash, $token));
+
+        return Redirect::to('register/verify')
+            ->withStatus(__d('platform', 'We have sent you an E-mail to activate your Account.'), 'success');
+    }
+
+    /**
+     * Process the verification token.
+     *
+     * @return \Nova\Http\RedirectResponse
+     */
+    public function tokenVerify(Request $request, $hash, $token)
     {
         $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
         $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.

@@ -114,6 +114,9 @@ class Handler extends ExceptionHandler
             return $this->renderHttpException($e, $request);
         }
 
+        // We will instruct Whoops to not exit after it displays the exception as it
+        // will otherwise run out before we can do anything else. We just want to
+        // let the framework go ahead and finish a request on this end instead.
         with($whoops = new WhoopsRun())->allowQuit(false);
 
         $whoops->writeToOutput(false);

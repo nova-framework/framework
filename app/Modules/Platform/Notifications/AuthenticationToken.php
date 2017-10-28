@@ -9,7 +9,14 @@ use Shared\Notifications\Messages\MailMessage;
 class AuthenticationToken extends Notification
 {
     /**
-     * The password reset token.
+     * The login hash.
+     *
+     * @var string
+     */
+    public $hash;
+
+    /**
+     * The login token.
      *
      * @var string
      */
@@ -22,8 +29,9 @@ class AuthenticationToken extends Notification
      * @param  string  $token
      * @return void
      */
-    public function __construct($token)
+    public function __construct($hash, $token)
     {
+        $this->hash  = $hash;
         $this->token = $token;
     }
 
@@ -49,7 +57,7 @@ class AuthenticationToken extends Notification
         return (new MailMessage)
             ->subject(__d('platform', 'Authentication Token'))
             ->line(__d('platform', 'You are receiving this email because we received an one-time login request for your account.'))
-            ->action(__d('platform', 'Login'), url('authorize', $this->token))
+            ->action(__d('platform', 'Login'), url('authorize', array($this->hash, $this->token)))
             ->line(__d('platform', 'If you did not request an one-time login, no further action is required.'))
             ->queued();
     }

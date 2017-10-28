@@ -15,7 +15,6 @@ use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Hash;
-use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
@@ -50,7 +49,7 @@ class Authorize extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function postLogin()
+    public function postLogin(Request $request)
     {
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check()) {
@@ -60,10 +59,10 @@ class Authorize extends BaseController
         }
 
         // Retrieve the Authentication credentials.
-        $credentials = Input::only('username', 'password');
+        $credentials = $request->only('username', 'password');
 
         // Prepare the 'remember' parameter.
-        $remember = (Input::get('remember') == 'on');
+        $remember = $request->has('remember');
 
         // Make an attempt to login the Guest with the given credentials.
         if(! Auth::attempt($credentials, $remember)) {
@@ -162,7 +161,11 @@ class Authorize extends BaseController
             'token' => $token,
         ));
 
-        $loginToken->user->notify(new LoginTokenNotification($token));
+        $hashKey = Config::get('app.key');
+
+        $hash = hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey);
+
+        $loginToken->user->notify(new LoginTokenNotification($hash, $token));
 
         return Redirect::back()
             ->withStatus(__d('platform', 'Login instructions have been sent to the Center email address.'), 'success');
@@ -173,12 +176,10 @@ class Authorize extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function tokenLogin(Request $request, $token)
+    public function tokenLogin(Request $request, $hash, $token)
     {
         $maxAttempts = Config::get('platform::tokenLogin.maxAttempts', 5);
         $lockoutTime = Config::get('platform::tokenLogin.lockoutTime', 1); // In minutes.
-
-        $validity = Config::get('platform::tokenLogin.validity', 15); // In minutes.
 
         // Make a Rate Limiter instance, via Container.
         $limiter = App::make('Nova\Cache\RateLimiter');
@@ -192,6 +193,17 @@ class Authorize extends BaseController
             return Redirect::to('authorize')
                 ->withStatus(__d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds), 'danger');
         }
+
+        $hashKey = Config::get('app.key');
+
+        if ($hash !== hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey)) {
+            $limiter->hit($throttleKey, $lockoutTime);
+
+            return Redirect::to('authorize')
+                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+        }
+
+        $validity = Config::get('platform::tokenLogin.validity', 15); // In minutes.
 
         try {
             $loginToken = LoginToken::with('user')

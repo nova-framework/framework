@@ -139,7 +139,7 @@ class Registrar extends BaseController
         $user->notify(new AccountActivationNotification($hash, $token));
 
         // Prepare the flash message.
-        $status = __d('platform', 'Your Account has been created. We have sent you an E-mail to activate your Account.');
+        $status = __d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.');
 
         return Redirect::to('register/status')->withStatus($status);
     }
@@ -205,7 +205,7 @@ class Registrar extends BaseController
         $user->notify(new AccountActivationNotification($hash, $token));
 
         return Redirect::to('register/verify')
-            ->withStatus(__d('platform', 'We have sent you an E-mail to activate your Account.'), 'success');
+            ->withStatus(__d('platform', 'Activation instructions have been sent to your email address.'), 'success');
     }
 
     /**

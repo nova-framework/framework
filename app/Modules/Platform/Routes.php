@@ -14,6 +14,11 @@ Route::get( 'login',  array('middleware' => 'guest', 'uses' => 'Authorize@login'
 Route::post('login',  array('middleware' => 'guest', 'uses' => 'Authorize@postLogin'));
 Route::post('logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout'));
 
+// The One-Time Authentication.
+Route::get( 'authorize',         array('middleware' => 'guest', 'uses' => 'Authorize@tokenRequest'));
+Route::post('authorize',         array('middleware' => 'guest', 'uses' => 'Authorize@tokenProcess'));
+Route::get( 'authorize/{token}', array('middleware' => 'guest', 'uses' => 'Authorize@tokenLogin'));
+
 // The Password Remind.
 Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@remind'));
 Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@postRemind'));

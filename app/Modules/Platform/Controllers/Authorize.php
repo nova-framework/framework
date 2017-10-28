@@ -9,17 +9,25 @@
 namespace App\Modules\Platform\Controllers;
 
 use Nova\Helpers\ReCaptcha;
+use Nova\Http\Request;
+
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Session;
+use Nova\Support\Facades\Validator;
 
 use Shared\Support\Facades\Password;
 
 use App\Modules\Platform\Controllers\BaseController;
+use App\Modules\Platform\Models\UserToken as LoginToken;
+use App\Modules\Platform\Notifications\AuthenticationToken as LoginTokenNotification;
+
+use Carbon\Carbon;
 
 
 class Authorize extends BaseController
@@ -220,4 +228,90 @@ class Authorize extends BaseController
         return Redirect::back()->withStatus($status, 'danger');
     }
 
+    public function tokenRequest()
+    {
+        return $this->createView()
+            ->shares('title', __d('platform', 'One-Time Login'))
+            ->shares('guard', 'web');
+    }
+
+    public function tokenProcess(Request $request)
+    {
+        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($request)
+        {
+            return ReCaptcha::check($value, $request->ip());
+        });
+
+        $validator = Validator::make(
+            $input = $request->only('email', 'g-recaptcha-response'),
+            array(
+                'email'                => 'required|email|exists:users',
+                'g-recaptcha-response' => 'required|recaptcha'
+            ),
+            array(
+                'recaptcha' => __d('platform', 'The reCaptcha verification failed. Try again.'),
+            )
+        );
+
+        if ($validator->fails()) {
+            return Redirect::back()->withStatus($validator->errors(), 'danger');
+        }
+
+        $token = LoginToken::uniqueToken();
+
+        $loginToken = LoginToken::create(array(
+            'email' => $input['email'],
+            'token' => $token,
+        ));
+
+        $loginToken->user->notify(new LoginTokenNotification($token));
+
+        return Redirect::back()
+            ->withStatus(__d('platform', 'Login instructions have been sent to the Center email address.'), 'success');
+    }
+
+    public function tokenLogin(Request $request, $token)
+    {
+        $maxAttempts = Config::get('centers::tokenLogin.maxAttempts', 5);
+        $lockoutTime = Config::get('centers::tokenLogin.lockoutTime', 1); // In minutes.
+
+        $validity = Config::get('centers::tokenLogin.validity', 15); // In minutes.
+
+        // Make a Rate Limiter instance, via Container.
+        $limiter = App::make('Nova\Cache\RateLimiter');
+
+        // Compute the throttle key.
+        $throttleKey = 'users.tokenLogin|' .$request->ip();
+
+        if ($limiter->tooManyAttempts($throttleKey, $maxAttempts, $lockoutTime)) {
+            $seconds = $limiter->availableIn($throttleKey);
+
+            return Redirect::to('authorize')
+                ->withStatus(__d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds), 'danger');
+        }
+
+        try {
+            $loginToken = LoginToken::with('user')
+                ->where('token', $token)
+                ->where('created_at', '>', Carbon::parse('-' .$validity .' minutes'))
+                ->firstOrFail();
+        }
+        catch (ModelNotFoundException $e) {
+            $limiter->hit($throttleKey, $lockoutTime);
+
+            return Redirect::to('authorize')
+                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+        }
+
+        $limiter->clear($throttleKey);
+
+        // Delete all stored login Tokens for this Center.
+        LoginToken::where('email', $loginToken->email)->delete();
+
+        // Authenticate the Center instance.
+        Auth::login($loginToken->user, true /* remember */);
+
+        return Redirect::to('dashboard')
+            ->withStatus(__d('platform', '<b>{0}</b>, you have successfully logged in.', $loginToken->user->username), 'success');
+    }
 }

@@ -41,7 +41,6 @@ return array (
   'Image' => '',
   'Insert the current Password' => '',
   'Insert the new Password' => 'Укажите новый пароль',
-  'Invalid reCAPTCHA submitted.' => 'Неправильный код reCAPTCHA',
   'Link is invalid, please request a new link.' => '',
   'Login' => 'Вход',
   'Login instructions have been sent to the Center email address.' => '',

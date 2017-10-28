@@ -41,7 +41,6 @@ return array (
   'Image' => '',
   'Insert the current Password' => '',
   'Insert the new Password' => 'Indtast det nye kodeord',
-  'Invalid reCAPTCHA submitted.' => 'Ugyldigt reCAPTCHA indtastet',
   'Link is invalid, please request a new link.' => '',
   'Login' => 'Log ind',
   'Login instructions have been sent to the Center email address.' => '',

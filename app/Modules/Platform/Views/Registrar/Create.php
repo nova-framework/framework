@@ -43,7 +43,6 @@
                 <?php } else { ?>
                 <input type="hidden" name="g-recaptcha-response" value="dummy" />
                 <?php } ?>
-                <?php } ?>
                 <div class="form-group" style="margin-top: 22px;">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <input type="submit" name="submit" class="btn btn-success col-sm-8" value="<?= __d('platform', 'Sign up'); ?>">

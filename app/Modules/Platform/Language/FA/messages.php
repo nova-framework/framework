@@ -41,7 +41,6 @@ return array (
   'Image' => '',
   'Insert the current Password' => '',
   'Insert the new Password' => 'رمز عبور جدید را وارد کنید',
-  'Invalid reCAPTCHA submitted.' => 'کد امنیتی نامعتبر است.',
   'Link is invalid, please request a new link.' => '',
   'Login' => 'ورود',
   'Login instructions have been sent to the Center email address.' => '',

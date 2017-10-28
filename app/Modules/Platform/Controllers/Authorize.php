@@ -58,7 +58,7 @@ class Authorize extends BaseController
     {
         // Verify the submitted reCAPTCHA
         if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            $status = __d('platform', 'Invalid reCAPTCHA submitted.');
+            $status = __d('platform', 'The reCaptcha verification failed.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }

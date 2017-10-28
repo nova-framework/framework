@@ -43,19 +43,23 @@ class Activity extends BaseModel
      */
     public static function updateCurrent($request)
     {
-        if (! Auth::check()) {
+        $guard = Auth::guard();
+
+        if (! $guard->check()) {
             // We track only the authenticated users.
             return;
         }
 
+        $now = Carbon::now();
+
         $attributes = array(
             'session' => Session::getId(),
-            'user_id' => Auth::id(),
+            'user_id' => $guard->id(),
         );
 
         $model = static::updateOrCreate($attributes, array(
-            'last_activity'    => strtotime(Carbon::now()),
-            'ip'            => $request->ip()
+            'last_activity' => $now->timestamp,
+            'ip'            => $request->ip(),
         ));
     }
 }

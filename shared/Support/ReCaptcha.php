@@ -16,7 +16,7 @@ class ReCaptcha
      * @param  string   $remoteIp
      * @return boolean
      */
-    public static function Check($response, $remoteIp)
+    public static function check($response, $remoteIp)
     {
         if (false === Config::get('reCaptcha.active', false)) {
             return true;

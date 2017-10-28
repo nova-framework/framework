@@ -108,7 +108,7 @@ class Handler extends ExceptionHandler
     {
         $debug = Config::get('app.debug');
 
-        if (! $debug) {
+        if (! $debug && View::exists("Errors/500")) {
             $e = FlattenException::create($e);
 
             return $this->renderHttpException($e, $request);

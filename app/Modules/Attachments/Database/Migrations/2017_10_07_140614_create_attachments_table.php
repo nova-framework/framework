@@ -19,6 +19,7 @@ class CreateAttachmentsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('size')->unsigned();
+            $table->string('type', 40)->nullable();
             $table->string('file');
             $table->morphs('attachable');
             $table->timestamps();

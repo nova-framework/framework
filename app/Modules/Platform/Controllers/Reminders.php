@@ -50,13 +50,12 @@ class Reminders extends BaseController
     public function postRemind(Request $request)
     {
         // Verify the reCAPTCHA
-        if(! ReCaptcha::check()) {
+        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
             $status = __d('platform', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
         }
 
-        //
         $credentials = $request->only('email');
 
         switch ($response = Password::remind($credentials, $request->ip())) {

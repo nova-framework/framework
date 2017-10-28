@@ -52,7 +52,7 @@ class Authorize extends BaseController
     public function postLogin(Request $request)
     {
         // Verify the submitted reCAPTCHA
-        if(! ReCaptcha::check()) {
+        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
             $status = __d('platform', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');

@@ -129,7 +129,7 @@ class Handler extends ExceptionHandler
 
         $whoops->pushHandler($handler);
 
-        // Compute the response status code and headers.
+        // Compute the status code and headers.
         $status = ($e instanceof HttpExceptionInterface) ? $e->getStatusCode() : 500;
 
         $headers = ($e instanceof HttpExceptionInterface) ? $e->getHeaders() : array();

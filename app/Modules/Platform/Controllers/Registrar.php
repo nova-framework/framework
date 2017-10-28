@@ -134,9 +134,11 @@ class Registrar extends BaseController
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
 
-        $hash = hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey);
+        $timestamp = time();
 
-        $user->notify(new AccountActivationNotification($hash, $token));
+        $hash = hash_hmac('sha256', $token .'|' .$request->ip() .'|' .$timestamp, $hashKey);
+
+        $user->notify(new AccountActivationNotification($hash, $timestamp, $token));
 
         // Prepare the flash message.
         $status = __d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.');
@@ -200,9 +202,11 @@ class Registrar extends BaseController
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
 
-        $hash = hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey);
+        $timestamp = time();
 
-        $user->notify(new AccountActivationNotification($hash, $token));
+        $hash = hash_hmac('sha256', $token .'|' .$request->ip() .'|' .$timestamp, $hashKey);
+
+        $user->notify(new AccountActivationNotification($hash, $timestamp, $token));
 
         return Redirect::to('register/verify')
             ->withStatus(__d('platform', 'Activation instructions have been sent to your email address.'), 'success');
@@ -213,7 +217,7 @@ class Registrar extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function tokenVerify(Request $request, $hash, $token)
+    public function tokenVerify(Request $request, $hash, $timestamp, $token)
     {
         $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
         $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
@@ -233,7 +237,9 @@ class Registrar extends BaseController
 
         $hashKey = Config::get('app.key');
 
-        if ($hash !== hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey)) {
+        $data = $token .'|' .$request->ip() .'|' .$timestamp;
+
+        if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey))) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('register/status')

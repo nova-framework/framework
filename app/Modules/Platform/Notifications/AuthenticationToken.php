@@ -16,6 +16,13 @@ class AuthenticationToken extends Notification
     public $hash;
 
     /**
+     * The login timestamp.
+     *
+     * @var string
+     */
+    public $timestamp;
+
+    /**
      * The login token.
      *
      * @var string
@@ -26,13 +33,16 @@ class AuthenticationToken extends Notification
     /**
      * Create a notification instance.
      *
-     * @param  string  $token
+     * @param  string   $hash
+     * @param  integer  $timestamp
+     * @param  string   $token
      * @return void
      */
-    public function __construct($hash, $token)
+    public function __construct($hash, $timestamp, $token)
     {
-        $this->hash  = $hash;
-        $this->token = $token;
+        $this->hash      = $hash;
+        $this->timestamp = $timestamp;
+        $this->token     = $token;
     }
 
     /**
@@ -57,7 +67,7 @@ class AuthenticationToken extends Notification
         return (new MailMessage)
             ->subject(__d('platform', 'Authentication Token'))
             ->line(__d('platform', 'You are receiving this email because we received an one-time login request for your account.'))
-            ->action(__d('platform', 'Login'), url('authorize', array($this->hash, $this->token)))
+            ->action(__d('platform', 'Login'), url('authorize', array($this->hash, $this->timestamp, $this->token)))
             ->line(__d('platform', 'If you did not request an one-time login, no further action is required.'))
             ->queued();
     }

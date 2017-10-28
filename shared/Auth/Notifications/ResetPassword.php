@@ -16,6 +16,13 @@ class ResetPassword extends Notification
     public $hash;
 
     /**
+     * The password reset timestamp.
+     *
+     * @var string
+     */
+    public $timestamp;
+
+    /**
      * The password reset token.
      *
      * @var string
@@ -26,13 +33,16 @@ class ResetPassword extends Notification
     /**
      * Create a notification instance.
      *
-     * @param  string  $token
+     * @param  string   $hash
+     * @param  integer  $timestamp
+     * @param  string   $token
      * @return void
      */
-    public function __construct($hash, $token)
+    public function __construct($hash, $timestamp, $token)
     {
-        $this->hash  = $hash;
-        $this->token = $token;
+        $this->hash      = $hash;
+        $this->timestamp = $timestamp;
+        $this->token     = $token;
     }
 
     /**
@@ -57,7 +67,7 @@ class ResetPassword extends Notification
         return (new MailMessage)
             ->subject(__d('shared', 'Reset Password'))
             ->line(__d('shared', 'You are receiving this email because we received a password reset request for your account.'))
-            ->action(__d('shared', 'Reset Password'), url('password/reset', array($this->hash, $this->token)))
+            ->action(__d('shared', 'Reset Password'), url('password/reset', array($this->hash, $this->timestamp, $this->token)))
             ->line(__d('shared', 'If you did not request a password reset, no further action is required.'))
             ->queued();
     }

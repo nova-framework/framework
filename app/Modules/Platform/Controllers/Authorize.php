@@ -168,9 +168,11 @@ class Authorize extends BaseController
 
         $hashKey = Config::get('app.key');
 
-        $hash = hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey);
+        $timestamp = time();
 
-        $loginToken->user->notify(new LoginTokenNotification($hash, $token));
+        $hash = hash_hmac('sha256', $token .'|' .$request->ip() .'|' .$timestamp, $hashKey);
+
+        $loginToken->user->notify(new LoginTokenNotification($hash, $timestamp, $token));
 
         return Redirect::back()
             ->withStatus(__d('platform', 'Login instructions have been sent to the Center email address.'), 'success');
@@ -181,7 +183,7 @@ class Authorize extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function tokenLogin(Request $request, $hash, $token)
+    public function tokenLogin(Request $request, $hash, $timestamp, $token)
     {
         $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
         $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
@@ -199,21 +201,26 @@ class Authorize extends BaseController
                 ->withStatus(__d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds), 'danger');
         }
 
+        $validity = Config::get('platform::tokenLogin.validity', 15); // In minutes.
+
+        $oldest = Carbon::parse('-' .$validity .' minutes');
+
+        //
         $hashKey = Config::get('app.key');
 
-        if ($hash !== hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey)) {
+        $data = $token .'|' .$request->ip() .'|' .$timestamp;
+
+        if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($timestamp <= $oldest->timestamp)) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('authorize')
                 ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
         }
 
-        $validity = Config::get('platform::tokenLogin.validity', 15); // In minutes.
-
         try {
             $loginToken = LoginToken::with('user')
                 ->where('token', $token)
-                ->where('created_at', '>', Carbon::parse('-' .$validity .' minutes'))
+                ->where('created_at', '>', $oldest)
                 ->firstOrFail();
         }
         catch (ModelNotFoundException $e) {

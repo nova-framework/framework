@@ -75,7 +75,7 @@ class Reminders extends BaseController
      * @param  string  $token
      * @return \Nova\Http\RedirectResponse|\Nova\View\View
      */
-    public function reset(Request $request, $hash, $token)
+    public function reset(Request $request, $hash, $timestamp, $token)
     {
         $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
         $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
@@ -93,22 +93,27 @@ class Reminders extends BaseController
                 ->withStatus(__d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds), 'danger');
         }
 
+        $reminder = Config::get('auth.defaults.reminder', 'users');
+
+        $validity = Config::get("auth.reminders.{$reminder}.expire", 60);
+
+        $oldest = Carbon::parse('-' .$validity .' minutes');
+
+        //
         $hashKey = Config::get('app.key');
 
-        if ($hash !== hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey)) {
+        $data = $token .'|' .$request->ip() .'|' .$timestamp;
+
+        if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($timestamp <= $oldest->timestamp)) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('password/remind')
                 ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
         }
 
-        $reminder = Config::get('auth.defaults.reminder', 'users');
-
-        $validity = Config::get("auth.reminders.{$reminder}.expire", 60);
-
         $reminder = DB::table('password_reminders')
             ->where('token', $token)
-            ->where('created_at', '>', Carbon::parse('-' .$validity .' minutes'))
+            ->where('created_at', '>', $oldest)
             ->first();
 
         if (is_null($reminder)) {

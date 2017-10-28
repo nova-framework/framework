@@ -18,6 +18,13 @@ class AccountActivation extends Notification
     public $hash;
 
     /**
+     * The account activation timestamp.
+     *
+     * @var string
+     */
+    public $timestamp;
+
+    /**
      * The account activation token.
      *
      * @var string
@@ -28,13 +35,16 @@ class AccountActivation extends Notification
     /**
      * Create a notification instance.
      *
-     * @param  string  $token
+     * @param  string   $hash
+     * @param  integer  $timestamp
+     * @param  string   $token
      * @return void
      */
-    public function __construct($hash, $token)
+    public function __construct($hash, $timestamp, $token)
     {
-        $this->hash  = $hash;
-        $this->token = $token;
+        $this->hash      = $hash;
+        $this->timestamp = $timestamp;
+        $this->token     = $token;
     }
 
     /**
@@ -59,7 +69,7 @@ class AccountActivation extends Notification
         return (new MailMessage)
             ->subject(__d('platform', 'Account Activation'))
             ->line(__d('platform', 'Thanks for creating an Account with the {0}.', Config::get('app.name')))
-            ->action(__d('platform', 'Activate your Account'), url('register', array($this->hash, $this->token)))
+            ->action(__d('platform', 'Activate your Account'), url('register', array($this->hash, $this->timestamp, $this->token)))
             ->line(__d('platform', 'If you did not made an account registration, no further action is required.'))
             ->queued();
     }

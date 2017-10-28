@@ -109,9 +109,11 @@ class PasswordBroker
         // Create the token hash.
         $hashKey = Config::get('app.key');
 
-        $hash = hash_hmac('sha1', $token .'|' .$clientIp, $hashKey);
+        $timestamp = time();
 
-        $user->sendPasswordResetNotification($hash, $token);
+        $hash = hash_hmac('sha256', $token .'|' .$clientIp .'|' .$timestamp, $hashKey);
+
+        $user->sendPasswordResetNotification($hash, $timestamp, $token);
 
         return self::REMINDER_SENT;
     }

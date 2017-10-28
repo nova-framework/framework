@@ -272,10 +272,10 @@ class Authorize extends BaseController
 
     public function tokenLogin(Request $request, $token)
     {
-        $maxAttempts = Config::get('centers::tokenLogin.maxAttempts', 5);
-        $lockoutTime = Config::get('centers::tokenLogin.lockoutTime', 1); // In minutes.
+        $maxAttempts = Config::get('platform::tokenLogin.maxAttempts', 5);
+        $lockoutTime = Config::get('platform::tokenLogin.lockoutTime', 1); // In minutes.
 
-        $validity = Config::get('centers::tokenLogin.validity', 15); // In minutes.
+        $validity = Config::get('platform::tokenLogin.validity', 15); // In minutes.
 
         // Make a Rate Limiter instance, via Container.
         $limiter = App::make('Nova\Cache\RateLimiter');

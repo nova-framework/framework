@@ -9,4 +9,10 @@
 
 return array(
     'activityLimit' => 5,
+
+    'tokenLogin' = array(
+        'lockoutTime' => 1,  // In minutes.
+        'maxAttempts' => 5,
+        'validity'    => 15, // In minutes.
+    ),
 );

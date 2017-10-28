@@ -8,15 +8,15 @@
 
 
 return array(
-    'activityLimit' => 5,
+    'activityLimit' => 5,   // In minutes.
 
     'throttle' => array(
-        'lockoutTime' => 1,  // In minutes.
+        'lockoutTime' => 1, // In minutes.
         'maxAttempts' => 5,
     ),
 
     'tokenLogin' => array(
-        'validity' => 15, // In minutes.
+        'validity' => 15,   // In minutes.
     ),
 
     'reminders' => array(

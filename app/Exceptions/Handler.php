@@ -113,9 +113,6 @@ class Handler extends ExceptionHandler
             return $this->renderHttpException($e, $request);
         }
 
-        $headers = method_exists($e, 'getHeaders') ? $e->getHeaders() : array();
-
-        //
         $whoops = new WhoopsRun();
 
         if ($request->ajax() || $request->wantsJson()) {
@@ -126,7 +123,7 @@ class Handler extends ExceptionHandler
 
         $whoops->pushHandler($handler);
 
-        return Response::make($whoops->handleException($e), 500, $headers);
+        return Response::make($whoops->handleException($e), 500);
     }
 
     /**

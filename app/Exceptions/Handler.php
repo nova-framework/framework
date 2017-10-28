@@ -13,6 +13,7 @@ use Nova\Support\Facades\View;
 
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 use Whoops\Run as WhoopsRun;
 use Whoops\Handler\JsonResponseHandler as WhoopsJsonResponseHandler;
@@ -113,17 +114,24 @@ class Handler extends ExceptionHandler
             return $this->renderHttpException($e, $request);
         }
 
-        $whoops = new WhoopsRun();
+        with($whoops = new WhoopsRun())->allowQuit(false);
+
+        $whoops->writeToOutput(false);
 
         if ($request->ajax() || $request->wantsJson()) {
             $handler = new WhoopsJsonResponseHandler();
         } else {
-            $handler = new WhoopsPrettyPageHandler();
+            with($handler = new WhoopsPrettyPageHandler())->setEditor('sublime');
         }
 
         $whoops->pushHandler($handler);
 
-        return Response::make($whoops->handleException($e), 500);
+        // Compute the response status code and headers.
+        $status = ($e instanceof HttpExceptionInterface) ? $e->getStatusCode() : 500;
+
+        $headers = ($e instanceof HttpExceptionInterface) ? $e->getHeaders() : array();
+
+        return Response::make($whoops->handleException($e), $status, $headers);
     }
 
     /**

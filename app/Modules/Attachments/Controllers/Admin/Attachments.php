@@ -22,6 +22,7 @@ class Attachments extends BaseController
                 'id'       => $model->id,
                 'name'     => $model->name,
                 'size'     => $model->size,
+                'type'     => $model->type,
                 'url'      => $model->url(),
                 'download' => $model->url(true),
             );

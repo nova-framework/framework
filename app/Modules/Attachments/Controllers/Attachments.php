@@ -61,7 +61,7 @@ class Attachments extends BaseController
         }
 
         $fileName = $request->input('name');
-        $fileType = $request->input('type');
+        $mimeType = $request->input('type');
         $fileSize = $request->input('size');
 
         if ($fileSize != filesize($filePath)) {
@@ -69,7 +69,7 @@ class Attachments extends BaseController
         }
 
         // Create an UploadedFile instance from the temporary file.
-        $file = new UploadedFile($filePath, $fileName, $fileType, $fileSize, UPLOAD_ERR_OK, true);
+        $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);
 
         return $this->handleUploadedFile($file, $filePath);
     }
@@ -93,6 +93,7 @@ class Attachments extends BaseController
         $attachment = Attachment::create(array(
             'name' => $file->getClientOriginalName(),
             'size' => $file->getSize(),
+            'type' => $file->getClientMimeType(),
 
             // The inner FileField use the UploadedFile instance.
             'file' => $file,

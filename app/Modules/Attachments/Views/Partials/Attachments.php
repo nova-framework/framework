@@ -139,14 +139,19 @@ $(function () {
         });
     }
 
-    var setupAttachment = function(preview, name, id, url, download) {
+    var setupAttachment = function(preview, name, type, id, url, download) {
         preview.attr('data-id', id);
 
         preview.find('.fileid').html(id);
 
-        preview.find('.preview').attr('data-name', name);
-        preview.find('.preview').attr('data-url', url);
         preview.find('.download').attr('href', download);
+
+        if (! type.match(/image.*/) && ! type.match(/audio.*/) && ! type.match(/video.*/) && (type !== 'application/pdf')) {
+            preview.find('.preview').hide();
+        } else {
+            preview.find('.preview').attr('data-name', name);
+            preview.find('.preview').attr('data-url', url);
+        }
 
         // Insert a hidden input in the preview element, for notifying back the attachment ID.
         var html = '<input name="attachment[]" class="upload-field-ids" type="hidden" value="' + id + '"/>';
@@ -244,7 +249,7 @@ $(function () {
                 success: function(data, textStatus, xhr) {
                     var preview = $(file.previewElement);
 
-                    setupAttachment(preview, file.name, data.id, data.url);
+                    setupAttachment(preview, file.name, file.type, data.id, data.url, data.download);
 
                     done();
                 },
@@ -290,7 +295,7 @@ $(function () {
         var preview = $(file.previewElement);
 
         if (! file.upload.chunked) {
-            setupAttachment(preview, file.name, response.id, response.url, response.download);
+            setupAttachment(preview, file.name, file.type, response.id, response.url, response.download);
         }
 
         // Notify the User.
@@ -308,8 +313,8 @@ $(function () {
     dropzone.on("complete", function(file, response) {
         var preview = $(file.previewElement);
 
-        if ((file.id !== undefined) && (file.url !== undefined)) {
-            setupAttachment(preview, file.name, file.id, file.url, file.download);
+        if ((file.id !== undefined) && (file.url !== undefined) && (file.download !== undefined)) {
+            setupAttachment(preview, file.name, file.type, file.id, file.url, file.download);
         }
 
         preview.find('.working').hide();

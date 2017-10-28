@@ -22,7 +22,7 @@ Route::get('attachments/{method}/{token}/{filename}', array(
 
     'uses'  => 'Attachments@serve',
     'where' => array(
-        'method' => '(download|view)',
+        'method' => '(download|preview)',
     ),
 ));
 

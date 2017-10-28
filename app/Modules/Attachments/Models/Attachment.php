@@ -16,7 +16,7 @@ class Attachment extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('name', 'size', 'file', 'attachable_id', 'attachable_type');
+    protected $fillable = array('name', 'size', 'type', 'file', 'attachable_id', 'attachable_type');
 
     public $files = array(
         'file' => array(
@@ -49,7 +49,7 @@ class Attachment extends BaseModel
         $file = $this->getAttribute('file');
 
         if ($file->exists()) {
-            $method = $download ? 'download' : 'view';
+            $method = $download ? 'download' : 'preview';
 
             list ($token, $filename) = explode('-', basename((string) $this->file->path), 2);
 

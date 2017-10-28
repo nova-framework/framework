@@ -8,8 +8,6 @@
 
 namespace App\Modules\Platform\Controllers;
 
-use Nova\Helpers\ReCaptcha;
-
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
@@ -20,6 +18,7 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Str;
 
 use Shared\Support\Facades\Password;
+use Shared\Support\ReCaptcha;
 
 use App\Modules\Platform\Controllers\BaseController;
 
@@ -52,10 +51,8 @@ class Reminders extends BaseController
         $remoteIp = $request->ip();
 
         // Verify the reCAPTCHA
-        if(! $this->reCaptchaCheck($request->input('g-recaptcha-response'), $remoteIp)) {
-            $status = __d('platform', 'The reCaptcha verification failed.');
-
-            return Redirect::back()->withStatus($status, 'danger');
+        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $remoteIp)) {
+            return Redirect::back()->withStatus(__d('platform', 'The reCaptcha verification failed.'), 'danger');
         }
 
         $credentials = $request->only('email');

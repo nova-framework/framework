@@ -16,9 +16,9 @@ use Nova\Support\Facades\Hash;
 use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Response;
 use Nova\Support\Facades\Validator;
-use Nova\Support\Arr;
 
 use Shared\Support\Facades\Password;
+use Shared\Support\ReCaptcha;
 
 use App\Modules\Platform\Controllers\BaseController;
 use App\Modules\Platform\Models\UserToken as LoginToken;
@@ -56,7 +56,7 @@ class Authorize extends BaseController
     public function postLogin(Request $request)
     {
         // Verify the submitted reCAPTCHA
-        if(! $this->reCaptchaCheck($request->input('g-recaptcha-response'), $request->ip())) {
+        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
             return Redirect::back()->withStatus(__d('platform', 'The reCaptcha verification failed.'), 'danger');
         }
 
@@ -137,7 +137,7 @@ class Authorize extends BaseController
 
         Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
-            return $this->reCaptchaCheck($value, $remoteIp);
+            return ReCaptcha::check($value, $remoteIp);
         });
 
         $validator = Validator::make(

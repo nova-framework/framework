@@ -20,8 +20,6 @@ use Nova\View\Layout;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-use ReCaptcha\ReCaptcha;
-
 use BadMethodCallException;
 
 
@@ -212,25 +210,5 @@ abstract class BaseController extends Controller
     public function getLayout()
     {
         return $this->layout;
-    }
-
-    /**
-     * Verify the given ReCaptcha response.
-     *
-     * @param  string   $response
-     * @param  string   $remoteIp
-     * @return boolean
-     */
-    protected function reCaptchaCheck($response, $remoteIp)
-    {
-        if (false === Config::get('reCaptcha.active', false)) {
-            return true;
-        }
-
-        $secret = Config::get('reCaptcha.secret');
-
-        $result = with(new ReCaptcha($secret))->verify($response, $remoteIp);
-
-        return $result->isSuccess();
     }
 }

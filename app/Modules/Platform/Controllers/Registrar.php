@@ -19,6 +19,8 @@ use Nova\Support\Facades\Redirect;
 use Nova\Support\Facades\Validator;
 use Nova\Support\Str;
 
+use Shared\Support\ReCaptcha;
+
 use App\Modules\Platform\Notifications\AccountActivation as AccountActivationNotification;
 use App\Modules\Roles\Models\Role;
 use App\Modules\Users\Models\User;
@@ -59,7 +61,7 @@ class Registrar extends BaseController
         // Add the custom Validation Rule commands.
         Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
-            return $this->reCaptchaCheck($value, $remoteIp);
+            return ReCaptcha::check($value, $remoteIp);
         });
 
         Validator::extend('valid_name', function($attribute, $value, $parameters)
@@ -135,10 +137,8 @@ class Registrar extends BaseController
 
         $user->notify(new AccountActivationNotification($hash, $token));
 
-        // Prepare the flash message.
-        $status = __d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.');
-
-        return Redirect::to('register/status')->withStatus($status);
+        return Redirect::to('register/status')
+            ->withStatus(__d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.'), 'success');
     }
 
     /**
@@ -163,7 +163,7 @@ class Registrar extends BaseController
 
         Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
-            return $this->reCaptchaCheck($value, $remoteIp);
+            return ReCaptcha::check($value, $remoteIp);
         });
 
         $validator = Validator::make(

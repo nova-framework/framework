@@ -15,8 +15,9 @@ interface RemindableInterface
     /**
      * Send the password reset notification.
      *
+     * @param  string  $hash
      * @param  string  $token
      * @return void
      */
-    public function sendPasswordResetNotification($token);
+    public function sendPasswordResetNotification($hash, $token);
 }

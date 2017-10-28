@@ -3,6 +3,7 @@
 namespace Shared\Auth\Reminders;
 
 use Nova\Auth\UserProviderInterface;
+use Nova\Support\Facades\Config;
 
 use Closure;
 
@@ -14,35 +15,35 @@ class PasswordBroker
      *
      * @var int
      */
-    const REMINDER_SENT = 'reminders.sent';
+    const REMINDER_SENT = 'sent';
 
     /**
      * Constant representing a successfully reset password.
      *
      * @var int
      */
-    const PASSWORD_RESET = 'reminders.reset';
+    const PASSWORD_RESET = 'reset';
 
     /**
      * Constant representing the user not found response.
      *
      * @var int
      */
-    const INVALID_USER = 'reminders.user';
+    const INVALID_USER = 'user';
 
     /**
      * Constant representing an invalid password.
      *
      * @var int
      */
-    const INVALID_PASSWORD = 'reminders.password';
+    const INVALID_PASSWORD = 'password';
 
     /**
      * Constant representing an invalid token.
      *
      * @var int
      */
-    const INVALID_TOKEN = 'reminders.token';
+    const INVALID_TOKEN = 'token';
 
     /**
      * The password reminder repository.
@@ -85,10 +86,11 @@ class PasswordBroker
      * Send a password reminder to a user.
      *
      * @param  array     $credentials
+     * @param  string    $clientIp
      * @param  \Closure  $callback
      * @return string
      */
-    public function remind(array $credentials, Closure $callback = null)
+    public function remind(array $credentials, $clientIp)
     {
         // First we will check to see if we found a user at the given credentials and
         // if we did not we will redirect back to this current URI with a piece of
@@ -103,10 +105,15 @@ class PasswordBroker
         // user with a link to reset their password. We will then redirect back to
         // the current URI having nothing set in the session to indicate errors.
         $token = $this->reminders->create($user);
-        
-        $user->sendPasswordResetNotification($token);
-        
-        return self::RESET_LINK_SENT;
+
+        // Create the token hash.
+        $hashKey = Config::get('app.key');
+
+        $hash = hash_hmac('sha1', $token .'|' .$clientIp, $hashKey);
+
+        $user->sendPasswordResetNotification($hash, $token);
+
+        return self::REMINDER_SENT;
     }
 
     /**

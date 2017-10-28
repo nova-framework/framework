@@ -24,14 +24,14 @@ Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Reminde
 Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@postRemind'));
 
 // The Password Reset.
-Route::get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Reminders@reset'));
-Route::post('password/reset',         array('middleware' => 'guest', 'uses' => 'Reminders@postReset'));
+Route::post('password/reset',                array('middleware' => 'guest', 'uses' => 'Reminders@postReset'));
+Route::get( 'password/reset/{hash}/{token}', array('middleware' => 'guest', 'uses' => 'Reminders@reset'));
 
 // The Account Registration.
-Route::get( 'register',          array('before' => 'guest', 'uses' => 'Registrar@create'));
-Route::post('register',          array('before' => 'guest', 'uses' => 'Registrar@store'));
-Route::get( 'register/status',   array('before' => 'guest', 'uses' => 'Registrar@status'));
-Route::get( 'register/{token?}', array('before' => 'guest', 'uses' => 'Registrar@verify'));
+Route::get( 'register',                 array('before' => 'guest', 'uses' => 'Registrar@create'));
+Route::post('register',                 array('before' => 'guest', 'uses' => 'Registrar@store'));
+Route::get( 'register/status',          array('before' => 'guest', 'uses' => 'Registrar@status'));
+Route::get( 'register/{hash}/{token?}', array('before' => 'guest', 'uses' => 'Registrar@verify'));
 
 // The User's Dashboard.
 Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));

@@ -2,6 +2,8 @@
     <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('platform', 'Password Recovery'); ?></h2>
 </div>
 
+<?= Session::getMessages(); ?>
+
 <div class="row">
     <div style="margin-top:50px;" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-primary" >
@@ -9,8 +11,6 @@
                 <div class="panel-title"><?= __d('platform', 'Reset your password for <b>{0}</b>', Config::get('app.name')); ?></div>
             </div>
             <div style="padding-top: 30px" class="panel-body" >
-                <?= Session::getMessages(); ?>
-
                 <form method='post' role="form">
 
                 <fieldset>

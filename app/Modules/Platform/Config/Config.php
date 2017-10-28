@@ -15,4 +15,17 @@ return array(
         'maxAttempts' => 5,
         'validity'    => 15, // In minutes.
     ),
+
+    'reminders' => array(
+        'lockoutTime' => 1,  // In minutes.
+        'maxAttempts' => 5,
+
+        'messages' => array(
+            'password' => __d('platform', 'Passwords must be at least six characters and match the confirmation.'),
+            'user'     => __d('platform', 'We can\'t find an User with that e-mail address.'),
+            'token'    => __d('platform', 'This password reset token is invalid.'),
+            'sent'     => __d('platform', 'Password reminder sent!'),
+            'reset'    => __d('platform', 'Password has been reset!'),
+        ),
+    ),
 );

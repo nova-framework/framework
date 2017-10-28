@@ -3,6 +3,7 @@
 namespace Shared\Auth\Reminders;
 
 use Nova\Database\Connection;
+use Nova\Support\Str;
 
 use Carbon\Carbon;
 
@@ -169,11 +170,14 @@ class DatabaseReminderRepository implements ReminderRepositoryInterface
      */
     public function createNewToken(RemindableInterface $user)
     {
-        $email = $user->getReminderEmail();
+       $tokens = $this->getTable()->lists('token');
 
-        $value = str_shuffle(sha1($email.spl_object_hash($this).microtime(true)));
+        do {
+            $token = Str::random(100);
+        }
+        while (in_array($token, $tokens));
 
-        return hash_hmac('sha1', $value, $this->hashKey);
+        return $token;
     }
 
     /**

@@ -10,17 +10,23 @@ namespace App\Modules\Platform\Controllers;
 
 use Nova\Helpers\ReCaptcha;
 
+use Nova\Http\Request;
+use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
+use Nova\Support\Facades\DB;
 use Nova\Support\Facades\Hash;
-use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Redirect;
+use Nova\Support\Str;
 
 use Shared\Support\Facades\Password;
 
 use App\Modules\Platform\Controllers\BaseController;
 
+use Carbon\Carbon;
 
-class Authorize extends BaseController
+
+class Reminders extends BaseController
 {
     protected $layout = 'Default';
 
@@ -41,9 +47,8 @@ class Authorize extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function postRemind()
+    public function postRemind(Request $request)
     {
-
         // Verify the reCAPTCHA
         if(! ReCaptcha::check()) {
             $status = __d('platform', 'Invalid reCAPTCHA submitted.');
@@ -52,18 +57,16 @@ class Authorize extends BaseController
         }
 
         //
-        $credentials = Input::only('email');
+        $credentials = $request->only('email');
 
-        switch ($response = Password::remind($credentials)) {
+        switch ($response = Password::remind($credentials, $request->ip())) {
             case Password::INVALID_USER:
-                $status = __d('platform', 'We can\'t find a User with that e-mail address.');
-
-                return Redirect::back()->withStatus($status, 'danger');
+                return Redirect::back()
+                    ->withStatus(__d('platform', 'We can\'t find an User with that e-mail address.'), 'danger');
 
             case Password::REMINDER_SENT:
-                $status = __d('platform', 'Reset instructions have been sent to your email address');
-
-                return Redirect::back()->withStatus($status);
+                return Redirect::back()
+                    ->withStatus(__d('platform', 'Reset instructions have been sent to your email address.'));
         }
     }
 
@@ -71,12 +74,56 @@ class Authorize extends BaseController
      * Display the password reset view for the given token.
      *
      * @param  string  $token
-     * @return \Nova\View\View
+     * @return \Nova\Http\RedirectResponse|\Nova\View\View
      */
-    public function reset($token)
+    public function reset(Request $request, $hash, $token)
     {
+        $maxAttempts = Config::get('platform::reminders.maxAttempts', 5);
+        $lockoutTime = Config::get('platform::reminders.lockoutTime', 1); // In minutes.
+
+        // Make a Rate Limiter instance, via Container.
+        $limiter = App::make('Nova\Cache\RateLimiter');
+
+        // Compute the throttle key.
+        $throttleKey = $this->getGuard() .'|reminders|' .$request->ip();
+
+        if ($limiter->tooManyAttempts($throttleKey, $maxAttempts, $lockoutTime)) {
+            $seconds = $limiter->availableIn($throttleKey);
+
+            return Redirect::to('password/remind')
+                ->withStatus(__d('platform', 'Too many login attempts, please try again in {0} seconds.', $seconds), 'danger');
+        }
+
+        $hashKey = Config::get('app.key');
+
+        if ($hash !== hash_hmac('sha1', $token .'|' .$request->ip(), $hashKey)) {
+            $limiter->hit($throttleKey, $lockoutTime);
+
+            return Redirect::to('password/remind')
+                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+        }
+
+        $reminder = Config::get('auth.defaults.reminder', 'users');
+
+        $validity = Config::get("auth.reminders.{$reminder}.expire", 60);
+
+        $reminder = DB::table('password_reminders')
+            ->where('token', $token)
+            ->where('created_at', '>', Carbon::parse('-' .$validity .' minutes'))
+            ->first();
+
+        if (is_null($reminder)) {
+            $limiter->hit($throttleKey, $lockoutTime);
+
+            return Redirect::to('password/remind')
+                ->withStatus(__d('platform', 'Link is invalid, please request a new link.'), 'danger');
+        }
+
+        $limiter->clear($throttleKey);
+
         return $this->createView()
             ->shares('title', __d('platform', 'Password Reset'))
+            ->with('email', $reminder->email)
             ->with('token', $token);
     }
 
@@ -85,54 +132,69 @@ class Authorize extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function postReset()
+    public function postReset(Request $request)
     {
-        // Verify the reCAPTCHA
-        if(! ReCaptcha::check()) {
-            $status = __d('platform', 'Invalid reCAPTCHA submitted.');
-
-            return Redirect::back()->withStatus($status, 'danger');
-        }
-
-        $credentials = Input::only(
+        $credentials = $request->only(
             'email', 'password', 'password_confirmation', 'token'
         );
 
         // Add to Password Broker a custom validation.
-        Password::validator(function($credentials)
+        Password::validator(function ($credentials)
         {
             $pattern = "/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/";
 
             return (preg_match($pattern, $credentials['password']) === 1);
         });
 
-        $response = Password::reset($credentials, function($user, $password)
+        $response = Password::reset($credentials, function ($user, $password)
         {
-            $user->password = Hash::make($password);
-
-            $user->save();
+            $this->resetPassword($user, $password);
         });
 
-        // Parse the response.
+        $message = Config::get('platform::reminders.messages.' .$response);
+
+        // Calculate the User's Dashboard URI.
+        $guard = $this->getGuard();
+
+        $uri = Config::get("auth.guards.{$guard}.paths.dashboard", 'dashboard');
+
         switch ($response) {
-            case Password::INVALID_PASSWORD:
-                $status = __d('platform', 'Passwords must be strong enough and match the confirmation.');
-
-                break;
-            case Password::INVALID_TOKEN:
-                $status = __d('platform', 'This password reset token is invalid.');
-
-                break;
-            case Password::INVALID_USER:
-                $status = __d('platform', 'We can\'t find a User with that e-mail address.');
-
-                break;
             case Password::PASSWORD_RESET:
-                $status = __d('platform', 'You have successfully reset your Password.');
+                return Redirect::to($uri)->withStatus($message, 'success');
 
-                return Redirect::to('login')->withStatus($status);
+            case Password::INVALID_TOKEN:
+                return Redirect::to('password/remind')->withStatus($message, 'danger');
+
+            default:
+                return Redirect::back()->withInput($request->only('email'))->withStatus($message, 'danger');
         }
+    }
 
-        return Redirect::back()->withStatus($status, 'danger');
+    /**
+     * Reset the given user's password.
+     *
+     * @param  \Shared\Auth\Reminders\RemindableInterface  $user
+     * @param  string  $password
+     * @return void
+     */
+    protected function resetPassword($user, $password)
+    {
+        $user->password = Hash::make($password);
+
+        $user->remember_token = Str::random(60);
+
+        $user->save();
+
+        Auth::guard($this->getGuard())->login($user);
+    }
+
+    /**
+     * Get the guard to be used during password reset.
+     *
+     * @return string|null
+     */
+    protected function getGuard()
+    {
+        return 'web';
     }
 }

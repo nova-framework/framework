@@ -49,8 +49,10 @@ class Reminders extends BaseController
      */
     public function postRemind(Request $request)
     {
+        $remoteIp = $request->ip();
+
         // Verify the reCAPTCHA
-        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
+        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $remoteIp)) {
             $status = __d('platform', 'Invalid reCAPTCHA submitted.');
 
             return Redirect::back()->withStatus($status, 'danger');
@@ -58,7 +60,7 @@ class Reminders extends BaseController
 
         $credentials = $request->only('email');
 
-        switch ($response = Password::remind($credentials, $request->ip())) {
+        switch ($response = Password::remind($credentials, $remoteIp)) {
             case Password::INVALID_USER:
                 return Redirect::back()
                     ->withStatus(__d('platform', 'We can\'t find an User with that e-mail address.'), 'danger');
@@ -77,11 +79,14 @@ class Reminders extends BaseController
      */
     public function reset(Request $request, $hash, $timestamp, $token)
     {
+        $remoteIp = $request->ip();
+
+        // Get the limiter constraints.
         $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
         $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
-        $throttleKey = $this->getGuard() .'|reminders|' .$request->ip();
+        $throttleKey = $this->getGuard() .'|reminders|' .$remoteIp;
 
         // Make a Rate Limiter instance, via Container.
         $limiter = App::make('Nova\Cache\RateLimiter');
@@ -102,7 +107,7 @@ class Reminders extends BaseController
         //
         $hashKey = Config::get('app.key');
 
-        $data = $token .'|' .$request->ip() .'|' .$timestamp;
+        $data = $token .'|' .$remoteIp .'|' .$timestamp;
 
         if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($timestamp <= $oldest->timestamp)) {
             $limiter->hit($throttleKey, $lockoutTime);

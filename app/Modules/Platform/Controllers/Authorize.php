@@ -139,9 +139,11 @@ class Authorize extends BaseController
      */
     public function tokenProcess(Request $request)
     {
-        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($request)
+        $remoteIp = $request->ip();
+
+        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
-            return ReCaptcha::check($value, $request->ip());
+            return ReCaptcha::check($value, $remoteIp);
         });
 
         $validator = Validator::make(
@@ -151,7 +153,11 @@ class Authorize extends BaseController
                 'g-recaptcha-response' => 'required|recaptcha'
             ),
             array(
-                'recaptcha' => __d('platform', 'The reCaptcha verification failed. Try again.'),
+                'recaptcha' => __d('platform', 'The reCaptcha verification failed.'),
+            ),
+            array(
+                'email'                => __d('platform', 'E-mail'),
+                'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
             )
         );
 
@@ -185,11 +191,14 @@ class Authorize extends BaseController
      */
     public function tokenLogin(Request $request, $hash, $timestamp, $token)
     {
+        $remoteIp = $request->ip();
+
+        // Get the limiter constraints.
         $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
         $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
-        $throttleKey = 'users.tokenLogin|' .$request->ip();
+        $throttleKey = 'users.tokenLogin|' .$remoteIp;
 
         // Make a Rate Limiter instance, via Container.
         $limiter = App::make('Nova\Cache\RateLimiter');
@@ -208,7 +217,7 @@ class Authorize extends BaseController
         //
         $hashKey = Config::get('app.key');
 
-        $data = $token .'|' .$request->ip() .'|' .$timestamp;
+        $data = $token .'|' .$remoteIp .'|' .$timestamp;
 
         if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey)) || ($timestamp <= $oldest->timestamp)) {
             $limiter->hit($throttleKey, $lockoutTime);

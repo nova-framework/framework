@@ -13,35 +13,35 @@ class PasswordBroker
     /**
      * Constant representing a successfully sent reminder.
      *
-     * @var int
+     * @var string
      */
     const REMINDER_SENT = 'sent';
 
     /**
      * Constant representing a successfully reset password.
      *
-     * @var int
+     * @var string
      */
     const PASSWORD_RESET = 'reset';
 
     /**
      * Constant representing the user not found response.
      *
-     * @var int
+     * @var string
      */
     const INVALID_USER = 'user';
 
     /**
      * Constant representing an invalid password.
      *
-     * @var int
+     * @var string
      */
     const INVALID_PASSWORD = 'password';
 
     /**
      * Constant representing an invalid token.
      *
-     * @var int
+     * @var string
      */
     const INVALID_TOKEN = 'token';
 
@@ -67,6 +67,14 @@ class PasswordBroker
     protected $passwordValidator;
 
     /**
+     * The hash(_hmac) key.
+     *
+     * @var string
+     */
+    protected $hashKey;
+
+
+    /**
      * Create a new password broker instance.
      *
      * @param  \Auth\Reminders\ReminderRepositoryInterface  $reminders
@@ -75,11 +83,13 @@ class PasswordBroker
      * @param  string  $reminderView
      * @return void
      */
-    public function __construct(ReminderRepositoryInterface $reminders, UserProviderInterface $users)
+    public function __construct(ReminderRepositoryInterface $reminders, UserProviderInterface $users, $hashKey)
     {
         $this->users = $users;
 
         $this->reminders = $reminders;
+
+        $this->hashKey = $hashKey;
     }
 
     /**
@@ -90,7 +100,7 @@ class PasswordBroker
      * @param  \Closure  $callback
      * @return string
      */
-    public function remind(array $credentials, $clientIp)
+    public function remind(array $credentials, $remoteIp)
     {
         // First we will check to see if we found a user at the given credentials and
         // if we did not we will redirect back to this current URI with a piece of
@@ -106,12 +116,10 @@ class PasswordBroker
         // the current URI having nothing set in the session to indicate errors.
         $token = $this->reminders->create($user);
 
-        // Create the token hash.
-        $hashKey = Config::get('app.key');
-
+        // Create the token timestamp and hash.
         $timestamp = time();
 
-        $hash = hash_hmac('sha256', $token .'|' .$clientIp .'|' .$timestamp, $hashKey);
+        $hash = hash_hmac('sha256', $token .'|' .$remoteIp .'|' .$timestamp, $this->hashKey);
 
         $user->sendPasswordResetNotification($hash, $timestamp, $token);
 

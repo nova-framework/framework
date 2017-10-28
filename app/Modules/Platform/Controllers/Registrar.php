@@ -32,29 +32,37 @@ class Registrar extends BaseController
     protected $layout = 'Default';
 
 
-    protected function validator(array $data)
+    protected function validator(array $data, $remoteIp)
     {
         // Validation rules.
         $rules = array(
-            'realname' => 'required|min:6|valid_name',
-            'username' => 'required|min:6|unique:users',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|confirmed|strong_password'
+            'realname'             => 'required|min:6|valid_name',
+            'username'             => 'required|min:6|unique:users',
+            'email'                => 'required|email|unique:users',
+            'password'             => 'required|confirmed|strong_password',
+            'g-recaptcha-response' => 'required|min:1|recaptcha'
         );
 
         $messages = array(
+            'recaptcha'       => __d('platform', 'The reCaptcha verification failed.'),
             'valid_name'      => __d('platform', 'The :attribute field is not a valid name.'),
             'strong_password' => __d('platform', 'The :attribute field is not strong enough.'),
         );
 
         $attributes = array(
-            'username' => __d('platform', 'Username'),
-            'realname' => __d('platform', 'Name and Surname'),
-            'email'    => __d('platform', 'E-mail'),
-            'password' => __d('platform', 'Password'),
+            'username'             => __d('platform', 'Username'),
+            'realname'             => __d('platform', 'Name and Surname'),
+            'email'                => __d('platform', 'E-mail'),
+            'password'             => __d('platform', 'Password'),
+            'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
         );
 
         // Add the custom Validation Rule commands.
+        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
+        {
+            return ReCaptcha::check($value, $remoteIp);
+        });
+
         Validator::extend('valid_name', function($attribute, $value, $parameters)
         {
             $pattern = '~^(?:[\p{L}\p{Mn}\p{Pd}\'\x{2019}]+(?:$|\s+)){2,}$~u';
@@ -93,18 +101,11 @@ class Registrar extends BaseController
     public function store(Request $request)
     {
         $input = $request->only(
-            'username', 'realname', 'email', 'password', 'password_confirmation'
+            'username', 'realname', 'email', 'password', 'password_confirmation', 'g-recaptcha-response'
         );
 
-        // Verify the submitted reCAPTCHA
-        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $request->ip())) {
-            $status = __d('platform', 'Invalid reCAPTCHA submitted.');
-
-            return Redirect::back()->withStatus($status, 'danger');
-        }
-
         // Create a Validator instance.
-        $validator = $this->validator($input);
+        $validator = $this->validator($input, $request->ip());
 
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withStatus($validator->errors(), 'danger');
@@ -113,16 +114,13 @@ class Registrar extends BaseController
         // Encrypt the given Password.
         $password = Hash::make($input['password']);
 
-        // Create the Activation code.
-        $token = $this->createNewToken();
-
         // Create the User record.
         $user = User::create(array(
             'username'        => $input['username'],
             'realname'        => $input['realname'],
             'email'           => $input['email'],
             'password'        => $password,
-            'activation_code' => $token,
+            'activation_code' => $token = $this->createNewToken(),
         ));
 
         // Retrieve the default 'user' Role.
@@ -134,11 +132,9 @@ class Registrar extends BaseController
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
 
-        $timestamp = time();
+        $hash = hash_hmac('sha256', $token, $hashKey);
 
-        $hash = hash_hmac('sha256', $token .'|' .$request->ip() .'|' .$timestamp, $hashKey);
-
-        $user->notify(new AccountActivationNotification($hash, $timestamp, $token));
+        $user->notify(new AccountActivationNotification($hash, $token));
 
         // Prepare the flash message.
         $status = __d('platform', 'Your Account has been created. Activation instructions have been sent to your email address.');
@@ -164,19 +160,25 @@ class Registrar extends BaseController
      */
     public function verifyPost(Request $request)
     {
-        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($request)
+        $remoteIp = $request->ip();
+
+        Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
-            return ReCaptcha::check($value, $request->ip());
+            return ReCaptcha::check($value, $remoteIp);
         });
 
         $validator = Validator::make(
             $input = $request->only('email', 'g-recaptcha-response'),
             array(
-                'email'                => 'required|email|exists:users',
-                'g-recaptcha-response' => 'required|recaptcha'
+                'email'                => 'required|email|exists:users,email',
+                'g-recaptcha-response' => 'required|min:1|recaptcha'
             ),
             array(
-                'recaptcha' => __d('platform', 'The reCaptcha verification failed. Try again.'),
+                'recaptcha' => __d('platform', 'The reCaptcha verification failed.'),
+            ),
+            array(
+                'email'                => __d('platform', 'E-mail'),
+                'g-recaptcha-response' => __d('platform', 'ReCaptcha'),
             )
         );
 
@@ -192,7 +194,7 @@ class Registrar extends BaseController
         catch (ModelNotFoundException $e) {
             return Redirect::back()
                 ->withInput(array('email' => $email))
-                ->withStatus(__d('platform', 'This E-mail cannot receive Account Activation links.', $email), 'danger');
+                ->withStatus(__d('platform', 'The selected email cannot receive Account Activation links.', $email), 'danger');
         }
 
         $user->activation_code = $token = $this->createNewToken();
@@ -202,11 +204,9 @@ class Registrar extends BaseController
         // Send the associated Activation Notification.
         $hashKey = Config::get('app.key');
 
-        $timestamp = time();
+        $hash = hash_hmac('sha256', $token, $hashKey);
 
-        $hash = hash_hmac('sha256', $token .'|' .$request->ip() .'|' .$timestamp, $hashKey);
-
-        $user->notify(new AccountActivationNotification($hash, $timestamp, $token));
+        $user->notify(new AccountActivationNotification($hash, $token));
 
         return Redirect::to('register/verify')
             ->withStatus(__d('platform', 'Activation instructions have been sent to your email address.'), 'success');
@@ -219,11 +219,14 @@ class Registrar extends BaseController
      */
     public function tokenVerify(Request $request, $hash, $timestamp, $token)
     {
+        $remoteIp = $request->ip();
+
+        // Get the limiter constraints.
         $maxAttempts = Config::get('platform::throttle.maxAttempts', 5);
         $lockoutTime = Config::get('platform::throttle.lockoutTime', 1); // In minutes.
 
         // Compute the throttle key.
-        $throttleKey = 'registrar.verify|' .$request->ip();
+        $throttleKey = 'registrar.verify|' .$remoteIp;
 
         // Make a Rate Limiter instance, via Container.
         $limiter = App::make('Nova\Cache\RateLimiter');
@@ -237,9 +240,7 @@ class Registrar extends BaseController
 
         $hashKey = Config::get('app.key');
 
-        $data = $token .'|' .$request->ip() .'|' .$timestamp;
-
-        if (! hash_equals($hash, hash_hmac('sha256', $data, $hashKey))) {
+        if (! hash_equals($hash, hash_hmac('sha256', $token, $hashKey))) {
             $limiter->hit($throttleKey, $lockoutTime);
 
             return Redirect::to('register/status')
@@ -292,7 +293,7 @@ class Registrar extends BaseController
      */
     public function createNewToken()
     {
-        $tokens = User::lists('activation_code');
+        $tokens = User::whereNotNull('activation_code')->lists('activation_code');
 
         do {
             $token = Str::random(100);

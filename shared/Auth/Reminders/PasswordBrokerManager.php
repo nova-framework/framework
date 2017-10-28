@@ -78,7 +78,8 @@ class PasswordBrokerManager
         // aggregate service of sorts providing a convenient interface for resets.
         return new PasswordBroker(
             $this->createReminderRepository($config),
-            $this->app['auth']->createUserProvider($config['provider'])
+            $this->app['auth']->createUserProvider($config['provider']),
+            $this->app['config']->get('app.key')
         );
     }
 

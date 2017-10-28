@@ -52,7 +52,7 @@ class Reminders extends BaseController
         $remoteIp = $request->ip();
 
         // Verify the reCAPTCHA
-        if(! ReCaptcha::check($request->input('g-recaptcha-response'), $remoteIp)) {
+        if(! $this->reCaptchaCheck($request->input('g-recaptcha-response'), $remoteIp)) {
             $status = __d('platform', 'The reCaptcha verification failed.');
 
             return Redirect::back()->withStatus($status, 'danger');

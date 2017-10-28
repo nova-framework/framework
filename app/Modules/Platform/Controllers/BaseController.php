@@ -3,12 +3,15 @@
 namespace App\Modules\Platform\Controllers;
 
 use Nova\Support\Facades\Auth;
+use Nova\Support\Facades\Config;
 use Nova\Support\Facades\Request;
 use Nova\Support\Facades\View;
 
 use App\Controllers\BaseController as Controller;
 use App\Modules\Platform\Models\Activity;
 use App\Modules\Platform\Support\EventedMenu;
+
+use ReCaptcha\ReCaptcha;
 
 
 abstract class BaseController extends Controller
@@ -53,5 +56,25 @@ abstract class BaseController extends Controller
 
         View::share('navbarLeftItems',  $navbarLeftItems);
         View::share('navbarRightItems', $navbarRightItems);
+    }
+
+    /**
+     * Verify the given ReCaptcha response.
+     *
+     * @param  string   $response
+     * @param  string   $remoteIp
+     * @return boolean
+     */
+    protected function reCaptchaCheck($response, $remoteIp)
+    {
+        if (false === Config::get('reCaptcha.active', false)) {
+            return true;
+        }
+
+        $secret = Config::get('reCaptcha.secret');
+
+        $result = with(new ReCaptcha($secret))->verify($response, $remoteIp);
+
+        return $result->isSuccess();
     }
 }

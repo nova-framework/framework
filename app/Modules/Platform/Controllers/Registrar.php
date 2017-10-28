@@ -9,7 +9,6 @@
 namespace App\Modules\Platform\Controllers;
 
 use Nova\Database\ORM\ModelNotFoundException;
-use Nova\Helpers\ReCaptcha;
 use Nova\Http\Request;
 use Nova\Support\Facades\App;
 use Nova\Support\Facades\Auth;
@@ -60,7 +59,7 @@ class Registrar extends BaseController
         // Add the custom Validation Rule commands.
         Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
-            return ReCaptcha::check($value, $remoteIp);
+            return $this->reCaptchaCheck($value, $remoteIp);
         });
 
         Validator::extend('valid_name', function($attribute, $value, $parameters)
@@ -164,7 +163,7 @@ class Registrar extends BaseController
 
         Validator::extend('recaptcha', function($attribute, $value, $parameters) use ($remoteIp)
         {
-            return ReCaptcha::check($value, $remoteIp);
+            return $this->reCaptchaCheck($value, $remoteIp);
         });
 
         $validator = Validator::make(

@@ -31,7 +31,8 @@
         "twbs/bootstrap": "^3.3",
         "ramsey/uuid": "~3.0",
         "studio-42/elfinder": "^2.1",
-        "filp/whoops": "^2.1"
+        "filp/whoops": "^2.1",
+        "google/recaptcha": "~1.1"
     },
     "autoload": {
         "classmap": [

@@ -18,7 +18,7 @@
         <h3 class="box-title"><?= __d('attachments', 'The Attachable\'s Form'); ?></h3>
     </div>
     <div class="box-body">
-        <p class="text-center" style="padding-top: 10px;"><?= __d('attachments', 'There will be dragons!'); ?></p>
+        <p class="text-center text-danger" style="padding-top: 10px;"><strong><?= __d('attachments', 'There will be dragons!'); ?></strong></p>
     </div>
     <div class="box-footer">
             <input type="submit" class="btn btn-success col-sm-2 pull-right submit-button" value="<?= __d('attachments', 'Send'); ?>">

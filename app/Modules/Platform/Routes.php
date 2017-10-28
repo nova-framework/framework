@@ -69,12 +69,12 @@ Route::get( 'account',         array('middleware' => 'auth', 'uses' => 'Account@
 Route::post('account',         array('middleware' => 'auth', 'uses' => 'Account@update'));
 Route::post('account/picture', array('middleware' => 'auth', 'uses' => 'Account@picture'));
 
-// The Heartbeat
-Route::post('heartbeat', array('middleware' => 'auth', 'uses' => 'Heartbeat@update'));
-
-// The Notifications.
+// The User's Notifications.
 Route::get( 'notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@index'));
 Route::post('notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@update'));
+
+// The Heartbeat
+Route::post('heartbeat', array('middleware' => 'auth', 'uses' => 'Heartbeat@update'));
 
 
 // The Adminstration Routes.

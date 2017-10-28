@@ -179,7 +179,6 @@ return array(
         'Number'        => 'Nova\Helpers\Number',
         'ReservedWords' => 'Nova\Helpers\ReservedWords',
         'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
-        'TableBuilder'  => 'Nova\Helpers\TableBuilder',
         'Tags'          => 'Nova\Helpers\Tags',
 
         // The Forensics Console.

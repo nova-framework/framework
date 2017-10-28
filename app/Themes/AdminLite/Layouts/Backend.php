@@ -68,6 +68,7 @@ if (isset($user->image) && $user->image->exists()) {
     Assets::js(array(
         vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
         resource_url('js/sprintf.min.js'),
+        resource_url('js/bootstrap-notify.min.js'),
     ));
 
     ?>
@@ -242,6 +243,22 @@ $(function () {
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
+    });
+
+    // Bootstrap Notify.
+    $.notifyDefaults({
+        type: 'info',
+        allow_dismiss: true,
+        newest_on_top: true,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOutUp'
+        },
+        template: '<div class="col-xs-11 col-sm-4 alert alert-notify alert-notify-{0} alert-dismissible" style="padding: 10px;">' +
+                  '<button type="button" class="close" style="top: -7px; right: -2px;" data-dismiss="alert" aria-hidden="true">×</button>' +
+                  '<h4>{1}</h4>' +
+                  '<p>{2}</p>' +
+                  '</div>'
     });
 });
 </script>

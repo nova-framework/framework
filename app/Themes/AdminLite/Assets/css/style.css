@@ -1,3 +1,57 @@
 /* Your styles here */
 
+.alert-notify {
+    color: #333;
+    background: #fff;
+    border-radius: 0;
+    border: 1px solid #d2d6de;
+    border-left: 15px solid #d2d6de;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.alert-notify-default {
+    border-color: #d2d6de;
+}
+
+.alert-notify-primary {
+    border-color: #3c8dbc;
+}
+
+.alert-notify-success {
+    border-color: #008d4c;
+}
+
+.alert-notify-danger,
+.alert-notify-error {
+    border-color: #d73925;
+}
+
+.alert-notify-warning {
+    border-color: #e08e0b;
+}
+
+.alert-notify-info {
+    border-color: #00acd6;
+}
+
+.alert-notify-primary.close {
+    color: #3c8dbc;
+}
+
+.alert-notify-success.close {
+    color: #008d4c;
+}
+
+.alert-notify-danger.close,
+.alert-notify-error.close {
+    color: #d73925;
+}
+
+.alert-notify-warning.close {
+    color: #e08e0b;
+}
+
+.alert-notify-info.close {
+    color: #00acd6;
+}
 

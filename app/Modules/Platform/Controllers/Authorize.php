@@ -181,11 +181,11 @@ class Authorize extends BaseController
         $maxAttempts = Config::get('platform::tokenLogin.maxAttempts', 5);
         $lockoutTime = Config::get('platform::tokenLogin.lockoutTime', 1); // In minutes.
 
-        // Make a Rate Limiter instance, via Container.
-        $limiter = App::make('Nova\Cache\RateLimiter');
-
         // Compute the throttle key.
         $throttleKey = 'users.tokenLogin|' .$request->ip();
+
+        // Make a Rate Limiter instance, via Container.
+        $limiter = App::make('Nova\Cache\RateLimiter');
 
         if ($limiter->tooManyAttempts($throttleKey, $maxAttempts, $lockoutTime)) {
             $seconds = $limiter->availableIn($throttleKey);

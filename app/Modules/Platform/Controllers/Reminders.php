@@ -80,11 +80,11 @@ class Reminders extends BaseController
         $maxAttempts = Config::get('platform::reminders.maxAttempts', 5);
         $lockoutTime = Config::get('platform::reminders.lockoutTime', 1); // In minutes.
 
-        // Make a Rate Limiter instance, via Container.
-        $limiter = App::make('Nova\Cache\RateLimiter');
-
         // Compute the throttle key.
         $throttleKey = $this->getGuard() .'|reminders|' .$request->ip();
+
+        // Make a Rate Limiter instance, via Container.
+        $limiter = App::make('Nova\Cache\RateLimiter');
 
         if ($limiter->tooManyAttempts($throttleKey, $maxAttempts, $lockoutTime)) {
             $seconds = $limiter->availableIn($throttleKey);

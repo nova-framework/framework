@@ -11,20 +11,23 @@
 |
 */
 
-// The Attachments.
-Route::post('attachments',              array('middleware' => 'auth', 'uses' => 'Attachments@store'));
-Route::post('attachments/done',         array('middleware' => 'auth', 'uses' => 'Attachments@done'));
-Route::post('attachments/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Attachments@destroy'));
+Route::group(array('middleware' => 'auth'), function ()
+{
+    // The Attachments.
+    Route::post('attachments',              array('middleware' => 'auth', 'uses' => 'Attachments@store'));
+    Route::post('attachments/done',         array('middleware' => 'auth', 'uses' => 'Attachments@done'));
+    Route::post('attachments/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Attachments@destroy'));
 
-// The authentication protected File serving.
-Route::get('attachments/{method}/{token}/{filename}', array(
-    'middleware' => 'auth',
+    // The authentication protected File serving.
+    Route::get('attachments/{method}/{token}/{filename}', array(
+        'middleware' => 'auth',
 
-    'uses'  => 'Attachments@serve',
-    'where' => array(
-        'method' => '(download|preview)',
-    ),
-));
+        'uses'  => 'Attachments@serve',
+        'where' => array(
+            'method' => '(download|preview)',
+        ),
+    ));
+});
 
 // The Adminstration Routes.
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()

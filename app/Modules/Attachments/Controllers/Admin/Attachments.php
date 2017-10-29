@@ -32,6 +32,7 @@ class Attachments extends BaseController
         return $this->createView()
             ->shares('title', __d('attachments', 'Attachments'))
             ->with('attachments', $attachments)
+            ->with('maxFiles', 1000)
             ->with('deletable', true);
     }
 

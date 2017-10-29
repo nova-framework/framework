@@ -2,6 +2,9 @@
 
 $deletable = isset($deletable) ? $deletable : false;
 
+$maxFiles    = isset($maxFiles)    ? $maxFiles    : 10;
+$maxFilesize = isset($maxFilesize) ? $maxFilesize : 1000;
+
 // Prepare the existing files for javascript.
 $existingFiles = json_encode(
     Input::old('attachment', isset($attachments) ? $attachments : array())
@@ -39,7 +42,7 @@ $existingFiles = json_encode(
                         <strong class="error text-danger" data-dz-errormessage></strong>
                     </td>
                     <td style="text-align: center; vertical-align: middle;" width="15%">
-                        <div class="type" data-dz-type></div>
+                        <div class="type"></div>
                     </td>
                     <td style="text-align: center; vertical-align: middle;" width="10%">
                         <div class="size" data-dz-size></div>
@@ -206,8 +209,8 @@ $(function () {
     var dropzone = new Dropzone("#dropzone", {
         url: "<?= site_url('attachments'); ?>", // Set the url.
         chunking: true,
-        maxFiles: 10,
-        maxFilesize: 1000, // MB
+        maxFiles: <?= $maxFiles; ?>,
+        maxFilesize: <?= $maxFilesize; ?>, // MB
         parallelUploads: 1,
         //acceptedFiles: 'image/*, application/pdf',
         previewTemplate: previewTemplate,

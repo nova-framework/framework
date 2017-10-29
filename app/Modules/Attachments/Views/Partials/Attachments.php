@@ -24,8 +24,8 @@ $existingFiles = json_encode(
                 <tr class="bg-navy disabled">
                     <th style='text-align: center; vertical-align: middle;' width="5%"><?= __d('attachments', 'ID'); ?></th>
                     <th style='text-align: center; vertical-align: middle;' width="55%"><?= __d('attachments', 'File'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;' width="10%"><?= __d('attachments', 'Size'); ?></th>
                     <th style='text-align: center; vertical-align: middle;' width="15%"><?= __d('attachments', 'Type'); ?></th>
+                    <th style='text-align: center; vertical-align: middle;' width="10%"><?= __d('attachments', 'Size'); ?></th>
                     <th style='text-align: right; vertical-align: middle;' width="15%"><?= __d('attachments', 'Operations'); ?></th>
                 </tr>
             </thead>
@@ -38,11 +38,11 @@ $existingFiles = json_encode(
                         <div class="name" data-dz-name></div>
                         <strong class="error text-danger" data-dz-errormessage></strong>
                     </td>
-                    <td style="text-align: center; vertical-align: middle;" width="10%">
-                        <div class="size" data-dz-size></div>
-                    </td>
                     <td style="text-align: center; vertical-align: middle;" width="15%">
                         <div class="type" data-dz-type></div>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;" width="10%">
+                        <div class="size" data-dz-size></div>
                     </td>
                     <td style="text-align: right; vertical-align: middle;" width="15%">
                         <span class="working"><i class="fa fa-cog fa-spin" aria-hidden="true" style="margin: 8px 9px 8px;"></i></span>

@@ -1,10 +1,10 @@
 <?php
 
-$deletable = isset($deletable) ? $deletable : true;
+$deletable = isset($deletable) ? $deletable : false;
 
 // Prepare the existing files for javascript.
 $existingFiles = json_encode(
-    Input::get('attachment', isset($attachments) ? $attachments : array())
+    Input::old('attachment', isset($attachments) ? $attachments : array())
 );
 
 ?>

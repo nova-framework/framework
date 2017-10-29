@@ -32,8 +32,9 @@ class Attachments extends BaseController
         $attachments = array(
             'files' => $files,
 
+            'attachable' => null,
+
             // Rendering options.
-            'attachable'   => null,
             'downloadable' => true,
             'deletable'    => true,
 

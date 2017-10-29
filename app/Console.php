@@ -26,7 +26,7 @@ Forge::command('attachment:clear-stalled', function ()
 {
     Attachment::where('attachable_id', 0)->where('created_at', '<', Carbon::parse('-3 hours'))->delete();
 
-    $this->comment('Attachments cleared!');
+    $this->comment('The stalled Attachments was cleared!');
 
 })->describe('Clear all Attachments not associated to an Attachable after 3 hours');
 

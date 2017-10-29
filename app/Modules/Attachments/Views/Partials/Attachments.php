@@ -114,7 +114,6 @@ $files = isset($files) ? $files : array();
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.js"></script>
 
-
 <script>
 
 $(function () {
@@ -136,6 +135,10 @@ $(function () {
     $("#modal-preview-dialog").on('hidden.bs.modal', function () {
         $('.modal-preview-iframe').attr('src', '');
     });
+
+    //window.onbeforeunload = function () {
+    //    return "<?= __d('requests', 'Avoid changing page as this will cut your editing session.'); ?>";
+    //};
 });
 
 </script>
@@ -427,10 +430,6 @@ $(function () {
 
     // Update the Dropzone's max files reached.
     dropzone._updateMaxFilesReachedClass();
-
-    //window.onbeforeunload = function () {
-    //    return "<?= __d('requests', 'Avoid changing page as this will cut your editing session.'); ?>";
-    //};
 });
 
 </script>

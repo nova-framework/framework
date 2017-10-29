@@ -22,13 +22,13 @@ Forge::resolveCommands(array(
 /**
  * Add the Closure based commands.
  */
-Forge::command('attachments:clear', function ()
+Forge::command('attachment:clear-stalled', function ()
 {
-    //Attachment::where('attachable_id', 0)->where('created_at', '<', Carbon::parse('-3 hours'))->delete();
+    Attachment::where('attachable_id', 0)->where('created_at', '<', Carbon::parse('-3 hours'))->delete();
 
     $this->comment('Attachments cleared!');
 
-})->describe('Delete all Attachments which are still not attached after 3 hours');
+})->describe('Clear all Attachments not associated to an Attachable after 3 hours');
 
 
 /**
@@ -39,7 +39,7 @@ Schedule::command('mailer:spool:send')->everyMinute();
 /**
  * Schedule the stalled Attachments clearing.
  */
-Schedule::command('attachments:clear')->hourly();
+//Schedule::command('attachment:clear-stalled')->hourly();
 
 /**
  * Schedule the flushing of expired password reminders.

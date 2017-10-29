@@ -135,10 +135,6 @@ $(function () {
     $("#modal-preview-dialog").on('hidden.bs.modal', function () {
         $('.modal-preview-iframe').attr('src', '');
     });
-
-    //window.onbeforeunload = function () {
-    //    return "<?= __d('requests', 'Avoid changing page as this will cut your editing session.'); ?>";
-    //};
 });
 
 </script>

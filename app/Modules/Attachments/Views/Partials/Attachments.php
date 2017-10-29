@@ -68,8 +68,6 @@ $existingFiles = json_encode(
     </div>
 </div>
 
-<?php if ($deletable) { ?>
-
 <div class="modal modal-default" id="modal-confirm-dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -89,8 +87,6 @@ $existingFiles = json_encode(
         <!-- /.modal-content -->
     </div>
 </div>
-
-<?php } ?>
 
 <div class="modal modal-default" id="modal-preview-dialog" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog" style="width: 97% !important; margin-left: 2%;">

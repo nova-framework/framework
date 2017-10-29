@@ -25,7 +25,7 @@ Forge::resolveCommands(array(
 Forge::command('attachment:clear-stalled', function ()
 {
     $attachments = Attachment::where('attachable_id', 0)
-        ->where('created_at', '<', Carbon::parse('-1 hours'))
+        ->where('created_at', '<', Carbon::parse('-3 hours'))
         ->get();
 
     foreach ($attachments as $attachment) {

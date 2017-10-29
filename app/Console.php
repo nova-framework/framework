@@ -34,7 +34,7 @@ Forge::command('attachment:clear-stalled', function ()
 
     $this->info('The stalled Attachments was cleared!');
 
-})->describe('Clear all Attachments not associated to an Attachable after 3 hours');
+})->describe('Clear all Attachments still not associated to an Attachable after 3 hours');
 
 
 /**

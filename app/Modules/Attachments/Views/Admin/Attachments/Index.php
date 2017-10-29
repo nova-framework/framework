@@ -11,7 +11,7 @@
 
 <?= Session::getMessages(); ?>
 
-<form id="attachments-form"  action="<?= site_url('admin/attachments'); ?>" method="POST" role="form">
+<form id="attachable-form"  action="<?= site_url('admin/attachments'); ?>" method="POST" role="form">
 
 <div class="box box-default">
     <div class="box-header with-border">

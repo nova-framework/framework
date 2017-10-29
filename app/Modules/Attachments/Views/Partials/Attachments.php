@@ -19,12 +19,13 @@ $existingFiles = json_encode(
             <br>
             <?= __d('attachments', 'For attaching files, please click the button bellow or drag and drop files within this widget.'); ?>
         </div>
-        <table id='files-table' class='table table-striped table-hover responsive' style="display: none;">
+        <table id='files-table' class='table table-striped table-hover table-responsive' style="display: none;">
             <thead>
                 <tr class="bg-navy disabled">
                     <th style='text-align: center; vertical-align: middle;' width="5%"><?= __d('attachments', 'ID'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;' width="60%"><?= __d('attachments', 'File'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;' width="15%"><?= __d('attachments', 'Size'); ?></th>
+                    <th style='text-align: center; vertical-align: middle;' width="55%"><?= __d('attachments', 'File'); ?></th>
+                    <th style='text-align: center; vertical-align: middle;' width="10%"><?= __d('attachments', 'Size'); ?></th>
+                    <th style='text-align: center; vertical-align: middle;' width="15%"><?= __d('attachments', 'Type'); ?></th>
                     <th style='text-align: right; vertical-align: middle;' width="15%"><?= __d('attachments', 'Operations'); ?></th>
                 </tr>
             </thead>
@@ -33,12 +34,15 @@ $existingFiles = json_encode(
                     <td style="text-align: center; vertical-align: middle;" width="5%">
                         <div class="fileid">-</div>
                     </td>
-                    <td style="text-align: center; vertical-align: middle;" width="60%">
+                    <td style="text-align: center; vertical-align: middle;" width="55%">
                         <div class="name" data-dz-name></div>
                         <strong class="error text-danger" data-dz-errormessage></strong>
                     </td>
-                    <td style="text-align: center; vertical-align: middle;" width="15%">
+                    <td style="text-align: center; vertical-align: middle;" width="10%">
                         <div class="size" data-dz-size></div>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;" width="15%">
+                        <div class="type" data-dz-type></div>
                     </td>
                     <td style="text-align: right; vertical-align: middle;" width="15%">
                         <span class="working"><i class="fa fa-cog fa-spin" aria-hidden="true" style="margin: 8px 9px 8px;"></i></span>
@@ -151,10 +155,18 @@ $(function () {
         preview.attr('data-id', id);
 
         preview.find('.fileid').html(id);
+        preview.find('.type').html(type);
 
         preview.find('.download').attr('href', download);
 
-        if (! type.match(/image.*/) && ! type.match(/audio.*/) && ! type.match(/video.*/) && (type !== 'application/pdf')) {
+        // Setup the modal preview for the current (mime)type.
+        var unavailable = ! type.match(/image.*/)
+                       && ! type.match(/audio.*/)
+                       && ! type.match(/video.*/)
+                       && (type !== 'application/pdf')
+                       && (type !== 'application/x-shockwave-flash');
+
+        if (unavailable) {
             preview.find('.preview').remove();
         } else {
             preview.find('.preview').attr('data-name', name);
@@ -164,7 +176,7 @@ $(function () {
         // Insert a hidden input in the preview element, for notifying back the attachment ID.
         var html = '<input name="attachment[]" class="upload-field-ids" type="hidden" value="' + id + '"/>';
 
-        $('#attachments-form').append(html);
+        $('#attachable-form').append(html);
     }
 
     // Get the template HTML and remove it from the document.

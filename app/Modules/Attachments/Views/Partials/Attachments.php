@@ -1,14 +1,14 @@
 <?php
 
-$deletable = isset($deletable) ? $deletable : false;
+$attachable = isset($attachable) ? $attachable : '';
+
+$downloadable = isset($downloadable) ? $downloadable : false;
+$deletable    = isset($deletable)    ? $deletable    : false;
 
 $maxFiles    = isset($maxFiles)    ? $maxFiles    : 10;
 $maxFilesize = isset($maxFilesize) ? $maxFilesize : 1000;
 
-// Prepare the existing files for javascript.
-$existingFiles = json_encode(
-    Input::old('attachment', isset($attachments) ? $attachments : array())
-);
+$files = isset($files) ? $files : array();
 
 ?>
 
@@ -54,7 +54,9 @@ $existingFiles = json_encode(
                         </div>
                         <div class="btn-group pull-right actions" role="group" aria-label='...' style="display: none;">
                             <a class="btn btn-sm btn-warning preview" href="#" data-toggle="modal" data-target="#modal-preview-dialog" title="<?= __d('attachments', 'Show this Attachment'); ?>" role="button"><i class="fa fa-search"></i></a>
+                            <?php if ($downloadable) { ?>
                             <a class="btn btn-sm btn-success download" href="#" title="<?= __d('requests', 'Download this Attachment'); ?>" role="button"><i class="fa fa-download"></i></a>
+                            <?php } ?>
                             <?php if ($deletable) { ?>
                             <a data-dz-remove class="btn btn-sm btn-danger" href="#" title="<?= __d('attachments', 'Delete this Attachment'); ?>" role="button"><i class="fa fa-remove"></i></a>
                             <?php } ?>
@@ -141,15 +143,6 @@ $(function () {
 <script>
 
 $(function () {
-    var notify = function(title, message, type) {
-        $.notify({
-            title:   title,
-            message: message
-        }, {
-            type: type,
-        });
-    }
-
     var setupAttachment = function(preview, name, type, id, url, download) {
         preview.attr('data-id', id);
 
@@ -418,7 +411,7 @@ $(function () {
     });
 
     // Add the existing files into Dropzone uploader.
-    var existingFiles = <?= $existingFiles; ?>;
+    var existingFiles = <?= json_encode($files); ?>;
 
     for (i = 0; i < existingFiles.length; i++) {
         var file = existingFiles[i];

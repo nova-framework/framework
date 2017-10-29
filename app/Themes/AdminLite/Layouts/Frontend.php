@@ -234,6 +234,15 @@ $(function () {
                   '<p>{2}</p>' +
                   '</div>'
     });
+
+    notify = function(title, message, type) {
+        $.notify({
+            title:   title,
+            message: message
+        }, {
+            type: type,
+        });
+    }
 });
 </script>
 

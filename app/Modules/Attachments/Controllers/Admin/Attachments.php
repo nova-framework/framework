@@ -16,7 +16,7 @@ class Attachments extends BaseController
         $models = Attachment::all();
 
         // Prepare the existing files information.
-        $attachments = $models->map(function ($model)
+        $files = $models->map(function ($model)
         {
             return array(
                 'id'       => $model->id,
@@ -29,11 +29,22 @@ class Attachments extends BaseController
 
         })->toArray();
 
+        $attachments = array(
+            'files' => $files,
+
+            // Rendering options.
+            'attachable'   => null,
+            'downloadable' => true,
+            'deletable'    => true,
+
+            // Limits.
+            'maxFiles'     => 1000,
+            'maxFilessize' => 1000, // MB
+        );
+
         return $this->createView()
             ->shares('title', __d('attachments', 'Attachments'))
-            ->with('attachments', $attachments)
-            ->with('maxFiles', 1000)
-            ->with('deletable', true);
+            ->with('attachments', $attachments);
     }
 
     public function update(Request $request)

@@ -6,7 +6,7 @@ $downloadable = isset($downloadable) ? $downloadable : false;
 $deletable    = isset($deletable)    ? $deletable    : false;
 
 $maxFiles    = isset($maxFiles)    ? $maxFiles    : 10;
-$maxFilesize = isset($maxFilesize) ? $maxFilesize : 1000;
+$maxFilesize = isset($maxFilesize) ? $maxFilesize : 1000; // 1GB
 
 $files = isset($files) ? $files : array();
 

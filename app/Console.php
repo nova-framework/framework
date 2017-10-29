@@ -24,7 +24,13 @@ Forge::resolveCommands(array(
  */
 Forge::command('attachment:clear-stalled', function ()
 {
-    Attachment::where('attachable_id', 0)->where('created_at', '<', Carbon::parse('-3 hours'))->delete();
+    $attachments = Attachment::where('attachable_id', 0)
+        ->where('created_at', '<', Carbon::parse('-1 hours'))
+        ->get();
+
+    foreach ($attachments as $attachment) {
+        $attachment->delete();
+    };
 
     $this->info('The stalled Attachments was cleared!');
 

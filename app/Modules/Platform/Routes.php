@@ -50,7 +50,7 @@ Route::post('register/status',  array('middleware' => 'guest', 'uses' => 'Regist
 Route::get( 'register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
 Route::post('register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verifyPost'));
 
-Route::get('register/{hash}/{time}/{token?}', array(
+Route::get('register/{hash}/{token?}', array(
     'middleware' => 'guest',
 
     'uses'  => 'Registrar@tokenVerify',

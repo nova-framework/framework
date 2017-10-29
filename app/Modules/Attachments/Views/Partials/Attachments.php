@@ -427,6 +427,10 @@ $(function () {
 
     // Update the Dropzone's max files reached.
     dropzone._updateMaxFilesReachedClass();
+
+    //window.onbeforeunload = function () {
+    //    return "<?= __d('requests', 'Avoid changing page as this will cut your editing session.'); ?>";
+    //};
 });
 
 </script>

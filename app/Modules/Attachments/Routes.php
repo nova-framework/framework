@@ -11,17 +11,15 @@
 |
 */
 
-Route::group(array('middleware' => 'auth'), function ()
+Route::group(array('prefix' => '/', 'middleware' => 'auth'), function ()
 {
     // The Attachments.
-    Route::post('attachments',              array('middleware' => 'auth', 'uses' => 'Attachments@store'));
-    Route::post('attachments/done',         array('middleware' => 'auth', 'uses' => 'Attachments@done'));
-    Route::post('attachments/{id}/destroy', array('middleware' => 'auth', 'uses' => 'Attachments@destroy'));
+    Route::post('attachments',              array('uses' => 'Attachments@store'));
+    Route::post('attachments/done',         array('uses' => 'Attachments@done'));
+    Route::post('attachments/{id}/destroy', array('uses' => 'Attachments@destroy'));
 
     // The authentication protected File serving.
     Route::get('attachments/{method}/{token}/{filename}', array(
-        'middleware' => 'auth',
-
         'uses'  => 'Attachments@serve',
         'where' => array(
             'method' => '(download|preview)',
@@ -30,8 +28,8 @@ Route::group(array('middleware' => 'auth'), function ()
 });
 
 // The Adminstration Routes.
-Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'), function ()
 {
-    Route::get( 'attachments',  array('middleware' => 'auth', 'uses' => 'Attachments@index'));
-    Route::post('attachments',  array('middleware' => 'auth', 'uses' => 'Attachments@update'));
+    Route::get( 'attachments',  array('uses' => 'Attachments@index'));
+    Route::post('attachments',  array('uses' => 'Attachments@update'));
 });

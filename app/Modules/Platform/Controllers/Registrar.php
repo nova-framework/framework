@@ -216,7 +216,7 @@ class Registrar extends BaseController
      *
      * @return \Nova\Http\RedirectResponse
      */
-    public function tokenVerify(Request $request, $hash, $timestamp, $token)
+    public function tokenVerify(Request $request, $hash, $token)
     {
         $remoteIp = $request->ip();
 

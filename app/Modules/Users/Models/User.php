@@ -13,10 +13,12 @@ use Shared\Auth\Reminders\RemindableInterface;
 use Shared\Database\ORM\FileField\FileFieldTrait;
 use Shared\Notifications\NotifiableTrait;
 
+use App\Modules\Attachments\Traits\HasAttachmentsTrait;
+
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, NotifiableTrait, FileFieldTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, NotifiableTrait, FileFieldTrait, HasAttachmentsTrait;
 
     //
     protected $table = 'users';

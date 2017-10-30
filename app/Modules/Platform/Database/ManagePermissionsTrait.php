@@ -32,16 +32,16 @@ trait ManagePermissionsTrait
      *
      * @return void
      */
-    protected function createPermission(array $attributes)
+    protected function createPermission(array $data)
     {
         $updateRoles = Schema::hasTable('permission_role');
 
-        //
-        $roles = isset($attributes['roles']) ? $attributes['roles'] : array();
-
-        unset($attributes['roles']);
+        // Compute the associated roles.
+        $roles = isset($data['roles']) ? $data['roles'] : array();
 
         // Update or create a new Permission instance.
+        $attributes = array_except($data, array('roles'));
+
         $permission = Permission::updateOrCreate(array('slug' => $attributes['slug']), $attributes);
 
         if (! empty($roles) && $updateRoles) {

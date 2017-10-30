@@ -11,7 +11,7 @@
 
 <?= Session::getMessages(); ?>
 
-<?php if (Gate::allows('create', 'App\Models\Role')) { ?>
+<?php if (Gate::allows('create', 'App\Modules\Roles\Models\Role')) { ?>
 
 <div class="box box-default">
     <div class="box-header with-border">

@@ -11,7 +11,7 @@
 
 <?= Session::getMessages(); ?>
 
-<?php if (Gate::allows('create', 'App\Models\User') && ! isset($simple)) { ?>
+<?php if (Gate::allows('create', 'App\Modules\Users\Models\User')) { ?>
 
 <div class="box box-default">
     <div class="box-header with-border">

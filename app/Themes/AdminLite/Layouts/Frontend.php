@@ -89,7 +89,7 @@ if (isset($user->image) && $user->image->exists()) {
     <nav class="navbar navbar-static-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= __d('admin_lite', 'Private Area'); ?></strong></a>
+          <a href="<?= site_url(); ?>" class="navbar-brand"><?= __d('admin_lite', 'Private Area'); ?></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>

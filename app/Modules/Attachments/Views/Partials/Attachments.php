@@ -279,9 +279,9 @@ $(function () {
 
                     file.status = Dropzone.ERROR;
 
-                    this.emit("error", file, response, xhr);
+                    dropzone.emit("error", file, response, xhr);
 
-                    this.emit("complete", file);
+                    dropzone.emit("complete", file);
                 }
             });
         }

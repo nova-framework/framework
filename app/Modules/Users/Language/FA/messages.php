@@ -22,6 +22,7 @@ return array (
   'Edit User' => 'ویرایش کاربر',
   'Edit the User Account : <b>{0}</b>' => 'ویرایش حساب کاربری : <b>{0}</b>',
   'Edit this User' => 'ویرایش این کاربر',
+  'Field' => '',
   'ID' => 'شناسه',
   'Name and Surname' => 'نام و نام خانوادگی',
   'No registered Users' => 'هیچ کاربر ثبت شده ای وجود ندارد',
@@ -58,4 +59,5 @@ return array (
   'Username' => 'نام کاربری',
   'Users' => 'کاربران',
   'Users List' => '',
+  'Value' => '',
 );

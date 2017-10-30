@@ -22,6 +22,7 @@ return array (
   'Edit User' => 'Rediger bruger',
   'Edit the User Account : <b>{0}</b>' => 'Rediger brugerkontoen <b>{0}</b>',
   'Edit this User' => 'Rediger denne bruger',
+  'Field' => '',
   'ID' => 'ID',
   'Name and Surname' => 'For- og Efternavn',
   'No registered Users' => 'Ingen tilmeldte brugere',
@@ -58,4 +59,5 @@ return array (
   'Username' => 'Brugernavn',
   'Users' => 'Brugere',
   'Users List' => '',
+  'Value' => '',
 );

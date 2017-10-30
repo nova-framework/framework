@@ -13,11 +13,15 @@
 <?= Session::getMessages(); ?>
 
 <div class="box box-widget">
-    <div class="box-header with-border">
+    <div class="box-header">
         <h3 class="box-title"><?= __d('roles', 'User Role : <b>{0}</b>', $role->name); ?></h3>
     </div>
     <div class="box-body no-padding">
         <table id='left' class='table table-hover responsive'>
+            <tr class="bg-navy disabled">
+                <th style='text-align: left; vertical-align: middle;'><?= __d('requests', 'Field'); ?></th>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('requests', 'Value'); ?></th>
+            </tr>
             <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('roles', 'ID'); ?></th>
                 <td style='text-align: left; vertical-align: middle;' width='70%'><?= $role->id; ?></td>

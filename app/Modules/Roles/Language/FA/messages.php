@@ -18,6 +18,7 @@ return array (
   'Edit Role' => '',
   'Edit the Role <b>{0}</b>' => '',
   'Edit this Role' => '',
+  'Field' => '',
   'ID' => '',
   'Name' => '',
   'No registered Roles' => '',
@@ -41,4 +42,5 @@ return array (
   'User Role : <b>{0}</b>' => '',
   'User Roles' => '',
   'Users' => '',
+  'Value' => '',
 );

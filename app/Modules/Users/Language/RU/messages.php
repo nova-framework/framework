@@ -22,6 +22,7 @@ return array (
   'Edit User' => 'Редактировать пользователя',
   'Edit the User Account : <b>{0}</b>' => 'Редактировать аккаунт пользователя : <b>{0}</b>',
   'Edit this User' => 'Редактировать этого пользователя',
+  'Field' => '',
   'ID' => 'ID',
   'Name and Surname' => 'Имя и фамилия',
   'No registered Users' => 'Нет зарегистрированных пользователей',
@@ -58,4 +59,5 @@ return array (
   'Username' => 'Имя пользователя',
   'Users' => 'Пользователи',
   'Users List' => '',
+  'Value' => '',
 );

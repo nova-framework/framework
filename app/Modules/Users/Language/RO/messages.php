@@ -22,6 +22,7 @@ return array (
   'Edit User' => '',
   'Edit the User Account : <b>{0}</b>' => '',
   'Edit this User' => '',
+  'Field' => '',
   'ID' => '',
   'Name and Surname' => '',
   'No registered Users' => '',
@@ -58,4 +59,5 @@ return array (
   'Username' => '',
   'Users' => '',
   'Users List' => '',
+  'Value' => '',
 );

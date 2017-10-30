@@ -45,18 +45,16 @@ class BaseController extends Controller
     /**
      * Serve a File.
      *
+     * @param  string $token
      * @param  string $fileName
      * @param  \Nova\Http\Request  $request
      * @param  string  $disposition
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function serveFile($fileName, Request $request, $disposition = 'inline')
+    protected function serveFile($token, $fileName, Request $request, $disposition = 'inline')
     {
-        $path = $this->filePath .$fileName;
-
-        // We will need this split because the FileField prepend a unique string to file names.
-        list($unique, $fileName) = explode('-', $fileName, 2);
+        $path = $this->filePath .$token .'-' .$fileName;
 
         return $this->getFileDispatcher()->serve($path, $request, $disposition, $fileName, false);
     }

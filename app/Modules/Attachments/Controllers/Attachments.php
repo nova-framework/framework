@@ -20,10 +20,7 @@ class Attachments extends BaseController
     {
         $disposition = ($method == 'download') ? 'attachment' : 'inline';
 
-        // Merge the token to the file name.
-        $fileName = $token .'-' .$fileName;
-
-        return $this->serveFile($fileName, $request, $disposition);
+        return $this->serveFile($token, $fileName, $request, $disposition);
     }
 
     public function store(Request $request)

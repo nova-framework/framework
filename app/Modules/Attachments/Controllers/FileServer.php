@@ -56,11 +56,8 @@ class FileServer extends Controller
     {
         $path = $this->filePath .$token .'-' .$fileName;
 
-        return $this->getFileDispatcher()->serve($path, $request, $disposition, $fileName, false);
-    }
+        $dispatcher = $this->container->make('assets.dispatcher');
 
-    protected function getFileDispatcher()
-    {
-        return $this->container->make('assets.dispatcher');
+        return $dispatcher->serve($path, $request, $disposition, $fileName, false);
     }
 }

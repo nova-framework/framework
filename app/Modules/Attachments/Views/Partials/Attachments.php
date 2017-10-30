@@ -142,6 +142,8 @@ $(function () {
 <script>
 
 $(function () {
+    var userId = '<?= $userId; ?>';
+
     var setupAttachment = function(preview, name, type, id, url, download) {
         preview.attr('data-id', id);
 
@@ -255,6 +257,7 @@ $(function () {
                     name: file.name,
                     type: file.type,
                     size: file.size,
+                    user: userId
                 },
                 dataType: 'json',
                 success: function(data, textStatus, xhr) {
@@ -292,7 +295,10 @@ $(function () {
         $("#files-table").show();
     });
 
-    dropzone.on("sending", function(file) {
+    dropzone.on("sending", function(file, xhr, formData) {
+        formData.append('user', userId);
+
+        //
         var preview = $(file.previewElement);
 
         preview.find('.working').hide();

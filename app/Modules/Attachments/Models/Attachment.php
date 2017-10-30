@@ -16,7 +16,7 @@ class Attachment extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('name', 'size', 'type', 'file', 'attachable_id', 'attachable_type');
+    protected $fillable = array('user_id', 'name', 'size', 'type', 'file', 'attachable_id', 'attachable_type');
 
     public $files = array(
         'file' => array(
@@ -25,6 +25,11 @@ class Attachment extends BaseModel
         ),
     );
 
+
+    public function user()
+    {
+        return $this->belongsTo('App\Modules\Users\Model\User', 'user_id', 'id');
+    }
 
     /**
      * Get the attachable entity that the attachment belongs to.

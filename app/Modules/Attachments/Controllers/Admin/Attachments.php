@@ -3,6 +3,7 @@
 namespace App\Modules\Attachments\Controllers\Admin;
 
 use Nova\Http\Request;
+use Nova\Support\Facades\Auth;
 
 use App\Modules\Attachments\Models\Attachment;
 use App\Modules\Platform\Controllers\Admin\BaseController;
@@ -13,6 +14,9 @@ class Attachments extends BaseController
 
     public function index()
     {
+        $authUser = Auth::user();
+
+        //
         $models = Attachment::all();
 
         // Prepare the existing files information.
@@ -30,8 +34,10 @@ class Attachments extends BaseController
         })->toArray();
 
         $attachments = array(
-            'files' => $files,
+            'files'  => $files,
+            'userId' => $authUser->id,
 
+            // The Attachable.
             'attachable' => null,
 
             // Rendering options.

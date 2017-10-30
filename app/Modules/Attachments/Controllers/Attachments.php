@@ -28,7 +28,7 @@ class Attachments extends BaseController
         $file = $request->file('file');
 
         if (! $request->has('chunks')) {
-            return $this->handleUploadedFile($file);
+            return $this->handleUploadedFile($file, $request);
         }
 
         $uuid = $request->input('uuid');
@@ -68,7 +68,7 @@ class Attachments extends BaseController
         // Create an UploadedFile instance from the temporary file.
         $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);
 
-        return $this->handleUploadedFile($file, $filePath);
+        return $this->handleUploadedFile($file, $request, $filePath);
     }
 
     public function destroy($id)
@@ -85,9 +85,12 @@ class Attachments extends BaseController
         return Response::json(array('success' => true), 200);
     }
 
-    protected function handleUploadedFile(UploadedFile $file, $filePath = null)
+    protected function handleUploadedFile(UploadedFile $file, Request $request, $filePath = null)
     {
         $attachment = Attachment::create(array(
+            'user_id' => $request->input('user'),
+
+            // The file information.
             'name' => $file->getClientOriginalName(),
             'size' => $file->getSize(),
             'type' => $file->getClientMimeType(),

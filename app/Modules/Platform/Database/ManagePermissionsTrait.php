@@ -44,7 +44,7 @@ trait ManagePermissionsTrait
         // Update or create a new Permission instance.
         $permission = Permission::updateOrCreate(array('slug' => $attributes['slug']), $attributes);
 
-        if (isset($roles) && $updateRoles) {
+        if (! empty($roles) && $updateRoles) {
             if (! is_array($roles)) {
                 $roles = array($roles);
             }

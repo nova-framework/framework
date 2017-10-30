@@ -19,8 +19,8 @@
     <div class="box-body no-padding">
         <table id='left' class='table table-hover responsive'>
             <tr class="bg-navy disabled">
-                <th style='text-align: left; vertical-align: middle;'><?= __d('requests', 'Field'); ?></th>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('requests', 'Value'); ?></th>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Field'); ?></th>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Value'); ?></th>
             </tr>
             <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>

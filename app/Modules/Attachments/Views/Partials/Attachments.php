@@ -94,7 +94,7 @@ $files = isset($files) ? $files : array();
 </div>
 
 <div class="modal modal-default" id="modal-preview-dialog" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog" style="width: 97% !important; margin-left: 1.5%;">
+    <div class="modal-dialog" style="width: 97% !important; margin-left: 1.5%; margin-top: 1.7%;">
         <div class="modal-content">
             <div class="modal-header" style="padding: 10px;">
                 <button aria-label="<?= __d('attachments', 'Close'); ?>" data-dismiss="modal" class="close" type="button">
@@ -116,7 +116,7 @@ $files = isset($files) ? $files : array();
 
 $(function () {
     $('#modal-preview-dialog').on('show.bs.modal', function (event) {
-        var height = $(window).height() - 155;
+        var height = $(window).height() - 145;
 
         $(this).find(".modal-body").css("height", height);
 

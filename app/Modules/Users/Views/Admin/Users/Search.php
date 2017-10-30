@@ -73,6 +73,9 @@
 
 <a class='btn btn-primary' href='<?= Request::header('referer'); ?>'><?= __('<< Previous Page'); ?></a>
 
+<div class="clearfix"></div>
+<br>
+
 </section>
 
 <?php
@@ -95,7 +98,7 @@ foreach ($users as $user) {
                 <button data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('users', 'Cancel'); ?></button>
                 <form action="<?= site_url('admin/users/' .$user->id .'/destroy'); ?>" method="POST">
                     <?= csrf_field(); ?>
-                    
+
                     <input type="submit" name="button" class="btn btn btn-danger pull-right" value="<?= __d('users', 'Delete the User'); ?>">
                 </form>
             </div>

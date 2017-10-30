@@ -11,6 +11,8 @@
 
 <?= Session::getMessages(); ?>
 
+<?php if (Gate::allows('create', 'App\Modules\Messages\Models\Message')) { ?>
+
 <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title"><?= __d('messages', 'Send a new Message'); ?></h3>
@@ -19,6 +21,8 @@
         <a class='btn btn-success col-sm-2 pull-right' href='<?= site_url('messages/create'); ?>'><?= __d('messages', 'Send a new Message'); ?></a>
     </div>
 </div>
+
+<?php } ?>
 
 <style>
 

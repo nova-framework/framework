@@ -116,7 +116,7 @@ $files = isset($files) ? $files : array();
 
 $(function () {
     $('#modal-preview-dialog').on('show.bs.modal', function (event) {
-        var height = $(window).height() - 145;
+        var height = $(window).height() - 155;
 
         $(this).find(".modal-body").css("height", height);
 

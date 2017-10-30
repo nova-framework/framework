@@ -26,7 +26,7 @@ class PermissionsTableSeeder extends Seeder
                 'slug'  => 'platform.backend.manage',
                 'group' => 'platform',
 
-                'roles' => array(1, 2),
+                'roles' => array(1, 2, 3),
             ),
             array(
                 'name'  => 'Manage the Platform Settings',

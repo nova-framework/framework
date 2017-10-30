@@ -36,13 +36,13 @@ class Roles extends BaseController
         );
 
         $messages = array(
-            'valid_name' => __d('users', 'The :attribute field is not a valid name.'),
+            'valid_name' => __d('roles', 'The :attribute field is not a valid name.'),
         );
 
         $attributes = array(
-            'name'        => __d('users', 'Name'),
-            'slug'        => __d('users', 'Slug'),
-            'description' => __d('users', 'Description'),
+            'name'        => __d('roles', 'Name'),
+            'slug'        => __d('roles', 'Slug'),
+            'description' => __d('roles', 'Description'),
         );
 
         // Add the custom Validation Rule commands.
@@ -67,7 +67,7 @@ class Roles extends BaseController
         $roles = Role::with('users')->paginate(25);
 
         return $this->createView()
-            ->shares('title', __d('users', 'Roles'))
+            ->shares('title', __d('roles', 'Roles'))
             ->with('roles', $roles);
     }
 
@@ -79,7 +79,7 @@ class Roles extends BaseController
         }
 
         return $this->createView()
-            ->shares('title', __d('users', 'Create Role'));
+            ->shares('title', __d('roles', 'Create Role'));
     }
 
     public function store()
@@ -102,7 +102,7 @@ class Roles extends BaseController
         Role::create($input);
 
         // Prepare the flash message.
-        $status = __d('users', 'The Role <b>{0}</b> was successfully created.', $input['name']);
+        $status = __d('roles', 'The Role <b>{0}</b> was successfully created.', $input['name']);
 
         return Redirect::to('admin/roles')->withStatus($status);
     }
@@ -115,7 +115,7 @@ class Roles extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
-            $status = __d('users', 'Role not found: #{0}', $id);
+            $status = __d('roles', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -126,7 +126,7 @@ class Roles extends BaseController
         }
 
         return $this->createView()
-            ->shares('title', __d('users', 'Show Role'))
+            ->shares('title', __d('roles', 'Show Role'))
             ->with('role', $role);
     }
 
@@ -149,7 +149,7 @@ class Roles extends BaseController
         }
 
         return $this->createView()
-            ->shares('title', __d('users', 'Edit Role'))
+            ->shares('title', __d('roles', 'Edit Role'))
             ->with('role', $role);
     }
 
@@ -163,7 +163,7 @@ class Roles extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
-            $status = __d('users', 'Role not found: #{0}', $id);
+            $status = __d('roles', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -192,7 +192,7 @@ class Roles extends BaseController
         $role->save();
 
         // Prepare the flash message.
-        $status = __d('users', 'The Role <b>{0}</b> was successfully updated.', $name);
+        $status = __d('roles', 'The Role <b>{0}</b> was successfully updated.', $name);
 
         return Redirect::to('admin/roles')->withStatus($status);
     }
@@ -205,7 +205,7 @@ class Roles extends BaseController
         }
         catch (ModelNotFoundException $e) {
             // There is no Role with this ID.
-            $status = __d('users', 'Role not found: #{0}', $id);
+            $status = __d('roles', 'Role not found: #{0}', $id);
 
             return Redirect::to('admin/roles')->withStatus($status, 'danger');
         }
@@ -219,7 +219,7 @@ class Roles extends BaseController
         $role->delete();
 
         // Prepare the flash message.
-        $status = __d('users', 'The Role <b>{0}</b> was successfully deleted.', $role->name);
+        $status = __d('roles', 'The Role <b>{0}</b> was successfully deleted.', $role->name);
 
         return Redirect::to('admin/roles')->withStatus($status);
     }

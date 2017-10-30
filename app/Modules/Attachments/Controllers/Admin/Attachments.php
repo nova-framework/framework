@@ -5,7 +5,6 @@ namespace App\Modules\Attachments\Controllers\Admin;
 use Nova\Http\Request;
 use Nova\Support\Facades\Auth;
 
-use App\Modules\Attachments\Models\Attachment;
 use App\Modules\Platform\Controllers\Admin\BaseController;
 
 
@@ -16,25 +15,23 @@ class Attachments extends BaseController
     {
         $authUser = Auth::user();
 
-        //
-        $models = Attachment::all();
-
         // Prepare the existing files information.
-        $files = $models->map(function ($model)
+        $attachments = $authUser->attachments->map(function ($attachment)
         {
             return array(
-                'id'       => $model->id,
-                'name'     => $model->name,
-                'size'     => $model->size,
-                'type'     => $model->type,
-                'url'      => $model->url(),
-                'download' => $model->url(true),
-            );
+                'id'       => $attachment->id,
+                'name'     => $attachment->name,
+                'size'     => $attachment->size,
+                'type'     => $attachment->type,
+                'url'      => $attachment->url(),
 
-        })->toArray();
+                // The download URL.
+                'download' => $attachment->url(true),
+            );
+        });
 
         $attachments = array(
-            'files'  => $files,
+            'files'  => $attachments->toArray(),
             'userId' => $authUser->id,
 
             // The Attachable.

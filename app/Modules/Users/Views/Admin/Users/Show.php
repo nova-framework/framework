@@ -54,6 +54,8 @@
     </div>
 </div>
 
-<a class='btn btn-primary' href='<?= site_url('admin/users'); ?>'><?= __d('users', '<< Previous Page'); ?></a>
+<a class='btn btn-primary col-sm-2' href='<?= site_url('admin/users'); ?>'><?= __d('users', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
 
 </section>

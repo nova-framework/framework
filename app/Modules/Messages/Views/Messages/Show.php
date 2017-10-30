@@ -72,11 +72,9 @@ use App\Models\User;
     </div>
 </div>
 
-<div class="clearfix"></div>
+<a class='btn btn-primary col-sm-2' href='<?= site_url('messages'); ?>'><?= __d('backend', '<< Previous Page'); ?></a>
 
-<div style="margin-bottom: 20px;">
-    <a class='btn btn-primary col-sm-2' href='<?= site_url('messages'); ?>'><?= __d('backend', '<< Previous Page'); ?></a>
-</div>
+<div class="clearfix"></div>
 
 </section>
 

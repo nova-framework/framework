@@ -66,4 +66,6 @@
 
 <a class='btn btn-primary col-sm-2' href='<?= site_url('messages'); ?>'><?= __d('messages', '<< Previous Page'); ?></a>
 
+<div class="clearfix"></div>
+
 </section>

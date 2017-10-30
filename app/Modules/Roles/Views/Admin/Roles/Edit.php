@@ -60,6 +60,8 @@
     </div>
 </div>
 
-<a class='btn btn-primary' href='<?= site_url('admin/roles'); ?>'><?= __d('roles', '<< Previous Page'); ?></a>
+<a class='btn btn-primary col-sm-2' href='<?= site_url('admin/roles'); ?>'><?= __d('roles', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
 
 </section>

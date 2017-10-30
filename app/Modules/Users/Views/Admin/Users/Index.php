@@ -32,7 +32,11 @@
         </div>
     </div>
     <div class="box-body no-padding">
-<?php if (! $users->isEmpty()) { ?>
+<?php
+$deletables = 0;
+
+if (! $users->isEmpty()) {
+?>
         <table id='left' class='table table-striped table-hover responsive'>
             <tr class="bg-navy disabled">
                 <th style='text-align: center; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
@@ -44,8 +48,6 @@
                 <th style='text-align: right; vertical-align: middle;'><?= __d('users', 'Operations'); ?></th>
             </tr>
 <?php
-    $deletables = 0;
-
     foreach ($users->getItems() as $user) {
         echo "
 <tr>

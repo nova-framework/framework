@@ -210,8 +210,7 @@ class Users extends BaseController
         );
 
         if(empty($input['password']) && empty($input['password_confirm'])) {
-            unset($input['password']);
-            unset($input['password_confirmation']);
+            unset($input['password'], $input['password_confirmation']);
         }
 
         // Get the User Model instance.

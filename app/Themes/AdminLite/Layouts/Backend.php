@@ -172,10 +172,10 @@ if (isset($user->image) && $user->image->exists()) {
             <div class="input-group">
                 <input type="text" name="query" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                    </button>
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
                 </span>
             </div>
+            <?= csrf_field(); ?>
         </form>
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">

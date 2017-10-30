@@ -1,9 +1,9 @@
 <section class="content-header">
-    <h1><?= __d('system', 'Show Message'); ?></h1>
+    <h1><?= __d('messages', 'Show Message'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('system', 'Dashboard'); ?></a></li>
+        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('messages', 'Dashboard'); ?></a></li>
         <li><a href='<?= site_url('messages'); ?>'><?= __d('backend', 'Messages'); ?></a></li>
-        <li><?= __d('system', 'Show Message'); ?></li>
+        <li><?= __d('messages', 'Show Message'); ?></li>
     </ol>
 </section>
 

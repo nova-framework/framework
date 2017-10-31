@@ -74,7 +74,7 @@
         <?php } ?>
         <?php } else { ?>
         <div class="alert alert-info" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-info"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('messages', 'No messages'); ?></h4>
+            <h4><i class="icon fa fa-info"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('messages', 'No messages'); ?></h4>
             <?= __d('messages', 'You have no messages sent or received.'); ?>
         </div>
         <?php } ?>

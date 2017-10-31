@@ -50,7 +50,7 @@
         </table>
         <?php } else { ?>
         <div class="alert alert-info" style="margin: 0 5px 5px;">
-            <h4><i class="icon fa fa-info"></i> <?php echo strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('platform', 'No notifications'); ?></h4>
+            <h4><i class="icon fa fa-info"></i> <?= strftime("%d %b %Y, %R", time()) ." - "; ?> <?= __d('platform', 'No notifications'); ?></h4>
             <?= __d('platform', 'You have no notifications.'); ?>
         </div>
         <?php } ?>

@@ -216,7 +216,7 @@ $(function () {
         maxFiles: <?= $maxFiles; ?>,
         maxFilesize: <?= $maxFilesize; ?>, // MB
         parallelUploads: 1,
-        acceptedFiles: 'image/*, application/pdf',
+        //acceptedFiles: 'image/*, application/pdf',
         previewTemplate: previewTemplate,
         autoQueue: true,
         previewsContainer: "#previews", // Define the container to display the previews.

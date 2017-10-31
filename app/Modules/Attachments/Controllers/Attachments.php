@@ -32,15 +32,13 @@ class Attachments extends BaseController
             return $this->handleUploadedFile($file, $request);
         }
 
-        $uuid = $request->input('uuid');
-
-        // Get the temporary file path for this UUID.
-        $filePath = $this->getFilePath($uuid);
+        // Get the temporary file path.
+        $filePath = $this->getFilePath($request);
 
         // Create the temporary file's directory.
         File::makeDirectory(dirname($filePath), 0755, true, true);
 
-        // Store the chunk data in the temporary file.
+        // Appends the chunk's data to the temporary file.
         $tempPath = $file->getRealPath();
 
         if (file_put_contents($filePath, file_get_contents($tempPath), FILE_APPEND) === false) {
@@ -52,20 +50,16 @@ class Attachments extends BaseController
 
     public function done(Request $request)
     {
-        $uuid = $request->input('uuid');
-
-        if (! is_readable($filePath = $this->getFilePath($uuid))) {
-            return Response::json(array('error' => 'Temporary file not found.'), 400);
-        }
-
+        $fileName = $request->input('name');
         $fileSize = $request->input('size');
+        $mimeType = $request->input('type');
 
-        if ($fileSize != filesize($filePath)) {
+        // Get the temporary file path.
+        $filePath = $this->getFilePath($request);
+
+        if (! is_readable($filePath) || ($fileSize != File::size($filePath))) {
             return Response::json(array('error' => 'Invalid temporary file.'), 400);
         }
-
-        $fileName = $request->input('name');
-        $mimeType = $request->input('type');
 
         // Create an UploadedFile instance from the temporary file.
         $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);
@@ -123,8 +117,10 @@ class Attachments extends BaseController
         return Response::json($data, 200);
     }
 
-    protected function getFilePath($name)
+    protected function getFilePath(Request $request)
     {
+        $uuid = $request->input('uuid');
+
         return storage_path('upload') .DS .sha1($name) .'.part';
     }
 }

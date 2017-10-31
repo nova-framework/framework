@@ -14,25 +14,67 @@ Route::get( 'login',  array('middleware' => 'guest', 'uses' => 'Authorize@login'
 Route::post('login',  array('middleware' => 'guest', 'uses' => 'Authorize@postLogin'));
 Route::post('logout', array('middleware' => 'auth',  'uses' => 'Authorize@logout'));
 
+// The One-Time Authentication.
+Route::get( 'authorize', array('middleware' => 'guest', 'uses' => 'Authorize@tokenRequest'));
+Route::post('authorize', array('middleware' => 'guest', 'uses' => 'Authorize@tokenProcess'));
+
+Route::get('authorize/{hash}/{time}/{token}', array(
+    'middleware' => 'guest',
+
+    'uses'  => 'Authorize@tokenLogin',
+    'where' => array(
+        'time' => '(\d+)'
+    ),
+));
+
 // The Password Remind.
-Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@remind'));
-Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Authorize@postRemind'));
+Route::get( 'password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@remind'));
+Route::post('password/remind', array('middleware' => 'guest', 'uses' => 'Reminders@postRemind'));
 
 // The Password Reset.
-Route::get( 'password/reset/{token}', array('middleware' => 'guest', 'uses' => 'Authorize@reset'));
-Route::post('password/reset',         array('middleware' => 'guest', 'uses' => 'Authorize@postReset'));
+Route::post('password/reset', array('middleware' => 'guest', 'uses' => 'Reminders@postReset'));
+
+Route::get('password/reset/{hash}/{time}/{token}', array(
+    'middleware' => 'guest',
+
+    'uses'  => 'Reminders@reset',
+    'where' => array(
+        'time' => '(\d+)'
+    ),
+));
+
+// The Account Registration.
+Route::get( 'register',         array('middleware' => 'guest', 'uses' => 'Registrar@create'));
+Route::post('register',         array('middleware' => 'guest', 'uses' => 'Registrar@store'));
+Route::post('register/status',  array('middleware' => 'guest', 'uses' => 'Registrar@status'));
+Route::get( 'register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verify'));
+Route::post('register/verify',  array('middleware' => 'guest', 'uses' => 'Registrar@verifyPost'));
+
+Route::get('register/{hash}/{token?}', array(
+    'middleware' => 'guest',
+
+    'uses'  => 'Registrar@tokenVerify',
+    'where' => array(
+        'time' => '(\d+)'
+    ),
+));
 
 // The User's Dashboard.
 Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Dashboard@index'));
 
 Route::get('dashboard/notify', array('middleware' => 'auth', 'uses' => 'Dashboard@notify'));
 
-// The Heartbeat
-Route::post('heartbeat', array('middleware' => 'auth', 'uses' => 'Heartbeat@update'));
+// The User's Account.
+Route::get( 'account',         array('middleware' => 'auth', 'uses' => 'Account@index'));
+Route::post('account',         array('middleware' => 'auth', 'uses' => 'Account@update'));
+Route::post('account/picture', array('middleware' => 'auth', 'uses' => 'Account@picture'));
 
-// The Notifications.
+// The User's Notifications.
 Route::get( 'notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@index'));
 Route::post('notifications',      array('middleware' => 'auth', 'uses' => 'Notifications@update'));
+
+// The Heartbeat
+Route::post('heartbeat', array('middleware' => 'auth', 'uses' => 'Heartbeat@update'));
 
 
 // The Adminstration Routes.

@@ -14,10 +14,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $path = realpath(__DIR__ .'/../') .DS .'Bootstrap.php';
-
-        $this->bootstrapFrom($path);
-
         //
     }
 

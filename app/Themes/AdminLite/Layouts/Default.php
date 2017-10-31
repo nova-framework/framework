@@ -3,7 +3,7 @@
  * Frontend Default Layout
  */
 
-$siteName = Config::get('app.name', SITETITLE);
+$siteName = Config::get('app.name');
 
 // Generate the Language Changer menu.
 $langCode = Language::code();
@@ -95,7 +95,7 @@ $languages = Config::get('languages');
                         <i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Logout'); ?>
                     </a>
                     <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                        <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                        <?= csrf_field(); ?>
                     </form>
                 </li>
                 <?php } else { ?>
@@ -103,10 +103,14 @@ $languages = Config::get('languages');
                     <a href='<?= site_url('register'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Sign Up'); ?></a>
                 </li>
                 <li <?= ($currentUri == 'login') ? 'class="active"' : ''; ?>>
-                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-out'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
+                    <a href='<?= site_url('login'); ?>'><i class='fa fa-sign-in'></i> <?= __d('admin_lite', 'Sign In'); ?></a>
+                </li>
+                </li>
+                <li <?= ($currentUri == 'authorize') ? 'class="active"' : ''; ?>>
+                    <a href='<?= site_url('authorize'); ?>'><i class='fa fa-send'></i> <?= __d('admin_lite', 'On-Time Login'); ?></a>
                 </li>
                 <li <?= ($currentUri == 'password/remind') ? 'class="active"' : ''; ?>>
-                    <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-user'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>
+                    <a href='<?= site_url('password/remind'); ?>'><i class='fa fa-unlock-alt'></i> <?= __d('admin_lite', 'Forgot Password?'); ?></a>
                 </li>
                 <?php } ?>
             </ul>

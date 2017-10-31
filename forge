@@ -24,7 +24,7 @@ require ROOTDIR .'vendor' .DS .'autoload.php';
 // Turn On The Lights
 //--------------------------------------------------------------------------
 
-$app = require_once APPDIR .'Boot' .DS .'Start.php';
+$app = require_once APPDIR .'Start.php';
 
 //--------------------------------------------------------------------------
 // Load The Forge Console Application
@@ -41,7 +41,10 @@ $forge = ConsoleApplication::start($app);
 // Run The Forge Application
 //--------------------------------------------------------------------------
 
-$status = $forge->run();
+$status = $forge->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
 
 //--------------------------------------------------------------------------
 // Shutdown The Application

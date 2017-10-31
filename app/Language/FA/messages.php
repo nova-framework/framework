@@ -2,8 +2,10 @@
 
 return array (
   'Bad Request' => '',
+  'Be right back.' => '',
   'Forbidden' => '',
   'Go to our home page and navigate to the content in question.' => 'به صفحه اصلی بروید و به صفحه مورد نظر خود رجوع کنید.',
+  'Hello!' => '',
   'Hello, welcome from the welcome controller and subpage method! <br/>
 This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => 'درود, به کنترل گر صفحه خوش آمد گویی و زیر صفحه خوش آمدید! <br/>
 این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/SubPage.php</code>',
@@ -11,17 +13,16 @@ This content can be changed in <code>/app/Views/Welcome/SubPage.php</code>' => '
 this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => 'درود, به کنترل گر صفحه خوش آمد گویی خوش آمدید! <br/>
 این محتوا میتواند در این مسیر ویرایش شود: <code>/app/Views/Welcome/Welcome.php</code>',
   'Home' => 'خانه',
-  'If you have problems, please paste the above URL into your web browser.' => 'اگر مشکلی دارید، لطفا لینک بالا را در مرور گر وب خود وارد کنید.',
   'If you spelled the URL manually, double check the spelling.' => 'اگر URL را هجی کرده اید, دوباره آن را بررسی کنید',
+  'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:' => '',
   'Internal Server Error' => 'خطای داخلی سرور',
   'Method not allowed' => '',
   'Open subpage' => 'بازکردن زیرصفحه',
-  'Password Reset' => 'بازنشانی رمزعبور',
-  'Please verify your E-mail address' => 'لطفا آدرس ایمیل خود را تایید کنید',
   'Referrer: {0}' => 'ارجاع: {0}',
+  'Regards,' => '',
+  'Service unavailable' => '',
   'Something has gone wrong on the Web Server.' => 'خطایی در سرور وب بوجود آمده است',
   'Subpage' => 'زیر صفحه',
-  'Thanks for creating an Account with the {0}. Please follow the link below to verify your email address: {1}' => 'بابت ایجاد حساب کاربری با {0} سپاس گذاریم. لطفا لینک زیر را جهت فعال سازی ایمیل خود کلیک کنید: {1}',
   'The :attribute and :other must be different.' => ':attribute و :other باید متفاوت باشد.',
   'The :attribute and :other must match.' => ':attribute و :other باید مطابقت داشته باشد.',
   'The :attribute confirmation does not match.' => 'تایید :attribute مطابقت ندارد.',
@@ -69,10 +70,9 @@ this content can be changed in <code>/app/Views/Welcome/Welcome.php</code>' => '
   'The selected :attribute is invalid.' => ':attribute انتخابی نامعتبر است.',
   'This could be the result of an invalid Page request.' => 'این ممکن است نتیجه یک درخواست نامعتبر باشد.',
   'This could be the result of the page being removed, the name being changed or the page being temporarily unavailable.' => 'این ممکن است نتیجه یک صفحه که پاک شده باشد, انتقال یافته باشد و یا اینکه موقتا دردسترس نیباشد, باشد.',
-  'To reset your password, complete this form: {0}.' => 'برای بازیابی رمز عبور خود، این فرم را کامل کنید: {0}.',
   'Troubleshooting' => 'اشکال زدایی',
   'Unauthorized' => '',
   'Validation Token has expired. Please try again!' => '',
   'Welcome' => 'خوش امدید',
-  'You are not authorized to access this resource.' => '',
+  'Whoops!' => '',
 );

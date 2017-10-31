@@ -28,14 +28,14 @@ class PermissionsTableSeeder extends Seeder
                 'slug'  => 'module.roles.lists',
                 'group' => 'roles',
 
-                'roles' => array(1, 2),
+                'roles' => array(1, 2, 3),
             ),
             array(
                 'name'  => 'View the Roles',
                 'slug'  => 'module.roles.view',
                 'group' => 'roles',
 
-                'roles' => array(1, 2),
+                'roles' => array(1, 2, 3),
             ),
             array(
                 'name'  => 'Create new Roles',

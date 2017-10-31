@@ -22,7 +22,7 @@ require ROOTDIR .'vendor' .DS .'autoload.php';
 // Bootstrap the Framework and get the Application instance
 //--------------------------------------------------------------------------
 
-$app = require_once APPDIR .'Boot' .DS .'Start.php';
+$app = require_once APPDIR .'Start.php';
 
 //--------------------------------------------------------------------------
 // Run the Application

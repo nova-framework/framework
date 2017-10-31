@@ -13,7 +13,7 @@ use Nova\Http\Request;
 /** Define Events. */
 
 // Add a Listener to the Event 'router.matched', to process the global View variables.
-Event::listen('base.controller.initialize', function(Request $request)
+Event::listen('router.matched', function($route, Request $request)
 {
     // Share the Application version.
     $path = ROOTDIR .'VERSION.txt';
@@ -25,9 +25,6 @@ Event::listen('base.controller.initialize', function(Request $request)
     }
 
     View::share('version', $version);
-
-    // Share on Views the CSRF Token and the current URI.
-    View::share('csrfToken', Session::token());
 
     View::share('currentUri', $request->path());
 });

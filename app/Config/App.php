@@ -61,10 +61,20 @@ return array(
      */
     'key' => 'SomeRandomStringThere_1234567890',
 
-    /**
-     *  Prevents the website from CSRF attacks.
-     */
-    'csrf' => true,
+    /*
+    |--------------------------------------------------------------------------
+    | Logging Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the log settings for your application. Out of
+    | the box, Laravel uses the Monolog PHP logging library. This gives
+    | you a variety of powerful log handlers / formatters to utilize.
+    |
+    | Available Settings: "single", "daily", "syslog", "errorlog"
+    |
+    */
+
+    'log' => 'single',
 
     /**
      * The Application's Middleware stack.
@@ -114,11 +124,9 @@ return array(
         'Nova\Encryption\EncryptionServiceProvider',
         'Nova\Filesystem\FilesystemServiceProvider',
         'Nova\Hashing\HashServiceProvider',
-        'Nova\Log\LogServiceProvider',
         'Nova\Mail\MailServiceProvider',
         'Nova\Pagination\PaginationServiceProvider',
         'Nova\Redis\RedisServiceProvider',
-        'Nova\Auth\Reminders\ReminderServiceProvider',
         'Nova\Session\SessionServiceProvider',
         'Nova\Language\LanguageServiceProvider',
         'Nova\Validation\ValidationServiceProvider',
@@ -126,7 +134,6 @@ return array(
         'Nova\View\ViewServiceProvider',
 
         // The Forge Providers.
-        'Nova\Auth\Reminders\ConsoleServiceProvider',
         'Nova\Cache\ConsoleServiceProvider',
         'Nova\Foundation\Providers\ConsoleSupportServiceProvider',
         'Nova\Foundation\Providers\ForgeServiceProvider',
@@ -138,6 +145,8 @@ return array(
         'Nova\Session\ConsoleServiceProvider',
 
         // The Shared Providers.
+        'Shared\Auth\Reminders\ReminderServiceProvider',
+        'Shared\Auth\ConsoleServiceProvider',
         'Shared\Database\Backup\ConsoleServiceProvider',
         'Shared\Notifications\NotificationServiceProvider',
         'Shared\Routing\RoutingServiceProvider',
@@ -170,7 +179,6 @@ return array(
         'Number'        => 'Nova\Helpers\Number',
         'ReservedWords' => 'Nova\Helpers\ReservedWords',
         'SimpleCurl'    => 'Nova\Helpers\SimpleCurl',
-        'TableBuilder'  => 'Nova\Helpers\TableBuilder',
         'Tags'          => 'Nova\Helpers\Tags',
 
         // The Forensics Console.
@@ -200,7 +208,6 @@ return array(
         'Language'      => 'Nova\Support\Facades\Language',
         'Mailer'        => 'Nova\Support\Facades\Mailer',
         'Paginator'     => 'Nova\Support\Facades\Paginator',
-        'Password'      => 'Nova\Support\Facades\Password',
         'Redirect'      => 'Nova\Support\Facades\Redirect',
         'Redis'         => 'Nova\Support\Facades\Redis',
         'Request'       => 'Nova\Support\Facades\Request',
@@ -221,6 +228,7 @@ return array(
 
         // The Shared Facades.
         'Notification'  => 'Shared\Support\Facades\Notification',
+        'Password'      => 'Shared\Support\Facades\Password',
         'Widget'        => 'Shared\Support\Facades\Widget',
     ),
 

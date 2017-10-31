@@ -13,11 +13,15 @@
 <?= Session::getMessages(); ?>
 
 <div class="box box-widget">
-    <div class="box-header with-border">
+    <div class="box-header">
         <h3 class="box-title"><?= __d('users', 'User Account : <b>{0}</b>', $user->username); ?></h3>
     </div>
     <div class="box-body no-padding">
         <table id='left' class='table table-hover responsive'>
+            <tr class="bg-navy disabled">
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Field'); ?></th>
+                <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'Value'); ?></th>
+            </tr>
             <tr>
                 <th style='text-align: left; vertical-align: middle;'><?= __d('users', 'ID'); ?></th>
                 <td style='text-align: left; vertical-align: middle;' width='70%'><?= $user->id; ?></td>
@@ -50,6 +54,9 @@
     </div>
 </div>
 
-<a class='btn btn-primary' href='<?= site_url('admin/users'); ?>'><?= __d('users', '<< Previous Page'); ?></a>
+<a class='btn btn-primary col-sm-2' href='<?= site_url('admin/users'); ?>'><?= __d('users', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
+<br>
 
 </section>

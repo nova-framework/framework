@@ -20,7 +20,7 @@ class Notifications extends BaseController
         $notifications = $authUser->notifications()->paginate(25);
 
         return $this->createView()
-            ->shares('title', __d('system', 'Notifications'))
+            ->shares('title', __d('platform', 'Notifications'))
             ->with('notifications', $notifications);
     }
 
@@ -44,7 +44,7 @@ class Notifications extends BaseController
         $notifications->markAsRead();
 
         // Prepare the flash message.
-        $status = __d('system', 'The selected notification(s) was successfully marked as read.');
+        $status = __d('platform', 'The selected notification(s) was successfully marked as read.');
 
         return Redirect::to('notifications')->withStatus($status);
     }

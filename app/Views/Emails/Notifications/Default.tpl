@@ -89,9 +89,9 @@ $fontFamily = 'font-family: Arial, \'Helvetica Neue\', Helvetica, sans-serif;';
 												{{ $greeting }}
 											@else
 												@if ($level == 'error')
-													{{ __d('notifications', 'Whoops!') }}
+													{{  __('Whoops!') }}
 												@else
-													{{ __d('notifications', 'Hello!') }}
+													{{  __('Hello!') }}
 												@endif
 											@endif
 										</h1>
@@ -141,7 +141,7 @@ $fontFamily = 'font-family: Arial, \'Helvetica Neue\', Helvetica, sans-serif;';
 
 										<!-- Salutation -->
 										<p style="{{ $style['paragraph'] }}">
-											{{ __d('notifications', 'Regards,') }}<br>{{ config('app.name') }}
+											{{  __('Regards,') }}<br>{{ config('app.name') }}
 										</p>
 
 										<!-- Sub Copy -->
@@ -150,7 +150,7 @@ $fontFamily = 'font-family: Arial, \'Helvetica Neue\', Helvetica, sans-serif;';
 												<tr>
 													<td style="{{ $fontFamily }}">
 														<p style="{{ $style['paragraph-sub'] }}">
-															{{ __d('notifications', 'If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:', $actionText) }}
+															{{  __('If you\'re having trouble clicking the "{0}" button, copy and paste the URL below into your web browser:', $actionText) }}
 														</p>
 
 														<p style="{{ $style['paragraph-sub'] }}">

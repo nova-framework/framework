@@ -3,7 +3,7 @@
  * Frontend Default Layout
  */
 
-$siteName = Config::get('app.name', SITETITLE);
+$siteName = Config::get('app.name');
 
 // Prepare the current User Info.
 $user = Auth::user();
@@ -68,6 +68,7 @@ if (isset($user->image) && $user->image->exists()) {
     Assets::js(array(
             vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
             resource_url('js/sprintf.min.js'),
+            resource_url('js/bootstrap-notify.min.js'),
         )
     );
 
@@ -88,7 +89,7 @@ if (isset($user->image) && $user->image->exists()) {
     <nav class="navbar navbar-static-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a href="<?= site_url(); ?>" class="navbar-brand"><strong><?= __d('admin_lite', 'Private Area'); ?></strong></a>
+          <a href="<?= site_url(); ?>" class="navbar-brand"><?= __d('admin_lite', 'Private Area'); ?></a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>
@@ -158,7 +159,7 @@ if (isset($user->image) && $user->image->exists()) {
                                     <?= __d('admin_lite', 'Sign out'); ?>
                                 </a>
                                 <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                                    <?= csrf_field(); ?>
                                 </form>
                             </div>
                         </li>
@@ -217,6 +218,31 @@ $(function () {
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
     });
+
+    // Bootstrap Notify.
+    $.notifyDefaults({
+        type: 'info',
+        allow_dismiss: true,
+        newest_on_top: true,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOutUp'
+        },
+        template: '<div class="col-xs-11 col-sm-4 alert alert-notify alert-notify-{0} alert-dismissible" style="padding: 10px;">' +
+                  '<button type="button" class="close" style="top: -7px; right: -2px;" data-dismiss="alert" aria-hidden="true">×</button>' +
+                  '<h4>{1}</h4>' +
+                  '<p>{2}</p>' +
+                  '</div>'
+    });
+
+    notify = function(title, message, type) {
+        $.notify({
+            title:   title,
+            message: message
+        }, {
+            type: type,
+        });
+    }
 });
 </script>
 
@@ -300,7 +326,7 @@ $(function () {
     // Setup the CSRF header on AJAX requests.
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': '<?= $csrfToken; ?>'
+            'X-CSRF-TOKEN': '<?= csrf_token(); ?>'
         }
     });
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Platform\Policies;
+namespace App\Modules\Messages\Policies;
 
 use App\Modules\Users\Models\User;
 use App\Models\Option;

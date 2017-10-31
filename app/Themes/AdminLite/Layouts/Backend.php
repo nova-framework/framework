@@ -3,7 +3,7 @@
  * Backend Default Layout
  */
 
-$siteName = Config::get('app.name', SITETITLE);
+$siteName = Config::get('app.name');
 
 // Prepare the current User Info.
 $user = Auth::user();
@@ -68,6 +68,7 @@ if (isset($user->image) && $user->image->exists()) {
     Assets::js(array(
         vendor_url('bower_components/jquery/dist/jquery.min.js', 'almasaeed2010/adminlte'),
         resource_url('js/sprintf.min.js'),
+        resource_url('js/bootstrap-notify.min.js'),
     ));
 
     ?>
@@ -151,7 +152,7 @@ if (isset($user->image) && $user->image->exists()) {
                     <?= __d('admin_lite', 'Sign out'); ?>
                   </a>
                   <form id="logout-form" action="<?= site_url('logout'); ?>" method="POST" style="display: none;">
-                    <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+                    <?= csrf_field(); ?>
                   </form>
                 </div>
               </li>
@@ -167,12 +168,11 @@ if (isset($user->image) && $user->image->exists()) {
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
         <!-- search form -->
-        <form action="<?= site_url('admin/users/search'); ?>" method="POST" class="sidebar-form">
+        <form action="<?= site_url('admin/users/search'); ?>" method="GET" class="sidebar-form">
             <div class="input-group">
                 <input type="text" name="query" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                    </button>
+                    <button type="submit" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
                 </span>
             </div>
         </form>
@@ -243,6 +243,31 @@ $(function () {
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' // optional
     });
+
+    // Bootstrap Notify.
+    $.notifyDefaults({
+        type: 'info',
+        allow_dismiss: true,
+        newest_on_top: true,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOutUp'
+        },
+        template: '<div class="col-xs-11 col-sm-4 alert alert-notify alert-notify-{0} alert-dismissible" style="padding: 10px;">' +
+                  '<button type="button" class="close" style="top: -7px; right: -2px;" data-dismiss="alert" aria-hidden="true">×</button>' +
+                  '<h4>{1}</h4>' +
+                  '<p>{2}</p>' +
+                  '</div>'
+    });
+
+    notify = function(title, message, type) {
+        $.notify({
+            title:   title,
+            message: message
+        }, {
+            type: type,
+        });
+    }
 });
 </script>
 
@@ -325,7 +350,7 @@ $(function () {
     // Setup the CSRF header on AJAX requests.
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': '<?= $csrfToken; ?>'
+            'X-CSRF-TOKEN': '<?= csrf_token(); ?>'
         }
     });
 

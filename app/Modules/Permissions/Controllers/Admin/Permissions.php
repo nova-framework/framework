@@ -33,7 +33,7 @@ class Permissions extends BaseController
         $roles = Role::all();
 
         return $this->createView()
-            ->shares('title', __d('users', 'Permissions'))
+            ->shares('title', __d('permissions', 'Permissions'))
             ->with('permissions', $permissions)
             ->with('roles', $roles)
             ->with('modules', $modules);
@@ -76,7 +76,7 @@ class Permissions extends BaseController
         Cache::forget('system_permissions');
 
         // Prepare the flash message.
-        $status = __d('users', 'The permissions was successfully updated.');
+        $status = __d('permissions', 'The permissions was successfully updated.');
 
         return Redirect::to('admin/permissions')->withStatus($status);
     }

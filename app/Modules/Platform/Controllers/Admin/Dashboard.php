@@ -22,7 +22,7 @@ class Dashboard extends BaseController
         $users = User::with('roles')->activeSince($since)->paginate(25);
 
         return $this->createView()
-            ->shares('title', __d('system', 'Dashboard'))
+            ->shares('title', __d('platform', 'Dashboard'))
             ->with('users', $users);
     }
 

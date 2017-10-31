@@ -19,8 +19,10 @@ trait ManagePermissionsTrait
      */
     public function createPermissions(array $permissions)
     {
+        $updateRoles = Schema::hasTable('permission_role');
+
         foreach ($permissions as $permission) {
-            $this->createPermission($permission);
+            $this->createPermission($permission, $updateRoles);
         }
 
         // Invalidate the cached system permissions.
@@ -32,22 +34,18 @@ trait ManagePermissionsTrait
      *
      * @return void
      */
-    protected function createPermission(array $attributes)
+    protected function createPermission(array $data, $updateRoles)
     {
-        $updateRoles = Schema::hasTable('permission_role');
+        $slug = $data['slug'];
 
-        //
-        $roles = isset($attributes['roles']) ? $attributes['roles'] : array();
+        $attributes = array_except($data, array('roles', 'slug'));
 
-        unset($attributes['roles']);
+        $permission = Permission::updateOrCreate(array('slug' => $slug), $attributes);
 
-        // Update or create a new Permission instance.
-        $permission = Permission::updateOrCreate(array('slug' => $attributes['slug']), $attributes);
+        if (isset($data['roles']) && $updateRoles) {
+            $roles = $data['roles'];
 
-        if (isset($roles) && $updateRoles) {
-            if (! is_array($roles)) {
-                $roles = array($roles);
-            }
+            if (! is_array($roles)) $roles = array($roles);
 
             $permission->roles()->sync($roles);
         }

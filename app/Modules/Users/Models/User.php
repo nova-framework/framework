@@ -4,19 +4,23 @@ namespace App\Modules\Users\Models;
 
 use Nova\Auth\UserTrait;
 use Nova\Auth\UserInterface;
-use Nova\Auth\Reminders\RemindableTrait;
-use Nova\Auth\Reminders\RemindableInterface;
 use Nova\Database\ORM\Model as BaseModel;
 use Nova\Foundation\Auth\Access\AuthorizableTrait;
 use Nova\Support\Facades\Cache;
 
+use Shared\Auth\Reminders\RemindableTrait;
+use Shared\Auth\Reminders\RemindableInterface;
 use Shared\Database\ORM\FileField\FileFieldTrait;
 use Shared\Notifications\NotifiableTrait;
+
+use App\Modules\Attachments\Traits\HasAttachmentsTrait;
+use App\Modules\Messages\Traits\HasMessagesTrait;
+use App\Modules\Platform\Traits\HasActivitiesTrait;
 
 
 class User extends BaseModel implements UserInterface, RemindableInterface
 {
-    use UserTrait, RemindableTrait, AuthorizableTrait, NotifiableTrait, FileFieldTrait;
+    use UserTrait, RemindableTrait, AuthorizableTrait, NotifiableTrait, FileFieldTrait, HasActivitiesTrait, HasMessagesTrait, HasAttachmentsTrait;
 
     //
     protected $table = 'users';
@@ -38,28 +42,6 @@ class User extends BaseModel implements UserInterface, RemindableInterface
     protected $cachedRoles;
     protected $cachedPermissions;
 
-
-    public function activities()
-    {
-        return $this->hasMany('App\Modules\Platform\Models\Activity', 'user_id', 'id');
-    }
-
-    public function scopeActiveSince($query, $since)
-    {
-        return $query->with(array('activities' => function ($query)
-        {
-            return $query->orderBy('last_activity', 'DESC');
-
-        }))->whereHas('activities', function ($query) use ($since)
-        {
-            return $query->where('last_activity', '>=', $since);
-        });
-    }
-
-    public function messages()
-    {
-        return $this->hasMany('App\Modules\Messages\Models\Message', 'sender_id', 'id');
-    }
 
     public function picture()
     {

@@ -44,7 +44,7 @@ class Messages extends BaseController
             ->paginate(10);
 
         return $this->createView()
-            ->shares('title',  __d('backend', 'Messages'))
+            ->shares('title', __d('messages', 'Messages'))
             ->with(compact('authUser', 'messages'));
     }
 
@@ -56,7 +56,7 @@ class Messages extends BaseController
         $users = User::where('id', '!=', $authUser->id)->get();
 
         return $this->createView()
-            ->shares('title', __d('backend', 'Send Message'))
+            ->shares('title', __d('messages', 'Send Message'))
             ->with(compact('authUser', 'users'));
     }
 
@@ -89,7 +89,7 @@ class Messages extends BaseController
              $user = User::findOrFail($userId);
         }
         catch (ModelNotFoundException $e) {
-            $message = __d('backend', 'The User with ID: {0} was not found.', $userId);
+            $message = __d('messages', 'The User with ID: {0} was not found.', $userId);
 
             return Redirect::to('admin/dashboard')->with('warning', $status);
         }
@@ -106,7 +106,7 @@ class Messages extends BaseController
         $authUser->messages()->save($message);
 
         // Prepare the flash message.
-        $status = __d('backend', 'Message Posted.');
+        $status = __d('messages', 'Message Posted.');
 
         return Redirect::to('messages')->with('success', $status);
     }
@@ -134,7 +134,7 @@ class Messages extends BaseController
         $messageCount = Message::where('receiver_id', $authUser->id)->unread()->count();
 
         return $this->createView()
-            ->shares('title', __d('backend', 'Show Message'))
+            ->shares('title', __d('messages', 'Show Message'))
             ->shares('privateMessageCount', $messageCount)
             ->with(compact('authUser', 'message'));
     }
@@ -150,7 +150,7 @@ class Messages extends BaseController
         $this->validateInput($input, array(
             'reply' => 'required|min:3|max:1000',
         ), array(
-            'required' => __d('backend', 'You must type a reply first!')
+            'required' => __d('messages', 'You must type a reply first!')
         ));
 
         // Find the status that we need to reply to.

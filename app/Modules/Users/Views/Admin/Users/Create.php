@@ -1,8 +1,8 @@
 <section class="content-header">
     <h1><?= __d('users', 'Create User'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('admin/dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
-        <li><a href='<?= site_url('admin/users'); ?>'><?= __d('users', 'Users'); ?></a></li>
+        <li><a href="<?= site_url('admin/dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('users', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('admin/users'); ?>"><?= __d('users', 'Users'); ?></a></li>
         <li><?= __d('users', 'Create User'); ?></li>
     </ol>
 </section>
@@ -74,13 +74,16 @@
                 </div>
             </div>
 
-            <input type="hidden" name="csrfToken" value="<?= $csrfToken; ?>" />
+            <?= csrf_field(); ?>
 
             </form>
         </div>
     </div>
 </div>
 
-<a class='btn btn-primary' href='<?= site_url('admin/users'); ?>'><?= __d('users', '<< Previous Page'); ?></a>
+<a class="btn btn-primary col-sm-2" href="<?= site_url('admin/users'); ?>"><?= __d('users', '<< Previous Page'); ?></a>
+
+<div class="clearfix"></div>
+<br>
 
 </section>

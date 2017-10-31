@@ -15,7 +15,7 @@ class Dashboard extends BaseController
     public function index()
     {
         return $this->createView()
-            ->shares('title', __d('system', 'Dashboard'));
+            ->shares('title', __d('platform', 'Dashboard'));
     }
 
     public function notify()
@@ -28,3 +28,4 @@ class Dashboard extends BaseController
         return Redirect::to('dashboard')->withStatus('A sample notification was sent to yourself.', 'success');
     }
 }
+

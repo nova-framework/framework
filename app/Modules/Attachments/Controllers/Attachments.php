@@ -58,13 +58,14 @@ class Attachments extends BaseController
             return Response::json(array('error' => 'Temporary file not found.'), 400);
         }
 
-        $fileName = $request->input('name');
-        $mimeType = $request->input('type');
         $fileSize = $request->input('size');
 
         if ($fileSize != filesize($filePath)) {
             return Response::json(array('error' => 'Invalid temporary file.'), 400);
         }
+
+        $fileName = $request->input('name');
+        $mimeType = $request->input('type');
 
         // Create an UploadedFile instance from the temporary file.
         $file = new UploadedFile($filePath, $fileName, $mimeType, $fileSize, UPLOAD_ERR_OK, true);

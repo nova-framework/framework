@@ -11,6 +11,6 @@ trait HasAttachmentsTrait
      */
     public function attachments()
     {
-        return $this->hasMany('App\Modules\Attachments\Models\Attachment', 'user_id', 'id');
+        return $this->morphMany('App\Modules\Attachments\Models\Attachment', 'ownerable');
     }
 }

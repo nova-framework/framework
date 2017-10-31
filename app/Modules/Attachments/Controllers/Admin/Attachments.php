@@ -31,8 +31,8 @@ class Attachments extends BaseController
         });
 
         $attachments = array(
-            'files'  => $attachments->toArray(),
-            'userId' => $authUser->id,
+            'files' => $attachments->toArray(),
+            'user'  => $authUser,
 
             // The Attachable.
             'attachable' => null,

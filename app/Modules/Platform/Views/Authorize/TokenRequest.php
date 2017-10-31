@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('platform', 'One-Time Login'); ?></h2>
+    <h2 style="margin-top: 25px; padding-bottom: 10px; border-bottom: 1px solid #FFF;"><?= __d('platform', 'Center Login'); ?></h2>
 </section>
 
 <!-- Main content -->
@@ -19,7 +19,7 @@
                 <p><?= __d('platform', 'Please enter your e-mail address to be sent a link to login one time.'); ?></p>
 
                 <div class="form-group">
-                    <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Email'); ?>" value="<?= Input::old('email'); ?>"><br><br></p>
+                    <p><input type="text" name="email" id="email" class="form-control input-lg col-xs-12 col-sm-12 col-md-12" placeholder="<?= __d('platform', 'Email'); ?>"><br><br></p>
                 </div>
                 <?php if (Config::get('reCaptcha.active') === true) { ?>
                 <div class="row pull-right" style="margin-right: 0; margin-top: 15px;">

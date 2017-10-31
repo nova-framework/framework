@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('platform', 'Notifications'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
     </ol>
 </section>
 
@@ -22,15 +22,15 @@
     <div class="box-body no-padding">
         <?php $format = __d('platform', '%d %b %Y, %H:%M'); ?>
         <?php if (! $notifications->isEmpty()) { ?>
-        <table class='table table-bordered table-striped table-hover responsive'>
+        <table class="table table-bordered table-striped table-hover responsive">
             <thead>
                 <tr class="bg-navy disabled">
-                    <th style='text-align: center; vertical-align: middle;'>-</th>
-                    <th style='text-align: left; vertical-align: middle;'><?= __d('platform', 'Message'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;'><?= __d('platform', 'URL'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;'><?= __d('platform', 'Sent At'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;'><?= __d('platform', 'Read At'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;'><input type="checkbox" value="" class="checkLeft1"></th>
+                    <th style="text-align: center; vertical-align: middle;">-</th>
+                    <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Message'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;"><?= __d('platform', 'URL'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;"><?= __d('platform', 'Sent At'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;"><?= __d('platform', 'Read At'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;"><input type="checkbox" value="" class="checkLeft1"></th>
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +38,7 @@
             <?php foreach ($notifications->all() as $item) { ?>
             <?php $data = $item->data; ?>
                 <tr>
-                    <td style="text-align: center; vertical-align: middle; padding: 5px;" width="5%"><i class='fa fa-<?= isset($data['icon']) ? $data['icon'] : 'bell'; ?> text-<?= isset($data['color']) ? $data['color'] : 'aqua'; ?>'></i></td>
+                    <td style="text-align: center; vertical-align: middle; padding: 5px;" width="5%"><i class="fa fa-<?= isset($data['icon']) ? $data['icon'] : 'bell'; ?> text-<?= isset($data['color']) ? $data['color'] : 'aqua'; ?>"></i></td>
                     <td style="text-align: left; vertical-align: middle;" width='40%'><?= $data['message']; ?></td>
                     <td style="text-align: center; vertical-align: middle;" width='20%'><a href="<?= $data['link'] .'?read=' .$item->uuid; ?>" target="_blank"><?= str_replace($url, '/', $data['link']); ?></td>
                     <td style="text-align: center; vertical-align: middle;" width="15%"><?= $item->created_at->formatLocalized($format); ?></td>

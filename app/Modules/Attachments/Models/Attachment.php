@@ -16,7 +16,9 @@ class Attachment extends BaseModel
 
     protected $primaryKey = 'id';
 
-    protected $fillable = array('user_id', 'name', 'size', 'type', 'file', 'attachable_id', 'attachable_type');
+    protected $fillable = array(
+        'name', 'size', 'type', 'file', 'ownerable_id', 'ownerable_type', 'attachable_id', 'attachable_type'
+    );
 
     public $files = array(
         'file' => array(
@@ -26,9 +28,12 @@ class Attachment extends BaseModel
     );
 
 
-    public function user()
+    /**
+     * Get the ownerable entity that the attachment belongs to.
+     */
+    public function ownerable()
     {
-        return $this->belongsTo('App\Modules\Users\Model\User', 'user_id', 'id');
+        return $this->morphTo();
     }
 
     /**

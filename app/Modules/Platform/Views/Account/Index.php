@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('platform', 'Account'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('platform', 'Dashboard'); ?></a></li>
         <li><?= __d('platform', 'Account'); ?></li>
     </ol>
 </section>
@@ -16,26 +16,26 @@
         <h3 class="box-title"><?= __d('platform', 'Account Details'); ?></h3>
     </div>
     <div class="box-body no-padding">
-        <table id='left' class='table table-hover responsive'>
+        <table id="left" class="table table-hover responsive">
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('platform', 'Username'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->username; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Username'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->username; ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('platform', 'Roles'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= implode(', ', $user->roles->lists('name')); ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Roles'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= implode(', ', $user->roles->lists('name')); ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('platform', 'Name and Surname'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->realname; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Name and Surname'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->realname; ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('platform', 'E-mail'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->email; ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'E-mail'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->email; ?></td>
             </tr>
             <tr>
-                <th style='text-align: left; vertical-align: middle;'><?= __d('platform', 'Created At'); ?></th>
-                <td style='text-align: left; vertical-align: middle;' width='75%'><?= $user->created_at->formatLocalized(__d('platform', '%d %b %Y, %R')); ?></td>
+                <th style="text-align: left; vertical-align: middle;"><?= __d('platform', 'Created At'); ?></th>
+                <td style="text-align: left; vertical-align: middle;" width="75%"><?= $user->created_at->formatLocalized(__d('platform', '%d %b %Y, %R')); ?></td>
             </tr>
         </table>
     </div>
@@ -84,26 +84,26 @@
     <div class="box-body">
         <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Current Password'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Current Password'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
                     <input name="current_password" id="current_password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the current Password'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'New Password'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'New Password'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
                     <input name="password" id="password" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Insert the new Password'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Confirm Password'); ?> <font color='#CC0000'>*</font></label>
+                <label class="col-sm-4 control-label" for="name"><?= __d('platform', 'Confirm Password'); ?> <font color="#CC0000">*</font></label>
                 <div class="col-sm-8">
                     <input name="password_confirmation" id="password_confirmation" type="password" class="form-control" value="" placeholder="<?= __d('platform', 'Verify the new Password'); ?>">
                 </div>
             </div>
             <div class="clearfix"></div>
             <br>
-            <font color='#CC0000'>*</font><?= __d('platform', 'Required field'); ?>
+            <font color="#CC0000">*</font><?= __d('platform', 'Required field'); ?>
         </div>
     </div>
     <div class="box-footer">

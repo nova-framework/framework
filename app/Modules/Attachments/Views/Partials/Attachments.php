@@ -1,12 +1,12 @@
 <?php
 
-$attachable = isset($attachable) ? $attachable : '';
+$attachable   = isset($attachable) ? $attachable : '';
 
 $downloadable = isset($downloadable) ? $downloadable : false;
 $deletable    = isset($deletable)    ? $deletable    : false;
 
 $maxFiles    = isset($maxFiles)    ? $maxFiles    : 10;
-$maxFilesize = isset($maxFilesize) ? $maxFilesize : 1000; // 1GB
+$maxFilesize = isset($maxFilesize) ? $maxFilesize : 1000;
 
 $files = isset($files) ? $files : array();
 
@@ -22,14 +22,14 @@ $files = isset($files) ? $files : array();
             <br>
             <?= __d('attachments', 'For attaching files, please click the button bellow or drag and drop files within this widget.'); ?>
         </div>
-        <table id='files-table' class='table table-striped table-hover table-responsive' style="display: none;">
+        <table id="files-table" class="table table-striped table-hover table-responsive" style="display: none;">
             <thead>
                 <tr class="bg-navy disabled">
-                    <th style='text-align: center; vertical-align: middle;' width="5%"><?= __d('attachments', 'ID'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;' width="55%"><?= __d('attachments', 'File'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;' width="15%"><?= __d('attachments', 'Type'); ?></th>
-                    <th style='text-align: center; vertical-align: middle;' width="10%"><?= __d('attachments', 'Size'); ?></th>
-                    <th style='text-align: right; vertical-align: middle;' width="15%"><?= __d('attachments', 'Operations'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;" width="5%"><?= __d('attachments', 'ID'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;" width="55%"><?= __d('attachments', 'File'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;" width="15%"><?= __d('attachments', 'Type'); ?></th>
+                    <th style="text-align: center; vertical-align: middle;" width="10%"><?= __d('attachments', 'Size'); ?></th>
+                    <th style="text-align: right; vertical-align: middle;" width="15%"><?= __d('attachments', 'Operations'); ?></th>
                 </tr>
             </thead>
             <tbody id="previews" class="dropzone-previews">
@@ -85,8 +85,8 @@ $files = isset($files) ? $files : array();
                 <p id="modal-confirm-message"></p>
             </div>
             <div class="modal-footer">
-                <button id='model-confirm-cancel-button' data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('attachments', 'Cancel'); ?></button>
-                <button id='modal-confirm-delete-button' data-dismiss="modal" class="btn btn-success pull-right col-md-3" type="button"><?= __d('attachments', 'Confirm'); ?></button>
+                <button id="modal-confirm-cancel-button" data-dismiss="modal" class="btn btn-primary pull-left col-md-3" type="button"><?= __d('attachments', 'Cancel'); ?></button>
+                <button id="modal-confirm-delete-button" data-dismiss="modal" class="btn btn-success pull-right col-md-3" type="button"><?= __d('attachments', 'Confirm'); ?></button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -105,7 +105,7 @@ $files = isset($files) ? $files : array();
                 <iframe class="modal-preview-iframe" frameborder="0" style="width: 100%; height: 100%;" src=""></iframe>
             </div>
             <div class="modal-footer" style="padding: 5px;">
-                <button id='model-preview-button' data-dismiss="modal" class="btn btn-primary col-sm-1 pull-right" type="button"><?= __d('attachments', 'Close'); ?></button>
+                <button id="model-preview-button" data-dismiss="modal" class="btn btn-primary col-sm-1 pull-right" type="button"><?= __d('attachments', 'Close'); ?></button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -115,6 +115,16 @@ $files = isset($files) ? $files : array();
 <script>
 
 $(function () {
+    $(window).bind('beforeunload', function() {
+        /*
+        var message = "<?= __d('requests', 'Avoid changing page as this will cut your editing session.'); ?>";
+
+        e.returnValue = message;
+
+        return message;
+        */
+    });
+
     $('#modal-preview-dialog').on('show.bs.modal', function (event) {
         var height = $(window).height() - 155;
 
@@ -142,7 +152,8 @@ $(function () {
 <script>
 
 $(function () {
-    var userId = '<?= $userId; ?>';
+    var ownerId   = '<?= $user->id; ?>';
+    var ownerType = '<?= str_replace('\\', '\\\\', get_class($user)); ?>';
 
     var setupAttachment = function(preview, name, type, id, url, download) {
         preview.attr('data-id', id);
@@ -199,14 +210,13 @@ $(function () {
         return el[0];
     };
 
-
     var dropzone = new Dropzone("#dropzone", {
         url: "<?= site_url('attachments'); ?>", // Set the url.
         chunking: true,
         maxFiles: <?= $maxFiles; ?>,
         maxFilesize: <?= $maxFilesize; ?>, // MB
         parallelUploads: 1,
-        //acceptedFiles: 'image/*, application/pdf',
+        acceptedFiles: 'image/*, application/pdf',
         previewTemplate: previewTemplate,
         autoQueue: true,
         previewsContainer: "#previews", // Define the container to display the previews.
@@ -257,7 +267,10 @@ $(function () {
                     name: file.name,
                     type: file.type,
                     size: file.size,
-                    user: userId
+
+                    // Setup the ownership.
+                    owner_id:   ownerId,
+                    owner_type: ownerType
                 },
                 dataType: 'json',
                 success: function(data, textStatus, xhr) {
@@ -296,7 +309,8 @@ $(function () {
     });
 
     dropzone.on("sending", function(file, xhr, formData) {
-        formData.append('user', userId);
+        formData.append('owner_id',   ownerId);
+        formData.append('owner_type', ownerType);
 
         //
         var preview = $(file.previewElement);

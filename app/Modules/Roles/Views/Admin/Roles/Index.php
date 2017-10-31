@@ -18,7 +18,7 @@
         <h3 class="box-title"><?= __d('roles', 'Create a new Role'); ?></h3>
     </div>
     <div class="box-body">
-        <a class='btn btn-success col-sm-2 pull-right' href='<?= site_url('admin/roles/create'); ?>'><?= __d('roles', 'Create a new Role'); ?></a>
+        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('admin/roles/create'); ?>"><?= __d('roles', 'Create a new Role'); ?></a>
     </div>
 </div>
 
@@ -34,7 +34,7 @@
     <div class="box-body no-padding">
         <?php $deletables = 0; ?>
         <?php if (! $roles->isEmpty()) { ?>
-        <table id='left' class='table table-striped table-hover responsive'>
+        <table id="left" class="table table-striped table-hover responsive">
             <tr class="bg-navy disabled">
                 <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'ID'); ?></th>
                 <th style="text-align: center; vertical-align: middle;"><?= __d('roles', 'Name'); ?></th>
@@ -48,7 +48,7 @@
                 <td style="text-align: center; vertical-align: middle;" width="5%"><?= $role->id; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="17%"><?= $role->name; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="17%"><?= $role->slug; ?></td>
-                <td style='text-align: left; vertical-align: middle;' width="40%"><?= $role->description; ?></td>
+                <td style="text-align: left; vertical-align: middle;" width="40%"><?= $role->description; ?></td>
                 <td style="text-align: center; vertical-align: middle;" width="6%"><?= $role->users->count(); ?></td>
                 <td style="text-align: right; vertical-align: middle;" width="15%">
                     <div class="btn-group" role="group" aria-label="...">

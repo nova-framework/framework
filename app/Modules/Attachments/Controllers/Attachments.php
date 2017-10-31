@@ -5,6 +5,7 @@ namespace App\Modules\Attachments\Controllers;
 use Nova\Http\UploadedFile;
 use Nova\Http\Request;
 use Nova\Database\ORM\ModelNotFoundException;
+use Nova\Support\Facades\Auth;
 use Nova\Support\Facades\File;
 use Nova\Support\Facades\Input;
 use Nova\Support\Facades\Response;
@@ -87,16 +88,20 @@ class Attachments extends BaseController
 
     protected function handleUploadedFile(UploadedFile $file, Request $request, $filePath = null)
     {
-        $attachment = Attachment::create(array(
-            'user_id' => $request->input('user'),
+        $ownerableId   = $request->input('owner_id');
+        $ownerableType = $request->input('owner_type');
 
-            // The file information.
+        $attachment = Attachment::create(array(
             'name' => $file->getClientOriginalName(),
             'size' => $file->getSize(),
             'type' => $file->getClientMimeType(),
 
             // The inner FileField use the UploadedFile instance.
             'file' => $file,
+
+            // Fill the 'ownerable' morph.
+            'ownerable_id'   => $ownerableId,
+            'ownerable_type' => $ownerableType,
 
             // Fill the 'attachable' morph with dummy values.
             'attachable_id'   => 0,

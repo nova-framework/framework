@@ -1,7 +1,7 @@
 <section class="content-header">
     <h1><?= __d('messages', 'Messages'); ?></h1>
     <ol class="breadcrumb">
-        <li><a href='<?= site_url('dashboard'); ?>'><i class="fa fa-dashboard"></i> <?= __d('messages', 'Dashboard'); ?></a></li>
+        <li><a href="<?= site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?= __d('messages', 'Dashboard'); ?></a></li>
         <li><?= __d('messages', 'Messages'); ?></li>
     </ol>
 </section>
@@ -18,7 +18,7 @@
         <h3 class="box-title"><?= __d('messages', 'Send a new Message'); ?></h3>
     </div>
     <div class="box-body">
-        <a class='btn btn-success col-sm-2 pull-right' href='<?= site_url('messages/create'); ?>'><?= __d('messages', 'Send a new Message'); ?></a>
+        <a class="btn btn-success col-sm-2 pull-right" href="<?= site_url('messages/create'); ?>"><?= __d('messages', 'Send a new Message'); ?></a>
     </div>
 </div>
 
@@ -65,7 +65,7 @@
                     </ul>
                 </div>
                 <div class="col-md-4 no-padding">
-                    <a class="btn btn-sm btn-<?= ($unread > 0) ? 'warning' : 'primary'; ?> pull-right" title="<?= __d('messages', 'View this message and its replies'); ?>" href="<?= site_url('messages/' .$message->id); ?>"><i class='fa fa-search'></i> <?= __d('messages', 'View the Message(s)'); ?></a>
+                    <a class="btn btn-sm btn-<?= ($unread > 0) ? 'warning' : 'primary'; ?> pull-right" title="<?= __d('messages', 'View this message and its replies'); ?>" href="<?= site_url('messages/' .$message->id); ?>"><i class="fa fa-search"></i> <?= __d('messages', 'View the Message(s)'); ?></a>
                     <div class="clearfix"></div>
                 </div>
             </div>

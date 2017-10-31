@@ -121,6 +121,6 @@ class Attachments extends BaseController
     {
         $uuid = $request->input('uuid');
 
-        return storage_path('upload') .DS .sha1($name) .'.part';
+        return storage_path('upload') .DS .sha1($uuid) .'.part';
     }
 }

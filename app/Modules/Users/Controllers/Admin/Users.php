@@ -345,7 +345,7 @@ class Users extends BaseController
         $users = User::where('username', 'LIKE', '%' .$search .'%')
             ->orWhere('realname', 'LIKE', '%' .$search .'%')
             ->orWhere('email', 'LIKE', '%' .$search .'%')
-            ->get();
+            ->paginate(15);
 
         // Prepare the Query for displaying.
         $search = htmlentities($search);

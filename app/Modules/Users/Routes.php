@@ -13,7 +13,7 @@
 Route::group(array('prefix' => 'admin', 'namespace' => 'Admin'), function ()
 {
     // The Users Search.
-    Route::post('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
+    Route::get('users/search', array('middleware' => 'auth', 'uses' => 'Users@search'));
 
     // The Users CRUD.
     Route::get( 'users',              array('middleware' => 'auth', 'uses' => 'Users@index'));

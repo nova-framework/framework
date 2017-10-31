@@ -80,7 +80,7 @@
 
 </section>
 
-<?php if (count($deletables) > 0) { ?>
+<?php if ($deletables > 0) { ?>
 
 <div class="modal modal-default" id="modal-delete-dialog">
     <div class="modal-dialog">
